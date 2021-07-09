@@ -21,7 +21,15 @@ then
 fi
 
 runApplication reconstructPar -latestTime
-runApplication postProcess -func singleGraph -latestTime
+runApplication postProcess -latestTime -func "
+    graphCell
+    (
+        funcName=graph,
+        start=(3.4901 0 0),
+        end=(3.4901 0.0096 0),
+        fields=(alpha.gas alpha.gas2 alpha.liquid T.liquid T.gas d.bubbles)
+    )"
+
 ./validation/createGraphs
 
 #------------------------------------------------------------------------------

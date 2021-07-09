@@ -47,8 +47,26 @@ runTimeModifiable true;
 functions
 {
     #includeFunc wallShearStress
-    #includeFunc wallShearStressGraph
-    #includeFunc kGraph
+
+    #includeFunc graphUniform
+    (
+        funcName=wallShearStressGraph,
+        start=(0.04075 0.00075 0),
+        end=(3.04 0.00075 0),
+        nPoints=100,
+        axis=x,
+        wallShearStress
+    )
+
+    #includeFunc graphUniform
+    (
+        funcName=kGraph,
+        start=(0.04075 0.05 0),
+        end=(3.04 0.05 0),
+        nPoints=100,
+        axis=x,
+        k
+    )
 }
 
 // ************************************************************************* //

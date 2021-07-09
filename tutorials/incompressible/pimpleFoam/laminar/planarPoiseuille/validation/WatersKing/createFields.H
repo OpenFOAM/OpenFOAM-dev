@@ -53,5 +53,6 @@ const dictionary& gradPDict =
     fvModels.subDict("momentumSource").subDict("sources");
 const scalar K(vector(gradPDict.subDict("U").lookup("explicit")).x());
 
-dictionary probes(IFstream(runTime.system()/"probes")());
-const point location = pointField(probes.lookup("probeLocations"))[0];
+const dictionary& probesDict =
+    runTime.controlDict().subDict("functions").subDict("probes");
+const point location = pointField(probesDict.lookup("probeLocations"))[0];

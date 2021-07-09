@@ -17,7 +17,7 @@ gnuplot<<EOF
     set xrange [0:1]
     set yrange [0:0.15]
 
-    file = system("ls ../postProcessing/singleGraph/$(foamListTimes -case .. | tail -1)/*.xy")
+    file = system("ls ../postProcessing/graph/$(foamListTimes -case .. | tail -1)/*.xy")
 
     plot file u (\$1/0.01905):2 w lp lt 1 t 'Simulation', \
     './exptData/alpha.gas' u 1:2 w p lt rgb "black" pt 4 t 'Experiment'

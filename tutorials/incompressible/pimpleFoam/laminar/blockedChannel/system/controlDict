@@ -50,7 +50,7 @@ maxCo           5;
 
 functions
 {
-    #includeFunc scalarTransport
+    #includeFunc scalarTransport(tracer)
 }
 
 // ************************************************************************* //

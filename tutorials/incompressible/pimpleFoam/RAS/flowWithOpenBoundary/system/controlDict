@@ -45,7 +45,7 @@ runTimeModifiable true;
 
 functions
 {
-    #includeFunc scalarTransport
+    #includeFunc scalarTransport(T, alphaD=1, alphaDt=1)
     #includeFunc time
 }
 

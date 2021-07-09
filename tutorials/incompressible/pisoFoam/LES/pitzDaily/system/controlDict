@@ -50,13 +50,11 @@ functions
     {
         type            probes;
         libs            ("libsampling.so");
+
         writeControl    timeStep;
         writeInterval   1;
 
-        fields
-        (
-            p
-        );
+        fields          (p);
 
         probeLocations
         (
@@ -68,37 +66,29 @@ functions
             (0.1524 0.0253 0)
             (0.1778 0.0253 0)
         );
-
     }
 
     #includeFunc fieldAverage(U, p, prime2Mean = yes)
 
     surfaceSampling
     {
-        // Sample near-wall velocity
-
-        type surfaces;
-
-        // Where to load it from (if not already in solver)
+        type            surfaces;
         libs            ("libsampling.so");
+
         writeControl    writeTime;
 
         interpolationScheme cellPoint;
 
-        surfaceFormat vtk;
+        surfaceFormat   vtk;
 
-        // Fields to be sampled
-        fields
-        (
-            U
-        );
+        fields          (U);
 
         surfaces
         (
             nearWall
             {
                 type            patchInternalField;
-                patches         ( lowerWall );
+                patches         (lowerWall);
                 distance        1e-6;
                 interpolate     true;
                 triangulate     false;
@@ -106,7 +96,7 @@ functions
         );
     }
 
-    #includeFunc scalarTransport
+    #includeFunc scalarTransport(s)
 }
 
 // ************************************************************************* //

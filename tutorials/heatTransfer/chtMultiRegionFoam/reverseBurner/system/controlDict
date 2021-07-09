@@ -52,7 +52,7 @@ adjustTimeStep  yes;
 
 functions
 {
-    #includeFunc Qdot
+    #includeFunc Qdot(region=gas)
 }
 
 

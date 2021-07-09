@@ -52,7 +52,14 @@ maxDeltaT       0.001;
 
 functions
 {
-    #includeFunc        singleGraph
+    #includeFunc graphCell
+    (
+        funcName=graph,
+        start=(0.0101 0 0),
+        end=(0.0101 0.01905 0),
+        fields=(alpha.gas)
+    )
+
     #includeFunc yPlus(phase=liquid)
 }
 

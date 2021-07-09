@@ -53,8 +53,22 @@ maxDeltaT       1;
 
 functions
 {
-    #includeFunc "patchAverage(funcName=cylinderT, region=fluid, name=fluid_to_solid, field=T)"
-    #includeFunc "patchAverage(funcName=inletU, region=fluid, name=inlet, field=U)"
+    #includeFunc patchAverage
+    (
+        funcName=cylinderT,
+        region=fluid,
+        patch=fluid_to_solid,
+        field=T
+    )
+    #includeFunc patchAverage
+    (
+        funcName=inletU,
+        region=fluid,
+        patch=inlet,
+        field=U
+    )
+ }
+
 }
 
 // ************************************************************************* //

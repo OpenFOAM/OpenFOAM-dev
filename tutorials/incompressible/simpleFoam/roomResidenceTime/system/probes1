@@ -10,10 +10,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/probes/probes.cfg"
-
-fields (age);
-probeLocations
+points
 (
     (1.13 1.8 0.0)
     (1.13 1.8 0.1)
@@ -46,5 +43,9 @@ probeLocations
     (1.13 1.8 2.9)
     (1.13 1.8 3.0)
 );
+
+fields  (age);
+
+#includeEtc "caseDicts/postProcessing/probes/probes.cfg"
 
 // ************************************************************************* //

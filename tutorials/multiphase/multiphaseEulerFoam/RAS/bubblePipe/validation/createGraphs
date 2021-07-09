@@ -13,8 +13,8 @@ gnuplot<<EOF
     set xlabel 'r (mm)'
     set ylabel '{/Symbol a} (-)'
 
-    alpha = system("ls ../postProcessing/singleGraph/$(foamListTimes -case .. -latestTime)/line_alpha*.xy")
-    forces = system("ls ../postProcessing/singleGraph/$(foamListTimes -case .. -latestTime)/line_lift*.xy")
+    alpha = system("ls ../postProcessing/graph/$(foamListTimes -case .. -latestTime)/line_alpha*.xy")
+    forces = system("ls ../postProcessing/graph/$(foamListTimes -case .. -latestTime)/line_lift*.xy")
 
     plot alpha u (\$1*1000):4 w l lw 3 lc rgb 'black' t 'total',\
     alpha u (\$1*1000):2 w l lw 2 lc rgb 'green' t 'd < 5.5mm',\

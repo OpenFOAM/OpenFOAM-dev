@@ -26,21 +26,21 @@ gnuplot<<EOF
 
     set ylabel 'Void fraction (-)'
     plot \
-        "postProcessing/singleGraph/$graphFile" \
+        "postProcessing/graph/$graphFile" \
         u (\$1/0.0096):2 w lp lt 1 t 'Simulation', \
         './validation/exptData/vof_deb1.txt' \
         u 1:2 w p lt rgb "black" pt 4 t 'Experiment'
 
     set ylabel 'Liquid temperature (K)'
     plot \
-        "postProcessing/singleGraph/$graphFile" \
+        "postProcessing/graph/$graphFile" \
         u (\$1/0.0096):3 w lp lt 1 t 'Simulation', \
         './validation/exptData/T_deb1.txt' \
         u 1:2 w p lt rgb "black" pt 4 t 'Experiment'
 
     set ylabel 'Sauter mean diameter (mm)'
     plot \
-        "postProcessing/singleGraph/$graphFile" \
+        "postProcessing/graph/$graphFile" \
         u (\$1/0.0096):(\$5*1000) w lp lt 1 t 'Simulation', \
         './validation/exptData/d_deb1.txt' \
         u 1:(\$2*1000) w p lt rgb "black" pt 4 t 'Experiment'

@@ -50,7 +50,7 @@ maxCo           5;
 
 functions
 {
-    #includeFunc patchAverage(name=inlet, fields=(p U))
+    #includeFunc patchAverage(patch=inlet, fields=(p U))
 }
 
 // ************************************************************************* //

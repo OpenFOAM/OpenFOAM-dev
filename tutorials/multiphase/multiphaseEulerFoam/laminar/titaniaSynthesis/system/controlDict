@@ -52,7 +52,13 @@ maxDeltaT       1e-3;
 
 functions
 {
-    #includeFunc        singleGraph
+    #includeFunc graphCell
+    (
+        funcName=graph,
+        start=(0 0 1e-3),
+        end=(0.44 0 1e-3),
+        fields=(TiCl4.vapor O2.vapor Cl2.vapor alpha.particles)
+    )
 
     numberConcentration
     {

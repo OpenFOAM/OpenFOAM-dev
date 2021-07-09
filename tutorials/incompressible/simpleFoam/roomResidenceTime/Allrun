@@ -6,10 +6,12 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication blockMesh
 runApplication simpleFoam
-runApplication -s age simpleFoam -latestTime -postProcess -func age
+runApplication -s age simpleFoam -postProcess -latestTime \
+    -func "age(diffusion=true)"
 runApplication -s probes1 postProcess -func probes1 -latestTime
 runApplication -s probes2 postProcess -func probes2 -latestTime
-runApplication -s flowRatePatch postProcess -func flowRatePatch -latestTime
+runApplication -s patchFlowRate postProcess -latestTime \
+    -func "patchFlowRate(funcName=inletFlowRate,patch=inlet)" -latestTime
 
 (cd validation && ./Allrun $*)
 

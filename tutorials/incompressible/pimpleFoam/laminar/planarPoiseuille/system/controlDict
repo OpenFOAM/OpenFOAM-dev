@@ -46,8 +46,8 @@ runTimeModifiable true;
 functions
 {
     #includeFunc residuals(p, sigma)
-    #includeFunc singleGraph
-    #includeFunc probes
+    #includeFunc graphCell(funcName=graph, start=(0 0 0), end=(0 1 0), U)
+    #includeFunc probes(funcName=probes, points=((0 1 0)), U)
 }
 
 // ************************************************************************* //

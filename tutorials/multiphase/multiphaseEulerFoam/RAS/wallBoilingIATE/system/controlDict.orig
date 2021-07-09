@@ -52,7 +52,7 @@ maxDeltaT       0.001;
 
 functions
 {
-   outflow
+    outflow
     {
         type            surfaceFieldValue;
         functionObjectLibs ( "libfieldFunctionObjects.so" );

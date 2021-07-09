@@ -7,7 +7,7 @@ head -n 30 ../postProcessing/probes1/*/age | cut -d' ' -f6 | cut -d')' -f1 > pos
 
 # Build dimless age value
 V=45.36
-Vdot=`cat ../postProcessing/flowRatePatch/0/surfaceFieldValue.dat | tail -n 1 | xargs | cut -d' ' -f2`
+Vdot=`cat ../postProcessing/inletFlowRate/*/surfaceFieldValue.dat | tail -n 1 | xargs | cut -d' ' -f2`
 Vdot=`echo $Vdot | sed 's/e/*10^/'`
 
 while IFS= read -r line

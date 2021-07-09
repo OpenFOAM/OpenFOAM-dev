@@ -45,7 +45,9 @@ runTimeModifiable true;
 
 functions
 {
-    #includeFunc graphs
+    #includeFunc graphCell(funcName=lineA, start=(-0.0016 0 0), end=(-0.0016 0.0128 0), U)
+    #includeFunc graphCell(funcName=lineB, start=(-0.0048 0 0), end=(-0.0048 0.0128 0), U)
+    #includeFunc graphCell(funcName=lineC, start=(-0.0032 0 0), end=(-0.0032 0.0128 0), U)
 }
 
 // ************************************************************************* //
