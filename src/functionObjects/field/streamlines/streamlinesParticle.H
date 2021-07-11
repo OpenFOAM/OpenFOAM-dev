@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::streamLineParticle
+    Foam::streamlinesParticle
 
 Description
-    Particle class that samples fields as it passes through. Used in streamline
+    Particle class that samples fields as it passes through. Used in streamlines
     calculation.
 
 SourceFiles
-    streamLineParticle.C
+    streamlinesParticle.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef streamLineParticle_H
-#define streamLineParticle_H
+#ifndef streamlinesParticle_H
+#define streamlinesParticle_H
 
 #include "particle.H"
 #include "Cloud.H"
@@ -49,16 +49,16 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-class streamLineParticle;
-class streamLineParticleCloud;
+class streamlinesParticle;
+class streamlinesCloud;
 
-Ostream& operator<<(Ostream&, const streamLineParticle&);
+Ostream& operator<<(Ostream&, const streamlinesParticle&);
 
 /*---------------------------------------------------------------------------*\
-                     Class streamLineParticle Declaration
+                     Class streamlinesParticle Declaration
 \*---------------------------------------------------------------------------*/
 
-class streamLineParticle
+class streamlinesParticle
 :
     public particle
 {
@@ -98,7 +98,7 @@ public:
             //- Construct from components
             trackingData
             (
-                streamLineParticleCloud& cloud,
+                streamlinesCloud& cloud,
                 const PtrList<interpolation<scalar>>& vsInterp,
                 const PtrList<interpolation<vector>>& vvInterp,
                 const label UIndex,
@@ -166,7 +166,7 @@ public:
     // Constructors
 
         //- Construct from components
-        streamLineParticle
+        streamlinesParticle
         (
             const polyMesh& c,
             const vector& position,
@@ -175,7 +175,7 @@ public:
         );
 
         //- Construct from Istream
-        streamLineParticle
+        streamlinesParticle
         (
             const polyMesh& c,
             Istream& is,
@@ -183,12 +183,12 @@ public:
         );
 
         //- Construct copy
-        streamLineParticle(const streamLineParticle& p);
+        streamlinesParticle(const streamlinesParticle& p);
 
         //- Construct and return a clone
         autoPtr<particle> clone() const
         {
-            return autoPtr<particle>(new streamLineParticle(*this));
+            return autoPtr<particle>(new streamlinesParticle(*this));
         }
 
         //- Factory class to read-construct particles used for parallel transfer
@@ -203,11 +203,11 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<streamLineParticle> operator()(Istream& is) const
+            autoPtr<streamlinesParticle> operator()(Istream& is) const
             {
-                return autoPtr<streamLineParticle>
+                return autoPtr<streamlinesParticle>
                 (
-                    new streamLineParticle(mesh_, is, true)
+                    new streamlinesParticle(mesh_, is, true)
                 );
             }
         };
@@ -218,25 +218,25 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(streamLineParticleCloud&, trackingData&, const scalar);
+            bool move(streamlinesCloud&, trackingData&, const scalar);
 
             //- Overridable function to handle the particle hitting a patch
             //  Executed before other patch-hitting functions
-            bool hitPatch(streamLineParticleCloud&, trackingData&);
+            bool hitPatch(streamlinesCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wedge
-            void hitWedgePatch(streamLineParticleCloud&, trackingData&);
+            void hitWedgePatch(streamlinesCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a
             //  symmetry plane
-            void hitSymmetryPlanePatch(streamLineParticleCloud&, trackingData&);
+            void hitSymmetryPlanePatch(streamlinesCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a
             //  symmetry patch
-            void hitSymmetryPatch(streamLineParticleCloud&, trackingData&);
+            void hitSymmetryPatch(streamlinesCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a cyclic
-            void hitCyclicPatch(streamLineParticleCloud&, trackingData&);
+            void hitCyclicPatch(streamlinesCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a
             //  cyclicAMIPatch
@@ -244,7 +244,7 @@ public:
             (
                 const vector&,
                 const scalar,
-                streamLineParticleCloud&,
+                streamlinesCloud&,
                 trackingData&
             );
 
@@ -254,7 +254,7 @@ public:
             (
                 const vector&,
                 const scalar,
-                streamLineParticleCloud&,
+                streamlinesCloud&,
                 trackingData&
             );
 
@@ -264,30 +264,30 @@ public:
             (
                 const vector&,
                 const scalar,
-                streamLineParticleCloud&,
+                streamlinesCloud&,
                 trackingData&
             );
 
             //- Overridable function to handle the particle hitting a
             //- processorPatch
-            void hitProcessorPatch(streamLineParticleCloud&, trackingData&);
+            void hitProcessorPatch(streamlinesCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wallPatch
-            void hitWallPatch(streamLineParticleCloud&, trackingData&);
+            void hitWallPatch(streamlinesCloud&, trackingData&);
 
 
         // I-O
 
             //- Read
-            static void readFields(Cloud<streamLineParticle>&);
+            static void readFields(Cloud<streamlinesParticle>&);
 
             //- Write
-            static void writeFields(const Cloud<streamLineParticle>&);
+            static void writeFields(const Cloud<streamlinesParticle>&);
 
 
     // Ostream Operator
 
-        friend Ostream& operator<<(Ostream&, const streamLineParticle&);
+        friend Ostream& operator<<(Ostream&, const streamlinesParticle&);
 };
 
 

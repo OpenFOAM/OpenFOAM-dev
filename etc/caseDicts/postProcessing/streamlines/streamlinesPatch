@@ -7,12 +7,11 @@
 -------------------------------------------------------------------------------
 Description
     Writes out files of stream lines with interpolated field data in VTK
-    format, with initial points uniformly distributed along a line.
+    format, with initial points randomly selected within a patch.
 
 \*---------------------------------------------------------------------------*/
 
-start   <point>;
-end     <point>;
+patch   <patch>;
 nPoints <nPoints>;
 
 fields  (<fieldNames>);
@@ -20,6 +19,6 @@ fields  (<fieldNames>);
 direction both; // Direction in which to track from the starting points. Can be
                 // "both", "forward" or "backward"
 
-#includeEtc "caseDicts/postProcessing/streamLines/streamLinesLine.cfg"
+#includeEtc "caseDicts/postProcessing/streamlines/streamlinesPatch.cfg"
 
 // ************************************************************************* //

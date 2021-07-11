@@ -51,7 +51,7 @@ cacheTemporaryObjects
 
 functions
 {
-    #includeFunc streamLinesLine
+    #includeFunc streamlinesLine
     (
         funcName=streamlines,
         start=(-0.0205 0.001 0.00001),

@@ -6,9 +6,9 @@
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 
-streamLines
+streamlines
 {
-    type            streamLine;
+    type            streamlines;
 
     libs            ("libfieldFunctionObjects.so");
 

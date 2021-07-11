@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::streamLineParticleCloud
+    Foam::streamlinesCloud
 
 Description
-    A Cloud of streamLine particles
+    A Cloud of streamlines particles
 
 SourceFiles
-    streamLineCloud.C
+    streamlinesCloud.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef streamLineParticleCloud_H
-#define streamLineParticleCloud_H
+#ifndef streamlinesCloud_H
+#define streamlinesCloud_H
 
 #include "Cloud.H"
-#include "streamLineParticle.H"
+#include "streamlinesParticle.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,27 +44,27 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class streamLineCloud Declaration
+                       Class streamlinesCloud Declaration
 \*---------------------------------------------------------------------------*/
 
-class streamLineParticleCloud
+class streamlinesCloud
 :
-    public Cloud<streamLineParticle>
+    public Cloud<streamlinesParticle>
 {
 public:
 
     //- Type of parcel the cloud was instantiated for
-    typedef streamLineParticle parcelType;
+    typedef streamlinesParticle parcelType;
 
 
     //- Runtime type information
-    TypeName("streamLineParticleCloud");
+    TypeName("streamlinesCloud");
 
 
     // Constructors
 
         //- Construct given mesh
-        streamLineParticleCloud
+        streamlinesCloud
         (
             const polyMesh&,
             const word& cloudName = "defaultCloud",
@@ -72,21 +72,21 @@ public:
         );
 
         //- Construct from mesh, cloud name, and a list of particles
-        streamLineParticleCloud
+        streamlinesCloud
         (
             const polyMesh& mesh,
             const word& cloudName,
-            const IDLList<streamLineParticle>& particles
+            const IDLList<streamlinesParticle>& particles
         );
 
         //- Disallow default bitwise copy construction
-        streamLineParticleCloud(const streamLineParticleCloud&) = delete;
+        streamlinesCloud(const streamlinesCloud&) = delete;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const streamLineParticleCloud&) = delete;
+        void operator=(const streamlinesCloud&) = delete;
 };
 
 

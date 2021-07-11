@@ -53,7 +53,7 @@ functions
 
     #includeFunc time
 
-    #includeFunc streamLinesSphere
+    #includeFunc streamlinesSphere
     (
         funcName=streamlines,
         centre=(4 0 0.7),

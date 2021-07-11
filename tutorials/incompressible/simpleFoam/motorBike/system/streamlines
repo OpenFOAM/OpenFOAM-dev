@@ -6,12 +6,12 @@
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 
-streamLines
+streamlines
 {
     // Where to load it from
     libs            ("libfieldFunctionObjects.so");
 
-    type            streamLine;
+    type            streamlines;
 
     // Output every
     writeControl    writeTime;

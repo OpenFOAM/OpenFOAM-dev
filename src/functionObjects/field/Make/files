@@ -16,9 +16,9 @@ nearWallFields/findCellParticle.C
 processorField/processorField.C
 readFields/readFields.C
 
-streamLine/streamLine.C
-streamLine/streamLineParticle.C
-streamLine/streamLineParticleCloud.C
+streamlines/streamlines.C
+streamlines/streamlinesParticle.C
+streamlines/streamlinesCloud.C
 
 surfaceInterpolate/surfaceInterpolate.C
 

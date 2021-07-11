@@ -20,6 +20,6 @@ fields  (<fieldNames>);
 direction both; // Direction in which to track from the starting points. Can be
                 // "both", "forward" or "backward"
 
-#includeEtc "caseDicts/postProcessing/streamLines/streamLinesSphere.cfg"
+#includeEtc "caseDicts/postProcessing/streamlines/streamlinesSphere.cfg"
 
 // ************************************************************************* //

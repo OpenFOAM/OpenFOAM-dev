@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,14 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "streamLineParticle.H"
-#include "streamLineParticleCloud.H"
+#include "streamlinesParticle.H"
+#include "streamlinesCloud.H"
 #include "vectorFieldIOField.H"
 #include "scalarFieldIOField.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::vector Foam::streamLineParticle::interpolateFields
+Foam::vector Foam::streamlinesParticle::interpolateFields
 (
     const trackingData& td,
     const point& position,
@@ -80,7 +80,7 @@ Foam::vector Foam::streamLineParticle::interpolateFields
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::streamLineParticle::streamLineParticle
+Foam::streamlinesParticle::streamlinesParticle
 (
     const polyMesh& mesh,
     const vector& position,
@@ -94,7 +94,7 @@ Foam::streamLineParticle::streamLineParticle
 {}
 
 
-Foam::streamLineParticle::streamLineParticle
+Foam::streamlinesParticle::streamlinesParticle
 (
     const polyMesh& mesh,
     Istream& is,
@@ -126,15 +126,15 @@ Foam::streamLineParticle::streamLineParticle
     // Check state of Istream
     is.check
     (
-        "streamLineParticle::streamLineParticle"
-        "(const Cloud<streamLineParticle>&, Istream&, bool)"
+        "streamlinesParticle::streamlinesParticle"
+        "(const Cloud<streamlinesParticle>&, Istream&, bool)"
     );
 }
 
 
-Foam::streamLineParticle::streamLineParticle
+Foam::streamlinesParticle::streamlinesParticle
 (
-    const streamLineParticle& p
+    const streamlinesParticle& p
 )
 :
     particle(p),
@@ -149,9 +149,9 @@ Foam::streamLineParticle::streamLineParticle
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::streamLineParticle::move
+bool Foam::streamlinesParticle::move
 (
-    streamLineParticleCloud& cloud,
+    streamlinesCloud& cloud,
     trackingData& td,
     const scalar
 )
@@ -236,7 +236,7 @@ bool Foam::streamLineParticle::move
             // Failure exit. Particle stagnated or it's life ran out.
             if (debug)
             {
-                Pout<< "streamLineParticle: Removing stagnant particle:"
+                Pout<< "streamlinesParticle: Removing stagnant particle:"
                     << position() << " sampled positions:"
                     << sampledPositions_.size() << endl;
             }
@@ -251,7 +251,7 @@ bool Foam::streamLineParticle::move
 
             if (debug)
             {
-                Pout<< "streamLineParticle: Removing particle:" << position()
+                Pout<< "streamlinesParticle: Removing particle:" << position()
                     << " sampled positions:" << sampledPositions_.size()
                     << endl;
             }
@@ -286,16 +286,16 @@ bool Foam::streamLineParticle::move
 }
 
 
-bool Foam::streamLineParticle::hitPatch(streamLineParticleCloud&, trackingData&)
+bool Foam::streamlinesParticle::hitPatch(streamlinesCloud&, trackingData&)
 {
     // Disable generic patch interaction
     return false;
 }
 
 
-void Foam::streamLineParticle::hitWedgePatch
+void Foam::streamlinesParticle::hitWedgePatch
 (
-    streamLineParticleCloud&,
+    streamlinesCloud&,
     trackingData& td
 )
 {
@@ -304,9 +304,9 @@ void Foam::streamLineParticle::hitWedgePatch
 }
 
 
-void Foam::streamLineParticle::hitSymmetryPlanePatch
+void Foam::streamlinesParticle::hitSymmetryPlanePatch
 (
-    streamLineParticleCloud&,
+    streamlinesCloud&,
     trackingData& td
 )
 {
@@ -315,9 +315,9 @@ void Foam::streamLineParticle::hitSymmetryPlanePatch
 }
 
 
-void Foam::streamLineParticle::hitSymmetryPatch
+void Foam::streamlinesParticle::hitSymmetryPatch
 (
-    streamLineParticleCloud&,
+    streamlinesCloud&,
     trackingData& td
 )
 {
@@ -326,9 +326,9 @@ void Foam::streamLineParticle::hitSymmetryPatch
 }
 
 
-void Foam::streamLineParticle::hitCyclicPatch
+void Foam::streamlinesParticle::hitCyclicPatch
 (
-    streamLineParticleCloud&,
+    streamlinesCloud&,
     trackingData& td
 )
 {
@@ -337,11 +337,11 @@ void Foam::streamLineParticle::hitCyclicPatch
 }
 
 
-void Foam::streamLineParticle::hitCyclicAMIPatch
+void Foam::streamlinesParticle::hitCyclicAMIPatch
 (
     const vector&,
     const scalar,
-    streamLineParticleCloud&,
+    streamlinesCloud&,
     trackingData& td
 )
 {
@@ -350,11 +350,11 @@ void Foam::streamLineParticle::hitCyclicAMIPatch
 }
 
 
-void Foam::streamLineParticle::hitCyclicACMIPatch
+void Foam::streamlinesParticle::hitCyclicACMIPatch
 (
     const vector&,
     const scalar,
-    streamLineParticleCloud&,
+    streamlinesCloud&,
     trackingData& td
 )
 {
@@ -363,11 +363,11 @@ void Foam::streamLineParticle::hitCyclicACMIPatch
 }
 
 
-void Foam::streamLineParticle::hitCyclicRepeatAMIPatch
+void Foam::streamlinesParticle::hitCyclicRepeatAMIPatch
 (
     const vector&,
     const scalar,
-    streamLineParticleCloud&,
+    streamlinesCloud&,
     trackingData& td
 )
 {
@@ -376,9 +376,9 @@ void Foam::streamLineParticle::hitCyclicRepeatAMIPatch
 }
 
 
-void Foam::streamLineParticle::hitProcessorPatch
+void Foam::streamlinesParticle::hitProcessorPatch
 (
-    streamLineParticleCloud&,
+    streamlinesCloud&,
     trackingData& td
 )
 {
@@ -387,9 +387,9 @@ void Foam::streamLineParticle::hitProcessorPatch
 }
 
 
-void Foam::streamLineParticle::hitWallPatch
+void Foam::streamlinesParticle::hitWallPatch
 (
-    streamLineParticleCloud&,
+    streamlinesCloud&,
     trackingData& td
 )
 {
@@ -398,7 +398,7 @@ void Foam::streamLineParticle::hitWallPatch
 }
 
 
-void Foam::streamLineParticle::readFields(Cloud<streamLineParticle>& c)
+void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
 {
 //    if (!c.size())
 //    {
@@ -430,7 +430,7 @@ void Foam::streamLineParticle::readFields(Cloud<streamLineParticle>& c)
     c.checkFieldIOobject(c, sampledTimes);
 
     label i = 0;
-    forAllIter(Cloud<streamLineParticle>, c, iter)
+    forAllIter(Cloud<streamlinesParticle>, c, iter)
     {
         iter().lifeTime_ = lifeTime[i];
         iter().sampledPositions_.transfer(sampledPositions[i]);
@@ -440,7 +440,7 @@ void Foam::streamLineParticle::readFields(Cloud<streamLineParticle>& c)
 }
 
 
-void Foam::streamLineParticle::writeFields(const Cloud<streamLineParticle>& c)
+void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
 {
     particle::writeFields(c);
 
@@ -463,7 +463,7 @@ void Foam::streamLineParticle::writeFields(const Cloud<streamLineParticle>& c)
     );
 
     label i = 0;
-    forAllConstIter(Cloud<streamLineParticle>, c, iter)
+    forAllConstIter(Cloud<streamlinesParticle>, c, iter)
     {
         lifeTime[i] = iter().lifeTime_;
         sampledPositions[i] = iter().sampledPositions_;
@@ -479,7 +479,7 @@ void Foam::streamLineParticle::writeFields(const Cloud<streamLineParticle>& c)
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const streamLineParticle& p)
+Foam::Ostream& Foam::operator<<(Ostream& os, const streamlinesParticle& p)
 {
     os  << static_cast<const particle&>(p)
         << token::SPACE << p.lifeTime_
@@ -490,7 +490,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const streamLineParticle& p)
         << token::SPACE << p.sampledVectors_;
 
     // Check state of Ostream
-    os.check("Ostream& operator<<(Ostream&, const streamLineParticle&)");
+    os.check("Ostream& operator<<(Ostream&, const streamlinesParticle&)");
 
     return os;
 }

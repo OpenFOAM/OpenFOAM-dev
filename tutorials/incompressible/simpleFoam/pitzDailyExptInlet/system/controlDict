@@ -46,9 +46,9 @@ runTimeModifiable true;
 
 functions
 {
-    streamLines
+    streamlines
     {
-        type            streamLine;
+        type            streamlines;
 
         // Where to load it from (if not already in solver)
         libs            ("libfieldFunctionObjects.so");

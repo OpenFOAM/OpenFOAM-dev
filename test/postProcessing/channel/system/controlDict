@@ -323,9 +323,9 @@ solversFunctions
     //#includeFunc particles
 }
 
-streamLinesFunctions
+streamlinesFunctions
 {
-    #includeFunc streamLinesSphere
+    #includeFunc streamlinesSphere
     (
         centre=(0 0 0),
         radius=0.1,
@@ -335,7 +335,7 @@ streamLinesFunctions
         direction=forward
     )
 
-    #includeFunc streamLinesLine
+    #includeFunc streamlinesLine
     (
         start=(-0.5 -0.5 -0.05),
         end=(0.5 0.5 0.05),
@@ -345,7 +345,7 @@ streamLinesFunctions
         direction=backward
     )
 
-    #includeFunc streamLinesPatch
+    #includeFunc streamlinesPatch
     (
         patch=inlet,
         nPoints=100,
@@ -353,7 +353,7 @@ streamLinesFunctions
         U
     )
 
-    #includeFunc streamLinesPoints
+    #includeFunc streamlinesPoints
     (
         points=((-0.2 -0.2 0) (0 0 0) (0.2 0.2 0))
         p,
@@ -409,7 +409,7 @@ functions
     $pressureFunctions;
     $probesFunctions;
     $solversFunctions;
-    $streamLinesFunctions;
+    $streamlinesFunctions;
     $surfaceFunctions;
     $surfaceFieldValueFunctions;
 }

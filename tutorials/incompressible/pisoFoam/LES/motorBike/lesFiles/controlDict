@@ -65,7 +65,7 @@ functions
     }
 
     #include "cuttingPlane"
-    #include "streamLines"
+    #include "streamlines"
     #include "forceCoeffs"
 }
 

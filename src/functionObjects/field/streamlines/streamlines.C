@@ -25,8 +25,8 @@ License
 
 #include "Pstream.H"
 #include "functionObjectList.H"
-#include "streamLine.H"
-#include "streamLineParticleCloud.H"
+#include "streamlines.H"
+#include "streamlinesCloud.H"
 #include "ReadFields.H"
 #include "meshSearch.H"
 #include "sampledSet.H"
@@ -44,16 +44,16 @@ namespace Foam
 {
     template<>
     const char*
-        NamedEnum<functionObjects::streamLine::trackDirection, 3>::names[] =
+        NamedEnum<functionObjects::streamlines::trackDirection, 3>::names[] =
         {"forward", "backward", "both"};
 
     namespace functionObjects
     {
-        defineTypeNameAndDebug(streamLine, 0);
-        addToRunTimeSelectionTable(functionObject, streamLine, dictionary);
+        defineTypeNameAndDebug(streamlines, 0);
+        addToRunTimeSelectionTable(functionObject, streamlines, dictionary);
 
-        const NamedEnum<streamLine::trackDirection, 3>
-            streamLine::trackDirectionNames_;
+        const NamedEnum<streamlines::trackDirection, 3>
+            streamlines::trackDirectionNames_;
     }
 }
 
@@ -61,7 +61,7 @@ namespace Foam
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::indirectPrimitivePatch>
-Foam::functionObjects::streamLine::wallPatch() const
+Foam::functionObjects::streamlines::wallPatch() const
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
@@ -107,10 +107,10 @@ Foam::functionObjects::streamLine::wallPatch() const
 }
 
 
-void Foam::functionObjects::streamLine::track()
+void Foam::functionObjects::streamlines::track()
 {
-    IDLList<streamLineParticle> initialParticles;
-    streamLineParticleCloud particles
+    IDLList<streamlinesParticle> initialParticles;
+    streamlinesCloud particles
     (
         mesh_,
         cloudName_,
@@ -123,7 +123,7 @@ void Foam::functionObjects::streamLine::track()
     {
         particles.addParticle
         (
-            new streamLineParticle
+            new streamlinesParticle
             (
                 mesh_,
                 seedPoints[i],
@@ -262,7 +262,7 @@ void Foam::functionObjects::streamLine::track()
 
 
     // Additional particle info
-    streamLineParticle::trackingData td
+    streamlinesParticle::trackingData td
     (
         particles,
         vsInterp,
@@ -294,7 +294,7 @@ void Foam::functionObjects::streamLine::track()
 
     if (trackDirection_ == trackDirection::both)
     {
-        particles.IDLList<streamLineParticle>::operator=(initialParticles);
+        particles.IDLList<streamlinesParticle>::operator=(initialParticles);
         td.trackForward_ = !td.trackForward_;
         particles.move(particles, td, trackTime);
     }
@@ -303,7 +303,7 @@ void Foam::functionObjects::streamLine::track()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::streamLine::streamLine
+Foam::functionObjects::streamlines::streamlines
 (
     const word& name,
     const Time& runTime,
@@ -320,13 +320,13 @@ Foam::functionObjects::streamLine::streamLine
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::streamLine::~streamLine()
+Foam::functionObjects::streamlines::~streamlines()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::streamLine::read(const dictionary& dict)
+bool Foam::functionObjects::streamlines::read(const dictionary& dict)
 {
     if (dict != dict_)
     {
@@ -409,7 +409,7 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
         interpolationCellPoint<scalar>::typeName
     );
 
-    cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamLine");
+    cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamlines");
 
     meshSearchPtr_.reset(new meshSearch(mesh_));
 
@@ -429,13 +429,13 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::streamLine::execute()
+bool Foam::functionObjects::streamlines::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::streamLine::write()
+bool Foam::functionObjects::streamlines::write()
 {
     Info<< type() << " " << name() << " write:" << nl;
 
@@ -715,7 +715,7 @@ bool Foam::functionObjects::streamLine::write()
 }
 
 
-void Foam::functionObjects::streamLine::updateMesh(const mapPolyMesh& mpm)
+void Foam::functionObjects::streamlines::updateMesh(const mapPolyMesh& mpm)
 {
     if (&mpm.mesh() == &mesh_)
     {
@@ -724,7 +724,7 @@ void Foam::functionObjects::streamLine::updateMesh(const mapPolyMesh& mpm)
 }
 
 
-void Foam::functionObjects::streamLine::movePoints(const polyMesh& mesh)
+void Foam::functionObjects::streamlines::movePoints(const polyMesh& mesh)
 {
     if (&mesh == &mesh_)
     {

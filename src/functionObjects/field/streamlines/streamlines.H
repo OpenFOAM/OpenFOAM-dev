@@ -22,17 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::streamLine
+    Foam::functionObjects::streamlines
 
 Description
-    Generates streamline data by sampling a set of user-specified fields along a
-    particle track, transported by a user-specified velocity field.
+    Generates streamline data by sampling a set of user-specified fields along
+    a particle track, transported by a user-specified velocity field.
 
     Example of function object specification:
     \verbatim
-    streamLine1
+    streamlines1
     {
-        type            streamLine;
+        type            streamlines;
         libs            ("libfieldFunctionObjects.so");
 
         writeControl    writeTime;
@@ -66,15 +66,15 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        type         | Type name: streamLine   | yes         |
+        type         | Type name: streamlines  | yes         |
         setFormat    | Output data type        | yes         |
         U            | Tracking velocity field name | no     | U
         direction    | Direction in which to track | yes     |
         fields       | Fields to sample        | yes         |
-        writeTime    | Write the flow time along the streamline | no | no
+        writeTime    | Write the flow time along the streamlines | no | no
         lifetime     | Maximum number of particle tracking steps | yes |
         trackLength  | Tracking segment length | no          |
-        nSubCycle    | Number of tracking steps per cell | no|
+        nSubCycle    | Number of tracking steps per cell | no |
         cloudName    | Cloud name to use       | yes         |
         seedSampleSet| Seeding method (see below)| yes       |
     \endtable
@@ -94,15 +94,14 @@ See also
     Foam::functionObject
     Foam::functionObjects::timeControl
     Foam::sampledSet
-    Foam::wallBoundedStreamLine
 
 SourceFiles
-    streamLine.C
+    streamlines.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_streamLine_H
-#define functionObjects_streamLine_H
+#ifndef functionObjects_streamlines_H
+#define functionObjects_streamlines_H
 
 #include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
@@ -126,10 +125,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class streamLine Declaration
+                         Class streamlines Declaration
 \*---------------------------------------------------------------------------*/
 
-class streamLine
+class streamlines
 :
     public fvMeshFunctionObject
 {
@@ -189,7 +188,7 @@ private:
         //- Names of vector fields
         wordList vectorNames_;
 
-        //- Write the streamline ages
+        //- Write the streamlines ages
         Switch writeAge_;
 
 
@@ -236,13 +235,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("streamLine");
+    TypeName("streamlines");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        streamLine
+        streamlines
         (
             const word& name,
             const Time& runTime,
@@ -250,11 +249,11 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        streamLine(const streamLine&) = delete;
+        streamlines(const streamlines&) = delete;
 
 
     //- Destructor
-    virtual ~streamLine();
+    virtual ~streamlines();
 
 
     // Member Functions
@@ -278,7 +277,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const streamLine&) = delete;
+        void operator=(const streamlines&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,41 +23,41 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "streamLineParticleCloud.H"
+#include "streamlinesCloud.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(streamLineParticleCloud, 0);
+    defineTypeNameAndDebug(streamlinesCloud, 0);
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::streamLineParticleCloud::streamLineParticleCloud
+Foam::streamlinesCloud::streamlinesCloud
 (
     const polyMesh& mesh,
     const word& cloudName,
     bool readFields
 )
 :
-    Cloud<streamLineParticle>(mesh, cloudName, false)
+    Cloud<streamlinesParticle>(mesh, cloudName, false)
 {
     if (readFields)
     {
-        streamLineParticle::readFields(*this);
+        streamlinesParticle::readFields(*this);
     }
 }
 
 
-Foam::streamLineParticleCloud::streamLineParticleCloud
+Foam::streamlinesCloud::streamlinesCloud
 (
     const polyMesh& mesh,
     const word& cloudName,
-    const IDLList<streamLineParticle>& particles
+    const IDLList<streamlinesParticle>& particles
 )
 :
-    Cloud<streamLineParticle>(mesh, cloudName, particles)
+    Cloud<streamlinesParticle>(mesh, cloudName, particles)
 {}
 
 
