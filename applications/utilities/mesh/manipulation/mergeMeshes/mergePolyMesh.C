@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -199,7 +199,7 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     const pointField& p = m.points();
     labelList renumberPoints(p.size());
 
-    const pointZoneMesh& pz = m.pointZones();
+    const meshPointZones& pz = m.pointZones();
     labelList pointZoneIndices(pz.size());
 
     forAll(pz, zoneI)
@@ -236,7 +236,7 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     const cellList& c = m.cells();
     labelList renumberCells(c.size());
 
-    const cellZoneMesh& cz = m.cellZones();
+    const meshCellZones& cz = m.cellZones();
     labelList cellZoneIndices(cz.size());
 
     forAll(cz, zoneI)
@@ -286,7 +286,7 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
 
 
 
-    const faceZoneMesh& fz = m.faceZones();
+    const meshFaceZones& fz = m.faceZones();
     labelList faceZoneIndices(fz.size());
 
     forAll(fz, zoneI)

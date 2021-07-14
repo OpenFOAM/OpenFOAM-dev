@@ -256,7 +256,7 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
 
     // Create the porous region cellZone and add to the mesh cellZones
 
-    cellZoneMesh& cellZones = const_cast<cellZoneMesh&>(mesh.cellZones());
+    meshCellZones& cellZones = const_cast<meshCellZones&>(mesh.cellZones());
 
     label zoneID = cellZones.findZoneID(zoneName_);
 

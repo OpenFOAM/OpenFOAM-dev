@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
                     set.name(),             // name
                     pointLabels,            // addressing
                     sz,                     // index
-                    mesh.pointZones()       // pointZoneMesh
+                    mesh.pointZones()       // meshPointZones
                 )
             );
             mesh.pointZones().writeOpt() = IOobject::AUTO_WRITE;
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
                     addressing.shrink(),    // addressing
                     flipMap.shrink(),       // flipmap
                     sz,                     // index
-                    mesh.faceZones()        // pointZoneMesh
+                    mesh.faceZones()        // meshFaceZones
                 )
             );
             mesh.faceZones().writeOpt() = IOobject::AUTO_WRITE;
@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
                         set.name(),             // name
                         cellLabels,             // addressing
                         sz,                     // index
-                        mesh.cellZones()        // pointZoneMesh
+                        mesh.cellZones()        // meshCellZones
                     )
                 );
                 mesh.cellZones().writeOpt() = IOobject::AUTO_WRITE;

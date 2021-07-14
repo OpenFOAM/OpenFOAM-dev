@@ -59,7 +59,7 @@ void printMesh(const Time& runTime, const polyMesh& mesh)
 template<class ZoneType>
 void removeZone
 (
-    ZoneMesh<ZoneType, polyMesh>& zones,
+    MeshZones<ZoneType, polyMesh>& zones,
     const word& setName
 )
 {
@@ -124,7 +124,7 @@ void removeSet
     {
         removeZone
         (
-            const_cast<cellZoneMesh&>(mesh.cellZones()),
+            const_cast<meshCellZones&>(mesh.cellZones()),
             setName
         );
     }
@@ -132,7 +132,7 @@ void removeSet
     {
         removeZone
         (
-            const_cast<faceZoneMesh&>(mesh.faceZones()),
+            const_cast<meshFaceZones&>(mesh.faceZones()),
             setName
         );
     }
@@ -140,7 +140,7 @@ void removeSet
     {
         removeZone
         (
-            const_cast<pointZoneMesh&>(mesh.pointZones()),
+            const_cast<meshPointZones&>(mesh.pointZones()),
             setName
         );
     }

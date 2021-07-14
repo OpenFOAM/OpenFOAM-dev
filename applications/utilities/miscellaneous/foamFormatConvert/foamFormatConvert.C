@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ bool writeZones(const word& name, const fileName& meshDir, Time& runTime)
 
     bool writeOk = false;
 
-    if (io.typeHeaderOk<cellZoneMesh>(false))
+    if (io.typeHeaderOk<meshCellZones>(false))
     {
         Info<< "        Reading " << io.headerClassName()
             << " : " << name << endl;

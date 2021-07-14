@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Foam::autoPtr<Foam::faceZone> Foam::faceZone::New
     const word& name,
     const dictionary& dict,
     const label index,
-    const faceZoneMesh& zm
+    const meshFaceZones& mz
 )
 {
     if (debug)
@@ -58,7 +58,7 @@ Foam::autoPtr<Foam::faceZone> Foam::faceZone::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<faceZone>(cstrIter()(name, dict, index, zm));
+    return autoPtr<faceZone>(cstrIter()(name, dict, index, mz));
 }
 
 

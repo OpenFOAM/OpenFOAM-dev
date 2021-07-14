@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::ZoneMesh
+    Foam::MeshZones
 
 Description
     A list of mesh zones.
 
 SourceFiles
-    ZoneMesh.C
+    MeshZones.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ZoneMesh_H
-#define ZoneMesh_H
+#ifndef MeshZones_H
+#define MeshZones_H
 
 #include "List.H"
 #include "regIOobject.H"
@@ -50,17 +50,17 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-template<class ZoneType, class MeshType> class ZoneMesh;
+template<class ZoneType, class MeshType> class MeshZones;
 
 template<class ZoneType, class MeshType>
-Ostream& operator<<(Ostream&, const ZoneMesh<ZoneType, MeshType>&);
+Ostream& operator<<(Ostream&, const MeshZones<ZoneType, MeshType>&);
 
 /*---------------------------------------------------------------------------*\
-                          Class ZoneMesh Declaration
+                          Class MeshZones Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ZoneType, class MeshType>
-class ZoneMesh
+class MeshZones
 :
     public PtrList<ZoneType>,
     public regIOobject
@@ -80,10 +80,10 @@ class ZoneMesh
         bool read();
 
         //- Disallow default bitwise copy construction
-        ZoneMesh(const ZoneMesh&);
+        MeshZones(const MeshZones&);
 
         //- Disallow default bitwise assignment
-        void operator=(const ZoneMesh<ZoneType, MeshType>&);
+        void operator=(const MeshZones<ZoneType, MeshType>&);
 
 
         //- Create zone map
@@ -95,14 +95,14 @@ public:
     // Constructors
 
         //- Read constructor given IOobject and a MeshType reference
-        ZoneMesh
+        MeshZones
         (
             const IOobject&,
             const MeshType&
         );
 
         //- Construct given size
-        ZoneMesh
+        MeshZones
         (
             const IOobject&,
             const MeshType&,
@@ -110,7 +110,7 @@ public:
         );
 
          //- Construct given a PtrList
-        ZoneMesh
+        MeshZones
         (
             const IOobject&,
             const MeshType&,
@@ -119,7 +119,7 @@ public:
 
 
     //- Destructor
-    ~ZoneMesh();
+    ~MeshZones();
 
 
     // Member Functions
@@ -169,11 +169,12 @@ public:
         //  true if in error.
         bool checkParallelSync(const bool report = false) const;
 
-        //- Correct zone mesh after moving points
+        //- Correct zones after moving points
         void movePoints(const pointField&);
 
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
+
 
     // Member Operators
 
@@ -192,7 +193,7 @@ public:
         friend Ostream& operator<< <ZoneType, MeshType>
         (
             Ostream&,
-            const ZoneMesh<ZoneType, MeshType>&
+            const MeshZones<ZoneType, MeshType>&
         );
 };
 
@@ -204,7 +205,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "ZoneMesh.C"
+    #include "MeshZones.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

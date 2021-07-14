@@ -1419,7 +1419,7 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::meshRefinement::balance
 
                 const PtrList<surfaceZonesInfo>& surfZones =
                     surfaces().surfZones();
-                const faceZoneMesh& fZones = mesh_.faceZones();
+                const meshFaceZones& fZones = mesh_.faceZones();
                 const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
                 // Get faces whose owner and neighbour should stay together,
@@ -1832,7 +1832,7 @@ Foam::tmp<Foam::pointVectorField> Foam::meshRefinement::makeDisplacementField
 
 void Foam::meshRefinement::checkCoupledFaceZones(const polyMesh& mesh)
 {
-    const faceZoneMesh& fZones = mesh.faceZones();
+    const meshFaceZones& fZones = mesh.faceZones();
 
     // Check any zones are present anywhere and in same order
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ label addPointZone(const polyMesh& mesh, const word& name)
     }
     else
     {
-        pointZoneMesh& pointZones = const_cast<polyMesh&>(mesh).pointZones();
+        meshPointZones& pointZones = const_cast<polyMesh&>(mesh).pointZones();
         zoneID = pointZones.size();
         Info<< "Adding pointZone " << name << " at index " << zoneID << endl;
 
@@ -118,7 +118,7 @@ label addFaceZone(const polyMesh& mesh, const word& name)
     }
     else
     {
-        faceZoneMesh& faceZones = const_cast<polyMesh&>(mesh).faceZones();
+        meshFaceZones& faceZones = const_cast<polyMesh&>(mesh).faceZones();
         zoneID = faceZones.size();
         Info<< "Adding faceZone " << name << " at index " << zoneID << endl;
 
@@ -151,7 +151,7 @@ label addCellZone(const polyMesh& mesh, const word& name)
     }
     else
     {
-        cellZoneMesh& cellZones = const_cast<polyMesh&>(mesh).cellZones();
+        meshCellZones& cellZones = const_cast<polyMesh&>(mesh).cellZones();
         zoneID = cellZones.size();
         Info<< "Adding cellZone " << name << " at index " << zoneID << endl;
 

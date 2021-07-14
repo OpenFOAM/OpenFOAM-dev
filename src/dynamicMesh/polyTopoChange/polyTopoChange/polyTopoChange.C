@@ -1580,7 +1580,7 @@ void Foam::polyTopoChange::resetZones
 
     pointZoneMap.setSize(mesh.pointZones().size());
     {
-        const pointZoneMesh& pointZones = mesh.pointZones();
+        const meshPointZones& pointZones = mesh.pointZones();
 
         // Count points per zone
 
@@ -1666,7 +1666,7 @@ void Foam::polyTopoChange::resetZones
 
     faceZoneFaceMap.setSize(mesh.faceZones().size());
     {
-        const faceZoneMesh& faceZones = mesh.faceZones();
+        const meshFaceZones& faceZones = mesh.faceZones();
 
         labelList nFaces(faceZones.size(), 0);
 
@@ -1779,7 +1779,7 @@ void Foam::polyTopoChange::resetZones
 
     cellZoneMap.setSize(mesh.cellZones().size());
     {
-        const cellZoneMesh& cellZones = mesh.cellZones();
+        const meshCellZones& cellZones = mesh.cellZones();
 
         labelList nCells(cellZones.size(), 0);
 
@@ -1868,11 +1868,11 @@ void Foam::polyTopoChange::resetZones
 void Foam::polyTopoChange::calcFaceZonePointMap
 (
     const polyMesh& mesh,
-    const List<Map<label>>& oldFaceZoneMeshPointMaps,
+    const List<Map<label>>& oldMeshFaceZonesPointMaps,
     labelListList& faceZonePointMap
 ) const
 {
-    const faceZoneMesh& faceZones = mesh.faceZones();
+    const meshFaceZones& faceZones = mesh.faceZones();
 
     faceZonePointMap.setSize(faceZones.size());
 
@@ -1880,25 +1880,26 @@ void Foam::polyTopoChange::calcFaceZonePointMap
     {
         const faceZone& newZone = faceZones[zoneI];
 
-        const labelList& newZoneMeshPoints = newZone().meshPoints();
+        const labelList& newMeshZonePoints = newZone().meshPoints();
 
-        const Map<label>& oldZoneMeshPointMap = oldFaceZoneMeshPointMaps[zoneI];
+        const Map<label>& oldMeshZonePointMap =
+            oldMeshFaceZonesPointMaps[zoneI];
 
         labelList& curFzPointRnb = faceZonePointMap[zoneI];
 
-        curFzPointRnb.setSize(newZoneMeshPoints.size());
+        curFzPointRnb.setSize(newMeshZonePoints.size());
 
-        forAll(newZoneMeshPoints, pointi)
+        forAll(newMeshZonePoints, pointi)
         {
-            if (newZoneMeshPoints[pointi] < pointMap_.size())
+            if (newMeshZonePoints[pointi] < pointMap_.size())
             {
                 Map<label>::const_iterator ozmpmIter =
-                    oldZoneMeshPointMap.find
+                    oldMeshZonePointMap.find
                     (
-                        pointMap_[newZoneMeshPoints[pointi]]
+                        pointMap_[newMeshZonePoints[pointi]]
                     );
 
-                if (ozmpmIter != oldZoneMeshPointMap.end())
+                if (ozmpmIter != oldMeshZonePointMap.end())
                 {
                     curFzPointRnb[pointi] = ozmpmIter();
                 }
@@ -2055,7 +2056,7 @@ void Foam::polyTopoChange::compactAndReorder
     List<Map<label>>& oldPatchMeshPointMaps,
     labelList& oldPatchNMeshPoints,
     labelList& oldPatchStarts,
-    List<Map<label>>& oldFaceZoneMeshPointMaps
+    List<Map<label>>& oldMeshFaceZonesPointMaps
 )
 {
     if (mesh.boundaryMesh().size() != nPatches_)
@@ -2144,22 +2145,22 @@ void Foam::polyTopoChange::compactAndReorder
 
     forAll(boundary, patchi)
     {
-        // Copy old face zone mesh point maps
+        // Copy old face zone point maps
         oldPatchMeshPointMaps[patchi] = boundary[patchi].meshPointMap();
         oldPatchNMeshPoints[patchi] = boundary[patchi].meshPoints().size();
         oldPatchStarts[patchi] = boundary[patchi].start();
     }
 
-    // Grab old face zone mesh point maps.
+    // Grab old face zone point maps.
     // These need to be saved before resetting the mesh and are used
     // later on to calculate the faceZone pointMaps.
-    oldFaceZoneMeshPointMaps.setSize(mesh.faceZones().size());
+    oldMeshFaceZonesPointMaps.setSize(mesh.faceZones().size());
 
     forAll(mesh.faceZones(), zoneI)
     {
         const faceZone& oldZone = mesh.faceZones()[zoneI];
 
-        oldFaceZoneMeshPointMaps[zoneI] = oldZone().meshPointMap();
+        oldMeshFaceZonesPointMaps[zoneI] = oldZone().meshPointMap();
     }
 }
 
@@ -2296,7 +2297,7 @@ void Foam::polyTopoChange::addMesh
     // Add points
     {
         const pointField& points = mesh.points();
-        const pointZoneMesh& pointZones = mesh.pointZones();
+        const meshPointZones& pointZones = mesh.pointZones();
 
         // Extend
         points_.setCapacity(points_.size() + points.size());
@@ -2333,7 +2334,7 @@ void Foam::polyTopoChange::addMesh
 
     // Add cells
     {
-        const cellZoneMesh& cellZones = mesh.cellZones();
+        const meshCellZones& cellZones = mesh.cellZones();
 
         // Resize
 
@@ -2392,7 +2393,7 @@ void Foam::polyTopoChange::addMesh
         const faceList& faces = mesh.faces();
         const labelList& faceOwner = mesh.faceOwner();
         const labelList& faceNeighbour = mesh.faceNeighbour();
-        const faceZoneMesh& faceZones = mesh.faceZones();
+        const meshFaceZones& faceZones = mesh.faceZones();
 
         // Resize
         label nAllFaces = mesh.faces().size();
@@ -3144,7 +3145,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
     List<Map<label>> oldPatchMeshPointMaps;
     labelList oldPatchNMeshPoints;
     labelList oldPatchStarts;
-    List<Map<label>> oldFaceZoneMeshPointMaps;
+    List<Map<label>> oldMeshFaceZonesPointMaps;
 
     // Compact, reorder patch faces and calculate mesh/patch maps.
     compactAndReorder
@@ -3169,7 +3170,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
         oldPatchMeshPointMaps,
         oldPatchNMeshPoints,
         oldPatchStarts,
-        oldFaceZoneMeshPointMaps
+        oldMeshFaceZonesPointMaps
     );
 
     const label nOldPoints(mesh.nPoints());
@@ -3320,9 +3321,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
         patchPointMap
     );
 
-    // Create the face zone mesh point renumbering
+    // Create the face zone point renumbering
     labelListList faceZonePointMap(mesh.faceZones().size());
-    calcFaceZonePointMap(mesh, oldFaceZoneMeshPointMaps, faceZonePointMap);
+    calcFaceZonePointMap(mesh, oldMeshFaceZonesPointMaps, faceZonePointMap);
 
     labelHashSet flipFaceFluxSet(getSetIndices(flipFaceFlux_));
 
@@ -3423,7 +3424,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
     List<Map<label>> oldPatchMeshPointMaps;
     labelList oldPatchNMeshPoints;
     labelList oldPatchStarts;
-    List<Map<label>> oldFaceZoneMeshPointMaps;
+    List<Map<label>> oldMeshFaceZonesPointMaps;
 
     // Compact, reorder patch faces and calculate mesh/patch maps.
     compactAndReorder
@@ -3448,7 +3449,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
         oldPatchMeshPointMaps,
         oldPatchNMeshPoints,
         oldPatchStarts,
-        oldFaceZoneMeshPointMaps
+        oldMeshFaceZonesPointMaps
     );
 
     const label nOldPoints(mesh.nPoints());
@@ -3537,7 +3538,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
     // ~~~~~
 
     // Start off from empty zones.
-    const pointZoneMesh& oldPointZones = mesh.pointZones();
+    const meshPointZones& oldPointZones = mesh.pointZones();
     List<pointZone*> pZonePtrs(oldPointZones.size());
     {
         forAll(oldPointZones, i)
@@ -3552,7 +3553,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
         }
     }
 
-    const faceZoneMesh& oldFaceZones = mesh.faceZones();
+    const meshFaceZones& oldFaceZones = mesh.faceZones();
     List<faceZone*> fZonePtrs(oldFaceZones.size());
     {
         forAll(oldFaceZones, i)
@@ -3568,7 +3569,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
         }
     }
 
-    const cellZoneMesh& oldCellZones = mesh.cellZones();
+    const meshCellZones& oldCellZones = mesh.cellZones();
     List<cellZone*> cZonePtrs(oldCellZones.size());
     {
         forAll(oldCellZones, i)
@@ -3613,9 +3614,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
         patchPointMap
     );
 
-    // Create the face zone mesh point renumbering
+    // Create the face zone point renumbering
     labelListList faceZonePointMap(newMesh.faceZones().size());
-    calcFaceZonePointMap(newMesh, oldFaceZoneMeshPointMaps, faceZonePointMap);
+    calcFaceZonePointMap(newMesh, oldMeshFaceZonesPointMaps, faceZonePointMap);
 
     if (debug)
     {

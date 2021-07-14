@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ public:
         );
 
         //- Construct given the original zone and resetting the
-        //  cell list and zone mesh information
+        //  cell list and mesh zones information
         zone
         (
             const zone&,
@@ -126,7 +126,7 @@ public:
         );
 
         //- Construct given the original zone, resetting the
-        //  cell list and zone mesh information
+        //  cell list and mesh zones information
         zone
         (
             const zone&,

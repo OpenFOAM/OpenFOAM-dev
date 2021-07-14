@@ -90,7 +90,7 @@ void mergeDuplicateBoundaryFaces
 
     const faceList& faces = mesh.faces();
     const labelList& faceOwner = mesh.faceOwner();
-    const faceZoneMesh& faceZones = mesh.faceZones();
+    const meshFaceZones& faceZones = mesh.faceZones();
 
     forAll(duplicates, bFacei)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,14 +70,14 @@ void Foam::attachDetach::detachInterface
     }
 
     const polyMesh& mesh = topoChanger().mesh();
-    const faceZoneMesh& zoneMesh = mesh.faceZones();
+    const meshFaceZones& meshZones = mesh.faceZones();
 
     // Check that zone is in increasing order (needed since adding faces
     // in same order - otherwise polyTopoChange face ordering will mess up
     // correspondence)
     if (debug)
     {
-        const labelList& faceLabels = zoneMesh[faceZoneID_.index()];
+        const labelList& faceLabels = meshZones[faceZoneID_.index()];
         if (faceLabels.size() > 0)
         {
             for (label i = 1; i < faceLabels.size(); i++)
@@ -85,7 +85,7 @@ void Foam::attachDetach::detachInterface
                 if (faceLabels[i] <= faceLabels[i-1])
                 {
                     FatalErrorInFunction
-                        << "faceZone " << zoneMesh[faceZoneID_.index()].name()
+                        << "faceZone " << meshZones[faceZoneID_.index()].name()
                         << " does not have mesh face labels in"
                         << " increasing order." << endl
                         << "Face label " << faceLabels[i]
@@ -100,14 +100,15 @@ void Foam::attachDetach::detachInterface
 
 
 
-    const primitiveFacePatch& masterFaceLayer = zoneMesh[faceZoneID_.index()]();
+    const primitiveFacePatch& masterFaceLayer =
+        meshZones[faceZoneID_.index()]();
     const pointField& points = mesh.points();
     const labelListList& meshEdgeFaces = mesh.edgeFaces();
 
     const labelList& mp = masterFaceLayer.meshPoints();
     const edgeList& zoneLocalEdges = masterFaceLayer.edges();
 
-    const labelList& meshEdges = zoneMesh[faceZoneID_.index()].meshEdges();
+    const labelList& meshEdges = meshZones[faceZoneID_.index()].meshEdges();
 
     // Create the points
 
@@ -170,8 +171,8 @@ void Foam::attachDetach::detachInterface
 
     // Modify faces in the master zone and duplicate for the slave zone
 
-    const labelList& mf = zoneMesh[faceZoneID_.index()];
-    const boolList& mfFlip = zoneMesh[faceZoneID_.index()].flipMap();
+    const labelList& mf = meshZones[faceZoneID_.index()];
+    const boolList& mfFlip = meshZones[faceZoneID_.index()].flipMap();
     const faceList& zoneFaces = masterFaceLayer.localFaces();
 
     const faceList& faces = mesh.faces();
@@ -317,7 +318,7 @@ void Foam::attachDetach::detachInterface
         forAll(curFaces, facei)
         {
             // Check if the face belongs to the master patch; if not add it
-            if (zoneMesh.whichZone(curFaces[facei]) != faceZoneID_.index())
+            if (meshZones.whichZone(curFaces[facei]) != faceZoneID_.index())
             {
                 masterCellFaceMap.insert(curFaces[facei]);
             }

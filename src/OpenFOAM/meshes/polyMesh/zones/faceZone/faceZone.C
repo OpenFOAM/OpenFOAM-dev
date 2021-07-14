@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "faceZone.H"
 #include "addToRunTimeSelectionTable.H"
-#include "faceZoneMesh.H"
+#include "meshFaceZones.H"
 #include "polyMesh.H"
 #include "primitiveMesh.H"
 #include "demandDrivenData.H"
@@ -64,12 +64,12 @@ void Foam::faceZone::calcFaceZonePatch() const
         new primitiveFacePatch
         (
             faceList(size()),
-            zoneMesh().mesh().points()
+            meshZones().mesh().points()
         );
 
     primitiveFacePatch& patch = *patchPtr_;
 
-    const faceList& f = zoneMesh().mesh().faces();
+    const faceList& f = meshZones().mesh().faces();
 
     const labelList& addr = *this;
     const boolList& flip = flipMap();
@@ -113,8 +113,8 @@ void Foam::faceZone::calcCellLayers() const
         // Go through all the faces in the master zone.  Choose the
         // master or slave cell based on the face flip
 
-        const labelList& own = zoneMesh().mesh().faceOwner();
-        const labelList& nei = zoneMesh().mesh().faceNeighbour();
+        const labelList& own = meshZones().mesh().faceOwner();
+        const labelList& nei = meshZones().mesh().faceNeighbour();
 
         const labelList& mf = *this;
 
@@ -131,7 +131,7 @@ void Foam::faceZone::calcCellLayers() const
             label ownCelli = own[mf[facei]];
             label neiCelli =
             (
-                zoneMesh().mesh().isInternalFace(mf[facei])
+                meshZones().mesh().isInternalFace(mf[facei])
               ? nei[mf[facei]]
               : -1
             );
@@ -165,7 +165,7 @@ void Foam::faceZone::checkAddressing() const
     const labelList& mf = *this;
 
     // Note: nFaces, nCells might not be set yet on mesh so use owner size
-    const label nFaces = zoneMesh().mesh().faceOwner().size();
+    const label nFaces = meshZones().mesh().faceOwner().size();
 
     bool hasWarned = false;
     forAll(mf, i)
@@ -189,12 +189,12 @@ Foam::faceZone::faceZone
     const labelUList& addr,
     const boolList& fm,
     const label index,
-    const faceZoneMesh& zm
+    const meshFaceZones& mz
 )
 :
     zone(name, addr, index),
     flipMap_(fm),
-    zoneMesh_(zm),
+    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -210,12 +210,12 @@ Foam::faceZone::faceZone
     labelList&& addr,
     boolList&& fm,
     const label index,
-    const faceZoneMesh& zm
+    const meshFaceZones& mz
 )
 :
     zone(name, move(addr), index),
     flipMap_(move(fm)),
-    zoneMesh_(zm),
+    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -230,12 +230,12 @@ Foam::faceZone::faceZone
     const word& name,
     const dictionary& dict,
     const label index,
-    const faceZoneMesh& zm
+    const meshFaceZones& mz
 )
 :
     zone(name, dict, this->labelsName, index),
     flipMap_(dict.lookup("flipMap")),
-    zoneMesh_(zm),
+    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -251,12 +251,12 @@ Foam::faceZone::faceZone
     const labelUList& addr,
     const boolList& fm,
     const label index,
-    const faceZoneMesh& zm
+    const meshFaceZones& mz
 )
 :
     zone(fz, addr, index),
     flipMap_(fm),
-    zoneMesh_(zm),
+    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -272,12 +272,12 @@ Foam::faceZone::faceZone
     labelList&& addr,
     boolList&& fm,
     const label index,
-    const faceZoneMesh& zm
+    const meshFaceZones& mz
 )
 :
     zone(fz, move(addr), index),
     flipMap_(move(fm)),
-    zoneMesh_(zm),
+    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -297,9 +297,9 @@ Foam::faceZone::~faceZone()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::faceZoneMesh& Foam::faceZone::zoneMesh() const
+const Foam::meshFaceZones& Foam::faceZone::meshZones() const
 {
-    return zoneMesh_;
+    return meshZones_;
 }
 
 
@@ -351,8 +351,8 @@ const Foam::labelList& Foam::faceZone::meshEdges() const
             (
                 operator()().meshEdges
                 (
-                    zoneMesh().mesh().edges(),
-                    zoneMesh().mesh().pointEdges()
+                    meshZones().mesh().edges(),
+                    meshZones().mesh().pointEdges()
                 )
             );
     }
@@ -418,13 +418,13 @@ void Foam::faceZone::updateMesh(const mapPolyMesh& mpm)
 
 bool Foam::faceZone::checkDefinition(const bool report) const
 {
-    return zone::checkDefinition(zoneMesh().mesh().faces().size(), report);
+    return zone::checkDefinition(meshZones().mesh().faces().size(), report);
 }
 
 
 bool Foam::faceZone::checkParallelSync(const bool report) const
 {
-    const polyMesh& mesh = zoneMesh().mesh();
+    const polyMesh& mesh = meshZones().mesh();
     const polyBoundaryMesh& bm = mesh.boundaryMesh();
 
     bool hasError = false;

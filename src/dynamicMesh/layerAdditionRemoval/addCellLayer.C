@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -399,7 +399,7 @@ void Foam::layerAdditionRemoval::addCellLayer
 
     const labelListList& meshEdgeFaces = mesh.edgeFaces();
 
-    const faceZoneMesh& zoneMesh = mesh.faceZones();
+    const meshFaceZones& meshZones = mesh.faceZones();
 
     // Do all boundary edges
 
@@ -429,7 +429,7 @@ void Foam::layerAdditionRemoval::addCellLayer
             if (!mesh.isInternalFace(cf))
             {
                 // Face not internal. Check if it is in the zone
-                if (zoneMesh.whichZone(cf) != faceZoneID_.index())
+                if (meshZones.whichZone(cf) != faceZoneID_.index())
                 {
                     // Found the face in a boundary patch which is not in zone
                     patchID = mesh.boundaryMesh().whichPatch(cf);
@@ -499,7 +499,7 @@ void Foam::layerAdditionRemoval::addCellLayer
         forAll(curFaces, facei)
         {
             // Check if the face belongs to the master zone; if not add it
-            if (zoneMesh.whichZone(curFaces[facei]) != faceZoneID_.index())
+            if (meshZones.whichZone(curFaces[facei]) != faceZoneID_.index())
             {
                 masterCellFaceMap.insert(curFaces[facei]);
             }

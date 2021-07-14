@@ -461,7 +461,7 @@ autoPtr<mapPolyMesh> reorderMesh
 
     // Re-do the faceZones
     {
-        faceZoneMesh& faceZones = mesh.faceZones();
+        meshFaceZones& faceZones = mesh.faceZones();
         faceZones.clearAddressing();
         forAll(faceZones, zoneI)
         {
@@ -492,7 +492,7 @@ autoPtr<mapPolyMesh> reorderMesh
     }
     // Re-do the cellZones
     {
-        cellZoneMesh& cellZones = mesh.cellZones();
+        meshCellZones& cellZones = mesh.cellZones();
         cellZones.clearAddressing();
         forAll(cellZones, zoneI)
         {

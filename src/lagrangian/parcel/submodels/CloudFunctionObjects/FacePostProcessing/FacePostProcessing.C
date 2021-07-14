@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ void Foam::FacePostProcessing<CloudType>::write()
 {
     const fvMesh& mesh = this->owner().mesh();
     const Time& time = mesh.time();
-    const faceZoneMesh& fzm = mesh.faceZones();
+    const meshFaceZones& mfz = mesh.faceZones();
     scalar timeNew = time.value();
     scalar timeElapsed = timeNew - timeOld_;
 
@@ -105,7 +105,7 @@ void Foam::FacePostProcessing<CloudType>::write()
     List<scalarField> zoneMassFlowRate(massFlowRate_.size());
     forAll(faceZoneIDs_, zoneI)
     {
-        const word& zoneName = fzm[faceZoneIDs_[zoneI]].name();
+        const word& zoneName = mfz[faceZoneIDs_[zoneI]].name();
 
         scalarListList allProcMass(Pstream::nProcs());
         allProcMass[proci] = massTotal_[zoneI];
@@ -147,7 +147,7 @@ void Foam::FacePostProcessing<CloudType>::write()
     {
         forAll(faceZoneIDs_, zoneI)
         {
-            const faceZone& fZone = fzm[faceZoneIDs_[zoneI]];
+            const faceZone& fZone = mfz[faceZoneIDs_[zoneI]];
 
             labelList pointToGlobal;
             labelList uniqueMeshPointLabels;
@@ -272,17 +272,17 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
     outputFilePtr_.setSize(faceZoneNames.size());
 
     DynamicList<label> zoneIDs;
-    const faceZoneMesh& fzm = owner.mesh().faceZones();
+    const meshFaceZones& mfz = owner.mesh().faceZones();
     const surfaceScalarField& magSf = owner.mesh().magSf();
     const polyBoundaryMesh& pbm = owner.mesh().boundaryMesh();
     forAll(faceZoneNames, i)
     {
         const word& zoneName = faceZoneNames[i];
-        label zoneI = fzm.findZoneID(zoneName);
+        label zoneI = mfz.findZoneID(zoneName);
         if (zoneI != -1)
         {
             zoneIDs.append(zoneI);
-            const faceZone& fz = fzm[zoneI];
+            const faceZone& fz = mfz[zoneI];
             mass_[i].setSize(fz.size(), 0.0);
             massTotal_[i].setSize(fz.size(), 0.0);
             massFlowRate_[i].setSize(fz.size(), 0.0);
@@ -365,11 +365,11 @@ void Foam::FacePostProcessing<CloudType>::postFace(const parcelType& p, bool&)
      || this->owner().solution().transient()
     )
     {
-        const faceZoneMesh& fzm = this->owner().mesh().faceZones();
+        const meshFaceZones& mfz = this->owner().mesh().faceZones();
 
         forAll(faceZoneIDs_, i)
         {
-            const faceZone& fz = fzm[faceZoneIDs_[i]];
+            const faceZone& fz = mfz[faceZoneIDs_[i]];
 
             label faceId = -1;
             forAll(fz, j)

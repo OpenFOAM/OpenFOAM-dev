@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1061,18 +1061,18 @@ int main(int argc, char *argv[])
         //
         //---------------------------------------------------------------------
 
-        const faceZoneMesh& zones = mesh.faceZones();
+        const meshFaceZones& zones = mesh.faceZones();
 
         if (doFaceZones && zones.size() > 0)
         {
-            mkDir(fvPath/"faceZoneMesh");
+            mkDir(fvPath/"meshFaceZones");
 
             fileName patchFileName;
 
             if (vMesh.useSubMesh())
             {
                 patchFileName =
-                    fvPath/"faceZoneMesh"/cellSetName
+                    fvPath/"meshFaceZones"/cellSetName
                   + "_"
                   + timeDesc
                   + ".plt";
@@ -1080,7 +1080,7 @@ int main(int argc, char *argv[])
             else
             {
                 patchFileName =
-                    fvPath/"faceZoneMesh"/"faceZoneMesh"
+                    fvPath/"meshFaceZones"/"meshFaceZones"
                   + "_"
                   + timeDesc
                   + ".plt";

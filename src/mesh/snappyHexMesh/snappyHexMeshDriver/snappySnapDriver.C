@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1874,7 +1874,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::snappySnapDriver::repatchToSurface
 
         // 2. All faces on zoned surfaces
         const PtrList<surfaceZonesInfo>& surfZones = surfaces.surfZones();
-        const faceZoneMesh& fZones = mesh.faceZones();
+        const meshFaceZones& fZones = mesh.faceZones();
 
         forAll(zonedSurfaces, i)
         {
@@ -2173,7 +2173,7 @@ void Foam::snappySnapDriver::doSnap
     // Selectively 'forget' about the baffles, i.e. not check across them
     // or merge across them.
     {
-        const faceZoneMesh& fZones = mesh.faceZones();
+        const meshFaceZones& fZones = mesh.faceZones();
         const refinementSurfaces& surfaces = meshRefiner_.surfaces();
         const PtrList<surfaceZonesInfo>& surfZones = surfaces.surfZones();
 

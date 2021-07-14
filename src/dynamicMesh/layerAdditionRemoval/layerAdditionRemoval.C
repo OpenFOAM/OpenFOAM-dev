@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -247,7 +247,7 @@ bool Foam::layerAdditionRemoval::changeTopology() const
     else
     {
         // Thickness calculated from edges on layer
-        const Map<label>& zoneMeshPointMap = fz().meshPointMap();
+        const Map<label>& meshZonePointMap = fz().meshPointMap();
 
         // Edges with only one point on zone
         forAll(mc, facei)
@@ -259,9 +259,9 @@ bool Foam::layerAdditionRemoval::changeTopology() const
             {
                 const edge& e = cellEdges[i];
 
-                if (zoneMeshPointMap.found(e[0]))
+                if (meshZonePointMap.found(e[0]))
                 {
-                    if (!zoneMeshPointMap.found(e[1]))
+                    if (!meshZonePointMap.found(e[1]))
                     {
                         scalar curDelta = e.mag(mesh.points());
                         avgDelta += curDelta;
@@ -272,7 +272,7 @@ bool Foam::layerAdditionRemoval::changeTopology() const
                 }
                 else
                 {
-                    if (zoneMeshPointMap.found(e[1]))
+                    if (meshZonePointMap.found(e[1]))
                     {
                         scalar curDelta = e.mag(mesh.points());
                         avgDelta += curDelta;

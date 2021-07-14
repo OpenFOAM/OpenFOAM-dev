@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ public:
 template<class ZoneType>
 Foam::wordList Foam::vtkPVFoam::getZoneNames
 (
-    const ZoneMesh<ZoneType, polyMesh>& zmesh
+    const MeshZones<ZoneType, polyMesh>& zmesh
 ) const
 {
     wordList names(zmesh.size());
@@ -124,7 +124,7 @@ Foam::wordList Foam::vtkPVFoam::getZoneNames(const word& zoneType) const
         false
     );
 
-    if (ioObj.typeHeaderOk<cellZoneMesh>(false))
+    if (ioObj.typeHeaderOk<meshCellZones>(false))
     {
         zonesEntries zones(ioObj);
 

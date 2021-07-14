@@ -295,10 +295,10 @@ class vtkPVFoam
         //  TODO: regions
         List<polyDecomp> regionPolyDecomp_;
 
-        //- Decomposed cells information (cellZone meshes)
+        //- Decomposed cells information (cellZonas)
         List<polyDecomp> zonePolyDecomp_;
 
-        //- Decomposed cells information (cellSet meshes)
+        //- Decomposed cells information (cellSets)
         List<polyDecomp> csetPolyDecomp_;
 
         //- List of patch names for rendering to window
@@ -369,7 +369,7 @@ class vtkPVFoam
             template<class ZoneType>
             wordList getZoneNames
             (
-                const ZoneMesh<ZoneType, polyMesh>&
+                const MeshZones<ZoneType, polyMesh>&
             ) const;
 
             //- Add objects of Type to paraview array selection
@@ -432,31 +432,31 @@ class vtkPVFoam
             //- Lagrangian mesh
             void convertMeshLagrangian(vtkMultiBlockDataSet*, int& blockNo);
 
-            //- Patch meshes
+            //- Patches
             void convertMeshPatches(vtkMultiBlockDataSet*, int& blockNo);
 
-            //- Cell zone meshes
+            //- Cell zones
             void convertMeshCellZones(vtkMultiBlockDataSet*, int& blockNo);
 
-            //- Face zone meshes
+            //- Face zones
             void convertMeshFaceZones(vtkMultiBlockDataSet*, int& blockNo);
 
-            //- Point zone meshes
+            //- Point zones
             void convertMeshPointZones(vtkMultiBlockDataSet*, int& blockNo);
 
-            //- Cell set meshes
+            //- Cell sets
             void convertMeshCellSets(vtkMultiBlockDataSet*, int& blockNo);
 
-            //- Face set meshes
+            //- Face sets
             void convertMeshFaceSets(vtkMultiBlockDataSet*, int& blockNo);
 
-            //- Point set meshes
+            //- Point sets
             void convertMeshPointSets(vtkMultiBlockDataSet*, int& blockNo);
 
 
         // Add mesh functions
 
-            //- Add internal mesh/cell set meshes
+            //- Add internal mesh/cell set
             vtkUnstructuredGrid* volumeVTKMesh(const fvMesh&, polyDecomp&);
 
             //- Add Lagrangian mesh
@@ -477,7 +477,7 @@ class vtkPVFoam
                 const labelList& pointLabels
             );
 
-            //- Add face set mesh
+            //- Add face set
             vtkPolyData* faceSetVTKMesh
             (
                 const fvMesh&,

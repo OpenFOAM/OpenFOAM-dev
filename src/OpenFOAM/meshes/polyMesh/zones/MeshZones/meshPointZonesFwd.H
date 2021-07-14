@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Typedef
-    Foam::pointZoneMesh
+    Foam::meshPointZones
 
 Description
-    A ZoneMesh with the type pointZone
+    A MeshZones with the type pointZone
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef pointZoneMeshFwd_H
-#define pointZoneMeshFwd_H
+#ifndef meshPointZonesFwd_H
+#define meshPointZonesFwd_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    template<class Zone, class MeshType> class ZoneMesh;
+    template<class Zone, class MeshType> class MeshZones;
     class pointZone;
     class polyMesh;
 
-    typedef ZoneMesh<pointZone, polyMesh> pointZoneMesh;
+    typedef MeshZones<pointZone, polyMesh> meshPointZones;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -1543,7 +1543,7 @@ int main(int argc, char *argv[])
 
     if (hasZones)
     {
-        const faceZoneMesh& faceZones = mesh.faceZones();
+        const meshFaceZones& faceZones = mesh.faceZones();
 
         meshZoneID.setSize(zoneNames.size());
         forAll(zoneNames, i)

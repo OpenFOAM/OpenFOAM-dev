@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "pointZone.H"
 #include "addToRunTimeSelectionTable.H"
-#include "pointZoneMesh.H"
+#include "meshPointZones.H"
 #include "polyMesh.H"
 #include "primitiveMesh.H"
 #include "demandDrivenData.H"
@@ -49,11 +49,11 @@ Foam::pointZone::pointZone
     const word& name,
     const labelUList& addr,
     const label index,
-    const pointZoneMesh& zm
+    const meshPointZones& mz
 )
 :
     zone(name, addr, index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -62,11 +62,11 @@ Foam::pointZone::pointZone
     const word& name,
     labelList&& addr,
     const label index,
-    const pointZoneMesh& zm
+    const meshPointZones& mz
 )
 :
     zone(name, move(addr), index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -75,11 +75,11 @@ Foam::pointZone::pointZone
     const word& name,
     const dictionary& dict,
     const label index,
-    const pointZoneMesh& zm
+    const meshPointZones& mz
 )
 :
     zone(name, dict, this->labelsName, index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -88,11 +88,11 @@ Foam::pointZone::pointZone
     const pointZone& pz,
     const labelUList& addr,
     const label index,
-    const pointZoneMesh& zm
+    const meshPointZones& mz
 )
 :
     zone(pz, addr, index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -101,11 +101,11 @@ Foam::pointZone::pointZone
     const pointZone& pz,
     labelList&& addr,
     const label index,
-    const pointZoneMesh& zm
+    const meshPointZones& mz
 )
 :
     zone(pz, move(addr), index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -117,9 +117,9 @@ Foam::pointZone::~pointZone()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::pointZoneMesh& Foam::pointZone::zoneMesh() const
+const Foam::meshPointZones& Foam::pointZone::meshZones() const
 {
-    return zoneMesh_;
+    return meshZones_;
 }
 
 
@@ -131,13 +131,13 @@ Foam::label Foam::pointZone::whichPoint(const label globalPointID) const
 
 bool Foam::pointZone::checkDefinition(const bool report) const
 {
-    return zone::checkDefinition(zoneMesh_.mesh().points().size(), report);
+    return zone::checkDefinition(meshZones_.mesh().points().size(), report);
 }
 
 
 bool Foam::pointZone::checkParallelSync(const bool report) const
 {
-    const polyMesh& mesh = zoneMesh().mesh();
+    const polyMesh& mesh = meshZones().mesh();
 
     labelList maxZone(mesh.nPoints(), -1);
     labelList minZone(mesh.nPoints(), labelMax);

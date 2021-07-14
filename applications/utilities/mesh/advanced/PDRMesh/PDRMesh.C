@@ -319,7 +319,7 @@ void createCoupledBaffles
     PackedBoolList&  modifiedFace
 )
 {
-    const faceZoneMesh& faceZones = mesh.faceZones();
+    const meshFaceZones& faceZones = mesh.faceZones();
 
     forAll(coupledWantedPatch, facei)
     {
@@ -387,7 +387,7 @@ void createCyclicCoupledBaffles
     PackedBoolList&  modifiedFace
 )
 {
-    const faceZoneMesh& faceZones = mesh.faceZones();
+    const meshFaceZones& faceZones = mesh.faceZones();
 
     forAll(cyclicMasterPatch, facei)
     {
@@ -460,7 +460,7 @@ void createBaffles
     polyTopoChange& meshMod
 )
 {
-    const faceZoneMesh& faceZones = mesh.faceZones();
+    const meshFaceZones& faceZones = mesh.faceZones();
     Info << "faceZone:createBaffle " << faceZones << endl;
     forAll(wantedPatch, facei)
     {

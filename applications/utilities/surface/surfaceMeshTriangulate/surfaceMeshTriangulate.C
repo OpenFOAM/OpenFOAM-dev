@@ -142,13 +142,13 @@ int main(int argc, char *argv[])
 
 
 
-    const faceZoneMesh& fzm = mesh.faceZones();
-    labelHashSet includeFaceZones(fzm.size());
+    const meshFaceZones& mfz = mesh.faceZones();
+    labelHashSet includeFaceZones(mfz.size());
 
     if (args.optionFound("faceZones"))
     {
         wordReList zoneNames(args.optionLookup("faceZones")());
-        const wordList allZoneNames(fzm.names());
+        const wordList allZoneNames(mfz.names());
         forAll(zoneNames, i)
         {
             const wordRe& zoneName = zoneNames[i];
@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
         HashTable<label> zoneSize(1000);
         forAllConstIter(labelHashSet, includeFaceZones, iter)
         {
-            const faceZone& pp = fzm[iter.key()];
+            const faceZone& pp = mfz[iter.key()];
             zoneSize.insert(pp.name(), pp.size());
             nFaces += pp.size();
         }
@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                label zoneI = fzm.findZoneID(iter.key());
+                label zoneI = mfz.findZoneID(iter.key());
                 faceZoneToCompactZone[zoneI] = iter();
             }
         }
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
         // Collect faces on faceZones
         forAllConstIter(labelHashSet, includeFaceZones, iter)
         {
-            const faceZone& pp = fzm[iter.key()];
+            const faceZone& pp = mfz[iter.key()];
             forAll(pp, i)
             {
                 faceLabels.append(pp[i]);

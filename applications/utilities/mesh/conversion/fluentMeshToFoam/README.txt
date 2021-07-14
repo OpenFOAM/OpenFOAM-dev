@@ -19,7 +19,7 @@ Notes for fluentMeshToFoam with zone preservation
     - Zones are simple lists of label lists that can be accessed from polyMesh
     with the cellZones(), faceZones() and pointZones() member functions
 
-    - Example (Members from polyMesh.H and ZoneMesh.H):
+    - Example (Members from polyMesh.H and MeshZones.H):
     const labelList& thisCellZone = mesh.cellZones()["thisZoneName"];
 
     - Zone integrity is preserved during mesh modification and decompomposition.

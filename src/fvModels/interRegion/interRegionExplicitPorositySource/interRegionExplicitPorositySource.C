@@ -90,12 +90,12 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 
     const word zoneName(name + ":porous");
 
-    const cellZoneMesh& cellZones = mesh.cellZones();
+    const meshCellZones& cellZones = mesh.cellZones();
     label zoneID = cellZones.findZoneID(zoneName);
 
     if (zoneID == -1)
     {
-        cellZoneMesh& cz = const_cast<cellZoneMesh&>(cellZones);
+        meshCellZones& cz = const_cast<meshCellZones&>(cellZones);
 
         zoneID = cz.size();
 

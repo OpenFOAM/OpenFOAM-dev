@@ -143,7 +143,7 @@ Note
 #include "sphericalTensorIOField.H"
 #include "symmTensorIOField.H"
 #include "tensorIOField.H"
-#include "faceZoneMesh.H"
+#include "meshFaceZones.H"
 #include "Cloud.H"
 #include "passiveParticle.H"
 #include "stringListOps.H"
@@ -1067,7 +1067,7 @@ int main(int argc, char *argv[])
             );
             print("    surfVectorFields  :", Info, svf);
 
-            const faceZoneMesh& zones = mesh.faceZones();
+            const meshFaceZones& zones = mesh.faceZones();
 
             forAll(zones, zoneI)
             {

@@ -340,7 +340,7 @@ Foam::labelList Foam::surfaceZonesInfo::addCellZonesToMesh
 {
     labelList surfaceToCellZone(surfList.size(), -1);
 
-    cellZoneMesh& cellZones = mesh.cellZones();
+    meshCellZones& cellZones = mesh.cellZones();
 
     forAll(namedSurfaces, i)
     {
@@ -364,7 +364,7 @@ Foam::labelList Foam::surfaceZonesInfo::addCellZonesToMesh
                         cellZoneName,   // name
                         labelList(0),   // addressing
                         zoneI,          // index
-                        cellZones       // cellZoneMesh
+                        cellZones       // meshCellZones
                     )
                 );
             }
@@ -405,7 +405,7 @@ Foam::labelList Foam::surfaceZonesInfo::addFaceZonesToMesh
 {
     labelList surfaceToFaceZone(surfList.size(), -1);
 
-    faceZoneMesh& faceZones = mesh.faceZones();
+    meshFaceZones& faceZones = mesh.faceZones();
 
     forAll(namedSurfaces, i)
     {
@@ -428,7 +428,7 @@ Foam::labelList Foam::surfaceZonesInfo::addFaceZonesToMesh
                     labelList(0),   // addressing
                     boolList(0),    // flipmap
                     zoneI,          // index
-                    faceZones       // faceZoneMesh
+                    faceZones       // meshFaceZones
                 )
             );
         }

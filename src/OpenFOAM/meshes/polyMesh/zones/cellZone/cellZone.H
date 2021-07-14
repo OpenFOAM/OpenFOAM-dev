@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
     Currently set up as an indirect list but will be extended to use a
     primitive mesh.  For quick check whether a cell belongs to the zone use
-    the lookup mechanism in cellZoneMesh, where all the zoned cells are
+    the lookup mechanism in meshCellZones, where all the zoned cells are
     registered with their zone number.
 
 SourceFiles
@@ -42,7 +42,7 @@ SourceFiles
 #define cellZone_H
 
 #include "zone.H"
-#include "cellZoneMeshFwd.H"
+#include "meshCellZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,7 +69,7 @@ protected:
     // Protected data
 
         //- Reference to zone list
-        const cellZoneMesh& zoneMesh_;
+        const meshCellZones& meshZones_;
 
 
 public:
@@ -95,9 +95,9 @@ public:
                 const word& name,
                 const dictionary& dict,
                 const label index,
-                const cellZoneMesh& zm
+                const meshCellZones& mz
             ),
-            (name, dict, index, zm)
+            (name, dict, index, mz)
         );
 
 
@@ -109,7 +109,7 @@ public:
             const word& name,
             const labelUList& addr,
             const label index,
-            const cellZoneMesh&
+            const meshCellZones&
         );
 
         //- Construct from components, transferring contents
@@ -118,7 +118,7 @@ public:
             const word& name,
             labelList&& addr,
             const label index,
-            const cellZoneMesh&
+            const meshCellZones&
         );
 
         //- Construct from dictionary
@@ -127,54 +127,54 @@ public:
             const word& name,
             const dictionary&,
             const label index,
-            const cellZoneMesh&
+            const meshCellZones&
         );
 
         //- Construct given the original zone and resetting the
-        //  cell list and zone mesh information
+        //  cell list and mesh zones information
         cellZone
         (
             const cellZone&,
             const labelUList& addr,
             const label index,
-            const cellZoneMesh&
+            const meshCellZones&
         );
 
         //- Construct given the original zone, resetting the
-        //  cell list and zone mesh information
+        //  cell list and mesh zones information
         cellZone
         (
             const cellZone&,
             labelList&& addr,
             const label index,
-            const cellZoneMesh&
+            const meshCellZones&
         );
 
         //- Disallow default bitwise copy construction
         cellZone(const cellZone&) = delete;
 
 
-        //- Construct and return a clone, resetting the zone mesh
-        virtual autoPtr<cellZone> clone(const cellZoneMesh& zm) const
+        //- Construct and return a clone, resetting the mesh zones
+        virtual autoPtr<cellZone> clone(const meshCellZones& mz) const
         {
             return autoPtr<cellZone>
             (
-                new cellZone(*this, *this, index(), zm)
+                new cellZone(*this, *this, index(), mz)
             );
         }
 
         //- Construct and return a clone, resetting the cell list
-        //  and zone mesh
+        //  and mesh zones
         virtual autoPtr<cellZone> clone
         (
             const labelUList& addr,
             const label index,
-            const cellZoneMesh& zm
+            const meshCellZones& mz
         ) const
         {
             return autoPtr<cellZone>
             (
-                new cellZone(*this, addr, index, zm)
+                new cellZone(*this, addr, index, mz)
             );
         }
 
@@ -188,7 +188,7 @@ public:
             const word& name,
             const dictionary&,
             const label index,
-            const cellZoneMesh&
+            const meshCellZones&
         );
 
 
@@ -201,8 +201,8 @@ public:
         //- Helper function to re-direct to zone::localID(...)
         label whichCell(const label globalCellID) const;
 
-        //- Return zoneMesh reference
-        const cellZoneMesh& zoneMesh() const;
+        //- Return meshZones reference
+        const meshCellZones& meshZones() const;
 
         //- Check zone definition. Return true if in error.
         virtual bool checkDefinition(const bool report = false) const;

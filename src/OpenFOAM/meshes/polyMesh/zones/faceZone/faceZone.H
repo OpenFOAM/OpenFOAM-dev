@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     A subset of mesh faces organised as a primitive patch.
 
     For quick check whether a face belongs to the zone use the lookup
-    mechanism in faceZoneMesh, where all the zoned faces are registered
+    mechanism in meshFaceZones, where all the zoned faces are registered
     with their zone number.
 
 SourceFiles
@@ -41,7 +41,7 @@ SourceFiles
 #define faceZone_H
 
 #include "zone.H"
-#include "faceZoneMeshFwd.H"
+#include "meshFaceZonesFwd.H"
 #include "boolList.H"
 #include "primitiveFacePatch.H"
 
@@ -81,7 +81,7 @@ protected:
         boolList flipMap_;
 
         //- Reference to zone list
-        const faceZoneMesh& zoneMesh_;
+        const meshFaceZones& meshZones_;
 
 
         // Demand-driven private data
@@ -137,9 +137,9 @@ public:
                 const word& name,
                 const dictionary& dict,
                 const label index,
-                const faceZoneMesh& zm
+                const meshFaceZones& mz
             ),
-            (name, dict, index, zm)
+            (name, dict, index, mz)
         );
 
 
@@ -152,7 +152,7 @@ public:
             const labelUList& addr,
             const boolList& fm,
             const label index,
-            const faceZoneMesh& zm
+            const meshFaceZones& mz
         );
 
         //- Construct from components, moving contents
@@ -162,7 +162,7 @@ public:
             labelList&& addr,
             boolList&& fm,
             const label index,
-            const faceZoneMesh&
+            const meshFaceZones&
         );
 
         //- Construct from dictionary
@@ -171,57 +171,57 @@ public:
             const word& name,
             const dictionary&,
             const label index,
-            const faceZoneMesh&
+            const meshFaceZones&
         );
 
         //- Construct given the original zone and resetting the
-        //  face list and zone mesh information
+        //  face list and mesh zones information
         faceZone
         (
             const faceZone&,
             const labelUList& addr,
             const boolList& fm,
             const label index,
-            const faceZoneMesh&
+            const meshFaceZones&
         );
 
         //- Construct given the original zone, resetting the
-        //  face list and zone mesh information
+        //  face list and mesh zones information
         faceZone
         (
             const faceZone&,
             labelList&& addr,
             boolList&& fm,
             const label index,
-            const faceZoneMesh&
+            const meshFaceZones&
         );
 
         //- Disallow default bitwise copy construction
         faceZone(const faceZone&) = delete;
 
 
-        //- Construct and return a clone, resetting the zone mesh
-        virtual autoPtr<faceZone> clone(const faceZoneMesh& zm) const
+        //- Construct and return a clone, resetting the mesh zones
+        virtual autoPtr<faceZone> clone(const meshFaceZones& mz) const
         {
             return autoPtr<faceZone>
             (
-                new faceZone(*this, *this, flipMap(), index(), zm)
+                new faceZone(*this, *this, flipMap(), index(), mz)
             );
         }
 
         //- Construct and return a clone, resetting the face list
-        //  and zone mesh
+        //  and mesh zones
         virtual autoPtr<faceZone> clone
         (
             const labelUList& addr,
             const boolList& fm,
             const label index,
-            const faceZoneMesh& zm
+            const meshFaceZones& mz
         ) const
         {
             return autoPtr<faceZone>
             (
-                new faceZone(*this, addr, fm, index, zm)
+                new faceZone(*this, addr, fm, index, mz)
             );
         }
 
@@ -235,7 +235,7 @@ public:
             const word& name,
             const dictionary&,
             const label index,
-            const faceZoneMesh&
+            const meshFaceZones&
         );
 
 
@@ -257,8 +257,8 @@ public:
         //- Return reference to primitive patch
         const primitiveFacePatch& operator()() const;
 
-        //- Return zoneMesh reference
-        const faceZoneMesh& zoneMesh() const;
+        //- Return meshZones reference
+        const meshFaceZones& meshZones() const;
 
 
         // Addressing into mesh

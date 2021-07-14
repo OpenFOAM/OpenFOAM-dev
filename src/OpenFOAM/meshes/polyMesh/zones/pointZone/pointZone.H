@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     list.
 
     For quick check whether a point belongs to the zone use the lookup
-    mechanism in pointZoneMesh, where all the zoned points are registered
+    mechanism in meshPointZones, where all the zoned points are registered
     with their zone number.
 
 SourceFiles
@@ -43,7 +43,7 @@ SourceFiles
 #define pointZone_H
 
 #include "zone.H"
-#include "pointZoneMeshFwd.H"
+#include "meshPointZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,7 +70,7 @@ protected:
     // Protected data
 
         //- Reference to zone list
-        const pointZoneMesh& zoneMesh_;
+        const meshPointZones& meshZones_;
 
 
 public:
@@ -96,9 +96,9 @@ public:
                 const word& name,
                 const dictionary& dict,
                 const label index,
-                const pointZoneMesh& zm
+                const meshPointZones& mz
             ),
-            (name, dict, index, zm)
+            (name, dict, index, mz)
         );
 
 
@@ -110,7 +110,7 @@ public:
             const word& name,
             const labelUList& addr,
             const label index,
-            const pointZoneMesh&
+            const meshPointZones&
         );
 
         //- Construct from components, transferring contents
@@ -119,7 +119,7 @@ public:
             const word& name,
             labelList&& addr,
             const label index,
-            const pointZoneMesh&
+            const meshPointZones&
         );
 
         //- Construct from dictionary
@@ -128,54 +128,54 @@ public:
             const word& name,
             const dictionary&,
             const label index,
-            const pointZoneMesh&
+            const meshPointZones&
         );
 
         //- Construct given the original zone and resetting the
-        //  point list and zone mesh information
+        //  point list and mesh zones information
         pointZone
         (
             const pointZone&,
             const labelUList& addr,
             const label index,
-            const pointZoneMesh&
+            const meshPointZones&
         );
 
         //- Construct given the original zone, resetting the
-        //  face list and zone mesh information
+        //  face list and mesh zones information
         pointZone
         (
             const pointZone&,
             labelList&& addr,
             const label index,
-            const pointZoneMesh&
+            const meshPointZones&
         );
 
         //- Disallow default bitwise copy construction
         pointZone(const pointZone&) = delete;
 
 
-        //- Construct and return a clone, resetting the zone mesh
-        virtual autoPtr<pointZone> clone(const pointZoneMesh& zm) const
+        //- Construct and return a clone, resetting the mesh zones
+        virtual autoPtr<pointZone> clone(const meshPointZones& mz) const
         {
             return autoPtr<pointZone>
             (
-                new pointZone(*this, *this, index(), zm)
+                new pointZone(*this, *this, index(), mz)
             );
         }
 
         //- Construct and return a clone, resetting the point list
-        //  and zone mesh
+        //  and mesh zones
         virtual autoPtr<pointZone> clone
         (
-            const pointZoneMesh& zm,
+            const meshPointZones& mz,
             const label index,
             const labelUList& addr
         ) const
         {
             return autoPtr<pointZone>
             (
-                new pointZone(*this, addr, index, zm)
+                new pointZone(*this, addr, index, mz)
             );
         }
 
@@ -189,7 +189,7 @@ public:
             const word& name,
             const dictionary&,
             const label index,
-            const pointZoneMesh&
+            const meshPointZones&
         );
 
 
@@ -199,8 +199,8 @@ public:
 
     // Member Functions
 
-        //- Return zoneMesh reference
-        const pointZoneMesh& zoneMesh() const;
+        //- Return meshZones reference
+        const meshPointZones& meshZones() const;
 
         //- Helper function to re-direct to zone::localID(...)
         label whichPoint(const label globalPointID) const;

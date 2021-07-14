@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,9 @@ SourceFiles
 #include "labelIOList.H"
 #include "polyBoundaryMesh.H"
 #include "boundBox.H"
-#include "pointZoneMesh.H"
-#include "faceZoneMesh.H"
-#include "cellZoneMesh.H"
+#include "meshPointZones.H"
+#include "meshFaceZones.H"
+#include "meshCellZones.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -159,13 +159,13 @@ private:
         // Zoning information
 
             //- Point zones
-            pointZoneMesh pointZones_;
+            meshPointZones pointZones_;
 
             //- Face zones
-            faceZoneMesh faceZones_;
+            meshFaceZones faceZones_;
 
             //- Cell zones
-            cellZoneMesh cellZones_;
+            meshCellZones cellZones_;
 
 
         //- Parallel info
@@ -467,20 +467,20 @@ public:
             //- Return the cell search tree
             const indexedOctree<treeDataCell>& cellTree() const;
 
-            //- Return point zone mesh
-            const pointZoneMesh& pointZones() const
+            //- Return point zones
+            const meshPointZones& pointZones() const
             {
                 return pointZones_;
             }
 
-            //- Return face zone mesh
-            const faceZoneMesh& faceZones() const
+            //- Return face zones
+            const meshFaceZones& faceZones() const
             {
                 return faceZones_;
             }
 
-            //- Return cell zone mesh
-            const cellZoneMesh& cellZones() const
+            //- Return cell zones
+            const meshCellZones& cellZones() const
             {
                 return cellZones_;
             }
@@ -553,19 +553,19 @@ public:
         // Topological change
 
             //- Return non-const access to the pointZones
-            pointZoneMesh& pointZones()
+            meshPointZones& pointZones()
             {
                 return pointZones_;
             }
 
             //- Return non-const access to the faceZones
-            faceZoneMesh& faceZones()
+            meshFaceZones& faceZones()
             {
                 return faceZones_;
             }
 
             //- Return non-const access to the cellZones
-            cellZoneMesh& cellZones()
+            meshCellZones& cellZones()
             {
                 return cellZones_;
             }

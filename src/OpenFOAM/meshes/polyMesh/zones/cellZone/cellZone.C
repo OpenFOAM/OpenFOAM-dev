@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "cellZone.H"
 #include "addToRunTimeSelectionTable.H"
-#include "cellZoneMesh.H"
+#include "meshCellZones.H"
 #include "polyMesh.H"
 #include "primitiveMesh.H"
 #include "IOstream.H"
@@ -49,11 +49,11 @@ Foam::cellZone::cellZone
     const word& name,
     const labelUList& addr,
     const label index,
-    const cellZoneMesh& zm
+    const meshCellZones& mz
 )
 :
     zone(name, addr, index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -62,11 +62,11 @@ Foam::cellZone::cellZone
     const word& name,
     labelList&& addr,
     const label index,
-    const cellZoneMesh& zm
+    const meshCellZones& mz
 )
 :
     zone(name, move(addr), index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -75,11 +75,11 @@ Foam::cellZone::cellZone
     const word& name,
     const dictionary& dict,
     const label index,
-    const cellZoneMesh& zm
+    const meshCellZones& mz
 )
 :
     zone(name, dict, this->labelsName, index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -88,11 +88,11 @@ Foam::cellZone::cellZone
     const cellZone& cz,
     const labelUList& addr,
     const label index,
-    const cellZoneMesh& zm
+    const meshCellZones& mz
 )
 :
     zone(cz, addr, index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -101,11 +101,11 @@ Foam::cellZone::cellZone
     const cellZone& cz,
     labelList&& addr,
     const label index,
-    const cellZoneMesh& zm
+    const meshCellZones& mz
 )
 :
     zone(cz, move(addr), index),
-    zoneMesh_(zm)
+    meshZones_(mz)
 {}
 
 
@@ -123,15 +123,15 @@ Foam::label Foam::cellZone::whichCell(const label globalCellID) const
 }
 
 
-const Foam::cellZoneMesh& Foam::cellZone::zoneMesh() const
+const Foam::meshCellZones& Foam::cellZone::meshZones() const
 {
-    return zoneMesh_;
+    return meshZones_;
 }
 
 
 bool Foam::cellZone::checkDefinition(const bool report) const
 {
-    return zone::checkDefinition(zoneMesh_.mesh().nCells(), report);
+    return zone::checkDefinition(meshZones_.mesh().nCells(), report);
 }
 
 

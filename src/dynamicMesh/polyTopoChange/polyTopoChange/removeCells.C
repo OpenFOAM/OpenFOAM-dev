@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -248,7 +248,7 @@ void Foam::removeCells::setRefinement
     const faceList& faces = mesh_.faces();
     const labelList& faceOwner = mesh_.faceOwner();
     const labelList& faceNeighbour = mesh_.faceNeighbour();
-    const faceZoneMesh& faceZones = mesh_.faceZones();
+    const meshFaceZones& faceZones = mesh_.faceZones();
 
     // Count starting number of faces using each point. Keep up to date whenever
     // removing a face.

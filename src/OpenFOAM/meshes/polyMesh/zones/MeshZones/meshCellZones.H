@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,27 +21,17 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::faceZoneMesh
-
 Description
-    A ZoneMesh with the type faceZone
+    Foam::meshCellZones
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef faceZoneMeshFwd_H
-#define faceZoneMeshFwd_H
+#ifndef meshCellZones_H
+#define meshCellZones_H
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    template<class Zone, class MeshType> class ZoneMesh;
-    class faceZone;
-    class polyMesh;
-
-    typedef ZoneMesh<faceZone, polyMesh> faceZoneMesh;
-}
+#include "MeshZones.H"
+#include "cellZone.H"
+#include "meshCellZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

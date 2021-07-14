@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -512,7 +512,7 @@ bool Foam::domainDecomposition::writeDecomposition(const bool decomposeSets)
 
         // Point zones
         {
-            const pointZoneMesh& pz = pointZones();
+            const meshPointZones& pz = pointZones();
 
             // Go through all the zoned points and find out if they
             // belong to a zone.  If so, add it to the zone as
@@ -578,7 +578,7 @@ bool Foam::domainDecomposition::writeDecomposition(const bool decomposeSets)
 
         // Face zones
         {
-            const faceZoneMesh& fz = faceZones();
+            const meshFaceZones& fz = faceZones();
 
             // Go through all the zoned face and find out if they
             // belong to a zone.  If so, add it to the zone as
@@ -672,7 +672,7 @@ bool Foam::domainDecomposition::writeDecomposition(const bool decomposeSets)
 
         // Cell zones
         {
-            const cellZoneMesh& cz = cellZones();
+            const meshCellZones& cz = cellZones();
 
             // Go through all the zoned cells and find out if they
             // belong to a zone.  If so, add it to the zone as

@@ -296,7 +296,7 @@ void printAllSets(const polyMesh& mesh, Ostream& os)
         }
     }
 
-    const cellZoneMesh& cellZones = mesh.cellZones();
+    const meshCellZones& cellZones = mesh.cellZones();
     if (cellZones.size())
     {
         os  << "cellZones:" << endl;
@@ -306,7 +306,7 @@ void printAllSets(const polyMesh& mesh, Ostream& os)
             os  << '\t' << zone.name() << "\tsize:" << zone.size() << endl;
         }
     }
-    const faceZoneMesh& faceZones = mesh.faceZones();
+    const meshFaceZones& faceZones = mesh.faceZones();
     if (faceZones.size())
     {
         os  << "faceZones:" << endl;
@@ -316,7 +316,7 @@ void printAllSets(const polyMesh& mesh, Ostream& os)
             os  << '\t' << zone.name() << "\tsize:" << zone.size() << endl;
         }
     }
-    const pointZoneMesh& pointZones = mesh.pointZones();
+    const meshPointZones& pointZones = mesh.pointZones();
     if (pointZones.size())
     {
         os  << "pointZones:" << endl;
@@ -334,7 +334,7 @@ void printAllSets(const polyMesh& mesh, Ostream& os)
 template<class ZoneType>
 void removeZone
 (
-    ZoneMesh<ZoneType, polyMesh>& zones,
+    MeshZones<ZoneType, polyMesh>& zones,
     const word& setName
 )
 {
@@ -400,7 +400,7 @@ void removeSet
     {
         removeZone
         (
-            const_cast<cellZoneMesh&>(mesh.cellZones()),
+            const_cast<meshCellZones&>(mesh.cellZones()),
             setName
         );
     }
@@ -408,7 +408,7 @@ void removeSet
     {
         removeZone
         (
-            const_cast<faceZoneMesh&>(mesh.faceZones()),
+            const_cast<meshFaceZones&>(mesh.faceZones()),
             setName
         );
     }
@@ -416,7 +416,7 @@ void removeSet
     {
         removeZone
         (
-            const_cast<pointZoneMesh&>(mesh.pointZones()),
+            const_cast<meshPointZones&>(mesh.pointZones()),
             setName
         );
     }

@@ -278,7 +278,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         solutionD_ = Zero;
 
         // Zones
-        pointZoneMesh newPointZones
+        meshPointZones newPointZones
         (
             IOobject
             (
@@ -315,7 +315,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         }
 
 
-        faceZoneMesh newFaceZones
+        meshFaceZones newFaceZones
         (
             IOobject
             (
@@ -356,7 +356,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         }
 
 
-        cellZoneMesh newCellZones
+        meshCellZones newCellZones
         (
             IOobject
             (

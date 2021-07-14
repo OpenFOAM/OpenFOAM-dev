@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ZoneMesh.H"
+#include "MeshZones.H"
 #include "entry.H"
 #include "demandDrivenData.H"
 #include "stringListOps.H"
@@ -32,7 +32,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class ZoneType, class MeshType>
-void Foam::ZoneMesh<ZoneType, MeshType>::calcZoneMap() const
+void Foam::MeshZones<ZoneType, MeshType>::calcZoneMap() const
 {
     // It is an error to attempt to recalculate cellEdges
     // if the pointer is already set
@@ -71,7 +71,7 @@ void Foam::ZoneMesh<ZoneType, MeshType>::calcZoneMap() const
 
 
 template<class ZoneType, class MeshType>
-bool Foam::ZoneMesh<ZoneType, MeshType>::read()
+bool Foam::MeshZones<ZoneType, MeshType>::read()
 {
     if
     (
@@ -114,7 +114,7 @@ bool Foam::ZoneMesh<ZoneType, MeshType>::read()
         // Check state of IOstream
         is.check
         (
-            "ZoneMesh::ZoneMesh"
+            "MeshZones::MeshZones"
             "(const IOobject&, const MeshType&)"
         );
 
@@ -133,7 +133,7 @@ bool Foam::ZoneMesh<ZoneType, MeshType>::read()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ZoneType, class MeshType>
-Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
+Foam::MeshZones<ZoneType, MeshType>::MeshZones
 (
     const IOobject& io,
     const MeshType& mesh
@@ -149,7 +149,7 @@ Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
 
 
 template<class ZoneType, class MeshType>
-Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
+Foam::MeshZones<ZoneType, MeshType>::MeshZones
 (
     const IOobject& io,
     const MeshType& mesh,
@@ -167,11 +167,11 @@ Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
 
 
 template<class ZoneType, class MeshType>
-Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
+Foam::MeshZones<ZoneType, MeshType>::MeshZones
 (
     const IOobject& io,
     const MeshType& mesh,
-    const PtrList<ZoneType>& pzm
+    const PtrList<ZoneType>& mpz
 )
 :
     PtrList<ZoneType>(),
@@ -183,10 +183,10 @@ Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
     {
         // Nothing read. Use supplied zones
         PtrList<ZoneType>& zones = *this;
-        zones.setSize(pzm.size());
+        zones.setSize(mpz.size());
         forAll(zones, zoneI)
         {
-            zones.set(zoneI, pzm[zoneI].clone(*this).ptr());
+            zones.set(zoneI, mpz[zoneI].clone(*this).ptr());
         }
     }
 }
@@ -195,7 +195,7 @@ Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class ZoneType, class MeshType>
-Foam::ZoneMesh<ZoneType, MeshType>::~ZoneMesh()
+Foam::MeshZones<ZoneType, MeshType>::~MeshZones()
 {
     clearAddressing();
 }
@@ -205,7 +205,7 @@ Foam::ZoneMesh<ZoneType, MeshType>::~ZoneMesh()
 
 template<class ZoneType, class MeshType>
 const Foam::Map<Foam::label>&
-Foam::ZoneMesh<ZoneType, MeshType>::zoneMap() const
+Foam::MeshZones<ZoneType, MeshType>::zoneMap() const
 {
     if (!zoneMapPtr_)
     {
@@ -217,7 +217,7 @@ Foam::ZoneMesh<ZoneType, MeshType>::zoneMap() const
 
 
 template<class ZoneType, class MeshType>
-Foam::label Foam::ZoneMesh<ZoneType, MeshType>::whichZone
+Foam::label Foam::MeshZones<ZoneType, MeshType>::whichZone
 (
     const label objectIndex
 ) const
@@ -237,7 +237,7 @@ Foam::label Foam::ZoneMesh<ZoneType, MeshType>::whichZone
 
 
 template<class ZoneType, class MeshType>
-Foam::wordList Foam::ZoneMesh<ZoneType, MeshType>::types() const
+Foam::wordList Foam::MeshZones<ZoneType, MeshType>::types() const
 {
     const PtrList<ZoneType>& zones = *this;
 
@@ -253,7 +253,7 @@ Foam::wordList Foam::ZoneMesh<ZoneType, MeshType>::types() const
 
 
 template<class ZoneType, class MeshType>
-Foam::wordList Foam::ZoneMesh<ZoneType, MeshType>::names() const
+Foam::wordList Foam::MeshZones<ZoneType, MeshType>::names() const
 {
     const PtrList<ZoneType>& zones = *this;
 
@@ -269,7 +269,7 @@ Foam::wordList Foam::ZoneMesh<ZoneType, MeshType>::names() const
 
 
 template<class ZoneType, class MeshType>
-Foam::labelList Foam::ZoneMesh<ZoneType, MeshType>::findIndices
+Foam::labelList Foam::MeshZones<ZoneType, MeshType>::findIndices
 (
     const wordRe& key
 ) const
@@ -302,7 +302,7 @@ Foam::labelList Foam::ZoneMesh<ZoneType, MeshType>::findIndices
 
 
 template<class ZoneType, class MeshType>
-Foam::label Foam::ZoneMesh<ZoneType, MeshType>::findIndex
+Foam::label Foam::MeshZones<ZoneType, MeshType>::findIndex
 (
     const wordRe& key
 ) const
@@ -337,7 +337,7 @@ Foam::label Foam::ZoneMesh<ZoneType, MeshType>::findIndex
 
 
 template<class ZoneType, class MeshType>
-Foam::label Foam::ZoneMesh<ZoneType, MeshType>::findZoneID
+Foam::label Foam::MeshZones<ZoneType, MeshType>::findZoneID
 (
     const word& zoneName
 ) const
@@ -366,7 +366,7 @@ Foam::label Foam::ZoneMesh<ZoneType, MeshType>::findZoneID
 
 
 template<class ZoneType, class MeshType>
-Foam::PackedBoolList Foam::ZoneMesh<ZoneType, MeshType>::findMatching
+Foam::PackedBoolList Foam::MeshZones<ZoneType, MeshType>::findMatching
 (
     const wordRe& key
 ) const
@@ -384,7 +384,7 @@ Foam::PackedBoolList Foam::ZoneMesh<ZoneType, MeshType>::findMatching
 
 
 template<class ZoneType, class MeshType>
-void Foam::ZoneMesh<ZoneType, MeshType>::clearAddressing()
+void Foam::MeshZones<ZoneType, MeshType>::clearAddressing()
 {
     deleteDemandDrivenData(zoneMapPtr_);
 
@@ -398,7 +398,7 @@ void Foam::ZoneMesh<ZoneType, MeshType>::clearAddressing()
 
 
 template<class ZoneType, class MeshType>
-void Foam::ZoneMesh<ZoneType, MeshType>::clear()
+void Foam::MeshZones<ZoneType, MeshType>::clear()
 {
     clearAddressing();
     PtrList<ZoneType>::clear();
@@ -406,7 +406,7 @@ void Foam::ZoneMesh<ZoneType, MeshType>::clear()
 
 
 template<class ZoneType, class MeshType>
-bool Foam::ZoneMesh<ZoneType, MeshType>::checkDefinition
+bool Foam::MeshZones<ZoneType, MeshType>::checkDefinition
 (
     const bool report
 ) const
@@ -424,7 +424,7 @@ bool Foam::ZoneMesh<ZoneType, MeshType>::checkDefinition
 
 
 template<class ZoneType, class MeshType>
-bool Foam::ZoneMesh<ZoneType, MeshType>::checkParallelSync
+bool Foam::MeshZones<ZoneType, MeshType>::checkParallelSync
 (
     const bool report
 ) const
@@ -502,7 +502,7 @@ bool Foam::ZoneMesh<ZoneType, MeshType>::checkParallelSync
 
 
 template<class ZoneType, class MeshType>
-void Foam::ZoneMesh<ZoneType, MeshType>::movePoints(const pointField& p)
+void Foam::MeshZones<ZoneType, MeshType>::movePoints(const pointField& p)
 {
     PtrList<ZoneType>& zones = *this;
 
@@ -514,7 +514,7 @@ void Foam::ZoneMesh<ZoneType, MeshType>::movePoints(const pointField& p)
 
 
 template<class ZoneType, class MeshType>
-bool Foam::ZoneMesh<ZoneType, MeshType>::writeData(Ostream& os) const
+bool Foam::MeshZones<ZoneType, MeshType>::writeData(Ostream& os) const
 {
     os  << *this;
     return os.good();
@@ -524,7 +524,7 @@ bool Foam::ZoneMesh<ZoneType, MeshType>::writeData(Ostream& os) const
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
 
 template<class ZoneType, class MeshType>
-const ZoneType& Foam::ZoneMesh<ZoneType, MeshType>::operator[]
+const ZoneType& Foam::MeshZones<ZoneType, MeshType>::operator[]
 (
     const word& zoneName
 ) const
@@ -544,7 +544,7 @@ const ZoneType& Foam::ZoneMesh<ZoneType, MeshType>::operator[]
 
 
 template<class ZoneType, class MeshType>
-ZoneType& Foam::ZoneMesh<ZoneType, MeshType>::operator[]
+ZoneType& Foam::MeshZones<ZoneType, MeshType>::operator[]
 (
     const word& zoneName
 )
@@ -569,7 +569,7 @@ template<class ZoneType, class MeshType>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const ZoneMesh<ZoneType, MeshType>& zones
+    const MeshZones<ZoneType, MeshType>& zones
 )
 {
     os  << zones.size() << nl << token::BEGIN_LIST;

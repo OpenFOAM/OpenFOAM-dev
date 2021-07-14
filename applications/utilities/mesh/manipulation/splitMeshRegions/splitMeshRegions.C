@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1192,7 +1192,7 @@ label findCorrespondingRegion
 void getZoneID
 (
     const polyMesh& mesh,
-    const cellZoneMesh& cellZones,
+    const meshCellZones& cellZones,
     labelList& zoneID,
     labelList& neiZoneID
 )
@@ -1251,7 +1251,7 @@ void matchRegions
     labelList& zoneToRegion
 )
 {
-    const cellZoneMesh& cellZones = mesh.cellZones();
+    const meshCellZones& cellZones = mesh.cellZones();
 
     regionToZone.setSize(nCellRegions, -1);
     regionNames.setSize(nCellRegions);
@@ -1586,7 +1586,7 @@ int main(int argc, char *argv[])
         args.optionLookupOrDefault("defaultRegionName", standardRegionName)
     );
 
-    const cellZoneMesh& cellZones = mesh.cellZones();
+    const meshCellZones& cellZones = mesh.cellZones();
 
     // Existing zoneID
     labelList zoneID(mesh.nCells(), -1);
@@ -1645,7 +1645,7 @@ int main(int argc, char *argv[])
             << "This requires all"
             << " cells to be in one and only one cellZone." << nl << endl;
 
-        cellZoneMesh newCellZones
+        meshCellZones newCellZones
         (
             IOobject
             (
@@ -1939,7 +1939,7 @@ int main(int argc, char *argv[])
                             zoneName,           // name
                             regionCells,        // addressing
                             zoneI,              // index
-                            cellZones           // cellZoneMesh
+                            cellZones           // meshCellZones
                         )
                     );
                 }
