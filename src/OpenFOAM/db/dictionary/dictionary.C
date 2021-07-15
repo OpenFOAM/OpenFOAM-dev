@@ -1025,12 +1025,9 @@ Foam::dictionary Foam::dictionary::subOrEmptyDict
                 << "keyword " << keyword << " is undefined in dictionary "
                 << name()
                 << exit(FatalIOError);
-            return entryPtr->dict();
         }
-        else
-        {
-            return dictionary(*this, dictionary(name() + '/' + keyword));
-        }
+
+        return dictionary(*this, dictionary(name() + '/' + keyword));
     }
     else
     {

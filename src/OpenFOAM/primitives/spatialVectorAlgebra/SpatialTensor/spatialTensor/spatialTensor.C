@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ const char* const Foam::spatialTensor::vsType::componentNames[] =
 {
     "Exx",  "Exy",  "Exz",    "Erxx", "Erxy", "Erxz",
     "Eyx",  "Eyy",  "Eyz",    "Eryx", "Eryy", "Eryz",
-    "Ezx",  "Ezy",  "Ezz",    "Erzx", "Erzy", "Erzz"
+    "Ezx",  "Ezy",  "Ezz",    "Erzx", "Erzy", "Erzz",
 
     "Erxx", "Erxy", "Erxz",   "Exx",  "Exy",  "Exz",
     "Eryx", "Eryy", "Eryz",   "Eyx",  "Eyy",  "Eyz",

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,10 @@ bool Foam::fileFormats::STARCDCore::readHeader
     string line;
 
     is.getLine(line);
-    IStringStream(line)() >> header;
+    (IStringStream(line)()) >> header;
 
     is.getLine(line);
-    IStringStream(line)() >> majorVersion;
+    (IStringStream(line)()) >> majorVersion;
 
     // add other checks ...
     if (header != signature)
