@@ -224,33 +224,48 @@ case SGIMPI:
     breaksw
 
 case INTELMPI:
-    if ( ! $?MPI_ROOT) setenv MPI_ROOT /dummy
+    if ( $?I_MPI_ROOT ) then
+        # I_MPI_ROOT is set by Intel MPI mpivars.sh setting
+        setenv MPI_ARCH_PATH "$I_MPI_ROOT"
+    else if ( $?MPI_ROOT ) then
+        setenv MPI_ARCH_PATH "$MPI_ROOT"
+    endif
 
-    if ( ! -d "$MPI_ROOT" ) then
+    if ( ! -d "$MPI_ROOT" || ! $?MPI_ARCH_PATH ) then
         echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
-        echo "    MPI_ROOT not a valid mpt installation directory."
-        echo "    Please set MPI_ROOT to the mpt installation directory."
-        echo "    (usually done by loading the mpt module)"
-        echo "    MPI_ROOT currently set to '$MPI_ROOT'"
+        echo "    I_MPI_ROOT not a valid MPI installation directory."
+        echo "    Please set I_MPI_ROOT to the MPI installation directory."
+        echo "    (usually done by loading the MPI module)"
+        echo "    I_MPI_ROOT currently set to '$I_MPI_ROOT'"
+    else
+        if ( "${MPI_ARCH_PATH:h}/" == $MPI_ARCH_PATH ) then
+            setenv MPI_ARCH_PATH ${MPI_ARCH_PATH:h}
+        endif
+        setenv FOAM_MPI intelmpi
     endif
-
-    if ( "${MPI_ROOT:h}/" == $MPI_ROOT ) then
-        setenv MPI_ROOT ${MPI_ROOT:h}
-    endif
-
-    setenv FOAM_MPI ${MPI_ROOT:t}
-    setenv MPI_ARCH_PATH $MPI_ROOT
-
 
     if ($?FOAM_VERBOSE && $?prompt) then
-        echo "Using INTEL MPT:"
-        echo "    MPI_ROOT : $MPI_ROOT"
-        echo "    FOAM_MPI : $FOAM_MPI"
+        echo "Using INTEL MPI:"
+        echo "    MPI_ARCH_PATH : $MPI_ARCH_PATH"
+        echo "    FOAM_MPI      : $FOAM_MPI"
     endif
 
+    if ( -d "$MPI_ARCH_PATH/intel64/bin" ) then
+    # Intel MPI version from 5.x to 2019
+        _foamAddPath "$MPI_ARCH_PATH/intel64/bin"
+        _foamAddLib  "$MPI_ARCH_PATH/intel64/lib"
+        _foamAddLib  "$MPI_ARCH_PATH/intel64/lib/release"
+        setenv MPI_ARCH_INC  "-isystem $MPI_ARCH_PATH/intel64/include"
+        setenv MPI_ARCH_LIBS "-L$MPI_ARCH_PATH/intel64/lib/release -lmpi"
+    else if ( -d "$MPI_ARCH_PATH/bin" ) then
+    # Intel MPI version after 2021
+        _foamAddPath "$MPI_ARCH_PATH/bin"
+        _foamAddLib  "$MPI_ARCH_PATH/lib"
+        _foamAddLib  "$MPI_ARCH_PATH/lib/release"
+        setenv MPI_ARCH_INC  "-isystem $MPI_ARCH_PATH/include"
+        setenv MPI_ARCH_LIBS "-L$MPI_ARCH_PATH/lib/release -lmpi"
+    endif
 
-    _foamAddPath    $MPI_ARCH_PATH/bin64
-    _foamAddLib     $MPI_ARCH_PATH/lib64
     breaksw
 
 default:

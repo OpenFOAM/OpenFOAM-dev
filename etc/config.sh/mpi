@@ -229,34 +229,61 @@ SGIMPI)
     ;;
 
 INTELMPI)
-    # No trailing slash
-    [ "${MPI_ROOT%/}" = "${MPI_ROOT}" ] || MPI_ROOT="${MPI_ROOT%/}"
+    if [ -n "$I_MPI_ROOT" ]
+    then
+        # I_MPI_ROOT is set by Intel MPI mpivars.sh setting
+        MPI_ARCH_PATH="${I_MPI_ROOT}"
+    elif [ -n "$MPI_ROOT" ]
+    then
+        MPI_ARCH_PATH="${MPI_ROOT}"
+    fi
 
-    export FOAM_MPI="${MPI_ROOT##*/}"
-    export MPI_ARCH_PATH=$MPI_ROOT
-
-    if [ ! -d "$MPI_ROOT" -o -z "$MPI_ARCH_PATH" ]
+    if [ ! -d "$I_MPI_ROOT" -o -z "$MPI_ARCH_PATH" ]
     then
         echo "Warning in $WM_PROJECT_DIR/etc/config.sh/settings:" 1>&2
-        echo "    MPI_ROOT not a valid mpt installation directory or ending" \
+        echo "    I_MPI_ROOT not a valid mpt installation directory or ending" \
              " in a '/'." 1>&2
-        echo "    Please set MPI_ROOT to the mpt installation directory." 1>&2
-        echo "    MPI_ROOT currently set to '$MPI_ROOT'" 1>&2
+        echo "    Please set I_MPI_ROOT to the mpt installation directory." 1>&2
+        echo "    I_MPI_ROOT currently set to '$I_MPI_ROOT'" 1>&2
+    else
+        # No trailing slash
+        [ "${MPI_ARCH_PATH%/}" = "${MPI_ARCH_PATH}" ] || MPI_ARCH_PATH="${MPI_ARCH_PATH%/}"
+
+        FOAM_MPI=intelmpi
+        export MPI_ARCH_PATH FOAM_MPI
     fi
 
     if [ "$FOAM_VERBOSE" -a "$PS1" ]
     then
         echo "Using INTEL MPI:" 1>&2
-        echo "    MPI_ROOT : $MPI_ROOT" 1>&2
-        echo "    FOAM_MPI : $FOAM_MPI" 1>&2
+        echo "    MPI_ARCH_PATH : $MPI_ARCH_PATH" 1>&2
+        echo "    FOAM_MPI      : $FOAM_MPI" 1>&2
     fi
 
-    _foamAddPath    $MPI_ARCH_PATH/bin64
-    _foamAddLib     $MPI_ARCH_PATH/lib/release
+    if [ -d "$MPI_ARCH_PATH/intel64/bin" ]
+    then
+    # Intel MPI version from 5.x to 2019
+        _foamAddPath $MPI_ARCH_PATH/intel64/bin
+        _foamAddLib  $MPI_ARCH_PATH/intel64/lib
+        _foamAddLib  $MPI_ARCH_PATH/intel64/lib/release
+        export MPI_ARCH_INC="-isystem $MPI_ARCH_PATH/intel64/include"
+        export MPI_ARCH_LIBS="-L$MPI_ARCH_PATH/intel64/lib/release -lmpi"
+    elif [ -d "$MPI_ARCH_PATH/bin" ]
+    then
+    # Intel MPI version after 2021
+        _foamAddPath $MPI_ARCH_PATH/bin
+        _foamAddLib  $MPI_ARCH_PATH/lib
+        _foamAddLib  $MPI_ARCH_PATH/lib/release
+        export MPI_ARCH_INC="-isystem $MPI_ARCH_PATH/include"
+        export MPI_ARCH_LIBS="-L$MPI_ARCH_PATH/lib/release -lmpi"
+    fi
+
     ;;
+
 *)
     export FOAM_MPI=dummy
     ;;
+
 esac
 
 # Add (non-dummy) MPI implementation
