@@ -139,9 +139,9 @@ runParallel()
     else
         echo "Running $APP_RUN in parallel on $PWD using $nProcs processes"
         if [ "$LOG_APPEND" = "true" ]; then
-            ( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null >> log.$LOG_SUFFIX 2>&1 )
+            ( mpirun -np $nProcs --use-hwthread-cpus $APP_RUN -parallel "$@" < /dev/null >> log.$LOG_SUFFIX 2>&1 )
         else
-            ( mpirun -np $nProcs $APP_RUN -parallel "$@" < /dev/null > log.$LOG_SUFFIX 2>&1 )
+            ( mpirun -np $nProcs --use-hwthread-cpus $APP_RUN -parallel "$@" < /dev/null > log.$LOG_SUFFIX 2>&1 )
         fi
     fi
 }
