@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,6 +149,7 @@ Foam::radiationModels::blackBodyEmission::blackBodyEmission
         "blackBodyEmissivePower",
         Function1s::tableBase::boundsHandling::clamp,
         linearInterpolationWeights::typeName,
+        autoPtr<TableReader<scalar>>(nullptr),
         emissivePowerTable
     ),
     C1_("C1", dimensionSet(1, 4, 3, 0, 0, 0, 0), 3.7419e-16),

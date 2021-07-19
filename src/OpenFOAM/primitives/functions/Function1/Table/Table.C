@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,13 +138,15 @@ Foam::Function1s::Table<Type>::Table
     const word& name,
     const tableBase::boundsHandling boundsHandling,
     const word& interpolationScheme,
+    const autoPtr<TableReader<Type>>& reader,
     const List<Tuple2<scalar, Type>>& table
 )
 :
     FieldFunction1<Type, Table<Type>>(name),
     boundsHandling_(boundsHandling),
     interpolationScheme_(interpolationScheme),
-    values_(table)
+    values_(table),
+    reader_(reader, false)
 {}
 
 

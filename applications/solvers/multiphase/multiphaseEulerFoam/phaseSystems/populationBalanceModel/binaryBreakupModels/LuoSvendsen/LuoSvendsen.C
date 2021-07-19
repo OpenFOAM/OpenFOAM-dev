@@ -122,6 +122,7 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
             "gamma2by11",
             Function1s::tableBase::boundsHandling::clamp,
             linearInterpolationWeights::typeName,
+            autoPtr<TableReader<scalar>>(nullptr),
             gammaUpperReg2by11Table
         );
 
@@ -131,6 +132,7 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
             "gamma5by11",
             Function1s::tableBase::boundsHandling::clamp,
             linearInterpolationWeights::typeName,
+            autoPtr<TableReader<scalar>>(nullptr),
             gammaUpperReg5by11Table
         );
 
@@ -140,6 +142,7 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
             "gamma8by11",
             Function1s::tableBase::boundsHandling::clamp,
             linearInterpolationWeights::typeName,
+            autoPtr<TableReader<scalar>>(nullptr),
             gammaUpperReg8by11Table
         );
 }

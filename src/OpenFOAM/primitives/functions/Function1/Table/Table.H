@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ class Table
         //- Enumeration for handling out-of-bound values
         const tableBase::boundsHandling boundsHandling_;
 
-        //- Interpolation type
+        //- Interpolation scheme
         const word interpolationScheme_;
 
         //- Table data
@@ -177,6 +177,7 @@ public:
             const word& name,
             const tableBase::boundsHandling boundsHandling,
             const word& interpolationScheme,
+            const autoPtr<TableReader<Type>>& reader,
             const List<Tuple2<scalar, Type>>& table
         );
 
@@ -192,6 +193,30 @@ public:
 
 
     // Member Functions
+
+        //- Return the handling out-of-bound values
+        const tableBase::boundsHandling& boundsHandling() const
+        {
+            return boundsHandling_;
+        }
+
+        //- Return the interpolation scheme
+        const word& interpolationScheme() const
+        {
+            return interpolationScheme_;
+        }
+
+        //- Return the reader
+        const autoPtr<TableReader<Type>>& reader() const
+        {
+            return reader_;
+        }
+
+        //- Return table data
+        const List<Tuple2<scalar, Type>>& values() const
+        {
+            return values_;
+        }
 
         //- Return Table value as a function of scalar x
         virtual Type value(const scalar x) const;
