@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -60,7 +60,7 @@ setenv FOAM_INST_DIR `lsof +p $$ |& grep -oE '/.*'$WM_PROJECT'[^/]*/etc/cshrc' |
 setenv WM_COMPILER_TYPE system
 
 #- Compiler:
-#    WM_COMPILER = Gcc | Gcc48 ... Gcc62 | Clang | Icc
+#    WM_COMPILER = Gcc | Gcc48 ... Gcc62 | Clang | Icx
 setenv WM_COMPILER Gcc
 setenv WM_COMPILER_ARCH # defined but empty
 unsetenv WM_COMPILER_LIB_ARCH

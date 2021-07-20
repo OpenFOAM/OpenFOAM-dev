@@ -1,2 +1,0 @@
-cDBUG       = -g -DFULLDEBUG -O0
-cOPT        =

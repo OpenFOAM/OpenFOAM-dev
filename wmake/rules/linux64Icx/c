@@ -1,8 +1,8 @@
 SUFFIXES += .c
 
-cWARN        = -Wall
+cWARN        =
 
-cc          = gcc -m64
+cc          = icx
 
 include $(DEFAULT_RULES)/c$(WM_COMPILE_OPTION)
 
@@ -12,5 +12,5 @@ ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $< -o $@
 
 LINK_LIBS   = $(cDBUG)
 
-LINKLIBSO   = $(cc) -shared
-LINKEXE     = $(cc) -Xlinker --add-needed -Xlinker -z -Xlinker nodefs
+LINKLIBSO   = $(cc) $(cFLAGS) -shared
+LINKEXE     = $(cc) $(cFLAGS) -Xlinker --add-needed -Xlinker -z -Xlinker nodefs

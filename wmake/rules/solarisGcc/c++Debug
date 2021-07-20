@@ -1,2 +1,0 @@
-c++DBUG    = -ggdb3 -DFULLDEBUG
-c++OPT      = -O0 -fdefault-inline -finline-functions

@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -57,10 +57,10 @@ Gcc48u)
     export WM_CC='gcc-4.8'
     export WM_CXX='g++-4.8'
     ;;
-Icc)
-    # Example for ensuring that 3rd software uses the Icc compilers
-    export WM_CC='icc'
-    export WM_CXX='icpc'
+Icx)
+    # Example for ensuring that 3rd software uses the Icx compilers
+    export WM_CC='icx'
+    export WM_CXX='icpx'
     ;;
 esac
 
