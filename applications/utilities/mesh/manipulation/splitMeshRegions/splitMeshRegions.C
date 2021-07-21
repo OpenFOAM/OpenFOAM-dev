@@ -225,17 +225,6 @@ void subsetSurfaceFields
             )
         );
 
-        // Hack: set value to 0 for introduced patches (since don't
-        //       get initialised.
-        forAll(tSubFld().boundaryField(), patchi)
-        {
-            if (addedPatches.found(patchi))
-            {
-                tSubFld.ref().boundaryFieldRef()[patchi] ==
-                    typename GeoField::value_type(Zero);
-            }
-        }
-
         // Store on subMesh
         GeoField* subFld = tSubFld.ptr();
         subFld->rename(fld.name());
