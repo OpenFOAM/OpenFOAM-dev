@@ -47,7 +47,7 @@ $(coalescenceModels)/coalescenceModel/coalescenceModel.C
 $(coalescenceModels)/ballisticCollisions/ballisticCollisions.C
 $(coalescenceModels)/BrownianCollisions/BrownianCollisions.C
 $(coalescenceModels)/constantCoalescence/constantCoalescence.C
-$(coalescenceModels)/CoulaloglouTavlaridesCoalescence/CoulaloglouTavlaridesCoalescence.C
+$(coalescenceModels)/CoulaloglouTavlarides/CoulaloglouTavlarides.C
 $(coalescenceModels)/DahnekeInterpolation/DahnekeInterpolation.C
 $(coalescenceModels)/hydrodynamic/hydrodynamic.C
 $(coalescenceModels)/LehrMilliesMewesCoalescence/LehrMilliesMewesCoalescence.C

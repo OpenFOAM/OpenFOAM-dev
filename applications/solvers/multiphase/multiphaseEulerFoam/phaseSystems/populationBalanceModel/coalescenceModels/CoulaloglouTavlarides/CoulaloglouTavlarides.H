@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::coalescenceModels::CoulaloglouTavlaridesCoalescence
+    Foam::diameterModels::coalescenceModels::CoulaloglouTavlarides
 
 Description
     Model of Coulaloglou and Tavlarides (1977). The coalescence rate is
@@ -70,12 +70,12 @@ Usage
     \endtable
 
 SourceFiles
-    CoulaloglouTavlaridesCoalescence.C
+    CoulaloglouTavlarides.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef CoulaloglouTavlaridesCoalescence_H
-#define CoulaloglouTavlaridesCoalescence_H
+#ifndef CoulaloglouTavlarides_H
+#define CoulaloglouTavlarides_H
 
 #include "coalescenceModel.H"
 
@@ -89,10 +89,10 @@ namespace coalescenceModels
 {
 
 /*---------------------------------------------------------------------------*\
-              Class CoulaloglouTavlaridesCoalescence Declaration
+                    Class CoulaloglouTavlarides Declaration
 \*---------------------------------------------------------------------------*/
 
-class CoulaloglouTavlaridesCoalescence
+class CoulaloglouTavlarides
 :
     public coalescenceModel
 {
@@ -112,7 +112,7 @@ public:
 
     // Constructor
 
-        CoulaloglouTavlaridesCoalescence
+        CoulaloglouTavlarides
         (
             const populationBalanceModel& popBal,
             const dictionary& dict
@@ -120,7 +120,7 @@ public:
 
 
     //- Destructor
-    virtual ~CoulaloglouTavlaridesCoalescence()
+    virtual ~CoulaloglouTavlarides()
     {}
 
 
