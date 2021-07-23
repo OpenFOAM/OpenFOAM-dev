@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CoulaloglouTavlaridesCoalescence.H"
+#include "CoulaloglouTavlarides.H"
 #include "addToRunTimeSelectionTable.H"
 #include "phaseDynamicMomentumTransportModel.H"
 
@@ -35,11 +35,11 @@ namespace diameterModels
 {
 namespace coalescenceModels
 {
-    defineTypeNameAndDebug(CoulaloglouTavlaridesCoalescence, 0);
+    defineTypeNameAndDebug(CoulaloglouTavlarides, 0);
     addToRunTimeSelectionTable
     (
         coalescenceModel,
-        CoulaloglouTavlaridesCoalescence,
+        CoulaloglouTavlarides,
         dictionary
     );
 }
@@ -49,8 +49,8 @@ namespace coalescenceModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::CoulaloglouTavlaridesCoalescence::
-CoulaloglouTavlaridesCoalescence
+Foam::diameterModels::coalescenceModels::CoulaloglouTavlarides::
+CoulaloglouTavlarides
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -65,7 +65,7 @@ CoulaloglouTavlaridesCoalescence
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void
-Foam::diameterModels::coalescenceModels::CoulaloglouTavlaridesCoalescence::
+Foam::diameterModels::coalescenceModels::CoulaloglouTavlarides::
 addToCoalescenceRate
 (
     volScalarField& coalescenceRate,
