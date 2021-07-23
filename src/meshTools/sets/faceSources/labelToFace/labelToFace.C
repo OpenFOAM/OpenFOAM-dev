@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(labelToFace, 0);
     addToRunTimeSelectionTable(topoSetSource, labelToFace, word);
-    addToRunTimeSelectionTable(topoSetSource, labelToFace, istream);
 }
 
 
@@ -77,17 +76,6 @@ Foam::labelToFace::labelToFace
 :
     topoSetSource(mesh),
     labels_(dict.lookup("value"))
-{}
-
-
-Foam::labelToFace::labelToFace
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    labels_(checkIs(is))
 {}
 
 

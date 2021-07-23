@@ -100,16 +100,10 @@ public:
             const dictionary& dict
         );
 
-        //- Construct from Istream
-        cylinderAnnulusToFace
-        (
-            const polyMesh& mesh,
-            Istream&
-        );
-
 
     // Destructor
     virtual ~cylinderAnnulusToFace();
+
 
     // Member Functions
 

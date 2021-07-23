@@ -34,7 +34,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(setToFaceZone, 0);
     addToRunTimeSelectionTable(topoSetSource, setToFaceZone, word);
-    addToRunTimeSelectionTable(topoSetSource, setToFaceZone, istream);
 }
 
 
@@ -68,17 +67,6 @@ Foam::setToFaceZone::setToFaceZone
 :
     topoSetSource(mesh),
     setName_(dict.lookupBackwardsCompatible<word>({"set", "faceSet"}))
-{}
-
-
-Foam::setToFaceZone::setToFaceZone
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    setName_(checkIs(is))
 {}
 
 

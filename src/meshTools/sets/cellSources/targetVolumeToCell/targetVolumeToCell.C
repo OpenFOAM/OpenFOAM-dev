@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(targetVolumeToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, targetVolumeToCell, word);
-    addToRunTimeSelectionTable(topoSetSource, targetVolumeToCell, istream);
 }
 
 
@@ -288,17 +287,6 @@ Foam::targetVolumeToCell::targetVolumeToCell
     maskSetName_(dict.lookupOrDefault<word>("set", ""))
 {}
 
-
-Foam::targetVolumeToCell::targetVolumeToCell
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    vol_(readScalar(checkIs(is))),
-    n_(checkIs(is))
-{}
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 

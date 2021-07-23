@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(fieldToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, fieldToCell, word);
-    addToRunTimeSelectionTable(topoSetSource, fieldToCell, istream);
 }
 
 
@@ -118,19 +117,6 @@ Foam::fieldToCell::fieldToCell
     fieldName_(dict.lookup("field")),
     min_(dict.lookup<scalar>("min")),
     max_(dict.lookup<scalar>("max"))
-{}
-
-
-Foam::fieldToCell::fieldToCell
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    fieldName_(checkIs(is)),
-    min_(readScalar(checkIs(is))),
-    max_(readScalar(checkIs(is)))
 {}
 
 

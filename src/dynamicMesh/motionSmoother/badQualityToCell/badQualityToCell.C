@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,13 +33,8 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(badQualityToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, badQualityToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, badQualityToCell, istream);
-
+    defineTypeNameAndDebug(badQualityToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, badQualityToCell, word);
 }
 
 
@@ -73,7 +68,6 @@ void Foam::badQualityToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from dictionary
 Foam::badQualityToCell::badQualityToCell
 (
     const polyMesh& mesh,
@@ -82,18 +76,6 @@ Foam::badQualityToCell::badQualityToCell
 :
     topoSetSource(mesh),
     dict_(dict)
-{}
-
-
-// Construct from Istream
-Foam::badQualityToCell::badQualityToCell
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    dict_(is)
 {}
 
 

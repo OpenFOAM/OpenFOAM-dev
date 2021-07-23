@@ -33,7 +33,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(patchDistanceToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, patchDistanceToCell, word);
-    addToRunTimeSelectionTable(topoSetSource, patchDistanceToCell, istream);
 }
 
 

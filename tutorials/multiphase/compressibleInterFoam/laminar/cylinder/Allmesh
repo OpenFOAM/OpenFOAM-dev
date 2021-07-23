@@ -2,10 +2,7 @@
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication blockMesh
-
-#runApplication setSet -batch wallFilmRegion.setSet
 runApplication topoSet
-
 runApplication extrudeToRegionMesh -overwrite
 
 paraFoam -touch

@@ -42,7 +42,7 @@ cleanCase()
     done
 
     rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./logSummary.* \
-        ./*.OpenFOAM ./*.blockMesh ./*.foam ./.setSet
+        ./*.OpenFOAM ./*.blockMesh ./*.foam
 
     for d in constant 0
     do

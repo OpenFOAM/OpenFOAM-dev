@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,8 +151,6 @@ public:
             return actionNames_[actionName];
         }
 
-        //- Check state of stream.
-        static Istream& checkIs(Istream& is);
 
     // Declare run-time constructor selection table
 
@@ -167,19 +165,6 @@ public:
                 const dictionary& dict
             ),
             (mesh, dict)
-        );
-
-        // For the Istream constructor
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            topoSetSource,
-            istream,
-            (
-                const polyMesh& mesh,
-                Istream& is
-            ),
-            (mesh, is)
         );
 
 
@@ -249,14 +234,6 @@ public:
             const word& topoSetSourceType,
             const polyMesh& mesh,
             const dictionary& dict
-        );
-
-        //- Return a reference to the selected topoSetSource
-        static autoPtr<topoSetSource> New
-        (
-            const word& topoSetSourceType,
-            const polyMesh& mesh,
-            Istream& is
         );
 
 

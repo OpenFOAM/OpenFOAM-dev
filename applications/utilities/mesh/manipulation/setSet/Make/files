@@ -1,3 +1,0 @@
-setSet.C
-
-EXE = $(FOAM_APPBIN)/setSet

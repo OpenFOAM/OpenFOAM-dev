@@ -36,7 +36,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(regionToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, regionToCell, word);
-    addToRunTimeSelectionTable(topoSetSource, regionToCell, istream);
 }
 
 
@@ -407,19 +406,6 @@ Foam::regionToCell::regionToCell
       : dict.lookup("insidePoints")
     ),
     nErode_(dict.lookupOrDefault("nErode", 0))
-{}
-
-
-Foam::regionToCell::regionToCell
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    setName_(checkIs(is)),
-    insidePoints_(checkIs(is)),
-    nErode_(0)
 {}
 
 

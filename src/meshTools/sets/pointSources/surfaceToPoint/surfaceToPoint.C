@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(surfaceToPoint, 0);
     addToRunTimeSelectionTable(topoSetSource, surfaceToPoint, word);
-    addToRunTimeSelectionTable(topoSetSource, surfaceToPoint, istream);
 }
 
 
@@ -150,22 +149,6 @@ Foam::surfaceToPoint::surfaceToPoint
     nearDist_(dict.lookup<scalar>("nearDistance")),
     includeInside_(readBool(dict.lookup("includeInside"))),
     includeOutside_(readBool(dict.lookup("includeOutside")))
-{
-    checkSettings();
-}
-
-
-Foam::surfaceToPoint::surfaceToPoint
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    surfName_(checkIs(is)),
-    nearDist_(readScalar(checkIs(is))),
-    includeInside_(readBool(checkIs(is))),
-    includeOutside_(readBool(checkIs(is)))
 {
     checkSettings();
 }

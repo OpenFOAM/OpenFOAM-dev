@@ -88,9 +88,6 @@ public:
         //- Construct from dictionary
         normalToFace(const polyMesh& mesh, const dictionary& dict);
 
-        //- Construct from Istream
-        normalToFace(const polyMesh& mesh, Istream&);
-
 
     //- Destructor
     virtual ~normalToFace();

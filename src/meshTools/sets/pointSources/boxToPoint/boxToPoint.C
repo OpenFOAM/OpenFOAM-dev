@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(boxToPoint, 0);
     addToRunTimeSelectionTable(topoSetSource, boxToPoint, word);
-    addToRunTimeSelectionTable(topoSetSource, boxToPoint, istream);
 }
 
 
@@ -90,17 +89,6 @@ Foam::boxToPoint::boxToPoint
       ? treeBoundBoxList(1, treeBoundBox(dict.lookup("box")))
       : dict.lookup("boxes")
     )
-{}
-
-
-Foam::boxToPoint::boxToPoint
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    bbs_(1, treeBoundBox(checkIs(is)))
 {}
 
 

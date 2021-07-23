@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(regionToFace, 0);
     addToRunTimeSelectionTable(topoSetSource, regionToFace, word);
-    addToRunTimeSelectionTable(topoSetSource, regionToFace, istream);
 }
 
 
@@ -194,18 +193,6 @@ Foam::regionToFace::regionToFace
     topoSetSource(mesh),
     setName_(dict.lookup("set")),
     nearPoint_(dict.lookup("nearPoint"))
-{}
-
-
-Foam::regionToFace::regionToFace
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    setName_(checkIs(is)),
-    nearPoint_(checkIs(is))
 {}
 
 

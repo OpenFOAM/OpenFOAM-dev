@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(shapeToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, shapeToCell, word);
-    addToRunTimeSelectionTable(topoSetSource, shapeToCell, istream);
 }
 
 
@@ -121,22 +120,6 @@ Foam::shapeToCell::shapeToCell
     }
 }
 
-
-Foam::shapeToCell::shapeToCell
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    type_(checkIs(is))
-{
-    if (!cellModeller::lookup(type_) && (type_ != "splitHex"))
-    {
-        FatalErrorInFunction
-            << "Illegal cell type " << type_ << exit(FatalError);
-    }
-}
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 

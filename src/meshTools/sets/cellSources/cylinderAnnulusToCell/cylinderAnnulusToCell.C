@@ -33,7 +33,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(cylinderAnnulusToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, cylinderAnnulusToCell, word);
-    addToRunTimeSelectionTable(topoSetSource, cylinderAnnulusToCell, istream);
 }
 
 
@@ -104,20 +103,6 @@ Foam::cylinderAnnulusToCell::cylinderAnnulusToCell
     point2_(dict.lookupBackwardsCompatible<point>({"point2", "p2"})),
     outerRadius_(dict.lookup<scalar>("outerRadius")),
     innerRadius_(dict.lookup<scalar>("innerRadius"))
-{}
-
-
-Foam::cylinderAnnulusToCell::cylinderAnnulusToCell
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    point1_(checkIs(is)),
-    point2_(checkIs(is)),
-    outerRadius_(readScalar(checkIs(is))),
-    innerRadius_(readScalar(checkIs(is)))
 {}
 
 

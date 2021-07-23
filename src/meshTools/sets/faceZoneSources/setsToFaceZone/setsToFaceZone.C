@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(setsToFaceZone, 0);
     addToRunTimeSelectionTable(topoSetSource, setsToFaceZone, word);
-    addToRunTimeSelectionTable(topoSetSource, setsToFaceZone, istream);
 }
 
 
@@ -76,19 +75,6 @@ Foam::setsToFaceZone::setsToFaceZone
     faceSetName_(dict.lookup("faceSet")),
     cellSetName_(dict.lookup("cellSet")),
     flip_(dict.lookupOrDefault("flip", false))
-{}
-
-
-Foam::setsToFaceZone::setsToFaceZone
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    faceSetName_(checkIs(is)),
-    cellSetName_(checkIs(is)),
-    flip_(false)
 {}
 
 

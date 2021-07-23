@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(surfaceToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, surfaceToCell, word);
-    addToRunTimeSelectionTable(topoSetSource, surfaceToCell, istream);
 }
 
 
@@ -435,29 +434,6 @@ Foam::surfaceToCell::surfaceToCell
     ),
     nearDist_(dict.lookup<scalar>("nearDistance")),
     curvature_(dict.lookup<scalar>("curvature")),
-    surfPtr_(new triSurface(surfName_)),
-    querySurfPtr_(new triSurfaceSearch(*surfPtr_)),
-    IOwnPtrs_(true)
-{
-    checkSettings();
-}
-
-
-Foam::surfaceToCell::surfaceToCell
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    surfName_(checkIs(is)),
-    outsidePoints_(checkIs(is)),
-    includeCut_(readBool(checkIs(is))),
-    includeInside_(readBool(checkIs(is))),
-    includeOutside_(readBool(checkIs(is))),
-    useSurfaceOrientation_(false),
-    nearDist_(readScalar(checkIs(is))),
-    curvature_(readScalar(checkIs(is))),
     surfPtr_(new triSurface(surfName_)),
     querySurfPtr_(new triSurfaceSearch(*surfPtr_)),
     IOwnPtrs_(true)

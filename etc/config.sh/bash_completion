@@ -3463,35 +3463,6 @@ _setFields_ ()
 }
 complete -o filenames -o nospace -F _setFields_ setFields
 
-_setSet_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-batch -case -constant -doc -fileHandler -help -hostRoots -latestTime -libs -loop -noFunctionObjects -noSync -noVTK -noZero -parallel -region -roots -srcDoc -time"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -batch)
-            opts="" ; extra="-d -f" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -time)
-            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
-        -hostRoots|-libs|-region|-roots)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _setSet_ setSet
-
 _setsToZones_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"

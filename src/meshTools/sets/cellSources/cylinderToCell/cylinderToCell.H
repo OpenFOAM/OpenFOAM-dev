@@ -95,13 +95,6 @@ public:
             const dictionary& dict
         );
 
-        //- Construct from Istream
-        cylinderToCell
-        (
-            const polyMesh& mesh,
-            Istream&
-        );
-
 
     //- Destructor
     virtual ~cylinderToCell();

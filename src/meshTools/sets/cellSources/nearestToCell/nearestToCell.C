@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(nearestToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, nearestToCell, word);
-    addToRunTimeSelectionTable(topoSetSource, nearestToCell, istream);
 }
 
 
@@ -77,17 +76,6 @@ Foam::nearestToCell::nearestToCell
 :
     topoSetSource(mesh),
     points_(dict.lookup("points"))
-{}
-
-
-Foam::nearestToCell::nearestToCell
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    points_(checkIs(is))
 {}
 
 

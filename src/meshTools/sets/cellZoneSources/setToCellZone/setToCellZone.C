@@ -34,7 +34,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(setToCellZone, 0);
     addToRunTimeSelectionTable(topoSetSource, setToCellZone, word);
-    addToRunTimeSelectionTable(topoSetSource, setToCellZone, istream);
 }
 
 
@@ -67,17 +66,6 @@ Foam::setToCellZone::setToCellZone
 :
     topoSetSource(mesh),
     setName_(dict.lookupBackwardsCompatible<word>({"set", "cellSet"}))
-{}
-
-
-Foam::setToCellZone::setToCellZone
-(
-    const polyMesh& mesh,
-    Istream& is
-)
-:
-    topoSetSource(mesh),
-    setName_(checkIs(is))
 {}
 
 

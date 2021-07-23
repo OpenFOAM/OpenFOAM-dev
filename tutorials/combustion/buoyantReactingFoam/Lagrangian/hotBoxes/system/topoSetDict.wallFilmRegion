@@ -9,29 +9,33 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      extrudeToRegionMeshDict;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-region          wallFilmRegion;
-
-faceZones       (wallFilmFaces);
-
-oneD            false;
-
-sampleMode      nearestPatchFace;
-
-extrudeModel    linearNormal;
-
-nLayers         1;
-
-expansionRatio  1;
-
-adaptMesh       yes; // apply mapped to both regions
-
-linearNormalCoeffs
-{
-    thickness       0.001;
+    object      topoSetDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    {
+        name    wallFilmFaceSet;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            name wallFilm;
+        }
+    }
+    {
+        name    wallFilmFaces;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet wallFilmFaceSet;
+        }
+    }
+);
+
+// ************************************************************************* //

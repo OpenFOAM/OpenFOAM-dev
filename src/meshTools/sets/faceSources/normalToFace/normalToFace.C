@@ -34,7 +34,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(normalToFace, 0);
     addToRunTimeSelectionTable(topoSetSource, normalToFace, word);
-    addToRunTimeSelectionTable(topoSetSource, normalToFace, istream);
 }
 
 
@@ -86,16 +85,6 @@ Foam::normalToFace::normalToFace(const polyMesh& mesh, const dictionary& dict)
     topoSetSource(mesh),
     normal_(dict.lookup("normal")),
     tol_(dict.lookup<scalar>("cos"))
-{
-    setNormal();
-}
-
-
-Foam::normalToFace::normalToFace(const polyMesh& mesh, Istream& is)
-:
-    topoSetSource(mesh),
-    normal_(checkIs(is)),
-    tol_(readScalar(checkIs(is)))
 {
     setNormal();
 }

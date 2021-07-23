@@ -13,10 +13,10 @@ runApplication topoSet
 # Create the obstacles - add obstacle patches to wallFilm patch
 runApplication subsetMesh c0 -patch wallFilm -overwrite -noFields
 
-# Split the obstacle patches into cube[1-6]_patch[1-6]
-runApplication ./patchifyObstacles
+# Create a wallFilmRegion faceZone from the obstacles and floor
+runApplication -s wallFilmRegion topoSet -dict topoSetDict.wallFilmRegion
 
-# Create the wall film region via extrusion
+# Create the wall film region from the wallFilmRegion faceZone via extrusion
 runApplication extrudeToRegionMesh -overwrite
 
 paraFoam -touch

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,9 @@ Application
 Description
     Selects a section of mesh based on a cellSet.
 
-    The utility sub-sets the mesh to choose only a part of interest. Check
-    the setSet/cellSet/topoSet utilities to see how to select cells based on
-    various shapes.
+    The utility sub-sets the mesh to choose only a part of interest. Check the
+    cellSet/topoSet utilities to see how to select cells based on various
+    shapes.
 
     The mesh will subset all points, faces and cells needed to make a sub-mesh
     but will not preserve attached boundary types.

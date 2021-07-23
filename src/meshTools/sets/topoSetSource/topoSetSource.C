@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(topoSetSource, 0);
     defineRunTimeSelectionTable(topoSetSource, word);
-    defineRunTimeSelectionTable(topoSetSource, istream);
 
     template<>
     const char* Foam::NamedEnum
@@ -91,46 +90,6 @@ Foam::autoPtr<Foam::topoSetSource> Foam::topoSetSource::New
     }
 
     return autoPtr<topoSetSource>(cstrIter()(mesh, dict));
-}
-
-
-Foam::autoPtr<Foam::topoSetSource> Foam::topoSetSource::New
-(
-    const word& topoSetSourceType,
-    const polyMesh& mesh,
-    Istream& is
-)
-{
-    istreamConstructorTable::iterator cstrIter =
-        istreamConstructorTablePtr_->find(topoSetSourceType);
-
-    if (cstrIter == istreamConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown topoSetSource type " << topoSetSourceType
-            << endl << endl
-            << "Valid topoSetSource types : " << endl
-            << istreamConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
-
-    return autoPtr<topoSetSource>(cstrIter()(mesh, is));
-}
-
-
-Foam::Istream& Foam::topoSetSource::checkIs(Istream& is)
-{
-    if (is.good() && !is.eof())
-    {
-        return is;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << exit(FatalError);
-
-        return is;
-    }
 }
 
 
