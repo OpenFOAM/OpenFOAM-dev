@@ -42,24 +42,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::surfaceToCell::usage_
-(
-    surfaceToCell::typeName,
-    "\n    Usage: surfaceToCell"
-    "<surface> <outsidePoints> <cut> <inside> <outside> <near> <curvature>\n\n"
-    "    <surface> name of triSurface\n"
-    "    <outsidePoints> list of points that define outside\n"
-    "    <cut> boolean whether to include cells cut by surface\n"
-    "    <inside>   ,,                 ,,       inside surface\n"
-    "    <outside>  ,,                 ,,       outside surface\n"
-    "    <near> scalar; include cells with centre <= near to surface\n"
-    "    <curvature> scalar; include cells close to strong curvature"
-    " on surface\n"
-    "    (curvature defined as difference in surface normal at nearest"
-    " point on surface for each vertex of cell)\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::label Foam::surfaceToCell::getNearest

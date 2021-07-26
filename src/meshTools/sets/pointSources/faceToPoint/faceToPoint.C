@@ -47,13 +47,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::faceToPoint::usage_
-(
-    faceToPoint::typeName,
-    "\n    Usage: faceToPoint <faceSet> all\n\n"
-    "    Select all points of faces in the faceSet\n\n"
-);
-
 const Foam::NamedEnum<Foam::faceToPoint::faceAction, 1>
     Foam::faceToPoint::faceActionNames_;
 

@@ -29,7 +29,6 @@ License
 #include "Time.H"
 #include "IFstream.H"
 #include "fieldDictionary.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -39,14 +38,6 @@ namespace Foam
     defineTypeNameAndDebug(fieldToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, fieldToCell, word);
 }
-
-
-Foam::topoSetSource::addToUsageTable Foam::fieldToCell::usage_
-(
-    fieldToCell::typeName,
-    "\n    Usage: fieldToCell field min max\n\n"
-    "    Select all cells with field value >= min and <= max\n\n"
-);
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

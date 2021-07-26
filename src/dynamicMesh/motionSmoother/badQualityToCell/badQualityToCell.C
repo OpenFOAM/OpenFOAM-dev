@@ -38,14 +38,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::badQualityToCell::usage_
-(
-    badQualityToCell::typeName,
-    "\n    Usage: badQualityToCell mesh-quality-dictionary\n\n"
-    "    Select all cells that do not satisfy the selection criterion\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::badQualityToCell::combine(topoSet& set, const bool add) const

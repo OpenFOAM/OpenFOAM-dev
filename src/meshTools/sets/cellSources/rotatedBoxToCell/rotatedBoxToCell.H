@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,8 +65,6 @@ class rotatedBoxToCell
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
 
         //- Skewed box
@@ -100,9 +98,6 @@ public:
 
         //- Construct from dictionary
         rotatedBoxToCell(const polyMesh& mesh, const dictionary& dict);
-
-        //- Construct from Istream
-        rotatedBoxToCell(const polyMesh& mesh, Istream&);
 
 
     //- Destructor

@@ -61,8 +61,6 @@ public:
 
 private:
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         static const NamedEnum<faceAction, 1> faceActionNames_;
 

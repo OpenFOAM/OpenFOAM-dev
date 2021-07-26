@@ -54,8 +54,6 @@ class patchToFace
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Name/regular expression of patch
         wordRe patchName_;

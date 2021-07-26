@@ -47,13 +47,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::cellToPoint::usage_
-(
-    cellToPoint::typeName,
-    "\n    Usage: cellToPoint <cellSet> all\n\n"
-    "    Select all points of cells in the cellSet\n\n"
-);
-
 const Foam::NamedEnum<Foam::cellToPoint::cellAction, 1>
     Foam::cellToPoint::cellActionNames_;
 

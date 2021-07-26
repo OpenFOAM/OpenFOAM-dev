@@ -37,15 +37,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::rotatedBoxToCell::usage_
-(
-    rotatedBoxToCell::typeName,
-    "\n    Usage: rotatedBoxToCell (originx originy originz)"
-    " (ix iy iz) (jx jy jz) (kx ky kz)\n\n"
-    "    Select all cells with cellCentre within parallelepiped\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
@@ -136,16 +127,6 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
     i_(dict.lookup("i")),
     j_(dict.lookup("j")),
     k_(dict.lookup("k"))
-{}
-
-
-Foam::rotatedBoxToCell::rotatedBoxToCell(const polyMesh& mesh, Istream& is)
-:
-    topoSetSource(mesh),
-    origin_(is),
-    i_(is),
-    j_(is),
-    k_(is)
 {}
 
 

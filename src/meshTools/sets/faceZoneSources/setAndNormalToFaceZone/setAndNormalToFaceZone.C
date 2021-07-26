@@ -42,14 +42,6 @@ addToRunTimeSelectionTable(topoSetSource, setAndNormalToFaceZone, word);
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::setAndNormalToFaceZone::usage_
-(
-    setAndNormalToFaceZone::typeName,
-    "\n    Usage: setAndNormalToFaceZone <faceSet> <normal>\n\n"
-    "    Select all faces in the faceSet and orient using normal.\n\n"
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::setAndNormalToFaceZone::setAndNormalToFaceZone

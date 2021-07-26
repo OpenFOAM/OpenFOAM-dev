@@ -65,8 +65,6 @@ public:
 
 private:
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         static const NamedEnum<pointAction, 3> pointActionNames_;
 

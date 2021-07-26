@@ -61,8 +61,6 @@ public:
 
 private:
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         static const NamedEnum<cellAction, 1> cellActionNames_;
 

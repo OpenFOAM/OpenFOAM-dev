@@ -55,8 +55,6 @@ class targetVolumeToCell
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Wanted volume
         const scalar vol_;

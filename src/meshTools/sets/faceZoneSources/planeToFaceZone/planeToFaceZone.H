@@ -77,8 +77,6 @@ private:
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Point on the plane
         const vector point_;

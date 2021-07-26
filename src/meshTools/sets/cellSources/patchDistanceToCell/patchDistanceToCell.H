@@ -53,8 +53,6 @@ class patchDistanceToCell
 {
 private:
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- List of patches
         wordReList patches_;
@@ -82,13 +80,6 @@ public:
         (
             const polyMesh& mesh,
             const dictionary& dict
-        );
-
-        //- Construct from Istream
-        patchDistanceToCell
-        (
-            const polyMesh& mesh,
-            Istream&
         );
 
 

@@ -51,14 +51,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::cellToFace::usage_
-(
-    cellToFace::typeName,
-    "\n    Usage: cellToFace <cellSet> all|both\n\n"
-    "    Select -all : all faces of cells in the cellSet\n"
-    "           -both: faces where both neighbours are in the cellSet\n\n"
-);
-
 const Foam::NamedEnum<Foam::cellToFace::cellAction, 2>
     Foam::cellToFace::cellActionNames_;
 

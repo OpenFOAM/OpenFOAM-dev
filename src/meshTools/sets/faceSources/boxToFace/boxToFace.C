@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::boxToFace::usage_
-(
-    boxToFace::typeName,
-    "\n    Usage: boxToFace ((minx miny minz) (maxx maxy maxz))\n\n"
-    "    Select all face with faceCentre within bounding box\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::boxToFace::combine(topoSet& set, const bool add) const

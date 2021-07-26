@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::nearestToPoint::usage_
-(
-    nearestToPoint::typeName,
-    "\n    Usage: nearestToPoint (pt0 .. ptn)\n\n"
-    "    Select the nearest point for each of the points pt0 ..ptn\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::nearestToPoint::combine(topoSet& set, const bool add) const

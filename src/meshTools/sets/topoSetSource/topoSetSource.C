@@ -53,9 +53,6 @@ namespace Foam
 }
 
 
-Foam::HashTable<Foam::string>* Foam::topoSetSource::usageTablePtr_ = nullptr;
-
-
 const Foam::NamedEnum<Foam::topoSetSource::setAction, 8>
     Foam::topoSetSource::actionNames_;
 

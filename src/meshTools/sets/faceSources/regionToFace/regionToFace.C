@@ -42,15 +42,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::regionToFace::usage_
-(
-    regionToFace::typeName,
-    "\n    Usage: regionToFace <faceSet> (x y z)\n\n"
-    "    Select all faces in the connected region of the faceSet"
-    " starting from the point.\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::regionToFace::markZone

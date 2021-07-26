@@ -53,8 +53,6 @@ class sphereToCell
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Centre
         vector centre_;

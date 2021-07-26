@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::sphereToCell::usage_
-(
-    sphereToCell::typeName,
-    "\n    Usage: sphereToCell (centreX centreY centreZ) radius\n\n"
-    "    Select all cells with cellCentre within bounding sphere\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::sphereToCell::combine(topoSet& set, const bool add) const

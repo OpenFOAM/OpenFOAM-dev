@@ -46,15 +46,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::searchableSurfaceToFaceZone::usage_
-(
-    searchableSurfaceToFaceZone::typeName,
-    "\n    Usage: searchableSurfaceToFaceZone surface\n\n"
-    "    Select all faces whose cell-cell centre vector intersects the surface "
-    "\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::searchableSurfaceToFaceZone::combine

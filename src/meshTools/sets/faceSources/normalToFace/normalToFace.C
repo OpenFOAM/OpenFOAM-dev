@@ -37,15 +37,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::normalToFace::usage_
-(
-    normalToFace::typeName,
-    "\n    Usage: normalToFace (nx ny nz) <tol>\n\n"
-    "    Select faces with normal aligned to unit vector (nx ny nz)\n"
-    "    to within tol\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::normalToFace::setNormal()

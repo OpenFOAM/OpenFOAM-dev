@@ -65,8 +65,6 @@ private:
 
         static const NamedEnum<faceAction, 2> faceActionNames_;
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Name/regular expression of faceZone
         wordRe zoneName_;

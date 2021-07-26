@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::boundaryToFace::usage_
-(
-    boundaryToFace::typeName,
-    "\n    Usage: boundaryToFace\n\n"
-    "    Select all boundary faces\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::boundaryToFace::combine(topoSet& set, const bool add) const
@@ -69,16 +61,6 @@ Foam::boundaryToFace::boundaryToFace(const polyMesh& mesh)
 
 
 Foam::boundaryToFace::boundaryToFace(const polyMesh& mesh, const dictionary&)
-:
-    topoSetSource(mesh)
-{}
-
-
-Foam::boundaryToFace::boundaryToFace
-(
-    const polyMesh& mesh,
-    Istream& is
-)
 :
     topoSetSource(mesh)
 {}

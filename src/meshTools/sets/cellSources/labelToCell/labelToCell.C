@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::labelToCell::usage_
-(
-    labelToCell::typeName,
-    "\n    Usage: labelToCell (i0 i1 .. in)\n\n"
-    "    Select cells by cellLabel\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::labelToCell::combine(topoSet& set, const bool add) const

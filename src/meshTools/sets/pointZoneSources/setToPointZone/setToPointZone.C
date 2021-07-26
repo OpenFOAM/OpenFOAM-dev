@@ -37,14 +37,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::setToPointZone::usage_
-(
-    setToPointZone::typeName,
-    "\n    Usage: setToPointZone <pointSet>\n\n"
-    "    Select all points in the pointSet.\n\n"
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::setToPointZone::setToPointZone

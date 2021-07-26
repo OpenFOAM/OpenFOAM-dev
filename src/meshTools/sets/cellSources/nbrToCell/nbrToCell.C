@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::nbrToCell::usage_
-(
-    nbrToCell::typeName,
-    "\n    Usage: nbrToCell <nNeighbours>\n\n"
-    "    Select all cells with <= nNeighbours neighbouring cells\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::nbrToCell::combine(topoSet& set, const bool add) const

@@ -53,8 +53,6 @@ class nearestToPoint
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Points to select nearest to
         pointField points_;

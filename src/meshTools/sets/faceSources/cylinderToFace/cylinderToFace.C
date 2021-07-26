@@ -36,15 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::cylinderToFace::usage_
-(
-    cylinderToFace::typeName,
-    "\n    Usage: cylinderToFace (point1X point1Y point1Z)"
-    " (point2X point2Y point2Z) radius\n\n"
-    "    Select all faces with face centre within bounding cylinder\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::cylinderToFace::combine(topoSet& set, const bool add) const

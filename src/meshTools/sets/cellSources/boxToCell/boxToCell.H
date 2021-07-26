@@ -53,8 +53,6 @@ class boxToCell
 {
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Bounding box.
         treeBoundBoxList bbs_;

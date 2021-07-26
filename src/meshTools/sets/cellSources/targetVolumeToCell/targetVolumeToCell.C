@@ -39,14 +39,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::targetVolumeToCell::usage_
-(
-    targetVolumeToCell::typeName,
-    "\n    Usage: targetVolumeToCell (nx ny nz)\n\n"
-    "    Adjust plane until obtained selected volume\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::scalar Foam::targetVolumeToCell::volumeOfSet

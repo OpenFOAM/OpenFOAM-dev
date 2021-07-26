@@ -65,8 +65,6 @@ class surfaceToCell
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Name of surface file
         const fileName surfName_;

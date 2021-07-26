@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::patchToFace::usage_
-(
-    patchToFace::typeName,
-    "\n    Usage: patchToFace patch\n\n"
-    "    Select all faces in the patch. Note:accepts wildcards for patch.\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::patchToFace::combine(topoSet& set, const bool add) const

@@ -37,15 +37,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::zoneToPoint::usage_
-(
-    zoneToPoint::typeName,
-    "\n    Usage: zoneToPoint zone\n\n"
-    "    Select all points in the pointZone."
-    " Note:accepts wildcards for zone.\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::zoneToPoint::combine(topoSet& set, const bool add) const

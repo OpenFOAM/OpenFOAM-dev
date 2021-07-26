@@ -39,19 +39,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::surfaceToPoint::usage_
-(
-    surfaceToPoint::typeName,
-    "\n    Usage: surfaceToPoint <surface> <near> <inside> <outside>\n\n"
-    "    <surface> name of triSurface\n"
-    "    <near> scalar; include points with coordinate <= near to surface\n"
-    "    <inside> boolean; whether to include points on opposite side of"
-    " surface normal\n"
-    "    <outside> boolean; whether to include points on this side of"
-    " surface normal\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::surfaceToPoint::combine(topoSet& set, const bool add) const

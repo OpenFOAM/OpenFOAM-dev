@@ -61,8 +61,6 @@ class surfaceToPoint
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Name of surface file
         fileName surfName_;

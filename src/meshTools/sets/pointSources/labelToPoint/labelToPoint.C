@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::labelToPoint::usage_
-(
-    labelToPoint::typeName,
-    "\n    Usage: labelToPoint (i0 i1 .. in)\n\n"
-    "    Select points by label\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::labelToPoint::combine(topoSet& set, const bool add) const

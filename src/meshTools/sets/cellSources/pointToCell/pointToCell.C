@@ -48,14 +48,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::pointToCell::usage_
-(
-    pointToCell::typeName,
-    "\n    Usage: pointToCell <pointSet> any|edge\n\n"
-    "    Select all cells with any point ('any') or any edge ('edge')"
-    " in the pointSet\n\n"
-);
-
 const Foam::NamedEnum<Foam::pointToCell::pointAction, 2>
     Foam::pointToCell::pointActionNames_;
 

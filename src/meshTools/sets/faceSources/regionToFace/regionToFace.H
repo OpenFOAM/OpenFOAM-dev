@@ -55,8 +55,6 @@ class regionToFace
 {
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Name of set to use
         word setName_;

@@ -50,14 +50,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::faceToCell::usage_
-(
-    faceToCell::typeName,
-    "\n    Usage: faceToCell <faceSet> neighbour|owner|any|all\n\n"
-    "    Select cells that are the owner|neighbour|any"
-    " of the faces in the faceSet or where all faces are in the faceSet\n\n"
-);
-
 const Foam::NamedEnum<Foam::faceToCell::faceAction, 4>
     Foam::faceToCell::faceActionNames_;
 

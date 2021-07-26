@@ -54,8 +54,6 @@ class normalToFace
 
 private:
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- (unit)vector to compare to
         vector normal_;

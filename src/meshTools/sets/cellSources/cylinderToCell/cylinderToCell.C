@@ -36,15 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::cylinderToCell::usage_
-(
-    cylinderToCell::typeName,
-    "\n    Usage: cylinderToCell (point1X point1Y point1Z)"
-    " (point2X point2Y point2Z) radius\n\n"
-    "    Select all cells with cell centre within bounding cylinder\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::cylinderToCell::combine(topoSet& set, const bool add) const

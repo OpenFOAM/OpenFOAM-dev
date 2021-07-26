@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::labelToFace::usage_
-(
-    labelToFace::typeName,
-    "\n    Usage: labelToFace (i0 i1 .. in)\n\n"
-    "    Select faces by label\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::labelToFace::combine(topoSet& set, const bool add) const

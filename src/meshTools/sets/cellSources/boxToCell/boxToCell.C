@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::boxToCell::usage_
-(
-    boxToCell::typeName,
-    "\n    Usage: boxToCell (minx miny minz) (maxx maxy maxz)\n\n"
-    "    Select all cells with cellCentre within bounding box\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::boxToCell::combine(topoSet& set, const bool add) const

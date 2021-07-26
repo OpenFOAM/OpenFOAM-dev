@@ -37,14 +37,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::cellToCell::usage_
-(
-    cellToCell::typeName,
-    "\n    Usage: cellToCell <cellSet>\n\n"
-    "    Select all cells in the cellSet\n\n"
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::cellToCell::cellToCell

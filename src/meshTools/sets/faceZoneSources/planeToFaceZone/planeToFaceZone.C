@@ -54,15 +54,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::planeToFaceZone::usage_
-(
-    planeToFaceZone::typeName,
-    "\n    Usage: planeToFaceZone (px py pz) (nx ny nz) include\n\n"
-    "    Select faces for which the adjacent cell centres lie on opposite "
-    " of a plane\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::planeToFaceZone::combine(faceZoneSet& fzSet, const bool add) const

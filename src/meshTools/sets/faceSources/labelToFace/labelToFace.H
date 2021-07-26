@@ -53,8 +53,6 @@ class labelToFace
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Cell labels read from dictionary
         labelList labels_;

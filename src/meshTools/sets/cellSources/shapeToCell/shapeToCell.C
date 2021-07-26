@@ -39,15 +39,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::shapeToCell::usage_
-(
-    shapeToCell::typeName,
-    "\n    Usage: shapeToCell tet|pyr|prism|hex|tetWedge|wedge|splitHex\n\n"
-    "    Select all cells of given cellShape.\n"
-    "    (splitHex hardcoded with internal angle < 10 degrees)\n"
-);
-
-
 // Angle for polys to be considered splitHexes.
 Foam::scalar Foam::shapeToCell::featureCos = Foam::cos(degToRad(10.0));
 

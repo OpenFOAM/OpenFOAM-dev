@@ -49,16 +49,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::pointToFace::usage_
-(
-    pointToFace::typeName,
-    "\n    Usage: pointToFace <pointSet> any|all|edge\n\n"
-    "    Select faces with\n"
-    "    -any point in the pointSet\n"
-    "    -all points in the pointSet\n\n"
-    "    -two consecutive points (an edge) in the pointSet\n\n"
-);
-
 const Foam::NamedEnum<Foam::pointToFace::pointAction, 3>
     Foam::pointToFace::pointActionNames_;
 

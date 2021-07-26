@@ -37,14 +37,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::faceToFace::usage_
-(
-    faceToFace::typeName,
-    "\n    Usage: faceToFace <faceSet>\n\n"
-    "    Select all faces in the faceSet\n\n"
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::faceToFace::faceToFace

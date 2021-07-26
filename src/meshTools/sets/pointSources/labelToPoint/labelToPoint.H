@@ -53,8 +53,6 @@ class labelToPoint
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Point labels read from dictionary
         labelList labels_;

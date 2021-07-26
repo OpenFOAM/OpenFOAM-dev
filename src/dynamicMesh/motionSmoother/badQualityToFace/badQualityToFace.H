@@ -54,9 +54,6 @@ class badQualityToFace
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
-
         //- Mesh quality dictionary
         const dictionary dict_;
 

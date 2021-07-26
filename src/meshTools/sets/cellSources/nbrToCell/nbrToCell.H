@@ -54,8 +54,6 @@ class nbrToCell
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Number of internal faces on cell
         label minNbrs_;

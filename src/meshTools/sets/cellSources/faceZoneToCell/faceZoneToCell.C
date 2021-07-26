@@ -47,15 +47,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::faceZoneToCell::usage_
-(
-    faceZoneToCell::typeName,
-    "\n    Usage: faceZoneToCell zone master|slave\n\n"
-    "    Select master or slave side of the faceZone."
-    " Note:accepts wildcards for zone.\n\n"
-);
-
-
 const Foam::NamedEnum<Foam::faceZoneToCell::faceAction, 2>
     Foam::faceZoneToCell::faceActionNames_;
 

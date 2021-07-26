@@ -36,15 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::cylinderAnnulusToCell::usage_
-(
-    cylinderAnnulusToCell::typeName,
-    "\n    Usage: cylinderAnnulusToCell (point1X point1Y point1Z)"
-    " (point2X point2Y point2Z) outerRadius innerRadius\n\n"
-    "    Select all cells with cell centre within bounding cylinder annulus\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::cylinderAnnulusToCell::combine(topoSet& set, const bool add) const

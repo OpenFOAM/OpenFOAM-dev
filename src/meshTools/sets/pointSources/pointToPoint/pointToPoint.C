@@ -37,14 +37,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::pointToPoint::usage_
-(
-    pointToPoint::typeName,
-    "\n    Usage: pointToPoint <pointSet>\n\n"
-    "    Select all points in the pointSet\n\n"
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::pointToPoint::pointToPoint

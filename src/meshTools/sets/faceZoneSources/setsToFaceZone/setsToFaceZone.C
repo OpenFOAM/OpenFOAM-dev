@@ -39,15 +39,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::setsToFaceZone::usage_
-(
-    setsToFaceZone::typeName,
-    "\n    Usage: setsToFaceZone <faceSet> <slaveCellSet>\n\n"
-    "    Select all faces in the faceSet."
-    " Orientated so slave side is in cellSet.\n\n"
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::setsToFaceZone::setsToFaceZone

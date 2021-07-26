@@ -37,15 +37,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::setToFaceZone::usage_
-(
-    setToFaceZone::typeName,
-    "\n    Usage: setToFaceZone <faceSet>\n\n"
-    "    Select all faces in the faceSet."
-    " Sets flipMap.\n\n"
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::setToFaceZone::setToFaceZone

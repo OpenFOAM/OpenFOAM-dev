@@ -36,14 +36,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::boxToPoint::usage_
-(
-    boxToPoint::typeName,
-    "\n    Usage: boxToPoint ((minx miny minz) (maxx maxy maxz))\n\n"
-    "    Select all points with coordinate within bounding box\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::boxToPoint::combine(topoSet& set, const bool add) const

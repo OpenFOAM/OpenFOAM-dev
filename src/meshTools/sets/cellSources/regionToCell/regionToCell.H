@@ -70,8 +70,6 @@ class regionToCell
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Name of cellSet to keep to
         const word setName_;

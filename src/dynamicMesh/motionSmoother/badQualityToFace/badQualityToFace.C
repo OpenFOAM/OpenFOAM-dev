@@ -38,14 +38,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::badQualityToFace::usage_
-(
-    badQualityToFace::typeName,
-    "\n    Usage: badQualityToFace mesh-quality-dictionary\n\n"
-    "    Select all faces that do not satisfy the selection criterion\n\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::badQualityToFace::combine(topoSet& set, const bool add) const

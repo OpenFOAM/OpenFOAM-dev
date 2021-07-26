@@ -39,15 +39,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::regionToCell::usage_
-(
-    regionToCell::typeName,
-    "\n    Usage: regionToCell subCellSet (pt0 .. ptn)\n\n"
-    "    Select all cells in the connected region containing"
-    " points (pt0..ptn).\n"
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::regionToCell::markRegionFaces

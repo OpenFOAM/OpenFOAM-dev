@@ -92,35 +92,8 @@ public:
             REMOVE
         };
 
+
 protected:
-
-        //- A table of usage strings
-        static HashTable<string>* usageTablePtr_;
-
-        //- Class with constructor to add usage string to table
-        class addToUsageTable
-        {
-        public:
-
-            addToUsageTable(const word& name, const string& msg)
-            {
-                if (!usageTablePtr_)
-                {
-                    usageTablePtr_ = new HashTable<string>();
-                }
-                usageTablePtr_->insert(name, msg);
-            }
-
-            ~addToUsageTable()
-            {
-                if (usageTablePtr_)
-                {
-                    delete usageTablePtr_;
-                    usageTablePtr_ = nullptr;
-                }
-            }
-        };
-
 
     // Protected data
 
@@ -188,26 +161,6 @@ public:
                 return topoSetSource::New(topoSetSourceType, mesh_, dict);
             }
         };
-
-
-        static const string& usage(const word& name)
-        {
-            if (!usageTablePtr_)
-            {
-                usageTablePtr_ = new HashTable<string>();
-            }
-
-            const HashTable<string>& usageTable = *usageTablePtr_;
-
-            if (usageTable.found(name))
-            {
-                return usageTable[name];
-            }
-            else
-            {
-                return illegalSource_;
-            }
-        }
 
 
     // Constructors

@@ -51,12 +51,7 @@ class fieldToCell
 :
     public topoSetSource
 {
-
     // Private Data
-
-        //- Add usage string
-        static addToUsageTable usage_;
-
 
         //- Name of volScalarField
         word fieldName_;
@@ -64,7 +59,7 @@ class fieldToCell
         //- Min to subset field values with
         scalar min_;
 
-        //- Max ,,
+        //- Max to subset field values with
         scalar max_;
 
 
@@ -78,10 +73,12 @@ class fieldToCell
             topoSet& set
         ) const;
 
+
 public:
 
     //- Runtime type information
     TypeName("fieldToCell");
+
 
     // Constructors
 

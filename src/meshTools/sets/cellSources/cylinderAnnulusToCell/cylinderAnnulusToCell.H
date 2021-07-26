@@ -54,8 +54,6 @@ class cylinderAnnulusToCell
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- First point on cylinder axis
         vector point1_;

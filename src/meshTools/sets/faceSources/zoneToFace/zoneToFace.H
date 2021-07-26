@@ -54,8 +54,6 @@ class zoneToFace
 
     // Private Data
 
-        //- Add usage string
-        static addToUsageTable usage_;
 
         //- Name/regular expression of cellZone
         wordRe zoneName_;

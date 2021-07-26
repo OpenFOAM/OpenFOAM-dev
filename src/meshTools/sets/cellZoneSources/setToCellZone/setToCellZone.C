@@ -37,14 +37,6 @@ namespace Foam
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::setToCellZone::usage_
-(
-    setToCellZone::typeName,
-    "\n    Usage: setToCellZone <cellSet>\n\n"
-    "    Select all cells in the cellSet.\n\n"
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::setToCellZone::setToCellZone
