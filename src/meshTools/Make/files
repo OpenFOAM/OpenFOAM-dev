@@ -162,6 +162,7 @@ $(faceSources)/boxToFace/boxToFace.C
 $(faceSources)/regionToFace/regionToFace.C
 $(faceSources)/cylinderToFace/cylinderToFace.C
 $(faceSources)/cylinderAnnulusToFace/cylinderAnnulusToFace.C
+$(faceSources)/patchFluxToFace/patchFluxToFace.C
 
 pointSources = sets/pointSources
 $(pointSources)/labelToPoint/labelToPoint.C
