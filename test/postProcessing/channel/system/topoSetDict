@@ -21,20 +21,14 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        sourceInfo
-        {
-            name    inlet;
-        }
+        name    inlet;
     }
     {
         name    f0;
         type    faceZoneSet;
         action  new;
         source  setToFaceZone;
-        sourceInfo
-        {
-            set     f0;
-        }
+        set     f0;
     }
 );
 

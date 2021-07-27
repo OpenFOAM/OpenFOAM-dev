@@ -21,20 +21,14 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        sourceInfo
-        {
-            name walls;
-        }
+        name walls;
     }
     {
         name    walls;
         type    faceZoneSet;
         action  new;
         source  setToFaceZone;
-        sourceInfo
-        {
-            faceSet walls;
-        }
+        faceSet walls;
     }
 );
 

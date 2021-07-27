@@ -21,10 +21,7 @@ actions
         type    faceSet;
         action  new;
         source  boxToFace;
-        sourceInfo
-        {
-            box (-0.84 -0.31 -0.01)(-0.82 0.31 0.06);
-        }
+        box (-0.84 -0.31 -0.01)(-0.82 0.31 0.06);
     }
 );
 

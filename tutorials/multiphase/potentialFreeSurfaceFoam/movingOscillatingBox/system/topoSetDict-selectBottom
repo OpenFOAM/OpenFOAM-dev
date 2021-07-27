@@ -32,11 +32,8 @@ actions
         type    faceSet;
         action  subset;
         source  normalToFace;
-        sourceInfo
-        {
-            normal (0 1 0);     // Vector
-            cos     0.01;       // Tolerance (max cos of angle)
-        }
+        normal (0 1 0);     // Vector
+        cos     0.01;       // Tolerance (max cos of angle)
     }
 );
 

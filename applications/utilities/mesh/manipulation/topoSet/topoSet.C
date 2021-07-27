@@ -25,7 +25,9 @@ Application
     topoSet
 
 Description
-    Operates on cellSets/faceSets/pointSets through a dictionary.
+    Executes the sequence of topoSet actions specified in the topoSetDict.
+
+Usage
 
 \*---------------------------------------------------------------------------*/
 
@@ -216,9 +218,9 @@ int main(int argc, char *argv[])
     // Read set construct info from dictionary
     PtrList<dictionary> actions(topoSetDict.lookup("actions"));
 
-    forAll(timeDirs, timeI)
+    forAll(timeDirs, timei)
     {
-        runTime.setTime(timeDirs[timeI], timeI);
+        runTime.setTime(timeDirs[timei], timei);
         Info<< "Time = " << runTime.timeName() << endl;
 
         // Optionally re-read mesh
@@ -232,7 +234,6 @@ int main(int argc, char *argv[])
             const word setName(dict.lookup("name"));
             const word actionName(dict.lookup("action"));
             const word setType(dict.lookup("type"));
-
 
             topoSetSource::setAction action = topoSetSource::toAction
             (
@@ -270,7 +271,6 @@ int main(int argc, char *argv[])
             }
 
 
-
             // Handle special actions (clear, invert) locally, rest through
             // sources.
             switch (action)
@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
                     (
                         dict.lookup("source"),
                         mesh,
-                        dict.subDict("sourceInfo")
+                        dict.optionalSubDict("sourceInfo")
                     );
 
                     source().applyToSet(action, currentSet());
@@ -304,7 +304,7 @@ int main(int argc, char *argv[])
                     (
                         dict.lookup("source"),
                         mesh,
-                        dict.subDict("sourceInfo")
+                        dict.optionalSubDict("sourceInfo")
                     );
 
                     // Backup current set.

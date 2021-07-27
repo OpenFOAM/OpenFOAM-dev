@@ -31,40 +31,28 @@ actions
         type    cellSet;
         action  delete;
         source  boxToCell;
-        sourceInfo
-        {
-            box (0.4 0.1 0.1) (0.6 0.3 0.3);
-        }
+        box (0.4 0.1 0.1) (0.6 0.3 0.3);
     }
     {
         name    c0;
         type    cellSet;
         action  delete;
         source  boxToCell;
-        sourceInfo
-        {
-            box (0.4 0.1 0.4) (0.6 0.3 0.6);
-        }
+        box (0.4 0.1 0.4) (0.6 0.3 0.6);
     }
     {
         name    c0;
         type    cellSet;
         action  delete;
         source  boxToCell;
-        sourceInfo
-        {
-            box (0.4 0.4 0.1) (0.6 0.6 0.3);
-        }
+        box (0.4 0.4 0.1) (0.6 0.6 0.3);
     }
     {
         name    c0;
         type    cellSet;
         action  delete;
         source  boxToCell;
-        sourceInfo
-        {
-            box (0.4 0.4 0.4) (0.6 0.6 0.6);
-        }
+        box (0.4 0.4 0.4) (0.6 0.6 0.6);
     }
 );
 

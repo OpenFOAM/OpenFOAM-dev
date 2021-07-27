@@ -32,10 +32,7 @@ actions
         type    faceZoneSet;
         action  new;
         source  setToFaceZone;
-        sourceInfo
-        {
-            faceSet plateFaceSet;
-        }
+        faceSet plateFaceSet;
     }
 );
 

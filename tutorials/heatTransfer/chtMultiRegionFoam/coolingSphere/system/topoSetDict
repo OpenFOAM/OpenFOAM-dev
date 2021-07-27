@@ -23,18 +23,15 @@ actions
         type    cellSet;
         action  new;
         source  sphereToCell;
-        sourceInfo
-        {
-            centre (0 0 0);
-            radius $!geometry/sphere/radius;
-        }
+        centre (0 0 0);
+        radius $!geometry/sphere/radius;
     }
     {
         name    solid;
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo { set cs; }
+        set cs;
     }
 );
 

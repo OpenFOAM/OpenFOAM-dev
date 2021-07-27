@@ -20,13 +20,10 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-           boxes
-           (
-                (3.48 -0.1 -0.1) (3.5 0.1 0.1)
-           );
-        }
+       boxes
+       (
+            (3.48 -0.1 -0.1) (3.5 0.1 0.1)
+       );
     }
 
     {
@@ -34,10 +31,7 @@ actions
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo
-        {
-           set  x349;
-        }
+       set  x349;
     }
 
     {
@@ -45,13 +39,10 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-           boxes
-           (
-                (3.48 0.0093 -0.1) (3.5 0.1 0.1)
-           );
-        }
+       boxes
+       (
+            (3.48 0.0093 -0.1) (3.5 0.1 0.1)
+       );
     }
 
     {
@@ -59,10 +50,7 @@ actions
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo
-        {
-           set  x349_wall;
-        }
+       set  x349_wall;
     }
 
     {
@@ -70,13 +58,10 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-           boxes
-           (
-                (3.48 0.0 -0.1) (3.5 0.005 0.1)
-           );
-        }
+       boxes
+       (
+            (3.48 0.0 -0.1) (3.5 0.005 0.1)
+       );
     }
 
     {
@@ -84,10 +69,7 @@ actions
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo
-        {
-           set  x349_bulk;
-        }
+       set  x349_bulk;
     }
 
 );

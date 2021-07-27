@@ -32,21 +32,15 @@ actions
         type    faceSet;
         action  new;
         source  cellToFace;
-        sourceInfo
-        {
-            set     rotorCells;
-            option  all;
-        }
+        set     rotorCells;
+        option  all;
     }
     {
         name    rotorFaces;
         type    faceSet;
         action  subset;
         source  boxToFace;
-        sourceInfo
-        {
-            box (-100 -100 0.1) (100 100 0.15);
-        }
+        box (-100 -100 0.1) (100 100 0.15);
     }
 
     {
@@ -54,10 +48,7 @@ actions
         type    faceSet;
         action  new;
         source  faceToFace;
-        sourceInfo
-        {
-            set     rotorFaces;
-        }
+        set     rotorFaces;
     }
 
     {
@@ -65,10 +56,7 @@ actions
         type    faceSet;
         action  subset;
         source  boxToFace;
-        sourceInfo
-        {
-            box (-100 0.249 -100) (100 0.251 100);
-        }
+        box (-100 0.249 -100) (100 0.251 100);
     }
 
     {
@@ -76,10 +64,7 @@ actions
         type    faceSet;
         action  new;
         source  faceToFace;
-        sourceInfo
-        {
-            set     rotorFaces;
-        }
+        set     rotorFaces;
     }
 
     {
@@ -87,10 +72,7 @@ actions
         type    faceSet;
         action  subset;
         source  boxToFace;
-        sourceInfo
-        {
-            box (0.249 -100 -100) (0.251 100 100);
-        }
+        box (0.249 -100 -100) (0.251 100 100);
     }
 
     {
@@ -98,20 +80,14 @@ actions
         type    faceSet;
         action  add;
         source  faceToFace;
-        sourceInfo
-        {
-            set     rotorBlades2;
-        }
+        set     rotorBlades2;
     }
     {
         name    rotorBlades;
         type    faceZoneSet;
         action  new;
         source  setToFaceZone;
-        sourceInfo
-        {
-            faceSet rotorBladesFaceSet;
-        }
+        faceSet rotorBladesFaceSet;
     }
 );
 

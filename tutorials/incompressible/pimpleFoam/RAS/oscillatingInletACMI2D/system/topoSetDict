@@ -34,10 +34,7 @@ actions
         type    faceZoneSet;
         action  new;
         source  setToFaceZone;
-        sourceInfo
-        {
-            faceSet couple1FaceSet;
-        }
+        faceSet couple1FaceSet;
     }
 
     // Create faceZone for patch couple2
@@ -56,10 +53,7 @@ actions
         type    faceZoneSet;
         action  new;
         source  setToFaceZone;
-        sourceInfo
-        {
-            faceSet couple2FaceSet;
-        }
+        faceSet couple2FaceSet;
     }
 
     // Create cellZone for moving cells in inlet channel
@@ -68,20 +62,14 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-            box     (-100 -100 -100) (1.0001 100 100);
-        }
+        box     (-100 -100 -100) (1.0001 100 100);
     }
     {
         name    inletChannel;
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo
-        {
-            set     inletChannelCellSet;
-        }
+        set     inletChannelCellSet;
     }
 );
 

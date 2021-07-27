@@ -22,20 +22,14 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-            box (581850.5 4785805 1061) (581850.8 4785815 1071);
-        }
+        box (581850.5 4785805 1061) (581850.8 4785815 1071);
     }
     {
         name    actuationDisk1;
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo
-        {
-            set actuationDisk1CellSet;
-        }
+        set actuationDisk1CellSet;
     }
 
     // actuationDisk2
@@ -44,20 +38,14 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-            box (581754 4785658 1065) (581754.4 4785668 1075);
-        }
+        box (581754 4785658 1065) (581754.4 4785668 1075);
     }
     {
         name    actuationDisk2;
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo
-        {
-            set actuationDisk2CellSet;
-        }
+        set actuationDisk2CellSet;
     }
 
 );

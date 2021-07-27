@@ -16,26 +16,22 @@ FoamFile
 
 actions
 (
-    // porousBlockage
+    // Create porousBlockage cellSet
     {
         name    porousBlockageCellSet;
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-            box (-0.5 -0.5 -1) (0.5 0.5 1);
-        }
+        box (-0.5 -0.5 -1) (0.5 0.5 1);
     }
+
+    // Convert porousBlockage cellSet into a cellZone
     {
         name    porousBlockage;
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo
-        {
-            set porousBlockageCellSet;
-        }
+        set porousBlockageCellSet;
     }
 );
 

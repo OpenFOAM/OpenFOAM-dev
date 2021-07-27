@@ -38,12 +38,9 @@ Usage
             type    faceSet;
             name    inflow;
             source  patchFluxToFace;
-            sourceInfo
-            {
-                field       phi;
-                patch       outlet;
-                inflow      true;
-            }
+            field   phi;
+            patch   outlet;
+            inflow  true;
         }
 
         {
@@ -51,12 +48,9 @@ Usage
             type    faceSet;
             name    outflow;
             source  patchFluxToFace;
-            sourceInfo
-            {
-                field       phi;
-                patch       outlet;
-                inflow      false;
-            }
+            field   phi;
+            patch   outlet;
+            inflow  false;
         }
     );
     \endverbatim

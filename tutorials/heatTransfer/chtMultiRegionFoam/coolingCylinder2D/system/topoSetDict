@@ -23,22 +23,18 @@ actions
         type    cellSet;
         action  new;
         source  cylinderToCell;
-        sourceInfo
-        {
-            point1 (0 0 -100);
-            point2 (0 0  100);
-            centre (0 0 0);
-            radius $cylinderRadius;
-        }
+        point1 (0 0 -100);
+        point2 (0 0  100);
+        centre (0 0 0);
+        radius $cylinderRadius;
     }
     {
         name    solid;
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo { set cs; }
+        set cs;
     }
-
 );
 
 // ************************************************************************* //

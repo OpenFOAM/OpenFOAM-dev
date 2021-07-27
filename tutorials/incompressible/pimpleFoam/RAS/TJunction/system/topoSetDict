@@ -21,22 +21,16 @@ actions
         type    faceZoneSet;
         action  new;
         source  searchableSurfaceToFaceZone;
-        sourceInfo
-        {
-            surface triSurfaceMesh;
-            name  "surface1.obj";
-        }
+        surface triSurfaceMesh;
+        file    "surface1.obj";
     }
     {
         name    fz2;
         type    faceZoneSet;
         action  new;
         source  searchableSurfaceToFaceZone;
-        sourceInfo
-        {
-            surface triSurfaceMesh;
-            name  "surface2.obj";
-        }
+        surface triSurfaceMesh;
+        file    "surface2.obj";
     }
 );
 

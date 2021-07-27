@@ -21,13 +21,10 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-           boxes
-           (
-                (0 0.04 0) (0.1 0.05 0.1)
-           );
-        }
+       boxes
+       (
+            (0 0.04 0) (0.1 0.05 0.1)
+       );
     }
 
     {
@@ -35,10 +32,7 @@ actions
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        sourceInfo
-        {
-           set  injection;
-        }
+       set  injection;
     }
 );
 

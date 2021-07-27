@@ -25,10 +25,7 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-            box (-100 -100 $zSlice)(100 100 100);
-        }
+        box (-100 -100 $zSlice)(100 100 100);
     }
 
     {
@@ -36,11 +33,8 @@ actions
         type    faceSet;
         action  new;
         source  cellToFace;
-        sourceInfo
-        {
-            set    z;
-            option all;
-        }
+        set    z;
+        option all;
     }
 
     {
@@ -54,11 +48,8 @@ actions
         type    faceSet;
         action  subset;
         source  cellToFace;
-        sourceInfo
-        {
-            set    z;
-            option all;
-        }
+        set    z;
+        option all;
     }
 
     // ~~~~~~~~~~~~~~~~ //
@@ -68,10 +59,7 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-            box (-100 $ySlice -100)(100 100 100);
-        }
+        box (-100 $ySlice -100)(100 100 100);
     }
 
     {
@@ -79,11 +67,8 @@ actions
         type    faceSet;
         action  new;
         source  cellToFace;
-        sourceInfo
-        {
-            set    y;
-            option all;
-        }
+        set    y;
+        option all;
     }
 
     {
@@ -97,11 +82,8 @@ actions
         type    faceSet;
         action  subset;
         source  cellToFace;
-        sourceInfo
-        {
-            set    y;
-            option all;
-        }
+        set    y;
+        option all;
     }
 
     // ~~~~~~~~~~~~~~~~ //
@@ -111,10 +93,7 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-            box ($xSlice -100 -100)(100 100 100);
-        }
+        box ($xSlice -100 -100)(100 100 100);
     }
 
     {
@@ -122,11 +101,8 @@ actions
         type    faceSet;
         action  new;
         source  cellToFace;
-        sourceInfo
-        {
-            set    x;
-            option all;
-        }
+        set    x;
+        option all;
     }
 
     {
@@ -140,11 +116,8 @@ actions
         type    faceSet;
         action  subset;
         source  cellToFace;
-        sourceInfo
-        {
-            set    x;
-            option all;
-        }
+        set    x;
+        option all;
     }
 );
 

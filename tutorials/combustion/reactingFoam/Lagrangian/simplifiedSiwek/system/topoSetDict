@@ -22,11 +22,8 @@ actions
         action new;
 
         source sphereToCell;
-        sourceInfo
-        {
-            centre          (0.125 0.375 0.05);
-            radius          0.005;
-        }
+        centre          (0.125 0.375 0.05);
+        radius          0.005;
     }
 );
 

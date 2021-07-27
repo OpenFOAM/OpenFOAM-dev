@@ -20,16 +20,13 @@ actions
         type    cellSet;
         action  new;
         source surfaceToCell;
-        sourceInfo
-        {
-            file            "constant/geometry/flange.obj";
-            outsidePoints   ((-0.026 -0.0275 -0.0235));
-            includeCut      true;
-            includeInside   true;
-            includeOutside  false;
-            nearDistance    -1;
-            curvature       -100;
-        }
+        file            "constant/geometry/flange.obj";
+        outsidePoints   ((-0.026 -0.0275 -0.0235));
+        includeCut      true;
+        includeInside   true;
+        includeOutside  false;
+        nearDistance    -1;
+        curvature       -100;
     }
 );
 

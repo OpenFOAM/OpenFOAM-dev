@@ -21,10 +21,7 @@ actions
         type    faceSet;
         action  new;
         source  boxToFace;
-        sourceInfo
-        {
-            box (0.099 -0.006 0.004)(0.101 0.006 0.016);
-        }
+        box (0.099 -0.006 0.004)(0.101 0.006 0.016);
     }
 
     {
@@ -32,10 +29,7 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-            box (-10 -10 -10)(0.1 10 10);
-        }
+        box (-10 -10 -10)(0.1 10 10);
     }
 
     {
@@ -43,11 +37,8 @@ actions
         type    faceZoneSet;
         action  new;
         source  setsToFaceZone;
-        sourceInfo
-        {
-            faceSet cyclicFacesFaceSet;
-            cellSet cyclicFacesSlaveCells;
-        }
+        faceSet cyclicFacesFaceSet;
+        cellSet cyclicFacesSlaveCells;
     }
 
     {
@@ -55,10 +46,7 @@ actions
         type    faceSet;
         action  new;
         source  boxToFace;
-        sourceInfo
-        {
-            box (0.099 -10 -10)(0.101 10 10);
-        }
+        box (0.099 -10 -10)(0.101 10 10);
     }
 
     {
@@ -66,10 +54,7 @@ actions
         type    faceSet;
         action  delete;
         source  boxToFace;
-        sourceInfo
-        {
-            box (0.099 -0.006 0.004)(0.101 0.006 0.016);
-        }
+        box (0.099 -0.006 0.004)(0.101 0.006 0.016);
     }
 
     {
@@ -77,10 +62,7 @@ actions
         type    faceZoneSet;
         action  new;
         source  setToFaceZone;
-        sourceInfo
-        {
-            faceSet baffleFaceSet;
-        }
+        faceSet baffleFaceSet;
     }
 );
 

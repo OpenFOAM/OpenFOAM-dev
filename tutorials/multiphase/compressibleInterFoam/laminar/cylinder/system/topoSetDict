@@ -31,10 +31,7 @@ actions
         type    faceZoneSet;
         action  new;
         source  setToFaceZone;
-        sourceInfo
-        {
-            faceSet wallFilmFaceSet;
-        }
+        faceSet wallFilmFaceSet;
     }
 );
 

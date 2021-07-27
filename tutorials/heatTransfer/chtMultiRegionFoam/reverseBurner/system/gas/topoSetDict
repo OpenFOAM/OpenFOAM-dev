@@ -20,10 +20,7 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        sourceInfo
-        {
-            box (0.01 0.1 -0.01) (0.02 0.11 0.01);
-        }
+        box (0.01 0.1 -0.01) (0.02 0.11 0.01);
     }
 );
 

@@ -31,21 +31,15 @@ actions
         type    faceSet;
         action  subset;
         source  boxToFace;
-        sourceInfo
-        {
-            box (0 -100 -100)(100 -0.2 100);
-        }
+        box (0 -100 -100)(100 -0.2 100);
     }
     {
         name    c0;
         type    cellSet;
         action  new;
         source  faceToCell;
-        sourceInfo
-        {
-            set     f0;
-            option  any;
-        }
+        set     f0;
+        option  any;
     }
 
 
@@ -64,11 +58,8 @@ actions
         type    cellSet;
         action  delete;
         source  faceToCell;
-        sourceInfo
-        {
-            set     walls;
-            option  any;
-        }
+        set     walls;
+        option  any;
     }
 );
 
