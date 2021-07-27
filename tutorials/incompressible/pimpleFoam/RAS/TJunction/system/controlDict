@@ -79,10 +79,10 @@ functions
         );
     }
 
-    #includeFunc "flowRatePatch(name=outlet1)"
-    #includeFunc "flowRateFaceZone(name=fz1)"
-    #includeFunc "flowRatePatch(name=outlet2)"
-    #includeFunc "flowRateFaceZone(name=fz2)"
+    #includeFunc patchFlowRate(patch=outlet1)
+    #includeFunc faceZoneFlowRate(name=fz1)
+    #includeFunc patchFlowRate(patch=outlet2)
+    #includeFunc faceZoneFlowRate(name=fz2)
 }
 
 // ************************************************************************* //
