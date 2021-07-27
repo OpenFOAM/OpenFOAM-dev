@@ -97,7 +97,12 @@ Foam::zoneToPoint::zoneToPoint
 )
 :
     topoSetSource(mesh),
-    zoneName_(dict.lookup("name"))
+    zoneName_
+    (
+        dict.dictName() == "sourceInfo"
+      ? dict.lookupBackwardsCompatible({"zone", "name"})
+      : dict.lookup("zone")
+    )
 {}
 
 

@@ -21,10 +21,7 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        sourceInfo
-        {
-            name wallFilm;
-        }
+        patch   wallFilm;
     }
     {
         name    wallFilmFaces;

@@ -24,10 +24,7 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        sourceInfo
-        {
-            name    couple1;
-        }
+        patch   couple1;
     }
     {
         name    couple1Faces;
@@ -43,10 +40,7 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        sourceInfo
-        {
-            name    couple2;
-        }
+        patch   couple2;
     }
     {
         name    couple2Faces;

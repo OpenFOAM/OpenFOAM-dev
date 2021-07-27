@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellToCell.H"
-#include "polyMesh.H"
 #include "cellSet.H"
 #include "addToRunTimeSelectionTable.H"
 

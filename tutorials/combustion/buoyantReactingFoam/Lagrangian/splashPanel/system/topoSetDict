@@ -21,7 +21,7 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        name walls;
+        patch   walls;
     }
     {
         name    walls;

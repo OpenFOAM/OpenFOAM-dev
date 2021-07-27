@@ -118,7 +118,7 @@ Foam::faceZoneToCell::faceZoneToCell
 )
 :
     topoSetSource(mesh),
-    zoneName_(dict.lookup("name")),
+    zoneName_(dict.lookupBackwardsCompatible({"zone", "name"})),
     option_(faceActionNames_.read(dict.lookup("option")))
 {}
 

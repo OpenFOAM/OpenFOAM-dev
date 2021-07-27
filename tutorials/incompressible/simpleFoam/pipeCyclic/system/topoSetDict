@@ -21,10 +21,7 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        sourceInfo
-        {
-            name "side1";
-        }
+        patch   "side1";
     }
     {
         name    f0;
@@ -48,10 +45,7 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        sourceInfo
-        {
-            name "walls";
-        }
+        patch   "walls";
     }
     {
         name    c0;

@@ -209,7 +209,11 @@ Foam::searchableSurfaceToFaceZone::searchableSurfaceToFaceZone
             word(dict.lookup("surface")),
             IOobject
             (
-                dict.lookupOrDefault("name", mesh.objectRegistry::db().name()),
+                dict.lookupOrDefault
+                (
+                    "file",
+                    mesh.objectRegistry::db().name()
+                ),
                 mesh.time().constant(),
                 searchableSurface::geometryDir(mesh.time()),
                 mesh.objectRegistry::db(),

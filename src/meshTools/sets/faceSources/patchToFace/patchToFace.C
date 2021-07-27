@@ -97,7 +97,12 @@ Foam::patchToFace::patchToFace
 )
 :
     topoSetSource(mesh),
-    patchName_(dict.lookup("name"))
+    patchName_
+    (
+        dict.dictName() == "sourceInfo"
+      ? dict.lookupBackwardsCompatible({"patch", "name"})
+      : dict.lookup("patch")
+    )
 {}
 
 

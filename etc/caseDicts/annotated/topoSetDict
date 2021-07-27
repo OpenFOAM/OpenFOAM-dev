@@ -106,18 +106,12 @@ set c1;
 
 // cellSet from cell zone
 source zoneToCell;
-sourceInfo
-{
-    name ".*Zone";      // Name of cellZone, regular expressions allowed
-}
+zone   ".*Zone";      // Name of cellZone, regular expressions allowed
 
 // cellSet from cells on master or slave side of faceZone
 source faceZoneToCell;
-sourceInfo
-{
-    name ".*Zone";      // Name of faceZone, regular expressions allowed
-    option master;      // master/slave
-}
+zone   ".*Zone";      // Name of faceZone, regular expressions allowed
+option master;        // master/slave
 
 // cellSet from faceSet
 source faceToCell;
@@ -213,8 +207,8 @@ option all;         // All faces of cells
 source pointToFace;
 set p0;
 option any;         // Faces using any point in pointSet
-// option all        // Faces with all points in pointSet
-// option edge       // Faces with two consecutive points in pointSet
+// option all          // Faces with all points in pointSet
+// option edge         // Faces with two consecutive points in pointSet
 
 // faceSet specified by labels
 source labelToFace;
@@ -222,21 +216,15 @@ value (12 13 56);   // labels of faces
 
 // faceSet from patches
 source patchToFace;
-sourceInfo
-{
-    name ".*Wall";      // Name of patch or patch group,
-                        // (regular expressions allowed)
-}
+patch  ".*Wall";    // Name of patch or patch group,
+                    // (regular expressions allowed)
 
 // faceSet from the boundary
 source boundaryToFace;
 
 // faceSet from a faceZone
 source zoneToFace;
-sourceInfo
-{
-    name ".*Zone1";     // Name of faceZone, regular expressions allowed
-}
+zone   ".*Zone1";     // Name of faceZone, regular expressions allowed
 
 // faceSet inside a rectangular bounding box or boxes
 source boxToFace;
@@ -273,10 +261,7 @@ value (12 13 56);   // labels of points
 
 // pointSet from pointZone
 source zoneToPoint;
-sourceInfo
-{
-    name ".*Zone";      // name of pointZone, regular expressions allowed
-}
+zone   ".*Zone";      // name of pointZone, regular expressions allowed
 
 // pointSet nearest to positions
 source nearestToPoint;

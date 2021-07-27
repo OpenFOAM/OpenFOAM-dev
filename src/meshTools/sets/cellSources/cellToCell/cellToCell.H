@@ -52,9 +52,9 @@ class cellToCell
 {
     // Private Data
 
-
         //- Name of set to use
         word setName_;
+
 
 public:
 
@@ -94,7 +94,6 @@ public:
             const topoSetSource::setAction action,
             topoSet&
         ) const;
-
 };
 
 
