@@ -27,7 +27,7 @@ regions
 (
     zoneToCell
     {
-        name pipe;
+        zone pipe;
         fieldValues
         (
             volScalarFieldValue CH4 $!pipe/CH4
