@@ -1,4 +1,4 @@
 c++DBUG     =
-c++OPT      = -O3 -mcpu=native -fno-tree-slp-vectorize
+c++OPT      = -O3 -mcpu=native
 
 ROUNDING_MATH = -frounding-math
