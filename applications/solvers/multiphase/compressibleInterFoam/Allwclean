@@ -5,6 +5,7 @@ wclean libso compressibleTwoPhaseMixture
 wclean libso surfaceTensionModels
 wclean libso twoPhaseChange
 wclean libso compressibleInterPhaseTransportModel
+wclean libso VoFTurbulenceDamping
 wclean libso VoFClouds
 wclean libso VoFSurfaceFilm
 

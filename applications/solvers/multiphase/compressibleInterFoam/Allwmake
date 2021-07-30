@@ -8,6 +8,7 @@ wmake $targetType compressibleTwoPhaseMixture
 wmake $targetType surfaceTensionModels
 wmake $targetType twoPhaseChange
 wmake $targetType compressibleInterPhaseTransportModel
+wmake $targetType VoFTurbulenceDamping
 wmake $targetType VoFClouds
 wmake $targetType VoFSurfaceFilm
 
