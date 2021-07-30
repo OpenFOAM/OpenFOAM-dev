@@ -89,11 +89,6 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
                 IOdictionary phasePropertiesDict(transportPropertiesIO);
                 phasePropertiesDict.rename("phaseProperties");
 
-                WarningInFunction
-                    << "Automatically converting "
-                    << transportPropertiesIO.name()
-                    << " into " << phasePropertiesDict.name() << " and ".
-
                 const wordList phases(phasePropertiesDict.lookup("phases"));
 
                 forAll(phases, i)
