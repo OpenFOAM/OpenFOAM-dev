@@ -47,7 +47,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::continuousGasKEpsilon
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -58,7 +58,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::continuousGasKEpsilon
         U,
         alphaRhoPhi,
         phi,
-        transport,
+        viscosity,
         type
     ),
 
@@ -119,7 +119,7 @@ void continuousGasKEpsilon<BasicMomentumTransportModel>::correctNut()
 
     const momentumTransportModel& liquidTurbulence = this->liquidTurbulence();
 
-    const phaseModel& gas = refCast<const phaseModel>(this->transport());
+    const phaseModel& gas = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = gas.fluid();
     const phaseModel& liquid = fluid.otherPhase(gas);
 
@@ -155,7 +155,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::liquidTurbulence() const
     {
         const volVectorField& U = this->U_;
 
-        const phaseModel& gas = refCast<const phaseModel>(this->transport());
+        const phaseModel& gas = refCast<const phaseModel>(this->properties());
         const phaseSystem& fluid = gas.fluid();
         const phaseModel& liquid = fluid.otherPhase(gas);
 
@@ -205,7 +205,7 @@ template<class BasicMomentumTransportModel>
 tmp<Foam::volScalarField>
 continuousGasKEpsilon<BasicMomentumTransportModel>::rhoEff() const
 {
-    const phaseModel& gas = refCast<const phaseModel>(this->transport());
+    const phaseModel& gas = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = gas.fluid();
     const phaseModel& liquid = fluid.otherPhase(gas);
 

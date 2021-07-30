@@ -86,57 +86,6 @@ Foam::rhoThermo::implementation::implementation
 {}
 
 
-Foam::rhoThermo::implementation::implementation
-(
-    const fvMesh& mesh,
-    const dictionary& dict,
-    const word& phaseName
-)
-:
-    rho_
-    (
-        IOobject
-        (
-            phasePropertyName("thermo:rho", phaseName),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimDensity
-    ),
-
-    psi_
-    (
-        IOobject
-        (
-            phasePropertyName("thermo:psi", phaseName),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionSet(0, -2, 2, 0, 0)
-    ),
-
-    mu_
-    (
-        IOobject
-        (
-            phasePropertyName("thermo:mu", phaseName),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionSet(1, -1, -1, 0, 0)
-    )
-{}
-
-
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::rhoThermo> Foam::rhoThermo::New

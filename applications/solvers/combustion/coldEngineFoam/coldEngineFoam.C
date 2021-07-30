@@ -33,7 +33,7 @@ Description
 #include "engineTime.H"
 #include "engineMesh.H"
 #include "psiThermo.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "fluidThermophysicalTransportModel.H"
 #include "OFstream.H"
 #include "fvModels.H"

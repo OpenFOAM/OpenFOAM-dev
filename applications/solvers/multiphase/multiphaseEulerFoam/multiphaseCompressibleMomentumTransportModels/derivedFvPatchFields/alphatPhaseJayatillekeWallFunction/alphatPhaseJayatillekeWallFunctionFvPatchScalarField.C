@@ -25,7 +25,7 @@ License
 
 #include "alphatPhaseJayatillekeWallFunctionFvPatchScalarField.H"
 #include "phaseSystem.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -182,8 +182,8 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
 
     const scalarField& y = turbModel.y()[patchi];
 
-    const tmp<scalarField> tmuw = turbModel.mu(patchi);
-    const scalarField& muw = tmuw();
+    const tmp<scalarField> tnuw = turbModel.nu(patchi);
+    const scalarField& nuw = tnuw();
 
     const tmp<scalarField> talphaw = phase.thermo().alpha(patchi);
     const scalarField& alphaw = talphaw();
@@ -213,9 +213,9 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
 
     const scalarField uTau(Cmu25*sqrt(kw));
 
-    const scalarField yPlus(uTau*y/(muw/rhow));
+    const scalarField yPlus(uTau*y/nuw);
 
-    const scalarField Pr(muw/alphaw);
+    const scalarField Pr(rhow*nuw/alphaw);
 
     // Molecular-to-turbulent Prandtl number ratio
     const scalarField Prat(Pr/Prt_);

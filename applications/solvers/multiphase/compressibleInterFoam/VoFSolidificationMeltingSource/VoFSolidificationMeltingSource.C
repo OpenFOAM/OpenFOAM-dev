@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFSolidificationMeltingSource.H"
-#include "twoPhaseMixtureThermo.H"
+#include "compressibleTwoPhaseMixture.H"
 #include "fvcDdt.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -59,60 +59,13 @@ void Foam::fv::VoFSolidificationMeltingSource::readCoeffs()
 }
 
 
-void Foam::fv::VoFSolidificationMeltingSource::update() const
-{
-    if (curTimeIndex_ == mesh().time().timeIndex())
-    {
-        return;
-    }
-
-    if (debug)
-    {
-        Info<< type() << ": " << name()
-            << " - updating solid phase fraction" << endl;
-    }
-
-    alphaSolid_.oldTime();
-
-    const twoPhaseMixtureThermo& thermo
-    (
-        mesh().lookupObject<twoPhaseMixtureThermo>
-        (
-            twoPhaseMixtureThermo::dictName
-        )
-    );
-
-    const volScalarField& TVoF = thermo.thermo1().T();
-    const volScalarField CpVoF(thermo.thermo1().Cp());
-    const volScalarField& alphaVoF = thermo.alpha1();
-
-    const labelList& cells = set_.cells();
-
-    forAll(cells, i)
-    {
-        const label celli = cells[i];
-
-        alphaSolid_[celli] = min
-        (
-            relax_*alphaVoF[celli]*alphaSolidT_->value(TVoF[celli])
-          + (1 - relax_)*alphaSolid_[celli],
-            alphaVoF[celli]
-        );
-    }
-
-    alphaSolid_.correctBoundaryConditions();
-
-    curTimeIndex_ = mesh().time().timeIndex();
-}
-
-
 Foam::word Foam::fv::VoFSolidificationMeltingSource::alphaSolidName() const
 {
-    const twoPhaseMixtureThermo& thermo
+    const compressibleTwoPhaseMixture& thermo
     (
-        mesh().lookupObject<twoPhaseMixtureThermo>
+        mesh().lookupObject<compressibleTwoPhaseMixture>
         (
-            twoPhaseMixtureThermo::dictName
+            "phaseProperties"
         )
     );
 
@@ -152,8 +105,7 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
         mesh,
         dimensionedScalar(dimless, 0),
         zeroGradientFvPatchScalarField::typeName
-    ),
-    curTimeIndex_(-1)
+    )
 {
     readCoeffs();
 }
@@ -179,13 +131,11 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    update();
-
-    const twoPhaseMixtureThermo& thermo
+    const compressibleTwoPhaseMixture& thermo
     (
-        mesh().lookupObject<twoPhaseMixtureThermo>
+        mesh().lookupObject<compressibleTwoPhaseMixture>
         (
-            twoPhaseMixtureThermo::dictName
+            "phaseProperties"
         )
     );
 
@@ -214,8 +164,6 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    update();
-
     scalarField& Sp = eqn.diag();
     const scalarField& V = mesh().V();
 
@@ -240,6 +188,46 @@ void Foam::fv::VoFSolidificationMeltingSource::updateMesh
 )
 {
     set_.updateMesh(mpm);
+}
+
+
+void Foam::fv::VoFSolidificationMeltingSource::correct()
+{
+    if (debug)
+    {
+        Info<< type() << ": " << name()
+            << " - updating solid phase fraction" << endl;
+    }
+
+    alphaSolid_.oldTime();
+
+    const compressibleTwoPhaseMixture& thermo
+    (
+        mesh().lookupObject<compressibleTwoPhaseMixture>
+        (
+            "phaseProperties"
+        )
+    );
+
+    const volScalarField& TVoF = thermo.thermo1().T();
+    const volScalarField CpVoF(thermo.thermo1().Cp());
+    const volScalarField& alphaVoF = thermo.alpha1();
+
+    const labelList& cells = set_.cells();
+
+    forAll(cells, i)
+    {
+        const label celli = cells[i];
+
+        alphaSolid_[celli] = min
+        (
+            relax_*alphaVoF[celli]*alphaSolidT_->value(TVoF[celli])
+          + (1 - relax_)*alphaSolid_[celli],
+            alphaVoF[celli]
+        );
+    }
+
+    alphaSolid_.correctBoundaryConditions();
 }
 
 

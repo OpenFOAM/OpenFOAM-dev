@@ -45,7 +45,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 :
     linearViscousStress<laminarModel<BasicMomentumTransportModel>>
@@ -56,7 +56,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     a_("a", dimless/dimTime, this->coeffDict_),

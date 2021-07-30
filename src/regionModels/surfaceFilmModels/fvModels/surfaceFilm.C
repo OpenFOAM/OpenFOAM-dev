@@ -59,7 +59,7 @@ Foam::fv::surfaceFilm::surfaceFilm
     fvModel(sourceName, modelType, dict, mesh),
     primaryThermo_
     (
-        mesh.lookupObject<fluidThermo>(basicThermo::dictName)
+        mesh.lookupObject<fluidThermo>(physicalProperties::typeName)
     ),
     surfaceFilm_
     (

@@ -163,7 +163,7 @@ SpalartAllmaras<BasicMomentumTransportModel>::SpalartAllmaras
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -175,7 +175,7 @@ SpalartAllmaras<BasicMomentumTransportModel>::SpalartAllmaras
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     sigmaNut_

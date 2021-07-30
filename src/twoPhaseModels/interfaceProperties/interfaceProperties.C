@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,14 @@ License
 #include "fvcDiv.H"
 #include "fvcGrad.H"
 #include "fvcSnGrad.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(interfaceProperties, 0);
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -153,7 +161,7 @@ Foam::interfaceProperties::interfaceProperties
     const IOdictionary& dict
 )
 :
-    transportPropertiesDict_(dict),
+    phasePropertiesDict_(dict),
 
     sigmaPtr_(surfaceTensionModel::New(dict, alpha1.mesh())),
 
@@ -197,6 +205,14 @@ Foam::interfaceProperties::interfaceProperties
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::volVectorField> Foam::interfaceProperties::n() const
+{
+    const volVectorField gradAlpha(fvc::grad(alpha1_));
+
+    return volVectorField::New("n", gradAlpha/(mag(gradAlpha) + deltaN_));
+}
+
+
 Foam::tmp<Foam::volScalarField>
 Foam::interfaceProperties::sigmaK() const
 {
@@ -218,6 +234,77 @@ Foam::interfaceProperties::nearInterface() const
 }
 
 
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::interfaceProperties::fraction() const
+{
+    const fvMesh& mesh = alpha1_.mesh();
+
+    tmp<volScalarField::Internal> tA
+    (
+        volScalarField::Internal::New
+        (
+            "A",
+            mesh,
+            dimensionedScalar(dimless, 0)
+        )
+    );
+    volScalarField::Internal& A = tA.ref();
+
+    const surfaceVectorField& Sf = mesh.Sf();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
+
+    const surfaceScalarField alphaf(fvc::interpolate(alpha1_));
+    const volVectorField::Internal n(this->n());
+
+    const scalarField& ialpha = alpha1_;
+    const scalarField& ialphaf = alphaf;
+    scalarField sumnSf(mesh.nCells(), 0);
+
+    forAll(own, facei)
+    {
+        {
+            const scalar nSf(mag(n[own[facei]] & Sf[facei]));
+            A[own[facei]] += nSf*(ialphaf[facei] - ialpha[own[facei]]);
+            sumnSf[own[facei]] += nSf;
+        }
+        {
+            const scalar nSf(mag(n[nei[facei]] & Sf[facei]));
+            A[nei[facei]] += nSf*(ialphaf[facei] - ialpha[nei[facei]]);
+            sumnSf[nei[facei]] += nSf;
+        }
+    }
+
+    forAll(mesh.boundary(), patchi)
+    {
+        const labelUList& own = mesh.boundary()[patchi].faceCells();
+        const fvsPatchScalarField& palphaf = alphaf.boundaryField()[patchi];
+
+        forAll(mesh.boundary()[patchi], facei)
+        {
+            const scalar nSf(mag(n[own[facei]] & Sf[facei]));
+            A[own[facei]] += nSf*(palphaf[facei] - ialpha[own[facei]]);
+            sumnSf[own[facei]] += nSf;
+        }
+    }
+
+    scalarField& a = A.field();
+    forAll(a, i)
+    {
+        if (sumnSf[i] > small)
+        {
+            a[i] = 2*mag(a[i])/sumnSf[i];
+        }
+        else
+        {
+            a[i] = 0;
+        }
+    }
+
+    return tA;
+}
+
+
 void Foam::interfaceProperties::correct()
 {
     calculateK();
@@ -226,7 +313,7 @@ void Foam::interfaceProperties::correct()
 
 bool Foam::interfaceProperties::read()
 {
-    sigmaPtr_->readDict(transportPropertiesDict_);
+    sigmaPtr_->readDict(phasePropertiesDict_);
 
     return true;
 }

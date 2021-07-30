@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFClouds.H"
-#include "twoPhaseMixtureThermo.H"
+#include "compressibleTwoPhaseMixture.H"
 #include "fvmSup.H"
 #include "uniformDimensionedFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -64,14 +64,14 @@ Foam::fv::VoFClouds::VoFClouds
     (
         mesh.lookupObject<fluidThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
         )
     ),
     carrierThermo_
     (
         mesh.lookupObject<fluidThermo>
         (
-            IOobject::groupName(basicThermo::dictName, carrierPhaseName_)
+            IOobject::groupName(physicalProperties::typeName, carrierPhaseName_)
         )
     ),
     clouds_

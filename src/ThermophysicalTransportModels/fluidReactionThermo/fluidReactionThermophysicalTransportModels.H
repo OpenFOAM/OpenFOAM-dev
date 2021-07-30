@@ -24,16 +24,15 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fluidReactionThermophysicalTransportModel.H"
-#include "dynamicMomentumTransportModels.H"
+#include "compressibleMomentumTransportModels.H"
 #include "makeThermophysicalTransportModel.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 makeThermophysicalTransportModelTypes
 (
     ThermophysicalTransportModel,
-    dynamicTransportModelCompressibleMomentumTransportModel,
+    compressibleMomentumTransportModel,
     fluidReactionThermo
 );
 
@@ -42,7 +41,7 @@ makeThermophysicalTransportModelTypes
     makeThermophysicalTransportModel                                           \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        dynamicTransportModelCompressibleMomentumTransportModel,               \
+        compressibleMomentumTransportModel,                                    \
         fluidReactionThermo,                                                   \
         laminar,                                                               \
         Type                                                                   \
@@ -52,7 +51,7 @@ makeThermophysicalTransportModelTypes
     makeTurbulenceThermophysicalTransportModel                                 \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        dynamicTransportModelCompressibleMomentumTransportModel,               \
+        compressibleMomentumTransportModel,                                    \
         fluidReactionThermo,                                                   \
         SType,                                                                 \
         Type                                                                   \
@@ -62,7 +61,7 @@ makeThermophysicalTransportModelTypes
     makeThermophysicalTransportModel                                           \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        dynamicTransportModelCompressibleMomentumTransportModel,               \
+        compressibleMomentumTransportModel,                                    \
         fluidReactionThermo,                                                   \
         RAS,                                                                   \
         Type                                                                   \
@@ -72,7 +71,7 @@ makeThermophysicalTransportModelTypes
     makeThermophysicalTransportModel                                           \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        dynamicTransportModelCompressibleMomentumTransportModel,               \
+        compressibleMomentumTransportModel,                                    \
         fluidReactionThermo,                                                   \
         LES,                                                                   \
         Type                                                                   \

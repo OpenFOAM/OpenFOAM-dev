@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::incompressibleMomentumTransportModel
 
 Description
-    Abstract base class for turbulence models (RAS, LES and laminar).
+    Base class for single-phase incompressible turbulence models.
 
 SourceFiles
     incompressibleMomentumTransportModel.C
@@ -36,15 +36,11 @@ SourceFiles
 #define incompressibleMomentumTransportModel_H
 
 #include "momentumTransportModel.H"
-#include "geometricOneField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declarations
-class fvMesh;
 
 /*---------------------------------------------------------------------------*\
             Class incompressibleMomentumTransportModel Declaration
@@ -54,35 +50,70 @@ class incompressibleMomentumTransportModel
 :
     public momentumTransportModel
 {
+
+public:
+
+    typedef geometricOneField alphaField;
+    typedef geometricOneField rhoField;
+
+
 protected:
 
     // Protected data
 
-        geometricOneField rho_;
+        alphaField alpha_;
+        rhoField rho_;
 
 
 public:
 
     //- Runtime type information
-    TypeName(momentumTransportModel::typeName_());
+    // TypeName("incompressibleMomentumTransportModel");
+
+
+    // Declare run-time constructor selection table
+
+        declareRunTimeNewSelectionTable
+        (
+            autoPtr,
+            incompressibleMomentumTransportModel,
+            dictionary,
+            (
+                const alphaField& alpha,
+                const rhoField& rho,
+                const volVectorField& U,
+                const surfaceScalarField& alphaRhoPhi,
+                const surfaceScalarField& phi,
+                const viscosity& viscosity
+            ),
+            (alpha, rho, U, alphaRhoPhi, phi, viscosity)
+        );
 
 
     // Constructors
 
-        //- Construct from components
+        //- Construct
         incompressibleMomentumTransportModel
         (
+            const word& type,
+            const geometricOneField& alpha,
             const geometricOneField& rho,
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
-            const surfaceScalarField& phi
+            const surfaceScalarField& phi,
+            const viscosity& viscosity
         );
 
-        //- Disallow default bitwise copy construction
-        incompressibleMomentumTransportModel
+
+    // Selectors
+
+        //- Return a reference to the selected turbulence model
+        static autoPtr<incompressibleMomentumTransportModel> New
         (
-            const incompressibleMomentumTransportModel&
-        ) = delete;
+            const volVectorField& U,
+            const surfaceScalarField& phi,
+            const viscosity& viscosity
+        );
 
 
     //- Destructor
@@ -92,41 +123,62 @@ public:
 
     // Member Functions
 
-        //- Return the laminar dynamic viscosity
-        virtual tmp<volScalarField> mu() const;
+        //- Access function to phase fraction
+        const alphaField& alpha() const
+        {
+            return alpha_;
+        }
 
-        //- Return the laminar dynamic viscosity on patch
-        virtual tmp<scalarField> mu(const label patchi) const;
+        //- Return the density field
+        const rhoField& rho() const
+        {
+            return rho_;
+        }
 
-        //- Return the turbulence dynamic viscosity
-        virtual tmp<volScalarField> mut() const;
-
-        //- Return the turbulence dynamic viscosity on patch
-        virtual tmp<scalarField> mut(const label patchi) const;
-
-        //- Return the effective dynamic viscosity
-        virtual tmp<volScalarField> muEff() const;
-
-        //- Return the effective dynamic viscosity on patch
-        virtual tmp<scalarField> muEff(const label patchi) const;
-
-        //- Return the effective stress tensor including the laminar stress
-        virtual tmp<volSymmTensorField> devSigma() const = 0;
+        //- Return the effective stress tensor
+        virtual tmp<volSymmTensorField> devSigma() const;
 
         //- Return the source term for the momentum equation
-        virtual tmp<fvVectorMatrix> divDevSigma(volVectorField& U) const = 0;
+        virtual tmp<fvVectorMatrix> divDevSigma(volVectorField& U) const;
 
+        //- Return the effective stress tensor
+        virtual tmp<volSymmTensorField> devTau() const;
 
-    // Member Operators
+        //- Return the source term for the momentum equation
+        virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) const;
 
-        //- Disallow default bitwise assignment
-        void operator=(const incompressibleMomentumTransportModel&) = delete;
+        //- Return the source term for the momentum equation
+        virtual tmp<fvVectorMatrix> divDevTau
+        (
+            const volScalarField& rho,
+            volVectorField& U
+        ) const;
 };
+
+
+namespace incompressible
+{
+    typedef incompressibleMomentumTransportModel momentumTransportModel;
+
+    template<class IncompressibleMomentumTransportModel>
+    autoPtr<IncompressibleMomentumTransportModel> New
+    (
+        const volVectorField& U,
+        const surfaceScalarField& phi,
+        const viscosity& viscosity
+    );
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "incompressibleMomentumTransportModelTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

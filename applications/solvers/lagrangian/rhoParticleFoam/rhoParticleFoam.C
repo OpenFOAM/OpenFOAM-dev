@@ -34,7 +34,7 @@ Description
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "fluidThermo.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "parcelCloudList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

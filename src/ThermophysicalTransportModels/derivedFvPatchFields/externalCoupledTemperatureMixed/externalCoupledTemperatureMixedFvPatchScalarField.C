@@ -123,7 +123,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
         )
     );
 
-    static word thermoName(basicThermo::dictName);
+    static word thermoName(physicalProperties::typeName);
 
     if (db().foundObject<thermophysicalTransportModel>(ttmName))
     {

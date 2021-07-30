@@ -46,7 +46,7 @@ kOmegaSSTSato<BasicMomentumTransportModel>::kOmegaSSTSato
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -57,11 +57,11 @@ kOmegaSSTSato<BasicMomentumTransportModel>::kOmegaSSTSato
         U,
         alphaRhoPhi,
         phi,
-        transport,
+        viscosity,
         type
     ),
 
-    phase_(refCast<const phaseModel>(transport)),
+    phase_(refCast<const phaseModel>(viscosity)),
 
     hasDispersedPhaseNames_(this->coeffDict_.found("dispersedPhases")),
 

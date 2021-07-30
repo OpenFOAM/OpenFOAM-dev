@@ -41,7 +41,7 @@ namespace twoPhaseChangeModels
 
 Foam::twoPhaseChangeModels::Kunz::Kunz
 (
-    const twoPhaseMixtureThermo& mixture
+    const compressibleTwoPhaseMixture& mixture
 )
 :
     cavitationModel(typeName, mixture),

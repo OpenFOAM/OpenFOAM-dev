@@ -29,7 +29,7 @@ License
 
 Foam::autoPtr<Foam::twoPhaseChangeModel> Foam::twoPhaseChangeModel::New
 (
-    const twoPhaseMixtureThermo& mixture
+    const compressibleTwoPhaseMixture& mixture
 )
 {
     IOobject twoPhaseChangeModelIO

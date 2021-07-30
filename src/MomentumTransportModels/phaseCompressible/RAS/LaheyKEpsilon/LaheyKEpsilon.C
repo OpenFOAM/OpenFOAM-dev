@@ -46,7 +46,7 @@ LaheyKEpsilon<BasicMomentumTransportModel>::LaheyKEpsilon
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -57,7 +57,7 @@ LaheyKEpsilon<BasicMomentumTransportModel>::LaheyKEpsilon
         U,
         alphaRhoPhi,
         phi,
-        transport,
+        viscosity,
         type
     ),
 
@@ -132,24 +132,22 @@ bool LaheyKEpsilon<BasicMomentumTransportModel>::read()
 
 
 template<class BasicMomentumTransportModel>
-const PhaseCompressibleMomentumTransportModel
-<
-    typename BasicMomentumTransportModel::transportModel
->&
+const phaseCompressibleMomentumTransportModel&
 LaheyKEpsilon<BasicMomentumTransportModel>::gasTurbulence() const
 {
     if (!gasTurbulencePtr_)
     {
         const volVectorField& U = this->U_;
 
-        const phaseModel& liquid = refCast<const phaseModel>(this->transport());
+        const phaseModel& liquid =
+            refCast<const phaseModel>(this->properties());
         const phaseSystem& fluid = liquid.fluid();
         const phaseModel& gas = fluid.otherPhase(liquid);
 
         gasTurbulencePtr_ =
            &U.db().lookupObject
             <
-                PhaseCompressibleMomentumTransportModel<transportModel>
+                phaseCompressibleMomentumTransportModel
             >
             (
                 IOobject::groupName
@@ -167,10 +165,10 @@ LaheyKEpsilon<BasicMomentumTransportModel>::gasTurbulence() const
 template<class BasicMomentumTransportModel>
 void LaheyKEpsilon<BasicMomentumTransportModel>::correctNut()
 {
-    const PhaseCompressibleMomentumTransportModel<transportModel>&
-        gasTurbulence = this->gasTurbulence();
+    const phaseCompressibleMomentumTransportModel& gasTurbulence =
+        this->gasTurbulence();
 
-    const phaseModel& liquid = refCast<const phaseModel>(this->transport());
+    const phaseModel& liquid = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = liquid.fluid();
     const phaseModel& gas = fluid.otherPhase(liquid);
 
@@ -187,10 +185,10 @@ void LaheyKEpsilon<BasicMomentumTransportModel>::correctNut()
 template<class BasicMomentumTransportModel>
 tmp<volScalarField> LaheyKEpsilon<BasicMomentumTransportModel>::bubbleG() const
 {
-    const PhaseCompressibleMomentumTransportModel<transportModel>&
-        gasTurbulence = this->gasTurbulence();
+    const phaseCompressibleMomentumTransportModel& gasTurbulence =
+        this->gasTurbulence();
 
-    const phaseModel& liquid = refCast<const phaseModel>(this->transport());
+    const phaseModel& liquid = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = liquid.fluid();
     const phaseModel& gas = fluid.otherPhase(liquid);
 
@@ -239,8 +237,8 @@ tmp<fvScalarMatrix> LaheyKEpsilon<BasicMomentumTransportModel>::kSource() const
     const alphaField& alpha = this->alpha_;
     const rhoField& rho = this->rho_;
 
-    const PhaseCompressibleMomentumTransportModel<transportModel>&
-        gasTurbulence = this->gasTurbulence();
+    const phaseCompressibleMomentumTransportModel& gasTurbulence =
+        this->gasTurbulence();
 
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 
@@ -258,8 +256,8 @@ LaheyKEpsilon<BasicMomentumTransportModel>::epsilonSource() const
     const alphaField& alpha = this->alpha_;
     const rhoField& rho = this->rho_;
 
-    const PhaseCompressibleMomentumTransportModel<transportModel>&
-        gasTurbulence = this->gasTurbulence();
+    const phaseCompressibleMomentumTransportModel& gasTurbulence =
+        this->gasTurbulence();
 
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 

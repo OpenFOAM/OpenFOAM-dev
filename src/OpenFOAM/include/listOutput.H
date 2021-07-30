@@ -54,7 +54,7 @@ if (args.optionFound("listFvConstraints"))
 }
 #endif
 
-#ifdef kinematicMomentumTransportModel_H
+#ifdef incompressibleMomentumTransportModels_H
 if (args.optionFound("listMomentumTransportModels"))
 {
     Info<< "Turbulence models"
@@ -73,7 +73,7 @@ if (args.optionFound("listMomentumTransportModels"))
         << endl;
     listOptions = true;
 }
-#elif defined(dynamicMomentumTransportModel_H)
+#elif defined(compressibleMomentumTransportModels_H)
 if (args.optionFound("listMomentumTransportModels"))
 {
     Info<< "Turbulence models"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
 
     const word fluidThermoName
     (
-        IOobject::groupName(basicThermo::dictName, phase)
+        IOobject::groupName(physicalProperties::typeName, phase)
     );
 
     if (mesh.foundObject<fluidThermo>(fluidThermoName))
@@ -102,10 +102,10 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
             return thermo.kappa(patchi);
         }
     }
-    else if (mesh.foundObject<solidThermo>(basicThermo::dictName))
+    else if (mesh.foundObject<solidThermo>(physicalProperties::typeName))
     {
         const solidThermo& thermo =
-            mesh.lookupObject<solidThermo>(basicThermo::dictName);
+            mesh.lookupObject<solidThermo>(physicalProperties::typeName);
 
         if (!thermo.isotropic())
         {

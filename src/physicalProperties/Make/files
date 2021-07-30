@@ -1,0 +1,7 @@
+physicalProperties/physicalProperties.C
+viscosity/viscosity.C
+viscosityModels/viscosityModel/viscosityModel.C
+viscosityModels/viscosityModel/viscosityModelNew.C
+viscosityModels/constant/constantViscosityModel.C
+
+LIB = $(FOAM_LIBBIN)/libphysicalProperties

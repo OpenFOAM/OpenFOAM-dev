@@ -36,8 +36,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "singlePhaseTransportModel.H"
-#include "kinematicMomentumTransportModel.H"
+#include "viscosityModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "wallDist.H"
 #include "bound.H"
 
@@ -122,11 +122,11 @@ int main(int argc, char *argv[])
     #include "createPhi.H"
     phi.write();
 
-    singlePhaseTransportModel laminarTransport(U, phi);
+    autoPtr<viscosityModel> viscosity(viscosityModel::New(mesh));
 
     autoPtr<incompressible::momentumTransportModel> turbulence
     (
-        incompressible::momentumTransportModel::New(U, phi, laminarTransport)
+        incompressible::momentumTransportModel::New(U, phi, viscosity)
     );
 
     if (isA<incompressible::RASModel>(turbulence()))

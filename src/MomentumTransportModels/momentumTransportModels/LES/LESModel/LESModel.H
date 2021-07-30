@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,9 @@ Class
 Description
     Templated abstract base class for LES SGS models
 
+    with support for generalised Newtonian viscosity models including
+    strain-rate dependency.
+
 SourceFiles
     LESModel.C
 
@@ -41,7 +44,8 @@ SourceFiles
 #ifndef LESModel_H
 #define LESModel_H
 
-#include "MomentumTransportModel.H"
+#include "momentumTransportModel.H"
+#include "generalisedNewtonianViscosityModel.H"
 #include "LESdelta.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -84,6 +88,10 @@ protected:
         //- Lower limit for omega
         dimensionedScalar omegaMin_;
 
+        //- Run-time selectable generalised Newtonian viscosity model
+        autoPtr<laminarModels::generalisedNewtonianViscosityModel>
+            viscosityModel_;
+
         //- Run-time selectable delta model
         autoPtr<Foam::LESdelta> delta_;
 
@@ -98,7 +106,6 @@ public:
 
     typedef typename BasicMomentumTransportModel::alphaField alphaField;
     typedef typename BasicMomentumTransportModel::rhoField rhoField;
-    typedef typename BasicMomentumTransportModel::transportModel transportModel;
 
 
     //- Runtime type information
@@ -118,9 +125,9 @@ public:
                 const volVectorField& U,
                 const surfaceScalarField& alphaRhoPhi,
                 const surfaceScalarField& phi,
-                const transportModel& transport
+                const viscosity& viscosity
             ),
-            (alpha, rho, U, alphaRhoPhi, phi, transport)
+            (alpha, rho, U, alphaRhoPhi, phi, viscosity)
         );
 
 
@@ -135,7 +142,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& transport
+            const viscosity& viscosity
         );
 
         //- Disallow default bitwise copy construction
@@ -152,7 +159,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& transport
+            const viscosity& viscosity
         );
 
 
@@ -166,33 +173,41 @@ public:
         //- Read model coefficients if they have changed
         virtual bool read();
 
+        //- Const access to the coefficients dictionary
+        virtual const dictionary& coeffDict() const
+        {
+            return coeffDict_;
+        }
 
-        // Access
+        //- Return the lower allowable limit for k (default: small)
+        const dimensionedScalar& kMin() const
+        {
+            return kMin_;
+        }
 
-            //- Const access to the coefficients dictionary
-            virtual const dictionary& coeffDict() const
-            {
-                return coeffDict_;
-            }
+        //- Allow kMin to be changed
+        dimensionedScalar& kMin()
+        {
+            return kMin_;
+        }
 
-            //- Return the lower allowable limit for k (default: small)
-            const dimensionedScalar& kMin() const
-            {
-                return kMin_;
-            }
+        //- Access function to filter width
+        inline const volScalarField& delta() const
+        {
+            return delta_();
+        }
 
-            //- Allow kMin to be changed
-            dimensionedScalar& kMin()
-            {
-                return kMin_;
-            }
+        //- Return the laminar viscosity
+        virtual tmp<volScalarField> nu() const
+        {
+            return viscosityModel_->nu();
+        }
 
-            //- Access function to filter width
-            inline const volScalarField& delta() const
-            {
-                return delta_();
-            }
-
+        //- Return the laminar viscosity on patchi
+        virtual tmp<scalarField> nu(const label patchi) const
+        {
+            return viscosityModel_->nu(patchi);
+        }
 
         //- Return the effective viscosity
         virtual tmp<volScalarField> nuEff() const

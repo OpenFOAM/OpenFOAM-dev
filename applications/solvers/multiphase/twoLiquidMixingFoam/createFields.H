@@ -28,7 +28,7 @@ volVectorField U
 
 #include "createPhi.H"
 
-Info<< "Reading transportProperties\n" << endl;
+Info<< "Reading phaseProperties\n" << endl;
 incompressibleTwoPhaseMixture mixture(U, phi);
 
 volScalarField& alpha1(mixture.alpha1());

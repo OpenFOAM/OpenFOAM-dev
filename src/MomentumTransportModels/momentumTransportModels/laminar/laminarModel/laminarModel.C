@@ -52,7 +52,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::laminarModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 :
     BasicMomentumTransportModel
@@ -63,7 +63,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::laminarModel
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     laminarDict_(this->subOrEmptyDict("laminar")),
@@ -87,7 +87,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 {
     const IOdictionary modelDict
@@ -131,7 +131,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
                 U,
                 alphaRhoPhi,
                 phi,
-                transport
+                viscosity
             )
         );
     }
@@ -150,7 +150,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
                 U,
                 alphaRhoPhi,
                 phi,
-                transport
+                viscosity
             )
         );
     }

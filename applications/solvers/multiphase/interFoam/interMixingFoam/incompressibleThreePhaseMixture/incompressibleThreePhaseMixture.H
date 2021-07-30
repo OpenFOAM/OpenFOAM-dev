@@ -34,7 +34,7 @@ SourceFiles
 #ifndef incompressibleThreePhaseMixture_H
 #define incompressibleThreePhaseMixture_H
 
-#include "kinematicTransportModel.H"
+#include "viscosity.H"
 #include "IOdictionary.H"
 #include "viscosityModel.H"
 #include "dimensionedScalar.H"
@@ -52,7 +52,7 @@ namespace Foam
 class incompressibleThreePhaseMixture
 :
     public IOdictionary,
-    public kinematicTransportModel
+    public viscosity
 {
     // Private Data
 
@@ -223,7 +223,7 @@ public:
             calcNu();
         }
 
-        //- Read base transportProperties dictionary
+        //- Read base phaseProperties dictionary
         bool read();
 };
 

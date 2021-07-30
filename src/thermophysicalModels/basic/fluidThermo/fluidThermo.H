@@ -39,8 +39,8 @@ SourceFiles
 #define fluidThermo_H
 
 #include "basicThermo.H"
-#include "kinematicTransportModel.H"
-#include "dynamicTransportModel.H"
+#include "viscosity.H"
+#include "viscosity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,8 +54,7 @@ namespace Foam
 class fluidThermo
 :
     virtual public basicThermo,
-    public kinematicTransportModel,
-    public dynamicTransportModel
+    public viscosity
 {
 public:
 
@@ -204,9 +203,6 @@ public:
 
         //- Construct from mesh and phase name
         implementation(const fvMesh&, const word& phaseName);
-
-        //- Construct from mesh, dictionary and phase name
-        implementation(const fvMesh&, const dictionary&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
         implementation(const implementation&) = delete;

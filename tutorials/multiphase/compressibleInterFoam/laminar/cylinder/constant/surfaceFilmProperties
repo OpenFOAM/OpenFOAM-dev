@@ -18,6 +18,8 @@ surfaceFilmModel thermoSingleLayer;
 
 regionName      wallFilmRegion;
 
+phase           liquid;
+
 viscosity
 {
     model        Newtonian;

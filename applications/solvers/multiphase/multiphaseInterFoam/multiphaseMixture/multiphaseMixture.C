@@ -63,7 +63,7 @@ Foam::multiphaseMixture::multiphaseMixture
     (
         IOobject
         (
-            "transportProperties",
+            "phaseProperties",
             U.time().constant(),
             U.db(),
             IOobject::MUST_READ_IF_MODIFIED,
@@ -695,19 +695,8 @@ bool Foam::multiphaseMixture::read()
 {
     if (regIOobject::read())
     {
-        bool readOK = true;
-
-        PtrList<entry> phaseData(lookup("phases"));
-        label phasei = 0;
-
-        forAllIter(PtrDictionary<phase>, phases_, iter)
-        {
-            readOK &= iter().read(phaseData[phasei++].dict());
-        }
-
         lookup("sigmas") >> sigmas_;
-
-        return readOK;
+        return true;
     }
     else
     {

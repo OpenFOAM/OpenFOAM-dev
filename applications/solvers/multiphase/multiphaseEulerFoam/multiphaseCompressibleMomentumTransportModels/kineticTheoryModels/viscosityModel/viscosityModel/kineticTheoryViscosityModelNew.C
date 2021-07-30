@@ -33,9 +33,9 @@ Foam::kineticTheoryModels::viscosityModel::New
     const dictionary& dict
 )
 {
-    word viscosityModelType(dict.lookup("viscosityModel"));
+    word viscosityModelType(dict.lookup("granularViscosityModel"));
 
-    Info<< "Selecting viscosityModel "
+    Info<< "Selecting granularViscosityModel "
         << viscosityModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
@@ -45,10 +45,10 @@ Foam::kineticTheoryModels::viscosityModel::New
     {
         FatalError
             << "viscosityModel::New(const dictionary&) : " << endl
-            << "    unknown viscosityModelType type "
+            << "    unknown granularViscosityModel type "
             << viscosityModelType
             << ", constructor not in hash table" << endl << endl
-            << "    Valid viscosityModelType types are :" << endl;
+            << "    Valid granularViscosityModel types are :" << endl;
         Info<< dictionaryConstructorTablePtr_->sortedToc() << abort(FatalError);
     }
 

@@ -31,11 +31,11 @@ RAS
         alphaMax                0.62;
         alphaMinFriction        0.5;
 
-        viscosityModel          Gidaspow;
-        conductivityModel       Gidaspow;
-        granularPressureModel   Lun;
-        frictionalStressModel   JohnsonJackson;
-        radialModel             SinclairJackson;
+        granularViscosityModel      Gidaspow;
+        granularConductivityModel   Gidaspow;
+        granularPressureModel       Lun;
+        frictionalStressModel       JohnsonJackson;
+        radialModel                 SinclairJackson;
 
         JohnsonJacksonCoeffs
         {

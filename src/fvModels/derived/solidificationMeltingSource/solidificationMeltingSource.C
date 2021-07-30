@@ -98,7 +98,7 @@ Foam::fv::solidificationMeltingSource::Cp() const
         case thermoMode::thermo:
         {
             const basicThermo& thermo =
-                mesh().lookupObject<basicThermo>(basicThermo::dictName);
+                mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
             return thermo.Cp();
             break;
@@ -270,7 +270,7 @@ Foam::wordList Foam::fv::solidificationMeltingSource::addSupFields() const
         case thermoMode::thermo:
         {
             const basicThermo& thermo =
-                mesh().lookupObject<basicThermo>(basicThermo::dictName);
+                mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
             return wordList({UName_, thermo.he().name()});
         }

@@ -3,7 +3,7 @@ EXE_INC = \
     -I$(LIB_SRC)/lagrangian/parcel/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
-    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
     -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude \
@@ -16,7 +16,7 @@ EXE_LIBS = \
     -llagrangianParcelTurbulence \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
-    -ltransportModels \
+    -lphysicalProperties \
     -lfiniteVolume \
     -lregionModels \
     -lsurfaceFilmModels \

@@ -6,7 +6,7 @@ word continuousPhaseName
     (
         IOobject
         (
-            "transportProperties",
+            "physicalProperties",
             runTime.constant(),
             mesh,
             IOobject::MUST_READ
@@ -65,13 +65,13 @@ mesh.setFluxRequired(p.name());
 
 Info<< "Creating turbulence model\n" << endl;
 
-singlePhaseTransportModel continuousPhaseTransport(Uc, phic);
+autoPtr<viscosityModel> continuousPhaseViscosity(viscosityModel::New(mesh));
 
 dimensionedScalar rhocValue
 (
     IOobject::groupName("rho", continuousPhaseName),
     dimDensity,
-    continuousPhaseTransport.lookup
+    continuousPhaseViscosity->lookup
     (
         IOobject::groupName("rho", continuousPhaseName)
     )
@@ -101,7 +101,7 @@ volScalarField muc
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    rhoc*continuousPhaseTransport.nu()
+    rhoc*continuousPhaseViscosity->nu()
 );
 
 Info << "Creating field alphac\n" << endl;
@@ -154,7 +154,7 @@ autoPtr<phaseIncompressible::momentumTransportModel> continuousPhaseTurbulence
         Uc,
         alphaPhic,
         phic,
-        continuousPhaseTransport
+        continuousPhaseViscosity
     )
 );
 

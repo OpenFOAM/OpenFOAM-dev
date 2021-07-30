@@ -60,23 +60,14 @@ protected:
 
     // Protected data
 
-        //- Run-time selectable non-Newtonian viscosity model
+        //- Run-time selectable generalised Newtonian viscosity model
         autoPtr<generalisedNewtonianViscosityModel> viscosityModel_;
-
-        //- The non-Newtonian viscosity field
-        volScalarField nu_;
-
-
-    // Protected Member Functions
-
-        virtual tmp<volScalarField> strainRate() const;
 
 
 public:
 
     typedef typename BasicMomentumTransportModel::alphaField alphaField;
     typedef typename BasicMomentumTransportModel::rhoField rhoField;
-    typedef typename BasicMomentumTransportModel::transportModel transportModel;
 
 
     //- Runtime type information
@@ -93,7 +84,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& transport
+            const viscosity& viscosity
         );
 
 
@@ -107,7 +98,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& transport
+            const viscosity& viscosity
         );
 
 

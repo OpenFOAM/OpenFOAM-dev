@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      physicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+rho
+{
+    type        uniform;
+    value       7854;
+}
+
+nu
+{
+    type        uniform;
+    value       0.3;
+}
+
+E
+{
+    type        uniform;
+    value       2e+11;
+}
+
+Cp
+{
+    type        uniform;
+    value       434;
+}
+
+kappa
+{
+    type        uniform;
+    value       60.5;
+}
+
+alphav
+{
+    type        uniform;
+    value       1.1e-05;
+}
+
+planeStress     yes;
+thermalStress   no;
+
+
+// ************************************************************************* //

@@ -85,7 +85,7 @@ kOmega<BasicMomentumTransportModel>::kOmega
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -97,10 +97,10 @@ kOmega<BasicMomentumTransportModel>::kOmega
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
-    Cmu_
+    betaStar_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
@@ -188,7 +188,7 @@ bool kOmega<BasicMomentumTransportModel>::read()
 {
     if (eddyViscosity<RASModel<BasicMomentumTransportModel>>::read())
     {
-        Cmu_.readIfPresent(this->coeffDict());
+        betaStar_.readIfPresent(this->coeffDict());
         beta_.readIfPresent(this->coeffDict());
         gamma_.readIfPresent(this->coeffDict());
         alphaK_.readIfPresent(this->coeffDict());
@@ -272,7 +272,7 @@ void kOmega<BasicMomentumTransportModel>::correct()
      ==
         alpha()*rho()*G
       - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
-      - fvm::Sp(Cmu_*alpha()*rho()*omega_(), k_)
+      - fvm::Sp(betaStar_*alpha()*rho()*omega_(), k_)
       + kSource()
       + fvModels.source(alpha, rho, k_)
     );

@@ -28,8 +28,8 @@ volVectorField U
 
 #include "createPhi.H"
 
-Info<< "Constructing multiphaseMixtureThermo\n" << endl;
-multiphaseMixtureThermo mixture(U, phi);
+Info<< "Constructing compressibleMultiphaseMixture\n" << endl;
+compressibleMultiphaseMixture mixture(U, phi);
 
 const volScalarField& rho = mixture.rho();
 

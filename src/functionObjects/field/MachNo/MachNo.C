@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,11 @@ bool Foam::functionObjects::MachNo::calc()
     if
     (
         foundObject<volVectorField>(fieldName_)
-     && foundObject<fluidThermo>(fluidThermo::dictName)
+     && foundObject<fluidThermo>(physicalProperties::typeName)
     )
     {
         const fluidThermo& thermo =
-            lookupObject<fluidThermo>(fluidThermo::dictName);
+            lookupObject<fluidThermo>(physicalProperties::typeName);
 
         const volVectorField& U = lookupObject<volVectorField>(fieldName_);
 

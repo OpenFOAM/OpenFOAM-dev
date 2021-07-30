@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,8 +34,8 @@ Description
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
-#include "singlePhaseTransportModel.H"
-#include "kinematicMomentumTransportModel.H"
+#include "viscosityModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "parcelCloudList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -68,8 +68,8 @@ int main(int argc, char *argv[])
             U.correctBoundaryConditions();
         }
 
-        laminarTransport.correct();
-        mu = laminarTransport.nu()*rhoInfValue;
+        viscosity->correct();
+        mu = viscosity->nu()*rhoInfValue;
 
         clouds.evolve();
 

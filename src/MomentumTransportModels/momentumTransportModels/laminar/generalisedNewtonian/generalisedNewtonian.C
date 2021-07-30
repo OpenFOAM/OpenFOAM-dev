@@ -47,7 +47,7 @@ generalisedNewtonian<BasicMomentumTransportModel>::generalisedNewtonian
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 :
     linearViscousStress<laminarModel<BasicMomentumTransportModel>>
@@ -58,44 +58,19 @@ generalisedNewtonian<BasicMomentumTransportModel>::generalisedNewtonian
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     viscosityModel_
     (
         generalisedNewtonianViscosityModel::New
         (
-            this->coeffDict_
+            this->coeffDict_,
+            viscosity,
+            U
         )
-    ),
-
-    nu_
-    (
-        IOobject
-        (
-            IOobject::groupName
-            (
-                IOobject::modelName("nu", typeName),
-                alphaRhoPhi.group()
-            ),
-            this->runTime_.timeName(),
-            this->mesh_,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        viscosityModel_->nu(this->nu(), strainRate())
     )
 {}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class BasicMomentumTransportModel>
-tmp<volScalarField>
-generalisedNewtonian<BasicMomentumTransportModel>::strainRate() const
-{
-    return sqrt(2.0)*mag(symm(fvc::grad(this->U())));
-}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -116,7 +91,7 @@ generalisedNewtonian<BasicMomentumTransportModel>::nuEff() const
     return volScalarField::New
     (
         IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
-        nu_
+        viscosityModel_->nu()
     );
 }
 
@@ -128,14 +103,14 @@ generalisedNewtonian<BasicMomentumTransportModel>::nuEff
     const label patchi
 ) const
 {
-    return nu_.boundaryField()[patchi];
+    return viscosityModel_->nu(patchi);
 }
 
 
 template<class BasicMomentumTransportModel>
 void generalisedNewtonian<BasicMomentumTransportModel>::correct()
 {
-    nu_ = viscosityModel_->nu(this->nu(), strainRate());
+    viscosityModel_->correct();
     laminarModel<BasicMomentumTransportModel>::correct();
 }
 

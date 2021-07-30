@@ -26,7 +26,7 @@ License
 #include "nutkFilmWallFunctionFvPatchScalarField.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "addToRunTimeSelectionTable.H"
 #include "surfaceFilmRegionModel.H"
 #include "mappedWallPolyPatch.H"

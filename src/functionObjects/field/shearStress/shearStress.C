@@ -26,8 +26,8 @@ License
 #include "shearStress.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "kinematicMomentumTransportModel.H"
-#include "dynamicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModel.H"
+#include "compressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

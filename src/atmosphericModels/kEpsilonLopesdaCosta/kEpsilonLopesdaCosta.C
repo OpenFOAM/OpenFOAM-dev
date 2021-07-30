@@ -183,7 +183,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -195,7 +195,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     Cmu_

@@ -168,8 +168,8 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
 
     const scalarField& y = turbModel.y()[patchi];
 
-    const tmp<scalarField> tmuw = turbModel.mu(patchi);
-    const scalarField& muw = tmuw();
+    const tmp<scalarField> tnuw = turbModel.nu(patchi);
+    const scalarField& nuw = tnuw();
 
     const tmp<scalarField> talphaw = ttm.thermo().alpha(patchi);
     const scalarField& alphaw = talphaw();
@@ -196,10 +196,10 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
 
         scalar uTau = Cmu25*sqrt(k[celli]);
 
-        scalar yPlus = uTau*y[facei]/(muw[facei]/rhow[facei]);
+        scalar yPlus = uTau*y[facei]/nuw[facei];
 
         // Molecular Prandtl number
-        scalar Pr = muw[facei]/alphaw[facei];
+        scalar Pr = rhow[facei]*nuw[facei]/alphaw[facei];
 
         // Molecular-to-turbulent Prandtl number ratio
         scalar Prat = Pr/Prt_;

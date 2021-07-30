@@ -103,7 +103,7 @@ Foam::fv::interRegionHeatTransfer::~interRegionHeatTransfer()
 Foam::wordList Foam::fv::interRegionHeatTransfer::addSupFields() const
 {
     const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>(basicThermo::dictName);
+        mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
     return wordList(1, thermo.he().name());
 }
@@ -172,7 +172,7 @@ void Foam::fv::interRegionHeatTransfer::addSup
         if (he.dimensions() == dimEnergy/dimMass)
         {
             const basicThermo& thermo =
-               mesh().lookupObject<basicThermo>(basicThermo::dictName);
+               mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
             const volScalarField htcAoVByCpv(htcAoV/thermo.Cpv());
 

@@ -341,7 +341,7 @@ kOmegaSSTLM<BasicMomentumTransportModel>::kOmegaSSTLM
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -352,7 +352,7 @@ kOmegaSSTLM<BasicMomentumTransportModel>::kOmegaSSTLM
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     ca1_

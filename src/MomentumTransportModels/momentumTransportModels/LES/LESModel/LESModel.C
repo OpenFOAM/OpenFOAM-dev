@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LESModel.H"
+#include "NewtonianViscosityModel.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -48,7 +49,7 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 :
     BasicMomentumTransportModel
@@ -59,7 +60,7 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     LESDict_(this->subOrEmptyDict("LES")),
@@ -100,6 +101,26 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
         )
     ),
 
+    viscosityModel_
+    (
+        coeffDict_.found("viscosityModel")
+      ? laminarModels::generalisedNewtonianViscosityModel::New
+        (
+            coeffDict_,
+            viscosity,
+            U
+        )
+      : autoPtr<laminarModels::generalisedNewtonianViscosityModel>
+        (
+            new laminarModels::generalisedNewtonianViscosityModels::Newtonian
+            (
+                coeffDict_,
+                viscosity,
+                U
+            )
+        )
+    ),
+
     delta_
     (
         LESdelta::New
@@ -127,7 +148,7 @@ Foam::LESModel<BasicMomentumTransportModel>::New
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 {
     const IOdictionary modelDict
@@ -162,7 +183,7 @@ Foam::LESModel<BasicMomentumTransportModel>::New
 
     return autoPtr<LESModel>
     (
-        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, transport)
+        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, viscosity)
     );
 }
 
@@ -195,6 +216,7 @@ bool Foam::LESModel<BasicMomentumTransportModel>::read()
 template<class BasicMomentumTransportModel>
 void Foam::LESModel<BasicMomentumTransportModel>::correct()
 {
+    viscosityModel_->correct();
     delta_().correct();
     BasicMomentumTransportModel::correct();
 }

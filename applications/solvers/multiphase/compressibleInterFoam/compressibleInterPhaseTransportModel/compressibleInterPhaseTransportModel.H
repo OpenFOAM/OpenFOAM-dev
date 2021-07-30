@@ -45,9 +45,9 @@ SourceFiles
 #define compressibleInterPhaseTransportModel_H
 
 #include "twoPhaseMixture.H"
-#include "twoPhaseMixtureThermo.H"
-#include "dynamicMomentumTransportModel.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "compressibleTwoPhaseMixture.H"
+#include "compressibleMomentumTransportModels.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,13 +66,13 @@ class compressibleInterPhaseTransportModel
         Switch twoPhaseTransport_;
 
         //- Two-phase mixture
-        const twoPhaseMixtureThermo& mixture_;
+        const compressibleTwoPhaseMixture& mixture_;
 
         //- Mixture volumetric flux
         const surfaceScalarField& phi_;
 
         //- Phase volumetric flux
-        const surfaceScalarField& alphaPhi10_;
+        const surfaceScalarField& alphaPhi1_;
 
         //- Phase-1 mass-flux (constructed for two-phase transport)
         tmp<surfaceScalarField> alphaRhoPhi1_;
@@ -101,8 +101,8 @@ public:
             const volVectorField& U,
             const surfaceScalarField& phi,
             const surfaceScalarField& rhoPhi,
-            const surfaceScalarField& alphaPhi10,
-            const twoPhaseMixtureThermo& mixture
+            const surfaceScalarField& alphaPhi1,
+            const compressibleTwoPhaseMixture& mixture
         );
 
         //- Disallow default bitwise copy construction

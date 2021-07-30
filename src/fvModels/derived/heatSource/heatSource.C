@@ -115,7 +115,7 @@ Foam::fv::heatSource::~heatSource()
 Foam::wordList Foam::fv::heatSource::addSupFields() const
 {
     const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>(basicThermo::dictName);
+        mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
     return wordList(1, thermo.he().name());
 }

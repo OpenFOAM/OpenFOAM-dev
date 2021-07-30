@@ -46,7 +46,7 @@ NicenoKEqn<BasicMomentumTransportModel>::NicenoKEqn
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -57,7 +57,7 @@ NicenoKEqn<BasicMomentumTransportModel>::NicenoKEqn
         U,
         alphaRhoPhi,
         phi,
-        transport,
+        viscosity,
         type
     ),
 
@@ -121,24 +121,22 @@ bool NicenoKEqn<BasicMomentumTransportModel>::read()
 
 
 template<class BasicMomentumTransportModel>
-const PhaseCompressibleMomentumTransportModel
-<
-    typename BasicMomentumTransportModel::transportModel
->&
+const phaseCompressibleMomentumTransportModel&
 NicenoKEqn<BasicMomentumTransportModel>::gasTurbulence() const
 {
     if (!gasTurbulencePtr_)
     {
         const volVectorField& U = this->U_;
 
-        const phaseModel& liquid = refCast<const phaseModel>(this->transport());
+        const phaseModel& liquid =
+            refCast<const phaseModel>(this->properties());
         const phaseSystem& fluid = liquid.fluid();
         const phaseModel& gas = fluid.otherPhase(liquid);
 
         gasTurbulencePtr_ =
            &U.db().lookupObject
             <
-                PhaseCompressibleMomentumTransportModel<transportModel>
+                phaseCompressibleMomentumTransportModel
             >
             (
                 IOobject::groupName
@@ -156,10 +154,10 @@ NicenoKEqn<BasicMomentumTransportModel>::gasTurbulence() const
 template<class BasicMomentumTransportModel>
 void NicenoKEqn<BasicMomentumTransportModel>::correctNut()
 {
-    const PhaseCompressibleMomentumTransportModel<transportModel>&
-        gasTurbulence = this->gasTurbulence();
+    const phaseCompressibleMomentumTransportModel& gasTurbulence =
+        this->gasTurbulence();
 
-    const phaseModel& liquid = refCast<const phaseModel>(this->transport());
+    const phaseModel& liquid = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = liquid.fluid();
     const phaseModel& gas = fluid.otherPhase(liquid);
 
@@ -176,10 +174,10 @@ void NicenoKEqn<BasicMomentumTransportModel>::correctNut()
 template<class BasicMomentumTransportModel>
 tmp<volScalarField> NicenoKEqn<BasicMomentumTransportModel>::bubbleG() const
 {
-    const PhaseCompressibleMomentumTransportModel<transportModel>&
-        gasTurbulence = this->gasTurbulence();
+    const phaseCompressibleMomentumTransportModel& gasTurbulence =
+        this->gasTurbulence();
 
-    const phaseModel& liquid = refCast<const phaseModel>(this->transport());
+    const phaseModel& liquid = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = liquid.fluid();
     const phaseModel& gas = fluid.otherPhase(liquid);
 
@@ -225,8 +223,8 @@ tmp<fvScalarMatrix> NicenoKEqn<BasicMomentumTransportModel>::kSource() const
     const alphaField& alpha = this->alpha_;
     const rhoField& rho = this->rho_;
 
-    const PhaseCompressibleMomentumTransportModel<transportModel>&
-        gasTurbulence = this->gasTurbulence();
+    const phaseCompressibleMomentumTransportModel& gasTurbulence =
+        this->gasTurbulence();
 
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 

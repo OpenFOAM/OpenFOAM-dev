@@ -70,7 +70,7 @@ kEqn<BasicMomentumTransportModel>::kEqn
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -82,7 +82,7 @@ kEqn<BasicMomentumTransportModel>::kEqn
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     k_

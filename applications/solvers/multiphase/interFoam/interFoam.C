@@ -41,7 +41,7 @@ Description
 #include "subCycle.H"
 #include "immiscibleIncompressibleTwoPhaseMixture.H"
 #include "noPhaseChange.H"
-#include "kinematicMomentumTransportModel.H"
+#include "incompressibleInterPhaseTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
 #include "fvModels.H"
@@ -62,11 +62,8 @@ int main(int argc, char *argv[])
     #include "createDyMControls.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
-    #include "createAlphaFluxes.H"
     #include "initCorrectPhi.H"
     #include "createUfIfPresent.H"
-
-    turbulence->validate();
 
     if (!LTS)
     {
@@ -171,6 +168,8 @@ int main(int argc, char *argv[])
             #include "alphaControls.H"
             #include "alphaEqnSubCycle.H"
 
+            turbulence.correctPhasePhi();
+
             mixture.correct();
 
             #include "UEqn.H"
@@ -183,7 +182,7 @@ int main(int argc, char *argv[])
 
             if (pimple.turbCorr())
             {
-                turbulence->correct();
+                turbulence.correct();
             }
         }
 

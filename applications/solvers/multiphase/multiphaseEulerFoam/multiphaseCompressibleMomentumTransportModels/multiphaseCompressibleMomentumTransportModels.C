@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "phaseDynamicMomentumTransportModels.H"
+#include "makePhaseCompressibleMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,7 +51,7 @@ makeLESModel(continuousGasKEqn);
 #include "kineticTheoryModel.H"
 makeMomentumTransportModel
 (
-    dynamicTransportModelPhaseCompressibleMomentumTransportModel,
+    phaseCompressibleMomentumTransportModel,
     RAS,
     kineticTheoryModel
 );
@@ -59,7 +59,7 @@ makeMomentumTransportModel
 #include "phasePressureModel.H"
 makeMomentumTransportModel
 (
-    dynamicTransportModelPhaseCompressibleMomentumTransportModel,
+    phaseCompressibleMomentumTransportModel,
     RAS,
     phasePressureModel
 );

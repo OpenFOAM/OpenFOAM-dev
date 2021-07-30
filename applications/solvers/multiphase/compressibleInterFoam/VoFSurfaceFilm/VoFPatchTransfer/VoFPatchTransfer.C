@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFPatchTransfer.H"
-#include "twoPhaseMixtureThermo.H"
+#include "compressibleTwoPhaseMixture.H"
 #include "thermoSingleLayer.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -155,11 +155,11 @@ void VoFPatchTransfer::correct
     const polyBoundaryMesh& pbm = film.regionMesh().boundaryMesh();
 
 
-    const twoPhaseMixtureThermo& thermo
+    const compressibleTwoPhaseMixture& thermo
     (
-        film.primaryMesh().lookupObject<twoPhaseMixtureThermo>
+        film.primaryMesh().lookupObject<compressibleTwoPhaseMixture>
         (
-            twoPhaseMixtureThermo::dictName
+            "phaseProperties"
         )
     );
 

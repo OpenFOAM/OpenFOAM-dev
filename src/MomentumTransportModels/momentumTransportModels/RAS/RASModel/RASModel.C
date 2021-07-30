@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "RASModel.H"
+#include "NewtonianViscosityModel.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -48,7 +49,7 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 :
     BasicMomentumTransportModel
@@ -59,7 +60,7 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     RASDict_(this->subOrEmptyDict("RAS")),
@@ -98,6 +99,26 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
             dimless/dimTime,
             small
         )
+    ),
+
+    viscosityModel_
+    (
+        coeffDict_.found("viscosityModel")
+      ? laminarModels::generalisedNewtonianViscosityModel::New
+        (
+            coeffDict_,
+            viscosity,
+            U
+        )
+      : autoPtr<laminarModels::generalisedNewtonianViscosityModel>
+        (
+            new laminarModels::generalisedNewtonianViscosityModels::Newtonian
+            (
+                coeffDict_,
+                viscosity,
+                U
+            )
+        )
     )
 {
     // Force the construction of the mesh deltaCoeffs which may be needed
@@ -117,7 +138,7 @@ Foam::RASModel<BasicMomentumTransportModel>::New
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 {
     const IOdictionary modelDict
@@ -152,7 +173,7 @@ Foam::RASModel<BasicMomentumTransportModel>::New
 
     return autoPtr<RASModel>
     (
-        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, transport)
+        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, viscosity)
     );
 }
 
@@ -185,6 +206,7 @@ bool Foam::RASModel<BasicMomentumTransportModel>::read()
 template<class BasicMomentumTransportModel>
 void Foam::RASModel<BasicMomentumTransportModel>::correct()
 {
+    viscosityModel_->correct();
     BasicMomentumTransportModel::correct();
 }
 

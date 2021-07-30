@@ -50,7 +50,7 @@ PDRkEpsilon::PDRkEpsilon
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const dynamicTransportModel& transport,
+    const viscosity& transport,
     const word& modelName
 )
 :

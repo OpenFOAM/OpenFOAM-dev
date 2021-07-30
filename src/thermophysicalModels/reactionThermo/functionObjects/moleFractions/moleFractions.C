@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ void Foam::moleFractions<ThermoType>::calculateMoleFractions()
     const ThermoType& thermo =
         mesh_.lookupObject<ThermoType>
         (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
         );
 
     const PtrList<volScalarField>& Y = thermo.composition().Y();
@@ -70,7 +70,7 @@ Foam::moleFractions<ThermoType>::moleFractions
 {
     const word dictName
     (
-        IOobject::groupName(basicThermo::dictName, phaseName_)
+        IOobject::groupName(physicalProperties::typeName, phaseName_)
     );
 
     if (mesh_.foundObject<ThermoType>(dictName))

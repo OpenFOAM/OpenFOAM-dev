@@ -31,9 +31,9 @@ Description
     See http://en.wikipedia.org/wiki/Upper-convected_Maxwell_model
         http://en.wikipedia.org/wiki/Generalised_Maxwell_model
 
-    The model includes an additional viscosity (nu) from the transport
+    The model includes an additional viscosity (nu) from the viscosity
     model from which it is instantiated, which makes it equivalent to
-    the Oldroyd-B model for the case of an incompressible transport
+    the Oldroyd-B model for the case of an incompressible viscosity
     model (where nu is non-zero).
     See https://en.wikipedia.org/wiki/Oldroyd-B_model
 
@@ -111,7 +111,7 @@ protected:
             const dimensionSet& dims
         ) const;
 
-        //- Return the turbulence viscosity
+        //- Return the non-Newtonian viscosity
         tmp<volScalarField> nu0() const
         {
             return this->nu() + nuM_;
@@ -128,7 +128,6 @@ public:
 
     typedef typename BasicMomentumTransportModel::alphaField alphaField;
     typedef typename BasicMomentumTransportModel::rhoField rhoField;
-    typedef typename BasicMomentumTransportModel::transportModel transportModel;
 
 
     //- Runtime type information
@@ -145,7 +144,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& transport,
+            const viscosity& viscosity,
             const word& type = typeName
         );
 

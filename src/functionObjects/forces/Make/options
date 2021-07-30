@@ -1,6 +1,6 @@
 EXE_INC = \
     -I$(LIB_SRC)/fileFormats/lnInclude \
-    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
@@ -12,7 +12,7 @@ EXE_INC = \
 
 LIB_LIBS = \
     -lfluidThermophysicalModels \
-    -ltransportModels \
+    -lphysicalProperties \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lcompressibleMomentumTransportModels \

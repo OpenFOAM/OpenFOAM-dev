@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kappaEff.H"
-#include "kinematicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

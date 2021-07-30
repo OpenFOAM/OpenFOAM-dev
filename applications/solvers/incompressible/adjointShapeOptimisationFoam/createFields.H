@@ -77,19 +77,19 @@ setRefCell
 mesh.setFluxRequired(pa.name());
 
 
-singlePhaseTransportModel laminarTransport(U, phi);
+autoPtr<viscosityModel> viscosity(viscosityModel::New(mesh));
 
 autoPtr<incompressible::momentumTransportModel> turbulence
 (
-    incompressible::momentumTransportModel::New(U, phi, laminarTransport)
+    incompressible::momentumTransportModel::New(U, phi, viscosity)
 );
 
 
 dimensionedScalar zeroSensitivity("0", dimVelocity*dimVelocity, 0.0);
 dimensionedScalar zeroAlpha("0", dimless/dimTime, 0.0);
 
-dimensionedScalar lambda(laminarTransport.lookup("lambda"));
-dimensionedScalar alphaMax(laminarTransport.lookup("alphaMax"));
+dimensionedScalar lambda(viscosity->lookup("lambda"));
+dimensionedScalar alphaMax(viscosity->lookup("alphaMax"));
 
 const labelList& inletCells = mesh.boundary()["inlet"].faceCells();
 //const labelList& outletCells = mesh.boundary()["outlet"].faceCells();

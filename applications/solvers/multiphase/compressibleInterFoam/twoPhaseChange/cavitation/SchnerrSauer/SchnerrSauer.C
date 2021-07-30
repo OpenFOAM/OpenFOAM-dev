@@ -48,7 +48,7 @@ namespace twoPhaseChangeModels
 
 Foam::twoPhaseChangeModels::SchnerrSauer::SchnerrSauer
 (
-    const twoPhaseMixtureThermo& mixture
+    const compressibleTwoPhaseMixture& mixture
 )
 :
     cavitationModel(typeName, mixture),

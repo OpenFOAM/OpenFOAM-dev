@@ -41,7 +41,7 @@ namespace twoPhaseChangeModels
 
 Foam::twoPhaseChangeModels::Merkle::Merkle
 (
-    const twoPhaseMixtureThermo& mixture
+    const compressibleTwoPhaseMixture& mixture
 )
 :
     cavitationModel(typeName, mixture),

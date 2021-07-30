@@ -25,7 +25,7 @@ Class
     Foam::compressibleMomentumTransportModel
 
 Description
-    Abstract base class for turbulence models (RAS, LES and laminar).
+    Base class for single-phase compressible turbulence models.
 
 SourceFiles
     compressibleMomentumTransportModel.C
@@ -42,9 +42,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declarations
-class fvMesh;
-
 /*---------------------------------------------------------------------------*\
              Class compressibleMomentumTransportModel Declaration
 \*---------------------------------------------------------------------------*/
@@ -54,35 +51,70 @@ class compressibleMomentumTransportModel
     public momentumTransportModel
 {
 
+public:
+
+    typedef geometricOneField alphaField;
+    typedef volScalarField rhoField;
+
+
 protected:
 
     // Protected data
 
-        const volScalarField& rho_;
+        alphaField alpha_;
+        const rhoField& rho_;
 
 
 public:
 
     //- Runtime type information
-    TypeName(momentumTransportModel::typeName_());
+    // TypeName("compressibleMomentumTransportModel");
+
+
+    // Declare run-time constructor selection table
+
+        declareRunTimeNewSelectionTable
+        (
+            autoPtr,
+            compressibleMomentumTransportModel,
+            dictionary,
+            (
+                const alphaField& alpha,
+                const rhoField& rho,
+                const volVectorField& U,
+                const surfaceScalarField& alphaRhoPhi,
+                const surfaceScalarField& phi,
+                const viscosity& viscosity
+            ),
+            (alpha, rho, U, alphaRhoPhi, phi, viscosity)
+        );
 
 
     // Constructors
 
-        //- Construct from components
+        //- Construct
         compressibleMomentumTransportModel
         (
+            const word& type,
+            const geometricOneField& alpha,
             const volScalarField& rho,
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
-            const surfaceScalarField& phi
+            const surfaceScalarField& phi,
+            const viscosity& viscosity
         );
 
-        //- Disallow default bitwise copy construction
-        compressibleMomentumTransportModel
+
+    // Selectors
+
+        //- Return a reference to the selected turbulence model
+        static autoPtr<compressibleMomentumTransportModel> New
         (
-            const compressibleMomentumTransportModel&
-        ) = delete;
+            const volScalarField& rho,
+            const volVectorField& U,
+            const surfaceScalarField& phi,
+            const viscosity& viscosity
+        );
 
 
     //- Destructor
@@ -92,8 +124,14 @@ public:
 
     // Member Functions
 
+        //- Return the phase fraction field
+        const alphaField& alpha() const
+        {
+            return alpha_;
+        }
+
         //- Return the density field
-        const volScalarField& rho() const
+        const rhoField& rho() const
         {
             return rho_;
         }
@@ -106,18 +144,33 @@ public:
 
         //- Return the source term for the momentum equation
         virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) const = 0;
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const compressibleMomentumTransportModel&) = delete;
 };
+
+
+namespace compressible
+{
+    typedef compressibleMomentumTransportModel momentumTransportModel;
+
+    template<class CompressibleMomentumTransportModel>
+    autoPtr<CompressibleMomentumTransportModel> New
+    (
+        const volScalarField& rho,
+        const volVectorField& U,
+        const surfaceScalarField& phi,
+        const viscosity& viscosity
+    );
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "compressibleMomentumTransportModelTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

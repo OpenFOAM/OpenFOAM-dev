@@ -25,7 +25,7 @@ License
 
 #include "LehrMilliesMewes.H"
 #include "addToRunTimeSelectionTable.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

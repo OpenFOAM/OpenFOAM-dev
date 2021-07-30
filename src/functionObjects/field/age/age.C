@@ -175,19 +175,16 @@ bool Foam::functionObjects::age::execute()
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
 
-        tmp<volScalarField> tmuEff;
-        word laplacianScheme;
+        const word laplacianScheme("laplacian(muEff," + schemesField_ + ")");
 
+        tmp<volScalarField> tnuEff;
         if (diffusion_)
         {
-            tmuEff =
+            tnuEff =
                 mesh_.lookupObject<momentumTransportModel>
                 (
                     momentumTransportModel::typeName
-                ).muEff();
-
-            laplacianScheme =
-                "laplacian(" + tmuEff().name() + ',' + schemesField_ + ")";
+                ).nuEff();
         }
 
         for (int i=0; i<=nCorr_; i++)
@@ -199,7 +196,7 @@ bool Foam::functionObjects::age::execute()
 
             if (diffusion_)
             {
-                ageEqn -= fvm::laplacian(tmuEff(), age, laplacianScheme);
+                ageEqn -= fvm::laplacian(rho*tnuEff(), age, laplacianScheme);
             }
 
             ageEqn.relax(relaxCoeff);

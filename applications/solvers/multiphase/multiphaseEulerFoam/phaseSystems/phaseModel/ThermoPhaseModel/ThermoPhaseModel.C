@@ -38,7 +38,7 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::ThermoPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, referencePhase, index),
-    dynamicTransportModel(),
+    viscosity(),
     thermo_(ThermoModel::New(fluid.mesh(), this->name()))
 {
     thermo_->validate

@@ -9,11 +9,11 @@
 
     if (!isType<radiationModels::noRadiation>(radiation()))
     {
-        IOdictionary transportProperties
+        IOdictionary physicalProperties
         (
             IOobject
             (
-                "transportProperties",
+                "physicalProperties",
                 runTime.constant(),
                 runTime,
                 IOobject::MUST_READ,
@@ -26,14 +26,14 @@
         (
             "rhoRef",
             dimDensity,
-            transportProperties
+            physicalProperties
         );
 
         dimensionedScalar CpRef
         (
             "CpRef",
             dimSpecificHeatCapacity,
-            transportProperties
+            physicalProperties
         );
 
         rhoCpRef = rhoRef*CpRef;

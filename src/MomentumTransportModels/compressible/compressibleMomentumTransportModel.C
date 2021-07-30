@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,34 +25,61 @@ License
 
 #include "compressibleMomentumTransportModel.H"
 #include "surfaceInterpolate.H"
-#include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    defineTypeNameAndDebug(compressibleMomentumTransportModel, 0);
-}
+// namespace Foam
+// {
+//     defineTypeNameAndDebug(compressibleMomentumTransportModel, 0);
+// }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::compressibleMomentumTransportModel::compressibleMomentumTransportModel
 (
+    const word& type,
+    const geometricOneField& alpha,
     const volScalarField& rho,
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
-    const surfaceScalarField& phi
+    const surfaceScalarField& phi,
+    const viscosity& viscosity
 )
 :
     momentumTransportModel
     (
         U,
         alphaRhoPhi,
-        phi
+        phi,
+        viscosity
     ),
+    alpha_(alpha),
     rho_(rho)
 {}
+
+
+// * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::compressibleMomentumTransportModel>
+Foam::compressibleMomentumTransportModel::New
+(
+    const volScalarField& rho,
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    const viscosity& viscosity
+)
+{
+    return momentumTransportModel::New<compressibleMomentumTransportModel>
+    (
+        geometricOneField(),
+        rho,
+        U,
+        phi,
+        phi,
+        viscosity
+    );
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

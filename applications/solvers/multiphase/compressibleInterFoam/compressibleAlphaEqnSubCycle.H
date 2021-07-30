@@ -1,6 +1,6 @@
 fvModels.source(alpha1, mixture.thermo1().rho());
 
-tmp<surfaceScalarField> talphaPhi1(alphaPhi10);
+tmp<surfaceScalarField> talphaPhi1(alphaPhi1);
 
 if (nAlphaSubCycles > 1)
 {
@@ -15,7 +15,7 @@ if (nAlphaSubCycles > 1)
             mesh
         ),
         mesh,
-        dimensionedScalar(alphaPhi10.dimensions(), 0)
+        dimensionedScalar(alphaPhi1.dimensions(), 0)
     );
 
     surfaceScalarField rhoPhiSum
@@ -45,7 +45,7 @@ if (nAlphaSubCycles > 1)
     )
     {
         #include "alphaEqn.H"
-        talphaPhi1.ref() += (runTime.deltaT()/totalDeltaT)*alphaPhi10;
+        talphaPhi1.ref() += (runTime.deltaT()/totalDeltaT)*alphaPhi1;
         rhoPhiSum += (runTime.deltaT()/totalDeltaT)*rhoPhi;
     }
 

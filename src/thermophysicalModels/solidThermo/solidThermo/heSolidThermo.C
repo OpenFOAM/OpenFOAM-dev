@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,21 +160,6 @@ heSolidThermo
 )
 :
     heThermo<BasicSolidThermo, MixtureType>(mesh, phaseName)
-{
-    calculate();
-}
-
-
-template<class BasicSolidThermo, class MixtureType>
-Foam::heSolidThermo<BasicSolidThermo, MixtureType>::
-heSolidThermo
-(
-    const fvMesh& mesh,
-    const dictionary& dict,
-    const word& phaseName
-)
-:
-    heThermo<BasicSolidThermo, MixtureType>(mesh, dict, phaseName)
 {
     calculate();
 }

@@ -43,7 +43,7 @@ const Foam::word Foam::twoPhaseChangeModel::phaseChangePropertiesName
 
 Foam::IOobject Foam::twoPhaseChangeModel::createIOobject
 (
-    const twoPhaseMixtureThermo& mixture
+    const compressibleTwoPhaseMixture& mixture
 ) const
 {
     IOobject io
@@ -73,7 +73,7 @@ Foam::IOobject Foam::twoPhaseChangeModel::createIOobject
 Foam::twoPhaseChangeModel::twoPhaseChangeModel
 (
     const word& type,
-    const twoPhaseMixtureThermo& mixture
+    const compressibleTwoPhaseMixture& mixture
 )
 :
     IOdictionary(createIOobject(mixture)),

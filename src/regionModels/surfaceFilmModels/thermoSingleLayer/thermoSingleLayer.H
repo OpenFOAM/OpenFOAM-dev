@@ -75,8 +75,6 @@ protected:
 
     // Protected data
 
-        const word phaseName_;
-
         // Thermo properties
 
             //- Reference to the primary region thermo

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,15 +48,12 @@ namespace mixtureViscosityModels
 
 Foam::mixtureViscosityModels::plastic::plastic
 (
-    const word& name,
-    const dictionary& viscosityProperties,
-    const volVectorField& U,
-    const surfaceScalarField& phi,
-    const word modelName
+    const fvMesh& mesh,
+    const word& group
 )
 :
-    mixtureViscosityModel(name, viscosityProperties, U, phi),
-    plasticCoeffs_(viscosityProperties.optionalSubDict(modelName + "Coeffs")),
+    mixtureViscosityModel(mesh, group),
+    plasticCoeffs_(optionalSubDict(typeName + "Coeffs")),
     plasticViscosityCoeff_
     (
         "coeff",
@@ -77,12 +74,12 @@ Foam::mixtureViscosityModels::plastic::plastic
     ),
     alpha_
     (
-        U.mesh().lookupObject<volScalarField>
+        mesh.lookupObject<volScalarField>
         (
             IOobject::groupName
             (
-                viscosityProperties.lookupOrDefault<word>("alpha", "alpha"),
-                viscosityProperties.dictName()
+                lookupOrDefault<word>("alpha", "alpha"),
+                group
             )
         )
     )
@@ -92,7 +89,11 @@ Foam::mixtureViscosityModels::plastic::plastic
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::mixtureViscosityModels::plastic::mu(const volScalarField& muc) const
+Foam::mixtureViscosityModels::plastic::mu
+(
+    const volScalarField& muc,
+    const volVectorField& U
+) const
 {
     return min
     (
@@ -110,20 +111,22 @@ Foam::mixtureViscosityModels::plastic::mu(const volScalarField& muc) const
 }
 
 
-bool Foam::mixtureViscosityModels::plastic::read
-(
-    const dictionary& viscosityProperties
-)
+bool Foam::mixtureViscosityModels::plastic::read()
 {
-    mixtureViscosityModel::read(viscosityProperties);
+    if (mixtureViscosityModel::read())
+    {
+        plasticCoeffs_ = optionalSubDict(typeName + "Coeffs");
 
-    plasticCoeffs_ = viscosityProperties.optionalSubDict(typeName + "Coeffs");
+        plasticCoeffs_.lookup("k") >> plasticViscosityCoeff_;
+        plasticCoeffs_.lookup("n") >> plasticViscosityExponent_;
+        plasticCoeffs_.lookup("muMax") >> muMax_;
 
-    plasticCoeffs_.lookup("k") >> plasticViscosityCoeff_;
-    plasticCoeffs_.lookup("n") >> plasticViscosityExponent_;
-    plasticCoeffs_.lookup("muMax") >> muMax_;
-
-    return true;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

@@ -36,7 +36,7 @@ Description
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "multiphaseMixture.H"
-#include "kinematicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
 #include "fvModels.H"

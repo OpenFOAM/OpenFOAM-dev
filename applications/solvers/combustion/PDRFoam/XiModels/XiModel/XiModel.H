@@ -92,7 +92,7 @@ SourceFiles
 
 #include "IOdictionary.H"
 #include "psiuReactionThermo.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "multivariateSurfaceInterpolationScheme.H"
 #include "fvcDiv.H"
 #include "runTimeSelectionTables.H"
@@ -208,7 +208,11 @@ public:
         //- Return the flame diffusivity
         virtual tmp<volScalarField> Db() const
         {
-            return turbulence_.muEff();
+            return volScalarField::New
+            (
+                "Db",
+                turbulence_.rho()*turbulence_.nuEff()
+            );
         }
 
         //- Add Xi to the multivariateSurfaceInterpolationScheme table

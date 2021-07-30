@@ -128,7 +128,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 :
     BasicMomentumTransportModel
@@ -139,7 +139,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     couplingFactor_

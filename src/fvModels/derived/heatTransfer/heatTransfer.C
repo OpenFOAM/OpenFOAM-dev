@@ -94,7 +94,7 @@ Foam::fv::heatTransfer::~heatTransfer()
 Foam::wordList Foam::fv::heatTransfer::addSupFields() const
 {
     const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>(basicThermo::dictName);
+        mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
     return wordList(1, thermo.he().name());
 }
@@ -124,7 +124,7 @@ void Foam::fv::heatTransfer::addSup
         if (he.dimensions() == dimEnergy/dimMass)
         {
             const basicThermo& thermo =
-               mesh().lookupObject<basicThermo>(basicThermo::dictName);
+               mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
             const volScalarField htcAoVByCpv(htcAoV/thermo.Cpv());
 

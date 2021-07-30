@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -460,7 +460,13 @@ bool Foam::fileOperation::writeObject
 {
     if (write)
     {
-        fileName filePath(io.objectPath());
+        const fileName filePath
+        (
+            io.global()
+          ? io.rootPath()/io.time().globalCaseName()
+           /io.instance()/io.db().dbDir()/io.local()/io.name()
+          : io.objectPath()
+        );
 
         mkDir(filePath.path());
 

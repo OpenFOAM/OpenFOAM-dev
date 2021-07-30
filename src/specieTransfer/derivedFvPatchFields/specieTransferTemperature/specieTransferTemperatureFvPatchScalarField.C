@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ Foam::specieTransferTemperatureFvPatchScalarField::phiHep() const
 
     // Get thermodynamic properties
     const fluidThermo& thermo =
-        db().lookupObject<fluidThermo>(basicThermo::dictName);
+        db().lookupObject<fluidThermo>(physicalProperties::typeName);
     const fvPatchScalarField& Tp = *this;
     const fvPatchScalarField& pp = thermo.p().boundaryField()[patch().index()];
 
@@ -162,7 +162,7 @@ void Foam::specieTransferTemperatureFvPatchScalarField::updateCoeffs()
 
     // Get the current energy to linearise around
     const fluidThermo& thermo =
-        db().lookupObject<fluidThermo>(basicThermo::dictName);
+        db().lookupObject<fluidThermo>(physicalProperties::typeName);
     const scalarField& hep = thermo.he().boundaryField()[patch().index()];
 
     heValueFraction() = phip/(phip - patch().deltaCoeffs()*AAlphaEffp);

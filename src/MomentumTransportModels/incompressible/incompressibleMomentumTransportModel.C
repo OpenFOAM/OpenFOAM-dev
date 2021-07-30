@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,73 +24,101 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleMomentumTransportModel.H"
+#include "fvMatrix.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    defineTypeNameAndDebug(incompressibleMomentumTransportModel, 0);
-}
+// namespace Foam
+// {
+//     defineTypeNameAndDebug(incompressibleMomentumTransportModel, 0);
+// }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::incompressibleMomentumTransportModel::incompressibleMomentumTransportModel
 (
-    const geometricOneField&,
+    const word& type,
+    const geometricOneField& alpha,
+    const geometricOneField& rho,
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
-    const surfaceScalarField& phi
+    const surfaceScalarField& phi,
+    const viscosity& viscosity
 )
 :
-    momentumTransportModel
-    (
-        U,
-        alphaRhoPhi,
-        phi
-    )
+    momentumTransportModel(U, alphaRhoPhi, phi, viscosity),
+    alpha_(alpha),
+    rho_(rho)
 {}
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::incompressibleMomentumTransportModel::mu() const
+// * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::incompressibleMomentumTransportModel>
+Foam::incompressibleMomentumTransportModel::New
+(
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    const viscosity& viscosity
+)
 {
-    return nu();
+    return momentumTransportModel::New<incompressibleMomentumTransportModel>
+    (
+        geometricOneField(),
+        geometricOneField(),
+        U,
+        phi,
+        phi,
+        viscosity
+    );
 }
 
 
-Foam::tmp<Foam::scalarField>
-Foam::incompressibleMomentumTransportModel::mu(const label patchi) const
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volSymmTensorField>
+Foam::incompressibleMomentumTransportModel::devSigma() const
 {
-    return nu(patchi);
+    return devTau();
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::incompressibleMomentumTransportModel::mut() const
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::incompressibleMomentumTransportModel::divDevSigma(volVectorField& U) const
 {
-    return nut();
+    return divDevTau(U);
 }
 
 
-Foam::tmp<Foam::scalarField>
-Foam::incompressibleMomentumTransportModel::mut(const label patchi) const
+Foam::tmp<Foam::volSymmTensorField>
+Foam::incompressibleMomentumTransportModel::devTau() const
 {
-    return nut(patchi);
+    NotImplemented;
+    return devSigma();
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::incompressibleMomentumTransportModel::muEff() const
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::incompressibleMomentumTransportModel::divDevTau
+(
+    volVectorField& U
+) const
 {
-    return nuEff();
+    NotImplemented;
+    return divDevSigma(U);
 }
 
 
-Foam::tmp<Foam::scalarField>
-Foam::incompressibleMomentumTransportModel::muEff(const label patchi) const
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::incompressibleMomentumTransportModel::divDevTau
+(
+    const volScalarField& rho,
+    volVectorField& U
+) const
 {
-    return nuEff(patchi);
+    NotImplemented;
+    return divDevSigma(U);
 }
 
 

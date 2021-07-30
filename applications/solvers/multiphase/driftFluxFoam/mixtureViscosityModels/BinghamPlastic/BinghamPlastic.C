@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,13 +49,11 @@ namespace mixtureViscosityModels
 
 Foam::mixtureViscosityModels::BinghamPlastic::BinghamPlastic
 (
-    const word& name,
-    const dictionary& viscosityProperties,
-    const volVectorField& U,
-    const surfaceScalarField& phi
+    const fvMesh& mesh,
+    const word& group
 )
 :
-    plastic(name, viscosityProperties, U, phi, typeName),
+    plastic(mesh, group),
     yieldStressCoeff_
     (
         "BinghamCoeff",
@@ -73,8 +71,7 @@ Foam::mixtureViscosityModels::BinghamPlastic::BinghamPlastic
         "BinghamOffset",
         dimless,
         plasticCoeffs_
-    ),
-    U_(U)
+    )
 {}
 
 
@@ -83,7 +80,8 @@ Foam::mixtureViscosityModels::BinghamPlastic::BinghamPlastic
 Foam::tmp<Foam::volScalarField>
 Foam::mixtureViscosityModels::BinghamPlastic::mu
 (
-    const volScalarField& muc
+    const volScalarField& muc,
+    const volVectorField& U
 ) const
 {
     volScalarField tauy
@@ -108,7 +106,7 @@ Foam::mixtureViscosityModels::BinghamPlastic::mu
         )
     );
 
-    volScalarField mup(plastic::mu(muc));
+    volScalarField mup(plastic::mu(muc, U));
 
     dimensionedScalar tauySmall("tauySmall", tauy.dimensions(), small);
 
@@ -116,7 +114,7 @@ Foam::mixtureViscosityModels::BinghamPlastic::mu
     (
         tauy
        /(
-            sqrt(2.0)*mag(symm(fvc::grad(U_)))
+            sqrt(2.0)*mag(symm(fvc::grad(U)))
           + 1.0e-4*(tauy + tauySmall)/mup
         )
       + mup,
@@ -125,18 +123,20 @@ Foam::mixtureViscosityModels::BinghamPlastic::mu
 }
 
 
-bool Foam::mixtureViscosityModels::BinghamPlastic::read
-(
-    const dictionary& viscosityProperties
-)
+bool Foam::mixtureViscosityModels::BinghamPlastic::read()
 {
-    plastic::read(viscosityProperties);
+    if (plastic::read())
+    {
+        plasticCoeffs_.lookup("yieldStressCoeff") >> yieldStressCoeff_;
+        plasticCoeffs_.lookup("yieldStressExponent") >> yieldStressExponent_;
+        plasticCoeffs_.lookup("yieldStressOffset") >> yieldStressOffset_;
 
-    plasticCoeffs_.lookup("yieldStressCoeff") >> yieldStressCoeff_;
-    plasticCoeffs_.lookup("yieldStressExponent") >> yieldStressExponent_;
-    plasticCoeffs_.lookup("yieldStressOffset") >> yieldStressOffset_;
-
-    return true;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

@@ -97,7 +97,7 @@ WALE<BasicMomentumTransportModel>::WALE
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -109,7 +109,7 @@ WALE<BasicMomentumTransportModel>::WALE
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     Ck_

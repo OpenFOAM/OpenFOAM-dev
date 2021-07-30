@@ -25,6 +25,8 @@ RAS
     turbulence      on;
 
     printCoeffs     on;
+
+    viscosityModel  Newtonian;
 }
 
 

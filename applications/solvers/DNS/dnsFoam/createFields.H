@@ -1,4 +1,4 @@
-#include "readTransportProperties.H"
+#include "readPhysicalProperties.H"
 
 Info<< "Reading field p\n" << endl;
 volScalarField p

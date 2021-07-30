@@ -133,7 +133,7 @@ kOmega2006<BasicMomentumTransportModel>::kOmega2006
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -145,7 +145,7 @@ kOmega2006<BasicMomentumTransportModel>::kOmega2006
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     betaStar_

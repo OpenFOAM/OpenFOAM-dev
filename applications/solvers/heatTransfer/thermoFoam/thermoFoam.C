@@ -31,7 +31,7 @@ Description
 
 #include "fvCFD.H"
 #include "fluidThermo.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "fluidThermophysicalTransportModel.H"
 #include "LESModel.H"
 #include "fvModels.H"

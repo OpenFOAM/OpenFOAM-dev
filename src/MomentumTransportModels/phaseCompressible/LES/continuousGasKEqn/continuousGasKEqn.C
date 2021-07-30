@@ -43,7 +43,7 @@ continuousGasKEqn<BasicMomentumTransportModel>::continuousGasKEqn
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -54,7 +54,7 @@ continuousGasKEqn<BasicMomentumTransportModel>::continuousGasKEqn
         U,
         alphaRhoPhi,
         phi,
-        transport,
+        viscosity,
         type
     ),
 
@@ -103,7 +103,7 @@ continuousGasKEqn<BasicMomentumTransportModel>::liquidTurbulence() const
     {
         const volVectorField& U = this->U_;
 
-        const phaseModel& gas = refCast<const phaseModel>(this->transport());
+        const phaseModel& gas = refCast<const phaseModel>(this->properties());
         const phaseSystem& fluid = gas.fluid();
         const phaseModel& liquid = fluid.otherPhase(gas);
 

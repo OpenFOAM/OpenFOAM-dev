@@ -32,11 +32,11 @@ RAS
         alphaMinFriction        0.5;
         residualAlpha           1e-6;
 
-        viscosityModel          Syamlal;
-        conductivityModel       Syamlal;
-        granularPressureModel   SyamlalRogersOBrien;
-        frictionalStressModel   Schaeffer;
-        radialModel             CarnahanStarling;
+        granularViscosityModel      Syamlal;
+        granularConductivityModel   Syamlal;
+        granularPressureModel       SyamlalRogersOBrien;
+        frictionalStressModel       Schaeffer;
+        radialModel                 CarnahanStarling;
 
         SchaefferCoeffs
         {

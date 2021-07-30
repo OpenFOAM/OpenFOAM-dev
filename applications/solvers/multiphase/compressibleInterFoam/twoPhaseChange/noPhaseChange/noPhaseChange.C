@@ -42,7 +42,7 @@ namespace twoPhaseChangeModels
 
 Foam::twoPhaseChangeModels::noPhaseChange::noPhaseChange
 (
-    const twoPhaseMixtureThermo& mixture
+    const compressibleTwoPhaseMixture& mixture
 )
 :
     twoPhaseChangeModel(typeName, mixture)

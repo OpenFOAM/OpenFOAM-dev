@@ -1,0 +1,36 @@
+Reference:
+
+    Figueiredo, R. A., Oishi, C. M., Afonso, A. M., Tasso, I. V. M., &
+    Cuminato, J. A. (2016).
+    A two-phase solver for complex fluids: Studies of the Weissenberg effect.
+    International Journal of Multiphase Flow, 84, 98-115.
+
+In interFoam with momentumTransport simulationType set to twoPhaseTransport
+separate stress models (laminar, non-Newtonian, LES or RAS) are instantiated for
+each of the two phases allowing for different modeling for the phases.
+
+This example case uses:
+- phases "air" and "liquid"
+- air phase
+  - constant/momentumTransport.air:
+    - stress model set to laminar, Newtonian
+  - constant/thermophysicalProperties.air:
+    - transport set to const (Newtonian)
+    - mu (dynamic viscoity) = 1.84e-5
+- liquid phase
+  - constant/momentumTransport.liquid:
+    - stress model set to laminar, Maxwell non-Newtonian
+    - nuM (kinematic viscosity) = 0.01476
+    - lambda = 0.018225
+  - constant/thermophysicalProperties.liquid
+    - transport set to const (Newtonian)
+    - mu (dynamic viscoity) = 1.46
+
+Liquid phase properties were calculated from the relations given in the paper:
+- rho = 890 kg/m^3
+- mu = mu_{s} + mu_{p} = 146 poise = 14.6 Pa.s
+  s = solvent (Newtonian), p = polymer (Maxwell)
+- mu_{s}/mu_{p} = 1/9
+
+=> mu_{s} = 14.6/10 = 1.46 Pa.s
+=> nu_{p} = nuM = (9/10)*14.6/890 = 0.01476 m^2/s

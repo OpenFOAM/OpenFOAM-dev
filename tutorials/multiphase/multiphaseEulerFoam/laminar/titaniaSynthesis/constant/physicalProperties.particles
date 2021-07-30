@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      physicalProperties.particles;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType
+{
+    type            heRhoThermo;
+    mixture         multiComponentMixture;
+    transport       const;
+    thermo          hConst;
+    equationOfState rhoConst;
+    specie          specie;
+    energy          sensibleInternalEnergy;
+}
+
+species (TiO2);
+
+defaultSpecie TiO2;
+
+TiO2
+{
+    specie
+    {
+        molWeight   79.87880;
+    }
+    equationOfState
+    {
+        rho         4230;
+    }
+    thermodynamics
+    {
+        Hf          -1.18307e+07;
+        Cp          684.246;
+    }
+    transport
+    {
+        mu          1e-7;
+        Pr          8.0e-6;
+    }
+}
+
+
+// ************************************************************************* //

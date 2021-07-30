@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ Foam::adsorptionMassFractionFvPatchScalarField::calcPhiYp() const
     const word& YName = internalField().name();
 
     const fluidThermo& thermo =
-        db().lookupObject<fluidThermo>(fluidThermo::dictName);
+        db().lookupObject<fluidThermo>(physicalProperties::typeName);
 
     // Get the cell-mass fraction
     const scalarField Yc(patchInternalField());

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::PDRDragModels::basic::Dcu() const
             U_.db().lookupObject<volScalarField>("betav");
 
         DragDcu =
-            (0.5*rho_)*CR_*mag(U_) + (Csu*I)*betav*turbulence_.muEff()*sqr(Aw_);
+            rho_*(0.5*CR_*mag(U_) + (Csu*I)*betav*turbulence_.nuEff()*sqr(Aw_));
     }
 
     return tDragDcu;
@@ -143,8 +143,11 @@ Foam::tmp<Foam::volScalarField> Foam::PDRDragModels::basic::Gk() const
             U_.db().lookupObject<volSymmTensorField>("CT");
 
         Gk =
-            (0.5*rho_)*mag(U_)*(U_ & CT & U_)
-          + Csk*betav*turbulence_.muEff()*sqr(Aw_)*magSqr(U_);
+            rho_
+           *(
+                0.5*mag(U_)*(U_ & CT & U_)
+              + Csk*betav*turbulence_.nuEff()*sqr(Aw_)*magSqr(U_)
+            );
     }
 
     return tGk;

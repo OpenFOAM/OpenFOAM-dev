@@ -33,7 +33,7 @@ Description
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "psiThermo.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "fluidThermophysicalTransportModel.H"
 #include "fixedRhoFvPatchScalarField.H"
 #include "directionInterpolate.H"
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
             phiEp += mesh.phi()*(a_pos*p_pos + a_neg*p_neg);
         }
 
-        volScalarField muEff("muEff", turbulence->muEff());
+        volScalarField muEff("muEff", rho*turbulence->nuEff());
         volTensorField tauMC("tauMC", muEff*dev2(Foam::T(fvc::grad(U))));
 
         // --- Solve density

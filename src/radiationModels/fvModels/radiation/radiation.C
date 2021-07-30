@@ -61,7 +61,7 @@ Foam::fv::radiation::radiation
     (
         radiationModel::New
         (
-            mesh.lookupObject<basicThermo>(basicThermo::dictName).T()
+            mesh.lookupObject<basicThermo>(physicalProperties::typeName).T()
         )
     )
 {}
@@ -72,7 +72,7 @@ Foam::fv::radiation::radiation
 Foam::wordList Foam::fv::radiation::addSupFields() const
 {
     const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>(basicThermo::dictName);
+        mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
     return wordList(1, thermo.he().name());
 }
@@ -86,7 +86,7 @@ void Foam::fv::radiation::addSup
 ) const
 {
     const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>(basicThermo::dictName);
+        mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
     radiation_->correct();
 

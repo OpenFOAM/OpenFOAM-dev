@@ -38,7 +38,7 @@ SourceFiles
 
 #include "IOdictionary.H"
 #include "psiuReactionThermo.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "multivariateSurfaceInterpolationScheme.H"
 #include "runTimeSelectionTables.H"
 

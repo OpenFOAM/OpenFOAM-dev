@@ -47,7 +47,7 @@ Description
 #include "laminarThermophysicalTransportModel.H"
 #include "RASThermophysicalTransportModel.H"
 #include "LESThermophysicalTransportModel.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

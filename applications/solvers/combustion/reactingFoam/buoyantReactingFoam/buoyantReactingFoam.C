@@ -38,7 +38,7 @@ Description
 #include "dynamicFvMesh.H"
 #include "fluidReactionThermo.H"
 #include "combustionModel.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "fluidReactionThermophysicalTransportModel.H"
 #include "multivariateScheme.H"
 #include "pimpleControl.H"

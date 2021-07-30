@@ -87,7 +87,7 @@ const Foam::solidThermo&
 Foam::fv::solidEquilibriumEnergySource::solidThermo() const
 {
     const word thermoName =
-        IOobject::groupName(basicThermo::dictName, solidPhaseName_);
+        IOobject::groupName(physicalProperties::typeName, solidPhaseName_);
 
     if (!mesh().foundObject<Foam::solidThermo>(thermoName))
     {
@@ -134,7 +134,7 @@ Foam::wordList Foam::fv::solidEquilibriumEnergySource::addSupFields() const
     const basicThermo& thermo =
         mesh().lookupObject<basicThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
         );
 
     return wordList(1, thermo.he().name());

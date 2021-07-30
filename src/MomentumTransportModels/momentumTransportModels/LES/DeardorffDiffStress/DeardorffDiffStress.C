@@ -55,7 +55,7 @@ DeardorffDiffStress<BasicMomentumTransportModel>::DeardorffDiffStress
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -67,7 +67,7 @@ DeardorffDiffStress<BasicMomentumTransportModel>::DeardorffDiffStress
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     Ck_

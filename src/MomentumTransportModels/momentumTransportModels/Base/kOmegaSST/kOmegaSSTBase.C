@@ -56,7 +56,7 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST::F1
             max
             (
                 (scalar(1)/betaStar_)*sqrt(k_)/(omega_*y_),
-                scalar(500)*(this->mu()/this->rho_)/(sqr(y_)*omega_)
+                scalar(500)*this->nu()/(sqr(y_)*omega_)
             ),
             (4*alphaOmega2_)*k_/(CDkOmegaPlus*sqr(y_))
         ),
@@ -76,7 +76,7 @@ F2() const
         max
         (
             (scalar(2)/betaStar_)*sqrt(k_)/(omega_*y_),
-            scalar(500)*(this->mu()/this->rho_)/(sqr(y_)*omega_)
+            scalar(500)*this->nu()/(sqr(y_)*omega_)
         ),
         scalar(100)
     );
@@ -91,7 +91,7 @@ F3() const
 {
     tmp<volScalarField> arg3 = min
     (
-        150*(this->mu()/this->rho_)/(omega_*sqr(y_)),
+        150*this->nu()/(omega_*sqr(y_)),
         scalar(10)
     );
 
@@ -222,7 +222,7 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport
+    const viscosity& viscosity
 )
 :
     MomentumTransportModel
@@ -233,7 +233,7 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     alphaK1_

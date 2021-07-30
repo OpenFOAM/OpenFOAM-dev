@@ -122,9 +122,6 @@ class VoFSolidificationMeltingSource
         //- Solid phase fraction
         mutable volScalarField alphaSolid_;
 
-        //- Current time index (used for updating)
-        mutable label curTimeIndex_;
-
 
     // Private Member Functions
 
@@ -133,9 +130,6 @@ class VoFSolidificationMeltingSource
 
         //- Return the name of the solid phase fraction
         word alphaSolidName() const;
-
-        //- Update the model
-        void update() const;
 
         //- Helper function to apply to the energy equation
         template<class RhoFieldType>
@@ -198,6 +192,10 @@ public:
 
             //- Update for mesh changes
             virtual void updateMesh(const mapPolyMesh&);
+
+
+        //- Correct the model
+        virtual void correct();
 
 
         // IO

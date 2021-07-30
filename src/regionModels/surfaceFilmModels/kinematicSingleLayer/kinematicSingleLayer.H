@@ -74,6 +74,8 @@ protected:
 
     // Protected data
 
+        const word phaseName_;
+
         // Solution parameters
 
             pimpleControl pimple_;

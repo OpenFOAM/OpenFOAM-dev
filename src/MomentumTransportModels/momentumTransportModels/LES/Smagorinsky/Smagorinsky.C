@@ -77,7 +77,7 @@ Smagorinsky<BasicMomentumTransportModel>::Smagorinsky
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -89,7 +89,7 @@ Smagorinsky<BasicMomentumTransportModel>::Smagorinsky
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     Ck_

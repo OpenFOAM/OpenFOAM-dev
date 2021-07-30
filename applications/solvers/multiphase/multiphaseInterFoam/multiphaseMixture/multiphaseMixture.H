@@ -28,7 +28,7 @@ Description
     Incompressible multi-phase mixture with built in solution for the
     phase fractions with interface compression for interface-capturing.
 
-    Derived from kinematicTransportModel so that it can be used in conjunction
+    Derived from viscosity so that it can be used in conjunction
     with the incompressible turbulence models.
 
     Surface tension and contact-angle is handled for the interface
@@ -42,7 +42,7 @@ SourceFiles
 #ifndef multiphaseMixture_H
 #define multiphaseMixture_H
 
-#include "kinematicTransportModel.H"
+#include "viscosity.H"
 #include "IOdictionary.H"
 #include "phase.H"
 #include "PtrDictionary.H"
@@ -61,7 +61,7 @@ namespace Foam
 class multiphaseMixture
 :
     public IOdictionary,
-    public kinematicTransportModel
+    public viscosity
 {
 public:
 
@@ -266,7 +266,7 @@ public:
         //- Correct the mixture properties
         void correct();
 
-        //- Read base transportProperties dictionary
+        //- Read base phaseProperties dictionary
         bool read();
 };
 

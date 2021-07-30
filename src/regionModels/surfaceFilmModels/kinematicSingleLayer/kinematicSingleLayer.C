@@ -479,6 +479,7 @@ kinematicSingleLayer::kinematicSingleLayer
 )
 :
     surfaceFilmRegionModel(modelType, mesh, g, regionType),
+    phaseName_(coeffs_.lookupOrDefault("phase", word::null)),
     pimple_(regionMesh()),
 
     cumulativeContErr_(0),
@@ -770,7 +771,7 @@ kinematicSingleLayer::kinematicSingleLayer
     (
         IOobject
         (
-            "U", // must have same name as U to enable mapping
+            "U", // Must have same name as U to enable mapping
             time().timeName(),
             regionMesh(),
             IOobject::NO_READ,
@@ -785,7 +786,8 @@ kinematicSingleLayer::kinematicSingleLayer
     (
         IOobject
         (
-            "thermo:rho", // must have same name as rho to enable mapping
+            // Must have same name as rho to enable mapping
+            IOobject::groupName("thermo:rho", phaseName_),
             time().timeName(),
             regionMesh(),
             IOobject::NO_READ,
@@ -800,7 +802,8 @@ kinematicSingleLayer::kinematicSingleLayer
     (
         IOobject
         (
-            "thermo:mu", // must have same name as mu to enable mapping
+            // Must have same name as rho to enable mapping
+            IOobject::groupName("thermo:mu", phaseName_),
             time().timeName(),
             regionMesh(),
             IOobject::NO_READ,

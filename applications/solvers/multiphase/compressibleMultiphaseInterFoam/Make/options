@@ -1,8 +1,8 @@
 EXE_INC = \
     -I. \
     -I../interFoam \
-    -ImultiphaseMixtureThermo/lnInclude \
-    -I$(LIB_SRC)/transportModels/lnInclude \
+    -IcompressibleMultiphaseMixture/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
@@ -12,7 +12,7 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
-    -lmultiphaseMixtureThermo \
+    -lcompressibleMultiphaseMixture \
     -lfluidThermophysicalModels \
     -lspecie \
     -linterfaceProperties \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,7 @@ class slurry
 :
     public mixtureViscosityModel
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Slurry phase fraction
         const volScalarField& alpha_;
@@ -83,14 +81,7 @@ public:
     // Constructors
 
         //- Construct from components
-        slurry
-        (
-            const word& name,
-            const dictionary& viscosityProperties,
-            const volVectorField& U,
-            const surfaceScalarField& phi,
-            const word modelName=typeName
-        );
+        slurry(const fvMesh& mesh, const word& group);
 
 
     //- Destructor
@@ -102,10 +93,14 @@ public:
 
         //- Return the mixture viscosity
         //  given the viscosity of the continuous phase
-        tmp<volScalarField> mu(const volScalarField& muc) const;
+        tmp<volScalarField> mu
+        (
+            const volScalarField& muc,
+            const volVectorField& U
+        ) const;
 
-        //- Read transportProperties dictionary
-        bool read(const dictionary& viscosityProperties);
+        //- Read phaseProperties dictionary
+        bool read();
 };
 
 

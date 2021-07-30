@@ -32,7 +32,7 @@ Description
 
 #include "fvCFD.H"
 #include "engineMesh.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "fluidReactionThermophysicalTransportModel.H"
 #include "combustionModel.H"
 #include "fvModels.H"

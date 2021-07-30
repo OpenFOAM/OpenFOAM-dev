@@ -31,8 +31,8 @@ License
 #include "fvmSup.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
-#include "kinematicMomentumTransportModel.H"
-#include "dynamicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModel.H"
+#include "compressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -60,10 +60,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
     const surfaceScalarField& phi
 ) const
 {
-    typedef incompressible::momentumTransportModel icoModel;
-    typedef compressible::momentumTransportModel cmpModel;
-
-    word Dname("D" + s_.name());
+    const word Dname("D" + s_.name());
 
     if (constantD_)
     {
@@ -71,26 +68,24 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
         (
             Dname,
             mesh_,
-            dimensionedScalar(Dname, phi.dimensions()/dimLength, D_)
+            dimensionedScalar(Dname, dimViscosity, D_)
         );
     }
-    else if (mesh_.foundObject<icoModel>(momentumTransportModel::typeName))
-    {
-        const icoModel& model = mesh_.lookupObject<icoModel>
+    else if
+    (
+        mesh_.foundObject<momentumTransportModel>
         (
             momentumTransportModel::typeName
-        );
-
-        return alphaD_*model.nu() + alphaDt_*model.nut();
-    }
-    else if (mesh_.foundObject<cmpModel>(momentumTransportModel::typeName))
+        )
+    )
     {
-        const cmpModel& model = mesh_.lookupObject<cmpModel>
-        (
-            momentumTransportModel::typeName
-        );
+        const momentumTransportModel& turbulence =
+            mesh_.lookupObject<momentumTransportModel>
+            (
+                momentumTransportModel::typeName
+            );
 
-        return alphaD_*model.mu() + alphaDt_*model.mut();
+        return alphaD_*turbulence.nu() + alphaDt_*turbulence.nut();
     }
     else
     {
@@ -186,20 +181,17 @@ bool Foam::functionObjects::scalarTransport::execute()
         Foam::fvConstraints::New(mesh_)
     );
 
-    if (phi.dimensions() == dimMass/dimTime)
+    if (phi.dimensions() == dimVolume/dimTime)
     {
-        const volScalarField& rho =
-            mesh_.lookupObject<volScalarField>(rhoName_);
-
         for (int i=0; i<=nCorr_; i++)
         {
             fvScalarMatrix sEqn
             (
-                fvm::ddt(rho, s_)
+                fvm::ddt(s_)
               + fvm::div(phi, s_, divScheme)
               - fvm::laplacian(D, s_, laplacianScheme)
              ==
-                fvModels.source(rho, s_)
+                fvModels.source(s_)
             );
 
             sEqn.relax(relaxCoeff);
@@ -211,17 +203,20 @@ bool Foam::functionObjects::scalarTransport::execute()
             fvConstraints.constrain(s_);
         }
     }
-    else if (phi.dimensions() == dimVolume/dimTime)
+    else if (phi.dimensions() == dimMass/dimTime)
     {
+        const volScalarField& rho =
+            mesh_.lookupObject<volScalarField>(rhoName_);
+
         for (int i=0; i<=nCorr_; i++)
         {
             fvScalarMatrix sEqn
             (
-                fvm::ddt(s_)
+                fvm::ddt(rho, s_)
               + fvm::div(phi, s_, divScheme)
-              - fvm::laplacian(D, s_, laplacianScheme)
+              - fvm::laplacian(rho*D, s_, laplacianScheme)
              ==
-                fvModels.source(s_)
+                fvModels.source(rho, s_)
             );
 
             sEqn.relax(relaxCoeff);

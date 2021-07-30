@@ -26,7 +26,7 @@ License
 #include "Luo.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mathematicalConstants.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "virtualMassModel.H"
 #include "phaseSystem.H"
 

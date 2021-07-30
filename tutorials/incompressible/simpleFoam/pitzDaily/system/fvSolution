@@ -24,6 +24,14 @@ solvers
         smoother        GaussSeidel;
     }
 
+    pcorr
+    {
+        solver          GAMG;
+        tolerance       1e-06;
+        relTol          0;
+        smoother        GaussSeidel;
+    }
+
     "(U|k|epsilon|omega|f|v2)"
     {
         solver          smoothSolver;

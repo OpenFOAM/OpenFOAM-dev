@@ -150,7 +150,7 @@ dynamicKEqn<BasicMomentumTransportModel>::dynamicKEqn
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -162,7 +162,7 @@ dynamicKEqn<BasicMomentumTransportModel>::dynamicKEqn
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     k_

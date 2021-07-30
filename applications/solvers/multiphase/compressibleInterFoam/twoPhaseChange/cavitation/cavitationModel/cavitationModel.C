@@ -43,7 +43,7 @@ namespace twoPhaseChangeModels
 Foam::twoPhaseChangeModels::cavitationModel::cavitationModel
 (
     const word& type,
-    const twoPhaseMixtureThermo& mixture
+    const compressibleTwoPhaseMixture& mixture
 )
 :
     twoPhaseChangeModel(type, mixture),

@@ -30,13 +30,13 @@ volVectorField U
 );
 
 
-Info<< "Reading transportProperties\n" << endl;
+Info<< "Reading physicalProperties\n" << endl;
 
-IOdictionary transportProperties
+IOdictionary physicalProperties
 (
     IOobject
     (
-        "transportProperties",
+        "physicalProperties",
         runTime.constant(),
         mesh,
         IOobject::MUST_READ_IF_MODIFIED,
@@ -49,7 +49,7 @@ Info<< "Reading diffusivity DT\n" << endl;
 
 dimensionedScalar DT
 (
-    transportProperties.lookup("DT")
+    physicalProperties.lookup("DT")
 );
 
 #include "createPhi.H"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,17 +39,6 @@ namespace Foam
 Foam::fluidThermo::implementation::implementation
 (
     const fvMesh& mesh,
-    const word& phaseName
-)
-:
-    p_(lookupOrConstruct(mesh, "p"))
-{}
-
-
-Foam::fluidThermo::implementation::implementation
-(
-    const fvMesh& mesh,
-    const dictionary& dict,
     const word& phaseName
 )
 :

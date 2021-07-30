@@ -36,7 +36,7 @@ SourceFiles
 #define combustionModel_H
 
 #include "IOdictionary.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "fluidReactionThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

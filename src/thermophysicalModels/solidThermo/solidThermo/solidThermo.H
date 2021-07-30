@@ -80,16 +80,6 @@ public:
         (mesh, phaseName)
     );
 
-    // Declare run-time constructor selection tables
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        solidThermo,
-        dictionary,
-        (const fvMesh& mesh, const dictionary& dict, const word& phaseName),
-        (mesh, dict, phaseName)
-    );
-
 
     // Selectors
 
@@ -97,14 +87,6 @@ public:
         static autoPtr<solidThermo> New
         (
             const fvMesh&,
-            const word& phaseName = word::null
-        );
-
-        //- Selection using a specified dictionary
-        static autoPtr<solidThermo> New
-        (
-            const fvMesh&,
-            const dictionary&,
             const word& phaseName = word::null
         );
 
@@ -232,18 +214,6 @@ public:
         :
             basicThermo::implementation(mesh, phaseName),
             solidThermo::implementation(mesh, phaseName)
-        {}
-
-        //- Construct from mesh, dictionary and phase name
-        composite
-        (
-            const fvMesh& mesh,
-            const dictionary& dict,
-            const word& phaseName
-        )
-        :
-            basicThermo::implementation(mesh, dict, phaseName),
-            solidThermo::implementation(mesh, dict, phaseName)
         {}
 };
 

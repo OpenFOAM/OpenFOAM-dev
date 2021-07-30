@@ -113,8 +113,8 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
 
     const scalarField alphaEffw(ttm.alphaEff(patchi));
 
-    const tmp<scalarField> tmuw = turbModel.mu(patchi);
-    const scalarField& muw = tmuw();
+    const tmp<scalarField> tnuw = turbModel.nu(patchi);
+    const scalarField& nuw = tnuw();
 
     const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
     const vectorField& Uc = turbModel.U();
@@ -123,14 +123,14 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
     const scalarField Cpw(ttm.thermo().Cp(Tw, patchi));
 
     const scalarField kappaw(Cpw*alphaEffw);
-    const scalarField Pr(muw*Cpw/kappaw);
+    const scalarField Pr(rhow*nuw*Cpw/kappaw);
 
     scalarField& htc = *this;
     forAll(htc, facei)
     {
-        label celli = patch().faceCells()[facei];
+        const label celli = patch().faceCells()[facei];
 
-        scalar Re = rhow[facei]*mag(Uc[celli] - Uw[facei])*L_/muw[facei];
+        const scalar Re = mag(Uc[celli] - Uw[facei])*L_/nuw[facei];
 
         if (Re < 5.0E+05)
         {

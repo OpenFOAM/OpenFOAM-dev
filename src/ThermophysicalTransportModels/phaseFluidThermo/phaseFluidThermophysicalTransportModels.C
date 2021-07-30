@@ -30,7 +30,7 @@ License
 makeThermophysicalTransportModels
 (
     PhaseThermophysicalTransportModel,
-    dynamicTransportModelPhaseCompressibleMomentumTransportModel,
+    phaseCompressibleMomentumTransportModel,
     fluidThermo
 );
 

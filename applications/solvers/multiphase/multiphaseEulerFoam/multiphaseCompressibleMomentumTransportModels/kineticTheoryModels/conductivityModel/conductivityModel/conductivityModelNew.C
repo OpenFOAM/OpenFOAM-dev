@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,9 @@ Foam::kineticTheoryModels::conductivityModel::New
     const dictionary& dict
 )
 {
-    word conductivityModelType(dict.lookup("conductivityModel"));
+    word conductivityModelType(dict.lookup("granularConductivityModel"));
 
-    Info<< "Selecting conductivityModel "
+    Info<< "Selecting granularConductivityModel "
         << conductivityModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
@@ -45,10 +45,10 @@ Foam::kineticTheoryModels::conductivityModel::New
     {
         FatalError
             << "conductivityModel::New(const dictionary&) : " << endl
-            << "    unknown conductivityModelType type "
+            << "    unknown granularConductivityModel type "
             << conductivityModelType
             << ", constructor not in hash table" << endl << endl
-            << "    Valid conductivityModelType types are :" << endl;
+            << "    Valid granularConductivityModel types are :" << endl;
         Info<< dictionaryConstructorTablePtr_->sortedToc() << abort(FatalError);
     }
 

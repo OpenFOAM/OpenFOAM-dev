@@ -13,10 +13,10 @@ T
 
         regionName          ${baffleRegionName};
 
-        # include "3DbaffleSolidThermo"
+        #include "3DbaffleRadiation"
 
         // New fvMesh (region) information
-        # include "extrudeModel"
+        #include "extrudeModel"
 }
 
 // ************************************************************************* //

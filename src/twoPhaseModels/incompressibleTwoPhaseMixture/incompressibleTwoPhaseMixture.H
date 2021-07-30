@@ -35,11 +35,8 @@ SourceFiles
 #ifndef incompressibleTwoPhaseMixture_H
 #define incompressibleTwoPhaseMixture_H
 
-#include "kinematicTransportModel.H"
-#include "viscosityModel.H"
 #include "twoPhaseMixture.H"
-#include "IOdictionary.H"
-
+#include "viscosityModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,13 +49,10 @@ namespace Foam
 
 class incompressibleTwoPhaseMixture
 :
-    public IOdictionary,
-    public kinematicTransportModel,
-    public twoPhaseMixture
+    public twoPhaseMixture,
+    public viscosity
 {
-protected:
-
-    // Protected data
+    // Private Data
 
         autoPtr<viscosityModel> nuModel1_;
         autoPtr<viscosityModel> nuModel2_;
@@ -70,12 +64,6 @@ protected:
         const surfaceScalarField& phi_;
 
         volScalarField nu_;
-
-
-    // Protected Member Functions
-
-        //- Calculate and return the laminar viscosity
-        void calcNu();
 
 
 public:
@@ -130,6 +118,9 @@ public:
             return U_;
         }
 
+        //- Return the mixture density
+        tmp<volScalarField> rho() const;
+
         //- Return the dynamic laminar viscosity
         tmp<volScalarField> mu() const;
 
@@ -152,12 +143,9 @@ public:
         tmp<surfaceScalarField> nuf() const;
 
         //- Correct the laminar viscosity
-        virtual void correct()
-        {
-            calcNu();
-        }
+        virtual void correct();
 
-        //- Read base transportProperties dictionary
+        //- Read base phaseProperties dictionary
         virtual bool read();
 };
 

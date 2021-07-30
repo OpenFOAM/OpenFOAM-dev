@@ -25,7 +25,7 @@ License
 
 #include "Gosman.H"
 #include "phasePair.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 #include "dragModel.H"
 

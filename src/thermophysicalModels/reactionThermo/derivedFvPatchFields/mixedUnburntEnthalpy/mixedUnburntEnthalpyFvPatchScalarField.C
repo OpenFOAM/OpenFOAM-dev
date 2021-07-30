@@ -93,7 +93,7 @@ void Foam::mixedUnburntEnthalpyFvPatchScalarField::updateCoeffs()
 
     const psiuReactionThermo& thermo = db().lookupObject<psiuReactionThermo>
     (
-        basicThermo::dictName
+        physicalProperties::typeName
     );
 
     const label patchi = patch().index();

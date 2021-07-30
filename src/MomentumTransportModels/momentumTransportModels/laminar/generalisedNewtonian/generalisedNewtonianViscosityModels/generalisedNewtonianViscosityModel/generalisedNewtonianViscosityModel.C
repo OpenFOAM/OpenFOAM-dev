@@ -42,10 +42,13 @@ namespace laminarModels
 Foam::laminarModels::generalisedNewtonianViscosityModel::
 generalisedNewtonianViscosityModel
 (
-    const dictionary& viscosityProperties
+    const dictionary& viscosityProperties,
+    const viscosity& viscosity,
+    const volVectorField& U
 )
 :
-    viscosityProperties_(viscosityProperties)
+    viscosity_(viscosity),
+    U_(U)
 {}
 
 
@@ -56,8 +59,6 @@ bool Foam::laminarModels::generalisedNewtonianViscosityModel::read
     const dictionary& viscosityProperties
 )
 {
-    viscosityProperties_ = viscosityProperties;
-
     return true;
 }
 

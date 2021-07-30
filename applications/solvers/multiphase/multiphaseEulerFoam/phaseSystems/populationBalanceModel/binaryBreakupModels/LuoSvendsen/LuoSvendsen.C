@@ -25,7 +25,7 @@ License
 
 #include "LuoSvendsen.H"
 #include "addToRunTimeSelectionTable.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "linearInterpolationWeights.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

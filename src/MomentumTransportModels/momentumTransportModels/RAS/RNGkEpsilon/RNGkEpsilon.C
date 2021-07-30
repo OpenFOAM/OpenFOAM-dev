@@ -87,7 +87,7 @@ RNGkEpsilon<BasicMomentumTransportModel>::RNGkEpsilon
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -99,7 +99,7 @@ RNGkEpsilon<BasicMomentumTransportModel>::RNGkEpsilon
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     Cmu_

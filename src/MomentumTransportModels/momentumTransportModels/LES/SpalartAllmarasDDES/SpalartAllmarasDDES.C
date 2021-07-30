@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ SpalartAllmarasDDES<BasicMomentumTransportModel>::SpalartAllmarasDDES
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -126,7 +126,7 @@ SpalartAllmarasDDES<BasicMomentumTransportModel>::SpalartAllmarasDDES
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     )
 {}
 

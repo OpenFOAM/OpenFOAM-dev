@@ -16,14 +16,10 @@ volVectorField U
 
 #include "createPhi.H"
 
-singlePhaseTransportModel laminarTransport(U, phi);
 
-dimensionedScalar rhoInfValue
-(
-    "rhoInf",
-    dimDensity,
-    laminarTransport
-);
+autoPtr<viscosityModel> viscosity(viscosityModel::New(mesh));
+
+dimensionedScalar rhoInfValue("rhoInf", dimDensity, viscosity);
 
 volScalarField rhoInf
 (
@@ -41,7 +37,7 @@ volScalarField rhoInf
 
 autoPtr<incompressible::momentumTransportModel> turbulence
 (
-    incompressible::momentumTransportModel::New(U, phi, laminarTransport)
+    incompressible::momentumTransportModel::New(U, phi, viscosity)
 );
 
 volScalarField mu
@@ -54,7 +50,7 @@ volScalarField mu
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    laminarTransport.nu()*rhoInfValue
+    viscosity->nu()*rhoInfValue
 );
 
 Info<< "Constructing clouds" << endl;

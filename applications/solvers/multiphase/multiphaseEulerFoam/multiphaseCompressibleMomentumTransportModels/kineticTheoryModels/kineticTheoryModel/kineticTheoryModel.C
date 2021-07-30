@@ -70,7 +70,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -82,10 +82,10 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
-    phase_(refCast<const phaseModel>(transport)),
+    phase_(refCast<const phaseModel>(viscosity)),
 
     continuousPhaseName_
     (

@@ -1,23 +1,23 @@
-IOobject alphaPhi10Header
+IOobject alphaPhi1Header
 (
-    IOobject::groupName("alphaPhi0", alpha1.group()),
+    IOobject::groupName("alphaPhi", alpha1.group()),
     runTime.timeName(),
     mesh,
     IOobject::READ_IF_PRESENT,
     IOobject::AUTO_WRITE
 );
 
-const bool alphaRestart = alphaPhi10Header.typeHeaderOk<surfaceScalarField>();
+const bool alphaRestart = alphaPhi1Header.typeHeaderOk<surfaceScalarField>();
 
 if (alphaRestart)
 {
     Info << "Restarting alpha" << endl;
 }
 
-// MULES flux from previous time-step
-surfaceScalarField alphaPhi10
+// Phase-1 volumetric flux
+surfaceScalarField alphaPhi1
 (
-    alphaPhi10Header,
+    alphaPhi1Header,
     phi*fvc::interpolate(alpha1)
 );
 

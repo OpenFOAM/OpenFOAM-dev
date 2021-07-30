@@ -70,7 +70,7 @@ LRR<BasicMomentumTransportModel>::LRR
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -82,7 +82,7 @@ LRR<BasicMomentumTransportModel>::LRR
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     Cmu_

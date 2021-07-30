@@ -283,13 +283,12 @@ thermoSingleLayer::thermoSingleLayer
 )
 :
     kinematicSingleLayer(modelType, mesh, g, regionType, false),
-    phaseName_(coeffs_.lookupOrDefault("phase", word::null)),
 
     primaryThermo_
     (
         mesh.lookupObject<fluidThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
         )
     ),
 

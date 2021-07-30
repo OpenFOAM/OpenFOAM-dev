@@ -1,3 +1,4 @@
-phaseDynamicMomentumTransportModels/phaseDynamicMomentumTransportModels.C
+phaseCompressibleMomentumTransportModel.C
+phaseCompressibleMomentumTransportModels.C
 
 LIB = $(FOAM_LIBBIN)/libphaseCompressibleMomentumTransportModels

@@ -65,7 +65,7 @@ dynamicLagrangian<BasicMomentumTransportModel>::dynamicLagrangian
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -77,7 +77,7 @@ dynamicLagrangian<BasicMomentumTransportModel>::dynamicLagrangian
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     flm_

@@ -28,17 +28,15 @@ volVectorField U
 
 #include "createPhi.H"
 
-
 pressureReference pressureReference(p, simple.dict());
 
 mesh.setFluxRequired(p.name());
 
-
-singlePhaseTransportModel laminarTransport(U, phi);
+autoPtr<viscosityModel> viscosity(viscosityModel::New(mesh));
 
 autoPtr<incompressible::momentumTransportModel> turbulence
 (
-    incompressible::momentumTransportModel::New(U, phi, laminarTransport)
+    incompressible::momentumTransportModel::New(U, phi, viscosity)
 );
 
 #include "createMRF.H"

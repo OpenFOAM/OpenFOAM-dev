@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFSurfaceFilm.H"
-#include "twoPhaseMixtureThermo.H"
+#include "compressibleTwoPhaseMixture.H"
 #include "fvmSup.H"
 #include "uniformDimensionedFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -63,7 +63,7 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
     (
         mesh.lookupObject<fluidThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
         )
     ),
     film_

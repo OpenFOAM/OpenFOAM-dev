@@ -31,8 +31,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "singlePhaseTransportModel.H"
-#include "kinematicMomentumTransportModel.H"
+#include "viscosityModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "SRFModel.H"
 #include "simpleControl.H"
 #include "pressureReference.H"
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
         U = Urel + SRF->U();
 
-        laminarTransport.correct();
+        viscosity->correct();
         turbulence->correct();
 
         runTime.write();

@@ -33,8 +33,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "singlePhaseTransportModel.H"
-#include "kinematicMomentumTransportModel.H"
+#include "viscosityModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
 #include "SRFModel.H"
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
             if (pimple.turbCorr())
             {
-                laminarTransport.correct();
+                viscosity->correct();
                 turbulence->correct();
             }
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,15 +31,19 @@ License
 
 Foam::autoPtr<Foam::mixtureViscosityModel> Foam::mixtureViscosityModel::New
 (
-    const word& name,
-    const dictionary& viscosityProperties,
-    const volVectorField& U,
-    const surfaceScalarField& phi
+    const fvMesh& mesh,
+    const word& group
 )
 {
-    const word modelType(viscosityProperties.lookup("transportModel"));
+    const word modelType
+    (
+        IOdictionary
+        (
+            viscosityModel::findModelDict(mesh, group)
+        ).lookup("viscosityModel")
+    );
 
-    Info<< "Selecting incompressible transport model " << modelType << endl;
+    Info<< "Selecting mixture viscosity model " << modelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -54,8 +58,7 @@ Foam::autoPtr<Foam::mixtureViscosityModel> Foam::mixtureViscosityModel::New
             << exit(FatalError);
     }
 
-    return autoPtr<mixtureViscosityModel>
-        (cstrIter()(name, viscosityProperties, U, phi));
+    return autoPtr<mixtureViscosityModel>(cstrIter()(mesh, group));
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,22 +48,19 @@ namespace mixtureViscosityModels
 
 Foam::mixtureViscosityModels::slurry::slurry
 (
-    const word& name,
-    const dictionary& viscosityProperties,
-    const volVectorField& U,
-    const surfaceScalarField& phi,
-    const word modelName
+    const fvMesh& mesh,
+    const word& group
 )
 :
-    mixtureViscosityModel(name, viscosityProperties, U, phi),
+    mixtureViscosityModel(mesh, group),
     alpha_
     (
-        U.mesh().lookupObject<volScalarField>
+        mesh.lookupObject<volScalarField>
         (
             IOobject::groupName
             (
-                viscosityProperties.lookupOrDefault<word>("alpha", "alpha"),
-                viscosityProperties.dictName()
+                lookupOrDefault<word>("alpha", "alpha"),
+                group
             )
         )
     )
@@ -73,7 +70,11 @@ Foam::mixtureViscosityModels::slurry::slurry
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::mixtureViscosityModels::slurry::mu(const volScalarField& muc) const
+Foam::mixtureViscosityModels::slurry::mu
+(
+    const volScalarField& muc,
+    const volVectorField& U
+) const
 {
     return
     (
@@ -82,12 +83,9 @@ Foam::mixtureViscosityModels::slurry::mu(const volScalarField& muc) const
 }
 
 
-bool Foam::mixtureViscosityModels::slurry::read
-(
-    const dictionary& viscosityProperties
-)
+bool Foam::mixtureViscosityModels::slurry::read()
 {
-    return true;
+    return mixtureViscosityModel::read();
 }
 
 

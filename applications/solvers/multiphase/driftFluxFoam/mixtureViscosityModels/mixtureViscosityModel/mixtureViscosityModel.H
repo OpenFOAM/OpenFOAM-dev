@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,7 @@ SourceFiles
 #define mixtureViscosityModel_H
 
 #include "dictionary.H"
-#include "volFieldsFwd.H"
-#include "surfaceFieldsFwd.H"
-#include "dimensionedScalar.H"
+#include "viscosityModel.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -58,18 +56,9 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class mixtureViscosityModel
+:
+    public viscosityModel
 {
-
-protected:
-
-    // Protected data
-
-        word name_;
-        dictionary viscosityProperties_;
-
-        const volVectorField& U_;
-        const surfaceScalarField& phi_;
-
 
 public:
 
@@ -85,25 +74,17 @@ public:
             mixtureViscosityModel,
             dictionary,
             (
-                const word& name,
-                const dictionary& viscosityProperties,
-                const volVectorField& U,
-                const surfaceScalarField& phi
+                const fvMesh& mesh,
+                const word& group
             ),
-            (name, viscosityProperties, U, phi)
+            (mesh, group)
         );
 
 
     // Constructors
 
         //- Construct from components
-        mixtureViscosityModel
-        (
-            const word& name,
-            const dictionary& viscosityProperties,
-            const volVectorField& U,
-            const surfaceScalarField& phi
-        );
+        mixtureViscosityModel(const fvMesh& U, const word& group);
 
         //- Disallow default bitwise copy construction
         mixtureViscosityModel(const mixtureViscosityModel&);
@@ -114,10 +95,8 @@ public:
         //- Return a reference to the selected viscosity model
         static autoPtr<mixtureViscosityModel> New
         (
-            const word& name,
-            const dictionary& viscosityProperties,
-            const volVectorField& U,
-            const surfaceScalarField& phi
+            const fvMesh& mesh,
+            const word& group
         );
 
 
@@ -128,18 +107,31 @@ public:
 
     // Member Functions
 
-        //- Return the phase transport properties dictionary
-        const dictionary& viscosityProperties() const
+        //- Return the laminar viscosity
+        virtual tmp<volScalarField> nu() const
         {
-            return viscosityProperties_;
+            NotImplemented;
+            return tmp<volScalarField>(nullptr);
         }
 
-        //- Return the mixture viscosity
-        //  given the viscosity of the continuous phase
-        virtual tmp<volScalarField> mu(const volScalarField& muc) const = 0;
+        //- Return the laminar viscosity for patch
+        virtual tmp<scalarField> nu(const label patchi) const
+        {
+            NotImplemented;
+            return tmp<scalarField>(nullptr);
+        }
 
-        //- Read transportProperties dictionary
-        virtual bool read(const dictionary& viscosityProperties) = 0;
+        //- Correct the laminar viscosity
+        virtual void correct()
+        {}
+
+        //- Return the mixture viscosity
+        //  given the viscosity and velocity of the continuous phase
+        virtual tmp<volScalarField> mu
+        (
+            const volScalarField& muc,
+            const volVectorField& U
+        ) const = 0;
 
 
     // Member Operators

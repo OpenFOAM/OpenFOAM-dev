@@ -62,7 +62,7 @@ SourceFiles
 
 #include "volFields.H"
 #include "typeInfo.H"
-#include "IOdictionary.H"
+#include "physicalProperties.H"
 #include "autoPtr.H"
 #include "wordIOList.H"
 
@@ -130,12 +130,6 @@ public:
         class implementation;
 
 
-    // Static Member data
-
-        //- Name of the thermophysical properties dictionary
-        static const word dictName;
-
-
     //- Runtime type information
     TypeName("basicThermo");
 
@@ -183,15 +177,6 @@ public:
         static autoPtr<Thermo> New
         (
             const fvMesh&,
-            const word& phaseName=word::null
-        );
-
-        //- Generic New for each of the related thermodynamics packages
-        template<class Thermo>
-        static autoPtr<Thermo> New
-        (
-            const fvMesh&,
-            const dictionary&,
             const word& phaseName=word::null
         );
 
@@ -450,7 +435,7 @@ public:
 class basicThermo::implementation
 :
     virtual public basicThermo,
-    public IOdictionary
+    public physicalProperties
 {
 protected:
 
@@ -478,16 +463,13 @@ public:
     // Static Member data
 
         //- Name of the thermophysical properties dictionary
-        using basicThermo::dictName;
+        using physicalProperties::typeName;
 
 
     // Constructors
 
         //- Construct from mesh and phase name
         implementation(const fvMesh&, const word& phaseName);
-
-        //- Construct from mesh, dictionary and phase name
-        implementation(const fvMesh&, const dictionary&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
         implementation(const implementation&) = delete;

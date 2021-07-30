@@ -164,8 +164,8 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
     const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
-    const tmp<scalarField> tmuw = turbModel.mu(patchi);
-    const scalarField& muw = tmuw();
+    const tmp<scalarField> tnuw = turbModel.nu(patchi);
+    const scalarField& nuw = tnuw();
     const tmp<scalarField> talpha = ttm.thermo().alpha(patchi);
     const scalarField& alphaw = talpha();
 
@@ -179,9 +179,9 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
 
         scalar uTau = Cmu25*sqrt(k[faceCelli]);
 
-        scalar yPlus = y[facei]*uTau/(muw[facei]/rhow[facei]);
+        scalar yPlus = y[facei]*uTau/nuw[facei];
 
-        scalar Pr = muw[facei]/alphaw[facei];
+        scalar Pr = rhow[facei]*nuw[facei]/alphaw[facei];
 
         scalar factor = 0.0;
         scalar mStar = mDotFilmp[facei]/(y[facei]*uTau);

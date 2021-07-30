@@ -9,7 +9,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
     )
 );
 
-volScalarField Db("Db", turbulence->muEff());
+volScalarField Db("Db", rho*turbulence->nuEff());
 
 if (ign.ignited())
 {

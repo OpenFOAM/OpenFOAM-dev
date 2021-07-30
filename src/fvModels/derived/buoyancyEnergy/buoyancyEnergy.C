@@ -86,7 +86,7 @@ Foam::wordList Foam::fv::buoyancyEnergy::addSupFields() const
     const basicThermo& thermo =
         mesh().lookupObject<basicThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
         );
 
     return wordList(1, thermo.he().name());

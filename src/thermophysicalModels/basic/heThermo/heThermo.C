@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,73 +198,6 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
 )
 :
     BasicThermo(mesh, phaseName),
-    MixtureType(*this, mesh, phaseName),
-
-    he_
-    (
-        IOobject
-        (
-            BasicThermo::phasePropertyName
-            (
-                MixtureType::thermoType::heName(),
-                phaseName
-            ),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        volScalarFieldProperty
-        (
-            "he",
-            dimEnergy/dimMass,
-            &MixtureType::cellThermoMixture,
-            &MixtureType::patchFaceThermoMixture,
-            &MixtureType::thermoMixtureType::HE,
-            this->p_,
-            this->T_
-        ),
-        this->heBoundaryTypes(),
-        this->heBoundaryBaseTypes()
-    ),
-
-    Cp_
-    (
-        IOobject
-        (
-            BasicThermo::phasePropertyName("Cp", phaseName),
-            mesh.time().timeName(),
-            mesh
-        ),
-        mesh,
-        dimensionedScalar(dimEnergy/dimMass/dimTemperature, Zero)
-    ),
-
-    Cv_
-    (
-        IOobject
-        (
-            BasicThermo::phasePropertyName("Cv", phaseName),
-            mesh.time().timeName(),
-            mesh
-        ),
-        mesh,
-        dimensionedScalar(dimEnergy/dimMass/dimTemperature, Zero)
-    )
-{
-    heBoundaryCorrection(he_);
-}
-
-
-template<class BasicThermo, class MixtureType>
-Foam::heThermo<BasicThermo, MixtureType>::heThermo
-(
-    const fvMesh& mesh,
-    const dictionary& dict,
-    const word& phaseName
-)
-:
-    BasicThermo(mesh, dict, phaseName),
     MixtureType(*this, mesh, phaseName),
 
     he_

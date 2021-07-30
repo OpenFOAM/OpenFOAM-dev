@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,7 @@ Description
     defineSolidThermo(BaseThermo, CThermo, Mixture, ThermoPhys);               \
                                                                                \
     addSolidThermo(basicThermo, CThermo##Mixture##ThermoPhys, fvMesh);         \
-    addSolidThermo(BaseThermo, CThermo##Mixture##ThermoPhys, fvMesh);          \
-    addSolidThermo(BaseThermo, CThermo##Mixture##ThermoPhys, dictionary)
+    addSolidThermo(BaseThermo, CThermo##Mixture##ThermoPhys, fvMesh);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

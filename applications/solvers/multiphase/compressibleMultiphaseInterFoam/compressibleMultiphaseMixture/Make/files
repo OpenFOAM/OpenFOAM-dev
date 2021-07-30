@@ -1,0 +1,5 @@
+phaseModel/phaseModel.C
+alphaContactAngle/alphaContactAngleFvPatchScalarField.C
+compressibleMultiphaseMixture.C
+
+LIB = $(FOAM_LIBBIN)/libcompressibleMultiphaseMixture

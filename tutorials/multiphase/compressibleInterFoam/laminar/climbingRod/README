@@ -15,7 +15,7 @@ This example case uses:
 - air phase
   - constant/momentumTransport.air:
     - stress model set to laminar, Newtonian
-  - constant/thermophysicalProperties.air:
+  - constant/physicalProperties.air:
     - transport set to const (Newtonian)
     - mu (dynamic viscoity) = 1.84e-5
 - liquid phase
@@ -23,7 +23,7 @@ This example case uses:
     - stress model set to laminar, Maxwell non-Newtonian
     - nuM (kinematic viscosity) = 0.01476
     - lambda = 0.018225
-  - constant/thermophysicalProperties.liquid
+  - constant/physicalProperties.liquid
     - transport set to const (Newtonian)
     - mu (dynamic viscoity) = 1.46
 

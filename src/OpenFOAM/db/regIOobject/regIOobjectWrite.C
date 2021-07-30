@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,8 +62,8 @@ bool Foam::regIOobject::writeObject
 
 
     //- uncomment this if you want to write global objects on master only
-    // bool isGlobal = global();
-    bool isGlobal = false;
+    bool isGlobal = global();
+    // bool isGlobal = false;
 
     if (instance() == time().timeName())
     {

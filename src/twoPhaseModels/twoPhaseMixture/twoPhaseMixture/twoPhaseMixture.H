@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ SourceFiles
 #ifndef twoPhaseMixture_H
 #define twoPhaseMixture_H
 
+#include "IOdictionary.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,10 +48,10 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class twoPhaseMixture
+:
+    public IOdictionary
 {
-protected:
-
-    // Protected data
+    // Private data
 
         word phase1Name_;
         word phase2Name_;
@@ -59,16 +60,23 @@ protected:
         volScalarField alpha2_;
 
 
+    // Private Member Functions
+
+        static IOdictionary readPhasePropertiesDict
+        (
+            const objectRegistry& obr
+        );
+
+
 public:
+
+    TypeName("twoPhaseMixture");
+
 
     // Constructors
 
         //- Construct from components
-        twoPhaseMixture
-        (
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
+        twoPhaseMixture(const fvMesh& mesh);
 
 
     //- Destructor
@@ -111,6 +119,9 @@ public:
         {
             return alpha2_;
         }
+
+        //- Read base phaseProperties dictionary
+        virtual bool read() = 0;
 };
 
 

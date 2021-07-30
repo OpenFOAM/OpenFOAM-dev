@@ -4,7 +4,7 @@
     (
         fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
       + MRF.DDt(rho, U)
-      + turbulence->divDevTau(rho, U)
+      + turbulence.divDevTau(rho, U)
      ==
        phaseChange.SU(rho, rhoPhi, U)
      + fvModels.source(rho, U)

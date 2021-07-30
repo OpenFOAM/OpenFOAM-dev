@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
     parcels without affecting the flow-field.
 
     The cloud requires the density of the fluid which is looked-up from
-    constant/transportProperties dictionary and the acceleration due to gravity
+    constant/phaseProperties dictionary and the acceleration due to gravity
     which is read from the constant/g file if present or defaults to zero.
 
     The cloud properties are read from the constant/<cloudName>Properties
@@ -77,7 +77,7 @@ SourceFiles
 namespace Foam
 {
 
-class singlePhaseTransportModel;
+class viscosityModel;
 
 namespace functionObjects
 {
@@ -95,8 +95,8 @@ class particles
         //- Optional acceleration due to gravity
         uniformDimensionedVectorField g_;
 
-        //- Reference to the laminar transport model
-        const singlePhaseTransportModel& laminarTransport_;
+        //- Reference to the carrier fluid viscosity model
+        const viscosityModel& viscosity_;
 
         //- Uniform density value
         dimensionedScalar rhoValue_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ SourceFiles
 #include "fvMatricesFwd.H"
 #include "nearWallDist.H"
 #include "geometricOneField.H"
+#include "viscosity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,6 +71,8 @@ protected:
         const surfaceScalarField& alphaRhoPhi_;
         const surfaceScalarField& phi_;
 
+        const viscosity& viscosity_;
+
         //- Near wall distance boundary field
         nearWallDist y_;
 
@@ -81,6 +84,18 @@ protected:
             const objectRegistry& obr,
             const word& group,
             bool registerObject = false
+        );
+
+
+        template<class MomentumTransportModel>
+        static inline autoPtr<MomentumTransportModel> New
+        (
+            const typename MomentumTransportModel::alphaField& alpha,
+            const typename MomentumTransportModel::rhoField& rho,
+            const volVectorField& U,
+            const surfaceScalarField& alphaRhoPhi,
+            const surfaceScalarField& phi,
+            const viscosity& viscosity
         );
 
 
@@ -97,7 +112,8 @@ public:
         (
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
-            const surfaceScalarField& phi
+            const surfaceScalarField& phi,
+            const viscosity& viscosity
         );
 
         //- Disallow default bitwise copy construction
@@ -148,6 +164,12 @@ public:
         //- Return the volumetric flux field
         virtual tmp<surfaceScalarField> phi() const;
 
+        //- Access function to fluid properties
+        const class Foam::viscosity& properties() const
+        {
+            return viscosity_;
+        }
+
         //- Return the near wall distances
         const nearWallDist& y() const
         {
@@ -155,10 +177,16 @@ public:
         }
 
         //- Return the laminar viscosity
-        virtual tmp<volScalarField> nu() const = 0;
+        virtual tmp<volScalarField> nu() const
+        {
+            return this->viscosity_.nu();
+        }
 
-        //- Return the laminar viscosity on patch
-        virtual tmp<scalarField> nu(const label patchi) const = 0;
+        //- Return the laminar viscosity on patchi
+        virtual tmp<scalarField> nu(const label patchi) const
+        {
+            return this->viscosity_.nu(patchi);
+        }
 
         //- Return the turbulence viscosity
         virtual tmp<volScalarField> nut() const = 0;
@@ -171,24 +199,6 @@ public:
 
         //- Return the effective viscosity on patch
         virtual tmp<scalarField> nuEff(const label patchi) const = 0;
-
-        //- Return the laminar dynamic viscosity
-        virtual tmp<volScalarField> mu() const = 0;
-
-        //- Return the laminar dynamic viscosity on patch
-        virtual tmp<scalarField> mu(const label patchi) const = 0;
-
-        //- Return the turbulence dynamic viscosity
-        virtual tmp<volScalarField> mut() const = 0;
-
-        //- Return the turbulence dynamic viscosity on patch
-        virtual tmp<scalarField> mut(const label patchi) const = 0;
-
-        //- Return the effective dynamic viscosity
-        virtual tmp<volScalarField> muEff() const = 0;
-
-        //- Return the effective dynamic viscosity on patch
-        virtual tmp<scalarField> muEff(const label patchi) const = 0;
 
         //- Return the turbulence kinetic energy
         virtual tmp<volScalarField> k() const = 0;
@@ -217,6 +227,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "momentumTransportModelTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

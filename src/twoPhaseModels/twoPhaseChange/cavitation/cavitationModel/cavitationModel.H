@@ -120,7 +120,7 @@ public:
             volVectorField& U
         ) const;
 
-        //- Read the transportProperties dictionary and update
+        //- Read the phaseProperties dictionary and update
         virtual bool read();
 };
 

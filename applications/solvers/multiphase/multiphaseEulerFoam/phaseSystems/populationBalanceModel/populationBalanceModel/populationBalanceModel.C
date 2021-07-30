@@ -33,7 +33,7 @@ License
 #include "surfaceTensionModel.H"
 #include "fvm.H"
 #include "fvcDdt.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "shapeModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

@@ -12,13 +12,13 @@
         mesh
     );
 
-    Info<< "Reading transportProperties\n" << endl;
+    Info<< "Reading physicalProperties\n" << endl;
 
-    IOdictionary transportProperties
+    IOdictionary physicalProperties
     (
         IOobject
         (
-            "transportProperties",
+            "physicalProperties",
             runTime.constant(),
             mesh,
             IOobject::MUST_READ_IF_MODIFIED,
@@ -26,7 +26,7 @@
         )
     );
 
-    List<magnet> magnets(transportProperties.lookup("magnets"));
+    List<magnet> magnets(physicalProperties.lookup("magnets"));
 
     surfaceScalarField murf
     (
@@ -58,7 +58,7 @@
 
         if (magnetZonei == -1)
         {
-            FatalIOErrorIn(args.executable().c_str(), transportProperties)
+            FatalIOErrorIn(args.executable().c_str(), physicalProperties)
                 << "Cannot find faceZone for magnet " << magnets[i].name()
                 << exit(FatalIOError);
         }

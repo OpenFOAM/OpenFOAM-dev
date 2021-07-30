@@ -81,7 +81,7 @@ Foam::wordList Foam::fv::limitTemperature::constrainedFields() const
     const basicThermo& thermo =
         mesh().lookupObject<basicThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
         );
 
     return wordList(1, thermo.he().name());
@@ -93,7 +93,7 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
     const basicThermo& thermo =
         mesh().lookupObject<basicThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
         );
 
     const labelList& cells = set_.cells();

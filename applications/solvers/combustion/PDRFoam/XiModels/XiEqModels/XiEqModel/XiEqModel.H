@@ -43,7 +43,7 @@ SourceFiles
 
 #include "IOdictionary.H"
 #include "psiuReactionThermo.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -137,10 +137,7 @@ public:
     // Member Functions
 
         //- Return the flame-wrinkling XiEq
-        virtual tmp<volScalarField> XiEq() const
-        {
-            return turbulence_.muEff();
-        }
+        virtual tmp<volScalarField> XiEq() const = 0;
 
         //- Return the sub-grid Schelkin effect
         tmp<volScalarField> calculateSchelkinEffect(const scalar) const;

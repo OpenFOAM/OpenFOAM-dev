@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallHeatTransferCoeffModel.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

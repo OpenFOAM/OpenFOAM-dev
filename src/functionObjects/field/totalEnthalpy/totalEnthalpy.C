@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ bool Foam::functionObjects::totalEnthalpy::execute()
 
     const word thermoName
     (
-        IOobject::groupName(fluidThermo::dictName, phaseName_)
+        IOobject::groupName(physicalProperties::typeName, phaseName_)
     );
 
     if (mesh_.foundObject<fluidThermo>(thermoName))

@@ -1,7 +1,7 @@
 EXE_INC = \
     -I. \
     -I.. \
-    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseProperties/alphaContactAngle/alphaContactAngle \
@@ -18,7 +18,7 @@ EXE_INC = \
 EXE_LIBS = \
     -ltwoPhaseMixture \
     -ltwoPhaseProperties \
-    -ltransportModels \
+    -lphysicalProperties \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lfiniteVolume \

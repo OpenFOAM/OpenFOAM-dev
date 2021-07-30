@@ -35,7 +35,7 @@ SourceFiles
 #ifndef twoPhaseChangeModel_H
 #define twoPhaseChangeModel_H
 
-#include "twoPhaseMixtureThermo.H"
+#include "compressibleTwoPhaseMixture.H"
 #include "fvMatricesFwd.H"
 #include "Pair.H"
 
@@ -57,7 +57,7 @@ class twoPhaseChangeModel
         //- Construct the base IO object
         IOobject createIOobject
         (
-            const twoPhaseMixtureThermo& mixture
+            const compressibleTwoPhaseMixture& mixture
         ) const;
 
 
@@ -66,7 +66,7 @@ protected:
     // Protected data
 
         //- Reference to the two-phase mixture
-        const twoPhaseMixtureThermo& mixture_;
+        const compressibleTwoPhaseMixture& mixture_;
 
         //- Model coefficient dictionary
         dictionary twoPhaseChangeModelCoeffs_;
@@ -89,7 +89,7 @@ public:
             twoPhaseChangeModel,
             dictionary,
             (
-                const twoPhaseMixtureThermo& mixture
+                const compressibleTwoPhaseMixture& mixture
             ),
             (mixture)
         );
@@ -101,7 +101,7 @@ public:
         twoPhaseChangeModel
         (
             const word& type,
-            const twoPhaseMixtureThermo& mixture
+            const compressibleTwoPhaseMixture& mixture
         );
 
         //- Disallow default bitwise copy construction
@@ -113,7 +113,7 @@ public:
         //- Return a reference to the selected phaseChange model
         static autoPtr<twoPhaseChangeModel> New
         (
-            const twoPhaseMixtureThermo& mixture
+            const compressibleTwoPhaseMixture& mixture
         );
 
 
@@ -163,7 +163,7 @@ public:
         //- Correct the phaseChange model
         virtual void correct() = 0;
 
-        //- Read the transportProperties dictionary and update
+        //- Read the phaseProperties dictionary and update
         virtual bool read() = 0;
 
 

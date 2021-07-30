@@ -24,8 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallHeatTransferCoeff.H"
-#include "kinematicMomentumTransportModel.H"
-#include "dynamicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModel.H"
+#include "compressibleMomentumTransportModel.H"
+#include "fvsPatchField.H"
 #include "basicThermo.H"
 #include "wallPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
@@ -100,7 +101,7 @@ bool Foam::functionObjects::wallHeatTransferCoeff::read(const dictionary& dict)
     fvMeshFunctionObject::read(dict);
     writeLocalObjects::read(dict);
 
-    if (!foundObject<basicThermo>(basicThermo::dictName))
+    if (!foundObject<basicThermo>(physicalProperties::typeName))
     {
         rho_.read(dict);
         Cp_.read(dict);
@@ -173,14 +174,14 @@ bool Foam::functionObjects::wallHeatTransferCoeff::execute()
     tmp<volScalarField> thtc;
     thtc = coeffModel_->htcByRhoCp(mmtm, patchSet_);
 
-    if (!foundObject<basicThermo>(basicThermo::dictName))
+    if (!foundObject<basicThermo>(physicalProperties::typeName))
     {
         thtc.ref() *= rho_*Cp_;
     }
     else
     {
         const basicThermo& thermo =
-            lookupObject<basicThermo>(basicThermo::dictName);
+            lookupObject<basicThermo>(physicalProperties::typeName);
 
         thtc.ref() *= thermo.rho()*thermo.Cp();
     }

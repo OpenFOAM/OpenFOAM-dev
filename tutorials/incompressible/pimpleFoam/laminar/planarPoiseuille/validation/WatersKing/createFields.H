@@ -1,21 +1,13 @@
-Info<< "Reading transportProperties\n" << endl;
-IOdictionary transportProperties
-(
-    IOobject
-    (
-        "transportProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::NO_WRITE
-    )
-);
+Info<< "Reading physicalProperties\n" << endl;
+
+autoPtr<viscosityModel> viscosity(viscosityModel::New(mesh));
+
 const scalar nu2 =
     dimensionedScalar
     (
         "nu",
         dimViscosity,
-        transportProperties.lookup("nu")
+        viscosity->lookup("nu")
     ).value();
 
 Info<< "Reading viscoelastic properties\n" << endl;

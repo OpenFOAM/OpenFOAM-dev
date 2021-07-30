@@ -30,8 +30,8 @@ volVectorField U
 
 #include "createPhi.H"
 
-Info<< "Constructing twoPhaseMixtureThermo\n" << endl;
-twoPhaseMixtureThermo mixture(U, phi);
+Info<< "Constructing compressibleTwoPhaseMixture\n" << endl;
+compressibleTwoPhaseMixture mixture(U, phi);
 
 autoPtr<twoPhaseChangeModel> phaseChangePtr
 (
@@ -87,7 +87,7 @@ compressibleInterPhaseTransportModel turbulence
     U,
     phi,
     rhoPhi,
-    alphaPhi10,
+    alphaPhi1,
     mixture
 );
 

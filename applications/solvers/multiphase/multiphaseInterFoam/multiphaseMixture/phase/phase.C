@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,6 @@ License
 Foam::phase::phase
 (
     const word& phaseName,
-    const dictionary& phaseDict,
     const volVectorField& U,
     const surfaceScalarField& phi
 )
@@ -48,18 +47,8 @@ Foam::phase::phase
         U.mesh()
     ),
     name_(phaseName),
-    phaseDict_(phaseDict),
-    nuModel_
-    (
-        viscosityModel::New
-        (
-            IOobject::groupName("nu", phaseName),
-            phaseDict_,
-            U,
-            phi
-        )
-    ),
-    rho_("rho", dimDensity, phaseDict_)
+    nuModel_(viscosityModel::New(U.mesh(), phaseName)),
+    rho_("rho", dimDensity, nuModel_())
 {}
 
 
@@ -80,18 +69,9 @@ void Foam::phase::correct()
 
 bool Foam::phase::read(const dictionary& phaseDict)
 {
-    phaseDict_ = phaseDict;
+    phaseDict.lookup("rho") >> rho_;
 
-    if (nuModel_->read(phaseDict_))
-    {
-        phaseDict_.lookup("rho") >> rho_;
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return true;
 }
 
 

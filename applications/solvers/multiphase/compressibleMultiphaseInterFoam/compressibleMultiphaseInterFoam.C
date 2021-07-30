@@ -36,8 +36,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "multiphaseMixtureThermo.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMultiphaseMixture.H"
+#include "compressibleMomentumTransportModels.H"
 #include "pimpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

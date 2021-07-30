@@ -56,7 +56,7 @@ template<class BasePhaseModel, class ThermoModel>
 class ThermoPhaseModel
 :
     public BasePhaseModel,
-    public dynamicTransportModel
+    public viscosity
 {
 protected:
 

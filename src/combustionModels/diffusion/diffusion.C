@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ void Foam::combustionModels::diffusion::correct()
             this->thermo().composition().Y(oxidantName_);
 
         this->wFuel_ ==
-            C_*this->turbulence().muEff()
+            C_*this->thermo().rho()*this->turbulence().nuEff()
            *mag(fvc::grad(YFuel) & fvc::grad(YO2))
            *pos0(YFuel)*pos0(YO2);
     }

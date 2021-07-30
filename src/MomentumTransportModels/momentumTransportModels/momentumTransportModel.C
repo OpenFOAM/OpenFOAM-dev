@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,8 @@ Foam::momentumTransportModel::momentumTransportModel
 (
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
-    const surfaceScalarField& phi
+    const surfaceScalarField& phi,
+    const viscosity& viscosity
 )
 :
     IOdictionary(readModelDict(U.db(), alphaRhoPhi.group(), true)),
@@ -100,6 +101,7 @@ Foam::momentumTransportModel::momentumTransportModel
     U_(U),
     alphaRhoPhi_(alphaRhoPhi),
     phi_(phi),
+    viscosity_(viscosity),
     y_(mesh_)
 {
     // Ensure name of IOdictionary is typeName

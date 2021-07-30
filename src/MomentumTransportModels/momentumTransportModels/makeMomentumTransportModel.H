@@ -23,76 +23,64 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "addToRunTimeSelectionTable.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeMomentumTransportModelTypes(                                       \
-    Alpha, Rho, baseModel, BaseModel, Transport)                               \
-                                                                               \
+#define makeMomentumTransportModelTypes(Alpha, Rho, BaseModel)                 \
     namespace Foam                                                             \
     {                                                                          \
-        typedef BaseModel<Transport> Transport##BaseModel;                     \
-        typedef laminarModel<Transport##BaseModel>                             \
-            laminar##Transport##BaseModel;                                     \
-        typedef RASModel<Transport##BaseModel> RAS##Transport##BaseModel;      \
-        typedef LESModel<Transport##BaseModel> LES##Transport##BaseModel;      \
+        typedef laminarModel<BaseModel> laminar##BaseModel;                    \
+        typedef RASModel<BaseModel> RAS##BaseModel;                            \
+        typedef LESModel<BaseModel> LES##BaseModel;                            \
     }
 
 
-#define makeBaseMomentumTransportModel(                                        \
-    Alpha, Rho, baseModel, BaseModel, Transport)                               \
+#define makeBaseMomentumTransportModel(Alpha, Rho, BaseModel)                  \
                                                                                \
     namespace Foam                                                             \
     {                                                                          \
-        typedef MomentumTransportModel                                         \
-        <                                                                      \
-            Alpha,                                                             \
-            Rho,                                                               \
-            baseModel,                                                         \
-            Transport                                                          \
-        > Transport##baseModel;                                                \
+        typedef BaseModel Transport##momentumTransportModel;                   \
                                                                                \
-        defineTemplateRunTimeSelectionTable                                    \
+        defineRunTimeSelectionTable                                            \
         (                                                                      \
-            Transport##baseModel,                                              \
+            Transport##momentumTransportModel,                                 \
             dictionary                                                         \
         );                                                                     \
                                                                                \
                                                                                \
-        defineNamedTemplateTypeNameAndDebug(laminar##Transport##BaseModel, 0); \
+        defineNamedTemplateTypeNameAndDebug(laminar##BaseModel, 0);            \
                                                                                \
-        defineTemplateRunTimeSelectionTable                                    \
-        (laminar##Transport##BaseModel, dictionary);                           \
+        defineTemplateRunTimeSelectionTable(laminar##BaseModel, dictionary);   \
                                                                                \
         addToRunTimeSelectionTable                                             \
         (                                                                      \
-            Transport##baseModel,                                              \
-            laminar##Transport##BaseModel,                                     \
+            Transport##momentumTransportModel,                                 \
+            laminar##BaseModel,                                                \
             dictionary                                                         \
         );                                                                     \
                                                                                \
                                                                                \
-        defineNamedTemplateTypeNameAndDebug(RAS##Transport##BaseModel, 0);     \
+        defineNamedTemplateTypeNameAndDebug(RAS##BaseModel, 0);                \
                                                                                \
-        defineTemplateRunTimeSelectionTable                                    \
-        (RAS##Transport##BaseModel, dictionary);                               \
+        defineTemplateRunTimeSelectionTable(RAS##BaseModel, dictionary);       \
                                                                                \
         addToRunTimeSelectionTable                                             \
         (                                                                      \
-            Transport##baseModel,                                              \
-            RAS##Transport##BaseModel,                                         \
+            Transport##momentumTransportModel,                                 \
+            RAS##BaseModel,                                                    \
             dictionary                                                         \
         );                                                                     \
                                                                                \
                                                                                \
-        defineNamedTemplateTypeNameAndDebug(LES##Transport##BaseModel, 0);     \
+        defineNamedTemplateTypeNameAndDebug(LES##BaseModel, 0);                \
                                                                                \
-        defineTemplateRunTimeSelectionTable                                    \
-        (LES##Transport##BaseModel, dictionary);                               \
+        defineTemplateRunTimeSelectionTable(LES##BaseModel, dictionary);       \
                                                                                \
         addToRunTimeSelectionTable                                             \
         (                                                                      \
-            Transport##baseModel,                                              \
-            LES##Transport##BaseModel,                                         \
+            Transport##momentumTransportModel,                                 \
+            LES##BaseModel,                                                    \
             dictionary                                                         \
         );                                                                     \
     }

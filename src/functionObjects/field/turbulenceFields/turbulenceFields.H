@@ -65,8 +65,8 @@ Usage
         omega       | turbulence specific dissipation rate
         nut         | turbulence viscosity (incompressible)
         nuEff       | effective turbulence viscosity (incompressible)
-        mut         | turbulence viscosity (compressible)
-        muEff       | effective turbulence viscosity (compressible)
+        nut         | turbulence viscosity (compressible)
+        nuEff       | effective turbulence viscosity (compressible)
         alphaEff    | effective turbulence thermal diffusivity (compressible)
         R           | Reynolds stress tensor
         devSigma | Deviatoric part of the effective Reynolds stress \
@@ -113,8 +113,8 @@ public:
         k,
         epsilon,
         omega,
-        mut,
-        muEff,
+        nut,
+        nuEff,
         alphaEff,
         R,
         devTau

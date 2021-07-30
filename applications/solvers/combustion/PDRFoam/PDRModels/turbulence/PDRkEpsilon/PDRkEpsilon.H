@@ -61,7 +61,7 @@ SourceFiles
 #define compressible_PDRkEpsilon_H
 
 #include "kEpsilon.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -102,7 +102,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const dynamicTransportModel& transport,
+            const viscosity& transport,
             const word& modelName = typeName
         );
 

@@ -38,4 +38,4 @@ else
     #include "alphaEqn.H"
 }
 
-rho == alpha1*rho1 + alpha2*rho2;
+rho == mixture.rho();

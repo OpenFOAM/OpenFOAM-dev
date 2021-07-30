@@ -245,7 +245,7 @@ Foam::functionObjects::phaseScalarTransport::D
         (
             "D" + s_.name(),
             mesh_,
-            dimensionedScalar(alphaPhi.dimensions()/dimLength, D_)
+            dimensionedScalar(dimViscosity, D_)
         );
     }
 
@@ -256,8 +256,8 @@ Foam::functionObjects::phaseScalarTransport::D
         mesh_.foundObject<momentumTransportModel>(namePhase)
       ? namePhase
       : mesh_.foundObject<momentumTransportModel>(nameNoPhase)
-      ? nameNoPhase
-      : word::null;
+        ? nameNoPhase
+        : word::null;
 
     if (name == word::null)
     {
@@ -272,19 +272,7 @@ Foam::functionObjects::phaseScalarTransport::D
     const momentumTransportModel& turbulence =
         mesh_.lookupObject<momentumTransportModel>(name);
 
-    if (alphaPhi.dimensions() == dimVolume/dimTime)
-    {
-        return alphaD_*turbulence.nu() + alphaDt_*turbulence.nut();
-    }
-    else if (alphaPhi.dimensions() == dimMass/dimTime)
-    {
-        return alphaD_*turbulence.mu() + alphaDt_*turbulence.mut();
-    }
-    else
-    {
-        PhiDimensionErrorInFunction(alphaPhi);
-        return tmp<volScalarField>(nullptr);
-    }
+    return alphaD_*turbulence.nu() + alphaDt_*turbulence.nut();
 }
 
 
@@ -448,7 +436,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
               + fvm::div(alphaPhi, s_, divScheme)
               - fvm::laplacian
                 (
-                    fvc::interpolate(alpha)*fvc::interpolate(D),
+                    fvc::interpolate(alpha)*fvc::interpolate(rho*D),
                     s_,
                     laplacianScheme
                 )

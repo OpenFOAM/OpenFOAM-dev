@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef laminarModel_H
 #define laminarModel_H
 
-#include "MomentumTransportModel.H"
+#include "momentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -76,7 +76,6 @@ public:
 
     typedef typename BasicMomentumTransportModel::alphaField alphaField;
     typedef typename BasicMomentumTransportModel::rhoField rhoField;
-    typedef typename BasicMomentumTransportModel::transportModel transportModel;
 
 
     //- Runtime type information
@@ -96,9 +95,9 @@ public:
                 const volVectorField& U,
                 const surfaceScalarField& alphaRhoPhi,
                 const surfaceScalarField& phi,
-                const transportModel& transport
+                const viscosity& viscosity
             ),
-            (alpha, rho, U, alphaRhoPhi, phi, transport)
+            (alpha, rho, U, alphaRhoPhi, phi, viscosity)
         );
 
 
@@ -113,7 +112,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& transport
+            const viscosity& viscosity
         );
 
         //- Disallow default bitwise copy construction
@@ -130,7 +129,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& transport
+            const viscosity& viscosity
         );
 
 
@@ -172,7 +171,7 @@ public:
         //- Return the stress tensor [m^2/s^2], i.e. 0 for laminar flow
         virtual tmp<volSymmTensorField> sigma() const;
 
-        //- Correct the laminar transport
+        //- Correct the laminar viscosity
         virtual void correct();
 
 

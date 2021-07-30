@@ -210,10 +210,10 @@ bool Foam::functionObjects::wallHeatFlux::execute()
 
         return store(name, calcWallHeatFlux(ttm.q()));
     }
-    else if (foundObject<solidThermo>(solidThermo::dictName))
+    else if (foundObject<solidThermo>(physicalProperties::typeName))
     {
         const solidThermo& thermo =
-            lookupObject<solidThermo>(solidThermo::dictName);
+            lookupObject<solidThermo>(physicalProperties::typeName);
 
         return store(name, calcWallHeatFlux(thermo.q()));
     }

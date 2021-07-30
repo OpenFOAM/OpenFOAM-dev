@@ -81,19 +81,16 @@ void Foam::combustionModels::PaSR::correct()
     tmp<volScalarField> tepsilon(this->turbulence().epsilon());
     const scalarField& epsilon = tepsilon();
 
-    tmp<volScalarField> tmuEff(this->turbulence().muEff());
-    const scalarField& muEff = tmuEff();
+    tmp<volScalarField> tnuEff(this->turbulence().nuEff());
+    const scalarField& nuEff = tnuEff();
 
     tmp<volScalarField> ttc(this->chemistryPtr_->tc());
     const scalarField& tc = ttc();
 
-    tmp<volScalarField> trho(this->rho());
-    const scalarField& rho = trho();
-
     forAll(epsilon, i)
     {
         const scalar tk =
-            Cmix_*sqrt(max(muEff[i]/rho[i]/(epsilon[i] + small), 0));
+            Cmix_*sqrt(max(nuEff[i]/(epsilon[i] + small), 0));
 
         if (tk > small)
         {

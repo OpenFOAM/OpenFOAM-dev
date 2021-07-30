@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,7 @@ thermalBaffle::thermalBaffle
 :
     thermalBaffleModel(modelType, mesh, dict),
     nNonOrthCorr_(solution().lookup<label>("nNonOrthCorr")),
-    thermo_(solidThermo::New(regionMesh(), dict)),
+    thermo_(solidThermo::New(regionMesh())),
     h_(thermo_->he()),
     Qs_
     (

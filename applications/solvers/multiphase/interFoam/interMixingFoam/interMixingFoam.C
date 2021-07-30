@@ -37,7 +37,7 @@ Description
 #include "localEulerDdtScheme.H"
 #include "subCycle.H"
 #include "immiscibleIncompressibleThreePhaseMixture.H"
-#include "kinematicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
 #include "fvModels.H"

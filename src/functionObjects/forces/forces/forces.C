@@ -26,10 +26,10 @@ License
 #include "forces.H"
 #include "fvcGrad.H"
 #include "porosityModel.H"
-#include "kinematicMomentumTransportModel.H"
-#include "dynamicMomentumTransportModel.H"
-#include "phaseKinematicMomentumTransportModel.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModel.H"
+#include "compressibleMomentumTransportModel.H"
+#include "phaseIncompressibleMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "fluidThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -265,18 +265,18 @@ Foam::functionObjects::forces::devTau() const
 
         return model.devTau();
     }
-    else if (obr_.foundObject<dictionary>("transportProperties"))
+    else if (obr_.foundObject<dictionary>("physicalProperties"))
     {
         // Legacy support for icoFoam
 
-        const dictionary& transportProperties =
-             obr_.lookupObject<dictionary>("transportProperties");
+        const dictionary& physicalProperties =
+             obr_.lookupObject<dictionary>("physicalProperties");
 
         const dimensionedScalar nu
         (
             "nu",
             dimViscosity,
-            transportProperties.lookup("nu")
+            physicalProperties.lookup("nu")
         );
 
         const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
@@ -312,41 +312,41 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::mu() const
         const incompressible::momentumTransportModel& model =
             obr_.lookupObject<icoModel>(modelName);
 
-        return rho()*model.transport().nu();
+        return rho()*model.nu();
     }
     else if (obr_.foundObject<cmpModel>(modelName))
     {
         const cmpModel& model =
             obr_.lookupObject<cmpModel>(modelName);
 
-        return model.transport().mu();
+        return model.rho()*model.nu();
     }
     else if (obr_.foundObject<phaseIcoModel>(phaseModelName))
     {
         const phaseIcoModel& model =
             obr_.lookupObject<phaseIcoModel>(phaseModelName);
 
-        return rho()*model.transport().nu();
+        return rho()*model.nu();
     }
     else if (obr_.foundObject<phaseCmpModel>(phaseModelName))
     {
         const phaseCmpModel& model =
             obr_.lookupObject<phaseCmpModel>(phaseModelName);
 
-        return model.transport().mu();
+        return model.rho()*model.nu();
     }
-    else if (obr_.foundObject<dictionary>("transportProperties"))
+    else if (obr_.foundObject<dictionary>("physicalProperties"))
     {
         // Legacy support for icoFoam
 
-        const dictionary& transportProperties =
-             obr_.lookupObject<dictionary>("transportProperties");
+        const dictionary& physicalProperties =
+             obr_.lookupObject<dictionary>("physicalProperties");
 
         const dimensionedScalar nu
         (
             "nu",
             dimViscosity,
-            transportProperties.lookup("nu")
+            physicalProperties.lookup("nu")
         );
 
         return rho()*nu;

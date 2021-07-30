@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,14 +72,14 @@ public:
 
     // Member Functions
 
-        //- Correct the transport and interface properties
+        //- Correct the phase and interface properties
         virtual void correct()
         {
             incompressibleTwoPhaseMixture::correct();
             interfaceProperties::correct();
         }
 
-        //- Read base transportProperties dictionary
+        //- Read base phaseProperties dictionary
         virtual bool read();
 };
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "particles.H"
-#include "singlePhaseTransportModel.H"
+#include "viscosityModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -66,15 +66,15 @@ Foam::functionObjects::particles::particles
         ),
         dimensionedVector(dimAcceleration, Zero)
     ),
-    laminarTransport_
+    viscosity_
     (
-        mesh_.lookupObject<singlePhaseTransportModel>("transportProperties")
+        mesh_.lookupObject<viscosityModel>(physicalProperties::typeName)
     ),
     rhoValue_
     (
         "rho",
         dimDensity,
-        laminarTransport_
+        viscosity_
     ),
     rho_
     (
@@ -87,7 +87,7 @@ Foam::functionObjects::particles::particles
         mesh_,
         rhoValue_
     ),
-    mu_("mu", rhoValue_*laminarTransport_.nu()),
+    mu_("mu", rhoValue_*viscosity_.nu()),
     U_
     (
         mesh_.lookupObject<volVectorField>(dict.lookupOrDefault<word>("U", "U"))
@@ -131,7 +131,7 @@ bool Foam::functionObjects::particles::read
 
 bool Foam::functionObjects::particles::execute()
 {
-    mu_ = rhoValue_*laminarTransport_.nu();
+    mu_ = rhoValue_*viscosity_.nu();
 
     cloudPtr_->evolve();
 

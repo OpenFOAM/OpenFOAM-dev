@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,8 +57,8 @@ class interfaceProperties
 {
     // Private Data
 
-        //- Keep a reference to the transportProperties dictionary
-        const dictionary& transportPropertiesDict_;
+        //- Keep a reference to the phaseProperties dictionary
+        const dictionary& phasePropertiesDict_;
 
         //- Surface tension
         autoPtr<surfaceTensionModel> sigmaPtr_;
@@ -90,6 +90,9 @@ class interfaceProperties
 
 public:
 
+    TypeName("interfaceProperties");
+
+
     // Constructors
 
         //- Construct from volume fraction field gamma and IOdictionary
@@ -105,12 +108,19 @@ public:
         interfaceProperties(const interfaceProperties&) = delete;
 
 
+    //- Destructor
+    virtual ~interfaceProperties()
+    {}
+
+
     // Member Functions
 
         const dimensionedScalar& deltaN() const
         {
             return deltaN_;
         }
+
+        tmp<volVectorField> n() const;
 
         const surfaceScalarField& nHatf() const
         {
@@ -122,12 +132,15 @@ public:
         tmp<surfaceScalarField> surfaceTensionForce() const;
 
         //- Indicator of the proximity of the interface
-        //  Field values are 1 near and 0 away for the interface.
+        //  Field values are 1 near and 0 away from the interface.
         tmp<volScalarField> nearInterface() const;
+
+        //- Interface fraction in a cell
+        tmp<volScalarField::Internal> fraction() const;
 
         void correct();
 
-        //- Read transportProperties dictionary
+        //- Read phaseProperties dictionary
         bool read();
 
 

@@ -226,7 +226,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::SpalartAllmarasDES
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -238,7 +238,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::SpalartAllmarasDES
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     sigmaNut_

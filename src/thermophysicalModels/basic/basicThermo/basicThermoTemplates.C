@@ -243,17 +243,9 @@ Foam::autoPtr<Thermo> Foam::basicThermo::New
     const word& phaseName
 )
 {
-    IOdictionary thermoDict
+    const IOdictionary thermoDict
     (
-        IOobject
-        (
-            phasePropertyName(dictName, phaseName),
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE,
-            false
-        )
+        physicalProperties::findModelDict(mesh, phaseName)
     );
 
     typename Thermo::fvMeshConstructorTable::iterator cstrIter =
@@ -264,25 +256,6 @@ Foam::autoPtr<Thermo> Foam::basicThermo::New
         );
 
     return autoPtr<Thermo>(cstrIter()(mesh, phaseName));
-}
-
-
-template<class Thermo>
-Foam::autoPtr<Thermo> Foam::basicThermo::New
-(
-    const fvMesh& mesh,
-    const dictionary& dict,
-    const word& phaseName
-)
-{
-    typename Thermo::dictionaryConstructorTable::iterator cstrIter =
-        lookupCstrIter<Thermo, typename Thermo::dictionaryConstructorTable>
-        (
-            dict,
-            Thermo::dictionaryConstructorTablePtr_
-        );
-
-    return autoPtr<Thermo>(cstrIter()(mesh, dict, phaseName));
 }
 
 

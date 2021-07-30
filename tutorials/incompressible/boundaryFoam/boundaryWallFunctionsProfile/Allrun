@@ -14,8 +14,8 @@ for e in $exponents
 do
     echo "    Setting nu to 1e-$e"
 
-    sed "s/XXX/$e/g" constant/transportProperties.template \
-        > constant/transportProperties
+    sed "s/XXX/$e/g" constant/physicalProperties.template \
+        > constant/physicalProperties
 
     runApplication -s $e  $(getApplication)
 

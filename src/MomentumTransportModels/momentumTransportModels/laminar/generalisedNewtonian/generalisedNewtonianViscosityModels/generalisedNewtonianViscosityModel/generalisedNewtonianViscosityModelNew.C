@@ -24,13 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "generalisedNewtonianViscosityModel.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::laminarModels::generalisedNewtonianViscosityModel>
 Foam::laminarModels::generalisedNewtonianViscosityModel::New
 (
-    const dictionary& viscosityProperties
+    const dictionary& viscosityProperties,
+    const viscosity& viscosity,
+    const volVectorField& U
 )
 {
     const word modelType
@@ -55,7 +58,7 @@ Foam::laminarModels::generalisedNewtonianViscosityModel::New
 
     return autoPtr<generalisedNewtonianViscosityModel>
     (
-        cstrIter()(viscosityProperties)
+        cstrIter()(viscosityProperties, viscosity, U)
     );
 }
 

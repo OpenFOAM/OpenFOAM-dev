@@ -53,7 +53,7 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
     (
         IOobject
         (
-            "transportProperties",
+            "phaseProperties",
             U.time().constant(),
             U.db(),
             IOobject::MUST_READ_IF_MODIFIED,
@@ -120,40 +120,13 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         calculatedFvPatchScalarField::typeName
     ),
 
-    nuModel1_
-    (
-        viscosityModel::New
-        (
-            "nu1",
-            subDict(phase1Name_),
-            U,
-            phi
-        )
-    ),
-    nuModel2_
-    (
-        viscosityModel::New
-        (
-            "nu2",
-            subDict(phase2Name_),
-            U,
-            phi
-        )
-    ),
-    nuModel3_
-    (
-        viscosityModel::New
-        (
-            "nu3",
-            subDict(phase3Name_),
-            U,
-            phi
-        )
-    ),
+    nuModel1_(viscosityModel::New(U.mesh(), phase1Name_)),
+    nuModel2_(viscosityModel::New(U.mesh(), phase2Name_)),
+    nuModel3_(viscosityModel::New(U.mesh(), phase3Name_)),
 
-    rho1_("rho", dimDensity, nuModel1_->viscosityProperties()),
-    rho2_("rho", dimDensity, nuModel2_->viscosityProperties()),
-    rho3_("rho", dimDensity, nuModel3_->viscosityProperties())
+    rho1_("rho", dimDensity, nuModel1_()),
+    rho2_("rho", dimDensity, nuModel2_()),
+    rho3_("rho", dimDensity, nuModel3_())
 {
     alpha3_ == 1.0 - alpha1_ - alpha2_;
     calcNu();
@@ -215,23 +188,11 @@ bool Foam::incompressibleThreePhaseMixture::read()
 {
     if (regIOobject::read())
     {
-        if
-        (
-            nuModel1_().read(*this)
-         && nuModel2_().read(*this)
-         && nuModel3_().read(*this)
-        )
-        {
-            nuModel1_->viscosityProperties().lookup("rho") >> rho1_;
-            nuModel2_->viscosityProperties().lookup("rho") >> rho2_;
-            nuModel3_->viscosityProperties().lookup("rho") >> rho3_;
+        nuModel1_->lookup("rho") >> rho1_;
+        nuModel2_->lookup("rho") >> rho2_;
+        nuModel3_->lookup("rho") >> rho3_;
 
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
     else
     {

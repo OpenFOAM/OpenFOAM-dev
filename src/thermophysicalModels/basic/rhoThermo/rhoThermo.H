@@ -158,9 +158,6 @@ public:
         //- Construct from mesh and phase name
         implementation(const fvMesh&, const word& phaseName);
 
-        //- Construct from mesh, dictionary and phase name
-        implementation(const fvMesh&, const dictionary&, const word& phaseName);
-
         //- Disallow default bitwise copy construction
         implementation(const implementation&) = delete;
 

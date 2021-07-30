@@ -57,14 +57,14 @@ void Foam::fv::massSource::readCoeffs()
     (
         mesh().foundObject<basicThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
         )
     )
     {
         const basicThermo& thermo =
             mesh().lookupObject<basicThermo>
             (
-                IOobject::groupName(basicThermo::dictName, phaseName_)
+                IOobject::groupName(physicalProperties::typeName, phaseName_)
             );
         heName_ = thermo.he().name();
         TName_ = thermo.T().name();
@@ -179,7 +179,7 @@ void Foam::fv::massSource::addSupType
         const basicThermo& thermo =
             mesh().lookupObject<basicThermo>
             (
-                IOobject::groupName(basicThermo::dictName, phaseName_)
+                IOobject::groupName(physicalProperties::typeName, phaseName_)
             );
         const scalarField hs
         (

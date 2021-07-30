@@ -296,12 +296,6 @@ void thermalBaffleFvPatchScalarField::write(Ostream& os) const
         writeKeyword(os, "regionName") << regionName
             << token::END_STATEMENT << nl;
 
-        writeKeyword(os, "thermoType");
-        os << dict_.subDict("thermoType") << nl;
-
-        writeKeyword(os, "mixture");
-        os << dict_.subDict("mixture") << nl;
-
         writeKeyword(os, "radiation");
         os << dict_.subDict("radiation") << nl;
    }

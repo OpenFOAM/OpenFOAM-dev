@@ -151,7 +151,7 @@ public:
         //- Correct the phaseChange model
         virtual void correct() = 0;
 
-        //- Read the transportProperties dictionary and update
+        //- Read the phaseProperties dictionary and update
         virtual bool read() = 0;
 
 

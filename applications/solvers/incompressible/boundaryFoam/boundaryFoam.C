@@ -36,8 +36,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "singlePhaseTransportModel.H"
-#include "kinematicMomentumTransportModel.H"
+#include "viscosityModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "wallFvPatch.H"
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
         U += (Ubar - UbarStar);
         gradP += (Ubar - UbarStar)/(1.0/UEqn.A())().weightedAverage(mesh.V());
 
-        laminarTransport.correct();
+        viscosity->correct();
         turbulence->correct();
 
         Info<< "Uncorrected Ubar = " << (flowDirection & UbarStar.value())

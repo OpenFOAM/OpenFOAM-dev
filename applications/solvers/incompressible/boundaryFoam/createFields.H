@@ -29,14 +29,14 @@ surfaceScalarField phi
 );
 
 
-singlePhaseTransportModel laminarTransport(U, phi);
+autoPtr<viscosityModel> viscosity(viscosityModel::New(mesh));
 
 autoPtr<incompressible::momentumTransportModel> turbulence
 (
-    incompressible::momentumTransportModel::New(U, phi, laminarTransport)
+    incompressible::momentumTransportModel::New(U, phi, viscosity)
 );
 
-dimensionedVector Ubar("Ubar", dimVelocity, laminarTransport);
+dimensionedVector Ubar("Ubar", dimVelocity, viscosity);
 
 vector flowDirection = (Ubar/mag(Ubar)).value();
 tensor flowMask = sqr(flowDirection);

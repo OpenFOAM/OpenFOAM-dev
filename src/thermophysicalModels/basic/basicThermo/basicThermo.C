@@ -38,8 +38,6 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::word Foam::basicThermo::dictName("thermophysicalProperties");
-
 namespace Foam
 {
     defineTypeNameAndDebug(basicThermo, 0);
@@ -86,9 +84,9 @@ const Foam::basicThermo& Foam::basicThermo::lookupThermo
     const fvPatchScalarField& pf
 )
 {
-    if (pf.db().foundObject<basicThermo>(dictName))
+    if (pf.db().foundObject<basicThermo>(physicalProperties::typeName))
     {
-        return pf.db().lookupObject<basicThermo>(dictName);
+        return pf.db().lookupObject<basicThermo>(physicalProperties::typeName);
     }
     else
     {
@@ -113,7 +111,7 @@ const Foam::basicThermo& Foam::basicThermo::lookupThermo
         }
     }
 
-    return pf.db().lookupObject<basicThermo>(dictName);
+    return pf.db().lookupObject<basicThermo>(physicalProperties::typeName);
 }
 
 
@@ -287,17 +285,7 @@ Foam::basicThermo::implementation::implementation
     const word& phaseName
 )
 :
-    IOdictionary
-    (
-        IOobject
-        (
-            phasePropertyName(dictName, phaseName),
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    ),
+    physicalProperties(mesh, phaseName),
 
     phaseName_(phaseName),
 
@@ -329,57 +317,6 @@ Foam::basicThermo::implementation::implementation
     ),
 
     dpdt_(lookupOrDefault<Switch>("dpdt", true))
-{}
-
-
-Foam::basicThermo::implementation::implementation
-(
-    const fvMesh& mesh,
-    const dictionary& dict,
-    const word& phaseName
-)
-:
-    IOdictionary
-    (
-        IOobject
-        (
-            phasePropertyName(dictName, phaseName),
-            mesh.time().constant(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        dict
-    ),
-
-    phaseName_(phaseName),
-
-    T_
-    (
-        IOobject
-        (
-            phasePropertyName("T", phaseName),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    ),
-
-    alpha_
-    (
-        IOobject
-        (
-            phasePropertyName("thermo:alpha", phaseName),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionedScalar(dimensionSet(1, -1, -1, 0, 0), Zero)
-    )
 {}
 
 

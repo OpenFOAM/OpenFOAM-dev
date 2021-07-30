@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "turbulenceFields.H"
-#include "kinematicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModel.H"
 #include "thermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -55,8 +55,8 @@ const char* Foam::NamedEnum
     "k",
     "epsilon",
     "omega",
-    "mut",
-    "muEff",
+    "nut",
+    "nuEff",
     "alphaEff",
     "R",
     "devTau"
@@ -194,14 +194,14 @@ bool Foam::functionObjects::turbulenceFields::execute()
                     processField<scalar>(f, omega(model));
                     break;
                 }
-                case compressibleField::mut:
+                case compressibleField::nut:
                 {
-                    processField<scalar>(f, model.mut());
+                    processField<scalar>(f, model.nut());
                     break;
                 }
-                case compressibleField::muEff:
+                case compressibleField::nuEff:
                 {
-                    processField<scalar>(f, model.muEff());
+                    processField<scalar>(f, model.nuEff());
                     break;
                 }
                 case compressibleField::alphaEff:
@@ -252,14 +252,14 @@ bool Foam::functionObjects::turbulenceFields::execute()
                     processField<scalar>(f, omega(model));
                     break;
                 }
-                case compressibleField::mut:
+                case compressibleField::nut:
                 {
-                    processField<scalar>(f, model.mut());
+                    processField<scalar>(f, model.nut());
                     break;
                 }
-                case compressibleField::muEff:
+                case compressibleField::nuEff:
                 {
-                    processField<scalar>(f, model.muEff());
+                    processField<scalar>(f, model.nuEff());
                     break;
                 }
                 case compressibleField::R:

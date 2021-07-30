@@ -26,8 +26,8 @@ License
 #include "wallShearStress.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "kinematicMomentumTransportModel.H"
-#include "dynamicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModel.H"
+#include "compressibleMomentumTransportModel.H"
 #include "wallPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,27 +39,12 @@ namespace Foam
 
 Foam::mixtureViscosityModel::mixtureViscosityModel
 (
-    const word& name,
-    const dictionary& viscosityProperties,
-    const volVectorField& U,
-    const surfaceScalarField& phi
+    const fvMesh& mesh,
+    const word& group
 )
 :
-    name_(name),
-    viscosityProperties_(viscosityProperties),
-    U_(U),
-    phi_(phi)
+    viscosityModel(mesh, group)
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-bool Foam::mixtureViscosityModel::read(const dictionary& viscosityProperties)
-{
-    viscosityProperties_ = viscosityProperties;
-
-    return true;
-}
 
 
 // ************************************************************************* //

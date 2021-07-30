@@ -46,8 +46,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "singlePhaseTransportModel.H"
-#include "kinematicMomentumTransportModel.H"
+#include "viscosityModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "simpleControl.H"
 #include "pressureReference.H"
 #include "fvModels.H"
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        laminarTransport.lookup("lambda") >> lambda;
+        viscosity->lookup("lambda") >> lambda;
 
         // alpha +=
         //    mesh.relaxationFactor("alpha")
@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
             fvConstraints.constrain(Ua);
         }
 
-        laminarTransport.correct();
+        viscosity->correct();
         turbulence->correct();
 
         runTime.write();

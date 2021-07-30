@@ -58,7 +58,7 @@ Description
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "psiuReactionThermo.H"
-#include "dynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
 #include "laminarFlameSpeed.H"
 #include "XiModel.H"
 #include "PDRDragModel.H"

@@ -59,7 +59,7 @@ surfaceScalarField rhoPhi
     fvc::interpolate(rho)*phi
 );
 
-Info<< "Reading transportProperties\n" << endl;
+Info<< "Reading phaseProperties\n" << endl;
 
 incompressibleTwoPhaseMixture mixture(U, phi);
 

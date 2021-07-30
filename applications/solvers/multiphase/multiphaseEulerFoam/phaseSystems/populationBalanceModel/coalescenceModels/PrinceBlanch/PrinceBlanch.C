@@ -26,7 +26,7 @@ License
 #include "PrinceBlanch.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mathematicalConstants.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "fvcGrad.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

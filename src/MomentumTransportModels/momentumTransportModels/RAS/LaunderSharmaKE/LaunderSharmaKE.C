@@ -104,7 +104,7 @@ LaunderSharmaKE<BasicMomentumTransportModel>::LaunderSharmaKE
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -116,7 +116,7 @@ LaunderSharmaKE<BasicMomentumTransportModel>::LaunderSharmaKE
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     Cmu_

@@ -1,10 +1,10 @@
-Info<< "Reading transportProperties\n" << endl;
+Info<< "Reading physicalProperties\n" << endl;
 
-IOdictionary transportProperties
+IOdictionary physicalProperties
 (
     IOobject
     (
-        "transportProperties",
+        "physicalProperties",
         runTime.constant(),
         mesh,
         IOobject::MUST_READ_IF_MODIFIED,
@@ -16,28 +16,28 @@ dimensionedScalar rho
 (
     "rho",
     dimDensity,
-    transportProperties
+    physicalProperties
 );
 
 dimensionedScalar nu
 (
     "nu",
     dimViscosity,
-    transportProperties
+    physicalProperties
 );
 
 dimensionedScalar mu
 (
     "mu",
     dimensionSet(1, 1, -2, 0, 0, -2, 0),
-    transportProperties
+    physicalProperties
 );
 
 dimensionedScalar sigma
 (
     "sigma",
     dimensionSet(-1, -3, 3, 0, 0, 2, 0),
-    transportProperties
+    physicalProperties
 );
 
 Info<< "Reading field p\n" << endl;

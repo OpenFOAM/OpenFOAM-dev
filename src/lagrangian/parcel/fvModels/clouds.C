@@ -59,7 +59,7 @@ Foam::fv::clouds::clouds
     fvModel(sourceName, modelType, dict, mesh),
     carrierThermo_
     (
-        mesh.lookupObject<fluidThermo>(basicThermo::dictName)
+        mesh.lookupObject<fluidThermo>(physicalProperties::typeName)
     ),
     clouds_
     (

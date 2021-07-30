@@ -83,7 +83,7 @@ public:
         //- Construct for mixture
         Merkle
         (
-            const twoPhaseMixtureThermo& mixture
+            const compressibleTwoPhaseMixture& mixture
         );
 
 
@@ -106,7 +106,7 @@ public:
         //- Correct the Merkle phaseChange model
         virtual void correct();
 
-        //- Read the transportProperties dictionary and update
+        //- Read the phaseProperties dictionary and update
         virtual bool read();
 };
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,18 +24,159 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "twoPhaseMixture.H"
+#include "viscosityModel.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(twoPhaseMixture, 0);
+}
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * //
+
+Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
+(
+    const objectRegistry& obr
+)
+{
+    IOobject phasePropertiesIO
+    (
+        "phaseProperties",
+        obr.time().constant(),
+        obr,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE,
+        false
+    );
+
+    if (phasePropertiesIO.typeHeaderOk<IOdictionary>(true))
+    {
+        return phasePropertiesIO;
+    }
+    else
+    {
+        IOobject thermophysicalPropertiesIO
+        (
+            "thermophysicalProperties",
+            obr.time().constant(),
+            obr,
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE,
+            false
+        );
+
+        if (thermophysicalPropertiesIO.typeHeaderOk<IOdictionary>(true))
+        {
+            IOdictionary phasePropertiesDict(thermophysicalPropertiesIO);
+            phasePropertiesDict.rename("phaseProperties");
+            return phasePropertiesDict;
+        }
+        else
+        {
+            IOobject transportPropertiesIO
+            (
+                "transportProperties",
+                obr.time().constant(),
+                obr,
+                IOobject::MUST_READ_IF_MODIFIED,
+                IOobject::NO_WRITE,
+                false
+            );
+
+            if (transportPropertiesIO.typeHeaderOk<IOdictionary>(true))
+            {
+                IOdictionary phasePropertiesDict(transportPropertiesIO);
+                phasePropertiesDict.rename("phaseProperties");
+
+                WarningInFunction
+                    << "Automatically converting "
+                    << transportPropertiesIO.name()
+                    << " into " << phasePropertiesDict.name() << " and ".
+
+                const wordList phases(phasePropertiesDict.lookup("phases"));
+
+                forAll(phases, i)
+                {
+                    IOdictionary phaseDict
+                    (
+                        IOobject
+                        (
+                            IOobject::groupName
+                            (
+                                physicalProperties::typeName,
+                                phases[i]
+                            ),
+                            obr.time().constant(),
+                            obr,
+                            IOobject::NO_READ,
+                            IOobject::NO_WRITE,
+                            false
+                        )
+                    );
+
+                    phaseDict.merge(phasePropertiesDict.subDict(phases[i]));
+
+                    phaseDict.changeKeyword
+                    (
+                        "transportModel",
+                        viscosityModel::typeName
+                    );
+
+                    phaseDict.writeObject
+                    (
+                        IOstream::ASCII,
+                        IOstream::currentVersion,
+                        IOstream::UNCOMPRESSED,
+                        true
+                    );
+
+                    phasePropertiesDict.remove(phases[i]);
+                }
+
+                phasePropertiesDict.writeObject
+                (
+                    IOstream::ASCII,
+                    IOstream::currentVersion,
+                    IOstream::UNCOMPRESSED,
+                    true
+                );
+
+                WarningInFunction
+                    << "Upgrading case by "
+                       "converting transportProperties into phaseProperties, "
+                    << IOobject::groupName
+                       (
+                           physicalProperties::typeName,
+                           phases[0]
+                       )
+                    << " and "
+                    << IOobject::groupName
+                       (
+                           physicalProperties::typeName,
+                           phases[1]
+                       )
+                    << nl << endl;
+
+                return phasePropertiesDict;
+            }
+            else
+            {
+                return phasePropertiesIO;
+            }
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseMixture::twoPhaseMixture
-(
-    const fvMesh& mesh,
-    const dictionary& dict
-)
+Foam::twoPhaseMixture::twoPhaseMixture(const fvMesh& mesh)
 :
-    phase1Name_(wordList(dict.lookup("phases"))[0]),
-    phase2Name_(wordList(dict.lookup("phases"))[1]),
+    IOdictionary(readPhasePropertiesDict(mesh)),
+
+    phase1Name_(wordList(lookup("phases"))[0]),
+    phase2Name_(wordList(lookup("phases"))[1]),
 
     alpha1_
     (
@@ -60,7 +201,9 @@ Foam::twoPhaseMixture::twoPhaseMixture
         ),
         1.0 - alpha1_
     )
-{}
+{
+    checkIn();
+}
 
 
 // ************************************************************************* //

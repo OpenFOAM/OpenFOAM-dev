@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,9 +54,7 @@ class BinghamPlastic
 :
     public plastic
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Yield stress coefficient
         dimensionedScalar yieldStressCoeff_;
@@ -66,9 +64,6 @@ protected:
 
         //- Yield stress offset
         dimensionedScalar yieldStressOffset_;
-
-        //- Velocity
-        const volVectorField& U_;
 
 
 public:
@@ -80,13 +75,7 @@ public:
     // Constructors
 
         //- Construct from components
-        BinghamPlastic
-        (
-            const word& name,
-            const dictionary& viscosityProperties,
-            const volVectorField& U,
-            const surfaceScalarField& phi
-        );
+        BinghamPlastic(const fvMesh& mesh, const word& group);
 
 
     //- Destructor
@@ -98,10 +87,14 @@ public:
 
         //- Return the mixture viscosity
         //  given the viscosity of the continuous phase
-        tmp<volScalarField> mu(const volScalarField& muc) const;
+        tmp<volScalarField> mu
+        (
+            const volScalarField& muc,
+            const volVectorField& U
+        ) const;
 
-        //- Read transportProperties dictionary
-        bool read(const dictionary& viscosityProperties);
+        //- Read phaseProperties dictionary
+        bool read();
 };
 
 

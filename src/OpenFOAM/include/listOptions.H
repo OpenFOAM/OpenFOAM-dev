@@ -41,8 +41,8 @@ argList::addBoolOption
 );
 #endif
 
-#if defined(kinematicMomentumTransportModel_H)                                 \
- || defined(dynamicMomentumTransportModel_H)
+#if defined(incompressibleMomentumTransportModels_H)                           \
+ || defined(compressibleMomentumTransportModels_H)
 argList::addBoolOption
 (
     "listMomentumTransportModels",

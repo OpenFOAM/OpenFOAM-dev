@@ -26,8 +26,8 @@ License
 #include "alphatWallBoilingWallFunctionFvPatchScalarField.H"
 #include "phaseSystem.H"
 #include "heatTransferPhaseSystem.H"
-#include "compressibleMomentumTransportModel.H"
-#include "phaseDynamicMomentumTransportModel.H"
+#include "compressibleMomentumTransportModels.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "saturationModel.H"
 #include "rhoReactionThermo.H"
 #include "addToRunTimeSelectionTable.H"
@@ -351,8 +351,8 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                 const scalarField& y = turbModel.y()[patchi];
 
-                const tmp<scalarField> tmuw = turbModel.mu(patchi);
-                const scalarField& muw = tmuw();
+                const tmp<scalarField> tnuw = turbModel.nu(patchi);
+                const scalarField& nuw = tnuw();
 
                 const rhoThermo& lThermo = liquid.thermo();
 
@@ -383,9 +383,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                 const scalarField uTau(Cmu25*sqrt(kw));
 
-                const scalarField yPlus(uTau*y/(muw/rhoLiquidw));
+                const scalarField yPlus(uTau*y/nuw);
 
-                const scalarField Pr(muw/alphaw);
+                const scalarField Pr(rhoLiquidw*nuw/alphaw);
 
                 // Molecular-to-turbulent Prandtl number ratio
                 const scalarField Prat(Pr/Prt_);

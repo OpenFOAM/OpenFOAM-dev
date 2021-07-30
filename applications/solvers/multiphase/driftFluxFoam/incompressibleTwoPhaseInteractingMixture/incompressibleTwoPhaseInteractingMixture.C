@@ -25,8 +25,6 @@ License
 
 #include "incompressibleTwoPhaseInteractingMixture.H"
 #include "addToRunTimeSelectionTable.H"
-#include "surfaceFields.H"
-#include "fvc.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -45,51 +43,20 @@ incompressibleTwoPhaseInteractingMixture
     const surfaceScalarField& phi
 )
 :
-    IOdictionary
-    (
-        IOobject
-        (
-            "transportProperties",
-            U.time().constant(),
-            U.db(),
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    ),
-    twoPhaseMixture(U.mesh(), *this),
-    dynamicTransportModel(),
+    twoPhaseMixture(U.mesh()),
 
-    muModel_
-    (
-        mixtureViscosityModel::New
-        (
-            "mu",
-            subDict(phase1Name_),
-            U,
-            phi
-        )
-    ),
+    muModel_(mixtureViscosityModel::New(U.mesh(), phase1Name())),
+    nucModel_(viscosityModel::New(U.mesh(), phase2Name())),
 
-    nucModel_
-    (
-        viscosityModel::New
-        (
-            "nuc",
-            subDict(phase2Name_),
-            U,
-            phi
-        )
-    ),
-
-    rhod_("rho", dimDensity, muModel_->viscosityProperties()),
-    rhoc_("rho", dimDensity, nucModel_->viscosityProperties()),
+    rhod_("rho", dimDensity, muModel_()),
+    rhoc_("rho", dimDensity, nucModel_()),
     dd_
     (
         "d",
         dimLength,
-        muModel_->viscosityProperties().lookupOrDefault("d", 0.0)
+        muModel_->lookupOrDefault("d", 0.0)
     ),
-    alphaMax_(muModel_->viscosityProperties().lookupOrDefault("alphaMax", 1.0)),
+    alphaMax_(muModel_->lookupOrDefault("alphaMax", 1.0)),
 
     U_(U),
     phi_(phi),
@@ -117,28 +84,19 @@ bool Foam::incompressibleTwoPhaseInteractingMixture::read()
 {
     if (regIOobject::read())
     {
-        if
-        (
-            muModel_().read(subDict(phase1Name_))
-         && nucModel_().read(subDict(phase2Name_))
-        )
+        if (muModel_->read() || nucModel_->read())
         {
-            muModel_->viscosityProperties().lookup("rho") >> rhod_;
-            nucModel_->viscosityProperties().lookup("rho") >> rhoc_;
+            muModel_->lookup("rho") >> rhod_;
+            nucModel_->lookup("rho") >> rhoc_;
 
             dd_ = dimensionedScalar
             (
                 "d",
                 dimLength,
-                muModel_->viscosityProperties().lookupOrDefault("d", 0)
+                muModel_->lookupOrDefault("d", 0)
             );
 
-            alphaMax_ =
-                muModel_->viscosityProperties().lookupOrDefault
-                (
-                    "alphaMax",
-                    1.0
-                );
+            alphaMax_ = muModel_->lookupOrDefault( "alphaMax", 1.0);
 
             return true;
         }

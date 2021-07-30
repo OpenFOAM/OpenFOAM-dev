@@ -31,19 +31,13 @@ volVectorField U
 #include "createPhi.H"
 
 
-Info<< "Reading transportProperties\n" << endl;
+Info<< "Reading phaseProperties\n" << endl;
 immiscibleIncompressibleTwoPhaseMixture mixture(U, phi);
 
 autoPtr<twoPhaseChangeModel> phaseChangePtr
 (
     twoPhaseChangeModel::New(mixture)
 );
-
-volScalarField& alpha1(mixture.alpha1());
-volScalarField& alpha2(mixture.alpha2());
-
-const dimensionedScalar& rho1 = mixture.rho1();
-const dimensionedScalar& rho2 = mixture.rho2();
 
 
 // Need to store rho for ddt(rho, U)
@@ -56,16 +50,9 @@ volScalarField rho
         mesh,
         IOobject::READ_IF_PRESENT
     ),
-    alpha1*rho1 + alpha2*rho2
+    mixture.rho()
 );
 rho.oldTime();
-
-
-// Construct incompressible turbulence model
-autoPtr<incompressible::momentumTransportModel> turbulence
-(
-    incompressible::momentumTransportModel::New(U, phi, mixture)
-);
 
 
 #include "readGravitationalAcceleration.H"
@@ -101,7 +88,22 @@ if (p_rgh.needReference())
 }
 
 mesh.setFluxRequired(p_rgh.name());
+
+volScalarField& alpha1(mixture.alpha1());
 mesh.setFluxRequired(alpha1.name());
+
+
+#include "createAlphaFluxes.H"
+
+// Construct incompressible turbulence model
+incompressibleInterPhaseTransportModel turbulence
+(
+    U,
+    phi,
+    alphaPhi1,
+    mixture
+);
+
 
 #include "createMRF.H"
 #include "createFvModels.H"

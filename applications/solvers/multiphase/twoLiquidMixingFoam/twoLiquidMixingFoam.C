@@ -35,7 +35,7 @@ Description
 #include "MULES.H"
 #include "subCycle.H"
 #include "incompressibleTwoPhaseMixture.H"
-#include "kinematicMomentumTransportModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
 

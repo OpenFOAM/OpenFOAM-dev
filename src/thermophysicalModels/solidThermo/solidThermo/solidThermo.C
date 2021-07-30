@@ -32,7 +32,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(solidThermo, 0);
     defineRunTimeSelectionTable(solidThermo, fvMesh);
-    defineRunTimeSelectionTable(solidThermo, dictionary);
 }
 
 
@@ -119,15 +118,15 @@ Foam::autoPtr<Foam::solidThermo> Foam::solidThermo::New
 }
 
 
-Foam::autoPtr<Foam::solidThermo> Foam::solidThermo::New
-(
-    const fvMesh& mesh,
-    const dictionary& dict,
-    const word& phaseName
-)
-{
-    return basicThermo::New<solidThermo>(mesh, dict, phaseName);
-}
+// Foam::autoPtr<Foam::solidThermo> Foam::solidThermo::New
+// (
+//     const fvMesh& mesh,
+//     const dictionary& dict,
+//     const word& phaseName
+// )
+// {
+//     return basicThermo::New<solidThermo>(mesh, dict, phaseName);
+// }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

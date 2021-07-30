@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,6 @@ class phase
     // Private Data
 
         word name_;
-        dictionary phaseDict_;
         autoPtr<viscosityModel> nuModel_;
         dimensionedScalar rho_;
 
@@ -70,7 +69,6 @@ public:
         phase
         (
             const word& name,
-            const dictionary& phaseDict,
             const volVectorField& U,
             const surfaceScalarField& phi
         );
@@ -99,8 +97,8 @@ public:
 
             autoPtr<phase> operator()(Istream& is) const
             {
-                dictionaryEntry ent(dictionary::null, is);
-                return autoPtr<phase>(new phase(ent.keyword(), ent, U_, phi_));
+                const word name(is);
+                return autoPtr<phase>(new phase(name, U_, phi_));
             }
         };
 
@@ -147,7 +145,7 @@ public:
         //-Inherit read from volScalarField
         using volScalarField::read;
 
-        //- Read base transportProperties dictionary
+        //- Read base phaseProperties dictionary
         bool read(const dictionary& phaseDict);
 };
 

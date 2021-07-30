@@ -35,8 +35,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "singlePhaseTransportModel.H"
-#include "kinematicMomentumTransportModel.H"
+#include "viscosityModel.H"
+#include "incompressibleMomentumTransportModels.H"
 #include "pisoControl.H"
 #include "pressureReference.H"
 #include "fvModels.H"
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        laminarTransport.correct();
+        viscosity->correct();
         turbulence->correct();
 
         runTime.write();

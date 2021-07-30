@@ -40,8 +40,7 @@ SourceFiles
 #include "viscosityModel.H"
 #include "mixtureViscosityModel.H"
 #include "twoPhaseMixture.H"
-#include "dynamicTransportModel.H"
-#include "IOdictionary.H"
+#include "viscosity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,13 +53,10 @@ namespace Foam
 
 class incompressibleTwoPhaseInteractingMixture
 :
-    public IOdictionary,
     public twoPhaseMixture,
-    public dynamicTransportModel
+    public viscosity
 {
-protected:
-
-    // Protected data
+    // Private data
 
         autoPtr<mixtureViscosityModel> muModel_;
         autoPtr<viscosityModel> nucModel_;
@@ -160,15 +156,15 @@ public:
         //- Return the mixture density
         virtual tmp<volScalarField> rho() const
         {
-            return alpha1_*rhod_ + alpha2_*rhoc_;
+            return alpha1()*rhod_ + alpha2()*rhoc_;
         }
 
         //- Return the mixture density for patch
         virtual tmp<scalarField> rho(const label patchi) const
         {
             return
-                alpha1_.boundaryField()[patchi]*rhod_.value()
-              + alpha2_.boundaryField()[patchi]*rhoc_.value();
+                alpha1().boundaryField()[patchi]*rhod_.value()
+              + alpha2().boundaryField()[patchi]*rhoc_.value();
         }
 
         //- Return the mixture viscosity
@@ -186,10 +182,10 @@ public:
         //- Correct the laminar viscosity
         virtual void correct()
         {
-            mu_ = muModel_->mu(rhoc_*nucModel_->nu());
+            mu_ = muModel_->mu(rhoc_*nucModel_->nu(), U_);
         }
 
-        //- Read base transportProperties dictionary
+        //- Read base phaseProperties dictionary
         virtual bool read();
 };
 

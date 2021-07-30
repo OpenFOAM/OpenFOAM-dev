@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     const fvPatch& nbrPatch = patch().boundaryMesh()[samplePolyPatch().index()];
 
     const fluidThermo& thermo =
-        db().lookupObject<fluidThermo>(fluidThermo::dictName);
+        db().lookupObject<fluidThermo>(physicalProperties::typeName);
 
     // Get the cell-mass fractions
     const scalarField Yc(patchInternalField());

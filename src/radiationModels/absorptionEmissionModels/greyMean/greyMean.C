@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ Foam::radiationModels::absorptionEmissionModels::greyMean::greyMean
     speciesNames_(0),
     specieIndex_(label(0)),
     lookUpTablePtr_(),
-    thermo_(mesh.lookupObject<fluidThermo>(basicThermo::dictName)),
+    thermo_(mesh.lookupObject<fluidThermo>(physicalProperties::typeName)),
     Yj_(nSpecies_)
 {
     if (!isA<basicSpecieMixture>(thermo_))

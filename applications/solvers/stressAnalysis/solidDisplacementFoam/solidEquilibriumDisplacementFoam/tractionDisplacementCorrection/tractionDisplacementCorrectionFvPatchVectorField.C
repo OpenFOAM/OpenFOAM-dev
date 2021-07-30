@@ -138,7 +138,7 @@ void tractionDisplacementCorrectionFvPatchVectorField::updateCoeffs()
     const solidDisplacementThermo& thermo =
         db().lookupObject<solidDisplacementThermo>
         (
-            solidDisplacementThermo::dictName
+            physicalProperties::typeName
         );
 
     const scalarField& E = thermo.E(patchi);

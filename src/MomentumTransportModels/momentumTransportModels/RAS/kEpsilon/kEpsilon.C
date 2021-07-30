@@ -86,7 +86,7 @@ kEpsilon<BasicMomentumTransportModel>::kEpsilon
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
+    const viscosity& viscosity,
     const word& type
 )
 :
@@ -98,7 +98,7 @@ kEpsilon<BasicMomentumTransportModel>::kEpsilon
         U,
         alphaRhoPhi,
         phi,
-        transport
+        viscosity
     ),
 
     Cmu_

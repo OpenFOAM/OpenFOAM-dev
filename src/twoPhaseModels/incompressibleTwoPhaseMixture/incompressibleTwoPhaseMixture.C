@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,33 +24,14 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleTwoPhaseMixture.H"
+#include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
-#include "surfaceFields.H"
-#include "fvc.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(incompressibleTwoPhaseMixture, 0);
-}
-
-
-// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
-
-void Foam::incompressibleTwoPhaseMixture::calcNu()
-{
-    nuModel1_->correct();
-    nuModel2_->correct();
-
-    const volScalarField limitedAlpha1
-    (
-        "limitedAlpha1",
-        min(max(alpha1_, scalar(0)), scalar(1))
-    );
-
-    // Average kinematic viscosity calculated from dynamic viscosity
-    nu_ = mu()/(limitedAlpha1*rho1_ + (scalar(1) - limitedAlpha1)*rho2_);
 }
 
 
@@ -62,42 +43,13 @@ Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
     const surfaceScalarField& phi
 )
 :
-    IOdictionary
-    (
-        IOobject
-        (
-            "transportProperties",
-            U.time().constant(),
-            U.db(),
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    ),
-    twoPhaseMixture(U.mesh(), *this),
+    twoPhaseMixture(U.mesh()),
 
-    nuModel1_
-    (
-        viscosityModel::New
-        (
-            "nu1",
-            subDict(phase1Name_),
-            U,
-            phi
-        )
-    ),
-    nuModel2_
-    (
-        viscosityModel::New
-        (
-            "nu2",
-            subDict(phase2Name_),
-            U,
-            phi
-        )
-    ),
+    nuModel1_(viscosityModel::New(U.mesh(), phase1Name())),
+    nuModel2_(viscosityModel::New(U.mesh(), phase2Name())),
 
-    rho1_("rho", dimDensity, nuModel1_->viscosityProperties()),
-    rho2_("rho", dimDensity, nuModel2_->viscosityProperties()),
+    rho1_("rho", dimDensity, nuModel1_()),
+    rho2_("rho", dimDensity, nuModel2_()),
 
     U_(U),
     phi_(phi),
@@ -115,18 +67,29 @@ Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
         calculatedFvPatchScalarField::typeName
     )
 {
-    calcNu();
+    correct();
 }
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
+Foam::incompressibleTwoPhaseMixture::rho() const
+{
+    return volScalarField::New
+    (
+        "rho",
+        alpha1()*rho1_ + (scalar(1) - alpha1())*rho2_
+    );
+}
+
+
+Foam::tmp<Foam::volScalarField>
 Foam::incompressibleTwoPhaseMixture::mu() const
 {
     const volScalarField limitedAlpha1
     (
-        min(max(alpha1_, scalar(0)), scalar(1))
+        min(max(alpha1(), scalar(0)), scalar(1))
     );
 
     return volScalarField::New
@@ -143,7 +106,7 @@ Foam::incompressibleTwoPhaseMixture::muf() const
 {
     const surfaceScalarField alpha1f
     (
-        min(max(fvc::interpolate(alpha1_), scalar(0)), scalar(1))
+        min(max(fvc::interpolate(alpha1()), scalar(0)), scalar(1))
     );
 
     return surfaceScalarField::New
@@ -160,7 +123,7 @@ Foam::incompressibleTwoPhaseMixture::nuf() const
 {
     const surfaceScalarField alpha1f
     (
-        min(max(fvc::interpolate(alpha1_), scalar(0)), scalar(1))
+        min(max(fvc::interpolate(alpha1()), scalar(0)), scalar(1))
     );
 
     return surfaceScalarField::New
@@ -178,32 +141,31 @@ bool Foam::incompressibleTwoPhaseMixture::read()
 {
     if (regIOobject::read())
     {
-        if
-        (
-            nuModel1_().read
-            (
-                subDict(phase1Name_ == "1" ? "phase1": phase1Name_)
-            )
-         && nuModel2_().read
-            (
-                subDict(phase2Name_ == "2" ? "phase2": phase2Name_)
-            )
-        )
-        {
-            nuModel1_->viscosityProperties().lookup("rho") >> rho1_;
-            nuModel2_->viscosityProperties().lookup("rho") >> rho2_;
+        nuModel1_->lookup("rho") >> rho1_;
+        nuModel2_->lookup("rho") >> rho2_;
 
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
     else
     {
         return false;
     }
+}
+
+
+void Foam::incompressibleTwoPhaseMixture::correct()
+{
+    nuModel1_->correct();
+    nuModel2_->correct();
+
+    const volScalarField limitedAlpha1
+    (
+        "limitedAlpha1",
+        min(max(alpha1(), scalar(0)), scalar(1))
+    );
+
+    // Average kinematic viscosity calculated from dynamic viscosity
+    nu_ = mu()/(limitedAlpha1*rho1_ + (scalar(1) - limitedAlpha1)*rho2_);
 }
 
 

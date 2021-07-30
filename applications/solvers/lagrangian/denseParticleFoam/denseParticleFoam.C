@@ -77,8 +77,8 @@ namespace Foam
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
-#include "singlePhaseTransportModel.H"
-#include "phaseKinematicMomentumTransportModel.H"
+#include "viscosityModel.H"
+#include "phaseIncompressibleMomentumTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
 #include "CorrectPhi.H"
@@ -130,8 +130,8 @@ int main(int argc, char *argv[])
             }
         }
 
-        continuousPhaseTransport.correct();
-        muc = rhoc*continuousPhaseTransport.nu();
+        continuousPhaseViscosity->correct();
+        muc = rhoc*continuousPhaseViscosity->nu();
 
         clouds.evolve();
 
