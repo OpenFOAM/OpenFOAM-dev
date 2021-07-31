@@ -21,8 +21,11 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Namespace
+    Foam::regionModels::thermalBaffleModels
+
 Class
-    Foam::regionModels::thermalBaffleModels::thermalBaffleModel
+    Foam::regionModels::thermalBaffleModel
 
 Description
 
@@ -42,14 +45,11 @@ SourceFiles
 #include "regionModel1D.H"
 #include "radiationModel.H"
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 namespace regionModels
-{
-namespace thermalBaffleModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -228,7 +228,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace thermalBaffleModels
 } // End namespace regionModels
 } // End namespace Foam
 

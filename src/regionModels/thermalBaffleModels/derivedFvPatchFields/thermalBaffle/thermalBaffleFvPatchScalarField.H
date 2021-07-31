@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,7 +182,7 @@ class thermalBaffleFvPatchScalarField
         bool owner_;
 
         //- Thermal baffle
-        autoPtr<regionModels::thermalBaffleModels::thermalBaffleModel> baffle_;
+        autoPtr<regionModels::thermalBaffleModel> baffle_;
 
         //- Dictionary
         dictionary dict_;

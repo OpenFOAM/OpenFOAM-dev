@@ -69,7 +69,7 @@ thermalBaffleFvPatchScalarField
 
     const fvMesh& thisMesh = patch().boundaryMesh().mesh();
 
-    typedef regionModels::thermalBaffleModels::thermalBaffleModel baffle;
+    typedef regionModels::thermalBaffleModel baffle;
 
     if (thisMesh.name() == polyMesh::defaultRegion)
     {
