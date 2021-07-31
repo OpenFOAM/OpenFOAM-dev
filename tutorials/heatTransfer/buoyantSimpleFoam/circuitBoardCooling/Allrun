@@ -8,9 +8,6 @@ runApplication blockMesh
 
 cp -R 0.orig 0
 
-mkdir constant/baffle3DRegion
-cp 0/include/3DBaffle/physicalProperties constant/baffle3DRegion
-
 # Create 1D and 3D baffles
 runApplication createBaffles -overwrite
 

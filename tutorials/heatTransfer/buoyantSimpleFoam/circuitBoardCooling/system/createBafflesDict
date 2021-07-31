@@ -35,13 +35,13 @@ baffles
             type            wall;
             patchFields
             {
-                #include "./0/include/wallBafflePatches"
-                #include "./0/include/1DBaffle/1DTemperatureMasterBafflePatches"
+                #include "./include/wallBafflePatches"
+                #include "./include/1DBaffle/1DTemperatureMasterBafflePatches"
             }
         }
     }
 
-    #include "./0/include/baffle3DSetup"
+    #include "./include/baffle3DSetup"
 
     baffleFacesThermoBaffle3D
     {
@@ -58,8 +58,8 @@ baffles
             sameGroup       off;
             patchFields
             {
-                #include "./0/include/wallBafflePatches"
-                #include "./0/include/3DBaffle/3DTemperatureMasterBafflePatches"
+                #include "./include/wallBafflePatches"
+                #include "./include/3DBaffle/3DTemperatureMasterBafflePatches"
             }
         }
     }
