@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -253,6 +253,12 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
         }
     }
 
+    // Reset the seed of the pseudo-random generator used by the graph
+    // partitioning routines of the libScotch library. Two consecutive calls to
+    // the same libScotch partitioning routines, and separated by a call to
+    // SCOTCH randomReset, will always yield the same results, as if the
+    // equivalent standalone Scotch programs were used twice, independently,
+    SCOTCH_randomReset();
 
     // Strategy
     // ~~~~~~~~
@@ -274,9 +280,6 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
                 Info<< "scotchDecomp : Using strategy " << strategy << endl;
             }
             SCOTCH_stratGraphMap(&stradat, strategy.c_str());
-            // fprintf(stdout, "S\tStrat=");
-            // SCOTCH_stratSave(&stradat, stdout);
-            // fprintf(stdout, "\n");
         }
     }
 
@@ -391,48 +394,7 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
             SCOTCH_archCmplt(&archdat, nProcessors_),
             "SCOTCH_archCmplt"
         );
-
-
-        //- Hack to test clustering. Note that finalDecomp is non-compact
-        //  numbers!
-        //
-        ////- Set up variable sizes architecture
-        // check
-        //(
-        //    SCOTCH_archVcmplt(&archdat),
-        //    "SCOTCH_archVcmplt"
-        //);
-        //
-        ////- Stategy flags: go for quality or load balance (or leave default)
-        // SCOTCH_Num straval = 0;
-        ////straval |= SCOTCH_STRATQUALITY;
-        ////straval |= SCOTCH_STRATQUALITY;
-        //
-        ////- Number of cells per agglomeration
-        ////SCOTCH_Num agglomSize = SCOTCH_archSize(&archdat);
-        // SCOTCH_Num agglomSize = 3;
-        //
-        ////- Build strategy for agglomeration
-        // check
-        //(
-        //    SCOTCH_stratGraphClusterBuild
-        //    (
-        //        &stradat,   // strategy to build
-        //        straval,    // strategy flags
-        //        agglomSize, // cells per cluster
-        //        1.0,        // weight?
-        //        0.01        // max load imbalance
-        //    ),
-        //    "SCOTCH_stratGraphClusterBuild"
-        //);
     }
-
-
-    // SCOTCH_Mapping mapdat;
-    // SCOTCH_graphMapInit(&grafdat, &mapdat, &archdat, nullptr);
-    // SCOTCH_graphMapCompute(&grafdat, &mapdat, &stradat); // Perform mapping
-    // SCOTCH_graphMapExit(&grafdat, &mapdat);
-
 
     // Hack:switch off fpu error trapping
     #ifdef FE_NOMASK_ENV
@@ -462,25 +424,12 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
     feenableexcept(oldExcepts);
     #endif
 
-
-
-    // finalDecomp.setSize(xadj.size()-1);
-    // check
-    //(
-    //    SCOTCH_graphPart
-    //    (
-    //        &grafdat,
-    //        nProcessors_,       // partnbr
-    //        &stradat,           // const SCOTCH_Strat *
-    //        finalDecomp.begin() // parttab
-    //    ),
-    //    "SCOTCH_graphPart"
-    //);
-
     // Release storage for graph
     SCOTCH_graphExit(&grafdat);
+
     // Release storage for strategy
     SCOTCH_stratExit(&stradat);
+
     // Release storage for network topology
     SCOTCH_archExit(&archdat);
 
