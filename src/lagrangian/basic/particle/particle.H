@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,9 +93,9 @@ class particle
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
 
-        //- The value of nBehind_ at which tracking is abandoned. See the
-        //  description of nBehind_.
-        static const label maxNBehind_;
+        //- The value of nTracksBehind_ at which tracking is abandoned. See the
+        //  description of nTracksBehind_.
+        static const label maxNTracksBehind_;
 
 
 public:
@@ -148,17 +148,27 @@ private:
         //- Fraction of time-step completed
         scalar stepFraction_;
 
-        //- The distance behind the maximum distance reached so far
-        scalar behind_;
+        //- The step fraction less than the maximum reached so far
+        scalar stepFractionBehind_;
 
-        //- The number of tracks carried out that ended in a distance behind the
-        //  maximum distance reached so far. Once this reaches maxNBehind_,
-        //  tracking is abandoned for the current step. This is needed because
-        //  when tetrahedra are inverted a straight trajectory can form a closed
-        //  loop through regions of overlapping positive and negative space.
-        //  Without this break clause, such loops can result in a valid track
-        //  which never ends.
-        label nBehind_;
+        //- The number of tracks carried out that ended in a step fraction less
+        //  than the maximum reached so far. Once this reaches
+        //  maxNTracksBehind_, tracking is abandoned for the current step.
+        //
+        //  This is needed because when tetrahedra are inverted a straight
+        //  trajectory can form a closed loop through regions of overlapping
+        //  positive and negative space. Without this break clause, such loops
+        //  can result in a valid track which never ends.
+        //
+        //  Because the test is susceptible to round off error, a track of zero
+        //  length will also increment the counter. As such, it is important
+        //  that maxNTracksBehind_ is set large enough so that valid small
+        //  tracks do not result in the track being abandoned. The largest
+        //  number of valid small tracks that are likely to be performed
+        //  sequentially is equal to the number of tetrahedra that can meet at
+        //  a point. An estimate of this number is therefore used to set
+        //  maxNTracksBehind_.
+        label nTracksBehind_;
 
         //- Originating processor id
         label origProc_;

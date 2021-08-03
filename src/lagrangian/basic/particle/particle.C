@@ -31,7 +31,7 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::label Foam::particle::maxNBehind_ = 10;
+const Foam::label Foam::particle::maxNTracksBehind_ = 48;
 
 Foam::label Foam::particle::particleCount_ = 0;
 
@@ -447,6 +447,7 @@ void Foam::particle::locate
         const class face& f = mesh_.faces()[c[cellTetFacei]];
         for (label tetPti = 1; tetPti < f.size() - 1; ++ tetPti)
         {
+            reset();
             coordinates_ = barycentric(1, 0, 0, 0);
             tetFacei_ = c[cellTetFacei];
             tetPti_ = tetPti;
@@ -471,6 +472,7 @@ void Foam::particle::locate
 
     // The particle must be (hopefully only slightly) outside the cell. Track
     // into the tet which got the furthest.
+    reset();
     coordinates_ = barycentric(1, 0, 0, 0);
     tetFacei_ = minTetFacei;
     tetPti_ = minTetPti;
@@ -524,9 +526,9 @@ Foam::particle::particle
     tetFacei_(tetFacei),
     tetPti_(tetPti),
     facei_(-1),
-    stepFraction_(1.0),
-    behind_(0.0),
-    nBehind_(0),
+    stepFraction_(1),
+    stepFractionBehind_(0),
+    nTracksBehind_(0),
     origProc_(Pstream::myProcNo()),
     origId_(getNewParticleID())
 {}
@@ -545,9 +547,9 @@ Foam::particle::particle
     tetFacei_(-1),
     tetPti_(-1),
     facei_(-1),
-    stepFraction_(1.0),
-    behind_(0.0),
-    nBehind_(0),
+    stepFraction_(1),
+    stepFractionBehind_(0),
+    nTracksBehind_(0),
     origProc_(Pstream::myProcNo()),
     origId_(getNewParticleID())
 {
@@ -570,8 +572,8 @@ Foam::particle::particle(const particle& p)
     tetPti_(p.tetPti_),
     facei_(p.facei_),
     stepFraction_(p.stepFraction_),
-    behind_(p.behind_),
-    nBehind_(p.nBehind_),
+    stepFractionBehind_(p.stepFractionBehind_),
+    nTracksBehind_(p.nTracksBehind_),
     origProc_(p.origProc_),
     origId_(p.origId_)
 {}
@@ -586,8 +588,8 @@ Foam::particle::particle(const particle& p, const polyMesh& mesh)
     tetPti_(p.tetPti_),
     facei_(p.facei_),
     stepFraction_(p.stepFraction_),
-    behind_(p.behind_),
-    nBehind_(p.nBehind_),
+    stepFractionBehind_(p.stepFractionBehind_),
+    nTracksBehind_(p.nTracksBehind_),
     origProc_(p.origProc_),
     origId_(p.origId_)
 {}
@@ -659,7 +661,7 @@ Foam::scalar Foam::particle::trackToFace
     facei_ = -1;
 
     // Loop the tets in the current cell
-    while (nBehind_ < maxNBehind_)
+    while (nTracksBehind_ < maxNTracksBehind_)
     {
         f *= trackToTri(f*displacement, f*fraction, tetTriI);
 
@@ -682,21 +684,13 @@ Foam::scalar Foam::particle::trackToFace
     }
 
     // Warn if stuck, and incorrectly advance the step fraction to completion
-    static label stuckID = -1, stuckProc = -1;
-    if (origId_ != stuckID && origProc_ != stuckProc)
-    {
-        WarningInFunction
-            << "Particle #" << origId_ << " got stuck at " << position()
-            << endl;
-    }
-
-    stuckID = origId_;
-    stuckProc = origProc_;
+    WarningInFunction
+        << "Particle #" << origId_ << " got stuck at " << position() << endl;
 
     stepFraction_ += f*fraction;
 
-    behind_ = 0;
-    nBehind_ = 0;
+    stepFractionBehind_ = 0;
+    nTracksBehind_ = 0;
 
     return 0;
 }
@@ -745,10 +739,10 @@ Foam::scalar Foam::particle::trackToStationaryTri
 
     // Calculate the hit fraction
     label iH = -1;
-    scalar muH = std::isnormal(detA) && detA <= 0 ? vGreat : 1/detA;
+    scalar muH = detA > vSmall ? 1/detA : vGreat;
     for (label i = 0; i < 4; ++ i)
     {
-        if (Tx1[i] < - detA*small)
+        if (Tx1[i] < - vSmall && Tx1[i] < - mag(detA)*small)
         {
             scalar mu = - y0[i]/Tx1[i];
 
@@ -765,6 +759,15 @@ Foam::scalar Foam::particle::trackToStationaryTri
                 muH = mu;
             }
         }
+    }
+
+    // If there has been no hit on a degenerate or inverted tet then the
+    // displacement must be within the round off error. Advance the step
+    // fraction without moving and return.
+    if (iH == -1 && muH == vGreat)
+    {
+        stepFraction_ += fraction;
+        return 0;
     }
 
     // Set the new coordinates
@@ -786,6 +789,9 @@ Foam::scalar Foam::particle::trackToStationaryTri
     coordinates_ = yH;
     tetTriI = iH;
 
+    // Set the proportion of the track that has been completed
+    stepFraction_ += fraction*muH*detA;
+
     if (debug)
     {
         if (iH != -1)
@@ -799,26 +805,25 @@ Foam::scalar Foam::particle::trackToStationaryTri
         Info<< "End local coordinates = " << yH << endl
             << "End global coordinates = " << position() << endl
             << "Tracking displacement = " << position() - x0 << endl
-            << muH*detA*100 << "% of the step from " << stepFraction_ << " to "
-            << stepFraction_ + fraction << " completed" << endl << endl;
+            << muH*detA*100 << "% of the step from "
+            << stepFraction_ - fraction*muH*detA << " to "
+            << stepFraction_ - fraction*muH*detA + fraction
+            << " completed" << endl << endl;
     }
 
-    // Set the proportion of the track that has been completed
-    stepFraction_ += fraction*muH*detA;
-
-    // Accumulate displacement behind
-    if (detA <= 0 || nBehind_ > 0)
+    // Accumulate fraction behind
+    if (muH*detA < small || nTracksBehind_ > 0)
     {
-        behind_ += muH*detA*mag(displacement);
+        stepFractionBehind_ += fraction*muH*detA;
 
-        if (behind_ > 0)
+        if (stepFractionBehind_ > rootSmall)
         {
-            behind_ = 0;
-            nBehind_ = 0;
+            stepFractionBehind_ = 0;
+            nTracksBehind_ = 0;
         }
         else
         {
-            ++ nBehind_;
+            ++ nTracksBehind_;
         }
     }
 
@@ -891,7 +896,7 @@ Foam::scalar Foam::particle::trackToMovingTri
 
     // Calculate the hit fraction
     label iH = -1;
-    scalar muH = std::isnormal(detA[0]) && detA[0] <= 0 ? vGreat : 1/detA[0];
+    scalar muH = detA[0] > vSmall ? 1/detA[0] : vGreat;
     for (label i = 0; i < 4; ++ i)
     {
         const Roots<3> mu = hitEqn[i].roots();
@@ -901,7 +906,8 @@ Foam::scalar Foam::particle::trackToMovingTri
             if
             (
                 mu.type(j) == rootType::real
-             && hitEqn[i].derivative(mu[j]) < - detA[0]*small
+             && hitEqn[i].derivative(mu[j]) < - vSmall
+             && hitEqn[i].derivative(mu[j]) < - mag(detA[0])*small
             )
             {
                 if (debug)
@@ -916,7 +922,7 @@ Foam::scalar Foam::particle::trackToMovingTri
                     const scalar detAH = detAEqn.value(mu[j]);
 
                     Info<< "Hit on tet face " << i << " at local coordinate "
-                        << (std::isnormal(detAH) ? name(yH/detAH) : "???")
+                        << (mag(detAH) > vSmall ? name(yH/detAH) : "???")
                         << ", " << mu[j]*detA[0]*100 << "% of the "
                         << "way along the track" << endl;
                 }
@@ -928,6 +934,15 @@ Foam::scalar Foam::particle::trackToMovingTri
                 }
             }
         }
+    }
+
+    // If there has been no hit on a degenerate or inverted tet then the
+    // displacement must be within the round off error. Advance the step
+    // fraction without moving and return.
+    if (iH == -1 && muH == vGreat)
+    {
+        stepFraction_ += fraction;
+        return 0;
     }
 
     // Set the new coordinates
@@ -946,7 +961,7 @@ Foam::scalar Foam::particle::trackToMovingTri
     // distance and therefore can be of the static mesh type. This has not yet
     // been implemented.
     const scalar detAH = detAEqn.value(muH);
-    if (!std::isnormal(detAH))
+    if (mag(detAH) < vSmall)
     {
         FatalErrorInFunction
             << "A moving tet collapsed onto a particle. This is not supported. "
@@ -974,22 +989,6 @@ Foam::scalar Foam::particle::trackToMovingTri
     // Set the proportion of the track that has been completed
     stepFraction_ += fraction*muH*detA[0];
 
-    // Accumulate displacement behind
-    if (detA[0] <= 0 || nBehind_ > 0)
-    {
-        behind_ += muH*detA[0]*mag(displacement);
-
-        if (behind_ > 0)
-        {
-            behind_ = 0;
-            nBehind_ = 0;
-        }
-        else
-        {
-            ++ nBehind_;
-        }
-    }
-
     if (debug)
     {
         if (iH != -1)
@@ -1003,9 +1002,26 @@ Foam::scalar Foam::particle::trackToMovingTri
         Info<< "End local coordinates = " << yH << endl
             << "End global coordinates = " << position() << endl
             << "Tracking displacement = " << position() - x0 << endl
-            << muH*detA[0]*100 << "% of the step from " << stepFraction_
-            << " to " << stepFraction_ + fraction << " completed" << endl
-            << endl;
+            << muH*detA[0]*100 << "% of the step from "
+            << stepFraction_ - fraction*muH*detA[0] << " to "
+            << stepFraction_ - fraction*muH*detA[0] + fraction
+            << " completed" << endl << endl;
+    }
+
+    // Accumulate fraction behind
+    if (muH*detA[0] < small || nTracksBehind_ > 0)
+    {
+        stepFractionBehind_ += fraction*muH*detA[0];
+
+        if (stepFractionBehind_ > rootSmall)
+        {
+            stepFractionBehind_ = 0;
+            nTracksBehind_ = 0;
+        }
+        else
+        {
+            ++ nTracksBehind_;
+        }
     }
 
     return iH != -1 ? 1 - muH*detA[0] : 0;
