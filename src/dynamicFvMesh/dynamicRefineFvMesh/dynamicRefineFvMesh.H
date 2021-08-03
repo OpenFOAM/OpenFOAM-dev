@@ -67,7 +67,7 @@ Usage
             (phi none)
             (nHatf none)
             (rhoPhi none)
-            (alphaPhi0.water none)
+            (alphaPhi.water none)
             (ghf none)
         );
 
@@ -137,7 +137,7 @@ Usage
             (phi none)
             (nHatf none)
             (rhoPhi none)
-            (alphaPhi0.water none)
+            (alphaPhi.water none)
             (ghf none)
         );
 
