@@ -26,6 +26,7 @@ License
 #include "meanVelocityForce.H"
 #include "volFields.H"
 #include "fvMatrices.H"
+#include "timeIOdictionary.H"
 #include "IFstream.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -65,7 +66,7 @@ void Foam::fv::meanVelocityForce::writeProps
     // Only write on output time
     if (mesh().time().writeTime())
     {
-        IOdictionary propsDict
+        timeIOdictionary propsDict
         (
             IOobject
             (

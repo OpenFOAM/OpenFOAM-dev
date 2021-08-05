@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Time.H"
+#include "timeIOdictionary.H"
 #include "argList.H"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
@@ -232,7 +233,7 @@ void Foam::Time::setControls()
         }
     }
 
-    IOdictionary timeDict
+    timeIOdictionary timeDict
     (
         IOobject
         (
@@ -911,7 +912,7 @@ void Foam::Time::setTime(const instant& inst, const label newIndex)
     dimensionedScalar::name() = inst.name();
     timeIndex_ = newIndex;
 
-    IOdictionary timeDict
+    timeIOdictionary timeDict
     (
         IOobject
         (

@@ -460,13 +460,7 @@ bool Foam::fileOperation::writeObject
 {
     if (write)
     {
-        const fileName filePath
-        (
-            io.global() && !(io.instance() == io.time().timeName())
-          ? io.rootPath()/io.time().globalCaseName()
-           /io.instance()/io.db().dbDir()/io.local()/io.name()
-          : io.objectPath()
-        );
+        const fileName filePath(io.objectPath());
 
         mkDir(filePath.path());
 

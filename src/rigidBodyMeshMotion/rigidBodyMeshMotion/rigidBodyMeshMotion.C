@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,14 +24,15 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rigidBodyMeshMotion.H"
-#include "addToRunTimeSelectionTable.H"
 #include "polyMesh.H"
 #include "pointPatchDist.H"
 #include "pointConstraints.H"
+#include "timeIOdictionary.H"
 #include "uniformDimensionedFields.H"
 #include "forces.H"
 #include "OneConstant.H"
 #include "mathematicalConstants.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -97,8 +98,8 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
             mesh.time().timeName(),
             "uniform",
             mesh
-        ).typeHeaderOk<IOdictionary>(true)
-      ? IOdictionary
+        ).typeHeaderOk<timeIOdictionary>(true)
+      ? timeIOdictionary
         (
             IOobject
             (
@@ -339,7 +340,7 @@ void Foam::rigidBodyMeshMotion::solve()
 
 bool Foam::rigidBodyMeshMotion::write() const
 {
-    IOdictionary dict
+    timeIOdictionary dict
     (
         IOobject
         (

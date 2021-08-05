@@ -240,6 +240,7 @@ IOdictionary = db/IOobjects/IOdictionary
 $(IOdictionary)/IOdictionary.C
 $(IOdictionary)/IOdictionaryIO.C
 $(IOdictionary)/localIOdictionary.C
+$(IOdictionary)/timeIOdictionary.C
 $(IOdictionary)/systemDict.C
 
 db/IOobjects/IOMap/IOMapName.C

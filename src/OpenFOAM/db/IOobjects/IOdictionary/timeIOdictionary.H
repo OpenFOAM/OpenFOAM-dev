@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::localIOdictionary
+    Foam::timeIOdictionary
 
 Description
-    localIOdictionary derived from IOdictionary with global set false to
-    disable parallel master reading.
+    timeIOdictionary derived from IOdictionary with globalWrite set false to
+    enable writing to processor time directories.
 
-    Used to read GeometricFields.
+    Used for time-dependent global data written to the <time>/uniform
+    directories.
 
 SourceFiles
-    localIOdictionary.C
+    timeIOdictionary.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef localIOdictionary_H
-#define localIOdictionary_H
+#ifndef timeIOdictionary_H
+#define timeIOdictionary_H
 
 #include "IOdictionary.H"
 
@@ -46,10 +47,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class localIOdictionary Declaration
+                      Class timeIOdictionary Declaration
 \*---------------------------------------------------------------------------*/
 
-class localIOdictionary
+class timeIOdictionary
 :
     public IOdictionary
 {
@@ -59,40 +60,21 @@ public:
     // Constructors
 
         //- Construct given an IOobject and actual type name
-        localIOdictionary(const IOobject& io);
+        timeIOdictionary(const IOobject& io);
 
         //- Construct given an IOobject and dictionary
-        localIOdictionary(const IOobject&, const dictionary&);
-
-        //- Construct given an IOobject and actual type name
-        localIOdictionary(const IOobject& io, const word& actualType);
+        timeIOdictionary(const IOobject&, const dictionary&);
 
 
     // Member Functions
 
-        //- Return false as object is not global,
-        //  i.e. different for all processors
-        virtual bool global() const
+        //- Return false as the object is global, i.e. same for all processors
+        //  but written to the processor time directory
+        virtual bool globalWrite() const
         {
             return false;
         }
-
-        //- Return complete path + object name if the file exists
-        //  in the case otherwise null
-        virtual fileName filePath() const
-        {
-            // Use default (local only) search strategy
-            return localFilePath(type());
-        }
 };
-
-
-//- Template function for obtaining global status
-template<>
-inline bool typeGlobal<localIOdictionary>()
-{
-    return false;
-}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

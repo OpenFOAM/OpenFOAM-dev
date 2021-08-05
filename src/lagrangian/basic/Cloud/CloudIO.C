@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "Cloud.H"
 #include "Time.H"
 #include "IOPosition.H"
-#include "IOdictionary.H"
+#include "timeIOdictionary.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -50,9 +50,9 @@ void Foam::Cloud<ParticleType>::readCloudUniformProperties()
         false
     );
 
-    if (dictObj.typeHeaderOk<IOdictionary>(true))
+    if (dictObj.typeHeaderOk<timeIOdictionary>(true))
     {
-        const IOdictionary uniformPropsDict(dictObj);
+        const timeIOdictionary uniformPropsDict(dictObj);
 
         const word procName("processor" + Foam::name(Pstream::myProcNo()));
         if (uniformPropsDict.found(procName))
@@ -71,7 +71,7 @@ void Foam::Cloud<ParticleType>::readCloudUniformProperties()
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::writeCloudUniformProperties() const
 {
-    IOdictionary uniformPropsDict
+    timeIOdictionary uniformPropsDict
     (
         IOobject
         (

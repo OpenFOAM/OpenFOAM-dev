@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -246,10 +246,6 @@ public:
 
             //- Read object if modified (as set by call to modified)
             virtual bool readIfModified();
-
-            //- Is object same for all processors
-            //  Defaults to false, must be overridden by global IO classes
-            virtual bool global() const;
 
 
         // Writing

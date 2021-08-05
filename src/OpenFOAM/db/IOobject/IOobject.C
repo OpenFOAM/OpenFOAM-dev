@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -321,12 +321,6 @@ const Foam::Time& Foam::IOobject::time() const
 }
 
 
-const Foam::fileName& Foam::IOobject::caseName() const
-{
-    return time().caseName();
-}
-
-
 Foam::word Foam::IOobject::group() const
 {
     return group(name_);
@@ -339,9 +333,54 @@ Foam::word Foam::IOobject::member() const
 }
 
 
+bool Foam::IOobject::global() const
+{
+    return false;
+}
+
+
+bool Foam::IOobject::globalWrite() const
+{
+    return global();
+}
+
+
 const Foam::fileName& Foam::IOobject::rootPath() const
 {
     return time().rootPath();
+}
+
+
+const Foam::fileName& Foam::IOobject::caseName() const
+{
+    if (globalWrite())
+    {
+        return time().globalCaseName();
+    }
+    else
+    {
+        return time().caseName();
+    }
+}
+
+
+Foam::fileName& Foam::IOobject::instance() const
+{
+    if
+    (
+        instance_ != time().system()
+     && instance_ != time().constant()
+     && instance_ != time().timeName()
+    )
+    {
+        scalar timeValue;
+        if (readScalar(instance_.c_str(), timeValue))
+        {
+            instance_ = time().timeName();
+        }
+    }
+
+    return instance_;
 }
 
 

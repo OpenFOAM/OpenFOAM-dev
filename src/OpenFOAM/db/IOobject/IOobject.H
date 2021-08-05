@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ private:
         string note_;
 
         //- Instance path component
-        fileName instance_;
+        mutable fileName instance_;
 
         //- Local path component
         fileName local_;
@@ -384,19 +384,24 @@ public:
             //  as <model>:<name>
             inline word modelName(const char* name) const;
 
+            //- Return true if object is global, i.e. same for all processors
+            //  Defaults to false, must be overridden by global IO classes
+            virtual bool global() const;
+
+            //- Return true if object is global, i.e. same for all processors
+            //  and written to the global case directory,
+            //  i.e. not the processor time directory
+            //  Defaults to global()
+            virtual bool globalWrite() const;
+
             const fileName& rootPath() const;
 
             const fileName& caseName() const;
 
-            const fileName& instance() const
-            {
-                return instance_;
-            }
-
-            fileName& instance()
-            {
-                return instance_;
-            }
+            //- Return the instance directory, constant, system, <time> etc.
+            //  If the instance is a time directory it is updated to the
+            //  current time before return
+            fileName& instance() const;
 
             const fileName& local() const
             {

@@ -53,7 +53,7 @@ SourceFiles
 
 #include "particle.H"
 #include "Cloud.H"
-#include "IOdictionary.H"
+#include "timeIOdictionary.H"
 #include "autoPtr.H"
 #include "Random.H"
 #include "fvMesh.H"
@@ -144,7 +144,7 @@ protected:
         IOdictionary particleProperties_;
 
         //- Dictionary of output properties
-        IOdictionary outputProperties_;
+        timeIOdictionary outputProperties_;
 
         //- Solution properties
         cloudSolution solution_;
