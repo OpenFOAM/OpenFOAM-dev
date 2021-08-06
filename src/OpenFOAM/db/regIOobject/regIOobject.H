@@ -211,11 +211,14 @@ public:
 
         // Reading
 
+            using IOobject::filePath;
+
             //- Return complete path + object name if the file exists
-            //  in the case directory otherwise null. Does not search
-            //  up if parallel. Can be overridden to provide this functionality
-            //  (e.g. IOdictionary)
-            virtual fileName filePath() const;
+            //  in the case directory otherwise null.
+            //
+            //  For global objects in parallel searches up into the global
+            //  case directory
+            fileName filePath() const;
 
             //- Read and check header info
             bool headerOk();

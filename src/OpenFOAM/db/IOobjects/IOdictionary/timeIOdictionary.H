@@ -25,7 +25,7 @@ Class
     Foam::timeIOdictionary
 
 Description
-    timeIOdictionary derived from IOdictionary with globalWrite set false to
+    timeIOdictionary derived from IOdictionary with globalFile set false to
     enable writing to processor time directories.
 
     Used for time-dependent global data written to the <time>/uniform
@@ -70,11 +70,19 @@ public:
 
         //- Return false as the object is global, i.e. same for all processors
         //  but written to the processor time directory
-        virtual bool globalWrite() const
+        virtual bool globalFile() const
         {
             return false;
         }
 };
+
+
+//- Template function for obtaining global write status
+template<>
+inline bool typeGlobalFile<timeIOdictionary>()
+{
+    return false;
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

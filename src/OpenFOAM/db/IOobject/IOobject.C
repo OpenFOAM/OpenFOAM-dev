@@ -339,7 +339,7 @@ bool Foam::IOobject::global() const
 }
 
 
-bool Foam::IOobject::globalWrite() const
+bool Foam::IOobject::globalFile() const
 {
     return global();
 }
@@ -353,7 +353,7 @@ const Foam::fileName& Foam::IOobject::rootPath() const
 
 const Foam::fileName& Foam::IOobject::caseName() const
 {
-    if (globalWrite())
+    if (globalFile())
     {
         return time().globalCaseName();
     }
@@ -421,17 +421,13 @@ Foam::fileName Foam::IOobject::localPath() const
 }
 
 
-Foam::fileName Foam::IOobject::localFilePath(const word& typeName) const
+Foam::fileName Foam::IOobject::filePath
+(
+    const word& typeName,
+    const bool isGlobal
+) const
 {
-    // Do not check for undecomposed files
-    return fileHandler().filePath(false, *this, typeName);
-}
-
-
-Foam::fileName Foam::IOobject::globalFilePath(const word& typeName) const
-{
-    // Check for undecomposed files
-    return fileHandler().filePath(true, *this, typeName);
+    return fileHandler().filePath(isGlobal, *this, typeName);
 }
 
 

@@ -390,7 +390,7 @@ void Foam::regIOobject::rename(const word& newName)
 
 Foam::fileName Foam::regIOobject::filePath() const
 {
-    return localFilePath(type());
+    return IOobject::filePath(type(), globalFile());
 }
 
 

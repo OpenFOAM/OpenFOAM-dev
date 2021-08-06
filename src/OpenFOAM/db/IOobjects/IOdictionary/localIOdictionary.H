@@ -76,14 +76,6 @@ public:
         {
             return false;
         }
-
-        //- Return complete path + object name if the file exists
-        //  in the case otherwise null
-        virtual fileName filePath() const
-        {
-            // Use default (local only) search strategy
-            return localFilePath(type());
-        }
 };
 
 

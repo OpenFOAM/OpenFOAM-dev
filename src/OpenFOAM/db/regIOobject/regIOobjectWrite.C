@@ -62,7 +62,7 @@ bool Foam::regIOobject::writeObject
     // Write global objects on master only
     // Everyone check or just master
     bool masterOnly =
-        globalWrite()
+        globalFile()
      && (
             regIOobject::fileModificationChecking == timeStampMaster
          || regIOobject::fileModificationChecking == inotifyMaster

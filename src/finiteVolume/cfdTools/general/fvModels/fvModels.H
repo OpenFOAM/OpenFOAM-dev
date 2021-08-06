@@ -123,13 +123,6 @@ public:
             return true;
         }
 
-        //- Return complete path + object name if the file exists
-        //  either in the case/processor or case otherwise null
-        virtual fileName filePath() const
-        {
-            return globalFilePath(type());
-        }
-
 
         // Checks
 

@@ -47,12 +47,8 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
     const bool isGlobal
 )
 {
-    const fileName fName
-    (
-        isGlobal
-      ? io.globalFilePath(typeName)
-      : io.localFilePath(typeName)
-    );
+    const fileName fName(io.filePath(typeName, isGlobal));
+
     if (fName.empty())
     {
         FatalErrorInFunction
@@ -112,12 +108,7 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
     }
     else
     {
-        fName =
-        (
-            isGlobal
-          ? io.globalFilePath(typeName)
-          : io.localFilePath(typeName)
-        );
+        fName = io.filePath(typeName, isGlobal);
 
         if (!exists(fName))
         {

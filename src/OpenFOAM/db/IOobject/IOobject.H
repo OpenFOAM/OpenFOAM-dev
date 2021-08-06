@@ -392,7 +392,7 @@ public:
             //  and written to the global case directory,
             //  i.e. not the processor time directory
             //  Defaults to global()
-            virtual bool globalWrite() const;
+            virtual bool globalFile() const;
 
             const fileName& rootPath() const;
 
@@ -433,11 +433,12 @@ public:
                 return localPath()/name();
             }
 
-            //- Helper for filePath that searches locally.
-            fileName localFilePath(const word& typeName) const;
-
-            //- Helper for filePath that searches up if in parallel
-            fileName globalFilePath(const word& typeName) const;
+            //- Return complete path + object name if the file exists
+            //  in the case directory otherwise null.
+            //
+            //  If isGlobal and parallel searches up into the global case
+            //  directory.
+            fileName filePath(const word& typeName, const bool isGlobal) const;
 
 
         // Reading
@@ -508,7 +509,6 @@ public:
 template<>
 Ostream& operator<<(Ostream& os, const InfoProxy<IOobject>& ip);
 
-
 //- Template function for obtaining global status
 template<class T>
 inline bool typeGlobal()
@@ -516,16 +516,18 @@ inline bool typeGlobal()
     return false;
 }
 
+//- Template function for obtaining global write status
+template<class T>
+inline bool typeGlobalFile()
+{
+    return typeGlobal<T>();
+}
+
 //- Template function for obtaining filePath
 template<class T>
 inline fileName typeFilePath(const IOobject& io)
 {
-    return
-    (
-        typeGlobal<T>()
-      ? io.globalFilePath(T::typeName)
-      : io.localFilePath(T::typeName)
-    );
+    return io.filePath(T::typeName, typeGlobalFile<T>());
 }
 
 inline IOobject unregister(const IOobject& io)

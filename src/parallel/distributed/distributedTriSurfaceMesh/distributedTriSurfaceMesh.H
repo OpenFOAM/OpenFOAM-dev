@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -459,13 +459,6 @@ public:
             virtual bool global() const
             {
                 return false;
-            }
-
-            //- Return complete path + object name if the file exists
-            //  either in the case/processor or case otherwise null
-            virtual fileName filePath() const
-            {
-                return searchableSurface::localFilePath(type());
             }
 
 
