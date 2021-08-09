@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -322,20 +322,20 @@ public:
                 const word& typeName
             ) const;
 
-            //- Search for an object. checkGlobal : also check undecomposed case
+            //- Search for an object. globalFile : also check undecomposed case
             //  Optional wanted typeName.
             virtual fileName filePath
             (
-                const bool checkGlobal,
+                const bool globalFile,
                 const IOobject&,
                 const word& typeName
             ) const = 0;
 
-            //- Search for a directory. checkGlobal : also check undecomposed
+            //- Search for a directory. globalFile : also check undecomposed
             //  case
             virtual fileName dirPath
             (
-                const bool checkGlobal,
+                const bool globalFile,
                 const IOobject&
             ) const = 0;
 

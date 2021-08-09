@@ -658,10 +658,10 @@ int main(int argc, char *argv[])
                 // Read dictionary. (disable class type checking so we can load
                 // field)
                 Info<< "Loading dictionary " << fieldName << endl;
-                const word oldTypeName = IOdictionary::typeName;
-                const_cast<word&>(IOdictionary::typeName) = word::null;
+                const word oldTypeName = localIOdictionary::typeName;
+                const_cast<word&>(localIOdictionary::typeName) = word::null;
 
-                IOdictionary fieldDict
+                localIOdictionary fieldDict
                 (
                     IOobject
                     (
@@ -674,7 +674,7 @@ int main(int argc, char *argv[])
                     )
                 );
 
-                const_cast<word&>(IOdictionary::typeName) = oldTypeName;
+                const_cast<word&>(localIOdictionary::typeName) = oldTypeName;
 
                 // Fake type back to what was in field
                 const_cast<word&>(fieldDict.type()) =

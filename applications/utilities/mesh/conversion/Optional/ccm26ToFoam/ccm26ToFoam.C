@@ -1103,7 +1103,7 @@ int main(int argc, char *argv[])
     }
 
 
-    Info<< "Writing mesh to " << mesh.objectRegistry::localObjectPath()
+    Info<< "Writing mesh to " << mesh.objectRegistry::relativeObjectPath()
         << "..." << nl << endl;
 
 
@@ -1148,7 +1148,7 @@ int main(int argc, char *argv[])
     }
 
     Info<< "Writing cellIds as volScalarField to "
-        << cellIdField.localObjectPath() << "..." << nl << endl;
+        << cellIdField.relativeObjectPath() << "..." << nl << endl;
     mesh.write();
 
     Info<< "End\n" << endl;

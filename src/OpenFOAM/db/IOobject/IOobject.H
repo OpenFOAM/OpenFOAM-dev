@@ -384,61 +384,53 @@ public:
             //  as <model>:<name>
             inline word modelName(const char* name) const;
 
-            //- Return true if object is global, i.e. same for all processors
-            //  Defaults to false, must be overridden by global IO classes
-            virtual bool global() const;
-
-            //- Return true if object is global, i.e. same for all processors
-            //  and written to the global case directory,
-            //  i.e. not the processor time directory
-            //  Defaults to global()
-            virtual bool globalFile() const;
-
             const fileName& rootPath() const;
 
-            const fileName& caseName() const;
+            const fileName& caseName(const bool global) const;
 
             //- Return the instance directory, constant, system, <time> etc.
-            //  If the instance is a time directory it is updated to the
-            //  current time before return
+            //  Allows modification of the instance
             fileName& instance() const;
+
+            //- If the instance is a time directory update to the current time
+            void updateInstance() const;
 
             const fileName& local() const
             {
                 return local_;
             }
 
-            //- Return complete path
-            fileName path() const;
+            //- Return complete path including the processor sub-directory
+            //  for a parallel run if global is set false
+            fileName path(const bool global) const;
 
-            //- Return complete path with alternative instance and local
-            fileName path
-            (
-                const word& instance,
-                const fileName& local = ""
-            ) const;
-
-            //- Return the path relative to the case
-            fileName localPath() const;
-
-            //- Return complete path + object name
-            fileName objectPath() const
+            //- Return complete path + object name including the processor
+            //  sub-directory for a parallel run if global is set false
+            fileName objectPath(const bool global) const
             {
-                return path()/name();
+                return path(global)/name();
             }
 
-            //- Return complete localPath + object name
-            fileName localObjectPath() const
+            //- Return complete path + object name including the processor
+            //  sub-directory for a parallel run if globalFile is false for Type
+            template<class Type>
+            inline fileName objectPath() const;
+
+            //- Return the path relative to the case directory
+            fileName relativePath() const;
+
+            //- Return complete relativePath + object name
+            fileName relativeObjectPath() const
             {
-                return localPath()/name();
+                return relativePath()/name();
             }
 
             //- Return complete path + object name if the file exists
             //  in the case directory otherwise null.
             //
-            //  If isGlobal and parallel searches up into the global case
+            //  If global and parallel searches up into the global case
             //  directory.
-            fileName filePath(const word& typeName, const bool isGlobal) const;
+            fileName filePath(const word& typeName, const bool global) const;
 
 
         // Reading
@@ -454,6 +446,7 @@ public:
             //- Helper: warn that type does not support re-reading
             template<class Type>
             void warnNoRereading() const;
+
 
         // Writing
 
@@ -510,24 +503,30 @@ template<>
 Ostream& operator<<(Ostream& os, const InfoProxy<IOobject>& ip);
 
 //- Template function for obtaining global status
-template<class T>
+template<class Type>
 inline bool typeGlobal()
 {
     return false;
 }
 
 //- Template function for obtaining global write status
-template<class T>
+template<class Type>
 inline bool typeGlobalFile()
 {
-    return typeGlobal<T>();
+    return typeGlobal<Type>();
 }
 
 //- Template function for obtaining filePath
-template<class T>
+template<class Type>
 inline fileName typeFilePath(const IOobject& io)
 {
-    return io.filePath(T::typeName, typeGlobalFile<T>());
+    return io.filePath(Type::typeName, typeGlobalFile<Type>());
+}
+
+template<class Type>
+inline fileName IOobject::objectPath() const
+{
+    return objectPath(typeGlobalFile<Type>());
 }
 
 inline IOobject unregister(const IOobject& io)

@@ -33,7 +33,8 @@
         }
         else
         {
-            Info<< "skip ... missing entry " << io.objectPath() << endl;
+            Info<< "skip ... missing entry "
+                << io.objectPath<IOdictionary>() << endl;
             continue;
         }
     }

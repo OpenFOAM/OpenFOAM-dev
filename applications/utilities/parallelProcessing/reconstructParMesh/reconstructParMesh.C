@@ -187,7 +187,7 @@ void writeCellDistribution
     cellDecomposition.write();
 
     Info<< nl << "Wrote decomposition to "
-        << cellDecomposition.localObjectPath()
+        << cellDecomposition.relativeObjectPath()
         << " for use in manual decomposition." << endl;
 
 

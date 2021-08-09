@@ -195,26 +195,30 @@ int main(int argc, char *argv[])
     {
         if (dictIO.typeHeaderOk<IOdictionary>(true))
         {
-            Info<< "Refining according to " << dictIO.path() << nl << endl;
+            Info<< "Refining according to "
+                << dictIO.path(typeGlobalFile<IOdictionary>()) << nl << endl;
             refineDict = IOdictionary(dictIO);
         }
         else
         {
             FatalErrorInFunction
                 << "Cannot open specified refinement dictionary "
-                << dictIO.path() << exit(FatalError);
+                << dictIO.path(typeGlobalFile<IOdictionary>())
+                << exit(FatalError);
         }
     }
     else if (!refineAllCells)
     {
         if (dictIO.typeHeaderOk<IOdictionary>(true))
         {
-            Info<< "Refining according to " << dictIO.path() << nl << endl;
+            Info<< "Refining according to "
+                << dictIO.path(typeGlobalFile<IOdictionary>()) << nl << endl;
             refineDict = IOdictionary(dictIO);
         }
         else
         {
-            Info<< "Refinement dictionary " << dictIO.path() << " not found"
+            Info<< "Refinement dictionary "
+                << dictIO.path(typeGlobalFile<IOdictionary>()) << " not found"
                 << nl << endl;
         }
     }
@@ -386,7 +390,7 @@ int main(int argc, char *argv[])
     }
 
     Info<< "Writing map from new to old cell to "
-        << newToOld.localObjectPath() << nl << endl;
+        << newToOld.relativeObjectPath() << nl << endl;
 
     newToOld.write();
 

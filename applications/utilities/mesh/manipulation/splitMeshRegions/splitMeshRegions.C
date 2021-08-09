@@ -586,10 +586,9 @@ autoPtr<mapPolyMesh> createRegionMesh
             false
         );
 
-        Info<< "Testing:" << io.objectPath() << endl;
+        Info<< "Testing:" << io.objectPath<IOdictionary>() << endl;
 
         if (!io.typeHeaderOk<IOdictionary>(true))
-        // if (!exists(io.objectPath()))
         {
             Info<< "Writing dummy " << regionName/io.name() << endl;
             dictionary dummyDict;
@@ -1393,7 +1392,7 @@ void writeCellToRegion(const fvMesh& mesh, const labelList& cellRegion)
         cellToRegion.write();
 
         Info<< "Writing region per cell file (for manual decomposition) to "
-            << cellToRegion.localObjectPath() << nl << endl;
+            << cellToRegion.relativeObjectPath() << nl << endl;
     }
     // Write for postprocessing
     {
@@ -1419,7 +1418,7 @@ void writeCellToRegion(const fvMesh& mesh, const labelList& cellRegion)
         cellToRegion.write();
 
         Info<< "Writing region per cell as volScalarField to "
-            << cellToRegion.localObjectPath() << nl << endl;
+            << cellToRegion.relativeObjectPath() << nl << endl;
     }
 }
 

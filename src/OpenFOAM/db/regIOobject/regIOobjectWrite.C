@@ -50,14 +50,8 @@ bool Foam::regIOobject::writeObject
         return false;
     }
 
-    if (instance().empty())
-    {
-        SeriousErrorInFunction
-            << "instance undefined for object " << name()
-            << endl;
-
-        return false;
-    }
+    // If the instance is a time directory update to the current time
+    updateInstance();
 
     // Write global objects on master only
     // Everyone check or just master

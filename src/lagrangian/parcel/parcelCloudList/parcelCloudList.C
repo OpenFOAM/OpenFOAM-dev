@@ -80,8 +80,9 @@ void Foam::parcelCloudList::initialise
         }
         else
         {
-            Info<< "Clouds not active: Neither " << cloudsIO.localObjectPath()
-                << " nor " << cloudIO.localObjectPath() << " found" << endl;
+            Info<< "Clouds not active: Neither "
+                << cloudsIO.relativeObjectPath()
+                << " nor " << cloudIO.relativeObjectPath() << " found" << endl;
         }
     }
 }

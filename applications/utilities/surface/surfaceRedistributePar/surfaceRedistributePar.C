@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
     fileName localPath(actualPath);
     localPath.replace(runTime.rootPath() + '/', "");
 
-    if (actualPath == io.objectPath())
+    if (actualPath == io.objectPath(false))
     {
         Info<< "Loading local (decomposed) surface " << localPath << nl <<endl;
     }

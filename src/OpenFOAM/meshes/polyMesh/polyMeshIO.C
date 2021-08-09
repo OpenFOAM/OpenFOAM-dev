@@ -75,7 +75,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         InfoInFunction << "Updating mesh based on saved data." << endl;
     }
 
-    // Find the point and cell instance
+    // Find the points and faces instance
     fileName pointsInst(time().findInstance(meshDir(), "points"));
     fileName facesInst(time().findInstance(meshDir(), "faces"));
     // fileName boundaryInst(time().findInstance(meshDir(), "boundary"));

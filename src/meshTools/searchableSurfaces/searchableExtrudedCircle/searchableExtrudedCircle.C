@@ -68,7 +68,7 @@ Foam::searchableExtrudedCircle::searchableExtrudedCircle
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
                 false
-            ).objectPath()
+            ).objectPath(global())
         )
     ),
     radius_(dict.lookup<scalar>("radius"))

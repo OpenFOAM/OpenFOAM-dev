@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1478,7 +1478,7 @@ int main(int argc, char *argv[])
     // Set the precision of the points data to 10
     IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
 
-    Info<< nl << "Writing mesh to " << mesh.localObjectPath() << endl;
+    Info<< nl << "Writing mesh to " << mesh.relativeObjectPath() << endl;
     mesh.write();
 
 

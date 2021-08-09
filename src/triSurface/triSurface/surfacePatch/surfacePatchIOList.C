@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,13 +29,12 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(surfacePatchIOList, 0);
+    defineTypeNameAndDebug(surfacePatchIOList, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from IOObject
 Foam::surfacePatchIOList::surfacePatchIOList
 (
     const IOobject& io
@@ -98,7 +97,7 @@ Foam::surfacePatchIOList::surfacePatchIOList
                     << "Patches are not ordered. Start of patch " << patchi
                     << " does not correspond to sum of preceding patches."
                     << endl
-                    << "while reading " << io.objectPath()
+                    << "while reading " << objectPath()
                     << exit(FatalError);
             }
 

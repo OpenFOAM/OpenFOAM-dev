@@ -95,7 +95,8 @@ void Foam::refinementFeatures::read
                 FatalIOErrorInFunction
                 (
                     dict
-                )   << "Could not open " << featObj.objectPath()
+                )   << "Could not open "
+                    << featObj.objectPath<featureEdgeMesh>()
                     << exit(FatalIOError);
             }
 

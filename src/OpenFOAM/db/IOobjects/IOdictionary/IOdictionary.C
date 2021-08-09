@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::IOdictionary::IOdictionary
 :
     regIOobject(io)
 {
-    dictionary::name() = IOobject::objectPath();
+    dictionary::name() = regIOobject::objectPath();
 
     // Reading performed by derived type
 }
@@ -61,7 +61,7 @@ Foam::IOdictionary::IOdictionary(const IOobject& io)
 :
     regIOobject(io)
 {
-    dictionary::name() = IOobject::objectPath();
+    dictionary::name() = regIOobject::objectPath();
 
     readHeaderOk(IOstream::ASCII, typeName);
 
@@ -78,7 +78,7 @@ Foam::IOdictionary::IOdictionary
 :
     regIOobject(io)
 {
-    dictionary::name() = IOobject::objectPath();
+    dictionary::name() = regIOobject::objectPath();
 
     if (!readHeaderOk(IOstream::ASCII, typeName))
     {
@@ -98,7 +98,7 @@ Foam::IOdictionary::IOdictionary
 :
     regIOobject(io)
 {
-    dictionary::name() = IOobject::objectPath();
+    dictionary::name() = regIOobject::objectPath();
 
     // Note that we do construct the dictionary null and read in
     // afterwards

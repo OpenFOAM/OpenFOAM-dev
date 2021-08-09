@@ -95,7 +95,7 @@ void createDummyFvMeshFiles(const polyMesh& mesh, const word& regionName)
             false
         );
 
-        Info<< "Testing:" << io.objectPath() << endl;
+        Info<< "Testing:" << io.objectPath<IOdictionary>() << endl;
 
         if (!io.typeHeaderOk<IOdictionary>(false))
         {
@@ -1028,7 +1028,7 @@ int main(int argc, char *argv[])
     }
 
     mesh.setInstance(runTimeExtruded.constant());
-    Info<< "Writing mesh to " << mesh.localObjectPath() << nl << endl;
+    Info<< "Writing mesh to " << mesh.relativeObjectPath() << nl << endl;
 
     if (!mesh.write())
     {

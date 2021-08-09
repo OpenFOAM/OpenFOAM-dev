@@ -66,7 +66,7 @@ void Foam::fv::heatTransferModel::readCoeffs()
         FatalIOErrorInFunction(coeffs())
             << "Area per unit volume (AoV) not found. A uniform AoV "
             << "value should be specified, or a non-uniform field should "
-            << "exist at " << AoVIO.objectPath()
+            << "exist at " << AoVIO.objectPath<volScalarField>()
             << exit(FatalIOError);
     }
 }

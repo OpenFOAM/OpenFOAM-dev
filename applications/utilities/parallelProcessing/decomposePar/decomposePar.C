@@ -432,13 +432,13 @@ int main(int argc, char *argv[])
                 IOobject::NO_WRITE,
                 false
             ),
-            dictIO.objectPath()
+            dictIO.objectPath<domainDecomposition>()
         );
 
         // Decompose the mesh
         if (!decomposeFieldsOnly)
         {
-            mesh.decomposeMesh(dictIO.objectPath());
+            mesh.decomposeMesh(dictIO.objectPath<domainDecomposition>());
 
             mesh.writeDecomposition(decomposeSets);
 
@@ -464,7 +464,7 @@ int main(int argc, char *argv[])
                 cellDecomposition.write();
 
                 Info<< nl << "Wrote decomposition to "
-                    << cellDecomposition.localObjectPath()
+                    << cellDecomposition.relativeObjectPath()
                     << " for use in manual decomposition." << endl;
 
                 // Write as volScalarField for postprocessing.

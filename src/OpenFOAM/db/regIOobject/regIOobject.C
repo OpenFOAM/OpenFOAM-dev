@@ -138,7 +138,8 @@ Foam::regIOobject::~regIOobject()
         if (this == &db())
         {
             Pout<< "Destroying objectRegistry " << name()
-                << " in directory " << rootPath()/caseName()/instance()
+                << " in directory "
+                << rootPath()/caseName()/instance()
                 << endl;
         }
         else
@@ -160,6 +161,30 @@ Foam::regIOobject::~regIOobject()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::regIOobject::global() const
+{
+    return false;
+}
+
+
+bool Foam::regIOobject::globalFile() const
+{
+    return global();
+}
+
+
+const Foam::fileName& Foam::regIOobject::caseName() const
+{
+    return IOobject::caseName(globalFile());
+}
+
+
+Foam::fileName Foam::regIOobject::path() const
+{
+    return IOobject::path(globalFile());
+}
+
 
 bool Foam::regIOobject::checkIn()
 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1390,8 +1390,8 @@ Foam::distributedTriSurfaceMesh::distributedTriSurfaceMesh(const IOobject& io)
 
     if (debug)
     {
-        InfoInFunction << "Read distributedTriSurface from " << io.objectPath()
-            << ':' << endl;
+        InfoInFunction << "Read distributedTriSurface from "
+            << searchableSurface::objectPath() << ':' << endl;
         writeStats(Info);
 
         labelList nTris(Pstream::nProcs());
@@ -1474,8 +1474,8 @@ Foam::distributedTriSurfaceMesh::distributedTriSurfaceMesh
 
     if (debug)
     {
-        InfoInFunction << "Read distributedTriSurface from " << io.objectPath()
-            << " and dictionary:" << endl;
+        InfoInFunction << "Read distributedTriSurface from "
+            << searchableSurface::objectPath() << " and dictionary:" << endl;
         writeStats(Info);
 
         labelList nTris(Pstream::nProcs());

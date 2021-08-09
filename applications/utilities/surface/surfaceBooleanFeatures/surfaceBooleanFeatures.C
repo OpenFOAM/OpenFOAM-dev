@@ -793,7 +793,7 @@ int main(int argc, char *argv[])
         );
 
         Info<< nl << "Writing featureEdgeMesh to "
-            << bfeMesh.localObjectPath() << endl;
+            << bfeMesh.relativeObjectPath() << endl;
 
         bfeMesh.regIOobject::write();
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,11 @@ class uncollatedFileOperation
     // Private Member Functions
 
         //- Search for an object.
-        //    checkGlobal : also check undecomposed case
+        //    globalFile : also check undecomposed case
         //    isFile      : true:check for file  false:check for directory
         fileName filePathInfo
         (
-            const bool checkGlobal,
+            const bool globalFile,
             const bool isFile,
             const IOobject&
         ) const;
@@ -200,19 +200,19 @@ public:
 
         // (reg)IOobject functionality
 
-            //- Search for an object. checkGlobal : also check undecomposed case
+            //- Search for an object. globalFile : also check undecomposed case
             virtual fileName filePath
             (
-                const bool checkGlobal,
+                const bool globalFile,
                 const IOobject&,
                 const word& typeName
             ) const;
 
-            //- Search for a directory. checkGlobal : also check undecomposed
+            //- Search for a directory. globalFile : also check undecomposed
             //  case
             virtual fileName dirPath
             (
-                const bool checkGlobal,
+                const bool globalFile,
                 const IOobject&
             ) const;
 

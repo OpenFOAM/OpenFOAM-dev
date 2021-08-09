@@ -379,7 +379,7 @@ bool Foam::fileOperation::exists(IOobject& io) const
     {
         // Re-test with searched for objectPath. This is for backwards
         // compatibility
-        fileName originalPath(filePath(io.objectPath()));
+        fileName originalPath(filePath(io.objectPath(false)));
         if (originalPath != objPath)
         {
             // Test for either directory or a (valid) file & IOobject
@@ -445,7 +445,7 @@ Foam::fileName Foam::fileOperation::objectPath
     const word& typeName
 ) const
 {
-    return io.objectPath();
+    return io.objectPath(false);
 }
 
 
@@ -890,7 +890,7 @@ Foam::fileNameList Foam::fileOperation::readObjects
             << " instance:" << instance << endl;
     }
 
-    fileName path(db.path(instance, db.dbDir()/local));
+    fileName path(db.path(instance, local));
 
     newInstance = word::null;
     fileNameList objectNames;
@@ -911,6 +911,7 @@ Foam::fileNameList Foam::fileOperation::readObjects
             objectNames = Foam::readDir(procsPath, fileType::file);
         }
     }
+
     return objectNames;
 }
 

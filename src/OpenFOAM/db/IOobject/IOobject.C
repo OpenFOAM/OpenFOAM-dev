@@ -333,27 +333,15 @@ Foam::word Foam::IOobject::member() const
 }
 
 
-bool Foam::IOobject::global() const
-{
-    return false;
-}
-
-
-bool Foam::IOobject::globalFile() const
-{
-    return global();
-}
-
-
 const Foam::fileName& Foam::IOobject::rootPath() const
 {
     return time().rootPath();
 }
 
 
-const Foam::fileName& Foam::IOobject::caseName() const
+const Foam::fileName& Foam::IOobject::caseName(const bool global) const
 {
-    if (globalFile())
+    if (global)
     {
         return time().globalCaseName();
     }
@@ -366,9 +354,16 @@ const Foam::fileName& Foam::IOobject::caseName() const
 
 Foam::fileName& Foam::IOobject::instance() const
 {
+    return instance_;
+}
+
+
+void Foam::IOobject::updateInstance() const
+{
     if
     (
-        instance_ != time().system()
+        !instance_.isAbsolute()
+     && instance_ != time().system()
      && instance_ != time().constant()
      && instance_ != time().timeName()
     )
@@ -379,36 +374,23 @@ Foam::fileName& Foam::IOobject::instance() const
             instance_ = time().timeName();
         }
     }
-
-    return instance_;
 }
 
 
-Foam::fileName Foam::IOobject::path() const
+Foam::fileName Foam::IOobject::path(const bool global) const
 {
-    if (instance().isAbsolute())
+    if (instance_.isAbsolute())
     {
-        return instance();
+        return instance_;
     }
     else
     {
-        return rootPath()/caseName()/instance()/db_.dbDir()/local();
+        return rootPath()/caseName(global)/instance()/db_.dbDir()/local();
     }
 }
 
 
-Foam::fileName Foam::IOobject::path
-(
-    const word& instance,
-    const fileName& local
-) const
-{
-    // Note: can only be called with relative instance since is word type
-    return rootPath()/caseName()/instance/db_.dbDir()/local;
-}
-
-
-Foam::fileName Foam::IOobject::localPath() const
+Foam::fileName Foam::IOobject::relativePath() const
 {
     if (instance().isAbsolute())
     {
@@ -424,10 +406,10 @@ Foam::fileName Foam::IOobject::localPath() const
 Foam::fileName Foam::IOobject::filePath
 (
     const word& typeName,
-    const bool isGlobal
+    const bool global
 ) const
 {
-    return fileHandler().filePath(isGlobal, *this, typeName);
+    return fileHandler().filePath(global, *this, typeName);
 }
 
 

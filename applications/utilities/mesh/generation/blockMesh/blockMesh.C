@@ -154,13 +154,13 @@ int main(int argc, char *argv[])
     if (!meshDictIO.typeHeaderOk<IOdictionary>(true))
     {
         FatalErrorInFunction
-            << "Cannot find file " << meshDictIO.localObjectPath()
+            << "Cannot find file " << meshDictIO.relativeObjectPath()
             << nl
             << exit(FatalError);
     }
 
     Info<< "Creating block mesh from\n    "
-        << meshDictIO.localObjectPath() << endl;
+        << meshDictIO.relativeObjectPath() << endl;
 
     IOdictionary meshDict(meshDictIO);
     blockMesh blocks(meshDict, regionName);

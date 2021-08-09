@@ -77,7 +77,7 @@ void Foam::fv::heatTransferModels::constant::readCoeffs()
         FatalIOErrorInFunction(coeffs())
             << "Heat transfer coefficient (htc) not found. A uniform htc "
             << "value should be specified, or a non-uniform field should "
-            << "exist at " << htcIO.objectPath()
+            << "exist at " << htcIO.objectPath<volScalarField>()
             << exit(FatalIOError);
     }
 }

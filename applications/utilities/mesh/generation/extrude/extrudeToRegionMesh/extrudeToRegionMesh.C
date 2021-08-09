@@ -353,7 +353,7 @@ void createDummyFvMeshFiles(const polyMesh& mesh, const word& regionName)
             false
         );
 
-        Info<< "Testing:" << io.objectPath() << endl;
+        Info<< "Testing:" << io.objectPath<IOdictionary>() << endl;
 
         if (!io.typeHeaderOk<IOdictionary>(true))
         {

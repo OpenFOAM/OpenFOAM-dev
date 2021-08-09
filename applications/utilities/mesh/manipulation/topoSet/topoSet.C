@@ -116,7 +116,7 @@ void removeSet
     if (objects.found(setName))
     {
         // Remove file
-        fileName object = objects[setName]->objectPath();
+        const fileName object = objects[setName]->objectPath(false);
         Info<< "Removing file " << object << endl;
         rm(object);
     }

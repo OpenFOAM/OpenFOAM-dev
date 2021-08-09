@@ -389,7 +389,7 @@ namespace Foam
         feMesh.writeStats(Info);
 
         Info<< nl << "Writing extendedFeatureEdgeMesh to "
-            << feMesh.localObjectPath() << endl;
+            << feMesh.relativeObjectPath() << endl;
 
         mkDir(feMesh.path());
 
@@ -422,7 +422,7 @@ namespace Foam
         );
 
         Info<< nl << "Writing featureEdgeMesh to "
-            << bfeMesh.localObjectPath() << endl;
+            << bfeMesh.relativeObjectPath() << endl;
 
         bfeMesh.regIOobject::write();
 

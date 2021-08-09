@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -316,7 +316,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //        }
 //
 //        Info<< "Writing map from tetDualMesh points to Voronoi mesh to "
-//            << pointDualAddressing.localObjectPath() << endl;
+//            << pointDualAddressing.relativeObjectPath() << endl;
 //        pointDualAddressing.write();
 //
 //
@@ -370,7 +370,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //            }
 //
 //            Info<< "Writing tetDualMesh points mapped onto Voronoi mesh to "
-//                << dualPoints.localObjectPath() << endl
+//                << dualPoints.relativeObjectPath() << endl
 //                << "Replace the polyMesh/points with these." << endl;
 //            dualPoints.write();
 //        }

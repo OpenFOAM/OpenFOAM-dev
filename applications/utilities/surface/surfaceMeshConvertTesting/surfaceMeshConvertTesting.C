@@ -338,7 +338,7 @@ int main(int argc, char *argv[])
             );
 
             Info<< "writing surfMesh as well: "
-                << surfOut.localObjectPath() << endl;
+                << surfOut.relativeObjectPath() << endl;
             surfOut.write();
 
             surfLabelField zoneIds
@@ -368,7 +368,7 @@ int main(int argc, char *argv[])
 
 
             Info<< "writing surfMesh again well: "
-                << surfOut.localObjectPath()
+                << surfOut.relativeObjectPath()
                 << endl;
             surfOut.write();
 
@@ -388,7 +388,7 @@ int main(int argc, char *argv[])
             }
 
             Info<< "write zoneIds (for testing only): "
-                << zoneIds.localObjectPath() << endl;
+                << zoneIds.relativeObjectPath() << endl;
             zoneIds.write();
 
             surfPointLabelField pointIds
@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
             }
 
             Info<< "write pointIds (for testing only): "
-                << pointIds.localObjectPath() << endl;
+                << pointIds.relativeObjectPath() << endl;
             pointIds.write();
 
             Info<<"surfMesh with these names: " << surfOut.names() << endl;

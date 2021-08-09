@@ -28,7 +28,7 @@ if (!mesh.foundObject<IOdictionary>("radiationProperties"))
                 << "    type    radiation;" << nl
                 << "    libs    (\"libradiationModels.so\");" << nl
                 << "}" << nl << nl
-                << "to " << radiationProperties.localPath()/"fvModels"
+                << "to " << radiationProperties.relativePath()/"fvModels"
                 << exit(FatalError);
         }
     }

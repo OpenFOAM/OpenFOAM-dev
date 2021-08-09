@@ -225,7 +225,7 @@ Foam::surfMesh::surfMesh
 {
     if (debug)
     {
-        Info<<"IOobject: " << io.path() << nl
+        Info<<"IOobject: " << io.path(false) << nl
             <<" name: " << io.name()
             <<" instance: " << io.instance()
             <<" local: " << io.local()
@@ -394,7 +394,7 @@ void Foam::surfMesh::addZones
 // Remove all files and some subdirs (eg, sets)
 void Foam::surfMesh::removeFiles(const fileName& instanceDir) const
 {
-    fileName meshFilesPath = db().path()/instanceDir/meshSubDir;
+    fileName meshFilesPath = db().path(instanceDir, meshSubDir);
 
     rm(meshFilesPath/"points");
     rm(meshFilesPath/"faces");

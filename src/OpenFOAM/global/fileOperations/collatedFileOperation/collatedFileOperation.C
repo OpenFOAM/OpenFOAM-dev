@@ -423,7 +423,7 @@ Foam::fileName Foam::fileOperations::collatedFileOperation::objectPath
     // Replacement for objectPath
     if (io.time().processorCase())
     {
-        return masterUncollatedFileOperation::localObjectPath
+        return masterUncollatedFileOperation::relativeObjectPath
         (
             io,
             fileOperation::PROCOBJECT,
@@ -433,7 +433,7 @@ Foam::fileName Foam::fileOperations::collatedFileOperation::objectPath
     }
     else
     {
-        return masterUncollatedFileOperation::localObjectPath
+        return masterUncollatedFileOperation::relativeObjectPath
         (
             io,
             fileOperation::OBJECT,
@@ -693,7 +693,7 @@ Foam::word Foam::fileOperations::collatedFileOperation::processorsDir
     const IOobject& io
 ) const
 {
-    return processorsDir(io.objectPath());
+    return processorsDir(io.objectPath(false));
 }
 
 
