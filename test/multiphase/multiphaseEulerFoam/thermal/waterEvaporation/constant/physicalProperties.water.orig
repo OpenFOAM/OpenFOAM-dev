@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      thermophysicalProperties.air1;
+    object      physicalProperties.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -19,8 +19,8 @@ thermoType
     type            heRhoThermo;
     mixture         pureMixture;
     transport       const;
-    thermo          hConst;
-    equationOfState perfectGas;
+    thermo          eConst;
+    equationOfState rhoConst;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -29,17 +29,25 @@ mixture
 {
     specie
     {
-        molWeight   28.9;
+        molWeight   18.0153;
+    }
+    equationOfState
+    {
+        rho         1027;
     }
     thermodynamics
     {
-        Cp          1007;
-        Hf          0;
+        Hf          -1.58643e+07;
+        Cv          4195;
+        Cp          4195;
+        Tref        372.76;
+        Hsref       312508;
+        Esref       312410;
     }
     transport
     {
-        mu          1.84e-05;
-        Pr          0.7;
+        mu          2.8291e-4;
+        Pr          2.289;
     }
 }
 

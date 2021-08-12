@@ -20,7 +20,7 @@ setInertY()
     esac
 
     runApplication -a foamDictionary -entry defaultSpecie $arg \
-        constant/thermophysicalProperties.$phase
+        constant/physicalProperties.$phase
 }
 
 setThermoAndEnergy()
@@ -35,7 +35,7 @@ setThermoAndEnergy()
     esac
 
     runApplication -a foamDictionary -entry thermoType/thermo -set $thermo \
-        constant/thermophysicalProperties.$phase
+        constant/physicalProperties.$phase
 
     case $he in
         e ) energy="sensibleInternalEnergy";;
@@ -44,7 +44,7 @@ setThermoAndEnergy()
     esac
 
     runApplication -a foamDictionary -entry thermoType/energy -set $energy \
-        constant/thermophysicalProperties.$phase
+        constant/physicalProperties.$phase
 }
 
 runApplication blockMesh

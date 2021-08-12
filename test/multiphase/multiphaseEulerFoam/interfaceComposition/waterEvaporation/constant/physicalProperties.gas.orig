@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      thermophysicalProperties.gas;
+    object      physicalProperties.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -25,35 +25,13 @@ thermoType
     energy          sensibleInternalEnergy;
 }
 
+defaultSpecie air;
+
 species
 (
     air
     H2O
-    C3H8O
 );
-
-defaultSpecie air;
-
-air
-{
-    specie
-    {
-        molWeight       28.9596;
-    }
-    thermodynamics
-    {
-        Tlow            200;
-        Thigh           3500;
-        Tcommon         1000;
-        highCpCoeffs    ( 3.57304 -7.24383e-04 1.67022e-06 -1.26501e-10 -4.20580e-13 -1047.41 3.12431 );
-        lowCpCoeffs     ( 3.09589 1.22835e-03 -4.14267e-07 6.56910e-11 -3.87021e-15 -983.191 5.34161 );
-    }
-    transport
-    {
-        As              1.67212e-06;
-        Ts              170.672;
-    }
-}
 
 H2O
 {
@@ -76,19 +54,19 @@ H2O
     }
 }
 
-C3H8O
+air
 {
     specie
     {
-        molWeight       60.09661;
+        molWeight       28.9596;
     }
     thermodynamics
     {
         Tlow            200;
-        Thigh           6000;
+        Thigh           3500;
         Tcommon         1000;
-        highCpCoeffs    ( 8.52377 0.0210371 -7.48398e-06 1.19959e-09 -7.14873e-14 -35070.2 -17.7857 );
-        lowCpCoeffs     ( 5.41878 -0.000575566 8.51215e-05 -1.1106e-07 4.43007e-11 -32836.8 5.29974 );
+        highCpCoeffs    ( 3.57304 -7.24383e-04 1.67022e-06 -1.26501e-10 -4.20580e-13 -1047.41 3.12431 );
+        lowCpCoeffs     ( 3.09589 1.22835e-03 -4.14267e-07 6.56910e-11 -3.87021e-15 -983.191 5.34161 );
     }
     transport
     {
@@ -96,5 +74,6 @@ C3H8O
         Ts              170.672;
     }
 }
+
 
 // ************************************************************************* //

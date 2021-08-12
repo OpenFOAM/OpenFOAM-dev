@@ -7,23 +7,22 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     2.0;
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      thermophysicalProperties;
+    object      physicalProperties.air3;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 thermoType
 {
-    type            hePsiThermo;
+    type            heRhoThermo;
     mixture         pureMixture;
     transport       const;
     thermo          hConst;
     equationOfState perfectGas;
     specie          specie;
-    energy          sensibleEnthalpy;
+    energy          sensibleInternalEnergy;
 }
 
 mixture
@@ -43,6 +42,5 @@ mixture
         Pr          0.7;
     }
 }
-
 
 // ************************************************************************* //

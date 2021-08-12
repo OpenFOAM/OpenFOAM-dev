@@ -13,7 +13,7 @@ setThermoAndEnergy()
     phase=${1#*.}
 
     runApplication -a foamDictionary -entry thermoType/thermo -set ${he}Const \
-        constant/thermophysicalProperties.$phase
+        constant/physicalProperties.$phase
 
     case $he in
         e ) energy="sensibleInternalEnergy";;
@@ -22,7 +22,7 @@ setThermoAndEnergy()
     esac
 
     runApplication -a foamDictionary -entry thermoType/energy -set $energy \
-        constant/thermophysicalProperties.$phase
+        constant/physicalProperties.$phase
 }
 
 runApplication blockMesh

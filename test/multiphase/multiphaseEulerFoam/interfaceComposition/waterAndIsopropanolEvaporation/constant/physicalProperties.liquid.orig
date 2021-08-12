@@ -10,36 +10,70 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      thermophysicalProperties.air1;
+    object      physicalProperties.liquid;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 thermoType
 {
     type            heRhoThermo;
-    mixture         pureMixture;
+    mixture         multiComponentMixture;
     transport       const;
-    thermo          hConst;
-    equationOfState perfectGas;
+    thermo          eConst;
+    equationOfState rhoConst;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
 
-mixture
+species
+(
+    H2O
+    C3H8O
+);
+
+defaultSpecie H2O;
+
+H2O
 {
     specie
     {
-        molWeight   28.9;
+        molWeight       18.0153;
+    }
+    equationOfState
+    {
+        rho             1027;
     }
     thermodynamics
     {
-        Cp          1007;
-        Hf          0;
+        Hf              -1.5879e+07;
+        Cv              4195;
     }
     transport
     {
-        mu          1.84e-05;
-        Pr          0.7;
+        mu              3.645e-4;
+        Pr              2.289;
+    }
+}
+
+C3H8O
+{
+    specie
+    {
+        molWeight       60.09661;
+    }
+    equationOfState
+    {
+        rho             786;
+    }
+    thermodynamics
+    {
+        Hf              -5.303e+06;
+        Cv              2680;
+    }
+    transport
+    {
+        mu              3.645e-4;
+        Pr              2.289;
     }
 }
 

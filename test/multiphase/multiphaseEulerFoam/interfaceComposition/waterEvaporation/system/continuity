@@ -71,9 +71,9 @@ codeRead
     const volScalarField& alphaLiq =
         mesh().lookupObject<volScalarField>("alpha.liquid");
     const rhoThermo& thermoGas =
-        mesh().lookupObject<rhoThermo>("thermophysicalProperties.gas");
+        mesh().lookupObject<rhoThermo>("physicalProperties.gas");
     const rhoThermo& thermoLiq =
-        mesh().lookupObject<rhoThermo>("thermophysicalProperties.liquid");
+        mesh().lookupObject<rhoThermo>("physicalProperties.liquid");
 
     *mass0Gas = alphaGas*thermoGas.rho();
     *mass0Liq = alphaLiq*thermoLiq.rho();
@@ -125,9 +125,9 @@ codeExecute
     const volScalarField& alphaLiq =
         mesh().lookupObject<volScalarField>("alpha.liquid");
     const rhoThermo& thermoGas =
-        mesh().lookupObject<rhoThermo>("thermophysicalProperties.gas");
+        mesh().lookupObject<rhoThermo>("physicalProperties.gas");
     const rhoThermo& thermoLiq =
-        mesh().lookupObject<rhoThermo>("thermophysicalProperties.liquid");
+        mesh().lookupObject<rhoThermo>("physicalProperties.liquid");
 
     dMassGas = alphaGas*thermoGas.rho() - mass0Gas;
     dMassLiq = alphaLiq*thermoLiq.rho() - mass0Liq;
