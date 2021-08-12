@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,9 @@ Foam::diameterModels::coalescenceModel::New
     const dictionary& dict
 )
 {
+    Info<< "Selecting coalescence model for "
+        << popBal.name() << ": " << type << endl;
+
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(type);
 

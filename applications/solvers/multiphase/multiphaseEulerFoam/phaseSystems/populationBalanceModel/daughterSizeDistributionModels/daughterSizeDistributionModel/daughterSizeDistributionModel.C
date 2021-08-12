@@ -52,6 +52,10 @@ Foam::diameterModels::daughterSizeDistributionModel::New
         dict.lookup("daughterSizeDistributionModel")
     );
 
+    Info<< "Selecting daughter size distribution model for "
+        << breakup.popBal().name() << ": "
+        << daughterSizeDistributionModelType << endl;
+
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(daughterSizeDistributionModelType);
 

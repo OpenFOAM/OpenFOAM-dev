@@ -48,6 +48,9 @@ Foam::diameterModels::nucleationModel::New
     const dictionary& dict
 )
 {
+    Info<< "Selecting nucleation model for "
+        << popBal.name() << ": " << type << endl;
+
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(type);
 

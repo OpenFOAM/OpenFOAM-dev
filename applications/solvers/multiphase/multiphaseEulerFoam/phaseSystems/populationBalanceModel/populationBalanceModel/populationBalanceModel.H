@@ -383,9 +383,13 @@ public:
 
             autoPtr<populationBalanceModel> operator()(Istream& is) const
             {
+                word name(is);
+
+                Info << "Setting up population balance: " << name << endl;
+
                 return autoPtr<populationBalanceModel>
                 (
-                    new populationBalanceModel(fluid_, word(is), pDmdt_)
+                    new populationBalanceModel(fluid_, name, pDmdt_)
                 );
             }
         };
