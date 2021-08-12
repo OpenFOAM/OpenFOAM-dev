@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,9 +59,6 @@ class reactionDriven
 
         //- Sphere-equivalent nucleation diameter
         const dimensionedScalar dNuc_;
-
-        //- Velocity group in which the nucleation occurs
-        const velocityGroup& velGroup_;
 
         //- Phase in which the reaction occurs
         const phaseModel& reactingPhase_;

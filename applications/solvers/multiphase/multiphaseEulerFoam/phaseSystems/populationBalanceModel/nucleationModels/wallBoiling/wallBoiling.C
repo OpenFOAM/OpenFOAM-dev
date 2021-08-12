@@ -57,21 +57,7 @@ wallBoiling
     const dictionary& dict
 )
 :
-    nucleationModel(popBal, dict),
-    velGroup_
-    (
-        refCast<const velocityGroup>
-        (
-            popBal.mesh().lookupObject<phaseModel>
-            (
-                IOobject::groupName
-                (
-                    "alpha",
-                    dict.lookup("velocityGroup")
-                )
-            ).dPtr()()
-        )
-    )
+    nucleationModel(popBal, dict)
 {}
 
 

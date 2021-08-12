@@ -63,20 +63,6 @@ reactionDriven
 :
     nucleationModel(popBal, dict),
     dNuc_("nucleationDiameter", dimLength, dict),
-    velGroup_
-    (
-        refCast<const velocityGroup>
-        (
-            popBal.mesh().lookupObject<phaseModel>
-            (
-                IOobject::groupName
-                (
-                    "alpha",
-                    dict.lookup("velocityGroup")
-                )
-            ).dPtr()()
-        )
-    ),
     reactingPhase_
     (
         popBal_.mesh().lookupObject<phaseModel>

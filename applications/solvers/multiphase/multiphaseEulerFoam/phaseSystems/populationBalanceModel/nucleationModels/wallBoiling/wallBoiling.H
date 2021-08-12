@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,12 +59,6 @@ class wallBoiling
 :
     public nucleationModel
 {
-    // Private Data
-
-        //- Velocity group in which the nucleation occurs
-        const velocityGroup& velGroup_;
-
-
 public:
 
     //- Runtime type information
