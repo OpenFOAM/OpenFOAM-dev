@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,9 +51,9 @@ Foam::particle::particle(const polyMesh& mesh, Istream& is, bool readFields)
     tetFacei_(-1),
     tetPti_(-1),
     facei_(-1),
-    stepFraction_(0.0),
-    behind_(0.0),
-    nBehind_(0),
+    stepFraction_(0),
+    stepFractionBehind_(0),
+    nTracksBehind_(0),
     origProc_(Pstream::myProcNo()),
     origId_(-1)
 {
@@ -63,8 +63,8 @@ Foam::particle::particle(const polyMesh& mesh, Istream& is, bool readFields)
 
         if (readFields)
         {
-            is  >> facei_ >> stepFraction_ >> behind_ >> nBehind_
-                >> origProc_ >> origId_;
+            is  >> facei_ >> stepFraction_ >> stepFractionBehind_
+                >> nTracksBehind_ >> origProc_ >> origId_;
         }
     }
     else
@@ -113,8 +113,8 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const particle& p)
             << token::SPACE << p.tetPti_
             << token::SPACE << p.facei_
             << token::SPACE << p.stepFraction_
-            << token::SPACE << p.behind_
-            << token::SPACE << p.nBehind_
+            << token::SPACE << p.stepFractionBehind_
+            << token::SPACE << p.nTracksBehind_
             << token::SPACE << p.origProc_
             << token::SPACE << p.origId_;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,9 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "tetIndices.H"
+#include "Time.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -69,15 +72,22 @@ inline Foam::triFace Foam::tetIndices::faceTriIs(const polyMesh& mesh) const
 
     if (faceBasePtI < 0)
     {
-        static label badFacei = -1;
+        static labelHashSet badFaces;
+        static label badTimeIndex = -1;
 
-        if (badFacei != face())
+        if (badTimeIndex != mesh.time().timeIndex())
+        {
+            badFaces.clear();
+            badTimeIndex = mesh.time().timeIndex();
+        }
+
+        if (!badFaces[face()])
         {
             WarningInFunction
                 << "No base point for face " << face() << ", " << f
                 << ", produces a valid tet decomposition." << endl;
 
-            badFacei = face();
+            badFaces.set(face());
         }
 
         faceBasePtI = 0;
