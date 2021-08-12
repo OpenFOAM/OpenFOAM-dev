@@ -51,6 +51,7 @@ $(coalescenceModels)/CoulaloglouTavlarides/CoulaloglouTavlarides.C
 $(coalescenceModels)/DahnekeInterpolation/DahnekeInterpolation.C
 $(coalescenceModels)/hydrodynamic/hydrodynamic.C
 $(coalescenceModels)/LehrMilliesMewesCoalescence/LehrMilliesMewesCoalescence.C
+$(coalescenceModels)/LiaoCoalescence/LiaoCoalescence.C
 $(coalescenceModels)/Luo/Luo.C
 $(coalescenceModels)/PrinceBlanch/PrinceBlanch.C
 $(coalescenceModels)/turbulentShear/turbulentShear.C
@@ -58,6 +59,8 @@ $(coalescenceModels)/turbulentShear/turbulentShear.C
 binaryBreakupModels = populationBalanceModel/binaryBreakupModels
 $(binaryBreakupModels)/binaryBreakupModel/binaryBreakupModel.C
 $(binaryBreakupModels)/LehrMilliesMewes/LehrMilliesMewes.C
+$(binaryBreakupModels)/Liao/LiaoBase.C
+$(binaryBreakupModels)/Liao/Liao.C
 $(binaryBreakupModels)/LuoSvendsen/LuoSvendsen.C
 $(binaryBreakupModels)/powerLawUniformBinary/powerLawUniformBinary.C
 
