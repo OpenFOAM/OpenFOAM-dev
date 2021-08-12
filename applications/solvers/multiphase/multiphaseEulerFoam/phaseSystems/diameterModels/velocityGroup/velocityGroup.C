@@ -211,40 +211,49 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::a() const
 
 void Foam::diameterModels::velocityGroup::correct()
 {
-    forAll(sizeGroups_, i)
-    {
-        sizeGroups_[i].correct();
-    }
+    const populationBalanceModel& popBal =
+        phase().mesh().lookupObject<populationBalanceModel>(popBalName_);
 
-    if
-    (
-        phase().mesh().solverDict(popBalName_).lookupOrDefault<Switch>
+    const pimpleControl& pimple =
+        phase().mesh().lookupObject<pimpleControl>("solutionControl");
+
+    if (!popBal.solveOnFinalIterOnly() || pimple.finalPimpleIter())
+    {
+        forAll(sizeGroups_, i)
+        {
+            sizeGroups_[i].correct();
+        }
+
+        if
         (
-            "scale",
-            true
+            phase().mesh().solverDict(popBalName_).lookupOrDefault<Switch>
+            (
+                "scale",
+                true
+            )
         )
-    )
-    {
-        scale();
+        {
+            scale();
+        }
+
+        f_ = fSum();
+
+        f_.correctBoundaryConditions();
+
+        Info<< phase().name() << " sizeGroups-sum volume fraction, min, max = "
+            << f_.weightedAverage(phase().mesh().V()).value()
+            << ' ' << min(f_).value()
+            << ' ' << max(f_).value()
+            << endl;
+
+        d_ = dsm();
+
+        Info<< this->phase().name() << " Sauter mean diameter, min, max = "
+            << d_.weightedAverage(d_.mesh().V()).value()
+            << ' ' << min(d_).value()
+            << ' ' << max(d_).value()
+            << endl;
     }
-
-    f_ = fSum();
-
-    f_.correctBoundaryConditions();
-
-    Info<< phase().name() << " sizeGroups-sum volume fraction, min, max = "
-        << f_.weightedAverage(phase().mesh().V()).value()
-        << ' ' << min(f_).value()
-        << ' ' << max(f_).value()
-        << endl;
-
-    d_ = dsm();
-
-    Info<< this->phase().name() << " Sauter mean diameter, min, max = "
-        << d_.weightedAverage(d_.mesh().V()).value()
-        << ' ' << min(d_).value()
-        << ' ' << max(d_).value()
-        << endl;
 }
 
 

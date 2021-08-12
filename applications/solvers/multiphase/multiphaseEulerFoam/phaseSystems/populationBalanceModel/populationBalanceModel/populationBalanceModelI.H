@@ -25,12 +25,6 @@ License
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
-inline Foam::label Foam::diameterModels::populationBalanceModel::nCorr() const
-{
-    return mesh_.solverDict(name_).lookup<label>("nCorr");
-}
-
-
 inline Foam::label
 Foam::diameterModels::populationBalanceModel::sourceUpdateInterval() const
 {
@@ -60,6 +54,24 @@ inline const Foam::dictionary&
 Foam::diameterModels::populationBalanceModel::dict() const
 {
     return dict_;
+}
+
+
+inline Foam::label Foam::diameterModels::populationBalanceModel::nCorr() const
+{
+    return mesh_.solverDict(name_).lookup<label>("nCorr");
+}
+
+
+inline Foam::Switch
+Foam::diameterModels::populationBalanceModel::solveOnFinalIterOnly() const
+{
+    return
+        mesh_.solverDict(name_).lookupOrDefault<bool>
+        (
+            "solveOnFinalIterOnly",
+            false
+        );
 }
 
 

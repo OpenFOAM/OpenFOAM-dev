@@ -330,9 +330,6 @@ private:
         //- Return whether the sources should be updated on this iteration
         bool updateSources();
 
-        //- Return the number of corrections
-        inline label nCorr() const;
-
         //- Return the interval at which the sources are updated
         inline label sourceUpdateInterval() const;
 
@@ -411,6 +408,12 @@ public:
 
         //- Return populationBalanceCoeffs dictionary
         inline const dictionary& dict() const;
+
+        //- Return the number of corrections
+        inline label nCorr() const;
+
+        //- Solve on final pimple iteration only
+        inline Switch solveOnFinalIterOnly() const;
 
         //- Return continuous phase
         inline const phaseModel& continuousPhase() const;
