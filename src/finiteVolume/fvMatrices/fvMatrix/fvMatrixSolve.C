@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve
 {
     if (debug)
     {
-        Info.masterStream(this->mesh().comm())
+        Info(this->mesh().comm())
             << "fvMatrix<Type>::solve(const dictionary& solverControls) : "
                "solving fvMatrix<Type>"
             << endl;
@@ -108,7 +108,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
 {
     if (debug)
     {
-        Info.masterStream(this->mesh().comm())
+        Info(this->mesh().comm())
             << "fvMatrix<Type>::solveSegregated"
                "(const dictionary& solverControls) : "
                "solving fvMatrix<Type>"
@@ -198,7 +198,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
 
         if (SolverPerformance<Type>::debug)
         {
-            solverPerf.print(Info.masterStream(this->mesh().comm()));
+            solverPerf.print(Info(this->mesh().comm()));
         }
 
         solverPerfVec.replace(cmpt, solverPerf);
@@ -224,7 +224,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
 {
     if (debug)
     {
-        Info.masterStream(this->mesh().comm())
+        Info(this->mesh().comm())
             << "fvMatrix<Type>::solveCoupled"
                "(const dictionary& solverControls) : "
                "solving fvMatrix<Type>"
@@ -265,7 +265,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
 
     if (SolverPerformance<Type>::debug)
     {
-        solverPerf.print(Info.masterStream(this->mesh().comm()));
+        solverPerf.print(Info(this->mesh().comm()));
     }
 
     psi.correctBoundaryConditions();

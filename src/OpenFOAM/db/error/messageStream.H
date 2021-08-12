@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,13 +104,9 @@ public:
         messageStream
         (
             const string& title,
-            errorSeverity,
+            const errorSeverity,
             const int maxErrors = 0
         );
-
-
-        //- Construct from dictionary
-        messageStream(const dictionary&);
 
 
     // Member Functions
@@ -133,11 +129,6 @@ public:
         {
             return maxErrors_;
         }
-
-        //- Convert to OSstream
-        //  Prints to Pout for the master stream
-        OSstream& masterStream(const label communicator);
-
 
         //- Convert to OSstream
         //  Prints basic message and returns OSstream for further info.
@@ -189,13 +180,13 @@ public:
             const dictionary&
         );
 
-        //- Convert to OSstream for << operations
-        operator OSstream&();
-
         //- Explicitly convert to OSstream for << operations
-        OSstream& operator()()
+        OSstream& operator()(const label communicator = -1);
+
+        //- Convert to OSstream for << operations
+        operator OSstream&()
         {
-            return operator OSstream&();
+            return this->operator()();
         }
 };
 

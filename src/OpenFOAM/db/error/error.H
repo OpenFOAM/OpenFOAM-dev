@@ -90,12 +90,6 @@ public:
         //- Construct from title string
         error(const string& title);
 
-        //- Construct from dictionary
-        error(const dictionary&);
-
-        //- Copy constructor
-        error(const error&);
-
 
     //- Destructor
     virtual ~error() throw();
@@ -148,19 +142,17 @@ public:
             const int sourceFileLineNumber = 0
         );
 
-        //- Convert to OSstream
-        //  Prints basic message and returns OSstream for further info.
-        operator OSstream&();
-
         //- Explicitly convert to OSstream for << operations
-        OSstream& operator()()
+        OSstream& operator()();
+
+        //- Convert to OSstream for << operations
+        operator OSstream&()
         {
-            return operator OSstream&();
+            return this->operator()();
         }
 
         //- Create and return a dictionary
         operator dictionary() const;
-
 
         //- Helper function to print a stack (if OpenFOAM IO not yet
         //  initialised)
@@ -211,9 +203,6 @@ public:
 
         //- Construct from title string
         IOerror(const string& title);
-
-        //- Construct from dictionary
-        IOerror(const dictionary&);
 
 
     //- Destructor
@@ -282,7 +271,6 @@ public:
 
         //- Create and return a dictionary
         operator dictionary() const;
-
 
         //- Exit : can be called for any error to exit program
         void exit(const int errNo = 1);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ int Foam::messageStream::level(Foam::debug::debugSwitch("level", 2));
 Foam::messageStream::messageStream
 (
     const string& title,
-    errorSeverity sev,
+    const errorSeverity sev,
     const int maxErrors
 )
 :
@@ -45,35 +45,6 @@ Foam::messageStream::messageStream
     maxErrors_(maxErrors),
     errorCount_(0)
 {}
-
-
-Foam::messageStream::messageStream(const dictionary& dict)
-:
-    title_(dict.lookup("title")),
-    severity_(FATAL),
-    maxErrors_(0),
-    errorCount_(0)
-{}
-
-
-Foam::OSstream& Foam::messageStream::masterStream(const label communicator)
-{
-    if (UPstream::warnComm != -1 && communicator != UPstream::warnComm)
-    {
-        Pout<< "** messageStream with comm:" << communicator
-            << endl;
-        error::printStack(Pout);
-    }
-
-    if (communicator == UPstream::worldComm || UPstream::master(communicator))
-    {
-        return operator()();
-    }
-    else
-    {
-        return Snull;
-    }
-}
 
 
 Foam::OSstream& Foam::messageStream::operator()
@@ -185,14 +156,35 @@ Foam::OSstream& Foam::messageStream::operator()
 }
 
 
-Foam::messageStream::operator Foam::OSstream&()
+Foam::OSstream& Foam::messageStream::operator()(label communicator)
 {
+    if (communicator != -1)
+    {
+        if (UPstream::warnComm != -1 && communicator != UPstream::warnComm)
+        {
+            Pout<< "** messageStream with comm:" << communicator
+                << endl;
+            error::printStack(Pout);
+        }
+    }
+    else
+    {
+        communicator = UPstream::worldComm;
+    }
+
     if (level)
     {
-        bool collect = (severity_ == INFO || severity_ == WARNING);
+        const bool master = Pstream::master(communicator);
 
-        // Report the error
-        if (!Pstream::master() && collect)
+        const bool collect = severity_ == INFO || severity_ == WARNING;
+
+        const bool prefix =
+            (Pstream::parRun() && !collect)
+         || communicator != UPstream::worldComm;
+
+        OSstream& os = prefix ? Pout : Sout;
+
+        if (!master && collect)
         {
             return Snull;
         }
@@ -200,14 +192,7 @@ Foam::messageStream::operator Foam::OSstream&()
         {
             if (title().size())
             {
-                if (Pstream::parRun() && !collect)
-                {
-                    Pout<< title().c_str();
-                }
-                else
-                {
-                    Sout<< title().c_str();
-                }
+                os << title().c_str();
             }
 
             if (maxErrors_)
@@ -222,14 +207,7 @@ Foam::messageStream::operator Foam::OSstream&()
                 }
             }
 
-            if (Pstream::parRun() && !collect)
-            {
-                return Pout;
-            }
-            else
-            {
-                return Sout;
-            }
+            return os;
         }
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,43 +54,6 @@ Foam::error::error(const string& title)
 }
 
 
-Foam::error::error(const dictionary& errDict)
-:
-    std::exception(),
-    messageStream(errDict),
-    functionName_(errDict.lookup("functionName")),
-    sourceFileName_(errDict.lookup("sourceFileName")),
-    sourceFileLineNumber_(errDict.lookup<label>("sourceFileLineNumber")),
-    abort_(env("FOAM_ABORT")),
-    throwExceptions_(false),
-    messageStreamPtr_(new OStringStream())
-{
-    if (!messageStreamPtr_->good())
-    {
-        Perr<< endl
-            << "error::error(const dictionary& errDict) : "
-               "cannot open error stream"
-            << endl;
-        exit(1);
-    }
-}
-
-
-Foam::error::error(const error& err)
-:
-    std::exception(),
-    messageStream(err),
-    functionName_(err.functionName_),
-    sourceFileName_(err.sourceFileName_),
-    sourceFileLineNumber_(err.sourceFileLineNumber_),
-    abort_(err.abort_),
-    throwExceptions_(err.throwExceptions_),
-    messageStreamPtr_(new OStringStream(*err.messageStreamPtr_))
-{
-    //*messageStreamPtr_ << err.message();
-}
-
-
 Foam::error::~error() throw()
 {
     delete messageStreamPtr_;
@@ -128,7 +91,7 @@ Foam::OSstream& Foam::error::operator()
 }
 
 
-Foam::error::operator Foam::OSstream&()
+Foam::OSstream& Foam::error::operator()()
 {
     if (!messageStreamPtr_->good())
     {
