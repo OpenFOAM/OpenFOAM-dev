@@ -49,7 +49,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fvCellSet::setCellSet()
+void Foam::fvCellSet::setCells()
 {
     Info<< incrIndent;
 
@@ -119,7 +119,14 @@ void Foam::fvCellSet::setCellSet()
         }
     }
 
-    // Set volume information
+    Info<< decrIndent;
+}
+
+
+void Foam::fvCellSet::setV()
+{
+    Info<< incrIndent;
+
     V_ = 0;
     forAll(cells_, i)
     {
@@ -162,7 +169,18 @@ Foam::fvCellSet::~fvCellSet()
 
 void Foam::fvCellSet::updateMesh(const mapPolyMesh&)
 {
-    setCellSet();
+    setCells();
+    setV();
+}
+
+
+void Foam::fvCellSet::movePoints()
+{
+    if (selectionMode_ == selectionModeType::points)
+    {
+        setCells();
+    }
+    setV();
 }
 
 
@@ -202,7 +220,8 @@ bool Foam::fvCellSet::read(const dictionary& dict)
         }
     }
 
-    setCellSet();
+    setCells();
+    setV();
 
     return true;
 }

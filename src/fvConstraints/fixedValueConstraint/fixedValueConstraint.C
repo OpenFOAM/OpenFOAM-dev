@@ -126,6 +126,13 @@ void Foam::fv::fixedValueConstraint::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::fixedValueConstraint::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::fixedValueConstraint::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))

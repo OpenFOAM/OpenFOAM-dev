@@ -233,7 +233,6 @@ Foam::fv::codedFvModel::codedFvModel
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
     fieldName_(word::null)
 {
     readCoeffs();
@@ -259,7 +258,13 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::codedFvModel);
 
 void Foam::fv::codedFvModel::updateMesh(const mapPolyMesh& mpm)
 {
-    set_.updateMesh(mpm);
+    redirectFvModel().updateMesh(mpm);
+}
+
+
+bool Foam::fv::codedFvModel::movePoints()
+{
+    return redirectFvModel().movePoints();
 }
 
 
@@ -267,7 +272,6 @@ bool Foam::fv::codedFvModel::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
         readCoeffs();
         return true;
     }

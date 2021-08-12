@@ -173,6 +173,15 @@ public:
             virtual void correct();
 
 
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
+
+
         // IO
 
             //- Read dictionary

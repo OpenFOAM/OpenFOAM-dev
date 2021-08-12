@@ -134,6 +134,13 @@ void Foam::fv::limitVelocity::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::limitVelocity::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::limitVelocity::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))

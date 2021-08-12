@@ -148,6 +148,13 @@ void Foam::fv::limitTemperature::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::limitTemperature::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::limitTemperature::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
