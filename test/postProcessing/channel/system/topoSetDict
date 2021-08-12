@@ -21,7 +21,7 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        name    inlet;
+        patch   inlet;
     }
     {
         name    f0;
