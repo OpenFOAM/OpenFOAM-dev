@@ -29,7 +29,7 @@ gnuplot<<EOF
 
     numberDensity = '../postProcessing/numberDensity/10/numberDensity.dat'
 
-    plot '<printf "1 0.05\n1 0\n"' w l lc rgb 'black' t 'Init. Cond.',\
+    plot '<printf "1 0.05\n1 1e-5\n"' w l lc rgb 'black' t 'Init. Cond.',\
     n(x,10.0) dt 2 lc rgb 'black' t 'Ziff and McGrady (1985)',\
     numberDensity every ::0::19 u 1:4 w p pt 1 lc rgb 'black' t 'air1',\
     numberDensity every ::20::24 u 1:4 w p pt 5 lc rgb 'black' t 'air2',\
