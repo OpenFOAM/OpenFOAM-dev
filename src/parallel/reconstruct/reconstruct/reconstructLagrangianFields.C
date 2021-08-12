@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Foam::tmp<Foam::IOField<Type>> Foam::reconstructLagrangianField
     forAll(meshes, i)
     {
         // Check object on local mesh
-        IOobject localIOobject
+        typeIOobject<IOField<Type>> localIOobject
         (
             fieldName,
             meshes[i].time().timeName(),
@@ -70,7 +70,7 @@ Foam::tmp<Foam::IOField<Type>> Foam::reconstructLagrangianField
             IOobject::NO_WRITE
         );
 
-        if (localIOobject.typeHeaderOk<IOField<Type>>(true))
+        if (localIOobject.headerOk())
         {
             IOField<Type> fieldi(localIOobject);
 
@@ -119,7 +119,7 @@ Foam::reconstructLagrangianFieldField
 
     forAll(meshes, i)
     {
-        // Check object on local mesh
+        // No type checking is done to handle CompactIOField and IOField
         IOobject localIOobject
         (
             fieldName,
@@ -130,14 +130,7 @@ Foam::reconstructLagrangianFieldField
             IOobject::NO_WRITE
         );
 
-        if
-        (
-            localIOobject.typeHeaderOk<CompactIOField<Field<Type>, Type>>
-            (
-                false
-            )
-         || localIOobject.typeHeaderOk<IOField<Field<Type>>>(false)
-        )
+        if (localIOobject.headerOk())
         {
             CompactIOField<Field<Type>, Type> fieldi(localIOobject);
 

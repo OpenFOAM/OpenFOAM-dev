@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ void Foam::preservePatchTypes
 
     // Read boundary file as single dictionary
     {
-        IOobject patchEntriesHeader
+        typeIOobject<polyBoundaryMeshEntries> patchEntriesHeader
         (
             "boundary",
             meshInstance,
@@ -57,7 +57,7 @@ void Foam::preservePatchTypes
             false
         );
 
-        if (patchEntriesHeader.typeHeaderOk<polyBoundaryMesh>(true))
+        if (patchEntriesHeader.headerOk())
         {
             // Create a list of entries from the boundary file.
             polyBoundaryMeshEntries patchEntries(patchEntriesHeader);

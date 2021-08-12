@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -586,13 +586,13 @@ double* Foam::vtkPVFoam::findTimes(int& nTimeSteps)
 
             if
             (
-                IOobject
+                typeIOobject<pointIOField>
                 (
                     "points",
                     timeName,
                     meshDir_,
                     runTime
-                ).typeHeaderOk<pointIOField>(true)
+                ).headerOk()
             )
             {
                 break;

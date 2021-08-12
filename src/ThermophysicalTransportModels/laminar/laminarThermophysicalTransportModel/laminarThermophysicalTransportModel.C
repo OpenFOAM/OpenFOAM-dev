@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ Foam::laminarThermophysicalTransportModel
     const thermoModel& thermo
 )
 {
-    IOobject header
+    typeIOobject<IOdictionary> header
     (
         IOobject::groupName
         (
@@ -96,7 +96,7 @@ Foam::laminarThermophysicalTransportModel
         false
     );
 
-    if (header.typeHeaderOk<IOdictionary>(true))
+    if (header.headerOk())
     {
         IOdictionary modelDict(header);
 

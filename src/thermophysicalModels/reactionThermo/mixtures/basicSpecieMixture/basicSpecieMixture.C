@@ -78,7 +78,7 @@ Foam::basicSpecieMixture::basicSpecieMixture
 
     forAll(species_, i)
     {
-        IOobject header
+        typeIOobject<volScalarField> header
         (
             IOobject::groupName(species_[i], phaseName),
             mesh.time().timeName(),
@@ -87,7 +87,7 @@ Foam::basicSpecieMixture::basicSpecieMixture
         );
 
         // check if field exists and can be read
-        if (header.typeHeaderOk<volScalarField>(true))
+        if (header.headerOk())
         {
             Y_.set
             (
@@ -116,7 +116,7 @@ Foam::basicSpecieMixture::basicSpecieMixture
                     IOobject::groupName("Ydefault", phaseName)
                 );
 
-                IOobject timeIO
+                typeIOobject<volScalarField> timeIO
                 (
                     YdefaultName,
                     mesh.time().timeName(),
@@ -125,7 +125,7 @@ Foam::basicSpecieMixture::basicSpecieMixture
                     IOobject::NO_WRITE
                 );
 
-                IOobject constantIO
+                typeIOobject<volScalarField> constantIO
                 (
                     YdefaultName,
                     mesh.time().constant(),
@@ -134,7 +134,7 @@ Foam::basicSpecieMixture::basicSpecieMixture
                     IOobject::NO_WRITE
                 );
 
-                IOobject time0IO
+                typeIOobject<volScalarField> time0IO
                 (
                     YdefaultName,
                     Time::timeName(0),
@@ -143,11 +143,11 @@ Foam::basicSpecieMixture::basicSpecieMixture
                     IOobject::NO_WRITE
                 );
 
-                if (timeIO.typeHeaderOk<volScalarField>(true))
+                if (timeIO.headerOk())
                 {
                     tYdefault = new volScalarField(timeIO, mesh);
                 }
-                else if (constantIO.typeHeaderOk<volScalarField>(true))
+                else if (constantIO.headerOk())
                 {
                     tYdefault = new volScalarField(constantIO, mesh);
                 }

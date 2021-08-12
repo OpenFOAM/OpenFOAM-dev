@@ -149,9 +149,12 @@ int main(int argc, char *argv[])
         }
     }
 
-    IOobject meshDictIO(systemDictIO(dictName, args, runTime, regionName));
+    typeIOobject<IOdictionary> meshDictIO
+    (
+        systemDictIO(dictName, args, runTime, regionName)
+    );
 
-    if (!meshDictIO.typeHeaderOk<IOdictionary>(true))
+    if (!meshDictIO.headerOk())
     {
         FatalErrorInFunction
             << "Cannot find file " << meshDictIO.relativeObjectPath()

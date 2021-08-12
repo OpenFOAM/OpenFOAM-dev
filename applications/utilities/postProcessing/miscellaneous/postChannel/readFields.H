@@ -1,4 +1,4 @@
-    IOobject UMeanHeader
+    typeIOobject<volVectorField> UMeanHeader
     (
         "UMean",
         runTime.timeName(),
@@ -6,7 +6,7 @@
         IOobject::MUST_READ
     );
 
-    if (!UMeanHeader.typeHeaderOk<volVectorField>(true))
+    if (!UMeanHeader.headerOk())
     {
         Info<< "    No UMean field" << endl;
         continue;

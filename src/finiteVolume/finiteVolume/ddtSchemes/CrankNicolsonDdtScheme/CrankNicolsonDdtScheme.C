@@ -120,12 +120,12 @@ CrankNicolsonDdtScheme<Type>::ddt0_
                 runTime.timeIndex() == runTime.startTimeIndex()
              || runTime.timeIndex() == runTime.startTimeIndex() + 1
             )
-         && IOobject
+         && typeIOobject<DDt0Field<GeoField>>
             (
                 name,
                 startTimeName,
                 mesh()
-            ).typeHeaderOk<DDt0Field<GeoField>>()
+            ).headerOk()
         )
         {
             regIOobject::store

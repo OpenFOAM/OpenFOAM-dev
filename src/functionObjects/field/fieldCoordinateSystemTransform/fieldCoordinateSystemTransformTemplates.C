@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
     }
     else
     {
-        IOobject fieldHeader
+        typeIOobject<VolFieldType> fieldHeader
         (
             fieldName,
             mesh_.time().timeName(),
@@ -88,11 +88,7 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
             IOobject::NO_WRITE
         );
 
-        if
-        (
-            fieldHeader.typeHeaderOk<VolFieldType>(false)
-         && fieldHeader.headerClassName() == VolFieldType::typeName
-        )
+        if (fieldHeader.headerOk())
         {
             DebugInfo
                 << type() << ": Field " << fieldName << " read from file"
@@ -103,20 +99,28 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
                 mesh_.lookupObject<VolFieldType>(fieldName)
             );
         }
-        else if
-        (
-            fieldHeader.typeHeaderOk<SurfaceFieldType>(false)
-         && fieldHeader.headerClassName() == SurfaceFieldType::typeName
-        )
+        else
         {
-            DebugInfo
-                << type() << ": Field " << fieldName << " read from file"
-                << endl;
-
-            transformField<SurfaceFieldType>
+            typeIOobject<SurfaceFieldType> fieldHeader
             (
-                mesh_.lookupObject<SurfaceFieldType>(fieldName)
+                fieldName,
+                mesh_.time().timeName(),
+                mesh_,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE
             );
+
+            if (fieldHeader.headerOk())
+            {
+                DebugInfo
+                    << type() << ": Field " << fieldName << " read from file"
+                    << endl;
+
+                transformField<SurfaceFieldType>
+                (
+                    mesh_.lookupObject<SurfaceFieldType>(fieldName)
+                );
+            }
         }
     }
 }

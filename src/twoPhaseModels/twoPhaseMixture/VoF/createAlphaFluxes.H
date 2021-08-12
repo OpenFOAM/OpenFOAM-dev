@@ -1,4 +1,4 @@
-IOobject alphaPhi1Header
+typeIOobject<surfaceScalarField> alphaPhi1Header
 (
     IOobject::groupName("alphaPhi", alpha1.group()),
     runTime.timeName(),
@@ -7,7 +7,7 @@ IOobject alphaPhi1Header
     IOobject::AUTO_WRITE
 );
 
-const bool alphaRestart = alphaPhi1Header.typeHeaderOk<surfaceScalarField>();
+const bool alphaRestart = alphaPhi1Header.headerOk();
 
 if (alphaRestart)
 {

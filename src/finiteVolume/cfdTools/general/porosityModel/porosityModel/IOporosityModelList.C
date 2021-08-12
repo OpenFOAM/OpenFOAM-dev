@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::IOobject Foam::IOporosityModelList::createIOobject
     const fvMesh& mesh
 ) const
 {
-    IOobject io
+    typeIOobject<IOdictionary> io
     (
         "porosityProperties",
         mesh.time().constant(),
@@ -43,7 +43,7 @@ Foam::IOobject Foam::IOporosityModelList::createIOobject
         IOobject::NO_WRITE
     );
 
-    if (io.typeHeaderOk<IOdictionary>(true))
+    if (io.headerOk())
     {
         Info<< "Creating porosity model list from " << io.name() << nl << endl;
 

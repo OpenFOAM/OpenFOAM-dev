@@ -120,7 +120,7 @@ void Foam::vtkPVFoam::convertFields(vtkMultiBlockDataSet* output)
         forAllConstIter(IOobjectList, objects, iter)
         {
             Info<< "  " << iter()->name()
-                << " == " << iter()->objectPath<volScalarField>() << nl;
+                << " == " << iter()->objectPath(false) << nl;
         }
         printMemory();
     }

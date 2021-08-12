@@ -1,10 +1,9 @@
-
 if (nVar >= Num_variables - nSprayVariables)
 {
     return Z_UNDEF;
 }
 
-IOobject fieldObjectPtr
+typeIOobject<volScalarField> fieldObjectPtr
 (
     fieldNames[var2field[nVar]],
     runTime.timeName(),
@@ -12,7 +11,7 @@ IOobject fieldObjectPtr
     IOobject::NO_READ
 );
 
-if (!fieldObjectPtr.typeHeaderOk<volScalarField>(true))
+if (!fieldObjectPtr.headerOk())
 {
     return Z_UNDEF;
 }

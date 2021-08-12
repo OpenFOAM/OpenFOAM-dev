@@ -76,13 +76,13 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
     RBD::rigidBodyMotion
     (
         coeffDict(),
-        IOobject
+        typeIOobject<timeIOdictionary>
         (
             "rigidBodyMotionState",
             mesh.time().timeName(),
             "uniform",
             mesh
-        ).typeHeaderOk<timeIOdictionary>(true)
+        ).headerOk()
       ? timeIOdictionary
         (
             IOobject

@@ -575,7 +575,7 @@ autoPtr<mapPolyMesh> createRegionMesh
 {
     // Create dummy system/fv*
     {
-        IOobject io
+        typeIOobject<IOdictionary> io
         (
             "fvSchemes",
             mesh.time().system(),
@@ -586,9 +586,9 @@ autoPtr<mapPolyMesh> createRegionMesh
             false
         );
 
-        Info<< "Testing:" << io.objectPath<IOdictionary>() << endl;
+        Info<< "Testing:" << io.objectPath() << endl;
 
-        if (!io.typeHeaderOk<IOdictionary>(true))
+        if (!io.headerOk())
         {
             Info<< "Writing dummy " << regionName/io.name() << endl;
             dictionary dummyDict;
@@ -603,7 +603,7 @@ autoPtr<mapPolyMesh> createRegionMesh
         }
     }
     {
-        IOobject io
+        typeIOobject<IOdictionary> io
         (
             "fvSolution",
             mesh.time().system(),
@@ -614,8 +614,7 @@ autoPtr<mapPolyMesh> createRegionMesh
             false
         );
 
-        if (!io.typeHeaderOk<IOdictionary>(true))
-        // if (!exists(io.objectPath()))
+        if (!io.headerOk())
         {
             Info<< "Writing dummy " << regionName/io.name() << endl;
             dictionary dummyDict;

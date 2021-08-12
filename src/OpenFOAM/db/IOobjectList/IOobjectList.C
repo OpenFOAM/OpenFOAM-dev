@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "IOobjectList.H"
 #include "Time.H"
 #include "OSspecific.H"
-#include "IOList.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -57,7 +56,6 @@ Foam::IOobjectList::IOobjectList
         newInstance
     );
 
-
     forAll(ObjectNames, i)
     {
         IOobject* objectPtr = new IOobject
@@ -72,7 +70,7 @@ Foam::IOobjectList::IOobjectList
         );
 
         // Use object with local scope
-        if (objectPtr->typeHeaderOk<IOList<label>>(false))
+        if (objectPtr->headerOk())
         {
             insert(ObjectNames[i], objectPtr);
         }

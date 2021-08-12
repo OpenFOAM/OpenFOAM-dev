@@ -16,6 +16,6 @@ for (label n1=0; n1<Times.size() && variableGood; ++n1)
             Times[n1].name(),
             mesh,
             IOobject::NO_READ
-        ).typeHeaderOk<volScalarField>(false);
+        ).headerOk();
     }
 }

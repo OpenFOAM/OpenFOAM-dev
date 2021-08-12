@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -584,10 +584,8 @@ int main(int argc, char *argv[])
                     IOobject::MUST_READ
                 );
 
-                bool fieldExists = fieldObject.typeHeaderOk<IOField<scalar>>
-                (
-                    false
-                );
+                bool fieldExists = fieldObject.headerOk();
+
                 if (fieldType == scalarIOField::typeName)
                 {
                     ensightCloudField<scalar>

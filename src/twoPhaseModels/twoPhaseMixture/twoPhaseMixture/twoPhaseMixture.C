@@ -40,7 +40,7 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
     const objectRegistry& obr
 )
 {
-    IOobject phasePropertiesIO
+    typeIOobject<IOdictionary> phasePropertiesIO
     (
         "phaseProperties",
         obr.time().constant(),
@@ -50,13 +50,13 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
         false
     );
 
-    if (phasePropertiesIO.typeHeaderOk<IOdictionary>(true))
+    if (phasePropertiesIO.headerOk())
     {
         return phasePropertiesIO;
     }
     else
     {
-        IOobject thermophysicalPropertiesIO
+        typeIOobject<IOdictionary> thermophysicalPropertiesIO
         (
             "thermophysicalProperties",
             obr.time().constant(),
@@ -66,7 +66,7 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
             false
         );
 
-        if (thermophysicalPropertiesIO.typeHeaderOk<IOdictionary>(true))
+        if (thermophysicalPropertiesIO.headerOk())
         {
             IOdictionary phasePropertiesDict(thermophysicalPropertiesIO);
             phasePropertiesDict.rename("phaseProperties");
@@ -74,7 +74,7 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
         }
         else
         {
-            IOobject transportPropertiesIO
+            typeIOobject<IOdictionary> transportPropertiesIO
             (
                 "transportProperties",
                 obr.time().constant(),
@@ -84,7 +84,7 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
                 false
             );
 
-            if (transportPropertiesIO.typeHeaderOk<IOdictionary>(true))
+            if (transportPropertiesIO.headerOk())
             {
                 IOdictionary phasePropertiesDict(transportPropertiesIO);
                 phasePropertiesDict.rename("phaseProperties");

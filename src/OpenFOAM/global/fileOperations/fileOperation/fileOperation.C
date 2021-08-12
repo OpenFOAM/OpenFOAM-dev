@@ -370,9 +370,8 @@ bool Foam::fileOperation::exists(IOobject& io) const
     }
     else
     {
-        ok =
-            isFile(objPath)
-         && io.typeHeaderOk<IOList<label>>(false);// object with local scope
+        // IOobject::headerOk assumes local scope
+        ok = isFile(objPath) && io.headerOk();
     }
 
     if (!ok)
@@ -389,9 +388,8 @@ bool Foam::fileOperation::exists(IOobject& io) const
             }
             else
             {
-                ok =
-                    isFile(originalPath)
-                 && io.typeHeaderOk<IOList<label>>(false);
+                // IOobject::headerOk assumes local scope
+                ok = isFile(originalPath) && io.headerOk();
             }
         }
     }

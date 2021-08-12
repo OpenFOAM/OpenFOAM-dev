@@ -137,7 +137,7 @@ void Foam::polyMesh::calcDirections() const
 
 Foam::autoPtr<Foam::labelIOList> Foam::polyMesh::readTetBasePtIs() const
 {
-    IOobject io
+    typeIOobject<labelIOList> io
     (
         "tetBasePtIs",
         instance(),
@@ -147,7 +147,7 @@ Foam::autoPtr<Foam::labelIOList> Foam::polyMesh::readTetBasePtIs() const
         IOobject::NO_WRITE
     );
 
-    if (io.typeHeaderOk<labelIOList>())
+    if (io.headerOk())
     {
         return autoPtr<labelIOList>(new labelIOList(io));
     }
@@ -1250,7 +1250,7 @@ Foam::IOobject Foam::polyMesh::points0IO
     {
         // Check that points0 are actually in constant directory
 
-        IOobject io
+        typeIOobject<pointIOField> io
         (
             "points0",
             instance,
@@ -1261,7 +1261,7 @@ Foam::IOobject Foam::polyMesh::points0IO
             false
         );
 
-        if (io.typeHeaderOk<pointIOField>())
+        if (io.headerOk())
         {
             return io;
         }

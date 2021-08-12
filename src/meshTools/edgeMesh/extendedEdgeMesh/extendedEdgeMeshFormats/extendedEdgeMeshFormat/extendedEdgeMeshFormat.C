@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ bool Foam::fileFormats::extendedEdgeMeshFormat::read
 
     // Construct IOobject to re-use the headerOk & readHeader
     // (so we can read ascii and binary)
-    IOobject io
+    typeIOobject<extendedFeatureEdgeMesh> io
     (
         filename,
         dummyTime,
@@ -73,14 +73,14 @@ bool Foam::fileFormats::extendedEdgeMeshFormat::read
         false
     );
 
-    if (!io.typeHeaderOk<extendedFeatureEdgeMesh>(false))
+    if (!io.headerOk())
     {
         FatalErrorInFunction
             << "Cannot read file " << filename
             << exit(FatalError);
     }
 
-    const fileName fName(typeFilePath<extendedFeatureEdgeMesh>(io));
+    const fileName fName(io.filePath());
 
     autoPtr<IFstream> isPtr(new IFstream(fName));
     bool ok = false;

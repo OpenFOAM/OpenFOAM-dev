@@ -1,6 +1,6 @@
 if (!mesh.foundObject<IOdictionary>("radiationProperties"))
 {
-    IOobject radiationProperties
+    typeIOobject<IOdictionary> radiationProperties
     (
         "radiationProperties",
         runTime.constant(),
@@ -10,7 +10,7 @@ if (!mesh.foundObject<IOdictionary>("radiationProperties"))
         false
     );
 
-    if (radiationProperties.typeHeaderOk<IOdictionary>(false))
+    if (radiationProperties.headerOk())
     {
         const word modelType
         (

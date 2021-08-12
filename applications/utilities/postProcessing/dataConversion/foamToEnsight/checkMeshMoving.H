@@ -9,7 +9,7 @@ if (Times.size() > 1)
     {
         if (Times[timeI].name() != mesh.pointsInstance())
         {
-            IOobject io
+            typeIOobject<pointIOField> io
             (
                 "points",
                 Times[timeI].name(),
@@ -17,7 +17,8 @@ if (Times.size() > 1)
                 mesh,
                 IOobject::NO_READ
             );
-            if (io.typeHeaderOk<pointIOField>(true))
+
+            if (io.headerOk())
             {
                 meshMoving = true;
                 break;

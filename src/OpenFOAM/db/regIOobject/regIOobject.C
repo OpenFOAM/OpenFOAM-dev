@@ -421,15 +421,15 @@ Foam::fileName Foam::regIOobject::filePath() const
 
 bool Foam::regIOobject::headerOk()
 {
-    // Note: Should be consistent with IOobject::typeHeaderOk(false)
+    // Note: Should be consistent with typeIOobject<Type>::headerOk()
 
     bool ok = true;
 
-    fileName fName(filePath());
+    const fileName fName(filePath());
 
     ok = Foam::fileHandler().readHeader(*this, fName, type());
 
-    if (!ok && IOobject::debug)
+    if (IOobject::debug && (!ok || headerClassName() != type()))
     {
         IOWarningInFunction(fName)
             << "failed to read header of file " << objectPath()

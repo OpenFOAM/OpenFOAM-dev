@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1858,7 +1858,7 @@ const Foam::labelList& Foam::globalMeshData::sharedPointGlobalLabels() const
         );
         labelList& sharedPointGlobalLabels = sharedPointGlobalLabelsPtr_();
 
-        IOobject addrHeader
+        typeIOobject<labelIOList> addrHeader
         (
             "pointProcAddressing",
             mesh_.facesInstance()/mesh_.meshSubDir,
@@ -1866,7 +1866,7 @@ const Foam::labelList& Foam::globalMeshData::sharedPointGlobalLabels() const
             IOobject::MUST_READ
         );
 
-        if (addrHeader.typeHeaderOk<labelIOList>(true))
+        if (addrHeader.headerOk())
         {
             // There is a pointProcAddressing file so use it to get labels
             // on the original mesh

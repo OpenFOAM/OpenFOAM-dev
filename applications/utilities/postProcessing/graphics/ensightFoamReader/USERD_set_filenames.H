@@ -171,7 +171,7 @@ int USERD_set_filenames
         false
     );
 
-    if (sprayHeader.typeHeaderOk<Cloud<passiveParticle>>(false))
+    if (sprayHeader.headerOk())
     {
         Info<< "[Found lagrangian]" << endl;
 

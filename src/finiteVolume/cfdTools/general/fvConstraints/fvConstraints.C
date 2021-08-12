@@ -42,7 +42,7 @@ Foam::IOobject Foam::fvConstraints::createIOobject
     const fvMesh& mesh
 ) const
 {
-    IOobject io
+    typeIOobject<IOdictionary> io
     (
         typeName,
         mesh.time().system(),
@@ -51,7 +51,7 @@ Foam::IOobject Foam::fvConstraints::createIOobject
         IOobject::NO_WRITE
     );
 
-    if (io.typeHeaderOk<IOdictionary>(true))
+    if (io.headerOk())
     {
         Info<< "Creating fvConstraints from "
             << io.instance()/io.name() << nl
@@ -66,7 +66,7 @@ Foam::IOobject Foam::fvConstraints::createIOobject
         // check if the fvOptions file is in system
         io.rename("fvOptions");
 
-        if (io.typeHeaderOk<IOdictionary>(true))
+        if (io.headerOk())
         {
             Warning
                 << "Creating fvConstraints from "
@@ -82,7 +82,7 @@ Foam::IOobject Foam::fvConstraints::createIOobject
             // check if the fvOptions file is in constant
             io.instance() = mesh.time().constant();
 
-            if (io.typeHeaderOk<IOdictionary>(true))
+            if (io.headerOk())
             {
                 Warning
                     << "Creating fvConstraints from "

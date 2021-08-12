@@ -128,9 +128,8 @@ $(topoSets)/pointZoneSet.C
 
 sets/topoSetSource/topoSetSource.C
 
-cellSources =  sets/cellSources
+cellSources = sets/cellSources
 $(cellSources)/faceToCell/faceToCell.C
-$(cellSources)/fieldToCell/fieldToCell.C
 $(cellSources)/pointToCell/pointToCell.C
 $(cellSources)/shapeToCell/shapeToCell.C
 $(cellSources)/boxToCell/boxToCell.C
@@ -154,15 +153,14 @@ $(faceSources)/faceToFace/faceToFace.C
 $(faceSources)/labelToFace/labelToFace.C
 $(faceSources)/cellToFace/cellToFace.C
 $(faceSources)/normalToFace/normalToFace.C
-$(faceSources)/pointToFace/pointToFace.C
 $(faceSources)/patchToFace/patchToFace.C
+$(faceSources)/pointToFace/pointToFace.C
 $(faceSources)/boundaryToFace/boundaryToFace.C
 $(faceSources)/zoneToFace/zoneToFace.C
 $(faceSources)/boxToFace/boxToFace.C
 $(faceSources)/regionToFace/regionToFace.C
 $(faceSources)/cylinderToFace/cylinderToFace.C
 $(faceSources)/cylinderAnnulusToFace/cylinderAnnulusToFace.C
-$(faceSources)/patchFluxToFace/patchFluxToFace.C
 
 pointSources = sets/pointSources
 $(pointSources)/labelToPoint/labelToPoint.C

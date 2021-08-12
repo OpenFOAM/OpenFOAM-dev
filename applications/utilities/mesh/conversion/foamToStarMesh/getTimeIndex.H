@@ -8,7 +8,7 @@
      && runTime.timeName() != "0"
     )
     {
-        IOobject io
+        typeIOobject<IOdictionary> io
         (
             "time",
             runTime.timeName(),
@@ -19,7 +19,7 @@
             false
         );
 
-        if (io.typeHeaderOk<IOdictionary>(true))
+        if (io.headerOk())
         {
             IOdictionary timeObject
             (

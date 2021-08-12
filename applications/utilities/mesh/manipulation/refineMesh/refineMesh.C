@@ -189,11 +189,11 @@ int main(int argc, char *argv[])
 
     // Dictionary to control refinement
     const word dictName("refineMeshDict");
-    IOobject dictIO(systemDictIO(dictName, args, runTime));
+    typeIOobject<IOdictionary> dictIO(systemDictIO(dictName, args, runTime));
     dictionary refineDict;
     if (readDict)
     {
-        if (dictIO.typeHeaderOk<IOdictionary>(true))
+        if (dictIO.headerOk())
         {
             Info<< "Refining according to "
                 << dictIO.path(typeGlobalFile<IOdictionary>()) << nl << endl;
@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
     }
     else if (!refineAllCells)
     {
-        if (dictIO.typeHeaderOk<IOdictionary>(true))
+        if (dictIO.headerOk())
         {
             Info<< "Refining according to "
                 << dictIO.path(typeGlobalFile<IOdictionary>()) << nl << endl;

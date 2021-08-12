@@ -342,7 +342,7 @@ void createDummyFvMeshFiles(const polyMesh& mesh, const word& regionName)
 {
     // Create dummy system/fv*
     {
-        IOobject io
+        typeIOobject<IOdictionary> io
         (
             "fvSchemes",
             mesh.time().system(),
@@ -353,9 +353,9 @@ void createDummyFvMeshFiles(const polyMesh& mesh, const word& regionName)
             false
         );
 
-        Info<< "Testing:" << io.objectPath<IOdictionary>() << endl;
+        Info<< "Testing:" << io.objectPath() << endl;
 
-        if (!io.typeHeaderOk<IOdictionary>(true))
+        if (!io.headerOk())
         {
             Info<< "Writing dummy " << regionName/io.name() << endl;
             dictionary dummyDict;
@@ -370,7 +370,7 @@ void createDummyFvMeshFiles(const polyMesh& mesh, const word& regionName)
         }
     }
     {
-        IOobject io
+        typeIOobject<IOdictionary> io
         (
             "fvSolution",
             mesh.time().system(),
@@ -381,7 +381,7 @@ void createDummyFvMeshFiles(const polyMesh& mesh, const word& regionName)
             false
         );
 
-        if (!io.typeHeaderOk<IOdictionary>(true))
+        if (!io.headerOk())
         {
             Info<< "Writing dummy " << regionName/io.name() << endl;
             dictionary dummyDict;
@@ -2492,7 +2492,7 @@ int main(int argc, char *argv[])
     {
         autoPtr<pointIOField> patchFaceCentresPtr;
 
-        IOobject io
+        typeIOobject<pointIOField> io
         (
             "patchFaceCentres",
             mesh.pointsInstance(),
@@ -2500,7 +2500,8 @@ int main(int argc, char *argv[])
             mesh,
             IOobject::MUST_READ
         );
-        if (io.typeHeaderOk<pointIOField>(true))
+
+        if (io.headerOk())
         {
             // Read patchFaceCentres and patchEdgeCentres
             Info<< "Reading patch face,edge centres : "

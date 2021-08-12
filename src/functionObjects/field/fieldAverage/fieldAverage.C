@@ -243,7 +243,7 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
     }
     else
     {
-        IOobject propsDictHeader
+        typeIOobject<timeIOdictionary> propsDictHeader
         (
             name() + "Properties",
             obr_.time().timeName(obr_.time().startTime().value()),
@@ -254,7 +254,7 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
             false
         );
 
-        if (!propsDictHeader.typeHeaderOk<timeIOdictionary>())
+        if (!propsDictHeader.headerOk())
         {
             Log << "    Starting averaging at time "
                 << obr_.time().timeName() << nl;

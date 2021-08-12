@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
         Pstream::scatterList(meshBb);
     }
 
-    IOobject io
+    typeIOobject<searchableSurface> io
     (
         surfFileName,
         runTime.constant(),
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
     );
 
     // Look for file (using searchableSurface rules)
-    const fileName actualPath(typeFilePath<searchableSurface>(io));
+    const fileName actualPath(io.filePath());
     fileName localPath(actualPath);
     localPath.replace(runTime.rootPath() + '/', "");
 

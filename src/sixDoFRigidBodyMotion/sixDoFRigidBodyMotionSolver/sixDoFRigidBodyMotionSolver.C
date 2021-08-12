@@ -60,13 +60,13 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
     sixDoFRigidBodyMotion
     (
         coeffDict(),
-        IOobject
+        typeIOobject<timeIOdictionary>
         (
             "sixDoFRigidBodyMotionState",
             mesh.time().timeName(),
             "uniform",
             mesh
-        ).typeHeaderOk<timeIOdictionary>(true)
+        ).headerOk()
       ? timeIOdictionary
         (
             IOobject

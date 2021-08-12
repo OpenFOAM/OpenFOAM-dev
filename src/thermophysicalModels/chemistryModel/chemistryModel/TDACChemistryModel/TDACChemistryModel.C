@@ -71,7 +71,7 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
     {
         forAll(this->Y(), i)
         {
-            IOobject header
+            typeIOobject<volScalarField> header
             (
                 this->Y()[i].name(),
                 this->mesh().time().timeName(),
@@ -81,7 +81,7 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
 
             // Check if the species file is provided, if not set inactive
             // and NO_WRITE
-            if (!header.typeHeaderOk<volScalarField>(true))
+            if (!header.headerOk())
             {
                 composition.setInactive(i);
             }

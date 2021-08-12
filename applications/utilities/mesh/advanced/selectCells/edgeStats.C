@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ Foam::edgeStats::edgeStats(const polyMesh& mesh)
     mesh_(mesh),
     normalDir_(3)
 {
-    IOobject motionObj
+    typeIOobject<IOdictionary> motionObj
     (
         "motionProperties",
         mesh.time().constant(),
@@ -83,7 +83,7 @@ Foam::edgeStats::edgeStats(const polyMesh& mesh)
         IOobject::NO_WRITE
     );
 
-    if (motionObj.typeHeaderOk<IOdictionary>(true))
+    if (motionObj.headerOk())
     {
         Info<< "Reading " << mesh.time().constant() / "motionProperties"
             << endl << endl;

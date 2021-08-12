@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,9 +30,9 @@ License
 
 Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New(const IOobject& io)
 {
-    IOobject dictHeader(dynamicMeshDictIOobject(io));
+    typeIOobject<IOdictionary> dictHeader(dynamicMeshDictIOobject(io));
 
-    if (dictHeader.typeHeaderOk<IOdictionary>(true))
+    if (dictHeader.headerOk())
     {
         IOdictionary dict(dictHeader);
 

@@ -32,7 +32,7 @@ Foam::autoPtr<Foam::twoPhaseChangeModel> Foam::twoPhaseChangeModel::New
     const immiscibleIncompressibleTwoPhaseMixture& mixture
 )
 {
-    IOobject twoPhaseChangeModelIO
+    typeIOobject<IOdictionary> twoPhaseChangeModelIO
     (
         IOobject
         (
@@ -47,7 +47,7 @@ Foam::autoPtr<Foam::twoPhaseChangeModel> Foam::twoPhaseChangeModel::New
 
     word modelType(twoPhaseChangeModels::noPhaseChange::typeName);
 
-    if (twoPhaseChangeModelIO.typeHeaderOk<IOdictionary>(false))
+    if (twoPhaseChangeModelIO.headerOk())
     {
         IOdictionary(twoPhaseChangeModelIO).lookup
         (

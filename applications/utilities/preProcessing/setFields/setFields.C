@@ -58,7 +58,7 @@ bool setCellFieldType
     word fieldName(fieldValueStream);
 
     // Check the current time directory
-    IOobject fieldHeader
+    typeIOobject<fieldType> fieldHeader
     (
         fieldName,
         mesh.time().timeName(),
@@ -67,9 +67,9 @@ bool setCellFieldType
     );
 
     // Check the "constant" directory
-    if (!fieldHeader.typeHeaderOk<fieldType>(true))
+    if (!fieldHeader.headerOk())
     {
-        fieldHeader = IOobject
+        fieldHeader = typeIOobject<fieldType>
         (
             fieldName,
             mesh.time().constant(),
@@ -79,7 +79,7 @@ bool setCellFieldType
     }
 
     // Check field exists
-    if (fieldHeader.typeHeaderOk<fieldType>(true))
+    if (fieldHeader.headerOk())
     {
         Info<< "    Setting internal values of "
             << fieldHeader.headerClassName()
@@ -204,7 +204,7 @@ bool setFaceFieldType
     word fieldName(fieldValueStream);
 
     // Check the current time directory
-    IOobject fieldHeader
+    typeIOobject<fieldType> fieldHeader
     (
         fieldName,
         mesh.time().timeName(),
@@ -213,9 +213,9 @@ bool setFaceFieldType
     );
 
     // Check the "constant" directory
-    if (!fieldHeader.typeHeaderOk<fieldType>(true))
+    if (!fieldHeader.headerOk())
     {
-        fieldHeader = IOobject
+        fieldHeader = typeIOobject<fieldType>
         (
             fieldName,
             mesh.time().constant(),
@@ -225,7 +225,7 @@ bool setFaceFieldType
     }
 
     // Check field exists
-    if (fieldHeader.typeHeaderOk<fieldType>(true))
+    if (fieldHeader.headerOk())
     {
         Info<< "    Setting patchField values of "
             << fieldHeader.headerClassName()

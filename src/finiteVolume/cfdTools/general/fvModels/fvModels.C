@@ -42,7 +42,7 @@ Foam::IOobject Foam::fvModels::createIOobject
     const fvMesh& mesh
 ) const
 {
-    IOobject io
+    typeIOobject<IOdictionary> io
     (
         typeName,
         mesh.time().constant(),
@@ -51,7 +51,7 @@ Foam::IOobject Foam::fvModels::createIOobject
         IOobject::NO_WRITE
     );
 
-    if (io.typeHeaderOk<IOdictionary>(true))
+    if (io.headerOk())
     {
         Info<< "Creating fvModels from "
             << io.instance()/io.name() << nl
@@ -66,7 +66,7 @@ Foam::IOobject Foam::fvModels::createIOobject
         // check if the fvOptions file is in constant
         io.rename("fvOptions");
 
-        if (io.typeHeaderOk<IOdictionary>(true))
+        if (io.headerOk())
         {
             Warning
                 << "Creating fvModels from "
@@ -82,7 +82,7 @@ Foam::IOobject Foam::fvModels::createIOobject
             // check if the fvOptions file is in system
             io.instance() = mesh.time().system();
 
-            if (io.typeHeaderOk<IOdictionary>(true))
+            if (io.headerOk())
             {
                 Warning
                     << "Creating fvModels from "

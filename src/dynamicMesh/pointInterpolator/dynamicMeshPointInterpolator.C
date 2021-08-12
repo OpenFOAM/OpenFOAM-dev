@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::dynamicMeshPointInterpolator::dynamicMeshPointInterpolator
 
     forAll(allTimes, i)
     {
-        IOobject io
+        typeIOobject<pointVectorField> io
         (
             fieldName_,
             allTimes[i].name(),
@@ -61,7 +61,8 @@ Foam::dynamicMeshPointInterpolator::dynamicMeshPointInterpolator
             IOobject::NO_WRITE,
             false
         );
-        if (io.typeHeaderOk<pointVectorField>(false))
+
+        if (io.headerOk())
         {
             names.append(allTimes[i].name());
             values.append(allTimes[i].value());

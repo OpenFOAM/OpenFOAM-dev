@@ -41,7 +41,7 @@ void Foam::parcelCloudList::initialise
     const Args& ... args
 )
 {
-    IOobject cloudsIO
+    typeIOobject<wordGlobalIOList> cloudsIO
     (
         cloudsName,
         mesh_.time().constant(),
@@ -50,7 +50,7 @@ void Foam::parcelCloudList::initialise
         IOobject::NO_WRITE
     );
 
-    if (cloudsIO.typeHeaderOk<wordGlobalIOList>(false))
+    if (cloudsIO.headerOk())
     {
         wordGlobalIOList cloudNames(cloudsIO);
 
@@ -63,7 +63,7 @@ void Foam::parcelCloudList::initialise
     }
     else
     {
-        IOobject cloudIO
+        typeIOobject<IOdictionary> cloudIO
         (
             "cloudProperties",
             mesh_.time().constant(),
@@ -72,7 +72,7 @@ void Foam::parcelCloudList::initialise
             IOobject::NO_WRITE
         );
 
-        if (cloudIO.typeHeaderOk<IOdictionary>(false))
+        if (cloudIO.headerOk())
         {
             this->setSize(1);
 

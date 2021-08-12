@@ -4,7 +4,7 @@ if (nVar >= Num_variables - nSprayVariables)
 }
 
 
-IOobject fieldObjectPtr
+typeIOobject<volTensorField> fieldObjectPtr
 (
     fieldNames[var2field[nVar]],
     runTime.timeName(),
@@ -12,7 +12,7 @@ IOobject fieldObjectPtr
     IOobject::NO_READ
 );
 
-if (!fieldObjectPtr.typeHeaderOk<volTensorField>(true))
+if (!fieldObjectPtr.headerOk())
 {
     return Z_UNDEF;
 }

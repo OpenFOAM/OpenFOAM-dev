@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,7 +141,7 @@ void MapVolFields
         {
             const fieldType fieldSource(*fieldIter(), meshSource);
 
-            IOobject targetIO
+            typeIOobject<fieldType> targetIO
             (
                 fieldName,
                 meshTarget.time().timeName(),
@@ -149,7 +149,7 @@ void MapVolFields
                 IOobject::MUST_READ
             );
 
-            if (targetIO.typeHeaderOk<fieldType>(true))
+            if (targetIO.headerOk())
             {
                 Info<< "    interpolating onto existing field "
                     << fieldName << endl;

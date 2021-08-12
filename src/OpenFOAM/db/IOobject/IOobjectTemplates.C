@@ -49,7 +49,10 @@ bool Foam::IOobject::typeHeaderOk(const bool checkType)
     // Determine local status
     if (!masterOnly || Pstream::master())
     {
-        const fileName fName(typeFilePath<Type>(*this));
+        const fileName fName
+        (
+            filePath(Type::typeName, typeGlobalFile<Type>())
+        );
 
         ok = fp.readHeader(*this, fName, Type::typeName);
         if (ok && checkType && headerClassName_ != Type::typeName)
@@ -85,6 +88,13 @@ void Foam::IOobject::warnNoRereading() const
             << " does not support automatic rereading."
             << endl;
     }
+}
+
+
+template<class Type>
+bool Foam::typeIOobject<Type>::headerOk()
+{
+    return typeHeaderOk<Type>(true);
 }
 
 

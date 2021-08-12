@@ -1,5 +1,5 @@
 {
-    IOobject io
+    typeIOobject<pointIOField> io
     (
         "points",
         runTime.timeName(),
@@ -7,7 +7,7 @@
         mesh
     );
 
-    if (io.typeHeaderOk<pointIOField>(true))
+    if (io.headerOk())
     {
         // Read new points
         io.readOpt() = IOobject::MUST_READ;

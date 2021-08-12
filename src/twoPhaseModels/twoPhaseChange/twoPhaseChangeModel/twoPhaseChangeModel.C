@@ -46,7 +46,7 @@ Foam::IOobject Foam::twoPhaseChangeModel::createIOobject
     const immiscibleIncompressibleTwoPhaseMixture& mixture
 ) const
 {
-    IOobject io
+    typeIOobject<IOdictionary> io
     (
         phaseChangePropertiesName,
         mixture.U().mesh().time().constant(),
@@ -55,7 +55,7 @@ Foam::IOobject Foam::twoPhaseChangeModel::createIOobject
         IOobject::NO_WRITE
     );
 
-    if (io.typeHeaderOk<IOdictionary>(true))
+    if (io.headerOk())
     {
         io.readOpt() = IOobject::MUST_READ_IF_MODIFIED;
         return io;

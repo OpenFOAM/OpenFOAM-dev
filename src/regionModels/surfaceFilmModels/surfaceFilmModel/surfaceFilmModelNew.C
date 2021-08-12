@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ autoPtr<surfaceFilmModel> surfaceFilmModel::New
     word modelType;
 
     {
-        IOobject surfaceFilmPropertiesDictHeader
+        typeIOobject<IOdictionary> surfaceFilmPropertiesDictHeader
         (
             regionType + "Properties",
             mesh.time().constant(),
@@ -55,7 +55,7 @@ autoPtr<surfaceFilmModel> surfaceFilmModel::New
             false
         );
 
-        if (surfaceFilmPropertiesDictHeader.typeHeaderOk<IOdictionary>())
+        if (surfaceFilmPropertiesDictHeader.headerOk())
         {
             IOdictionary surfaceFilmPropertiesDict
             (

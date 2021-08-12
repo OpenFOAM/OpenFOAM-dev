@@ -639,7 +639,7 @@ int main(int argc, char *argv[])
 
     Info<< "Checking for motionProperties\n" << endl;
 
-    IOobject motionObj
+    typeIOobject<IOdictionary> motionObj
     (
         "motionProperties",
         runTime.constant(),
@@ -651,7 +651,7 @@ int main(int argc, char *argv[])
     // corrector for mesh motion
     twoDPointCorrector* correct2DPtr = nullptr;
 
-    if (motionObj.typeHeaderOk<IOdictionary>(true))
+    if (motionObj.headerOk())
     {
         Info<< "Reading " << runTime.constant() / "motionProperties"
             << endl << endl;

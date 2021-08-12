@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::functionObjects::readFields::loadField
     }
     else
     {
-        IOobject fieldHeader
+        typeIOobject<VolFieldType> fieldHeader
         (
             fieldName,
             mesh_.time().timeName(),
@@ -64,11 +64,7 @@ void Foam::functionObjects::readFields::loadField
             IOobject::NO_WRITE
         );
 
-        if
-        (
-            fieldHeader.typeHeaderOk<VolFieldType>(false)
-         && fieldHeader.headerClassName() == VolFieldType::typeName
-        )
+        if (fieldHeader.headerOk())
         {
             // Store field locally
             Log << "    Reading " << fieldName << endl;
@@ -77,18 +73,26 @@ void Foam::functionObjects::readFields::loadField
             vflds.setSize(sz+1);
             vflds.set(sz, new VolFieldType(fieldHeader, mesh_));
         }
-        else if
-        (
-            fieldHeader.typeHeaderOk<SurfaceFieldType>(false)
-         && fieldHeader.headerClassName() == SurfaceFieldType::typeName
-        )
+        else
         {
-            // Store field locally
-            Log << "    Reading " << fieldName << endl;
+            typeIOobject<SurfaceFieldType> fieldHeader
+            (
+                fieldName,
+                mesh_.time().timeName(),
+                mesh_,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE
+            );
 
-            label sz = sflds.size();
-            sflds.setSize(sz+1);
-            sflds.set(sz, new SurfaceFieldType(fieldHeader, mesh_));
+            if (fieldHeader.headerOk())
+            {
+                // Store field locally
+                Log << "    Reading " << fieldName << endl;
+
+                label sz = sflds.size();
+                sflds.setSize(sz+1);
+                sflds.set(sz, new SurfaceFieldType(fieldHeader, mesh_));
+            }
         }
     }
 }

@@ -89,7 +89,7 @@ bool writeZones(const word& name, const fileName& meshDir, Time& runTime)
 
     bool writeOk = false;
 
-    if (io.typeHeaderOk<meshCellZones>(false))
+    if (io.headerOk())
     {
         Info<< "        Reading " << io.headerClassName()
             << " : " << name << endl;
@@ -199,7 +199,7 @@ bool writeOptionalMeshObject
 
     bool writeOk = false;
 
-    bool haveFile = io.typeHeaderOk<IOField<label>>(false);
+    bool haveFile = io.headerOk();
 
     // Make sure all know if there is a valid class name
     stringList classNames(1, io.headerClassName());

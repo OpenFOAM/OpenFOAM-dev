@@ -1,6 +1,6 @@
     Info<< "Reading non-inertial frame fields" << endl;
 
-    IOobject linearAccelerationHeader
+    typeIOobject<uniformDimensionedVectorField> linearAccelerationHeader
     (
         "linearAcceleration",
         runTime.timeName(),
@@ -11,13 +11,7 @@
 
     autoPtr<uniformDimensionedVectorField> linearAccelerationPtr;
 
-    if
-    (
-        linearAccelerationHeader.typeHeaderOk<uniformDimensionedVectorField>
-        (
-            true
-        )
-    )
+    if (linearAccelerationHeader.headerOk())
     {
         Info<< "    Reading " << linearAccelerationHeader.name() << endl;
 
@@ -28,7 +22,7 @@
     }
 
 
-    IOobject angularVelocityHeader
+    typeIOobject<uniformDimensionedVectorField> angularVelocityHeader
     (
         "angularVelocity",
         runTime.timeName(),
@@ -39,7 +33,7 @@
 
     autoPtr<uniformDimensionedVectorField> angularVelocityPtr;
 
-    if (angularVelocityHeader.typeHeaderOk<uniformDimensionedVectorField>(true))
+    if (angularVelocityHeader.headerOk())
     {
         Info<< "    Reading " << angularVelocityHeader.name() << endl;
 
@@ -50,7 +44,7 @@
     }
 
 
-    IOobject angularAccelerationHeader
+    typeIOobject<uniformDimensionedVectorField> angularAccelerationHeader
     (
         "angularAcceleration",
         runTime.timeName(),
@@ -61,13 +55,7 @@
 
     autoPtr<uniformDimensionedVectorField> angularAccelerationPtr;
 
-    if
-    (
-        angularAccelerationHeader.typeHeaderOk<uniformDimensionedVectorField>
-        (
-            true
-        )
-    )
+    if (angularAccelerationHeader.headerOk())
     {
         Info<< "    Reading " << angularAccelerationHeader.name() << endl;
 
@@ -78,7 +66,7 @@
     }
 
 
-    IOobject centreOfRotationHeader
+    typeIOobject<uniformDimensionedVectorField> centreOfRotationHeader
     (
         "centreOfRotation",
         runTime.timeName(),
@@ -89,13 +77,7 @@
 
     autoPtr<uniformDimensionedVectorField> centreOfRotationPtr;
 
-    if
-    (
-        centreOfRotationHeader.typeHeaderOk<uniformDimensionedVectorField>
-        (
-            true
-        )
-    )
+    if (centreOfRotationHeader.headerOk())
     {
         Info<< "    Reading " << centreOfRotationHeader.name() << endl;
 

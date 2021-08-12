@@ -124,7 +124,7 @@ Foam::wordList Foam::vtkPVFoam::getZoneNames(const word& zoneType) const
         false
     );
 
-    if (ioObj.typeHeaderOk<meshCellZones>(false))
+    if (ioObj.headerOk())
     {
         zonesEntries zones(ioObj);
 
@@ -321,7 +321,7 @@ void Foam::vtkPVFoam::updateInfoPatches
     {
         // Mesh not loaded - read from file
         // but this could fail if we've supplied a bad region name
-        IOobject ioObj
+        typeIOobject<polyBoundaryMesh> ioObj
         (
             "boundary",
             dbPtr_().findInstance
@@ -338,7 +338,7 @@ void Foam::vtkPVFoam::updateInfoPatches
         );
 
         // This should only ever fail if the mesh region doesn't exist
-        if (ioObj.typeHeaderOk<polyBoundaryMesh>(true))
+        if (ioObj.headerOk())
         {
             polyBoundaryMeshEntries patchEntries(ioObj);
 

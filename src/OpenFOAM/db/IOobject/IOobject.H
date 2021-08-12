@@ -61,6 +61,13 @@ Description
       - \par NO_WRITE
         No automatic write on destruction but can be written explicitly
 
+Class
+    Foam::typeIOobject
+
+Description
+    Templated form of IOobject providing type information for file reading and
+    header type checking.
+
 SourceFiles
     IOobject.C
     IOobjectReadHeader.C
@@ -134,6 +141,7 @@ public:
 
         static const NamedEnum<fileCheckTypes, 4> fileCheckTypesNames;
 
+
 private:
 
     // Private Data
@@ -175,6 +183,11 @@ protected:
 
         //- Set the object state to bad
         void setBad(const string&);
+
+        //- Read header using typeGlobalFile to find file
+        //  and optionally check the headerClassName against Type
+        template<class Type>
+        bool typeHeaderOk(const bool checkType);
 
 
 public:
@@ -411,11 +424,6 @@ public:
                 return path(global)/name();
             }
 
-            //- Return complete path + object name including the processor
-            //  sub-directory for a parallel run if globalFile is false for Type
-            template<class Type>
-            inline fileName objectPath() const;
-
             //- Return the path relative to the case directory
             fileName relativePath() const;
 
@@ -438,10 +446,9 @@ public:
             //- Read header
             bool readHeader(Istream&);
 
-            //- Read header (uses typeFilePath to find file) and check header
-            //  info. Optionally checks headerClassName against type
-            template<class Type>
-            bool typeHeaderOk(const bool checkType = true);
+            //- Read header of local object without type-checking
+            //  Mainly used to create IOobjectLists
+            bool headerOk();
 
             //- Helper: warn that type does not support re-reading
             template<class Type>
@@ -516,25 +523,59 @@ inline bool typeGlobalFile()
     return typeGlobal<Type>();
 }
 
-//- Template function for obtaining filePath
-template<class Type>
-inline fileName typeFilePath(const IOobject& io)
-{
-    return io.filePath(Type::typeName, typeGlobalFile<Type>());
-}
-
-template<class Type>
-inline fileName IOobject::objectPath() const
-{
-    return objectPath(typeGlobalFile<Type>());
-}
-
 inline IOobject unregister(const IOobject& io)
 {
     IOobject uio(io);
     uio.registerObject() = false;
     return uio;
 }
+
+
+/*---------------------------------------------------------------------------*\
+                         Class typeIOobject Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class typeIOobject
+:
+    public IOobject
+{
+
+public:
+
+    // Constructors
+
+        using IOobject::IOobject;
+
+        typeIOobject(const IOobject& io)
+        :
+            IOobject(io)
+        {}
+
+
+    // Member Functions
+
+        // Reading
+
+            //- Read header (uses typeGlobalFile to find file) and check
+            bool headerOk();
+
+            using IOobject::objectPath;
+
+            //- Return the object path for this Type
+            inline fileName objectPath() const
+            {
+                return objectPath(typeGlobalFile<Type>());
+            }
+
+            using IOobject::filePath;
+
+            //- Return the path for the file for this Type
+            inline fileName filePath() const
+            {
+                return filePath(Type::typeName, typeGlobalFile<Type>());
+            }
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

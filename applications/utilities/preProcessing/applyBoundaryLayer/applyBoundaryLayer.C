@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
         epsilon.write();
 
         // Turbulence omega
-        IOobject omegaHeader
+        typeIOobject<volScalarField> omegaHeader
         (
             "omega",
             runTime.timeName(),
@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
             false
         );
 
-        if (omegaHeader.typeHeaderOk<volScalarField>(true))
+        if (omegaHeader.headerOk())
         {
             volScalarField omega(omegaHeader, mesh);
 
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
         }
 
         // Turbulence nuTilda
-        IOobject nuTildaHeader
+        typeIOobject<volScalarField> nuTildaHeader
         (
             "nuTilda",
             runTime.timeName(),
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
             false
         );
 
-        if (nuTildaHeader.typeHeaderOk<volScalarField>(true))
+        if (nuTildaHeader.headerOk())
         {
             volScalarField nuTilda(nuTildaHeader, mesh);
             nuTilda = nut;

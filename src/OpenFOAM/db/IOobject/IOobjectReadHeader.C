@@ -28,6 +28,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+bool Foam::IOobject::headerOk()
+{
+    return typeHeaderOk<IOobject>(false);
+}
+
+
 bool Foam::IOobject::readHeader(Istream& is)
 {
     if (IOobject::debug)

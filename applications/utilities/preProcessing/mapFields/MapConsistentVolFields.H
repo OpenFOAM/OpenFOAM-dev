@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ void MapConsistentVolFields
         // Read field
         fieldType fieldSource(*fieldIter(), meshSource);
 
-        IOobject fieldTargetIOobject
+        typeIOobject<fieldType> fieldTargetIOobject
         (
             fieldIter()->name(),
             meshTarget.time().timeName(),
@@ -68,7 +68,7 @@ void MapConsistentVolFields
             IOobject::AUTO_WRITE
         );
 
-        if (fieldTargetIOobject.typeHeaderOk<fieldType>(true))
+        if (fieldTargetIOobject.headerOk())
         {
             // Read fieldTarget
             fieldType fieldTarget

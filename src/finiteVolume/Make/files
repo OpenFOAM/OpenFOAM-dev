@@ -470,4 +470,10 @@ fvConstraints = $(general)/fvConstraints
 $(fvConstraints)/fvConstraint.C
 $(fvConstraints)/fvConstraints.C
 
+cellSources = sets/cellSources
+$(cellSources)/fieldToCell/fieldToCell.C
+
+faceSources = sets/faceSources
+$(faceSources)/patchFluxToFace/patchFluxToFace.C
+
 LIB = $(FOAM_LIBBIN)/libfiniteVolume

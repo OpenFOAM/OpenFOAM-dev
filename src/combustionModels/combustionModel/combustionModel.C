@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::IOobject Foam::combustionModel::createIOobject
     const word& combustionProperties
 ) const
 {
-    IOobject io
+    typeIOobject<IOdictionary> io
     (
         thermo.phasePropertyName(combustionProperties),
         thermo.T().mesh().time().constant(),
@@ -56,7 +56,7 @@ Foam::IOobject Foam::combustionModel::createIOobject
         IOobject::NO_WRITE
     );
 
-    if (io.typeHeaderOk<IOdictionary>(true))
+    if (io.headerOk())
     {
         io.readOpt() = IOobject::MUST_READ_IF_MODIFIED;
         return io;

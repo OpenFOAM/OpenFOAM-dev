@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,11 +39,11 @@ License
 Foam::hexRef8Data::hexRef8Data(const IOobject& io)
 {
     {
-        IOobject rio(io);
+        typeIOobject<labelIOList> rio(io);
         rio.rename("cellLevel");
         bool haveFile = returnReduce
         (
-            rio.typeHeaderOk<labelIOList>(true),
+            rio.headerOk(),
             orOp<bool>()
         );
         if (haveFile)
@@ -53,11 +53,11 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         }
     }
     {
-        IOobject rio(io);
+        typeIOobject<labelIOList> rio(io);
         rio.rename("pointLevel");
         bool haveFile = returnReduce
         (
-            rio.typeHeaderOk<labelIOList>(true),
+            rio.headerOk(),
             orOp<bool>()
         );
         if (haveFile)
@@ -67,11 +67,11 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         }
     }
     {
-        IOobject rio(io);
+        typeIOobject<uniformDimensionedScalarField> rio(io);
         rio.rename("level0Edge");
         bool haveFile = returnReduce
         (
-            rio.typeHeaderOk<uniformDimensionedScalarField>(true),
+            rio.headerOk(),
             orOp<bool>()
         );
         if (haveFile)
@@ -81,11 +81,11 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         }
     }
     {
-        IOobject rio(io);
+        typeIOobject<refinementHistory> rio(io);
         rio.rename("refinementHistory");
         bool haveFile = returnReduce
         (
-            rio.typeHeaderOk<refinementHistory>(true),
+            rio.headerOk(),
             orOp<bool>()
         );
         if (haveFile)

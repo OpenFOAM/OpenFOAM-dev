@@ -43,7 +43,7 @@ Foam::IOobject Foam::physicalProperties::findModelDict
     bool registerObject
 )
 {
-    IOobject physicalPropertiesIO
+    typeIOobject<IOdictionary> physicalPropertiesIO
     (
         IOobject::groupName(physicalProperties::typeName, group),
         obr.time().constant(),
@@ -53,13 +53,13 @@ Foam::IOobject Foam::physicalProperties::findModelDict
         registerObject
     );
 
-    if (physicalPropertiesIO.typeHeaderOk<IOdictionary>(true))
+    if (physicalPropertiesIO.headerOk())
     {
         return physicalPropertiesIO;
     }
     else
     {
-        IOobject thermophysicalPropertiesIO
+        typeIOobject<IOdictionary> thermophysicalPropertiesIO
         (
             IOobject::groupName("thermophysicalProperties", group),
             obr.time().constant(),
@@ -69,13 +69,13 @@ Foam::IOobject Foam::physicalProperties::findModelDict
             registerObject
         );
 
-        if (thermophysicalPropertiesIO.typeHeaderOk<IOdictionary>(true))
+        if (thermophysicalPropertiesIO.headerOk())
         {
             return thermophysicalPropertiesIO;
         }
         else
         {
-            IOobject transportPropertiesIO
+            typeIOobject<IOdictionary> transportPropertiesIO
             (
                 IOobject::groupName("transportProperties", group),
                 obr.time().constant(),
@@ -85,7 +85,7 @@ Foam::IOobject Foam::physicalProperties::findModelDict
                 registerObject
             );
 
-            if (transportPropertiesIO.typeHeaderOk<IOdictionary>(true))
+            if (transportPropertiesIO.headerOk())
             {
                 return transportPropertiesIO;
             }

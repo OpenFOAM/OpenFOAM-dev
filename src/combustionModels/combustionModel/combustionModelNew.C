@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::autoPtr<Foam::combustionModel> Foam::combustionModel::New
     const word& combustionProperties
 )
 {
-    IOobject combIO
+    typeIOobject<IOdictionary> combIO
     (
         IOobject
         (
@@ -49,7 +49,7 @@ Foam::autoPtr<Foam::combustionModel> Foam::combustionModel::New
     );
 
     word modelType(combustionModels::noCombustion::typeName);
-    if (combIO.typeHeaderOk<IOdictionary>(false))
+    if (combIO.headerOk())
     {
         IOdictionary(combIO).lookup(combustionModel::typeName) >> modelType;
     }

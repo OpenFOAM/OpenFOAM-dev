@@ -42,7 +42,7 @@ namespace fv
 
 void Foam::fv::heatTransferModel::readCoeffs()
 {
-    IOobject AoVIO
+    typeIOobject<volScalarField> AoVIO
     (
         "AoV",
         mesh().time().constant(),
@@ -56,7 +56,7 @@ void Foam::fv::heatTransferModel::readCoeffs()
         AoV_ = dimensionedScalar("AoV", dimless/dimLength, coeffs());
         AoVPtr_.clear();
     }
-    else if (AoVIO.typeHeaderOk<volScalarField>(false))
+    else if (AoVIO.headerOk())
     {
         AoV_ = dimensionedScalar("AoV", dimless/dimLength, NaN);
         AoVPtr_.set(new volScalarField(AoVIO, mesh()));
@@ -66,7 +66,7 @@ void Foam::fv::heatTransferModel::readCoeffs()
         FatalIOErrorInFunction(coeffs())
             << "Area per unit volume (AoV) not found. A uniform AoV "
             << "value should be specified, or a non-uniform field should "
-            << "exist at " << AoVIO.objectPath<volScalarField>()
+            << "exist at " << AoVIO.objectPath()
             << exit(FatalIOError);
     }
 }

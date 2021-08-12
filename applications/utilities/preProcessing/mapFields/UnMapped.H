@@ -41,7 +41,7 @@ void UnMapped(const IOobjectList& objects)
 
     forAllConstIter(IOobjectList, fields, fieldIter)
     {
-        mvBak(fieldIter()->objectPath<Type>(), "unmapped");
+        mvBak(fieldIter()->objectPath(false), "unmapped");
     }
 }
 

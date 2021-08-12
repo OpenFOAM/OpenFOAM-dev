@@ -39,7 +39,7 @@ Foam::word Foam::Cloud<ParticleType>::cloudPropertiesName("cloudProperties");
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::readCloudUniformProperties()
 {
-    IOobject dictObj
+    typeIOobject<timeIOdictionary> dictObj
     (
         cloudPropertiesName,
         time().timeName(),
@@ -50,7 +50,7 @@ void Foam::Cloud<ParticleType>::readCloudUniformProperties()
         false
     );
 
-    if (dictObj.typeHeaderOk<timeIOdictionary>(true))
+    if (dictObj.headerOk())
     {
         const timeIOdictionary uniformPropsDict(dictObj);
 

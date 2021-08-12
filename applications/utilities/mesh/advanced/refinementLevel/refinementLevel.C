@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
 
 
     // Refinement level
-    IOobject refHeader
+    typeIOobject<labelIOList> refHeader
     (
         "refinementLevel",
         runTime.timeName(),
@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
         runTime
     );
 
-    if (!readLevel && refHeader.typeHeaderOk<labelIOList>(true))
+    if (!readLevel && refHeader.headerOk())
     {
         WarningInFunction
             << "Detected " << refHeader.name() << " file in "

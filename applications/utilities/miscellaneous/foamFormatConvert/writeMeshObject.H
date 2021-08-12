@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ inline bool writeMeshObject
     bool disableHeaderChecking = false
 )
 {
-    IOobject io
+    typeIOobject<CheckType> io
     (
         name,
         runTime.timeName(),
@@ -61,11 +61,7 @@ inline bool writeMeshObject
 
     bool writeOk = false;
 
-    if
-    (
-        io.typeHeaderOk<Type>(false)
-     && io.headerClassName() == CheckType::typeName
-    )
+    if (io.headerOk())
     {
         Info<< "        Reading " << io.headerClassName()
             << " : " << name << endl;

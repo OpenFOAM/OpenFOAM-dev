@@ -159,7 +159,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
 
         forAll(sigmas_, modei)
         {
-            IOobject header
+            typeIOobject<volSymmTensorField> header
             (
                 IOobject::groupName("sigma" + name(modei), alphaRhoPhi.group()),
                 this->runTime_.timeName(),
@@ -168,7 +168,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
             );
 
             // Check if mode field exists and can be read
-            if (header.typeHeaderOk<volSymmTensorField>(true))
+            if (header.headerOk())
             {
                 Info<< "    Reading mode stress field "
                     << header.name() << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ Foam::PatchCollisionDensity<CloudType>::PatchCollisionDensity
     collisionDensity_ == 0;
     collisionDensity0_ == 0;
 
-    IOobject io
+    typeIOobject<volScalarField> io
     (
         this->owner().name() + ":collisionDensity",
         this->owner().mesh().time().timeName(),
@@ -110,7 +110,7 @@ Foam::PatchCollisionDensity<CloudType>::PatchCollisionDensity
         IOobject::NO_WRITE
     );
 
-    if (io.typeHeaderOk<volScalarField>())
+    if (io.headerOk())
     {
         const volScalarField collisionDensity(io, this->owner().mesh());
         collisionDensity_ == collisionDensity.boundaryField();

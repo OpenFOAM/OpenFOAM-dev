@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,58 +23,66 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fieldToCell.H"
+#include "patchFluxToFace.H"
 #include "polyMesh.H"
-#include "cellSet.H"
+#include "faceSet.H"
 #include "Time.H"
 #include "IFstream.H"
 #include "fieldDictionary.H"
+#include "surfaceFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(fieldToCell, 0);
-    addToRunTimeSelectionTable(topoSetSource, fieldToCell, word);
+    defineTypeNameAndDebug(patchFluxToFace, 0);
+    addToRunTimeSelectionTable(topoSetSource, patchFluxToFace, word);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fieldToCell::applyToSet
+void Foam::patchFluxToFace::applyToSet
 (
     const topoSetSource::setAction action,
-    const scalarField& field,
+    const scalarField& patchFluxField,
     topoSet& set
 ) const
 {
-    Info<< "    Field min:" << min(field)
-        << " max:" << max(field) << endl;
+    const polyPatch& patch = mesh().boundaryMesh()[patchName_];
 
     if ((action == topoSetSource::NEW) || (action == topoSetSource::ADD))
     {
-        Info<< "    Adding all cells with value of field " << fieldName_
-            << " within range " << min_ << ".." << max_ << endl;
+        Info<< "    Adding all " << fieldName_
+            << (inflow_ ? " inflow" : " outflow") << " faces" << endl;
 
-        forAll(field, celli)
+        forAll(patch, facei)
         {
-            if (field[celli] >= min_ && field[celli] <= max_)
+            if
+            (
+                (inflow_ && patchFluxField[facei] < 0)
+             || (!inflow_ && patchFluxField[facei] >= 0)
+            )
             {
-                set.insert(celli);
+                set.insert(patch.start() + facei);
             }
         }
     }
     else if (action == topoSetSource::DELETE)
     {
-        Info<< "    Removing all cells with value of field " << fieldName_
-            << " within range " << min_ << ".." << max_ << endl;
+        Info<< "    Removing all " << fieldName_
+            << (inflow_ ? " inflow" : " outflow") << " faces" << endl;
 
-        forAll(field, celli)
+        forAll(patch, facei)
         {
-            if (field[celli] >= min_ && field[celli] <= max_)
+            if
+            (
+                (inflow_ && patchFluxField[facei] < 0)
+             || (!inflow_ && patchFluxField[facei] >= 0)
+            )
             {
-                set.erase(celli);
+                set.erase(patch.start() + facei);
             }
         }
     }
@@ -83,22 +91,22 @@ void Foam::fieldToCell::applyToSet
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fieldToCell::fieldToCell
+Foam::patchFluxToFace::patchFluxToFace
 (
     const polyMesh& mesh,
     const word& fieldName,
-    const scalar min,
-    const scalar max
+    const word& patchName,
+    const bool inflow
 )
 :
     topoSetSource(mesh),
     fieldName_(fieldName),
-    min_(min),
-    max_(max)
+    patchName_(patchName),
+    inflow_(inflow)
 {}
 
 
-Foam::fieldToCell::fieldToCell
+Foam::patchFluxToFace::patchFluxToFace
 (
     const polyMesh& mesh,
     const dictionary& dict
@@ -106,27 +114,26 @@ Foam::fieldToCell::fieldToCell
 :
     topoSetSource(mesh),
     fieldName_(dict.lookup("field")),
-    min_(dict.lookup<scalar>("min")),
-    max_(dict.lookup<scalar>("max"))
+    patchName_(dict.lookup("patch")),
+    inflow_(dict.lookup<Switch>("inflow"))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fieldToCell::~fieldToCell()
+Foam::patchFluxToFace::~patchFluxToFace()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fieldToCell::applyToSet
+void Foam::patchFluxToFace::applyToSet
 (
     const topoSetSource::setAction action,
     topoSet& set
 ) const
 {
-    // Try to load field
-    IOobject fieldObject
+    typeIOobject<surfaceScalarField> fieldObject
     (
         fieldName_,
         mesh().time().timeName(),
@@ -136,41 +143,31 @@ void Foam::fieldToCell::applyToSet
         false
     );
 
-    // Note: should check for volScalarField but that introduces dependency
-    //       on volMesh so just use another type with processor-local scope
-    if (!fieldObject.typeHeaderOk<labelIOList>(false))
+    if (fieldObject.headerOk())
     {
-        WarningInFunction
-            << "Cannot read field " << fieldName_
-            << " from time " << mesh().time().timeName() << endl;
-    }
-    else if (fieldObject.headerClassName() == "volScalarField")
-    {
-        IFstream str(typeFilePath<labelIOList>(fieldObject));
+        IFstream str(fieldObject.filePath());
 
         // Read dictionary
-        fieldDictionary fieldDict(fieldObject, fieldObject.headerClassName());
+        const fieldDictionary fieldDict
+        (
+            fieldObject,
+            fieldObject.headerClassName()
+        );
 
-        scalarField internalVals("internalField", fieldDict, mesh().nCells());
+        const scalarField patchFluxField
+        (
+            "value",
+            fieldDict.subDict("boundaryField").subDict(patchName_),
+            mesh().boundaryMesh()[patchName_].size()
+        );
 
-        applyToSet(action, internalVals, set);
-    }
-    else if (fieldObject.headerClassName() == "volVectorField")
-    {
-        IFstream str(typeFilePath<labelIOList>(fieldObject));
-
-        // Read dictionary
-        fieldDictionary fieldDict(fieldObject, fieldObject.headerClassName());
-
-        vectorField internalVals("internalField", fieldDict, mesh().nCells());
-
-        applyToSet(action, mag(internalVals), set);
+        applyToSet(action, patchFluxField, set);
     }
     else
     {
         WarningInFunction
-            << "Cannot handle fields of type " << fieldObject.headerClassName()
-            << endl;
+            << "Cannot read flux field " << fieldName_
+            << " from time " << mesh().time().timeName() << endl;
     }
 }
 

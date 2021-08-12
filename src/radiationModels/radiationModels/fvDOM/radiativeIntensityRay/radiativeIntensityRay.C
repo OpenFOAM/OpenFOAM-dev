@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,7 @@ Foam::radiationModels::radiativeIntensityRay::radiativeIntensityRay
 
     forAll(ILambda_, lambdaI)
     {
-        IOobject IHeader
+        typeIOobject<volScalarField> IHeader
         (
             intensityPrefix + "_" + name(rayId) + "_" + name(lambdaI),
             mesh_.time().timeName(),
@@ -187,7 +187,7 @@ Foam::radiationModels::radiativeIntensityRay::radiativeIntensityRay
         );
 
         // Check if field exists and can be read
-        if (IHeader.typeHeaderOk<volScalarField>(true))
+        if (IHeader.headerOk())
         {
             ILambda_.set
             (

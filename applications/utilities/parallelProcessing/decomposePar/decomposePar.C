@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
         label nProcs = fileHandler().nProcs(runTime.path(), regionDir);
 
         // Get the dictionary IO
-        const IOobject dictIO
+        const typeIOobject<IOdictionary> dictIO
         (
             systemDictIO(dictName, args, runTime, regionName)
         );
@@ -432,13 +432,13 @@ int main(int argc, char *argv[])
                 IOobject::NO_WRITE,
                 false
             ),
-            dictIO.objectPath<domainDecomposition>()
+            dictIO.objectPath()
         );
 
         // Decompose the mesh
         if (!decomposeFieldsOnly)
         {
-            mesh.decomposeMesh(dictIO.objectPath<domainDecomposition>());
+            mesh.decomposeMesh(dictIO.objectPath());
 
             mesh.writeDecomposition(decomposeSets);
 

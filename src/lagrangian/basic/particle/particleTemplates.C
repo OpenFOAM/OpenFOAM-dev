@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,9 +44,12 @@ void Foam::particle::readFields(TrackCloudType& c)
 {
     bool valid = c.size();
 
-    IOobject procIO(c.fieldIOobject("origProcId", IOobject::MUST_READ));
+    typeIOobject<IOField<label>> procIO
+    (
+        c.fieldIOobject("origProcId", IOobject::MUST_READ)
+    );
 
-    bool haveFile = procIO.typeHeaderOk<IOField<label>>(true);
+    bool haveFile = procIO.headerOk();
 
     IOField<label> origProcId(procIO, valid && haveFile);
     c.checkFieldIOobject(c, origProcId);

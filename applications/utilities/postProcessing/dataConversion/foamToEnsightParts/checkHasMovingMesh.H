@@ -6,13 +6,13 @@ if (timeDirs.size() > 1)
     hasMovingMesh = true;
     for (label i=0; i < timeDirs.size() && hasMovingMesh; ++i)
     {
-        hasMovingMesh = IOobject
+        hasMovingMesh = typeIOobject<pointIOField>
         (
             "points",
             timeDirs[i].name(),
             polyMesh::meshSubDir,
             mesh,
             IOobject::NO_READ
-        ).typeHeaderOk<pointIOField>(true);
+        ).headerOk();
     }
 }
