@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,6 +83,7 @@ void Foam::sampledSets::lineUniform::calcSamples
                 if (++ sampleI < nPoints_)
                 {
                     sampleT = scalar(sampleI)/(nPoints_ - 1);
+                    sampleParticle.reset();
                     sampleParticle.track((end_ - start_)/(nPoints_ - 1), 0);
                 }
             }
