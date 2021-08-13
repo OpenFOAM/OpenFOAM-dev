@@ -56,6 +56,12 @@ void Foam::sampledSets::lineFace::calcSamples
     DynamicList<scalar>& samplingCurveDist
 )
 {
+    // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
+    // build them, otherwise, if some processors have no particles then there
+    // is a comms mismatch.
+    mesh.tetBasePtIs();
+    mesh.oldCellCentres();
+
     // Create lists of initial positions from which to track, the faces and
     // cells associated with those positions, and whether the track  propagates
     // forward (true) or backward (false) along the line from start to end

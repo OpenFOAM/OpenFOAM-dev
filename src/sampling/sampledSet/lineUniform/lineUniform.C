@@ -52,6 +52,12 @@ void Foam::sampledSets::lineUniform::calcSamples
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
+    // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
+    // build them, otherwise, if some processors have no particles then there
+    // is a comms mismatch.
+    mesh().tetBasePtIs();
+    mesh().oldCellCentres();
+
     label sampleSegmentI = 0, sampleI = 0;
     scalar sampleT = 0;
 
