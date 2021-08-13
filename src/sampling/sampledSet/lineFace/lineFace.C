@@ -146,7 +146,7 @@ void Foam::sampledSets::lineFace::calcSamples
             const vector s =
                 sign*(end - start)*(1 - dist/mag(end - start));
 
-            sampleParticle.reset();
+            sampleParticle.reset(1);
 
             if
             (

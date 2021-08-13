@@ -281,9 +281,9 @@ inline Foam::vector Foam::particle::position() const
 }
 
 
-inline void Foam::particle::reset()
+inline void Foam::particle::reset(const scalar stepFraction)
 {
-    stepFraction_ = 0;
+    stepFraction_ = stepFraction;
     stepFractionBehind_ = 0;
     nTracksBehind_ = 0;
 }

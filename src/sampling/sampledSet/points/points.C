@@ -118,7 +118,7 @@ void Foam::sampledSets::points::calcSamplesOrdered
                 {
                     const vector s = points_[sampleI] - points_[sampleI - 1];
                     sampleDist += mag(s);
-                    sampleParticle.reset();
+                    sampleParticle.reset(1);
                     sampleParticle.track(s, 0);
                 }
             }

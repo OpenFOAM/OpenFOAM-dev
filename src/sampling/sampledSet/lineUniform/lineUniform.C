@@ -89,7 +89,7 @@ void Foam::sampledSets::lineUniform::calcSamples
                 if (++ sampleI < nPoints_)
                 {
                     sampleT = scalar(sampleI)/(nPoints_ - 1);
-                    sampleParticle.reset();
+                    sampleParticle.reset(1);
                     sampleParticle.track((end_ - start_)/(nPoints_ - 1), 0);
                 }
             }
