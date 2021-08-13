@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,8 +119,9 @@ public:
         //- Update model
         virtual void calculate
         (
+            const typename CloudType::parcelType& p,
+            const typename CloudType::parcelType::trackingData& td,
             const scalar dt,
-            const scalar age,
             const scalar mass0,
             const scalar mass,
             const scalar T,

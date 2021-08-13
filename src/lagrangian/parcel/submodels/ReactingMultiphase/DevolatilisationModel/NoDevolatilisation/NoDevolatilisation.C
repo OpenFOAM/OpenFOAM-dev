@@ -60,7 +60,8 @@ Foam::NoDevolatilisation<CloudType>::~NoDevolatilisation()
 template<class CloudType>
 void Foam::NoDevolatilisation<CloudType>::calculate
 (
-    const scalar,
+    const typename CloudType::parcelType&,
+    const typename CloudType::parcelType::trackingData&,
     const scalar,
     const scalar,
     const scalar,

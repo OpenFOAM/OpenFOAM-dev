@@ -225,7 +225,6 @@ protected:
             TrackCloudType& cloud,
             trackingData& td,
             const scalar dt,           // timestep
-            const scalar age,          // age
             const scalar Ts,           // surface temperature
             const scalar d,            // diameter
             const scalar T,            // temperature

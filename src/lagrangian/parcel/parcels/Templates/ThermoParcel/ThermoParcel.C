@@ -93,8 +93,8 @@ template<class ParcelType>
 template<class TrackCloudType>
 void Foam::ThermoParcel<ParcelType>::calcSurfaceValues
 (
-    TrackCloudType& cloud,
-    trackingData& td,
+    const TrackCloudType& cloud,
+    const trackingData& td,
     const scalar T,
     scalar& Ts,
     scalar& rhos,

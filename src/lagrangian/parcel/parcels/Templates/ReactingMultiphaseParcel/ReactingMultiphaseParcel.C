@@ -274,7 +274,6 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         cloud,
         td,
         dt,
-        this->age_,
         Ts,
         d0,
         T0,
@@ -503,7 +502,6 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
     TrackCloudType& cloud,
     trackingData& td,
     const scalar dt,
-    const scalar age,
     const scalar Ts,
     const scalar d,
     const scalar T,
@@ -557,12 +555,17 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
     const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
 
+    const typename TrackCloudType::parcelType& p =
+        static_cast<const typename TrackCloudType::parcelType&>(*this);
+    typename TrackCloudType::parcelType::trackingData& ttd =
+        static_cast<typename TrackCloudType::parcelType::trackingData&>(td);
 
     // Total mass of volatiles evolved
     cloud.devolatilisation().calculate
     (
+        p,
+        ttd,
         dt,
-        age,
         mass0,
         mass,
         T,
