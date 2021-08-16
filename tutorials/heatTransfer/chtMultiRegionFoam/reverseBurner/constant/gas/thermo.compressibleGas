@@ -21,8 +21,6 @@ O2
     {
         molWeight       31.9988;
     }
-    equationOfState
-    {}
     thermodynamics
     {
         Tlow            200;
@@ -33,8 +31,8 @@ O2
     }
     transport
     {
-        As              1.67212e-06;
-        Ts              170.672;
+        As              1.753e-6;
+        Ts              139;
     }
 }
 
@@ -44,8 +42,6 @@ H2O
     {
         molWeight       18.0153;
     }
-    equationOfState
-    {}
     thermodynamics
     {
         Tlow            200;
@@ -56,8 +52,8 @@ H2O
     }
     transport
     {
-        As              1.67212e-06;
-        Ts              170.672;
+        As              2.978e-7;
+        Ts              1064;
     }
 }
 
@@ -67,8 +63,6 @@ CH4
     {
         molWeight       16.0428;
     }
-    equationOfState
-    {}
     thermodynamics
     {
         Tlow            200;
@@ -79,8 +73,8 @@ CH4
     }
     transport
     {
-        As              1.67212e-06;
-        Ts              170.672;
+        As              1.0194e-06;
+        Ts              171.06;
     }
 }
 
@@ -90,8 +84,6 @@ CO2
     {
         molWeight       44.01;
     }
-    equationOfState
-    {}
     thermodynamics
     {
         Tlow            200;
@@ -102,8 +94,8 @@ CO2
     }
     transport
     {
-        As              1.67212e-06;
-        Ts              170.672;
+        As              1.503e-6;
+        Ts              222;
     }
 }
 
@@ -113,8 +105,6 @@ N2
     {
         molWeight       28.0134;
     }
-    equationOfState
-    {}
     thermodynamics
     {
         Tlow            200;
@@ -125,8 +115,8 @@ N2
     }
     transport
     {
-        As              1.67212e-06;
-        Ts              170.672;
+        As              1.401e-6;
+        Ts              107;
     }
 }
 
