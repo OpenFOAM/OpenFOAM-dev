@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
         muCells[celli] = transportMixture.mu(pCells[celli], TCells[celli]);
         alphaCells[celli] =
             transportMixture.kappa(pCells[celli], TCells[celli])
-           /thermoMixture.Cp(pCells[celli], TCells[celli]);
+           /CpCells[celli];
     }
 
     volScalarField::Boundary& pBf =
@@ -121,7 +121,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
                 palpha[facei] =
                     transportMixture.kappa(pp[facei], pT[facei])
-                   /thermoMixture.Cp(pp[facei], pT[facei]);
+                   /pCp[facei];
             }
         }
         else
@@ -145,7 +145,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
                 palpha[facei] =
                     transportMixture.kappa(pp[facei], pT[facei])
-                   /thermoMixture.Cp(pp[facei], pT[facei]);
+                   /pCp[facei];
             }
         }
     }
