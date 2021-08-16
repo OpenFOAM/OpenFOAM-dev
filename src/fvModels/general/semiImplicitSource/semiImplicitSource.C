@@ -64,17 +64,6 @@ void Foam::fv::semiImplicitSource::readCoeffs()
     // Get the volume mode
     volumeMode_ = volumeModeNames_.read(coeffs().lookup("volumeMode"));
 
-    // Set volume normalisation
-    switch (volumeMode_)
-    {
-        case volumeMode::absolute:
-            VDash_ = set_.V();
-            break;
-        case volumeMode::specific:
-            VDash_ = 1;
-            break;
-    }
-
     // Set field source terms
     fieldSp_.clear();
     fieldSu_.clear();
@@ -142,9 +131,21 @@ void Foam::fv::semiImplicitSource::addSupType
         false
     );
 
+    // Set volume normalisation
+    scalar VDash = NaN;
+    switch (volumeMode_)
+    {
+        case volumeMode::absolute:
+            VDash = set_.V();
+            break;
+        case volumeMode::specific:
+            VDash = 1;
+            break;
+    }
+
     // Explicit source function for the field
     UIndirectList<Type>(Su, set_.cells()) =
-        fieldSu_[fieldName]->value<Type>(t)/VDash_;
+        fieldSu_[fieldName]->value<Type>(t)/VDash;
 
     volScalarField::Internal Sp
     (
@@ -168,7 +169,7 @@ void Foam::fv::semiImplicitSource::addSupType
 
     // Implicit source function for the field
     UIndirectList<scalar>(Sp, set_.cells()) =
-        fieldSp_[fieldName]->value(t)/VDash_;
+        fieldSp_[fieldName]->value(t)/VDash;
 
     eqn += Su + fvm::SuSp(Sp, psi);
 }
@@ -211,8 +212,7 @@ Foam::fv::semiImplicitSource::semiImplicitSource
 :
     fvModel(name, modelType, dict, mesh),
     set_(coeffs(), mesh),
-    volumeMode_(volumeMode::absolute),
-    VDash_(1)
+    volumeMode_(volumeMode::absolute)
 {
     readCoeffs();
 }
@@ -248,6 +248,13 @@ FOR_ALL_FIELD_TYPES
 void Foam::fv::semiImplicitSource::updateMesh(const mapPolyMesh& mpm)
 {
     set_.updateMesh(mpm);
+}
+
+
+bool Foam::fv::semiImplicitSource::movePoints()
+{
+    set_.movePoints();
+    return true;
 }
 
 

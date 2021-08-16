@@ -362,6 +362,13 @@ void Foam::fv::solidificationMeltingSource::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::solidificationMeltingSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::solidificationMeltingSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

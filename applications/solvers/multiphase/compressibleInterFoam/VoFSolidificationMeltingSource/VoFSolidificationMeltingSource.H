@@ -193,6 +193,9 @@ public:
             //- Update for mesh changes
             virtual void updateMesh(const mapPolyMesh&);
 
+            //- Update for mesh motion
+            virtual bool movePoints();
+
 
         //- Correct the model
         virtual void correct();

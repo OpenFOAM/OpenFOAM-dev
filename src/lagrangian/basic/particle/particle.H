@@ -528,9 +528,9 @@ public:
 
     // Track
 
-        //- Set step fraction and behind data to zero in preparation for a new
-        //  track
-        inline void reset();
+        //- Set the step fraction and clear the behind data in preparation for
+        //  a new track
+        inline void reset(const scalar stepFraction);
 
         //- Track along the displacement for a given fraction of the overall
         //  step. End when the track is complete, or when a boundary is hit.

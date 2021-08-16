@@ -94,9 +94,6 @@ class codedFvModel
 {
     // Private data
 
-        //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
-
         //- The name of the field that this fvModel applies to
         word fieldName_;
 
@@ -207,6 +204,9 @@ public:
 
             //- Update for mesh changes
             virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
 
 
         // IO

@@ -636,6 +636,13 @@ void Foam::fv::rotorDiskSource::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::rotorDiskSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::rotorDiskSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

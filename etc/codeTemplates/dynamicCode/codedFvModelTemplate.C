@@ -179,6 +179,18 @@ void ${typeName}FvModel${SourceType}::addSup
 }
 
 
+void ${typeName}FvModel${SourceType}::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
+bool ${typeName}FvModel${SourceType}::movePoints()
+{
+    set_.movePoints();
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

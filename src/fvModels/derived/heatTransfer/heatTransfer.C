@@ -159,6 +159,19 @@ void Foam::fv::heatTransfer::correct()
 }
 
 
+void Foam::fv::heatTransfer::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
+bool Foam::fv::heatTransfer::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::heatTransfer::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

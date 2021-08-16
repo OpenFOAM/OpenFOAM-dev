@@ -77,6 +77,12 @@ void Foam::sampledSets::points::calcSamplesOrdered
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
+    // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
+    // build them, otherwise, if some processors have no particles then there
+    // is a comms mismatch.
+    mesh().tetBasePtIs();
+    mesh().oldCellCentres();
+
     const label n = points_.size();
 
     label sampleSegmentI = 0;
@@ -112,7 +118,7 @@ void Foam::sampledSets::points::calcSamplesOrdered
                 {
                     const vector s = points_[sampleI] - points_[sampleI - 1];
                     sampleDist += mag(s);
-                    sampleParticle.reset();
+                    sampleParticle.reset(1);
                     sampleParticle.track(s, 0);
                 }
             }

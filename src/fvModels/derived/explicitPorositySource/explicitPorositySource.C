@@ -145,6 +145,13 @@ void Foam::fv::explicitPorositySource::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::explicitPorositySource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::explicitPorositySource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

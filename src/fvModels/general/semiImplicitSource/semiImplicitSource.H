@@ -137,9 +137,6 @@ private:
         //- Volume mode
         volumeMode volumeMode_;
 
-        //- Volume normalisation
-        scalar VDash_;
-
         //- Explicit parts of the sources
         HashPtrTable<objectFunction1> fieldSu_;
 
@@ -225,6 +222,9 @@ public:
 
             //- Update for mesh changes
             virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
 
 
         // IO

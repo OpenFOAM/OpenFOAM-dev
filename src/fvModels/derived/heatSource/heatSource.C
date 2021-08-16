@@ -150,6 +150,19 @@ void Foam::fv::heatSource::addSup
 }
 
 
+void Foam::fv::heatSource::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
+bool Foam::fv::heatSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::heatSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

@@ -122,8 +122,11 @@ private:
         //- Read the coefficients from the given dictionary
         void readCoeffs(const dictionary& dict);
 
-        //- Set the cell set based on the user input selection mode
-        void setCellSet();
+        //- Set the cells
+        void setCells();
+
+        //- Set the sum of scalar volumes
+        void setV();
 
 
 public:
@@ -164,6 +167,9 @@ public:
 
             //- Update for mesh changes
             void updateMesh(const mapPolyMesh&);
+
+            //- Update for mesh motion
+            void movePoints();
 
 
         // IO

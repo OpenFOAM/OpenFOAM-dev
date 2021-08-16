@@ -254,6 +254,13 @@ void Foam::fv::meanVelocityForce::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::meanVelocityForce::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::meanVelocityForce::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))

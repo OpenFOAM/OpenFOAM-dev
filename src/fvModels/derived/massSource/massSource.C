@@ -300,6 +300,13 @@ void Foam::fv::massSource::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::massSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::massSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

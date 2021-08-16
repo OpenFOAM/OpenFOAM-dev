@@ -137,25 +137,33 @@ void rotateFields(const argList& args, const Time& runTime, const tensor& T)
 
 int main(int argc, char *argv[])
 {
-    const wordList supportedTransformations
+    argList::addNote
     (
-        {"translate", "rotate", "Rx", "Ry", "Rz", "Ra", "scale"}
+        "Transforms a mesh by translation, rotation and/or scaling.\n"
+        "The <transformations> are listed comma-separated in a string "
+        "and executed in sequence.\n\n"
+        "transformations:\n"
+        "  translate=<vector>        "
+        "translation by vector, e.g. (1 2 3)\n"
+        "  rotate=(<n1> <n2>)        "
+        "rotation from unit vector n1 to n2\n"
+        "  Rx=<angle>                "
+        "rotation by given angle [deg], e.g. 90, about x-axis\n"
+        "  Ry=<angle>                "
+        "rotation by given angle [deg] about y-axis\n"
+        "  Rz=<angle>                "
+        "rotation by given angle [deg] about z-axis\n"
+        "  Ra=<axis vector> <angle>  "
+        "rotation by given angle [deg] about specified axis\n"
+        "  scale=<vector>            "
+        "scale by factors from vector in x, y, z directions,\n"
+        "                            "
+        "e.g. (0.001 0.001 0.001) to scale from mm to m\n\n"
+        "example:\n"
+        "  transformPoints "
+        "\"translate=(1.2 0 0), Rx=90, translate=(-1.2 0 0)\""
     );
 
-    {
-        OStringStream supportedTransformationsStr;
-        supportedTransformationsStr << supportedTransformations << endl;
-
-        argList::addNote
-        (
-            "Transforms a mesh e.g.\n"
-            "transformPoints "
-            "\"translate=(-0.586 0 -0.156), "
-            "Ry=3.485, "
-            "translate=(0.586 0 0.156)\"\n\n"
-            "Supported transformations " + supportedTransformationsStr.str()
-        );
-    }
 
     argList::validArgs.append("transformations");
 

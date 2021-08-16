@@ -320,6 +320,13 @@ void Foam::fv::effectivenessHeatExchangerSource::updateMesh
 }
 
 
+bool Foam::fv::effectivenessHeatExchangerSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::effectivenessHeatExchangerSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

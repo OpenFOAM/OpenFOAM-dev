@@ -447,11 +447,11 @@ void Foam::particle::locate
         const class face& f = mesh_.faces()[c[cellTetFacei]];
         for (label tetPti = 1; tetPti < f.size() - 1; ++ tetPti)
         {
-            reset();
             coordinates_ = barycentric(1, 0, 0, 0);
             tetFacei_ = c[cellTetFacei];
             tetPti_ = tetPti;
             facei_ = -1;
+            reset(1);
 
             label tetTriI = -1;
             const scalar f = trackToTri(displacement, 0, tetTriI);
@@ -472,11 +472,11 @@ void Foam::particle::locate
 
     // The particle must be (hopefully only slightly) outside the cell. Track
     // into the tet which got the furthest.
-    reset();
     coordinates_ = barycentric(1, 0, 0, 0);
     tetFacei_ = minTetFacei;
     tetPti_ = minTetPti;
     facei_ = -1;
+    reset(1);
 
     track(displacement, 0);
     if (!onFace())

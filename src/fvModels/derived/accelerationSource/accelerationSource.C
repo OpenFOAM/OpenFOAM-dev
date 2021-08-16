@@ -117,6 +117,13 @@ void Foam::fv::accelerationSource::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::accelerationSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::accelerationSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

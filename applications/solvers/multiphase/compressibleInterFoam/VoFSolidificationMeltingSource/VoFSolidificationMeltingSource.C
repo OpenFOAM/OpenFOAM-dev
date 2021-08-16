@@ -191,6 +191,13 @@ void Foam::fv::VoFSolidificationMeltingSource::updateMesh
 }
 
 
+bool Foam::fv::VoFSolidificationMeltingSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 void Foam::fv::VoFSolidificationMeltingSource::correct()
 {
     if (debug)

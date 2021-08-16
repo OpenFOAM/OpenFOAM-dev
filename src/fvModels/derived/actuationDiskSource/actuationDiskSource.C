@@ -175,6 +175,13 @@ void Foam::fv::actuationDiskSource::updateMesh(const mapPolyMesh& mpm)
 }
 
 
+bool Foam::fv::actuationDiskSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
 bool Foam::fv::actuationDiskSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
