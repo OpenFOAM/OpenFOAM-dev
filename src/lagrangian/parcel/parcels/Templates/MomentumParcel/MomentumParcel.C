@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -313,7 +313,7 @@ bool Foam::MomentumParcel<ParcelType>::move
         // maxCo times the total value.
         scalar f = 1 - p.stepFraction();
         f = min(f, maxCo);
-        f = min(f, maxCo*l/max(small*l, mag(s)));
+        f = min(f, maxCo/min(max(mag(s)/l, rootSmall), rootGreat));
         if (p.moving())
         {
             // Track to the next face
@@ -421,7 +421,13 @@ void Foam::MomentumParcel<ParcelType>::hitWallPatch
     trackingData&
 )
 {
-    // wall interactions are handled by the generic hitPatch method
+    const polyPatch& pp = this->mesh().boundaryMesh()[this->patch()];
+
+    FatalErrorInFunction
+        << "Particle " << this->origId() << " hit " << pp.type() << " patch "
+        << pp.name() << " at " << this->position()
+        << " but no interaction model was specified for this patch"
+        << exit(FatalError);
 }
 
 
