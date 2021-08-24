@@ -25,16 +25,45 @@ Class
     Foam::fv::clouds
 
 Description
-    Lagrangian clouds fvModel
+    This fvModel adds any number of Lagrangian clouds to any single-phase
+    solver. The particles are tracked through, and exchange sources with, the
+    Eulerian flow field.
+
+    As well as the fvModel controls, properties must be specified for each
+    cloud. For a single cloud, these should be provided in the
+    constant/cloudProperties file. For multiple clouds, the list of cloud names
+    must first be provided in the constant/clouds file. Then, each named cloud
+    has its properties specified in its constant/<cloudName>Properties file.
+
+    The application of sources to the Eulerian fields is controlled by the
+    solution/coupled switch in each cloud's properties file. If set to "true"
+    then the Eulerian phase will have forces, and heat and mass sources applied
+    to it by the Lagrangian phase. If set to "false" then these will be omitted,
+    and the Lagrangian phase will not affect the Eulerian phase.
+
+    If this model is used with an incompressible solver, then the density of
+    the Eulerian phase must be specified in the constant/physicalProperties
+    dictionary.
+
+    Gravity will be read from the constant/g file if present, otherwise it will
+    default to zero.
 
 Usage
     Example usage:
     \verbatim
     clouds
     {
-        type    clouds;
+        libs        ("liblagrangianParcel.so");
+        type        clouds;
     }
     \endverbatim
+
+    \table
+        Property | Description                     | Required   | Default value
+        type     | Type name: clouds               | yes        |
+        rho      | Name of the density field       | no         | rho
+        U        | Name of the velocity field      | no         | U
+    \endtable
 
 SourceFiles
     clouds.C
@@ -46,6 +75,7 @@ SourceFiles
 
 #include "fvModel.H"
 #include "fluidThermo.H"
+#include "viscosityModel.H"
 #include "uniformDimensionedFields.H"
 #include "parcelCloudList.H"
 
@@ -66,11 +96,35 @@ class clouds
 {
     // Private Data
 
-        //- Reference to the carrier phase thermo
-        const fluidThermo& carrierThermo_;
+        //- Optional acceleration due to gravity
+        const uniformDimensionedVectorField g_;
+
+        //- Flag to indicate whether a thermo model is available for the
+        //  carrier
+        const bool carrierHasThermo_;
+
+        //- Reference to the carrier phase thermo. Valid only if the carrier
+        //  has thermo.
+        const tmpNrc<fluidThermo> tCarrierThermo_;
+
+        //- Reference to the carrier viscosity model. Valid only if the carrier
+        //  does not have thermo.
+        const tmpNrc<viscosityModel> tCarrierViscosity_;
+
+        //- Density field. Valid only if the carrier does not have thermo.
+        const tmp<volScalarField> tRho_;
+
+        //- Viscosity field. Valid only if the carrier does not have thermo.
+        tmp<volScalarField> tMu_;
+
+        //- Name of the density field
+        const word rhoName_;
+
+        //- Name of the velocity field
+        const word UName_;
 
         //- The Lagrangian cloud list
-        mutable parcelCloudList clouds_;
+        mutable autoPtr<parcelCloudList> cloudsPtr_;
 
         //- Current time index (used for updating)
         mutable label curTimeIndex_;
@@ -127,7 +181,7 @@ public:
                 const word& fieldName
             ) const;
 
-            //- Add source to pressure or enthalpy equation
+            //- Add source to enthalpy or species equation
             virtual void addSup
             (
                 const volScalarField& rho,
@@ -135,7 +189,14 @@ public:
                 const word& fieldName
             ) const;
 
-            //- Add source to momentum equation
+            //- Add source to incompressible momentum equation
+            virtual void addSup
+            (
+                fvMatrix<vector>& eqn,
+                const word& fieldName
+            ) const;
+
+            //- Add source to compressible momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
