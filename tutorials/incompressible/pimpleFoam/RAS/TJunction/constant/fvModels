@@ -10,14 +10,14 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      physicalProperties;
+    object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-viscosityModel  constant;
-
-nu              [0 2 -1 0 0 0 0] 1e-05;
-
-rho             [1 -3 0 0 0 0 0] 1.2;
+clouds
+{
+    type    clouds;
+    libs    ("liblagrangianParcel.so");
+}
 
 // ************************************************************************* //

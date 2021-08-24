@@ -42,7 +42,7 @@ Description
     and the Lagrangian phase will not affect the Eulerian phase.
 
     If this model is used with an incompressible solver, then the density of
-    the Eulerian phase must be specified in the constant/phaseProperties
+    the Eulerian phase must be specified in the constant/physicalProperties
     dictionary.
 
     Gravity will be read from the constant/g file if present, otherwise it will
