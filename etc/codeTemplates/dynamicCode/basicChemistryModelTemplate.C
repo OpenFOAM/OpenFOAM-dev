@@ -89,7 +89,7 @@ namespace Foam
 #define standardChemistryModelCppTest 0
 #define TDACChemistryModelCppTest 1
 
-#if ${method}CppTest == TDACChemistryModelCppTest
+#if ${method}ChemistryModelCppTest == TDACChemistryModelCppTest
 
 #include "makeChemistryReductionMethod.H"
 #include "makeChemistryTabulationMethod.H"
