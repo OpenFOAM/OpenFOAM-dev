@@ -13,6 +13,8 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+type            cloud;
+
 solution
 {
     transient       true;

@@ -9,15 +9,21 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      physicalProperties;
+    object      limitPressure;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-viscosityModel  constant;
+limitp
+{
+    type       limitPressure;
 
-nu              [0 2 -1 0 0 0 0] 1e-05;
+    // limits can be specified absolute
+    // min        200;
+    // max        500;
 
-rho             [1 -3 0 0 0 0 0] 1.2;
+    // ... or as multipliers on initial min/max values
+    minFactor  0.1;
+    maxFactor  1.5;
+}
 
-// ************************************************************************* //
+//************************************************************************** //

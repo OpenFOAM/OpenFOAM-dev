@@ -13,7 +13,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-radiationModel  opaqueSolid;
+radiationModel  none; // opaqueSolid;
 
 absorptionEmissionModel constant;
 

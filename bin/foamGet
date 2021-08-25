@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -77,7 +77,7 @@ findFiles () {
     _prefix="$2"
     _ext="$3"
 
-    if [ -z "$_ext" -o "$_ext" = "ANY" ] ; then
+    if [ -z "$_ext" ] || [ "$_ext" = "ANY" ] ; then
         findFilesInDirs "$_dirs" "$_prefix"
     else
         findFilesInDirs "$_dirs" "${_prefix}.${_ext}"
@@ -92,7 +92,7 @@ pruneFiles () {
              -maxdepth 1 -mindepth 1 \
              -type d -name "[[:digit:]]*" \
              -o -name "dev" 2> /dev/null | \
-             grep -v $WM_PROJECT_VERSION | \
+             grep -v "$WM_PROJECT_VERSION" | \
              awk -F "/" '{print $NF}')"
     [ "$_vers" ] && \
         for _v in $_vers
@@ -141,8 +141,35 @@ listArgs () {
 cpFile () {
     _file="$1"
     _dir="$2"
+
+    [ -d "$_dir" ] || return 0
+
     echo "Copying $_file to $_dir"
     cp "$_file" "$_dir"
+}
+
+setTgt () {
+    _prefix="$1"
+    _file="$2"
+    _tgt="$3"
+
+    ! [ "$_tgt" ] && \
+        echo "$_file" | grep -Eq "(fvModel|fvConstraint)" && \
+        _tgt="constant"
+
+    ! [ "$_tgt" ] && \
+        case "$prefix" in
+            All*) _tgt="." ;;
+            *Properties|*Cloud) _tgt="constant" ;;
+            s) _tgt="0" ;;
+            *) _tgt="system" ;;
+        esac
+
+    echo "$_tgt"
+
+    [ -d "$_tgt" ] && return 0
+    echo "target directory does not exist: '$_tgt'" >&2
+    return 0
 }
 
 setFile () {
@@ -207,25 +234,8 @@ done
 [ $# -eq 1 ] || error "missing argument: no file name/prefix <file> supplied"
 prefix="$1"
 
-[ "$tgt" ] || \
-    case "$prefix" in
-       All*)
-          tgt="."
-          ;;
-       *Properties|*Cloud)
-          tgt="constant"
-          ;;
-       s)
-          tgt="0"
-          ;;
-       *)
-          tgt="system"
-          ;;
-    esac
-
 [ -s "system/controlDict" ] || \
     echo "Warning: cannot find OpenFOAM case directory (no system/controlDict file)"
-[ -d "$tgt" ] || error "target directory does not exist: '$tgt'"
 
 files="$(findFiles "$searchDirs" "$prefix" "$ext")"
 
@@ -236,7 +246,9 @@ files="$(pruneFiles $files)"
     error "no file $prefix found $(noFilesMessage "$ext")"
 
 nFiles="$(nArgs "$files")"
-[ "$nFiles" -eq 1 ] && cpFile "$files" "$tgt" && exit 0
+[ "$nFiles" -eq 1 ] && \
+    tgt="$(setTgt "$prefix" "$files" "$tgt")" && \
+    cpFile "$files" "$tgt" && exit 0
 
 echo "Multiple files with \"$prefix\" prefix found:"
 suggest="$(listArgs "$files")"
@@ -246,15 +258,16 @@ echo "$files" | grep -q "annotated/" && \
 printf "\n%s" "Enter file number (1-$nFiles) to obtain description "
 [ -n "$suggest" ] && printf "%s" "(suggest $suggest) "
 printf "%s" ": "
-read nFile
+read -r nFile
 
-[ -z "$nFile" -a -n "$suggest" ] && nFile="$suggest"
+[ -z "$nFile" ] && [ -n "$suggest" ] && nFile="$suggest"
 [ -z "$nFile" ] && \
     echo "Cannot specify nothing; re-run and enter a file number" && exit 1
 ! [ "$nFile" -eq "$nFile" ] 2>/dev/null && \
     echo "\"$nFile\" is not a number between 1 and $nFiles" && exit 1
-[ "$nFile" -lt 1 -o "$nFile" -gt "$nFiles" ] && \
+[ "$nFile" -lt 1 ] || [ "$nFile" -gt "$nFiles" ] && \
     echo "\"$nFile\" is not a number between 1 and $nFiles" && exit 1
 
 file="$(setFile "$files" "$nFile")"
+tgt="$(setTgt "$prefix" "$file" "$tgt")"
 cpFile "$file" "$tgt"

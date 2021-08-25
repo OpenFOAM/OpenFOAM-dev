@@ -42,8 +42,6 @@ SIMPLE
     }
 
     nNonOrthogonalCorrectors 0;
-    pMinFactor      0.1;
-    pMaxFactor      1.5;
 }
 
 relaxationFactors

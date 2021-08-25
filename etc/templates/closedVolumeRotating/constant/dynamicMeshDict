@@ -15,17 +15,14 @@ FoamFile
 
 dynamicFvMesh   dynamicMotionSolverFvMesh;
 
-solver solidBody;
+motionSolverLibs ( "libfvMotionSolvers.so" );
 
-solidBodyCoeffs
-{
-    cellZone        rotatingZone;
+motionSolver    solidBody;
 
-    solidBodyMotionFunction  rotatingMotion;
-    rotatingMotionCoeffs
-    {
-        #include "rotatingZoneProperties"
-    }
-}
+cellZone        rotatingZone;
+
+solidBodyMotionFunction  rotatingMotion;
+
+#include        "rotatingZoneProperties"
 
 // ************************************************************************* //

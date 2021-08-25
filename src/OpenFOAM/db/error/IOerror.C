@@ -41,10 +41,6 @@ Foam::IOerror::IOerror(const string& title)
 {}
 
 
-Foam::IOerror::~IOerror() throw()
-{}
-
-
 Foam::OSstream& Foam::IOerror::operator()
 (
     const char* functionName,
@@ -186,7 +182,7 @@ void Foam::IOerror::exit(const int)
             IOerror errorException(*this);
 
             // Rewind the message buffer for the next error message
-            messageStreamPtr_->rewind();
+            messageStream_.rewind();
 
             throw errorException;
         }
@@ -231,7 +227,7 @@ void Foam::IOerror::abort()
             IOerror errorException(*this);
 
             // Rewind the message buffer for the next error message
-            messageStreamPtr_->rewind();
+            messageStream_.rewind();
 
             throw errorException;
         }

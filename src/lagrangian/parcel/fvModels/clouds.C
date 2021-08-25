@@ -57,16 +57,87 @@ Foam::fv::clouds::clouds
 )
 :
     fvModel(sourceName, modelType, dict, mesh),
-    carrierThermo_
+    g_
     (
-        mesh.lookupObject<fluidThermo>(physicalProperties::typeName)
+        IOobject
+        (
+            "g",
+            mesh.time().constant(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::NO_WRITE
+        ),
+        dimensionedVector(dimAcceleration, Zero)
     ),
-    clouds_
+    carrierHasThermo_
     (
-        mesh.lookupObject<volScalarField>("rho"),
-        mesh.lookupObject<volVectorField>("U"),
-        mesh.lookupObject<uniformDimensionedVectorField>("g"),
-        carrierThermo_
+        mesh.foundObject<fluidThermo>(physicalProperties::typeName)
+    ),
+    tCarrierThermo_
+    (
+        carrierHasThermo_
+      ? tmpNrc<fluidThermo>
+        (
+            mesh.lookupObject<fluidThermo>(physicalProperties::typeName)
+        )
+      : tmpNrc<fluidThermo>(nullptr)
+    ),
+    tCarrierViscosity_
+    (
+        carrierHasThermo_
+      ? tmpNrc<viscosityModel>(nullptr)
+      : tmpNrc<viscosityModel>
+        (
+            mesh.lookupObject<viscosityModel>(physicalProperties::typeName)
+        )
+    ),
+    tRho_
+    (
+        carrierHasThermo_
+      ? tmp<volScalarField>(nullptr)
+      : tmp<volScalarField>
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "rho",
+                    mesh.time().timeName(),
+                    mesh
+                ),
+                mesh,
+                dimensionedScalar("rho", dimDensity, tCarrierViscosity_())
+            )
+        )
+    ),
+    tMu_
+    (
+        carrierHasThermo_
+      ? tmp<volScalarField>(nullptr)
+      : tmp<volScalarField>
+        (
+            new volScalarField("mu", tRho_()*tCarrierViscosity_().nu())
+        )
+    ),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
+    UName_(dict.lookupOrDefault<word>("U", "U")),
+    cloudsPtr_
+    (
+        carrierHasThermo_
+      ? new parcelCloudList
+        (
+            mesh.lookupObject<volScalarField>(rhoName_),
+            mesh.lookupObject<volVectorField>(UName_),
+            g_,
+            tCarrierThermo_()
+        )
+      : new parcelCloudList
+        (
+            tRho_(),
+            mesh.lookupObject<volVectorField>(UName_),
+            tMu_(),
+            g_
+        )
     ),
     curTimeIndex_(-1)
 {}
@@ -76,20 +147,29 @@ Foam::fv::clouds::clouds
 
 Foam::wordList Foam::fv::clouds::addSupFields() const
 {
-    wordList fieldNames({"rho", "U", carrierThermo_.he().name()});
+    wordList fieldNames(1, UName_);
 
-    if (isA<basicSpecieMixture>(carrierThermo_))
+    if (carrierHasThermo_)
     {
-        const basicSpecieMixture& composition =
-            refCast<const basicSpecieMixture>(carrierThermo_);
+        const fluidThermo& carrierThermo = tCarrierThermo_();
 
-        const PtrList<volScalarField>& Y = composition.Y();
+        fieldNames.append(rhoName_);
 
-        forAll(Y, i)
+        fieldNames.append(carrierThermo.he().name());
+
+        if (isA<basicSpecieMixture>(carrierThermo))
         {
-            if (composition.solve(i))
+            const basicSpecieMixture& composition =
+                refCast<const basicSpecieMixture>(carrierThermo);
+
+            const PtrList<volScalarField>& Y = composition.Y();
+
+            forAll(Y, i)
             {
-                fieldNames.append(Y[i].name());
+                if (composition.solve(i))
+                {
+                    fieldNames.append(Y[i].name());
+                }
             }
         }
     }
@@ -105,7 +185,12 @@ void Foam::fv::clouds::correct()
         return;
     }
 
-    clouds_.evolve();
+    if (!carrierHasThermo_)
+    {
+        tMu_.ref() = tRho_()*tCarrierViscosity_().nu();
+    }
+
+    cloudsPtr_().evolve();
 
     curTimeIndex_ = mesh().time().timeIndex();
 }
@@ -122,15 +207,17 @@ void Foam::fv::clouds::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == "rho")
-    {
-        eqn += clouds_.Srho(eqn.psi());
-    }
-    else
+    if (!carrierHasThermo_)
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Applying source to compressible equation when carrier thermo "
+            << "is not available"
             << exit(FatalError);
+    }
+
+    if (fieldName == rhoName_)
+    {
+        eqn += cloudsPtr_().Srho(eqn.psi());
     }
 }
 
@@ -147,34 +234,64 @@ void Foam::fv::clouds::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == "rho")
+    if (!carrierHasThermo_)
     {
-        eqn += clouds_.Srho(eqn.psi());
+        FatalErrorInFunction
+            << "Applying source to compressible equation when carrier thermo "
+            << "is not available"
+            << exit(FatalError);
     }
-    else if (fieldName == carrierThermo_.he().name())
+
+    const fluidThermo& carrierThermo = tCarrierThermo_();
+
+    if (fieldName == rhoName_)
     {
-        eqn += clouds_.Sh(eqn.psi());
+        eqn += cloudsPtr_().Srho(eqn.psi());
+    }
+    else if (fieldName == carrierThermo.he().name())
+    {
+        eqn += cloudsPtr_().Sh(eqn.psi());
     }
     else if
     (
-        isA<basicSpecieMixture>(carrierThermo_)
-     && refCast<const basicSpecieMixture>(carrierThermo_).contains
+        isA<basicSpecieMixture>(carrierThermo)
+     && refCast<const basicSpecieMixture>(carrierThermo).contains
         (
             eqn.psi().name()
         )
     )
     {
-        eqn += clouds_.SYi
+        eqn += cloudsPtr_().SYi
         (
-            refCast<const basicSpecieMixture>(carrierThermo_).index(eqn.psi()),
+            refCast<const basicSpecieMixture>(carrierThermo).index(eqn.psi()),
             eqn.psi()
         );
     }
-    else
+}
+
+
+void Foam::fv::clouds::addSup
+(
+    fvMatrix<vector>& eqn,
+    const word& fieldName
+) const
+{
+    if (debug)
+    {
+        Info<< type() << ": applying source to " << eqn.psi().name() << endl;
+    }
+
+    if (carrierHasThermo_)
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Applying source to incompressible equation when carrier thermo "
+            << "is available"
             << exit(FatalError);
+    }
+
+    if (fieldName == UName_)
+    {
+        eqn += cloudsPtr_().SU(eqn.psi())/tRho_();
     }
 }
 
@@ -191,15 +308,17 @@ void Foam::fv::clouds::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == "U")
-    {
-        eqn += clouds_.SU(eqn.psi());
-    }
-    else
+    if (!carrierHasThermo_)
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Applying source to compressible equation when carrier thermo "
+            << "is not available"
             << exit(FatalError);
+    }
+
+    if (fieldName == UName_)
+    {
+        eqn += cloudsPtr_().SU(eqn.psi());
     }
 }
 
@@ -207,7 +326,7 @@ void Foam::fv::clouds::addSup
 void Foam::fv::clouds::preUpdateMesh()
 {
     // Store the particle positions
-    clouds_.storeGlobalPositions();
+    cloudsPtr_().storeGlobalPositions();
 }
 
 
