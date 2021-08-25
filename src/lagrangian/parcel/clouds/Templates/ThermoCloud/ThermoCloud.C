@@ -336,7 +336,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     T_(c.T()),
     p_(c.p()),
     heatTransferModel_(nullptr),
-    compositionModel_(nullptr),
+    compositionModel_(c.compositionModel_->clone()),
     TIntegrator_(nullptr),
     radiation_(false),
     radAreaP_(nullptr),
