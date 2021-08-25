@@ -42,21 +42,15 @@ Foam::error::error(const string& title)
     sourceFileLineNumber_(0),
     abort_(env("FOAM_ABORT")),
     throwExceptions_(false),
-    messageStreamPtr_(new OStringStream())
+    messageStream_()
 {
-    if (!messageStreamPtr_->good())
+    if (!messageStream_.good())
     {
         Perr<< endl
             << "error::error(const string& title) : cannot open error stream"
             << endl;
         exit(1);
     }
-}
-
-
-Foam::error::~error() throw()
-{
-    delete messageStreamPtr_;
 }
 
 
@@ -93,7 +87,7 @@ Foam::OSstream& Foam::error::operator()
 
 Foam::OSstream& Foam::error::operator()()
 {
-    if (!messageStreamPtr_->good())
+    if (!messageStream_.good())
     {
         Perr<< endl
             << "error::operator OSstream&() : error stream has failed"
@@ -101,7 +95,7 @@ Foam::OSstream& Foam::error::operator()()
         abort();
     }
 
-    return *messageStreamPtr_;
+    return messageStream_;
 }
 
 
@@ -124,7 +118,7 @@ Foam::error::operator Foam::dictionary() const
 
 Foam::string Foam::error::message() const
 {
-    return messageStreamPtr_->str();
+    return messageStream_.str();
 }
 
 
@@ -155,7 +149,7 @@ void Foam::error::exit(const int errNo)
             error errorException(*this);
 
             // Rewind the message buffer for the next error message
-            messageStreamPtr_->rewind();
+            messageStream_.rewind();
 
             throw errorException;
         }
@@ -200,7 +194,7 @@ void Foam::error::abort()
             error errorException(*this);
 
             // Rewind the message buffer for the next error message
-            messageStreamPtr_->rewind();
+            messageStream_.rewind();
 
             throw errorException;
         }

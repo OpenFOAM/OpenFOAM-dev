@@ -48,6 +48,7 @@ SourceFiles
 #ifndef error_H
 #define error_H
 
+#include "OStringStream.H"
 #include "messageStream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -81,7 +82,9 @@ protected:
         bool abort_;
 
         bool throwExceptions_;
-        OStringStream* messageStreamPtr_;
+
+        OStringStream messageStream_;
+
 
 public:
 
@@ -89,10 +92,6 @@ public:
 
         //- Construct from title string
         error(const string& title);
-
-
-    //- Destructor
-    virtual ~error() throw();
 
 
     // Member Functions
@@ -203,10 +202,6 @@ public:
 
         //- Construct from title string
         IOerror(const string& title);
-
-
-    //- Destructor
-    virtual ~IOerror() throw();
 
 
     // Member Functions
