@@ -313,6 +313,10 @@ public:
         //- Return the top of the tree
         const dictionary& topDict() const;
 
+        //- Return the scoped keyword with which this dictionary can be
+        //  accessed from the top dictionary in the tree
+        word topDictKeyword() const;
+
         //- Return line number of first token in dictionary
         label startLineNumber() const;
 

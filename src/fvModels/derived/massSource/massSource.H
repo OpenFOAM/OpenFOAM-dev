@@ -66,7 +66,7 @@ SourceFiles
 #include "fvModel.H"
 #include "fvCellSet.H"
 #include "HashPtrTable.H"
-#include "objectFunction1.H"
+#include "unknownTypeFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -104,7 +104,7 @@ class massSource
         autoPtr<Function1<scalar>> massFlowRate_;
 
         //- Field values
-        HashPtrTable<objectFunction1> fieldValues_;
+        HashPtrTable<unknownTypeFunction1> fieldValues_;
 
 
     // Private Member Functions

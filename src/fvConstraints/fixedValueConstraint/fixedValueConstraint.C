@@ -56,14 +56,11 @@ void Foam::fv::fixedValueConstraint::readCoeffs()
         fieldValues_.set
         (
             iter().keyword(),
-            objectFunction1::New<VolField>
+            new unknownTypeFunction1
             (
                 iter().keyword(),
-                coeffs().subDict("fieldValues"),
-                iter().keyword(),
-                mesh(),
-                false
-            ).ptr()
+                coeffs().subDict("fieldValues")
+            )
         );
     }
 }

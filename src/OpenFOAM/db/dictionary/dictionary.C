@@ -580,6 +580,26 @@ const Foam::dictionary& Foam::dictionary::topDict() const
 }
 
 
+Foam::word Foam::dictionary::topDictKeyword() const
+{
+    const dictionary& p = parent();
+
+    if (&p != this && !p.name().empty())
+    {
+        const word pKeyword = p.topDictKeyword();
+        const char pSeparator = functionEntries::inputSyntaxEntry::scopeChar();
+        return
+            pKeyword == word::null
+          ? dictName()
+          : word(pKeyword + pSeparator + dictName());
+    }
+    else
+    {
+        return word::null;
+    }
+}
+
+
 Foam::label Foam::dictionary::startLineNumber() const
 {
     if (size())

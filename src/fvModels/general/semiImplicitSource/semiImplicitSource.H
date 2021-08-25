@@ -95,7 +95,7 @@ SourceFiles
 #include "fvModel.H"
 #include "fvCellSet.H"
 #include "HashPtrTable.H"
-#include "objectFunction1.H"
+#include "unknownTypeFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -138,7 +138,7 @@ private:
         volumeMode volumeMode_;
 
         //- Explicit parts of the sources
-        HashPtrTable<objectFunction1> fieldSu_;
+        HashPtrTable<unknownTypeFunction1> fieldSu_;
 
         //- Implicit parts of the sources
         HashPtrTable<Function1<scalar>> fieldSp_;

@@ -55,7 +55,7 @@ SourceFiles
 
 #include "fvConstraint.H"
 #include "fvCellSet.H"
-#include "objectFunction1.H"
+#include "unknownTypeFunction1.H"
 #include "HashPtrTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -79,7 +79,7 @@ class fixedValueConstraint
         fvCellSet set_;
 
         //- Field values
-        HashPtrTable<objectFunction1> fieldValues_;
+        HashPtrTable<unknownTypeFunction1> fieldValues_;
 
 
     // Private Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,26 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::objectFunction1
+    Foam::unknownTypeFunction1
 
 Description
-    Wrapper around Function1 that constructs a function of type associated with
-    an object found in the database.
+    Wrapper around Function1 that constructs a function for an as yet
+    unknown primitive type. It stores the location of the user input and
+    actually constructs the function on demand at the point at which a value is
+    requested for a specific type.
 
 SourceFiles
-    objectFunction1Templates.C
+    unknownTypeFunction1.C
+    unknownTypeFunction1Templates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef objectFunction1_H
-#define objectFunction1_H
+#ifndef unknownTypeFunction1_H
+#define unknownTypeFunction1_H
 
 #include "Function1.H"
-#include "objectRegistry.H"
+#include "fieldTypes.H"
+#include "nil.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,74 +49,79 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class objectFunction1 Declaration
+                       Class unknownTypeFunction1 Declaration
 \*---------------------------------------------------------------------------*/
 
-class objectFunction1
-:
-    private autoPtr<Function1<scalar>>,
-    private autoPtr<Function1<vector>>,
-    private autoPtr<Function1<symmTensor>>,
-    private autoPtr<Function1<sphericalTensor>>,
-    private autoPtr<Function1<tensor>>
+class unknownTypeFunction1
 {
     // Private Classes
 
-        //- Tag structure used to deduce type in the templated constructor
-        template<class PrimitiveType>
-        struct type
+        //- Convenient grouping of Function1s of all primitive types
+        struct functionPtr
+        :
+            #define PublicAutoPtrFunction1Type(Type, nullArg) \
+                public autoPtr<Function1<Type>>,
+            FOR_ALL_FIELD_TYPES(PublicAutoPtrFunction1Type)
+            #undef InheritAutoPtrFunction1Type
+            private nil
         {};
 
 
-    // Private Constructors
+    // Private Data
 
-        //- Construct from an name and a dictionary
-        template<class PrimitiveType>
-        objectFunction1
-        (
-            const word& name,
-            const dictionary& dict,
-            const type<PrimitiveType>&
-        );
+        //- Name of the function
+        const word name_;
+
+        //- Top-level dictionary from which to read the function
+        const dictionary& topDict_;
+
+        //- Keyword within the top-level dictionary to the sub-dictionary in
+        //  which this function is defined
+        const word topDictKeyword_;
+
+        //- Pointer to the Function1
+        mutable functionPtr functionPtr_;
+
+
+    // Private Member Functions
+
+        //- Build the function of a given primitive type
+        template<class Type>
+        void build() const;
 
 
 public:
 
-    // Selector
+    // Constructors
 
-        template<template<class> class ObjectType>
-        static autoPtr<objectFunction1> New
-        (
-            const word& name,
-            const dictionary& dict,
-            const word& objectName,
-            const objectRegistry& db,
-            const bool error = true
-        );
+        //- Construct from an name and a dictionary
+        unknownTypeFunction1(const word& name, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        unknownTypeFunction1(const unknownTypeFunction1&) = delete;
 
 
     //- Destructor
-    ~objectFunction1()
-    {}
+    ~unknownTypeFunction1();
 
 
     // Member Functions
 
         //- Return value as a function of scalar x
-        template<class PrimitiveType>
-        PrimitiveType value(const scalar x) const;
+        template<class Type>
+        Type value(const scalar x) const;
 
         //- Return value as a function of scalarField x
-        template<class PrimitiveType>
-        tmp<Field<PrimitiveType>> value(const scalarField& x) const;
+        template<class Type>
+        tmp<Field<Type>> value(const scalarField& x) const;
 
         //- Integrate between two scalars
-        template<class PrimitiveType>
-        PrimitiveType integral(const scalar x1, const scalar x2) const;
+        template<class Type>
+        Type integral(const scalar x1, const scalar x2) const;
 
         //- Integrate between two scalar fields
-        template<class PrimitiveType>
-        tmp<Field<PrimitiveType>> integral
+        template<class Type>
+        tmp<Field<Type>> integral
         (
             const scalarField& x1,
             const scalarField& x2
@@ -122,7 +131,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const objectFunction1&) = delete;
+        void operator=(const unknownTypeFunction1&) = delete;
 };
 
 
@@ -133,7 +142,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "objectFunction1Templates.C"
+    #include "unknownTypeFunction1Templates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

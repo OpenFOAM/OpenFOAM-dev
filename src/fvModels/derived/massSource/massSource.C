@@ -99,13 +99,7 @@ void Foam::fv::massSource::readFieldValues()
             fieldValues_.set
             (
                 fieldName,
-                objectFunction1::New<VolField>
-                (
-                    fieldName,
-                    fieldCoeffs,
-                    fieldName,
-                    mesh()
-                ).ptr()
+                new unknownTypeFunction1(fieldName, fieldCoeffs)
             );
         }
     }
