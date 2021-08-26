@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,13 +26,33 @@ Class
 
 Description
     Simple extension of the perfect gas equation of state to liquids by
-    the addition of a constant density off-set.
+    the addition of a constant density off-set:
 
-    Coefficient mixing is very inaccurate and not supported,
-    so this equation of state is not applicable to mixtures.
+    \verbatim
+        rho = rho0 + p/(R*T)
+    \endverbatim
+
+    Coefficient mixing is very inaccurate and not supported, so this equation of
+    state is not applicable to mixtures.
 
     This equation of state is rather inaccurate and has been superseded by
     rPolynomial which is much more accurate and supports mixtures.
+
+Usage
+    \table
+        Property     | Description
+        rho0         | Reference density
+        R            | Fluid constant
+    \endtable
+
+    Example specification of the perfectFluid equation of state:
+    \verbatim
+    equationOfState
+    {
+        rho0        1000;
+        R           100;
+    }
+    \endverbatim
 
 SourceFiles
     perfectFluidI.H

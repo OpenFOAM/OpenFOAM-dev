@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,25 @@ Class
 Description
     Incompressible gas equation of state using a constant reference pressure in
     the perfect gas equation of state rather than the local pressure so that the
-    density only varies with temperature and composition.
+    density only varies with temperature:
+
+    \verbatim
+        rho = pRef/(R*T)
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description
+        pRef         | Reference pressure
+    \endtable
+
+    Example specification of the incompressiblePerfectGas equation of state:
+    \verbatim
+    equationOfState
+    {
+        pRef        1e5;
+    }
+    \endverbatim
 
 SourceFiles
     incompressiblePerfectGasI.H

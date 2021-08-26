@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,14 @@ Description
     Incompressible, polynomial form of equation of state, using a polynomial
     function for density.
 
-    Coefficient mixing is very inaccurate and not supported,
-    so this equation of state is not applicable to mixtures.
+    Coefficient mixing is very inaccurate and not supported, so this equation of
+    state is not applicable to mixtures.
+
+    The polynomial expression is evaluated from:
+
+    \verbatim
+            rho = 1000 - 0.05*T + 0.003*sqr(T)
+    \endverbatim
 
 Usage
     \table
@@ -37,19 +43,13 @@ Usage
         rhoCoeffs<8> | Density polynomial coefficients
     \endtable
 
-    Example of the specification of the equation of state:
+    Example specification of the icoPolynomial equation of state:
     \verbatim
     equationOfState
     {
         rhoCoeffs<8>    ( 1000 -0.05 0.003 0 0 0 0 0 );
     }
     \endverbatim
-
-    The polynomial expression is evaluated as so:
-
-        \f[
-            \rho = 1000 - 0.05 T + 0.003 T^2
-        \f]
 
 SourceFiles
     icoPolynomialI.H

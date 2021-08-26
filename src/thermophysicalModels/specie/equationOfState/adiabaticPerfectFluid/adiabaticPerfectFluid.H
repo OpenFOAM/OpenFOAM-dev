@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,36 @@ Class
     Foam::adiabaticPerfectFluid
 
 Description
-    Adiabatic perfect fluid equation of state.
+    Adiabatic perfect fluid equation of state for liquids:
+
+    \verbatim
+        rho = rho0*pow((p + B)/(p0 + B), 1/gamma)
+    \endverbatim
+
+    Equivalent to the Murnaghan-Tait equation of state with different
+    coefficient specification.
 
     Coefficient mixing is very inaccurate and not supported,
     so this equation of state is not applicable to mixtures.
+
+Usage
+    \table
+        Property     | Description
+        rho0         | Reference density
+        R            | Fluid constant
+    \endtable
+
+    Example specification of the adiabaticPerfectFluid equation of state
+    for LNG:
+    \verbatim
+    equationOfState
+    {
+        rho0            450;
+        p0              1e5;
+        gamma           15.4;
+        B               50000000
+    }
+    \endverbatim
 
 SourceFiles
     adiabaticPerfectFluidI.H

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,22 @@ Class
     Foam::rhoConst
 
 Description
-    RhoConst (rho = const) of state.
+    Constant density equations of state
+
+Usage
+    \table
+        Property     | Description
+        rho          | Constant density
+    \endtable
+
+    Example specification of the rhoConst equation of state:
+    \verbatim
+    equationOfState
+    {
+        rho         1000;
+    }
+    \endverbatim
+
 
 SourceFiles
     rhoConstI.H

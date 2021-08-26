@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::linear
 
 Description
-    Linear equation of state with constant compressibility
+    Linear equation of state with constant compressibility:
 
     \verbatim
         rho = rho0 + psi*p
@@ -33,6 +33,22 @@ Description
 
     Coefficient mixing is very inaccurate and not supported,
     so this equation of state is not applicable to mixtures.
+
+Usage
+    \table
+        Property     | Description
+        rho0         | Reference density
+        psi          | Constant compressibility
+    \endtable
+
+    Example specification of the linear equation of state:
+    \verbatim
+    equationOfState
+    {
+        rho0        1000;
+        psi         1e-5;
+    }
+    \endverbatim
 
 SourceFiles
     linearI.H

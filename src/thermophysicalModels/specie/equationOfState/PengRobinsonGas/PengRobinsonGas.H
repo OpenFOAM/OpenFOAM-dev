@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,32 @@ Class
     Foam::PengRobinsonGas
 
 Description
-    PengRobinsonGas gas equation of state.
+    PengRobinsonGas cubic equation of state for gases
+
+    Coefficient mixing is very inaccurate and not supported, so this equation of
+    state can only be applied to mixtures by using a thermophysical properties
+    model which mixes specie property value.
+
+Usage
+    \table
+        Property     | Description
+        Tc           | Critical temperature [K]
+        Vc           | Critical volume [m^3/kmol]
+        Pc           | Critical pressure [Pa]
+        omega        | Acentric factor [-]
+    \endtable
+
+    Example specification of the PengRobinsonGas equation of state for methane:
+    \verbatim
+    equationOfState
+    {
+        Tc        190.55;
+        Vc        0.0285;
+        Pc        4.595e6;
+        omega     0.0115;
+
+    }
+    \endverbatim
 
 SourceFiles
     PengRobinsonGasI.H

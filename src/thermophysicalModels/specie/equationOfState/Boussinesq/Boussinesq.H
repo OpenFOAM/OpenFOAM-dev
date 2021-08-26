@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,24 @@ Description
 
     Coefficient mixing is very inaccurate and not supported,
     so this equation of state is not applicable to mixtures.
+
+Usage
+    \table
+        Property     | Description
+        rho0         | Reference density
+        T0           | Reference temperature
+        beta         | Coefficient of thermal expansion
+    \endtable
+
+    Example specification of the Boussinesq equation of state:
+    \verbatim
+    equationOfState
+    {
+        rho0            1;
+        T0              300;
+        beta            3e-03;
+    }
+    \endverbatim
 
 SourceFiles
     BoussinesqI.H

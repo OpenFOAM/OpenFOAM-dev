@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,17 @@ Class
     Foam::perfectGas
 
 Description
-    Perfect gas equation of state.
+    Perfect gas equation of state:
+
+    \verbatim
+        rho = p/(R*T)
+    \endverbatim
+
+Usage
+    The gas constant R used by the perfect gas equation of state is obtained
+    directly from the specie or mixture molecular weight so there is no need to
+    provide an equation of \c equationOfState enry in the \c mixture
+    specification.
 
 SourceFiles
     perfectGasI.H

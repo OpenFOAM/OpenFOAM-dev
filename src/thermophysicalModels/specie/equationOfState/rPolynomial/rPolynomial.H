@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,9 @@ Class
 Description
     Reciprocal polynomial equation of state for liquids and solids
 
-    \f[
-        1/\rho = C_0 + C_1 T + C_2 T^2 - C_3 p - C_4 p T
-    \f]
+    \verbatim
+        1/rho = C0 + C1*T + C2*sqr(T) - C3*p - C4*p*T
+    \endverbatim
 
     This polynomial for the reciprocal of the density provides a much better fit
     than the equivalent polynomial for the density and has the advantage that it
@@ -42,7 +42,7 @@ Usage
         C            | Density polynomial coefficients
     \endtable
 
-    Example of the specification of the equation of state for pure water:
+    Example specification of the rPolynomial equation of state for pure water:
     \verbatim
     equationOfState
     {
