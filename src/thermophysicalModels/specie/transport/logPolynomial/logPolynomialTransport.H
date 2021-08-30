@@ -25,19 +25,26 @@ Class
     Foam::logPolynomialTransport
 
 Description
-    Transport package using polynomial functions of \c ln(T) for \c mu and
-    \c kappa:
+    Transport package using polynomial functions of the natural logarithm of
+    temperature for the natural logarithm of dynamic viscosity and thermal
+    conductivity:
 
-        \f[
-            ln(mu)    = \sum_{i=1}^N \left( a[i] * ln(T)^{i-1} \right)
-        \f]
+    \verbatim
+        log(mu) = muCoeffs[0] + muCoeffs[1]*log(T)
+           + muCoeffs[2]*sqr(log(T)) + muCoeffs[3]*pow3(log(T))
+           + muCoeffs[4]*pow4(log(T)) + muCoeffs[5]*pow(log(T), 5)
+           + muCoeffs[6]*pow(log(T), 6) + muCoeffs[7]*pow(log(T), 7)
 
-        \f[
-            ln(kappa) = \sum_{i=1}^N \left( b[i] * ln(T)^{i-1} \right)
-        \f]
+        log(kappa) = kappaCoeffs[0] + kappaCoeffs[1]*log(T)
+           + kappaCoeffs[2]*sqr(log(T)) + kappaCoeffs[3]*pow3(log(T))
+           + kappaCoeffs[4]*pow4(log(T)) + kappaCoeffs[5]*pow(log(T), 5)
+           + kappaCoeffs[6]*pow(log(T), 6) + kappaCoeffs[7]*pow(log(T), 7)
+    \endverbatim
+
+    The polynomial function is templated on the order of the polynomial which
+    defaults to 8.
 
 Usage
-
     \table
         Property        | Description
         muCoeffs<8>     | Dynamic viscosity polynomial coefficients
@@ -48,20 +55,10 @@ Usage
     \verbatim
     transport
     {
-        muCoeffs<8>     ( 1000 -0.05 0.003 0 0 0 0 0 );
-        kappaCoeffs<8>  ( 2000 -0.15 0.023 0 0 0 0 0 );
+        muCoeffs<8>     (1000 -0.05 0.003 0 0 0 0 0);
+        kappaCoeffs<8>  (2000 -0.15 0.023 0 0 0 0 0);
     }
     \endverbatim
-
-    The polynomial expressions are evaluated as so:
-
-        \f[
-            \mu    = 1000 - 0.05 ln(T) + 0.003 ln(T)^2
-        \f]
-
-        \f[
-            \kappa = 2000 - 0.15 ln(T) + 0.023 ln(T)^2
-        \f]
 
 SourceFiles
     logPolynomialTransportI.H

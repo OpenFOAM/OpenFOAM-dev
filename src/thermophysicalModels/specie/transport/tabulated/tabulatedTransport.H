@@ -25,11 +25,10 @@ Class
     Foam::tabulatedTransport
 
 Description
-    Transport properties package using uniform tabulated data for
+    Transport properties package using uniformly-spaced tabulated data for
     viscosity and thermal conductivity vs pressure and temperature.
 
 Usage
-
     \table
         Property        | Description
         mu              | Dynamic viscosity vs pressure and temperature table
@@ -79,6 +78,8 @@ Usage
         }
     }
     \endverbatim
+
+    See also tutorials/resources/thermoData/wallBoiling*
 
 SourceFiles
     tabulatedTransportI.H

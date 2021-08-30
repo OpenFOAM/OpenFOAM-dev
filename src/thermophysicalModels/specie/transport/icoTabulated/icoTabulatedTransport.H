@@ -25,11 +25,10 @@ Class
     Foam::icoTabulatedTransport
 
 Description
-    Transport properties package using non-uniform tabulated data for
+    Transport properties package using non-uniformly-spaced tabulated data for
     viscosity and thermal conductivity vs temperature.
 
 Usage
-
     \table
         Property        | Description
         mu              | Dynamic viscosity vs temperature table

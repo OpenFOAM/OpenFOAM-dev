@@ -25,9 +25,23 @@ Class
     Foam::constTransport
 
 Description
-    Constant properties Transport package.
-    Templated into a given thermodynamics package (needed for thermal
-    conductivity).
+    Transport package with constant properties
+
+Usage
+    \table
+        Property     | Description
+        mu           | Constant dynamic viscosity [Pa.s]
+        Pr           | Constant Prandtl number []
+    \endtable
+
+    Example specification of constTransport for air:
+    \verbatim
+    transport
+    {
+        mu              1.82e-05;
+        Pr              0.71;
+    }
+    \endverbatim
 
 SourceFiles
     constTransportI.H

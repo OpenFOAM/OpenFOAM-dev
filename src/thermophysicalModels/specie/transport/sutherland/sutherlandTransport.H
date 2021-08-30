@@ -25,15 +25,33 @@ Class
     Foam::sutherlandTransport
 
 Description
-    Transport package using Sutherland's formula.
+    Transport package using Sutherland's formula for viscosity:
 
-    Templated into a given thermodynamics package (needed for thermal
-    conductivity).
+    \verbatim
+        mu = As*sqrt(T)/(1 + Ts/T)
+    \endverbatim
 
-    Dynamic viscosity [kg/m.s]
-    \f[
-        \mu = A_s \frac{\sqrt{T}}{1 + T_s / T}
-    \f]
+    and the thermal conductivity (for gases) is obtained from:
+
+    \verbatim
+        kappa = mu*Cv*(1.32 + 1.77*R/Cv)
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description
+        As           | Sutherland constant kg/(ms K^1/2)
+        Ts           | Sutherland temperature [K]
+    \endtable
+
+    Example specification of sutherlandTransport for air:
+    \verbatim
+    transport
+    {
+        As              1.458e-06;
+        Ts              110.4;
+    }
+    \endverbatim
 
 SourceFiles
     sutherlandTransportI.H
@@ -160,7 +178,7 @@ public:
 
     // Member Operators
 
-        inline void operator+=(const sutherlandTransport&);
+        inline void operator+===(const sutherlandTransport&);
         inline void operator*=(const scalar);
 
 

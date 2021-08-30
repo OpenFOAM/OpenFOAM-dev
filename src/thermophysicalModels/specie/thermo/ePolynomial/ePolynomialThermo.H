@@ -29,8 +29,10 @@ Description
     of temperature for the constant heat capacity at constant volume:
 
     \verbatim
-        Cv = a0 + a1*T + a2*sqr(T) + a3*pow3(T) + a4*pow4(T)
-           + a5*pow(T, 5) + a6*pow(T, 6) + a7*pow(T, 7)
+        Cv = CvCoeffs[0] + CvCoeffs[1]*T + CvCoeffs[2]*sqr(T)
+           + CvCoeffs[3]*pow3(T) + CvCoeffs[4]*pow4(T)
+           + CvCoeffs[5]*pow(T, 5) + CvCoeffs[6]*pow(T, 6)
+           + CvCoeffs[7]*pow(T, 7)
     \endverbatim
 
     The polynomial function is templated on the order of the polynomial which

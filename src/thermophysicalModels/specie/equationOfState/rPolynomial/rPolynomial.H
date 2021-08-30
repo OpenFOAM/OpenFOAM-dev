@@ -28,7 +28,7 @@ Description
     Reciprocal polynomial equation of state for liquids and solids
 
     \verbatim
-        1/rho = C0 + C1*T + C2*sqr(T) - C3*p - C4*p*T
+        1/rho = C[0] + C[1]*T + C[2]*sqr(T) - C[3]*p - C[4]*p*T
     \endverbatim
 
     This polynomial for the reciprocal of the density provides a much better fit
