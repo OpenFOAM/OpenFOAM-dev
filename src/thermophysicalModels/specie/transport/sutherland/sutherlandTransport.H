@@ -178,7 +178,7 @@ public:
 
     // Member Operators
 
-        inline void operator+===(const sutherlandTransport&);
+        inline void operator+=(const sutherlandTransport&);
         inline void operator*=(const scalar);
 
 

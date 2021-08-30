@@ -83,7 +83,7 @@ inline hConstThermo<EquationOfState> operator*
 );
 
 template<class EquationOfState>
-inline hConstThermo<EquationOfState> operator====
+inline hConstThermo<EquationOfState> operator==
 (
     const hConstThermo<EquationOfState>&,
     const hConstThermo<EquationOfState>&
