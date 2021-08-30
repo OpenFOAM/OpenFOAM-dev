@@ -112,10 +112,6 @@ class massSource
         //- Non-virtual read
         void readCoeffs();
 
-        //- Read field values for a given primitive type
-        template<class Type>
-        void readFieldValues();
-
 
         // Sources
 

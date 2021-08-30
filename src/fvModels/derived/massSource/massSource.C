@@ -74,35 +74,14 @@ void Foam::fv::massSource::readCoeffs()
     const dictionary& fieldCoeffs = coeffs().subDict("fieldValues");
     forAllConstIter(dictionary, fieldCoeffs, iter)
     {
-        fieldValues_.set(iter().keyword(), nullptr);
+        fieldValues_.set
+        (
+            iter().keyword(),
+            new unknownTypeFunction1(iter().keyword(), fieldCoeffs)
+        );
     }
-
-    #define callReadFieldValues(Type, nullArg) readFieldValues<Type>();
-    FOR_ALL_FIELD_TYPES(callReadFieldValues);
-    #undef callReadFieldValues
 
     massFlowRate_.reset(Function1<scalar>::New("massFlowRate", coeffs()).ptr());
-}
-
-
-template<class Type>
-void Foam::fv::massSource::readFieldValues()
-{
-    const dictionary& fieldCoeffs = coeffs().subDict("fieldValues");
-
-    forAllConstIter(dictionary, fieldCoeffs, iter)
-    {
-        const word& fieldName = iter().keyword();
-
-        if (mesh().foundObject<VolField<Type>>(fieldName))
-        {
-            fieldValues_.set
-            (
-                fieldName,
-                new unknownTypeFunction1(fieldName, fieldCoeffs)
-            );
-        }
-    }
 }
 
 
