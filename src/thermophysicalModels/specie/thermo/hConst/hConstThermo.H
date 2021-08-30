@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,30 @@ Class
     Foam::hConstThermo
 
 Description
-    Constant properties thermodynamics package
-    templated into the EquationOfState.
+    Enthalpy based thermodynamics package using a constant heat capacity
+    at constant pressure:
+
+    \verbatim
+        h = Cp*(T - Tref) + Hsref
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description
+        Cp           | Constant Heat capacity at constant pressure [J/kmol/K]
+        Tref         | Reference temperature [K] (defaults to 0)
+        Hsref        | Reference sensible enthalpy [J/kg] (defaults to 0)
+        Hf           | Heat of formation [J/kg]
+    \endtable
+
+    Example specification of hConstThermo for air:
+    \verbatim
+    thermodynamics
+    {
+        Cp          1007;
+        Hf          0;
+    }
+    \endverbatim
 
 SourceFiles
     hConstThermoI.H
@@ -61,7 +83,7 @@ inline hConstThermo<EquationOfState> operator*
 );
 
 template<class EquationOfState>
-inline hConstThermo<EquationOfState> operator==
+inline hConstThermo<EquationOfState> operator====
 (
     const hConstThermo<EquationOfState>&,
     const hConstThermo<EquationOfState>&

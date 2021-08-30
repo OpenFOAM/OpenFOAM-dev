@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,54 @@ Class
     Foam::janafThermo
 
 Description
-    JANAF tables based thermodynamics package templated
-    into the equation of state.
+    Enthalpy based thermodynamics package using JANAF tables:
+
+    \verbatim
+        Cp = (((a4*T + a3)*T + a2)*T + a1)*T + a0
+        ha = ((((a4/5*T + a3/4)*T + a2/3)*T + a1/2)*T + a0)*T + a5
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description
+        Tlow         | Lower temperature limit [K]
+        Thigh        | Upper temperature limit [K]
+        Tcommon      | Transition temperature from low to high polynomials [K]
+        lowCpCoeffs  | Low temperature range heat capacity coefficients
+        highCpCoeffs | High temperature range heat capacity coefficients
+    \endtable
+
+    Example specification of janafThermo for air:
+    \verbatim
+    thermodynamics
+    {
+        Tlow            100;
+        Thigh           10000;
+        Tcommon         1000;
+
+        lowCpCoeffs
+        (
+            3.5309628
+            -0.0001236595
+            -5.0299339e-07
+            2.4352768e-09
+            -1.4087954e-12
+            -1046.9637
+            2.9674391
+        );
+
+        highCpCoeffs
+        (
+            2.9525407
+            0.0013968838
+            -4.9262577e-07
+            7.8600091e-11
+            -4.6074978e-15
+            -923.93753
+            5.8718221
+        );
+    }
+    \endverbatim
 
 SourceFiles
     janafThermoI.H

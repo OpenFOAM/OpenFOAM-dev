@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,30 @@ Class
     Foam::eConstThermo
 
 Description
-    Constant properties thermodynamics package templated on an equation of
-    state
+    Internal energy based thermodynamics package using a constant heat capacity
+    at constant volume:
+
+    \verbatim
+        e = Cv*(T - Tref) + Esref
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description
+        Cv           | Constant Heat capacity at constant volume [J/kmol/K]
+        Tref         | Reference temperature [K] (defaults to 0)
+        Esref        | Reference sensible internal energy [J/kg] (defaults to 0)
+        Hf           | Heat of formation [J/kg]
+    \endtable
+
+    Example specification of eConstThermo for air:
+    \verbatim
+    thermodynamics
+    {
+        Cv          724;
+        Hf          0;
+    }
+    \endverbatim
 
 SourceFiles
     eConstThermoI.H

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,18 @@ Class
     Foam::hPolynomialThermo
 
 Description
-    Thermodynamics package templated on the equation of state, using polynomial
-    functions for \c cp, \c h and \c s.
+    Enthalpy based thermodynamics package using a polynomial function
+    of temperature for the constant heat capacity at constant pressure:
 
-    Polynomials for \c h and \c s derived from \c cp.
+    \verbatim
+        Cp = a0 + a1*T + a2*sqr(T) + a3*pow3(T) + a4*pow4(T)
+           + a5*pow(T, 5) + a6*pow(T, 6) + a7*pow(T, 7)
+    \endverbatim
+
+    The polynomial function is templated on the order of the polynomial which
+    defaults to 8.
 
 Usage
-
     \table
         Property     | Description
         Hf           | Heat of formation
@@ -45,19 +50,13 @@ Usage
     {
         Hf              0;
         Sf              0;
-        CpCoeffs<8>     ( 1000 -0.05 0.003 0 0 0 0 0 );
+        CpCoeffs<8>     (1000 -0.05 0.003 0 0 0 0 0);
     }
     \endverbatim
 
-    The polynomial expression is evaluated as so:
-
-        \f[
-            Cp = 1000 - 0.05 T + 0.003 T^2
-        \f]
-
 Note
-    - Specific heat at constant pressure polynomial coefficients evaluate to an
-      expression in [J/kg/K].
+    Specific heat at constant pressure polynomial coefficients evaluate to an
+    expression in [J/kg/K].
 
 SourceFiles
     hPolynomialThermoI.H

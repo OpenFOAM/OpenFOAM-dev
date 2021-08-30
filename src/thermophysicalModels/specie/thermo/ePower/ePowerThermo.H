@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,14 +25,33 @@ Class
     Foam::ePowerThermo
 
 Description
-    Power-function based thermodynamics package templated on EquationOfState.
+    Internal energy based thermodynamics package using a power function of
+    temperature for the constant heat capacity at constant volume which is
+    particularly suitable for solids at low temperatures:
 
-    In this thermodynamics package the heat capacity is a simple power of
-    temperature:
+    \verbatim
+        Cv = c0*pow(T/Tref, n0)
+    \endverbatim
 
-        Cv(T) = c0*(T/Tref)^n0;
+Usage
+    \table
+        Property     | Description
+        c0           | Reference heat capacity at constant volume [J/kmol/K]
+        n0           | Exponent of the power function
+        Tref         | Reference temperature [K]
+        Hf           | Heat of formation [J/kg]
+    \endtable
 
-    which is particularly suitable for solids.
+    Example specification of ePowerThermo:
+    \verbatim
+    thermodynamics
+    {
+        c0          230;
+        Tref        470;
+        n0          3;
+        Hf          0;
+    }
+    \endverbatim
 
 SourceFiles
     ePowerThermoI.H
