@@ -1,0 +1,27 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+
+for i in 1 2
+do
+    runApplication -s XY$i topoSet -dict topoSetDictXY$i
+    runApplication -s XY$i refineMesh -dict refineMeshDictXY -overwrite
+done
+
+for i in 1 2 3 4
+do
+    runApplication -s Z$i topoSet -dict topoSetDictZ$i
+    runApplication -s Z$i refineMesh -dict refineMeshDictZ -overwrite
+done
+
+runApplication setWaves
+
+runApplication decomposePar
+
+runParallel $(getApplication)
+
+runApplication reconstructPar -newTimes

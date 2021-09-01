@@ -11,7 +11,6 @@ waveSuperpositions/waveAtmBoundaryLayerSuperposition/waveAtmBoundaryLayerSuperpo
 
 derivedFvPatchFields/waveAlpha/waveAlphaFvPatchScalarField.C
 derivedFvPatchFields/waveInletOutlet/waveInletOutletFvPatchFields.C
-derivedFvPatchFields/wavePressure/wavePressureFvPatchScalarField.C
 derivedFvPatchFields/waveVelocity/waveVelocityFvPatchVectorField.C
 
 LIB = $(FOAM_LIBBIN)/libwaves

@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      waveProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+origin          (0 0 2.7);
+
+direction       (1 0 0);
+
+UMean           (0 0 0);
+
+waves
+(
+    Stokes5
+    {
+        length      5.64;
+        amplitude   0.3;
+        phase       0.8;
+        angle       0;
+        depth       2.7;
+    }
+);
+
+scale           table ((18 1) (24 0));
+
+
+// ************************************************************************* //
