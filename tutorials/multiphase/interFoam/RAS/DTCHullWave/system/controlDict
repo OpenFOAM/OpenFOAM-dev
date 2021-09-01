@@ -62,8 +62,6 @@ functions
         writeControl    adjustableRunTime;
         writeInterval   0.01;
 
-        startTime       10;
-
         surfaceFormat   vtk;
         writeFormat     binary;
         fields          (p_rgh U);
