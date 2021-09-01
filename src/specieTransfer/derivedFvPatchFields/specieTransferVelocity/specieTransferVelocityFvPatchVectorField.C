@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ specieTransferVelocityFvPatchVectorField
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
+    fixedValueInletOutletFvPatchField<vector>(p, iF),
     rhoName_("rho")
 {}
 
@@ -50,18 +50,12 @@ specieTransferVelocityFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict,
-    const bool readValue
+    const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
+    fixedValueInletOutletFvPatchField<vector>(p, iF),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
-{
-    if (readValue)
-    {
-        fvPatchVectorField::operator==(vectorField("value", dict, p.size()));
-    }
-}
+{}
 
 
 Foam::specieTransferVelocityFvPatchVectorField::
@@ -73,7 +67,7 @@ specieTransferVelocityFvPatchVectorField
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchVectorField(ptf, p, iF, mapper),
+    fixedValueInletOutletFvPatchField<vector>(ptf, p, iF, mapper),
     rhoName_(ptf.rhoName_)
 {}
 
@@ -85,7 +79,7 @@ specieTransferVelocityFvPatchVectorField
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchVectorField(ptf, iF),
+    fixedValueInletOutletFvPatchField<vector>(ptf, iF),
     rhoName_(ptf.rhoName_)
 {}
 
@@ -136,7 +130,7 @@ void Foam::specieTransferVelocityFvPatchVectorField::updateCoeffs()
     const tensorField Tau(tensor::I - sqr(nf));
     this->operator==((Tau & *this) + nf*phip()/(rhop*patch().magSf()));
 
-    fixedValueFvPatchVectorField::updateCoeffs();
+    fixedValueInletOutletFvPatchField<vector>::updateCoeffs();
 }
 
 
