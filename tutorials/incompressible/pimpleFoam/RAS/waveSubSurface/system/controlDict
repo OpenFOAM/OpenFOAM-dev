@@ -53,36 +53,4 @@ libs
     "libwaves.so"
 );
 
-functions
-{
-   readG
-   {
-       libs ("libutilityFunctionObjects.so");
-       type coded;
-       name readG;
-       enabled yes;
-       executeControl none;
-       codeRead
-       #{
-           if (!mesh().template foundObject<uniformDimensionedVectorField>("g"))
-           {
-               Info<< "\nReading g" << endl;
-               uniformDimensionedVectorField* g =
-                   new uniformDimensionedVectorField
-                   (
-                       IOobject
-                       (
-                           "g",
-                           mesh().time().constant(),
-                           mesh(),
-                           IOobject::MUST_READ,
-                           IOobject::NO_WRITE
-                       )
-                   );
-               g->store();
-           }
-       #};
-   }
-};
-
 // ************************************************************************* //

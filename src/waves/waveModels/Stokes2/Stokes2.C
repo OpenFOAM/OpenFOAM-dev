@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ namespace Foam
 namespace waveModels
 {
     defineTypeNameAndDebug(Stokes2, 0);
-    addToRunTimeSelectionTable(waveModel, Stokes2, objectRegistry);
+    addToRunTimeSelectionTable(waveModel, Stokes2, dictionary);
 }
 }
 
@@ -42,11 +42,11 @@ namespace waveModels
 
 Foam::waveModels::Stokes2::Stokes2
 (
-    const objectRegistry& db,
-    const dictionary& dict
+    const dictionary& dict,
+    const scalar g
 )
 :
-    Airy(db, dict)
+    Airy(dict, g)
 {}
 
 

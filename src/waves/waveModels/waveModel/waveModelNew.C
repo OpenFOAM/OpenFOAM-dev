@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,19 +29,19 @@ License
 
 Foam::autoPtr<Foam::waveModel> Foam::waveModel::New
 (
-    const objectRegistry& db,
-    const dictionary& dict
+    const dictionary& dict,
+    const scalar g
 )
 {
-    return waveModel::New(dict.lookup("type"), db, dict);
+    return waveModel::New(dict.lookup("type"), dict, g);
 }
 
 
 Foam::autoPtr<Foam::waveModel> Foam::waveModel::New
 (
     const word& type,
-    const objectRegistry& db,
-    const dictionary& dict
+    const dictionary& dict,
+    const scalar g
 )
 {
     if (debug)
@@ -49,19 +49,19 @@ Foam::autoPtr<Foam::waveModel> Foam::waveModel::New
         Info<< "Selecting " << waveModel::typeName << " " << type << endl;
     }
 
-    objectRegistryConstructorTable::iterator cstrIter =
-        objectRegistryConstructorTablePtr_->find(type);
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(type);
 
-    if (cstrIter == objectRegistryConstructorTablePtr_->end())
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
             << "Unknown " << waveModel::typeName << " " << type << nl << nl
             << "Valid model types are:" << nl
-            << objectRegistryConstructorTablePtr_->sortedToc()
+            << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 
-    return cstrIter()(db, dict);
+    return cstrIter()(dict, g);
 }
 
 

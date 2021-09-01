@@ -151,11 +151,6 @@ protected:
         //  perpendicular to both.
         tmp<vectorField> velocity(const scalar t, const vectorField& xyz) const;
 
-        //- Get the wave pressure at a given time and local coordinates. Local
-        //  x is aligned with the direction, z with negative gravity, and y is
-        //  perpendicular to both.
-        tmp<scalarField> pressure(const scalar t, const vectorField& xyz) const;
-
         //- Get the scaling factor, calculated from the optional scaling
         //  functions. X and y are the same as for the elevation method.
         tmp<scalarField> scale(const vector2DField& xy) const;
@@ -219,20 +214,6 @@ public:
 
         //- Get the gas velocity at a given time and global positions
         virtual tmp<vectorField> UGas
-        (
-            const scalar t,
-            const vectorField& p
-        ) const;
-
-        //- Get the liquid pressure at a given time and global positions
-        virtual tmp<scalarField> pLiquid
-        (
-            const scalar t,
-            const vectorField& p
-        ) const;
-
-        //- Get the gas pressure at a given time and global positions
-        virtual tmp<scalarField> pGas
         (
             const scalar t,
             const vectorField& p

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,8 +113,8 @@ public:
         //- Construct a copy
         Airy(const Airy& wave);
 
-        //- Construct from a database and a dictionary
-        Airy(const objectRegistry& db, const dictionary& dict);
+        //- Construct from a dictionary and gravity
+        Airy(const dictionary& dict, const scalar g);
 
         //- Construct a clone
         virtual autoPtr<waveModel> clone() const
@@ -161,15 +161,6 @@ public:
         //  x is aligned with the direction of propagation, and z with negative
         //  gravity.
         virtual tmp<vector2DField> velocity
-        (
-            const scalar t,
-            const vector2DField& xz
-        ) const;
-
-        //- Get the wave pressure at a given time and local coordinates. Local
-        //  x is aligned with the direction of propagation, and z with negative
-        //  gravity.
-        virtual tmp<scalarField> pressure
         (
             const scalar t,
             const vector2DField& xz

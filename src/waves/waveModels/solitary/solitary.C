@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ namespace Foam
 namespace waveModels
 {
     defineTypeNameAndDebug(solitary, 0);
-    addToRunTimeSelectionTable(waveModel, solitary, objectRegistry);
+    addToRunTimeSelectionTable(waveModel, solitary, dictionary);
 }
 }
 
@@ -93,11 +93,11 @@ Foam::waveModels::solitary::solitary(const solitary& wave)
 
 Foam::waveModels::solitary::solitary
 (
-    const objectRegistry& db,
-    const dictionary& dict
+    const dictionary& dict,
+    const scalar g
 )
 :
-    waveModel(db, dict),
+    waveModel(dict, g),
     offset_(dict.lookup<scalar>("offset")),
     depth_(dict.lookup<scalar>("depth"))
 {}
@@ -146,17 +146,6 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
               + (- 7*A + 3*A*sqr(Z))*sqr(P)
             )
         );
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::pressure
-(
-    const scalar t,
-    const vector2DField& xz
-) const
-{
-    NotImplemented;
-    return tmp<scalarField>(nullptr);
 }
 
 

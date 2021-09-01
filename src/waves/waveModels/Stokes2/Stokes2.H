@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,8 +69,8 @@ public:
 
     // Constructors
 
-        //- Construct from a database and a dictionary
-        Stokes2(const objectRegistry& db, const dictionary& dict);
+        //- Construct from a dictionary and gravity
+        Stokes2(const dictionary& dict, const scalar g);
 
         //- Construct a clone
         virtual autoPtr<waveModel> clone() const
