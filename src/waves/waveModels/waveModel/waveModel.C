@@ -38,8 +38,7 @@ namespace Foam
 
 Foam::waveModel::waveModel(const waveModel& wave)
 :
-    g_(wave.g_),
-    amplitude_(wave.amplitude_, false)
+    g_(wave.g_)
 {}
 
 
@@ -49,8 +48,7 @@ Foam::waveModel::waveModel
     const scalar g
 )
 :
-    g_(g),
-    amplitude_(Function1<scalar>::New("amplitude", dict))
+    g_(g)
 {}
 
 
@@ -63,9 +61,7 @@ Foam::waveModel::~waveModel()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 void Foam::waveModel::write(Ostream& os) const
-{
-    writeEntry(os, amplitude_());
-}
+{}
 
 
 // ************************************************************************* //

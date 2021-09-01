@@ -63,23 +63,26 @@ class solitary
 {
     // Private Data
 
-        //- Offset [m]
-        const scalar offset_;
-
         //- Depth [m]
         const scalar depth_;
+
+        //- Amplitude [m]
+        const scalar amplitude_;
+
+        //- Offset [m]
+        const scalar offset_;
 
 
     // Private Member Functions
 
         //- The wavenumber [1/m]
-        scalar k(const scalar t) const;
+        scalar k() const;
 
         //- The dimensionless amplitude [1]
-        scalar alpha(const scalar t) const;
+        scalar alpha() const;
 
         //- The wave celerity [m/s]
-        scalar celerity(const scalar t) const;
+        scalar celerity() const;
 
         //- The evolution parameter [1]
         //  This is analogous to the oscillation angle of a periodic wave
@@ -126,16 +129,22 @@ public:
 
         // Access
 
-            //- Get the offset
-            scalar offset() const
-            {
-                return offset_;
-            }
-
             //- Get the depth
             scalar depth() const
             {
                 return depth_;
+            }
+
+            //- Get the amplitude
+            scalar amplitude() const
+            {
+                return amplitude_;
+            }
+
+            //- Get the offset
+            scalar offset() const
+            {
+                return offset_;
             }
 
         //- Get the wave elevation at a given time and local coordinates. Local

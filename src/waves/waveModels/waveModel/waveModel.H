@@ -60,9 +60,6 @@ class waveModel
         //- Gravitational acceleration [m/s^2]
         const scalar g_;
 
-        //- Peak-to-mean amplitude [m]
-        autoPtr<Function1<scalar>> amplitude_;
-
 
 public:
 
@@ -123,12 +120,6 @@ public:
             scalar g() const
             {
                 return g_;
-            }
-
-            //- Get the amplitude
-            scalar amplitude(const scalar t) const
-            {
-                return amplitude_->value(t);
             }
 
         //- Get the wave elevation at a given time and local coordinates. Local

@@ -41,21 +41,21 @@ namespace waveModels
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::scalar Foam::waveModels::solitary::k(const scalar t) const
+Foam::scalar Foam::waveModels::solitary::k() const
 {
-    return sqrt(0.75*amplitude(t)/pow3(depth()));
+    return sqrt(0.75*amplitude()/pow3(depth()));
 }
 
 
-Foam::scalar Foam::waveModels::solitary::alpha(const scalar t) const
+Foam::scalar Foam::waveModels::solitary::alpha() const
 {
-    return amplitude(t)/depth();
+    return amplitude()/depth();
 }
 
 
-Foam::scalar Foam::waveModels::solitary::celerity(const scalar t) const
+Foam::scalar Foam::waveModels::solitary::celerity() const
 {
-    return sqrt(g()*depth()/(1 - alpha(t)));
+    return sqrt(g()*depth()/(1 - alpha()));
 }
 
 
@@ -65,7 +65,7 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::parameter
     const scalarField& x
 ) const
 {
-    return k(t)*(x - offset_ - celerity(t)*t);
+    return k()*(x - offset() - celerity()*t);
 }
 
 
@@ -86,8 +86,9 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::Pi
 Foam::waveModels::solitary::solitary(const solitary& wave)
 :
     waveModel(wave),
-    offset_(wave.offset_),
-    depth_(wave.depth_)
+    depth_(wave.depth_),
+    amplitude_(wave.amplitude_),
+    offset_(wave.offset_)
 {}
 
 
@@ -98,8 +99,9 @@ Foam::waveModels::solitary::solitary
 )
 :
     waveModel(dict, g),
-    offset_(dict.lookup<scalar>("offset")),
-    depth_(dict.lookup<scalar>("depth"))
+    depth_(dict.lookup<scalar>("depth")),
+    amplitude_(dict.lookup<scalar>("amplitude")),
+    offset_(dict.lookup<scalar>("offset"))
 {}
 
 
@@ -117,7 +119,7 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::elevation
     const scalarField& x
 ) const
 {
-    return amplitude(t)*Pi(t, x);
+    return amplitude()*Pi(t, x);
 }
 
 
@@ -127,12 +129,12 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
     const vector2DField& xz
 ) const
 {
-    const scalar A = alpha(t);
+    const scalar A = alpha();
     const scalarField Z(max(scalar(0), 1 + xz.component(1)/depth()));
     const scalarField P(Pi(t, xz.component(0)));
 
     return
-        celerity(t)
+        celerity()
        *zip
         (
             A/4
@@ -140,7 +142,7 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
                 (4 + 2*A - 6*A*sqr(Z))*P
               + (- 7*A + 9*A*sqr(Z))*sqr(P)
             ),
-            A*Z*depth()*k(t)*tanh(parameter(t, xz.component(0)))
+            A*Z*depth()*k()*tanh(parameter(t, xz.component(0)))
            *(
                 (2 + A - A*sqr(Z))*P
               + (- 7*A + 3*A*sqr(Z))*sqr(P)
@@ -154,6 +156,7 @@ void Foam::waveModels::solitary::write(Ostream& os) const
     waveModel::write(os);
 
     writeEntry(os, "offset", offset_);
+    writeEntry(os, "amplitude", amplitude_);
     writeEntry(os, "depth", depth_);
 }
 

@@ -39,19 +39,80 @@ namespace waveModels
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::scalar Foam::waveModels::Airy::length
+(
+    const dictionary& dict,
+    const scalar depth,
+    const scalar amplitude,
+    const scalar g,
+    scalar (*modelCelerity)(scalar, scalar, scalar, scalar)
+)
+{
+    const bool haveLength = dict.found("length");
+    const bool havePeriod = dict.found("period");
+
+    if (haveLength == havePeriod)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Exactly one of either length or period must be specified"
+            << exit(FatalIOError);
+    }
+
+    if (haveLength)
+    {
+        return dict.lookup<scalar>("length");
+    }
+    else
+    {
+        const scalar period = dict.lookup<scalar>("period");
+
+        scalar length0 = 0;
+        scalar length1 = 1.5*g*sqr(period)/(2*constant::mathematical::pi);
+
+        // Bisect down to round off error to find the wave length
+        for (label i = 0; i < ceil(std::log2(1/small)); ++ i)
+        {
+            const scalar length = (length0 + length1)/2;
+
+            const scalar t = length/modelCelerity(depth, amplitude, length, g);
+
+            (t < period ? length0 : length1) = length;
+        }
+
+        return (length0 + length1)/2;
+    }
+}
+
+
+// * * * * * * * * * * Static Protected Member Functions  * * * * * * ** * * //
+
+Foam::scalar Foam::waveModels::Airy::k(const scalar length)
+{
+    return 2*Foam::constant::mathematical::pi/length;
+}
+
+
+bool Foam::waveModels::Airy::deep(const scalar depth, const scalar length)
+{
+    return depth*k(length) > log(great);
+}
+
+
+Foam::scalar Foam::waveModels::Airy::celerity
+(
+    const scalar depth,
+    const scalar amplitude,
+    const scalar length,
+    const scalar g
+)
+{
+    return sqrt(g/k(length)*tanh(k(length)*depth));
+}
+
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-Foam::scalar Foam::waveModels::Airy::k() const
-{
-    return 2*Foam::constant::mathematical::pi/length_;
-}
-
-
-Foam::scalar Foam::waveModels::Airy::celerity() const
-{
-    return sqrt(g()/k()*tanh(k()*depth()));
-}
-
 
 Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::angle
 (
@@ -60,12 +121,6 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::angle
 ) const
 {
     return phase_ + k()*(x - celerity()*t);
-}
-
-
-bool Foam::waveModels::Airy::deep() const
-{
-    return k()*depth() > log(great);
 }
 
 
@@ -92,6 +147,7 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::vi
     {
         const scalar kd = k()*depth();
         const scalarField kdz(max(scalar(0), kd + kz));
+
         return i*zip(cosh(i*kdz)*cos(i*phi), sinh(i*kdz)*sin(i*phi))/sinh(kd);
     }
 }
@@ -102,23 +158,33 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::vi
 Foam::waveModels::Airy::Airy(const Airy& wave)
 :
     waveModel(wave),
+    depth_(wave.depth_),
+    amplitude_(wave.amplitude_, false),
     length_(wave.length_),
-    phase_(wave.phase_),
-    depth_(wave.depth_)
+    phase_(wave.phase_)
 {}
 
 
 Foam::waveModels::Airy::Airy
 (
     const dictionary& dict,
-    const scalar g
+    const scalar g,
+    const word& modelName,
+    scalar (*modelCelerity)(scalar, scalar, scalar, scalar)
 )
 :
     waveModel(dict, g),
-    length_(dict.lookup<scalar>("length")),
-    phase_(dict.lookup<scalar>("phase")),
-    depth_(dict.lookupOrDefault<scalar>("depth", log(2*great)/k()))
-{}
+    depth_(dict.lookupOrDefault<scalar>("depth", great)),
+    amplitude_(Function1<scalar>::New("amplitude", dict)),
+    length_(length(dict, depth_, amplitude(), g, modelCelerity)),
+    phase_(dict.lookup<scalar>("phase"))
+{
+    const scalar c = modelCelerity(depth(), amplitude(), length(), g);
+
+    Info<< waveModel::typeName << ": " << modelName
+        << ": period = " << length_/c
+        << ", length = " << length_ << endl;;
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -147,7 +213,7 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::velocity
 {
     const scalar ka = k()*amplitude(t);
 
-    return celerity()*ka*vi(1, t, xz);
+    return Airy::celerity()*ka*vi(1, t, xz);
 }
 
 
@@ -155,12 +221,13 @@ void Foam::waveModels::Airy::write(Ostream& os) const
 {
     waveModel::write(os);
 
-    writeEntry(os, "length", length_);
-    writeEntry(os, "phase", phase_);
     if (!deep())
     {
         writeEntry(os, "depth", depth_);
     }
+    writeEntry(os, amplitude_());
+    writeEntry(os, "length", length_);
+    writeEntry(os, "phase", phase_);
 }
 
 
