@@ -53,7 +53,7 @@ specieTransferVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueInletOutletFvPatchField<vector>(p, iF),
+    fixedValueInletOutletFvPatchField<vector>(p, iF, dict),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {}
 
