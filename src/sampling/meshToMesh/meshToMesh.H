@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,23 +60,6 @@ namespace Foam
 
 class meshToMesh
 {
-public:
-
-    // Public data types
-
-        //- Enumeration specifying interpolation method
-        enum interpolationMethod
-        {
-            imDirect,
-            imMapNearest,
-            imCellVolumeWeight
-        };
-
-        static const NamedEnum<interpolationMethod, 3>
-            interpolationMethodNames_;
-
-private:
-
     // Private Data
 
         //- Reference to the source mesh
@@ -164,7 +147,7 @@ private:
 
         //- Calculate the addressing between overlapping regions of src and tgt
         //  meshes
-        void calcAddressing
+        word calcAddressing
         (
             const word& methodName,
             const polyMesh& src,
@@ -172,7 +155,8 @@ private:
         );
 
         //- Calculate - main driver function
-        void calculate(const word& methodName);
+        //  Returns the corresponding AMImethod
+        word calculate(const word& methodName);
 
         //- Calculate patch overlap
         void calculatePatchAMIs(const word& amiMethodName);
@@ -181,7 +165,6 @@ private:
         void constructNoCuttingPatches
         (
             const word& methodName,
-            const word& AMIMethodName,
             const bool interpAllPatches
         );
 
@@ -189,7 +172,6 @@ private:
         void constructFromCuttingPatches
         (
             const word& methodName,
-            const word& AMIMethodName,
             const HashTable<word>& patchMap,
             const wordList& cuttingPatches
         );
@@ -260,12 +242,12 @@ public:
 
     // Constructors
 
-        //- Construct from source and target meshes
+        //- Construct from source and target meshes, generic mapping methods
         meshToMesh
         (
             const polyMesh& src,
             const polyMesh& tgt,
-            const interpolationMethod& method,
+            const word& methodName,
             const bool interpAllPatches = true
         );
 
@@ -274,28 +256,7 @@ public:
         (
             const polyMesh& src,
             const polyMesh& tgt,
-            const word& methodName,     // internal mapping
-            const word& AMIMethodName,  // boundary mapping
-            const bool interpAllPatches = true
-        );
-
-        //- Construct from source and target meshes
-        meshToMesh
-        (
-            const polyMesh& src,
-            const polyMesh& tgt,
-            const interpolationMethod& method,
-            const HashTable<word>& patchMap,
-            const wordList& cuttingPatches
-        );
-
-        //- Construct from source and target meshes, generic mapping methods
-        meshToMesh
-        (
-            const polyMesh& src,
-            const polyMesh& tgt,
-            const word& methodName,     // internal mapping
-            const word& AMIMethodName,  // boundary mapping
+            const word& methodName,
             const HashTable<word>& patchMap,
             const wordList& cuttingPatches
         );
@@ -332,10 +293,6 @@ public:
 
             //- Return const access to the overlap volume
             inline scalar V() const;
-
-            //- Conversion between mesh and patch interpolation methods
-            static AMIInterpolation::interpolationMethod
-            interpolationMethodAMI(const interpolationMethod method);
 
 
         // Evaluation

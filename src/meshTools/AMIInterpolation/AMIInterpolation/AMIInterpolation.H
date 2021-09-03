@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,7 @@ SourceFiles
 #include "boolList.H"
 #include "primitivePatch.H"
 #include "faceAreaIntersect.H"
+#include "faceAreaWeightAMI.H"
 #include "globalIndex.H"
 #include "ops.H"
 
@@ -69,42 +70,6 @@ namespace Foam
 
 class AMIInterpolation
 {
-public:
-
-    // Public data types
-
-        //- Enumeration specifying interpolation method
-        enum interpolationMethod
-        {
-            imDirect,
-            imMapNearest,
-            imFaceAreaWeight,
-            imPartialFaceAreaWeight,
-            imSweptFaceAreaWeight
-        };
-
-        //- Convert interpolationMethod to word representation
-        static word interpolationMethodToWord
-        (
-            const interpolationMethod& method
-        );
-
-        //- Convert word to interpolationMethod
-        static interpolationMethod wordTointerpolationMethod
-        (
-            const word& method
-        );
-
-        //- Calculate the patch face magnitudes for the given tri-mode
-        static tmp<scalarField> patchMagSf
-        (
-            const primitivePatch& patch,
-            const faceAreaIntersect::triangulationMode triMode
-        );
-
-
-private:
-
     // Private Data
 
         //- Interpolation method
@@ -304,21 +269,7 @@ public:
             const primitivePatch& tgtPatch,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
-            const interpolationMethod& method = imFaceAreaWeight,
-            const scalar lowWeightCorrection = -1,
-            const bool reverseTarget = false,
-            const bool report = true
-        );
-
-        //- Construct from components
-        AMIInterpolation
-        (
-            const primitivePatch& srcPatch,
-            const primitivePatch& tgtPatch,
-            const faceAreaIntersect::triangulationMode& triMode,
-            const bool requireMatch = true,
-            const word& methodName =
-                interpolationMethodToWord(imFaceAreaWeight),
+            const word& methodName = faceAreaWeightAMI::typeName,
             const scalar lowWeightCorrection = -1,
             const bool reverseTarget = false,
             const bool report = true
@@ -332,22 +283,7 @@ public:
             const autoPtr<searchableSurface>& surf,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
-            const interpolationMethod& method = imFaceAreaWeight,
-            const scalar lowWeightCorrection = -1,
-            const bool reverseTarget = false,
-            const bool report = true
-        );
-
-        //- Construct from components, with projection surface
-        AMIInterpolation
-        (
-            const primitivePatch& srcPatch,
-            const primitivePatch& tgtPatch,
-            const autoPtr<searchableSurface>& surf,
-            const faceAreaIntersect::triangulationMode& triMode,
-            const bool requireMatch = true,
-            const word& methodName =
-                interpolationMethodToWord(imFaceAreaWeight),
+            const word& methodName = faceAreaWeightAMI::typeName,
             const scalar lowWeightCorrection = -1,
             const bool reverseTarget = false,
             const bool report = true
@@ -590,6 +526,13 @@ public:
                 point& srcPoint
             )
             const;
+
+            //- Calculate the patch face magnitudes for the given tri-mode
+            static tmp<scalarField> patchMagSf
+            (
+                const primitivePatch& patch,
+                const faceAreaIntersect::triangulationMode triMode
+            );
 
 
         // Checks

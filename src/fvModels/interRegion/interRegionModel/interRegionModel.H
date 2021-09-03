@@ -62,7 +62,7 @@ class interRegionModel
         word nbrRegionName_;
 
         //- Interpolation method
-        meshToMesh::interpolationMethod interpolationMethod_;
+        word interpolationMethod_;
 
         //- Mesh to mesh interpolation object
         mutable autoPtr<meshToMesh> meshInterpPtr_;

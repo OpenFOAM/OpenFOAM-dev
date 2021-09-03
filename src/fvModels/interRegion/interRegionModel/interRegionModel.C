@@ -25,6 +25,7 @@ License
 
 #include "interRegionModel.H"
 #include "fvModels.H"
+#include "directMethod.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -50,11 +51,7 @@ void Foam::fv::interRegionModel::readCoeffs()
             "nbrRegionName"
         });
 
-    interpolationMethod_ =
-        meshToMesh::interpolationMethodNames_.read
-        (
-            coeffs().lookup("interpolationMethod")
-        );
+    coeffs().lookup("interpolationMethod") >> interpolationMethod_;
 }
 
 
@@ -143,7 +140,7 @@ Foam::fv::interRegionModel::interRegionModel
     fvModel(name, modelType, dict, mesh),
     master_(false),
     nbrRegionName_(word::null),
-    interpolationMethod_(meshToMesh::imDirect),
+    interpolationMethod_(directMethod::typeName),
     meshInterpPtr_()
 {
     readCoeffs();

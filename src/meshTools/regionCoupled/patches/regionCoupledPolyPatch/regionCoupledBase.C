@@ -92,7 +92,7 @@ void Foam::regionCoupledBase::resetAMI() const
                 surfPtr(),
                 faceAreaIntersect::tmMesh,
                 true,
-                AMIInterpolation::imFaceAreaWeight,
+                faceAreaWeightAMI::typeName,
                 -1,
                 AMIReverse_
             )

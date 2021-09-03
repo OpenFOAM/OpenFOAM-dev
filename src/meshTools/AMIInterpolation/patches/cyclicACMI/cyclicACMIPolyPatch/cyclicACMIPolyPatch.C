@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cyclicACMIPolyPatch.H"
+#include "partialFaceAreaWeightAMI.H"
 #include "SubField.H"
 #include "Time.H"
 #include "addToRunTimeSelectionTable.H"
@@ -240,7 +241,7 @@ Foam::cyclicACMIPolyPatch::cyclicACMIPolyPatch
         bm,
         patchType,
         false,
-        AMIInterpolation::imPartialFaceAreaWeight
+        partialFaceAreaWeightAMI::typeName
     ),
     nonOverlapPatchName_(word::null),
     nonOverlapPatchID_(-1),
@@ -270,7 +271,7 @@ Foam::cyclicACMIPolyPatch::cyclicACMIPolyPatch
         bm,
         patchType,
         false,
-        AMIInterpolation::imPartialFaceAreaWeight
+        partialFaceAreaWeightAMI::typeName
     ),
     nonOverlapPatchName_(dict.lookup("nonOverlapPatch")),
     nonOverlapPatchID_(-1),

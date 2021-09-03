@@ -32,6 +32,7 @@ Description
 
 #include "fvCFD.H"
 #include "meshToMesh.H"
+#include "cellVolumeWeightMethod.H"
 #include "processorPolyPatch.H"
 #include "MapMeshes.H"
 
@@ -41,7 +42,7 @@ void mapConsistentMesh
 (
     const fvMesh& meshSource,
     const fvMesh& meshTarget,
-    const meshToMesh::interpolationMethod& mapMethod,
+    const word& mapMethod,
     const bool subtract,
     const HashSet<word>& selectedFields,
     const bool noLagrangian
@@ -79,7 +80,7 @@ void mapSubMesh
     const fvMesh& meshTarget,
     const HashTable<word>& patchMap,
     const wordList& cuttingPatches,
-    const meshToMesh::interpolationMethod& mapMethod,
+    const word& mapMethod,
     const bool subtract,
     const HashSet<word>& selectedFields,
     const bool noLagrangian
@@ -231,16 +232,15 @@ int main(int argc, char *argv[])
 
     const bool consistent = args.optionFound("consistent");
 
-    meshToMesh::interpolationMethod mapMethod =
-        meshToMesh::imCellVolumeWeight;
-
-    if (args.optionFound("mapMethod"))
-    {
-        mapMethod = meshToMesh::interpolationMethodNames_[args["mapMethod"]];
-
-        Info<< "Mapping method: "
-            << meshToMesh::interpolationMethodNames_[mapMethod] << endl;
-    }
+    const word mapMethod
+    (
+        args.optionLookupOrDefault<word>
+        (
+            "mapMethod",
+            cellVolumeWeightMethod::typeName
+        )
+    );
+    Info<< "Mapping method: " << mapMethod << endl;
 
     const bool subtract = args.optionFound("subtract");
     if (subtract)

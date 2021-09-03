@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,21 +33,6 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(meshToMesh, 0);
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::meshToMesh::interpolationMethod,
-        3
-    >::names[] =
-    {
-        "direct",
-        "mapNearest",
-        "cellVolumeWeight"
-    };
-
-    const NamedEnum<meshToMesh::interpolationMethod, 3>
-        meshToMesh::interpolationMethodNames_;
 }
 
 
@@ -227,7 +212,7 @@ void Foam::meshToMesh::normaliseWeights
 }
 
 
-void Foam::meshToMesh::calcAddressing
+Foam::word Foam::meshToMesh::calcAddressing
 (
     const word& methodName,
     const polyMesh& src,
@@ -258,16 +243,20 @@ void Foam::meshToMesh::calcAddressing
     {
         methodPtr->writeConnectivity(src, tgt, srcToTgtCellAddr_);
     }
+
+    return methodPtr->AMImethod();
 }
 
 
-void Foam::meshToMesh::calculate(const word& methodName)
+Foam::word Foam::meshToMesh::calculate(const word& methodName)
 {
     Info<< "Creating mesh-to-mesh addressing for " << srcRegion_.name()
         << " and " << tgtRegion_.name() << " regions using "
         << methodName << endl;
 
     singleMeshProc_ = calcDistribution(srcRegion_, tgtRegion_);
+
+    word amiMethod;
 
     if (singleMeshProc_ == -1)
     {
@@ -352,7 +341,7 @@ void Foam::meshToMesh::calculate(const word& methodName)
             }
         }
 
-        calcAddressing(methodName, srcRegion_, newTgt);
+        amiMethod = calcAddressing(methodName, srcRegion_, newTgt);
 
         // per source cell the target cell address in newTgt mesh
         forAll(srcToTgtCellAddr_, i)
@@ -437,7 +426,7 @@ void Foam::meshToMesh::calculate(const word& methodName)
     }
     else
     {
-        calcAddressing(methodName, srcRegion_, tgtRegion_);
+        amiMethod = calcAddressing(methodName, srcRegion_, tgtRegion_);
 
         normaliseWeights
         (
@@ -455,38 +444,8 @@ void Foam::meshToMesh::calculate(const word& methodName)
     }
 
     Info<< "    Overlap volume: " << V_ << endl;
-}
 
-
-Foam::AMIInterpolation::interpolationMethod
-Foam::meshToMesh::interpolationMethodAMI(const interpolationMethod method)
-{
-    switch (method)
-    {
-        case imDirect:
-        {
-            return AMIInterpolation::imDirect;
-            break;
-        }
-        case imMapNearest:
-        {
-            return AMIInterpolation::imMapNearest;
-            break;
-        }
-        case imCellVolumeWeight:
-        {
-            return AMIInterpolation::imFaceAreaWeight;
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unhandled enumeration " << method
-                << abort(FatalError);
-        }
-    }
-
-    return AMIInterpolation::imDirect;
+    return amiMethod;
 }
 
 
@@ -539,7 +498,6 @@ void Foam::meshToMesh::calculatePatchAMIs(const word& AMIMethodName)
 void Foam::meshToMesh::constructNoCuttingPatches
 (
     const word& methodName,
-    const word& AMIMethodName,
     const bool interpAllPatches
 )
 {
@@ -583,17 +541,16 @@ void Foam::meshToMesh::constructNoCuttingPatches
     }
 
     // calculate volume addressing and weights
-    calculate(methodName);
+    const word amiMethod = calculate(methodName);
 
     // calculate patch addressing and weights
-    calculatePatchAMIs(AMIMethodName);
+    calculatePatchAMIs(amiMethod);
 }
 
 
 void Foam::meshToMesh::constructFromCuttingPatches
 (
     const word& methodName,
-    const word& AMIMethodName,
     const HashTable<word>& patchMap,
     const wordList& cuttingPatches
 )
@@ -616,10 +573,10 @@ void Foam::meshToMesh::constructFromCuttingPatches
     }
 
     // calculate volume addressing and weights
-    calculate(methodName);
+    const word amiMethod = calculate(methodName);
 
     // calculate patch addressing and weights
-    calculatePatchAMIs(AMIMethodName);
+    calculatePatchAMIs(amiMethod);
 
     // set IDs of cutting patches on target mesh
     cuttingPatches_.setSize(cuttingPatches.size());
@@ -637,7 +594,7 @@ Foam::meshToMesh::meshToMesh
 (
     const polyMesh& src,
     const polyMesh& tgt,
-    const interpolationMethod& method,
+    const word& methodName,
     bool interpAllPatches
 )
 :
@@ -656,15 +613,7 @@ Foam::meshToMesh::meshToMesh
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
 {
-    constructNoCuttingPatches
-    (
-        interpolationMethodNames_[method],
-        AMIInterpolation::interpolationMethodToWord
-        (
-            interpolationMethodAMI(method)
-        ),
-        interpAllPatches
-    );
+    constructNoCuttingPatches(methodName, interpAllPatches);
 }
 
 
@@ -673,72 +622,6 @@ Foam::meshToMesh::meshToMesh
     const polyMesh& src,
     const polyMesh& tgt,
     const word& methodName,
-    const word& AMIMethodName,
-    bool interpAllPatches
-)
-:
-    srcRegion_(src),
-    tgtRegion_(tgt),
-    srcPatchID_(),
-    tgtPatchID_(),
-    patchAMIs_(),
-    cuttingPatches_(),
-    srcToTgtCellAddr_(),
-    tgtToSrcCellAddr_(),
-    srcToTgtCellWght_(),
-    tgtToSrcCellWght_(),
-    V_(0.0),
-    singleMeshProc_(-1),
-    srcMapPtr_(nullptr),
-    tgtMapPtr_(nullptr)
-{
-    constructNoCuttingPatches(methodName, AMIMethodName, interpAllPatches);
-}
-
-
-Foam::meshToMesh::meshToMesh
-(
-    const polyMesh& src,
-    const polyMesh& tgt,
-    const interpolationMethod& method,
-    const HashTable<word>& patchMap,
-    const wordList& cuttingPatches
-)
-:
-    srcRegion_(src),
-    tgtRegion_(tgt),
-    srcPatchID_(),
-    tgtPatchID_(),
-    patchAMIs_(),
-    cuttingPatches_(),
-    srcToTgtCellAddr_(),
-    tgtToSrcCellAddr_(),
-    srcToTgtCellWght_(),
-    tgtToSrcCellWght_(),
-    V_(0.0),
-    singleMeshProc_(-1),
-    srcMapPtr_(nullptr),
-    tgtMapPtr_(nullptr)
-{
-    constructFromCuttingPatches
-    (
-        interpolationMethodNames_[method],
-        AMIInterpolation::interpolationMethodToWord
-        (
-            interpolationMethodAMI(method)
-        ),
-        patchMap,
-        cuttingPatches
-    );
-}
-
-
-Foam::meshToMesh::meshToMesh
-(
-    const polyMesh& src,
-    const polyMesh& tgt,
-    const word& methodName,     // internal mapping
-    const word& AMIMethodName,  // boundary mapping
     const HashTable<word>& patchMap,
     const wordList& cuttingPatches
 )
@@ -761,7 +644,6 @@ Foam::meshToMesh::meshToMesh
     constructFromCuttingPatches
     (
         methodName,
-        AMIMethodName,
         patchMap,
         cuttingPatches
     );

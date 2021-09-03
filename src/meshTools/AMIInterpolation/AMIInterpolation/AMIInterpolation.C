@@ -39,103 +39,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-Foam::word Foam::AMIInterpolation::interpolationMethodToWord
-(
-    const interpolationMethod& im
-)
-{
-    word method = "unknown-interpolationMethod";
-
-    switch (im)
-    {
-        case imDirect:
-        {
-            method = "directAMI";
-            break;
-        }
-        case imMapNearest:
-        {
-            method = "mapNearestAMI";
-            break;
-        }
-        case imFaceAreaWeight:
-        {
-            method = "faceAreaWeightAMI";
-            break;
-        }
-        case imPartialFaceAreaWeight:
-        {
-            method = "partialFaceAreaWeightAMI";
-            break;
-        }
-        case imSweptFaceAreaWeight:
-        {
-            method = "sweptFaceAreaWeightAMI";
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unhandled interpolationMethod enumeration " << method
-                << abort(FatalError);
-        }
-    }
-
-    return method;
-}
-
-
-typename Foam::AMIInterpolation::interpolationMethod
-Foam::AMIInterpolation::wordTointerpolationMethod(const word& im)
-{
-    interpolationMethod method = imDirect;
-
-    wordList methods
-    (
-        IStringStream
-        (
-            "("
-                "directAMI "
-                "mapNearestAMI "
-                "faceAreaWeightAMI "
-                "partialFaceAreaWeightAMI "
-                "sweptFaceAreaWeightAMI"
-            ")"
-        )()
-    );
-
-    if (im == "directAMI")
-    {
-        method = imDirect;
-    }
-    else if (im == "mapNearestAMI")
-    {
-        method = imMapNearest;
-    }
-    else if (im == "faceAreaWeightAMI")
-    {
-        method = imFaceAreaWeight;
-    }
-    else if (im == "partialFaceAreaWeightAMI")
-    {
-        method = imPartialFaceAreaWeight;
-    }
-    else if (im == "sweptFaceAreaWeightAMI")
-    {
-        method = imSweptFaceAreaWeight;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Invalid interpolationMethod " << im
-            << ".  Valid methods are:" << methods
-            << exit(FatalError);
-    }
-
-    return method;
-}
-
-
 Foam::tmp<Foam::scalarField> Foam::AMIInterpolation::patchMagSf
 (
     const primitivePatch& patch,
@@ -658,37 +561,6 @@ Foam::AMIInterpolation::AMIInterpolation
     const primitivePatch& tgtPatch,
     const faceAreaIntersect::triangulationMode& triMode,
     const bool requireMatch,
-    const interpolationMethod& method,
-    const scalar lowWeightCorrection,
-    const bool reverseTarget,
-    const bool report
-)
-:
-    methodName_(interpolationMethodToWord(method)),
-    reverseTarget_(reverseTarget),
-    requireMatch_(requireMatch),
-    singlePatchProc_(-999),
-    lowWeightCorrection_(lowWeightCorrection),
-    srcAddress_(),
-    srcWeights_(),
-    srcWeightsSum_(),
-    tgtAddress_(),
-    tgtWeights_(),
-    tgtWeightsSum_(),
-    triMode_(triMode),
-    srcMapPtr_(nullptr),
-    tgtMapPtr_(nullptr)
-{
-    update(srcPatch, tgtPatch, report);
-}
-
-
-Foam::AMIInterpolation::AMIInterpolation
-(
-    const primitivePatch& srcPatch,
-    const primitivePatch& tgtPatch,
-    const faceAreaIntersect::triangulationMode& triMode,
-    const bool requireMatch,
     const word& methodName,
     const scalar lowWeightCorrection,
     const bool reverseTarget,
@@ -711,38 +583,6 @@ Foam::AMIInterpolation::AMIInterpolation
     tgtMapPtr_(nullptr)
 {
     update(srcPatch, tgtPatch, report);
-}
-
-
-Foam::AMIInterpolation::AMIInterpolation
-(
-    const primitivePatch& srcPatch,
-    const primitivePatch& tgtPatch,
-    const autoPtr<searchableSurface>& surfPtr,
-    const faceAreaIntersect::triangulationMode& triMode,
-    const bool requireMatch,
-    const interpolationMethod& method,
-    const scalar lowWeightCorrection,
-    const bool reverseTarget,
-    const bool report
-)
-:
-    methodName_(interpolationMethodToWord(method)),
-    reverseTarget_(reverseTarget),
-    requireMatch_(requireMatch),
-    singlePatchProc_(-999),
-    lowWeightCorrection_(lowWeightCorrection),
-    srcAddress_(),
-    srcWeights_(),
-    srcWeightsSum_(),
-    tgtAddress_(),
-    tgtWeights_(),
-    tgtWeightsSum_(),
-    triMode_(triMode),
-    srcMapPtr_(nullptr),
-    tgtMapPtr_(nullptr)
-{
-    constructFromSurface(srcPatch, tgtPatch, surfPtr, report);
 }
 
 

@@ -203,7 +203,7 @@ Foam::regionModels::regionModel::interRegionAMI
                     nbrP,
                     faceAreaIntersect::tmMesh,
                     true,
-                    AMIInterpolation::imFaceAreaWeight,
+                    faceAreaWeightAMI::typeName,
                     -1,
                     flip
                 )
@@ -246,7 +246,7 @@ Foam::regionModels::regionModel::interRegionAMI
                 nbrP,
                 faceAreaIntersect::tmMesh,
                 true,
-                AMIInterpolation::imFaceAreaWeight,
+                faceAreaWeightAMI::typeName,
                 -1,
                 flip
             )

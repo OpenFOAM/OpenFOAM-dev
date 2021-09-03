@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cyclicRepeatAMIPolyPatch.H"
+#include "partialFaceAreaWeightAMI.H"
 #include "SubField.H"
 #include "Time.H"
 #include "addToRunTimeSelectionTable.H"
@@ -214,7 +215,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
             nbrPatch,
             faceAreaIntersect::tmMesh,
             false,
-            AMIInterpolation::imPartialFaceAreaWeight,
+            partialFaceAreaWeightAMI::typeName,
             AMILowWeightCorrection_,
             AMIReverse_,
             false
@@ -234,7 +235,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
             nbrPatch,
             faceAreaIntersect::tmMesh,
             false,
-            AMIInterpolation::imPartialFaceAreaWeight,
+            partialFaceAreaWeightAMI::typeName,
             AMILowWeightCorrection_,
             AMIReverse_,
             false
@@ -254,7 +255,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
             nbrPatch,
             faceAreaIntersect::tmMesh,
             false,
-            AMIInterpolation::imPartialFaceAreaWeight,
+            partialFaceAreaWeightAMI::typeName,
             AMILowWeightCorrection_,
             AMIReverse_,
             false
@@ -321,7 +322,7 @@ Foam::cyclicRepeatAMIPolyPatch::cyclicRepeatAMIPolyPatch
         bm,
         patchType,
         false,
-        AMIInterpolation::imFaceAreaWeight
+        faceAreaWeightAMI::typeName
     ),
     transformPatchName_(word::null),
     transformPatchID_(-1)
@@ -348,7 +349,7 @@ Foam::cyclicRepeatAMIPolyPatch::cyclicRepeatAMIPolyPatch
         bm,
         patchType,
         false,
-        AMIInterpolation::imFaceAreaWeight
+        faceAreaWeightAMI::typeName
     ),
     transformPatchName_(dict.lookup("transformPatch")),
     transformPatchID_(-1)

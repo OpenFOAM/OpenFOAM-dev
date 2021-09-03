@@ -245,7 +245,7 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const polyBoundaryMesh& bm,
     const word& patchType,
     const bool AMIRequireMatch,
-    const AMIInterpolation::interpolationMethod AMIMethod
+    const word& AMIMethod
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType),
@@ -274,7 +274,7 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const polyBoundaryMesh& bm,
     const word& patchType,
     const bool AMIRequireMatch,
-    const AMIInterpolation::interpolationMethod AMIMethod
+    const word& AMIMethod
 )
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
@@ -287,15 +287,7 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
     AMIRequireMatch_(AMIRequireMatch),
     AMILowWeightCorrection_(dict.lookupOrDefault("lowWeightCorrection", -1.0)),
-    AMIMethod_
-    (
-        dict.found("method")
-      ? AMIInterpolation::wordTointerpolationMethod
-        (
-            dict.lookup("method")
-        )
-      : AMIMethod
-    ),
+    AMIMethod_(dict.lookupOrDefault("method", AMIMethod)),
     surfPtr_(nullptr),
     surfDict_(dict.subOrEmptyDict("surface"))
 {
@@ -742,7 +734,7 @@ void Foam::cyclicAMIPolyPatch::write(Ostream& os) const
     (
         os,
         "method",
-        AMIInterpolation::interpolationMethodToWord(AMIMethod_)
+        AMIMethod_
     );
 
     if (!surfDict_.empty())

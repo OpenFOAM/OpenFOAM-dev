@@ -38,6 +38,7 @@ SourceFiles
 #include "coupledPolyPatch.H"
 #include "cyclicTransform.H"
 #include "AMIInterpolation.H"
+#include "faceAreaWeightAMI.H"
 #include "polyBoundaryMesh.H"
 #include "coupleGroupIdentifier.H"
 
@@ -84,7 +85,7 @@ protected:
         const scalar AMILowWeightCorrection_;
 
         //- AMI Method
-        const AMIInterpolation::interpolationMethod AMIMethod_;
+        const word AMIMethod_;
 
         //- Projection surface
         mutable autoPtr<searchableSurface> surfPtr_;
@@ -144,8 +145,7 @@ public:
             const polyBoundaryMesh& bm,
             const word& patchType,
             const bool AMIRequireMatch = true,
-            const AMIInterpolation::interpolationMethod AMIMethod =
-                AMIInterpolation::imFaceAreaWeight
+            const word& AMIMethod = faceAreaWeightAMI::typeName
         );
 
         //- Construct from dictionary
@@ -157,8 +157,7 @@ public:
             const polyBoundaryMesh& bm,
             const word& patchType,
             const bool AMIRequireMatch = true,
-            const AMIInterpolation::interpolationMethod AMIMethod =
-                AMIInterpolation::imFaceAreaWeight
+            const word& AMIMethod = faceAreaWeightAMI::typeName
         );
 
         //- Construct as copy, resetting the boundary mesh

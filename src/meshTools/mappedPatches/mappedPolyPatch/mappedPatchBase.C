@@ -853,7 +853,7 @@ void Foam::mappedPatchBase::calcAMI() const
             surfPtr(),
             faceAreaIntersect::tmMesh,
             true,
-            AMIInterpolation::imFaceAreaWeight,
+            faceAreaWeightAMI::typeName,
             -1,
             AMIReverse_
         )

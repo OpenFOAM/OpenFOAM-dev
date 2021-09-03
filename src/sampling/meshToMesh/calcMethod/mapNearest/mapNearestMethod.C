@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mapNearestMethod.H"
+#include "mapNearestAMI.H"
 #include "pointIndexHit.H"
 #include "indexedOctree.H"
 #include "treeDataCell.H"
@@ -344,6 +345,12 @@ Foam::mapNearestMethod::~mapNearestMethod()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::word& Foam::mapNearestMethod::AMImethod() const
+{
+    return mapNearestAMI::typeName;
+}
+
 
 void Foam::mapNearestMethod::calculate
 (
