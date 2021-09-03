@@ -26,6 +26,7 @@ License
 #include "rotatedBoxToCell.H"
 #include "polyMesh.H"
 #include "cellModeller.H"
+#include "transform.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -123,11 +124,34 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
 )
 :
     topoSetSource(mesh),
-    origin_(dict.lookup("origin")),
-    i_(dict.lookup("i")),
-    j_(dict.lookup("j")),
-    k_(dict.lookup("k"))
-{}
+    origin_(),
+    i_(),
+    j_(),
+    k_()
+{
+    if (dict.found("box"))
+    {
+        const boundBox bb(dict.lookup("box"));
+        const vector c(dict.lookupOrDefault<vector>("centre", bb.midpoint()));
+        const vector n1(normalised(dict.lookup<vector>("n1")));
+        const vector n2(normalised(dict.lookup<vector>("n2")));
+
+        const tensor R(rotationTensor(n1, n2));
+        const pointField bbPoints(bb.points());
+
+        origin_ = (R & (bb.min() - c)) + c;
+        i_ = R & (bbPoints[1] - bb.min());
+        j_ = R & (bbPoints[3] - bb.min());
+        k_ = R & (bbPoints[4] - bb.min());
+    }
+    else
+    {
+        origin_ = dict.lookup<point>("origin");
+        i_ = dict.lookup<vector>("i");
+        j_ = dict.lookup<vector>("j");
+        k_ = dict.lookup<vector>("k");
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

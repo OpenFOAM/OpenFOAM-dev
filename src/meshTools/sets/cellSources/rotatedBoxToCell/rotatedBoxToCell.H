@@ -25,17 +25,38 @@ Class
     Foam::rotatedBoxToCell
 
 Description
-    A topoSetSource to select cells based on cell centres inside
-    rotated/skewed box (parallelopiped?).
+    A topoSetSource to select cells based on cell centres inside a rotated
+    and/or skewed box.
 
-    Box defined as origin and i,j,k vectors.
-    E.g. box rotated 45 degrees around z-axis with sizes sqrt(0.2^2+0.2^2)
-    (and extra large, 200 in z direction):
+    The box can be defined with an origin and three vectors; i, j, and k. The
+    origin is one corner of the box, and the vectors are the edges connected to
+    that corner.
+
+    For example, the following defines a box rotated 45 degrees around the
+    z-axis, with width and depth of 0.2, height of 200, and with a bottom left
+    corner at (0.4 0.4 -100):
+
     \verbatim
-       origin   ( 0.4 0.4 -100);
-       i        ( 0.2 0.2    0);
-       j        (-0.2 0.2    0);
-       k        ( 0.0 0.0  100);
+        origin  (0.4 0.4 -100);
+        i       (0.141421 0.141421 0);
+        j       (-0.141421 0.141421 0);
+        k       (0 0 200);
+    \endverbatim
+
+    Alternatively, the box can be defined using a non-rotated box and details
+    of how it should be rotated. This syntax is triggered by the presence of
+    the keyword "box". A standard bounding box is supplied, along with a centre
+    of rotation and two vectors, n1 and n2. The rotation is taken to be that
+    which transforms n1 onto n2.
+
+    The above example can be equivalently specified in this alternative form as
+    follows:
+
+    \verbatim
+        box     (0.4 0.4 -100) (0.6 0.6 100);
+        centre  (0.4 0.4 0);
+        n1      (1 0 0);
+        n2      (1 1 0);
     \endverbatim
 
 SourceFiles
@@ -62,16 +83,19 @@ class rotatedBoxToCell
 :
     public topoSetSource
 {
-
     // Private Data
 
+        //- Skewed box origin
+        vector origin_;
 
+        //- Skewed box edge vector
+        vector i_;
 
-        //- Skewed box
-        const vector origin_;
-        const vector i_;
-        const vector j_;
-        const vector k_;
+        //- Skewed box edge vector
+        vector j_;
+
+        //- Skewed box edge vector
+        vector k_;
 
 
     // Private Member Functions
