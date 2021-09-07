@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,53 +22,82 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::chemistryReductionMethods::PFA
+    Foam::chemistryReduction
 
 Description
-    Path flux analysis
+    An abstract class for methods of chemical mechanism reduction
 
 SourceFiles
-    PFA.C
+    chemistryReduction.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PFA_H
-#define PFA_H
+#ifndef chemistryReduction_H
+#define chemistryReduction_H
 
-#include "chemistryReduction.H"
+#include "chemistryReductionMethod.H"
+#include "Switch.H"
+#include "int64.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace chemistryReductionMethods
-{
 
 /*---------------------------------------------------------------------------*\
-                             Class PFA Declaration
+                       Class chemistrySolver Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class PFA
+class chemistryReduction
 :
-    public chemistryReduction<ThermoType>
+    public chemistryReductionMethod<ThermoType>
 {
-    // Private Data
 
-        //- List of label for the search initiating set
-        labelList searchInitSet_;
+protected:
+
+    // Protected Data
+
+        //- Dictionary that store the algorithm data
+        const dictionary coeffsDict_;
+
+        TDACChemistryModel<ThermoType>& chemistry_;
+
+        //- List of active species (active = true)
+        List<bool> activeSpecies_;
+
+        void initReduceMechanism();
+
+        void endReduceMechanism();
+
+
+private:
+
+        //- Switch to select performance logging
+        Switch log_;
+
+        //- Tolerance for the mechanism reduction algorithm
+        scalar tolerance_;
+
+        const clockTime clockTime_;
+
+        int64_t sumnActiveSpecies_;
+        int64_t sumn_;
+        scalar reduceMechCpuTime_;
+
+        // Log file for the average time spent reducing the chemistry
+        autoPtr<OFstream> cpuReduceFile_;
+
+        // Write average number of species
+        autoPtr<OFstream> nActiveSpeciesFile_;
 
 
 public:
 
-    //- Runtime type information
-    TypeName("PFA");
-
-
     // Constructors
 
         //- Construct from components
-        PFA
+        chemistryReduction
         (
             const IOdictionary& dict,
             TDACChemistryModel<ThermoType>& chemistry
@@ -76,10 +105,22 @@ public:
 
 
     //- Destructor
-    virtual ~PFA();
+    virtual ~chemistryReduction();
 
 
     // Member Functions
+
+        //- Return mechanism reduction active
+        virtual bool active() const
+        {
+            return true;
+        }
+
+        //- Return the tolerance
+        inline scalar tolerance() const;
+
+        //- Return the active species
+        inline const List<bool>& activeSpecies() const;
 
         //- Reduce the mechanism
         virtual void reduceMechanism
@@ -88,19 +129,24 @@ public:
             const scalar T,
             const scalarField& c,
             const label li
-        );
+        ) = 0;
+
+        virtual void update();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace chemistryReductionMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "chemistryReductionI.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 #ifdef NoRepository
-    #include "PFA.C"
+    #include "chemistryReduction.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

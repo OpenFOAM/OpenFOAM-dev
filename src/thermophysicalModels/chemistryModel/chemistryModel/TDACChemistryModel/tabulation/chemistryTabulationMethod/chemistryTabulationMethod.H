@@ -37,7 +37,6 @@ SourceFiles
 
 #include "IOdictionary.H"
 #include "scalarField.H"
-#include "Switch.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,23 +56,6 @@ class TDACChemistryModel;
 template<class ThermoType>
 class chemistryTabulationMethod
 {
-
-protected:
-
-    const dictionary& dict_;
-
-    const dictionary coeffsDict_;
-
-    //- Is tabulation active?
-    Switch active_;
-
-    //- Switch to select performance logging
-    Switch log_;
-
-    TDACChemistryModel<ThermoType>& chemistry_;
-
-    scalar tolerance_;
-
 
 public:
 
@@ -120,24 +102,9 @@ public:
 
     // Member Functions
 
-        inline bool active()
-        {
-            return active_;
-        }
-
-        inline bool log()
-        {
-            return active_ && log_;
-        }
-
-        inline scalar tolerance() const
-        {
-            return tolerance_;
-        }
-
-        virtual label size() = 0;
-
-        virtual void writePerformance() = 0;
+        //- Return true if the tabulation method tabulates
+        //  otherwise return false
+        virtual bool tabulates() = 0;
 
         // Retrieve function: (only virtual here)
         // Try to retrieve a stored point close enough (according to tolerance)
@@ -165,6 +132,8 @@ public:
         // The underlying structure of the tabulation is updated/cleaned
         // to increase the performance of the retrieve
         virtual bool update() = 0;
+
+        virtual void reset() = 0;
 };
 
 

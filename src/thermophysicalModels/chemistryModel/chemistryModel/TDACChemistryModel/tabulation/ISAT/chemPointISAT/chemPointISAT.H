@@ -135,6 +135,12 @@ class binaryNode;
 template<class ThermoType>
 class TDACChemistryModel;
 
+namespace chemistryTabulationMethods
+{
+    template<class ThermoType>
+    class ISAT;
+}
+
 
 /*---------------------------------------------------------------------------*\
                         Class chemPointISAT Declaration
@@ -145,8 +151,8 @@ class chemPointISAT
 {
     // Private Data
 
-        //- Pointer to the chemistryModel object
-        TDACChemistryModel<ThermoType>& chemistry_;
+        //- Reference to the ISAT table
+        chemistryTabulationMethods::ISAT<ThermoType>& table_;
 
         //- Vector storing the composition, temperature and pressure
         //  and deltaT if a variable time step is set on
@@ -245,7 +251,7 @@ public:
         //- Construct from components
         chemPointISAT
         (
-            TDACChemistryModel<ThermoType>& chemistry,
+            chemistryTabulationMethods::ISAT<ThermoType>& table,
             const scalarField& phi,
             const scalarField& Rphi,
             const scalarSquareMatrix& A,
@@ -272,7 +278,7 @@ public:
         //- Access to the TDACChemistryModel
         inline TDACChemistryModel<ThermoType>& chemistry()
         {
-            return chemistry_;
+            return table_.chemistry();
         }
 
         inline label nGrowth()

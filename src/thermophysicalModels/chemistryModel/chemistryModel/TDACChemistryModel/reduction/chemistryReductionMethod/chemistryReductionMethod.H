@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ SourceFiles
 #define chemistryReductionMethod_H
 
 #include "IOdictionary.H"
-#include "Switch.H"
 #include "scalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,33 +53,18 @@ class TDACChemistryModel;
 template<class ThermoType>
 class chemistryReductionMethod
 {
+    // Private Data
+
+        //- Cache the number of species
+        const label nSpecie_;
+
 
 protected:
 
-    const IOdictionary& dict_;
+    // Protected Data
 
-    //- Dictionary that store the algorithm data
-    const dictionary coeffsDict_;
-
-    //- Is mechanism reduction active?
-    Switch active_;
-
-    //- Switch to select performance logging
-    Switch log_;
-
-    TDACChemistryModel<ThermoType>& chemistry_;
-
-    //- List of active species (active = true)
-    List<bool> activeSpecies_;
-
-    //- Number of active species
-    label NsSimp_;
-
-    //- Number of species
-    const label nSpecie_;
-
-    //- Tolerance for the mechanism reduction algorithm
-    scalar tolerance_;
+        //- Number of active species
+        label nActiveSpecies_;
 
 
 public:
@@ -129,19 +113,13 @@ public:
     // Member Functions
 
         //- Is mechanism reduction active?
-        inline bool active() const;
+        virtual bool active() const = 0;
 
-        //- Is performance data logging enabled?
-        inline bool log() const;
-
-        //- Return the active species
-        inline const List<bool>& activeSpecies() const;
+        //- Return the number of species
+        inline label nSpecie();
 
         //- Return the number of active species
-        inline label NsSimp();
-
-        //- Return the initial number of species
-        inline label nSpecie();
+        inline label nActiveSpecies();
 
         //- Return the tolerance
         inline scalar tolerance() const;
@@ -154,7 +132,10 @@ public:
             const scalarField& c,
             const label li
         ) = 0;
+
+        virtual void update() = 0;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -103,7 +103,7 @@ SourceFiles
 #ifndef DRGEP_H
 #define DRGEP_H
 
-#include "chemistryReductionMethod.H"
+#include "chemistryReduction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -113,13 +113,13 @@ namespace chemistryReductionMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                             Class ode Declaration
+                             Class DRGEP Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
 class DRGEP
 :
-    public chemistryReductionMethod<ThermoType>
+    public chemistryReduction<ThermoType>
 {
     // Private Data
 

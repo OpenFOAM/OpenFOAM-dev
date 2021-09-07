@@ -85,7 +85,8 @@ class TDACChemistryModel
 {
     // Private member data
 
-        label timeSteps_;
+        //- Switch to select performance logging
+        Switch log_;
 
         // Mechanism reduction
         label NsDAC_;
@@ -94,34 +95,15 @@ class TDACChemistryModel
         Field<bool> reactionsDisabled_;
         Field<label> completeToSimplifiedIndex_;
         DynamicList<label> simplifiedToCompleteIndex_;
+
+        //- Reduction
         autoPtr<chemistryReductionMethod<ThermoType>> mechRed_;
 
-        // Tabulation
+        //- Tabulation
         autoPtr<chemistryTabulationMethod<ThermoType>> tabulation_;
-
-        // Log file for the average time spent reducing the chemistry
-        autoPtr<OFstream> cpuReduceFile_;
-
-        // Write average number of species
-        autoPtr<OFstream> nActiveSpeciesFile_;
-
-        //- Log file for the average time spent adding tabulated data
-        autoPtr<OFstream> cpuAddFile_;
-
-        //- Log file for the average time spent growing tabulated data
-        autoPtr<OFstream> cpuGrowFile_;
-
-        //- Log file for the average time spent retrieving tabulated data
-        autoPtr<OFstream> cpuRetrieveFile_;
 
         //- Log file for average time spent solving the chemistry
         autoPtr<OFstream> cpuSolveFile_;
-
-        // Field containing information about tabulation:
-        // 0 -> add (direct integration)
-        // 1 -> grow
-        // 2 -> retrieve
-        volScalarField tabulationResults_;
 
 
     // Private Member Functions
@@ -153,9 +135,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the number of chemistry evaluations (used by ISAT)
-        inline label timeSteps() const;
 
         //- Create and return a TDAC log file of the given name
         inline autoPtr<OFstream> logFile(const word& name) const;
@@ -240,16 +219,6 @@ public:
             inline const Field<label>& completeToSimplifiedIndex() const;
 
             inline autoPtr<chemistryReductionMethod<ThermoType>>& mechRed();
-
-            inline tmp<volScalarField> tabulationResults() const;
-
-            void setTabulationResultsAdd(const label celli);
-
-            void setTabulationResultsGrow(const label celli);
-
-            void setTabulationResultsRetrieve(const label celli);
-
-            inline void resetTabulationResults();
 
 
     // Member Operators

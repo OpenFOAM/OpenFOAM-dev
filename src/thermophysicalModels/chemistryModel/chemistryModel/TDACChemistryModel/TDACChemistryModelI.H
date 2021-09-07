@@ -26,13 +26,6 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-inline Foam::label Foam::TDACChemistryModel<ThermoType>::timeSteps() const
-{
-    return timeSteps_;
-}
-
-
-template<class ThermoType>
 inline Foam::autoPtr<Foam::OFstream>
 Foam::TDACChemistryModel<ThermoType>::logFile(const word& name) const
 {
@@ -60,14 +53,6 @@ inline Foam::autoPtr<Foam::chemistryReductionMethod<ThermoType>>&
 Foam::TDACChemistryModel<ThermoType>::mechRed()
 {
     return mechRed_;
-}
-
-
-template<class ThermoType>
-inline Foam::tmp<Foam::volScalarField>
-Foam::TDACChemistryModel<ThermoType>::tabulationResults() const
-{
-    return tabulationResults_;
 }
 
 
@@ -142,16 +127,6 @@ template<class ThermoType>
 inline Foam::scalarField& Foam::TDACChemistryModel<ThermoType>::simplifiedC()
 {
     return simplifiedC_;
-}
-
-
-template<class ThermoType>
-void Foam::TDACChemistryModel<ThermoType>::resetTabulationResults()
-{
-    forAll(tabulationResults_, tabi)
-    {
-        tabulationResults_[tabi] = 2;
-    }
 }
 
 

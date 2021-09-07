@@ -37,25 +37,12 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
 )
 :
     standardChemistryModel<ThermoType>(thermo),
-    timeSteps_(0),
+    log_(this->lookupOrDefault("log", false)),
     NsDAC_(this->nSpecie_),
     completeC_(this->nSpecie_, 0),
     reactionsDisabled_(this->reactions_.size(), false),
     completeToSimplifiedIndex_(this->nSpecie_, -1),
-    simplifiedToCompleteIndex_(this->nSpecie_),
-    tabulationResults_
-    (
-        IOobject
-        (
-            thermo.phasePropertyName("TabulationResults"),
-            this->time().timeName(),
-            this->mesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        this->mesh(),
-        scalar(0)
-    )
+    simplifiedToCompleteIndex_(this->nSpecie_)
 {
     const basicSpecieMixture& composition = this->thermo().composition();
 
@@ -94,20 +81,7 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
         *this
     );
 
-    if (mechRed_->log())
-    {
-        cpuReduceFile_ = logFile("cpu_reduce.out");
-        nActiveSpeciesFile_ = logFile("nActiveSpecies.out");
-    }
-
-    if (tabulation_->log())
-    {
-        cpuAddFile_ = logFile("cpu_add.out");
-        cpuGrowFile_ = logFile("cpu_grow.out");
-        cpuRetrieveFile_ = logFile("cpu_retrieve.out");
-    }
-
-    if (mechRed_->log() || tabulation_->log())
+    if (log_)
     {
         cpuSolveFile_ = logFile("cpu_solve.out");
     }
@@ -362,7 +336,6 @@ void Foam::TDACChemistryModel<ThermoType>::jacobian
     d2TdtdT /= ccp;
 
     // d(dpdt)/dc = 0 (pressure is assumed constant)
-
     // d(dpdt)/dT = 0 (pressure is assumed constant)
 }
 
@@ -374,27 +347,15 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
     const DeltaTType& deltaT
 )
 {
-    // Increment counter of time-step
-    timeSteps_++;
-
     const bool reduced = mechRed_->active();
+    tabulation_->reset();
 
     const basicSpecieMixture& composition = this->thermo().composition();
 
     // CPU time analysis
-    const clockTime clockTime_= clockTime();
+    const clockTime clockTime_ = clockTime();
     clockTime_.timeIncrement();
-    scalar reduceMechCpuTime_ = 0;
-    scalar addNewLeafCpuTime_ = 0;
-    scalar growCpuTime_ = 0;
     scalar solveChemistryCpuTime_ = 0;
-    scalar searchISATCpuTime_ = 0;
-
-    this->resetTabulationResults();
-
-    // Average number of active species
-    scalar nActiveSpecies = 0;
-    scalar nAvg = 0;
 
     basicChemistryModel::correct();
 
@@ -445,15 +406,13 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
         // When tabulation is active (short-circuit evaluation for retrieve)
         // It first tries to retrieve the solution of the system with the
         // information stored through the tabulation method
-        if (tabulation_->active() && tabulation_->retrieve(phiq, Rphiq))
+        if (tabulation_->retrieve(phiq, Rphiq))
         {
             // Retrieved solution stored in Rphiq
             for (label i=0; i<this->nSpecie(); i++)
             {
                 c[i] = rhoi*Rphiq[i]/this->specieThermos_[i].W();
             }
-
-            searchISATCpuTime_ += clockTime_.timeIncrement();
         }
         // This position is reached when tabulation is not used OR
         // if the solution is not retrieved.
@@ -468,9 +427,6 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
             {
                 // Reduce mechanism change the number of species (only active)
                 mechRed_->reduceMechanism(pi, Ti, c, celli);
-                nActiveSpecies += mechRed_->NsSimp();
-                nAvg++;
-                reduceMechCpuTime_ += clockTime_.timeIncrement();
             }
 
             // Calculate the chemical source terms
@@ -506,13 +462,14 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
                 timeLeft -= dt;
             }
 
+            if (log_)
             {
                 solveChemistryCpuTime_ += clockTime_.timeIncrement();
             }
 
             // If tabulation is used, we add the information computed here to
             // the stored points (either expand or add)
-            if (tabulation_->active())
+            if (tabulation_->tabulates())
             {
                 forAll(c, i)
                 {
@@ -522,18 +479,7 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
                 Rphiq[Rphiq.size()-2] = pi;
                 Rphiq[Rphiq.size()-1] = deltaT[celli];
 
-                label growOrAdd =
-                    tabulation_->add(phiq, Rphiq, celli, rhoi, deltaT[celli]);
-                if (growOrAdd)
-                {
-                    this->setTabulationResultsAdd(celli);
-                    addNewLeafCpuTime_ += clockTime_.timeIncrement();
-                }
-                else
-                {
-                    this->setTabulationResultsGrow(celli);
-                    growCpuTime_ += clockTime_.timeIncrement();
-                }
+                tabulation_->add(phiq, Rphiq, celli, rhoi, deltaT[celli]);
             }
 
             // When operations are done and if mechanism reduction is active,
@@ -557,51 +503,15 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
         }
     }
 
-    if (mechRed_->log() || tabulation_->log())
+    if (log_)
     {
         cpuSolveFile_()
             << this->time().timeOutputValue()
             << "    " << solveChemistryCpuTime_ << endl;
     }
 
-    if (mechRed_->log())
-    {
-        cpuReduceFile_()
-            << this->time().timeOutputValue()
-            << "    " << reduceMechCpuTime_ << endl;
-    }
-
-    if (tabulation_->active())
-    {
-        // Every time-step, look if the tabulation should be updated
-        tabulation_->update();
-
-        // Write the performance of the tabulation
-        tabulation_->writePerformance();
-
-        if (tabulation_->log())
-        {
-            cpuRetrieveFile_()
-                << this->time().timeOutputValue()
-                << "    " << searchISATCpuTime_ << endl;
-
-            cpuGrowFile_()
-                << this->time().timeOutputValue()
-                << "    " << growCpuTime_ << endl;
-
-            cpuAddFile_()
-                << this->time().timeOutputValue()
-                << "    " << addNewLeafCpuTime_ << endl;
-        }
-    }
-
-    if (reduced && nAvg && mechRed_->log())
-    {
-        // Write average number of species
-        nActiveSpeciesFile_()
-            << this->time().timeOutputValue()
-            << "    " << nActiveSpecies/nAvg << endl;
-    }
+    mechRed_->update();
+    tabulation_->update();
 
     if (Pstream::parRun())
     {
@@ -644,36 +554,6 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
 )
 {
     return this->solve<scalarField>(deltaT);
-}
-
-
-template<class ThermoType>
-void Foam::TDACChemistryModel<ThermoType>::
-setTabulationResultsAdd
-(
-    const label celli
-)
-{
-    tabulationResults_[celli] = 0;
-}
-
-
-template<class ThermoType>
-void Foam::TDACChemistryModel<ThermoType>::
-setTabulationResultsGrow(const label celli)
-{
-    tabulationResults_[celli] = 1;
-}
-
-
-template<class ThermoType>
-void Foam::TDACChemistryModel<ThermoType>::
-setTabulationResultsRetrieve
-(
-    const label celli
-)
-{
-    tabulationResults_[celli] = 2;
 }
 
 

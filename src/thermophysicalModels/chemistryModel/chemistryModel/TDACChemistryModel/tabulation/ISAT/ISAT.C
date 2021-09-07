@@ -40,71 +40,95 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::ISAT
         chemistryProperties,
         chemistry
     ),
-    chemisTree_(chemistry, this->coeffsDict_),
+    coeffsDict_(chemistryProperties.subDict("tabulation")),
+    chemistry_(chemistry),
+    log_(coeffsDict_.lookupOrDefault<Switch>("log", false)),
+    chemisTree_(*this, coeffsDict_),
     scaleFactor_(chemistry.nEqns() + 1, 1),
     runTime_(chemistry.time()),
+    timeSteps_(0),
     chPMaxLifeTime_
     (
-        this->coeffsDict_.lookupOrDefault("chPMaxLifeTime", INT_MAX)
+        coeffsDict_.lookupOrDefault("chPMaxLifeTime", INT_MAX)
     ),
-    maxGrowth_(this->coeffsDict_.lookupOrDefault("maxGrowth", INT_MAX)),
+    maxGrowth_(coeffsDict_.lookupOrDefault("maxGrowth", INT_MAX)),
     checkEntireTreeInterval_
     (
-        this->coeffsDict_.lookupOrDefault("checkEntireTreeInterval", INT_MAX)
+        coeffsDict_.lookupOrDefault("checkEntireTreeInterval", INT_MAX)
     ),
     maxDepthFactor_
     (
-        this->coeffsDict_.lookupOrDefault
+        coeffsDict_.lookupOrDefault
         (
             "maxDepthFactor",
             (chemisTree_.maxNLeafs() - 1)
-           /(log(scalar(chemisTree_.maxNLeafs()))/log(2.0))
+           /(Foam::log(scalar(chemisTree_.maxNLeafs()))/Foam::log(2.0))
         )
     ),
     minBalanceThreshold_
     (
-        this->coeffsDict_.lookupOrDefault
+        coeffsDict_.lookupOrDefault
         (
             "minBalanceThreshold", 0.1*chemisTree_.maxNLeafs()
         )
     ),
-    MRURetrieve_(this->coeffsDict_.lookupOrDefault("MRURetrieve", false)),
-    maxMRUSize_(this->coeffsDict_.lookupOrDefault("maxMRUSize", 0)),
+    MRURetrieve_(coeffsDict_.lookupOrDefault("MRURetrieve", false)),
+    maxMRUSize_(coeffsDict_.lookupOrDefault("maxMRUSize", 0)),
     lastSearch_(nullptr),
-    growPoints_(this->coeffsDict_.lookupOrDefault("growPoints", true)),
+    growPoints_(coeffsDict_.lookupOrDefault("growPoints", true)),
+    tolerance_(coeffsDict_.lookupOrDefault("tolerance", 1e-4)),
     nRetrieved_(0),
     nGrowth_(0),
     nAdd_(0),
+    addNewLeafCpuTime_(0),
+    growCpuTime_(0),
+    searchISATCpuTime_(0),
+    clockTime_(clockTime()),
+    tabulationResults_
+    (
+        IOobject
+        (
+            chemistry.thermo().phasePropertyName("TabulationResults"),
+            chemistry.time().timeName(),
+            chemistry.mesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        chemistry.mesh(),
+        scalar(0)
+    ),
+
     cleaningRequired_(false)
 {
-    if (this->active_)
+    dictionary scaleDict(coeffsDict_.subDict("scaleFactor"));
+    label Ysize = chemistry_.Y().size();
+    scalar otherScaleFactor = scaleDict.lookup<scalar>("otherSpecies");
+    for (label i=0; i<Ysize; i++)
     {
-        dictionary scaleDict(this->coeffsDict_.subDict("scaleFactor"));
-        label Ysize = this->chemistry_.Y().size();
-        scalar otherScaleFactor = scaleDict.lookup<scalar>("otherSpecies");
-        for (label i=0; i<Ysize; i++)
+        if (!scaleDict.found(chemistry_.Y()[i].member()))
         {
-            if (!scaleDict.found(this->chemistry_.Y()[i].member()))
-            {
-                scaleFactor_[i] = otherScaleFactor;
-            }
-            else
-            {
-                scaleFactor_[i] =
-                    scaleDict.lookup<scalar>(this->chemistry_.Y()[i].member());
-            }
+            scaleFactor_[i] = otherScaleFactor;
         }
-        scaleFactor_[Ysize] = scaleDict.lookup<scalar>("Temperature");
-        scaleFactor_[Ysize + 1] = scaleDict.lookup<scalar>("Pressure");
-        scaleFactor_[Ysize + 2] = scaleDict.lookup<scalar>("deltaT");
+        else
+        {
+            scaleFactor_[i] =
+                scaleDict.lookup<scalar>(chemistry_.Y()[i].member());
+        }
     }
+    scaleFactor_[Ysize] = scaleDict.lookup<scalar>("Temperature");
+    scaleFactor_[Ysize + 1] = scaleDict.lookup<scalar>("Pressure");
+    scaleFactor_[Ysize + 2] = scaleDict.lookup<scalar>("deltaT");
 
-    if (this->log())
+    if (log_)
     {
         nRetrievedFile_ = chemistry.logFile("found_isat.out");
         nGrowthFile_ = chemistry.logFile("growth_isat.out");
         nAddFile_ = chemistry.logFile("add_isat.out");
         sizeFile_ = chemistry.logFile("size_isat.out");
+
+        cpuAddFile_ = chemistry.logFile("cpu_add.out");
+        cpuGrowFile_ = chemistry.logFile("cpu_grow.out");
+        cpuRetrieveFile_ = chemistry.logFile("cpu_retrieve.out");
     }
 }
 
@@ -174,8 +198,8 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
     scalarField& Rphiq
 )
 {
-    label nEqns = this->chemistry_.nEqns(); // Species, T, p
-    bool mechRedActive = this->chemistry_.mechRed()->active();
+    label nEqns = chemistry_.nEqns(); // Species, T, p
+    bool mechRedActive = chemistry_.mechRed()->active();
     Rphiq = phi0->Rphi();
     scalarField dphi(phiq-phi0->phi());
     const scalarSquareMatrix& gradientsMatrix = phi0->A();
@@ -285,7 +309,7 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::cleanAndBalance()
         chemPointISAT<ThermoType>* xtmp =
             chemisTree_.treeSuccessor(x);
 
-        scalar elapsedTimeSteps = this->chemistry_.timeSteps() - x->timeTag();
+        scalar elapsedTimeSteps = timeSteps() - x->timeTag();
 
         if ((elapsedTimeSteps > chPMaxLifeTime_) || (x->nGrowth() > maxGrowth_))
         {
@@ -304,7 +328,7 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::cleanAndBalance()
     (
         chemisTree_.size() > minBalanceThreshold_
      && chemisTree_.depth() >
-        maxDepthFactor_*log(scalar(chemisTree_.size()))/log(2.0)
+        maxDepthFactor_*Foam::log(scalar(chemisTree_.size()))/Foam::log(2.0)
     )
     {
         chemisTree_.balance();
@@ -327,17 +351,17 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
     const scalar dt
 )
 {
-    bool mechRedActive = this->chemistry_.mechRed()->active();
-    label speciesNumber = this->chemistry_.nSpecie();
-    scalarField Rcq(this->chemistry_.nEqns() + 1);
+    bool mechRedActive = chemistry_.mechRed()->active();
+    label speciesNumber = chemistry_.nSpecie();
+    scalarField Rcq(chemistry_.nEqns() + 1);
     for (label i=0; i<speciesNumber; i++)
     {
         label s2c = i;
         if (mechRedActive)
         {
-            s2c = this->chemistry_.simplifiedToCompleteIndex()[i];
+            s2c = chemistry_.simplifiedToCompleteIndex()[i];
         }
-        Rcq[i] = rhoi*Rphiq[s2c]/this->chemistry_.specieThermos()[s2c].W();
+        Rcq[i] = rhoi*Rphiq[s2c]/chemistry_.specieThermos()[s2c].W();
     }
     Rcq[speciesNumber] = Rphiq[Rphiq.size() - 3];
     Rcq[speciesNumber + 1] = Rphiq[Rphiq.size() - 2];
@@ -353,7 +377,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
     // A = C(psi0,t0)/(I-dt*J(psi(t0+dt)))
     // where C(psi0,t0) = I
     scalarField dcdt(speciesNumber + 2, Zero);
-    this->chemistry_.jacobian(runTime_.value(), Rcq, li, dcdt, A);
+    chemistry_.jacobian(runTime_.value(), Rcq, li, dcdt, A);
 
     // The jacobian is computed according to the molar concentration
     // the following conversion allows the code to use A with mass fraction
@@ -363,7 +387,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
 
         if (mechRedActive)
         {
-            si = this->chemistry_.simplifiedToCompleteIndex()[i];
+            si = chemistry_.simplifiedToCompleteIndex()[i];
         }
 
         for (label j=0; j<speciesNumber; j++)
@@ -371,19 +395,19 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
             label sj = j;
             if (mechRedActive)
             {
-                sj = this->chemistry_.simplifiedToCompleteIndex()[j];
+                sj = chemistry_.simplifiedToCompleteIndex()[j];
             }
             A(i, j) *=
-              -dt*this->chemistry_.specieThermos()[si].W()
-               /this->chemistry_.specieThermos()[sj].W();
+              -dt*chemistry_.specieThermos()[si].W()
+               /chemistry_.specieThermos()[sj].W();
         }
 
         A(i, i) += 1;
         // Columns for pressure and temperature
         A(i, speciesNumber) *=
-            -dt*this->chemistry_.specieThermos()[si].W()/rhoi;
+            -dt*chemistry_.specieThermos()[si].W()/rhoi;
         A(i, speciesNumber + 1) *=
-            -dt*this->chemistry_.specieThermos()[si].W()/rhoi;
+            -dt*chemistry_.specieThermos()[si].W()/rhoi;
     }
 
     // For the temperature and pressure lines, ddc(dTdt)
@@ -393,13 +417,13 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
         label si = i;
         if (mechRedActive)
         {
-            si = this->chemistry_.simplifiedToCompleteIndex()[i];
+            si = chemistry_.simplifiedToCompleteIndex()[i];
         }
 
         A(speciesNumber, i) *=
-            -dt*rhoi/this->chemistry_.specieThermos()[si].W();
+            -dt*rhoi/chemistry_.specieThermos()[si].W();
         A(speciesNumber + 1, i) *=
-            -dt*rhoi/this->chemistry_.specieThermos()[si].W();
+            -dt*rhoi/chemistry_.specieThermos()[si].W();
     }
 
     A(speciesNumber, speciesNumber) = -dt*A(speciesNumber, speciesNumber) + 1;
@@ -433,6 +457,11 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
     scalarField& Rphiq
 )
 {
+    if (log_)
+    {
+        clockTime_.timeIncrement();
+    }
+
     bool retrieved(false);
     chemPointISAT<ThermoType>* phi0;
 
@@ -482,8 +511,7 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
     if (retrieved)
     {
         phi0->increaseNumRetrieve();
-        scalar elapsedTimeSteps =
-            this->chemistry_.timeSteps() - phi0->timeTag();
+        scalar elapsedTimeSteps = timeSteps() - phi0->timeTag();
 
         // Raise a flag when the chemPoint has been used more than the allowed
         // number of time steps
@@ -492,7 +520,7 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
             cleaningRequired_ = true;
             phi0->toRemove() = true;
         }
-        lastSearch_->lastTimeUsed() = this->chemistry_.timeSteps();
+        lastSearch_->lastTimeUsed() = timeSteps();
         addToMRU(phi0);
         calcNewC(phi0, phiq, Rphiq);
         nRetrieved_++;
@@ -503,6 +531,11 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
         // This point is reached when every retrieve trials have failed
         // or if the tree is empty
         return false;
+    }
+
+    if (log_)
+    {
+        searchISATCpuTime_ += clockTime_.timeIncrement();
     }
 }
 
@@ -517,7 +550,13 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
     const scalar deltaT
 )
 {
+    if (log_)
+    {
+        clockTime_.timeIncrement();
+    }
+
     label growthOrAddFlag = 1;
+
     // If lastSearch_ holds a valid pointer to a chemPoint AND the growPoints_
     // option is on, the code first tries to grow the point hold by lastSearch_
     if (lastSearch_ && growPoints_)
@@ -527,7 +566,15 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
             nGrowth_++;
             growthOrAddFlag = 0;
             addToMRU(lastSearch_);
-            //the structure of the tree is not modified, return false
+
+            tabulationResults_[li] = 1;
+
+            if (log_)
+            {
+                growCpuTime_ += clockTime_.timeIncrement();
+            }
+
+            // the structure of the tree is not modified, return false
             return growthOrAddFlag;
         }
     }
@@ -575,7 +622,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
                      tempList[i]->Rphi(),
                      tempList[i]->A(),
                      scaleFactor(),
-                     this->tolerance(),
+                     tolerance_,
                      scaleFactor_.size(),
                      nulPhi
                 );
@@ -589,7 +636,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
     }
 
     // Compute the A matrix needed to store the chemPoint.
-    label ASize = this->chemistry_.nEqns() + 1;
+    label ASize = chemistry_.nEqns() + 1;
     scalarSquareMatrix A(ASize, Zero);
     computeA(A, Rphiq, li, rho, deltaT);
 
@@ -599,7 +646,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
         Rphiq,
         A,
         scaleFactor(),
-        this->tolerance(),
+        tolerance_,
         scaleFactor_.size(),
         lastSearch_ // lastSearch_ may be nullptr (handled by binaryTree)
     );
@@ -609,6 +656,13 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
     }
     nAdd_++;
 
+    tabulationResults_[li] = 0;
+
+    if (log_)
+    {
+        addNewLeafCpuTime_ += clockTime_.timeIncrement();
+    }
+
     return growthOrAddFlag;
 }
 
@@ -616,7 +670,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
 template<class ThermoType>
 void Foam::chemistryTabulationMethods::ISAT<ThermoType>::writePerformance()
 {
-    if (this->log())
+    if (log_)
     {
         nRetrievedFile_()
             << runTime_.timeOutputValue() << "    " << nRetrieved_ << endl;
@@ -631,8 +685,46 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::writePerformance()
         nAdd_ = 0;
 
         sizeFile_()
-            << runTime_.timeOutputValue() << "    " << this->size() << endl;
+            << runTime_.timeOutputValue() << "    "
+            << chemisTree_.size() << endl;
+
+        cpuRetrieveFile_()
+            << runTime_.timeOutputValue()
+            << "    " << searchISATCpuTime_ << endl;
+        searchISATCpuTime_ = 0;
+
+        cpuGrowFile_()
+            << runTime_.timeOutputValue()
+            << "    " << growCpuTime_ << endl;
+        growCpuTime_ = 0;
+
+        cpuAddFile_()
+            << runTime_.timeOutputValue()
+            << "    " << addNewLeafCpuTime_ << endl;
+        addNewLeafCpuTime_ = 0;
     }
+}
+
+
+template<class ThermoType>
+void Foam::chemistryTabulationMethods::ISAT<ThermoType>::reset()
+{
+    // Increment counter of time-step
+    timeSteps_++;
+
+    forAll(tabulationResults_, i)
+    {
+        tabulationResults_[i] = 2;
+    }
+}
+
+
+template<class ThermoType>
+bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::update()
+{
+    bool updated = cleanAndBalance();
+    writePerformance();
+    return updated;
 }
 
 

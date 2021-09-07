@@ -61,6 +61,13 @@ class ISAT
 {
     // Private Data
 
+        const dictionary coeffsDict_;
+
+        TDACChemistryModel<ThermoType>& chemistry_;
+
+        //- Switch to select performance logging
+        Switch log_;
+
         //- List of the stored 'points' organised in a binary tree
         binaryTree<ThermoType> chemisTree_;
 
@@ -68,6 +75,8 @@ class ISAT
         scalarField scaleFactor_;
 
         const Time& runTime_;
+
+        label timeSteps_;
 
         //- Lifetime (number of time steps) of a stored point
         label chPMaxLifeTime_;
@@ -100,15 +109,37 @@ class ISAT
         //- Switch to allow growth (on by default)
         Switch growPoints_;
 
+        scalar tolerance_;
+
         // Statistics on ISAT usage
         label nRetrieved_;
         label nGrowth_;
         label nAdd_;
+        scalar addNewLeafCpuTime_;
+        scalar growCpuTime_;
+        scalar searchISATCpuTime_;
+
+        const clockTime clockTime_;
 
         autoPtr<OFstream> nRetrievedFile_;
         autoPtr<OFstream> nGrowthFile_;
         autoPtr<OFstream> nAddFile_;
         autoPtr<OFstream> sizeFile_;
+
+        //- Log file for the average time spent adding tabulated data
+        autoPtr<OFstream> cpuAddFile_;
+
+        //- Log file for the average time spent growing tabulated data
+        autoPtr<OFstream> cpuGrowFile_;
+
+        //- Log file for the average time spent retrieving tabulated data
+        autoPtr<OFstream> cpuRetrieveFile_;
+
+        // Field containing information about tabulation:
+        // 0 -> add (direct integration)
+        // 1 -> grow
+        // 2 -> retrieve
+        volScalarField::Internal tabulationResults_;
 
         bool cleaningRequired_;
 
@@ -196,6 +227,17 @@ public:
 
     // Member Functions
 
+        //- Return true as this tabulation method tabulates
+        virtual bool tabulates()
+        {
+            return true;
+        }
+
+        TDACChemistryModel<ThermoType>& chemistry()
+        {
+            return chemistry_;
+        }
+
         inline binaryTree<ThermoType>& chemisTree()
         {
             return chemisTree_;
@@ -206,10 +248,10 @@ public:
             return scaleFactor_;
         }
 
-        //- Return the size of the binary tree
-        virtual inline label size()
+        //- Return the number of chemistry evaluations
+        inline label timeSteps() const
         {
-            return chemisTree_.size();
+            return timeSteps_;
         }
 
         virtual void writePerformance();
@@ -235,10 +277,9 @@ public:
             const scalar deltaT
         );
 
-        virtual bool update()
-        {
-            return cleanAndBalance();
-        }
+        virtual void reset();
+
+        virtual bool update();
 };
 
 

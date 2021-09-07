@@ -35,14 +35,14 @@ Foam::chemistryReductionMethods::EFA<ThermoType>::EFA
     TDACChemistryModel<ThermoType>& chemistry
 )
 :
-    chemistryReductionMethod<ThermoType>(dict, chemistry),
-    sC_(this->nSpecie_,0),
-    sH_(this->nSpecie_,0),
-    sO_(this->nSpecie_,0),
-    sN_(this->nSpecie_,0),
+    chemistryReduction<ThermoType>(dict, chemistry),
+    sC_(this->nSpecie(),0),
+    sH_(this->nSpecie(),0),
+    sO_(this->nSpecie(),0),
+    sN_(this->nSpecie(),0),
     sortPart_(0.05)
 {
-    for (label i=0; i<this->nSpecie_; i++)
+    for (label i=0; i<this->nSpecie(); i++)
     {
         const List<specieElement>& curSpecieComposition =
             chemistry.mixture().specieComposition(i);
@@ -99,33 +99,35 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
     const label li
 )
 {
+    chemistryReduction<ThermoType>::initReduceMechanism();
+
     scalarField& completeC(this->chemistry_.completeC());
     scalarField c1(this->chemistry_.nEqns(), 0.0);
 
-    for (label i=0; i<this->nSpecie_; i++)
+    for (label i=0; i<this->nSpecie(); i++)
     {
         c1[i] = c[i];
         completeC[i] = c[i];
     }
 
-    c1[this->nSpecie_] = T;
-    c1[this->nSpecie_+1] = p;
+    c1[this->nSpecie()] = T;
+    c1[this->nSpecie()+1] = p;
 
 
     // Number of initialised rAB for each lines
-    Field<label> NbrABInit(this->nSpecie_,0);
+    Field<label> NbrABInit(this->nSpecie(),0);
 
     // Position of the initialised rAB, -1 when not initialised
-    RectangularMatrix<label> rABPos(this->nSpecie_, this->nSpecie_, -1);
-    RectangularMatrix<scalar> CFluxAB(this->nSpecie_, this->nSpecie_, 0.0);
-    RectangularMatrix<scalar> HFluxAB(this->nSpecie_, this->nSpecie_, 0.0);
-    RectangularMatrix<scalar> OFluxAB(this->nSpecie_, this->nSpecie_, 0.0);
-    RectangularMatrix<scalar> NFluxAB(this->nSpecie_, this->nSpecie_, 0.0);
+    RectangularMatrix<label> rABPos(this->nSpecie(), this->nSpecie(), -1);
+    RectangularMatrix<scalar> CFluxAB(this->nSpecie(), this->nSpecie(), 0.0);
+    RectangularMatrix<scalar> HFluxAB(this->nSpecie(), this->nSpecie(), 0.0);
+    RectangularMatrix<scalar> OFluxAB(this->nSpecie(), this->nSpecie(), 0.0);
+    RectangularMatrix<scalar> NFluxAB(this->nSpecie(), this->nSpecie(), 0.0);
     scalar CFlux(0.0), HFlux(0.0), OFlux(0.0), NFlux(0.0);
     label nbPairs(0);
 
     // Index of the other species involved in the rABNum
-    RectangularMatrix<label> rABOtherSpec(this->nSpecie_, this->nSpecie_, -1);
+    RectangularMatrix<label> rABOtherSpec(this->nSpecie(), this->nSpecie(), -1);
 
     forAll(this->chemistry_.reactions(), i)
     {
@@ -243,7 +245,7 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
     // Select species according to the total flux cutoff (1-tolerance)
     // of the flux is included
     label speciesNumber = 0;
-    for (label i=0; i<this->nSpecie_; i++)
+    for (label i=0; i<this->nSpecie(); i++)
     {
         this->activeSpecies_[i] = false;
     }
@@ -254,7 +256,7 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
         labelList source(nbPairs);
         labelList sink(nbPairs);
         label nP(0);
-        for (int A=0; A<this->nSpecie_ ; A++)
+        for (int A=0; A<this->nSpecie() ; A++)
         {
             for (int j=0; j<NbrABInit[A]; j++)
             {
@@ -320,7 +322,7 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
         labelList source(nbPairs);
         labelList sink(nbPairs);
         label nP(0);
-        for (int A=0; A<this->nSpecie_ ; A++)
+        for (int A=0; A<this->nSpecie() ; A++)
         {
             for (int j=0; j<NbrABInit[A]; j++)
             {
@@ -383,7 +385,7 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
         labelList source(nbPairs);
         labelList sink(nbPairs);
         label nP(0);
-        for (int A=0; A<this->nSpecie_ ; A++)
+        for (int A=0; A<this->nSpecie() ; A++)
         {
             for (int j=0; j<NbrABInit[A]; j++)
             {
@@ -445,7 +447,7 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
         labelList source(nbPairs);
         labelList sink(nbPairs);
         label nP(0);
-        for (int A=0; A<this->nSpecie_ ; A++)
+        for (int A=0; A<this->nSpecie() ; A++)
         {
             for (int j=0; j<NbrABInit[A]; j++)
             {
@@ -529,15 +531,15 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
         }
     }
 
-    this->NsSimp_ = speciesNumber;
+    this->nActiveSpecies_ = speciesNumber;
     scalarField& simplifiedC(this->chemistry_.simplifiedC());
-    simplifiedC.setSize(this->NsSimp_+2);
+    simplifiedC.setSize(this->nActiveSpecies_+2);
     DynamicList<label>& s2c(this->chemistry_.simplifiedToCompleteIndex());
-    s2c.setSize(this->NsSimp_);
+    s2c.setSize(this->nActiveSpecies_);
     Field<label>& c2s(this->chemistry_.completeToSimplifiedIndex());
     label j = 0;
 
-    for (label i=0; i<this->nSpecie_; i++)
+    for (label i=0; i<this->nSpecie(); i++)
     {
         if (this->activeSpecies_[i])
         {
@@ -554,12 +556,14 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
             c2s[i] = -1;
         }
     }
-    simplifiedC[this->NsSimp_] = T;
-    simplifiedC[this->NsSimp_+1] = p;
-    this->chemistry_.setNsDAC(this->NsSimp_);
+    simplifiedC[this->nActiveSpecies_] = T;
+    simplifiedC[this->nActiveSpecies_+1] = p;
+    this->chemistry_.setNsDAC(this->nActiveSpecies_);
     // change temporary Ns in chemistryModel
     // to make the function nEqns working
-    this->chemistry_.setNSpecie(this->NsSimp_);
+    this->chemistry_.setNSpecie(this->nActiveSpecies_);
+
+    chemistryReduction<ThermoType>::endReduceMechanism();
 }
 
 

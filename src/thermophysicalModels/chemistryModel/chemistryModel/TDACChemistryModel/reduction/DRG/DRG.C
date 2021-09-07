@@ -34,7 +34,7 @@ Foam::chemistryReductionMethods::DRG<ThermoType>::DRG
     TDACChemistryModel<ThermoType>& chemistry
 )
 :
-    chemistryReductionMethod<ThermoType>(dict, chemistry),
+    chemistryReduction<ThermoType>(dict, chemistry),
     searchInitSet_()
 {
     const wordHashSet initSet(this->coeffsDict_.lookup("initialSet"));
@@ -63,28 +63,30 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
     const label li
 )
 {
-    scalarField c1(this->nSpecie_+2, 0.0);
+    chemistryReduction<ThermoType>::initReduceMechanism();
 
-    for(label i=0; i<this->nSpecie_; i++)
+    scalarField c1(this->nSpecie()+2, 0.0);
+
+    for(label i=0; i<this->nSpecie(); i++)
     {
         c1[i] = c[i];
     }
 
-    c1[this->nSpecie_] = T;
-    c1[this->nSpecie_+1] = p;
+    c1[this->nSpecie()] = T;
+    c1[this->nSpecie()+1] = p;
 
     // Compute the rAB matrix
-    RectangularMatrix<scalar> rABNum(this->nSpecie_,this->nSpecie_,0.0);
-    scalarField rABDen(this->nSpecie_,0.0);
+    RectangularMatrix<scalar> rABNum(this->nSpecie(),this->nSpecie(),0.0);
+    scalarField rABDen(this->nSpecie(),0.0);
 
     // Number of initialised rAB for each lines
-    Field<label> NbrABInit(this->nSpecie_,0);
+    Field<label> NbrABInit(this->nSpecie(),0);
 
     // Position of the initialised rAB, -1 when not initialised
-    RectangularMatrix<label> rABPos(this->nSpecie_, this->nSpecie_, -1);
+    RectangularMatrix<label> rABPos(this->nSpecie(), this->nSpecie(), -1);
 
     // Index of the other species involved in the rABNum
-    RectangularMatrix<label> rABOtherSpec(this->nSpecie_, this->nSpecie_, -1);
+    RectangularMatrix<label> rABOtherSpec(this->nSpecie(), this->nSpecie(), -1);
 
     forAll(this->chemistry_.reactions(), i)
     {
@@ -152,7 +154,7 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
             // Absolute value of aggregated value
             scalar curwA = ((wA[id]>=0) ? wA[id] : -wA[id]);
 
-            List<bool> deltaBi(this->nSpecie_, false);
+            List<bool> deltaBi(this->nSpecie(), false);
             FIFOStack<label> usedIndex;
             forAll(R.lhs(), j)
             {
@@ -208,7 +210,7 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
 
     // Set all species to inactive and activate them according
     // to rAB and initial set
-    for (label i=0; i<this->nSpecie_; i++)
+    for (label i=0; i<this->nSpecie(); i++)
     {
         this->activeSpecies_[i] = false;
     }
@@ -293,12 +295,12 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
         }
     }
 
-    this->NsSimp_ = speciesNumber;
-    this->chemistry_.simplifiedC().setSize(this->NsSimp_+2);
-    this->chemistry_.simplifiedToCompleteIndex().setSize(this->NsSimp_);
+    this->nActiveSpecies_ = speciesNumber;
+    this->chemistry_.simplifiedC().setSize(this->nActiveSpecies_+2);
+    this->chemistry_.simplifiedToCompleteIndex().setSize(this->nActiveSpecies_);
 
     label j = 0;
-    for (label i=0; i<this->nSpecie_; i++)
+    for (label i=0; i<this->nSpecie(); i++)
     {
         if (this->activeSpecies_[i])
         {
@@ -316,13 +318,15 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
         }
     }
 
-    this->chemistry_.simplifiedC()[this->NsSimp_] = T;
-    this->chemistry_.simplifiedC()[this->NsSimp_+1] = p;
-    this->chemistry_.setNsDAC(this->NsSimp_);
+    this->chemistry_.simplifiedC()[this->nActiveSpecies_] = T;
+    this->chemistry_.simplifiedC()[this->nActiveSpecies_+1] = p;
+    this->chemistry_.setNsDAC(this->nActiveSpecies_);
 
     // Change temporary Ns in chemistryModel
     // to make the function nEqns working
-    this->chemistry_.setNSpecie(this->NsSimp_);
+    this->chemistry_.setNSpecie(this->nActiveSpecies_);
+
+    chemistryReduction<ThermoType>::endReduceMechanism();
 }
 
 

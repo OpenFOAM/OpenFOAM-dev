@@ -89,7 +89,7 @@ SourceFiles
 #ifndef DAC_H
 #define DAC_H
 
-#include "chemistryReductionMethod.H"
+#include "chemistryReduction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -104,7 +104,7 @@ namespace chemistryReductionMethods
 template<class ThermoType>
 class DAC
 :
-    public chemistryReductionMethod<ThermoType>
+    public chemistryReduction<ThermoType>
 {
     // Private Data
 

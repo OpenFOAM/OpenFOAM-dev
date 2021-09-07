@@ -337,11 +337,11 @@ void Foam::binaryTree<ThermoType>::deleteAllNode(bn* subTreeRoot)
 template<class ThermoType>
 Foam::binaryTree<ThermoType>::binaryTree
 (
-    TDACChemistryModel<ThermoType>& chemistry,
+    chemistryTabulationMethods::ISAT<ThermoType>& table,
     dictionary coeffsDict
 )
 :
-    chemistry_(chemistry),
+    table_(table),
     root_(nullptr),
     maxNLeafs_(coeffsDict.lookup<label>("maxNLeafs")),
     size_(0),
@@ -394,7 +394,7 @@ void Foam::binaryTree<ThermoType>::insertNewLeaf
         chP* newChemPoint =
             new chP
             (
-                chemistry_,
+                table_,
                 phiq,
                 Rphiq,
                 A,
@@ -404,7 +404,7 @@ void Foam::binaryTree<ThermoType>::insertNewLeaf
                 coeffsDict_,
                 root_
             );
-        root_->leafLeft()=newChemPoint;
+        root_->leafLeft() = newChemPoint;
     }
     else // at least one point stored
     {
@@ -421,7 +421,7 @@ void Foam::binaryTree<ThermoType>::insertNewLeaf
         chP* newChemPoint =
             new chP
             (
-                chemistry_,
+                table_,
                 phiq,
                 Rphiq,
                 A,
@@ -634,7 +634,7 @@ void Foam::binaryTree<ThermoType>::deleteLeaf(chP*& phi0)
 template<class ThermoType>
 void Foam::binaryTree<ThermoType>::balance()
 {
-    scalarField mean(chemistry_.nEqns(),0.0);
+    scalarField mean(table_.chemistry().nEqns(), 0.0);
 
     //1) walk through the entire tree by starting with the tree's most left
     // chemPoint
@@ -652,7 +652,7 @@ void Foam::binaryTree<ThermoType>::balance()
     mean /= size_;
 
     //3) compute the variance for each space direction
-    List<scalar> variance(chemistry_.nEqns(),0.0);
+    List<scalar> variance(table_.chemistry().nEqns(),0.0);
     forAll(chemPoints, j)
     {
         const scalarField& phij = chemPoints[j]->phi();

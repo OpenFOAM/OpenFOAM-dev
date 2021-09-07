@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,11 @@ Class
     Foam::chemistryTabulationMethods::none
 
 Description
+    A chemistryTabulationMethod which does nothing to allow tabulation to be
+    switched-off.
+
+SourceFiles
+    noChemistryTabulation.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -73,16 +78,10 @@ public:
 
     // Member Functions
 
-        //- Return the size of the binary tree
-        virtual label size()
+        //- Return false as this tabulation method does not tabulate
+        virtual bool tabulates()
         {
-            NotImplemented;
-            return 0;
-        }
-
-        virtual void writePerformance()
-        {
-            NotImplemented;
+            return false;
         }
 
         //- Find the closest stored leaf of phiQ and store the result in
@@ -93,7 +92,6 @@ public:
             scalarField& Rphiq
         )
         {
-            NotImplemented;
             return false;
         }
 
@@ -110,15 +108,16 @@ public:
             const scalar deltaT
         )
         {
-            NotImplemented;
             return false;
         }
 
         virtual bool update()
         {
-            NotImplemented;
             return false;
         }
+
+        virtual void reset()
+        {}
 };
 
 

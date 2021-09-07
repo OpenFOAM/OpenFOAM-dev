@@ -51,8 +51,9 @@ Description
 namespace Foam
 {
 
-template<class ThermoType>
-class TDACChemistryModel;
+/*---------------------------------------------------------------------------*\
+                           Class binaryTree Declaration
+\*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
 class binaryTree
@@ -69,8 +70,8 @@ private:
 
     // Private Data
 
-        //- Reference to the chemistryModel
-        TDACChemistryModel<ThermoType>& chemistry_;
+        //- Reference to the ISAT table
+        chemistryTabulationMethods::ISAT<ThermoType>& table_;
 
         //- Root node of the binary tree
         bn *root_;
@@ -134,7 +135,7 @@ public:
         //- Construct from dictionary and chemistryOnLineLibrary
         binaryTree
         (
-            TDACChemistryModel<ThermoType>& chemistry,
+            chemistryTabulationMethods::ISAT<ThermoType>& table,
             dictionary coeffsDict
         );
 

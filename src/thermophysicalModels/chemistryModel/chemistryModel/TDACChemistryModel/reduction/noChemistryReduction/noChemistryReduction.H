@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,8 @@ Class
     Foam::chemistryReductionMethods::none
 
 Description
+    A chemistryReductionMethod which does nothing to allow reduction to be
+    switched-off.
 
 SourceFiles
     noChemistryReduction.C
@@ -75,6 +77,12 @@ public:
 
     // Member Functions
 
+        //- Return mechanism reduction inactive
+        virtual bool active() const
+        {
+            return false;
+        }
+
         //- Reduce the mechanism
         virtual void reduceMechanism
         (
@@ -83,6 +91,9 @@ public:
             const scalarField& c,
             const label li
         );
+
+        virtual void update()
+        {}
 };
 
 

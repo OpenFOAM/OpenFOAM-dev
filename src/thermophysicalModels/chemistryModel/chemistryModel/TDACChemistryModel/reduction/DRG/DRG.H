@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef DRG_H
 #define DRG_H
 
-#include "chemistryReductionMethod.H"
+#include "chemistryReduction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,7 +51,7 @@ namespace chemistryReductionMethods
 template<class ThermoType>
 class DRG
 :
-    public chemistryReductionMethod<ThermoType>
+    public chemistryReduction<ThermoType>
 {
     // Private Data
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "chemistryTabulationMethod.H"
+#include "noChemistryTabulation.H"
 #include "Time.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
@@ -36,53 +37,67 @@ Foam::chemistryTabulationMethod<ThermoType>::New
     TDACChemistryModel<ThermoType>& chemistry
 )
 {
-    const dictionary& tabulationDict(dict.subDict("tabulation"));
-
-    const word methodName(tabulationDict.lookup("method"));
-
-    Info<< "Selecting chemistry tabulation method " << methodName << endl;
-
-    const word methodTypeName =
-        methodName + '<' + ThermoType::typeName() + '>';
-
-    typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(methodTypeName);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    if (dict.found("tabulation"))
     {
-        FatalErrorInFunction
-            << "Unknown " << typeName_() << " type " << methodName << endl
-            << endl;
+        const dictionary& tabulationDict(dict.subDict("tabulation"));
 
-        const wordList names(dictionaryConstructorTablePtr_->sortedToc());
+        const word methodName(tabulationDict.lookup("method"));
 
-        wordList thisCmpts;
-        thisCmpts.append(word::null);
-        thisCmpts.append
-        (
-            basicThermo::splitThermoName(ThermoType::typeName(), 5)
-        );
+        Info<< "Selecting chemistry tabulation method " << methodName << endl;
 
-        wordList validNames;
-        forAll(names, i)
+        const word methodTypeName =
+            methodName + '<' + ThermoType::typeName() + '>';
+
+        typename dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(methodTypeName);
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            const wordList cmpts(basicThermo::splitThermoName(names[i], 6));
+            FatalErrorInFunction
+                << "Unknown " << typeName_() << " type " << methodName << endl
+                << endl;
 
-            if (SubList<word>(cmpts, 5, 1) == SubList<word>(thisCmpts, 5, 1))
+            const wordList names(dictionaryConstructorTablePtr_->sortedToc());
+
+            wordList thisCmpts;
+            thisCmpts.append(word::null);
+            thisCmpts.append
+            (
+                basicThermo::splitThermoName(ThermoType::typeName(), 5)
+            );
+
+            wordList validNames;
+            forAll(names, i)
             {
-                validNames.append(cmpts[0]);
+                const wordList cmpts(basicThermo::splitThermoName(names[i], 6));
+
+                if
+                (
+                    SubList<word>(cmpts, 5, 1) == SubList<word>(thisCmpts, 5, 1)
+                )
+                {
+                    validNames.append(cmpts[0]);
+                }
             }
+
+            FatalErrorInFunction
+                << "Valid " << typeName_()
+                << " types are:" << validNames << endl
+                << exit(FatalError);
         }
 
-        FatalErrorInFunction
-            << "Valid " << typeName_() << " types are:" << validNames << endl
-            << exit(FatalError);
+        return autoPtr<chemistryTabulationMethod<ThermoType>>
+        (
+            cstrIter()(dict, chemistry)
+        );
     }
-
-    return autoPtr<chemistryTabulationMethod<ThermoType>>
-    (
-        cstrIter()(dict, chemistry)
-    );
+    else
+    {
+        return autoPtr<chemistryTabulationMethod<ThermoType>>
+        (
+            new chemistryTabulationMethods::none<ThermoType>(dict, chemistry)
+        );
+    }
 }
 
 

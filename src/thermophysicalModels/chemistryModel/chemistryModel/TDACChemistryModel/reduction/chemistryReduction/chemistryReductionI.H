@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,30 +21,33 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::chemistryReduction
+
+Description
+    An abstract class for reducing chemical mechanism
+
+SourceFiles
+    chemistryReduction.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "chemistryReductionMethod.H"
-#include "TDACChemistryModel.H"
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
-(
-    const Foam::IOdictionary& dict,
-    Foam::TDACChemistryModel<ThermoType>& chemistry
-)
-:
-    nSpecie_(chemistry.nSpecie()),
-    nActiveSpecies_(chemistry.nSpecie())
-{}
+inline Foam::scalar
+Foam::chemistryReduction<ThermoType>::tolerance() const
+{
+    return tolerance_;
+}
 
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::chemistryReductionMethod<ThermoType>::~chemistryReductionMethod()
-{}
+inline const Foam::List<bool>&
+Foam::chemistryReduction<ThermoType>::activeSpecies() const
+{
+    return activeSpecies_;
+}
 
 
 // ************************************************************************* //
