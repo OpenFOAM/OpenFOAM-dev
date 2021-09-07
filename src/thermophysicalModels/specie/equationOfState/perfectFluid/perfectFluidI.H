@@ -160,6 +160,13 @@ inline Foam::scalar Foam::perfectFluid<Specie>::CpMCv(scalar p, scalar T) const
 }
 
 
+template<class Specie>
+inline Foam::scalar Foam::perfectFluid<Specie>::alphav(scalar p, scalar T) const
+{
+    return (1 - rho0_/this->rho(p, T))/T;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Specie>

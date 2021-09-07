@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,6 +142,13 @@ template<class Specie>
 inline Foam::scalar Foam::rPolynomial<Specie>::CpMCv(scalar p, scalar T) const
 {
     return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::rPolynomial<Specie>::alphav(scalar p, scalar T) const
+{
+    return this->rho(p, T)*(C_[1] + 2*C_[2]*T - C_[4]*p);
 }
 
 

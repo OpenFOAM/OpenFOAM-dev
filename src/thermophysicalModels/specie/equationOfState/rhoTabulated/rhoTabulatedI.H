@@ -194,6 +194,17 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::CpMCv
 }
 
 
+template<class Specie>
+inline Foam::scalar Foam::rhoTabulated<Specie>::alphav
+(
+    scalar p,
+    scalar T
+) const
+{
+    return -rho_.dfdT(p, T)/rho(p, T);
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Specie>

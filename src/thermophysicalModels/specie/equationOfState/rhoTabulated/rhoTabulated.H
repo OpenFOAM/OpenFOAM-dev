@@ -215,6 +215,9 @@ public:
             //  Not implemented
             inline scalar CpMCv(scalar p, scalar T) const;
 
+            //- Return volumetric coefficient of thermal expansion [1/T]
+            inline scalar alphav(const scalar p, const scalar T) const;
+
 
         // IO
 

@@ -177,6 +177,17 @@ inline Foam::scalar Foam::Boussinesq<Specie>::CpMCv
 }
 
 
+template<class Specie>
+inline Foam::scalar Foam::Boussinesq<Specie>::alphav
+(
+    scalar p,
+    scalar T
+) const
+{
+    return rho0_/this->rho(p, T)*beta_;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Specie>

@@ -207,6 +207,17 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::CpMCv
 }
 
 
+template<class Specie>
+inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::alphav
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Specie>

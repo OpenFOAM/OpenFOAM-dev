@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,6 +184,17 @@ inline Foam::scalar Foam::icoTabulated<Specie>::CpMCv
 ) const
 {
     return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::icoTabulated<Specie>::alphav
+(
+    scalar p,
+    scalar T
+) const
+{
+    return -rho_.dfdT(T)/rho(p, T);
 }
 
 

@@ -187,6 +187,17 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::CpMCv
 }
 
 
+template<class Specie, int PolySize>
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::alphav
+(
+    scalar p,
+    scalar T
+) const
+{
+    return -rhoCoeffs_.derivative(T)/rho(p, T);
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Specie, int PolySize>

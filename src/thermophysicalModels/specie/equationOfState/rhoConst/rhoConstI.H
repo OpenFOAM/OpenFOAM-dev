@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,6 +128,13 @@ inline Foam::scalar Foam::rhoConst<Specie>::Z(scalar p, scalar T) const
 
 template<class Specie>
 inline Foam::scalar Foam::rhoConst<Specie>::CpMCv(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::rhoConst<Specie>::alphav(scalar p, scalar T) const
 {
     return 0;
 }
