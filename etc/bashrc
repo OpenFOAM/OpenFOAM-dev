@@ -158,10 +158,10 @@ export WM_PROJECT_USER_DIR=$HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION
 # Add in preset user or site preferences:
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile prefs.sh`
 
-# Evaluate command-line parameters and record settings for later
-# these can be used to set/unset values, or specify alternative pref files
+# Evaluate command-line parameters of the form "param=keyword" or unset
+# parameters with "param="
 export FOAM_SETTINGS="$@"
-_foamEval $@
+_foamParams $@
 
 # Clean standard environment variables (PATH, LD_LIBRARY_PATH, MANPATH)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
