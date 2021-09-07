@@ -48,7 +48,7 @@ then
     }
 
     # Evaluate command-line parameters
-    _foamEval()
+    _foamParams()
     {
         while [ $# -gt 0 ]
         do
@@ -66,15 +66,6 @@ then
                 # name=value  -> export name=value
                 [ "$FOAM_VERBOSE" -a "$PS1" ] && echo "export $1" 1>&2
                 eval "export $1"
-                ;;
-            *)
-                # Filename: source it
-                if [ -f "$1" ]
-                then
-                    _foamSource "$1"
-                else
-                    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile -silent "$1"`
-                fi
                 ;;
             esac
             shift
@@ -117,6 +108,6 @@ else
     # ~~~~~~~~~~~~~~~~~~~~
     unset WM_BASH_FUNCTIONS
     unset _foamAddPath _foamAddLib _foamAddMan
-    unset _foamSource _foamEval
+    unset _foamSource _foamParams
 
 fi
