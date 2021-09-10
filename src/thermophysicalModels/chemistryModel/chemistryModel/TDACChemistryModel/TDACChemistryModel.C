@@ -38,24 +38,34 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
 :
     standardChemistryModel<ThermoType>(thermo),
     log_(this->lookupOrDefault("log", false)),
-    NsDAC_(this->nSpecie_),
-    completeC_(this->nSpecie_, 0),
-    reactionsDisabled_(this->reactions_.size(), false),
-    completeToSimplifiedIndex_(this->nSpecie_, -1),
-    simplifiedToCompleteIndex_(this->nSpecie_)
-{
-    const basicSpecieMixture& composition = this->thermo().composition();
-
-    mechRed_ = chemistryReductionMethod<ThermoType>::New
+    cTos_(this->nSpecie_, -1),
+    sToc_(this->nSpecie_),
+    mechRedPtr_
     (
-        *this,
-        *this
-    );
-
+        chemistryReductionMethod<ThermoType>::New
+        (
+            *this,
+            *this
+        )
+    ),
+    mechRed_(*mechRedPtr_),
+    mechRedActive_(mechRed_.active()),
+    tabulationPtr_
+    (
+        chemistryTabulationMethod<ThermoType>::New
+        (
+            *this,
+            *this
+        )
+    ),
+    tabulation_(*tabulationPtr_)
+{
     // When the mechanism reduction method is used, the 'active' flag for every
     // species should be initialised (by default 'active' is true)
-    if (mechRed_->active())
+    if (mechRed_.active())
     {
+        const basicSpecieMixture& composition = this->thermo().composition();
+
         forAll(this->Y(), i)
         {
             typeIOobject<volScalarField> header
@@ -74,12 +84,6 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
             }
         }
     }
-
-    tabulation_ = chemistryTabulationMethod<ThermoType>::New
-    (
-        *this,
-        *this
-    );
 
     if (log_)
     {
@@ -107,7 +111,7 @@ void Foam::TDACChemistryModel<ThermoType>::omega
     scalarField& dcdt
 ) const
 {
-    const bool reduced = mechRed_->active();
+    const bool reduced = mechRed_.active();
 
     scalar omegaf, omegar;
 
@@ -115,7 +119,7 @@ void Foam::TDACChemistryModel<ThermoType>::omega
 
     forAll(this->reactions_, i)
     {
-        if (!reactionsDisabled_[i])
+        if (!mechRed_.reactionDisabled(i))
         {
             const Reaction<ThermoType>& R = this->reactions_[i];
             const scalar omegaI = R.omega(p, T, c, li, omegaf, omegar);
@@ -124,7 +128,7 @@ void Foam::TDACChemistryModel<ThermoType>::omega
             {
                 const label si =
                     reduced
-                  ? completeToSimplifiedIndex_[R.lhs()[s].index]
+                  ? cTos_[R.lhs()[s].index]
                   : R.lhs()[s].index;
                 const scalar sl = R.lhs()[s].stoichCoeff;
                 dcdt[si] -= sl*omegaI;
@@ -134,7 +138,7 @@ void Foam::TDACChemistryModel<ThermoType>::omega
             {
                 const label si =
                     reduced
-                  ? completeToSimplifiedIndex_[R.rhs()[s].index]
+                  ? cTos_[R.rhs()[s].index]
                   : R.rhs()[s].index;
                 const scalar sr = R.rhs()[s].stoichCoeff;
                 dcdt[si] += sr*omegaI;
@@ -153,21 +157,13 @@ void Foam::TDACChemistryModel<ThermoType>::derivatives
     scalarField& dcdt
 ) const
 {
-    const bool reduced = mechRed_->active();
+    const bool reduced = mechRed_.active();
 
     if (reduced)
     {
-        // When using DAC, the ODE solver submit a reduced set of species the
-        // complete set is used and only the species in the simplified mechanism
-        // are updated
-        this->c_ = completeC_;
-
-        // Update the concentration of the species in the simplified mechanism
-        // the other species remain the same and are used only for third-body
-        // efficiencies
-        for (label i=0; i<NsDAC_; i++)
+        for (label i=0; i<mechRed_.nActiveSpecies(); i++)
         {
-            this->c_[simplifiedToCompleteIndex_[i]] = max(c[i], 0);
+            this->c_[sToc_[i]] = max(c[i], 0);
         }
     }
     else
@@ -199,7 +195,7 @@ void Foam::TDACChemistryModel<ThermoType>::derivatives
     scalar& dTdt = dcdt[this->nSpecie_];
     for (label i=0; i<this->nSpecie_; i++)
     {
-        const label si = reduced ? simplifiedToCompleteIndex_[i] : i;
+        const label si = reduced ? sToc_[i] : i;
         dTdt -= dcdt[i]*this->specieThermos_[si].ha(p, T);
     }
     dTdt /= ccp;
@@ -218,7 +214,7 @@ void Foam::TDACChemistryModel<ThermoType>::jacobian
     scalarSquareMatrix& J
 ) const
 {
-    const bool reduced = mechRed_->active();
+    const bool reduced = mechRed_.active();
 
     // If the mechanism reduction is active, the computed Jacobian
     // is compact (size of the reduced set of species)
@@ -227,11 +223,9 @@ void Foam::TDACChemistryModel<ThermoType>::jacobian
 
     if (reduced)
     {
-        this->c_ = completeC_;
-
-        for (label i=0; i<NsDAC_; i++)
+        for (label i=0; i<mechRed_.nActiveSpecies(); i++)
         {
-            this->c_[simplifiedToCompleteIndex_[i]] = max(c[i], 0);
+            this->c_[sToc_[i]] = max(c[i], 0);
         }
     }
     else
@@ -251,7 +245,7 @@ void Foam::TDACChemistryModel<ThermoType>::jacobian
     // Evaluate contributions from reactions
     forAll(this->reactions_, ri)
     {
-        if (!reactionsDisabled_[ri])
+        if (!mechRed_.reactionDisabled(ri))
         {
             const Reaction<ThermoType>& R = this->reactions_[ri];
             scalar omegaI, kfwd, kbwd;
@@ -267,7 +261,7 @@ void Foam::TDACChemistryModel<ThermoType>::jacobian
                 kfwd,
                 kbwd,
                 reduced,
-                completeToSimplifiedIndex_
+                cTos_
             );
             R.dwdT
             (
@@ -280,7 +274,7 @@ void Foam::TDACChemistryModel<ThermoType>::jacobian
                 kbwd,
                 J,
                 reduced,
-                completeToSimplifiedIndex_,
+                cTos_,
                 this->nSpecie_
             );
         }
@@ -300,7 +294,7 @@ void Foam::TDACChemistryModel<ThermoType>::jacobian
     scalar& dTdt = dcdt[this->nSpecie_];
     for (label i=0; i<this->nSpecie_; i++)
     {
-        const label si = reduced ? simplifiedToCompleteIndex_[i] : i;
+        const label si = reduced ? sToc_[i] : i;
         dTdt -= dcdt[i]*this->specieThermos_[si].ha(p, T);
     }
     dTdt /= ccp;
@@ -314,10 +308,10 @@ void Foam::TDACChemistryModel<ThermoType>::jacobian
         for (label j = 0; j < this->nSpecie_; j++)
         {
             const scalar d2cjdtdci = J(j, i);
-            const label sj = reduced ? simplifiedToCompleteIndex_[j] : j;
+            const label sj = reduced ? sToc_[j] : j;
             d2Tdtdci -= d2cjdtdci*this->specieThermos_[sj].ha(p, T);
         }
-        const label si = reduced ? simplifiedToCompleteIndex_[i] : i;
+        const label si = reduced ? sToc_[i] : i;
         d2Tdtdci -= this->specieThermos_[si].cp(p, T)*dTdt;
         d2Tdtdci /= ccp;
     }
@@ -327,7 +321,7 @@ void Foam::TDACChemistryModel<ThermoType>::jacobian
     for (label i = 0; i < this->nSpecie_; i++)
     {
         const scalar d2cidtdT = J(i, this->nSpecie_);
-        const label si = reduced ? simplifiedToCompleteIndex_[i] : i;
+        const label si = reduced ? sToc_[i] : i;
         d2TdtdT -=
             dcdt[i]*this->specieThermos_[si].cp(p, T)
           + d2cidtdT*this->specieThermos_[si].ha(p, T);
@@ -347,8 +341,8 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
     const DeltaTType& deltaT
 )
 {
-    const bool reduced = mechRed_->active();
-    tabulation_->reset();
+    const bool reduced = mechRed_.active();
+    tabulation_.reset();
 
     const basicSpecieMixture& composition = this->thermo().composition();
 
@@ -372,7 +366,6 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
     const scalarField& T = this->thermo().T().oldTime();
     const scalarField& p = this->thermo().p().oldTime();
 
-    scalarField c(this->nSpecie_);
     scalarField c0(this->nSpecie_);
 
     // Composition vector (Yi, T, p, deltaT)
@@ -387,8 +380,9 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
 
         for (label i=0; i<this->nSpecie_; i++)
         {
-            c[i] = c0[i] =
+            this->c_[i] =
                 rhoi*this->Y_[i].oldTime()[celli]/this->specieThermos_[i].W();
+            c0[i] = this->c_[i];
             phiq[i] = this->Y()[i].oldTime()[celli];
         }
         phiq[this->nSpecie()] = Ti;
@@ -401,17 +395,15 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
         // Not sure if this is necessary
         Rphiq = Zero;
 
-        clockTime_.timeIncrement();
-
         // When tabulation is active (short-circuit evaluation for retrieve)
         // It first tries to retrieve the solution of the system with the
         // information stored through the tabulation method
-        if (tabulation_->retrieve(phiq, Rphiq))
+        if (tabulation_.retrieve(phiq, Rphiq))
         {
             // Retrieved solution stored in Rphiq
             for (label i=0; i<this->nSpecie(); i++)
             {
-                c[i] = rhoi*Rphiq[i]/this->specieThermos_[i].W();
+                this->c_[i] = rhoi*Rphiq[i]/this->specieThermos_[i].W();
             }
         }
         // This position is reached when tabulation is not used OR
@@ -420,13 +412,25 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
         // (it will either expand the current data or add a new stored point).
         else
         {
-            // Reset the time
-            clockTime_.timeIncrement();
-
             if (reduced)
             {
                 // Reduce mechanism change the number of species (only active)
-                mechRed_->reduceMechanism(pi, Ti, c, celli);
+                mechRed_.reduceMechanism
+                (
+                    pi,
+                    Ti,
+                    this->c_,
+                    sc_,
+                    cTos_,
+                    sToc_,
+                    celli
+                );
+            }
+
+            if (log_)
+            {
+                // Reset the time
+                clockTime_.timeIncrement();
             }
 
             // Calculate the chemical source terms
@@ -435,29 +439,26 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
                 scalar dt = timeLeft;
                 if (reduced)
                 {
-                    // completeC_ used in the overridden ODE methods
-                    // to update only the active species
-                    completeC_ = c;
-
                     // Solve the reduced set of ODE
                     this->solve
                     (
                         pi,
                         Ti,
-                        simplifiedC_,
+                        sc_,
                         celli,
                         dt,
                         this->deltaTChem_[celli]
                     );
 
-                    for (label i=0; i<NsDAC_; i++)
+                    for (label i=0; i<mechRed_.nActiveSpecies(); i++)
                     {
-                        c[simplifiedToCompleteIndex_[i]] = simplifiedC_[i];
+                        this->c_[sToc_[i]] = sc_[i];
                     }
                 }
                 else
                 {
-                    this->solve(pi, Ti, c, celli, dt, this->deltaTChem_[celli]);
+                    this->solve
+                    (pi, Ti, this->c_, celli, dt, this->deltaTChem_[celli]);
                 }
                 timeLeft -= dt;
             }
@@ -469,17 +470,17 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
 
             // If tabulation is used, we add the information computed here to
             // the stored points (either expand or add)
-            if (tabulation_->tabulates())
+            if (tabulation_.tabulates())
             {
-                forAll(c, i)
+                forAll(this->c_, i)
                 {
-                    Rphiq[i] = c[i]/rhoi*this->specieThermos_[i].W();
+                    Rphiq[i] = this->c_[i]/rhoi*this->specieThermos_[i].W();
                 }
                 Rphiq[Rphiq.size()-3] = Ti;
                 Rphiq[Rphiq.size()-2] = pi;
                 Rphiq[Rphiq.size()-1] = deltaT[celli];
 
-                tabulation_->add(phiq, Rphiq, celli, rhoi, deltaT[celli]);
+                tabulation_.add(phiq, Rphiq, celli, rhoi, deltaT[celli]);
             }
 
             // When operations are done and if mechanism reduction is active,
@@ -487,7 +488,7 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
             // to the total number of species (stored in the mechRed object)
             if (reduced)
             {
-                this->nSpecie_ = mechRed_->nSpecie();
+                this->nSpecie_ = mechRed_.nSpecie();
             }
             deltaTMin = min(this->deltaTChem_[celli], deltaTMin);
 
@@ -499,7 +500,7 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
         for (label i=0; i<this->nSpecie_; i++)
         {
             this->RR_[i][celli] =
-                (c[i] - c0[i])*this->specieThermos_[i].W()/deltaT[celli];
+                (this->c_[i] - c0[i])*this->specieThermos_[i].W()/deltaT[celli];
         }
     }
 
@@ -510,8 +511,8 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
             << "    " << solveChemistryCpuTime_ << endl;
     }
 
-    mechRed_->update();
-    tabulation_->update();
+    mechRed_.update();
+    tabulation_.update();
 
     if (Pstream::parRun())
     {

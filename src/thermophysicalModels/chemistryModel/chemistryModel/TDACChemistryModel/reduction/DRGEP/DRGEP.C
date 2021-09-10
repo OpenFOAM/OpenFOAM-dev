@@ -106,16 +106,17 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
     const scalar p,
     const scalar T,
     const scalarField& c,
+    DynamicField<scalar>& sc,
+    List<label>& ctos,
+    DynamicList<label>& stoc,
     const label li
 )
 {
-    scalarField& completeC(this->chemistry_.completeC());
     scalarField c1(this->chemistry_.nEqns(), 0.0);
 
     for (label i=0; i<this->nSpecie(); i++)
     {
         c1[i] = c[i];
-        completeC[i] = c[i];
     }
 
     c1[this->nSpecie()] = T;
@@ -664,24 +665,24 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
     forAll(this->chemistry_.reactions(), i)
     {
         const Reaction<ThermoType>& R = this->chemistry_.reactions()[i];
-        this->chemistry_.reactionsDisabled()[i] = false;
+        this->reactionsDisabled_[i] = false;
         forAll(R.lhs(), s)
         {
             label ss = R.lhs()[s].index;
             if (!this->activeSpecies_[ss])
             {
-                this->chemistry_.reactionsDisabled()[i] = true;
+                this->reactionsDisabled_[i] = true;
                 break;
             }
         }
-        if (!this->chemistry_.reactionsDisabled()[i])
+        if (!this->reactionsDisabled_[i])
         {
             forAll(R.rhs(), s)
             {
                 label ss = R.rhs()[s].index;
                 if (!this->activeSpecies_[ss])
                 {
-                    this->chemistry_.reactionsDisabled()[i] = true;
+                    this->reactionsDisabled_[i] = true;
                     break;
                 }
             }
@@ -689,20 +690,17 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
     }
 
     this->nActiveSpecies_ = speciesNumber;
-    scalarField& simplifiedC(this->chemistry_.simplifiedC());
-    simplifiedC.setSize(this->nActiveSpecies_+2);
-    DynamicList<label>& s2c(this->chemistry_.simplifiedToCompleteIndex());
-    s2c.setSize(this->nActiveSpecies_);
-    Field<label>& c2s(this->chemistry_.completeToSimplifiedIndex());
+    sc.setSize(this->nActiveSpecies_+2);
+    stoc.setSize(this->nActiveSpecies_);
 
     label j = 0;
     for (label i=0; i<this->nSpecie(); i++)
     {
         if (this->activeSpecies_[i])
         {
-            s2c[j] = i;
-            simplifiedC[j] = c[i];
-            c2s[i] = j++;
+            stoc[j] = i;
+            sc[j] = c[i];
+            ctos[i] = j++;
             if (!this->chemistry_.active(i))
             {
                 this->chemistry_.setActive(i);
@@ -710,15 +708,11 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
         }
         else
         {
-            c2s[i] = -1;
+            ctos[i] = -1;
         }
     }
-    simplifiedC[this->nActiveSpecies_] = T;
-    simplifiedC[this->nActiveSpecies_+1] = p;
-    this->chemistry_.setNsDAC(this->nActiveSpecies_);
-    // change temporary Ns in chemistryModel
-    // to make the function nEqns working
-    this->chemistry_.setNSpecie(this->nActiveSpecies_);
+    sc[this->nActiveSpecies_] = T;
+    sc[this->nActiveSpecies_+1] = p;
 
     chemistryReduction<ThermoType>::endReduceMechanism();
 }

@@ -198,12 +198,12 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
     scalarField& Rphiq
 )
 {
-    label nEqns = chemistry_.nEqns(); // Species, T, p
-    bool mechRedActive = chemistry_.mechRed()->active();
+    const label nEqns = chemistry_.nEqns(); // Species, T, p
+    const bool mechRedActive = chemistry_.mechRed().active();
     Rphiq = phi0->Rphi();
-    scalarField dphi(phiq-phi0->phi());
+    const scalarField dphi(phiq-phi0->phi());
     const scalarSquareMatrix& gradientsMatrix = phi0->A();
-    List<label>& completeToSimplified(phi0->completeToSimplifiedIndex());
+    const List<label>& completeToSimplified(phi0->completeToSimplifiedIndex());
 
     // Rphiq[i]=Rphi0[i]+A(i, j)dphi[j]
     // where Aij is dRi/dphi_j
@@ -211,7 +211,8 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
     {
         if (mechRedActive)
         {
-            label si = completeToSimplified[i];
+            const label si = completeToSimplified[i];
+
             // The species is active
             if (si != -1)
             {
@@ -306,10 +307,9 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::cleanAndBalance()
     chemPointISAT<ThermoType>* x = chemisTree_.treeMin();
     while(x != nullptr)
     {
-        chemPointISAT<ThermoType>* xtmp =
-            chemisTree_.treeSuccessor(x);
+        chemPointISAT<ThermoType>* xtmp = chemisTree_.treeSuccessor(x);
 
-        scalar elapsedTimeSteps = timeSteps() - x->timeTag();
+        const scalar elapsedTimeSteps = timeSteps() - x->timeTag();
 
         if ((elapsedTimeSteps > chPMaxLifeTime_) || (x->nGrowth() > maxGrowth_))
         {
@@ -351,17 +351,12 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
     const scalar dt
 )
 {
-    bool mechRedActive = chemistry_.mechRed()->active();
-    label speciesNumber = chemistry_.nSpecie();
+    const label speciesNumber = chemistry_.nSpecie();
     scalarField Rcq(chemistry_.nEqns() + 1);
     for (label i=0; i<speciesNumber; i++)
     {
-        label s2c = i;
-        if (mechRedActive)
-        {
-            s2c = chemistry_.simplifiedToCompleteIndex()[i];
-        }
-        Rcq[i] = rhoi*Rphiq[s2c]/chemistry_.specieThermos()[s2c].W();
+        const label si = chemistry_.sToc(i);
+        Rcq[i] = rhoi*Rphiq[si]/chemistry_.specieThermos()[si].W();
     }
     Rcq[speciesNumber] = Rphiq[Rphiq.size() - 3];
     Rcq[speciesNumber + 1] = Rphiq[Rphiq.size() - 2];
@@ -383,20 +378,12 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
     // the following conversion allows the code to use A with mass fraction
     for (label i=0; i<speciesNumber; i++)
     {
-        label si = i;
-
-        if (mechRedActive)
-        {
-            si = chemistry_.simplifiedToCompleteIndex()[i];
-        }
+        const label si = chemistry_.sToc(i);
 
         for (label j=0; j<speciesNumber; j++)
         {
-            label sj = j;
-            if (mechRedActive)
-            {
-                sj = chemistry_.simplifiedToCompleteIndex()[j];
-            }
+            const label sj = chemistry_.sToc(j);
+
             A(i, j) *=
               -dt*chemistry_.specieThermos()[si].W()
                /chemistry_.specieThermos()[sj].W();
@@ -414,11 +401,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
     // should be converted in ddY(dTdt)
     for (label i=0; i<speciesNumber; i++)
     {
-        label si = i;
-        if (mechRedActive)
-        {
-            si = chemistry_.simplifiedToCompleteIndex()[i];
-        }
+        const label si = chemistry_.sToc(i);
 
         A(speciesNumber, i) *=
             -dt*rhoi/chemistry_.specieThermos()[si].W();
@@ -511,7 +494,7 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
     if (retrieved)
     {
         phi0->increaseNumRetrieve();
-        scalar elapsedTimeSteps = timeSteps() - phi0->timeTag();
+        const scalar elapsedTimeSteps = timeSteps() - phi0->timeTag();
 
         // Raise a flag when the chemPoint has been used more than the allowed
         // number of time steps
@@ -636,7 +619,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
     }
 
     // Compute the A matrix needed to store the chemPoint.
-    label ASize = chemistry_.nEqns() + 1;
+    const label ASize = chemistry_.nEqns() + 1;
     scalarSquareMatrix A(ASize, Zero);
     computeA(A, Rphiq, li, rho, deltaT);
 

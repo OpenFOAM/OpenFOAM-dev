@@ -76,6 +76,10 @@ void Foam::chemistryReduction<ThermoType>::initReduceMechanism()
 template<class ThermoType>
 void Foam::chemistryReduction<ThermoType>::endReduceMechanism()
 {
+    // Change temporary Ns in chemistryModel
+    // to make the function nEqns working
+    this->chemistry_.setNSpecie(this->nActiveSpecies_);
+
     if (log_)
     {
         sumnActiveSpecies_ += this->nActiveSpecies_;

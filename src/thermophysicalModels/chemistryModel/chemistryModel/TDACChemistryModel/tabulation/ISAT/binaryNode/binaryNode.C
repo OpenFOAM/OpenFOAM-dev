@@ -70,7 +70,7 @@ void Foam::binaryNode<ThermoType>::calcV
 {
     // LT is the transpose of the L matrix
     scalarSquareMatrix& LT = elementLeft->LT();
-    bool mechReductionActive = elementLeft->chemistry().mechRed()->active();
+    bool mechReductionActive = elementLeft->chemistry().mechRed().active();
 
     // Difference of composition in the full species domain
     scalarField phiDif(elementRight->phi() - elementLeft->phi());

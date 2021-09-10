@@ -36,7 +36,8 @@ Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
 )
 :
     nSpecie_(chemistry.nSpecie()),
-    nActiveSpecies_(chemistry.nSpecie())
+    nActiveSpecies_(chemistry.nSpecie()),
+    reactionsDisabled_(chemistry.reactions().size(), false)
 {}
 
 

@@ -67,6 +67,7 @@ SourceFiles
 #include "standardChemistryModel.H"
 #include "chemistryReductionMethod.H"
 #include "chemistryTabulationMethod.H"
+#include "DynamicField.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -88,19 +89,30 @@ class TDACChemistryModel
         //- Switch to select performance logging
         Switch log_;
 
-        // Mechanism reduction
-        label NsDAC_;
-        scalarField completeC_;
-        scalarField simplifiedC_;
-        Field<bool> reactionsDisabled_;
-        Field<label> completeToSimplifiedIndex_;
-        DynamicList<label> simplifiedToCompleteIndex_;
+        //- Temporary simplified mechanism concentration field
+        DynamicField<scalar> sc_;
 
-        //- Reduction
-        autoPtr<chemistryReductionMethod<ThermoType>> mechRed_;
+        //- Temporary map from complete to simplified concentration fields
+        //  c -> sc
+        List<label> cTos_;
 
-        //- Tabulation
-        autoPtr<chemistryTabulationMethod<ThermoType>> tabulation_;
+        //- Temporary map from simplified to complete concentration fields
+        //  sc -> c
+        DynamicList<label> sToc_;
+
+        //- Mechanism reduction method
+        autoPtr<chemistryReductionMethod<ThermoType>> mechRedPtr_;
+
+        //- Mechanism reduction method reference
+        chemistryReductionMethod<ThermoType>& mechRed_;
+
+        bool mechRedActive_;
+
+        //- Tabulation method
+        autoPtr<chemistryTabulationMethod<ThermoType>> tabulationPtr_;
+
+        //- Tabulation method reference
+        chemistryTabulationMethod<ThermoType>& tabulation_;
 
         //- Log file for average time spent solving the chemistry
         autoPtr<OFstream> cpuSolveFile_;
@@ -198,27 +210,26 @@ public:
 
         // Mechanism reduction access functions
 
-            inline void setNsDAC(const label newNsDAC);
+            //- Return access to the mechanism reduction method
+            //  Needed by ISAT
+            inline const chemistryReductionMethod<ThermoType>& mechRed() const;
 
+            //- Allow the reduction method to reset the number of species
             inline void setNSpecie(const label newNs);
 
-            inline scalarField& completeC();
-
-            inline scalarField& simplifiedC();
-
-            inline Field<bool>& reactionsDisabled();
-
+            //- Return true if specie i is active
             inline bool active(const label i) const;
 
+            //- Set specie i active
             inline void setActive(const label i);
 
-            inline DynamicList<label>& simplifiedToCompleteIndex();
+            //- Return the index in the complete set of species
+            //  corresponding to the index si in the simplified set of species
+            inline label sToc(const label si) const;
 
-            inline Field<label>& completeToSimplifiedIndex();
-
-            inline const Field<label>& completeToSimplifiedIndex() const;
-
-            inline autoPtr<chemistryReductionMethod<ThermoType>>& mechRed();
+            //- Return the index in the simplified set of species
+            //  corresponding to the index si in the complete set of species
+            inline label cTos(const label ci) const;
 
 
     // Member Operators

@@ -35,7 +35,8 @@ SourceFiles
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-inline Foam::label Foam::chemistryReductionMethod<ThermoType>::nActiveSpecies()
+inline Foam::label
+Foam::chemistryReductionMethod<ThermoType>::nActiveSpecies() const
 {
     return nActiveSpecies_;
 }

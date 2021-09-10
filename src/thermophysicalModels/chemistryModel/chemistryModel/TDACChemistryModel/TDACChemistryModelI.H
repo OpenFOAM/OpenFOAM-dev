@@ -49,8 +49,8 @@ Foam::TDACChemistryModel<ThermoType>::Y()
 
 
 template<class ThermoType>
-inline Foam::autoPtr<Foam::chemistryReductionMethod<ThermoType>>&
-Foam::TDACChemistryModel<ThermoType>::mechRed()
+inline const Foam::chemistryReductionMethod<ThermoType>&
+Foam::TDACChemistryModel<ThermoType>::mechRed() const
 {
     return mechRed_;
 }
@@ -71,13 +71,6 @@ inline bool Foam::TDACChemistryModel<ThermoType>::active(const label i) const
 
 
 template<class ThermoType>
-inline void Foam::TDACChemistryModel<ThermoType>::setNsDAC(const label newNsDAC)
-{
-    NsDAC_ = newNsDAC;
-}
-
-
-template<class ThermoType>
 inline void Foam::TDACChemistryModel<ThermoType>::setNSpecie(const label newNs)
 {
     this->nSpecie_ = newNs;
@@ -85,48 +78,36 @@ inline void Foam::TDACChemistryModel<ThermoType>::setNSpecie(const label newNs)
 
 
 template<class ThermoType>
-inline Foam::DynamicList<Foam::label>&
-Foam::TDACChemistryModel<ThermoType>::simplifiedToCompleteIndex()
+inline Foam::label Foam::TDACChemistryModel<ThermoType>::sToc
+(
+    const label si
+) const
 {
-    return simplifiedToCompleteIndex_;
+    if (mechRedActive_)
+    {
+        return sToc_[si];
+    }
+    else
+    {
+        return si;
+    }
 }
 
 
 template<class ThermoType>
-inline Foam::Field<Foam::label>&
-Foam::TDACChemistryModel<ThermoType>::completeToSimplifiedIndex()
+inline Foam::label Foam::TDACChemistryModel<ThermoType>::cTos
+(
+    const label ci
+) const
 {
-    return completeToSimplifiedIndex_;
-}
-
-
-template<class ThermoType>
-inline const Foam::Field<Foam::label>&
-Foam::TDACChemistryModel<ThermoType>::completeToSimplifiedIndex() const
-{
-    return completeToSimplifiedIndex_;
-}
-
-
-template<class ThermoType>
-inline Foam::Field<bool>&
-Foam::TDACChemistryModel<ThermoType>::reactionsDisabled()
-{
-    return reactionsDisabled_;
-}
-
-
-template<class ThermoType>
-inline Foam::scalarField& Foam::TDACChemistryModel<ThermoType>::completeC()
-{
-    return completeC_;
-}
-
-
-template<class ThermoType>
-inline Foam::scalarField& Foam::TDACChemistryModel<ThermoType>::simplifiedC()
-{
-    return simplifiedC_;
+    if (mechRedActive_)
+    {
+        return cTos_[ci];
+    }
+    else
+    {
+        return ci;
+    }
 }
 
 

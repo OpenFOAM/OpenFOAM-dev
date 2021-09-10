@@ -36,7 +36,7 @@ SourceFiles
 #define chemistryReductionMethod_H
 
 #include "IOdictionary.H"
-#include "scalarField.H"
+#include "DynamicField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,6 +65,8 @@ protected:
 
         //- Number of active species
         label nActiveSpecies_;
+
+        Field<bool> reactionsDisabled_;
 
 
 public:
@@ -119,10 +121,15 @@ public:
         inline label nSpecie();
 
         //- Return the number of active species
-        inline label nActiveSpecies();
+        inline label nActiveSpecies() const;
 
         //- Return the tolerance
         inline scalar tolerance() const;
+
+        inline bool reactionDisabled(const label i) const
+        {
+            return reactionsDisabled_[i];
+        }
 
         //- Reduce the mechanism
         virtual void reduceMechanism
@@ -130,6 +137,9 @@ public:
             const scalar p,
             const scalar T,
             const scalarField& c,
+            DynamicField<scalar>& sc,
+            List<label>& ctos,
+            DynamicList<label>& stoc,
             const label li
         ) = 0;
 

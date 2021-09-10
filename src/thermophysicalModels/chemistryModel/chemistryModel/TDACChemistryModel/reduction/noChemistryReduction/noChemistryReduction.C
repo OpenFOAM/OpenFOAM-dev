@@ -53,6 +53,9 @@ void Foam::chemistryReductionMethods::none<ThermoType>::reduceMechanism
     const scalar p,
     const scalar T,
     const scalarField& c,
+    DynamicField<scalar>& sc,
+    List<label>& ctos,
+    DynamicList<label>& stoc,
     const label li
 )
 {
