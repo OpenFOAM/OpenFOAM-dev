@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,7 @@ SourceFiles
 #include "edgeList.H"
 #include "vectorField.H"
 #include "faceListFwd.H"
+#include "DynamicListFwd.H"
 #include "intersection.H"
 #include "pointHit.H"
 #include "ListListOps.H"
@@ -61,9 +62,6 @@ namespace Foam
 
 class face;
 class triFace;
-
-template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-class DynamicList;
 
 inline bool operator==(const face& a, const face& b);
 inline bool operator!=(const face& a, const face& b);

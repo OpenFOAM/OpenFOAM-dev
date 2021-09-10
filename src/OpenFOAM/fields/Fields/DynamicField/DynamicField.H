@@ -37,6 +37,7 @@ SourceFiles
 #define DynamicField_H
 
 #include "Field.H"
+#include "DynamicFieldFwd.H"
 #include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -45,9 +46,6 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-
-template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-class DynamicField;
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 Ostream& operator<<
@@ -68,7 +66,7 @@ Istream& operator>>
                         Class DynamicField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T, unsigned SizeInc=0, unsigned SizeMult=2, unsigned SizeDiv=1>
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 class DynamicField
 :
     public Field<T>

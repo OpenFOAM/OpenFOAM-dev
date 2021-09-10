@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,7 @@ SourceFiles
 #define DynamicList_H
 
 #include "List.H"
+#include "DynamicListFwd.H"
 #include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -52,9 +53,6 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-
-template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-class DynamicList;
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 Ostream& operator<<
@@ -74,7 +72,7 @@ Istream& operator>>
                          Class DynamicList Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T, unsigned SizeInc=0, unsigned SizeMult=2, unsigned SizeDiv=1>
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 class DynamicList
 :
     public List<T>
