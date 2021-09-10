@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "OSspecific.H"
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
@@ -37,6 +39,88 @@ Foam::TDACChemistryModel<ThermoType>::logFile(const word& name) const
             this->mesh().time().path()/"TDAC"/this->group()/name
         )
     );
+}
+
+template<class ThermoType>
+inline Foam::label Foam::TDACChemistryModel<ThermoType>::nEqns() const
+{
+    // nEqns = number of species + temperature + pressure
+    return nSpecie_ + 2;
+}
+
+
+template<class ThermoType>
+inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
+Foam::TDACChemistryModel<ThermoType>::RR()
+{
+    return RR_;
+}
+
+
+template<class ThermoType>
+inline const Foam::multiComponentMixture<ThermoType>&
+Foam::TDACChemistryModel<ThermoType>::mixture() const
+{
+    return mixture_;
+}
+
+
+template<class ThermoType>
+inline const Foam::PtrList<Foam::Reaction<ThermoType>>&
+Foam::TDACChemistryModel<ThermoType>::reactions() const
+{
+    return reactions_;
+}
+
+
+template<class ThermoType>
+inline const Foam::PtrList<ThermoType>&
+Foam::TDACChemistryModel<ThermoType>::specieThermos() const
+{
+    return specieThermos_;
+}
+
+
+template<class ThermoType>
+inline Foam::label Foam::TDACChemistryModel<ThermoType>::nSpecie() const
+{
+    return nSpecie_;
+}
+
+
+template<class ThermoType>
+inline Foam::label Foam::TDACChemistryModel<ThermoType>::nReaction() const
+{
+    return nReaction_;
+}
+
+
+template<class ThermoType>
+inline Foam::scalar Foam::TDACChemistryModel<ThermoType>::Treact() const
+{
+    return Treact_;
+}
+
+
+template<class ThermoType>
+inline Foam::scalar& Foam::TDACChemistryModel<ThermoType>::Treact()
+{
+    return Treact_;
+}
+
+
+template<class ThermoType>
+inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+Foam::TDACChemistryModel<ThermoType>::RR(const label i) const
+{
+    return RR_[i];
+}
+
+template<class ThermoType>
+Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+Foam::TDACChemistryModel<ThermoType>::RR(const label i)
+{
+    return RR_[i];
 }
 
 

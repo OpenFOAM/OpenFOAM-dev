@@ -64,7 +64,11 @@ SourceFiles
 #ifndef TDACChemistryModel_H
 #define TDACChemistryModel_H
 
-#include "standardChemistryModel.H"
+#include "basicChemistryModel.H"
+#include "ReactionList.H"
+#include "ODESystem.H"
+#include "volFields.H"
+#include "multiComponentMixture.H"
 #include "chemistryReductionMethod.H"
 #include "chemistryTabulationMethod.H"
 #include "DynamicField.H"
@@ -82,12 +86,77 @@ namespace Foam
 template<class ThermoType>
 class TDACChemistryModel
 :
-    public standardChemistryModel<ThermoType>
+    public basicChemistryModel,
+    public ODESystem
 {
-    // Private member data
+    // Private classes
+
+        //- Class to define scope of reaction evaluation. Runs pre-evaluate
+        //  hook on all reactions on construction and post-evaluate on
+        //  destruction.
+        class reactionEvaluationScope
+        {
+            const TDACChemistryModel<ThermoType>& chemistry_;
+
+        public:
+
+            reactionEvaluationScope
+            (
+                const TDACChemistryModel<ThermoType>& chemistry
+            )
+            :
+                chemistry_(chemistry)
+            {
+                forAll(chemistry_.reactions_, i)
+                {
+                    chemistry_.reactions_[i].preEvaluate();
+                }
+            }
+
+            ~reactionEvaluationScope()
+            {
+                forAll(chemistry_.reactions_, i)
+                {
+                    chemistry_.reactions_[i].postEvaluate();
+                }
+            }
+        };
+
+
+    // Private data
 
         //- Switch to select performance logging
         Switch log_;
+
+        //- Reference to the field of specie mass fractions
+        const PtrList<volScalarField>& Y_;
+
+        //- Reference to the multi component mixture
+        const multiComponentMixture<ThermoType>& mixture_;
+
+        //- Thermodynamic data of the species
+        const PtrList<ThermoType>& specieThermos_;
+
+        //- Reactions
+        const ReactionList<ThermoType> reactions_;
+
+        //- Number of species
+        label nSpecie_;
+
+        //- Number of reactions
+        label nReaction_;
+
+        //- Temperature below which the reaction rates are assumed 0
+        scalar Treact_;
+
+        //- List of reaction rate per specie [kg/m^3/s]
+        PtrList<volScalarField::Internal> RR_;
+
+        //- Temporary concentration field
+        mutable scalarField c_;
+
+        //- Temporary rate-of-change of concentration field
+        mutable scalarField dcdt_;
 
         //- Temporary simplified mechanism concentration field
         DynamicField<scalar> sc_;
@@ -120,6 +189,10 @@ class TDACChemistryModel
 
     // Private Member Functions
 
+        //- Write access to chemical source terms
+        //  (e.g. for multi-chemistry model)
+        inline PtrList<volScalarField::Internal>& RR();
+
         //- Solve the reaction system for the given time step
         //  of given type and return the characteristic time
         //  Variable number of species added
@@ -151,8 +224,26 @@ public:
         //- Create and return a TDAC log file of the given name
         inline autoPtr<OFstream> logFile(const word& name) const;
 
-        //- Return a reference to the list of mass fraction fields
-        inline const PtrList<volScalarField>& Y();
+        //- Return reference to the mixture
+        inline const multiComponentMixture<ThermoType>& mixture() const;
+
+        //- The reactions
+        inline const PtrList<Reaction<ThermoType>>& reactions() const;
+
+        //- Thermodynamic data of the species
+        inline const PtrList<ThermoType>& specieThermos() const;
+
+        //- The number of species
+        virtual inline label nSpecie() const;
+
+        //- The number of reactions
+        virtual inline label nReaction() const;
+
+        //- Temperature below which the reaction rates are assumed 0
+        inline scalar Treact() const;
+
+        //- Temperature below which the reaction rates are assumed 0
+        inline scalar& Treact();
 
         //- dc/dt = omega, rate of change in concentration, for each species
         virtual void omega
@@ -164,9 +255,31 @@ public:
             scalarField& dcdt
         ) const;
 
+        //- Calculates the reaction rates
+        virtual void calculate();
 
-        // Chemistry model functions (overriding functions in
-        // standardChemistryModel to use the private solve function)
+
+        // Chemistry model functions (overriding abstract functions in
+        // basicChemistryModel.H)
+
+            //- Return const access to the chemical source terms for specie, i
+            inline const volScalarField::Internal& RR
+            (
+                const label i
+            ) const;
+
+            //- Return non const access to chemical source terms [kg/m^3/s]
+            virtual volScalarField::Internal& RR
+            (
+                const label i
+            );
+
+            //- Return reaction rate of the speciei in reactionI
+            virtual tmp<volScalarField::Internal> calculateRR
+            (
+                const label reactionI,
+                const label speciei
+            ) const;
 
             //- Solve the reaction system for the given time step
             //  and return the characteristic time
@@ -176,9 +289,17 @@ public:
             //  and return the characteristic time
             virtual scalar solve(const scalarField& deltaT);
 
+            //- Return the chemical time scale
+            virtual tmp<volScalarField> tc() const;
 
-        // ODE functions (overriding functions in standardChemistryModel to take
-        // into account the variable number of species)
+            //- Return the heat release rate [kg/m/s^3]
+            virtual tmp<volScalarField> Qdot() const;
+
+
+        // ODE functions (overriding abstract functions in ODE.H)
+
+            //- Number of ODE's to solve
+            inline virtual label nEqns() const;
 
             virtual void derivatives
             (
@@ -206,6 +327,10 @@ public:
                 scalar& deltaT,
                 scalar& subDeltaT
             ) const = 0;
+
+
+        //- Return a reference to the list of mass fraction fields
+        inline const PtrList<volScalarField>& Y();
 
 
         // Mechanism reduction access functions
