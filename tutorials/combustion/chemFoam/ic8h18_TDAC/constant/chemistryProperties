@@ -19,7 +19,6 @@ FoamFile
 chemistryType
 {
     solver            ode;
-    method            TDAC;
 }
 
 chemistry       on;

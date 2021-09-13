@@ -24,9 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "noChemistrySolver.H"
-
-#include "standardChemistryModel.H"
-#include "TDACChemistryModel.H"
+#include "chemistryModel.H"
 
 #include "forGases.H"
 #include "forLiquids.H"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,68 +23,57 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeChemistrySolver_H
-#define makeChemistrySolver_H
+#ifndef makeChemistryReductionMethod_H
+#define makeChemistryReductionMethod_H
 
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistrySolver(Model, ThermoPhysics)                            \
+#define defineChemistryReductionMethod(nullArg, ThermoPhysics)                 \
                                                                                \
-    typedef Model<ThermoPhysics>                                               \
-        Model##ThermoPhysics;                                                  \
+    typedef chemistryReductionMethod<ThermoPhysics>                            \
+        chemistryReductionMethod##ThermoPhysics;                               \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        Model##ThermoPhysics,                                                  \
+        chemistryReductionMethod##ThermoPhysics,                               \
         (                                                                      \
-            word(Model##ThermoPhysics::typeName_())                            \
+            word(chemistryReductionMethod##ThermoPhysics::typeName_())         \
           + "<" + ThermoPhysics::typeName() + ">"                              \
         ).c_str(),                                                             \
         0                                                                      \
+    );                                                                         \
+                                                                               \
+    defineTemplateRunTimeSelectionTable                                        \
+    (                                                                          \
+        chemistryReductionMethod##ThermoPhysics,                               \
+        dictionary                                                             \
     )
 
-
-#define makeChemistrySolver(Solver, Model, ThermoPhysics)                      \
+#define makeChemistryReductionMethod(Method, ThermoPhysics)                    \
                                                                                \
-    typedef Solver<Model<ThermoPhysics>>                                       \
-        Solver##Model##ThermoPhysics;                                          \
+    typedef chemistryReductionMethod<ThermoPhysics>                            \
+        chemistryReductionMethod##ThermoPhysics;                               \
+                                                                               \
+    typedef chemistryReductionMethods::Method<ThermoPhysics>                   \
+        chemistryReductionMethod##Method##ThermoPhysics;                       \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        Solver##Model##ThermoPhysics,                                          \
+        chemistryReductionMethod##Method##ThermoPhysics,                       \
         (                                                                      \
-            word(Solver##Model##ThermoPhysics::typeName_())                    \
-          + "<" + word(Model<ThermoPhysics>::typeName_())                      \
-          + "<" + ThermoPhysics::typeName() + ">>"                             \
+            word(chemistryReductionMethod##Method##ThermoPhysics::typeName_()) \
+         + "<" + ThermoPhysics::typeName() + ">"                               \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        basicChemistryModel,                                                   \
-        Solver##Model##ThermoPhysics,                                          \
-        thermo                                                                 \
-    )
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#define defineChemistrySolvers(nullArg, ThermoPhysics)                         \
-    defineChemistrySolver                                                      \
-    (                                                                          \
-        chemistryModel,                                                        \
-        ThermoPhysics                                                          \
-    )
-
-#define makeChemistrySolvers(Solver, ThermoPhysics)                            \
-    makeChemistrySolver                                                        \
-    (                                                                          \
-        Solver,                                                                \
-        chemistryModel,                                                        \
-        ThermoPhysics                                                          \
+        chemistryReductionMethod##ThermoPhysics,                               \
+        chemistryReductionMethod##Method##ThermoPhysics,                       \
+        dictionary                                                             \
     )
 
 

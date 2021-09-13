@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,25 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "EulerImplicit.H"
+#include "chemistryTabulationMethod.H"
 #include "chemistryModel.H"
 
-#include "forGases.H"
-#include "forLiquids.H"
-#include "makeChemistrySolver.H"
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class ThermoType>
+Foam::chemistryTabulationMethod<ThermoType>::chemistryTabulationMethod
+(
+    const dictionary& dict,
+    chemistryModel<ThermoType>& chemistry
+)
+{}
 
-namespace Foam
-{
-    forCoeffGases(makeChemistrySolvers, EulerImplicit);
-    forCoeffLiquids(makeChemistrySolvers, EulerImplicit);
-}
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class ThermoType>
+Foam::chemistryTabulationMethod<ThermoType>::~chemistryTabulationMethod()
+{}
 
 
 // ************************************************************************* //

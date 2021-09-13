@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,68 +23,57 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeChemistrySolver_H
-#define makeChemistrySolver_H
+#ifndef makeChemistryTabulationMethod_H
+#define makeChemistryTabulationMethod_H
 
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistrySolver(Model, ThermoPhysics)                            \
+#define defineChemistryTabulationMethod(nullArg, ThermoPhysics)                \
                                                                                \
-    typedef Model<ThermoPhysics>                                               \
-        Model##ThermoPhysics;                                                  \
+    typedef chemistryTabulationMethod<ThermoPhysics>                           \
+        chemistryTabulationMethod##ThermoPhysics;                              \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        Model##ThermoPhysics,                                                  \
+        chemistryTabulationMethod##ThermoPhysics,                              \
         (                                                                      \
-            word(Model##ThermoPhysics::typeName_())                            \
+            word(chemistryTabulationMethod##ThermoPhysics::typeName_())        \
           + "<" + ThermoPhysics::typeName() + ">"                              \
         ).c_str(),                                                             \
         0                                                                      \
+    );                                                                         \
+                                                                               \
+    defineTemplateRunTimeSelectionTable                                        \
+    (                                                                          \
+        chemistryTabulationMethod##ThermoPhysics,                              \
+        dictionary                                                             \
     )
 
-
-#define makeChemistrySolver(Solver, Model, ThermoPhysics)                      \
+#define makeChemistryTabulationMethod(Method, ThermoPhysics)                   \
                                                                                \
-    typedef Solver<Model<ThermoPhysics>>                                       \
-        Solver##Model##ThermoPhysics;                                          \
+    typedef chemistryTabulationMethod<ThermoPhysics>                           \
+        chemistryTabulationMethod##ThermoPhysics;                              \
+                                                                               \
+    typedef chemistryTabulationMethods::Method<ThermoPhysics>                  \
+        chemistryTabulationMethod##Method##ThermoPhysics;                      \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        Solver##Model##ThermoPhysics,                                          \
+        chemistryTabulationMethod##Method##ThermoPhysics,                      \
         (                                                                      \
-            word(Solver##Model##ThermoPhysics::typeName_())                    \
-          + "<" + word(Model<ThermoPhysics>::typeName_())                      \
-          + "<" + ThermoPhysics::typeName() + ">>"                             \
+            word(chemistryTabulationMethod##Method##ThermoPhysics::typeName_())\
+         + "<" + ThermoPhysics::typeName() + ">"                               \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        basicChemistryModel,                                                   \
-        Solver##Model##ThermoPhysics,                                          \
-        thermo                                                                 \
-    )
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#define defineChemistrySolvers(nullArg, ThermoPhysics)                         \
-    defineChemistrySolver                                                      \
-    (                                                                          \
-        chemistryModel,                                                        \
-        ThermoPhysics                                                          \
-    )
-
-#define makeChemistrySolvers(Solver, ThermoPhysics)                            \
-    makeChemistrySolver                                                        \
-    (                                                                          \
-        Solver,                                                                \
-        chemistryModel,                                                        \
-        ThermoPhysics                                                          \
+        chemistryTabulationMethod##ThermoPhysics,                              \
+        chemistryTabulationMethod##Method##ThermoPhysics,                      \
+        dictionary                                                             \
     )
 
 

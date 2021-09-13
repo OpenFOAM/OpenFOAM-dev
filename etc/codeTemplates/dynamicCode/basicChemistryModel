@@ -27,8 +27,7 @@ solverRenamed
 
 method
 (
-    standard
-    TDAC
+    chemistryModel
 );
 
 codeOptions

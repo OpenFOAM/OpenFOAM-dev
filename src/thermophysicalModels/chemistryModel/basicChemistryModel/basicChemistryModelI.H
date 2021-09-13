@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "EulerImplicit.H"
-#include "chemistryModel.H"
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-#include "forGases.H"
-#include "forLiquids.H"
-#include "makeChemistrySolver.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+inline const Foam::fvMesh& Foam::basicChemistryModel::mesh() const
 {
-    forCoeffGases(makeChemistrySolvers, EulerImplicit);
-    forCoeffLiquids(makeChemistrySolvers, EulerImplicit);
+    return mesh_;
+}
+
+
+inline const Foam::fluidReactionThermo&
+Foam::basicChemistryModel::thermo() const
+{
+    return thermo_;
+}
+
+
+inline Foam::Switch Foam::basicChemistryModel::chemistry() const
+{
+    return chemistry_;
+}
+
+
+inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+Foam::basicChemistryModel::deltaTChem() const
+{
+    return deltaTChem_;
 }
 
 
