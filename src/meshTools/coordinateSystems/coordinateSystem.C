@@ -189,10 +189,13 @@ void Foam::coordinateSystem::writeDict(Ostream& os, bool subDict) const
     }
 
     writeEntry(os, "type", type());
-
-
     writeEntry(os, "origin", origin_);
+
+    os  << indent << "coordinateRotation" << nl
+        << indent << token::BEGIN_BLOCK << incrIndent << nl;
+    writeEntry(os, "type", R_->type());
     R_->write(os);
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 
     if (subDict)
     {
@@ -215,7 +218,7 @@ void Foam::coordinateSystem::operator=(const coordinateSystem& cs)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const coordinateSystem& cs)
 {
-    cs.write(os);
+    cs.writeDict(os);
     os.check("Ostream& operator<<(Ostream&, const coordinateSystem&");
     return os;
 }
