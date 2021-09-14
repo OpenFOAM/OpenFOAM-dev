@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,6 +160,9 @@ public:
         //- Construct from dictionary with a given name
         coordinateSystem(const word& name, const dictionary&);
 
+        //- Copy constructor
+        coordinateSystem(const coordinateSystem& cs);
+
         //- Construct and return a clone
         virtual autoPtr<coordinateSystem> clone() const
         {
@@ -304,6 +307,12 @@ public:
             {
                 return globalToLocal(global, false);
             }
+
+
+    // Member Operators
+
+        //- Assignment operator
+        void operator=(const coordinateSystem&);
 
 
     // IOstream Operators

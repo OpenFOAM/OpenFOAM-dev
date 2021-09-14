@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,6 +86,14 @@ Foam::coordinateSystem::coordinateSystem
     name_(name),
     origin_(dict.lookup("origin")),
     R_(coordinateRotation::New(dict.subDict("coordinateRotation")).ptr())
+{}
+
+
+Foam::coordinateSystem::coordinateSystem(const coordinateSystem& cs)
+:
+    name_(cs.name_),
+    origin_(cs.origin_),
+    R_(cs.R_, false)
 {}
 
 
@@ -190,6 +198,16 @@ void Foam::coordinateSystem::writeDict(Ostream& os, bool subDict) const
     {
         os  << decrIndent << indent << token::END_BLOCK << endl;
     }
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void Foam::coordinateSystem::operator=(const coordinateSystem& cs)
+{
+    name_ = cs.name_;
+    origin_ = cs.origin_;
+    R_ = cs.R_->clone();
 }
 
 
