@@ -188,6 +188,7 @@ void ${typeName}FvModel${SourceType}::updateMesh(const mapPolyMesh& mpm)
 bool ${typeName}FvModel${SourceType}::movePoints()
 {
     set_.movePoints();
+    return true;
 }
 
 
