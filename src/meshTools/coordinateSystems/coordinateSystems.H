@@ -166,7 +166,6 @@ inline bool typeGlobal
     >
 >()
 {
-    Pout << "typeGlobal" << endl;
     return true;
 }
 
