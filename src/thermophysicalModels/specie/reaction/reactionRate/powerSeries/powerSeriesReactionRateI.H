@@ -122,33 +122,22 @@ inline Foam::scalar Foam::powerSeriesReactionRate::ddT
 }
 
 
-inline const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
-Foam::powerSeriesReactionRate::beta() const
+inline bool Foam::powerSeriesReactionRate::hasDdc() const
 {
-    return NullObjectRef<List<Tuple2<label, scalar>>>();
+    return false;
 }
 
 
-inline void Foam::powerSeriesReactionRate::dcidc
+inline void Foam::powerSeriesReactionRate::ddc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarField& dcidc
-) const
-{}
-
-
-inline Foam::scalar Foam::powerSeriesReactionRate::dcidT
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    scalarField& ddc
 ) const
 {
-    return 0;
+    ddc = 0;
 }
 
 

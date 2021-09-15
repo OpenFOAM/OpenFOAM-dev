@@ -25,13 +25,32 @@ License
 
 #include "basicChemistryModel.H"
 
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
+/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
+
+namespace Foam
+{
+    template<>
+    const char* NamedEnum<basicChemistryModel::jacobianType, 2>::names[] =
+    {
+        "fast",
+        "exact"
+    };
+}
+
+
+const Foam::NamedEnum
+<
+    Foam::basicChemistryModel::jacobianType,
+    2
+> Foam::basicChemistryModel::jacobianTypeNames_;
+
 
 namespace Foam
 {
     defineTypeNameAndDebug(basicChemistryModel, 0);
     defineRunTimeSelectionTable(basicChemistryModel, thermo);
 }
+
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,45 +60,52 @@ inline Foam::scalar Foam::SRIFallOffFunction::operator()
     const scalar Pr
 ) const
 {
-    scalar X = 1.0/(1 + sqr(log10(max(Pr, small))));
-    return d_*pow(a_*exp(-b_/T) + exp(-T/c_), X)*pow(T, e_);
+    const scalar logPr = log10(max(Pr, small));
+
+    const scalar X = 1/(1 + sqr(logPr));
+
+    const scalar psi = a_*exp(-b_/T) + exp(-T/c_);
+
+    return d_*pow(psi, X)*pow(T, e_);
 }
 
 
 inline Foam::scalar Foam::SRIFallOffFunction::ddT
 (
+    const scalar T,
     const scalar Pr,
-    const scalar F,
-    const scalar dPrdT,
-    const scalar T
+    const scalar F
 ) const
 {
-    scalar X = 1.0/(1 + sqr(log10(max(Pr, small))));
-    scalar dXdPr = -X*X*2*log10(Pr)/Pr/log(10.0);
-    return
-        F
-       *(
-            e_/T
-          + X
-           *(a_*b_*exp(-b_/T)/sqr(T) - exp(-T/c_)/c_)
-           /(a_*exp(-b_/T) + exp(-T/c_))
-          + dXdPr*dPrdT*log(a_*exp(-b_/T) + exp(-T/c_))
-        );
+    const scalar logPr = log10(max(Pr, small));
+
+    const scalar X = 1/(1 + sqr(logPr));
+
+    const scalar psi = a_*exp(-b_/T) + exp(-T/c_);
+    const scalar dpsidT = a_*b_/sqr(T)*exp(-b_/T) - 1/c_*exp(-T/c_);
+
+    return F*(X/psi*dpsidT + e_/T);
 }
 
 
-inline Foam::scalar Foam::SRIFallOffFunction::ddc
+inline Foam::scalar Foam::SRIFallOffFunction::ddPr
 (
+    const scalar T,
     const scalar Pr,
-    const scalar F,
-    const scalar dPrdc,
-    const scalar T
+    const scalar F
 ) const
 {
-    scalar X = 1.0/(1 + sqr(log10(max(Pr, small))));
-    scalar dXdPr = -X*X*2*log10(Pr)/Pr/log(10.0);
-    scalar dXdc = dXdPr*dPrdc;
-    return F*dXdc*log(a_*exp(-b_/T) + exp(-T/c_));
+    static const scalar logTen = log(scalar(10));
+
+    const scalar logPr = log10(max(Pr, small));
+    const scalar dlogPrdPr = Pr >= small ? 1/(logTen*Pr) : 0;
+
+    const scalar X = 1/(1 + sqr(logPr));
+    const scalar dXdPr = -sqr(X)*2*logPr*dlogPrdPr;
+
+    const scalar psi = a_*exp(-b_/T) + exp(-T/c_);
+
+    return F*log(psi)*dXdPr;
 }
 
 

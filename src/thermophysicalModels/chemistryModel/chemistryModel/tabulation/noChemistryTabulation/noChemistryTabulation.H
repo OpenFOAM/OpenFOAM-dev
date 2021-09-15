@@ -65,7 +65,7 @@ public:
         none
         (
             const dictionary& chemistryProperties,
-            chemistryModel<ThermoType>& chemistry
+            const chemistryModel<ThermoType>& chemistry
         );
 
         //- Disallow default bitwise copy construction

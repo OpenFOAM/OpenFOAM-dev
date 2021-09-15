@@ -149,7 +149,7 @@ public:
                 const label li
             ) const;
 
-            //- Reverse rate constant from the given formard rate constant
+            //- Reverse rate constant from the given forward rate constant
             virtual scalar kr
             (
                 const scalar kfwd,
@@ -193,30 +193,29 @@ public:
                 const scalar kr
             ) const;
 
-            //- Third-body efficiencies (beta = 1-alpha)
-            //  non-empty only for third-body reactions
-            //  with enhanced molecularity (alpha != 1)
-            virtual const List<Tuple2<label, scalar>>& beta() const;
+            //- Does this reaction have concentration-dependent rate constants?
+            virtual bool hasDkdc() const;
 
-            //- Species concentration derivative of the pressure dependent term
-            //  By default this value is 1 as it multiplies the third-body term
-            virtual void dcidc
+            //- Concentration derivative of forward rate
+            void dkfdc
             (
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
                 const label li,
-                scalarField& dcidc
+                scalarField& dkfdc
             ) const;
 
-            //- Temperature derivative of the pressure dependent term
-            //  By default this value is 0 since ddT of molecularity is approx.0
-            virtual scalar dcidT
+            //- Concentration derivative of reverse rate
+            void dkrdc
             (
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
-                const label li
+                const label li,
+                const scalarField& dkfdc,
+                const scalar kr,
+                scalarField& dkrdc
             ) const;
 
 

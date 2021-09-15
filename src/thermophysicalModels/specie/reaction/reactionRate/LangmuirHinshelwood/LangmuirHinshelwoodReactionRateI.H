@@ -83,15 +83,13 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::operator()
     const scalar c1m = pow(c[r_[0]], m_[1]);
     const scalar c2m = pow(c[r_[1]], m_[2]);
 
-    const scalar TaByT0 = Ta_[0]/T;
-    const scalar TaByT1 = Ta_[1]/T;
-    const scalar TaByT2 = Ta_[2]/T;
+    const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-Ta_[0]/T);
+    const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-Ta_[1]/T);
+    const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-Ta_[2]/T);
 
-    const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-TaByT0);
-    const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-TaByT1);
-    const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-TaByT2);
+    const scalar b = a_ + k1*c1m + k2*c2m;
 
-    return k0/pow(a_ + k1*c1m + k2*c2m, m_[0]);
+    return k0/pow(b, m_[0]);
 }
 
 
@@ -106,50 +104,55 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::ddT
     const scalar c1m = pow(c[r_[0]], m_[1]);
     const scalar c2m = pow(c[r_[1]], m_[2]);
 
-    const scalar TaByT0 = Ta_[0]/T;
-    const scalar TaByT1 = Ta_[1]/T;
-    const scalar TaByT2 = Ta_[2]/T;
+    const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-Ta_[0]/T);
+    const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-Ta_[1]/T);
+    const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-Ta_[2]/T);
 
-    const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-TaByT0);
-    const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-TaByT1);
-    const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-TaByT2);
+    const scalar dk0dT = k0/T*(beta_[0] + Ta_[0]/T);
+    const scalar dk1dT = k1/T*(beta_[1] + Ta_[1]/T);
+    const scalar dk2dT = k2/T*(beta_[2] + Ta_[2]/T);
 
-    return
-       (
-           (beta_[0] + TaByT0)*k0
-         - m_[0]*k0*((beta_[1] + TaByT1)*k1*c1m + (beta_[2] + TaByT2)*k2*c2m)
-          /(a_ + k1*c1m + k2*c2m)
-       )/(pow(a_ + k1*c1m + k2*c2m, m_[0])*T);
+    const scalar b = a_ + k1*c1m + k2*c2m;
+    const scalar dbdT = dk1dT*c1m + dk2dT*c2m;
+
+    return (dk0dT - k0*m_[0]*dbdT/b)/pow(b, m_[0]);
 }
 
 
-inline const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
-Foam::LangmuirHinshelwoodReactionRate::beta() const
+inline bool Foam::LangmuirHinshelwoodReactionRate::hasDdc() const
 {
-    return NullObjectRef<List<Tuple2<label, scalar>>>();
+    return true;
 }
 
 
-inline void Foam::LangmuirHinshelwoodReactionRate::dcidc
+inline void Foam::LangmuirHinshelwoodReactionRate::ddc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarField& dcidc
-) const
-{}
-
-
-inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::dcidT
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    scalarField& ddc
 ) const
 {
-    return 0;
+    const scalar c1m = pow(c[r_[0]], m_[1]);
+    const scalar c2m = pow(c[r_[1]], m_[2]);
+
+    const scalar dc1mdc1 = m_[1]*c1m/c[r_[0]];
+    const scalar dc2mdc2 = m_[2]*c2m/c[r_[1]];
+
+    const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-Ta_[0]/T);
+    const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-Ta_[1]/T);
+    const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-Ta_[2]/T);
+
+    const scalar b = a_ + k1*c1m + k2*c2m;
+    const scalar dbdc1 = k1*dc1mdc1;
+    const scalar dbdc2 = k2*dc2mdc2;
+
+    const scalar k = k0/pow(b, m_[0]);
+
+    ddc = 0;
+    ddc[r_[0]] = - k*m_[0]/b*dbdc1;
+    ddc[r_[1]] = - k*m_[1]/b*dbdc2;
 }
 
 

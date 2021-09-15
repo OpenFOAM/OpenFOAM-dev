@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#define CHEMICALLY_ACTIVATION_FUNCTION_JACOBIAN false
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class ReactionRate, class ChemicallyActivationFunction>
@@ -42,12 +44,7 @@ inline Foam::ChemicallyActivatedReactionRate
     kInf_(kInf),
     F_(F),
     thirdBodyEfficiencies_(tbes)
-{
-    forAll(tbes, i)
-    {
-        beta_.append(Tuple2<label, scalar>(i, tbes[i]));
-    }
-}
+{}
 
 
 template<class ReactionRate, class ChemicallyActivationFunction>
@@ -61,23 +58,11 @@ inline Foam::ChemicallyActivatedReactionRate
     const dictionary& dict
 )
 :
-    k0_(species, dict),
-    kInf_(species, dict),
-    F_(dict),
-    thirdBodyEfficiencies_(species, dict)
-{
-    forAll(thirdBodyEfficiencies_, i)
-    {
-        beta_.append
-        (
-            Tuple2<label, scalar>
-            (
-                i,
-                thirdBodyEfficiencies_[i]
-            )
-        );
-    }
-}
+    k0_(species, dict.subDict("k0")),
+    kInf_(species, dict.subDict("kInf")),
+    F_(dict.subDict("F")),
+    thirdBodyEfficiencies_(species, dict.subDict("thirdBodyEfficiencies"))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -121,9 +106,11 @@ inline Foam::scalar Foam::ChemicallyActivatedReactionRate
 {
     const scalar k0 = k0_(p, T, c, li);
     const scalar kInf = kInf_(p, T, c, li);
-    const scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
+    const scalar M = thirdBodyEfficiencies_.M(c);
+    const scalar Pr = k0/kInf*M;
+    const scalar F = F_(T, Pr);
 
-    return k0*(1/(1 + Pr))*F_(T, Pr);
+    return k0/(1 + Pr)*F;
 }
 
 
@@ -142,9 +129,39 @@ inline Foam::scalar Foam::ChemicallyActivatedReactionRate
 {
     const scalar k0 = k0_(p, T, c, li);
     const scalar kInf = kInf_(p, T, c, li);
-    const scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
+    const scalar M = thirdBodyEfficiencies_.M(c);
+    const scalar Pr = k0/kInf*M;
+    const scalar F = F_(T, Pr);
 
-    return (1/(1 + Pr))*F_(T, Pr)*k0_.ddT(p, T, c, li);
+    const scalar dk0dT = k0_.ddT(p, T, c, li);
+
+    #if CHEMICALLY_ACTIVATION_FUNCTION_JACOBIAN
+
+    const scalar dkInfdT = kInf_.ddT(p, T, c, li);
+    const scalar dPrdT = (M*dk0dT - Pr*dkInfdT)/kInf;
+    const scalar dFdT = F_.ddT(T, Pr, F) + F_.ddPr(T, Pr, F)*dPrdT;
+
+    return
+        dk0dT/(1 + Pr)*F
+      - k0*dPrdT/sqr(1 + Pr)*F
+      + k0/(1 + Pr)*dFdT;
+
+    #else
+
+    return dk0dT/(1 + Pr)*F;
+
+    #endif
+}
+
+
+template<class ReactionRate, class ChemicallyActivationFunction>
+inline bool Foam::ChemicallyActivatedReactionRate
+<
+    ReactionRate,
+    ChemicallyActivationFunction
+>::hasDdc() const
+{
+    return true;
 }
 
 
@@ -153,74 +170,44 @@ inline void Foam::ChemicallyActivatedReactionRate
 <
     ReactionRate,
     ChemicallyActivationFunction
->::dcidc
+>::ddc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarField& dcidc
+    scalarField& ddc
 ) const
 {
+    const scalar k0 = k0_(p, T, c, li);
+    const scalar kInf = kInf_(p, T, c, li);
     const scalar M = thirdBodyEfficiencies_.M(c);
+    const scalar Pr = k0/kInf*M;
+    const scalar F = F_(T, Pr);
 
-    if (M > small)
-    {
-        const scalar k0 = k0_(p, T, c, li);
-        const scalar kInf = kInf_(p, T, c, li);
+    #if CHEMICALLY_ACTIVATION_FUNCTION_JACOBIAN
 
-        const scalar Pr = k0*M/kInf;
-        const scalar F = F_(T, Pr);
+    scalarField dk0dc(c.size(), 0);
+    k0_.ddc(p, T, c, li, dk0dc);
+    scalarField dkInfdc(c.size(), 0);
+    kInf_.ddc(p, T, c, li, dkInfdc);
+    tmp<scalarField> tdMdc = thirdBodyEfficiencies_.dMdc(c);
+    const scalarField& dMdc = tdMdc();
+    scalarField dPrdc((M*dk0dc - Pr*dkInfdc + k0*dMdc)/kInf);
+    const scalar dFdPr = F_.ddPr(T, Pr, F);
 
-        forAll(beta_, i)
-        {
-            const scalar dPrdci = -beta_[i].second()*k0/kInf;
-            const scalar dFdci = F_.ddc(Pr, F, dPrdci, T);
-            dcidc[i] = (-dPrdci/(1 + Pr) + dFdci/F);
-        }
-    }
-    else
-    {
-        forAll(beta_, i)
-        {
-            dcidc[i] = 0;
-        }
-    }
-}
+    ddc =
+        dk0dc/(1 + Pr)*F
+      - k0*dPrdc/sqr(1 + Pr)*F
+      + k0/(1 + Pr)*dFdPr*dPrdc;
 
+    #else
 
-template<class ReactionRate, class ChemicallyActivationFunction>
-inline Foam::scalar Foam::ChemicallyActivatedReactionRate
-<
-    ReactionRate,
-    ChemicallyActivationFunction
->::dcidT
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
-) const
-{
-    const scalar M = thirdBodyEfficiencies_.M(c);
+    k0_.ddc(p, T, c, li, ddc);
 
-    if (M > small)
-    {
-        const scalar k0 = k0_(p, T, c, li);
-        const scalar kInf = kInf_(p, T, c, li);
+    ddc *= 1/(1 + Pr)*F;
 
-        const scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
-        const scalar F = F_(T, Pr);
-        const scalar dPrdT =
-            Pr*(k0_.ddT(p, T, c, li)/k0 - kInf_.ddT(p, T, c, li)/kInf - 1/T);
-        const scalar dFdT = F_.ddT(Pr, F, dPrdT, T);
-
-        return (-dPrdT/(1 + Pr) + dFdT/F);
-    }
-    else
-    {
-        return 0;
-    }
+    #endif
 }
 
 
@@ -231,10 +218,33 @@ inline void Foam::ChemicallyActivatedReactionRate
     ChemicallyActivationFunction
 >::write(Ostream& os) const
 {
+    os  << indent << "k0" << nl;
+    os  << indent << token::BEGIN_BLOCK << nl;
+    os  << incrIndent;
     k0_.write(os);
+    os  << decrIndent;
+    os  << indent << token::END_BLOCK << nl;
+
+    os  << indent << "kInf" << nl;
+    os  << indent << token::BEGIN_BLOCK << nl;
+    os  << incrIndent;
     kInf_.write(os);
+    os  << decrIndent;
+    os  << indent << token::END_BLOCK << nl;
+
+    os  << indent << "F" << nl;
+    os  << indent << token::BEGIN_BLOCK << nl;
+    os  << incrIndent;
     F_.write(os);
+    os  << decrIndent;
+    os  << indent << token::END_BLOCK << nl;
+
+    os  << indent << "thirdBodyEfficiencies" << nl;
+    os  << indent << token::BEGIN_BLOCK << nl;
+    os  << incrIndent;
     thirdBodyEfficiencies_.write(os);
+    os  << decrIndent;
+    os  << indent << token::END_BLOCK << nl;
 }
 
 

@@ -339,33 +339,22 @@ inline Foam::scalar Foam::fluxLimitedLangmuirHinshelwoodReactionRate::ddT
 }
 
 
-inline const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
-Foam::fluxLimitedLangmuirHinshelwoodReactionRate::beta() const
+inline bool Foam::fluxLimitedLangmuirHinshelwoodReactionRate::hasDdc() const
 {
-    return NullObjectRef<List<Tuple2<label, scalar>>>();
+    return false;
 }
 
 
-inline void Foam::fluxLimitedLangmuirHinshelwoodReactionRate::dcidc
+inline void Foam::fluxLimitedLangmuirHinshelwoodReactionRate::ddc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarField& dcidc
-) const
-{}
-
-
-inline Foam::scalar Foam::fluxLimitedLangmuirHinshelwoodReactionRate::dcidT
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    scalarField& ddc
 ) const
 {
-    return 0;
+    ddc = 0;
 }
 
 

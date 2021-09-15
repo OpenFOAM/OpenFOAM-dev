@@ -34,7 +34,7 @@ Foam::autoPtr<Foam::chemistryTabulationMethod<ThermoType>>
 Foam::chemistryTabulationMethod<ThermoType>::New
 (
     const IOdictionary& dict,
-    chemistryModel<ThermoType>& chemistry
+    const chemistryModel<ThermoType>& chemistry
 )
 {
     if (dict.found("tabulation"))

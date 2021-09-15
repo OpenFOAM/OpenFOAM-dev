@@ -130,8 +130,11 @@ class chemistryModel
         //- Switch to select performance logging
         Switch log_;
 
+        //- Type of the Jacobian to be calculated
+        const jacobianType jacobianType_;
+
         //- Reference to the field of specie mass fractions
-        const PtrList<volScalarField>& Y_;
+        const PtrList<volScalarField>& Yvf_;
 
         //- Reference to the multi component mixture
         const multiComponentMixture<ThermoType>& mixture_;
@@ -145,23 +148,26 @@ class chemistryModel
         //- Number of species
         label nSpecie_;
 
-        //- Number of reactions
-        label nReaction_;
-
-        //- Temperature below which the reaction rates are assumed 0
-        scalar Treact_;
-
         //- List of reaction rate per specie [kg/m^3/s]
         PtrList<volScalarField::Internal> RR_;
+
+        //- Temporary mass fraction field
+        mutable scalarField Y_;
+
+        //- Temporary simplified mechanism mass fraction field
+        DynamicField<scalar> sY_;
 
         //- Temporary concentration field
         mutable scalarField c_;
 
-        //- Temporary rate-of-change of concentration field
-        mutable scalarField dcdt_;
-
         //- Temporary simplified mechanism concentration field
         DynamicField<scalar> sc_;
+
+        //- Specie-temperature-pressure workspace fields
+        mutable FixedList<scalarField, 5> YTpWork_;
+
+        //- Specie-temperature-pressure workspace matrices
+        mutable FixedList<scalarSquareMatrix, 2> YTpYTpWork_;
 
         //- Temporary map from complete to simplified concentration fields
         //  c -> sc
@@ -241,22 +247,6 @@ public:
         //- The number of reactions
         virtual inline label nReaction() const;
 
-        //- Temperature below which the reaction rates are assumed 0
-        inline scalar Treact() const;
-
-        //- Temperature below which the reaction rates are assumed 0
-        inline scalar& Treact();
-
-        //- dc/dt = omega, rate of change in concentration, for each species
-        virtual void omega
-        (
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li,
-            scalarField& dcdt
-        ) const;
-
         //- Calculates the reaction rates
         virtual void calculate();
 
@@ -306,17 +296,17 @@ public:
             virtual void derivatives
             (
                 const scalar t,
-                const scalarField& c,
+                const scalarField& YTp,
                 const label li,
-                scalarField& dcdt
+                scalarField& dYTpdt
             ) const;
 
             virtual void jacobian
             (
                 const scalar t,
-                const scalarField& c,
+                const scalarField& YTp,
                 const label li,
-                scalarField& dcdt,
+                scalarField& dYTpdt,
                 scalarSquareMatrix& J
             ) const;
 
@@ -324,7 +314,7 @@ public:
             (
                 scalar& p,
                 scalar& T,
-                scalarField& c,
+                scalarField& Y,
                 const label li,
                 scalar& deltaT,
                 scalar& subDeltaT
@@ -332,7 +322,7 @@ public:
 
 
         //- Return a reference to the list of mass fraction fields
-        inline const PtrList<volScalarField>& Y();
+        inline const PtrList<volScalarField>& Y() const;
 
 
         // Mechanism reduction access functions

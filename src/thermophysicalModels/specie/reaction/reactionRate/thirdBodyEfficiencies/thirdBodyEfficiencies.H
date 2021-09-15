@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef thirdBodyEfficiencies_H
 #define thirdBodyEfficiencies_H
 
-#include "scalarList.H"
+#include "scalarField.H"
 #include "speciesTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -55,7 +55,7 @@ Ostream& operator<<(Ostream&, const thirdBodyEfficiencies&);
 
 class thirdBodyEfficiencies
 :
-    public scalarList
+    public scalarField
 {
     // Private Data
 
@@ -84,7 +84,11 @@ public:
     // Member Functions
 
         //- Calculate and return M, the concentration of the third-bodies
-        inline scalar M(const scalarList& c) const;
+        inline scalar M(const scalarField& c) const;
+
+        //- Calculate and return the derivative of M, w.r.t. the species
+        //  concentrations
+        inline tmp<scalarField> dMdc(const scalarField& c) const;
 
         //- Write to stream
         inline void write(Ostream& os) const;

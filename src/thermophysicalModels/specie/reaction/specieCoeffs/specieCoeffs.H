@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #ifndef specieCoeffs_H
 #define specieCoeffs_H
 
+#include "specieExponent.H"
 #include "speciesTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,7 +48,6 @@ namespace Foam
 class specieCoeffs;
 Ostream& operator<<(Ostream&, const specieCoeffs&);
 
-
 /*---------------------------------------------------------------------------*\
                         Class specieCoeffs Declaration
 \*---------------------------------------------------------------------------*/
@@ -56,62 +56,83 @@ class specieCoeffs
 {
 public:
 
-    label index;
-    scalar stoichCoeff;
-    scalar exponent;
+    // Public Data
 
-    specieCoeffs()
-    :
-        index(-1),
-        stoichCoeff(0),
-        exponent(1)
-    {}
+        //- Index of the specie
+        label index;
 
-    specieCoeffs(const speciesTable& species, Istream& is);
+        //- Stoichiometric coefficient
+        scalar stoichCoeff;
 
-    bool operator==(const specieCoeffs& sc) const
-    {
-        return index == sc.index;
-    }
+        //- Exponent of the specie concentration
+        specieExponent exponent;
 
-    bool operator!=(const specieCoeffs& sc) const
-    {
-        return index != sc.index;
-    }
 
-    friend Ostream& operator<<(Ostream& os, const specieCoeffs& sc)
-    {
-        os  << sc.index << token::SPACE
-            << sc.stoichCoeff << token::SPACE
-            << sc.exponent;
-        return os;
-    }
+    // Constructors
 
-    //- Construct the left- and right-hand-side reaction coefficients
-    static void setLRhs
-    (
-        Istream&,
-        const speciesTable&,
-        List<specieCoeffs>& lhs,
-        List<specieCoeffs>& rhs
-    );
+        //- Construct null
+        specieCoeffs()
+        :
+            index(-labelMax),
+            stoichCoeff(NaN),
+            exponent()
+        {}
 
-    //- Write the string representation of the specieCoeffs list
-    static void reactionStr
-    (
-        OStringStream& reaction,
-        const speciesTable&,
-        const List<specieCoeffs>& scs
-    );
+        //- Construct from species table and input stream
+        specieCoeffs(const speciesTable& species, Istream& is);
 
-    //- Return string representation of reaction
-    static string reactionStr
-    (
-        OStringStream& reaction,
-        const speciesTable&,
-        const List<specieCoeffs>& lhs,
-        const List<specieCoeffs>& rhs
-    );
+
+    // Member Functions
+
+        //- Construct the left- and right-hand-side reaction coefficients
+        static void setLRhs
+        (
+            Istream&,
+            const speciesTable&,
+            List<specieCoeffs>& lhs,
+            List<specieCoeffs>& rhs
+        );
+
+        //- Write the string representation of the specieCoeffs list
+        static void reactionStr
+        (
+            OStringStream& reaction,
+            const speciesTable&,
+            const List<specieCoeffs>& scs
+        );
+
+        //- Return string representation of reaction
+        static string reactionStr
+        (
+            OStringStream& reaction,
+            const speciesTable&,
+            const List<specieCoeffs>& lhs,
+            const List<specieCoeffs>& rhs
+        );
+
+
+    // Member Operators
+
+        //- Equality comparison
+        bool operator==(const specieCoeffs& sc) const
+        {
+            return index == sc.index;
+        }
+
+        //- Inequality comparison
+        bool operator!=(const specieCoeffs& sc) const
+        {
+            return index != sc.index;
+        }
+
+        //- Write to output stream
+        friend Ostream& operator<<(Ostream& os, const specieCoeffs& sc)
+        {
+            os  << sc.index << token::SPACE
+                << sc.stoichCoeff << token::SPACE
+                << sc.exponent;
+            return os;
+        }
 };
 
 

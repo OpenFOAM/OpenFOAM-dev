@@ -286,30 +286,30 @@ void Foam::Reaction<ReactionThermo>::write(Ostream& os) const
 
 
 template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::omega
+void Foam::Reaction<ReactionThermo>::C
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarField& dcdt
+    scalar& Cf,
+    scalar& Cr
 ) const
 {
-    scalar omegaf, omegar;
-
-    const scalar omegaI = omega(p, T, c, li, omegaf, omegar);
+    Cf = Cr = 1;
 
     forAll(lhs(), i)
     {
         const label si = lhs()[i].index;
-        const scalar sl = lhs()[i].stoichCoeff;
-        dcdt[si] -= sl*omegaI;
+        const specieExponent& el = lhs()[i].exponent;
+        Cf *= c[si] >= small || el >= 1 ? pow(max(c[si], 0), el) : 0;
     }
+
     forAll(rhs(), i)
     {
         const label si = rhs()[i].index;
-        const scalar sr = rhs()[i].stoichCoeff;
-        dcdt[si] += sr*omegaI;
+        const specieExponent& er = rhs()[i].exponent;
+        Cr *= c[si] >= small || er >= 1 ? pow(max(c[si], 0), er) : 0;
     }
 }
 
@@ -325,225 +325,229 @@ Foam::scalar Foam::Reaction<ReactionThermo>::omega
     scalar& omegar
 ) const
 {
-    scalar clippedT = min(max(T, this->Tlow()), this->Thigh());
+    const scalar clippedT = min(max(T, this->Tlow()), this->Thigh());
 
-    omegaf = this->kf(p, clippedT, c, li);
-    omegar = this->kr(omegaf, p, clippedT, c, li);
+    // Rate constants
+    const scalar kf = this->kf(p, clippedT, c, li);
+    const scalar kr = this->kr(kf, p, clippedT, c, li);
 
-    forAll(lhs(), i)
-    {
-        const label si = lhs()[i].index;
-        const scalar el = lhs()[i].exponent;
-        omegaf *= c[si] >= small || el >= 1 ? pow(max(c[si], 0), el) : 0;
-    }
-    forAll(rhs(), i)
-    {
-        const label si = rhs()[i].index;
-        const scalar er = rhs()[i].exponent;
-        omegar *= c[si] >= small || er >= 1 ? pow(max(c[si], 0), er) : 0;
-    }
+    // Concentration products
+    scalar Cf, Cr;
+    this->C(p, T, c, li, Cf, Cr);
+
+    omegaf = kf*Cf;
+    omegar = kr*Cr;
 
     return omegaf - omegar;
 }
 
 
 template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::dwdc
+void Foam::Reaction<ReactionThermo>::dNdtByV
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarSquareMatrix& J,
-    scalarField& dcdt,
-    scalar& omegaI,
-    scalar& kfwd,
-    scalar& kbwd,
+    scalarField& dNdtByV,
     const bool reduced,
-    const List<label>& c2s
+    const List<label>& c2s,
+    const label Nsi0
 ) const
 {
     scalar omegaf, omegar;
-
-    omegaI = omega(p, T, c, li, omegaf, omegar);
+    const scalar omega = this->omega(p, T, c, li, omegaf, omegar);
 
     forAll(lhs(), i)
     {
         const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
         const scalar sl = lhs()[i].stoichCoeff;
-        dcdt[si] -= sl*omegaI;
+        dNdtByV[Nsi0 + si] -= sl*omega;
     }
     forAll(rhs(), i)
     {
         const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
         const scalar sr = rhs()[i].stoichCoeff;
-        dcdt[si] += sr*omegaI;
-    }
-
-    kfwd = this->kf(p, T, c, li);
-    kbwd = this->kr(kfwd, p, T, c, li);
-
-    forAll(lhs(), j)
-    {
-        const label sj = reduced ? c2s[lhs()[j].index] : lhs()[j].index;
-        scalar kf = kfwd;
-        forAll(lhs(), i)
-        {
-            const label si = lhs()[i].index;
-            const scalar el = lhs()[i].exponent;
-            if (i == j)
-            {
-                kf *=
-                    c[si] >= small || el >= 1
-                  ? el*pow(max(c[si], 0), el - 1)
-                  : 0;
-            }
-            else
-            {
-                kf *=
-                    c[si] >= small || el >= 1
-                  ? pow(max(c[si], 0), el)
-                  : 0;
-            }
-        }
-
-        forAll(lhs(), i)
-        {
-            const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
-            const scalar sl = lhs()[i].stoichCoeff;
-            J(si, sj) -= sl*kf;
-        }
-        forAll(rhs(), i)
-        {
-            const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
-            const scalar sr = rhs()[i].stoichCoeff;
-            J(si, sj) += sr*kf;
-        }
-    }
-
-    forAll(rhs(), j)
-    {
-        const label sj = reduced ? c2s[rhs()[j].index] : rhs()[j].index;
-        scalar kr = kbwd;
-        forAll(rhs(), i)
-        {
-            const label si = rhs()[i].index;
-            const scalar er = rhs()[i].exponent;
-            if (i == j)
-            {
-                kr *=
-                    c[si] >= small || er >= 1
-                  ? er*pow(max(c[si], 0), er - 1)
-                  : 0;
-            }
-            else
-            {
-                kr *=
-                    c[si] >= small || er >= 1
-                  ? pow(max(c[si], 0), er)
-                  : 0;
-            }
-        }
-
-        forAll(lhs(), i)
-        {
-            const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
-            const scalar sl = lhs()[i].stoichCoeff;
-            J(si, sj) += sl*kr;
-        }
-        forAll(rhs(), i)
-        {
-            const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
-            const scalar sr = rhs()[i].stoichCoeff;
-            J(si, sj) -= sr*kr;
-        }
-    }
-
-    // When third-body species are involved, additional terms are added
-    // beta function returns an empty list when third-body are not involved
-    const List<Tuple2<label, scalar>>& beta = this->beta();
-    if (notNull(beta))
-    {
-        // This temporary array needs to be cached for efficiency
-        scalarField dcidc(beta.size());
-        this->dcidc(p, T, c, li, dcidc);
-
-        forAll(beta, j)
-        {
-            label sj = beta[j].first();
-            sj = reduced ? c2s[sj] : sj;
-            if (sj != -1)
-            {
-                forAll(lhs(), i)
-                {
-                    const label si =
-                        reduced ? c2s[lhs()[i].index] : lhs()[i].index;
-                    const scalar sl = lhs()[i].stoichCoeff;
-                    J(si, sj) -= sl*dcidc[j]*omegaI;
-                }
-                forAll(rhs(), i)
-                {
-                    const label si =
-                        reduced ? c2s[rhs()[i].index] : rhs()[i].index;
-                    const scalar sr = rhs()[i].stoichCoeff;
-                    J(si, sj) += sr*dcidc[j]*omegaI;
-                }
-            }
-        }
+        dNdtByV[Nsi0 + si] += sr*omega;
     }
 }
 
 
 template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::dwdT
+void Foam::Reaction<ReactionThermo>::ddNdtByVdcTp
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    const scalar omegaI,
-    const scalar kfwd,
-    const scalar kbwd,
-    scalarSquareMatrix& J,
+    scalarField& dNdtByV,
+    scalarSquareMatrix& ddNdtByVdcTp,
     const bool reduced,
     const List<label>& c2s,
-    const label indexT
+    const label Nsi0,
+    const label Tsi,
+    scalarField& cTpWork0,
+    scalarField& cTpWork1
 ) const
 {
-    scalar dkfdT = this->dkfdT(p, T, c, li);
-    scalar dkrdT = this->dkrdT(p, T, c, li, dkfdT, kbwd);
+    // Rate constants
+    const scalar kf = this->kf(p, T, c, li);
+    const scalar kr = this->kr(kf, p, T, c, li);
 
-    forAll(lhs(), i)
-    {
-        const label si = lhs()[i].index;
-        const scalar el = lhs()[i].exponent;
-        dkfdT *= c[si] >= small || el >= 1 ? pow(max(c[si], 0), el) : 0;
-    }
-    forAll(rhs(), i)
-    {
-        const label si = rhs()[i].index;
-        const scalar er = rhs()[i].exponent;
-        dkrdT *= c[si] >= small || er >= 1 ? pow(max(c[si], 0), er) : 0;
-    }
+    // Concentration products
+    scalar Cf, Cr;
+    this->C(p, T, c, li, Cf, Cr);
 
-    const scalar dqidT = dkfdT - dkrdT;
+    // Overall reaction rate
+    const scalar omega = kf*Cf - kr*Cr;
 
-    // For reactions including third-body efficiencies or pressure dependent
-    // reaction, an additional term is needed
-    const scalar dcidT = omegaI*this->dcidT(p, T, c, li);
-
-    // J(i, indexT) = sum_reactions nu_i dqdT
+    // Specie reaction rates
     forAll(lhs(), i)
     {
         const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
         const scalar sl = lhs()[i].stoichCoeff;
-        J(si, indexT) -= sl*(dqidT + dcidT);
+        dNdtByV[Nsi0 + si] -= sl*omega;
     }
     forAll(rhs(), i)
     {
         const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
         const scalar sr = rhs()[i].stoichCoeff;
-        J(si, indexT) += sr*(dqidT + dcidT);
+        dNdtByV[Nsi0 + si] += sr*omega;
+    }
+
+    // Jacobian contributions from the derivative of the concentration products
+    // w.r.t. concentration
+    {
+        forAll(lhs(), j)
+        {
+            const label sj = reduced ? c2s[lhs()[j].index] : lhs()[j].index;
+
+            scalar dCfdcj = 1;
+            forAll(lhs(), i)
+            {
+                const label si = lhs()[i].index;
+                const specieExponent& el = lhs()[i].exponent;
+                if (i == j)
+                {
+                    dCfdcj *=
+                        c[si] >= small || el >= 1
+                      ? el*pow(max(c[si], 0), el - specieExponent(1))
+                      : 0;
+                }
+                else
+                {
+                    dCfdcj *=
+                        c[si] >= small || el >= 1
+                      ? pow(max(c[si], 0), el)
+                      : 0;
+                }
+            }
+
+            forAll(lhs(), i)
+            {
+                const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
+                const scalar sl = lhs()[i].stoichCoeff;
+                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) -= sl*kf*dCfdcj;
+            }
+            forAll(rhs(), i)
+            {
+                const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
+                const scalar sr = rhs()[i].stoichCoeff;
+                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) += sr*kf*dCfdcj;
+            }
+        }
+
+        forAll(rhs(), j)
+        {
+            const label sj = reduced ? c2s[rhs()[j].index] : rhs()[j].index;
+
+            scalar dCrcj = 1;
+            forAll(rhs(), i)
+            {
+                const label si = rhs()[i].index;
+                const specieExponent& er = rhs()[i].exponent;
+                if (i == j)
+                {
+                    dCrcj *=
+                        c[si] >= small || er >= 1
+                      ? er*pow(max(c[si], 0), er - specieExponent(1))
+                      : 0;
+                }
+                else
+                {
+                    dCrcj *=
+                        c[si] >= small || er >= 1
+                      ? pow(max(c[si], 0), er)
+                      : 0;
+                }
+            }
+
+            forAll(lhs(), i)
+            {
+                const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
+                const scalar sl = lhs()[i].stoichCoeff;
+                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) += sl*kr*dCrcj;
+            }
+            forAll(rhs(), i)
+            {
+                const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
+                const scalar sr = rhs()[i].stoichCoeff;
+                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) -= sr*kr*dCrcj;
+            }
+        }
+    }
+
+    // Jacobian contributions from the derivative of the rate constants
+    // w.r.t. temperature
+    {
+        const scalar dkfdT = this->dkfdT(p, T, c, li);
+        const scalar dkrdT = this->dkrdT(p, T, c, li, dkfdT, kr);
+
+        const scalar dwdT = dkfdT*Cf - dkrdT*Cr;
+        forAll(lhs(), i)
+        {
+            const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
+            const scalar sl = lhs()[i].stoichCoeff;
+            ddNdtByVdcTp(Nsi0 + si, Tsi) -= sl*dwdT;
+        }
+        forAll(rhs(), i)
+        {
+            const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
+            const scalar sr = rhs()[i].stoichCoeff;
+            ddNdtByVdcTp(Nsi0 + si, Tsi) += sr*dwdT;
+        }
+    }
+
+    // Jacobian contributions from the derivative of the rate constants
+    // w.r.t. concentration
+    if (hasDkdc())
+    {
+        scalarField& dkfdc = cTpWork0;
+        scalarField& dkrdc = cTpWork1;
+
+        this->dkfdc(p, T, c, li, dkfdc);
+        this->dkrdc(p, T, c, li, dkfdc, kr, dkrdc);
+
+        forAll(c, j)
+        {
+            const label sj = reduced ? c2s[j] : j;
+
+            if (sj == -1) continue;
+
+            const scalar dwdc = dkfdc[j]*Cf - dkrdc[j]*Cr;
+            forAll(lhs(), i)
+            {
+                const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
+                const scalar sl = lhs()[i].stoichCoeff;
+                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) -= sl*dwdc;
+            }
+            forAll(rhs(), i)
+            {
+                const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
+                const scalar sr = rhs()[i].stoichCoeff;
+                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) += sr*dwdc;
+            }
+        }
     }
 }
 

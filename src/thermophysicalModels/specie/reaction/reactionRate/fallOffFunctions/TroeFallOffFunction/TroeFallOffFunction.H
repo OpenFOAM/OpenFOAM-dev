@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,18 +93,16 @@ public:
 
         inline scalar ddT
         (
+            const scalar T,
             const scalar Pr,
-            const scalar F,
-            const scalar dPrdT,
-            const scalar T
+            const scalar F
         ) const;
 
-        inline scalar ddc
+        inline scalar ddPr
         (
+            const scalar T,
             const scalar Pr,
-            const scalar F,
-            const scalar dPrdc,
-            const scalar T
+            const scalar F
         ) const;
 
         //- Write to stream

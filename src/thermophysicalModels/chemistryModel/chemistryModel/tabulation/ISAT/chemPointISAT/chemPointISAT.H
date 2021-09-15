@@ -276,7 +276,7 @@ public:
     // Member Functions
 
         //- Access to the chemistryModel
-        inline chemistryModel<ThermoType>& chemistry()
+        inline const chemistryModel<ThermoType>& chemistry()
         {
             return table_.chemistry();
         }

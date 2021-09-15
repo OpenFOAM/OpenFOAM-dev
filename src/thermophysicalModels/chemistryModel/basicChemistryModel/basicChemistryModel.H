@@ -54,6 +54,22 @@ class basicChemistryModel
 :
     public IOdictionary
 {
+public:
+
+    // Public Enumerations
+
+        //- Enumeration for the type of Jacobian to be calculated by the
+        //  chemistry model
+        enum class jacobianType
+        {
+            fast,
+            exact
+        };
+
+        //- Jacobian type names
+        static const NamedEnum<jacobianType, 2> jacobianTypeNames_;
+
+
 protected:
 
     // Protected data

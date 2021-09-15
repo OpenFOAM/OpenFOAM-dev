@@ -35,12 +35,7 @@ inline Foam::thirdBodyArrheniusReactionRate::thirdBodyArrheniusReactionRate
 :
     ArrheniusReactionRate(A, beta, Ta),
     thirdBodyEfficiencies_(tbes)
-{
-    forAll(tbes, i)
-    {
-        beta_.append(Tuple2<label, scalar>(i, tbes[i]));
-    }
-}
+{}
 
 
 inline Foam::thirdBodyArrheniusReactionRate::thirdBodyArrheniusReactionRate
@@ -55,19 +50,7 @@ inline Foam::thirdBodyArrheniusReactionRate::thirdBodyArrheniusReactionRate
         dict
     ),
     thirdBodyEfficiencies_(species, dict)
-{
-    forAll(thirdBodyEfficiencies_, i)
-    {
-        beta_.append
-        (
-            Tuple2<label, scalar>
-            (
-                i,
-                thirdBodyEfficiencies_[i]
-            )
-        );
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -112,32 +95,25 @@ inline Foam::scalar Foam::thirdBodyArrheniusReactionRate::ddT
 }
 
 
-inline void Foam::thirdBodyArrheniusReactionRate::dcidc
+inline bool Foam::thirdBodyArrheniusReactionRate::hasDdc() const
+{
+    return true;
+}
+
+
+inline void Foam::thirdBodyArrheniusReactionRate::ddc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarField& dcidc
+    scalarField& ddc
 ) const
 {
-    scalar M = thirdBodyEfficiencies_.M(c);
-    forAll(beta_, i)
-    {
-        dcidc[i] = beta_[i].second()/max(M, small);
-    }
-}
+    const scalar k = ArrheniusReactionRate::operator()(p, T, c, li);
 
-
-inline Foam::scalar Foam::thirdBodyArrheniusReactionRate::dcidT
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
-) const
-{
-    return -1.0/T;
+    ddc = thirdBodyEfficiencies_.dMdc(c);
+    ddc *= k;
 }
 
 

@@ -32,7 +32,7 @@ template<class ThermoType>
 Foam::chemistryTabulationMethod<ThermoType>::chemistryTabulationMethod
 (
     const dictionary& dict,
-    chemistryModel<ThermoType>& chemistry
+    const chemistryModel<ThermoType>& chemistry
 )
 {}
 

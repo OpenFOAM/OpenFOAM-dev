@@ -77,8 +77,8 @@ void Foam::ode<ChemistryModel>::solve
     if (debug)
     {
         scalarField dcTp(this->nEqns(), rootSmall);
-        dcTp[nSpecie] = 300*rootSmall;
-        dcTp[nSpecie+1] = 1e5*rootSmall;
+        dcTp[nSpecie] = T*rootSmall;
+        dcTp[nSpecie+1] = p*rootSmall;
         this->check(0, cTp_, dcTp, li);
     }
 

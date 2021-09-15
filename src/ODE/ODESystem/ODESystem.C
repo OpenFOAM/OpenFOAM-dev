@@ -57,8 +57,15 @@ void Foam::ODESystem::check
     jacobian(x, y, li, dfdx1, d2fdxdyAnalytic);
 
     // Compare derivatives
-    Info<< "[derivatives] dfdx = " << dfdx0 << nl;
-    Info<< "[   jacobian] dfdx = " << dfdx1 << nl;
+    Info<< "[derivatives] dfdx = ( ";
+    forAll(dfdx0, i) { Info<< dfdx0[i] << ' '; }
+    Info<< ")" << nl;
+    Info<< "[   jacobian] dfdx = ( ";
+    forAll(dfdx1, i) { Info<< dfdx1[i] << ' '; }
+    Info<< ")" << nl;
+    Info<< "[      ratio] dfdx = ( ";
+    forAll(dfdx1, i) { Info<< dfdx1[i]/stabilise(dfdx0[i], rootVSmall) << ' '; }
+    Info<< ")" << nl;
 
     // Construct a Jacobian using the finite differences and the derivatives
     // method
@@ -83,10 +90,25 @@ void Foam::ODESystem::check
 
     for (label i = 0; i < nEqns(); ++ i)
     {
-        Info<< "[derivatives] d2fdxdy[" << i << "] = "
-            << UList<scalar>(d2fdxdyFiniteDifference[i], nEqns()) << nl;
-        Info<< "[   jacobian] d2fdxdy[" << i << "] = "
-            << UList<scalar>(d2fdxdyAnalytic[i], nEqns()) << nl;
+        UList<scalar> FD(d2fdxdyFiniteDifference[i], nEqns());
+        Info<< "[derivatives] d2fdxdy[" << i << "] = ( ";
+        forAll(FD, i) { Info<< FD[i] << ' '; }
+        Info<< ")" << nl;
+    }
+    for (label i = 0; i < nEqns(); ++ i)
+    {
+        UList<scalar> A(d2fdxdyAnalytic[i], nEqns());
+        Info<< "[   jacobian] d2fdxdy[" << i << "] = ( ";
+        forAll(A, i) { Info<< A[i] << ' '; }
+        Info<< ")" << nl;
+    }
+    for (label i = 0; i < nEqns(); ++ i)
+    {
+        UList<scalar> FD(d2fdxdyFiniteDifference[i], nEqns());
+        UList<scalar> A(d2fdxdyAnalytic[i], nEqns());
+        Info<< "[      ratio] d2fdxdy[" << i << "] = ( ";
+        forAll(A, i) { Info<< A[i]/stabilise(FD[i], rootVSmall) << ' '; }
+        Info<< ")" << nl;
     }
 }
 

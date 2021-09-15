@@ -164,44 +164,48 @@ Foam::scalar Foam::ReversibleReaction<ReactionThermo, ReactionRate>::dkrdT
     const scalar kr
 ) const
 {
-    scalar Kc = max(this->Kc(p, T), rootSmall);
+    const scalar Kc = max(this->Kc(p, T), rootSmall);
 
-    return dkfdT/Kc - kr*this->dKcdTbyKc(p, T);
+    return dkfdT/Kc - (Kc > rootSmall ? kr*this->dKcdTbyKc(p, T) : 0);
 }
 
 
 template<class ReactionThermo, class ReactionRate>
-const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
-Foam::ReversibleReaction<ReactionThermo, ReactionRate>::beta() const
+bool Foam::ReversibleReaction<ReactionThermo, ReactionRate>::hasDkdc() const
 {
-    return k_.beta();
+    return k_.hasDdc();
 }
 
 
 template<class ReactionThermo, class ReactionRate>
-void Foam::ReversibleReaction<ReactionThermo, ReactionRate>::dcidc
+void Foam::ReversibleReaction<ReactionThermo, ReactionRate>::dkfdc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarField& dcidc
+    scalarField& dkfdc
 ) const
 {
-    k_.dcidc(p, T, c, li, dcidc);
+    k_.ddc(p, T, c, li, dkfdc);
 }
 
 
 template<class ReactionThermo, class ReactionRate>
-Foam::scalar Foam::ReversibleReaction<ReactionThermo, ReactionRate>::dcidT
+void Foam::ReversibleReaction<ReactionThermo, ReactionRate>::dkrdc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
-    const label li
+    const label li,
+    const scalarField& dkfdc,
+    const scalar kr,
+    scalarField& dkrdc
 ) const
 {
-    return k_.dcidT(p, T, c, li);
+    const scalar Kc = max(this->Kc(p, T), rootSmall);
+
+    dkrdc = dkfdc/Kc;
 }
 
 

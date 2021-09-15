@@ -149,28 +149,15 @@ public:
             const label li
         ) const;
 
-        //- Third-body efficiencies (beta = 1-alpha)
-        //  non-empty only for third-body reactions
-        //  with enhanced molecularity (alpha != 1)
-        inline const List<Tuple2<label, scalar>>& beta() const;
+        inline bool hasDdc() const;
 
-        //- Species concentration derivative of the pressure dependent term
-        inline void dcidc
+        inline void ddc
         (
             const scalar p,
             const scalar T,
             const scalarField& c,
             const label li,
-            scalarField& dcidc
-        ) const;
-
-        //- Temperature derivative of the pressure dependent term
-        inline scalar dcidT
-        (
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li
+            scalarField& ddc
         ) const;
 
         //- Write to stream

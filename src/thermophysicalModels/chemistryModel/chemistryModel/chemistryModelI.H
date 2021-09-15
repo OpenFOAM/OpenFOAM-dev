@@ -91,21 +91,7 @@ inline Foam::label Foam::chemistryModel<ThermoType>::nSpecie() const
 template<class ThermoType>
 inline Foam::label Foam::chemistryModel<ThermoType>::nReaction() const
 {
-    return nReaction_;
-}
-
-
-template<class ThermoType>
-inline Foam::scalar Foam::chemistryModel<ThermoType>::Treact() const
-{
-    return Treact_;
-}
-
-
-template<class ThermoType>
-inline Foam::scalar& Foam::chemistryModel<ThermoType>::Treact()
-{
-    return Treact_;
+    return reactions_.size();
 }
 
 
@@ -126,9 +112,9 @@ Foam::chemistryModel<ThermoType>::RR(const label i)
 
 template<class ThermoType>
 inline const Foam::PtrList<Foam::volScalarField>&
-Foam::chemistryModel<ThermoType>::Y()
+Foam::chemistryModel<ThermoType>::Y() const
 {
-    return this->Y_;
+    return this->Yvf_;
 }
 
 

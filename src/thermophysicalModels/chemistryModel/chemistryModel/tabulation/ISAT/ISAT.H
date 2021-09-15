@@ -63,7 +63,7 @@ class ISAT
 
         const dictionary coeffsDict_;
 
-        chemistryModel<ThermoType>& chemistry_;
+        const chemistryModel<ThermoType>& chemistry_;
 
         //- Switch to select performance logging
         Switch log_;
@@ -214,7 +214,7 @@ public:
         ISAT
         (
             const dictionary& chemistryProperties,
-            chemistryModel<ThermoType>& chemistry
+            const chemistryModel<ThermoType>& chemistry
         );
 
         //- Disallow default bitwise copy construction
@@ -233,7 +233,7 @@ public:
             return true;
         }
 
-        chemistryModel<ThermoType>& chemistry()
+        const chemistryModel<ThermoType>& chemistry()
         {
             return chemistry_;
         }

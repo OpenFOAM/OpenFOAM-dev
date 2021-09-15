@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
     const scalarList& efficiencies
 )
 :
-    scalarList(efficiencies),
+    scalarField(efficiencies),
     species_(species)
 {
     if (size() != species_.size())
@@ -52,7 +52,7 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
     const dictionary& dict
 )
 :
-    scalarList(species.size()),
+    scalarField(species.size()),
     species_(species)
 {
     if (dict.found("coeffs"))
@@ -74,14 +74,14 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
     else
     {
         scalar defaultEff = dict.lookup<scalar>("defaultEfficiency");
-        scalarList::operator=(defaultEff);
+        scalarField::operator=(defaultEff);
     }
 }
 
 
 // * * * * * * * * * * * * * * * Member functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::thirdBodyEfficiencies::M(const scalarList& c) const
+inline Foam::scalar Foam::thirdBodyEfficiencies::M(const scalarField& c) const
 {
     scalar M = 0;
     forAll(*this, i)
@@ -90,6 +90,13 @@ inline Foam::scalar Foam::thirdBodyEfficiencies::M(const scalarList& c) const
     }
 
     return M;
+}
+
+
+inline Foam::tmp<Foam::scalarField>
+Foam::thirdBodyEfficiencies::dMdc(const scalarField& c) const
+{
+    return *this;
 }
 
 

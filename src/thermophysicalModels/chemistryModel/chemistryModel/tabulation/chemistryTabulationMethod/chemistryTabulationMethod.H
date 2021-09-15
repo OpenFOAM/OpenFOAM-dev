@@ -71,7 +71,7 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            chemistryModel<ThermoType>& chemistry
+            const chemistryModel<ThermoType>& chemistry
         ),
         (dict, chemistry)
     );
@@ -83,7 +83,7 @@ public:
         chemistryTabulationMethod
         (
             const dictionary& dict,
-            chemistryModel<ThermoType>& chemistry
+            const chemistryModel<ThermoType>& chemistry
         );
 
 
@@ -92,7 +92,7 @@ public:
         static autoPtr<chemistryTabulationMethod> New
         (
             const IOdictionary& dict,
-            chemistryModel<ThermoType>& chemistry
+            const chemistryModel<ThermoType>& chemistry
         );
 
 

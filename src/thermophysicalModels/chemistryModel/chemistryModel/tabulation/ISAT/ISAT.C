@@ -32,7 +32,7 @@ template<class ThermoType>
 Foam::chemistryTabulationMethods::ISAT<ThermoType>::ISAT
 (
     const dictionary& chemistryProperties,
-    chemistryModel<ThermoType>& chemistry
+    const chemistryModel<ThermoType>& chemistry
 )
 :
     chemistryTabulationMethod<ThermoType>
@@ -352,16 +352,17 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
     const scalar dt
 )
 {
-    const label speciesNumber = chemistry_.nSpecie();
-    scalarField Rcq(chemistry_.nEqns() + 1);
-    for (label i=0; i<speciesNumber; i++)
+    const label nSpecie = chemistry_.nSpecie();
+
+    scalarField Rphiqs(chemistry_.nEqns() + 1);
+    for (label i=0; i<nSpecie; i++)
     {
         const label si = chemistry_.sToc(i);
-        Rcq[i] = rhoi*Rphiq[si]/chemistry_.specieThermos()[si].W();
+        Rphiqs[i] = Rphiq[si];
     }
-    Rcq[speciesNumber] = Rphiq[Rphiq.size() - 3];
-    Rcq[speciesNumber + 1] = Rphiq[Rphiq.size() - 2];
-    Rcq[speciesNumber + 2] = Rphiq[Rphiq.size() - 1];
+    Rphiqs[nSpecie] = Rphiq[Rphiq.size() - 3];
+    Rphiqs[nSpecie + 1] = Rphiq[Rphiq.size() - 2];
+    Rphiqs[nSpecie + 2] = Rphiq[Rphiq.size() - 1];
 
     // Aaa is computed implicitly,
     // A is given by A = C(psi0, t0+dt), where C is obtained through solving
@@ -372,62 +373,29 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
     // C(psi0,t0+dt)*(I-dt*J(psi(t0+dt))) = C(psi0, t0)
     // A = C(psi0,t0)/(I-dt*J(psi(t0+dt)))
     // where C(psi0,t0) = I
-    scalarField dcdt(speciesNumber + 2, Zero);
-    chemistry_.jacobian(runTime_.value(), Rcq, li, dcdt, A);
+    scalarField dYTpdt(nSpecie + 2, Zero);
+    chemistry_.jacobian(runTime_.value(), Rphiqs, li, dYTpdt, A);
 
-    // The jacobian is computed according to the molar concentration
-    // the following conversion allows the code to use A with mass fraction
-    for (label i=0; i<speciesNumber; i++)
+    // Inverse of I - dt*J(psi(t0 + dt))
+    for (label i=0; i<nSpecie + 2; i++)
     {
-        const label si = chemistry_.sToc(i);
-
-        for (label j=0; j<speciesNumber; j++)
+        for (label j=0; j<nSpecie + 2; j++)
         {
-            const label sj = chemistry_.sToc(j);
-
-            A(i, j) *=
-              -dt*chemistry_.specieThermos()[si].W()
-               /chemistry_.specieThermos()[sj].W();
+            A(i, j) *= -dt;
         }
-
         A(i, i) += 1;
-        // Columns for pressure and temperature
-        A(i, speciesNumber) *=
-            -dt*chemistry_.specieThermos()[si].W()/rhoi;
-        A(i, speciesNumber + 1) *=
-            -dt*chemistry_.specieThermos()[si].W()/rhoi;
     }
-
-    // For the temperature and pressure lines, ddc(dTdt)
-    // should be converted in ddY(dTdt)
-    for (label i=0; i<speciesNumber; i++)
-    {
-        const label si = chemistry_.sToc(i);
-
-        A(speciesNumber, i) *=
-            -dt*rhoi/chemistry_.specieThermos()[si].W();
-        A(speciesNumber + 1, i) *=
-            -dt*rhoi/chemistry_.specieThermos()[si].W();
-    }
-
-    A(speciesNumber, speciesNumber) = -dt*A(speciesNumber, speciesNumber) + 1;
-
-    A(speciesNumber + 1, speciesNumber + 1) =
-        -dt*A(speciesNumber + 1, speciesNumber + 1) + 1;
-
-    A(speciesNumber + 2, speciesNumber + 2) = 1;
-
-    // Inverse of (I-dt*J(psi(t0+dt)))
+    A(nSpecie + 2, nSpecie + 2) = 1;
     LUscalarMatrix LUA(A);
     LUA.inv(A);
 
     // After inversion, lines of p and T are set to 0 except diagonal.  This
     // avoid skewness of the ellipsoid of accuracy and potential issues in the
     // binary tree.
-    for (label i=0; i<speciesNumber; i++)
+    for (label i=0; i<nSpecie; i++)
     {
-        A(speciesNumber, i) = 0;
-        A(speciesNumber + 1, i) = 0;
+        A(nSpecie, i) = 0;
+        A(nSpecie + 1, i) = 0;
     }
 }
 

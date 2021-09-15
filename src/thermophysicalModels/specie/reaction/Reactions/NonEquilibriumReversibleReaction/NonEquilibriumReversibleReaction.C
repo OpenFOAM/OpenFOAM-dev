@@ -181,40 +181,40 @@ Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkrdT
 
 
 template<class ReactionThermo, class ReactionRate>
-const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
-beta() const
+bool Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+hasDkdc() const
 {
-    return fk_.beta();
+    return fk_.hasDdc() || rk_.hasDdc();
 }
 
 
 template<class ReactionThermo, class ReactionRate>
-void
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dcidc
+void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkfdc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarField& dcidc
+    scalarField& dkfdc
 ) const
 {
-    fk_.dcidc(p, T, c, li, dcidc);
+    fk_.ddc(p, T, c, li, dkfdc);
 }
 
 
 template<class ReactionThermo, class ReactionRate>
-Foam::scalar
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dcidT
+void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkrdc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
-    const label li
+    const label li,
+    const scalarField& dkfdc,
+    const scalar kr,
+    scalarField& dkrdc
 ) const
 {
-    return fk_.dcidT(p, T, c, li);
+    rk_.ddc(p, T, c, li, dkrdc);
 }
 
 

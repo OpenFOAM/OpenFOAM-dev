@@ -224,14 +224,15 @@ public:
 
         // Reaction rate coefficients
 
-            //- Net reaction rate for individual species
-            void omega
+            //- Concentration powers
+            void C
             (
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
                 const label li,
-                scalarField& dcdt
+                scalar& Cf,
+                scalar& Cr
             ) const;
 
             //- Net reaction rate
@@ -244,6 +245,20 @@ public:
                 scalar& omegaf,
                 scalar& omegar
             ) const;
+
+            //- The net reaction rate for each species involved
+            void dNdtByV
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                const label li,
+                scalarField& dNdtByV,
+                const bool reduced,
+                const List<label>& c2s,
+                const label Nsi0
+            ) const;
+
 
         // Reaction rate coefficients
 
@@ -259,7 +274,7 @@ public:
             //- Reverse rate constant from the given forward rate constant
             virtual scalar kr
             (
-                const scalar kfwd,
+                const scalar kf,
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
@@ -277,40 +292,6 @@ public:
 
 
         // Jacobian coefficients
-
-            //- Derivative of the net reaction rate for each species involved
-            //  w.r.t. the species concentration
-            void dwdc
-            (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li,
-                scalarSquareMatrix& J,
-                scalarField& dcdt,
-                scalar& omegaI,
-                scalar& kfwd,
-                scalar& kbwd,
-                const bool reduced,
-                const List<label>& c2s
-            ) const;
-
-            //- Derivative of the net reaction rate for each species involved
-            //  w.r.t. the temperature
-            void dwdT
-            (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li,
-                const scalar omegaI,
-                const scalar kfwd,
-                const scalar kbwd,
-                scalarSquareMatrix& J,
-                const bool reduced,
-                const List<label>& c2s,
-                const label indexT
-            ) const;
 
             //- Temperature derivative of forward rate
             virtual scalar dkfdT
@@ -332,29 +313,48 @@ public:
                 const scalar kr
             ) const = 0;
 
-            //- Third-body efficiencies (beta = 1-alpha)
-            //  non-empty only for third-body reactions
-            //  with enhanced molecularity (alpha != 1)
-            virtual const List<Tuple2<label, scalar>>& beta() const = 0;
+            //- Does this reaction have concentration-dependent rate constants?
+            virtual bool hasDkdc() const = 0;
 
-            //- Species concentration derivative of the pressure dependent term
-            virtual void dcidc
+            //- Concentration derivative of forward rate
+            virtual void dkfdc
             (
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
                 const label li,
-                scalarField& dcidc
+                scalarField& dkfdc
             ) const = 0;
 
-            //- Temperature derivative of the pressure dependent term
-            virtual scalar dcidT
+            //- Concentration derivative of reverse rate
+            virtual void dkrdc
             (
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
-                const label li
+                const label li,
+                const scalarField& dkfdc,
+                const scalar kr,
+                scalarField& dkrdc
             ) const = 0;
+
+            //- Derivative of the net reaction rate for each species involved
+            //  w.r.t. the concentration and temperature
+            void ddNdtByVdcTp
+            (
+                const scalar p,
+                const scalar T,
+                const scalarField& c,
+                const label li,
+                scalarField& dNdtByV,
+                scalarSquareMatrix& ddNdtByVdcTp,
+                const bool reduced,
+                const List<label>& c2s,
+                const label csi0,
+                const label Tsi,
+                scalarField& cTpWork0,
+                scalarField& cTpWork1
+            ) const;
 
 
         //- Write

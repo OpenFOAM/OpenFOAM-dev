@@ -185,22 +185,21 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::dkrdT
 
 
 template<class ReactionThermo>
-const Foam::List<Foam::Tuple2<Foam::label, Foam::scalar>>&
-Foam::ReactionProxy<ReactionThermo>::beta() const
+bool Foam::ReactionProxy<ReactionThermo>::hasDkdc() const
 {
     NotImplemented;
-    return NullObjectRef<List<Tuple2<label, scalar>>>();
+    return false;
 }
 
 
 template<class ReactionThermo>
-void Foam::ReactionProxy<ReactionThermo>::dcidc
+void Foam::ReactionProxy<ReactionThermo>::dkfdc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
     const label li,
-    scalarField& dcidc
+    scalarField& dkfdc
 ) const
 {
     NotImplemented;
@@ -208,16 +207,18 @@ void Foam::ReactionProxy<ReactionThermo>::dcidc
 
 
 template<class ReactionThermo>
-Foam::scalar Foam::ReactionProxy<ReactionThermo>::dcidT
+void Foam::ReactionProxy<ReactionThermo>::dkrdc
 (
     const scalar p,
     const scalar T,
     const scalarField& c,
-    const label li
+    const label li,
+    const scalarField& dkfdc,
+    const scalar kr,
+    scalarField& dkrdc
 ) const
 {
     NotImplemented;
-    return 0;
 }
 
 

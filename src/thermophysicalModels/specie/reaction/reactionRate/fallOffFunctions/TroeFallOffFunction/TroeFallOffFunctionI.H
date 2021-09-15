@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,116 +57,103 @@ inline Foam::scalar Foam::TroeFallOffFunction::operator()
     const scalar Pr
 ) const
 {
-    scalar logFcent = log10
-    (
-        max
-        (
-            (1 - alpha_)*exp(-T/Tsss_) + alpha_*exp(-T/Ts_) + exp(-Tss_/T),
-            small
-        )
-    );
+    const scalar logPr = log10(max(Pr, small));
 
-    scalar c = -0.4 - 0.67*logFcent;
+    const scalar Fcent =
+        (1 - alpha_)*exp(-T/Tsss_)
+      + alpha_*exp(-T/Ts_)
+      + exp(-Tss_/T);
+
+    const scalar logFcent = log10(max(Fcent, small));
+
+    const scalar c = -0.4 - 0.67*logFcent;
     static const scalar d = 0.14;
-    scalar n = 0.75 - 1.27*logFcent;
+    const scalar n = 0.75 - 1.27*logFcent;
 
-    scalar logPr = log10(max(Pr, small));
-    return pow(10, logFcent/(1 + sqr((logPr + c)/(n - d*(logPr + c)))));
+    const scalar x1 = n - d*(logPr + c);
+    const scalar x2 = (logPr + c)/x1;
+    const scalar x3 = 1 + sqr(x2);
+    const scalar x4 = logFcent/x3;
+
+    return pow(10, x4);
 }
 
 
 inline Foam::scalar Foam::TroeFallOffFunction::ddT
 (
+    const scalar T,
     const scalar Pr,
-    const scalar F,
-    const scalar dPrdT,
-    const scalar T
+    const scalar F
 ) const
 {
-    scalar logPr = log10(max(Pr, small));
-    scalar logTen = log(10.0);
-    scalar Fcent =
-    (
-        max
-        (
-            (1 - alpha_)*exp(-T/Tsss_) + alpha_*exp(-T/Ts_) + exp(-Tss_/T),
-            small
-        )
-    );
-    scalar logFcent = log10(Fcent);
+    static const scalar logTen = log(scalar(10));
 
-    scalar dFcentdT =
-    (
-        (alpha_ - 1)*exp(-T/Tsss_)/Tsss_
-      - alpha_*exp(-T/Ts_)/Ts_
-      + Tss_*exp(-Tss_/T)/sqr(T)
-    );
+    const scalar logPr = log10(max(Pr, small));
 
-    scalar d = 0.14;
-    scalar dlogFcentdT = dFcentdT/Fcent/logTen;
-    scalar c = -0.4 - 0.67*logFcent;
-    scalar dcdT = -0.67*dlogFcentdT;
-    scalar n = 0.75 - 1.27*logFcent;
-    scalar dndT = -1.27*dlogFcentdT;
+    const scalar Fcent =
+        (1 - alpha_)*exp(-T/Tsss_)
+      + alpha_*exp(-T/Ts_)
+      + exp(-Tss_/T);
+    const scalar dFcentdT =
+      - (1 - alpha_)/Tsss_*exp(-T/Tsss_)
+      - alpha_/Ts_*exp(-T/Ts_)
+      + Tss_/sqr(T)*exp(-Tss_/T);
 
-    scalar dlogPrdT = dPrdT/Pr/logTen;
+    const scalar logFcent = log10(max(Fcent, small));
+    const scalar dlogFcentdT = Fcent >= small ? dFcentdT/Fcent/logTen : 0;
 
-    scalar dParentdT =
-        2.0*(logPr + c)/sqr(n - d*(logPr + c))
-       *(
-            (dlogPrdT + dcdT)
-          - (logPr + c)*(dndT - d*(dlogPrdT + dcdT))/(n - d*(logPr + c))
-        );
+    const scalar c = -0.4 - 0.67*logFcent;
+    const scalar dcdT = -0.67*dlogFcentdT;
+    static const scalar d = 0.14;
+    const scalar n = 0.75 - 1.27*logFcent;
+    const scalar dndT = - 1.27*dlogFcentdT;
 
-    return
-    (
-        F*logTen
-       *(
-            dlogFcentdT/(1.0 + sqr((logPr + c)/(n - d*(logPr + c))))
-          - logFcent*dParentdT/sqr(1.0 + sqr((logPr + c)/(n - d*(logPr + c))))
-        )
-    );
+    const scalar x1 = n - d*(logPr + c);
+    const scalar dx1dT = dndT - d*dcdT;
+    const scalar x2 = (logPr + c)/x1;
+    const scalar dx2dT = (dcdT - x2*dx1dT)/x1;
+    const scalar x3 = 1 + sqr(x2);
+    const scalar dx3dT = 2*x2*dx2dT;
+    const scalar x4 = logFcent/x3;
+    const scalar dx4dT = (dlogFcentdT - x4*dx3dT)/x3;
+
+    return logTen*F*dx4dT;
 }
 
 
-inline Foam::scalar Foam::TroeFallOffFunction::ddc
+inline Foam::scalar Foam::TroeFallOffFunction::ddPr
 (
+    const scalar T,
     const scalar Pr,
-    const scalar F,
-    const scalar dPrdc,
-    const scalar T
+    const scalar F
 ) const
 {
-    scalar logPr = log10(max(Pr, small));
-    scalar logTen = log(10.0);
-    scalar logFcent = log10
-    (
-        max
-        (
-            (1 - alpha_)*exp(-T/Tsss_) + alpha_*exp(-T/Ts_) + exp(-Tss_/T),
-            small
-        )
-    );
+    static const scalar logTen = log(scalar(10));
 
-    scalar dlogPrdc = dPrdc/Pr/logTen;
-    scalar d = 0.14;
-    scalar c = -0.4 - 0.67*logFcent;
-    scalar n = 0.75 - 1.27*logFcent;
+    const scalar logPr = log10(max(Pr, small));
+    const scalar dlogPrdPr = Pr >= small ? 1/(logTen*Pr) : 0;
 
-    scalar dParentdc =
-        2.0*(logPr + c)/sqr(n - d*(logPr + c))
-       *(
-            (dlogPrdc)
-          - (logPr + c)*(-d*(dlogPrdc))/(n - d*(logPr + c))
-        );
+    const scalar Fcent =
+        (1 - alpha_)*exp(-T/Tsss_)
+      + alpha_*exp(-T/Ts_)
+      + exp(-Tss_/T);
 
-    return
-    (
-        F*logTen
-       *(
-          - logFcent*dParentdc/sqr(1.0 + sqr((logPr + c)/(n - d*(logPr + c))))
-        )
-    );
+    const scalar logFcent = log10(max(Fcent, small));
+
+    const scalar c = -0.4 - 0.67*logFcent;
+    static const scalar d = 0.14;
+    const scalar n = 0.75 - 1.27*logFcent;
+
+    const scalar x1 = n - d*(logPr + c);
+    const scalar dx1dPr = -d*dlogPrdPr;
+    const scalar x2 = (logPr + c)/x1;
+    const scalar dx2dPr = (dlogPrdPr - x2*dx1dPr)/x1;
+    const scalar x3 = 1 + sqr(x2);
+    const scalar dx3dPr = 2*x2*dx2dPr;
+    const scalar x4 = logFcent/x3;
+    const scalar dx4dPr = -x4*dx3dPr/x3;
+
+    return logTen*F*dx4dPr;
 }
 
 
