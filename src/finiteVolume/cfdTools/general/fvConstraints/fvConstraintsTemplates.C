@@ -49,7 +49,7 @@ bool Foam::fvConstraints::constrain(fvMatrix<Type>& eqn) const
             }
 
             constrained =
-                constrained || constraint.constrain(eqn, eqn.psi().name());
+                constraint.constrain(eqn, eqn.psi().name()) || constrained;
         }
     }
 
@@ -84,7 +84,7 @@ bool Foam::fvConstraints::constrain
             }
 
             constrained =
-                constrained || constraint.constrain(field);
+                constraint.constrain(field) || constrained;
         }
     }
 
