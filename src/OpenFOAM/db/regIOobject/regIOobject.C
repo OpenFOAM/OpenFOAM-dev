@@ -400,15 +400,20 @@ void Foam::regIOobject::setUpToDate()
 
 void Foam::regIOobject::rename(const word& newName)
 {
-    // Check out of objectRegistry
-    checkOut();
-
-    IOobject::rename(newName);
-
-    if (registerObject())
+    // Only rename the object if the name is different
+    // avoiding the checkOut/checkIn
+    if (newName != name())
     {
-        // Re-register object with objectRegistry
-        checkIn();
+        // Check out of objectRegistry
+        checkOut();
+
+        IOobject::rename(newName);
+
+        if (registerObject())
+        {
+            // Re-register object with objectRegistry
+            checkIn();
+        }
     }
 }
 
