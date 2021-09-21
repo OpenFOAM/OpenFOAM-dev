@@ -343,7 +343,7 @@ constexpr bool False = false;
 //  called for this derived class.
 #define notImplemented(functionName)                                           \
     FatalErrorIn(functionName)                                                 \
-        << "Not implemented" << ::Foam::abort(FatalError);
+        << "Not implemented" << ::Foam::abort(::Foam::FatalError);
 
 //- Issue a FatalErrorIn for a function not currently implemented.
 //  The FUNCTION_NAME is printed and then abort is called.
