@@ -79,7 +79,7 @@ Description
                                                                                \
     defineSolidThermo(BaseThermo, CThermo, Mixture, ThermoPhys);               \
                                                                                \
-    addSolidThermo(BaseThermo, CThermo##Mixture##ThermoPhys, fvMesh
+    addSolidThermo(BaseThermo, CThermo##Mixture##ThermoPhys, fvMesh);
 
 
 #define makeSolidThermos(BaseThermo, CThermo, Mixture, ThermoPhys)             \
