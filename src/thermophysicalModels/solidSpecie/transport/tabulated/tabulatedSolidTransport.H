@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,16 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::icoTabulatedTransport
+    Foam::tabulatedSolidTransport
 
 Description
     Transport properties package using non-uniformly-spaced tabulated data for
-    viscosity and thermal conductivity vs temperature.
+    thermal conductivity vs temperature.
 
 Usage
     \table
         Property        | Description
-        mu              | Dynamic viscosity vs temperature table
         kappa           | Thermal conductivity vs temperature table
     \endtable
 
@@ -39,39 +38,26 @@ Usage
     \verbatim
     transport
     {
-        mu
-        {
-            values
-            (
-                (200 1.82e-05)
-                (350 2.61e-05)
-                (400 3.93e-05)
-            );
-        }
-
         kappa
         {
             values
             (
-                (200 2.56e-5)
-                (350 3.33e-5)
-                (400 4.72e-5)
+                (200 380)
+                (350 400)
+                (400 450)
             );
         }
     }
     \endverbatim
 
 SourceFiles
-    icoTabulatedTransportI.H
-    icoTabulatedTransport.C
-
-See also
-    Foam::Function1s::NonUniformTable
+    tabulatedSolidTransportI.H
+    tabulatedSolidTransport.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef icoTabulatedTransport_H
-#define icoTabulatedTransport_H
+#ifndef tabulatedSolidTransport_H
+#define tabulatedSolidTransport_H
 
 #include "NonUniformTable1.H"
 
@@ -80,20 +66,29 @@ See also
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
-
-template<class Thermo> class icoTabulatedTransport;
+template<class Thermo> class tabulatedSolidTransport;
 
 template<class Thermo>
-Ostream& operator<<(Ostream&, const icoTabulatedTransport<Thermo>&);
+inline tabulatedSolidTransport<Thermo> operator*
+(
+    const scalar,
+    const tabulatedSolidTransport<Thermo>&
+);
+
+template<class Thermo>
+Ostream& operator<<
+(
+    Ostream&,
+    const tabulatedSolidTransport<Thermo>&
+);
 
 
 /*---------------------------------------------------------------------------*\
-                     Class icoTabulatedTransport Declaration
+                  Class tabulatedSolidTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo>
-class icoTabulatedTransport
+class tabulatedSolidTransport
 :
     public Thermo
 {
@@ -102,9 +97,6 @@ class icoTabulatedTransport
 
     // Private Data
 
-        //- Dynamic viscosity table [Pa.s]
-        nonUniformTable mu_;
-
         //- Thermal conductivity table [W/m/K]
         nonUniformTable kappa_;
 
@@ -112,10 +104,9 @@ class icoTabulatedTransport
     // Private Member Functions
 
         //- Construct from components
-        inline icoTabulatedTransport
+        inline tabulatedSolidTransport
         (
             const Thermo& t,
-            const nonUniformTable& mu,
             const nonUniformTable& kappa
         );
 
@@ -125,16 +116,20 @@ public:
     // Constructors
 
         //- Construct as named copy
-        inline icoTabulatedTransport(const word&, const icoTabulatedTransport&);
+        inline tabulatedSolidTransport
+        (
+            const word&,
+            const tabulatedSolidTransport&
+        );
 
         //- Construct from dictionary
-        icoTabulatedTransport(const dictionary& dict);
+        tabulatedSolidTransport(const dictionary&);
 
         //- Construct and return a clone
-        inline autoPtr<icoTabulatedTransport> clone() const;
+        inline autoPtr<tabulatedSolidTransport> clone() const;
 
         // Selector from dictionary
-        inline static autoPtr<icoTabulatedTransport> New
+        inline static autoPtr<tabulatedSolidTransport> New
         (
             const dictionary& dict
         );
@@ -145,14 +140,20 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "tabulated<" + Thermo::typeName() + '>';
+            return "tabulatedSolid<" + Thermo::typeName() + '>';
         }
 
-        //- Dynamic viscosity [kg/m/s]
-        inline scalar mu(const scalar p, const scalar T) const;
+        //- Is the thermal conductivity isotropic
+        static const bool isotropic = true;
 
         //- Thermal conductivity [W/m/K]
         inline scalar kappa(const scalar p, const scalar T) const;
+
+        //- Thermal conductivity [W/m/K]
+        inline vector Kappa(const scalar p, const scalar T) const;
+
+         //- Dynamic viscosity [kg/m/s]
+        inline scalar mu(const scalar p, const scalar T) const;
 
         //- Write to Ostream
         void write(Ostream& os) const;
@@ -163,7 +164,7 @@ public:
         friend Ostream& operator<< <Thermo>
         (
             Ostream&,
-            const icoTabulatedTransport&
+            const tabulatedSolidTransport&
         );
 };
 
@@ -174,10 +175,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "icoTabulatedTransportI.H"
+#include "tabulatedSolidTransportI.H"
 
 #ifdef NoRepository
-    #include "icoTabulatedTransport.C"
+    #include "tabulatedSolidTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

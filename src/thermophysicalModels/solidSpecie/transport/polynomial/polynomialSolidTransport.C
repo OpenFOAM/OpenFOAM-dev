@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,7 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::polynomialSolidTransport
             "kappaCoeffs<" + Foam::name(PolySize) + '>'
         )
     )
-{
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -51,6 +50,9 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::polynomialSolidTransport
 template<class Thermo, int PolySize>
 void Foam::polynomialSolidTransport<Thermo, PolySize>::write(Ostream& os) const
 {
+    os  << this->name() << endl;
+    os  << token::BEGIN_BLOCK << incrIndent << nl;
+
     Thermo::write(os);
 
     dictionary dict("transport");
@@ -61,6 +63,8 @@ void Foam::polynomialSolidTransport<Thermo, PolySize>::write(Ostream& os) const
         kappaCoeffs_
     );
     os  << indent << dict.dictName() << dict;
+
+    os  << decrIndent << token::END_BLOCK << nl;
 }
 
 

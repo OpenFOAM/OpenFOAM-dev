@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,62 +23,86 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "exponentialSolidTransport.H"
-#include "IOstreams.H"
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo>
-Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
+inline Foam::tabulatedSolidTransport<Thermo>::tabulatedSolidTransport
+(
+    const Thermo& t,
+    const nonUniformTable& kappa
+)
+:
+    Thermo(t),
+    kappa_(kappa)
+{}
+
+
+template<class Thermo>
+inline Foam::tabulatedSolidTransport<Thermo>::tabulatedSolidTransport
+(
+    const word& name,
+    const tabulatedSolidTransport& tst
+)
+:
+    Thermo(name, tst),
+    kappa_(tst.kappa_)
+{}
+
+
+template<class Thermo>
+inline Foam::autoPtr<Foam::tabulatedSolidTransport<Thermo>>
+Foam::tabulatedSolidTransport<Thermo>::clone() const
+{
+    return autoPtr<tabulatedSolidTransport<Thermo>>
+    (
+        new tabulatedSolidTransport<Thermo>(*this)
+    );
+}
+
+
+template<class Thermo>
+inline Foam::autoPtr<Foam::tabulatedSolidTransport<Thermo>>
+Foam::tabulatedSolidTransport<Thermo>::New
 (
     const dictionary& dict
 )
-:
-    Thermo(dict),
-    kappa0_(0.0),
-    n0_(0.0),
-    Tref_(0.0)
 {
-    const dictionary& subDict = dict.subDict("transport");
-    kappa0_ = subDict.lookup<scalar>("kappa0");
-    n0_ = subDict.lookup<scalar>("n0");
-    Tref_ = subDict.lookup<scalar>("Tref");
+    return autoPtr<tabulatedSolidTransport<Thermo>>
+    (
+        new tabulatedSolidTransport<Thermo>(dict)
+    );
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Thermo>
-void Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport::write
+inline Foam::scalar Foam::tabulatedSolidTransport<Thermo>::kappa
 (
-    Ostream& os
+    const scalar p, const scalar T
 ) const
 {
-    os  << this->name() << endl;
-    os  << token::BEGIN_BLOCK << incrIndent << nl;
-
-    Thermo::write(os);
-
-    dictionary dict("transport");
-    dict.add("kappa0", kappa0_);
-    dict.add("n0", n0_);
-    dict.add("Tref", Tref_);
-    os  << indent << dict.dictName() << dict;
-
-    os  << decrIndent << token::END_BLOCK << nl;
+    return kappa_.value(T);
 }
 
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+template<class Thermo>
+inline Foam::vector Foam::tabulatedSolidTransport<Thermo>::Kappa
+(
+    const scalar p, const scalar T
+) const
+{
+    const scalar kappa = kappa_.value(T);
+    return vector(kappa, kappa, kappa);
+}
+
 
 template<class Thermo>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os, const exponentialSolidTransport<Thermo>& et
-)
+inline Foam::scalar Foam::tabulatedSolidTransport<Thermo>::
+mu(const scalar p, const scalar T) const
 {
-    et.write(os);
-    return os;
+    NotImplemented;
+    return scalar(0);
 }
 
 

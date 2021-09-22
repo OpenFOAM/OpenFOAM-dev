@@ -39,6 +39,7 @@ transport
     constAnIsoSolid
     exponentialSolid
     polynomialSolid
+    tabulatedSolid
 );
 
 thermo

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ License
 #include "eConstThermo.H"
 #include "ePolynomialThermo.H"
 #include "ePowerThermo.H"
+#include "eIcoTabulatedThermo.H"
 
 #include "sensibleInternalEnergy.H"
 
@@ -40,6 +41,7 @@ License
 #include "constAnIsoSolidTransport.H"
 #include "exponentialSolidTransport.H"
 #include "polynomialSolidTransport.H"
+#include "tabulatedSolidTransport.H"
 
 #include "thermo.H"
 
@@ -54,13 +56,16 @@ License
     forSolidEquations(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);  \
     forSolidEquations                                                          \
         (Mu, sensibleInternalEnergy, ePolynomialThermo, Macro, Args);          \
-    forSolidEquations(Mu, sensibleInternalEnergy, ePowerThermo, Macro, Args)
+    forSolidEquations(Mu, sensibleInternalEnergy, ePowerThermo, Macro, Args)   \
+    forSolidEquations                                                          \
+        (Mu, sensibleInternalEnergy, eIcoTabulatedThermo, Macro, Args)
 
 #define forSolidTransports(Macro, Args...)                                     \
     forSolidEnergiesAndThermos(constIsoSolidTransport, Macro, Args);           \
     forSolidEnergiesAndThermos(constAnIsoSolidTransport, Macro, Args);         \
     forSolidEnergiesAndThermos(exponentialSolidTransport, Macro, Args);        \
-    forSolidEnergiesAndThermos(polynomialSolidTransport, Macro, Args)
+    forSolidEnergiesAndThermos(polynomialSolidTransport, Macro, Args)          \
+    forSolidEnergiesAndThermos(tabulatedSolidTransport, Macro, Args)
 
 #define forSolids(Macro, Args...)                                              \
     forSolidTransports(Macro, Args)

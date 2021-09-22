@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,33 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "exponentialSolidTransport.H"
+#include "tabulatedSolidTransport.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo>
-Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
+Foam::tabulatedSolidTransport<Thermo>::tabulatedSolidTransport
 (
     const dictionary& dict
 )
 :
     Thermo(dict),
-    kappa0_(0.0),
-    n0_(0.0),
-    Tref_(0.0)
-{
-    const dictionary& subDict = dict.subDict("transport");
-    kappa0_ = subDict.lookup<scalar>("kappa0");
-    n0_ = subDict.lookup<scalar>("n0");
-    Tref_ = subDict.lookup<scalar>("Tref");
-}
+    kappa_("kappa", dict.subDict("transport").subDict("kappa"))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Thermo>
-void Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport::write
+void Foam::tabulatedSolidTransport<Thermo>::tabulatedSolidTransport::write
 (
     Ostream& os
 ) const
@@ -60,9 +53,7 @@ void Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport::write
     Thermo::write(os);
 
     dictionary dict("transport");
-    dict.add("kappa0", kappa0_);
-    dict.add("n0", n0_);
-    dict.add("Tref", Tref_);
+    dict.add("kappa", kappa_.values());
     os  << indent << dict.dictName() << dict;
 
     os  << decrIndent << token::END_BLOCK << nl;
@@ -74,7 +65,7 @@ void Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport::write
 template<class Thermo>
 Foam::Ostream& Foam::operator<<
 (
-    Ostream& os, const exponentialSolidTransport<Thermo>& et
+    Ostream& os, const tabulatedSolidTransport<Thermo>& et
 )
 {
     et.write(os);

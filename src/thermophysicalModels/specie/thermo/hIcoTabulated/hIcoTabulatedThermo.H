@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,11 +44,14 @@ Usage
         Hf              0;
         Sf              0;
         Cp
-        (
-            (200     1005)
-            (350     1010)
-            (400     1020)
-        );
+        {
+            values
+            (
+                (200     1005)
+                (350     1010)
+                (400     1020)
+            );
+        }
     }
     \endverbatim
 

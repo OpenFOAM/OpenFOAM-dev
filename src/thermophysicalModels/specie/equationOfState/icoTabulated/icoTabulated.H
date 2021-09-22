@@ -39,11 +39,14 @@ Usage
     equationOfState
     {
         rho
-        (
-            (200 1010)
-            (350 1000)
-            (400 980)
-        );
+        {
+            values
+            (
+                 (200 1010)
+                 (350 1000)
+                 (400 980)
+            );
+        }
     }
     \endverbatim
 
