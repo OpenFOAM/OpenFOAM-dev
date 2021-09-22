@@ -222,9 +222,9 @@ modelsInFamily () {
 # Argument: .H file
 TypeName () {
     # First sed captures FvPatch, PolyPatch, PointPatch
-    _model="$(grep -Es "TypeName\(\"*[a-Z,0-9,:_()]*\"*\);" "$1" | \
-            sed 's@[FP][a-z]*Patch::typeName_()@@g' | \
-            sed 's@[\t ]*TypeName("*\([a-Z,0-9,:]*\)"*);@\1@')"
+    _model="$(grep -Es "TypeName\(\"*[[:alnum:]:_()]*\"*\);" "$1" | \
+            sed 's@[FP][[:lower:]]*Patch::typeName_()@@g' | \
+            sed 's@[\t ]*TypeName("*\([[:alnum:]:]*\)"*);@\1@')"
 
     [ "$_model" ] && echo "$_model" && return 0
 
