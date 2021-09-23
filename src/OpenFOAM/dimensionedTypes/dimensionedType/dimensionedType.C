@@ -323,7 +323,7 @@ void Foam::dimensioned<Type>::replace
 template<class Type>
 void Foam::dimensioned<Type>::read(const dictionary& dict)
 {
-    dict.lookup(name_) >> value_;
+    initialise(dict.lookup(name_));
 }
 
 
