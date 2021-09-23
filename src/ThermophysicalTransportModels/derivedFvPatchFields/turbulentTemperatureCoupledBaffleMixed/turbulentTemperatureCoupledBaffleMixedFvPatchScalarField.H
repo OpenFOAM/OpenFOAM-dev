@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,11 +32,12 @@ Description
 
     Specifies gradient and temperature such that the equations are the same
     on both sides:
-      - refGradient = zero gradient
+      - refGradient = (qs_ + qsNbr)/kappa
       - refValue = neighbour value
       - mixFraction = nbrKDelta / (nbrKDelta + myKDelta())
 
-    where KDelta is heat-transfer coefficient K * deltaCoeffs
+    where KDelta is heat-transfer coefficient K*deltaCoeffs
+    and qs is the optional source heat flux.
 
     The thermal conductivity \c kappa can either be retrieved from various
     possible sources, as detailed in the class temperatureCoupledBase.
@@ -44,9 +45,11 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        Tnbr         | name of the field    | no | T
+        Tnbr         | name of the field       | no          | T
         thicknessLayers | list of thicknesses per layer [m] | no |
         kappaLayers  | list of thermal conductivities per layer [W/m/K] | no |
+        qs           | Optional source heat flux [W/m^2] | no | 0
+        Qs           | Optional heat source [W]          | no | 0
     \endtable
 
     Example of the boundary condition specification:
@@ -57,11 +60,15 @@ Usage
         Tnbr            T;
         thicknessLayers (0.1 0.2 0.3 0.4);
         kappaLayers     (1 2 3 4);
+        qs              uniform 100;    // Optional source heat flux [W/m^2]
         value           uniform 300;
     }
     \endverbatim
 
     Needs to be on underlying mapped(Wall)FvPatch.
+
+    Note that in order to provide an optional heat source either qs or Qs
+    should be specified, not both.
 
 See also
     Foam::temperatureCoupledBase
@@ -104,6 +111,9 @@ class turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 
         //- Conductivity of layers
         scalarList kappaLayers_;
+
+        //- Source heat flux [W/m^2]
+        scalarField qs_;
 
         //- Total contact resistance
         scalar contactRes_;

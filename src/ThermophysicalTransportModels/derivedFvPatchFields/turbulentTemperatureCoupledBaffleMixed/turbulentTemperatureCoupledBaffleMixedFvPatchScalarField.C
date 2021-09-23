@@ -50,6 +50,7 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
     TnbrName_("undefined-Tnbr"),
     thicknessLayers_(0),
     kappaLayers_(0),
+    qs_(p.size()),
     contactRes_(0)
 {
     this->refValue() = 0.0;
@@ -71,6 +72,7 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
     TnbrName_(dict.lookup("Tnbr")),
     thicknessLayers_(0),
     kappaLayers_(0),
+    qs_(p.size(), 0),
     contactRes_(0.0)
 {
     if (!isA<mappedPatchBase>(this->patch().patch()))
@@ -97,6 +99,26 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
             }
             contactRes_ = 1.0/contactRes_;
         }
+    }
+
+    if (dict.found("qs"))
+    {
+        if (dict.found("Qs"))
+        {
+            FatalIOError
+                << "Either qs or Qs should be specified, not both"
+                << exit(FatalIOError);
+        }
+
+        qs_ = scalarField("qs", dict, p.size());
+    }
+    else if (dict.found("Qs"))
+    {
+        qs_ = scalarField
+        (
+            p.size(),
+            dict.lookup<scalar>("Qs")/gSum(patch().magSf())
+        );
     }
 
     fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
@@ -132,6 +154,7 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
     TnbrName_(ptf.TnbrName_),
     thicknessLayers_(ptf.thicknessLayers_),
     kappaLayers_(ptf.kappaLayers_),
+    qs_(mapper(ptf.qs_)),
     contactRes_(ptf.contactRes_)
 {}
 
@@ -139,16 +162,17 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::
 turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 (
-    const turbulentTemperatureCoupledBaffleMixedFvPatchScalarField& wtcsf,
+    const turbulentTemperatureCoupledBaffleMixedFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    mixedFvPatchScalarField(wtcsf, iF),
-    temperatureCoupledBase(patch(), wtcsf),
-    TnbrName_(wtcsf.TnbrName_),
-    thicknessLayers_(wtcsf.thicknessLayers_),
-    kappaLayers_(wtcsf.kappaLayers_),
-    contactRes_(wtcsf.contactRes_)
+    mixedFvPatchScalarField(ptf, iF),
+    temperatureCoupledBase(patch(), ptf),
+    TnbrName_(ptf.TnbrName_),
+    thicknessLayers_(ptf.thicknessLayers_),
+    kappaLayers_(ptf.kappaLayers_),
+    qs_(ptf.qs_),
+    contactRes_(ptf.contactRes_)
 {}
 
 
@@ -164,7 +188,7 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
     // Since we're inside initEvaluate/evaluate there might be processor
     // comms underway. Change the tag we use.
     int oldTag = UPstream::msgType();
-    UPstream::msgType() = oldTag+1;
+    UPstream::msgType() = oldTag + 1;
 
     // Get the coupling information from the mappedPatchBase
     const mappedPatchBase& mpp =
@@ -214,6 +238,8 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
 
     tmp<scalarField> myKDelta = kappa(*this)*patch().deltaCoeffs();
 
+    scalarField qsNbr(nbrField.qs_);
+    mpp.distribute(qsNbr);
 
     // Both sides agree on
     // - temperature : (myKDelta*fld + nbrKDelta*nbrFld)/(myKDelta+nbrKDelta)
@@ -226,12 +252,12 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
     //    fixedvalue and pure fixedgradient
     // 2. specify gradient and temperature such that the equations are the
     //    same on both sides. This leads to the choice of
-    //    - refGradient = zero gradient
+    //    - refGradient = (qs_ + qsNbr)/kappa;
     //    - refValue = neighbour value
     //    - mixFraction = nbrKDelta / (nbrKDelta + myKDelta())
 
     this->refValue() = nbrIntFld();
-    this->refGrad() = 0.0;
+    this->refGrad() = (qs_ + qsNbr)/kappa(*this);
     this->valueFraction() = nbrKDelta()/(nbrKDelta() + myKDelta());
 
     mixedFvPatchScalarField::updateCoeffs();
