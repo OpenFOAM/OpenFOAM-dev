@@ -238,9 +238,6 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
 
     tmp<scalarField> myKDelta = kappa(*this)*patch().deltaCoeffs();
 
-    scalarField qsNbr(nbrField.qs_);
-    mpp.distribute(qsNbr);
-
     // Both sides agree on
     // - temperature : (myKDelta*fld + nbrKDelta*nbrFld)/(myKDelta+nbrKDelta)
     // - gradient    : (temperature-fld)*delta
@@ -252,12 +249,12 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
     //    fixedvalue and pure fixedgradient
     // 2. specify gradient and temperature such that the equations are the
     //    same on both sides. This leads to the choice of
-    //    - refGradient = (qs_ + qsNbr)/kappa;
+    //    - refGradient = qs_/kappa;
     //    - refValue = neighbour value
     //    - mixFraction = nbrKDelta / (nbrKDelta + myKDelta())
 
     this->refValue() = nbrIntFld();
-    this->refGrad() = (qs_ + qsNbr)/kappa(*this);
+    this->refGrad() = qs_/kappa(*this);
     this->valueFraction() = nbrKDelta()/(nbrKDelta() + myKDelta());
 
     mixedFvPatchScalarField::updateCoeffs();

@@ -32,9 +32,9 @@ Description
 
     Specifies gradient and temperature such that the equations are the same
     on both sides:
-      - refGradient = (qs_ + qsNbr)/kappa
+      - refGradient = qs_/kappa
       - refValue = neighbour value
-      - mixFraction = nbrKDelta / (nbrKDelta + myKDelta())
+      - mixFraction = nbrKDelta/(nbrKDelta + myKDelta())
 
     where KDelta is heat-transfer coefficient K*deltaCoeffs
     and qs is the optional source heat flux.
