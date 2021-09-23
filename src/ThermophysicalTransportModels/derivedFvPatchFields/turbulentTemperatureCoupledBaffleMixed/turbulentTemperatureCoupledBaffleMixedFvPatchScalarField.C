@@ -105,7 +105,7 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
     {
         if (dict.found("Qs"))
         {
-            FatalIOError
+            FatalIOErrorInFunction(dict)
                 << "Either qs or Qs should be specified, not both"
                 << exit(FatalIOError);
         }
