@@ -50,9 +50,6 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::polynomialSolidTransport
 template<class Thermo, int PolySize>
 void Foam::polynomialSolidTransport<Thermo, PolySize>::write(Ostream& os) const
 {
-    os  << this->name() << endl;
-    os  << token::BEGIN_BLOCK << incrIndent << nl;
-
     Thermo::write(os);
 
     dictionary dict("transport");
@@ -63,8 +60,6 @@ void Foam::polynomialSolidTransport<Thermo, PolySize>::write(Ostream& os) const
         kappaCoeffs_
     );
     os  << indent << dict.dictName() << dict;
-
-    os  << decrIndent << token::END_BLOCK << nl;
 }
 
 

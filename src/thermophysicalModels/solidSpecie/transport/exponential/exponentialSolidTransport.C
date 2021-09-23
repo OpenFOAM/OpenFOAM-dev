@@ -54,9 +54,6 @@ void Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport::write
     Ostream& os
 ) const
 {
-    os  << this->name() << endl;
-    os  << token::BEGIN_BLOCK << incrIndent << nl;
-
     Thermo::write(os);
 
     dictionary dict("transport");
@@ -64,8 +61,6 @@ void Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport::write
     dict.add("n0", n0_);
     dict.add("Tref", Tref_);
     os  << indent << dict.dictName() << dict;
-
-    os  << decrIndent << token::END_BLOCK << nl;
 }
 
 

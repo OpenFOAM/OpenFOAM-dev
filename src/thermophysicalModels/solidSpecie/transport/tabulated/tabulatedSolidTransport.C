@@ -47,16 +47,11 @@ void Foam::tabulatedSolidTransport<Thermo>::tabulatedSolidTransport::write
     Ostream& os
 ) const
 {
-    os  << this->name() << endl;
-    os  << token::BEGIN_BLOCK << incrIndent << nl;
-
     Thermo::write(os);
 
     dictionary dict("transport");
     dict.add("kappa", kappa_.values());
     os  << indent << dict.dictName() << dict;
-
-    os  << decrIndent << token::END_BLOCK << nl;
 }
 
 
