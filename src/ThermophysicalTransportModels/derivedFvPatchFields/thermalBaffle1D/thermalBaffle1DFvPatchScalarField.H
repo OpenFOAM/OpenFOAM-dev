@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,8 @@ Usage
 
         samplePatch     <slavePatchName>;
 
-        thickness       uniform 0.005;  // thickness [m]
-        Qs              uniform 100;    // heat flux [W/m^2]
+        thickness       uniform 0.005;  // Thickness [m]
+        qs              uniform 100;    // Source heat flux [W/m^2]
 
         qr              none;
         qrRelaxation    1;
@@ -124,8 +124,8 @@ class thermalBaffle1DFvPatchScalarField
         //- Baffle thickness [m]
         mutable scalarField thickness_;
 
-        //- Superficial heat source [W/m^2]
-        mutable scalarField Qs_;
+        //- Source heat flux [W/m^2]
+        mutable scalarField qs_;
 
         //- Solid dictionary
         dictionary solidDict_;
@@ -148,8 +148,8 @@ class thermalBaffle1DFvPatchScalarField
         //- Return const solid thermo
         const solidType& solid() const;
 
-        //- Return Qs from master
-        tmp<scalarField> Qs() const;
+        //- Return source heat flux from master
+        tmp<scalarField> qs() const;
 
         //- Return thickness from master
         tmp<scalarField> baffleThickness() const;
