@@ -94,7 +94,7 @@ Foam::label Foam::snappyRefineDriver::featureEdgeRefine
             (
                 meshRefiner_.refineCandidates
                 (
-                    refineParams.locationsInMesh(),
+                    refineParams.meshLocations().inside(),
                     refineParams.curvature(),
                     refineParams.planarAngle(),
 
@@ -207,7 +207,7 @@ Foam::label Foam::snappyRefineDriver::surfaceOnlyRefine
         (
             meshRefiner_.refineCandidates
             (
-                refineParams.locationsInMesh(),
+                refineParams.meshLocations().inside(),
                 refineParams.curvature(),
                 refineParams.planarAngle(),
 
@@ -341,7 +341,7 @@ Foam::label Foam::snappyRefineDriver::gapOnlyRefine
         (
             meshRefiner_.refineCandidates
             (
-                refineParams.locationsInMesh(),
+                refineParams.meshLocations().inside(),
                 refineParams.curvature(),
                 refineParams.planarAngle(),
 
@@ -692,7 +692,7 @@ void Foam::snappyRefineDriver::removeInsideCells
         nBufferLayers,                  // nBufferLayers
         globalToMasterPatch_,
         globalToSlavePatch_,
-        refineParams.locationsInMesh()
+        refineParams.meshLocations()
     );
 
     if (debug&meshRefinement::MESH)
@@ -753,7 +753,7 @@ Foam::label Foam::snappyRefineDriver::shellRefine
         (
             meshRefiner_.refineCandidates
             (
-                refineParams.locationsInMesh(),
+                refineParams.meshLocations().inside(),
                 refineParams.curvature(),
                 refineParams.planarAngle(),
 
@@ -921,7 +921,7 @@ void Foam::snappyRefineDriver::baffleAndSplitMesh
         const_cast<Time&>(mesh.time()),
         globalToMasterPatch_,
         globalToSlavePatch_,
-        refineParams.locationsInMesh()
+        refineParams.meshLocations()
     );
 }
 
@@ -956,7 +956,7 @@ void Foam::snappyRefineDriver::zonify
 
         meshRefiner_.zonify
         (
-            refineParams.locationsInMesh(),
+            refineParams.meshLocations().inside(),
             refineParams.allowFreeStandingZoneFaces()
         );
 
@@ -1023,7 +1023,7 @@ void Foam::snappyRefineDriver::splitAndMergeBaffles
         const_cast<Time&>(mesh.time()),
         globalToMasterPatch_,
         globalToSlavePatch_,
-        refineParams.locationsInMesh()
+        refineParams.meshLocations()
     );
 
     if (debug)
@@ -1061,7 +1061,7 @@ void Foam::snappyRefineDriver::splitAndMergeBaffles
         (
             globalToMasterPatch_,
             globalToSlavePatch_,
-            refineParams.locationsInMesh()
+            refineParams.meshLocations()
         );
 
         if (debug)

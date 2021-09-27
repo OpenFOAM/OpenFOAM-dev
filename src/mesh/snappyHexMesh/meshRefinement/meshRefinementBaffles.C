@@ -2263,7 +2263,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
     Time& runTime,
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
-    const List<point>& locationsInMesh
+    const refinementParameters::locations& meshLocations
 )
 {
     // Introduce baffles
@@ -2354,7 +2354,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
         runTime++;
     }
 
-    splitMeshRegions(globalToMasterPatch, globalToSlavePatch, locationsInMesh);
+    splitMeshRegions(globalToMasterPatch, globalToSlavePatch, meshLocations);
 
     if (debug)
     {
@@ -2445,7 +2445,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
     const label nBufferLayers,
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
-    const List<point>& locationsInMesh
+    const refinementParameters::locations& meshLocations
 )
 {
     // Determine patches to put intersections into
@@ -2484,13 +2484,13 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
     regionSplit cellRegion(mesh_, blockedFace);
     blockedFace.clear();
 
-    // Find the regions containing any of the points in locationsInMesh
+    // Find the regions containing any of the points in meshLocations
     findRegions
     (
         mesh_,
         cellRegion,
         mergeDistance_*vector::one,
-        locationsInMesh
+        meshLocations
     );
 
 
@@ -2668,7 +2668,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
     reduce(nCellsInMesh, sumOp<label>());
 
     Info<< "Selecting all cells in regions containing any of the points in "
-        << locationsInMesh << endl
+        << meshLocations.inside() << endl
         << "Selected: " << nCellsInMesh << " cells." << endl;
 
 

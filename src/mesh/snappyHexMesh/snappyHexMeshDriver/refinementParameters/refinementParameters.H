@@ -54,6 +54,31 @@ class polyMesh;
 
 class refinementParameters
 {
+public:
+
+    // Public classes
+
+        //- Class to hold the meshed region selection locations
+        class locations
+        {
+            //- Locations in the meshed regions
+            const List<point> inside_;
+
+        public:
+
+            //- Constructor
+            locations(const dictionary& dict);
+
+            //- Return the locations inside the meshed regions
+            const List<point>& inside() const
+            {
+                return inside_;
+            }
+        };
+
+
+private:
+
     // Private Data
 
         //- Total number of cells
@@ -74,8 +99,8 @@ class refinementParameters
         //- Number of layers between different refinement levels
         const label nBufferLayers_;
 
-        //- Areas to keep
-        const List<point> locationsInMesh_;
+        //- Locations to select regions of cells
+        const locations meshLocations_;
 
         //- FaceZone faces allowed which have owner and neighbour in same
         //  cellZone?
@@ -142,10 +167,10 @@ public:
                 return nBufferLayers_;
             }
 
-            //- Locations in to select meshed regions
-            const List<point>& locationsInMesh() const
+            //- Locations to select meshed regions
+            const locations& meshLocations() const
             {
-                return locationsInMesh_;
+                return meshLocations_;
             }
 
             //- Are zone faces allowed only in between different cell zones

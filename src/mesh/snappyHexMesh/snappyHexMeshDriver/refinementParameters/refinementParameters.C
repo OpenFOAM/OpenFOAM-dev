@@ -44,12 +44,7 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
         )
     ),
     nBufferLayers_(dict.lookup<label>("nCellsBetweenLevels")),
-    locationsInMesh_
-    (
-        dict.found("locationsInMesh")
-      ? List<point>(dict.lookup("locationsInMesh"))
-      : List<point>(1, dict.lookup("locationInMesh"))
-    ),
+    meshLocations_(dict),
     allowFreeStandingZoneFaces_(dict.lookup("allowFreeStandingZoneFaces")),
     useTopologicalSnapDetection_
     (
@@ -61,8 +56,6 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
         dict.lookupOrDefault<Switch>("handleSnapProblems", true)
     )
 {
-    InfoInFunction << locationsInMesh_ << endl;
-
     scalar featAngle(dict.lookup<scalar>("resolveFeatureAngle"));
 
     if (featAngle < 0 || featAngle > 180)
@@ -74,6 +67,17 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
         curvature_ = Foam::cos(degToRad(featAngle));
     }
 }
+
+
+Foam::refinementParameters::locations::locations(const dictionary& dict)
+:
+    inside_
+    (
+        dict.found("locationsInMesh")
+      ? List<point>(dict.lookup("locationsInMesh"))
+      : List<point>(1, dict.lookup("locationInMesh"))
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -88,11 +92,11 @@ const
     globalIndex globalCells(mesh.nCells());
 
     // Cell label per point
-    labelList cellLabels(locationsInMesh_.size());
+    labelList cellLabels(meshLocations_.inside().size());
 
-    forAll(locationsInMesh_, i)
+    forAll(meshLocations_.inside(), i)
     {
-        const point& locationInMesh = locationsInMesh_[i];
+        const point& locationInMesh = meshLocations_.inside()[i];
 
         label localCelli = mesh.findCell(locationInMesh);
 

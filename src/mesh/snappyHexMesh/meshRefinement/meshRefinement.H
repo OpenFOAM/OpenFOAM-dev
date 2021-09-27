@@ -51,6 +51,7 @@ SourceFiles
 #include "pointFieldsFwd.H"
 #include "Tuple2.H"
 #include "pointIndexHit.H"
+#include "refinementParameters.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -838,7 +839,7 @@ public:
                 Time& runTime,
                 const labelList& globalToMasterPatch,
                 const labelList& globalToSlavePatch,
-                const List<point>& locationsInMesh
+                const refinementParameters::locations& meshLocations
             );
 
             //- Split off (with optional buffer layers) unreachable areas
@@ -848,7 +849,7 @@ public:
                 const label nBufferLayers,
                 const labelList& globalToMasterPatch,
                 const labelList& globalToSlavePatch,
-                const List<point>& locationsInMesh
+                const refinementParameters::locations& meshLocations
             );
 
             //- Find boundary points that connect to more than one cell
@@ -910,7 +911,7 @@ public:
                 const polyMesh&,
                 const labelList& cellRegion,
                 const vector& perturbVec,
-                const point& locationInMesh
+                const point& location
             );
 
             //- Find regions points are in and update cellRegion
@@ -920,7 +921,7 @@ public:
                 const polyMesh&,
                 labelList& cellRegion,
                 const vector& perturbVec,
-                const List<point>& locationsInMesh
+                const refinementParameters::locations& meshLocations
             );
 
             //- Split mesh. Keep regions containing any point in locationsInMesh
@@ -928,7 +929,7 @@ public:
             (
                 const labelList& globalToMasterPatch,
                 const labelList& globalToSlavePatch,
-                const List<point>& locationsInMesh
+                const refinementParameters::locations& meshLocations
             );
 
             //- Split faces into two

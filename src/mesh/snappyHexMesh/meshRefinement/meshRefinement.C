@@ -2125,24 +2125,24 @@ void Foam::meshRefinement::findRegions
     const polyMesh& mesh,
     labelList& cellRegion,
     const vector& perturbVec,
-    const List<point>& locationsInMesh
+    const refinementParameters::locations& meshLocations
 )
 {
     // List of all cells inside any of the regions
-    // which have a point in the locationsInMesh list
+    // which have a point in the meshLocations.inside() list
     PackedBoolList insideCells(mesh.nCells());
 
-    // For each of the locationsInMesh find the corresponding region
+    // For each of the meshLocations.inside() find the corresponding region
     // and mark the cells
-    forAll(locationsInMesh, i)
+    forAll(meshLocations.inside(), i)
     {
-        // Find the region corresponding to the locationsInMesh[i]
+        // Find the region corresponding to the meshLocations.inside()[i]
         const label regioni = findRegion
         (
             mesh,
             cellRegion,
             perturbVec,
-            locationsInMesh[i]
+            meshLocations.inside()[i]
         );
 
         // Add all the cells in the region to insideCells
@@ -2170,7 +2170,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMeshRegions
 (
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
-    const List<point>& locationsInMesh
+    const refinementParameters::locations& meshLocations
 )
 {
     // Force calculation of face decomposition (used in findCell)
@@ -2189,7 +2189,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMeshRegions
         mesh_,
         cellRegion,
         mergeDistance_*vector::one,
-        locationsInMesh
+        meshLocations
     );
 
     // Subset
@@ -2218,7 +2218,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMeshRegions
         reduce(nCellsToKeep, sumOp<label>());
 
         Info<< "Keeping all cells in regions containing any point in "
-            << locationsInMesh << endl
+            << meshLocations.inside() << endl
             << "Selected for keeping : " << nCellsToKeep << " cells." << endl;
 
         // Remove cells
