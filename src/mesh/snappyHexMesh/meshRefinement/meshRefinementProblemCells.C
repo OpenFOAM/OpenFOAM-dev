@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ void Foam::meshRefinement::findNearest
             }
         }
 
-        label geomI = surfaces_.surfaces()[surfI];
+        const label geomI = surfaces_.surfaces()[surfI];
 
         pointField localNormals;
         surfaces_.geometry()[geomI].getNormal(localHits, localNormals);
@@ -168,11 +168,11 @@ Foam::Map<Foam::label> Foam::meshRefinement::findEdgeConnectedProblemCells
 
         if (eFaces.size() == 2)
         {
-            label face0 = pp.addressing()[eFaces[0]];
-            label face1 = pp.addressing()[eFaces[1]];
+            const label face0 = pp.addressing()[eFaces[0]];
+            const label face1 = pp.addressing()[eFaces[1]];
 
-            label cell0 = mesh_.faceOwner()[face0];
-            label cell1 = mesh_.faceOwner()[face1];
+            const label cell0 = mesh_.faceOwner()[face0];
+            const label cell1 = mesh_.faceOwner()[face1];
 
             if (cellLevel[cell0] > cellLevel[cell1])
             {
@@ -241,18 +241,16 @@ Foam::Map<Foam::label> Foam::meshRefinement::findEdgeConnectedProblemCells
 
     forAll(candidateFaces, i)
     {
-        label facei = candidateFaces[i];
+        const label facei = candidateFaces[i];
+        const vector n = mesh_.faceAreas()[facei]/mag(mesh_.faceAreas()[facei]);
 
-        vector n = mesh_.faceAreas()[facei];
-        n /= mag(n);
-
-        label region = surfaces_.globalRegion
+        const label region = surfaces_.globalRegion
         (
             nearestSurface[i],
             nearestRegion[i]
         );
 
-        scalar angle = degToRad(perpendicularAngle[region]);
+        const scalar angle = degToRad(perpendicularAngle[region]);
 
         if (angle >= 0)
         {
@@ -280,9 +278,6 @@ Foam::Map<Foam::label> Foam::meshRefinement::findEdgeConnectedProblemCells
 }
 
 
-// Check if moving face to new points causes a 'collapsed' face.
-// Uses new point position only for the face, not the neighbouring
-// cell centres
 bool Foam::meshRefinement::isCollapsedFace
 (
     const pointField& points,
@@ -310,10 +305,10 @@ bool Foam::meshRefinement::isCollapsedFace
 
     if (mesh_.isInternalFace(facei))
     {
-        label nei = mesh_.faceNeighbour()[facei];
-        vector d = mesh_.cellCentres()[nei] - ownCc;
+        const label nei = mesh_.faceNeighbour()[facei];
+        const vector d = mesh_.cellCentres()[nei] - ownCc;
 
-        scalar dDotS = (d & s)/(mag(d)*magS + vSmall);
+        const scalar dDotS = (d & s)/(mag(d)*magS + vSmall);
 
         if (dDotS < severeNonorthogonalityThreshold)
         {
@@ -326,13 +321,13 @@ bool Foam::meshRefinement::isCollapsedFace
     }
     else
     {
-        label patchi = mesh_.boundaryMesh().whichPatch(facei);
+        const label patchi = mesh_.boundaryMesh().whichPatch(facei);
 
         if (mesh_.boundaryMesh()[patchi].coupled())
         {
-            vector d = neiCc[facei-mesh_.nInternalFaces()] - ownCc;
+            const vector d = neiCc[facei-mesh_.nInternalFaces()] - ownCc;
 
-            scalar dDotS = (d & s)/(mag(d)*magS + vSmall);
+            const scalar dDotS = (d & s)/(mag(d)*magS + vSmall);
 
             if (dDotS < severeNonorthogonalityThreshold)
             {
@@ -353,7 +348,6 @@ bool Foam::meshRefinement::isCollapsedFace
 }
 
 
-// Check if moving cell to new points causes it to collapse.
 bool Foam::meshRefinement::isCollapsedCell
 (
     const pointField& points,
@@ -361,7 +355,7 @@ bool Foam::meshRefinement::isCollapsedCell
     const label celli
 ) const
 {
-    scalar vol = mesh_.cells()[celli].mag(points, mesh_.faces());
+    const scalar vol = mesh_.cells()[celli].mag(points, mesh_.faces());
 
     if (vol/mesh_.cellVolumes()[celli] < volFraction)
     {
@@ -406,7 +400,7 @@ Foam::labelList Foam::meshRefinement::nearestPatch
         nFaces = 0;
         forAll(adaptPatchIDs, i)
         {
-            label patchi = adaptPatchIDs[i];
+            const label patchi = adaptPatchIDs[i];
             const polyPatch& pp = patches[patchi];
 
             forAll(pp, i)
@@ -462,12 +456,6 @@ Foam::labelList Foam::meshRefinement::nearestPatch
 }
 
 
-// Returns list with for every internal face -1 or the patch they should
-// be baffled into. Gets run after createBaffles so all the unzoned surface
-// intersections have already been turned into baffles. (Note: zoned surfaces
-// are not baffled at this stage)
-// Used to remove cells by baffling all their faces and have the
-// splitMeshRegions chuck away non used regions.
 Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
 (
     const dictionary& motionDict,
@@ -557,7 +545,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
 
             forAll(cFaces, i)
             {
-                label facei = cFaces[i];
+                const label facei = cFaces[i];
 
                 if (facePatch[facei] == -1 && mesh_.isInternalFace(facei))
                 {
@@ -731,7 +719,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
 
         forAll(cPoints, i)
         {
-            label pointi = cPoints[i];
+            const label pointi = cPoints[i];
 
             if (pointLevel[pointi] <= cellLevel[celli])
             {
@@ -794,7 +782,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
                     // Block all faces of cell
                     forAll(cFaces, cf)
                     {
-                        label facei = cFaces[cf];
+                        const label facei = cFaces[cf];
 
                         if
                         (
@@ -881,7 +869,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
 
                         forAll(cFaces, cf)
                         {
-                            label facei = cFaces[cf];
+                            const label facei = cFaces[cf];
 
                             if
                             (

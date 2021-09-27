@@ -54,7 +54,7 @@ Foam::label Foam::meshRefinement::createBaffle
 ) const
 {
     const face& f = mesh_.faces()[facei];
-    label zoneID = mesh_.faceZones().whichZone(facei);
+    const label zoneID = mesh_.faceZones().whichZone(facei);
     bool zoneFlip = false;
 
     if (zoneID >= 0)
@@ -172,9 +172,8 @@ void Foam::meshRefinement::getBafflePatches
 
     forAll(testFaces, i)
     {
-        label facei = testFaces[i];
-
-        label own = mesh_.faceOwner()[facei];
+        const label facei = testFaces[i];
+        const label own = mesh_.faceOwner()[facei];
 
         if (mesh_.isInternalFace(facei))
         {
@@ -221,7 +220,7 @@ void Foam::meshRefinement::getBafflePatches
 
     forAll(testFaces, i)
     {
-        label facei = testFaces[i];
+        const label facei = testFaces[i];
 
         if (hit1[i].hit() && hit2[i].hit())
         {
@@ -283,20 +282,19 @@ Foam::Map<Foam::labelPair> Foam::meshRefinement::getZoneBafflePatches
     const PtrList<surfaceZonesInfo>& surfZones = surfaces_.surfZones();
     const meshFaceZones& fZones = mesh_.faceZones();
 
-    forAll(surfZones, surfI)
+    forAll(surfZones, surfi)
     {
-        const word& faceZoneName = surfZones[surfI].faceZoneName();
+        const word& faceZoneName = surfZones[surfi].faceZoneName();
 
         if (faceZoneName.size())
         {
             // Get zone
-            label zoneI = fZones.findZoneID(faceZoneName);
-
+            const label zoneI = fZones.findZoneID(faceZoneName);
             const faceZone& fZone = fZones[zoneI];
 
             // Get patch allocated for zone
-            label globalRegionI = surfaces_.globalRegion(surfI, 0);
-            labelPair zPatches
+            const label globalRegionI = surfaces_.globalRegion(surfi, 0);
+            const labelPair zPatches
             (
                 globalToMasterPatch[globalRegionI],
                 globalToSlavePatch[globalRegionI]
@@ -309,7 +307,7 @@ Foam::Map<Foam::labelPair> Foam::meshRefinement::getZoneBafflePatches
 
             forAll(fZone, i)
             {
-                label facei = fZone[i];
+                const label facei = fZone[i];
 
                 if (allowBoundary || mesh_.isInternalFace(facei))
                 {
@@ -332,6 +330,7 @@ Foam::Map<Foam::labelPair> Foam::meshRefinement::getZoneBafflePatches
             }
         }
     }
+
     return bafflePatch;
 }
 
@@ -439,7 +438,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createBaffles
     // Pick up owner side of baffle
     forAll(ownPatch, oldFacei)
     {
-        label facei = reverseFaceMap[oldFacei];
+        const label facei = reverseFaceMap[oldFacei];
 
         if (ownPatch[oldFacei] != -1 && facei >= 0)
         {
@@ -454,7 +453,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createBaffles
     // Pick up neighbour side of baffle (added faces)
     forAll(faceMap, facei)
     {
-        label oldFacei = faceMap[facei];
+        const label oldFacei = faceMap[facei];
 
         if (oldFacei >= 0 && reverseFaceMap[oldFacei] != facei)
         {
@@ -488,8 +487,8 @@ void Foam::meshRefinement::checkZoneFaces() const
         {
             forAll(pp, i)
             {
-                label facei = pp.start()+i;
-                label zoneI = fZones.whichZone(facei);
+                const label facei = pp.start() + i;
+                const label zoneI = fZones.whichZone(facei);
 
                 if (zoneI != -1)
                 {
@@ -536,7 +535,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createZoneBaffles
             )
         );
 
-        label nZoneFaces = returnReduce(faceToPatch.size(), sumOp<label>());
+        const label nZoneFaces =
+            returnReduce(faceToPatch.size(), sumOp<label>());
+
         if (nZoneFaces > 0)
         {
             // Convert into labelLists
@@ -563,7 +564,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createZoneBaffles
 
             forAll(faceMap, facei)
             {
-                label oldFacei = faceMap[facei];
+                const label oldFacei = faceMap[facei];
 
                 // Does face originate from face-to-patch
                 Map<labelPair>::const_iterator iter = faceToPatch.find
@@ -573,7 +574,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createZoneBaffles
 
                 if (iter != faceToPatch.end())
                 {
-                    label masterFacei = reverseFaceMap[oldFacei];
+                    const label masterFacei = reverseFaceMap[oldFacei];
                     if (facei != masterFacei)
                     {
                         baffles[baffleI++] = labelPair(masterFacei, facei);
@@ -661,9 +662,9 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
             {
                 const labelList& fEdges = mesh_.faceEdges(facei);
 
-                forAll(fEdges, fEdgeI)
+                forAll(fEdges, fEdgei)
                 {
-                    nBafflesPerEdge[fEdges[fEdgeI]]++;
+                    nBafflesPerEdge[fEdges[fEdgei]]++;
                 }
                 facei++;
             }
@@ -681,20 +682,20 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
     forAll(couples, i)
     {
         {
-            label f0 = couples[i].first();
+            const label f0 = couples[i].first();
             const labelList& fEdges0 = mesh_.faceEdges(f0, fe0);
-            forAll(fEdges0, fEdgeI)
+            forAll(fEdges0, fEdgei)
             {
-                nBafflesPerEdge[fEdges0[fEdgeI]] += baffleValue;
+                nBafflesPerEdge[fEdges0[fEdgei]] += baffleValue;
             }
         }
 
         {
-            label f1 = couples[i].second();
+            const label f1 = couples[i].second();
             const labelList& fEdges1 = mesh_.faceEdges(f1, fe1);
-            forAll(fEdges1, fEdgeI)
+            forAll(fEdges1, fEdgei)
             {
-                nBafflesPerEdge[fEdges1[fEdgeI]] += baffleValue;
+                nBafflesPerEdge[fEdges1[fEdgei]] += baffleValue;
             }
         }
     }
@@ -728,11 +729,11 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
         {
             const labelList& fEdges = mesh_.faceEdges(couple.first());
 
-            forAll(fEdges, fEdgeI)
+            forAll(fEdges, fEdgei)
             {
-                label edgeI = fEdges[fEdgeI];
+                const label edgei = fEdges[fEdgei];
 
-                if (nBafflesPerEdge[edgeI] == 2*baffleValue+2*1)
+                if (nBafflesPerEdge[edgei] == 2*baffleValue+2*1)
                 {
                     filteredCouples[filterI++] = couple;
                     break;
@@ -743,7 +744,8 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
     filteredCouples.setSize(filterI);
 
 
-    label nFiltered = returnReduce(filteredCouples.size(), sumOp<label>());
+    const label nFiltered =
+        returnReduce(filteredCouples.size(), sumOp<label>());
 
     Info<< "freeStandingBaffles : detected "
         << nFiltered
@@ -806,12 +808,6 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
             normal2
         );
 
-        // mkDir(mesh_.time().path()/timeName());
-        // OBJstream str
-        //(
-        //    mesh_.time().path()/timeName()/"flatBaffles.obj"
-        //);
-
         const scalar planarAngleCos = Foam::cos(degToRad(planarAngle));
 
         label filterI = 0;
@@ -829,19 +825,11 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
                 )
             )
             {
-                // Two different hits. Check angle.
-                // str.write
-                //(
-                //    linePointRef(hit1[i].hitPoint(), hit2[i].hitPoint()),
-                //    normal1[i],
-                //    normal2[i]
-                //);
-
-                if ((normal1[i]&normal2[i]) > planarAngleCos)
+                if ((normal1[i ]& normal2[i]) > planarAngleCos)
                 {
                     // Both normals aligned
-                    vector n = end[i]-start[i];
-                    scalar magN = mag(n);
+                    const vector n = end[i] - start[i];
+                    const scalar magN = mag(n);
                     if (magN > vSmall)
                     {
                         filteredCouples[filterI++] = couple;
@@ -882,18 +870,18 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::mergeBaffles
 
     forAll(couples, i)
     {
-        label face0 = couples[i].first();
-        label face1 = couples[i].second();
+        const label face0 = couples[i].first();
+        const label face1 = couples[i].second();
 
         // face1 < 0 signals a coupled face that has been converted to baffle.
 
-        label own0 = faceOwner[face0];
-        label own1 = faceOwner[face1];
+        const label own0 = faceOwner[face0];
+        const label own1 = faceOwner[face1];
 
         if (face1 < 0 || own0 < own1)
         {
             // Use face0 as the new internal face.
-            label zoneID = faceZones.whichZone(face0);
+            const label zoneID = faceZones.whichZone(face0);
             bool zoneFlip = false;
 
             if (zoneID >= 0)
@@ -902,7 +890,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::mergeBaffles
                 zoneFlip = fZone.flipMap()[fZone.whichFace(face0)];
             }
 
-            label nei = (face1 < 0 ? -1 : own1);
+            const label nei = (face1 < 0 ? -1 : own1);
 
             meshMod.setAction(polyRemoveFace(face1));
             meshMod.setAction
@@ -924,7 +912,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::mergeBaffles
         else
         {
             // Use face1 as the new internal face.
-            label zoneID = faceZones.whichZone(face1);
+            const label zoneID = faceZones.whichZone(face1);
             bool zoneFlip = false;
 
             if (zoneID >= 0)
@@ -982,13 +970,13 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::mergeBaffles
 
     forAll(couples, i)
     {
-        label newFace0 = map().reverseFaceMap()[couples[i].first()];
+        const label newFace0 = map().reverseFaceMap()[couples[i].first()];
         if (newFace0 != -1)
         {
             newExposedFaces[newI++] = newFace0;
         }
 
-        label newFace1 = map().reverseFaceMap()[couples[i].second()];
+        const label newFace1 = map().reverseFaceMap()[couples[i].second()];
         if (newFace1 != -1)
         {
             newExposedFaces[newI++] = newFace1;
@@ -1029,11 +1017,11 @@ void Foam::meshRefinement::findCellZoneGeometric
     {
         if (cellToZone[celli] == -2)
         {
-            label surfI = insideSurfaces[celli];
+            label surfi = insideSurfaces[celli];
 
-            if (surfI != -1)
+            if (surfi != -1)
             {
-                cellToZone[celli] = surfaceToCellZone[surfI];
+                cellToZone[celli] = surfaceToCellZone[surfi];
             }
         }
     }
@@ -1049,9 +1037,9 @@ void Foam::meshRefinement::findCellZoneGeometric
     label nCandidates = 0;
     forAll(namedSurfaceIndex, facei)
     {
-        label surfI = namedSurfaceIndex[facei];
+        const label surfi = namedSurfaceIndex[facei];
 
-        if (surfI != -1)
+        if (surfi != -1)
         {
             if (mesh_.isInternalFace(facei))
             {
@@ -1069,17 +1057,18 @@ void Foam::meshRefinement::findCellZoneGeometric
     nCandidates = 0;
     forAll(namedSurfaceIndex, facei)
     {
-        label surfI = namedSurfaceIndex[facei];
+        const label surfi = namedSurfaceIndex[facei];
 
-        if (surfI != -1)
+        if (surfi != -1)
         {
-            label own = faceOwner[facei];
+            const label own = faceOwner[facei];
             const point& ownCc = cellCentres[own];
 
             if (mesh_.isInternalFace(facei))
             {
-                label nei = faceNeighbour[facei];
+                const label nei = faceNeighbour[facei];
                 const point& neiCc = cellCentres[nei];
+
                 // Perturbed cc
                 const vector d = 1e-4*(neiCc - ownCc);
                 candidatePoints[nCandidates++] = ownCc-d;
@@ -1087,8 +1076,7 @@ void Foam::meshRefinement::findCellZoneGeometric
             }
             else
             {
-                // const point& neiFc = mesh_.faceCentres()[facei];
-                const point& neiFc = neiCc[facei-mesh_.nInternalFaces()];
+                const point& neiFc = neiCc[facei - mesh_.nInternalFaces()];
 
                 // Perturbed cc
                 const vector d = 1e-4*(neiFc - ownCc);
@@ -1113,21 +1101,21 @@ void Foam::meshRefinement::findCellZoneGeometric
     nCandidates = 0;
     forAll(namedSurfaceIndex, facei)
     {
-        label surfI = namedSurfaceIndex[facei];
+        const label surfi = namedSurfaceIndex[facei];
 
-        if (surfI != -1)
+        if (surfi != -1)
         {
-            label own = faceOwner[facei];
+            const label own = faceOwner[facei];
 
             if (mesh_.isInternalFace(facei))
             {
-                label ownSurfI = insideSurfaces[nCandidates++];
+                const label ownSurfI = insideSurfaces[nCandidates++];
                 if (ownSurfI != -1)
                 {
                     cellToZone[own] = surfaceToCellZone[ownSurfI];
                 }
 
-                label neiSurfI = insideSurfaces[nCandidates++];
+                const label neiSurfI = insideSurfaces[nCandidates++];
                 if (neiSurfI != -1)
                 {
                     label nei = faceNeighbour[facei];
@@ -1137,7 +1125,7 @@ void Foam::meshRefinement::findCellZoneGeometric
             }
             else
             {
-                label ownSurfI = insideSurfaces[nCandidates++];
+                const label ownSurfI = insideSurfaces[nCandidates++];
                 if (ownSurfI != -1)
                 {
                     cellToZone[own] = surfaceToCellZone[ownSurfI];
@@ -1153,8 +1141,8 @@ void Foam::meshRefinement::findCellZoneGeometric
 
     for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label ownZone = cellToZone[mesh_.faceOwner()[facei]];
-        label neiZone = cellToZone[mesh_.faceNeighbour()[facei]];
+        const label ownZone = cellToZone[mesh_.faceOwner()[facei]];
+        const label neiZone = cellToZone[mesh_.faceNeighbour()[facei]];
 
         if (namedSurfaceIndex[facei] == -1 && (ownZone != neiZone))
         {
@@ -1167,7 +1155,7 @@ void Foam::meshRefinement::findCellZoneGeometric
         }
     }
 
-    labelList neiCellZone(mesh_.nFaces()-mesh_.nInternalFaces());
+    labelList neiCellZone(mesh_.nFaces() - mesh_.nInternalFaces());
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
     forAll(patches, patchi)
@@ -1178,8 +1166,8 @@ void Foam::meshRefinement::findCellZoneGeometric
         {
             forAll(pp, i)
             {
-                label facei = pp.start()+i;
-                label ownZone = cellToZone[mesh_.faceOwner()[facei]];
+                const label facei = pp.start() + i;
+                const label ownZone = cellToZone[mesh_.faceOwner()[facei]];
                 neiCellZone[facei-mesh_.nInternalFaces()] = ownZone;
             }
         }
@@ -1194,9 +1182,9 @@ void Foam::meshRefinement::findCellZoneGeometric
         {
             forAll(pp, i)
             {
-                label facei = pp.start()+i;
-                label ownZone = cellToZone[mesh_.faceOwner()[facei]];
-                label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
+                const label facei = pp.start() + i;
+                const label ownZone = cellToZone[mesh_.faceOwner()[facei]];
+                const label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
 
                 if (namedSurfaceIndex[facei] == -1 && (ownZone != neiZone))
                 {
@@ -1255,29 +1243,29 @@ void Foam::meshRefinement::findCellZoneInsideWalk
     // For all locationSurface find the cell
     forAll(locationSurfaces, i)
     {
-        label surfI = locationSurfaces[i];
+        const label surfi = locationSurfaces[i];
 
-        const point& insidePoint = surfZones[surfI].zoneInsidePoint();
+        const point& insidePoint = surfZones[surfi].zoneInsidePoint();
 
-        Info<< "For surface " << surfaces_.names()[surfI]
+        Info<< "For surface " << surfaces_.names()[surfi]
             << " finding inside point " << insidePoint
             << endl;
 
         // Find the region containing the insidePoint
-        label keepRegionI = findRegion
+        label regionInMeshi = findRegion
         (
             mesh_,
             cellRegion,
-            mergeDistance_*vector(1,1,1),
+            mergeDistance_*vector::one,
             insidePoint
         );
 
-        Info<< "For surface " << surfaces_.names()[surfI]
+        Info<< "For surface " << surfaces_.names()[surfi]
             << " found point " << insidePoint
-            << " in global region " << keepRegionI
+            << " in global region " << regionInMeshi
             << " out of " << cellRegion.nRegions() << " regions." << endl;
 
-        if (keepRegionI == -1)
+        if (regionInMeshi == -1)
         {
             FatalErrorInFunction
                 << "Point " << insidePoint
@@ -1289,18 +1277,18 @@ void Foam::meshRefinement::findCellZoneInsideWalk
         // Set all cells with this region
         forAll(cellRegion, celli)
         {
-            if (cellRegion[celli] == keepRegionI)
+            if (cellRegion[celli] == regionInMeshi)
             {
                 if (cellToZone[celli] == -2)
                 {
-                    cellToZone[celli] = surfaceToCellZone[surfI];
+                    cellToZone[celli] = surfaceToCellZone[surfi];
                 }
-                else if (cellToZone[celli] != surfaceToCellZone[surfI])
+                else if (cellToZone[celli] != surfaceToCellZone[surfi])
                 {
                     WarningInFunction
                         << "Cell " << celli
                         << " at " << mesh_.cellCentres()[celli]
-                        << " is inside surface " << surfaces_.names()[surfI]
+                        << " is inside surface " << surfaces_.names()[surfi]
                         << " but already marked as being in zone "
                         << cellToZone[celli] << endl
                         << "This can happen if your surfaces are not"
@@ -1330,14 +1318,14 @@ bool Foam::meshRefinement::calcRegionToZone
         // Jump. Change one of the sides to my type.
 
         // 1. Interface between my type and unset region.
-        // Set region to keepRegion
+        // Set region to regionInMesh
 
         if (regionToCellZone[ownRegion] == -2)
         {
             if (regionToCellZone[neiRegion] == surfZoneI)
             {
                 // Face between unset and my region. Put unset
-                // region into keepRegion
+                // region into regionInMesh
                 regionToCellZone[ownRegion] = -1;
                 changed = true;
             }
@@ -1354,7 +1342,7 @@ bool Foam::meshRefinement::calcRegionToZone
             if (regionToCellZone[ownRegion] == surfZoneI)
             {
                 // Face between unset and my region. Put unset
-                // region into keepRegion
+                // region into regionInMesh
                 regionToCellZone[neiRegion] = -1;
                 changed = true;
             }
@@ -1373,14 +1361,14 @@ bool Foam::meshRefinement::calcRegionToZone
 
 void Foam::meshRefinement::findCellZoneTopo
 (
-    const point& keepPoint,
+    const List<point>& locationsInMesh,
     const labelList& namedSurfaceIndex,
     const labelList& surfaceToCellZone,
     labelList& cellToZone
 ) const
 {
     // Assumes:
-    // - region containing keepPoint does not go into a cellZone
+    // - region containing locationsInMesh does not go into a cellZone
     // - all other regions can be found by crossing faces marked in
     //   namedSurfaceIndex.
 
@@ -1406,7 +1394,7 @@ void Foam::meshRefinement::findCellZoneTopo
 
     // Per mesh region the zone the cell should be put in.
     // -2   : not analysed yet
-    // -1   : keepPoint region. Not put into any cellzone.
+    // -1   : locationInMesh region. Not put into any cellzone.
     // >= 0 : index of cellZone
     labelList regionToCellZone(cellRegion.nRegions(), -2);
 
@@ -1422,32 +1410,35 @@ void Foam::meshRefinement::findCellZoneTopo
     }
 
 
-    // Find the region containing the keepPoint
-    label keepRegionI = findRegion
-    (
-        mesh_,
-        cellRegion,
-        mergeDistance_*vector(1,1,1),
-        keepPoint
-    );
-
-    Info<< "Found point " << keepPoint
-        << " in global region " << keepRegionI
-        << " out of " << cellRegion.nRegions() << " regions." << endl;
-
-    if (keepRegionI == -1)
+    // Find the regions containing the locationsInMesh
+    forAll(locationsInMesh, i)
     {
-        FatalErrorInFunction
-            << "Point " << keepPoint
-            << " is not inside the mesh." << nl
-            << "Bounding box of the mesh:" << mesh_.bounds()
-            << exit(FatalError);
-    }
+        const label regionInMeshi = findRegion
+        (
+            mesh_,
+            cellRegion,
+            mergeDistance_*vector::one,
+            locationsInMesh[i]
+        );
 
-    // Mark default region with zone -1.
-    if (regionToCellZone[keepRegionI] == -2)
-    {
-        regionToCellZone[keepRegionI] = -1;
+        Info<< "Found point " << locationsInMesh[i]
+            << " in global region " << regionInMeshi
+            << " out of " << cellRegion.nRegions() << " regions." << endl;
+
+        if (regionInMeshi == -1)
+        {
+            FatalErrorInFunction
+                << "Point " << locationsInMesh[i]
+                << " is not inside the mesh." << nl
+                << "Bounding box of the mesh:" << mesh_.bounds()
+                << exit(FatalError);
+        }
+
+        // Mark default region with zone -1.
+        if (regionToCellZone[regionInMeshi] == -2)
+        {
+            regionToCellZone[regionInMeshi] = -1;
+        }
     }
 
 
@@ -1458,7 +1449,7 @@ void Foam::meshRefinement::findCellZoneTopo
         // Synchronise regionToCellZone.
         // Note:
         // - region numbers are identical on all processors
-        // - keepRegion is identical ,,
+        // - regionInMesh is identical ,,
         // - cellZones are identical ,,
         // This done at top of loop to account for geometric matching
         // not being synchronised.
@@ -1472,16 +1463,16 @@ void Foam::meshRefinement::findCellZoneTopo
 
         for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
         {
-            label surfI = namedSurfaceIndex[facei];
+            const label surfi = namedSurfaceIndex[facei];
 
             // Connected even if no cellZone defined for surface
-            if (surfI != -1)
+            if (surfi != -1)
             {
                 // Calculate region to zone from cellRegions on either side
                 // of internal face.
-                bool changedCell = calcRegionToZone
+                const bool changedCell = calcRegionToZone
                 (
-                    surfaceToCellZone[surfI],
+                    surfaceToCellZone[surfi],
                     cellRegion[mesh_.faceOwner()[facei]],
                     cellRegion[mesh_.faceNeighbour()[facei]],
                     regionToCellZone
@@ -1496,7 +1487,7 @@ void Foam::meshRefinement::findCellZoneTopo
         const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
         // Get coupled neighbour cellRegion
-        labelList neiCellRegion(mesh_.nFaces()-mesh_.nInternalFaces());
+        labelList neiCellRegion(mesh_.nFaces() - mesh_.nInternalFaces());
         forAll(patches, patchi)
         {
             const polyPatch& pp = patches[patchi];
@@ -1505,7 +1496,7 @@ void Foam::meshRefinement::findCellZoneTopo
             {
                 forAll(pp, i)
                 {
-                    label facei = pp.start()+i;
+                    const label facei = pp.start() + i;
                     neiCellRegion[facei-mesh_.nInternalFaces()] =
                         cellRegion[mesh_.faceOwner()[facei]];
                 }
@@ -1523,16 +1514,15 @@ void Foam::meshRefinement::findCellZoneTopo
             {
                 forAll(pp, i)
                 {
-                    label facei = pp.start()+i;
-
-                    label surfI = namedSurfaceIndex[facei];
+                    const label facei = pp.start() + i;
+                    const label surfi = namedSurfaceIndex[facei];
 
                     // Connected even if no cellZone defined for surface
-                    if (surfI != -1)
+                    if (surfi != -1)
                     {
-                        bool changedCell = calcRegionToZone
+                        const bool changedCell = calcRegionToZone
                         (
-                            surfaceToCellZone[surfI],
+                            surfaceToCellZone[surfi],
                             cellRegion[mesh_.faceOwner()[facei]],
                             neiCellRegion[facei-mesh_.nInternalFaces()],
                             regionToCellZone
@@ -1553,7 +1543,7 @@ void Foam::meshRefinement::findCellZoneTopo
 
     forAll(regionToCellZone, regionI)
     {
-        label zoneI = regionToCellZone[regionI];
+        const label zoneI = regionToCellZone[regionI];
 
         if (zoneI ==  -2)
         {
@@ -1592,8 +1582,8 @@ void Foam::meshRefinement::makeConsistentFaceIndex
 
     for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label ownZone = cellToZone[faceOwner[facei]];
-        label neiZone = cellToZone[faceNeighbour[facei]];
+        const label ownZone = cellToZone[faceOwner[facei]];
+        const label neiZone = cellToZone[faceNeighbour[facei]];
 
         if (ownZone == neiZone && namedSurfaceIndex[facei] != -1)
         {
@@ -1612,7 +1602,7 @@ void Foam::meshRefinement::makeConsistentFaceIndex
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
     // Get coupled neighbour cellZone
-    labelList neiCellZone(mesh_.nFaces()-mesh_.nInternalFaces());
+    labelList neiCellZone(mesh_.nFaces() - mesh_.nInternalFaces());
     forAll(patches, patchi)
     {
         const polyPatch& pp = patches[patchi];
@@ -1621,7 +1611,7 @@ void Foam::meshRefinement::makeConsistentFaceIndex
         {
             forAll(pp, i)
             {
-                label facei = pp.start()+i;
+                const label facei = pp.start() + i;
                 neiCellZone[facei-mesh_.nInternalFaces()] =
                     cellToZone[mesh_.faceOwner()[facei]];
             }
@@ -1638,10 +1628,10 @@ void Foam::meshRefinement::makeConsistentFaceIndex
         {
             forAll(pp, i)
             {
-                label facei = pp.start()+i;
+                const label facei = pp.start() + i;
 
-                label ownZone = cellToZone[faceOwner[facei]];
-                label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
+                const label ownZone = cellToZone[faceOwner[facei]];
+                const label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
 
                 if (ownZone == neiZone && namedSurfaceIndex[facei] != -1)
                 {
@@ -1662,7 +1652,7 @@ void Foam::meshRefinement::makeConsistentFaceIndex
             // Unzonify boundary faces
             forAll(pp, i)
             {
-                label facei = pp.start()+i;
+                const label facei = pp.start() + i;
                 namedSurfaceIndex[facei] = -1;
             }
         }
@@ -1791,8 +1781,8 @@ Foam::labelList Foam::meshRefinement::freeStandingBaffleFaces
         if (faceToZone[facei] != -1)
         {
             // Free standing baffle?
-            label ownZone = cellToZone[faceOwner[facei]];
-            label neiZone = cellToZone[faceNeighbour[facei]];
+            const label ownZone = cellToZone[faceOwner[facei]];
+            const label neiZone = cellToZone[faceNeighbour[facei]];
             if (ownZone == neiZone)
             {
                 faceLabels.append(facei);
@@ -1805,12 +1795,14 @@ Foam::labelList Foam::meshRefinement::freeStandingBaffleFaces
 
         forAll(pp, i)
         {
-            label facei = pp.start()+i;
+            const label facei = pp.start() + i;
             if (faceToZone[facei] != -1)
             {
                 // Free standing baffle?
-                label ownZone = cellToZone[faceOwner[facei]];
-                label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
+                const label ownZone = cellToZone[faceOwner[facei]];
+                const label neiZone =
+                    neiCellZone[facei - mesh_.nInternalFaces()];
+
                 if (ownZone == neiZone)
                 {
                     faceLabels.append(facei);
@@ -1840,9 +1832,9 @@ void Foam::meshRefinement::calcPatchNumMasterFaces
         if (isMasterFace[meshFacei])
         {
             const labelList& fEdges = patch.faceEdges()[facei];
-            forAll(fEdges, fEdgeI)
+            forAll(fEdges, fEdgei)
             {
-                nMasterFacesPerEdge[fEdges[fEdgeI]]++;
+                nMasterFacesPerEdge[fEdges[fEdgei]]++;
             }
         }
     }
@@ -1873,17 +1865,14 @@ Foam::label Foam::meshRefinement::markPatchZones
     {
         label nProtected = 0;
 
-        forAll(nMasterFacesPerEdge, edgeI)
+        forAll(nMasterFacesPerEdge, edgei)
         {
-            if (nMasterFacesPerEdge[edgeI] > 2)
+            if (nMasterFacesPerEdge[edgei] > 2)
             {
-                allEdgeInfo[edgeI] = -2;
+                allEdgeInfo[edgei] = -2;
                 nProtected++;
             }
         }
-        // Info<< "Protected from visiting "
-        //    << returnReduce(nProtected, sumOp<label>())
-        //    << " non-manifold edges" << nl << endl;
     }
 
 
@@ -1926,8 +1915,8 @@ Foam::label Foam::meshRefinement::markPatchZones
             break;
         }
 
-        label proci = globalFaces.whichProcID(globalSeed);
-        label seedFacei = globalFaces.toLocal(proci, globalSeed);
+        const label proci = globalFaces.whichProcID(globalSeed);
+        const label seedFacei = globalFaces.toLocal(proci, globalSeed);
 
         // Info<< "Seeding zone " << currentZoneI
         //    << " from processor " << proci << " face " << seedFacei
@@ -1937,17 +1926,16 @@ Foam::label Foam::meshRefinement::markPatchZones
         {
             patchEdgeFaceRegion& faceInfo = allFaceInfo[seedFacei];
 
-
             // Set face
             faceInfo = currentZoneI;
 
             // .. and seed its edges
             const labelList& fEdges = patch.faceEdges()[seedFacei];
-            forAll(fEdges, fEdgeI)
+            forAll(fEdges, fEdgei)
             {
-                label edgeI = fEdges[fEdgeI];
+                const label edgei = fEdges[fEdgei];
 
-                patchEdgeFaceRegion& edgeInfo = allEdgeInfo[edgeI];
+                patchEdgeFaceRegion& edgeInfo = allEdgeInfo[edgei];
 
                 if
                 (
@@ -1955,7 +1943,7 @@ Foam::label Foam::meshRefinement::markPatchZones
                     (
                         mesh_,
                         patch,
-                        edgeI,
+                        edgei,
                         seedFacei,
                         faceInfo,
                         tol,
@@ -1963,7 +1951,7 @@ Foam::label Foam::meshRefinement::markPatchZones
                     )
                 )
                 {
-                    changedEdges.append(edgeI);
+                    changedEdges.append(edgei);
                     changedInfo.append(edgeInfo);
                 }
             }
@@ -2052,18 +2040,15 @@ void Foam::meshRefinement::consistentOrientation
                 nProtected++;
             }
         }
-        // Info<< "Protected from visiting "
-        //    << returnReduce(nProtected, sumOp<label>())
-        //    << " slaves of coupled faces" << nl << endl;
     }
     {
         label nProtected = 0;
 
-        forAll(nMasterFacesPerEdge, edgeI)
+        forAll(nMasterFacesPerEdge, edgei)
         {
-            if (nMasterFacesPerEdge[edgeI] > 2)
+            if (nMasterFacesPerEdge[edgei] > 2)
             {
-                allEdgeInfo[edgeI] = orientedSurface::NOFLIP;
+                allEdgeInfo[edgei] = orientedSurface::NOFLIP;
                 nProtected++;
             }
         }
@@ -2108,8 +2093,8 @@ void Foam::meshRefinement::consistentOrientation
             break;
         }
 
-        label proci = globalFaces.whichProcID(globalSeed);
-        label seedFacei = globalFaces.toLocal(proci, globalSeed);
+        const label proci = globalFaces.whichProcID(globalSeed);
+        const label seedFacei = globalFaces.toLocal(proci, globalSeed);
 
         // Info<< "Seeding from processor " << proci << " face " << seedFacei
         //    << endl;
@@ -2130,11 +2115,11 @@ void Foam::meshRefinement::consistentOrientation
 
 
             const labelList& fEdges = patch.faceEdges()[seedFacei];
-            forAll(fEdges, fEdgeI)
+            forAll(fEdges, fEdgei)
             {
-                label edgeI = fEdges[fEdgeI];
+                const label edgei = fEdges[fEdgei];
 
-                patchFaceOrientation& edgeInfo = allEdgeInfo[edgeI];
+                patchFaceOrientation& edgeInfo = allEdgeInfo[edgei];
 
                 if
                 (
@@ -2142,7 +2127,7 @@ void Foam::meshRefinement::consistentOrientation
                     (
                         mesh_,
                         patch,
-                        edgeI,
+                        edgei,
                         seedFacei,
                         faceInfo,
                         tol,
@@ -2150,7 +2135,7 @@ void Foam::meshRefinement::consistentOrientation
                     )
                 )
                 {
-                    changedEdges.append(edgeI);
+                    changedEdges.append(edgei);
                     changedInfo.append(edgeInfo);
                 }
             }
@@ -2186,7 +2171,7 @@ void Foam::meshRefinement::consistentOrientation
     {
         labelList neiStatus
         (
-            mesh_.nFaces()-mesh_.nInternalFaces(),
+            mesh_.nFaces() - mesh_.nInternalFaces(),
             orientedSurface::UNVISITED
         );
 
@@ -2278,7 +2263,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
     Time& runTime,
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
-    const point& keepPoint
+    const List<point>& locationsInMesh
 )
 {
     // Introduce baffles
@@ -2292,8 +2277,8 @@ void Foam::meshRefinement::baffleAndSplitMesh
         << " faces that are intersected by the surface." << nl << endl;
 
     // Swap neighbouring cell centres and cell level
-    labelList neiLevel(mesh_.nFaces()-mesh_.nInternalFaces());
-    pointField neiCc(mesh_.nFaces()-mesh_.nInternalFaces());
+    labelList neiLevel(mesh_.nFaces() - mesh_.nInternalFaces());
+    pointField neiCc(mesh_.nFaces() - mesh_.nInternalFaces());
     calcNeighbourData(neiLevel, neiCc);
 
     labelList ownPatch, nbrPatch;
@@ -2369,7 +2354,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
         runTime++;
     }
 
-    splitMeshRegions(globalToMasterPatch, globalToSlavePatch, keepPoint);
+    splitMeshRegions(globalToMasterPatch, globalToSlavePatch, locationsInMesh);
 
     if (debug)
     {
@@ -2460,18 +2445,19 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
     const label nBufferLayers,
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
-    const point& keepPoint
+    const List<point>& locationsInMesh
 )
 {
     // Determine patches to put intersections into
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // Swap neighbouring cell centres and cell level
-    labelList neiLevel(mesh_.nFaces()-mesh_.nInternalFaces());
-    pointField neiCc(mesh_.nFaces()-mesh_.nInternalFaces());
+    labelList neiLevel(mesh_.nFaces() - mesh_.nInternalFaces());
+    pointField neiCc(mesh_.nFaces() - mesh_.nInternalFaces());
     calcNeighbourData(neiLevel, neiCc);
 
-    labelList ownPatch, nbrPatch;
+    labelList ownPatch;
+    labelList nbrPatch;
     getBafflePatches
     (
         globalToMasterPatch,
@@ -2498,27 +2484,14 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
     regionSplit cellRegion(mesh_, blockedFace);
     blockedFace.clear();
 
-    // Find the region containing the keepPoint
-    const label keepRegionI = findRegion
+    // Find the regions containing any of the points in locationsInMesh
+    findRegions
     (
         mesh_,
         cellRegion,
-        mergeDistance_*vector(1,1,1),
-        keepPoint
+        mergeDistance_*vector::one,
+        locationsInMesh
     );
-
-    Info<< "Found point " << keepPoint
-        << " in global region " << keepRegionI
-        << " out of " << cellRegion.nRegions() << " regions." << endl;
-
-    if (keepRegionI == -1)
-    {
-        FatalErrorInFunction
-            << "Point " << keepPoint
-            << " is not inside the mesh." << nl
-            << "Bounding box of the mesh:" << mesh_.bounds()
-            << exit(FatalError);
-    }
 
 
     // Walk out nBufferlayers from region split
@@ -2546,11 +2519,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
         forAll(faceNeighbour, facei)
         {
             const face& f = mesh_.faces()[facei];
+            const label ownRegion = cellRegion[faceOwner[facei]];
+            const label neiRegion = cellRegion[faceNeighbour[facei]];
 
-            label ownRegion = cellRegion[faceOwner[facei]];
-            label neiRegion = cellRegion[faceNeighbour[facei]];
-
-            if (ownRegion == keepRegionI && neiRegion != keepRegionI)
+            if (ownRegion == -1 && neiRegion != -1)
             {
                 // Note max(..) since possibly regionSplit might have split
                 // off extra unreachable parts of mesh. Note: or can this only
@@ -2560,7 +2532,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
                     pointBaffle[f[fp]] = max(defaultPatch, ownPatch[facei]);
                 }
             }
-            else if (ownRegion != keepRegionI && neiRegion == keepRegionI)
+            else if (ownRegion != -1 && neiRegion == -1)
             {
                 label newPatchi = nbrPatch[facei];
                 if (newPatchi == -1)
@@ -2573,6 +2545,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
                 }
             }
         }
+
         for
         (
             label facei = mesh_.nInternalFaces();
@@ -2581,10 +2554,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
         )
         {
             const face& f = mesh_.faces()[facei];
+            const label ownRegion = cellRegion[faceOwner[facei]];
 
-            label ownRegion = cellRegion[faceOwner[facei]];
-
-            if (ownRegion == keepRegionI)
+            if (ownRegion == -1)
             {
                 forAll(f, fp)
                 {
@@ -2615,7 +2587,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
 
                 forAll(pFaces, pFacei)
                 {
-                    label facei = pFaces[pFacei];
+                    const label facei = pFaces[pFacei];
 
                     if (ownPatch[facei] == -1)
                     {
@@ -2635,11 +2607,11 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
         {
             if (ownPatch[facei] != -1)
             {
-                label own = faceOwner[facei];
+                const label own = faceOwner[facei];
 
-                if (cellRegion[own] != keepRegionI)
+                if (cellRegion[own] != -1)
                 {
-                    cellRegion[own] = keepRegionI;
+                    cellRegion[own] = labelMax;
 
                     const cell& ownFaces = mesh_.cells()[own];
                     forAll(ownFaces, j)
@@ -2652,11 +2624,11 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
                 }
                 if (mesh_.isInternalFace(facei))
                 {
-                    label nei = faceNeighbour[facei];
+                    const label nei = faceNeighbour[facei];
 
-                    if (cellRegion[nei] != keepRegionI)
+                    if (cellRegion[nei] != -1)
                     {
-                        cellRegion[nei] = keepRegionI;
+                        cellRegion[nei] = labelMax;
 
                         const cell& neiFaces = mesh_.cells()[nei];
                         forAll(neiFaces, j)
@@ -2685,20 +2657,19 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
     DynamicList<label> cellsToRemove(mesh_.nCells());
     forAll(cellRegion, celli)
     {
-        if (cellRegion[celli] != keepRegionI)
+        if (cellRegion[celli] == -1)
         {
             cellsToRemove.append(celli);
         }
     }
     cellsToRemove.shrink();
 
-    label nCellsToKeep = mesh_.nCells() - cellsToRemove.size();
-    reduce(nCellsToKeep, sumOp<label>());
+    label nCellsInMesh = mesh_.nCells() - cellsToRemove.size();
+    reduce(nCellsInMesh, sumOp<label>());
 
-    Info<< "Keeping all cells in region " << keepRegionI
-        << " containing point " << keepPoint << endl
-        << "Selected for keeping : " << nCellsToKeep
-        << " cells." << endl;
+    Info<< "Selecting all cells in regions containing any of the points in "
+        << locationsInMesh << endl
+        << "Selected: " << nCellsInMesh << " cells." << endl;
 
 
     // Remove cells
@@ -2710,7 +2681,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
 
     forAll(exposedFaces, i)
     {
-        label facei = exposedFaces[i];
+        const label facei = exposedFaces[i];
 
         if (ownPatch[facei] != -1)
         {
@@ -2746,7 +2717,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::dupNonManifoldPoints
     // Topochange container
     polyTopoChange meshMod(mesh_);
 
-    label nNonManifPoints = returnReduce
+    const label nNonManifPoints = returnReduce
     (
         regionSide.meshPointMap().size(),
         sumOp<label>()
@@ -2804,26 +2775,29 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::dupNonManifoldPoints()
 
 Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
 (
-    const point& keepPoint,
+    const List<point>& locationsInMesh,
     const bool allowFreeStandingZoneFaces
 )
 {
     const PtrList<surfaceZonesInfo>& surfZones = surfaces_.surfZones();
 
-    labelList namedSurfaces(surfaceZonesInfo::getNamedSurfaces(surfZones));
+    const labelList namedSurfaces
+    (
+        surfaceZonesInfo::getNamedSurfaces(surfZones)
+    );
 
     forAll(namedSurfaces, i)
     {
-        label surfI = namedSurfaces[i];
+        label surfi = namedSurfaces[i];
 
-        Info<< "Surface : " << surfaces_.names()[surfI] << nl
-            << "    faceZone : " << surfZones[surfI].faceZoneName() << nl
-            << "    cellZone : " << surfZones[surfI].cellZoneName() << endl;
+        Info<< "Surface : " << surfaces_.names()[surfi] << nl
+            << "    faceZone : " << surfZones[surfi].faceZoneName() << nl
+            << "    cellZone : " << surfZones[surfi].cellZoneName() << endl;
     }
 
 
     // Add zones to mesh
-    labelList surfaceToFaceZone =
+    const labelList surfaceToFaceZone =
         surfaceZonesInfo::addFaceZonesToMesh
         (
             surfZones,
@@ -2831,7 +2805,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
             mesh_
         );
 
-    labelList surfaceToCellZone =
+    const labelList surfaceToCellZone =
         surfaceZonesInfo::addCellZonesToMesh
         (
             surfZones,
@@ -2847,8 +2821,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
 
 
     // Swap neighbouring cell centres and cell level
-    labelList neiLevel(mesh_.nFaces()-mesh_.nInternalFaces());
-    pointField neiCc(mesh_.nFaces()-mesh_.nInternalFaces());
+    labelList neiLevel(mesh_.nFaces() - mesh_.nInternalFaces());
+    pointField neiCc(mesh_.nFaces() - mesh_.nInternalFaces());
     calcNeighbourData(neiLevel, neiCc);
 
 
@@ -2987,11 +2961,11 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
         // Print a bit
         if (debug)
         {
-            forAll(nSurfFaces, surfI)
+            forAll(nSurfFaces, surfi)
             {
                 Pout<< "Surface:"
-                    << surfaces_.names()[surfI]
-                    << "  nZoneFaces:" << nSurfFaces[surfI] << nl;
+                    << surfaces_.names()[surfi]
+                    << "  nZoneFaces:" << nSurfFaces[surfi] << nl;
             }
             Pout<< endl;
         }
@@ -3072,14 +3046,14 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
     // ~~~~~~~~~~~~~~~~~
 
     {
-        Info<< "Walking from location-in-mesh " << keepPoint
+        Info<< "Walking from locations-in-mesh " << locationsInMesh
             << " to assign cellZones "
             << "- crossing a faceZone face changes cellZone" << nl << endl;
 
         // Topological walk
         findCellZoneTopo
         (
-            keepPoint,
+            locationsInMesh,
             namedSurfaceIndex,
             surfaceToCellZone,
 
@@ -3091,7 +3065,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
     // Make sure namedSurfaceIndex is unset in between same cell cell zones.
     if (!allowFreeStandingZoneFaces)
     {
-        Info<< "Only keeping zone faces in between different cellZones."
+        Info<< "Only selecting zone faces in between different cellZones."
             << nl << endl;
 
         makeConsistentFaceIndex(cellToZone, namedSurfaceIndex);
@@ -3106,10 +3080,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
 
     forAll(namedSurfaceIndex, facei)
     {
-        label surfI = namedSurfaceIndex[facei];
-        if (surfI != -1)
+        const label surfi = namedSurfaceIndex[facei];
+        if (surfi != -1)
         {
-            faceToZone[facei] = surfaceToFaceZone[surfI];
+            faceToZone[facei] = surfaceToFaceZone[surfi];
         }
     }
 
@@ -3128,7 +3102,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
 
         if (!pp.coupled())
         {
-            label bFacei = pp.start()-mesh_.nInternalFaces();
+            label bFacei = pp.start() - mesh_.nInternalFaces();
             forAll(pp, i)
             {
                 neiCellZone[bFacei++] = -1;
@@ -3285,8 +3259,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
             // Note: logic to use flipMap should be consistent with logic
             //       to pick up the freeStandingBaffleFaces!
 
-            label ownZone = cellToZone[faceOwner[facei]];
-            label neiZone = cellToZone[faceNeighbour[facei]];
+            const label ownZone = cellToZone[faceOwner[facei]];
+            const label neiZone = cellToZone[faceNeighbour[facei]];
 
             bool flip;
 
@@ -3332,12 +3306,12 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
 
         forAll(pp, i)
         {
-            label faceZoneI = faceToZone[facei];
+            const label faceZoneI = faceToZone[facei];
 
             if (faceZoneI != -1)
             {
-                label ownZone = cellToZone[faceOwner[facei]];
-                label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
+                const label ownZone = cellToZone[faceOwner[facei]];
+                const label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
 
                 bool flip;
 
@@ -3381,7 +3355,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
 
     forAll(cellToZone, celli)
     {
-        label zoneI = cellToZone[celli];
+        const label zoneI = cellToZone[celli];
 
         if (zoneI >= 0)
         {

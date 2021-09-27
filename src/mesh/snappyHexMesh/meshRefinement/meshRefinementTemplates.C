@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,6 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Add a T entry
 template<class T> void Foam::meshRefinement::updateList
 (
     const labelList& newToOld,
@@ -42,11 +41,11 @@ template<class T> void Foam::meshRefinement::updateList
 
     forAll(newElems, i)
     {
-        label oldI = newToOld[i];
+        const label oldi = newToOld[i];
 
-        if (oldI >= 0)
+        if (oldi >= 0)
         {
-            newElems[i] = elems[oldI];
+            newElems[i] = elems[oldi];
         }
     }
 
@@ -96,7 +95,6 @@ T Foam::meshRefinement::gAverage
 }
 
 
-// Compare two lists over all boundary faces
 template<class T>
 void Foam::meshRefinement::testSyncBoundaryFaceList
 (
@@ -106,7 +104,7 @@ void Foam::meshRefinement::testSyncBoundaryFaceList
     const UList<T>& syncedFaceData
 ) const
 {
-    label nBFaces = mesh_.nFaces() - mesh_.nInternalFaces();
+    const label nBFaces = mesh_.nFaces() - mesh_.nInternalFaces();
 
     if (faceData.size() != nBFaces || syncedFaceData.size() != nBFaces)
     {
@@ -132,7 +130,7 @@ void Foam::meshRefinement::testSyncBoundaryFaceList
 
             if (mag(data - syncData) > tol)
             {
-                label facei = pp.start()+i;
+                const label facei = pp.start() + i;
 
                 FatalErrorInFunction
                     << msg
@@ -210,8 +208,8 @@ int Foam::meshRefinement::readFlags
 
     forAll(words, i)
     {
-        int index = namedEnum[words[i]];
-        int val = 1<<index;
+        const int index = namedEnum[words[i]];
+        const int val = 1<<index;
         flags |= val;
     }
     return flags;
@@ -256,10 +254,10 @@ void Foam::meshRefinement::weightedSum
         {
             const edge& e = edges[edgeI];
 
-            scalar eWeight = edgeWeights[edgeI];
+            const scalar eWeight = edgeWeights[edgeI];
 
-            label v0 = e[0];
-            label v1 = e[1];
+            const label v0 = e[0];
+            const label v1 = e[1];
 
             sum[v0] += eWeight*pointData[v1];
             sum[v1] += eWeight*pointData[v0];

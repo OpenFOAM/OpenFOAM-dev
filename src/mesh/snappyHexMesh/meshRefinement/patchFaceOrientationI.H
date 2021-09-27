@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polyMesh.H"
-#include "transform.H"
 #include "orientedSurface.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -104,10 +102,6 @@ inline bool Foam::patchFaceOrientation::updateEdge
     const face& f = patch.localFaces()[facei];
     const edge& e = patch.edges()[edgeI];
 
-    // Pout<< "Updating edge:" << edgeI << " verts:" << e << nl
-    //    << "    start:" << patch.localPoints()[e[0]] << nl
-    //    << "      end:" << patch.localPoints()[e[1]] << endl;
-
     patchFaceOrientation consistentInfo(faceInfo);
 
     // Check how edge relates to face
@@ -118,6 +112,7 @@ inline bool Foam::patchFaceOrientation::updateEdge
     }
 
     operator=(consistentInfo);
+
     return true;
 }
 
@@ -147,6 +142,7 @@ inline bool Foam::patchFaceOrientation::updateEdge
     }
 
     operator=(consistentInfo);
+
     return true;
 }
 
@@ -172,14 +168,6 @@ inline bool Foam::patchFaceOrientation::updateFace
     const face& f = patch.localFaces()[facei];
     const edge& e = patch.edges()[edgeI];
 
-
-    // Pout<< "Updating face:" << facei << nl
-    //    << "    verts:" << f << nl
-    //    << " with edge:" << edgeI << nl
-    //    << "    start:" << patch.localPoints()[e[0]] << nl
-    //    << "      end:" << patch.localPoints()[e[1]] << endl;
-
-
     // Create (flipped/unflipped) version of edgeInfo
     patchFaceOrientation consistentInfo(edgeInfo);
 
@@ -189,6 +177,7 @@ inline bool Foam::patchFaceOrientation::updateFace
     }
 
     operator=(consistentInfo);
+
     return true;
 }
 

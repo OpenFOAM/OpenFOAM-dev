@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,8 @@ SourceFiles
 #define refinementParameters_H
 
 #include "dictionary.H"
-#include "pointField.H"
+#include "labelList.H"
+#include "point.H"
 #include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,7 +75,7 @@ class refinementParameters
         const label nBufferLayers_;
 
         //- Areas to keep
-        const pointField keepPoints_;
+        const List<point> locationsInMesh_;
 
         //- FaceZone faces allowed which have owner and neighbour in same
         //  cellZone?
@@ -141,10 +142,10 @@ public:
                 return nBufferLayers_;
             }
 
-            //- Areas to keep
-            const pointField& keepPoints() const
+            //- Locations in to select meshed regions
+            const List<point>& locationsInMesh() const
             {
-                return keepPoints_;
+                return locationsInMesh_;
             }
 
             //- Are zone faces allowed only in between different cell zones

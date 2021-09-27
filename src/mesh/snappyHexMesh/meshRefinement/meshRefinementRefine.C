@@ -155,8 +155,8 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
 
         for (label facei = 0; facei < nInternalFaces; facei++)
         {
-            label oldOwn = map.cellMap()[faceOwner[facei]];
-            label oldNei = map.cellMap()[faceNeighbour[facei]];
+            const label oldOwn = map.cellMap()[faceOwner[facei]];
+            const label oldNei = map.cellMap()[faceNeighbour[facei]];
 
             if
             (
@@ -195,7 +195,7 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
                 }
                 else
                 {
-                    refinedBoundaryFace[facei-nInternalFaces] = true;
+                    refinedBoundaryFace[facei - nInternalFaces] = true;
                 }
                 facei++;
             }
@@ -313,7 +313,7 @@ bool Foam::meshRefinement::markForRefine
 
 void Foam::meshRefinement::markFeatureCellLevel
 (
-    const pointField& keepPoints,
+    const List<point>& locationsInMesh,
     labelList& maxFeatureLevel
 ) const
 {
@@ -324,7 +324,8 @@ void Foam::meshRefinement::markFeatureCellLevel
     //
     // 1. find non-manifold points on feature edges (i.e. start of feature edge
     //    or 'knot')
-    // 2. seed particle starting at keepPoint going to this non-manifold point
+    // 2. seed particle starting at locationInMesh going to this non-manifold
+    //    point
     // 3. track particles to their non-manifold point
     //
     // 4. track particles across their connected feature edges, marking all
@@ -332,7 +333,8 @@ void Foam::meshRefinement::markFeatureCellLevel
     // 5. do 4 until all edges have been visited.
 
 
-    // Find all start cells of features. Is done by tracking from keepPoint.
+    // Find all start cells of features.
+    // Is done by tracking from locationInMesh.
     Cloud<trackedParticle> startPointCloud
     (
         mesh_,
@@ -343,17 +345,17 @@ void Foam::meshRefinement::markFeatureCellLevel
 
     // Features are identical on all processors. Number them so we know
     // what to seed. Do this on only the processor that
-    // holds the keepPoint.
+    // holds the locationInMesh.
 
-    forAll(keepPoints, i)
+    forAll(locationsInMesh, i)
     {
-        const point& keepPoint = keepPoints[i];
+        const point& locationInMesh = locationsInMesh[i];
 
-        const label celli = mesh_.cellTree().findInside(keepPoint);
+        const label celli = mesh_.cellTree().findInside(locationInMesh);
 
         if (celli != -1)
         {
-            // I am the processor that holds the keepPoint
+            // I am the processor that holds the locationInMesh
 
             forAll(features_, featI)
             {
@@ -363,7 +365,7 @@ void Foam::meshRefinement::markFeatureCellLevel
 
                 // Find regions on edgeMesh
                 labelList edgeRegion;
-                label nRegions = featureMesh.regions(edgeRegion);
+                const label nRegions = featureMesh.regions(edgeRegion);
 
 
                 PackedBoolList regionVisited(nRegions);
@@ -391,7 +393,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                             new trackedParticle
                             (
                                 mesh_,
-                                keepPoint,
+                                locationInMesh,
                                 celli,
                                 featureMesh.points()[pointi],   // endpos
                                 featureLevel,                   // level
@@ -419,7 +421,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                     if (regionVisited.set(edgeRegion[edgeI], 1u))
                     {
                         const edge& e = featureMesh.edges()[edgeI];
-                        label pointi = e.start();
+                        const label pointi = e.start();
                         if (debug&meshRefinement::FEATURESEEDS)
                         {
                             Pout<< "Adding particle from point:" << pointi
@@ -434,7 +436,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                             new trackedParticle
                             (
                                 mesh_,
-                                keepPoint,
+                                locationInMesh,
                                 celli,
                                 featureMesh.points()[pointi],   // endpos
                                 featureLevel,                   // level
@@ -509,8 +511,8 @@ void Foam::meshRefinement::markFeatureCellLevel
     {
         const trackedParticle& startTp = iter();
 
-        label featI = startTp.i();
-        label pointi = startTp.j();
+        const label featI = startTp.i();
+        const label pointi = startTp.j();
 
         const edgeMesh& featureMesh = features_[featI];
         const labelList& pEdges = featureMesh.pointEdges()[pointi];
@@ -518,7 +520,7 @@ void Foam::meshRefinement::markFeatureCellLevel
         // Now shoot particles down all pEdges.
         forAll(pEdges, pEdgeI)
         {
-            label edgeI = pEdges[pEdgeI];
+            const label edgeI = pEdges[pEdgeI];
 
             if (featureEdgeVisited[featI].set(edgeI, 1u))
             {
@@ -567,8 +569,8 @@ void Foam::meshRefinement::markFeatureCellLevel
         {
             trackedParticle& tp = iter();
 
-            label featI = tp.i();
-            label pointi = tp.j();
+            const label featI = tp.i();
+            const label pointi = tp.j();
 
             const edgeMesh& featureMesh = features_[featI];
             const labelList& pEdges = featureMesh.pointEdges()[pointi];
@@ -580,7 +582,7 @@ void Foam::meshRefinement::markFeatureCellLevel
 
             forAll(pEdges, i)
             {
-                label edgeI = pEdges[i];
+                const label edgeI = pEdges[i];
 
                 if (featureEdgeVisited[featI].set(edgeI, 1u))
                 {
@@ -588,7 +590,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                     // on the edge.
 
                     const edge& e = featureMesh.edges()[edgeI];
-                    label otherPointi = e.otherVertex(pointi);
+                    const label otherPointi = e.otherVertex(pointi);
 
                     tp.start() = tp.position();
                     tp.end() = featureMesh.points()[otherPointi];
@@ -640,7 +642,7 @@ void Foam::meshRefinement::markFeatureCellLevel
 // Calculates list of cells to refine based on intersection with feature edge.
 Foam::label Foam::meshRefinement::markFeatureRefinement
 (
-    const pointField& keepPoints,
+    const List<point>& locationsInMesh,
     const label nAllowRefine,
 
     labelList& refineCell,
@@ -649,14 +651,14 @@ Foam::label Foam::meshRefinement::markFeatureRefinement
 {
     // Largest refinement level of any feature passed through
     labelList maxFeatureLevel;
-    markFeatureCellLevel(keepPoints, maxFeatureLevel);
+    markFeatureCellLevel(locationsInMesh, maxFeatureLevel);
 
     // See which cells to refine. maxFeatureLevel will hold highest level
     // of any feature edge that passed through.
 
     const labelList& cellLevel = meshCutter_.cellLevel();
 
-    label oldNRefine = nRefine;
+    const label oldNRefine = nRefine;
 
     forAll(maxFeatureLevel, celli)
     {
@@ -741,7 +743,7 @@ Foam::label Foam::meshRefinement::markInternalDistanceToFeatureRefinement
         {
             if (maxLevel[testI] > testLevels[testI])
             {
-                bool reachedLimit = !markForRefine
+                const bool reachedLimit = !markForRefine
                 (
                     maxLevel[testI],    // mark with any positive value
                     nAllowRefine,
@@ -777,7 +779,6 @@ Foam::label Foam::meshRefinement::markInternalDistanceToFeatureRefinement
 }
 
 
-// Mark cells for non-surface intersection based refinement.
 Foam::label Foam::meshRefinement::markInternalRefinement
 (
     const label nAllowRefine,
@@ -789,7 +790,7 @@ Foam::label Foam::meshRefinement::markInternalRefinement
     const labelList& cellLevel = meshCutter_.cellLevel();
     const pointField& cellCentres = mesh_.cellCentres();
 
-    label oldNRefine = nRefine;
+    const label oldNRefine = nRefine;
 
     // Collect cells to test
     pointField testCc(cellLevel.size()-nRefine);
@@ -861,8 +862,6 @@ Foam::label Foam::meshRefinement::markInternalRefinement
 }
 
 
-// Collect faces that are intersected and whose neighbours aren't yet marked
-// for refinement.
 Foam::labelList Foam::meshRefinement::getRefineCandidateFaces
 (
     const labelList& refineCell
@@ -880,7 +879,7 @@ Foam::labelList Foam::meshRefinement::getRefineCandidateFaces
 
             if (mesh_.isInternalFace(facei))
             {
-                label nei = mesh_.faceNeighbour()[facei];
+                const label nei = mesh_.faceNeighbour()[facei];
 
                 if (refineCell[own] == -1 || refineCell[nei] == -1)
                 {
@@ -902,7 +901,6 @@ Foam::labelList Foam::meshRefinement::getRefineCandidateFaces
 }
 
 
-// Mark cells for surface intersection based refinement.
 Foam::label Foam::meshRefinement::markSurfaceRefinement
 (
     const label nAllowRefine,
@@ -916,7 +914,7 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
     const labelList& cellLevel = meshCutter_.cellLevel();
     const pointField& cellCentres = mesh_.cellCentres();
 
-    label oldNRefine = nRefine;
+    const label oldNRefine = nRefine;
 
     // Use cached surfaceIndex_ to detect if any intersection. If so
     // re-intersect to determine level wanted.
@@ -935,9 +933,9 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
 
     forAll(testFaces, i)
     {
-        label facei = testFaces[i];
+        const label facei = testFaces[i];
 
-        label own = mesh_.faceOwner()[facei];
+        const label own = mesh_.faceOwner()[facei];
 
         if (mesh_.isInternalFace(facei))
         {
@@ -949,7 +947,7 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
         }
         else
         {
-            label bFacei = facei - mesh_.nInternalFaces();
+            const label bFacei = facei - mesh_.nInternalFaces();
 
             start[i] = cellCentres[own];
             end[i] = neiCc[bFacei];
@@ -986,9 +984,9 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
 
     forAll(testFaces, i)
     {
-        label facei = testFaces[i];
+        const label facei = testFaces[i];
 
-        label surfI = surfaceHit[i];
+        const label surfI = surfaceHit[i];
 
         if (surfI != -1)
         {
@@ -998,7 +996,7 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
             // do the check with the surfaceMinLevel whilst intersecting the
             // surfaces?
 
-            label own = mesh_.faceOwner()[facei];
+            const label own = mesh_.faceOwner()[facei];
 
             if (surfaceMinLevel[i] > cellLevel[own])
             {
@@ -1020,7 +1018,8 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
 
             if (mesh_.isInternalFace(facei))
             {
-                label nei = mesh_.faceNeighbour()[facei];
+                const label nei = mesh_.faceNeighbour()[facei];
+
                 if (surfaceMinLevel[i] > cellLevel[nei])
                 {
                     // Neighbour needs refining
@@ -1100,7 +1099,7 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
     const labelList& cellLevel = meshCutter_.cellLevel();
     const pointField& cellCentres = mesh_.cellCentres();
 
-    label oldNRefine = nRefine;
+    const label oldNRefine = nRefine;
 
     // 1. local test: any cell on more than one surface gets refined
     // (if its current level is < max of the surface max level)
@@ -1123,13 +1122,12 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
 
     forAll(testFaces, i)
     {
-        label facei = testFaces[i];
-
-        label own = mesh_.faceOwner()[facei];
+        const label facei = testFaces[i];
+        const label own = mesh_.faceOwner()[facei];
 
         if (mesh_.isInternalFace(facei))
         {
-            label nei = mesh_.faceNeighbour()[facei];
+            const label nei = mesh_.faceNeighbour()[facei];
 
             start[i] = cellCentres[own];
             end[i] = cellCentres[nei];
@@ -1137,7 +1135,7 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
         }
         else
         {
-            label bFacei = facei - mesh_.nInternalFaces();
+            const label bFacei = facei - mesh_.nInternalFaces();
 
             start[i] = cellCentres[own];
             end[i] = neiCc[bFacei];
@@ -1167,6 +1165,7 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
     {
         // Per segment the normals of the surfaces
         List<vectorList> surfaceNormal;
+
         // Per segment the list of levels of the surfaces
         labelListList surfaceLevel;
 
@@ -1207,8 +1206,8 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
         // Convert face-wise data to cell.
         forAll(testFaces, i)
         {
-            label facei = testFaces[i];
-            label own = mesh_.faceOwner()[facei];
+            const label facei = testFaces[i];
+            const label own = mesh_.faceOwner()[facei];
 
             const vectorList& fNormals = surfaceNormal[i];
             const labelList& fLevels = surfaceLevel[i];
@@ -1284,7 +1283,7 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
             {
                 if ((normals[i] & normals[j]) < curvature)
                 {
-                    label maxLevel = max(levels[i], levels[j]);
+                    const label maxLevel = max(levels[i], levels[j]);
 
                     if (cellLevel[celli] < maxLevel)
                     {
@@ -1329,8 +1328,8 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
         facei++
     )
     {
-        label own = mesh_.faceOwner()[facei];
-        label nei = mesh_.faceNeighbour()[facei];
+        const label own = mesh_.faceOwner()[facei];
+        const label nei = mesh_.faceNeighbour()[facei];
 
         const vectorList& ownNormals = cellSurfNormals[own];
         const labelList& ownLevels = cellSurfLevels[own];
@@ -1513,8 +1512,8 @@ bool Foam::meshRefinement::isGap
 {
     //- Hits differ and angles are oppositeish and
     //  hits have a normal distance
-    vector d = point1-point0;
-    scalar magD = mag(d);
+    const vector d = point1 - point0;
+    const scalar magD = mag(d);
 
     if (magD > mergeDistance())
     {
@@ -1570,8 +1569,8 @@ bool Foam::meshRefinement::isNormalGap
 {
     //- Hits differ and angles are oppositeish and
     //  hits have a normal distance
-    vector d = point1-point0;
-    scalar magD = mag(d);
+    vector d = point1 - point0;
+    const scalar magD = mag(d);
 
     if (magD > mergeDistance())
     {
@@ -1712,7 +1711,7 @@ Foam::label Foam::meshRefinement::markProximityRefinement
     const labelList& cellLevel = meshCutter_.cellLevel();
     const pointField& cellCentres = mesh_.cellCentres();
 
-    label oldNRefine = nRefine;
+    const label oldNRefine = nRefine;
 
     // 1. local test: any cell on more than one surface gets refined
     // (if its current level is < max of the surface max level)
@@ -1732,13 +1731,12 @@ Foam::label Foam::meshRefinement::markProximityRefinement
 
     forAll(testFaces, i)
     {
-        label facei = testFaces[i];
-
-        label own = mesh_.faceOwner()[facei];
+        const label facei = testFaces[i];
+        const label own = mesh_.faceOwner()[facei];
 
         if (mesh_.isInternalFace(facei))
         {
-            label nei = mesh_.faceNeighbour()[facei];
+            const label nei = mesh_.faceNeighbour()[facei];
 
             start[i] = cellCentres[own];
             end[i] = cellCentres[nei];
@@ -1746,7 +1744,7 @@ Foam::label Foam::meshRefinement::markProximityRefinement
         }
         else
         {
-            label bFacei = facei - mesh_.nInternalFaces();
+            const label bFacei = facei - mesh_.nInternalFaces();
 
             start[i] = cellCentres[own];
             end[i] = neiCc[bFacei];
@@ -1878,8 +1876,8 @@ Foam::label Foam::meshRefinement::markProximityRefinement
 
     for (label facei = mesh_.nInternalFaces(); facei < mesh_.nFaces(); facei++)
     {
-        label bFacei = facei-mesh_.nInternalFaces();
-        label own = mesh_.faceOwner()[facei];
+        const label bFacei = facei-mesh_.nInternalFaces();
+        const label own = mesh_.faceOwner()[facei];
 
         neiBndMaxLevel[bFacei] = cellMaxLevel[own];
         neiBndMaxLocation[bFacei] = cellMaxLocation[own];
@@ -1894,8 +1892,8 @@ Foam::label Foam::meshRefinement::markProximityRefinement
     // Internal faces
     for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label own = mesh_.faceOwner()[facei];
-        label nei = mesh_.faceNeighbour()[facei];
+        const label own = mesh_.faceOwner()[facei];
+        const label nei = mesh_.faceNeighbour()[facei];
 
         if (cellMaxLevel[own] != -1 && cellMaxLevel[nei] != -1)
         {
@@ -1964,8 +1962,8 @@ Foam::label Foam::meshRefinement::markProximityRefinement
     // Boundary faces
     for (label facei = mesh_.nInternalFaces(); facei < mesh_.nFaces(); facei++)
     {
-        label own = mesh_.faceOwner()[facei];
-        label bFacei = facei - mesh_.nInternalFaces();
+        const label own = mesh_.faceOwner()[facei];
+        const label bFacei = facei - mesh_.nInternalFaces();
 
         if (cellLevel[own] < cellMaxLevel[own] && neiBndMaxLevel[bFacei] != -1)
         {
@@ -2027,7 +2025,7 @@ Foam::label Foam::meshRefinement::markProximityRefinement
 // hitting overall limit maxGlobalCells.
 Foam::labelList Foam::meshRefinement::refineCandidates
 (
-    const pointField& keepPoints,
+    const List<point>& locationsInMesh,
     const scalar curvature,
     const scalar planarAngle,
 
@@ -2041,7 +2039,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
     const label maxLocalCells
 ) const
 {
-    label totNCells = mesh_.globalData().nTotalCells();
+    const label totNCells = mesh_.globalData().nTotalCells();
 
     labelList cellsToRefine;
 
@@ -2073,7 +2071,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
         //    << endl;
 
         //- Disable refinement shortcut. nAllowRefine is per processor limit.
-        label nAllowRefine = labelMax / Pstream::nProcs();
+        const label nAllowRefine = labelMax / Pstream::nProcs();
 
         // Marked for refinement (>= 0) or not (-1). Actual value is the
         // index of the surface it intersects.
@@ -2093,9 +2091,9 @@ Foam::labelList Foam::meshRefinement::refineCandidates
 
         if (featureRefinement)
         {
-            label nFeatures = markFeatureRefinement
+            const label nFeatures = markFeatureRefinement
             (
-                keepPoints,
+                locationsInMesh,
                 nAllowRefine,
 
                 refineCell,
@@ -2111,7 +2109,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
 
         if (featureDistanceRefinement)
         {
-            label nShell = markInternalDistanceToFeatureRefinement
+            const label nShell = markInternalDistanceToFeatureRefinement
             (
                 nAllowRefine,
 
@@ -2127,7 +2125,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
 
         if (internalRefinement)
         {
-            label nShell = markInternalRefinement
+            const label nShell = markInternalRefinement
             (
                 nAllowRefine,
 
@@ -2143,7 +2141,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
 
         if (surfaceRefinement)
         {
-            label nSurf = markSurfaceRefinement
+            const label nSurf = markSurfaceRefinement
             (
                 nAllowRefine,
                 neiLevel,
@@ -2166,7 +2164,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
          && (surfaces_.minLevel() != surfaces_.maxLevel())
         )
         {
-            label nCurv = markSurfaceCurvatureRefinement
+            const label nCurv = markSurfaceCurvatureRefinement
             (
                 curvature,
                 nAllowRefine,
@@ -2193,7 +2191,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
             Info<< "Specified gap level : " << max(surfaces_.gapLevel())
                 << ", planar angle " << planarAngle << endl;
 
-            label nGap = markProximityRefinement
+            const label nGap = markProximityRefinement
             (
                 planarCos,
                 nAllowRefine,
@@ -2266,8 +2264,6 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::refine
 }
 
 
-// Do refinement of consistent set of cells followed by truncation and
-// load balancing.
 Foam::autoPtr<Foam::mapDistributePolyMesh>
 Foam::meshRefinement::refineAndBalance
 (
@@ -2310,11 +2306,11 @@ Foam::meshRefinement::refineAndBalance
 
     if (Pstream::nProcs() > 1)
     {
-        scalar nIdealCells =
+        const scalar nIdealCells =
             mesh_.globalData().nTotalCells()
           / Pstream::nProcs();
 
-        scalar unbalance = returnReduce
+        const scalar unbalance = returnReduce
         (
             mag(1.0-mesh_.nCells()/nIdealCells),
             maxOp<scalar>()
@@ -2414,11 +2410,11 @@ Foam::meshRefinement::balanceAndRefine
     {
         // First check if we need to balance at all. Precalculate number of
         // cells after refinement and see what maximum difference is.
-        scalar nNewCells = scalar(mesh_.nCells() + 7*cellsToRefine.size());
-        scalar nIdealNewCells =
-            returnReduce(nNewCells, sumOp<scalar>())
-          / Pstream::nProcs();
-        scalar unbalance = returnReduce
+        const scalar nNewCells =
+            scalar(mesh_.nCells() + 7*cellsToRefine.size());
+        const scalar nIdealNewCells =
+            returnReduce(nNewCells, sumOp<scalar>())/Pstream::nProcs();
+        const scalar unbalance = returnReduce
         (
             mag(1.0-nNewCells/nIdealNewCells),
             maxOp<scalar>()

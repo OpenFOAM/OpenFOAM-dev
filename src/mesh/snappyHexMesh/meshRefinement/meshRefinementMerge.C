@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -362,7 +362,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
 
         forAll(allFaceSets, setI)
         {
-            label oldMasterI = allFaceSets[setI][0];
+            const label oldMasterI = allFaceSets[setI][0];
             retestFaces.insert(map().reverseFaceMap()[oldMasterI]);
         }
         updateMesh(map, growFaceCellFace(retestFaces));
@@ -450,11 +450,11 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
 
             forAll(allFaceSets, setI)
             {
-                label masterFacei = faceCombiner.masterFace()[setI];
+                const label masterFacei = faceCombiner.masterFace()[setI];
 
                 if (masterFacei != -1)
                 {
-                    label masterCellII = mesh_.faceOwner()[masterFacei];
+                    const label masterCellII = mesh_.faceOwner()[masterFacei];
 
                     const cell& cFaces = mesh_.cells()[masterCellII];
 
@@ -470,7 +470,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             }
             mastersToRestore.shrink();
 
-            label nRestore = returnReduce
+            const label nRestore = returnReduce
             (
                 mastersToRestore.size(),
                 sumOp<label>()
@@ -634,7 +634,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemovePoints
     labelHashSet retestFaces(pointRemover.savedFaceLabels().size());
     forAll(pointRemover.savedFaceLabels(), i)
     {
-        label facei = pointRemover.savedFaceLabels()[i];
+        const label facei = pointRemover.savedFaceLabels()[i];
         if (facei >= 0)
         {
             retestFaces.insert(facei);
@@ -653,7 +653,6 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemovePoints
 }
 
 
-// Restore faces (which contain removed points)
 Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRestorePoints
 (
     removePoints& pointRemover,
@@ -705,7 +704,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRestorePoints
     labelHashSet retestFaces(2*facesToRestore.size());
     forAll(facesToRestore, i)
     {
-        label facei = map().reverseFaceMap()[facesToRestore[i]];
+        const label facei = map().reverseFaceMap()[facesToRestore[i]];
         if (facei >= 0)
         {
             retestFaces.insert(facei);
@@ -738,7 +737,7 @@ Foam::labelList Foam::meshRefinement::collectFaces
 
     forAll(candidateFaces, i)
     {
-        label facei = candidateFaces[i];
+        const label facei = candidateFaces[i];
 
         if (set.found(facei))
         {
@@ -768,9 +767,8 @@ Foam::labelList Foam::meshRefinement::growFaceCellFace
 
     forAllConstIter(faceSet, set, iter)
     {
-        label facei = iter.key();
-
-        label own = mesh_.faceOwner()[facei];
+        const label facei = iter.key();
+        const label own = mesh_.faceOwner()[facei];
 
         const cell& ownFaces = mesh_.cells()[own];
         forAll(ownFaces, ownFacei)
@@ -780,7 +778,7 @@ Foam::labelList Foam::meshRefinement::growFaceCellFace
 
         if (mesh_.isInternalFace(facei))
         {
-            label nbr = mesh_.faceNeighbour()[facei];
+            const label nbr = mesh_.faceNeighbour()[facei];
 
             const cell& nbrFaces = mesh_.cells()[nbr];
             forAll(nbrFaces, nbrFacei)
@@ -897,7 +895,11 @@ Foam::label Foam::meshRefinement::mergeEdgesUndo
                 )
             );
 
-            label n = returnReduce(masterErrorFaces.size(), sumOp<label>());
+            const label n = returnReduce
+            (
+                masterErrorFaces.size(),
+                sumOp<label>()
+            );
 
             Info<< "Detected " << n
                 << " error faces on boundaries that have been merged."

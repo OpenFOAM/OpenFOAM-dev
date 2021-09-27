@@ -225,7 +225,7 @@ private:
 
         // Get cells which are inside any closed surface. Note that
         // all closed surfaces
-        // will have already been oriented to have keepPoint outside.
+        // will have already been oriented to have locationInMesh outside.
         labelList getInsideCells(const word&) const;
 
         // Do all to remove inside cells
@@ -253,7 +253,7 @@ private:
             //  (or -1 if not passed through). Uses tracking.
             void markFeatureCellLevel
             (
-                const pointField& keepPoints,
+                const List<point>& locationsInMesh,
                 labelList& maxFeatureLevel
             ) const;
 
@@ -261,7 +261,7 @@ private:
             //  features.
             label markFeatureRefinement
             (
-                const pointField& keepPoints,
+                const List<point>& locationsInMesh,
                 const label nAllowRefine,
 
                 labelList& refineCell,
@@ -431,6 +431,12 @@ private:
             //- Returns list with for every internal face -1 or the patch
             //  they should be baffled into. If removeEdgeConnectedCells is set
             //  removes cells based on perpendicularAngle.
+            //
+            //  Gets run after createBaffles so all the unzoned surface
+            //  intersections have already been turned into baffles. (Note:
+            //  zoned surfaces are not baffled at this stage) Used to remove
+            //  cells by baffling all their faces and have the splitMeshRegions
+            //  chuck away non used regions.
             labelList markFacesOnProblemCells
             (
                 const dictionary& motionDict,
@@ -503,7 +509,7 @@ private:
             //  marked in namedSurfaceIndex regarded as blocked.
             void findCellZoneTopo
             (
-                const point& keepPoint,
+                const List<point>& locationsInMesh,
                 const labelList& namedSurfaceIndex,
                 const labelList& surfaceToCellZone,
                 labelList& cellToZone
@@ -773,7 +779,7 @@ public:
             //- Calculate list of cells to refine.
             labelList refineCandidates
             (
-                const pointField& keepPoints,
+                const List<point>& locationsInMesh,
                 const scalar curvature,
                 const scalar planarAngle,
 
@@ -832,7 +838,7 @@ public:
                 Time& runTime,
                 const labelList& globalToMasterPatch,
                 const labelList& globalToSlavePatch,
-                const point& keepPoint
+                const List<point>& locationsInMesh
             );
 
             //- Split off (with optional buffer layers) unreachable areas
@@ -842,7 +848,7 @@ public:
                 const label nBufferLayers,
                 const labelList& globalToMasterPatch,
                 const labelList& globalToSlavePatch,
-                const point& keepPoint
+                const List<point>& locationsInMesh
             );
 
             //- Find boundary points that connect to more than one cell
@@ -879,10 +885,10 @@ public:
 
             //- Put faces/cells into zones according to surface specification.
             //  Returns null if no zone surfaces present. Region containing
-            //  the keepPoint will not be put into a cellZone.
+            //  the locationInMesh will not be put into a cellZone.
             autoPtr<mapPolyMesh> zonify
             (
-                const point& keepPoint,
+                const List<point>& locationsInMesh,
                 const bool allowFreeStandingZoneFaces
             );
 
@@ -904,15 +910,25 @@ public:
                 const polyMesh&,
                 const labelList& cellRegion,
                 const vector& perturbVec,
-                const point& p
+                const point& locationInMesh
             );
 
-            //- Split mesh. Keep part containing point.
+            //- Find regions points are in and update cellRegion
+            //  Uses optional perturbation to re-test.
+            static void findRegions
+            (
+                const polyMesh&,
+                labelList& cellRegion,
+                const vector& perturbVec,
+                const List<point>& locationsInMesh
+            );
+
+            //- Split mesh. Keep regions containing any point in locationsInMesh
             autoPtr<mapPolyMesh> splitMeshRegions
             (
                 const labelList& globalToMasterPatch,
                 const labelList& globalToSlavePatch,
-                const point& keepPoint
+                const List<point>& locationsInMesh
             );
 
             //- Split faces into two

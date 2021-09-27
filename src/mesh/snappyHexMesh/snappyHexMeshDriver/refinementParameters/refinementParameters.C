@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,12 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
         )
     ),
     nBufferLayers_(dict.lookup<label>("nCellsBetweenLevels")),
-    keepPoints_(pointField(1, dict.lookup("locationInMesh"))),
+    locationsInMesh_
+    (
+        dict.found("locationsInMesh")
+      ? List<point>(dict.lookup("locationsInMesh"))
+      : List<point>(1, dict.lookup("locationInMesh"))
+    ),
     allowFreeStandingZoneFaces_(dict.lookup("allowFreeStandingZoneFaces")),
     useTopologicalSnapDetection_
     (
@@ -56,6 +61,8 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
         dict.lookupOrDefault<Switch>("handleSnapProblems", true)
     )
 {
+    InfoInFunction << locationsInMesh_ << endl;
+
     scalar featAngle(dict.lookup<scalar>("resolveFeatureAngle"));
 
     if (featAngle < 0 || featAngle > 180)
@@ -81,13 +88,13 @@ const
     globalIndex globalCells(mesh.nCells());
 
     // Cell label per point
-    labelList cellLabels(keepPoints_.size());
+    labelList cellLabels(locationsInMesh_.size());
 
-    forAll(keepPoints_, i)
+    forAll(locationsInMesh_, i)
     {
-        const point& keepPoint = keepPoints_[i];
+        const point& locationInMesh = locationsInMesh_[i];
 
-        label localCelli = mesh.findCell(keepPoint);
+        label localCelli = mesh.findCell(locationInMesh);
 
         label globalCelli = -1;
 
@@ -101,7 +108,7 @@ const
         if (globalCelli == -1)
         {
             FatalErrorInFunction
-                << "Point " << keepPoint
+                << "Point " << locationInMesh
                 << " is not inside the mesh or on a face or edge." << nl
                 << "Bounding box of the mesh:" << mesh.bounds()
                 << exit(FatalError);
@@ -111,7 +118,7 @@ const
         label proci = globalCells.whichProcID(globalCelli);
         label procCelli = globalCells.toLocal(proci, globalCelli);
 
-        Info<< "Found point " << keepPoint << " in cell " << procCelli
+        Info<< "Found point " << locationInMesh << " in cell " << procCelli
             << " on processor " << proci << endl;
 
 
