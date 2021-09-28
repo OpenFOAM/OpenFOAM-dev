@@ -66,7 +66,7 @@ castellatedMeshControls
         }
     }
 
-    locationInMesh (1e-5 1e-5 1e-5);
+    insidePoint (1e-5 1e-5 1e-5);
 }
 
 snapControls

@@ -152,7 +152,7 @@ Foam::CV2D::CV2D
     (
         point
         (
-            cvMeshDict.subDict("surfaceConformation").lookup("locationInMesh")
+            cvMeshDict.subDict("surfaceConformation").lookup("insidePoint")
         ).z()
     ),
     startOfInternalPoints_(0),

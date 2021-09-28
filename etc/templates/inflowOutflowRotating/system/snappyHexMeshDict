@@ -109,7 +109,7 @@ castellatedMeshControls
         */
     }
 
-    locationInMesh (1e-5 1e-5 1e-5); // Offset from (0 0 0) to avoid
+    insidePoint (1e-5 1e-5 1e-5); // Offset from (0 0 0) to avoid
                                      // coinciding with face or edge
     nCellsBetweenLevels 3;
 }

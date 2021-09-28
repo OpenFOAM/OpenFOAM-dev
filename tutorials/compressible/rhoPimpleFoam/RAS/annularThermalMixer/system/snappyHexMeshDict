@@ -203,7 +203,7 @@ castellatedMeshControls
 
     resolveFeatureAngle 30;
 
-    locationInMesh (0.035 0.043 0.017);
+    insidePoint (0.035 0.043 0.017);
 
     allowFreeStandingZoneFaces true;
 }

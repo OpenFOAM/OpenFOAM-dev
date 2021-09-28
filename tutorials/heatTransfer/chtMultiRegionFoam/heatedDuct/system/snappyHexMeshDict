@@ -94,7 +94,7 @@ castellatedMeshControls
 
     nCellsBetweenLevels 1;
 
-    locationInMesh (0.025 0.025 0.075);
+    insidePoint (0.025 0.025 0.075);
 }
 
 addLayersControls

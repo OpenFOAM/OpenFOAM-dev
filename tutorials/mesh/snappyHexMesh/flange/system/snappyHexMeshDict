@@ -141,11 +141,11 @@ castellatedMeshControls
 
     // After refinement patches get added for all refinementSurfaces and
     // all cells intersecting the surfaces get put into these patches. The
-    // section reachable from the locationInMesh is kept.
+    // section reachable from the insidePoint is kept.
     // NOTE: This point should never be on a face, always inside a cell, even
     // after refinement.
-    // This is an outside point locationInMesh (-0.033 -0.033 0.0033);
-    locationInMesh (-9.23149e-05 -0.0025 -0.0025); // Inside point
+    // This is an outside point insidePoint (-0.033 -0.033 0.0033);
+    insidePoint (-9.23149e-05 -0.0025 -0.0025); // Inside point
 
     // Whether any faceZones (as specified in the refinementSurfaces)
     // are only on the boundary of corresponding cellZones or also allow

@@ -108,7 +108,7 @@ castellatedMeshControls
         }
     }
 
-    locationInMesh (0 0 3);
+    insidePoint (0 0 3);
     nCellsBetweenLevels 5;
 }
 

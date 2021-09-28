@@ -26,7 +26,7 @@ geometry
 
 surfaceConformation
 {
-    locationInMesh              (-2.8 0.7 0.5);
+    insidePoint                 (-2.8 0.7 0.5);
 
     pointPairDistanceCoeff      0.005;
 

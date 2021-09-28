@@ -61,7 +61,7 @@ initialPoints
 
 surfaceConformation
 {
-    locationInMesh              (0.1 0.1 0.2);
+    insidePoint                 (0.1 0.1 0.2);
 
     featurePointControls
     {

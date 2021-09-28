@@ -34,7 +34,7 @@ geometry
 surfaceConformation
 {
     // The z-coordinate of the plane is taken from here.
-    locationInMesh                  (0 0 0);
+    insidePoint                     (0 0 0);
 
     pointPairDistanceCoeff          0.005;
 

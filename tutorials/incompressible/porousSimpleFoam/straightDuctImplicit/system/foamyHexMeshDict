@@ -22,7 +22,7 @@ geometry
 
 surfaceConformation
 {
-    locationInMesh (-0.078 0.02 0.0);
+    insidePoint (-0.078 0.02 0.0);
 
     featurePointControls
     {

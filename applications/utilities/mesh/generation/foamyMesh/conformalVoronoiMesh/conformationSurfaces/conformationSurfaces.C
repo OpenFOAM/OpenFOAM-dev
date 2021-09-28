@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ void Foam::conformationSurfaces::hasBoundedVolume
             )
         )
         {
-            pointField pts(1, locationInMesh_);
+            pointField pts(1, insidePoint_);
 
             List<volumeType> vTypes
             (
@@ -271,7 +271,7 @@ Foam::conformationSurfaces::conformationSurfaces
     runTime_(runTime),
     allGeometry_(allGeometry),
     features_(),
-    locationInMesh_(surfaceConformationDict.lookup("locationInMesh")),
+    insidePoint_(surfaceConformationDict.lookup("insidePoint")),
     surfaces_(),
     allGeometryToSurfaces_(),
     normalVolumeTypes_(),
@@ -561,7 +561,7 @@ Foam::conformationSurfaces::conformationSurfaces
     globalBounds_.min() -= newSpan;
     globalBounds_.max() += newSpan;
 
-    // Look at all surfaces at determine whether the locationInMesh point is
+    // Look at all surfaces at determine whether the insidePoint point is
     // inside or outside each, to establish a signature for the domain to be
     // meshed.
 
@@ -572,7 +572,7 @@ Foam::conformationSurfaces::conformationSurfaces
     );
 
     Info<< endl
-        << "Testing for locationInMesh " << locationInMesh_ << endl;
+        << "Testing for insidePoint " << insidePoint_ << endl;
 
     hasBoundedVolume(referenceVolumeTypes_);
 

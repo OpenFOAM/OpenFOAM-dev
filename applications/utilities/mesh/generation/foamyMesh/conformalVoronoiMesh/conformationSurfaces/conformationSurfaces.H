@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class conformationSurfaces
 
         //- The location in the mesh that specifies which portion of surfaces is
         //  to be meshed.
-        point locationInMesh_;
+        point insidePoint_;
 
         //- Indices of surfaces in allGeometry that are to be conformed to
         labelList surfaces_;
@@ -162,7 +162,7 @@ public:
             inline const PtrList<extendedFeatureEdgeMesh>& features() const;
 
             //- Return the location to mesh
-            inline const point& locationInMesh() const;
+            inline const point& insidePoint() const;
 
             //- Return the surface indices
             inline const labelList& surfaces() const;

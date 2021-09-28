@@ -85,7 +85,7 @@ geometry
 surfaceConformation
 {
     // A point inside surfaces that is inside mesh.
-    locationInMesh (0 0 0);
+    insidePoint (0 0 0);
 
     // How far apart are point-duplets generated. Balance this between
     // - very low distance: little chance of interference from other
