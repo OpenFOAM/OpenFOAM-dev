@@ -58,21 +58,32 @@ public:
 
     // Public classes
 
-        //- Class to hold the meshed region selection locations
-        class locations
+        //- Class to hold the points to select cells inside and outside
+        //  surface regions
+        class cellSelectionPoints
         {
-            //- Locations in the meshed regions
+            //- Points inside the surface regions to selected cells
             const List<point> inside_;
+
+            //- Points outside the surface region to deselect cells
+            const List<point> outside_;
+
 
         public:
 
             //- Constructor
-            locations(const dictionary& dict);
+            cellSelectionPoints(const dictionary& dict);
 
-            //- Return the locations inside the meshed regions
+            //- Return the points inside the surface regions to selected cells
             const List<point>& inside() const
             {
                 return inside_;
+            }
+
+            //- Return the points outside the surface region to deselect cells
+            const List<point>& outside() const
+            {
+                return outside_;
             }
         };
 
@@ -99,8 +110,8 @@ private:
         //- Number of layers between different refinement levels
         const label nBufferLayers_;
 
-        //- Locations to select regions of cells
-        const locations meshLocations_;
+        //- Points to select cells inside and outside surface regions
+        const cellSelectionPoints selectionPoints_;
 
         //- FaceZone faces allowed which have owner and neighbour in same
         //  cellZone?
@@ -167,10 +178,11 @@ public:
                 return nBufferLayers_;
             }
 
-            //- Locations to select meshed regions
-            const locations& meshLocations() const
+            //- Return the points to select cells inside and outside
+            //  surface regions
+            const cellSelectionPoints& selectionPoints() const
             {
-                return meshLocations_;
+                return selectionPoints_;
             }
 
             //- Are zone faces allowed only in between different cell zones

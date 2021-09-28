@@ -128,23 +128,6 @@ void Foam::meshRefinement::getBafflePatches
     labelList& nbrPatch
 ) const
 {
-    autoPtr<OFstream> str;
-    label vertI = 0;
-    if (debug&OBJINTERSECTIONS)
-    {
-        mkDir(mesh_.time().path()/timeName());
-        str.reset
-        (
-            new OFstream
-            (
-                mesh_.time().path()/timeName()/"intersections.obj"
-            )
-        );
-
-        Pout<< "getBafflePatches : Writing surface intersections to file "
-            << str().name() << nl << endl;
-    }
-
     const pointField& cellCentres = mesh_.cellCentres();
 
     // Surfaces that need to be baffled
@@ -224,21 +207,6 @@ void Foam::meshRefinement::getBafflePatches
 
         if (hit1[i].hit() && hit2[i].hit())
         {
-            if (str.valid())
-            {
-                meshTools::writeOBJ(str(), start[i]);
-                vertI++;
-                meshTools::writeOBJ(str(), hit1[i].rawPoint());
-                vertI++;
-                meshTools::writeOBJ(str(), hit2[i].rawPoint());
-                vertI++;
-                meshTools::writeOBJ(str(), end[i]);
-                vertI++;
-                str()<< "l " << vertI-3 << ' ' << vertI-2 << nl;
-                str()<< "l " << vertI-2 << ' ' << vertI-1 << nl;
-                str()<< "l " << vertI-1 << ' ' << vertI << nl;
-            }
-
             // Pick up the patches
             ownPatch[facei] = globalToMasterPatch
             [
@@ -1361,14 +1329,14 @@ bool Foam::meshRefinement::calcRegionToZone
 
 void Foam::meshRefinement::findCellZoneTopo
 (
-    const List<point>& locationsInMesh,
+    const List<point>& insidePoints,
     const labelList& namedSurfaceIndex,
     const labelList& surfaceToCellZone,
     labelList& cellToZone
 ) const
 {
     // Assumes:
-    // - region containing locationsInMesh does not go into a cellZone
+    // - region containing insidePoints does not go into a cellZone
     // - all other regions can be found by crossing faces marked in
     //   namedSurfaceIndex.
 
@@ -1394,7 +1362,7 @@ void Foam::meshRefinement::findCellZoneTopo
 
     // Per mesh region the zone the cell should be put in.
     // -2   : not analysed yet
-    // -1   : locationInMesh region. Not put into any cellzone.
+    // -1   : insidePoint region. Not put into any cellzone.
     // >= 0 : index of cellZone
     labelList regionToCellZone(cellRegion.nRegions(), -2);
 
@@ -1410,25 +1378,25 @@ void Foam::meshRefinement::findCellZoneTopo
     }
 
 
-    // Find the regions containing the locationsInMesh
-    forAll(locationsInMesh, i)
+    // Find the regions containing the insidePoints
+    forAll(insidePoints, i)
     {
         const label regionInMeshi = findRegion
         (
             mesh_,
             cellRegion,
             mergeDistance_*vector::one,
-            locationsInMesh[i]
+            insidePoints[i]
         );
 
-        Info<< "Found point " << locationsInMesh[i]
+        Info<< "Found point " << insidePoints[i]
             << " in global region " << regionInMeshi
             << " out of " << cellRegion.nRegions() << " regions." << endl;
 
         if (regionInMeshi == -1)
         {
             FatalErrorInFunction
-                << "Point " << locationsInMesh[i]
+                << "Point " << insidePoints[i]
                 << " is not inside the mesh." << nl
                 << "Bounding box of the mesh:" << mesh_.bounds()
                 << exit(FatalError);
@@ -2263,7 +2231,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
     Time& runTime,
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
-    const refinementParameters::locations& meshLocations
+    const refinementParameters::cellSelectionPoints& selectionPoints
 )
 {
     // Introduce baffles
@@ -2354,7 +2322,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
         runTime++;
     }
 
-    splitMeshRegions(globalToMasterPatch, globalToSlavePatch, meshLocations);
+    splitMeshRegions(globalToMasterPatch, globalToSlavePatch, selectionPoints);
 
     if (debug)
     {
@@ -2445,7 +2413,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
     const label nBufferLayers,
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
-    const refinementParameters::locations& meshLocations
+    const refinementParameters::cellSelectionPoints& selectionPoints
 )
 {
     // Determine patches to put intersections into
@@ -2484,13 +2452,13 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
     regionSplit cellRegion(mesh_, blockedFace);
     blockedFace.clear();
 
-    // Find the regions containing any of the points in meshLocations
+    // Find the regions containing any of the points in selectionPoints
     findRegions
     (
         mesh_,
         cellRegion,
         mergeDistance_*vector::one,
-        meshLocations
+        selectionPoints
     );
 
 
@@ -2668,7 +2636,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
     reduce(nCellsInMesh, sumOp<label>());
 
     Info<< "Selecting all cells in regions containing any of the points in "
-        << meshLocations.inside() << endl
+        << selectionPoints.inside() << endl
         << "Selected: " << nCellsInMesh << " cells." << endl;
 
 
@@ -2775,7 +2743,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::dupNonManifoldPoints()
 
 Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
 (
-    const List<point>& locationsInMesh,
+    const List<point>& insidePoints,
     const bool allowFreeStandingZoneFaces
 )
 {
@@ -3046,14 +3014,14 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
     // ~~~~~~~~~~~~~~~~~
 
     {
-        Info<< "Walking from locations-in-mesh " << locationsInMesh
+        Info<< "Walking from locations-in-mesh " << insidePoints
             << " to assign cellZones "
             << "- crossing a faceZone face changes cellZone" << nl << endl;
 
         // Topological walk
         findCellZoneTopo
         (
-            locationsInMesh,
+            insidePoints,
             namedSurfaceIndex,
             surfaceToCellZone,
 

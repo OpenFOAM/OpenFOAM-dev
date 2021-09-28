@@ -313,7 +313,7 @@ bool Foam::meshRefinement::markForRefine
 
 void Foam::meshRefinement::markFeatureCellLevel
 (
-    const List<point>& locationsInMesh,
+    const List<point>& insidePoints,
     labelList& maxFeatureLevel
 ) const
 {
@@ -324,7 +324,7 @@ void Foam::meshRefinement::markFeatureCellLevel
     //
     // 1. find non-manifold points on feature edges (i.e. start of feature edge
     //    or 'knot')
-    // 2. seed particle starting at locationInMesh going to this non-manifold
+    // 2. seed particle starting at insidePoint going to this non-manifold
     //    point
     // 3. track particles to their non-manifold point
     //
@@ -334,7 +334,7 @@ void Foam::meshRefinement::markFeatureCellLevel
 
 
     // Find all start cells of features.
-    // Is done by tracking from locationInMesh.
+    // Is done by tracking from insidePoint.
     Cloud<trackedParticle> startPointCloud
     (
         mesh_,
@@ -345,17 +345,17 @@ void Foam::meshRefinement::markFeatureCellLevel
 
     // Features are identical on all processors. Number them so we know
     // what to seed. Do this on only the processor that
-    // holds the locationInMesh.
+    // holds the insidePoint.
 
-    forAll(locationsInMesh, i)
+    forAll(insidePoints, i)
     {
-        const point& locationInMesh = locationsInMesh[i];
+        const point& insidePoint = insidePoints[i];
 
-        const label celli = mesh_.cellTree().findInside(locationInMesh);
+        const label celli = mesh_.cellTree().findInside(insidePoint);
 
         if (celli != -1)
         {
-            // I am the processor that holds the locationInMesh
+            // I am the processor that holds the insidePoint
 
             forAll(features_, featI)
             {
@@ -393,7 +393,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                             new trackedParticle
                             (
                                 mesh_,
-                                locationInMesh,
+                                insidePoint,
                                 celli,
                                 featureMesh.points()[pointi],   // endpos
                                 featureLevel,                   // level
@@ -436,7 +436,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                             new trackedParticle
                             (
                                 mesh_,
-                                locationInMesh,
+                                insidePoint,
                                 celli,
                                 featureMesh.points()[pointi],   // endpos
                                 featureLevel,                   // level
@@ -642,7 +642,7 @@ void Foam::meshRefinement::markFeatureCellLevel
 // Calculates list of cells to refine based on intersection with feature edge.
 Foam::label Foam::meshRefinement::markFeatureRefinement
 (
-    const List<point>& locationsInMesh,
+    const List<point>& insidePoints,
     const label nAllowRefine,
 
     labelList& refineCell,
@@ -651,7 +651,7 @@ Foam::label Foam::meshRefinement::markFeatureRefinement
 {
     // Largest refinement level of any feature passed through
     labelList maxFeatureLevel;
-    markFeatureCellLevel(locationsInMesh, maxFeatureLevel);
+    markFeatureCellLevel(insidePoints, maxFeatureLevel);
 
     // See which cells to refine. maxFeatureLevel will hold highest level
     // of any feature edge that passed through.
@@ -2025,7 +2025,7 @@ Foam::label Foam::meshRefinement::markProximityRefinement
 // hitting overall limit maxGlobalCells.
 Foam::labelList Foam::meshRefinement::refineCandidates
 (
-    const List<point>& locationsInMesh,
+    const List<point>& insidePoints,
     const scalar curvature,
     const scalar planarAngle,
 
@@ -2093,7 +2093,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
         {
             const label nFeatures = markFeatureRefinement
             (
-                locationsInMesh,
+                insidePoints,
                 nAllowRefine,
 
                 refineCell,

@@ -226,7 +226,7 @@ private:
 
         // Get cells which are inside any closed surface. Note that
         // all closed surfaces
-        // will have already been oriented to have locationInMesh outside.
+        // will have already been oriented to have insidePoint outside.
         labelList getInsideCells(const word&) const;
 
         // Do all to remove inside cells
@@ -254,7 +254,7 @@ private:
             //  (or -1 if not passed through). Uses tracking.
             void markFeatureCellLevel
             (
-                const List<point>& locationsInMesh,
+                const List<point>& insidePoints,
                 labelList& maxFeatureLevel
             ) const;
 
@@ -262,7 +262,7 @@ private:
             //  features.
             label markFeatureRefinement
             (
-                const List<point>& locationsInMesh,
+                const List<point>& insidePoints,
                 const label nAllowRefine,
 
                 labelList& refineCell,
@@ -510,7 +510,7 @@ private:
             //  marked in namedSurfaceIndex regarded as blocked.
             void findCellZoneTopo
             (
-                const List<point>& locationsInMesh,
+                const List<point>& insidePoints,
                 const labelList& namedSurfaceIndex,
                 const labelList& surfaceToCellZone,
                 labelList& cellToZone
@@ -780,7 +780,7 @@ public:
             //- Calculate list of cells to refine.
             labelList refineCandidates
             (
-                const List<point>& locationsInMesh,
+                const List<point>& insidePoints,
                 const scalar curvature,
                 const scalar planarAngle,
 
@@ -839,7 +839,7 @@ public:
                 Time& runTime,
                 const labelList& globalToMasterPatch,
                 const labelList& globalToSlavePatch,
-                const refinementParameters::locations& meshLocations
+                const refinementParameters::cellSelectionPoints& selectionPoints
             );
 
             //- Split off (with optional buffer layers) unreachable areas
@@ -849,7 +849,7 @@ public:
                 const label nBufferLayers,
                 const labelList& globalToMasterPatch,
                 const labelList& globalToSlavePatch,
-                const refinementParameters::locations& meshLocations
+                const refinementParameters::cellSelectionPoints& selectionPoints
             );
 
             //- Find boundary points that connect to more than one cell
@@ -886,10 +886,10 @@ public:
 
             //- Put faces/cells into zones according to surface specification.
             //  Returns null if no zone surfaces present. Region containing
-            //  the locationInMesh will not be put into a cellZone.
+            //  the insidePoint will not be put into a cellZone.
             autoPtr<mapPolyMesh> zonify
             (
-                const List<point>& locationsInMesh,
+                const List<point>& insidePoints,
                 const bool allowFreeStandingZoneFaces
             );
 
@@ -921,15 +921,15 @@ public:
                 const polyMesh&,
                 labelList& cellRegion,
                 const vector& perturbVec,
-                const refinementParameters::locations& meshLocations
+                const refinementParameters::cellSelectionPoints& selectionPoints
             );
 
-            //- Split mesh. Keep regions containing any point in locationsInMesh
+            //- Split mesh according to selectionPoints
             autoPtr<mapPolyMesh> splitMeshRegions
             (
                 const labelList& globalToMasterPatch,
                 const labelList& globalToSlavePatch,
-                const refinementParameters::locations& meshLocations
+                const refinementParameters::cellSelectionPoints& selectionPoints
             );
 
             //- Split faces into two

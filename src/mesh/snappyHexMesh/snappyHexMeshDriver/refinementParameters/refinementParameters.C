@@ -44,7 +44,7 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
         )
     ),
     nBufferLayers_(dict.lookup<label>("nCellsBetweenLevels")),
-    meshLocations_(dict),
+    selectionPoints_(dict),
     allowFreeStandingZoneFaces_(dict.lookup("allowFreeStandingZoneFaces")),
     useTopologicalSnapDetection_
     (
@@ -69,15 +69,49 @@ Foam::refinementParameters::refinementParameters(const dictionary& dict)
 }
 
 
-Foam::refinementParameters::locations::locations(const dictionary& dict)
+Foam::refinementParameters::cellSelectionPoints::cellSelectionPoints
+(
+    const dictionary& dict
+)
 :
     inside_
     (
-        dict.found("locationsInMesh")
-      ? List<point>(dict.lookup("locationsInMesh"))
-      : List<point>(1, dict.lookup("locationInMesh"))
+        dict.found("insidePoints")
+      ? List<point>(dict.lookup("insidePoints"))
+      : dict.found("insidePoint")
+          ? List<point>(1, dict.lookup("insidePoint"))
+          : dict.found("locationInMesh")
+              ? List<point>(1, dict.lookup("locationInMesh"))
+              : List<point>::null()
+    ),
+    outside_
+    (
+        dict.found("outsidePoints")
+      ? List<point>(dict.lookup("outsidePoints"))
+      : dict.found("outsidePoint")
+          ? List<point>(1, dict.lookup("outsidePoint"))
+          : List<point>::null()
     )
-{}
+{
+    if (inside_.size())
+    {
+        Info << "Cell selection insidePoints: " << inside_ << endl;
+    }
+
+    if (outside_.size())
+    {
+        Info << "Cell selection outsidePoints: " << outside_ << endl;
+    }
+
+    if (!inside_.size() && !outside_.size())
+    {
+        FatalErrorInFunction
+            << "Neither insidePoint/insidePoints nor "
+               "outsidePoint/outsidePoints specified: "
+            << "cannot select any cells."
+            << exit(FatalError);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -92,13 +126,13 @@ const
     globalIndex globalCells(mesh.nCells());
 
     // Cell label per point
-    labelList cellLabels(meshLocations_.inside().size());
+    labelList cellLabels(selectionPoints_.inside().size());
 
-    forAll(meshLocations_.inside(), i)
+    forAll(selectionPoints_.inside(), i)
     {
-        const point& locationInMesh = meshLocations_.inside()[i];
+        const point& insidePoint = selectionPoints_.inside()[i];
 
-        label localCelli = mesh.findCell(locationInMesh);
+        label localCelli = mesh.findCell(insidePoint);
 
         label globalCelli = -1;
 
@@ -112,7 +146,7 @@ const
         if (globalCelli == -1)
         {
             FatalErrorInFunction
-                << "Point " << locationInMesh
+                << "Point " << insidePoint
                 << " is not inside the mesh or on a face or edge." << nl
                 << "Bounding box of the mesh:" << mesh.bounds()
                 << exit(FatalError);
@@ -122,7 +156,7 @@ const
         label proci = globalCells.whichProcID(globalCelli);
         label procCelli = globalCells.toLocal(proci, globalCelli);
 
-        Info<< "Found point " << locationInMesh << " in cell " << procCelli
+        Info<< "Found point " << insidePoint << " in cell " << procCelli
             << " on processor " << proci << endl;
 
 

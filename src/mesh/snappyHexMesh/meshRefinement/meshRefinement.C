@@ -2094,11 +2094,11 @@ Foam::label Foam::meshRefinement::findRegion
     const polyMesh& mesh,
     const labelList& cellToRegion,
     const vector& perturbVec,
-    const point& locationInMesh
+    const point& location
 )
 {
     label regioni = -1;
-    label celli = mesh.findCell(locationInMesh);
+    label celli = mesh.findCell(location);
     if (celli != -1)
     {
         regioni = cellToRegion[celli];
@@ -2108,7 +2108,7 @@ Foam::label Foam::meshRefinement::findRegion
     if (regioni == -1)
     {
         // See if we can perturb a bit
-        celli = mesh.findCell(locationInMesh + perturbVec);
+        celli = mesh.findCell(location + perturbVec);
         if (celli != -1)
         {
             regioni = cellToRegion[celli];
@@ -2125,40 +2125,69 @@ void Foam::meshRefinement::findRegions
     const polyMesh& mesh,
     labelList& cellRegion,
     const vector& perturbVec,
-    const refinementParameters::locations& meshLocations
+    const refinementParameters::cellSelectionPoints& selectionPoints
 )
 {
-    // List of all cells inside any of the regions
-    // which have a point in the meshLocations.inside() list
-    PackedBoolList insideCells(mesh.nCells());
+    // List of all cells selected cells
+    PackedBoolList selectedCells(mesh.nCells());
 
-    // For each of the meshLocations.inside() find the corresponding region
-    // and mark the cells
-    forAll(meshLocations.inside(), i)
+    if (selectionPoints.outside().size())
     {
-        // Find the region corresponding to the meshLocations.inside()[i]
+        // Select all cells before removing those in regions
+        // containing locations in selectionPoints.outside()
+        selectedCells = true;
+
+        // For each of the selectionPoints.outside() find the corresponding
+        // region and deselect the cells
+        forAll(selectionPoints.outside(), i)
+        {
+            // Find the region corresponding to the selectionPoints.outside()[i]
+            const label regioni = findRegion
+            (
+                mesh,
+                cellRegion,
+                perturbVec,
+                selectionPoints.outside()[i]
+            );
+
+            // Deselect the cells in the region from selectedCells
+            forAll(cellRegion, celli)
+            {
+                if (cellRegion[celli] == regioni)
+                {
+                    selectedCells[celli] = false;
+                }
+            }
+        }
+    }
+
+    // For each of the selectionPoints.inside() find the corresponding region
+    // and select the cells
+    forAll(selectionPoints.inside(), i)
+    {
+        // Find the region corresponding to the selectionPoints.inside()[i]
         const label regioni = findRegion
         (
             mesh,
             cellRegion,
             perturbVec,
-            meshLocations.inside()[i]
+            selectionPoints.inside()[i]
         );
 
-        // Add all the cells in the region to insideCells
+        // Add all the cells in the region to selectedCells
         forAll(cellRegion, celli)
         {
             if (cellRegion[celli] == regioni)
             {
-                insideCells[celli] = true;
+                selectedCells[celli] = true;
             }
         }
     }
 
     // For all unmarked cells set cellRegion to -1
-    forAll(insideCells, celli)
+    forAll(selectedCells, celli)
     {
-        if (!insideCells[celli])
+        if (!selectedCells[celli])
         {
             cellRegion[celli] = -1;
         }
@@ -2170,7 +2199,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMeshRegions
 (
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
-    const refinementParameters::locations& meshLocations
+    const refinementParameters::cellSelectionPoints& selectionPoints
 )
 {
     // Force calculation of face decomposition (used in findCell)
@@ -2189,7 +2218,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMeshRegions
         mesh_,
         cellRegion,
         mergeDistance_*vector::one,
-        meshLocations
+        selectionPoints
     );
 
     // Subset
@@ -2218,7 +2247,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMeshRegions
         reduce(nCellsToKeep, sumOp<label>());
 
         Info<< "Keeping all cells in regions containing any point in "
-            << meshLocations.inside() << endl
+            << selectionPoints.inside() << endl
             << "Selected for keeping : " << nCellsToKeep << " cells." << endl;
 
         // Remove cells
