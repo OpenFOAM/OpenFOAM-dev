@@ -245,7 +245,7 @@ Foam::fluxLimitedLangmuirHinshelwoodReactionRate::operator()
     if (limited_)
     {
         scalar rc = 1;
-        forAll(ra_, i)
+        forAll(exp_, i)
         {
             rc *= pow(c[ra_[i]], exp_[i]);
         }
@@ -301,7 +301,7 @@ inline Foam::scalar Foam::fluxLimitedLangmuirHinshelwoodReactionRate::ddT
     if (limited_)
     {
         scalar rc = 1;
-        forAll(ra_, i)
+        forAll(exp_, i)
         {
             rc *= pow(c[ra_[i]], exp_[i]);
         }
