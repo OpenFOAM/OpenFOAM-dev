@@ -9,7 +9,8 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      thermophysicalProperties;
+    location    "constant";
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -19,7 +20,7 @@ thermoType
     mixture         pureMixture;
     transport       const;
     thermo          eConst;
-    equationOfState rPolynomial;
+    equationOfState Boussinesq;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -28,22 +29,23 @@ mixture
 {
     specie
     {
-        nMoles      1;
-        molWeight   18.0;       // [g/mol]
+        molWeight       28.9;
     }
     equationOfState
     {
-        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16); // [J/kg/K]
+        rho0            1;
+        T0              300;
+        beta            3e-03;
     }
     thermodynamics
     {
-        Cv          4181;      // [J/kg/K] at T = 293 K
-        Hf          0;
+        Cv              712;
+        Hf              0;
     }
     transport
     {
-        mu          1.0e-03;    // [kg/m/s]
-        Pr          7;
+        mu              1e-05;
+        Pr              0.7;
     }
 }
 

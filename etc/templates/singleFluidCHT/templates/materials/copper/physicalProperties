@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      thermophysicalProperties;
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -29,23 +29,23 @@ mixture
     specie
     {
         nMoles      1;
-        molWeight   27; // [g/mol]
+        molWeight   63.5;   // [g/mol]
     }
 
     transport
     {
-        kappa   240;    // [W/m/K]
+        kappa   380;        // [W/m/K]
     }
 
     thermodynamics
     {
         Hf      0;
-        Cv      896;    // [J/kg/K]
+        Cv      385;        // [J/kg/K]
     }
 
     equationOfState
     {
-        rho     2712;   // [kg/m^3]
+        rho     8940;       // [kg/m^3]
     }
 }
 

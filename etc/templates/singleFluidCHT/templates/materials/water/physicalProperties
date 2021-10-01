@@ -9,17 +9,17 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      thermophysicalProperties;
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 thermoType
 {
-    type            heSolidThermo;
+    type            heRhoThermo;
     mixture         pureMixture;
-    transport       constIso;
+    transport       const;
     thermo          eConst;
-    equationOfState rhoConst;
+    equationOfState rPolynomial;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -29,24 +29,23 @@ mixture
     specie
     {
         nMoles      1;
-        molWeight   63.5;   // [g/mol]
+        molWeight   18.0;       // [g/mol]
     }
-
-    transport
-    {
-        kappa   380;        // [W/m/K]
-    }
-
-    thermodynamics
-    {
-        Hf      0;
-        Cv      385;        // [J/kg/K]
-    }
-
     equationOfState
     {
-        rho     8940;       // [kg/m^3]
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16); // [J/kg/K]
+    }
+    thermodynamics
+    {
+        Cv          4181;      // [J/kg/K] at T = 293 K
+        Hf          0;
+    }
+    transport
+    {
+        mu          1.0e-03;    // [kg/m/s]
+        Pr          7;
     }
 }
+
 
 // ************************************************************************* //
