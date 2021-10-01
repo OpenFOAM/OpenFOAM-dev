@@ -291,7 +291,8 @@ int main(int argc, char *argv[])
             sourceRegion,
             runTimeSource.timeName(),
             runTimeSource
-        )
+        ),
+        false
     );
 
     fvMesh meshTarget
@@ -301,7 +302,8 @@ int main(int argc, char *argv[])
             targetRegion,
             runTimeTarget.timeName(),
             runTimeTarget
-        )
+        ),
+        false
     );
 
     Info<< "Source mesh size: " << meshSource.nCells() << tab

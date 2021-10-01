@@ -469,7 +469,8 @@ void Foam::vtkPVFoam::updateFoamMesh()
                 dbPtr_().timeName(),
                 dbPtr_(),
                 IOobject::MUST_READ
-            )
+            ),
+            false
         );
 
         meshChanged_ = true;

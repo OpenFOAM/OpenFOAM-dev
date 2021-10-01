@@ -4,8 +4,6 @@ EXE_INC = \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
-    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
 
 EXE_LIBS = \
@@ -16,7 +14,4 @@ EXE_LIBS = \
     -lfvModels \
     -lfvConstraints \
     -lsampling \
-    -ldynamicFvMesh \
-    -ltopoChangerFvMesh \
-    -ldynamicMesh \
     -lmeshTools

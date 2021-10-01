@@ -14,14 +14,17 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
+mover
+{
+    type            motionSolver;
 
-motionSolverLibs ("libfvMotionSolvers.so");
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-motionSolver    velocityComponentLaplacian;
+    motionSolver    velocityComponentLaplacian;
 
-component       x;
-diffusivity     directional (1 200 0);
+    component       x;
+    diffusivity     directional (1 200 0);
+}
 
 
 // ************************************************************************* //

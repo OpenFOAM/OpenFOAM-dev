@@ -1,0 +1,7 @@
+EXE_INC = \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+LIB_LIBS = \
+    -ldynamicMesh \
+    -lfiniteVolume

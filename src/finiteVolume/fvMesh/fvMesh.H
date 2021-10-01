@@ -69,6 +69,8 @@ namespace Foam
 {
 
 class fvMeshLduAddressing;
+class fvMeshTopoChanger;
+class fvMeshMover;
 class volMesh;
 class mapDistributePolyMesh;
 
@@ -89,6 +91,12 @@ class fvMesh
 
         //- Boundary mesh
         fvBoundaryMesh boundary_;
+
+        //- The topo-changer function class
+        autoPtr<fvMeshTopoChanger> topoChanger_;
+
+        //- The mover function class
+        autoPtr<fvMeshMover> mover_;
 
 
     // Demand-driven data
@@ -171,7 +179,8 @@ public:
     // Constructors
 
         //- Construct from IOobject
-        explicit fvMesh(const IOobject& io);
+        //  with the option to not instantiate the mesh changers
+        explicit fvMesh(const IOobject& io, const bool changers = true);
 
         //- Construct from cellShapes with boundary.
         fvMesh
@@ -287,6 +296,12 @@ public:
                 return lduAddr().upperAddr();
             }
 
+            //- Return the topo-changer function class
+            const fvMeshTopoChanger& topoChanger() const;
+
+            //- Return the mover function class
+            const fvMeshMover& mover() const;
+
             //- Return cell volumes
             const DimensionedField<scalar, volMesh>& V() const;
 
@@ -328,6 +343,12 @@ public:
 
 
         // Edit
+
+            //- Is mesh dynamic
+            virtual bool dynamic() const;
+
+            //- Update the mesh for both mesh motion and topology change
+            virtual bool update();
 
             //- Clear all geometry and addressing
             void clearOut();

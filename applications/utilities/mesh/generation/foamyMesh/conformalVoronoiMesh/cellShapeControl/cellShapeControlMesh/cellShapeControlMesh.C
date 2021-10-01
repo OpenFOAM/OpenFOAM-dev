@@ -378,7 +378,8 @@ Foam::cellShapeControlMesh::cellShapeControlMesh(const Time& runTime)
                 runTime,
                 IOobject::READ_IF_PRESENT,
                 IOobject::NO_WRITE
-            )
+            ),
+            false
         );
 
         if (mesh.nPoints() == this->vertexCount())

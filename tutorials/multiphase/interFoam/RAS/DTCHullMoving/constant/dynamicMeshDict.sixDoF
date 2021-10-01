@@ -13,56 +13,59 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
-
-motionSolverLibs    ("libsixDoFRigidBodyMotion.so");
-
-motionSolver    sixDoFRigidBodyMotion;
-
-patches         (hull);
-innerDistance   0.3;
-outerDistance   1;
-
-centreOfMass    (2.929541 0 0.2);
-mass            412.73;
-momentOfInertia (40 921 921);
-rhoInf          1;
-report          on;
-
-value           uniform (0 0 0);
-
-accelerationRelaxation 0.4;
-
-solver
+mover
 {
-    type Newmark;
-}
+    type            motionSolver;
 
-constraints
-{
-    zAxis
-    {
-        sixDoFRigidBodyMotionConstraint line;
-        direction     (0 0 1);
-    }
-    yPlane
-    {
-        sixDoFRigidBodyMotionConstraint axis;
-        axis          (0 1 0);
-    }
-}
+    libs            ("libfvMeshMovers.so" "libsixDoFRigidBodyMotion.so");
 
-restraints
-{
-    translationDamper
+    motionSolver    sixDoFRigidBodyMotion;
+
+    patches         (hull);
+    innerDistance   0.3;
+    outerDistance   1;
+
+    centreOfMass    (2.929541 0 0.2);
+    mass            412.73;
+    momentOfInertia (40 921 921);
+    rhoInf          1;
+    report          on;
+
+    value           uniform (0 0 0);
+
+    accelerationRelaxation 0.4;
+
+    solver
     {
-        sixDoFRigidBodyMotionRestraint linearDamper;
-        coeff         8596;
+        type Newmark;
     }
-    rotationDamper
+
+    constraints
     {
-        sixDoFRigidBodyMotionRestraint sphericalAngularDamper;
-        coeff         11586;
+        zAxis
+        {
+            sixDoFRigidBodyMotionConstraint line;
+            direction     (0 0 1);
+        }
+        yPlane
+        {
+            sixDoFRigidBodyMotionConstraint axis;
+            axis          (0 1 0);
+        }
+    }
+
+    restraints
+    {
+        translationDamper
+        {
+            sixDoFRigidBodyMotionRestraint linearDamper;
+            coeff         8596;
+        }
+        rotationDamper
+        {
+            sixDoFRigidBodyMotionRestraint sphericalAngularDamper;
+            coeff         11586;
+        }
     }
 }
 

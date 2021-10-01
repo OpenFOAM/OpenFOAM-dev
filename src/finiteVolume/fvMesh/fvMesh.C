@@ -31,11 +31,15 @@ License
 #include "SubField.H"
 #include "demandDrivenData.H"
 #include "fvMeshLduAddressing.H"
+#include "fvMeshTopoChanger.H"
+#include "fvMeshMover.H"
 #include "mapPolyMesh.H"
 #include "MapFvFields.H"
 #include "fvMeshMapper.H"
 #include "mapClouds.H"
 #include "MeshObject.H"
+
+#include "fvcSurfaceIntegrate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -253,7 +257,7 @@ void Foam::fvMesh::clearOut()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMesh::fvMesh(const IOobject& io)
+Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
 :
     polyMesh(io),
     surfaceInterpolation(*this),
@@ -261,6 +265,18 @@ Foam::fvMesh::fvMesh(const IOobject& io)
     fvSolution(static_cast<const objectRegistry&>(*this)),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
+    topoChanger_
+    (
+        changers
+      ? fvMeshTopoChanger::New(*this)
+      : autoPtr<fvMeshTopoChanger>(nullptr)
+    ),
+    mover_
+    (
+        changers
+      ? fvMeshMover::New(*this)
+      : autoPtr<fvMeshMover>(nullptr)
+    ),
     lduPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
@@ -451,6 +467,21 @@ Foam::fvMesh::~fvMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::fvMesh::dynamic() const
+{
+    return topoChanger_->dynamic() || mover_->dynamic();
+}
+
+
+bool Foam::fvMesh::update()
+{
+    // return !(!topoChanger_->update() && !mover_->update());
+    topoChanger_->update();
+    mover_->update();
+    return true;
+}
+
+
 void Foam::fvMesh::addFvPatches
 (
     const List<polyPatch*> & p,
@@ -551,6 +582,18 @@ const Foam::lduAddressing& Foam::fvMesh::lduAddr() const
     }
 
     return *lduPtr_;
+}
+
+
+const Foam::fvMeshTopoChanger& Foam::fvMesh::topoChanger() const
+{
+    return topoChanger_();
+}
+
+
+const Foam::fvMeshMover& Foam::fvMesh::mover() const
+{
+    return mover_();
 }
 
 
@@ -847,6 +890,17 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
 
     meshObject::updateMesh<fvMesh>(*this, mpm);
     meshObject::updateMesh<lduMesh>(*this, mpm);
+
+    if (mover_.valid())
+    {
+        mover_->updateMesh(mpm);
+
+        // Reset the old-time cell volumes prior to mesh-motion
+        if (V0Ptr_)
+        {
+            *V0Ptr_ = V();
+        }
+    }
 }
 
 
@@ -1084,6 +1138,16 @@ bool Foam::fvMesh::writeObject
     if (V00Ptr_)
     {
         ok = ok && V0Ptr_->write(write);
+    }
+
+    if (topoChanger_.valid())
+    {
+        topoChanger_->write(write);
+    }
+
+    if (mover_.valid())
+    {
+        mover_->write(write);
     }
 
     return ok && polyMesh::writeObject(fmt, ver, cmp, write);

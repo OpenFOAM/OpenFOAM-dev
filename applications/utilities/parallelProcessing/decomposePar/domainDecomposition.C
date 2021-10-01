@@ -75,7 +75,7 @@ Foam::domainDecomposition::domainDecomposition
     const fileName& dictFile
 )
 :
-    fvMesh(io),
+    fvMesh(io, false),
     facesInstancePointsPtr_
     (
         pointsInstance() != facesInstance()

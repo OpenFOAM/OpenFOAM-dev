@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     const bool overwrite = args.optionFound("overwrite");
     const bool fields = !args.optionFound("noFields");
 
-    #include "createMesh.H"
+    #include "createMeshNoChangers.H"
     const word oldInstance = mesh.pointsInstance();
 
     const word setName = args[1];

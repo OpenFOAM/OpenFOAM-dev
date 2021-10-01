@@ -13,78 +13,81 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
-
-motionSolverLibs    ("libsixDoFRigidBodyMotion.so");
-
-motionSolver        sixDoFRigidBodyMotion;
-
-sixDoFRigidBodyMotionCoeffs
+mover
 {
-    patches         (floatingObject);
-    innerDistance   0.05;
-    outerDistance   0.35;
+    type            motionSolver;
 
-    centreOfMass    (0.5 0.45 0.35);
+    libs            ("libfvMeshMovers.so" "libsixDoFRigidBodyMotion.so");
 
-    // Cuboid dimensions
-    Lx              0.3;
-    Ly              0.2;
-    Lz              0.5;
+    motionSolver        sixDoFRigidBodyMotion;
 
-    // Density of the solid
-    rhoSolid        500;
-
-    // Cuboid mass
-    mass            #calc "$rhoSolid*$Lx*$Ly*$Lz";
-
-    // Cuboid moment of inertia about the centre of mass
-    momentOfInertia #codeStream
+    sixDoFRigidBodyMotionCoeffs
     {
-        codeInclude
-        #{
-            #include "diagTensor.H"
-        #};
+        patches         (floatingObject);
+        innerDistance   0.05;
+        outerDistance   0.35;
 
-        code
-        #{
-            scalar sqrLx = sqr($Lx);
-            scalar sqrLy = sqr($Ly);
-            scalar sqrLz = sqr($Lz);
-            os  <<
-                $mass
-               *diagTensor(sqrLy + sqrLz, sqrLx + sqrLz, sqrLx + sqrLy)/12.0;
-        #};
-    };
+        centreOfMass    (0.5 0.45 0.35);
 
-    report          on;
-    accelerationRelaxation 0.7;
-    // accelerationDamping 0;
+        // Cuboid dimensions
+        Lx              0.3;
+        Ly              0.2;
+        Lz              0.5;
 
-    solver
-    {
-        type Newmark;
-    }
+        // Density of the solid
+        rhoSolid        500;
 
-    constraints
-    {
-        // fixedPoint
-        // {
-        //     sixDoFRigidBodyMotionConstraint point;
-        //     centreOfRotation (0.5 0.45 0.1);
-        // }
+        // Cuboid mass
+        mass            #calc "$rhoSolid*$Lx*$Ly*$Lz";
 
-        fixedLine
+        // Cuboid moment of inertia about the centre of mass
+        momentOfInertia #codeStream
         {
-            sixDoFRigidBodyMotionConstraint line;
-            centreOfRotation (0.5 0.45 0.1);
-            direction (0 1 0);
+            codeInclude
+            #{
+                #include "diagTensor.H"
+            #};
+
+            code
+            #{
+                scalar sqrLx = sqr($Lx);
+                scalar sqrLy = sqr($Ly);
+                scalar sqrLz = sqr($Lz);
+                os  <<
+                    $mass
+                   *diagTensor(sqrLy + sqrLz, sqrLx + sqrLz, sqrLx + sqrLy)/12.0;
+            #};
+        };
+
+        report          on;
+        accelerationRelaxation 0.7;
+        // accelerationDamping 0;
+
+        solver
+        {
+            type Newmark;
         }
 
-        fixedAxis
+        constraints
         {
-            sixDoFRigidBodyMotionConstraint axis;
-            axis (0 1 0);
+            // fixedPoint
+            // {
+            //     sixDoFRigidBodyMotionConstraint point;
+            //     centreOfRotation (0.5 0.45 0.1);
+            // }
+
+            fixedLine
+            {
+                sixDoFRigidBodyMotionConstraint line;
+                centreOfRotation (0.5 0.45 0.1);
+                direction (0 1 0);
+            }
+
+            fixedAxis
+            {
+                sixDoFRigidBodyMotionConstraint axis;
+                axis (0 1 0);
+            }
         }
     }
 }

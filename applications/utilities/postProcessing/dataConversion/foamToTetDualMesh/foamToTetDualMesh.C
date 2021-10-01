@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 
 
     // Read the mesh
-    #include "createMesh.H"
+    #include "createMeshNoChangers.H"
 
     // Read the tetDualMesh
     Info<< "Create tetDualMesh for time = "
@@ -170,7 +170,8 @@ int main(int argc, char *argv[])
             runTime.timeName(),
             runTime,
             IOobject::MUST_READ
-        )
+        ),
+        false
     );
     // From tet vertices to poly cells/faces
     const labelIOList pointDualAddressing

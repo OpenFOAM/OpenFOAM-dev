@@ -14,30 +14,35 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
-
-motionSolver    solidBody;
-
-solidBodyMotionFunction multiMotion;
-
-oscillation
+mover
 {
-    solidBodyMotionFunction oscillatingLinearMotion;
-    oscillatingLinearMotionCoeffs
+    type            motionSolver;
+
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
+
+    motionSolver    solidBody;
+
+    solidBodyMotionFunction multiMotion;
+
+    oscillation
     {
-        amplitude     (0.1 0 0);
-        omega         18.8945578;
+        solidBodyMotionFunction oscillatingLinearMotion;
+        oscillatingLinearMotionCoeffs
+        {
+            amplitude     (0.1 0 0);
+            omega         18.8945578;
+        }
     }
-}
 
-rotation
-{
-    solidBodyMotionFunction  rotatingMotion;
-    rotatingMotionCoeffs
+    rotation
     {
-        origin        (0 0.02 0);
-        axis          (0 0 1);
-        omega         18.8945578;
+        solidBodyMotionFunction  rotatingMotion;
+        rotatingMotionCoeffs
+        {
+            origin        (0 0.02 0);
+            axis          (0 0 1);
+            omega         18.8945578;
+        }
     }
 }
 

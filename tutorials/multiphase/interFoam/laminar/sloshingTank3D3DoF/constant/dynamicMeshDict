@@ -14,23 +14,72 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
+mover
+{
+    type    motionSolver;
 
-motionSolver    solidBody;
+    libs    ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-solidBodyMotionFunction SDA;
+    motionSolver    solidBody;
 
-CofG            (0 0 0);
-lamda           50;
-rollAmax        0.2;
-rollAmin        0.1;
-heaveA          4;
-swayA           2.4;
-Q               2;
-Tp              14;
-Tpn             12;
-dTi             0.06;
-dTp             -0.001;
+    solidBodyMotionFunction SDA;
+
+    CofG            (0 0 0);
+    lamda           50;
+    rollAmax        0.2;
+    rollAmin        0.1;
+    heaveA          4;
+    swayA           2.4;
+    Q               2;
+    Tp              14;
+    Tpn             12;
+    dTi             0.06;
+    dTp             -0.001;
+}
+
+
+topoChanger
+{
+    type    refiner;
+
+    libs    ("libfvMeshTopoChangers.so");
+
+    // How often to refine
+    refineInterval  1;
+
+    // Field to be refinement on
+    field           alpha.water;
+
+    // Refine field in between lower..upper
+    lowerRefineLevel 0.001;
+    upperRefineLevel 0.999;
+
+    // Have slower than 2:1 refinement
+    nBufferLayers   1;
+
+    // Refine cells only up to maxRefinement levels
+    maxRefinement   1;
+
+    // Stop refinement if maxCells reached
+    maxCells        200000;
+
+    // Flux field and corresponding velocity field. Fluxes on changed
+    // faces get recalculated by interpolating the velocity. Use 'none'
+    // on surfaceScalarFields that do not need to be reinterpolated.
+    correctFluxes
+    (
+        (phi none)
+        (nHatf none)
+        (rhoPhi none)
+        (alphaPhi.water none)
+        (meshPhi none)
+        (meshPhi_0 none)
+        (ghf none)
+    );
+
+    // Write the refinement level as a volScalarField
+    dumpLevel       true;
+}
 
 
 // ************************************************************************* //

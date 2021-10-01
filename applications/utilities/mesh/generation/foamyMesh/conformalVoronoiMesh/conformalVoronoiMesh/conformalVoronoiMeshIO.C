@@ -333,7 +333,8 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //                    instance,
 //                    runTime_,
 //                    IOobject::MUST_READ
-//                )
+//                ),
+//                false
 //            );
 //            pointIOField dualPoints
 //            (

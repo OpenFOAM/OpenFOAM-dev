@@ -14,17 +14,22 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
+mover
+{
+    type            motionSolver;
 
-motionSolver    solidBody;
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-solidBodyMotionFunction sixDoFMotion;
+    motionSolver    solidBody;
 
-CofG            (0 0 0);
+    solidBodyMotionFunction sixDoFMotion;
 
-translationRotation table;
-// interpolationScheme spline;
-file            "$FOAM_CASE/constant/6DoF.dat";
+    CofG            (0 0 0);
+
+    translationRotation table;
+    // interpolationScheme spline;
+    file            "$FOAM_CASE/constant/6DoF.dat";
+}
 
 
 // ************************************************************************* //

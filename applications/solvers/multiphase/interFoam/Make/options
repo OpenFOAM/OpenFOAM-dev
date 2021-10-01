@@ -11,7 +11,6 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/phaseIncompressible/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude
 
@@ -22,8 +21,6 @@ EXE_LIBS = \
     -lincompressibleMomentumTransportModels \
     -lincompressibleInterPhaseTransportModel \
     -lfiniteVolume \
-    -ldynamicFvMesh \
-    -ltopoChangerFvMesh \
     -lfvModels \
     -lfvConstraints \
     -lmeshTools

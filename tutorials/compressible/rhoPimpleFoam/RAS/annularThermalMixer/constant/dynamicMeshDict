@@ -16,16 +16,22 @@ FoamFile
 
 #include "${FOAM_CASE}/constant/caseSettings"
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
+mover
+{
+    type            motionSolver;
 
-motionSolver    solidBody;
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-cellZone        rotatingZone;
+    motionSolver    solidBody;
 
-solidBodyMotionFunction  rotatingMotion;
+    cellZone        rotatingZone;
 
-origin      (0 0 0);
-axis        (0 0 1);
-omega       $!meshMotionProperties/omega;
+    solidBodyMotionFunction  rotatingMotion;
+
+    origin      (0 0 0);
+    axis        (0 0 1);
+    omega       $!meshMotionProperties/omega;
+}
+
 
 // ************************************************************************* //

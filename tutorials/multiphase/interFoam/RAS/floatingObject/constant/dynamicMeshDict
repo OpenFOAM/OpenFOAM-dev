@@ -13,61 +13,64 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
-
-motionSolverLibs   ("librigidBodyMeshMotion.so");
-
-motionSolver       rigidBodyMotion;
-
-rigidBodyMotionCoeffs
+mover
 {
-    report          on;
+    type            motionSolver;
 
-    solver
+    libs            ("libfvMeshMovers.so" "librigidBodyMeshMotion.so");
+
+    motionSolver       rigidBodyMotion;
+
+    rigidBodyMotionCoeffs
     {
-        type Newmark;
-    }
+        report          on;
 
-    accelerationRelaxation 0.7;
-
-    bodies
-    {
-        floatingObject
+        solver
         {
-            type            cuboid;
-            parent          root;
+            type Newmark;
+        }
 
-            // Cuboid dimensions
-            Lx              0.3;
-            Ly              0.2;
-            Lz              0.5;
+        accelerationRelaxation 0.7;
 
-            // Density of the cuboid
-            rho             500;
-
-            // Cuboid mass
-            mass            #calc "$rho*$Lx*$Ly*$Lz";
-            L               ($Lx $Ly $Lz);
-            centreOfMass    (0 0 0.25);
-            transform       (1 0 0 0 1 0 0 0 1) (0.5 0.45 0.1);
-
-            joint
+        bodies
+        {
+            floatingObject
             {
-                type            composite;
-                joints
-                (
-                    {
-                        type Py;
-                    }
-                    {
-                        type Ry;
-                    }
-                );
-            }
+                type            cuboid;
+                parent          root;
 
-            patches         (floatingObject);
-            innerDistance   0.05;
-            outerDistance   0.35;
+                // Cuboid dimensions
+                Lx              0.3;
+                Ly              0.2;
+                Lz              0.5;
+
+                // Density of the cuboid
+                rho             500;
+
+                // Cuboid mass
+                mass            #calc "$rho*$Lx*$Ly*$Lz";
+                L               ($Lx $Ly $Lz);
+                centreOfMass    (0 0 0.25);
+                transform       (1 0 0 0 1 0 0 0 1) (0.5 0.45 0.1);
+
+                joint
+                {
+                    type            composite;
+                    joints
+                    (
+                        {
+                            type Py;
+                        }
+                        {
+                            type Ry;
+                        }
+                    );
+                }
+
+                patches         (floatingObject);
+                innerDistance   0.05;
+                outerDistance   0.35;
+            }
         }
     }
 }

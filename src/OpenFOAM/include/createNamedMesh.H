@@ -22,5 +22,6 @@ Foam::fvMesh mesh
         runTime.timeName(),
         runTime,
         Foam::IOobject::MUST_READ
-    )
+    ),
+    false
 );

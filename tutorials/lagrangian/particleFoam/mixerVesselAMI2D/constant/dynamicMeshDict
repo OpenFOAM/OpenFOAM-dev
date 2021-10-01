@@ -14,31 +14,36 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
-
-motionSolver    multiSolidBodyMotionSolver;
-
-multiSolidBodyMotionSolverCoeffs
+mover
 {
-    rotor
-    {
-        solidBodyMotionFunction  rotatingMotion;
-        rotatingMotionCoeffs
-        {
-            origin        (0 0 0);
-            axis          (0 0 1);
-            omega         6.2832; // rad/s
-        }
-    }
+    type            motionSolver;
 
-    stator
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
+
+    motionSolver    multiSolidBodyMotionSolver;
+
+    multiSolidBodyMotionSolverCoeffs
     {
-        solidBodyMotionFunction  rotatingMotion;
-        rotatingMotionCoeffs
+        rotor
         {
-            origin        (0 0 0);
-            axis          (0 0 1);
-            omega         -6.2832; // rad/s
+            solidBodyMotionFunction  rotatingMotion;
+            rotatingMotionCoeffs
+            {
+                origin        (0 0 0);
+                axis          (0 0 1);
+                omega         6.2832; // rad/s
+            }
+        }
+
+        stator
+        {
+            solidBodyMotionFunction  rotatingMotion;
+            rotatingMotionCoeffs
+            {
+                origin        (0 0 0);
+                axis          (0 0 1);
+                omega         -6.2832; // rad/s
+            }
         }
     }
 }

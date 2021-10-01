@@ -14,44 +14,48 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicRefineFvMesh;
+topoChanger
+{
+    type            refiner;
 
-// How often to refine
-refineInterval  1;
+    libs            ("libfvMeshTopoChangers.so");
 
-// Field to be refinement on
-field           alpha.water;
+    mover           none;
 
-// Refine field in between lower..upper
-lowerRefineLevel 0.001;
-upperRefineLevel 0.999;
+    // How often to refine
+    refineInterval  1;
 
-// If value < unrefineLevel unrefine
-unrefineLevel   10;
+    // Field to be refinement on
+    field           alpha.water;
 
-// Have slower than 2:1 refinement
-nBufferLayers   1;
+    // Refine field in between lower..upper
+    lowerRefineLevel 0.001;
+    upperRefineLevel 0.999;
 
-// Refine cells only up to maxRefinement levels
-maxRefinement   2;
+    // Have slower than 2:1 refinement
+    nBufferLayers   1;
 
-// Stop refinement if maxCells reached
-maxCells        200000;
+    // Refine cells only up to maxRefinement levels
+    maxRefinement   2;
 
-// Flux field and corresponding velocity field. Fluxes on changed
-// faces get recalculated by interpolating the velocity. Use 'none'
-// on surfaceScalarFields that do not need to be reinterpolated.
-correctFluxes
-(
-    (phi none)
-    (nHatf none)
-    (rhoPhi none)
-    (alphaPhi.water none)
-    (ghf none)
-);
+    // Stop refinement if maxCells reached
+    maxCells        200000;
 
-// Write the refinement level as a volScalarField
-dumpLevel       true;
+    // Flux field and corresponding velocity field. Fluxes on changed
+    // faces get recalculated by interpolating the velocity. Use 'none'
+    // on surfaceScalarFields that do not need to be reinterpolated.
+    correctFluxes
+    (
+        (phi none)
+        (nHatf none)
+        (rhoPhi none)
+        (alphaPhi.water none)
+        (ghf none)
+    );
+
+    // Write the refinement level as a volScalarField
+    dumpLevel       true;
+}
 
 
 // ************************************************************************* //

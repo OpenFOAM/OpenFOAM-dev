@@ -75,7 +75,8 @@ int USERD_set_filenames
             fvMesh::defaultRegion,
             runTime.timeName(),
             runTime
-        )
+        ),
+        false
     );
 
     // set the available number of time-steps

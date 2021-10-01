@@ -22,23 +22,6 @@ solvers
         nAlphaSubCycles 3;
     }
 
-    "pcorr.*"
-    {
-        solver          PCG;
-        preconditioner
-        {
-            preconditioner  GAMG;
-            tolerance       1e-05;
-            relTol          0;
-            smoother        DICGaussSeidel;
-            cacheAgglomeration no;
-        }
-
-        tolerance       1e-05;
-        relTol          0;
-        maxIter         100;
-    }
-
     p_rgh
     {
         solver          GAMG;
@@ -65,6 +48,12 @@ solvers
         maxIter         20;
     }
 
+    "pcorr.*"
+    {
+        $p_rghFinal;
+        tolerance       1e-4;
+    }
+
     U
     {
         solver          smoothSolver;
@@ -78,9 +67,8 @@ solvers
 PIMPLE
 {
     momentumPredictor no;
-    nCorrectors     2;
+    nCorrectors     3;
     nNonOrthogonalCorrectors 0;
-    correctPhi      no;
 
     pRefPoint       (0 0 0.15);
     pRefValue       1e5;

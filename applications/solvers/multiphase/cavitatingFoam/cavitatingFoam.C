@@ -34,7 +34,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "dynamicFvMesh.H"
 #include "barotropicCompressibilityModel.H"
 #include "incompressibleTwoPhaseMixture.H"
 #include "incompressibleMomentumTransportModels.H"
@@ -49,7 +48,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createDynamicFvMesh.H"
+    #include "createMesh.H"
     #include "createControls.H"
     #include "createFields.H"
     #include "createUfIfPresent.H"

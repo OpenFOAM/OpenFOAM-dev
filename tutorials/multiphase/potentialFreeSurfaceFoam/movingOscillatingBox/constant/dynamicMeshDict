@@ -15,16 +15,20 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
+mover
+{
+    type            motionSolver;
 
-motionSolverLibs ("libfvMotionSolvers.so");
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-motionSolver    displacementLaplacian;
+    motionSolver    displacementLaplacian;
 
-// diffusivity  uniform;
-// diffusivity  directional (1 200 0);
-// diffusivity  motionDirectional (1 1000 0);
-// diffusivity  file motionDiffusivity;
-diffusivity  inverseDistance 1(floatingObjectBottom);
+    // diffusivity  uniform;
+    // diffusivity  directional (1 200 0);
+    // diffusivity  motionDirectional (1 1000 0);
+    // diffusivity  file motionDiffusivity;
+    diffusivity  inverseDistance 1(floatingObjectBottom);
+}
+
 
 // ************************************************************************* //

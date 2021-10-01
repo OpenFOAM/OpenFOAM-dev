@@ -20,6 +20,7 @@ solvers
     {
         nAlphaCorr      1;
         nAlphaSubCycles 3;
+        nLimiterIter    5;
     }
 
     p_rgh
@@ -40,7 +41,7 @@ solvers
     "pcorr.*"
     {
         $p_rghFinal;
-        tolerance       0.0001;
+        tolerance       1e-4;
     }
 
     U

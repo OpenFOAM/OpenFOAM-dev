@@ -13,9 +13,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
+mover           motionSolver;
 
-motionSolverLibs ( "libfvMotionSolvers.so" );
+libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
 motionSolver    solidBody;
 

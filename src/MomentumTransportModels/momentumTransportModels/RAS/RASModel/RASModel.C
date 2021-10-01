@@ -183,8 +183,11 @@ Foam::RASModel<BasicMomentumTransportModel>::New
 template<class BasicMomentumTransportModel>
 bool Foam::RASModel<BasicMomentumTransportModel>::read()
 {
+    InfoInFunction << "Hmm" << endl;
+
     if (BasicMomentumTransportModel::read())
     {
+        InfoInFunction << "Hmm1" << endl;
         RASDict_ <<= this->subDict("RAS");
         RASDict_.lookup("turbulence") >> turbulence_;
 

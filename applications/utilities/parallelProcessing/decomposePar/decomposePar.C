@@ -957,7 +957,8 @@ int main(int argc, char *argv[])
                                     regionName,
                                     processorDb.timeName(),
                                     processorDb
-                                )
+                                ),
+                                false
                             )
                         );
                     }

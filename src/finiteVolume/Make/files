@@ -93,6 +93,18 @@ $(faceToCell)/extendedFaceToCellStencil.C
 $(faceToCell)/extendedCentredFaceToCellStencil.C
 $(faceToCell)/MeshObjects/centredCFCFaceToCellStencilObject.C
 
+fvMeshMovers = fvMesh/fvMeshMovers
+
+$(fvMeshMovers)/fvMeshMover/fvMeshMover.C
+$(fvMeshMovers)/fvMeshMover/fvMeshMoverNew.C
+$(fvMeshMovers)/none/fvMeshMoversNone.C
+
+fvMeshTopoChangers = fvMesh/fvMeshTopoChangers
+
+$(fvMeshTopoChangers)/fvMeshTopoChanger/fvMeshTopoChanger.C
+$(fvMeshTopoChangers)/fvMeshTopoChanger/fvMeshTopoChangerNew.C
+$(fvMeshTopoChangers)/none/fvMeshTopoChangersNone.C
+
 functionObjects/fvMeshFunctionObject/fvMeshFunctionObject.C
 functionObjects/volRegion/volRegion.C
 

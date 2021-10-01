@@ -383,7 +383,8 @@ int main(int argc, char *argv[])
                             regionName,
                             databases[proci].timeName(),
                             databases[proci]
-                        )
+                        ),
+                        false
                     );
 
                     // Initialise its addressing

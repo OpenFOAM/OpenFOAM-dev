@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
 
 #include "argList.H"
 #include "Time.H"
-#include "dynamicFvMesh.H"
+#include "fvMesh.H"
 #include "pimpleControl.H"
 #include "vtkSurfaceWriter.H"
 #include "cyclicAMIPolyPatch.H"
@@ -53,7 +53,33 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createNamedDynamicFvMesh.H"
+
+    Foam::word regionName;
+
+    if (args.optionReadIfPresent("region", regionName))
+    {
+        Foam::Info
+            << "Create mesh " << regionName << " for time = "
+            << runTime.timeName() << Foam::nl << Foam::endl;
+    }
+    else
+    {
+        regionName = Foam::fvMesh::defaultRegion;
+        Foam::Info
+            << "Create mesh for time = "
+            << runTime.timeName() << Foam::nl << Foam::endl;
+    }
+
+    Foam::fvMesh mesh
+    (
+        Foam::IOobject
+        (
+            regionName,
+            runTime.timeName(),
+            runTime,
+            Foam::IOobject::MUST_READ
+        )
+    );
 
     const bool checkAMI  = args.optionFound("checkAMI");
 

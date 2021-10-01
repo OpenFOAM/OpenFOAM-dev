@@ -13,40 +13,44 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicRefineFvMesh;
+topoChanger
+{
+    type            refiner;
 
-// Refine every refineInterval timesteps
-refineInterval 1;
+    libs            ("libfvMeshTopoChangers.so");
 
-// Maximum refinement level (starts from 0)
-maxRefinement 2;
+    // Refine every refineInterval timesteps
+    refineInterval 1;
 
-// Maximum cell limit (approximate)
-maxCells 10000;
+    // Maximum refinement level (starts from 0)
+    maxRefinement 2;
 
-// volScalarField to base refinement on
-field normalisedGradP;
+    // Maximum cell limit (approximate)
+    maxCells 10000;
 
-nBufferLayers 1;
+    // volScalarField to base refinement on
+    field normalisedGradP;
 
-dumpLevel true;
+    nBufferLayers 1;
 
-lowerRefineLevel 0.5;
-upperRefineLevel 1.5;
+    dumpLevel true;
 
-unrefineLevel 0.5;
+    lowerRefineLevel 0.5;
+    upperRefineLevel 1.5;
 
-nBufferLayers 1;
-// Newly introduced patch points optionally get projected onto a surface
-//projectSurfaces ("fixedWalls4.stl");
-//projectPatches (fixedWalls);
-// Maximum project distance
-//projectDistance 1;
+    nBufferLayers 1;
+    // Newly introduced patch points optionally get projected onto a surface
+    //projectSurfaces ("fixedWalls4.stl");
+    //projectPatches (fixedWalls);
+    // Maximum project distance
+    //projectDistance 1;
 
-// Fluxes to adapt. For newly created faces or split faces the flux
-// gets estimated from an interpolated volVectorField ('velocity')
-// First is name of the flux to adapt, second is velocity that will
-// be interpolated and inner-producted with the face area vector.
-correctFluxes ((phi rhoU) (phi_0 none));
+    // Fluxes to adapt. For newly created faces or split faces the flux
+    // gets estimated from an interpolated volVectorField ('velocity')
+    // First is name of the flux to adapt, second is velocity that will
+    // be interpolated and inner-producted with the face area vector.
+    correctFluxes ((phi rhoU) (phi_0 none));
+}
+
 
 // ************************************************************************* //

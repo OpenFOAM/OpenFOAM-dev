@@ -790,7 +790,8 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE,
             false
-        )
+        ),
+        false
     ),
     meshCutter_
     (

@@ -14,23 +14,28 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
+mover
+{
+    type            motionSolver;
 
-motionSolver    solidBody;
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-solidBodyMotionFunction SDA;
+    motionSolver    solidBody;
 
-CofG            (0 0 0);
-lamda           50;
-rollAmax        0.2;
-rollAmin        0.1;
-heaveA          4;
-swayA           2.4;
-Q               2;
-Tp              14;
-Tpn             12;
-dTi             0.06;
-dTp             -0.001;
+    solidBodyMotionFunction SDA;
+
+    CofG            (0 0 0);
+    lamda           50;
+    rollAmax        0.2;
+    rollAmin        0.1;
+    heaveA          4;
+    swayA           2.4;
+    Q               2;
+    Tp              14;
+    Tpn             12;
+    dTi             0.06;
+    dTp             -0.001;
+}
 
 
 // ************************************************************************* //

@@ -32,7 +32,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "dynamicFvMesh.H"
 #include "fluidThermo.H"
 #include "compressibleMomentumTransportModels.H"
 #include "parcelCloudList.H"
@@ -46,7 +45,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createDynamicFvMesh.H"
+    #include "createMesh.H"
     #include "createFields.H"
     #include "compressibleCourantNo.H"
 

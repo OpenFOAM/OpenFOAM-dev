@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "transformField.H"
-#include "dynamicMotionSolverFvMesh.H"
+#include "fvMeshMoversMotionSolver.H"
 #include "displacementMotionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -93,9 +93,12 @@ void surfaceSlipDisplacementPointPatchVectorField::calcProjection
             << endl;
     }
 
-    // Get the motionSolver from the dynamic mesh
+    // Get the motionSolver from the mesh
     const motionSolver& motion =
-        refCast<const dynamicMotionSolverFvMesh>(mesh).motion();
+        refCast<const fvMeshMovers::motionSolver>
+        (
+            refCast<const fvMesh>(mesh).mover()
+        ).motion();
 
     // Get the starting locations from the motionSolver
     const pointField& points0 =

@@ -13,73 +13,76 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
-
-motionSolverLibs ("libsixDoFRigidBodyMotion.so");
-
-motionSolver    sixDoFRigidBodyMotion;
-
-patches         (wing);
-innerDistance   0.3;
-outerDistance   1;
-
-mass            22.9;
-centreOfMass    (0.4974612746 -0.01671895744 0.125);
-momentOfInertia (1.958864357 3.920839234 2.057121362);
-orientation
-(
-    0.9953705935 0.09611129781 0
-    -0.09611129781 0.9953705935 0
-    0 0 1
-);
-angularMomentum (0 0 -2);
-g               (0 -9.81 0);
-rho             rhoInf;
-rhoInf          1;
-report          on;
-
-solver
+mover
 {
-    type symplectic;
-}
+    type            motionSolver;
 
-constraints
-{
-    yLine
+    libs            ("libfvMeshMovers.so" "libsixDoFRigidBodyMotion.so");
+
+    motionSolver    sixDoFRigidBodyMotion;
+
+    patches         (wing);
+    innerDistance   0.3;
+    outerDistance   1;
+
+    mass            22.9;
+    centreOfMass    (0.4974612746 -0.01671895744 0.125);
+    momentOfInertia (1.958864357 3.920839234 2.057121362);
+    orientation
+    (
+        0.9953705935 0.09611129781 0
+        -0.09611129781 0.9953705935 0
+        0 0 1
+    );
+    angularMomentum (0 0 -2);
+    g               (0 -9.81 0);
+    rho             rhoInf;
+    rhoInf          1;
+    report          on;
+
+    solver
     {
-        sixDoFRigidBodyMotionConstraint line;
-        centreOfRotation    (0.25 0.007 0.125);
-        direction           (0 1 0);
+        type symplectic;
     }
 
-    zAxis
+    constraints
     {
-        sixDoFRigidBodyMotionConstraint axis;
-        axis                (0 0 1);
-    }
-}
+        yLine
+        {
+            sixDoFRigidBodyMotionConstraint line;
+            centreOfRotation    (0.25 0.007 0.125);
+            direction           (0 1 0);
+        }
 
-restraints
-{
-    verticalSpring
-    {
-        sixDoFRigidBodyMotionRestraint linearSpring;
-
-        anchor          (0.25 0.007 0.125);
-        refAttachmentPt (0.25 0.007 0.125);
-        stiffness       4000;
-        damping         2;
-        restLength      0;
+        zAxis
+        {
+            sixDoFRigidBodyMotionConstraint axis;
+            axis                (0 0 1);
+        }
     }
 
-    axialSpring
+    restraints
     {
-        sixDoFRigidBodyMotionRestraint linearAxialAngularSpring;
+        verticalSpring
+        {
+            sixDoFRigidBodyMotionRestraint linearSpring;
 
-        axis            (0 0 1);
-        stiffness       700;
-        damping         0.5;
-        referenceOrientation $orientation;
+            anchor          (0.25 0.007 0.125);
+            refAttachmentPt (0.25 0.007 0.125);
+            stiffness       4000;
+            damping         2;
+            restLength      0;
+        }
+
+        axialSpring
+        {
+            sixDoFRigidBodyMotionRestraint linearAxialAngularSpring;
+
+            axis            (0 0 1);
+            stiffness       700;
+            damping         0.5;
+            referenceOrientation $orientation;
+        }
     }
 }
 

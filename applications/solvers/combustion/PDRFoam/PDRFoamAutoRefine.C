@@ -56,32 +56,33 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "dynamicFvMesh.H"
 #include "psiuReactionThermo.H"
 #include "compressibleMomentumTransportModels.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "laminarFlameSpeed.H"
 #include "XiModel.H"
 #include "PDRDragModel.H"
 #include "ignition.H"
 #include "Switch.H"
 #include "bound.H"
-#include "dynamicRefineFvMesh.H"
 #include "pimpleControl.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
+    #include "postProcess.H"
+
     #include "setRootCaseLists.H"
-
     #include "createTime.H"
-    #include "createDynamicFvMesh.H"
-
-    pimpleControl pimple(mesh);
-
+    #include "createMesh.H"
+    #include "createControl.H"
     #include "readCombustionProperties.H"
     #include "readGravitationalAcceleration.H"
     #include "createFields.H"
+    #include "createFieldRefs.H"
     #include "initContinuityErrs.H"
     #include "createTimeControls.H"
     #include "compressibleCourantNo.H"
@@ -122,22 +123,22 @@ int main(int argc, char *argv[])
             fvc::makeAbsolute(phi, rho, U);
 
             // Test : disable refinement for some cells
-            PackedBoolList& protectedCell =
-                refCast<dynamicRefineFvMesh>(mesh).protectedCell();
+            // PackedBoolList& protectedCell =
+            //     refCast<dynamicRefineFvMesh>(mesh).protectedCell();
 
-            if (protectedCell.empty())
-            {
-                protectedCell.setSize(mesh.nCells());
-                protectedCell = 0;
-            }
+            // if (protectedCell.empty())
+            // {
+            //     protectedCell.setSize(mesh.nCells());
+            //     protectedCell = 0;
+            // }
 
-            forAll(betav, celli)
-            {
-                if (betav[celli] < 0.99)
-                {
-                    protectedCell[celli] = 1;
-                }
-            }
+            // forAll(betav, celli)
+            // {
+            //     if (betav[celli] < 0.99)
+            //     {
+            //         protectedCell[celli] = 1;
+            //     }
+            // }
 
             // Flux estimate for introduced faces.
             volVectorField rhoU("rhoU", rho*U);
@@ -171,20 +172,21 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            #include "UEqn.H"
+            fvModels.correct();
 
+            #include "UEqn.H"
 
             // --- Pressure corrector loop
             while (pimple.correct())
             {
                 #include "bEqn.H"
                 #include "ftEqn.H"
-                #include "huEqn.H"
-                #include "hEqn.H"
+                #include "EauEqn.H"
+                #include "EaEqn.H"
 
                 if (!ign.ignited())
                 {
-                    hu == h;
+                    thermo.heu() == thermo.he();
                 }
 
                 #include "pEqn.H"
@@ -193,6 +195,7 @@ int main(int argc, char *argv[])
             if (pimple.turbCorr())
             {
                 turbulence->correct();
+                thermophysicalTransport->correct();
             }
         }
 

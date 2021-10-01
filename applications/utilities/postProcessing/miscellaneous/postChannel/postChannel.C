@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     // Get times list
     instantList timeDirs = timeSelector::select0(runTime, args);
 
-    #include "createMesh.H"
+    #include "createMeshNoChangers.H"
     #include "readPhysicalProperties.H"
 
     const word& gFormat = runTime.graphFormat();

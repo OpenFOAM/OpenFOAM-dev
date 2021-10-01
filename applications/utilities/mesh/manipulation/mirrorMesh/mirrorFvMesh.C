@@ -31,7 +31,7 @@ License
 
 Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io, const IOobject& dictIO)
 :
-    fvMesh(io),
+    fvMesh(io, false),
     mirrorMeshDict_(dictIO)
 {
     plane mirrorPlane(mirrorMeshDict_);

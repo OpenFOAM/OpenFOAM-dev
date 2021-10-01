@@ -30,6 +30,7 @@ License
 #include "cellSet.H"
 #include "boolList.H"
 #include "syncTools.H"
+#include "mapPolyMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -56,7 +57,8 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
     points0MotionSolver(mesh, dict, typeName),
     SBMFPtr_(solidBodyMotionFunction::New(coeffDict(), mesh.time())),
     pointIDs_(),
-    moveAllCells_(false)
+    moveAllCells_(false),
+    transform_(SBMFPtr_().transformation())
 {
     word cellZoneName =
         coeffDict().lookupOrDefault<word>("cellZone", "none");
@@ -156,9 +158,11 @@ Foam::solidBodyMotionSolver::~solidBodyMotionSolver()
 
 Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
 {
+    transform_ = SBMFPtr_().transformation();
+
     if (moveAllCells_)
     {
-        return transformPoints(SBMFPtr_().transformation(), points0_);
+        return transformPoints(transform_, points0_);
     }
     else
     {
@@ -167,12 +171,71 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
 
         UIndirectList<point>(transformedPts, pointIDs_) = transformPoints
         (
-            SBMFPtr_().transformation(),
+            transform_,
             pointField(points0_, pointIDs_)
         );
 
         return ttransformedPts;
     }
+}
+
+
+void Foam::solidBodyMotionSolver::updateMesh(const mapPolyMesh& mpm)
+{
+    // pointMesh already updates pointFields
+
+    motionSolver::updateMesh(mpm);
+
+    // Map points0_. Bit special since we somehow have to come up with
+    // a sensible points0 position for introduced points.
+    // Find out scaling between points0 and current points
+
+    // Get the new points either from the map or the mesh
+    const pointField& points =
+    (
+        mpm.hasMotionPoints()
+      ? mpm.preMotionPoints()
+      : mesh().points()
+    );
+
+    pointField newPoints0(mpm.pointMap().size());
+
+    forAll(newPoints0, pointi)
+    {
+        label oldPointi = mpm.pointMap()[pointi];
+
+        if (oldPointi >= 0)
+        {
+            label masterPointi = mpm.reversePointMap()[oldPointi];
+
+            if (masterPointi == pointi)
+            {
+                newPoints0[pointi] = points0_[oldPointi];
+            }
+            else
+            {
+                newPoints0[pointi] =
+                    transform_.invTransformPoint(points[pointi]);
+            }
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Cannot determine co-ordinates of introduced vertices."
+                << " New vertex " << pointi << " at co-ordinate "
+                << points[pointi] << exit(FatalError);
+        }
+    }
+
+    twoDCorrectPoints(newPoints0);
+
+    points0_.transfer(newPoints0);
+
+    // points0 changed - set to write and check-in to database
+    points0_.rename("points0");
+    points0_.writeOpt() = IOobject::AUTO_WRITE;
+    points0_.instance() = mesh().time().timeName();
+    points0_.checkIn();
 }
 
 

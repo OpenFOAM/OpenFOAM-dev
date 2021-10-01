@@ -13,67 +13,70 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh   dynamicMotionSolverFvMesh;
-
-motionSolverLibs   ("librigidBodyMeshMotion.so");
-
-motionSolver    rigidBodyMotion;
-
-report          on;
-
-solver
+mover
 {
-    type Newmark;
-}
+    type            motionSolver;
 
-accelerationRelaxation 0.4;
+    libs            ("libfvMeshMovers.so" "librigidBodyMeshMotion.so");
 
-bodies
-{
-    hull
+    motionSolver    rigidBodyMotion;
+
+    report          on;
+
+    solver
     {
-        type            rigidBody;
-        parent          root;
+        type Newmark;
+    }
 
-        centreOfMass    (0 0 0);
-        mass            412.73;
-        inertia         (40 0 0 921 0 921);
-        transform       (1 0 0 0 1 0 0 0 1) (2.929541 0 0.2);
+    accelerationRelaxation 0.4;
 
-        joint
+    bodies
+    {
+        hull
         {
-            type    composite;
-            joints
-            (
-                {
-                    type Pz;
-                }
-                {
-                    type Ry;
-                }
-            );
+            type            rigidBody;
+            parent          root;
+
+            centreOfMass    (0 0 0);
+            mass            412.73;
+            inertia         (40 0 0 921 0 921);
+            transform       (1 0 0 0 1 0 0 0 1) (2.929541 0 0.2);
+
+            joint
+            {
+                type    composite;
+                joints
+                (
+                    {
+                        type Pz;
+                    }
+                    {
+                        type Ry;
+                    }
+                );
+            }
+
+            patches         (hull);
+            innerDistance   0.3;
+            outerDistance   1;
+        }
+    }
+
+    restraints
+    {
+        translationDamper
+        {
+            type linearDamper;
+            body hull;
+            coeff 8596;
         }
 
-        patches         (hull);
-        innerDistance   0.3;
-        outerDistance   1;
-    }
-}
-
-restraints
-{
-    translationDamper
-    {
-        type linearDamper;
-        body hull;
-        coeff 8596;
-    }
-
-    rotationDamper
-    {
-        type sphericalAngularDamper;
-        body hull;
-        coeff 11586;
+        rotationDamper
+        {
+            type sphericalAngularDamper;
+            body hull;
+            coeff 11586;
+        }
     }
 }
 

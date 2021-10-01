@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rigidBodyState.H"
-#include "dynamicMotionSolverFvMesh.H"
+#include "fvMeshMoversMotionSolver.H"
 #include "motionSolver.H"
 #include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
@@ -75,10 +75,10 @@ Foam::functionObjects::rigidBodyState::~rigidBodyState()
 const Foam::RBD::rigidBodyMotion&
 Foam::functionObjects::rigidBodyState::motion() const
 {
-    const dynamicMotionSolverFvMesh& mesh =
-        refCast<const dynamicMotionSolverFvMesh>(obr_);
+    const fvMeshMovers::motionSolver& mover =
+        refCast<const fvMeshMovers::motionSolver>(mesh_.mover());
 
-    return (refCast<const RBD::rigidBodyMotion>(mesh.motion()));
+    return (refCast<const RBD::rigidBodyMotion>(mover.motion()));
 }
 
 

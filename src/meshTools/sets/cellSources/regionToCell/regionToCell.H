@@ -91,10 +91,10 @@ class regionToCell
         ) const;
 
         //- Determine for every disconnected region in the mesh whether
-        //  it contains a locationInMesh
+        //  it contains a insidePoint
         boolList findRegions(const bool verbose, const regionSplit&) const;
 
-        //- Deselect regions not containing a locationInMesh
+        //- Deselect regions not containing a insidePoint
         void unselectOutsideRegions(boolList& selectedCell) const;
 
         //- Deselect one layer of cells from selectedCell

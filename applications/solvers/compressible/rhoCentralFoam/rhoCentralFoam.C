@@ -31,7 +31,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "dynamicFvMesh.H"
 #include "psiThermo.H"
 #include "compressibleMomentumTransportModels.H"
 #include "fluidThermophysicalTransportModel.H"
@@ -49,7 +48,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createDynamicFvMesh.H"
+    #include "createMesh.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
     #include "createTimeControls.H"

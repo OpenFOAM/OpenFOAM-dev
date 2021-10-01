@@ -1,9 +1,0 @@
-dynamicFvMesh/dynamicFvMesh.C
-dynamicFvMesh/dynamicFvMeshNew.C
-staticFvMesh/staticFvMesh.C
-dynamicMotionSolverFvMesh/dynamicMotionSolverFvMesh.C
-dynamicInkJetFvMesh/dynamicInkJetFvMesh.C
-dynamicInterpolatedFvMesh/dynamicInterpolatedFvMesh.C
-dynamicRefineFvMesh/dynamicRefineFvMesh.C
-
-LIB = $(FOAM_LIBBIN)/libdynamicFvMesh
