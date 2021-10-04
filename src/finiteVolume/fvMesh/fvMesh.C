@@ -475,10 +475,10 @@ bool Foam::fvMesh::dynamic() const
 
 bool Foam::fvMesh::update()
 {
-    // return !(!topoChanger_->update() && !mover_->update());
-    topoChanger_->update();
-    mover_->update();
-    return true;
+    bool updated = topoChanger_->update();
+    updated = mover_->update() || updated;
+
+    return updated;
 }
 
 
