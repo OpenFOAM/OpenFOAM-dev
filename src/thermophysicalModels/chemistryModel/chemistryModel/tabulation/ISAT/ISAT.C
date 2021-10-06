@@ -200,60 +200,61 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
 {
     const label nEqns = chemistry_.nEqns(); // Species, T, p
     const bool mechRedActive = chemistry_.mechRed().active();
-    Rphiq = phi0->Rphi();
-    const scalarField dphi(phiq-phi0->phi());
-    const scalarSquareMatrix& gradientsMatrix = phi0->A();
-    const List<label>& completeToSimplified(phi0->completeToSimplifiedIndex());
+    const List<label>& completeToSimplified = phi0->completeToSimplifiedIndex();
 
-    // Rphiq[i]=Rphi0[i]+A(i, j)dphi[j]
-    // where Aij is dRi/dphi_j
-    for (label i=0; i<nEqns-3; i++)
+    const scalarField dphi(phiq - phi0->phi());
+    const scalarSquareMatrix& gradientsMatrix = phi0->A();
+
+    // Linear extrapolation:
+    //
+    //     Rphiq[i] = Rphi0[i] + (dR_i/dphi_j)*dphi[j]
+    //              = Rphi0[i] + A(i, j)*dphi[j]
+    //
+
+    Rphiq = phi0->Rphi();
+    for (label i=0; i<nEqns + 1; i++)
     {
         if (mechRedActive)
         {
-            const label si = completeToSimplified[i];
+            const label si =
+                i < nEqns - 2
+              ? completeToSimplified[i]
+              : i - (nEqns - 2) + phi0->nActiveSpecies();
 
-            // The species is active
             if (si != -1)
             {
-                for (label j=0; j<nEqns-2; j++)
+                // If specie is active, or T or p, then extrapolate using the
+                // gradients matrix
+                for (label j=0; j<nEqns + 1; j++)
                 {
-                    label sj = completeToSimplified[j];
+                    const label sj =
+                        j < nEqns - 2
+                      ? completeToSimplified[j]
+                      : j - (nEqns - 2) + phi0->nActiveSpecies();
+
                     if (sj != -1)
                     {
                         Rphiq[i] += gradientsMatrix(si, sj)*dphi[j];
                     }
                 }
-                Rphiq[i] +=
-                    gradientsMatrix(si, phi0->nActiveSpecies())*dphi[nEqns - 2];
-                Rphiq[i] +=
-                    gradientsMatrix(si, phi0->nActiveSpecies() + 1)
-                   *dphi[nEqns - 1];
-                Rphiq[i] +=
-                    gradientsMatrix(si, phi0->nActiveSpecies() + 2)
-                   *dphi[nEqns];
-
-                // As we use an approximation of A, Rphiq should be checked for
-                // negative values
-                Rphiq[i] = max(0, Rphiq[i]);
             }
-            // The species is not active A(i, j) = I(i, j)
             else
             {
+                // If specie is inactive then use the tabulated value directly
                 Rphiq[i] += dphi[i];
-                Rphiq[i] = max(0, Rphiq[i]);
             }
         }
-        else // Mechanism reduction is not active
+        else
         {
+            // Extrapolate using the gradients matrix
             for (label j=0; j<nEqns; j++)
             {
                 Rphiq[i] += gradientsMatrix(i, j)*dphi[j];
             }
-            // As we use a first order gradient matrix, Rphiq should be checked
-            // for negative values
-            Rphiq[i] = max(0, Rphiq[i]);
         }
+
+        // Clip
+        Rphiq[i] = max(0, Rphiq[i]);
     }
 }
 
@@ -507,19 +508,14 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
         addToMRU(phi0);
         calcNewC(phi0, phiq, Rphiq);
         nRetrieved_++;
-        return true;
-    }
-    else
-    {
-        // This point is reached when every retrieve trials have failed
-        // or if the tree is empty
-        return false;
     }
 
     if (log_)
     {
         searchISATCpuTime_ += clockTime_.timeIncrement();
     }
+
+    return retrieved;
 }
 
 

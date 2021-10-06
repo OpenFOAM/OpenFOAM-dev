@@ -634,25 +634,28 @@ void Foam::binaryTree<ThermoType>::deleteLeaf(chP*& phi0)
 template<class ThermoType>
 void Foam::binaryTree<ThermoType>::balance()
 {
-    scalarField mean(table_.chemistry().nEqns(), 0.0);
-
     //1) walk through the entire tree by starting with the tree's most left
     // chemPoint
     chP* x = treeMin();
     List<chP*> chemPoints(size_);
     label chPi=0;
-    //2) compute the mean composition
     while (x != nullptr)
     {
-        const scalarField& phij = x->phi();
-        mean += phij;
         chemPoints[chPi++] = x;
         x = treeSuccessor(x);
+    }
+
+    //2) compute the mean composition
+    scalarField mean(treeMin()->phi().size(), Zero);
+    forAll(chemPoints, j)
+    {
+        const scalarField& phij = chemPoints[j]->phi();
+        mean += phij;
     }
     mean /= size_;
 
     //3) compute the variance for each space direction
-    List<scalar> variance(table_.chemistry().nEqns(),0.0);
+    List<scalar> variance(treeMin()->phi().size(), Zero);
     forAll(chemPoints, j)
     {
         const scalarField& phij = chemPoints[j]->phi();
