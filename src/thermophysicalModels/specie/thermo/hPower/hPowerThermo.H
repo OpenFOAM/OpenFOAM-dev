@@ -33,7 +33,7 @@ Class
 Usage
     \table
         Property     | Description
-        c0           | Reference heat capacity at constant pressure [J/kmol/K]
+        c0           | Reference heat capacity at constant pressure [J/kg/K]
         n0           | Exponent of the power function
         Tref         | Reference temperature [K]
         Hf           | Heat of formation [J/kg]

@@ -36,7 +36,7 @@ Description
 Usage
     \table
         Property     | Description
-        c0           | Reference heat capacity at constant volume [J/kmol/K]
+        c0           | Reference heat capacity at constant volume [J/kg/K]
         n0           | Exponent of the power function
         Tref         | Reference temperature [K]
         Hf           | Heat of formation [J/kg]
