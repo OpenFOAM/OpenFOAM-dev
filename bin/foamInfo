@@ -36,7 +36,7 @@ usage() {
 Usage: ${0##*/} [OPTIONS] <name>
 options:
   -all     | -a        list all tutorials that use <name> (otherwise maximum 10)
-                       and all models of the same family (otherwise maximum 20)
+                       and all models of the same family (otherwise maximum 25)
   -browser | -b <name> output C++ source guide web page with specified browser,
                        e.g. foamInfo -browser "firefox"
   -help    | -h        print the usage
@@ -184,13 +184,30 @@ setFile() {
     echo "$_files" | xargs -n 1 | awk -v n="${_n}" 'NR==n'
 }
 
+# (1) model family directory (2) depth (optional, default 1)
+findModelDirs () {
+    _familyDir="$1"
+    _depth=1
+    [ "$2" ] && _depth="$2"
+
+    find "$1" -maxdepth "$_depth" -mindepth "$_depth" -type d
+}
+
 modelsInFamily () {
     _familyDir="$1"
     _family="${_familyDir##*/}"
 
     ! [ -d "$_familyDir" ] && return 0
 
-    _modelDirs="$(find "$_familyDir" -maxdepth 1 -mindepth 1 -type d)"
+    _modelDirs="$(findModelDirs "$_familyDir")"
+
+    ### special handling of fvModels
+    [ "$_family" = fvModels ] && \
+        _modelDirs="\
+            $(findModelDirs "$_familyDir" 2) \
+            $(findModelDirs "$FOAM_SRC/lagrangian/parcel/fvModels") \
+            $(findModelDirs "$FOAM_SRC/regionModels/surfaceFilmModels/fvModels") \
+            $(findModelDirs "$FOAM_SRC/radiationModels/fvModels/radiation")"
 
     [ "$_modelDirs" ] || return 0
 
@@ -263,6 +280,15 @@ printInfo() {
 
     _model="$(modelName "$_file")" || return 0
     _familyDir="$(dirname "$(dirname "$_file")")"
+
+    ### special handling of fvModels
+    echo "$_familyDir" | grep -q fvModels && \
+        _familyDir="$FOAM_SRC/fvModels"
+
+    ### special handling of fvConstraints
+    echo "$_familyDir" | grep -q fvConstraints && \
+        _familyDir="$FOAM_SRC/fvConstraints"
+
     _family="${_familyDir##*/}"
 
     _models="$(modelsInFamily "$_familyDir")"
@@ -279,7 +305,7 @@ printInfo() {
 
     printf "    The models in the '%s' family are:\n" "$_family"
 
-    _nMoD=20
+    _nMoD=25
     [ "$_all" = "yes" ] && _nMoD=1000
 
     [ "$_nMo" -gt "$_nMoD" ] && [ "$_all" = "no" ] && \
@@ -397,7 +423,7 @@ showTypeExamples() {
     _nEx="$(nArgs "$_examples")"
 
     echo "Examples using \"$_pre\""
-    [ "$_nEx" -gt "$_nExD" ] && [ "$_all" = "yes" ] && \
+    [ "$_nEx" -gt "$_nExD" ] && ! [ "$_all" = "yes" ] && \
         echo "    *** Listing $_nExD out of $_nEx;" \
              "run with \"-a\" option to list all ***"
     echo "$_examples" | awk -v nExD="$_nExD" 'FNR <= nExD {print "    " $1}'
