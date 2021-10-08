@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,37 +25,13 @@ Class
     Foam::functionObjects::surfaceInterpolate
 
 Description
-    Linearly interpolates volume fields to generate surface fields.
+    Calculates the surface interpolation of a field.
 
-    Fields are stored
-    - every time step the field is updated with new values
-    - at output it writes the fields
-
-    This functionObject can either be used
-    - to calculate a new field as a  post-processing step or
-    - since the fields are registered, used in another functionObject
-
-    Example of function object specification:
-    \verbatim
-    surfaceInterpolate1
-    {
-        type        surfaceInterpolate;
-        libs        ("libfieldFunctionObjects.so");
-        ...
-        fields      ((p pInterp)(U UInterp));
-    }
-    \endverbatim
-
-Usage
-    \table
-        Property | Description                   | Required    | Default value
-        type     | type name: surfaceInterpolate | yes         |
-        fields   | list of fields with corresponding output field names | yes |
-    \endtable
+    The operation can be applied to any volume field and will generate a
+    surface field.
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
-    Foam::functionObjects::timeControl
 
 SourceFiles
     surfaceInterpolate.C
@@ -65,53 +41,33 @@ SourceFiles
 #ifndef functionObjects_surfaceInterpolate_H
 #define functionObjects_surfaceInterpolate_H
 
-#include "fvMeshFunctionObject.H"
-#include "surfaceFieldsFwd.H"
-#include "Tuple2.H"
+#include "fieldExpression.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class mapPolyMesh;
-
 namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class surfaceInterpolate Declaration
+                      Class surfaceInterpolate Declaration
 \*---------------------------------------------------------------------------*/
 
 class surfaceInterpolate
 :
-    public fvMeshFunctionObject
+    public fieldExpression
 {
-protected:
+    // Private Member Functions
 
-    // Protected data
-
-        //- Fields to process
-        List<Tuple2<word, word>> fieldSet_;
-
-        //- Locally constructed fields
-        PtrList<surfaceScalarField> ssf_;
-        PtrList<surfaceVectorField> svf_;
-        PtrList<surfaceSphericalTensorField> sSpheretf_;
-        PtrList<surfaceSymmTensorField> sSymmtf_;
-        PtrList<surfaceTensorField> stf_;
-
-
-    // Protected Member Functions
-
+        //- Calculate the surface interpolation of the field and register the
+        //  result
         template<class Type>
-        void interpolateFields
-        (
-            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
-        ) const;
+        bool calcSurfaceInterpolate();
+
+        //- Calculate the surface interpolation of the field and return true if
+        //  successful
+        virtual bool calc();
 
 
 public:
@@ -122,8 +78,7 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         surfaceInterpolate
         (
             const word& name,
@@ -131,30 +86,9 @@ public:
             const dictionary& dict
         );
 
-        //- Disallow default bitwise copy construction
-        surfaceInterpolate(const surfaceInterpolate&) = delete;
-
 
     //- Destructor
     virtual ~surfaceInterpolate();
-
-
-    // Member Functions
-
-        //- Read the controls
-        virtual bool read(const dictionary&);
-
-        //- Calculate the interpolated fields
-        virtual bool execute();
-
-        //- Write the interpolated fields
-        virtual bool write();
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceInterpolate&) = delete;
 };
 
 

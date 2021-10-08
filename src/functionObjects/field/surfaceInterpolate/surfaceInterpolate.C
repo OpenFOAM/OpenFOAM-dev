@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceInterpolate.H"
-#include "surfaceFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,14 +33,27 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(surfaceInterpolate, 0);
-
-    addToRunTimeSelectionTable
-    (
-        functionObject,
-        surfaceInterpolate,
-        dictionary
-    );
+    addToRunTimeSelectionTable(functionObject, surfaceInterpolate, dictionary);
 }
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::surfaceInterpolate::calc()
+{
+    bool processed = false;
+
+    #define processType(fieldType, none)                                       \
+        processed = processed || calcSurfaceInterpolate<fieldType>();
+    FOR_ALL_FIELD_TYPES(processType)
+
+    if (!processed)
+    {
+        cannotFindObject(fieldName_);
+    }
+
+    return processed;
 }
 
 
@@ -54,85 +66,14 @@ Foam::functionObjects::surfaceInterpolate::surfaceInterpolate
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict),
-    fieldSet_()
-{
-    read(dict);
-}
+    fieldExpression(name, runTime, dict, typeName)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::functionObjects::surfaceInterpolate::~surfaceInterpolate()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::surfaceInterpolate::read
-(
-    const dictionary& dict
-)
-{
-    dict.lookup("fields") >> fieldSet_;
-
-    return true;
-}
-
-
-bool Foam::functionObjects::surfaceInterpolate::execute()
-{
-    Info<< type() << " " << name() << " write:" << nl;
-
-    // Clear out any previously loaded fields
-    ssf_.clear();
-    svf_.clear();
-    sSpheretf_.clear();
-    sSymmtf_.clear();
-    stf_.clear();
-
-    interpolateFields<scalar>(ssf_);
-    interpolateFields<vector>(svf_);
-    interpolateFields<sphericalTensor>(sSpheretf_);
-    interpolateFields<symmTensor>(sSymmtf_);
-    interpolateFields<tensor>(stf_);
-
-    Info<< endl;
-
-    return true;
-}
-
-
-bool Foam::functionObjects::surfaceInterpolate::write()
-{
-    Info<< type() << " " << name() << " write:" << nl;
-
-    Info<< "    Writing interpolated surface fields to "
-        << obr_.time().timeName() << endl;
-
-    forAll(ssf_, i)
-    {
-        ssf_[i].write();
-    }
-    forAll(svf_, i)
-    {
-        svf_[i].write();
-    }
-    forAll(sSpheretf_, i)
-    {
-        sSpheretf_[i].write();
-    }
-    forAll(sSymmtf_, i)
-    {
-        sSymmtf_[i].write();
-    }
-    forAll(stf_, i)
-    {
-        stf_[i].write();
-    }
-
-    return true;
-}
 
 
 // ************************************************************************* //

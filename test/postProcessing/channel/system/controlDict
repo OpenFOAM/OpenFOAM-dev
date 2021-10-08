@@ -124,6 +124,8 @@ fieldsFunctions
 
     #includeFunc streamFunction
 
+    #includeFunc surfaceInterpolate(rho, result=rhof)
+
     #includeFunc totalEnthalpy
 
     #includeFunc turbulenceFields(nuEff, R, devTau)
