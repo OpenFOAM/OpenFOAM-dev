@@ -4,9 +4,13 @@
         fvm::ddt(rho, T) + fvm::div(rhoPhi, T) - fvm::Sp(contErr, T)
       - fvm::laplacian(turbulence.alphaEff(), T)
       + (
+             mixture.totalInternalEnergy()
+          ?
             fvc::div(fvc::absolute(phi, U), p)()() // - contErr/rho*p
           + (fvc::ddt(rho, K) + fvc::div(rhoPhi, K))()()
           - (U()&(fvModels.source(rho, U)&U)()) - contErr*K
+          :
+            p*fvc::div(fvc::absolute(phi, U))()()
         )
        *(
            alpha1()/mixture.thermo1().Cv()()

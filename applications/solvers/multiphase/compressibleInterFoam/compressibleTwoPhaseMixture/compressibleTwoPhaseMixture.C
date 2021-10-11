@@ -44,6 +44,11 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
     twoPhaseMixture(U.mesh()),
     interfaceProperties(alpha1(), alpha2(), U, *this),
 
+    totalInternalEnergy_
+    (
+        lookupOrDefault<Switch>("totalInternalEnergy", true)
+    ),
+
     p_
     (
         IOobject
@@ -204,8 +209,11 @@ Foam::tmp<Foam::scalarField> Foam::compressibleTwoPhaseMixture::nu
 
 bool Foam::compressibleTwoPhaseMixture::read()
 {
-    if (regIOobject::read())
+    if (twoPhaseMixture::read())
     {
+        totalInternalEnergy_ =
+            lookupOrDefault<Switch>("totalInternalEnergy", true);
+
         return interfaceProperties::read();
     }
     else

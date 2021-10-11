@@ -59,6 +59,10 @@ class compressibleTwoPhaseMixture
 {
     // Private Data
 
+        //- Switch to choose between solving for internal energy
+        //  or total internal energy which is the default
+        Switch totalInternalEnergy_;
+
         //- Pressure
         volScalarField p_;
 
@@ -102,6 +106,13 @@ public:
 
 
     // Member Functions
+
+        //- Return true to solve for total internal energy
+        //  return false to solve for internal energy
+        bool totalInternalEnergy() const
+        {
+            return totalInternalEnergy_;
+        }
 
         //- Return pressure [Pa]
         volScalarField& p()
