@@ -82,7 +82,7 @@ incompressibleTwoPhaseInteractingMixture
 
 bool Foam::incompressibleTwoPhaseInteractingMixture::read()
 {
-    if (regIOobject::read())
+    if (twoPhaseMixture::read())
     {
         if (muModel_->read() || nucModel_->read())
         {

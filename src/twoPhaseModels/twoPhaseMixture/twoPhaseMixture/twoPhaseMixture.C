@@ -47,7 +47,7 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
         obr,
         IOobject::MUST_READ_IF_MODIFIED,
         IOobject::NO_WRITE,
-        false
+        true
     );
 
     if (phasePropertiesIO.headerOk())
@@ -63,7 +63,7 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
             obr,
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE,
-            false
+            true
         );
 
         if (thermophysicalPropertiesIO.headerOk())
@@ -81,7 +81,7 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
                 obr,
                 IOobject::MUST_READ_IF_MODIFIED,
                 IOobject::NO_WRITE,
-                false
+                true
             );
 
             if (transportPropertiesIO.headerOk())
@@ -106,7 +106,7 @@ Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
                             obr,
                             IOobject::NO_READ,
                             IOobject::NO_WRITE,
-                            false
+                            true
                         )
                     );
 
@@ -196,8 +196,14 @@ Foam::twoPhaseMixture::twoPhaseMixture(const fvMesh& mesh)
         ),
         1.0 - alpha1_
     )
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::twoPhaseMixture::read()
 {
-    checkIn();
+    return regIOobject::read();
 }
 
 

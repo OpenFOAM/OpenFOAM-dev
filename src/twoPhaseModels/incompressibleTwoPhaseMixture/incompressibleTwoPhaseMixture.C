@@ -139,7 +139,7 @@ Foam::incompressibleTwoPhaseMixture::nuf() const
 
 bool Foam::incompressibleTwoPhaseMixture::read()
 {
-    if (regIOobject::read())
+    if (twoPhaseMixture::read())
     {
         nuModel1_->lookup("rho") >> rho1_;
         nuModel2_->lookup("rho") >> rho2_;
