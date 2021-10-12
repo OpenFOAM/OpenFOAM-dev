@@ -36,6 +36,9 @@ Usage
 
         selectionMode   all;
 
+        // field           T;   // Optional energy/temperature field name
+                                // Set to T for compressibleInterFoam
+
         phase           gas; // Optional phase name
 
         min             200;
@@ -79,6 +82,9 @@ class limitTemperature
 
         //- Maximum temperature limit [K]
         scalar Tmax_;
+
+        //- Optional energy/temperature field name
+        word fieldName_;
 
         //- Optional phase name
         word phaseName_;

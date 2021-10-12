@@ -50,6 +50,7 @@ void Foam::fv::limitTemperature::readCoeffs()
 {
     Tmin_ = coeffs().lookup<scalar>("min");
     Tmax_ = coeffs().lookup<scalar>("max");
+    fieldName_ = coeffs().lookupOrDefault<word>("field", word::null);
     phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
 }
 
@@ -68,6 +69,7 @@ Foam::fv::limitTemperature::limitTemperature
     set_(coeffs(), mesh),
     Tmin_(-vGreat),
     Tmax_(vGreat),
+    fieldName_(word::null),
     phaseName_(word::null)
 {
     readCoeffs();
@@ -78,61 +80,100 @@ Foam::fv::limitTemperature::limitTemperature
 
 Foam::wordList Foam::fv::limitTemperature::constrainedFields() const
 {
-    const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>
-        (
-            IOobject::groupName(physicalProperties::typeName, phaseName_)
-        );
+    if (fieldName_ != word::null)
+    {
+        return wordList(1, IOobject::groupName(fieldName_, phaseName_));
+    }
+    else
+    {
+        const basicThermo& thermo =
+            mesh().lookupObject<basicThermo>
+            (
+                IOobject::groupName(physicalProperties::typeName, phaseName_)
+            );
 
-    return wordList(1, thermo.he().name());
+        return wordList(1, thermo.he().name());
+    }
 }
 
 
 bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
 {
-    const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>
-        (
-            IOobject::groupName(physicalProperties::typeName, phaseName_)
-        );
-
     const labelList& cells = set_.cells();
 
-    scalarField Tmin(cells.size(), Tmin_);
-    scalarField Tmax(cells.size(), Tmax_);
-
-    scalarField heMin(thermo.he(Tmin, cells));
-    scalarField heMax(thermo.he(Tmax, cells));
-
-    scalarField& hec = he.primitiveFieldRef();
-
-    forAll(cells, i)
+    if (he.dimensions() == dimTemperature)
     {
-        const label celli = cells[i];
-        hec[celli]= max(min(hec[celli], heMax[i]), heMin[i]);
-    }
+        scalarField& Tc = he.primitiveFieldRef();
 
-    // Handle boundaries in the case of 'all'
-    if (set_.selectionMode() == fvCellSet::selectionModeType::all)
-    {
-        volScalarField::Boundary& bf = he.boundaryFieldRef();
-
-        forAll(bf, patchi)
+        forAll(cells, i)
         {
-            fvPatchScalarField& hep = bf[patchi];
+            const label celli = cells[i];
+            Tc[celli] = max(min(Tc[celli], Tmax_), Tmin_);
+        }
 
-            if (!hep.fixesValue())
+        // Handle boundaries in the case of 'all'
+        if (set_.selectionMode() == fvCellSet::selectionModeType::all)
+        {
+            volScalarField::Boundary& Tbf = he.boundaryFieldRef();
+
+            forAll(Tbf, patchi)
             {
-                scalarField Tminp(hep.size(), Tmin_);
-                scalarField Tmaxp(hep.size(), Tmax_);
+                fvPatchScalarField& Tp = Tbf[patchi];
 
-                scalarField heMinp(thermo.he(Tminp, patchi));
-                scalarField heMaxp(thermo.he(Tmaxp, patchi));
-
-                forAll(hep, facei)
+                if (!Tp.fixesValue())
                 {
-                    hep[facei] =
-                        max(min(hep[facei], heMaxp[facei]), heMinp[facei]);
+                    forAll(Tp, facei)
+                    {
+                        Tp[facei] = max(min(Tp[facei], Tmax_), Tmin_);
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        const basicThermo& thermo =
+            mesh().lookupObject<basicThermo>
+            (
+                IOobject::groupName(physicalProperties::typeName, phaseName_)
+            );
+
+        const scalarField Tmin(cells.size(), Tmin_);
+        const scalarField Tmax(cells.size(), Tmax_);
+
+        const scalarField heMin(thermo.he(Tmin, cells));
+        const scalarField heMax(thermo.he(Tmax, cells));
+
+        scalarField& hec = he.primitiveFieldRef();
+
+        forAll(cells, i)
+        {
+            const label celli = cells[i];
+            hec[celli] = max(min(hec[celli], heMax[i]), heMin[i]);
+        }
+
+        // Handle boundaries in the case of 'all'
+        if (set_.selectionMode() == fvCellSet::selectionModeType::all)
+        {
+            volScalarField::Boundary& bf = he.boundaryFieldRef();
+
+            forAll(bf, patchi)
+            {
+                fvPatchScalarField& hep = bf[patchi];
+
+                if (!hep.fixesValue())
+                {
+                    const scalarField Tminp(hep.size(), Tmin_);
+                    const scalarField Tmaxp(hep.size(), Tmax_);
+
+                    const scalarField heMinp(thermo.he(Tminp, patchi));
+                    const scalarField heMaxp(thermo.he(Tmaxp, patchi));
+
+                    forAll(hep, facei)
+                    {
+                        hep[facei] =
+                            max(min(hep[facei], heMaxp[facei]), heMinp[facei]);
+                    }
                 }
             }
         }
