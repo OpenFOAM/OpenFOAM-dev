@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,26 @@ License
 template<class Thermo>
 Foam::constTransport<Thermo>::constTransport(const dictionary& dict)
 :
-    Thermo(dict),
-    mu_(dict.subDict("transport").lookup<scalar>("mu")),
-    rPr_(1.0/dict.subDict("transport").lookup<scalar>("Pr"))
-{}
+    Thermo(dict)
+{
+    const dictionary& transportDict = dict.subDict("transport");
+
+    mu_ = transportDict.lookup<scalar>("mu");
+
+    const bool foundPr = transportDict.found("Pr");
+    const bool foundKappa = transportDict.found("kappa");
+
+    if (foundPr == foundKappa)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Either Pr or kappa must be specified, but not both."
+            << exit(FatalIOError);
+    }
+
+    constPr_ = foundPr;
+    rPr_ = constPr_ ? 1/transportDict.lookup<scalar>("Pr") : NaN;
+    kappa_ = constPr_ ? NaN : transportDict.lookup<scalar>("kappa");
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -49,7 +65,15 @@ void Foam::constTransport<Thermo>::constTransport::write(Ostream& os) const
 
     dictionary dict("transport");
     dict.add("mu", mu_);
-    dict.add("Pr", 1.0/rPr_);
+    if (constPr_)
+    {
+        dict.add("Pr", 1.0/rPr_);
+    }
+    else
+    {
+        dict.add("kappa", kappa_);
+    }
+
     os  << indent << dict.dictName() << dict;
 
     os  << decrIndent << token::END_BLOCK << nl;

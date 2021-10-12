@@ -97,8 +97,14 @@ class constTransport
         //- Constant dynamic viscosity [Pa.s]
         scalar mu_;
 
-        //- Reciprocal Prandtl Number []
+        //- Is the Prandtl Number constant?
+        bool constPr_;
+
+        //- Reciprocal constant Prandtl Number []
         scalar rPr_;
+
+        //- Constant thermal conductivity [W/m/K]
+        scalar kappa_;
 
 
     // Private Member Functions
@@ -108,7 +114,9 @@ class constTransport
         (
             const Thermo& t,
             const scalar mu,
-            const scalar Pr
+            const bool constPr,
+            const scalar rPr,
+            const scalar kappa
         );
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,12 +30,16 @@ inline Foam::constTransport<Thermo>::constTransport
 (
     const Thermo& t,
     const scalar mu,
-    const scalar Pr
+    const bool constPr,
+    const scalar rPr,
+    const scalar kappa
 )
 :
     Thermo(t),
     mu_(mu),
-    rPr_(1.0/Pr)
+    constPr_(constPr),
+    rPr_(rPr),
+    kappa_(kappa)
 {}
 
 
@@ -48,7 +52,9 @@ inline Foam::constTransport<Thermo>::constTransport
 :
     Thermo(name, ct),
     mu_(ct.mu_),
-    rPr_(ct.rPr_)
+    constPr_(ct.constPr_),
+    rPr_(ct.rPr_),
+    kappa_(ct.kappa_)
 {}
 
 
@@ -97,7 +103,7 @@ inline Foam::scalar Foam::constTransport<Thermo>::kappa
     const scalar T
 ) const
 {
-    return this->Cp(p, T)*mu(p, T)*rPr_;
+    return constPr_ ? this->Cp(p, T)*mu(p, T)*rPr_ : kappa_;
 }
 
 
@@ -115,11 +121,26 @@ inline void Foam::constTransport<Thermo>::operator+=
 
     if (mag(this->Y()) > small)
     {
+        if
+        (
+            constTransport<Thermo>::debug
+         && (constPr_ != st.constPr_)
+        )
+        {
+            FatalErrorInFunction
+                << "Constant " << (constPr_ ? "Pr" : "kappa") << " for "
+                << (this->name().size() ? this->name() : "others") << " but "
+                << "constant " << (st.constPr_ ? "Pr" : "kappa") << " for "
+                << (st.name().size() ? st.name() : "others")
+                << exit(FatalError);
+        }
+
         Y1 /= this->Y();
         scalar Y2 = st.Y()/this->Y();
 
         mu_ = Y1*mu_ + Y2*st.mu_;
-        rPr_ = 1.0/(Y1/rPr_ + Y2/st.rPr_);
+        rPr_ = constPr_ ? 1/(Y1/rPr_ + Y2/st.rPr_) : NaN;
+        kappa_ = constPr_ ? NaN : Y1*kappa_ + Y2*st.kappa_;
     }
 }
 
@@ -154,7 +175,9 @@ inline Foam::constTransport<Thermo> Foam::operator+
         (
             t,
             0,
-            ct1.rPr_
+            ct1.constPr_,
+            ct1.rPr_,
+            0
         );
     }
     else
@@ -162,11 +185,27 @@ inline Foam::constTransport<Thermo> Foam::operator+
         scalar Y1 = ct1.Y()/t.Y();
         scalar Y2 = ct2.Y()/t.Y();
 
+        if
+        (
+            constTransport<Thermo>::debug
+         && (ct1.constPr_ != ct2.constPr_)
+        )
+        {
+            FatalErrorInFunction
+                << "Constant " << (ct1.constPr_ ? "Pr" : "kappa") << " for "
+                << (ct1.name().size() ? ct1.name() : "others") << " but "
+                << "constant " << (ct2.constPr_ ? "Pr" : "kappa") << " for "
+                << (ct2.name().size() ? ct2.name() : "others")
+                << exit(FatalError);
+        }
+
         return constTransport<Thermo>
         (
             t,
             Y1*ct1.mu_ + Y2*ct2.mu_,
-            1.0/(Y1/ct1.rPr_ + Y2/ct2.rPr_)
+            ct1.constPr_,
+            ct1.constPr_ ? 1/(Y1/ct1.rPr_ + Y2/ct2.rPr_) : NaN,
+            ct1.constPr_ ? NaN : Y1*ct1.kappa_ + Y2*ct2.kappa_
         );
     }
 }
@@ -183,7 +222,9 @@ inline Foam::constTransport<Thermo> Foam::operator*
     (
         s*static_cast<const Thermo&>(ct),
         ct.mu_,
-        1.0/ct.rPr_
+        ct.constPr_,
+        ct.rPr_,
+        ct.kappa_
     );
 }
 
