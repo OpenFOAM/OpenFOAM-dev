@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -167,10 +167,6 @@ public:
             //- Return time unit
             virtual word unit() const;
 
-            //- Return current crank-angle translated to a single revolution
-            //  (value between -180 and 180 with 0 = top dead centre)
-            scalar thetaRevolution() const;
-
             //- Return crank-angle increment
             virtual scalar deltaTheta() const;
 
@@ -182,9 +178,6 @@ public:
 
             //- Convert the real-time (s) into user-time (CA deg)
             virtual scalar timeToUserTime(const scalar t) const;
-
-            //- Ratio between real-time and user-time
-            virtual scalar timeToUserTimeRatio() const;
 
             //- Read the control dictionary and set the write controls etc.
             virtual void readDict();

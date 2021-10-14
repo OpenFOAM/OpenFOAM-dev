@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -235,7 +235,7 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
     {
         Function1s::Table<vector> timeSeries(word::null, dict);
 
-        fld = timeSeries.value(mesh().time().timeOutputValue());
+        fld = timeSeries.value(mesh().time().userTime());
     }
     else if (type == "slip")
     {

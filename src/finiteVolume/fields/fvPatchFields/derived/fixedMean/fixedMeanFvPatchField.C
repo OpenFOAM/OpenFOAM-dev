@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ void Foam::fixedMeanFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
     Type meanValue = meanValue_->value(t);
 
     Field<Type> newValues(this->patchInternalField());

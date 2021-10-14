@@ -185,7 +185,7 @@ void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = db().time().timeOutputValue();
+    const scalar t = db().time().userTime();
 
     operator==(U(t));
 

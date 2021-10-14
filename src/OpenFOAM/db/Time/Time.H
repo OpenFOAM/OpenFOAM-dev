@@ -431,6 +431,15 @@ public:
                 return prevTimeState_();
             }
 
+            //- Convert the user-time (e.g. CA deg) to real-time (s).
+            virtual scalar userTimeToTime(const scalar tau) const;
+
+            //- Convert the real-time (s) into user-time (e.g. CA deg)
+            virtual scalar timeToUserTime(const scalar t) const;
+
+            //- Return current user time value
+            scalar userTime() const;
+
 
         // Check
 

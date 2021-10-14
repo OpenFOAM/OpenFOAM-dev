@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ void Foam::rotatingWallVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
     scalar om = omega_->value(t);
 
     // Calculate the rotating wall velocity from the specification of the motion

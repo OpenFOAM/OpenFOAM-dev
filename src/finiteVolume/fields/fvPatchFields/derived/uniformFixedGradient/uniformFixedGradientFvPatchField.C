@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ void Foam::uniformFixedGradientFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
     this->gradient() = uniformGradient_->value(t);
 
     fixedGradientFvPatchField<Type>::updateCoeffs();

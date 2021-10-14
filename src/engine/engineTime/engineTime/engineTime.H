@@ -120,7 +120,7 @@ public:
         // Conversion
 
             //- Calculate the piston position from the engine geometry
-            //  and given timr (CA or s)
+            //  and given time (CA or s)
             virtual scalar pistonPosition(const scalar theta) const = 0;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ adaptiveLinear::adaptiveLinear
     relaxationModel(typeName, relaxationDict, runTime),
     relaxationStart_(coeffDict().lookup<scalar>("relaxationStart")),
     relaxationEnd_(coeffDict().lookup<scalar>("relaxationEnd")),
-    lastTimeValue_(runTime_.time().timeOutputValue()),
+    lastTimeValue_(runTime_.time().userTime()),
     relaxation_(relaxationStart_)
 {}
 
@@ -56,7 +56,7 @@ adaptiveLinear::adaptiveLinear
 
 scalar adaptiveLinear::relaxation()
 {
-    if (runTime_.time().timeOutputValue() > lastTimeValue_)
+    if (runTime_.time().userTime() > lastTimeValue_)
     {
         scalar currentRelaxation = relaxation_;
 
@@ -65,13 +65,13 @@ scalar adaptiveLinear::relaxation()
            /(
                 (
                     runTime_.time().endTime().value()
-                  - runTime_.time().timeOutputValue()
+                  - runTime_.time().userTime()
                 )
-               /(runTime_.time().timeOutputValue() - lastTimeValue_)
+               /(runTime_.time().userTime() - lastTimeValue_)
               + 1
             );
 
-        lastTimeValue_ = runTime_.time().timeOutputValue();
+        lastTimeValue_ = runTime_.time().userTime();
 
         return currentRelaxation;
     }

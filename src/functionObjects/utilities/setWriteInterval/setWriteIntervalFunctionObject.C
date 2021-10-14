@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ bool Foam::functionObjects::setWriteIntervalFunctionObject::execute()
 {
     const_cast<Time&>(time_).setWriteInterval
     (
-        writeIntervalPtr_().value(time_.timeOutputValue())
+        writeIntervalPtr_().value(time_.userTime())
     );
 
     return true;

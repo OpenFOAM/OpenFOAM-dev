@@ -115,7 +115,7 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
 
     scalarField alphap =
         patch().lookupPatchField<volScalarField, scalar>(alphaName_);

@@ -149,7 +149,7 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::updateCoeffs()
 
     // calculate the wavy film height
 
-    const scalar t = db().time().timeOutputValue();
+    const scalar t = db().time().userTime();
 
     const scalar GMean = GammaMean_->value(t);
     const scalar a = a_->value(t);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ updateCoeffs()
     alphap = max(alphap, scalar(0));
     alphap = min(alphap, scalar(1));
 
-    const scalar t = db().time().timeOutputValue();
+    const scalar t = db().time().userTime();
     scalar flowRate = flowRate_->value(t);
 
     // a simpler way of doing this would be nice

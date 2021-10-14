@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,32 +39,6 @@ Foam::TimeState::TimeState()
     writeTimeIndex_(0),
     writeTime_(false)
 {}
-
-
-// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * //
-
-Foam::TimeState::~TimeState()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::scalar Foam::TimeState::userTimeToTime(const scalar theta) const
-{
-    return theta;
-}
-
-
-Foam::scalar Foam::TimeState::timeToUserTime(const scalar t) const
-{
-    return t;
-}
-
-
-Foam::scalar Foam::TimeState::timeToUserTimeRatio() const
-{
-    return 1;
-}
 
 
 // ************************************************************************* //

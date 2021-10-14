@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ void Foam::waveInletOutletFvPatchField<Type>::updateCoeffs()
             phiName_
         );
 
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
     const waveSuperposition& waves = waveSuperposition::New(this->db());
 
     const pointField& localPoints = this->patch().patch().localPoints();

@@ -678,7 +678,7 @@ Foam::word Foam::Time::findInstance
         fileHandler().findInstance
         (
             startIO,
-            timeOutputValue(),
+            userTime(),
             stopInstance
         )
     );
@@ -804,6 +804,24 @@ Foam::dimensionedScalar Foam::Time::startTime() const
 Foam::dimensionedScalar Foam::Time::endTime() const
 {
     return dimensionedScalar("endTime", dimTime, endTime_);
+}
+
+
+Foam::scalar Foam::Time::userTimeToTime(const scalar tau) const
+{
+    return tau;
+}
+
+
+Foam::scalar Foam::Time::timeToUserTime(const scalar t) const
+{
+    return t;
+}
+
+
+Foam::scalar Foam::Time::userTime() const
+{
+    return timeToUserTime(value());
 }
 
 

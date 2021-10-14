@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ uniformFixedValuePointPatchField
     }
     else
     {
-        const scalar t = this->db().time().timeOutputValue();
+        const scalar t = this->db().time().userTime();
         fixedValuePointPatchField<Type>::operator=(uniformValue_->value(t));
     }
 }
@@ -81,7 +81,7 @@ uniformFixedValuePointPatchField
     uniformValue_(ptf.uniformValue_, false)
 {
     // For safety re-evaluate
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
     fixedValuePointPatchField<Type>::operator=(uniformValue_->value(t));
 }
 
@@ -98,7 +98,7 @@ uniformFixedValuePointPatchField
     uniformValue_(ptf.uniformValue_, false)
 {
     // For safety re-evaluate
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
     fixedValuePointPatchField<Type>::operator==(uniformValue_->value(t));
 }
 
@@ -113,7 +113,7 @@ void Foam::uniformFixedValuePointPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
     fixedValuePointPatchField<Type>::operator==(uniformValue_->value(t));
 
     fixedValuePointPatchField<Type>::updateCoeffs();

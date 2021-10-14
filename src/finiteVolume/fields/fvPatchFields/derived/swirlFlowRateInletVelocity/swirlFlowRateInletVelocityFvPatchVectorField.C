@@ -130,7 +130,7 @@ void Foam::swirlFlowRateInletVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
     const scalar flowRate = flowRate_->value(t);
     const scalar rpm = rpm_->value(t);
 

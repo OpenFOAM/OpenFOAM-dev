@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ void Foam::MRFZone::makeRelativeRhoFlux
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
-    const vector Omega = omega_->value(mesh_.time().timeOutputValue())*axis_;
+    const vector Omega = omega_->value(mesh_.time().userTime())*axis_;
 
     const vectorField& Cfi = Cf;
     const vectorField& Sfi = Sf;
@@ -68,7 +68,7 @@ void Foam::MRFZone::makeRelativeRhoFlux
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
-    const vector Omega = omega_->value(mesh_.time().timeOutputValue())*axis_;
+    const vector Omega = omega_->value(mesh_.time().userTime())*axis_;
 
     // Included patches
     forAll(includedFaces_, patchi)
@@ -108,7 +108,7 @@ void Foam::MRFZone::makeRelativeRhoFlux
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
-    const vector Omega = omega_->value(mesh_.time().timeOutputValue())*axis_;
+    const vector Omega = omega_->value(mesh_.time().userTime())*axis_;
 
     // Included patches
     forAll(includedFaces_[patchi], i)
@@ -141,7 +141,7 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
-    const vector Omega = omega_->value(mesh_.time().timeOutputValue())*axis_;
+    const vector Omega = omega_->value(mesh_.time().userTime())*axis_;
 
     const vectorField& Cfi = Cf;
     const vectorField& Sfi = Sf;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,24 +145,6 @@ Foam::word Foam::crankConRod::unit() const
 }
 
 
-Foam::scalar Foam::crankConRod::thetaRevolution() const
-{
-    scalar t = theta();
-
-    while (t > 180.0)
-    {
-        t -= 360.0;
-    }
-
-    while (t < -180.0)
-    {
-        t += 360.0;
-    }
-
-    return t;
-}
-
-
 Foam::scalar Foam::crankConRod::deltaTheta() const
 {
     return timeToDeg(deltaTValue());
@@ -198,12 +180,6 @@ Foam::scalar Foam::crankConRod::userTimeToTime(const scalar theta) const
 Foam::scalar Foam::crankConRod::timeToUserTime(const scalar t) const
 {
     return timeToDeg(t);
-}
-
-
-Foam::scalar Foam::crankConRod::timeToUserTimeRatio() const
-{
-    return timeToDeg(1);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,10 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of classes
+class Time;
+
+
 /*---------------------------------------------------------------------------*\
                           Class TimeState Declaration
 \*---------------------------------------------------------------------------*/
@@ -51,6 +55,7 @@ class TimeState
     public dimensionedScalar
 {
 
+// ***HGW temporary until
 protected:
 
         label timeIndex_;
@@ -64,30 +69,18 @@ protected:
 
 public:
 
+    //- Declare friendship with the Time class
+    friend class Time;
+
+
     // Constructors
 
         TimeState();
 
 
-    //- Destructor
-    virtual ~TimeState();
-
-
     // Member Functions
 
         // Access
-
-            //- Convert the user-time (e.g. CA deg) to real-time (s).
-            virtual scalar userTimeToTime(const scalar theta) const;
-
-            //- Convert the real-time (s) into user-time (e.g. CA deg)
-            virtual scalar timeToUserTime(const scalar t) const;
-
-            //- Ratio between real-time and user-time
-            virtual scalar timeToUserTimeRatio() const;
-
-            //- Return current time value
-            inline scalar timeOutputValue() const;
 
             //- Return current time index
             inline label timeIndex() const;

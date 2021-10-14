@@ -33,7 +33,7 @@ License
 void Foam::rotatingPressureInletOutletVelocityFvPatchVectorField::
 calcTangentialVelocity()
 {
-    const scalar t = this->db().time().timeOutputValue();
+    const scalar t = this->db().time().userTime();
     vector om = omega_->value(t);
 
     vector axisHat = om/mag(om);

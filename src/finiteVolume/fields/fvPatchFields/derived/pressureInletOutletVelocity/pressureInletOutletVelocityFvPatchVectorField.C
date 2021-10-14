@@ -111,7 +111,7 @@ void Foam::pressureInletOutletVelocityFvPatchVectorField::updateCoeffs()
 
     if (tangentialVelocity_.valid())
     {
-        const scalar t = this->db().time().timeOutputValue();
+        const scalar t = this->db().time().userTime();
         const vector tangentialVelocity = tangentialVelocity_->value(t);
         const vectorField n(patch().nf());
         refValue() = tangentialVelocity - n*(n & tangentialVelocity);

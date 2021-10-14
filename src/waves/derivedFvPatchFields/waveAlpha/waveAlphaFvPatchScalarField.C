@@ -183,7 +183,7 @@ void Foam::waveAlphaFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const scalar t = db().time().timeOutputValue();
+    const scalar t = db().time().userTime();
 
     operator==(alpha(t));
 

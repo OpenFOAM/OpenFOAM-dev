@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ Foam::fileName Foam::fileFormats::edgeMeshFormatsCore::findMeshInstance
 
     for (instanceI = ts.size()-1; instanceI >= 0; --instanceI)
     {
-        if (ts[instanceI].value() <= t.timeOutputValue())
+        if (ts[instanceI].value() <= t.userTime())
         {
             break;
         }
@@ -125,7 +125,7 @@ Foam::fileName Foam::fileFormats::edgeMeshFormatsCore::findMeshFile
 
     for (instanceI = ts.size()-1; instanceI >= 0; --instanceI)
     {
-        if (ts[instanceI].value() <= t.timeOutputValue())
+        if (ts[instanceI].value() <= t.userTime())
         {
             break;
         }

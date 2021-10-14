@@ -503,7 +503,7 @@ Foam::tmp<Foam::Field<Type>> Foam::timeVaryingMappedFvPatchField<Type>::map()
     // Apply offset to mapped values
     if (offset_.valid())
     {
-        const scalar t = time().timeOutputValue();
+        const scalar t = time().userTime();
         fld += offset_->value(t);
     }
 
