@@ -1691,8 +1691,8 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
     domainMesh.addFvPatches(patches, false);
 
     //*** Set the old-time volumes if present
-    // domainMesh.setV0().field() = V0;
-    // domainMesh.setV00().field() = V00;
+    // domainMesh.V0Ref().field() = V0;
+    // domainMesh.V00Ref().field() = V00;
 
     // Construct zones
     List<pointZone*> pZonePtrs(pointZoneNames.size());
