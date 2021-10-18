@@ -15,7 +15,8 @@ if (pimple.transonic())
                 fvc::flux(HbyA)
               + MRF.zeroFilter
                 (
-                    rhorAUf*fvc::ddtCorr(rho, U, rhoUf)/fvc::interpolate(rho)
+                    rhorAUf*fvc::ddtCorr(rho, U, phi, rhoUf)
+                   /fvc::interpolate(rho)
                 )
             )
         )
@@ -48,10 +49,8 @@ else
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
-        (
-            fvc::flux(rho*HbyA)
-          + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, rhoUf))
-        )
+        fvc::interpolate(rho)*fvc::flux(HbyA)
+      + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, phi, rhoUf))
     );
 
     fvc::makeRelative(phiHbyA, rho, U);
@@ -88,11 +87,8 @@ U.correctBoundaryConditions();
 fvConstraints.constrain(U);
 K = 0.5*magSqr(U);
 
-{
-    rhoUf = fvc::interpolate(rho*U);
-    surfaceVectorField n(mesh.Sf()/mesh.magSf());
-    rhoUf += n*(fvc::absolute(phi, rho, U)/mesh.magSf() - (n & rhoUf));
-}
+// Correct rhoUf if the mesh is moving
+fvc::correctRhoUf(rhoUf, rho, U, phi);
 
 if (thermo.dpdt())
 {
