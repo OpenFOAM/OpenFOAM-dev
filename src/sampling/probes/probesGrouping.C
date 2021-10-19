@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ Foam::label Foam::probes::classifyFields()
     label nFields = 0;
     clearFieldGroups();
 
-    if (loadFromFiles_)
+    if (loadFromFiles_ || postProcess)
     {
         // check files for a particular time
         IOobjectList objects(mesh_, mesh_.time().timeName());
@@ -152,5 +152,6 @@ Foam::label Foam::probes::classifyFields()
 
     return nFields;
 }
+
 
 // ************************************************************************* //
