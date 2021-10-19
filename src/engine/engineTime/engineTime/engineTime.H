@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef engineTime_H
-#define engineTime_H
+#ifndef engineTime0_H
+#define engineTime0_H
 
 #include "Time.H"
 #include "IOdictionary.H"
