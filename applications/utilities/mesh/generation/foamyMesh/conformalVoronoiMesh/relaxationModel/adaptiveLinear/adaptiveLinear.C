@@ -47,7 +47,7 @@ adaptiveLinear::adaptiveLinear
     relaxationModel(typeName, relaxationDict, runTime),
     relaxationStart_(coeffDict().lookup<scalar>("relaxationStart")),
     relaxationEnd_(coeffDict().lookup<scalar>("relaxationEnd")),
-    lastTimeValue_(runTime_.time().userTime()),
+    lastTimeValue_(runTime_.time().userTimeValue()),
     relaxation_(relaxationStart_)
 {}
 
@@ -56,7 +56,7 @@ adaptiveLinear::adaptiveLinear
 
 scalar adaptiveLinear::relaxation()
 {
-    if (runTime_.time().userTime() > lastTimeValue_)
+    if (runTime_.time().userTimeValue() > lastTimeValue_)
     {
         scalar currentRelaxation = relaxation_;
 
@@ -65,13 +65,13 @@ scalar adaptiveLinear::relaxation()
            /(
                 (
                     runTime_.time().endTime().value()
-                  - runTime_.time().userTime()
+                  - runTime_.time().userTimeValue()
                 )
-               /(runTime_.time().userTime() - lastTimeValue_)
+               /(runTime_.time().userTimeValue() - lastTimeValue_)
               + 1
             );
 
-        lastTimeValue_ = runTime_.time().userTime();
+        lastTimeValue_ = runTime_.time().userTimeValue();
 
         return currentRelaxation;
     }

@@ -112,7 +112,7 @@ void Foam::uniformFixedValueFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     fvPatchField<Type>::operator==(uniformValue_->value(t));
 
     fixedValueFvPatchField<Type>::updateCoeffs();

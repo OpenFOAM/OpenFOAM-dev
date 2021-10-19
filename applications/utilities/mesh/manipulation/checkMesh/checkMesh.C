@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
          || state == polyMesh::TOPO_PATCH_CHANGE
         )
         {
-            Info<< "Time = " << runTime.timeName() << nl << endl;
+            Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
             // Reconstruct globalMeshData
             mesh.globalData();
@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
         }
         else if (state == polyMesh::POINTS_MOVED)
         {
-            Info<< "Time = " << runTime.timeName() << nl << endl;
+            Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
             label nFailedChecks = checkGeometry
             (

@@ -121,7 +121,7 @@ void Foam::waveInletOutletFvPatchField<Type>::updateCoeffs()
             phiName_
         );
 
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     const waveSuperposition& waves = waveSuperposition::New(this->db());
 
     const pointField& localPoints = this->patch().patch().localPoints();

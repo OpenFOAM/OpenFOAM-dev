@@ -194,6 +194,8 @@ void Foam::Time::readDict()
 
     controlDict_.readIfPresent("graphFormat", graphFormat_);
     controlDict_.readIfPresent("runTimeModifiable", runTimeModifiable_);
+
+    userTime_->read(controlDict_);
 }
 
 

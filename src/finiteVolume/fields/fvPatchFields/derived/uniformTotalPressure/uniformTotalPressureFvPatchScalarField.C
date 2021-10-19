@@ -73,7 +73,7 @@ uniformTotalPressureFvPatchScalarField
     }
     else
     {
-        const scalar t = this->db().time().userTime();
+        const scalar t = this->db().time().userTimeValue();
         fvPatchScalarField::operator==(p0_->value(t));
     }
 }
@@ -98,7 +98,7 @@ uniformTotalPressureFvPatchScalarField
 {
     // Set the patch pressure to the current total pressure
     // This is not ideal but avoids problems with the creation of patch faces
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     fvPatchScalarField::operator==(p0_->value(t));
 }
 
@@ -132,7 +132,7 @@ void Foam::uniformTotalPressureFvPatchScalarField::updateCoeffs
         return;
     }
 
-    scalar p0 = p0_->value(this->db().time().userTime());
+    scalar p0 = p0_->value(this->db().time().userTimeValue());
 
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);

@@ -61,7 +61,7 @@ uniformFixedValuePointPatchField
     }
     else
     {
-        const scalar t = this->db().time().userTime();
+        const scalar t = this->db().time().userTimeValue();
         fixedValuePointPatchField<Type>::operator=(uniformValue_->value(t));
     }
 }
@@ -81,7 +81,7 @@ uniformFixedValuePointPatchField
     uniformValue_(ptf.uniformValue_, false)
 {
     // For safety re-evaluate
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     fixedValuePointPatchField<Type>::operator=(uniformValue_->value(t));
 }
 
@@ -98,7 +98,7 @@ uniformFixedValuePointPatchField
     uniformValue_(ptf.uniformValue_, false)
 {
     // For safety re-evaluate
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     fixedValuePointPatchField<Type>::operator==(uniformValue_->value(t));
 }
 
@@ -113,7 +113,7 @@ void Foam::uniformFixedValuePointPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     fixedValuePointPatchField<Type>::operator==(uniformValue_->value(t));
 
     fixedValuePointPatchField<Type>::updateCoeffs();

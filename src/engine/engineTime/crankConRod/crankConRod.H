@@ -173,12 +173,6 @@ public:
 
         // Member Functions overriding the virtual functions in time
 
-            //- Convert the user-time (CA deg) to real-time (s).
-            virtual scalar userTimeToTime(const scalar theta) const;
-
-            //- Convert the real-time (s) into user-time (CA deg)
-            virtual scalar timeToUserTime(const scalar t) const;
-
             //- Read the control dictionary and set the write controls etc.
             virtual void readDict();
 

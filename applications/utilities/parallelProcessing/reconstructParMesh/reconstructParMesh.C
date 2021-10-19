@@ -303,7 +303,7 @@ int main(int argc, char *argv[])
         // Set time for global database
         runTime.setTime(timeDirs[timeI], timeI);
 
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         // Set time for all databases
         forAll(databases, proci)

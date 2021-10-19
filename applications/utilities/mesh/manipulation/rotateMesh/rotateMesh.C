@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(timeDirs[timeI], timeI);
 
-        Info<< "Time = " << runTime.timeName() << endl;
+        Info<< "Time = " << runTime.userTimeName() << endl;
 
         // Search for list of objects for this time
         IOobjectList objects(mesh, runTime.timeName());

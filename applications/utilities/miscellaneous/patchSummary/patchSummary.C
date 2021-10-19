@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(timeDirs[timeI], timeI);
 
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         // Update the mesh if changed
         if (mesh.readUpdate() == polyMesh::TOPO_PATCH_CHANGE)

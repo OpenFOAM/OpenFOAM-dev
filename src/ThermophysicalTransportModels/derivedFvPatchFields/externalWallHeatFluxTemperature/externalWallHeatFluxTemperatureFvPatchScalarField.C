@@ -363,7 +363,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
                 }
             }
 
-            const scalar Ta = Ta_->value(this->db().time().userTime());
+            const scalar Ta = Ta_->value(this->db().time().userTimeValue());
 
             const scalarField hp
             (

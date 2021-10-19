@@ -34,7 +34,7 @@ License
 template<class Type>
 Foam::scalar Foam::CLASS::t() const
 {
-    return this->db().time().userTime();
+    return this->db().time().userTimeValue();
 }
 
 

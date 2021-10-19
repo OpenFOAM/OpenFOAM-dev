@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
     while (mag(runTime.theta()-ca1) > eps)
     {
-        scalar t1 = runTime.userTimeToTime(ca1-runTime.theta());
+        scalar t1 = runTime.userTimeToTime(ca1 - runTime.theta());
         runTime.setDeltaT(t1);
         runTime++;
         Info<< "CA = " << runTime.theta() << endl;

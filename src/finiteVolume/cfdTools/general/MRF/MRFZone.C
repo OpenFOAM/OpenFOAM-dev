@@ -295,7 +295,7 @@ Foam::MRFZone::MRFZone
 
 Foam::vector Foam::MRFZone::Omega() const
 {
-    return omega_->value(mesh_.time().userTime())*axis_;
+    return omega_->value(mesh_.time().userTimeValue())*axis_;
 }
 
 

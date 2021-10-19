@@ -85,7 +85,7 @@ bool Foam::functionObjects::setWriteIntervalFunctionObject::execute()
 {
     const_cast<Time&>(time_).setWriteInterval
     (
-        writeIntervalPtr_().value(time_.userTime())
+        writeIntervalPtr_().value(time_.userTimeValue())
     );
 
     return true;

@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
         while (simple.loop(runTime))
         {
-            Info<< "Time = " << runTime.timeName() << nl << endl;
+            Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
             while (simple.correctNonOrthogonal())
             {
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
         {
             runTime++;
 
-            Info<< "Time = " << runTime.timeName() << nl << endl;
+            Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
             fvModels.correct();
 

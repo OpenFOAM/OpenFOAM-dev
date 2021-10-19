@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
-        Info<< "Time = " << runTime.timeName() << endl;
+        Info<< "Time = " << runTime.userTimeName() << endl;
 
         Info<< "    Reading particle positions" << endl;
         passiveParticleCloud myCloud(mesh, cloudName);
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
-        Info<< "Time = " << runTime.timeName() << endl;
+        Info<< "Time = " << runTime.userTimeName() << endl;
 
         List<pointField> allPositions(Pstream::nProcs());
         List<labelField> allOrigIds(Pstream::nProcs());

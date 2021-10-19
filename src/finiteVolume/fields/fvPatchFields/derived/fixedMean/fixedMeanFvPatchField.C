@@ -89,7 +89,7 @@ void Foam::fixedMeanFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     Type meanValue = meanValue_->value(t);
 
     Field<Type> newValues(this->patchInternalField());

@@ -101,7 +101,7 @@ void Foam::surfaceNormalUniformFixedValueFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     fvPatchVectorField::operator=(uniformValue_->value(t)*patch().nf());
 
     fvPatchVectorField::updateCoeffs();

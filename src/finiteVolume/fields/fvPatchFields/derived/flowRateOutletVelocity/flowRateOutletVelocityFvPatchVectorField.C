@@ -132,7 +132,7 @@ void Foam::flowRateOutletVelocityFvPatchVectorField::updateValues
     const RhoType& rho
 )
 {
-    const scalar t = db().time().userTime();
+    const scalar t = db().time().userTimeValue();
 
     const vectorField n(patch().nf());
 

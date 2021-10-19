@@ -100,7 +100,7 @@ updateCoeffs()
     alphap = max(alphap, scalar(0));
     alphap = min(alphap, scalar(1));
 
-    const scalar t = db().time().userTime();
+    const scalar t = db().time().userTimeValue();
     scalar flowRate = flowRate_->value(t);
 
     // a simpler way of doing this would be nice

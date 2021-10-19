@@ -75,8 +75,7 @@ int main(int argc, char *argv[])
 
         runTime++;
 
-        Info<< "Engine time = " << runTime.theta() << runTime.unit()
-            << endl;
+        Info<< "Engine time = " << runTime.userTimeName() << endl;
 
         fvModels.preUpdateMesh();
 

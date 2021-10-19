@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(timeDirs[timei], timei);
 
-        Info<< "Time = " << runTime.timeName() << endl;
+        Info<< "Time = " << runTime.userTimeName() << endl;
 
         if (mesh.readUpdate() != polyMesh::UNCHANGED)
         {

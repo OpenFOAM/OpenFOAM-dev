@@ -656,33 +656,33 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::writePerformance()
     if (log_)
     {
         nRetrievedFile_()
-            << runTime_.userTime() << "    " << nRetrieved_ << endl;
+            << runTime_.userTimeValue() << "    " << nRetrieved_ << endl;
         nRetrieved_ = 0;
 
         nGrowthFile_()
-            << runTime_.userTime() << "    " << nGrowth_ << endl;
+            << runTime_.userTimeValue() << "    " << nGrowth_ << endl;
         nGrowth_ = 0;
 
         nAddFile_()
-            << runTime_.userTime() << "    " << nAdd_ << endl;
+            << runTime_.userTimeValue() << "    " << nAdd_ << endl;
         nAdd_ = 0;
 
         sizeFile_()
-            << runTime_.userTime() << "    "
+            << runTime_.userTimeValue() << "    "
             << chemisTree_.size() << endl;
 
         cpuRetrieveFile_()
-            << runTime_.userTime()
+            << runTime_.userTimeValue()
             << "    " << searchISATCpuTime_ << endl;
         searchISATCpuTime_ = 0;
 
         cpuGrowFile_()
-            << runTime_.userTime()
+            << runTime_.userTimeValue()
             << "    " << growCpuTime_ << endl;
         growCpuTime_ = 0;
 
         cpuAddFile_()
-            << runTime_.userTime()
+            << runTime_.userTimeValue()
             << "    " << addNewLeafCpuTime_ << endl;
         addNewLeafCpuTime_ = 0;
     }

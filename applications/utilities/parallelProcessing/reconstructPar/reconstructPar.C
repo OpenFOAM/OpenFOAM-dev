@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
             // Set time for global database
             runTime.setTime(timeDirs[timei], timei);
 
-            Info<< "Time = " << runTime.timeName() << endl << endl;
+            Info<< "Time = " << runTime.userTimeName() << endl << endl;
 
             // Set time for all databases
             forAll(databases, proci)

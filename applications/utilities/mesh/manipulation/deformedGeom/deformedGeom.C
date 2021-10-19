@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(Times[timeI], timeI);
 
-        Info<< "Time = " << runTime.timeName() << endl;
+        Info<< "Time = " << runTime.userTimeName() << endl;
 
         typeIOobject<volVectorField> Uheader
         (

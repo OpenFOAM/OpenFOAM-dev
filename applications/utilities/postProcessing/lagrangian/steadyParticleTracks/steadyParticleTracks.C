@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
-        Info<< "Time = " << runTime.timeName() << endl;
+        Info<< "Time = " << runTime.userTimeName() << endl;
 
         const fileName vtkTimePath(vtkPath/runTime.timeName());
         mkDir(vtkTimePath);

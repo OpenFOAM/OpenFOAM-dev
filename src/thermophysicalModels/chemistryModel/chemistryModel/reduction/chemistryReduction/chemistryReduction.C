@@ -95,14 +95,14 @@ void Foam::chemistryReduction<ThermoType>::update()
     if (log_)
     {
         cpuReduceFile_()
-            << this->chemistry_.time().userTime()
+            << this->chemistry_.time().userTimeValue()
             << "    " << reduceMechCpuTime_ << endl;
 
         if (sumn_)
         {
             // Write average number of species
             nActiveSpeciesFile_()
-                << this->chemistry_.time().userTime()
+                << this->chemistry_.time().userTimeValue()
                 << "    " << sumnActiveSpecies_/sumn_ << endl;
         }
 

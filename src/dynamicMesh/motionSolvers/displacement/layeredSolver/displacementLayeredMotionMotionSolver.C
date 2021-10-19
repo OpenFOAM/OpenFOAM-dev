@@ -235,7 +235,7 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
     {
         Function1s::Table<vector> timeSeries(word::null, dict);
 
-        fld = timeSeries.value(mesh().time().userTime());
+        fld = timeSeries.value(mesh().time().userTimeValue());
     }
     else if (type == "slip")
     {

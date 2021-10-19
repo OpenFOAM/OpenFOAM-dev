@@ -365,12 +365,16 @@ Foam::Time::Time
     endTime_(0),
     beginTime_(startTime_),
 
+    userTime_(userTimes::userTime::New(controlDict_)),
+
     stopAt_(stopAtControl::endTime),
     writeControl_(writeControl::timeStep),
     writeInterval_(great),
     purgeWrite_(0),
     writeOnce_(false),
+
     subCycling_(false),
+
     sigWriteNow_(writeInfoHeader, *this),
     sigStopAtWriteNow_(writeInfoHeader, *this),
 
@@ -434,12 +438,16 @@ Foam::Time::Time
     endTime_(0),
     beginTime_(startTime_),
 
+    userTime_(userTimes::userTime::New(controlDict_)),
+
     stopAt_(stopAtControl::endTime),
     writeControl_(writeControl::timeStep),
     writeInterval_(great),
     purgeWrite_(0),
     writeOnce_(false),
+
     subCycling_(false),
+
     sigWriteNow_(writeInfoHeader, *this),
     sigStopAtWriteNow_(writeInfoHeader, *this),
 
@@ -536,12 +544,16 @@ Foam::Time::Time
     endTime_(0),
     beginTime_(startTime_),
 
+    userTime_(userTimes::userTime::New(controlDict_)),
+
     stopAt_(stopAtControl::endTime),
     writeControl_(writeControl::timeStep),
     writeInterval_(great),
     purgeWrite_(0),
     writeOnce_(false),
+
     subCycling_(false),
+
     sigWriteNow_(writeInfoHeader, *this),
     sigStopAtWriteNow_(writeInfoHeader, *this),
 
@@ -604,11 +616,14 @@ Foam::Time::Time
     endTime_(0),
     beginTime_(startTime_),
 
+    userTime_(userTimes::userTime::New(controlDict_)),
+
     stopAt_(stopAtControl::endTime),
     writeControl_(writeControl::timeStep),
     writeInterval_(great),
     purgeWrite_(0),
     writeOnce_(false),
+
     subCycling_(false),
 
     writeFormat_(IOstream::ASCII),
@@ -678,7 +693,7 @@ Foam::word Foam::Time::findInstance
         fileHandler().findInstance
         (
             startIO,
-            userTime(),
+            userTimeValue(),
             stopInstance
         )
     );
@@ -807,21 +822,33 @@ Foam::dimensionedScalar Foam::Time::endTime() const
 }
 
 
+const Foam::userTimes::userTime& Foam::Time::userTime() const
+{
+    return *userTime_;
+}
+
+
+Foam::scalar Foam::Time::userTimeValue() const
+{
+    return userTime_->timeToUserTime(value());
+}
+
+
 Foam::scalar Foam::Time::userTimeToTime(const scalar tau) const
 {
-    return tau;
+    return userTime_->userTimeToTime(tau);
 }
 
 
 Foam::scalar Foam::Time::timeToUserTime(const scalar t) const
 {
-    return t;
+    return userTime_->timeToUserTime(t);
 }
 
 
-Foam::scalar Foam::Time::userTime() const
+Foam::word Foam::Time::userTimeName() const
 {
-    return timeToUserTime(value());
+    return timeName(userTimeValue()) + userTime_->unit();
 }
 
 
@@ -926,7 +953,7 @@ void Foam::Time::setTime(const Time& t)
 
 void Foam::Time::setTime(const instant& inst, const label newIndex)
 {
-    value() = inst.value();
+    value() = userTimeToTime(inst.value());
     dimensionedScalar::name() = inst.name();
     timeIndex_ = newIndex;
 

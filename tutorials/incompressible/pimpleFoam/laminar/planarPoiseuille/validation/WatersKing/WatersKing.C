@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     const scalar LOGvGreat = ::log(vGreat);
     while (!runTime.end())
     {
-        scalar t = runTime.userTime()/lambda;
+        scalar t = runTime.userTimeValue()/lambda;
         forAll(A, i)
         {
             if (bk[i]*t < LOGvGreat)

@@ -92,7 +92,7 @@ void Foam::translatingWallVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     const vector U = U_->value(t);
 
     // Remove the component of U normal to the wall in case the wall is not flat

@@ -59,7 +59,7 @@ Foam::fileName Foam::triSurface::triSurfInstance(const Time& d)
 
     for (i=ts.size()-1; i>=0; i--)
     {
-        if (ts[i].value() <= d.userTime())
+        if (ts[i].value() <= d.userTimeValue())
         {
             break;
         }

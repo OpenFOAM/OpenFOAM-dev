@@ -50,6 +50,12 @@ maxCo           0.2;
 
 maxDeltaT       1;
 
+userTime
+{
+    type     engine;
+    rpm      1500;
+}
+
 functions
 {
     setDeltaT

@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
             runTime++;
         }
 
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         phi = aphiv_pos*rho_pos + aphiv_neg*rho_neg;
 

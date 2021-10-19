@@ -294,6 +294,12 @@ $(Time)/timeSelector.C
 
 $(Time)/instant/instant.C
 
+userTime = $(Time)/userTime
+$(userTime)/userTime/userTime.C
+$(userTime)/userTime/userTimeNew.C
+$(userTime)/realTime/realTime.C
+$(userTime)/engineTime/engineTime.C
+
 dimensionSet/dimensionSet.C
 dimensionSet/dimensionSetIO.C
 dimensionSet/dimensionSets.C

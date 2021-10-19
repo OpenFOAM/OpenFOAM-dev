@@ -85,7 +85,7 @@ Foam::fileName Foam::fileFormats::surfaceFormatsCore::findMeshInstance
 
     for (instanceI = ts.size()-1; instanceI >= 0; --instanceI)
     {
-        if (ts[instanceI].value() <= t.userTime())
+        if (ts[instanceI].value() <= t.userTimeValue())
         {
             break;
         }
@@ -125,7 +125,7 @@ Foam::fileName Foam::fileFormats::surfaceFormatsCore::findMeshFile
 
     for (instanceI = ts.size()-1; instanceI >= 0; --instanceI)
     {
-        if (ts[instanceI].value() <= t.userTime())
+        if (ts[instanceI].value() <= t.userTimeValue())
         {
             break;
         }

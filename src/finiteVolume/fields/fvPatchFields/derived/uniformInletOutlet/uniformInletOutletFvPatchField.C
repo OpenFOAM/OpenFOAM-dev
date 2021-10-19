@@ -56,7 +56,7 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
     uniformInletValue_(Function1<Type>::New("uniformInletValue", dict))
 {
     this->refValue() =
-        uniformInletValue_->value(this->db().time().userTime());
+        uniformInletValue_->value(this->db().time().userTimeValue());
 
     if (dict.found("value"))
     {
@@ -90,7 +90,7 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
 {
     // Evaluate refValue since not mapped
     this->refValue() =
-        uniformInletValue_->value(this->db().time().userTime());
+        uniformInletValue_->value(this->db().time().userTimeValue());
 
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
@@ -126,7 +126,7 @@ void Foam::uniformInletOutletFvPatchField<Type>::updateCoeffs()
     }
 
     this->refValue() =
-        uniformInletValue_->value(this->db().time().userTime());
+        uniformInletValue_->value(this->db().time().userTimeValue());
 
     const Field<scalar>& phip =
         this->patch().template lookupPatchField<surfaceScalarField, scalar>
@@ -165,7 +165,7 @@ void Foam::uniformInletOutletFvPatchField<Type>::autoMap
 
     // Override
     this->refValue() =
-        uniformInletValue_->value(this->db().time().userTime());
+        uniformInletValue_->value(this->db().time().userTimeValue());
 }
 
 
@@ -180,7 +180,7 @@ void Foam::uniformInletOutletFvPatchField<Type>::rmap
 
     // Override
     this->refValue() =
-        uniformInletValue_->value(this->db().time().userTime());
+        uniformInletValue_->value(this->db().time().userTimeValue());
 }
 
 

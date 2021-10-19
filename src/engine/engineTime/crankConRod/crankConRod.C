@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "crankConRod.H"
+#include "../OpenFOAM/lnInclude/engineTime.H"
 #include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -46,7 +47,7 @@ void Foam::crankConRod::timeAdjustment()
     if
     (
         writeControl_ == writeControl::runTime
-        || writeControl_ == writeControl::adjustableRunTime
+     || writeControl_ == writeControl::adjustableRunTime
     )
     {
         writeInterval_ = degToTime(writeInterval_);
@@ -74,7 +75,10 @@ Foam::crankConRod::crankConRod
         systemName,
         constantName
     ),
-    rpm_(dict_.lookup("rpm")),
+    rpm_
+    (
+        refCast<const userTimes::engine>(userTime()).rpm()
+    ),
     conRodLength_(dimensionedScalar("conRodLength", dimLength, 0)),
     bore_(dimensionedScalar("bore", dimLength, 0)),
     stroke_(dimensionedScalar("stroke", dimLength, 0)),
@@ -167,19 +171,6 @@ Foam::scalar Foam::crankConRod::pistonPosition(const scalar theta) const
             - sqr(stroke_.value()*::sin(degToRad(theta))/2.0)
         )
     );
-}
-
-
-
-Foam::scalar Foam::crankConRod::userTimeToTime(const scalar theta) const
-{
-    return degToTime(theta);
-}
-
-
-Foam::scalar Foam::crankConRod::timeToUserTime(const scalar t) const
-{
-    return timeToDeg(t);
 }
 
 

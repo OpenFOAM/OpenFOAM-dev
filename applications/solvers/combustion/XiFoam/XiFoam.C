@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
         #include "setDeltaT.H"
 
         runTime++;
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         #include "rhoEqn.H"
 

@@ -123,7 +123,7 @@ void Foam::tractionDisplacementFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    this->updateCoeffs(pressure_->value(this->db().time().userTime()));
+    this->updateCoeffs(pressure_->value(this->db().time().userTimeValue()));
 }
 
 

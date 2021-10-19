@@ -109,7 +109,7 @@ void Foam::uniformFixedGradientFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     this->gradient() = uniformGradient_->value(t);
 
     fixedGradientFvPatchField<Type>::updateCoeffs();

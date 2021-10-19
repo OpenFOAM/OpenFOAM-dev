@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
     forAll(timeDirs, timei)
     {
         runTime.setTime(timeDirs[timei], timei);
-        Info<< "Time = " << runTime.timeName() << endl;
+        Info<< "Time = " << runTime.userTimeName() << endl;
 
         // Optionally re-read mesh
         meshReadUpdate(mesh);

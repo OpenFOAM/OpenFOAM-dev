@@ -62,7 +62,7 @@ rampHoldFall::rampHoldFall
 
 scalar rampHoldFall::relaxation()
 {
-    scalar t = runTime_.time().userTime();
+    scalar t = runTime_.time().userTimeValue();
 
     scalar tStart = runTime_.time().startTime().value();
     scalar tEnd = runTime_.time().endTime().value();

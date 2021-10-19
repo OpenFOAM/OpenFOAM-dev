@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
         runTime.setTime(timeDirs[timeI], timeI);
         const scalar t = runTime.value();
 
-        Info<< "Time = " << runTime.timeName() << nl << endl;
+        Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         mesh.readUpdate();
 

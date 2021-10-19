@@ -764,7 +764,7 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
     if (log_)
     {
         cpuSolveFile_()
-            << this->time().userTime()
+            << this->time().userTimeValue()
             << "    " << solveChemistryCpuTime_ << endl;
     }
 

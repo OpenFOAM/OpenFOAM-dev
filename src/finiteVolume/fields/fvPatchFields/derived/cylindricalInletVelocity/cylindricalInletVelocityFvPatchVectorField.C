@@ -108,7 +108,7 @@ void Foam::cylindricalInletVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTime();
+    const scalar t = this->db().time().userTimeValue();
     const scalar axialVelocity = axialVelocity_->value(t);
     const scalar radialVelocity = radialVelocity_->value(t);
     const scalar rpm = rpm_->value(t);

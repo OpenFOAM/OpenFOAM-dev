@@ -88,7 +88,7 @@ bool Foam::functionObjects::setTimeStepFunctionObject::execute()
     {
         const_cast<Time&>(time_).setDeltaT
         (
-            timeStepPtr_().value(time_.userTime())
+            timeStepPtr_().value(time_.userTimeValue())
         );
     }
 
