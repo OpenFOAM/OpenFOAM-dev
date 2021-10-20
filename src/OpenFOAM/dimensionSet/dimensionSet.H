@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,6 +63,7 @@ dimensionSet max(const dimensionSet&, const dimensionSet&);
 dimensionSet min(const dimensionSet&, const dimensionSet&);
 dimensionSet cmptMultiply(const dimensionSet&, const dimensionSet&);
 dimensionSet cmptDivide(const dimensionSet&, const dimensionSet&);
+dimensionSet cmptMag(const dimensionSet&);
 
 dimensionSet pow(const dimensionSet&, const scalar);
 dimensionSet pow(const dimensionSet&, const dimensionedScalar&);
@@ -346,6 +347,7 @@ public:
             const dimensionSet&,
             const dimensionSet&
         );
+        friend dimensionSet cmptMag(const dimensionSet&);
 
         friend dimensionSet pow(const dimensionSet&, const scalar);
         friend dimensionSet pow(const dimensionSet&, const dimensionedScalar&);
