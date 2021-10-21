@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,11 +193,12 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     const dictionary& dict,
     const label index,
     const polyBoundaryMesh& bm,
-    const word& patchType
+    const word& patchType,
+    const bool cyclicTransformDefaultIsNone
 )
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
-    cyclicTransform(dict, false),
+    cyclicTransform(dict, cyclicTransformDefaultIsNone),
     nbrPatchName_(dict.lookupOrDefault("neighbourPatch", word::null)),
     coupleGroup_(dict),
     nbrPatchID_(-1),

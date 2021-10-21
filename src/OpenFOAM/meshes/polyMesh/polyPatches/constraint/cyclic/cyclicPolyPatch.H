@@ -186,7 +186,8 @@ public:
             const dictionary& dict,
             const label index,
             const polyBoundaryMesh& bm,
-            const word& patchType
+            const word& patchType,
+            const bool cyclicTransformDefaultIsNone=false
         );
 
         //- Construct as copy, resetting the boundary mesh
