@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ Foam::cyclicFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->primitiveField();
     const labelUList& nbrFaceCells =
-        cyclicPatch().cyclicPatch().nbrPatch().faceCells();
+        cyclicPatch().nbrPatch().faceCells();
 
     tmp<Field<Type>> tpnf(new Field<Type>(this->size()));
     Field<Type>& pnf = tpnf.ref();
@@ -157,7 +157,7 @@ void Foam::cyclicFvPatchField<Type>::updateInterfaceMatrix
 ) const
 {
     const labelUList& nbrFaceCells =
-        cyclicPatch().cyclicPatch().nbrPatch().faceCells();
+        cyclicPatch().nbrPatch().faceCells();
 
     scalarField pnf(psiInternal, nbrFaceCells);
 
@@ -165,7 +165,7 @@ void Foam::cyclicFvPatchField<Type>::updateInterfaceMatrix
     transformCoupleField(pnf, cmpt);
 
     // Multiply the field by coefficients and add into the result
-    const labelUList& faceCells = cyclicPatch_.faceCells();
+    const labelUList& faceCells = cyclicPatch().faceCells();
 
     forAll(faceCells, elemI)
     {
@@ -184,7 +184,7 @@ void Foam::cyclicFvPatchField<Type>::updateInterfaceMatrix
 ) const
 {
     const labelUList& nbrFaceCells =
-        cyclicPatch().cyclicPatch().nbrPatch().faceCells();
+        cyclicPatch().nbrPatch().faceCells();
 
     Field<Type> pnf(psiInternal, nbrFaceCells);
 
@@ -192,7 +192,7 @@ void Foam::cyclicFvPatchField<Type>::updateInterfaceMatrix
     transformCoupleField(pnf);
 
     // Multiply the field by coefficients and add into the result
-    const labelUList& faceCells = cyclicPatch_.faceCells();
+    const labelUList& faceCells = cyclicPatch().faceCells();
 
     forAll(faceCells, elemI)
     {
