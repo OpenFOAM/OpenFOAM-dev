@@ -121,6 +121,22 @@ bool ${typeName}FunctionObject::read(const dictionary& dict)
 }
 
 
+Foam::wordList ${typeName}FunctionObject::fields() const
+{
+    if (${verbose:-false})
+    {
+        Info<<"fields ${typeName} sha1: ${SHA1sum}\n";
+    }
+
+    wordList fields;
+//{{{ begin code
+    ${codeFields}
+//}}} end code
+
+    return fields;
+}
+
+
 bool ${typeName}FunctionObject::execute()
 {
     if (${verbose:-false})

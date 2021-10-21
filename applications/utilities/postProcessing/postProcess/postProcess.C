@@ -44,21 +44,21 @@ using namespace Foam;
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define ReadFields(GeoFieldType)                                               \
-    readFields<GeoFieldType>(mesh, objects, selectedFields, storedObjects);
+    readFields<GeoFieldType>(mesh, objects, requiredFields, storedObjects);
 
 #define ReadPointFields(GeoFieldType)                                          \
-    readFields<GeoFieldType>(pMesh, objects, selectedFields, storedObjects);
+    readFields<GeoFieldType>(pMesh, objects, requiredFields, storedObjects);
 
 #define ReadUniformFields(FieldType)                                           \
     readUniformFields<FieldType>                                               \
-    (constantObjects, selectedFields, storedObjects);
+    (constantObjects, requiredFields, storedObjects);
 
 void executeFunctionObjects
 (
     const argList& args,
     const Time& runTime,
     fvMesh& mesh,
-    const HashSet<word>& selectedFields,
+    const HashSet<word>& requiredFields0,
     functionObjectList& functions,
     bool lastTime
 )
@@ -71,6 +71,12 @@ void executeFunctionObjects
 
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.timeName());
+
+    HashSet<word> requiredFields(requiredFields0);
+    forAll(functions, i)
+    {
+        requiredFields.insert(functions[i].fields());
+    }
 
     // Read volFields
     ReadFields(volScalarField);
@@ -151,14 +157,14 @@ int main(int argc, char *argv[])
     #include "createNamedMesh.H"
 
     // Initialise the set of selected fields from the command-line options
-    HashSet<word> selectedFields;
+    HashSet<word> requiredFields;
     if (args.optionFound("fields"))
     {
-        args.optionLookup("fields")() >> selectedFields;
+        args.optionLookup("fields")() >> requiredFields;
     }
     if (args.optionFound("field"))
     {
-        selectedFields.insert(args.optionLookup("field")());
+        requiredFields.insert(args.optionLookup("field")());
     }
 
     // Externally stored dictionary for functionObjectList
@@ -172,8 +178,7 @@ int main(int argc, char *argv[])
         (
             args,
             runTime,
-            functionsControlDict,
-            selectedFields
+            functionsControlDict
         )
     );
 
@@ -190,8 +195,7 @@ int main(int argc, char *argv[])
             (
                 args,
                 runTime,
-                functionsControlDict,
-                selectedFields
+                functionsControlDict
             );
         }
 
@@ -204,7 +208,7 @@ int main(int argc, char *argv[])
                 args,
                 runTime,
                 mesh,
-                selectedFields,
+                requiredFields,
                 functionsPtr(),
                 timei == timeDirs.size()-1
             );

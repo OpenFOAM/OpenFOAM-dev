@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -234,10 +234,10 @@ bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
     // Convert field to map
     fieldMap_.resize(2*fieldSet_.size());
     reverseFieldMap_.resize(2*fieldSet_.size());
-    forAll(fieldSet_, setI)
+    forAll(fieldSet_, seti)
     {
-        const word& fldName = fieldSet_[setI].first();
-        const word& sampleFldName = fieldSet_[setI].second();
+        const word& fldName = fieldSet_[seti].first();
+        const word& sampleFldName = fieldSet_[seti].second();
 
         fieldMap_.insert(fldName, sampleFldName);
         reverseFieldMap_.insert(sampleFldName, fldName);
@@ -250,6 +250,19 @@ bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
     calcAddressing();
 
     return true;
+}
+
+
+Foam::wordList Foam::functionObjects::nearWallFields::fields() const
+{
+    wordList fields(fieldSet_.size());
+
+    forAll(fieldSet_, fieldi)
+    {
+        fields[fieldi] = fieldSet_[fieldi].first();
+    }
+
+    return fields;
 }
 
 

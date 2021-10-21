@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,66 +81,24 @@ Foam::label Foam::sampledSets::classifyFields()
     label nFields = 0;
     clearFieldGroups();
 
-    if (loadFromFiles_)
+    // Check currently available fields
+    forAll(fields_, fieldi)
     {
-        // Check files for a particular time
-        IOobjectList objects(mesh_, mesh_.time().timeName());
-        wordList allFields = objects.sortedNames();
+        const word& fieldName = fields_[fieldi];
 
-        forAll(fieldSelection_, i)
+        if (mesh_.objectRegistry::found(fieldName))
         {
-            labelList indices = findStrings(fieldSelection_[i], allFields);
-
-            if (indices.size())
-            {
-                forAll(indices, fieldi)
-                {
-                    const word& fieldName = allFields[indices[fieldi]];
-
-                    nFields += appendFieldGroup
-                    (
-                        fieldName,
-                        objects.find(fieldName)()->headerClassName()
-                    );
-                }
-            }
-            else
-            {
-                WarningInFunction
-                    << "Cannot find field file matching "
-                    << fieldSelection_[i] << endl;
-            }
+            nFields += appendFieldGroup
+            (
+                fieldName,
+                mesh_.find(fieldName)()->type()
+            );
         }
-    }
-    else
-    {
-        // Check currently available fields
-        wordList allFields = mesh_.sortedNames();
-        labelList indices = findStrings(fieldSelection_, allFields);
-
-        forAll(fieldSelection_, i)
+        else
         {
-            labelList indices = findStrings(fieldSelection_[i], allFields);
-
-            if (indices.size())
-            {
-                forAll(indices, fieldi)
-                {
-                    const word& fieldName = allFields[indices[fieldi]];
-
-                    nFields += appendFieldGroup
-                    (
-                        fieldName,
-                        mesh_.find(fieldName)()->type()
-                    );
-                }
-            }
-            else
-            {
-                WarningInFunction
-                    << "Cannot find registered field matching "
-                    << fieldSelection_[i] << endl;
-            }
+            WarningInFunction
+                << "Cannot find registered field matching "
+                << fieldName << endl;
         }
     }
 

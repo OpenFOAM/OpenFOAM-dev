@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,16 +127,6 @@ public:
             const word& name,
             const Time& time,
             const dictionary& dict
-        );
-
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
-        patchProbes
-        (
-            const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
         );
 
         //- Disallow default bitwise copy construction

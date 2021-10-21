@@ -68,8 +68,8 @@ void Foam::functionObjects::fieldValues::fieldValueDelta::writeFileHeader
     const label i
 )
 {
-    const wordList& fields1 = region1Ptr_->fields();
-    const wordList& fields2 = region2Ptr_->fields();
+    const wordList fields1 = region1Ptr_->fields();
+    const wordList fields2 = region2Ptr_->fields();
 
     DynamicList<word> commonFields(fields1.size());
     forAll(fields1, fieldi)
@@ -157,6 +157,13 @@ bool Foam::functionObjects::fieldValues::fieldValueDelta::read
     resetName(typeName);
 
     return true;
+}
+
+
+Foam::wordList
+Foam::functionObjects::fieldValues::fieldValueDelta::fields() const
+{
+    return region1Ptr_->fields();
 }
 
 

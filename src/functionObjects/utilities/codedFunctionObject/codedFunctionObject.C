@@ -59,6 +59,7 @@ Foam::wordList Foam::codedFunctionObject::codeKeys() const
         "codeExecute",
         "codeInclude",
         "codeRead",
+        "codeFields",
         "codeWrite",
         "localCode"
     };
@@ -149,6 +150,13 @@ Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
         );
     }
     return redirectFunctionObjectPtr_();
+}
+
+
+Foam::wordList Foam::codedFunctionObject::fields() const
+{
+    updateLibrary();
+    return redirectFunctionObject().fields();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ fieldCoordinateSystemTransform
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fieldSet_(),
+    fields_(),
     coordSys_(coordinateSystem::New(mesh_, dict.subDict("coordinateSystem"))())
 {
     read(dict);
@@ -92,21 +92,28 @@ bool Foam::functionObjects::fieldCoordinateSystemTransform::read
 {
     fvMeshFunctionObject::read(dict);
 
-    dict.lookup("fields") >> fieldSet_;
+    dict.lookup("fields") >> fields_;
 
     return true;
 }
 
 
+Foam::wordList
+Foam::functionObjects::fieldCoordinateSystemTransform::fields() const
+{
+    return fields_;
+}
+
+
 bool Foam::functionObjects::fieldCoordinateSystemTransform::execute()
 {
-    forAll(fieldSet_, fieldi)
+    forAll(fields_, fieldi)
     {
-        transform<scalar>(fieldSet_[fieldi]);
-        transform<vector>(fieldSet_[fieldi]);
-        transform<sphericalTensor>(fieldSet_[fieldi]);
-        transform<symmTensor>(fieldSet_[fieldi]);
-        transform<tensor>(fieldSet_[fieldi]);
+        transform<scalar>(fields_[fieldi]);
+        transform<vector>(fields_[fieldi]);
+        transform<sphericalTensor>(fields_[fieldi]);
+        transform<symmTensor>(fields_[fieldi]);
+        transform<tensor>(fields_[fieldi]);
     }
 
     return true;
@@ -115,9 +122,9 @@ bool Foam::functionObjects::fieldCoordinateSystemTransform::execute()
 
 bool Foam::functionObjects::fieldCoordinateSystemTransform::write()
 {
-    forAll(fieldSet_, fieldi)
+    forAll(fields_, fieldi)
     {
-        writeObject(transformFieldName(fieldSet_[fieldi]));
+        writeObject(transformFieldName(fields_[fieldi]));
     }
 
     return true;

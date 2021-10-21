@@ -268,6 +268,12 @@ Foam::sampledSurfaces::isoSurface::~isoSurface()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::sampledSurfaces::isoSurface::fields() const
+{
+    return wordList(isoField_);
+}
+
+
 bool Foam::sampledSurfaces::isoSurface::needsUpdate() const
 {
     const fvMesh& fvm = static_cast<const fvMesh&>(mesh());

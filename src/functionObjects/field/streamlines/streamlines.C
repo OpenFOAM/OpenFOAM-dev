@@ -429,6 +429,15 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::streamlines::fields() const
+{
+    wordList allFields(fields_);
+    allFields.append(UName_);
+
+    return allFields;
+}
+
+
 bool Foam::functionObjects::streamlines::execute()
 {
     return true;

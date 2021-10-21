@@ -58,7 +58,7 @@ Description
         type            regionSizeDistribution;
         libs            ("libfieldFunctionObjects.so");
         ...
-        field           alpha;
+        alpha           alpha;
         patches         (inlet);
         threshold       0.4;
         fields          (p U);
@@ -80,7 +80,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         type         | type name: regionSizeDistribution |yes|
-        field        | phase field to interrogate | yes      |
+        alpha        | phase field to interrogate | yes      |
         patches      | patches from which the liquid core is identified | yes|
         threshold    | phase fraction applied to delimit regions | yes |
         fields       | fields to sample        | yes         |
@@ -154,7 +154,7 @@ class regionSizeDistribution
         label nBins_;
 
         //- Names of fields to sample on regions
-        wordReList fields_;
+        wordList fields_;
 
         //- Output formatter to write
         autoPtr<setWriter<scalar>> formatterPtr_;
@@ -252,6 +252,9 @@ public:
 
         //- Read the regionSizeDistribution data
         virtual bool read(const dictionary&);
+
+        //- Return the list of fields required
+        virtual wordList fields() const;
 
         //- Do nothing
         virtual bool execute();

@@ -155,6 +155,12 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::scalarTransport::fields() const
+{
+    return wordList{phiName_};
+}
+
+
 bool Foam::functionObjects::scalarTransport::execute()
 {
     Info<< type() << " write:" << endl;

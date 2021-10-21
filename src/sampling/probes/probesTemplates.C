@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,45 +120,23 @@ void Foam::probes::sampleAndWrite(const fieldGroup<Type>& fields)
 {
     forAll(fields, fieldi)
     {
-        if (loadFromFiles_)
+        objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
+
+        if
+        (
+            iter != objectRegistry::end()
+         && iter()->type()
+         == GeometricField<Type, fvPatchField, volMesh>::typeName
+        )
         {
             sampleAndWrite
             (
-                GeometricField<Type, fvPatchField, volMesh>
+                mesh_.lookupObject
+                <GeometricField<Type, fvPatchField, volMesh>>
                 (
-                    IOobject
-                    (
-                        fields[fieldi],
-                        mesh_.time().timeName(),
-                        mesh_,
-                        IOobject::MUST_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
-                    mesh_
+                    fields[fieldi]
                 )
             );
-        }
-        else
-        {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
-
-            if
-            (
-                iter != objectRegistry::end()
-             && iter()->type()
-             == GeometricField<Type, fvPatchField, volMesh>::typeName
-            )
-            {
-                sampleAndWrite
-                (
-                    mesh_.lookupObject
-                    <GeometricField<Type, fvPatchField, volMesh>>
-                    (
-                        fields[fieldi]
-                    )
-                );
-            }
         }
     }
 }
@@ -169,48 +147,27 @@ void Foam::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
 {
     forAll(fields, fieldi)
     {
-        if (loadFromFiles_)
+        objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
+
+        if
+        (
+            iter != objectRegistry::end()
+         && iter()->type()
+         == GeometricField<Type, fvsPatchField, surfaceMesh>::typeName
+        )
         {
             sampleAndWrite
             (
-                GeometricField<Type, fvsPatchField, surfaceMesh>
+                mesh_.lookupObject
+                <GeometricField<Type, fvsPatchField, surfaceMesh>>
                 (
-                    IOobject
-                    (
-                        fields[fieldi],
-                        mesh_.time().timeName(),
-                        mesh_,
-                        IOobject::MUST_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
-                    mesh_
+                    fields[fieldi]
                 )
             );
         }
-        else
-        {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
-
-            if
-            (
-                iter != objectRegistry::end()
-             && iter()->type()
-             == GeometricField<Type, fvsPatchField, surfaceMesh>::typeName
-            )
-            {
-                sampleAndWrite
-                (
-                    mesh_.lookupObject
-                    <GeometricField<Type, fvsPatchField, surfaceMesh>>
-                    (
-                        fields[fieldi]
-                    )
-                );
-            }
-        }
     }
 }
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 

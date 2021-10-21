@@ -104,6 +104,12 @@ bool Foam::functionObjects::histogram::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::histogram::fields() const
+{
+    return wordList(fieldName_);
+}
+
+
 bool Foam::functionObjects::histogram::execute()
 {
     return true;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ inline const Foam::word& Foam::functionObjects::fieldValue::regionName() const
 }
 
 
-inline const Foam::wordList& Foam::functionObjects::fieldValue::fields() const
+inline Foam::wordList Foam::functionObjects::fieldValue::fields() const
 {
     return fields_;
 }

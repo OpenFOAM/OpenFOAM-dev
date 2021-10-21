@@ -60,20 +60,20 @@ void Foam::functionObjects::sampledSurfaces::writeGeometry() const
 
     const fileName outputDir = outputPath_/mesh_.time().timeName();
 
-    forAll(*this, surfI)
+    forAll(*this, si)
     {
-        const sampledSurface& s = operator[](surfI);
+        const sampledSurface& s = operator[](si);
 
         if (Pstream::parRun())
         {
-            if (Pstream::master() && mergeList_[surfI].faces.size())
+            if (Pstream::master() && mergeList_[si].faces.size())
             {
                 formatter_->write
                 (
                     outputDir,
                     s.name(),
-                    mergeList_[surfI].points,
-                    mergeList_[surfI].faces
+                    mergeList_[si].points,
+                    mergeList_[si].faces
                 );
             }
         }
@@ -112,39 +112,8 @@ Foam::functionObjects::sampledSurfaces::sampledSurfaces
             )
         )
     ),
-    loadFromFiles_(false),
     outputPath_(fileName::null),
-    fieldSelection_(),
-    interpolationScheme_(word::null),
-    mergeList_(),
-    formatter_(nullptr)
-{
-    outputPath_ =
-        mesh_.time().globalPath()/functionObjects::writeFile::outputPrefix/name;
-
-    if (mesh_.name() != fvMesh::defaultRegion)
-    {
-        outputPath_ = outputPath_/mesh_.name();
-    }
-
-    read(dict);
-}
-
-
-Foam::functionObjects::sampledSurfaces::sampledSurfaces
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-:
-    functionObject(name),
-    PtrList<sampledSurface>(),
-    mesh_(refCast<const fvMesh>(obr)),
-    loadFromFiles_(loadFromFiles),
-    outputPath_(fileName::null),
-    fieldSelection_(),
+    fields_(),
     interpolationScheme_(word::null),
     mergeList_(),
     formatter_(nullptr)
@@ -234,7 +203,7 @@ bool Foam::functionObjects::sampledSurfaces::read(const dictionary& dict)
 
     if (surfacesFound)
     {
-        dict.lookup("fields") >> fieldSelection_;
+        dict.lookup("fields") >> fields_;
 
         dict.lookup("interpolationScheme") >> interpolationScheme_;
         const word writeType(dict.lookup("surfaceFormat"));
@@ -260,9 +229,9 @@ bool Foam::functionObjects::sampledSurfaces::read(const dictionary& dict)
         if (this->size())
         {
             Info<< "Reading surface description:" << nl;
-            forAll(*this, surfI)
+            forAll(*this, si)
             {
-                Info<< "    " << operator[](surfI).name() << nl;
+                Info<< "    " << operator[](si).name() << nl;
             }
             Info<< endl;
         }
@@ -270,17 +239,30 @@ bool Foam::functionObjects::sampledSurfaces::read(const dictionary& dict)
 
     if (Pstream::master() && debug)
     {
-        Pout<< "sample fields:" << fieldSelection_ << nl
+        Pout<< "sample fields:" << fields_ << nl
             << "sample surfaces:" << nl << "(" << nl;
 
-        forAll(*this, surfI)
+        forAll(*this, si)
         {
-            Pout<< "  " << operator[](surfI) << endl;
+            Pout<< "  " << operator[](si) << endl;
         }
         Pout<< ")" << endl;
     }
 
     return true;
+}
+
+
+Foam::wordList Foam::functionObjects::sampledSurfaces::fields() const
+{
+    wordList fields(fields_);
+
+    forAll(*this, si)
+    {
+        fields.append(operator[](si).fields());
+    }
+
+    return fields;
 }
 
 
@@ -318,9 +300,9 @@ void Foam::functionObjects::sampledSurfaces::readUpdate
 
 bool Foam::functionObjects::sampledSurfaces::needsUpdate() const
 {
-    forAll(*this, surfI)
+    forAll(*this, si)
     {
-        if (operator[](surfI).needsUpdate())
+        if (operator[](si).needsUpdate())
         {
             return true;
         }
@@ -334,9 +316,9 @@ bool Foam::functionObjects::sampledSurfaces::expire()
 {
     bool justExpired = false;
 
-    forAll(*this, surfI)
+    forAll(*this, si)
     {
-        if (operator[](surfI).expire())
+        if (operator[](si).expire())
         {
             justExpired = true;
         }
@@ -344,7 +326,7 @@ bool Foam::functionObjects::sampledSurfaces::expire()
         // Clear merge information
         if (Pstream::parRun())
         {
-            mergeList_[surfI].clear();
+            mergeList_[si].clear();
         }
     }
 
@@ -365,9 +347,9 @@ bool Foam::functionObjects::sampledSurfaces::update()
     // Serial: quick and easy, no merging required
     if (!Pstream::parRun())
     {
-        forAll(*this, surfI)
+        forAll(*this, si)
         {
-            if (operator[](surfI).update())
+            if (operator[](si).update())
             {
                 updated = true;
             }
@@ -385,9 +367,9 @@ bool Foam::functionObjects::sampledSurfaces::update()
             << mergeDim << " metre" << endl;
     }
 
-    forAll(*this, surfI)
+    forAll(*this, si)
     {
-        sampledSurface& s = operator[](surfI);
+        sampledSurface& s = operator[](si);
 
         if (s.update())
         {
@@ -406,9 +388,9 @@ bool Foam::functionObjects::sampledSurfaces::update()
                 SubList<face>(s.faces(), s.faces().size()),
                 s.points()
             ),
-            mergeList_[surfI].points,
-            mergeList_[surfI].faces,
-            mergeList_[surfI].pointsMap
+            mergeList_[si].points,
+            mergeList_[si].faces,
+            mergeList_[si].pointsMap
         );
     }
 

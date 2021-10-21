@@ -137,6 +137,9 @@ public:
         //- Read the scalarTransport data
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const;
+
         //- Calculate the scalarTransport
         virtual bool execute();
 

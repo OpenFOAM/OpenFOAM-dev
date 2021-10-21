@@ -95,6 +95,12 @@ Foam::functionObjects::timeControl::timeControl
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::functionObjects::timeControl::fields() const
+{
+    return foPtr_->fields();
+}
+
+
 bool Foam::functionObjects::timeControl::executeAtStart() const
 {
     return foPtr_->executeAtStart();

@@ -136,6 +136,9 @@ public:
 
         // Function object control
 
+            //- Return the list of fields required
+            virtual wordList fields() const;
+
             //- Return true if the functionObject should be executed
             //  at the start
             virtual bool executeAtStart() const;

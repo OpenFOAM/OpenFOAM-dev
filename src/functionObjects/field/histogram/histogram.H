@@ -145,6 +145,9 @@ public:
         //- Read the histogram data
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const;
+
         //- Execute, currently does nothing
         virtual bool execute();
 

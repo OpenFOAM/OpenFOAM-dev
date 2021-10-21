@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,6 +71,12 @@ bool Foam::functionObjects::writeVTK::read(const dictionary& dict)
     dict.lookup("objects") >> objectNames_;
 
     return true;
+}
+
+
+Foam::wordList Foam::functionObjects::writeVTK::fields() const
+{
+    return objectNames_;
 }
 
 

@@ -35,6 +35,7 @@ Description
        codeData    | c++; local member data (null constructed);
        localCode   | c++; local static functions;
        codeRead    | c++; upon functionObject::read();
+       codeFields  | c++; upon functionObject::fields();
        codeExecute | c++; upon functionObject::execute();
        codeWrite   | c++; upon functionObject::write()
        codeEnd     | c++; upon functionObject::end();
@@ -136,6 +137,9 @@ public:
 
 
     // Member Functions
+
+        //- Return the list of fields required
+        virtual wordList fields() const;
 
         //- Called at each ++ or += of the time-loop.
         //  postProcess overrides the usual executeControl behaviour and

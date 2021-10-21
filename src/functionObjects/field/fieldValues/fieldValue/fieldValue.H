@@ -163,8 +163,8 @@ public:
         //- Return the region name
         inline const word& regionName() const;
 
-        //- Return the list of field names
-        inline const wordList& fields() const;
+        //- Return the list of fields required
+        inline virtual wordList fields() const;
 
         //- Return the output field values flag
         inline const Switch& writeFields() const;

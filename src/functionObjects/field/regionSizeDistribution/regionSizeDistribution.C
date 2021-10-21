@@ -331,7 +331,7 @@ Foam::functionObjects::regionSizeDistribution::regionSizeDistribution
 :
     fvMeshFunctionObject(name, runTime, dict),
     file_(obr_, name),
-    alphaName_(dict.lookup("field")),
+    alphaName_(dict.lookup("alpha")),
     patchNames_(dict.lookup("patches"))
 {
     read(dict);
@@ -369,6 +369,14 @@ bool Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
     }
 
     return true;
+}
+
+
+Foam::wordList Foam::functionObjects::regionSizeDistribution::fields() const
+{
+    wordList fields(fields_);
+    fields.append(alphaName_);
+    return fields;
 }
 
 
@@ -745,92 +753,88 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
         // Collect some more field
         {
-            wordList scalarNames(obr_.names(volScalarField::typeName));
-            labelList selected = findStrings(fields_, scalarNames);
-
-            forAll(selected, i)
+            forAll(fields_, i)
             {
-                const word& fldName = scalarNames[selected[i]];
-                Info<< "    Scalar field " << fldName << endl;
+                if (obr_.foundObject<volScalarField>(fields_[i]))
+                {
+                    Info<< "    Scalar field " << fields_[i] << endl;
 
-                const scalarField& fld = obr_.lookupObject
-                <
-                    volScalarField
-                >(fldName).primitiveField();
+                    const scalarField& fld =
+                        obr_.lookupObject<volScalarField>(fields_[i])
+                       .primitiveField();
 
-                writeGraphs
-                (
-                    fldName,            // name of field
-                    alphaVol*fld,       // per cell field data
+                    writeGraphs
+                    (
+                        fields_[i],         // name of field
+                        alphaVol*fld,       // per cell field data
 
-                    regions,            // per cell the region(=droplet)
-                    sortedRegions,      // valid regions in sorted order
-                    1.0/sortedVols,     // per region normalisation
+                        regions,            // per cell the region(=droplet)
+                        sortedRegions,      // valid regions in sorted order
+                        1.0/sortedVols,     // per region normalisation
 
-                    indices,            // index of bin for each region
-                    binCount,           // per bin number of regions
-                    coords              // graph data for bins
-                );
+                        indices,            // index of bin for each region
+                        binCount,           // per bin number of regions
+                        coords              // graph data for bins
+                    );
+                }
             }
         }
         {
-            wordList vectorNames(obr_.names(volVectorField::typeName));
-            labelList selected = findStrings(fields_, vectorNames);
-
-            forAll(selected, i)
+            forAll(fields_, i)
             {
-                const word& fldName = vectorNames[selected[i]];
-                Info<< "    Vector field " << fldName << endl;
-
-                vectorField fld = obr_.lookupObject
-                <
-                    volVectorField
-                >(fldName).primitiveField();
-
-                if (coordSysPtr_.valid())
+                if (obr_.foundObject<volScalarField>(fields_[i]))
                 {
-                    Info<< "Transforming vector field " << fldName
-                        << " with coordinate system "
-                        << coordSysPtr_().name()
-                        << endl;
+                    Info<< "    Vector field " << fields_[i] << endl;
 
-                    fld = coordSysPtr_().localVector(fld);
-                }
+                    vectorField fld =
+                        obr_.lookupObject<volVectorField>(fields_[i])
+                       .primitiveField();
+
+                    if (coordSysPtr_.valid())
+                    {
+                        Info<< "Transforming vector field " << fields_[i]
+                            << " with coordinate system "
+                            << coordSysPtr_().name()
+                            << endl;
+
+                        fld = coordSysPtr_().localVector(fld);
+                    }
 
 
-                // Components
+                    // Components
 
-                for (direction cmp = 0; cmp < vector::nComponents; cmp++)
-                {
+                    for (direction cmp = 0; cmp < vector::nComponents; cmp++)
+                    {
+                        writeGraphs
+                        (
+                            fields_[i] + vector::componentNames[cmp],
+                            alphaVol*fld.component(cmp),// per cell field data
+
+                            regions,        // per cell the region(=droplet)
+                            sortedRegions,  // valid regions in sorted order
+                            1.0/sortedVols, // per region normalisation
+
+                            indices,        // index of bin for each region
+                            binCount,       // per bin number of regions
+                            coords          // graph data for bins
+                        );
+                    }
+
+                    // Magnitude
                     writeGraphs
                     (
-                        fldName + vector::componentNames[cmp],
-                        alphaVol*fld.component(cmp),// per cell field data
+                        fields_[i] + "mag",    // name of field
+                        alphaVol*mag(fld),  // per cell field data
 
-                        regions,        // per cell the region(=droplet)
-                        sortedRegions,  // valid regions in sorted order
-                        1.0/sortedVols, // per region normalisation
+                        regions,            // per cell the region(=droplet)
+                        sortedRegions,      // valid regions in sorted order
+                        1.0/sortedVols,     // per region normalisation
 
-                        indices,        // index of bin for each region
-                        binCount,       // per bin number of regions
-                        coords          // graph data for bins
+                        indices,            // index of bin for each region
+                        binCount,           // per bin number of regions
+                        coords              // graph data for bins
                     );
                 }
-
-                // Magnitude
-                writeGraphs
-                (
-                    fldName + "mag",    // name of field
-                    alphaVol*mag(fld),  // per cell field data
-
-                    regions,            // per cell the region(=droplet)
-                    sortedRegions,      // valid regions in sorted order
-                    1.0/sortedVols,     // per region normalisation
-
-                    indices,            // index of bin for each region
-                    binCount,           // per bin number of regions
-                    coords              // graph data for bins
-                );
             }
         }
     }

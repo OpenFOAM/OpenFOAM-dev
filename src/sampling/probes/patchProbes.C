@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,27 +195,6 @@ Foam::patchProbes::patchProbes
 )
 :
     probes(name, t, dict)
-{
-    // When constructing probes above it will have called the
-    // probes::findElements (since the virtual mechanism not yet operating).
-    // Not easy to workaround (apart from feeding through flag into constructor)
-    // so clear out any cells found for now.
-    elementList_.clear();
-    faceList_.clear();
-
-    read(dict);
-}
-
-
-Foam::patchProbes::patchProbes
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-:
-    probes(name, obr, dict)
 {
     // When constructing probes above it will have called the
     // probes::findElements (since the virtual mechanism not yet operating).

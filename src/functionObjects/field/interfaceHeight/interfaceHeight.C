@@ -250,6 +250,12 @@ bool Foam::functionObjects::interfaceHeight::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::interfaceHeight::fields() const
+{
+    return wordList(alphaName_);
+}
+
+
 bool Foam::functionObjects::interfaceHeight::execute()
 {
     return true;

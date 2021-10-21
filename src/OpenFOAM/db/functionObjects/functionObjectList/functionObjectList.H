@@ -149,8 +149,7 @@ public:
         (
             const argList& args,
             const Time& runTime,
-            dictionary& controlDict,
-            HashSet<word>& requiredFields
+            dictionary& controlDict
         );
 
 
@@ -223,8 +222,6 @@ public:
         //  parsing the optional arguments included in the string 'funcArgs',
         //  inserting 'field' or 'fields' entries as required and merging the
         //  resulting functionObject dictionary into 'functionsDict'.
-        //  Any fields required to execute the functionObject are added to
-        //  'requiredFields'
         //
         //  Parses the optional functionObject arguments:
         //      'Q(U)' -> funcName = Q; args = (U)
@@ -243,7 +240,6 @@ public:
             const string& funcArgs,
             dictionary& functionsDict,
             const Pair<string>& contextTypeAndValue,
-            HashSet<word>& requiredFields,
             const word& region = word::null
         );
 

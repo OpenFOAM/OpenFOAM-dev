@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,22 +33,11 @@ template<class GeoField>
 Foam::UPtrList<const GeoField>
 Foam::functionObjects::writeVTK::lookupFields() const
 {
-    DynamicList<word> allNames(obr_.toc().size());
+    UPtrList<const GeoField> fields(objectNames_.size());
+
     forAll(objectNames_, i)
     {
-        wordList names(obr_.names<GeoField>(objectNames_[i]));
-
-        if (names.size())
-        {
-            allNames.append(names);
-        }
-    }
-
-    UPtrList<const GeoField> fields(allNames.size());
-
-    forAll(allNames, i)
-    {
-        const GeoField& field = obr_.lookupObject<GeoField>(allNames[i]);
+        const GeoField& field = obr_.lookupObject<GeoField>(objectNames_[i]);
         Info<< "    Writing " << GeoField::typeName
             << " field " << field.name() << endl;
         fields.set(i, &field);

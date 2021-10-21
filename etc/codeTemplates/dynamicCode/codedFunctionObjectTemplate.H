@@ -96,6 +96,9 @@ public:
         //- Read the system calls
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const;
+
         //- Execute the "executeCalls" at each time-step
         virtual bool execute();
 

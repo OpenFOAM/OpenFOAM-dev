@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,6 @@ SourceFiles
 #include "surfaceWriter.H"
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
-#include "wordReList.H"
 #include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -139,9 +138,6 @@ class sampledSurfaces
         //- Const reference to fvMesh
         const fvMesh& mesh_;
 
-        //- Load fields from files (not from objectRegistry)
-        const bool loadFromFiles_;
-
         //- Output path
         fileName outputPath_;
 
@@ -149,7 +145,7 @@ class sampledSurfaces
         // Read from dictonary
 
             //- Names of fields to sample
-            wordReList fieldSelection_;
+            wordList fields_;
 
             //- Interpolation scheme to use
             word interpolationScheme_;
@@ -220,16 +216,6 @@ public:
             const dictionary& dict
         );
 
-        //- Construct for given objectRegistry and dictionary
-        //  allow the possibility to load fields from files
-        sampledSurfaces
-        (
-            const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
-        );
-
         //- Disallow default bitwise copy construction
         sampledSurfaces(const sampledSurfaces&) = delete;
 
@@ -257,6 +243,9 @@ public:
 
         //- Read the sampledSurfaces dictionary
         virtual bool read(const dictionary&);
+
+        //- Return the list of fields required
+        virtual wordList fields() const;
 
         //- Execute, currently does nothing
         virtual bool execute();

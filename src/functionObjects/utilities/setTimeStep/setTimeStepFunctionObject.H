@@ -102,6 +102,12 @@ public:
         //-  Read and reset the timeStep Function1
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const
+        {
+            return wordList::null();
+        }
+
         //- Reset the timeStep from the Function1 of time
         virtual bool execute();
 

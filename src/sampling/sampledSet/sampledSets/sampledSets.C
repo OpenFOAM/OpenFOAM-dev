@@ -158,36 +158,6 @@ Foam::sampledSets::sampledSets
             )
         )
     ),
-    loadFromFiles_(false),
-    outputPath_(fileName::null),
-    searchEngine_(mesh_),
-    interpolationScheme_(word::null),
-    writeFormat_(word::null)
-{
-    outputPath_ =
-        mesh_.time().globalPath()/functionObjects::writeFile::outputPrefix/name;
-
-    if (mesh_.name() != fvMesh::defaultRegion)
-    {
-        outputPath_ = outputPath_/mesh_.name();
-    }
-
-    read(dict);
-}
-
-
-Foam::sampledSets::sampledSets
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-:
-    functionObject(name),
-    PtrList<sampledSet>(),
-    mesh_(refCast<const fvMesh>(obr)),
-    loadFromFiles_(loadFromFiles),
     outputPath_(fileName::null),
     searchEngine_(mesh_),
     interpolationScheme_(word::null),
@@ -216,6 +186,12 @@ Foam::sampledSets::~sampledSets()
 void Foam::sampledSets::verbose(const bool verbosity)
 {
     verbose_ = verbosity;
+}
+
+
+Foam::wordList Foam::sampledSets::fields() const
+{
+    return fields_;
 }
 
 
@@ -277,7 +253,7 @@ bool Foam::sampledSets::read(const dictionary& dict)
     bool setsFound = dict_.found("sets");
     if (setsFound)
     {
-        dict_.lookup("fields") >> fieldSelection_;
+        dict_.lookup("fields") >> fields_;
         clearFieldGroups();
 
         dict.lookup("interpolationScheme") >> interpolationScheme_;
@@ -304,7 +280,7 @@ bool Foam::sampledSets::read(const dictionary& dict)
 
     if (Pstream::master() && debug)
     {
-        Pout<< "sample fields:" << fieldSelection_ << nl
+        Pout<< "sample fields:" << fields_ << nl
             << "sample sets:" << nl << "(" << nl;
 
         forAll(*this, setI)

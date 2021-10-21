@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::functionObjects::readFields::readFields
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fieldSet_()
+    fields_()
 {
     read(dict);
 }
@@ -68,9 +68,15 @@ bool Foam::functionObjects::readFields::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    dict.lookup("fields") >> fieldSet_;
+    dict.lookup("fields") >> fields_;
 
     return true;
+}
+
+
+Foam::wordList Foam::functionObjects::readFields::fields() const
+{
+    return fields_;
 }
 
 
@@ -89,9 +95,9 @@ bool Foam::functionObjects::readFields::execute()
     sSymmtf_.clear();
     stf_.clear();
 
-    forAll(fieldSet_, fieldi)
+    forAll(fields_, fieldi)
     {
-        const word& fieldName = fieldSet_[fieldi];
+        const word& fieldName = fields_[fieldi];
 
         // If necessary load field
         loadField<scalar>(fieldName, vsf_, ssf_);

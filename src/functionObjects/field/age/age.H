@@ -145,6 +145,9 @@ public:
         //- Read the data
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const;
+
         //- Execute
         virtual bool execute();
 

@@ -279,28 +279,7 @@ Foam::probes::probes
             )
         )
     ),
-    loadFromFiles_(false),
-    fieldSelection_(),
-    fixedLocations_(true),
-    interpolationScheme_("cell")
-{
-    read(dict);
-}
-
-
-Foam::probes::probes
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-:
-    functionObject(name),
-    pointField(0),
-    mesh_(refCast<const fvMesh>(obr)),
-    loadFromFiles_(loadFromFiles),
-    fieldSelection_(),
+    fields_(),
     fixedLocations_(true),
     interpolationScheme_("cell")
 {
@@ -319,7 +298,7 @@ Foam::probes::~probes()
 bool Foam::probes::read(const dictionary& dict)
 {
     dict.lookup("probeLocations") >> *this;
-    dict.lookup("fields") >> fieldSelection_;
+    dict.lookup("fields") >> fields_;
 
     dict.readIfPresent("fixedLocations", fixedLocations_);
     if (dict.readIfPresent("interpolationScheme", interpolationScheme_))
@@ -339,6 +318,12 @@ bool Foam::probes::read(const dictionary& dict)
     prepare();
 
     return true;
+}
+
+
+Foam::wordList Foam::probes::fields() const
+{
+    return fields_;
 }
 
 

@@ -116,8 +116,6 @@ if (argList::postProcess(argc, argv))
             // if not constructed from runTime
             dictionary functionsControlDict("controlDict");
 
-            HashSet<word> selectedFields;
-
             // Construct functionObjectList
             autoPtr<functionObjectList> functionsPtr
             (
@@ -125,8 +123,7 @@ if (argList::postProcess(argc, argv))
                 (
                     args,
                     runTime,
-                    functionsControlDict,
-                    selectedFields
+                    functionsControlDict
                 )
             );
 

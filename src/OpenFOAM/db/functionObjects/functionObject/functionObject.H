@@ -214,6 +214,9 @@ public:
         //- Read and set the functionObject if its data have changed
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const = 0;
+
         //- Return true if the functionObject should be executed at the start
         virtual bool executeAtStart() const;
 

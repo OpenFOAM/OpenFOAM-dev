@@ -367,6 +367,19 @@ bool Foam::functionObjects::fieldAverage::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::fieldAverage::fields() const
+{
+    wordList fields(faItems_.size());
+
+    forAll(faItems_, fieldi)
+    {
+        fields[fieldi] = faItems_[fieldi].fieldName();
+    }
+
+    return fields;
+}
+
+
 bool Foam::functionObjects::fieldAverage::execute()
 {
     calcAverages();

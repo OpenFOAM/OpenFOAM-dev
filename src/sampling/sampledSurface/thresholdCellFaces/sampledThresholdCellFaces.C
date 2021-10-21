@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,6 +169,12 @@ Foam::sampledSurfaces::thresholdCellFaces::~thresholdCellFaces()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::wordList Foam::sampledSurfaces::thresholdCellFaces::fields() const
+{
+    return wordList(fieldName_);
+}
+
 
 bool Foam::sampledSurfaces::thresholdCellFaces::needsUpdate() const
 {

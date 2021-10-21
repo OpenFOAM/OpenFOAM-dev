@@ -45,7 +45,6 @@ SourceFiles
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
 #include "surfaceMesh.H"
-#include "wordReList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -92,14 +91,11 @@ protected:
         //- Const reference to fvMesh
         const fvMesh& mesh_;
 
-        //- Load fields from files (not from objectRegistry)
-        bool loadFromFiles_;
-
 
         // Read from dictonary
 
             //- Names of fields to probe
-            wordReList fieldSelection_;
+            wordList fields_;
 
             //- Fixed locations, default = yes
             //  Note: set to false for moving mesh calculations where locations
@@ -198,16 +194,6 @@ public:
             const dictionary& dict
         );
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
-        probes
-        (
-            const word& name,
-            const objectRegistry& obr,
-            const dictionary& dict,
-            const bool loadFromFiles = false
-        );
-
         //- Disallow default bitwise copy construction
         probes(const probes&) = delete;
 
@@ -218,11 +204,8 @@ public:
 
     // Member Functions
 
-        //- Return names of fields to probe
-        virtual const wordReList& fieldNames() const
-        {
-            return fieldSelection_;
-        }
+        //- Return the list of fields required
+        virtual wordList fields() const;
 
         //- Return locations to probe
         virtual const pointField& probeLocations() const

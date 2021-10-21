@@ -215,6 +215,9 @@ public:
         //- Read the settings from the given dictionary
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const;
+
         //- Solve for the evolution of the field
         virtual bool execute();
 

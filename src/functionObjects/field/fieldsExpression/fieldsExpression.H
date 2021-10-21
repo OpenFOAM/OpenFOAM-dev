@@ -170,6 +170,9 @@ public:
         //- Read the fieldsExpression data
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const;
+
         //- Calculate the result fields
         virtual bool execute();
 

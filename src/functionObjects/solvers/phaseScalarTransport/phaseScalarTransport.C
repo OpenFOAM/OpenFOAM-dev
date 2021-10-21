@@ -364,6 +364,12 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::phaseScalarTransport::fields() const
+{
+    return wordList{alphaName_, alphaPhiName_, phiName_, pName_};
+}
+
+
 bool Foam::functionObjects::phaseScalarTransport::execute()
 {
     Info<< type() << ": Executing" << endl;

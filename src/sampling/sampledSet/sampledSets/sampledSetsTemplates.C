@@ -243,75 +243,34 @@ void Foam::sampledSets::sampleAndWrite
                     << fields[fieldi] << endl;
             }
 
-            if (loadFromFiles_)
+            if (interpolate)
             {
-                GeometricField<Type, fvPatchField, volMesh> vf
+                sampledFields.set
                 (
-                    IOobject
+                    fieldi,
+                    new volFieldSampler<Type>
                     (
-                        fields[fieldi],
-                        mesh_.time().timeName(),
-                        mesh_,
-                        IOobject::MUST_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
-                    mesh_
+                        interpolationScheme_,
+                        mesh_.lookupObject
+                        <GeometricField<Type, fvPatchField, volMesh>>
+                        (fields[fieldi]),
+                        *this
+                    )
                 );
-
-                if (interpolate)
-                {
-                    sampledFields.set
-                    (
-                        fieldi,
-                        new volFieldSampler<Type>
-                        (
-                            interpolationScheme_,
-                            vf,
-                            *this
-                        )
-                    );
-                }
-                else
-                {
-                    sampledFields.set
-                    (
-                        fieldi,
-                        new volFieldSampler<Type>(vf, *this)
-                    );
-                }
             }
             else
             {
-                if (interpolate)
-                {
-                    sampledFields.set
+                sampledFields.set
+                (
+                    fieldi,
+                    new volFieldSampler<Type>
                     (
-                        fieldi,
-                        new volFieldSampler<Type>
-                        (
-                            interpolationScheme_,
-                            mesh_.lookupObject
-                            <GeometricField<Type, fvPatchField, volMesh>>
-                            (fields[fieldi]),
-                            *this
-                        )
-                    );
-                }
-                else
-                {
-                    sampledFields.set
-                    (
-                        fieldi,
-                        new volFieldSampler<Type>
-                        (
-                            mesh_.lookupObject
-                            <GeometricField<Type, fvPatchField, volMesh>>
-                            (fields[fieldi]),
-                            *this
-                        )
-                    );
-                }
+                        mesh_.lookupObject
+                        <GeometricField<Type, fvPatchField, volMesh>>
+                        (fields[fieldi]),
+                        *this
+                    )
+                );
             }
         }
 

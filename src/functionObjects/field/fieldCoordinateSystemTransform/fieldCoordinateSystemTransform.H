@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ protected:
     // Protected data
 
         //- Fields to transform
-        wordList fieldSet_;
+        wordList fields_;
 
         //- Co-ordinate system to transform to
         coordinateSystem coordSys_;
@@ -145,6 +145,9 @@ public:
 
         //- Read the input data
         virtual bool read(const dictionary&);
+
+        //- Return the field required
+        virtual wordList fields() const;
 
         //- Calculate the transformed fields
         virtual bool execute();

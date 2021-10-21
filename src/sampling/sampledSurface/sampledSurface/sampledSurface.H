@@ -266,6 +266,12 @@ public:
         //- Does the surface need an update?
         virtual bool needsUpdate() const = 0;
 
+        //- Return the list of fields required
+        virtual wordList fields() const
+        {
+            return wordList::null();
+        }
+
         //- Mark the surface as needing an update.
         //  May also free up unneeded data.
         //  Return false if surface was already marked as expired.

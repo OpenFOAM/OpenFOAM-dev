@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,18 +171,10 @@ void Foam::functionObjects::sampledSurfaces::sampleAndWrite
     const IOobjectList& objects
 )
 {
-    wordList names;
-    if (loadFromFiles_)
-    {
-        IOobjectList fieldObjects(objects.lookupClass(GeoField::typeName));
-        names = fieldObjects.names();
-    }
-    else
-    {
-        names = mesh_.thisDb().names<GeoField>();
-    }
+    /*
+    wordList names(mesh_.thisDb().names<GeoField>());
 
-    labelList nameIDs(findStrings(fieldSelection_, names));
+    labelList nameIDs(findStrings(fields_, names));
 
     wordHashSet fieldNames(wordList(names, nameIDs));
 
@@ -219,6 +211,7 @@ void Foam::functionObjects::sampledSurfaces::sampleAndWrite
             );
         }
     }
+    */
 }
 
 

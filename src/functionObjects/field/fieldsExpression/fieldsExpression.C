@@ -123,6 +123,12 @@ bool Foam::functionObjects::fieldsExpression::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::fieldsExpression::fields() const
+{
+    return fieldNames_;
+}
+
+
 bool Foam::functionObjects::fieldsExpression::execute()
 {
     if (!calc())

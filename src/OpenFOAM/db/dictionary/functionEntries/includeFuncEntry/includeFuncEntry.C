@@ -58,14 +58,11 @@ bool Foam::functionEntries::includeFuncEntry::execute
     // Read line containing the function name and the optional arguments
     const string fNameArgs(readFuncNameArgs(is));
 
-    HashSet<word> selectedFields;
-
     return functionObjectList::readFunctionObject
     (
         fNameArgs,
         parentDict,
-        {"file", is.name() + " at line " + Foam::name(is.lineNumber())},
-        selectedFields
+        {"file", is.name() + " at line " + Foam::name(is.lineNumber())}
     );
 }
 

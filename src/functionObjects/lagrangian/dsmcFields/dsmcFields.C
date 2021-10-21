@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,21 @@ Foam::functionObjects::dsmcFields::~dsmcFields()
 bool Foam::functionObjects::dsmcFields::read(const dictionary& dict)
 {
     return true;
+}
+
+
+Foam::wordList Foam::functionObjects::dsmcFields::fields() const
+{
+    return wordList
+    {
+        "rhoNMean",
+        "rhoMMean",
+        "momentumMean",
+        "linearKEMean",
+        "internalEMean",
+        "iDofMean",
+        "fDMean"
+    };
 }
 
 

@@ -77,6 +77,12 @@ bool Foam::functionObjects::FUNCTIONOBJECT::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::FUNCTIONOBJECT::fields() const
+{
+    return wordList::null();
+}
+
+
 bool Foam::functionObjects::FUNCTIONOBJECT::execute()
 {
     return true;

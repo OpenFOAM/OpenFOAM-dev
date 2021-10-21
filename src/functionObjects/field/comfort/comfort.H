@@ -191,6 +191,9 @@ public:
         //- Read the data needed for the comfort calculation
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const;
+
         //- Calculate the predicted mean vote (PMV)
         //  and predicted percentage dissatisfaction (PPD) fields
         virtual bool execute();

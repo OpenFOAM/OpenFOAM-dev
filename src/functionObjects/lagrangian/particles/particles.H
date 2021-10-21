@@ -147,6 +147,12 @@ public:
         //- Read the controls
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const
+        {
+            return wordList::null();
+        }
+
         //- Track the cloud
         virtual bool execute();
 

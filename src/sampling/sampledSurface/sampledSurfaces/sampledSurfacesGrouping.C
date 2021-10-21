@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,48 +31,18 @@ Foam::label Foam::functionObjects::sampledSurfaces::classifyFields()
 {
     label nFields = 0;
 
-    if (loadFromFiles_)
+    // Check currently available fields
+    forAll(fields_, i)
     {
-        // Check files for a particular time
-        IOobjectList objects(mesh_, mesh_.time().timeName());
-        wordList allFields = objects.sortedNames();
-
-        forAll(fieldSelection_, i)
+        if (mesh_.objectRegistry::found(fields_[i]))
         {
-            labelList indices = findStrings(fieldSelection_[i], allFields);
-
-            if (indices.size())
-            {
-                nFields += indices.size();
-            }
-            else
-            {
-                WarningInFunction
-                    << "Cannot find field file matching "
-                    << fieldSelection_[i] << endl;
-            }
+            nFields++;
         }
-    }
-    else
-    {
-        // Check currently available fields
-        wordList allFields = mesh_.sortedNames();
-        labelList indices = findStrings(fieldSelection_, allFields);
-
-        forAll(fieldSelection_, i)
+        else
         {
-            labelList indices = findStrings(fieldSelection_[i], allFields);
-
-            if (indices.size())
-            {
-                nFields += indices.size();
-            }
-            else
-            {
-                WarningInFunction
-                    << "Cannot find registered field matching "
-                    << fieldSelection_[i] << endl;
-            }
+            WarningInFunction
+                << "Cannot find registered field matching "
+                << fields_[i] << endl;
         }
     }
 

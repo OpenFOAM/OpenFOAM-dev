@@ -195,6 +195,12 @@ public:
         //- Read the controls
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const
+        {
+            return wordList::null();
+        }
+
         //- Calculate turbulence fields
         virtual bool execute();
 

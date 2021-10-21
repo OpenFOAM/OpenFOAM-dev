@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class streamFunction
 {
     // Private Member Functions
 
-    tmp<pointScalarField> calc(const surfaceScalarField& phi) const;
+        tmp<pointScalarField> calc(const surfaceScalarField& phi) const;
 
         //- Calculate the stream-function and return true if successful
         virtual bool calc();

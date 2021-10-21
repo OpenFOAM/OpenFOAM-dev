@@ -124,6 +124,12 @@ bool Foam::functionObjects::age::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::age::fields() const
+{
+    return wordList{phiName_, rhoName_};
+}
+
+
 bool Foam::functionObjects::age::execute()
 {
     tmp<volScalarField> tage

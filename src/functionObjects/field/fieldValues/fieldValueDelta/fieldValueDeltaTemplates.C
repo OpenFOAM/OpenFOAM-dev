@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ void Foam::functionObjects::fieldValues::fieldValueDelta::processFields
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
 
-    const wordList& fields1 = region1Ptr_->fields();
+    const wordList fields1 = region1Ptr_->fields();
 
     const dictionary& results1 = region1Ptr_->resultDict();
     const dictionary& results2 = region2Ptr_->resultDict();

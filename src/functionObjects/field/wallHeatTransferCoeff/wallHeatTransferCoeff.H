@@ -187,6 +187,12 @@ public:
         //- Read the wallHeatTransferCoeffs data
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const
+        {
+            return wordList::null();
+        }
+
         //- Calculate the wall heat transfer coefficient
         virtual bool execute();
 

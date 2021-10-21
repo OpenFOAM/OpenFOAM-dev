@@ -176,7 +176,7 @@ class sampledSets
         // Read from dictonary
 
             //- Names of fields to sample
-            wordReList fieldSelection_;
+            wordList fields_;
 
             //- Interpolation scheme to use
             word interpolationScheme_;
@@ -259,16 +259,6 @@ public:
             const dictionary& dict
         );
 
-        //- Construct for given objectRegistry and dictionary
-        //  allow the possibility to load fields from files
-        sampledSets
-        (
-            const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
-        );
-
         //- Disallow default bitwise copy construction
         sampledSets(const sampledSets&) = delete;
 
@@ -284,6 +274,9 @@ public:
 
         //- Read the sampledSets
         virtual bool read(const dictionary&);
+
+        //- Return the list of fields required
+        virtual wordList fields() const;
 
         //- Execute, currently does nothing
         virtual bool execute();

@@ -236,7 +236,6 @@ bool Foam::functionObjectList::readFunctionObject
     const string& funcArgs,
     dictionary& functionsDict,
     const Pair<string>& contextTypeAndValue,
-    HashSet<word>& requiredFields,
     const word& region
 )
 {
@@ -434,37 +433,6 @@ bool Foam::functionObjectList::readFunctionObject
         );
     }
 
-    // Lookup the field, fields and objects entries from the now expanded
-    // funcDict and insert into the requiredFields
-    dictionary& expandedFuncDict = funcArgsDict.subDict(funcName);
-    if (functionObject::debug)
-    {
-        InfoInFunction
-            << nl << incrIndent << indent
-            << funcArgs << expandedFuncDict
-            << decrIndent << endl;
-    }
-    if (expandedFuncDict.found("field"))
-    {
-        requiredFields.insert(word(expandedFuncDict.lookup("field")));
-    }
-    if (expandedFuncDict.found("fields"))
-    {
-        List<wordAndDictionary> fields(expandedFuncDict.lookup("fields"));
-        forAll(fields, i)
-        {
-            requiredFields.insert(fields[i].first());
-        }
-    }
-    if (expandedFuncDict.found("objects"))
-    {
-        List<wordAndDictionary> objects(expandedFuncDict.lookup("objects"));
-        forAll(objects, i)
-        {
-            requiredFields.insert(objects[i].first());
-        }
-    }
-
     // Merge this functionObject dictionary into functionsDict
     functionsDict.merge(funcArgsDict);
     functionsDict.subDict(funcName).name() = funcDict.name();
@@ -512,8 +480,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
 (
     const argList& args,
     const Time& runTime,
-    dictionary& controlDict,
-    HashSet<word>& requiredFields
+    dictionary& controlDict
 )
 {
     autoPtr<functionObjectList> functionsPtr;
@@ -563,7 +530,6 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
                 args["func"],
                 functionsDict,
                 {"command", args.commandLine()},
-                requiredFields,
                 region
             );
         }
@@ -579,7 +545,6 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
                     funcs[i],
                     functionsDict,
                     {"command", args.commandLine()},
-                    requiredFields,
                     region
                 );
             }

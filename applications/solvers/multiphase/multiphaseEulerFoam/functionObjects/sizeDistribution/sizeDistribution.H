@@ -232,6 +232,12 @@ public:
         //- Read the sizeDistribution data
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const
+        {
+            return wordList::null();
+        }
+
         //- Execute, currently does nothing
         virtual bool execute();
 

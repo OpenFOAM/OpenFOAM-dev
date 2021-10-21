@@ -339,6 +339,9 @@ public:
         //- Read the field average data
         virtual bool read(const dictionary&);
 
+        //- Return the list of fields required
+        virtual wordList fields() const;
+
         //- Do not average at the start of the run
         virtual bool executeAtStart() const
         {

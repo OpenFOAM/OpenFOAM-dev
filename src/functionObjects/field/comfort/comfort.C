@@ -298,6 +298,12 @@ bool Foam::functionObjects::comfort::read(const dictionary& dict)
 }
 
 
+Foam::wordList Foam::functionObjects::comfort::fields() const
+{
+    return wordList{"U", "T"};
+}
+
+
 bool Foam::functionObjects::comfort::execute()
 {
     const dimensionedScalar Trad(this->Trad());
