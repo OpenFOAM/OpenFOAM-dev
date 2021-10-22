@@ -98,7 +98,7 @@ unityLewisFourier<BasicThermophysicalTransportModel>::q() const
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -fvc::interpolate(this->thermo().alpha()*this->alpha())
+       -fvc::interpolate(this->alpha()*this->thermo().alpha())
        *fvc::snGrad(this->thermo().he())
     );
 }
@@ -126,7 +126,7 @@ tmp<surfaceScalarField>unityLewisFourier<BasicThermophysicalTransportModel>::j
             "j(" + Yi.name() + ')',
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -fvc::interpolate(this->thermo().alpha()*this->alpha())
+       -fvc::interpolate(this->alpha()*this->DEff(Yi))
        *fvc::snGrad(Yi)
     );
 }
