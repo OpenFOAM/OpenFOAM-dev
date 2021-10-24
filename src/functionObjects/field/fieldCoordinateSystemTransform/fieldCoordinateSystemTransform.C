@@ -56,7 +56,7 @@ fieldCoordinateSystemTransform
 :
     fvMeshFunctionObject(name, runTime, dict),
     fields_(),
-    coordSys_(coordinateSystem::New(mesh_, dict.subDict("coordinateSystem"))())
+    coordSys_(coordinateSystem::New(mesh_, dict)())
 {
     read(dict);
 

@@ -57,9 +57,7 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
 
     if (mesh_.foundObject<VolFieldType>(fieldName))
     {
-        DebugInfo
-            << type() << ": Field " << fieldName << " already in database"
-            << endl;
+        DebugInfo << type() << ": Field " << fieldName << endl;
 
         transformField<VolFieldType>
         (
@@ -68,60 +66,12 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
     }
     else if (mesh_.foundObject<SurfaceFieldType>(fieldName))
     {
-        DebugInfo
-            << type() << ": Field " << fieldName << " already in database"
-            << endl;
+        DebugInfo << type() << ": Field " << fieldName << endl;
 
         transformField<SurfaceFieldType>
         (
             mesh_.lookupObject<SurfaceFieldType>(fieldName)
         );
-    }
-    else
-    {
-        typeIOobject<VolFieldType> fieldHeader
-        (
-            fieldName,
-            mesh_.time().timeName(),
-            mesh_,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE
-        );
-
-        if (fieldHeader.headerOk())
-        {
-            DebugInfo
-                << type() << ": Field " << fieldName << " read from file"
-                << endl;
-
-            transformField<VolFieldType>
-            (
-                mesh_.lookupObject<VolFieldType>(fieldName)
-            );
-        }
-        else
-        {
-            typeIOobject<SurfaceFieldType> fieldHeader
-            (
-                fieldName,
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE
-            );
-
-            if (fieldHeader.headerOk())
-            {
-                DebugInfo
-                    << type() << ": Field " << fieldName << " read from file"
-                    << endl;
-
-                transformField<SurfaceFieldType>
-                (
-                    mesh_.lookupObject<SurfaceFieldType>(fieldName)
-                );
-            }
-        }
     }
 }
 

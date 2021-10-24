@@ -35,7 +35,9 @@ Description
     {
         type        fieldCoordinateSystemTransform;
         libs        ("libfieldFunctionObjects.so");
-        ...
+
+        writeControl    writeTime;
+
         fields
         (
             U
@@ -45,6 +47,7 @@ Description
 
         coordinateSystem
         {
+            type    cartesian;
             origin  (0.001 0 0);
             coordinateRotation
             {
