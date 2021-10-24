@@ -27,7 +27,7 @@ Description
     - without state
 
 SourceFiles
-    Function1Template.C
+    codedFunction1Template.C
 
 \*---------------------------------------------------------------------------*/
 

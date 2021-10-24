@@ -27,14 +27,15 @@ Description
     - without state
 
 SourceFiles
-    Function2Template.C
+    codedFunction2Template.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Function2Template_H
-#define Function2Template_H
+#ifndef codedFunction2Template_H
+#define codedFunction2Template_H
 
 #include "Function2.H"
+#include "fieldTypes.H"
 
 //{{{ begin codeInclude
 ${codeInclude}

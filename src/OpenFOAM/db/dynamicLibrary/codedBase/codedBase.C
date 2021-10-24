@@ -367,7 +367,7 @@ Foam::codedBase::codedBase()
 
 Foam::codedBase::codedBase(const word& name, const dictionary& dict)
 :
-    codeName_(name),
+    codeName_(word(name).replaceAll("-", "_")),
     dict_(dict)
 {}
 
