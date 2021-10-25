@@ -28,9 +28,9 @@ License
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
 #include "dlLibraryTable.H"
+#include "regIOobject.H"
 #include "PstreamReduceOps.H"
 #include "OSspecific.H"
-#include "regIOobject.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -367,7 +367,7 @@ Foam::codedBase::codedBase()
 
 Foam::codedBase::codedBase(const word& name, const dictionary& dict)
 :
-    codeName_(word(name).replaceAll("-", "_")),
+    codeName_(name.replaceAll("-", "_")),
     dict_(dict)
 {}
 

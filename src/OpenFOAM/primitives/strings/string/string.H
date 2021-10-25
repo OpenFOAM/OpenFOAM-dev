@@ -165,9 +165,27 @@ public:
         //- Avoid masking the normal std::string replace
         using std::string::replace;
 
+        //- In this string replace first occurrence of sub-string oldStr
+        //  with newStr starting at start
+        string& replace
+        (
+            const string& oldStr,
+            const string& newStr,
+            size_type start = 0
+        );
+
         //- Replace first occurrence of sub-string oldStr with newStr
         //  starting at start
-        string& replace
+        string replace
+        (
+            const string& oldStr,
+            const string& newStr,
+            size_type start = 0
+        ) const;
+
+        //- In this string replace all occurrences of sub-string oldStr
+        //  with newStr starting at start
+        string& replaceAll
         (
             const string& oldStr,
             const string& newStr,
@@ -176,12 +194,12 @@ public:
 
         //- Replace all occurrences of sub-string oldStr with newStr
         //  starting at start
-        string& replaceAll
+        string replaceAll
         (
             const string& oldStr,
             const string& newStr,
             size_type start = 0
-        );
+        ) const;
 
         //- Expand initial tildes and all occurrences of environment variables
         //  Expansion includes:

@@ -78,6 +78,17 @@ Foam::string& Foam::string::replace
 }
 
 
+Foam::string Foam::string::replace
+(
+    const string& oldStr,
+    const string& newStr,
+    size_type start
+) const
+{
+    return string(*this).replace(oldStr, newStr, start);
+}
+
+
 Foam::string& Foam::string::replaceAll
 (
     const string& oldStr,
@@ -97,6 +108,17 @@ Foam::string& Foam::string::replaceAll
     }
 
     return *this;
+}
+
+
+Foam::string Foam::string::replaceAll
+(
+    const string& oldStr,
+    const string& newStr,
+    size_type start
+) const
+{
+    return string(*this).replaceAll(oldStr, newStr, start);
 }
 
 
