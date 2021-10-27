@@ -26,13 +26,23 @@ License
 #include "scalarTransport.H"
 #include "surfaceFields.H"
 #include "fvmDdt.H"
+#include "fvcDdt.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
+#include "fvcFlux.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "incompressibleMomentumTransportModel.H"
 #include "compressibleMomentumTransportModel.H"
+
+#include "CMULES.H"
+#include "EulerDdtScheme.H"
+#include "localEulerDdtScheme.H"
+#include "CrankNicolsonDdtScheme.H"
+#include "subCycle.H"
+#include "interfaceCompression.H"
+
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -53,16 +63,33 @@ namespace functionObjects
 }
 
 
+template<>
+const char* Foam::NamedEnum
+<
+    Foam::functionObjects::scalarTransport::diffusionType,
+    3
+>::names[] =
+{
+    "none",
+    "constant",
+    "viscosity"
+};
+
+const Foam::NamedEnum
+<
+    Foam::functionObjects::scalarTransport::diffusionType,
+    3
+> Foam::functionObjects::scalarTransport::diffusionTypeNames_;
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
-(
-    const surfaceScalarField& phi
-) const
+Foam::tmp<Foam::volScalarField>
+Foam::functionObjects::scalarTransport::D() const
 {
     const word Dname("D" + s_.name());
 
-    if (constantD_)
+    if (diffusion_ == diffusionType::constant)
     {
         return volScalarField::New
         (
@@ -71,13 +98,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
             dimensionedScalar(Dname, dimViscosity, D_)
         );
     }
-    else if
-    (
-        mesh_.foundObject<momentumTransportModel>
-        (
-            momentumTransportModel::typeName
-        )
-    )
+    else
     {
         const momentumTransportModel& turbulence =
             mesh_.lookupObject<momentumTransportModel>
@@ -85,16 +106,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
                 momentumTransportModel::typeName
             );
 
-        return alphaD_*turbulence.nu() + alphaDt_*turbulence.nut();
-    }
-    else
-    {
-        return volScalarField::New
-        (
-            Dname,
-            mesh_,
-            dimensionedScalar(Dname, phi.dimensions()/dimLength, 0)
-        );
+        return alphal_*turbulence.nu() + alphat_*turbulence.nut();
     }
 }
 
@@ -110,6 +122,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
 :
     fvMeshFunctionObject(name, runTime, dict),
     fieldName_(dict.lookupOrDefault<word>("field", "s")),
+    diffusion_(diffusionType::none),
     D_(0),
     nCorr_(0),
     s_
@@ -123,9 +136,49 @@ Foam::functionObjects::scalarTransport::scalarTransport
             IOobject::AUTO_WRITE
         ),
         mesh_
-    )
+    ),
+    MULES_(false),
+    deltaN_
+    (
+        "deltaN",
+        1e-8/pow(average(mesh_.V()), 1.0/3.0)
+    ),
+    sRestart_(false)
 {
     read(dict);
+
+    const dictionary& controls = mesh_.solverDict(s_.name());
+
+    if (controls.found("nSubCycles"))
+    {
+        MULES_ = true;
+
+        typeIOobject<surfaceScalarField> sPhiHeader
+        (
+            IOobject::groupName("sPhi", s_.group()),
+            runTime.timeName(),
+            mesh_,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        );
+
+        sRestart_ = sPhiHeader.headerOk();
+
+        if (sRestart_)
+        {
+            Info << "Restarting s" << endl;
+        }
+
+        const surfaceScalarField& phi =
+            mesh_.lookupObject<surfaceScalarField>(phiName_);
+
+        // Scalar volumetric flux
+        tsPhi_ = new surfaceScalarField
+        (
+            sPhiHeader,
+            phi*fvc::interpolate(s_)
+        );
+    }
 }
 
 
@@ -145,9 +198,22 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
     rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
     schemesField_ = dict.lookupOrDefault<word>("schemesField", fieldName_);
 
-    constantD_ = dict.readIfPresent("D", D_);
-    alphaD_ = dict.lookupOrDefault("alphaD", 1.0);
-    alphaDt_ = dict.lookupOrDefault("alphaDt", 1.0);
+    diffusion_ = diffusionTypeNames_.read(dict.lookup("diffusion"));
+
+    switch(diffusion_)
+    {
+        case diffusionType::none:
+            break;
+
+        case diffusionType::constant:
+            dict.lookup("D") >> D_;
+            break;
+
+        case diffusionType::viscosity:
+            dict.lookup("alphal") >> alphal_;
+            dict.lookup("alphat") >> alphat_;
+            break;
+    }
 
     dict.readIfPresent("nCorr", nCorr_);
 
@@ -168,11 +234,7 @@ bool Foam::functionObjects::scalarTransport::execute()
     const surfaceScalarField& phi =
         mesh_.lookupObject<surfaceScalarField>(phiName_);
 
-    // Calculate the diffusivity
-    volScalarField D("D" + s_.name(), this->D(phi));
-
-    word divScheme("div(phi," + schemesField_ + ")");
-    word laplacianScheme("laplacian(" + D.name() + "," + schemesField_ + ")");
+    const word divScheme("div(phi," + schemesField_ + ")");
 
     // Set under-relaxation coeff
     scalar relaxCoeff = 0.0;
@@ -189,24 +251,37 @@ bool Foam::functionObjects::scalarTransport::execute()
 
     if (phi.dimensions() == dimVolume/dimTime)
     {
-        for (int i=0; i<=nCorr_; i++)
+        if (MULES_)
         {
-            fvScalarMatrix sEqn
-            (
-                fvm::ddt(s_)
-              + fvm::div(phi, s_, divScheme)
-              - fvm::laplacian(D, s_, laplacianScheme)
-             ==
-                fvModels.source(s_)
-            );
-
-            sEqn.relax(relaxCoeff);
-
-            fvConstraints.constrain(sEqn);
-
-            sEqn.solve(schemesField_);
+            subCycleMULES();
 
             fvConstraints.constrain(s_);
+        }
+        else
+        {
+            for (int i=0; i<=nCorr_; i++)
+            {
+                fvScalarMatrix sEqn
+                (
+                    fvm::ddt(s_)
+                  + fvm::div(phi, s_, divScheme)
+                 ==
+                    fvModels.source(s_)
+                );
+
+                if (diffusion_ != diffusionType::none)
+                {
+                    sEqn -= fvm::laplacian(D(), s_);
+                }
+
+                sEqn.relax(relaxCoeff);
+
+                fvConstraints.constrain(sEqn);
+
+                sEqn.solve(schemesField_);
+
+                fvConstraints.constrain(s_);
+            }
         }
     }
     else if (phi.dimensions() == dimMass/dimTime)
@@ -220,10 +295,14 @@ bool Foam::functionObjects::scalarTransport::execute()
             (
                 fvm::ddt(rho, s_)
               + fvm::div(phi, s_, divScheme)
-              - fvm::laplacian(rho*D, s_, laplacianScheme)
              ==
                 fvModels.source(rho, s_)
             );
+
+            if (diffusion_ != diffusionType::none)
+            {
+                sEqn -= fvm::laplacian(rho*D(), s_);
+            }
 
             sEqn.relax(relaxCoeff);
 
@@ -245,6 +324,303 @@ bool Foam::functionObjects::scalarTransport::execute()
     Info<< endl;
 
     return true;
+}
+
+
+void Foam::functionObjects::scalarTransport::subCycleMULES()
+{
+    const dictionary& controls = mesh_.solverDict(s_.name());
+    const label nSubCycles(controls.lookup<label>("nSubCycles"));
+    const bool LTS = fv::localEulerDdt::enabled(mesh_);
+
+    if (nSubCycles > 1)
+    {
+        tmp<volScalarField> trSubDeltaT;
+
+        if (LTS)
+        {
+            trSubDeltaT =
+                fv::localEulerDdt::localRSubDeltaT(mesh_, nSubCycles);
+        }
+
+        for
+        (
+            subCycle<volScalarField> sSubCycle(s_, nSubCycles);
+            !(++sSubCycle).end();
+        )
+        {
+            solveMULES();
+        }
+    }
+    else
+    {
+        solveMULES();
+    }
+
+
+    // Apply the diffusion term separately to allow implicit solution
+    // and boundedness of the explicit advection
+    if (diffusion_ != diffusionType::none)
+    {
+        fvScalarMatrix sEqn
+        (
+            fvm::ddt(s_) - fvc::ddt(s_)
+          - fvm::laplacian(D(), s_)
+        );
+
+        sEqn.solve(controls.subDict("diffusion"));
+
+        Info<< s_.name() << " volume fraction = "
+            << s_.weightedAverage(mesh_.V()).value()
+            << "  Min(" << s_.name() << ") = " << min(s_).value()
+            << "  Max(" << s_.name() << ") = " << max(s_).value()
+            << endl;
+    }
+}
+
+
+void Foam::functionObjects::scalarTransport::solveMULES()
+{
+    const dictionary& controls = mesh_.solverDict(s_.name());
+    const label nCorr(controls.lookup<label>("nCorr"));
+    const label nSubCycles(controls.lookup<label>("nSubCycles"));
+    const bool MULESCorr(controls.lookupOrDefault<Switch>("MULESCorr", false));
+
+    // Apply the compression correction from the previous iteration
+    // Improves efficiency for steady-simulations but can only be applied
+    // once the s field is reasonably steady, i.e. fully developed
+    const bool applyPrevCorr
+    (
+        controls.lookupOrDefault<Switch>("applyPrevCorr", false)
+    );
+
+    const bool LTS = fv::localEulerDdt::enabled(mesh_);
+
+    const word divScheme("div(phi," + schemesField_ + ")");
+
+    const surfaceScalarField& phi =
+        mesh_.lookupObject<surfaceScalarField>(phiName_);
+
+    surfaceScalarField& sPhi_ = tsPhi_.ref();
+
+    const word sScheme(mesh_.divScheme(divScheme)[1].wordToken());
+
+    // If a compressive convection scheme is used
+    // the interface normal must be cached
+    tmp<surfaceScalarField> nHatf;
+
+    if (compressionSchemes.found(sScheme))
+    {
+        const surfaceVectorField gradsf(fvc::interpolate(fvc::grad(s_)));
+
+        nHatf = new surfaceScalarField
+        (
+            IOobject
+            (
+                "nHatf",
+                s_.time().timeName(),
+                mesh_
+            ),
+            gradsf/(mag(gradsf) + deltaN_) & mesh_.Sf()
+        );
+    }
+
+    // Set the off-centering coefficient according to ddt scheme
+    scalar ocCoeff = 0;
+    {
+        tmp<fv::ddtScheme<scalar>> tddtS
+        (
+            fv::ddtScheme<scalar>::New
+            (
+                mesh_,
+                mesh_.ddtScheme("ddt(s)")
+            )
+        );
+        const fv::ddtScheme<scalar>& ddtS = tddtS();
+
+        if
+        (
+            isType<fv::EulerDdtScheme<scalar>>(ddtS)
+         || isType<fv::localEulerDdtScheme<scalar>>(ddtS)
+        )
+        {
+            ocCoeff = 0;
+        }
+        else if (isType<fv::CrankNicolsonDdtScheme<scalar>>(ddtS))
+        {
+            if (nSubCycles > 1)
+            {
+                FatalErrorInFunction
+                    << "Sub-cycling is not supported "
+                       "with the CrankNicolson ddt scheme"
+                    << exit(FatalError);
+            }
+
+            if
+            (
+                sRestart_
+             || mesh_.time().timeIndex() > mesh_.time().startTimeIndex() + 1
+            )
+            {
+                ocCoeff =
+                    refCast<const fv::CrankNicolsonDdtScheme<scalar>>(ddtS)
+                   .ocCoeff();
+            }
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Only Euler and CrankNicolson ddt schemes are supported"
+                << exit(FatalError);
+        }
+    }
+
+    // Set the time blending factor, 1 for Euler
+    scalar cnCoeff = 1.0/(1.0 + ocCoeff);
+
+    tmp<surfaceScalarField> phiCN(phi);
+
+    // Calculate the Crank-Nicolson off-centred volumetric flux
+    if (ocCoeff > 0)
+    {
+        phiCN = surfaceScalarField::New
+        (
+            "phiCN",
+            cnCoeff*phi + (1.0 - cnCoeff)*phi.oldTime()
+        );
+    }
+
+    if (MULESCorr)
+    {
+        fvScalarMatrix sEqn
+        (
+            (
+                LTS
+              ? fv::localEulerDdtScheme<scalar>(mesh_).fvmDdt(s_)
+              : fv::EulerDdtScheme<scalar>(mesh_).fvmDdt(s_)
+            )
+          + fv::gaussConvectionScheme<scalar>
+            (
+                mesh_,
+                phiCN,
+                upwind<scalar>(mesh_, phiCN)
+            ).fvmDiv(phiCN, s_)
+        );
+
+        sEqn.solve();
+
+        Info<< s_.name() << " volume fraction = "
+            << s_.weightedAverage(mesh_.Vsc()).value()
+            << "  Min(" << s_.name() << ") = " << min(s_).value()
+            << "  Max(" << s_.name() << ") = " << max(s_).value()
+            << endl;
+
+        tmp<surfaceScalarField> tsPhiUD(sEqn.flux());
+        sPhi_ = tsPhiUD();
+
+        if (applyPrevCorr && tsPhiCorr0_.valid())
+        {
+            Info<< "Applying the previous iteration compression flux" << endl;
+            MULES::correct
+            (
+                geometricOneField(),
+                s_,
+                sPhi_,
+                tsPhiCorr0_.ref(),
+                oneField(),
+                zeroField()
+            );
+
+            sPhi_ += tsPhiCorr0_();
+        }
+
+        // Cache the upwind-flux
+        tsPhiCorr0_ = tsPhiUD;
+    }
+
+    for (int sCorr=0; sCorr<nCorr; sCorr++)
+    {
+        // Split operator
+        tmp<surfaceScalarField> tsPhiUn
+        (
+            fvc::flux
+            (
+                phiCN(),
+                (cnCoeff*s_ + (1.0 - cnCoeff)*s_.oldTime())(),
+                mesh_.divScheme(divScheme)
+            )
+        );
+
+        if (MULESCorr)
+        {
+            tmp<surfaceScalarField> tsPhiCorr(tsPhiUn() - sPhi_);
+            volScalarField s0("s0", s_);
+
+            MULES::correct
+            (
+                geometricOneField(),
+                s_,
+                tsPhiUn(),
+                tsPhiCorr.ref(),
+                oneField(),
+                zeroField()
+            );
+
+            // Under-relax the correction for all but the 1st corrector
+            if (sCorr == 0)
+            {
+                sPhi_ += tsPhiCorr();
+            }
+            else
+            {
+                s_ = 0.5*s_ + 0.5*s0;
+                sPhi_ += 0.5*tsPhiCorr();
+            }
+        }
+        else
+        {
+            sPhi_ = tsPhiUn;
+
+            MULES::explicitSolve
+            (
+                geometricOneField(),
+                s_,
+                phiCN,
+                sPhi_,
+                oneField(),
+                zeroField()
+            );
+        }
+    }
+
+    if (applyPrevCorr && MULESCorr)
+    {
+        tsPhiCorr0_ = sPhi_ - tsPhiCorr0_;
+        tsPhiCorr0_.ref().rename("sPhiCorr0");
+    }
+    else
+    {
+        tsPhiCorr0_.clear();
+    }
+
+    if
+    (
+        word(mesh_.ddtScheme("ddt(s)"))
+     == fv::CrankNicolsonDdtScheme<scalar>::typeName
+    )
+    {
+        if (ocCoeff > 0)
+        {
+            // Calculate the end-of-time-step s flux
+            sPhi_ = (sPhi_ - (1.0 - cnCoeff)*sPhi_.oldTime())/cnCoeff;
+        }
+    }
+
+    Info<< s_.name() << "volume fraction = "
+        << s_.weightedAverage(mesh_.Vsc()).value()
+        << "  Min(" << s_.name() << ") = " << min(s_).value()
+        << "  Max(" << s_.name() << ") = " << max(s_).value()
+        << endl;
 }
 
 

@@ -30,15 +30,57 @@ Description
     - To specify the field name set the \c field entry
     - To employ the same numerical schemes as another field set
       the \c schemesField entry,
-    - A constant diffusivity may be specified with the \c D entry,
-
-    - Alternatively if a turbulence model is available a turbulent diffusivity
-      may be constructed from the laminar and turbulent viscosities using the
-      optional diffusivity coefficients \c alphaD and \c alphaDt (which default
-      to 1):
+    - The \c diffusivity entry can be set to \c none, \c constant, \c viscosity
+    - A constant diffusivity is specified with the \c D entry,
+    - If a momentum transport model is available and the \c viscosity
+      diffusivety option specified an effective diffusivity may be constructed
+      from the laminar and turbulent viscosities using the diffusivity
+      coefficients \c alphal and \c alphat:
       \verbatim
-          D = alphaD*nu + alphaDt*nut
+          D = alphal*nu + alphat*nut
       \endverbatim
+
+    Example:
+    \verbatim
+        #includeFunc scalarTransport(T, alphaD=1, alphaDt=1)
+    \endverbatim
+
+    For incompressible flow the passive scalar may optionally be solved with the
+    MULES limiter and sub-cycling or semi-implicit in order to maintain
+    boundedness, particularly if a compressive, PLIC or MPLIC convection
+    scheme is used.
+
+    Example:
+    \verbatim
+        #includeFunc scalarTransport(tracer, diffusion=none)
+
+    with scheme specification:
+        div(phi,tracer)     Gauss interfaceCompression vanLeer 1;
+
+    and solver specification:
+        tracer
+        {
+            nCorr      1;
+            nSubCycles 3;
+
+            MULESCorr       no;
+            nLimiterIter    5;
+            applyPrevCorr   yes;
+
+            solver          smoothSolver;
+            smoother        symGaussSeidel;
+            tolerance       1e-8;
+            relTol          0;
+
+            diffusion
+            {
+                solver          smoothSolver;
+                smoother        symGaussSeidel;
+                tolerance       1e-8;
+                relTol          0;
+            }
+        }
+    \endverbatim
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
@@ -69,6 +111,19 @@ class scalarTransport
 :
     public fvMeshFunctionObject
 {
+public:
+
+        //- Enumeration defining the type of the diffusion
+        enum class diffusionType
+        {
+            none,
+            constant,
+            viscosity
+        };
+
+
+private:
+
     // Private Data
 
         //- Name of field to process
@@ -80,17 +135,20 @@ class scalarTransport
         //- Name of density field (optional)
         word rhoName_;
 
-        //- Diffusion coefficient (optional)
+        //- Diffusion type names
+        static const NamedEnum<diffusionType, 3> diffusionTypeNames_;
+
+        //- The type of diffusion
+        diffusionType diffusion_;
+
+        //- Constant diffusion coefficient (optional)
         scalar D_;
 
-        //- Flag to indicate whether a constant, uniform D_ is specified
-        bool constantD_;
-
         //- Laminar diffusion coefficient (optional)
-        scalar alphaD_;
+        scalar alphal_;
 
         //- Turbulent diffusion coefficient (optional)
-        scalar alphaDt_;
+        scalar alphat_;
 
         //- Number of corrector iterations (optional)
         int nCorr_;
@@ -101,11 +159,30 @@ class scalarTransport
         //- The scalar field
         volScalarField s_;
 
+        //- Switch for MULES limited solution
+        bool MULES_;
+
+        //- Stabilisation for normalisation of the interface normal
+        //  needed if a compressive convection scheme is used
+        const dimensionedScalar deltaN_;
+
+        //- Scalar volumetric flux
+        tmp<surfaceScalarField> tsPhi_;
+
+        //- MULES Correction
+        tmp<surfaceScalarField> tsPhiCorr0_;
+
+        //- Switch to indicate that s has been restarted for Crank-Nicolson
+        bool sRestart_;
+
 
     // Private Member Functions
 
         //- Return the diffusivity field
-        tmp<volScalarField> D(const surfaceScalarField& phi) const;
+        tmp<volScalarField> D() const;
+
+        void subCycleMULES();
+        void solveMULES();
 
 
 public:

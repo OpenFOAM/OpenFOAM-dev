@@ -32,6 +32,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "interfaceCompression.H"
 #include "CMULES.H"
 #include "localEulerDdtScheme.H"
 #include "subCycle.H"

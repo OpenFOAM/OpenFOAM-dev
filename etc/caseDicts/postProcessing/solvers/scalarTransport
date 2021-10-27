@@ -21,5 +21,9 @@ Description
 field           <fieldName>;    // Name of the transported scalar
 schemesField    $field;         // Name of the field from which to use schemes
                                 // and solvers settings
+diffusion       viscosity;
+
+alphal          1;
+alphat          1;
 
 // ************************************************************************* //
