@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -275,6 +275,9 @@ cmptAv(const tmp<DimensionedField<Type, GeoMesh>>& tdf)
 
     return CmptAv;
 }
+
+UNARY_FUNCTION(Type, Type, cmptMag, cmptMag);
+
 
 #define UNARY_REDUCTION_FUNCTION(returnType, func, dfunc)                      \
                                                                                \

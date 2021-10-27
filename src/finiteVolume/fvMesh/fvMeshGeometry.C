@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -226,7 +226,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V0() const
 }
 
 
-Foam::volScalarField::Internal& Foam::fvMesh::setV0()
+Foam::volScalarField::Internal& Foam::fvMesh::V0Ref()
 {
     if (!V0Ptr_)
     {
@@ -261,6 +261,17 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
             ),
             V0()
         );
+    }
+
+    return *V00Ptr_;
+}
+
+
+Foam::volScalarField::Internal& Foam::fvMesh::V00Ref()
+{
+    if (!V00Ptr_)
+    {
+        V00();
     }
 
     return *V00Ptr_;
@@ -429,7 +440,7 @@ const Foam::surfaceScalarField& Foam::fvMesh::phi() const
 }
 
 
-Foam::surfaceScalarField& Foam::fvMesh::setPhi()
+Foam::surfaceScalarField& Foam::fvMesh::phiRef()
 {
     if (!phiPtr_)
     {

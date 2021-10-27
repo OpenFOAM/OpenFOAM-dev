@@ -308,13 +308,19 @@ public:
             //- Return old-time cell volumes
             const DimensionedField<scalar, volMesh>& V0() const;
 
+            //- Access old-time cell volumes
+            DimensionedField<scalar, volMesh>& V0Ref();
+
             //- Return old-old-time cell volumes
             const DimensionedField<scalar, volMesh>& V00() const;
+
+            //- Access old-old-time cell volumes
+            DimensionedField<scalar, volMesh>& V00Ref();
 
             //- Return sub-cycle cell volumes
             tmp<DimensionedField<scalar, volMesh>> Vsc() const;
 
-            //- Return sub-cycl old-time cell volumes
+            //- Return sub-cycle old-time cell volumes
             tmp<DimensionedField<scalar, volMesh>> Vsc0() const;
 
             //- Return cell face area vectors
@@ -322,9 +328,6 @@ public:
 
             //- Return cell face area magnitudes
             const surfaceScalarField& magSf() const;
-
-            //- Return cell face motion fluxes
-            const surfaceScalarField& phi() const;
 
             //- Return cell centres as volVectorField
             const volVectorField& C() const;
@@ -334,6 +337,12 @@ public:
 
             //- Return face deltas as surfaceVectorField
             tmp<surfaceVectorField> delta() const;
+
+            //- Return cell face motion fluxes
+            const surfaceScalarField& phi() const;
+
+            //- Access cell face motion fluxes
+            surfaceScalarField& phiRef();
 
             //- Return a labelType of valid component indicators
             //  1 : valid (solved)
@@ -389,12 +398,6 @@ public:
             //- Remove boundary patches. Warning: fvPatchFields hold ref to
             //  these fvPatches.
             void removeFvBoundary();
-
-            //- Return cell face motion fluxes
-            surfaceScalarField& setPhi();
-
-            //- Return old-time cell volumes
-            DimensionedField<scalar, volMesh>& setV0();
 
 
         // Write
