@@ -343,6 +343,27 @@ public:
             }
 
 
+        // Evaluation functions
+
+            //- Initialise return of the patchField on the opposite patch of a
+            //  coupled patch
+            virtual void initPatchNeighbourField
+            (
+                const Pstream::commsTypes commsType
+            ) const
+            {}
+
+            //- Return patchField on the opposite patch of a coupled patch
+            virtual tmp<Field<Type>> patchNeighbourField
+            (
+                const Pstream::commsTypes commsType
+            ) const
+            {
+                NotImplemented;
+                return *this;
+            }
+
+
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object

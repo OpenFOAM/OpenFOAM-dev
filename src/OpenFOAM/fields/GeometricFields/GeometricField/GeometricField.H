@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,7 +185,10 @@ public:
 
             //- Return BoundaryField of the cell values neighbouring
             //  the boundary
-            Boundary boundaryInternalField() const;
+            tmp<Boundary> boundaryInternalField() const;
+
+            //- Return BoundaryField of the values on the other side of couples
+            tmp<Boundary> boundaryNeighbourField() const;
 
             //- Return a list of pointers for each patch field with only those
             //  pointing to interfaces being set

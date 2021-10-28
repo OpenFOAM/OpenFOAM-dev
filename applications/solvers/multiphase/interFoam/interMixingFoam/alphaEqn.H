@@ -17,11 +17,8 @@
 
     for (int gCorr=0; gCorr<nAlphaCorr; gCorr++)
     {
-        // Create the limiter to be used for all phase-fractions
-        scalarField allLambda(mesh.nFaces(), 1.0);
-
         // Split the limiter into a surfaceScalarField
-        slicedSurfaceScalarField lambda
+        surfaceScalarField lambda
         (
             IOobject
             (
@@ -33,11 +30,8 @@
                 false
             ),
             mesh,
-            dimless,
-            allLambda,
-            false   // Use slices for the couples
+            dimensionedScalar(dimless, 1)
         );
-
 
         // Create the complete convection flux for alpha1
         surfaceScalarField alphaPhi1
@@ -79,7 +73,7 @@
 
             MULES::limiter
             (
-                allLambda,
+                lambda,
                 rDeltaT,
                 geometricOneField(),
                 alpha1,
@@ -95,7 +89,7 @@
         {
             MULES::limiter
             (
-                allLambda,
+                lambda,
                 1.0/runTime.deltaT().value(),
                 geometricOneField(),
                 alpha1,
@@ -142,7 +136,7 @@
 
             MULES::limiter
             (
-                allLambda,
+                lambda,
                 rDeltaT,
                 geometricOneField(),
                 alpha2,
@@ -158,7 +152,7 @@
         {
             MULES::limiter
             (
-                allLambda,
+                lambda,
                 1.0/runTime.deltaT().value(),
                 geometricOneField(),
                 alpha2,

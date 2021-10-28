@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cyclicFvsPatchField.H"
+#include "GeometricField.H"
+#include "surfaceMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -96,6 +98,31 @@ Foam::cyclicFvsPatchField<Type>::cyclicFvsPatchField
     coupledFvsPatchField<Type>(ptf, iF),
     cyclicPatch_(ptf.cyclicPatch_)
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::cyclicFvsPatchField<Type>::patchNeighbourField
+(
+    const Pstream::commsTypes commsType
+) const
+{
+    typedef GeometricField<Type, fvsPatchField, surfaceMesh> geoField;
+    const geoField& gf = refCast<const geoField>(this->internalField());
+
+    const cyclicFvPatch& cp = refCast<const cyclicFvPatch>(this->patch());
+
+    tmp<Field<Type>> tresult
+    (
+        new Field<Type>(gf.boundaryField()[cp.nbrPatchID()])
+    );
+
+    cp.transform().transform(tresult.ref(), tresult.ref());
+
+    return tresult;
+}
 
 
 // ************************************************************************* //

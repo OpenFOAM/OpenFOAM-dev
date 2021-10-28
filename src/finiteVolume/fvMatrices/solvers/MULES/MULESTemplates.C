@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,6 @@ License
 #include "localEulerDdtScheme.H"
 #include "slicedSurfaceFields.H"
 #include "wedgeFvPatch.H"
-#include "syncTools.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -190,7 +189,7 @@ template
 >
 void Foam::MULES::limiter
 (
-    scalarField& allLambda,
+    surfaceScalarField& lambda,
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
     const volScalarField& psi,
@@ -252,23 +251,6 @@ void Foam::MULES::limiter
     const scalarField& phiCorrIf = phiCorr;
     const surfaceScalarField::Boundary& phiCorrBf =
         phiCorr.boundaryField();
-
-    slicedSurfaceScalarField lambda
-    (
-        IOobject
-        (
-            "lambda",
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        mesh,
-        dimless,
-        allLambda,
-        false   // Use slices for the couples
-    );
 
     scalarField& lambdaIf = lambda;
     surfaceScalarField::Boundary& lambdaBf = lambda.boundaryFieldRef();
@@ -560,7 +542,21 @@ void Foam::MULES::limiter
             }
         }
 
-        syncTools::syncFaceList(mesh, allLambda, minEqOp<scalar>());
+        // Take minimum value of limiter across coupled patches
+        surfaceScalarField::Boundary lambdaNbrBf
+        (
+            surfaceScalarField::Internal::null(),
+            lambdaBf.boundaryNeighbourField()
+        );
+        forAll(lambdaBf, patchi)
+        {
+            fvsPatchScalarField& lambdaPf = lambdaBf[patchi];
+            const fvsPatchScalarField& lambdaNbrPf = lambdaNbrBf[patchi];
+            if (lambdaPf.coupled())
+            {
+                lambdaPf = min(lambdaPf, lambdaNbrPf);
+            }
+        }
     }
 }
 
@@ -608,9 +604,7 @@ void Foam::MULES::limit
     surfaceScalarField& phiCorr = phiPsi;
     phiCorr -= phiBD;
 
-    scalarField allLambda(mesh.nFaces(), 1.0);
-
-    slicedSurfaceScalarField lambda
+    surfaceScalarField lambda
     (
         IOobject
         (
@@ -622,14 +616,12 @@ void Foam::MULES::limit
             false
         ),
         mesh,
-        dimless,
-        allLambda,
-        false   // Use slices for the couples
+        dimensionedScalar(dimless, 1)
     );
 
     limiter
     (
-        allLambda,
+        lambda,
         rDeltaT,
         rho,
         psi,

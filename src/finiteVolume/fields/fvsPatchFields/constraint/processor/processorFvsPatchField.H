@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,9 @@ class processorFvsPatchField
 
         //- Local reference cast into the processor patch
         const processorFvPatch& procPatch_;
+
+        //- Receive buffer for non-blocking communication
+        mutable Field<Type> receiveBuf_;
 
 
 public:
@@ -141,6 +144,22 @@ public:
                     return false;
                 }
             }
+
+
+        // Evaluation functions
+
+            //- Initialise return of the patchField on the opposite patch of a
+            //  coupled patch
+            virtual void initPatchNeighbourField
+            (
+                const Pstream::commsTypes commsType
+            ) const;
+
+            //- Return patchField on the opposite patch of a coupled patch
+            virtual tmp<Field<Type>> patchNeighbourField
+            (
+                const Pstream::commsTypes commsType
+            ) const;
 };
 
 

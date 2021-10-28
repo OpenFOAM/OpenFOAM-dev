@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cyclicAMIFvsPatchField.H"
+#include "GeometricField.H"
+#include "surfaceMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -104,6 +106,36 @@ template<class Type>
 bool Foam::cyclicAMIFvsPatchField<Type>::coupled() const
 {
     return cyclicAMIPatch_.coupled();
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::cyclicAMIFvsPatchField<Type>::patchNeighbourField
+(
+    const Pstream::commsTypes commsType
+) const
+{
+    typedef GeometricField<Type, fvsPatchField, surfaceMesh> geoField;
+    const geoField& gf = refCast<const geoField>(this->internalField());
+
+    const cyclicAMIFvPatch& cp = refCast<const cyclicAMIFvPatch>(this->patch());
+
+    const Field<Type>& pnf = gf.boundaryField()[cp.nbrPatchID()];
+
+    tmp<Field<Type>> tpnf;
+    if (cp.applyLowWeightCorrection())
+    {
+        tpnf = cyclicAMIPatch_.interpolate(pnf, *this);
+    }
+    else
+    {
+        tpnf = cyclicAMIPatch_.interpolate(pnf);
+    }
+
+    cp.transform().transform(tpnf.ref(), tpnf());
+
+    return tpnf;
 }
 
 

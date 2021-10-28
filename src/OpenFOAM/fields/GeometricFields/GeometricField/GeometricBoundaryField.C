@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -474,20 +474,114 @@ types() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-typename Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary
+Foam::tmp<typename Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary>
 Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 boundaryInternalField() const
 {
-    typename GeometricField<Type, PatchField, GeoMesh>::Boundary
-        BoundaryInternalField(*this);
+    tmp<typename GeometricField<Type, PatchField, GeoMesh>::Boundary> tresult
+    (
+        GeometricField<Type, PatchField, GeoMesh>::Internal::null(),
+        *this
+    );
 
-    forAll(BoundaryInternalField, patchi)
+    typename GeometricField<Type, PatchField, GeoMesh>::Boundary& result =
+        tresult.ref();
+
+    forAll(*this, patchi)
     {
-        BoundaryInternalField[patchi] ==
-            this->operator[](patchi).patchInternalField();
+        result[patchi] == this->operator[](patchi).patchInternalField();
     }
 
-    return BoundaryInternalField;
+    return tresult;
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Foam::tmp<typename Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary>
+Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+boundaryNeighbourField() const
+{
+    tmp<typename GeometricField<Type, PatchField, GeoMesh>::Boundary> tresult
+    (
+        new typename GeometricField<Type, PatchField, GeoMesh>::Boundary
+        (
+            GeometricField<Type, PatchField, GeoMesh>::Internal::null(),
+            *this
+        )
+    );
+
+    typename GeometricField<Type, PatchField, GeoMesh>::Boundary& result =
+        tresult.ref();
+
+    if
+    (
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
+    )
+    {
+        const label nReq = Pstream::nRequests();
+
+        forAll(*this, patchi)
+        {
+            if (this->operator[](patchi).coupled())
+            {
+                this->operator[](patchi)
+                    .initPatchNeighbourField(Pstream::defaultCommsType);
+            }
+        }
+
+        // Block for any outstanding requests
+        if
+        (
+            Pstream::parRun()
+         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
+        )
+        {
+            Pstream::waitRequests(nReq);
+        }
+
+        forAll(*this, patchi)
+        {
+            if (this->operator[](patchi).coupled())
+            {
+                result[patchi] =
+                    this->operator[](patchi)
+                    .patchNeighbourField(Pstream::defaultCommsType);
+            }
+        }
+    }
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
+    {
+        const lduSchedule& patchSchedule =
+            bmesh_.mesh().globalData().patchSchedule();
+
+        forAll(patchSchedule, patchEvali)
+        {
+            if (this->operator[](patchSchedule[patchEvali].patch).coupled())
+            {
+                if (patchSchedule[patchEvali].init)
+                {
+                    this->operator[](patchSchedule[patchEvali].patch)
+                        .initPatchNeighbourField(Pstream::defaultCommsType);
+                }
+                else
+                {
+                    result[patchSchedule[patchEvali].patch] =
+                        this->operator[](patchSchedule[patchEvali].patch)
+                        .patchNeighbourField(Pstream::defaultCommsType);
+                }
+            }
+        }
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Unsupported communications type "
+            << Pstream::commsTypeNames[Pstream::defaultCommsType]
+            << exit(FatalError);
+    }
+
+    return tresult;
 }
 
 
