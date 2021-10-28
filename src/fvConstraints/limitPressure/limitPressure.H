@@ -25,7 +25,8 @@ Class
     Foam::fv::limitPressure
 
 Description
-    Limits the pressure to be between minimum and maximum values.
+    Limits the specified pressure field to be between specified minimum and
+    maximum limits.
 
 Usage
     Example usage:
@@ -33,6 +34,8 @@ Usage
     limitp
     {
         type            limitPressure;
+
+        // p               p_rgh; // Optional entry to specify the pressure
 
         min             200;
         max             500;
@@ -66,6 +69,9 @@ class limitPressure
     public fvConstraint
 {
     // Private data
+
+        //- Pressure field name, default = p
+        word pName_;
 
         //- Minimum pressure limit
         dimensionedScalar pMin_;

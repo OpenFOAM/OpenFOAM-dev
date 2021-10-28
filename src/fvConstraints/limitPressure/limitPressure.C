@@ -50,6 +50,8 @@ void Foam::fv::limitPressure::readCoeffs()
 {
     const dictionary& dict(coeffs());
 
+    pName_ = dict.lookupOrDefault<word>("p", "p");
+
     if (dict.found("min") && dict.found("max"))
     {
         pMin_.value() = dict.lookup<scalar>("min");
@@ -60,7 +62,7 @@ void Foam::fv::limitPressure::readCoeffs()
     }
     else
     {
-        const volScalarField& p = mesh().lookupObject<volScalarField>("p");
+        const volScalarField& p = mesh().lookupObject<volScalarField>(pName_);
         const volScalarField::Boundary& pbf = p.boundaryField();
 
         bool pLimits = false;
@@ -158,6 +160,7 @@ Foam::fv::limitPressure::limitPressure
 )
 :
     fvConstraint(name, modelType, dict, mesh),
+    pName_(word::null),
     pMin_("pMin", dimPressure, 0),
     pMax_("pMax", dimPressure, great),
     limitMinP_(false),
@@ -171,7 +174,7 @@ Foam::fv::limitPressure::limitPressure
 
 Foam::wordList Foam::fv::limitPressure::constrainedFields() const
 {
-    return wordList(1, "p");
+    return wordList(1, pName_);
 }
 
 
@@ -187,7 +190,7 @@ bool Foam::fv::limitPressure::constrain(volScalarField& p) const
 
             if (pMin < pMin_.value())
             {
-                Info<< "limitPressure: p min " << pMin << endl;
+                Info<< "limitPressure: min " << pMin << endl;
                 p = max(p, pMin_);
                 constrained = true;
             }
@@ -199,7 +202,7 @@ bool Foam::fv::limitPressure::constrain(volScalarField& p) const
 
             if (pMax > pMax_.value())
             {
-                Info<< "limitPressure: p max " << pMax << endl;
+                Info<< "limitPressure: max " << pMax << endl;
                 p = min(p, pMax_);
                 constrained = true;
             }
