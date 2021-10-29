@@ -84,6 +84,8 @@ int main(int argc, char *argv[])
                 << liquidPtr->sigma(p, T)
                 << nl;
         }
+
+        plotFile << nl;
     }
 
     Info<< "\nEnd\n" << endl;
