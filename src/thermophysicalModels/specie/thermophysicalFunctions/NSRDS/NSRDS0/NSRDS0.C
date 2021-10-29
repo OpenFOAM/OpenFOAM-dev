@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,6 +86,24 @@ Foam::scalar Foam::Function1s::NSRDS0::integral
 {
     NotImplemented;
     return 0;
+}
+
+
+Foam::Function1s::NSRDS0 Foam::Function1s::NSRDS0::integral
+(
+    const word& name,
+    const scalar a
+) const
+{
+    if (f_ != 0)
+    {
+        FatalErrorInFunction
+            << "Integral function of " << typeName << " function requested"
+            << " but the \"f\" coefficient is not zero"
+            << exit(FatalError);
+    }
+
+    return NSRDS0(name, a, a_, b_/2, c_/3, d_/4, e_/5);
 }
 
 

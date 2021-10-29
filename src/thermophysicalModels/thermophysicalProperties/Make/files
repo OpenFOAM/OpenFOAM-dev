@@ -35,6 +35,7 @@ liquidProperties/MB/MB.C
 liquidProperties/CH4N2O/CH4N2O.C
 liquidProperties/nC3H8O/nC3H8O.C
 liquidProperties/iC3H8O/iC3H8O.C
+liquidProperties/NH3/NH3.C
 
 
 solidProperties/solidProperties/solidProperties.C
