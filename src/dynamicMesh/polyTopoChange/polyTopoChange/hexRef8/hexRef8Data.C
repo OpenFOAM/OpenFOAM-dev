@@ -33,6 +33,7 @@ License
 #include "syncTools.H"
 #include "refinementHistory.H"
 #include "fvMesh.H"
+#include "polyTopoChange.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -48,7 +49,11 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         );
         if (haveFile)
         {
-            Info<< "Reading hexRef8 data : " << rio.name() << endl;
+            if (polyTopoChange::debug)
+            {
+                Info<< "Reading hexRef8 data : " << rio.name() << endl;
+            }
+
             cellLevelPtr_.reset(new labelIOList(rio));
         }
     }
@@ -62,7 +67,11 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         );
         if (haveFile)
         {
-            Info<< "Reading hexRef8 data : " << rio.name() << endl;
+            if (polyTopoChange::debug)
+            {
+                Info<< "Reading hexRef8 data : " << rio.name() << endl;
+            }
+
             pointLevelPtr_.reset(new labelIOList(rio));
         }
     }
@@ -76,7 +85,11 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         );
         if (haveFile)
         {
-            Info<< "Reading hexRef8 data : " << rio.name() << endl;
+            if (polyTopoChange::debug)
+            {
+                Info<< "Reading hexRef8 data : " << rio.name() << endl;
+            }
+
             level0EdgePtr_.reset(new uniformDimensionedScalarField(rio));
         }
     }
@@ -90,7 +103,11 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         );
         if (haveFile)
         {
-            Info<< "Reading hexRef8 data : " << rio.name() << endl;
+            if (polyTopoChange::debug)
+            {
+                Info<< "Reading hexRef8 data : " << rio.name() << endl;
+            }
+
             refHistoryPtr_.reset(new refinementHistory(rio));
         }
     }
