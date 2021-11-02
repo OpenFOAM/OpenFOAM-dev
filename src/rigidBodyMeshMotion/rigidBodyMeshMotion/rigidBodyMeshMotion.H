@@ -124,8 +124,18 @@ class rigidBodyMeshMotion
         //- Current time index (used for updating)
         label curTimeIndex_;
 
+
+    // Private Member Functions
+
         //- To avoid warning from clang
         using RBD::rigidBodyMotion::write;
+
+        //- Return the list of transformation for each body from time 0
+        List<septernion> transforms0() const;
+
+        //- Return the list of weights for each body to pointi
+        //   w is used as the work-space for the weights and returned
+        List<scalar>& weights(const label pointi, List<scalar>& w) const;
 
 
 public:
