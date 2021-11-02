@@ -16,7 +16,7 @@ FoamFile
 
 ddtSchemes
 {
-    default         CrankNicolson 0.9;
+    default         Euler;
 }
 
 gradSchemes
@@ -26,7 +26,7 @@ gradSchemes
 
 divSchemes
 {
-    div(rhoPhi,U)  Gauss vanLeerV;
+    div(rhoPhi,U)   Gauss vanLeerV;
     div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
     div(phi,k)      Gauss upwind;
     div(phi,epsilon) Gauss upwind;

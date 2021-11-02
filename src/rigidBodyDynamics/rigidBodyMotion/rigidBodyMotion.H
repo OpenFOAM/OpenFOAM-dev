@@ -181,33 +181,8 @@ public:
 
         // Transformations
 
-            //- Transform the given initial pointField of the specified body
-            //  to correspond to the current motion state
-            tmp<pointField> transformPoints
-            (
-                const label bodyID,
-                const pointField& initialPoints
-            ) const;
-
-            //- Transform the given initial pointField of the specified body
-            //  to correspond to the current motion state scaled using
-            //  'slerp' interpolation
-            tmp<pointField> transformPoints
-            (
-                const label bodyID,
-                const scalarField& weight,
-                const pointField& initialPoints
-            ) const;
-
-            //- Transform the given initial pointField of the specified body
-            //  to correspond to the current motion state scaled using
-            //  'slerp' interpolation
-            tmp<pointField> transformPoints
-            (
-                const labelList& bodyIDs,
-                const List<const scalarField*>& weights,
-                const pointField& initialPoints
-            ) const;
+            //- Return the transformation of bodyID relative to the initial time
+            spatialTransform transform0(const label bodyID) const;
 
 
         //- Write

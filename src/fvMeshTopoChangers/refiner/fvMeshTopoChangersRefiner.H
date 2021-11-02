@@ -186,6 +186,9 @@ class refiner
         //- Protected cells (usually since not hexes)
         PackedBoolList protectedCells_;
 
+        //- The time index used for updating
+        label timeIndex_;
+
 
     // Private Member Functions
 

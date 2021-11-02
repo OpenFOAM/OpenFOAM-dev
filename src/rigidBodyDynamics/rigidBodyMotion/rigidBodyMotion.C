@@ -181,126 +181,12 @@ void Foam::RBD::rigidBodyMotion::status(const label bodyID) const
 }
 
 
-Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
+Foam::spatialTransform Foam::RBD::rigidBodyMotion::transform0
 (
-    const label bodyID,
-    const pointField& initialPoints
+    const label bodyID
 ) const
 {
-    // Calculate the transform from the initial state in the global frame
-    // to the current state in the global frame
-    spatialTransform X(X0(bodyID).inv() & X00(bodyID));
-
-    tmp<pointField> tpoints(new pointField(initialPoints.size()));
-    pointField& points = tpoints.ref();
-
-    forAll(points, i)
-    {
-        points[i] = X.transformPoint(initialPoints[i]);
-    }
-
-    return tpoints;
-}
-
-
-Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
-(
-    const label bodyID,
-    const scalarField& weight,
-    const pointField& initialPoints
-) const
-{
-    // Calculate the transform from the initial state in the global frame
-    // to the current state in the global frame
-    spatialTransform X(X0(bodyID).inv() & X00(bodyID));
-
-    // Calculate the septernion equivalent of the transformation for 'slerp'
-    // interpolation
-    septernion s(X);
-
-    tmp<pointField> tpoints(new pointField(initialPoints));
-    pointField& points = tpoints.ref();
-
-    forAll(points, i)
-    {
-        // Move non-stationary points
-        if (weight[i] > small)
-        {
-            // Use solid-body motion where weight = 1
-            if (weight[i] > 1 - small)
-            {
-                points[i] = X.transformPoint(initialPoints[i]);
-            }
-            // Slerp septernion interpolation
-            else
-            {
-                points[i] =
-                    slerp(septernion::I, s, weight[i])
-                   .transformPoint(initialPoints[i]);
-            }
-        }
-    }
-
-    return tpoints;
-}
-
-
-Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
-(
-    const labelList& bodyIDs,
-    const List<const scalarField*>& weights,
-    const pointField& initialPoints
-) const
-{
-    List<septernion> ss(bodyIDs.size() + 1);
-    ss[bodyIDs.size()] = septernion::I;
-
-    forAll(bodyIDs, bi)
-    {
-        const label bodyID = bodyIDs[bi];
-
-        // Calculate the transform from the initial state in the global frame
-        // to the current state in the global frame
-        spatialTransform X(X0(bodyID).inv() & X00(bodyID));
-
-        // Calculate the septernion equivalent of the transformation
-        ss[bi] = septernion(X);
-    }
-
-    tmp<pointField> tpoints(new pointField(initialPoints));
-    pointField& points = tpoints.ref();
-
-    List<scalar> w(ss.size());
-
-    forAll(points, i)
-    {
-        // Initialise to 1 for the far-field weight
-        scalar sum1mw = 1;
-
-        forAll(bodyIDs, bi)
-        {
-            w[bi] = (*(weights[bi]))[i];
-            sum1mw += w[bi]/(1 + small - w[bi]);
-        }
-
-        // Calculate the limiter for wi/(1 - wi) to ensure the sum(wi) = 1
-        scalar lambda = 1/sum1mw;
-
-        // Limit wi/(1 - wi) and sum the resulting wi
-        scalar sumw = 0;
-        forAll(bodyIDs, bi)
-        {
-            w[bi] = lambda*w[bi]/(1 + small - w[bi]);
-            sumw += w[bi];
-        }
-
-        // Calculate the weight for the stationary far-field
-        w[bodyIDs.size()] = 1 - sumw;
-
-        points[i] = average(ss, w).transformPoint(initialPoints[i]);
-    }
-
-    return tpoints;
+    return X0(bodyID).inv() & X00(bodyID);
 }
 
 

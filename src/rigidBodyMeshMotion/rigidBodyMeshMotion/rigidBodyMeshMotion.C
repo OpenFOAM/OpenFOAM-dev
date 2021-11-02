@@ -25,6 +25,7 @@ License
 
 #include "rigidBodyMeshMotion.H"
 #include "polyMesh.H"
+#include "mapPolyMesh.H"
 #include "pointPatchDist.H"
 #include "pointConstraints.H"
 #include "timeIOdictionary.H"
@@ -73,8 +74,7 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
+            IOobject::NO_WRITE
         ),
         pointMesh::New(mesh),
         dimensionedScalar(dimless, 0)
@@ -166,45 +166,17 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
         }
     }
 
+    const pointMesh& pMesh = pointMesh::New(mesh);
+
     // Calculate scaling factor everywhere for each meshed body
     forAll(bodyMeshes_, bi)
     {
-        const pointMesh& pMesh = pointMesh::New(mesh);
+        const pointPatchDist pDist(pMesh, bodyMeshes_[bi].patchSet_, points0());
 
-        pointPatchDist pDist(pMesh, bodyMeshes_[bi].patchSet_, points0());
+        bodyMeshes_[bi].weight_.primitiveFieldRef() =
+            bodyMeshes_[bi].weight(pDist.primitiveField());
 
-        pointScalarField& scale = bodyMeshes_[bi].weight_;
-
-        // Scaling: 1 up to di then linear down to 0 at do away from patches
-        scale.primitiveFieldRef() =
-            min
-            (
-                max
-                (
-                    (bodyMeshes_[bi].do_ - pDist.primitiveField())
-                   /(bodyMeshes_[bi].do_ - bodyMeshes_[bi].di_),
-                    scalar(0)
-                ),
-                scalar(1)
-            );
-
-        // Convert the scale function to a cosine
-        scale.primitiveFieldRef() =
-            min
-            (
-                max
-                (
-                    0.5
-                  - 0.5
-                   *cos(scale.primitiveField()
-                   *Foam::constant::mathematical::pi),
-                    scalar(0)
-                ),
-                scalar(1)
-            );
-
-        pointConstraints::New(pMesh).constrain(scale);
-        // scale.write();
+        pointConstraints::New(pMesh).constrain(bodyMeshes_[bi].weight_);
     }
 }
 
@@ -216,6 +188,31 @@ Foam::rigidBodyMeshMotion::~rigidBodyMeshMotion()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+Type Foam::rigidBodyMeshMotion::bodyMesh::weight
+(
+    const Type& pDist
+) const
+{
+    // Scaling: 1 up to di then linear down to 0 at do away from patches
+    Type weight = min(max((do_ - pDist)/(do_ - di_), scalar(0)), scalar(1));
+
+    // Convert the weight function to a cosine
+    weight =
+        min
+        (
+            max
+            (
+                0.5 - 0.5*cos(weight*Foam::constant::mathematical::pi),
+                scalar(0)
+            ),
+            scalar(1)
+        );
+
+    return weight;
+}
+
 
 Foam::tmp<Foam::pointField>
 Foam::rigidBodyMeshMotion::curPoints() const
@@ -309,25 +306,84 @@ void Foam::rigidBodyMeshMotion::solve()
     // Update the displacements
     if (bodyMeshes_.size() == 1)
     {
-        pointDisplacement_.primitiveFieldRef() = transformPoints
+        const septernion transform0
         (
-            bodyMeshes_[0].bodyID_,
-            bodyMeshes_[0].weight_,
-            points0()
-        ) - points0();
+            this->transform0(bodyMeshes_[0].bodyID_)
+        );
+
+        vectorField& pointDisplacement = pointDisplacement_.primitiveFieldRef();
+        const pointField& points0 = this->points0();
+        const scalarField& weight = bodyMeshes_[0].weight_;
+
+        forAll(points0, pointi)
+        {
+            // Move non-stationary points
+            if (weight[pointi] > small)
+            {
+                // Use solid-body motion where weight = 1
+                if (weight[pointi] > 1 - small)
+                {
+                    pointDisplacement[pointi] =
+                        transform0.transformPoint(points0[pointi])
+                      - points0[pointi];
+                }
+                // Slerp septernion interpolation
+                else
+                {
+                    pointDisplacement[pointi] =
+                        slerp(septernion::I, transform0, weight[pointi])
+                       .transformPoint(points0[pointi])
+                      - points0[pointi];
+                }
+            }
+        }
     }
     else
     {
-        labelList bodyIDs(bodyMeshes_.size());
-        List<const scalarField*> weights(bodyMeshes_.size());
-        forAll(bodyIDs, bi)
+        List<septernion> transforms0(bodyMeshes_.size() + 1);
+
+        forAll(bodyMeshes_, bi)
         {
-            bodyIDs[bi] = bodyMeshes_[bi].bodyID_;
-            weights[bi] = &bodyMeshes_[bi].weight_;
+            // Calculate the septernion equivalent of the transformation
+            transforms0[bi] = septernion(transform0(bodyMeshes_[bi].bodyID_));
         }
 
-        pointDisplacement_.primitiveFieldRef() =
-            transformPoints(bodyIDs, weights, points0()) - points0();
+        transforms0[bodyMeshes_.size()] = septernion::I;
+
+        vectorField& pointDisplacement = pointDisplacement_.primitiveFieldRef();
+        const pointField& points0 = this->points0();
+
+        List<scalar> w(transforms0.size());
+
+        forAll(points0, pointi)
+        {
+            // Initialise to 1 for the far-field weight
+            scalar sum1mw = 1;
+
+            forAll(bodyMeshes_, bi)
+            {
+                w[bi] = bodyMeshes_[bi].weight_[pointi];
+                sum1mw += w[bi]/(1 + small - w[bi]);
+            }
+
+            // Calculate the limiter for wi/(1 - wi) to ensure the sum(wi) = 1
+            scalar lambda = 1/sum1mw;
+
+            // Limit wi/(1 - wi) and sum the resulting wi
+            scalar sumw = 0;
+            forAll(bodyMeshes_, bi)
+            {
+                w[bi] = lambda*w[bi]/(1 + small - w[bi]);
+                sumw += w[bi];
+            }
+
+            // Calculate the weight for the stationary far-field
+            w[bodyMeshes_.size()] = 1 - sumw;
+
+            pointDisplacement[pointi] =
+                average(transforms0, w).transformPoint(points0[pointi])
+              - points0[pointi];
+        }
     }
 
     // Displacement has changed. Update boundary conditions
@@ -335,6 +391,121 @@ void Foam::rigidBodyMeshMotion::solve()
     (
         pointDisplacement_.mesh()
     ).constrainDisplacement(pointDisplacement_);
+}
+
+
+void Foam::rigidBodyMeshMotion::updateMesh(const mapPolyMesh& mpm)
+{
+    // pointMesh already updates pointFields
+
+    motionSolver::updateMesh(mpm);
+
+    // Get the new points either from the map or the mesh
+    const pointField& points =
+    (
+        mpm.hasMotionPoints()
+      ? mpm.preMotionPoints()
+      : mesh().points()
+    );
+
+    const pointMesh& pMesh = pointMesh::New(mesh());
+
+    pointField points0(points);
+
+    for (int iter=0; iter<3; iter++)
+    {
+    // Calculate scaling factor everywhere for each meshed body
+    forAll(bodyMeshes_, bi)
+    {
+        const pointPatchDist pDist(pMesh, bodyMeshes_[bi].patchSet_, points0);
+        pointScalarField& weight = bodyMeshes_[bi].weight_;
+
+        forAll(points0, pointi)
+        {
+            const label oldPointi = mpm.pointMap()[pointi];
+
+            if (oldPointi >= 0)
+            {
+                if (mpm.reversePointMap()[oldPointi] != pointi)
+                {
+                    weight[pointi] = bodyMeshes_[bi].weight(pDist[pointi]);
+                }
+            }
+            else
+            {
+                FatalErrorInFunction
+                    << "Cannot determine co-ordinates of introduced vertices."
+                    << " New vertex " << pointi << " at co-ordinate "
+                    << points[pointi] << exit(FatalError);
+            }
+        }
+
+        pointConstraints::New(pMesh).constrain(weight);
+    }
+
+    forAll(points0, pointi)
+    {
+        const label oldPointi = mpm.pointMap()[pointi];
+
+        if (oldPointi >= 0)
+        {
+            if (mpm.reversePointMap()[oldPointi] == pointi)
+            {
+                points0[pointi] = points0_[oldPointi];
+            }
+            else
+            {
+                if (bodyMeshes_.size() == 1)
+                {
+                    // Use solid-body motion where weight = 1
+                    if (bodyMeshes_[0].weight_[pointi] > 1 - small)
+                    {
+                        points0[pointi] =
+                            transform0(bodyMeshes_[0].bodyID_).inv()
+                           .transformPoint(points[pointi]);
+                    }
+                    // Slerp septernion interpolation
+                    else
+                    {
+                        points0[pointi] =
+                            slerp
+                            (
+                                septernion::I,
+                                septernion(transform0(bodyMeshes_[0].bodyID_)),
+                                bodyMeshes_[0].weight_[pointi]
+                            ).invTransformPoint(points[pointi]);
+                    }
+                }
+                else
+                {
+                    NotImplemented;
+                    // labelList bodyIDs(bodyMeshes_.size());
+                    // List<const scalarField*> weights(bodyMeshes_.size());
+                    // forAll(bodyIDs, bi)
+                    // {
+                    //     bodyIDs[bi] = bodyMeshes_[bi].bodyID_;
+                    //     weights[bi] = &bodyMeshes_[bi].weight_;
+                    // }
+
+                    // points0[pointi] = invTransformPoints
+                    // (
+                    //     bodyIDs,
+                    //     weights,
+                    //     points[pointi]
+                    // );
+                }
+            }
+        }
+    }
+    }
+
+    points0_.transfer(points0);
+
+    // points0 changed - set to write and check-in to database
+    points0_.rename("points0");
+    points0_.writeOpt() = IOobject::AUTO_WRITE;
+    points0_.instance() = mesh().time().timeName();
+    points0_.checkIn();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,45 @@ License
 
 // * * * * * * * * * * * * * * * global functions  * * * * * * * * * * * * * //
 
+void Foam::transformPoints
+(
+    vectorField& rtf,
+    const spatialTransform& tr,
+    const vectorField& tf
+)
+{
+    forAll(rtf, i)
+    {
+        rtf[i] = tr.transformPoint(tf[i]);
+    }
+}
+
+
+Foam::tmp<Foam::vectorField> Foam::transformPoints
+(
+    const spatialTransform& tr,
+    const vectorField& tf
+)
+{
+    tmp<vectorField > tranf(new vectorField(tf.size()));
+    transformPoints(tranf.ref(), tr, tf);
+    return tranf;
+}
+
+
+Foam::tmp<Foam::vectorField> Foam::transformPoints
+(
+    const spatialTransform& tr,
+    const tmp<vectorField>& ttf
+)
+{
+    tmp<vectorField > tranf = New(ttf);
+    transformPoints(tranf.ref(), tr, ttf());
+    ttf.clear();
+    return tranf;
+}
+
+
 void Foam::transform
 (
     vectorField& rtf,
@@ -36,7 +75,7 @@ void Foam::transform
     const vectorField& tf
 )
 {
-    tensor t = q.R();
+    const tensor t = q.R();
     TFOR_ALL_F_OP_FUNC_S_F(vector, rtf, =, transform, tensor, t, vector, tf)
 }
 
@@ -73,7 +112,7 @@ void Foam::transformPoints
     const vectorField& tf
 )
 {
-    vector T = tr.t();
+    const vector T = tr.t();
 
     // Check if any translation
     if (mag(T) > vSmall)

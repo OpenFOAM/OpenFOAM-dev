@@ -30,6 +30,7 @@ License
 #include "timeIOdictionary.H"
 #include "uniformDimensionedFields.H"
 #include "forces.H"
+#include "transformField.H"
 #include "OneConstant.H"
 #include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
@@ -272,9 +273,9 @@ void Foam::rigidBodyMeshMotionSolver::solve()
     {
         forAllConstIter(labelHashSet, bodyMeshes_[bi].patchSet_, iter)
         {
-            label patchi = iter.key();
+            const label patchi = iter.key();
 
-            pointField patchPoints0
+            const pointField patchPoints0
             (
                 meshSolver_.pointDisplacement().boundaryField()[patchi]
                .patchInternalField(meshSolver_.points0())
@@ -282,9 +283,9 @@ void Foam::rigidBodyMeshMotionSolver::solve()
 
             meshSolver_.pointDisplacement().boundaryFieldRef()[patchi] ==
             (
-                transformPoints
+                Foam::transformPoints
                 (
-                    bodyMeshes_[bi].bodyID_,
+                    transform0(bodyMeshes_[bi].bodyID_),
                     patchPoints0
                 ) - patchPoints0
             )();

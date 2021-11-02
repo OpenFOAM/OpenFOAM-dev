@@ -186,10 +186,6 @@ void Foam::solidBodyMotionSolver::updateMesh(const mapPolyMesh& mpm)
 
     motionSolver::updateMesh(mpm);
 
-    // Map points0_. Bit special since we somehow have to come up with
-    // a sensible points0 position for introduced points.
-    // Find out scaling between points0 and current points
-
     // Get the new points either from the map or the mesh
     const pointField& points =
     (
@@ -206,7 +202,7 @@ void Foam::solidBodyMotionSolver::updateMesh(const mapPolyMesh& mpm)
 
         if (oldPointi >= 0)
         {
-            label masterPointi = mpm.reversePointMap()[oldPointi];
+            const label masterPointi = mpm.reversePointMap()[oldPointi];
 
             if (masterPointi == pointi)
             {

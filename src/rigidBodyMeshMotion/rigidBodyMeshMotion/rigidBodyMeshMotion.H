@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,6 +93,9 @@ class rigidBodyMeshMotion
             const label bodyID,
             const dictionary& dict
         );
+
+        template<class Type>
+        inline Type weight(const Type& pDist) const;
     };
 
 
@@ -158,6 +161,9 @@ public:
 
         //- Solve for motion
         virtual void solve();
+
+        //-  Update local data for topology changes
+        virtual void updateMesh(const mapPolyMesh&);
 
         //- Write motion state information for restart
         virtual bool write() const;

@@ -1072,7 +1072,8 @@ Foam::fvMeshTopoChangers::refiner::refiner(fvMesh& mesh)
     meshCutter_(mesh),
     dumpLevel_(false),
     nRefinementIterations_(0),
-    protectedCells_(mesh.nCells(), 0)
+    protectedCells_(mesh.nCells(), 0),
+    timeIndex_(-1)
 {
     // Read static part of dictionary
     readDict();
@@ -1266,6 +1267,16 @@ Foam::fvMeshTopoChangers::refiner::~refiner()
 
 bool Foam::fvMeshTopoChangers::refiner::update()
 {
+    // Only refine on the first call it a time-step
+    if (timeIndex_ != mesh().time().timeIndex())
+    {
+        timeIndex_ = mesh().time().timeIndex();
+    }
+    else
+    {
+        return false;
+    }
+
     // Re-read dictionary. Chosen since usually -small so trivial amount
     // of time compared to actual refinement. Also very useful to be able
     // to modify on-the-fly.
