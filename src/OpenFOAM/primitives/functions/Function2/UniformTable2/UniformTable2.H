@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,23 +36,21 @@ Usage
         values      | Property values, assumed uniformly distributed
     \endtable
 
-    Example for the density of water between 280 and 350K
+    Example for the density of water from 1 to 3bar and 280 to 350K
     \verbatim
     rho
     {
         type    uniformTable;
 
-        pLow    1000;
-        pHigh   1e6;
-
-        Tlow    280;
-        Thigh   350;
+        low     (1e5 280);
+        high    (3e5 350);
 
         values
+        3 2
         (
-            999.87
-            991.53
-            973.7
+            (991 992)
+            (993 994)
+            (995 996)
         );
     }
     \endverbatim
