@@ -59,7 +59,6 @@ incompressibleTwoPhaseInteractingMixture
     alphaMax_(muModel_->lookupOrDefault("alphaMax", 1.0)),
 
     U_(U),
-    phi_(phi),
 
     mu_
     (

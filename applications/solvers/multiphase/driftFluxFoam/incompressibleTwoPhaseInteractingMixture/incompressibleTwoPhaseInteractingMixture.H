@@ -71,7 +71,6 @@ class incompressibleTwoPhaseInteractingMixture
         scalar alphaMax_;
 
         const volVectorField& U_;
-        const surfaceScalarField& phi_;
 
         volScalarField mu_;
 

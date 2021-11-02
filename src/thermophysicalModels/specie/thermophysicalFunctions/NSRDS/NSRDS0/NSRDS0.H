@@ -119,6 +119,8 @@ public:
             return ((((f_*T + e_)*T + d_)*T + c_)*T + b_)*T + a_;
         }
 
+        using FieldFunction1<scalar, NSRDS0>::integral;
+
         //- Integrate between two scalar values
         virtual scalar integral(const scalar x1, const scalar x2) const;
 

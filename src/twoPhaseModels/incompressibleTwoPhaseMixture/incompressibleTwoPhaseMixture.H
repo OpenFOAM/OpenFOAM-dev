@@ -61,7 +61,6 @@ class incompressibleTwoPhaseMixture
         dimensionedScalar rho2_;
 
         const volVectorField& U_;
-        const surfaceScalarField& phi_;
 
         volScalarField nu_;
 

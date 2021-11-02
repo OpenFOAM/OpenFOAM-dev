@@ -52,7 +52,6 @@ Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
     rho2_("rho", dimDensity, nuModel2_()),
 
     U_(U),
-    phi_(phi),
 
     nu_
     (
