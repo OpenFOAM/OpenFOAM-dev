@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,20 +25,70 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "C7H8.H"
+#include "argList.H"
+#include "IFstream.H"
+#include "OFstream.H"
+#include "liquidProperties.H"
+
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// Main program:
 
-int main()
+int main(int argc, char *argv[])
 {
-    C7H8 fuel;
+    argList::validArgs.append("liquidName");
+    argList::validArgs.append("pMin");
+    argList::validArgs.append("pMax");
+    argList::validArgs.append("nP");
+    argList::validArgs.append("Tmin");
+    argList::validArgs.append("Tmax");
+    argList::validArgs.append("nT");
+    argList args(argc, argv);
+    const word liquidName(args[1]);
 
-    Info<< fuel.rho(1e5, 300) << endl;
-    Info<< fuel << endl;
+    const scalar pMin = args.argRead<scalar>(2);
+    const scalar pMax = args.argRead<scalar>(3);
+    const scalar nP = args.argRead<label>(4);
+    const scalar Tmin = args.argRead<scalar>(5);
+    const scalar Tmax = args.argRead<scalar>(6);
+    const scalar nT = args.argRead<label>(7);
 
-    Info<< "End\n" << endl;
+    autoPtr<liquidProperties> liquidPtr = liquidProperties::New(liquidName);
+
+    OFstream plotFile(liquidName + ".dat");
+
+    plotFile << "# p T rho Cp Hs Ha pv hl Cpg mu mug kappa kappag sigma" << nl;
+
+    for (label pi = 0; pi < nP; ++ pi)
+    {
+        const scalar p = pMin + (pMax - pMin)*pi/(nP - 1);
+
+        for (label Ti = 0; Ti < nT; ++ Ti)
+        {
+            const scalar T = Tmin + (Tmax - Tmin)*Ti/(nT - 1);
+
+            plotFile
+                << p << ' '
+                << T << ' '
+                << liquidPtr->rho(p, T) << ' '
+                << liquidPtr->Cp(p, T) << ' '
+                << liquidPtr->Hs(p, T) << ' '
+                << liquidPtr->Ha(p, T) << ' '
+                << liquidPtr->pv(p, T) << ' '
+                << liquidPtr->hl(p, T) << ' '
+                << liquidPtr->Cpg(p, T) << ' '
+                << liquidPtr->mu(p, T) << ' '
+                << liquidPtr->mug(p, T) << ' '
+                << liquidPtr->kappa(p, T) << ' '
+                << liquidPtr->kappag(p, T) << ' '
+                << liquidPtr->sigma(p, T)
+                << nl;
+        }
+
+        plotFile << nl;
+    }
+
+    Info<< "\nEnd\n" << endl;
 
     return 0;
 }
