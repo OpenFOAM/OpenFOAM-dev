@@ -515,7 +515,16 @@ Foam::MovingPhaseModel<BasePhaseModel>::divU() const
 template<class BasePhaseModel>
 void Foam::MovingPhaseModel<BasePhaseModel>::divU(tmp<volScalarField> divU)
 {
-    divU_ = divU;
+    if (!divU_.valid())
+    {
+        divU_ = divU;
+        divU_.ref().rename(IOobject::groupName("divU", this->name()));
+        divU_.ref().checkIn();
+    }
+    else
+    {
+        divU_.ref() = divU;
+    }
 }
 
 
