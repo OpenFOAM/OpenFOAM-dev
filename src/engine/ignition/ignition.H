@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,9 +67,6 @@ public:
 
         //- Construct from Istream and database
         ignition(const dictionary&, const Time&, const fvMesh&);
-
-        //- Construct from Istream and engineTime
-        ignition(const dictionary&, const engineTime&, const fvMesh&);
 
         //- Disallow default bitwise copy construction
         ignition(const ignition&) = delete;

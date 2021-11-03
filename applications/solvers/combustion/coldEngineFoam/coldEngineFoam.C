@@ -30,7 +30,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "engineTime.H"
 #include "engineMesh.H"
 #include "psiThermo.H"
 #include "compressibleMomentumTransportModels.H"
@@ -44,12 +43,11 @@ Description
 
 int main(int argc, char *argv[])
 {
-    #define CREATE_TIME createEngineTime.H
     #define CREATE_MESH createEngineMesh.H
     #include "postProcess.H"
 
     #include "setRootCaseLists.H"
-    #include "createEngineTime.H"
+    #include "createTime.H"
     #include "createEngineMesh.H"
     #include "createControl.H"
     #include "createFields.H"

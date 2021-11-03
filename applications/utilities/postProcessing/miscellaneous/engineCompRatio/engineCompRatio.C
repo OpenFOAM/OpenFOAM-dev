@@ -32,7 +32,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "engineTime.H"
 #include "engineMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -40,7 +39,7 @@ Description
 int main(int argc, char *argv[])
 {
     #include "setRootCase.H"
-    #include "createEngineTime.H"
+    #include "createTime.H"
     #include "createEngineMesh.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -51,29 +50,29 @@ int main(int argc, char *argv[])
     scalar ca0 = -180.0;
     scalar ca1 = 0.0;
 
-    while (runTime.theta() > ca0)
+    while (runTime.userTimeValue() > ca0)
     {
         ca0 += fullCycle;
         ca1 += fullCycle;
     }
 
-    while (mag(runTime.theta() - ca0) > eps)
+    while (mag(runTime.userTimeValue() - ca0) > eps)
     {
-        scalar t0 = runTime.userTimeToTime(ca0 - runTime.theta());
+        scalar t0 = runTime.userTimeToTime(ca0 - runTime.userTimeValue());
         runTime.setDeltaT(t0);
         runTime++;
-        Info<< "CA = " << runTime.theta() << endl;
+        Info<< "CA = " << runTime.userTimeValue() << endl;
         mesh.move();
     }
 
     scalar Vmax = sum(mesh.V().field());
 
-    while (mag(runTime.theta()-ca1) > eps)
+    while (mag(runTime.userTimeValue()-ca1) > eps)
     {
-        scalar t1 = runTime.userTimeToTime(ca1 - runTime.theta());
+        scalar t1 = runTime.userTimeToTime(ca1 - runTime.userTimeValue());
         runTime.setDeltaT(t1);
         runTime++;
-        Info<< "CA = " << runTime.theta() << endl;
+        Info<< "CA = " << runTime.userTimeValue() << endl;
         mesh.move();
     }
 

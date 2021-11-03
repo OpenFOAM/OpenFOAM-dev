@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "engineValve.H"
-#include "engineTime.H"
+#include "engineMesh.H"
 #include "polyMesh.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -85,8 +85,7 @@ Foam::engineValve::engineValve
 )
 :
     name_(name),
-    mesh_(mesh),
-    engineDB_(refCast<const engineTime>(mesh.time())),
+    mesh_(refCast<const engineMesh>(mesh)),
     csPtr_(valveCS),
     bottomPatch_(bottomPatchName, mesh.boundaryMesh()),
     poppetPatch_(poppetPatchName, mesh.boundaryMesh()),
@@ -116,8 +115,7 @@ Foam::engineValve::engineValve
 )
 :
     name_(name),
-    mesh_(mesh),
-    engineDB_(refCast<const engineTime>(mesh_.time())),
+    mesh_(refCast<const engineMesh>(mesh)),
     csPtr_
     (
         coordinateSystem::New
@@ -172,7 +170,7 @@ Foam::scalar Foam::engineValve::lift(const scalar theta) const
 
 bool Foam::engineValve::isOpen() const
 {
-    return lift(engineDB_.theta()) >= minLift_;
+    return lift(mesh_.theta()) >= minLift_;
 }
 
 
@@ -180,7 +178,7 @@ Foam::scalar Foam::engineValve::curLift() const
 {
     return max
     (
-        lift(engineDB_.theta()),
+        lift(mesh_.theta()),
         minLift_
     );
 }
@@ -193,10 +191,10 @@ Foam::scalar Foam::engineValve::curVelocity() const
              curLift()
            - max
              (
-                 lift(engineDB_.theta() - engineDB_.deltaTheta()),
+                 lift(mesh_.theta() - mesh_.deltaTheta()),
                  minLift_
              )
-        )/(engineDB_.deltaTValue() + vSmall);
+       )/(mesh_.time().deltaTValue() + vSmall);
 }
 
 

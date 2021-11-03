@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,8 +44,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class polyMesh;
-class engineTime;
+class engineMesh;
 
 /*---------------------------------------------------------------------------*\
                         Class enginePiston Declaration
@@ -56,10 +55,7 @@ class enginePiston
     // Private Data
 
         //- Reference to engine mesh
-        const polyMesh& mesh_;
-
-        //- Reference to engine database
-        const engineTime& engineDB_;
+        const engineMesh& mesh_;
 
         //- Piston patch
         polyPatchID patchID_;

@@ -116,6 +116,7 @@ void Foam::Time::setControls()
     if (startFrom == "startTime")
     {
         controlDict_.lookup("startTime") >> startTime_;
+        startTime_ = userTimeToTime(startTime_);
     }
     else
     {
@@ -128,11 +129,11 @@ void Foam::Time::setControls()
             {
                 if (timeDirs[0].name() == constant() && timeDirs.size() >= 2)
                 {
-                    startTime_ = timeDirs[1].value();
+                    startTime_ = userTimeToTime(timeDirs[1].value());
                 }
                 else
                 {
-                    startTime_ = timeDirs[0].value();
+                    startTime_ = userTimeToTime(timeDirs[0].value());
                 }
             }
         }
@@ -140,7 +141,7 @@ void Foam::Time::setControls()
         {
             if (timeDirs.size())
             {
-                startTime_ = timeDirs.last().value();
+                startTime_ = userTimeToTime(timeDirs.last().value());
             }
         }
         else
@@ -153,7 +154,6 @@ void Foam::Time::setControls()
     }
 
     setTime(startTime_, 0);
-
     readDict();
     deltaTSave_ = deltaT_;
     deltaT0_ = deltaT_;
@@ -177,6 +177,7 @@ void Foam::Time::setControls()
             setTime(startTime_, 0);
 
             word newTime(timeName());
+
             if (newTime == oldTime)
             {
                 break;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,10 +46,10 @@ Foam::fvMotionSolverEngineMesh::fvMotionSolverEngineMesh(const IOobject& io)
     motionSolver_
     (
         *this,
-        engineDB_.engineDict()
+        dict_
     )
 {
-    engineDB_.engineDict().readIfPresent("pistonLayers", pistonLayers_);
+    dict_.readIfPresent("pistonLayers", pistonLayers_);
 }
 
 
@@ -63,13 +63,13 @@ Foam::fvMotionSolverEngineMesh::~fvMotionSolverEngineMesh()
 
 void Foam::fvMotionSolverEngineMesh::move()
 {
-    scalar deltaZ = engineDB_.pistonDisplacement().value();
+    scalar deltaZ = pistonDisplacement().value();
     Info<< "deltaZ = " << deltaZ << endl;
 
     // Position of the top of the static mesh layers above the piston
     scalar pistonPlusLayers = pistonPosition_.value() + pistonLayers_.value();
 
-    scalar pistonSpeed = deltaZ/engineDB_.deltaTValue();
+    scalar pistonSpeed = deltaZ/time().deltaTValue();
 
     motionSolver_.pointMotionU().boundaryFieldRef()[pistonIndex_] ==
         pistonSpeed;
@@ -87,37 +87,7 @@ void Foam::fvMotionSolverEngineMesh::move()
     }
 
     motionSolver_.solve();
-
-    if (engineDB_.foundObject<surfaceScalarField>("phi"))
-    {
-        surfaceScalarField& phi =
-            engineDB_.lookupObjectRef<surfaceScalarField>("phi");
-
-        const volScalarField& rho =
-            engineDB_.lookupObject<volScalarField>("rho");
-
-        const volVectorField& U =
-            engineDB_.lookupObject<volVectorField>("U");
-
-        bool absolutePhi = false;
-        if (moving())
-        {
-            phi += fvc::interpolate(rho)*fvc::meshPhi(rho, U);
-            absolutePhi = true;
-        }
-
-        movePoints(motionSolver_.curPoints());
-
-        if (absolutePhi)
-        {
-            phi -= fvc::interpolate(rho)*fvc::meshPhi(rho, U);
-        }
-    }
-    else
-    {
-        movePoints(motionSolver_.curPoints());
-    }
-
+    movePoints(motionSolver_.curPoints());
 
     pistonPosition_.value() += deltaZ;
 

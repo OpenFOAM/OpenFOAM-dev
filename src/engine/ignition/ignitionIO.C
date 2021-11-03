@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "engineTime.H"
+#include "Time.H"
 #include "ignition.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -41,32 +41,6 @@ Foam::ignition::ignition
     (
         combustionProperties.lookup("ignitionSites"),
         ignitionSite::iNew(db, mesh)
-    )
-{
-    if (ignite_)
-    {
-        Info<< "\nIgnition on" << endl;
-    }
-    else
-    {
-        Info<< "\nIgnition switched off" << endl;
-    }
-}
-
-
-Foam::ignition::ignition
-(
-    const dictionary& combustionProperties,
-    const engineTime& edb,
-    const fvMesh& mesh
-)
-:
-    mesh_(mesh),
-    ignite_(combustionProperties.lookup("ignite")),
-    ignSites_
-    (
-        combustionProperties.lookup("ignitionSites"),
-        ignitionSite::iNew(edb, mesh)
     )
 {
     if (ignite_)

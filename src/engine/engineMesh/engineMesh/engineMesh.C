@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,14 +24,15 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "engineMesh.H"
-#include "dimensionedScalar.H"
+#include "../OpenFOAM/lnInclude/engineTime.H"
+#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-defineTypeNameAndDebug(engineMesh, 0);
-defineRunTimeSelectionTable(engineMesh, IOobject);
+    defineTypeNameAndDebug(engineMesh, 0);
+    defineRunTimeSelectionTable(engineMesh, IOobject);
 }
 
 
@@ -40,7 +41,26 @@ defineRunTimeSelectionTable(engineMesh, IOobject);
 Foam::engineMesh::engineMesh(const IOobject& io)
 :
     fvMesh(io),
-    engineDB_(refCast<const engineTime>(time())),
+    dict_
+    (
+        IOobject
+        (
+            "engineGeometry",
+            time().constant(),
+            time(),
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE,
+            false
+        )
+    ),
+    rpm_
+    (
+        refCast<const userTimes::engine>(time().userTime()).rpm()
+    ),
+    conRodLength_("conRodLength", dimLength, dict_),
+    bore_("bore", dimLength, dict_),
+    stroke_("stroke", dimLength, dict_),
+    clearance_("clearance", dimLength, dict_),
     pistonIndex_(-1),
     linerIndex_(-1),
     cylinderHeadIndex_(-1),
@@ -130,5 +150,72 @@ Foam::engineMesh::engineMesh(const IOobject& io)
 
 Foam::engineMesh::~engineMesh()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::scalar Foam::engineMesh::theta() const
+{
+    return time().userTimeValue();
+}
+
+
+Foam::scalar Foam::engineMesh::deltaTheta() const
+{
+    return time().timeToUserTime(time().deltaTValue());
+}
+
+
+Foam::scalar Foam::engineMesh::pistonPosition(const scalar theta) const
+{
+    return
+    (
+        conRodLength_.value()
+      + stroke_.value()/2.0
+      + clearance_.value()
+    )
+  - (
+        stroke_.value()*::cos(degToRad(theta))/2.0
+      + ::sqrt
+        (
+            sqr(conRodLength_.value())
+          - sqr(stroke_.value()*::sin(degToRad(theta))/2.0)
+        )
+    );
+}
+
+
+Foam::dimensionedScalar Foam::engineMesh::pistonPosition() const
+{
+    return dimensionedScalar
+    (
+        "pistonPosition",
+        dimLength,
+        pistonPosition(theta())
+    );
+}
+
+
+Foam::dimensionedScalar Foam::engineMesh::pistonDisplacement() const
+{
+    return dimensionedScalar
+    (
+        "pistonDisplacement",
+        dimLength,
+        pistonPosition(theta() - deltaTheta()) - pistonPosition().value()
+    );
+}
+
+
+Foam::dimensionedScalar Foam::engineMesh::pistonSpeed() const
+{
+    return dimensionedScalar
+    (
+        "pistonSpeed",
+        dimVelocity,
+        pistonDisplacement().value()/(time().deltaTValue() + vSmall)
+    );
+}
+
 
 // ************************************************************************* //

@@ -12,7 +12,7 @@
         Info<< "Mean u':" << meanup << endl;
 
         logSummaryFile()
-            << runTime.theta() << tab
+            << runTime.userTimeValue() << tab
             << meanp << tab
             << meanT << tab
             << meanup << tab

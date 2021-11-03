@@ -35,7 +35,6 @@ SourceFiles
 #ifndef engineMesh_H
 #define engineMesh_H
 
-#include "engineTime.H"
 #include "fvMesh.H"
 #include "autoPtr.H"
 #include "runTimeSelectionTables.H"
@@ -57,7 +56,16 @@ protected:
 
     // Protected data
 
-        const engineTime& engineDB_;
+        const IOdictionary dict_;
+
+        //- RPM
+        dimensionedScalar rpm_;
+
+        //- Optional engine geometry parameters
+        dimensionedScalar conRodLength_;
+        dimensionedScalar bore_;
+        dimensionedScalar stroke_;
+        dimensionedScalar clearance_;
 
         label pistonIndex_;
         label linerIndex_;
@@ -111,6 +119,56 @@ public:
         {
             return true;
         }
+
+        //- Return the engines current operating RPM
+        const dimensionedScalar& rpm() const
+        {
+            return rpm_;
+        }
+
+        //- Return the engines connecting-rod length
+        const dimensionedScalar& conRodLength() const
+        {
+            return conRodLength_;
+        }
+
+        //- Return the engines bore
+        const dimensionedScalar& bore() const
+        {
+            return bore_;
+        }
+
+        //- Return the engines stroke
+        const dimensionedScalar& stroke() const
+        {
+            return stroke_;
+        }
+
+        //- Return the engines clearance-gap
+        const dimensionedScalar& clearance() const
+        {
+            return clearance_;
+        }
+
+        //- Return current crank-angle
+        virtual scalar theta() const;
+
+        //- Return crank-angle increment
+        virtual scalar deltaTheta() const;
+
+        //- Calculate the piston position from the engine geometry
+        //  and given crank angle.
+        scalar pistonPosition(const scalar theta) const;
+
+        //- Return current piston position
+        dimensionedScalar pistonPosition() const;
+
+        //- Return piston displacement for current time step
+        dimensionedScalar pistonDisplacement() const;
+
+        //- Return piston speed for current time step
+        dimensionedScalar pistonSpeed() const;
+
 
         virtual void move() = 0;
 

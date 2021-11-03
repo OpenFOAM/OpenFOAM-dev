@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "enginePiston.H"
-#include "engineTime.H"
-#include "polyMesh.H"
+#include "engineMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -38,8 +37,7 @@ Foam::enginePiston::enginePiston
     const scalar maxLayer
 )
 :
-    mesh_(mesh),
-    engineDB_(refCast<const engineTime>(mesh.time())),
+    mesh_(refCast<const engineMesh>(mesh)),
     patchID_(pistonPatchName, mesh.boundaryMesh()),
     csPtr_(pistonCS),
     minLayer_(minLayer),
@@ -53,8 +51,7 @@ Foam::enginePiston::enginePiston
     const dictionary& dict
 )
 :
-    mesh_(mesh),
-    engineDB_(refCast<const engineTime>(mesh_.time())),
+    mesh_(refCast<const engineMesh>(mesh)),
     patchID_(dict.lookup("patch"), mesh.boundaryMesh()),
     csPtr_
     (

@@ -40,7 +40,7 @@ void Foam::Time::readDict()
 
     if (!deltaTchanged_)
     {
-        deltaT_ = controlDict_.lookup<scalar>("deltaT");
+        deltaT_ = userTimeToTime(controlDict_.lookup<scalar>("deltaT"));
     }
 
     if (controlDict_.found("writeControl"))
@@ -55,6 +55,15 @@ void Foam::Time::readDict()
 
     if (controlDict_.readIfPresent("writeInterval", newWriteInterval))
     {
+        if
+        (
+            writeControl_ == writeControl::runTime
+         || writeControl_ == writeControl::adjustableRunTime
+        )
+        {
+            newWriteInterval = userTimeToTime(newWriteInterval);
+        }
+
         if
         (
             writeControl_ == writeControl::timeStep
@@ -120,7 +129,7 @@ void Foam::Time::readDict()
 
         if (stopAt_ == stopAtControl::endTime)
         {
-            controlDict_.lookup("endTime") >> endTime_;
+            endTime_ = userTimeToTime(controlDict_.lookup<scalar>("endTime"));
         }
         else
         {
@@ -132,7 +141,7 @@ void Foam::Time::readDict()
         endTime_ = 0;
     }
 
-    dimensionedScalar::name() = timeName(value());
+    dimensionedScalar::name() = timeName(timeToUserTime(value()));
 
     if (controlDict_.found("writeVersion"))
     {

@@ -47,12 +47,11 @@ Description
 
 int main(int argc, char *argv[])
 {
-    #define CREATE_TIME createEngineTime.H
     #define CREATE_MESH createEngineMesh.H
     #include "postProcess.H"
 
     #include "setRootCaseLists.H"
-    #include "createEngineTime.H"
+    #include "createTime.H"
     #include "createEngineMesh.H"
     #include "createEngineControls.H"
     #include "initContinuityErrs.H"
