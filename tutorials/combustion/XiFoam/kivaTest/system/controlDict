@@ -10,11 +10,11 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict.1st;
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     XiEngineFoam;
+application     XiFoam;
 
 startFrom       startTime;
 

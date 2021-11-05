@@ -66,6 +66,7 @@ PIMPLE
     nCorrectors     2;
     nNonOrthogonalCorrectors 1;
     momentumPredictor yes;
+    correctPhi      no;
 }
 
 

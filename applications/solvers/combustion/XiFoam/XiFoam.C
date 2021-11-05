@@ -57,6 +57,7 @@ Description
 #include "ignition.H"
 #include "Switch.H"
 #include "pimpleControl.H"
+#include "CorrectPhi.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 
@@ -69,16 +70,17 @@ int main(int argc, char *argv[])
     #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createMesh.H"
-    #include "createControl.H"
+    #include "createDyMControls.H"
+    #include "initContinuityErrs.H"
     #include "readCombustionProperties.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
-    #include "initContinuityErrs.H"
-    #include "createTimeControls.H"
-    #include "compressibleCourantNo.H"
-    #include "setInitialDeltaT.H"
+    #include "createRhoUfIfPresent.H"
 
     turbulence->validate();
+
+    #include "compressibleCourantNo.H"
+    #include "setInitialDeltaT.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,11 +88,26 @@ int main(int argc, char *argv[])
 
     while (pimple.run(runTime))
     {
-        #include "readTimeControls.H"
+        #include "readDyMControls.H"
+
+        // Store divrhoU from the previous mesh so that it can be mapped
+        // and used in correctPhi to ensure the corrected phi has the
+        // same divergence
+        autoPtr<volScalarField> divrhoU;
+        if (correctPhi)
+        {
+            divrhoU = new volScalarField
+            (
+                "divrhoU",
+                fvc::div(fvc::absolute(phi, rho, U))
+            );
+        }
+
         #include "compressibleCourantNo.H"
         #include "setDeltaT.H"
 
         runTime++;
+
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         #include "rhoEqn.H"
@@ -98,10 +115,48 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
+            if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+            {
+                // Store momentum to set rhoUf for introduced faces.
+                autoPtr<volVectorField> rhoU;
+                if (rhoUf.valid())
+                {
+                    rhoU = new volVectorField("rhoU", rho*U);
+                }
+
+                fvModels.preUpdateMesh();
+
+                // Do any mesh changes
+                mesh.update();
+
+                if (mesh.changing())
+                {
+                    MRF.update();
+
+                    if (correctPhi)
+                    {
+                        #include "correctPhi.H"
+                    }
+
+                    if (checkMeshCourantNo)
+                    {
+                        #include "meshCourantNo.H"
+                    }
+                }
+            }
+
+            if
+            (
+               !pimple.simpleRho()
+             && pimple.firstPimpleIter()
+            )
+            {
+                #include "rhoEqn.H"
+            }
+
             fvModels.correct();
 
             #include "UEqn.H"
-
             #include "ftEqn.H"
             #include "bEqn.H"
             #include "EauEqn.H"

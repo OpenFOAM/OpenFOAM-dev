@@ -38,10 +38,6 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#ifndef CREATE_TIME
-    #define CREATE_TIME createTime.H
-#endif
-
 #ifndef CREATE_MESH
     #define CREATE_MESH createMesh.H
 #endif
@@ -84,7 +80,7 @@ if (argList::postProcess(argc, argv))
         return 0;
     }
 
-    #include INCLUDE_FILE(CREATE_TIME)
+    #include "createTime.H"
     Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
     #include INCLUDE_FILE(CREATE_MESH)
 
