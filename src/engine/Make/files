@@ -8,7 +8,6 @@ enginePiston/enginePiston.C
 
 engineMesh/engineMesh/engineMesh.C
 engineMesh/engineMesh/engineMeshNew.C
-engineMesh/staticEngineMesh/staticEngineMesh.C
 engineMesh/layeredEngineMesh/layeredEngineMesh.C
 engineMesh/fvMotionSolverEngineMesh/fvMotionSolverEngineMesh.C
 

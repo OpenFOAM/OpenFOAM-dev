@@ -1,5 +1,7 @@
 motionSolver/fvMeshMoversMotionSolver.C
 interpolator/fvMeshMoversInterpolator.C
 inkJet/fvMeshMoversInkJet.C
+engine/engine/fvMeshMoversEngine.C
+engine/layered/fvMeshMoversLayeredEngine.C
 
 LIB = $(FOAM_LIBBIN)/libfvMeshMovers

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,73 +22,79 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::staticEngineMesh
+    Foam::fvMeshMoversLayeredEngine
 
 Description
-    Foam::staticEngineMesh
+    Foam::fvMeshMoversLayeredEngine
 
 SourceFiles
-    staticEngineMesh.C
+    fvMeshMoversLayeredEngine.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef staticEngineMesh_H
-#define staticEngineMesh_H
+#ifndef fvMeshMoversLayeredEngine_H
+#define fvMeshMoversLayeredEngine_H
 
-#include "engineMesh.H"
+#include "fvMeshMoversEngine.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace fvMeshMovers
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class staticEngineMesh Declaration
+                Class fvMeshMovers::layeredEngine Declaration
 \*---------------------------------------------------------------------------*/
 
-class staticEngineMesh
+class layeredEngine
 :
-    public engineMesh
+    public engine
 {
+    // Private Data
+
+        dimensionedScalar pistonLayers_;
+
+
 public:
 
     //- Runtime type information
-    TypeName("static");
+    TypeName("layeredEngine");
 
 
     // Constructors
 
-        //- Construct from IOobject
-        staticEngineMesh(const IOobject& io);
+        //- Construct from fvMesh
+        layeredEngine(fvMesh& mesh);
 
         //- Disallow default bitwise copy construction
-        staticEngineMesh(const staticEngineMesh&) = delete;
+        layeredEngine(const layeredEngine&) = delete;
 
 
     //- Destructor
-    ~staticEngineMesh();
+    ~layeredEngine();
 
 
     // Member Functions
 
-        //- Is mesh dynamic
-        virtual bool dynamic() const
-        {
-            return false;
-        }
+        //- Update local data for topology changes
+        virtual void updateMesh(const mapPolyMesh&);
 
-        void move();
+        //- Update the mesh for both mesh motion and topology change
+        virtual bool update();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const staticEngineMesh&) = delete;
+        void operator=(const layeredEngine&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace fvMeshMovers
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

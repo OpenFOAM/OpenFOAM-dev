@@ -135,6 +135,12 @@ public:
             return mesh_;
         }
 
+        //- Return the fvMesh
+        const fvMesh& mesh() const
+        {
+            return mesh_;
+        }
+
         //- Return the dynamicMeshDict/mover dict
         const dictionary& dict() const
         {

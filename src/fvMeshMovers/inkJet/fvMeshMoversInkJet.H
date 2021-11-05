@@ -96,7 +96,7 @@ public:
 
     // Member Functions
 
-        //-  Update local data for topology changes
+        //- Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&);
 
         //- Update the mesh for both mesh motion and topology change
