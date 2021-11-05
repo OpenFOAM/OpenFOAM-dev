@@ -62,7 +62,7 @@ class twoPhaseMixture
 
     // Private Member Functions
 
-        static IOdictionary readPhasePropertiesDict
+        static typeIOobject<IOdictionary> readPhasePropertiesDict
         (
             const objectRegistry& obr
         );

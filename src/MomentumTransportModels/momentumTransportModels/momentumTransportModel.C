@@ -38,7 +38,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-Foam::IOdictionary Foam::momentumTransportModel::readModelDict
+Foam::typeIOobject<Foam::IOdictionary>
+Foam::momentumTransportModel::readModelDict
 (
     const objectRegistry& obr,
     const word& group,

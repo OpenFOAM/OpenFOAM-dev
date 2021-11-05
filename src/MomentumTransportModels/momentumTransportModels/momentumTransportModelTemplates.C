@@ -40,10 +40,13 @@ inline Foam::autoPtr<MomentumTransportModel> Foam::momentumTransportModel::New
 {
     const word modelType
     (
-        momentumTransportModel::readModelDict
+        IOdictionary
         (
-            U.db(),
-            alphaRhoPhi.group()
+            momentumTransportModel::readModelDict
+            (
+                U.db(),
+                alphaRhoPhi.group()
+            )
         ).lookup("simulationType")
     );
 

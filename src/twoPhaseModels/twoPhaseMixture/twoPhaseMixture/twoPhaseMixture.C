@@ -35,7 +35,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * //
 
-Foam::IOdictionary Foam::twoPhaseMixture::readPhasePropertiesDict
+Foam::typeIOobject<Foam::IOdictionary>
+Foam::twoPhaseMixture::readPhasePropertiesDict
 (
     const objectRegistry& obr
 )

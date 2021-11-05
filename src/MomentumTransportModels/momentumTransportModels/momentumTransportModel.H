@@ -79,7 +79,7 @@ protected:
 
     // Protected member functions
 
-        static IOdictionary readModelDict
+        static typeIOobject<IOdictionary> readModelDict
         (
             const objectRegistry& obr,
             const word& group,
