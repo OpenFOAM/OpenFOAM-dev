@@ -32,7 +32,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "engineMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +39,7 @@ int main(int argc, char *argv[])
 {
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createEngineMesh.H"
+    #include "createMesh.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,7 +61,7 @@ int main(int argc, char *argv[])
         runTime.setDeltaT(t0);
         runTime++;
         Info<< "CA = " << runTime.userTimeValue() << endl;
-        mesh.move();
+        mesh.update();
     }
 
     scalar Vmax = sum(mesh.V().field());
@@ -73,14 +72,14 @@ int main(int argc, char *argv[])
         runTime.setDeltaT(t1);
         runTime++;
         Info<< "CA = " << runTime.userTimeValue() << endl;
-        mesh.move();
+        mesh.update();
     }
 
     scalar Vmin = sum(mesh.V().field());
 
     Info<< "\nVmax = " << Vmax;
     Info<< ", Vmin = " << Vmin << endl;
-    Info<< "Vmax/Vmin = " << Vmax/Vmin << endl;
+    Info<< "Compression ratio Vmax/Vmin = " << Vmax/Vmin << endl;
     Info<< "\nEnd\n" << endl;
 
     return 0;
