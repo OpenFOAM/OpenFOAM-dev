@@ -1,6 +1,0 @@
-engineMesh/engineMesh/engineMesh.C
-engineMesh/engineMesh/engineMeshNew.C
-engineMesh/layeredEngineMesh/layeredEngineMesh.C
-engineMesh/fvMotionSolverEngineMesh/fvMotionSolverEngineMesh.C
-
-LIB = $(FOAM_LIBBIN)/libengine

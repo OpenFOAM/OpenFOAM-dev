@@ -69,7 +69,6 @@ renumber/Allwmake $targetType $*
 fvAgglomerationMethods/Allwmake $targetType $*
 
 wmake $targetType fvMotionSolver
-wmake $targetType engine
 wmake $targetType fvModels
 wmake $targetType fvConstraints
 
