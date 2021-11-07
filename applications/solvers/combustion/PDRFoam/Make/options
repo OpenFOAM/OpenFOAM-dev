@@ -1,4 +1,6 @@
 EXE_INC = \
+    -I../XiFoam \
+    -I../XiFoam/ignition/lnInclude \
     -IXiModels/transport \
     -IXiModels/fixed \
     -IXiModels/algebraic \
@@ -19,7 +21,6 @@ EXE_INC = \
     -IPDRModels/XiGModels/basicXiSubG \
     -IPDRModels/turbulence/PDRkEpsilon \
     -IlaminarFlameSpeed/SCOPE \
-    -I$(LIB_SRC)/engine/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
@@ -33,7 +34,7 @@ EXE_INC = \
     -I$(LIB_SRC)/triSurface/lnInclude \
 
 EXE_LIBS = \
-    -lengine \
+    -lXiIgnition \
     -lmeshTools \
     -lfluidThermophysicalModels \
     -lreactionThermophysicalModels \
