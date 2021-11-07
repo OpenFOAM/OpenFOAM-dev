@@ -3,5 +3,7 @@ interpolator/fvMeshMoversInterpolator.C
 inkJet/fvMeshMoversInkJet.C
 engine/engine/fvMeshMoversEngine.C
 engine/layered/fvMeshMoversLayeredEngine.C
+engine/engineValve/engineValve.C
+engine/enginePiston/enginePiston.C
 
 LIB = $(FOAM_LIBBIN)/libfvMeshMovers

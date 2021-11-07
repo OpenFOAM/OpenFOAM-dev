@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "engineValve.H"
-#include "engineMesh.H"
-#include "polyMesh.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -65,7 +63,7 @@ Foam::scalar Foam::engineValve::adjustCrankAngle(const scalar theta) const
 Foam::engineValve::engineValve
 (
     const word& name,
-    const polyMesh& mesh,
+    const fvMeshMover& meshMover,
     const autoPtr<coordinateSystem>& valveCS,
     const word& bottomPatchName,
     const word& poppetPatchName,
@@ -85,15 +83,24 @@ Foam::engineValve::engineValve
 )
 :
     name_(name),
-    mesh_(refCast<const engineMesh>(mesh)),
+    meshMover_(refCast<const fvMeshMovers::engine>(meshMover)),
     csPtr_(valveCS),
-    bottomPatch_(bottomPatchName, mesh.boundaryMesh()),
-    poppetPatch_(poppetPatchName, mesh.boundaryMesh()),
-    stemPatch_(stemPatchName, mesh.boundaryMesh()),
-    curtainInPortPatch_(curtainInPortPatchName, mesh.boundaryMesh()),
-    curtainInCylinderPatch_(curtainInCylinderPatchName, mesh.boundaryMesh()),
-    detachInCylinderPatch_(detachInCylinderPatchName, mesh.boundaryMesh()),
-    detachInPortPatch_(detachInPortPatchName, mesh.boundaryMesh()),
+    bottomPatch_(bottomPatchName, meshMover_.mesh().boundaryMesh()),
+    poppetPatch_(poppetPatchName, meshMover_.mesh().boundaryMesh()),
+    stemPatch_(stemPatchName, meshMover_.mesh().boundaryMesh()),
+    curtainInPortPatch_
+    (
+        curtainInPortPatchName, meshMover_.mesh().boundaryMesh()
+    ),
+    curtainInCylinderPatch_
+    (
+        curtainInCylinderPatchName, meshMover_.mesh().boundaryMesh()
+    ),
+    detachInCylinderPatch_
+    (
+        detachInCylinderPatchName, meshMover_.mesh().boundaryMesh()
+    ),
+    detachInPortPatch_(detachInPortPatchName, meshMover_.mesh().boundaryMesh()),
     detachFaces_(detachFaces),
     liftProfile_(liftProfile),
     liftProfileStart_(min(liftProfile_.x())),
@@ -110,42 +117,42 @@ Foam::engineValve::engineValve
 Foam::engineValve::engineValve
 (
     const word& name,
-    const polyMesh& mesh,
+    const fvMeshMover& meshMover,
     const dictionary& dict
 )
 :
     name_(name),
-    mesh_(refCast<const engineMesh>(mesh)),
+    meshMover_(refCast<const fvMeshMovers::engine>(meshMover)),
     csPtr_
     (
         coordinateSystem::New
         (
-            mesh_,
+            meshMover_.mesh(),
             dict.subDict("coordinateSystem")
         )
     ),
-    bottomPatch_(dict.lookup("bottomPatch"), mesh.boundaryMesh()),
-    poppetPatch_(dict.lookup("poppetPatch"), mesh.boundaryMesh()),
-    stemPatch_(dict.lookup("stemPatch"), mesh.boundaryMesh()),
+    bottomPatch_(dict.lookup("bottomPatch"), meshMover_.mesh().boundaryMesh()),
+    poppetPatch_(dict.lookup("poppetPatch"), meshMover_.mesh().boundaryMesh()),
+    stemPatch_(dict.lookup("stemPatch"), meshMover_.mesh().boundaryMesh()),
     curtainInPortPatch_
     (
         dict.lookup("curtainInPortPatch"),
-        mesh.boundaryMesh()
+        meshMover_.mesh().boundaryMesh()
     ),
     curtainInCylinderPatch_
     (
         dict.lookup("curtainInCylinderPatch"),
-        mesh.boundaryMesh()
+        meshMover_.mesh().boundaryMesh()
     ),
     detachInCylinderPatch_
     (
         dict.lookup("detachInCylinderPatch"),
-        mesh.boundaryMesh()
+        meshMover_.mesh().boundaryMesh()
     ),
     detachInPortPatch_
     (
         dict.lookup("detachInPortPatch"),
-        mesh.boundaryMesh()
+        meshMover_.mesh().boundaryMesh()
     ),
     detachFaces_(dict.lookup("detachFaces")),
     liftProfile_("liftProfile", dict),
@@ -170,7 +177,7 @@ Foam::scalar Foam::engineValve::lift(const scalar theta) const
 
 bool Foam::engineValve::isOpen() const
 {
-    return lift(mesh_.theta()) >= minLift_;
+    return lift(meshMover_.theta()) >= minLift_;
 }
 
 
@@ -178,7 +185,7 @@ Foam::scalar Foam::engineValve::curLift() const
 {
     return max
     (
-        lift(mesh_.theta()),
+        lift(meshMover_.theta()),
         minLift_
     );
 }
@@ -191,10 +198,10 @@ Foam::scalar Foam::engineValve::curVelocity() const
              curLift()
            - max
              (
-                 lift(mesh_.theta() - mesh_.deltaTheta()),
+                 lift(meshMover_.theta() - meshMover_.deltaTheta()),
                  minLift_
              )
-       )/(mesh_.time().deltaTValue() + vSmall);
+       )/(meshMover_.mesh().time().deltaTValue() + vSmall);
 }
 
 

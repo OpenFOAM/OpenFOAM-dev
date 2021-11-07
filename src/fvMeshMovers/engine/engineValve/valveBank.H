@@ -22,83 +22,70 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::ignition
+    Foam::valveBank
 
 Description
-    Foam::ignition
-
-SourceFiles
-    ignition.C
-    ignitionIO.C
+    A list of valves.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ignition_H
-#define ignition_H
+#ifndef valveBank_H
+#define valveBank_H
 
-#include "ignitionSite.H"
-#include "Switch.H"
+#include "PtrList.H"
+#include "engineValve.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class fvMesh;
-
 /*---------------------------------------------------------------------------*\
-                          Class ignition Declaration
+                          Class valveBank Declaration
 \*---------------------------------------------------------------------------*/
 
-class ignition
+class valveBank
+:
+    public PtrList<engineValve>
 {
-    // Private Data
-
-        const fvMesh& mesh_;
-
-        Switch ignite_;
-
-        PtrList<ignitionSite> ignSites_;
-
-
 public:
 
     // Constructors
 
-        //- Construct from Istream and database
-        ignition(const dictionary&, const Time&, const fvMesh&);
-
-        //- Disallow default bitwise copy construction
-        ignition(const ignition&) = delete;
-
-
-    // Member Functions
-
-        //- Return the set of ignition sites
-        const PtrList<ignitionSite>& sites()
+        //- Construct from Istream
+        valveBank
+        (
+            const polyMesh& mesh,
+            Istream& is
+        )
         {
-            return ignSites_;
+            PtrList<entry> valveEntries(is);
+
+            setSize(valveEntries.size());
+
+            forAll(valveEntries, valveI)
+            {
+                valveI,
+                set
+                (
+                    new engineValve
+                    (
+                        valveEntries[valveI].keyword(),
+                        mesh,
+                        valveEntries[valveI].dict()
+                    )
+                );
+            }
         }
 
-
-        // Check
-
-            bool ignite() const
-            {
-                return ignite_;
-            }
-
-            //- Are any of the ignition site currently igniting
-            bool igniting() const;
-
-            //- Has the mixture been ignited?
-            bool ignited() const;
+        //- Disallow default bitwise copy construction
+        valveBank(const valveBank&) = delete;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const ignition&) = delete;
+        void operator=(const valveBank&) = delete;
 };
 
 

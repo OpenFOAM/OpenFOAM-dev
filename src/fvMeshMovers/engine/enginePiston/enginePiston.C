@@ -23,44 +23,57 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ignitionSite.H"
-#include "Time.H"
+#include "enginePiston.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::ignitionSite::ignitionSite
+Foam::enginePiston::enginePiston
 (
-    Istream& is,
-    const Time& db,
-    const fvMesh& mesh
+    const fvMeshMover& meshMover,
+    const word& pistonPatchName,
+    const autoPtr<coordinateSystem>& pistonCS,
+    const scalar minLayer,
+    const scalar maxLayer
 )
 :
-    db_(db),
-    mesh_(mesh),
-    ignitionSiteDict_(is),
-    location_(ignitionSiteDict_.lookup("location")),
-    diameter_(ignitionSiteDict_.lookup<scalar>("diameter")),
-    time_
-    (
-        db_.userTimeToTime
-        (
-            ignitionSiteDict_.lookup<scalar>("start")
-        )
-    ),
-    duration_
-    (
-        db_.userTimeToTime
-        (
-            ignitionSiteDict_.lookup<scalar>("duration")
-        )
-    ),
-    strength_(ignitionSiteDict_.lookup<scalar>("strength")),
-    timeIndex_(db_.timeIndex())
-{
-    // Check state of Istream
-    is.check("ignitionSite::ignitionSite(Istream&)");
+    meshMover_(refCast<const fvMeshMovers::engine>(meshMover)),
+    patchID_(pistonPatchName, meshMover_.mesh().boundaryMesh()),
+    csPtr_(pistonCS),
+    minLayer_(minLayer),
+    maxLayer_(maxLayer)
+{}
 
-    findIgnitionCells(mesh_);
+
+Foam::enginePiston::enginePiston
+(
+    const fvMeshMover& meshMover,
+    const dictionary& dict
+)
+:
+    meshMover_(refCast<const fvMeshMovers::engine>(meshMover)),
+    patchID_(dict.lookup("patch"), meshMover_.mesh().boundaryMesh()),
+    csPtr_
+    (
+        coordinateSystem::New
+        (
+            meshMover_.mesh(),
+            dict.subDict("coordinateSystem")
+        )
+    ),
+    minLayer_(dict.lookup<scalar>("minLayer")),
+    maxLayer_(dict.lookup<scalar>("maxLayer"))
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::enginePiston::writeDict(Ostream& os) const
+{
+    os  << nl << token::BEGIN_BLOCK
+        << "patch " << patchID_.name() << token::END_STATEMENT << nl
+        << "minLayer " << minLayer_ << token::END_STATEMENT << nl
+        << "maxLayer " << maxLayer_ << token::END_STATEMENT << nl
+        << token::END_BLOCK << endl;
 }
 
 

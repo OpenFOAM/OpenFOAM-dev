@@ -35,6 +35,7 @@ SourceFiles
 #ifndef enginePiston_H
 #define enginePiston_H
 
+#include "fvMeshMoversEngine.H"
 #include "polyPatchID.H"
 #include "coordinateSystem.H"
 
@@ -42,9 +43,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class engineMesh;
 
 /*---------------------------------------------------------------------------*\
                         Class enginePiston Declaration
@@ -54,8 +52,8 @@ class enginePiston
 {
     // Private Data
 
-        //- Reference to engine mesh
-        const engineMesh& mesh_;
+        //- Reference to engine mesh mover
+        const fvMeshMovers::engine& meshMover_;
 
         //- Piston patch
         polyPatchID patchID_;
@@ -75,15 +73,12 @@ class enginePiston
 
 public:
 
-    // Static Data Members
-
-
     // Constructors
 
         //- Construct from components
         enginePiston
         (
-            const polyMesh& mesh,
+            const fvMeshMover& meshMover,
             const word& pistonPatchName,
             const autoPtr<coordinateSystem>& pistonCS,
             const scalar minLayer,
@@ -94,7 +89,7 @@ public:
         //- Construct from dictionary
         enginePiston
         (
-            const polyMesh& mesh,
+            const fvMeshMover& meshMover,
             const dictionary& dict
         );
 

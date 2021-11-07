@@ -35,7 +35,7 @@ SourceFiles
 #ifndef engineValve_H
 #define engineValve_H
 
-#include "word.H"
+#include "fvMeshMoversEngine.H"
 #include "coordinateSystem.H"
 #include "polyPatchID.H"
 #include "Table.H"
@@ -44,9 +44,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class engineMesh;
 
 /*---------------------------------------------------------------------------*\
                          Class engineValve Declaration
@@ -59,8 +56,8 @@ class engineValve
         //- Name of valve
         word name_;
 
-        //- Reference to engine mesh
-        const engineMesh& mesh_;
+        //- Reference to engine mesh mover
+        const fvMeshMovers::engine& meshMover_;
 
         //- Coordinate system
         autoPtr<coordinateSystem> csPtr_;
@@ -141,7 +138,7 @@ public:
         engineValve
         (
             const word& name,
-            const polyMesh& mesh,
+            const fvMeshMover& meshMover,
             const autoPtr<coordinateSystem>& valveCS,
             const word& bottomPatchName,
             const word& poppetPatchName,
@@ -165,7 +162,7 @@ public:
         engineValve
         (
             const word& name,
-            const polyMesh& mesh,
+            const fvMeshMover& meshMover,
             const dictionary& dict
         );
 
