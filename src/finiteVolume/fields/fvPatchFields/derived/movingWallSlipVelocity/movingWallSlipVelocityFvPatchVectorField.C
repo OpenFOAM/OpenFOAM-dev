@@ -40,9 +40,11 @@ movingWallSlipVelocityFvPatchVectorField
 :
     directionMixedFvPatchVectorField(p, iF)
 {
+    const vectorField n(p.nf());
+
     refValue() = Zero;
     refGrad() = Zero;
-    valueFraction() = Zero;
+    valueFraction() = sqr(n);
 }
 
 
