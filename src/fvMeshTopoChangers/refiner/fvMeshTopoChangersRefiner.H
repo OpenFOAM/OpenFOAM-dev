@@ -33,7 +33,11 @@ Description
 Usage
     Example of single field based refinement in all cells:
     \verbatim
-        dynamicFvMesh   refiner;
+    topoChanger
+    {
+        type            refiner;
+
+        libs            ("libfvMeshTopoChangers.so");
 
         // How often to refine
         refineInterval  1;
@@ -68,11 +72,14 @@ Usage
 
         // Write the refinement level as a volScalarField
         dumpLevel       true;
+    }
     \endverbatim
 
     Example of single field based refinement in two regions:
     \verbatim
-        dynamicFvMesh   refiner;
+    topoChanger
+    {
+        type            refiner;
 
         // How often to refine
         refineInterval  1;
@@ -138,6 +145,7 @@ Usage
 
         // Write the refinement level as a volScalarField
         dumpLevel       true;
+    }
     \endverbatim
 
 
