@@ -257,11 +257,11 @@ Foam::fvMeshTopoChangers::refiner::refine
     }
 
     // Update fields
-    mesh().updateMesh(map);
+    mesh().updateMesh(map());
 
-    // Correct the flux for modified/added faces. All the faces which only
-    // have been renumbered will already have been handled by the mapping.
     {
+        // Correct the flux for modified/added faces. All the faces which only
+        // have been renumbered will already have been handled by the mapping.
         const labelList& faceMap = map().faceMap();
         const labelList& reverseFaceMap = map().reverseFaceMap();
 
@@ -296,141 +296,12 @@ Foam::fvMeshTopoChangers::refiner::refine
             Pout<< "Found " << masterFaces.size() << " split faces " << endl;
         }
 
-        HashTable<surfaceScalarField*> fluxes
-        (
-            mesh().lookupClass<surfaceScalarField>()
-        );
-        forAllIter(HashTable<surfaceScalarField*>, fluxes, iter)
-        {
-            if (!correctFluxes_.found(iter.key()))
-            {
-                WarningInFunction
-                    << "Cannot find surfaceScalarField " << iter.key()
-                    << " in user-provided flux mapping table "
-                    << correctFluxes_ << endl
-                    << "    The flux mapping table is used to recreate the"
-                    << " flux on newly created faces." << endl
-                    << "    Either add the entry if it is a flux or use ("
-                    << iter.key() << " none) to suppress this warning."
-                    << endl;
-                continue;
-            }
-
-            const word& UName = correctFluxes_[iter.key()];
-
-            if (UName == "none")
-            {
-                continue;
-            }
-
-            if (UName == "NaN")
-            {
-                Pout<< "Setting surfaceScalarField " << iter.key()
-                    << " to NaN" << endl;
-
-                surfaceScalarField& phi = *iter();
-
-                sigFpe::fillNan(phi.primitiveFieldRef());
-
-                continue;
-            }
-
-            if (debug)
-            {
-                Pout<< "Mapping flux " << iter.key()
-                    << " using interpolated flux " << UName
-                    << endl;
-            }
-
-            surfaceScalarField& phi = *iter();
-            const surfaceScalarField phiU
-            (
-                fvc::interpolate
-                (
-                    mesh().lookupObject<volVectorField>(UName)
-                )
-              & mesh().Sf()
-            );
-
-            // Recalculate new internal faces.
-            for (label facei = 0; facei < mesh().nInternalFaces(); facei++)
-            {
-                const label oldFacei = faceMap[facei];
-
-                if (oldFacei == -1)
-                {
-                    // Inflated/appended
-                    phi[facei] = phiU[facei];
-                }
-                else if (reverseFaceMap[oldFacei] != facei)
-                {
-                    // face-from-masterface
-                    phi[facei] = phiU[facei];
-                }
-            }
-
-            // Recalculate new boundary faces.
-            surfaceScalarField::Boundary& phiBf = phi.boundaryFieldRef();
-
-            forAll(phiBf, patchi)
-            {
-                fvsPatchScalarField& patchPhi = phiBf[patchi];
-
-                const fvsPatchScalarField& patchPhiU =
-                    phiU.boundaryField()[patchi];
-
-                label facei = patchPhi.patch().start();
-
-                forAll(patchPhi, i)
-                {
-                    const label oldFacei = faceMap[facei];
-
-                    if (oldFacei == -1)
-                    {
-                        // Inflated/appended
-                        patchPhi[i] = patchPhiU[i];
-                    }
-                    else if (reverseFaceMap[oldFacei] != facei)
-                    {
-                        // face-from-masterface
-                        patchPhi[i] = patchPhiU[i];
-                    }
-
-                    facei++;
-                }
-            }
-
-            // Update master faces
-            forAllConstIter(labelHashSet, masterFaces, iter)
-            {
-                const label facei = iter.key();
-
-                if (mesh().isInternalFace(facei))
-                {
-                    phi[facei] = phiU[facei];
-                }
-                else
-                {
-                    const label patchi =
-                        mesh().boundaryMesh().whichPatch(facei);
-
-                    const label i =
-                        facei - mesh().boundaryMesh()[patchi].start();
-
-                    const fvsPatchScalarField& patchPhiU =
-                        phiU.boundaryField()[patchi];
-
-                    fvsPatchScalarField& patchPhi = phiBf[patchi];
-
-                    patchPhi[i] = patchPhiU[i];
-                }
-            }
-        }
+        refineFluxes(masterFaces, map());
+        refineUfs(masterFaces, map());
     }
 
-
     // Update numbering of cells/vertices.
-    meshCutter_.updateMesh(map);
+    meshCutter_.updateMesh(map());
 
     // Update numbering of protectedCells_
     if (protectedCells_.size())
@@ -439,7 +310,7 @@ Foam::fvMeshTopoChangers::refiner::refine
 
         forAll(newProtectedCell, celli)
         {
-            label oldCelli = map().cellMap()[celli];
+            const label oldCelli = map().cellMap()[celli];
             newProtectedCell.set(celli, protectedCells_.get(oldCelli));
         }
         protectedCells_.transfer(newProtectedCell);
@@ -506,95 +377,11 @@ Foam::fvMeshTopoChangers::refiner::unrefine
     // Update fields
     mesh().updateMesh(map);
 
-    // Correct the flux for modified faces.
-    {
-        const labelList& reversePointMap = map().reversePointMap();
-        const labelList& reverseFaceMap = map().reverseFaceMap();
+    // Correct the fluxes for modified faces
+    unrefineFluxes(faceToSplitPoint, map());
 
-        HashTable<surfaceScalarField*> fluxes
-        (
-            mesh().lookupClass<surfaceScalarField>()
-        );
-        forAllIter(HashTable<surfaceScalarField*>, fluxes, iter)
-        {
-            if (!correctFluxes_.found(iter.key()))
-            {
-                WarningInFunction
-                    << "Cannot find surfaceScalarField " << iter.key()
-                    << " in user-provided flux mapping table "
-                    << correctFluxes_ << endl
-                    << "    The flux mapping table is used to recreate the"
-                    << " flux on newly created faces." << endl
-                    << "    Either add the entry if it is a flux or use ("
-                    << iter.key() << " none) to suppress this warning."
-                    << endl;
-                continue;
-            }
-
-            const word& UName = correctFluxes_[iter.key()];
-
-            if (UName == "none")
-            {
-                continue;
-            }
-
-            if (debug)
-            {
-                Info<< "Mapping flux " << iter.key()
-                    << " using interpolated flux " << UName
-                    << endl;
-            }
-
-            surfaceScalarField& phi = *iter();
-            surfaceScalarField::Boundary& phiBf =
-                phi.boundaryFieldRef();
-
-            const surfaceScalarField phiU
-            (
-                fvc::interpolate
-                (
-                    mesh().lookupObject<volVectorField>(UName)
-                )
-              & mesh().Sf()
-            );
-
-
-            forAllConstIter(Map<label>, faceToSplitPoint, iter)
-            {
-                label oldFacei = iter.key();
-                label oldPointi = iter();
-
-                if (reversePointMap[oldPointi] < 0)
-                {
-                    // midpoint was removed. See if face still exists.
-                    label facei = reverseFaceMap[oldFacei];
-
-                    if (facei >= 0)
-                    {
-                        if (mesh().isInternalFace(facei))
-                        {
-                            phi[facei] = phiU[facei];
-                        }
-                        else
-                        {
-                            const label patchi =
-                                mesh().boundaryMesh().whichPatch(facei);
-
-                            const label i =
-                                facei - mesh().boundaryMesh()[patchi].start();
-
-                            const fvsPatchScalarField& patchPhiU =
-                                phiU.boundaryField()[patchi];
-
-                            fvsPatchScalarField& patchPhi = phiBf[patchi];
-                            patchPhi[i] = patchPhiU[i];
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+    // Correct the face velocities for modified faces
+    unrefineUfs(faceToSplitPoint, map());
 
     // Update numbering of cells/vertices.
     meshCutter_.updateMesh(map);
@@ -606,7 +393,7 @@ Foam::fvMeshTopoChangers::refiner::unrefine
 
         forAll(newProtectedCell, celli)
         {
-            label oldCelli = map().cellMap()[celli];
+            const label oldCelli = map().cellMap()[celli];
             if (oldCelli >= 0)
             {
                 newProtectedCell.set(celli, protectedCells_.get(oldCelli));
@@ -619,6 +406,414 @@ Foam::fvMeshTopoChangers::refiner::unrefine
     meshCutter_.checkRefinementLevels(-1, labelList(0));
 
     return map;
+}
+
+
+Foam::word Foam::fvMeshTopoChangers::refiner::Uname
+(
+    const surfaceVectorField& Uf
+) const
+{
+    const word UfName(Uf.member());
+
+    return
+        IOobject::groupName
+        (
+            UfName.back() == 'f'
+          ? word(UfName(UfName.size() - 1))
+          : UfName.compare(UfName.size() - 3, 3, "f_0") == 0
+            ? word(UfName(UfName.size() - 3) + "_0")
+            : word::null,
+            Uf.group()
+        );
+}
+
+
+void Foam::fvMeshTopoChangers::refiner::refineFluxes
+(
+    const labelHashSet& masterFaces,
+    const mapPolyMesh& map
+)
+{
+    // Correct the flux for modified/added faces. All the faces which only
+    // have been renumbered will already have been handled by the mapping.
+    const labelList& faceMap = map.faceMap();
+    const labelList& reverseFaceMap = map.reverseFaceMap();
+
+    HashTable<surfaceScalarField*> fluxes
+    (
+        mesh().lookupClass<surfaceScalarField>()
+    );
+    forAllIter(HashTable<surfaceScalarField*>, fluxes, iter)
+    {
+        if (!correctFluxes_.found(iter.key()))
+        {
+            WarningInFunction
+                << "Cannot find surfaceScalarField " << iter.key()
+                << " in user-provided flux mapping table "
+                << correctFluxes_ << endl
+                << "    The flux mapping table is used to recreate the"
+                << " flux on newly created faces." << endl
+                << "    Either add the entry if it is a flux or use ("
+                << iter.key() << " none) to suppress this warning."
+                << endl;
+            continue;
+        }
+
+        const word& Uname = correctFluxes_[iter.key()];
+
+        if (Uname == "none")
+        {
+            continue;
+        }
+
+        if (Uname == "NaN")
+        {
+            Pout<< "Setting surfaceScalarField " << iter.key()
+                << " to NaN" << endl;
+
+            surfaceScalarField& phi = *iter();
+
+            sigFpe::fillNan(phi.primitiveFieldRef());
+
+            continue;
+        }
+
+        if (debug)
+        {
+            Pout<< "Mapping flux " << iter.key()
+                << " using interpolated flux " << Uname
+                << endl;
+        }
+
+        surfaceScalarField& phi = *iter();
+        const surfaceScalarField phiU
+        (
+            fvc::interpolate(mesh().lookupObject<volVectorField>(Uname))
+          & mesh().Sf()
+        );
+
+        // Recalculate new internal faces.
+        for (label facei = 0; facei < mesh().nInternalFaces(); facei++)
+        {
+            const label oldFacei = faceMap[facei];
+
+            if (oldFacei == -1)
+            {
+                // Inflated/appended
+                phi[facei] = phiU[facei];
+            }
+            else if (reverseFaceMap[oldFacei] != facei)
+            {
+                // face-from-masterface
+                phi[facei] = phiU[facei];
+            }
+        }
+
+        // Recalculate new boundary faces.
+        surfaceScalarField::Boundary& phiBf = phi.boundaryFieldRef();
+
+        forAll(phiBf, patchi)
+        {
+            fvsPatchScalarField& patchPhi = phiBf[patchi];
+
+            const fvsPatchScalarField& patchPhiU =
+                phiU.boundaryField()[patchi];
+
+            label facei = patchPhi.patch().start();
+
+            forAll(patchPhi, i)
+            {
+                const label oldFacei = faceMap[facei];
+
+                if (oldFacei == -1)
+                {
+                    // Inflated/appended
+                    patchPhi[i] = patchPhiU[i];
+                }
+                else if (reverseFaceMap[oldFacei] != facei)
+                {
+                    // face-from-masterface
+                    patchPhi[i] = patchPhiU[i];
+                }
+
+                facei++;
+            }
+        }
+
+        // Update master faces
+        forAllConstIter(labelHashSet, masterFaces, iter)
+        {
+            const label facei = iter.key();
+
+            if (mesh().isInternalFace(facei))
+            {
+                phi[facei] = phiU[facei];
+            }
+            else
+            {
+                const label patchi =
+                    mesh().boundaryMesh().whichPatch(facei);
+
+                const label i =
+                    facei - mesh().boundaryMesh()[patchi].start();
+
+                phiBf[patchi][i] = phiU.boundaryField()[patchi][i];
+            }
+        }
+    }
+}
+
+
+void Foam::fvMeshTopoChangers::refiner::refineUfs
+(
+    const labelHashSet& masterFaces,
+    const mapPolyMesh& map
+)
+{
+    const labelList& faceMap = map.faceMap();
+    const labelList& reverseFaceMap = map.reverseFaceMap();
+
+    // Interpolate U to Uf for added faces
+    HashTable<surfaceVectorField*> Ufs
+    (
+        mesh().lookupClass<surfaceVectorField>()
+    );
+    forAllIter(HashTable<surfaceVectorField*>, Ufs, iter)
+    {
+        surfaceVectorField& Uf = *iter();
+
+        const word Uname(this->Uname(Uf));
+
+        if (Uname != word::null)
+        {
+            const surfaceVectorField UfU
+            (
+                fvc::interpolate
+                (
+                    mesh().lookupObject<volVectorField>(Uname)
+                )
+            );
+
+            // Recalculate new internal faces.
+            for (label facei = 0; facei < mesh().nInternalFaces(); facei++)
+            {
+                label oldFacei = faceMap[facei];
+
+                if (oldFacei == -1)
+                {
+                    // Inflated/appended
+                    Uf[facei] = UfU[facei];
+                }
+                else if (reverseFaceMap[oldFacei] != facei)
+                {
+                    // face-from-masterface
+                    Uf[facei] = UfU[facei];
+                }
+            }
+
+            // Recalculate new boundary faces.
+            surfaceVectorField::Boundary& UfBf = Uf.boundaryFieldRef();
+            forAll(UfBf, patchi)
+            {
+                fvsPatchVectorField& patchUf = UfBf[patchi];
+                const fvsPatchVectorField& patchUfU =
+                    UfU.boundaryField()[patchi];
+
+                label facei = patchUf.patch().start();
+
+                forAll(patchUf, i)
+                {
+                    label oldFacei = faceMap[facei];
+
+                    if (oldFacei == -1)
+                    {
+                        // Inflated/appended
+                        patchUf[i] = patchUfU[i];
+                    }
+                    else if (reverseFaceMap[oldFacei] != facei)
+                    {
+                        // face-from-masterface
+                        patchUf[i] = patchUfU[i];
+                    }
+
+                    facei++;
+                }
+            }
+
+            // Update master faces
+            forAllConstIter(labelHashSet, masterFaces, iter)
+            {
+                label facei = iter.key();
+
+                if (mesh().isInternalFace(facei))
+                {
+                    Uf[facei] = UfU[facei];
+                }
+                else
+                {
+                    const label patchi =
+                        mesh().boundaryMesh().whichPatch(facei);
+                    const label i =
+                        facei - mesh().boundaryMesh()[patchi].start();
+
+                    const fvsPatchVectorField& patchUfU =
+                        UfU.boundaryField()[patchi];
+
+                    fvsPatchVectorField& patchUf = UfBf[patchi];
+
+                    patchUf[i] = patchUfU[i];
+                }
+            }
+        }
+    }
+}
+
+
+void Foam::fvMeshTopoChangers::refiner::unrefineFluxes
+(
+    const Map<label>& faceToSplitPoint,
+    const mapPolyMesh& map
+)
+{
+    const labelList& reversePointMap = map.reversePointMap();
+    const labelList& reverseFaceMap = map.reverseFaceMap();
+
+    HashTable<surfaceScalarField*> fluxes
+    (
+        mesh().lookupClass<surfaceScalarField>()
+    );
+    forAllIter(HashTable<surfaceScalarField*>, fluxes, iter)
+    {
+        if (!correctFluxes_.found(iter.key()))
+        {
+            WarningInFunction
+                << "Cannot find surfaceScalarField " << iter.key()
+                << " in user-provided flux mapping table "
+                << correctFluxes_ << endl
+                << "    The flux mapping table is used to recreate the"
+                << " flux on newly created faces." << endl
+                << "    Either add the entry if it is a flux or use ("
+                << iter.key() << " none) to suppress this warning."
+                << endl;
+            continue;
+        }
+
+        const word& Uname = correctFluxes_[iter.key()];
+
+        if (Uname == "none")
+        {
+            continue;
+        }
+
+        if (debug)
+        {
+            Info<< "Mapping flux " << iter.key()
+                << " using interpolated flux " << Uname
+                << endl;
+        }
+
+        surfaceScalarField& phi = *iter();
+        surfaceScalarField::Boundary& phiBf = phi.boundaryFieldRef();
+
+        const surfaceScalarField phiU
+        (
+            fvc::interpolate(mesh().lookupObject<volVectorField>(Uname))
+          & mesh().Sf()
+        );
+
+        forAllConstIter(Map<label>, faceToSplitPoint, iter)
+        {
+            const label oldFacei = iter.key();
+            const label oldPointi = iter();
+
+            if (reversePointMap[oldPointi] < 0)
+            {
+                // midpoint was removed. See if face still exists.
+                const label facei = reverseFaceMap[oldFacei];
+
+                if (facei >= 0)
+                {
+                    if (mesh().isInternalFace(facei))
+                    {
+                        phi[facei] = phiU[facei];
+                    }
+                    else
+                    {
+                        const label patchi =
+                            mesh().boundaryMesh().whichPatch(facei);
+
+                        const label i =
+                            facei - mesh().boundaryMesh()[patchi].start();
+
+                        phiBf[patchi][i] = phiU.boundaryField()[patchi][i];
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+void Foam::fvMeshTopoChangers::refiner::unrefineUfs
+(
+    const Map<label>& faceToSplitPoint,
+    const mapPolyMesh& map
+)
+{
+    const labelList& reversePointMap = map.reversePointMap();
+    const labelList& reverseFaceMap = map.reverseFaceMap();
+
+    // Interpolate U to Uf for added faces
+    HashTable<surfaceVectorField*> Ufs
+    (
+        mesh().lookupClass<surfaceVectorField>()
+    );
+    forAllIter(HashTable<surfaceVectorField*>, Ufs, iter)
+    {
+        surfaceVectorField& Uf = *iter();
+
+        const word Uname(this->Uname(Uf));
+
+        if (Uname != word::null)
+        {
+            surfaceVectorField::Boundary& UfBf = Uf.boundaryFieldRef();
+
+            const surfaceVectorField UfU
+            (
+                fvc::interpolate(mesh().lookupObject<volVectorField>(Uname))
+            );
+
+            forAllConstIter(Map<label>, faceToSplitPoint, iter)
+            {
+                const label oldFacei = iter.key();
+                const label oldPointi = iter();
+
+                if (reversePointMap[oldPointi] < 0)
+                {
+                    // midpoint was removed. See if face still exists.
+                    const label facei = reverseFaceMap[oldFacei];
+
+                    if (facei >= 0)
+                    {
+                        if (mesh().isInternalFace(facei))
+                        {
+                            Uf[facei] = UfU[facei];
+                        }
+                        else
+                        {
+                            const label patchi =
+                                mesh().boundaryMesh().whichPatch(facei);
+                            const label i =
+                                facei - mesh().boundaryMesh()[patchi].start();
+
+                            UfBf[patchi][i] = UfU.boundaryField()[patchi][i];
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -1410,7 +1605,7 @@ bool Foam::fvMeshTopoChangers::refiner::update()
 
                     forAll(cellMap, celli)
                     {
-                        label oldCelli = cellMap[celli];
+                        const label oldCelli = cellMap[celli];
 
                         if (oldCelli < 0)
                         {

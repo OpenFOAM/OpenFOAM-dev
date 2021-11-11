@@ -217,6 +217,32 @@ class refiner
         //- Unrefine cells. Gets passed in centre points of cells to combine.
         autoPtr<mapPolyMesh> unrefine(const labelList&);
 
+        word Uname(const surfaceVectorField& Uf) const;
+
+        void refineFluxes
+        (
+            const labelHashSet& masterFaces,
+            const mapPolyMesh& map
+        );
+
+        void refineUfs
+        (
+            const labelHashSet& masterFaces,
+            const mapPolyMesh& map
+        );
+
+        void unrefineFluxes
+        (
+            const Map<label>& faceToSplitPoint,
+            const mapPolyMesh& map
+        );
+
+        void unrefineUfs
+        (
+            const Map<label>& faceToSplitPoint,
+            const mapPolyMesh& map
+        );
+
 
         // Selection of cells to un/refine
 
