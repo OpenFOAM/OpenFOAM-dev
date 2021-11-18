@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
         max         (1 1 1);
         distance    0.1;
         signed      yes;
-        filter      full;
+        filtering   full;
         interpolate yes;
     }
     \endverbatim
@@ -48,7 +48,7 @@ Usage
         distance     | the distance from which to sample the surface | yes |
         signed       | sample only on one side of the surface, specified by \\
                        the sign of the distance | yes |
-        filter       | the level of filtering to perform on the iso-surface \\
+        filtering    | the level of filtering to perform on the iso-surface \\
                                                | no          | full
         interpolate  | interpolate values to the surface points | no | no
     \endtable

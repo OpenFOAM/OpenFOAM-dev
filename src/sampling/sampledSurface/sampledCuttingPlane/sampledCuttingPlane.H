@@ -35,7 +35,7 @@ Description
         planeType   pointAndNormal;
         point       (0 0 0);
         normal      (0 0 1);
-        filter      full;
+        filtering   full;
         interpolate yes;
     }
     \endverbatim
@@ -44,7 +44,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         planeType    | the method of specification of the plane | yes |
-        filter       | the level of filtering to perform on the iso-surface \\
+        filtering    | the level of filtering to perform on the iso-surface \\
                                                | no          | full
         interpolate  | interpolate values to the surface points | no | no
     \endtable

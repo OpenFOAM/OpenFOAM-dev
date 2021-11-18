@@ -33,7 +33,7 @@ Description
         type        isoSurface;
         isoField    p;
         isoValue    1e5;
-        filter      full;
+        filtering   full;
         interpolate yes;
     }
     \endverbatim
@@ -43,7 +43,7 @@ Usage
         Property     | Description             | Required    | Default value
         isoField     | the field to get an iso-surface of | yes |
         isoValue     | the iso-surface value   | yes         |
-        filter       | the level of filtering to perform on the iso-surface \\
+        filtering    | the level of filtering to perform on the iso-surface \\
                                                | no          | full
         interpolate  | interpolate values to the surface points | no | no
     \endtable
