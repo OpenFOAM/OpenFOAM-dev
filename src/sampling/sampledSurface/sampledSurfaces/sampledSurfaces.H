@@ -75,7 +75,7 @@ SourceFiles
 #ifndef functionObjects_sampledSurfaces_H
 #define functionObjects_sampledSurfaces_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "sampledSurface.H"
 #include "surfaceWriter.H"
 #include "volFieldsFwd.H"
@@ -101,7 +101,7 @@ namespace functionObjects
 
 class sampledSurfaces
 :
-    public functionObject,
+    public fvMeshFunctionObject,
     public PtrList<sampledSurface>
 {
     // Private classes
@@ -135,9 +135,6 @@ class sampledSurfaces
 
     // Private Data
 
-        //- Const reference to fvMesh
-        const fvMesh& mesh_;
-
         //- Output path
         fileName outputPath_;
 
@@ -165,40 +162,24 @@ class sampledSurfaces
 
     // Private Member Functions
 
-
-        //- Return number of fields
-        label classifyFields();
-
-        //- Write geometry only
-        void writeGeometry() const;
-
-        //- Write sampled fieldName on surface and on outputDir path
+        //- Sample all fields of a type on a given surface
         template<class Type>
-        void writeSurface
+        PtrList<const Field<Type>> sampleLocalType
         (
-            const Field<Type>& values,
-            const label surfI,
-            const word& fieldName,
-            const fileName& outputDir
+            const label surfi,
+            const wordList& fieldNames,
+            HashPtrTable<interpolation<Type>>& interpolations
         );
 
-        //- Sample and write a particular volume field
+        //- Sample all fields of a type on a given surface and combine on the
+        //  master for writing
         template<class Type>
-        void sampleAndWrite
+        PtrList<const Field<Type>> sampleType
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const label surfi,
+            const wordList& fieldNames,
+            HashPtrTable<interpolation<Type>>& interpolations
         );
-
-        //- Sample and write a particular surface field
-        template<class Type>
-        void sampleAndWrite
-        (
-            const GeometricField<Type, fvsPatchField, surfaceMesh>&
-        );
-
-        //- Sample and write all sampled fields
-        template<class Type>
-        void sampleAndWrite();
 
 
 public:

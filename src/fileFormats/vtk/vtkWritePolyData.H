@@ -36,6 +36,7 @@ SourceFiles
 #define vtkWritePolyData_H
 
 #include "vtkWriteOps.H"
+#include "boolList.H"
 #include "fileName.H"
 #include "Field.H"
 
