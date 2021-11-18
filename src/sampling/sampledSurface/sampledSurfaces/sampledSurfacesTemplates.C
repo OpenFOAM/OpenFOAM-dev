@@ -166,52 +166,23 @@ void Foam::functionObjects::sampledSurfaces::sampleAndWrite
 
 
 template<class GeoField>
-void Foam::functionObjects::sampledSurfaces::sampleAndWrite
-(
-    const IOobjectList& objects
-)
+void Foam::functionObjects::sampledSurfaces::sampleAndWrite()
 {
-    /*
-    wordList names(mesh_.thisDb().names<GeoField>());
-
-    labelList nameIDs(findStrings(fields_, names));
-
-    wordHashSet fieldNames(wordList(names, nameIDs));
-
-    forAllConstIter(wordHashSet, fieldNames, iter)
+    forAll(fields_, fieldi)
     {
-        const word& fieldName = iter.key();
-
-        if ((Pstream::master()) && verbose_)
+        if (mesh_.thisDb().foundObject<GeoField>(fields_[fieldi]))
         {
-            Pout<< "sampleAndWrite: " << fieldName << endl;
-        }
+            if (Pstream::master() && verbose_)
+            {
+                Pout<< "sampleAndWrite: " << fields_[fieldi] << endl;
+            }
 
-        if (loadFromFiles_)
-        {
-            const GeoField fld
-            (
-                IOobject
-                (
-                    fieldName,
-                    mesh_.time().timeName(),
-                    mesh_,
-                    IOobject::MUST_READ
-                ),
-                mesh_
-            );
-
-            sampleAndWrite(fld);
-        }
-        else
-        {
             sampleAndWrite
             (
-                mesh_.thisDb().lookupObject<GeoField>(fieldName)
+                mesh_.thisDb().lookupObject<GeoField>(fields_[fieldi])
             );
         }
     }
-    */
 }
 
 

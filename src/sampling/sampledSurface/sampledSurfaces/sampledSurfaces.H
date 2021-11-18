@@ -197,7 +197,8 @@ class sampledSurfaces
         );
 
         //- Sample and write all sampled fields
-        template<class Type> void sampleAndWrite(const IOobjectList& objects);
+        template<class Type>
+        void sampleAndWrite();
 
 
 public:
