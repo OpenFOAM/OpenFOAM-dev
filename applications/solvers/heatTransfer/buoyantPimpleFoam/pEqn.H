@@ -98,6 +98,9 @@ else
 
 phi = phiHbyA + p_rghEqn.flux();
 
+// Explicitly relax pressure for momentum corrector
+p_rgh.relax();
+
 p = p_rgh + rho*gh + pRef;
 
 if (mesh.steady())
@@ -119,9 +122,6 @@ else
     #include "rhoEqn.H"
     #include "compressibleContinuityErrs.H"
 }
-
-// Explicitly relax pressure for momentum corrector
-p_rgh.relax();
 
 // Correct the momentum source with the pressure gradient flux
 // calculated from the relaxed pressure
