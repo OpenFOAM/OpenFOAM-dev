@@ -55,12 +55,6 @@ Foam::fvMeshMovers::layeredEngine::~layeredEngine()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fvMeshMovers::layeredEngine::updateMesh(const mapPolyMesh& mpm)
-{
-    NotImplemented;
-}
-
-
 bool Foam::fvMeshMovers::layeredEngine::update()
 {
     const scalar deltaZ = pistonDisplacement().value();
@@ -98,6 +92,21 @@ bool Foam::fvMeshMovers::layeredEngine::update()
         << "Piston speed = " << pistonSpeed << " m/s" << endl;
 
     return true;
+}
+
+
+void Foam::fvMeshMovers::layeredEngine::updateMesh(const mapPolyMesh&)
+{
+    NotImplemented;
+}
+
+
+void Foam::fvMeshMovers::layeredEngine::distribute
+(
+    const mapDistributePolyMesh&
+)
+{
+    NotImplemented;
 }
 
 

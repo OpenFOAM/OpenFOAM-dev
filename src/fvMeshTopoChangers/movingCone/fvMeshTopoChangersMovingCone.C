@@ -384,4 +384,15 @@ bool Foam::fvMeshTopoChangers::movingCone::update()
 }
 
 
+void Foam::fvMeshTopoChangers::movingCone::updateMesh(const mapPolyMesh& map)
+{}
+
+
+void Foam::fvMeshTopoChangers::movingCone::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{}
+
+
 // ************************************************************************* //

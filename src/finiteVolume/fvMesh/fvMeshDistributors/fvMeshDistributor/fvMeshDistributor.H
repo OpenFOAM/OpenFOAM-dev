@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvMeshMover
+    Foam::fvMeshDistributor
 
 Description
     Abstract base class for fvMesh movers.
@@ -31,13 +31,13 @@ Description
     the corresponding mesh fluxes without any topology change.
 
 SourceFiles
-    fvMeshMover.C
-    fvMeshMoverNew.C
+    fvMeshDistributor.C
+    fvMeshDistributorNew.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshMover_H
-#define fvMeshMover_H
+#ifndef fvMeshDistributor_H
+#define fvMeshDistributor_H
 
 #include "fvMesh.H"
 
@@ -47,10 +47,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class fvMeshMover Declaration
+                        Class fvMeshDistributor Declaration
 \*---------------------------------------------------------------------------*/
 
-class fvMeshMover
+class fvMeshDistributor
 {
     // Private Data
 
@@ -64,7 +64,7 @@ class fvMeshMover
 public:
 
     //- Runtime type information
-    TypeName("fvMeshMover");
+    TypeName("fvMeshDistributor");
 
 
     // Declare run-time constructor selection table
@@ -72,7 +72,7 @@ public:
         declareRunTimeSelectionTable
         (
             autoPtr,
-            fvMeshMover,
+            fvMeshDistributor,
             fvMesh,
             (fvMesh& mesh),
             (mesh)
@@ -109,22 +109,22 @@ public:
     // Constructors
 
         //- Construct from fvMesh
-        explicit fvMeshMover(fvMesh&);
+        explicit fvMeshDistributor(fvMesh&);
 
         //- Disallow default bitwise copy construction
-        fvMeshMover(const fvMeshMover&) = delete;
+        fvMeshDistributor(const fvMeshDistributor&) = delete;
 
 
     // Selectors
 
-        //- Select, construct and return the fvMeshMover
+        //- Select, construct and return the fvMeshDistributor
         //  If the constant/dynamicMeshDict does not exist
         //  a staticFvMesh is returned
-        static autoPtr<fvMeshMover> New(fvMesh&);
+        static autoPtr<fvMeshDistributor> New(fvMesh&);
 
 
     //- Destructor
-    virtual ~fvMeshMover();
+    virtual ~fvMeshDistributor();
 
 
     // Member Functions
@@ -141,14 +141,14 @@ public:
             return mesh_;
         }
 
-        //- Return the dynamicMeshDict/mover dict
+        //- Return the dynamicMeshDict/distributor sub-dict
         const dictionary& dict() const
         {
-            return dynamicMeshDict_.subDict("mover");
+            return dynamicMeshDict_.subDict("distributor");
         }
 
         //- Is mesh dynamic, i.e. might it change?
-        //  Defaults to true, set to false in the fvMeshMovers::none
+        //  Defaults to true, set to false in the fvMeshDistributors::none
         virtual bool dynamic() const
         {
             return true;
@@ -157,8 +157,8 @@ public:
         //- Update the mesh for both mesh motion and topology change
         virtual bool update() = 0;
 
-        //-  Update local data for topology changes
-        virtual void updateMesh(const mapPolyMesh&) = 0;
+        //- Update corresponding to the given map
+        virtual void updateMesh(const mapPolyMesh& mpm) = 0;
 
         //- Update corresponding to the given distribution map
         virtual void distribute(const mapDistributePolyMesh& mdpm) = 0;
@@ -173,7 +173,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const fvMeshMover&) = delete;
+        void operator=(const fvMeshDistributor&) = delete;
 };
 
 

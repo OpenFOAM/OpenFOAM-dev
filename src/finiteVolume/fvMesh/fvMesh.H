@@ -70,6 +70,7 @@ namespace Foam
 
 class fvMeshLduAddressing;
 class fvMeshTopoChanger;
+class fvMeshDistributor;
 class fvMeshMover;
 class volMesh;
 class mapDistributePolyMesh;
@@ -94,6 +95,9 @@ class fvMesh
 
         //- The topo-changer function class
         autoPtr<fvMeshTopoChanger> topoChanger_;
+
+        //- The distributor function class
+        autoPtr<fvMeshDistributor> distributor_;
 
         //- The mover function class
         autoPtr<fvMeshMover> mover_;
@@ -299,6 +303,9 @@ public:
             //- Return the topo-changer function class
             const fvMeshTopoChanger& topoChanger() const;
 
+            //- Return the distributor function class
+            const fvMeshDistributor& distributor() const;
+
             //- Return the mover function class
             const fvMeshMover& mover() const;
 
@@ -368,7 +375,7 @@ public:
             //- Update mesh corresponding to the given distribution map
             //  This is a prototype implementation without field mapping
             //  or handling of old-time volumes for mesh-morphing
-            virtual void updateMesh(const mapDistributePolyMesh& mdpm);
+            virtual void distribute(const mapDistributePolyMesh& mdpm);
 
             //- Move points, returns volumes swept by faces in motion
             virtual tmp<scalarField> movePoints(const pointField&);

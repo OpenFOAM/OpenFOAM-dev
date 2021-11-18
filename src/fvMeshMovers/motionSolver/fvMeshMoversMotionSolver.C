@@ -63,12 +63,6 @@ const Foam::motionSolver& Foam::fvMeshMovers::motionSolver::motion() const
 }
 
 
-void Foam::fvMeshMovers::motionSolver::updateMesh(const mapPolyMesh& mpm)
-{
-    motionPtr_->updateMesh(mpm);
-}
-
-
 bool Foam::fvMeshMovers::motionSolver::update()
 {
     mesh().movePoints(motionPtr_->newPoints());
@@ -76,6 +70,19 @@ bool Foam::fvMeshMovers::motionSolver::update()
 
     return true;
 }
+
+
+void Foam::fvMeshMovers::motionSolver::updateMesh(const mapPolyMesh& mpm)
+{
+    motionPtr_->updateMesh(mpm);
+}
+
+
+void Foam::fvMeshMovers::motionSolver::distribute
+(
+    const mapDistributePolyMesh&
+)
+{}
 
 
 bool Foam::fvMeshMovers::motionSolver::write(const bool write) const

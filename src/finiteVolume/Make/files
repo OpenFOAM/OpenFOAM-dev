@@ -93,17 +93,23 @@ $(faceToCell)/extendedFaceToCellStencil.C
 $(faceToCell)/extendedCentredFaceToCellStencil.C
 $(faceToCell)/MeshObjects/centredCFCFaceToCellStencilObject.C
 
-fvMeshMovers = fvMesh/fvMeshMovers
-
-$(fvMeshMovers)/fvMeshMover/fvMeshMover.C
-$(fvMeshMovers)/fvMeshMover/fvMeshMoverNew.C
-$(fvMeshMovers)/none/fvMeshMoversNone.C
-
 fvMeshTopoChangers = fvMesh/fvMeshTopoChangers
 
 $(fvMeshTopoChangers)/fvMeshTopoChanger/fvMeshTopoChanger.C
 $(fvMeshTopoChangers)/fvMeshTopoChanger/fvMeshTopoChangerNew.C
 $(fvMeshTopoChangers)/none/fvMeshTopoChangersNone.C
+
+fvMeshDistributors = fvMesh/fvMeshDistributors
+
+$(fvMeshDistributors)/fvMeshDistributor/fvMeshDistributor.C
+$(fvMeshDistributors)/fvMeshDistributor/fvMeshDistributorNew.C
+$(fvMeshDistributors)/none/fvMeshDistributorsNone.C
+
+fvMeshMovers = fvMesh/fvMeshMovers
+
+$(fvMeshMovers)/fvMeshMover/fvMeshMover.C
+$(fvMeshMovers)/fvMeshMover/fvMeshMoverNew.C
+$(fvMeshMovers)/none/fvMeshMoversNone.C
 
 functionObjects/fvMeshFunctionObject/fvMeshFunctionObject.C
 functionObjects/volRegion/volRegion.C

@@ -363,6 +363,12 @@ public:
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
 
+        //- Update corresponding to the given map
+        virtual void updateMesh(const mapPolyMesh&);
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const mapDistributePolyMesh&);
+
 
     // Writing
 

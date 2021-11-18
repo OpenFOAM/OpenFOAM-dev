@@ -23,80 +23,73 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshMoversInterpolator.H"
+#include "fvMeshDistributor.H"
 #include "volFields.H"
-#include "pointFields.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace fvMeshMovers
-{
-    defineTypeNameAndDebug(interpolator, 0);
-    addToRunTimeSelectionTable(fvMeshMover, interpolator, fvMesh);
-}
+    defineTypeNameAndDebug(fvMeshDistributor, 0);
+    defineRunTimeSelectionTable(fvMeshDistributor, fvMesh);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshMovers::interpolator::interpolator(fvMesh& mesh)
+Foam::fvMeshDistributor::fvMeshDistributor(fvMesh& mesh)
 :
-    fvMeshMover(mesh),
-    meshCoeffs_(dict()),
-    pointInterpolator_(mesh, meshCoeffs_),
-    displacement_(meshCoeffs_.lookup("displacement")),
-    points0_
+    mesh_(mesh),
+    dynamicMeshDict_
     (
-        displacement_
-      ? new pointIOField(fvMesh::points0IO(mesh))
-      : nullptr
-    ),
-    velocityMotionCorrection_(mesh, dict())
+        IOdictionary
+        (
+            IOobject
+            (
+                "dynamicMeshDict",
+                mesh.time().constant(),
+                mesh.dbDir(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::NO_WRITE,
+                false
+            )
+        )
+    )
+{}
+
+
+Foam::fvMeshDistributor::velocityMotionCorrection::velocityMotionCorrection
+(
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+:
+    mesh_(mesh),
+    velocityFields_(dict.lookupOrDefault("velocityFields", wordList()))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fvMeshMovers::interpolator::~interpolator()
+Foam::fvMeshDistributor::~fvMeshDistributor()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-
-bool Foam::fvMeshMovers::interpolator::update()
+void Foam::fvMeshDistributor::velocityMotionCorrection::update() const
 {
-    if (displacement_)
+    forAll(velocityFields_, i)
     {
-        mesh().movePoints(points0_() + pointInterpolator_.curPointField()());
+        if (mesh_.foundObject<volVectorField>(velocityFields_[i]))
+        {
+            mesh_.lookupObjectRef<volVectorField>
+            (
+                velocityFields_[i]
+            ).correctBoundaryConditions();
+        }
     }
-    else
-    {
-        mesh().movePoints(pointInterpolator_.curPointField());
-    }
-
-    velocityMotionCorrection_.update();
-
-    return true;
 }
-
-
-void Foam::fvMeshMovers::interpolator::updateMesh(const mapPolyMesh&)
-{
-    NotImplemented;
-}
-
-
-void Foam::fvMeshMovers::interpolator::distribute
-(
-    const mapDistributePolyMesh&
-)
-{
-    NotImplemented;
-}
-
 
 // ************************************************************************* //

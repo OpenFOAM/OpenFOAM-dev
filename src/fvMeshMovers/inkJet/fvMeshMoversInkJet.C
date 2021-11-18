@@ -78,12 +78,6 @@ Foam::fvMeshMovers::inkJet::~inkJet()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fvMeshMovers::inkJet::updateMesh(const mapPolyMesh& mpm)
-{
-    NotImplemented;
-}
-
-
 bool Foam::fvMeshMovers::inkJet::update()
 {
     const scalar scalingFunction =
@@ -117,6 +111,21 @@ bool Foam::fvMeshMovers::inkJet::update()
     velocityMotionCorrection_.update();
 
     return true;
+}
+
+
+void Foam::fvMeshMovers::inkJet::updateMesh(const mapPolyMesh&)
+{
+    NotImplemented;
+}
+
+
+void Foam::fvMeshMovers::inkJet::distribute
+(
+    const mapDistributePolyMesh&
+)
+{
+    NotImplemented;
 }
 
 

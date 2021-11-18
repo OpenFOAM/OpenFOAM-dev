@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,77 +22,85 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::topoChangerFvMesh
+    Foam::fvMeshDistributors::none
 
 Description
-    Abstract base class for a topology changing fvMesh
+    Dummy fvMeshDistributor which does not move the mesh points
 
 SourceFiles
-    topoChangerFvMesh.C
-    newTopoFvMesh.C
+    none.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef topoChangerFvMesh_H
-#define topoChangerFvMesh_H
+#ifndef fvMeshDistributorsNone_H
+#define fvMeshDistributorsNone_H
 
-#include "dynamicFvMesh.H"
-#include "polyTopoChanger.H"
+#include "fvMeshDistributor.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace fvMeshDistributors
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class topoChangerFvMesh Declaration
+                        Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-class topoChangerFvMesh
+class none
 :
-    public dynamicFvMesh
+    public fvMeshDistributor
 {
-protected:
-
-    // Protected Data
-
-        polyTopoChanger topoChanger_;
-
-
 public:
 
     //- Runtime type information
-    TypeName("topoChangerFvMesh");
+    TypeName("none");
 
 
     // Constructors
 
-        //- Construct from objectRegistry, and read/write options
-        explicit topoChangerFvMesh(const IOobject& io);
+        //- Construct from fvMesh
+        none(fvMesh& mesh);
 
         //- Disallow default bitwise copy construction
-        topoChangerFvMesh(const topoChangerFvMesh&) = delete;
+        none(const none&) = delete;
 
 
     //- Destructor
-    virtual ~topoChangerFvMesh();
+    ~none();
 
 
     // Member Functions
 
-        //- Update the mesh for both mesh motion and topology change
-        virtual bool update() = 0;
+        //- The mesh is static and does not change so return false
+        virtual bool dynamic() const
+        {
+            return false;
+        }
+
+        //- Dummy update function which does not change the mesh
+        virtual bool update();
+
+        //- Update corresponding to the given map
+        virtual void updateMesh(const mapPolyMesh&)
+        {}
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const mapDistributePolyMesh&)
+        {}
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const topoChangerFvMesh&) = delete;
+        void operator=(const none&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace fvMeshDistributors
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

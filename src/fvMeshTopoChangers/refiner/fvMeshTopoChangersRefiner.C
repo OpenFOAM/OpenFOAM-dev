@@ -257,7 +257,7 @@ Foam::fvMeshTopoChangers::refiner::refine
     }
 
     // Update fields
-    mesh().updateMesh(map());
+    mesh().updateMesh(map);
 
     {
         // Correct the flux for modified/added faces. All the faces which only
@@ -299,9 +299,6 @@ Foam::fvMeshTopoChangers::refiner::refine
         refineFluxes(masterFaces, map());
         refineUfs(masterFaces, map());
     }
-
-    // Update numbering of cells/vertices.
-    meshCutter_.updateMesh(map());
 
     // Update numbering of protectedCells_
     if (protectedCells_.size())
@@ -382,9 +379,6 @@ Foam::fvMeshTopoChangers::refiner::unrefine
 
     // Correct the face velocities for modified faces
     unrefineUfs(faceToSplitPoint, map());
-
-    // Update numbering of cells/vertices.
-    meshCutter_.updateMesh(map);
 
     // Update numbering of protectedCells_
     if (protectedCells_.size())
@@ -1661,6 +1655,7 @@ bool Foam::fvMeshTopoChangers::refiner::update()
     }
 
     mesh().topoChanging(hasChanged);
+
     if (hasChanged)
     {
         // Reset moving flag (if any). If not using inflation we'll not move,
@@ -1669,6 +1664,24 @@ bool Foam::fvMeshTopoChangers::refiner::update()
     }
 
     return hasChanged;
+}
+
+
+void Foam::fvMeshTopoChangers::refiner::updateMesh(const mapPolyMesh& map)
+{
+    // Update numbering of cells/vertices.
+    meshCutter_.updateMesh(map);
+}
+
+
+void Foam::fvMeshTopoChangers::refiner::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{
+    InfoInFunction << endl;
+    // Redistribute the mesh cutting engine
+    meshCutter_.distribute(map);
 }
 
 

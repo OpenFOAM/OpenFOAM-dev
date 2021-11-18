@@ -160,6 +160,9 @@ class fvMeshDistribute
                 labelListList& constructPointMap
             );
 
+            //- Map the fields
+            void mapFields(const mapPolyMesh& map);
+
 
         // Coupling information
 

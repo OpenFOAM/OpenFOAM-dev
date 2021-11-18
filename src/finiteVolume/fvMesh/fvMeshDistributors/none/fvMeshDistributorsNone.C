@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,29 +23,41 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "topoChangerFvMesh.H"
-#include "Time.H"
+#include "fvMeshDistributorsNone.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(topoChangerFvMesh, 0);
+namespace fvMeshDistributors
+{
+    defineTypeNameAndDebug(none, 0);
+    addToRunTimeSelectionTable(fvMeshDistributor, none, fvMesh);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::topoChangerFvMesh::topoChangerFvMesh(const IOobject& io)
+Foam::fvMeshDistributors::none::none(fvMesh& mesh)
 :
-    dynamicFvMesh(io),
-    topoChanger_(*this)
+    fvMeshDistributor(mesh)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::topoChangerFvMesh::~topoChangerFvMesh()
+Foam::fvMeshDistributors::none::~none()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::fvMeshDistributors::none::update()
+{
+    return false;
+}
+
 
 // ************************************************************************* //

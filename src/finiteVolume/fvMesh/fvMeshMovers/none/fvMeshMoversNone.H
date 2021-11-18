@@ -79,12 +79,16 @@ public:
             return false;
         }
 
+        //- Dummy update function which does not change the mesh
+        virtual bool update();
+
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&)
         {}
 
-        //- Dummy update function which does not change the mesh
-        virtual bool update();
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const mapDistributePolyMesh&)
+        {}
 
 
     // Member Operators

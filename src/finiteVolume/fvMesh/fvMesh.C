@@ -32,6 +32,7 @@ License
 #include "demandDrivenData.H"
 #include "fvMeshLduAddressing.H"
 #include "fvMeshTopoChanger.H"
+#include "fvMeshDistributor.H"
 #include "fvMeshMover.H"
 #include "mapPolyMesh.H"
 #include "MapFvFields.H"
@@ -271,6 +272,12 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
       ? fvMeshTopoChanger::New(*this)
       : autoPtr<fvMeshTopoChanger>(nullptr)
     ),
+    distributor_
+    (
+        changers
+      ? fvMeshDistributor::New(*this)
+      : autoPtr<fvMeshDistributor>(nullptr)
+    ),
     mover_
     (
         changers
@@ -476,6 +483,7 @@ bool Foam::fvMesh::dynamic() const
 bool Foam::fvMesh::update()
 {
     bool updated = topoChanger_->update();
+    updated = distributor_->update() || updated;
     updated = mover_->update() || updated;
 
     return updated;
@@ -588,6 +596,12 @@ const Foam::lduAddressing& Foam::fvMesh::lduAddr() const
 const Foam::fvMeshTopoChanger& Foam::fvMesh::topoChanger() const
 {
     return topoChanger_();
+}
+
+
+const Foam::fvMeshDistributor& Foam::fvMesh::distributor() const
+{
+    return distributor_();
 }
 
 
@@ -891,6 +905,16 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
     meshObject::updateMesh<fvMesh>(*this, mpm);
     meshObject::updateMesh<lduMesh>(*this, mpm);
 
+    if (topoChanger_.valid())
+    {
+        topoChanger_->updateMesh(mpm);
+    }
+
+    if (distributor_.valid())
+    {
+        distributor_->updateMesh(mpm);
+    }
+
     if (mover_.valid())
     {
         mover_->updateMesh(mpm);
@@ -904,10 +928,10 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
 }
 
 
-void Foam::fvMesh::updateMesh(const mapDistributePolyMesh& mdpm)
+void Foam::fvMesh::distribute(const mapDistributePolyMesh& mdpm)
 {
     // Update polyMesh. This needs to keep volume existent!
-    // polyMesh::updateMesh(mdpm);
+    // polyMesh::distribute(mdpm);
 
     // if (VPtr_)
     // {
@@ -960,6 +984,10 @@ void Foam::fvMesh::updateMesh(const mapDistributePolyMesh& mdpm)
 
     // meshObject::updateMesh<fvMesh>(*this, mdpm);
     // meshObject::updateMesh<lduMesh>(*this, mdpm);
+
+    topoChanger_->distribute(mdpm);
+    distributor_->distribute(mdpm);
+    mover_->distribute(mdpm);
 }
 
 
@@ -1143,6 +1171,11 @@ bool Foam::fvMesh::writeObject
     if (topoChanger_.valid())
     {
         topoChanger_->write(write);
+    }
+
+    if (distributor_.valid())
+    {
+        distributor_->write(write);
     }
 
     if (mover_.valid())

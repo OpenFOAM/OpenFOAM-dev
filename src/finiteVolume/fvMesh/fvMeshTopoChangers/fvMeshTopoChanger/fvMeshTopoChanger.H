@@ -157,6 +157,12 @@ public:
         //- Update the mesh for both mesh motion and topology change
         virtual bool update() = 0;
 
+        //- Update corresponding to the given map
+        virtual void updateMesh(const mapPolyMesh& mpm) = 0;
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const mapDistributePolyMesh& mdpm) = 0;
+
         //- Write the mover state
         virtual bool write(const bool write = true) const
         {

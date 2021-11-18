@@ -572,7 +572,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::repatch
     autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields. No inflation, parallel sync.
-    mesh_.updateMesh(map);
+    mapFields(map);
 
     // Map patch fields using stored boundary fields. Note: assumes order
     // of fields has not changed in object registry!
@@ -769,7 +769,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::mergeSharedPoints
     autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields. No inflation, parallel sync.
-    mesh_.updateMesh(map);
+    mapFields(map);
 
     // Adapt constructMaps for merged points.
     forAll(constructPointMap, proci)
@@ -798,6 +798,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::mergeSharedPoints
             }
         }
     }
+
     return map;
 }
 
@@ -1282,8 +1283,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
     autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, false);
 
     // Update fields
-    mesh_.updateMesh(map);
-
+    mapFields(map);
 
     // Any exposed faces in a surfaceField will not be mapped. Map the value
     // of these separately (until there is support in all PatchFields for
@@ -1307,6 +1307,13 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
     }
 
     return map;
+}
+
+
+void Foam::fvMeshDistribute::mapFields(const mapPolyMesh& map)
+{
+    mesh_.mapFields(map);
+    meshObject::updateMesh<fvMesh>(mesh_, map);
 }
 
 
