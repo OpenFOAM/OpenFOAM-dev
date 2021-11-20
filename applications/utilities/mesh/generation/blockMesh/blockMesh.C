@@ -302,7 +302,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                celli += b.cells().size();
+                celli += blockCells.size();
             }
         }
 
