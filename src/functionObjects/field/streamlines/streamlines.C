@@ -270,6 +270,7 @@ void Foam::functionObjects::streamlines::track()
         UIndex,         // index of U in vvInterp
 
         trackDirection_ == trackDirection::forward,
+        trackOutside_,
 
         nSubCycle_,     // automatic track control:step through cells in steps?
         trackLength_,   // fixed track length
@@ -360,6 +361,8 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
     {
         trackDirection_ = trackDirectionNames_[word(dict.lookup("direction"))];
     }
+
+    trackOutside_ = dict.lookupOrDefault<Switch>("outside", false);
 
     dict.lookup("lifeTime") >> lifeTime_;
     if (lifeTime_ < 1)

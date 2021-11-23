@@ -47,34 +47,65 @@ Foam::vector Foam::streamlinesParticle::interpolateFields
     sampledScalars_.setSize(td.vsInterp_.size());
     forAll(td.vsInterp_, scalarI)
     {
+        const scalar s =
+            td.vsInterp_[scalarI].interpolate(position, celli, facei);
+
         sampledScalars_[scalarI].append
         (
-            td.vsInterp_[scalarI].interpolate
-            (
-                position,
-                celli,
-                facei
-            )
+            td.trackOutside_ ? transform_.invTransform(s) : s
         );
     }
+
+    vector U = vector::uniform(NaN);
 
     sampledVectors_.setSize(td.vvInterp_.size());
     forAll(td.vvInterp_, vectorI)
     {
+        const vector v =
+            td.vvInterp_[vectorI].interpolate(position, celli, facei);
+
+        if (vectorI == td.UIndex_)
+        {
+            U = v;
+        }
+
         sampledVectors_[vectorI].append
         (
-            td.vvInterp_[vectorI].interpolate
-            (
-                position,
-                celli,
-                facei
-            )
+            td.trackOutside_ ? transform_.invTransform(v) : v
         );
     }
 
-    const DynamicList<vector>& U = sampledVectors_[td.UIndex_];
+    return U;
+}
 
-    return U.last();
+
+void Foam::streamlinesParticle::endTrack(trackingData& td)
+{
+    {
+        td.allPositions_.append(vectorList());
+        vectorList& top = td.allPositions_.last();
+        top.transfer(sampledPositions_);
+    }
+
+    {
+        td.allTimes_.append(scalarList());
+        scalarList& top = td.allTimes_.last();
+        top.transfer(sampledTimes_);
+    }
+
+    forAll(sampledScalars_, i)
+    {
+        td.allScalars_[i].append(scalarList());
+        scalarList& top = td.allScalars_[i].last();
+        top.transfer(sampledScalars_[i]);
+    }
+
+    forAll(sampledVectors_, i)
+    {
+        td.allVectors_[i].append(vectorList());
+        vectorList& top = td.allVectors_[i].last();
+        top.transfer(sampledVectors_[i]);
+    }
 }
 
 
@@ -90,6 +121,7 @@ Foam::streamlinesParticle::streamlinesParticle
 :
     particle(mesh, position, celli),
     lifeTime_(lifeTime),
+    transform_(transformer::I),
     age_(0)
 {}
 
@@ -108,8 +140,8 @@ Foam::streamlinesParticle::streamlinesParticle
         List<scalarList> sampledScalars;
         List<vectorList> sampledVectors;
 
-        is  >> lifeTime_ >> age_ >> sampledPositions_ >> sampledTimes_
-            >> sampledScalars >> sampledVectors;
+        is  >> lifeTime_ >> transform_ >> age_ >> sampledPositions_
+            >> sampledTimes_ >> sampledScalars >> sampledVectors;
 
         sampledScalars_.setSize(sampledScalars.size());
         forAll(sampledScalars, i)
@@ -139,6 +171,7 @@ Foam::streamlinesParticle::streamlinesParticle
 :
     particle(p),
     lifeTime_(p.lifeTime_),
+    transform_(p.transform_),
     age_(p.age_),
     sampledPositions_(p.sampledPositions_),
     sampledTimes_(p.sampledTimes_),
@@ -173,7 +206,12 @@ bool Foam::streamlinesParticle::move
             --lifeTime_;
 
             // Store current position and sampled velocity.
-            sampledPositions_.append(position());
+            sampledPositions_.append
+            (
+                td.trackOutside_
+              ? transform_.invTransformPosition(position())
+              : position()
+            );
             sampledTimes_.append(age_);
             vector U = interpolateFields(td, position(), cell(), face());
 
@@ -216,13 +254,7 @@ bool Foam::streamlinesParticle::move
                *dt
                *(1 - trackToAndHitFace(dt*U, 0, cloud, td));
 
-            if
-            (
-                onFace()
-            || !td.keepParticle
-            ||  td.switchProcessor
-            ||  lifeTime_ == 0
-            )
+            if (!td.keepParticle || td.switchProcessor || lifeTime_ == 0)
             {
                 break;
             }
@@ -245,7 +277,12 @@ bool Foam::streamlinesParticle::move
         else
         {
             // Normal exit. Store last position and fields
-            sampledPositions_.append(position());
+            sampledPositions_.append
+            (
+                td.trackOutside_
+              ? transform_.invTransformPosition(position())
+              : position()
+            );
             sampledTimes_.append(age_);
             interpolateFields(td, position(), cell(), face());
 
@@ -257,29 +294,8 @@ bool Foam::streamlinesParticle::move
             }
         }
 
-        // Transfer particle data into trackingData.
-        {
-            td.allPositions_.append(vectorList());
-            vectorList& top = td.allPositions_.last();
-            top.transfer(sampledPositions_);
-        }
-        {
-            td.allTimes_.append(scalarList());
-            scalarList& top = td.allTimes_.last();
-            top.transfer(sampledTimes_);
-        }
-        forAll(sampledScalars_, i)
-        {
-            td.allScalars_[i].append(scalarList());
-            scalarList& top = td.allScalars_[i].last();
-            top.transfer(sampledScalars_[i]);
-        }
-        forAll(sampledVectors_, i)
-        {
-            td.allVectors_[i].append(vectorList());
-            vectorList& top = td.allVectors_[i].last();
-            top.transfer(sampledVectors_[i]);
-        }
+        // End this track
+        endTrack(td);
     }
 
     return td.keepParticle;
@@ -328,51 +344,69 @@ void Foam::streamlinesParticle::hitSymmetryPatch
 
 void Foam::streamlinesParticle::hitCyclicPatch
 (
-    streamlinesCloud&,
+    streamlinesCloud& cloud,
     trackingData& td
 )
 {
-    // Remove particle
-    td.keepParticle = false;
+    const cyclicPolyPatch& cpp =
+        static_cast<const cyclicPolyPatch&>(mesh().boundaryMesh()[patch()]);
+
+    // End this track
+    if (!td.trackOutside_ && cpp.transform().transformsPosition())
+    {
+        endTrack(td);
+    }
+
+    // Move across the cyclic
+    particle::hitCyclicPatch(cloud, td);
 }
 
 
 void Foam::streamlinesParticle::hitCyclicAMIPatch
 (
-    const vector&,
-    const scalar,
-    streamlinesCloud&,
+    const vector& displacement,
+    const scalar fraction,
+    streamlinesCloud& cloud,
     trackingData& td
 )
 {
-    // Remove particle
-    td.keepParticle = false;
+    // End this track
+    endTrack(td);
+
+    // Move across the cyclic
+    particle::hitCyclicAMIPatch(displacement, fraction, cloud, td);
 }
 
 
 void Foam::streamlinesParticle::hitCyclicACMIPatch
 (
-    const vector&,
-    const scalar,
-    streamlinesCloud&,
+    const vector& displacement,
+    const scalar fraction,
+    streamlinesCloud& cloud,
     trackingData& td
 )
 {
-    // Remove particle
-    td.keepParticle = false;
+    // End this track
+    endTrack(td);
+
+    // Move across the cyclic
+    particle::hitCyclicACMIPatch(displacement, fraction, cloud, td);
 }
 
 
 void Foam::streamlinesParticle::hitCyclicRepeatAMIPatch
 (
-    const vector&,
-    const scalar,
-    streamlinesCloud&,
+    const vector& displacement,
+    const scalar fraction,
+    streamlinesCloud& cloud,
     trackingData& td
 )
 {
-    // Remove particle
-    td.keepParticle = false;
+    // End this track
+    endTrack(td);
+
+    // Move across the cyclic
+    particle::hitCyclicRepeatAMIPatch(displacement, fraction, cloud, td);
 }
 
 
@@ -382,7 +416,16 @@ void Foam::streamlinesParticle::hitProcessorPatch
     trackingData& td
 )
 {
-    // Switch particle
+    const processorPolyPatch& ppp =
+        static_cast<const processorPolyPatch&>(mesh().boundaryMesh()[patch()]);
+
+    // End this track
+    if (!td.trackOutside_ && ppp.transform().transformsPosition())
+    {
+        endTrack(td);
+    }
+
+    // Switch processor
     td.switchProcessor = true;
 }
 
@@ -398,12 +441,17 @@ void Foam::streamlinesParticle::hitWallPatch
 }
 
 
+void Foam::streamlinesParticle::transformProperties
+(
+    const transformer& transform
+)
+{
+    transform_ = transform & transform_;
+}
+
+
 void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
 {
-//    if (!c.size())
-//    {
-//        return;
-//    }
     bool valid = c.size();
 
     particle::readFields(c);
@@ -414,6 +462,12 @@ void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
         valid
     );
     c.checkFieldIOobject(c, lifeTime);
+
+    IOList<transformer> transform
+    (
+        c.fieldIOobject("transform", IOobject::MUST_READ),
+        valid
+    );
 
     vectorFieldIOField sampledPositions
     (
@@ -433,6 +487,7 @@ void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
     forAllIter(Cloud<streamlinesParticle>, c, iter)
     {
         iter().lifeTime_ = lifeTime[i];
+        iter().transform_ = transform[i];
         iter().sampledPositions_.transfer(sampledPositions[i]);
         iter().sampledTimes_.transfer(sampledTimes[i]);
         i++;
@@ -451,11 +506,19 @@ void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
         c.fieldIOobject("lifeTime", IOobject::NO_READ),
         np
     );
+
+    IOList<transformer> transform
+    (
+        c.fieldIOobject("transform", IOobject::NO_READ),
+        np
+    );
+
     vectorFieldIOField sampledPositions
     (
         c.fieldIOobject("sampledPositions", IOobject::NO_READ),
         np
     );
+
     scalarFieldIOField sampledTimes
     (
         c.fieldIOobject("sampledTimes", IOobject::NO_READ),
@@ -466,6 +529,7 @@ void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
     forAllConstIter(Cloud<streamlinesParticle>, c, iter)
     {
         lifeTime[i] = iter().lifeTime_;
+        transform[i] = iter().transform_;
         sampledPositions[i] = iter().sampledPositions_;
         sampledTimes[i] = iter().sampledTimes_;
         i++;
@@ -483,6 +547,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const streamlinesParticle& p)
 {
     os  << static_cast<const particle&>(p)
         << token::SPACE << p.lifeTime_
+        << token::SPACE << p.transform_
         << token::SPACE << p.age_
         << token::SPACE << p.sampledPositions_
         << token::SPACE << p.sampledTimes_

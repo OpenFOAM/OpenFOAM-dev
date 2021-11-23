@@ -412,6 +412,8 @@ void Foam::particle::hitCyclicACMIPatch
 {
     typename TrackCloudType::particleType& p =
         static_cast<typename TrackCloudType::particleType&>(*this);
+    typename TrackCloudType::particleType::trackingData& ttd =
+        static_cast<typename TrackCloudType::particleType::trackingData&>(td);
 
     const cyclicACMIPolyPatch& cpp =
         static_cast<const cyclicACMIPolyPatch&>(mesh_.boundaryMesh()[patch()]);
@@ -445,7 +447,7 @@ void Foam::particle::hitCyclicACMIPatch
 
     if (couple)
     {
-        p.hitCyclicAMIPatch(displacement, fraction, cloud, td);
+        p.hitCyclicAMIPatch(displacement, fraction, cloud, ttd);
     }
     else
     {
@@ -468,8 +470,10 @@ void Foam::particle::hitCyclicRepeatAMIPatch
 {
     typename TrackCloudType::particleType& p =
         static_cast<typename TrackCloudType::particleType&>(*this);
+    typename TrackCloudType::particleType::trackingData& ttd =
+        static_cast<typename TrackCloudType::particleType::trackingData&>(td);
 
-    p.hitCyclicAMIPatch(displacement, fraction, cloud, td);
+    p.hitCyclicAMIPatch(displacement, fraction, cloud, ttd);
 }
 
 

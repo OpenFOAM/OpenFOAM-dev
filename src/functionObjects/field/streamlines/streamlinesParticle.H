@@ -80,6 +80,8 @@ public:
 
             bool trackForward_;
 
+            bool trackOutside_;
+
             const label nSubCycle_;
 
             const scalar trackLength_;
@@ -103,6 +105,7 @@ public:
                 const PtrList<interpolation<vector>>& vvInterp,
                 const label UIndex,
                 const bool trackForward,
+                const bool trackOutside,
                 const label nSubCycle,
                 const scalar trackLength,
                 DynamicList<List<point>>& allPositions,
@@ -116,6 +119,7 @@ public:
                 vvInterp_(vvInterp),
                 UIndex_(UIndex),
                 trackForward_(trackForward),
+                trackOutside_(trackOutside),
                 nSubCycle_(nSubCycle),
                 trackLength_(trackLength),
                 allPositions_(allPositions),
@@ -132,6 +136,9 @@ private:
 
         //- Lifetime of particle. Particle dies when reaches 0.
         label lifeTime_;
+
+        //- Current compound transform
+        transformer transform_;
 
         //- Age of the particle
         scalar age_;
@@ -159,6 +166,9 @@ private:
             const label celli,
             const label facei
         );
+
+        //- End the current track
+        void endTrack(trackingData&);
 
 
 public:
@@ -274,6 +284,13 @@ public:
 
             //- Overridable function to handle the particle hitting a wallPatch
             void hitWallPatch(streamlinesCloud&, trackingData&);
+
+
+        // Transformations
+
+            //- Transform the physical properties of the particle
+            //  according to the given transformation tensor
+            virtual void transformProperties(const transformer&);
 
 
         // I-O
