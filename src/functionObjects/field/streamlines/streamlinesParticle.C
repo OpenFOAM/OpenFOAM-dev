@@ -28,6 +28,21 @@ License
 #include "vectorFieldIOField.H"
 #include "scalarFieldIOField.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    typedef IOList<transformer> transformerIOList;
+
+    defineTemplateTypeNameAndDebugWithName
+    (
+        transformerIOList,
+        "transformerList",
+        0
+    );
+}
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::vector Foam::streamlinesParticle::interpolateFields
@@ -463,7 +478,7 @@ void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
     );
     c.checkFieldIOobject(c, lifeTime);
 
-    IOList<transformer> transform
+    transformerIOList transform
     (
         c.fieldIOobject("transform", IOobject::MUST_READ),
         valid
@@ -507,7 +522,7 @@ void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
         np
     );
 
-    IOList<transformer> transform
+    transformerIOList transform
     (
         c.fieldIOobject("transform", IOobject::NO_READ),
         np
