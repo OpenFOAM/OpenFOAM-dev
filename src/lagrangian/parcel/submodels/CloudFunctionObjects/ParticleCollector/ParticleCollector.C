@@ -462,20 +462,11 @@ void Foam::ParticleCollector<CloudType>::write()
                 "collector",
                 points_,
                 faces_,
+                false,
                 "massTotal",
                 faceMassTotal,
-                false
-            );
-
-            writer->write
-            (
-                this->writeTimeDir(),
-                "collector",
-                points_,
-                faces_,
                 "massFlowRate",
-                faceMassFlowRate,
-                false
+                faceMassFlowRate
             );
         }
     }

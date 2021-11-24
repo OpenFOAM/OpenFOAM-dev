@@ -34,7 +34,7 @@ Description
 #include "extendedFeatureEdgeMesh.H"
 #include "surfaceFeatures.H"
 #include "triSurfaceFields.H"
-#include "vtkSurfaceWriter.H"
+#include "vtkWritePolyData.H"
 #include "systemDict.H"
 
 using namespace Foam;
@@ -426,6 +426,13 @@ namespace Foam
 
         bfeMesh.regIOobject::write();
 
+        // Data to write out in VTK format
+        wordList writeVTKFieldNames;
+        boolList writeVTKFieldIsPointValues;
+        #define DeclareWriteVTKFieldTypeValues(Type, nullArg) \
+            PtrList<const Field<Type>> writeVTKField##Type##Values;
+        FOR_ALL_FIELD_TYPES(DeclareWriteVTKFieldTypeValues);
+        #undef DeclareWriteVTKFieldTypeValues
 
         // Find distance between close features
         if (dict.isDict("closeness"))
@@ -490,32 +497,18 @@ namespace Foam
 
                 if (writeVTK)
                 {
-                    const faceList faces(searchSurf.faces());
-
-                    vtkSurfaceWriter(runTime.writeFormat()).write
+                    writeVTKFieldNames.append("internalCloseness");
+                    writeVTKFieldIsPointValues.append(false);
+                    writeVTKFieldscalarValues.append
                     (
-                        runTime.path()
-                       /runTime.constant()
-                       /searchableSurface::geometryDir(runTime),
-                        searchSurf.objectRegistry::name(),
-                        searchSurf.points(),
-                        faces,
-                        "internalCloseness",                // fieldName
-                        closenessFields.first(),
-                        false                               // isNodeValues
+                        new scalarField(closenessFields.first())
                     );
 
-                    vtkSurfaceWriter(runTime.writeFormat()).write
+                    writeVTKFieldNames.append("externalCloseness");
+                    writeVTKFieldIsPointValues.append(false);
+                    writeVTKFieldscalarValues.append
                     (
-                        runTime.path()
-                       /runTime.constant()
-                       /searchableSurface::geometryDir(runTime),
-                        searchSurf.objectRegistry::name(),
-                        searchSurf.points(),
-                        faces,
-                        "externalCloseness",                // fieldName
-                        closenessFields.second(),
-                        false                               // isNodeValues
+                        new scalarField(closenessFields.second())
                     );
                 }
             }
@@ -562,30 +555,18 @@ namespace Foam
                             externalClosenessPointField[meshPointMap[pi]];
                     }
 
-                    vtkSurfaceWriter(runTime.writeFormat()).write
+                    writeVTKFieldNames.append("internalPointCloseness");
+                    writeVTKFieldIsPointValues.append(true);
+                    writeVTKFieldscalarValues.append
                     (
-                        runTime.path()
-                       /runTime.constant()
-                       /searchableSurface::geometryDir(runTime),
-                        searchSurf.objectRegistry::name(),
-                        searchSurf.points(),
-                        faces,
-                        "internalPointCloseness",           // fieldName
-                        internalCloseness,
-                        true                                // isNodeValues
+                        new scalarField(internalCloseness)
                     );
 
-                    vtkSurfaceWriter(runTime.writeFormat()).write
+                    writeVTKFieldNames.append("externalPointCloseness");
+                    writeVTKFieldIsPointValues.append(true);
+                    writeVTKFieldscalarValues.append
                     (
-                        runTime.path()
-                       /runTime.constant()
-                       /searchableSurface::geometryDir(runTime),
-                        searchSurf.objectRegistry::name(),
-                        searchSurf.points(),
-                        faces,
-                        "externalPointCloseness",           // fieldName
-                        externalCloseness,
-                        true                                // isNodeValues
+                        new scalarField(externalCloseness)
                     );
                 }
             }
@@ -615,18 +596,9 @@ namespace Foam
 
             if (writeVTK)
             {
-                vtkSurfaceWriter(runTime.writeFormat()).write
-                (
-                    runTime.path()
-                   /runTime.constant()
-                   /searchableSurface::geometryDir(runTime),
-                    sFeatFileName,
-                    surf.points(),
-                    faces,
-                    "curvature",                        // fieldName
-                    k,
-                    true                                // isNodeValues
-                );
+                writeVTKFieldNames.append("curvature");
+                writeVTKFieldIsPointValues.append(true);
+                writeVTKFieldscalarValues.append(new scalarField(k));
             }
         }
 
@@ -689,19 +661,42 @@ namespace Foam
 
             if (writeVTK)
             {
-                vtkSurfaceWriter(runTime.writeFormat()).write
+                writeVTKFieldNames.append("featureProximity");
+                writeVTKFieldIsPointValues.append(false);
+                writeVTKFieldscalarValues.append
                 (
-                    runTime.path()
-                   /runTime.constant()
-                   /searchableSurface::geometryDir(runTime),
-                    sFeatFileName,
-                    surf.points(),
-                    faces,
-                    "featureProximity",                 // fieldName
-                    featureProximity,
-                    false                               // isNodeValues
+                    new scalarField(featureProximity)
                 );
             }
+        }
+
+        if (writeVTK)
+        {
+            #define WriteVTKResizeFieldTypeValues(Type, nullArg) \
+                writeVTKField##Type##Values.resize(writeVTKFieldNames.size());
+            FOR_ALL_FIELD_TYPES(WriteVTKResizeFieldTypeValues)
+            #undef WriteVTKResizeFieldTypeValues
+
+            vtkWritePolyData::write
+            (
+                runTime.path()
+               /runTime.constant()
+               /searchableSurface::geometryDir(runTime)
+               /sFeatFileName + "Features.vtk",
+                sFeatFileName,
+                runTime.writeFormat() == IOstream::BINARY,
+                surf.points(),
+                labelList(),
+                labelListList(),
+                faces,
+                writeVTKFieldNames,
+                writeVTKFieldIsPointValues,
+                UPtrList<const Field<label>>(writeVTKFieldNames.size())
+                #define WriteVTKFieldTypeValuesParameter(Type, nullArg) \
+                    , UPtrList<const Field<Type>>(writeVTKField##Type##Values)
+                FOR_ALL_FIELD_TYPES(WriteVTKFieldTypeValuesParameter)
+                #undef WriteVTKFieldTypeValuesParameter
+            );
         }
 
         Info<< endl;

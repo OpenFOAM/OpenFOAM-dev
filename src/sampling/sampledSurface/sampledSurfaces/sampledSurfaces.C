@@ -51,46 +51,6 @@ bool Foam::functionObjects::sampledSurfaces::verbose_ = false;
 Foam::scalar Foam::functionObjects::sampledSurfaces::mergeTol_ = 1e-10;
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::functionObjects::sampledSurfaces::writeGeometry() const
-{
-    // Write to time directory under outputPath_
-    // Skip surface without faces (eg, a failed cut-plane)
-
-    const fileName outputDir = outputPath_/mesh_.time().timeName();
-
-    forAll(*this, si)
-    {
-        const sampledSurface& s = operator[](si);
-
-        if (Pstream::parRun())
-        {
-            if (Pstream::master() && mergeList_[si].faces.size())
-            {
-                formatter_->write
-                (
-                    outputDir,
-                    s.name(),
-                    mergeList_[si].points,
-                    mergeList_[si].faces
-                );
-            }
-        }
-        else if (s.faces().size())
-        {
-            formatter_->write
-            (
-                outputDir,
-                s.name(),
-                s.points(),
-                s.faces()
-            );
-        }
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::sampledSurfaces::sampledSurfaces
@@ -100,18 +60,8 @@ Foam::functionObjects::sampledSurfaces::sampledSurfaces
     const dictionary& dict
 )
 :
-    functionObject(name),
+    fvMeshFunctionObject(name, t, dict),
     PtrList<sampledSurface>(),
-    mesh_
-    (
-        refCast<const fvMesh>
-        (
-            t.lookupObject<objectRegistry>
-            (
-                dict.lookupOrDefault("region", polyMesh::defaultRegion)
-            )
-        )
-    ),
     outputPath_(fileName::null),
     fields_(),
     interpolationScheme_(word::null),
@@ -157,8 +107,7 @@ bool Foam::functionObjects::sampledSurfaces::write()
         // Finalise surfaces, merge points etc.
         update();
 
-        const label nFields = classifyFields();
-
+        // Create the output directory
         if (Pstream::master())
         {
             if (debug)
@@ -171,24 +120,81 @@ bool Foam::functionObjects::sampledSurfaces::write()
             mkDir(outputPath_/mesh_.time().timeName());
         }
 
-        // Write geometry first if required,
-        // or when no fields would otherwise be written
-        if (nFields == 0 || formatter_->separateGeometry())
+        // Create a list of names of fields that are actually available
+        wordList fieldNames;
+        forAll(fields_, fieldi)
         {
-            writeGeometry();
+            #define FoundFieldType(Type, nullArg)             \
+              || foundObject<VolField<Type>>(fields_[fieldi]) \
+              || foundObject<SurfaceField<Type>>(fields_[fieldi])
+            if (false FOR_ALL_FIELD_TYPES(FoundFieldType))
+            {
+                fieldNames.append(fields_[fieldi]);
+            }
+            else
+            {
+                cannotFindObject(fields_[fieldi]);
+            }
+            #undef FoundFieldType
         }
 
-        sampleAndWrite<volScalarField>();
-        sampleAndWrite<volVectorField>();
-        sampleAndWrite<volSphericalTensorField>();
-        sampleAndWrite<volSymmTensorField>();
-        sampleAndWrite<volTensorField>();
+        // Create table of cached interpolations, to prevent unnecessary work
+        // when interpolating fields over multiple surfaces
+        #define DeclareInterpolations(Type, nullArg) \
+            HashPtrTable<interpolation<Type>> interpolation##Type##s;
+        FOR_ALL_FIELD_TYPES(DeclareInterpolations);
+        #undef DeclareInterpolations
 
-        sampleAndWrite<surfaceScalarField>();
-        sampleAndWrite<surfaceVectorField>();
-        sampleAndWrite<surfaceSphericalTensorField>();
-        sampleAndWrite<surfaceSymmTensorField>();
-        sampleAndWrite<surfaceTensorField>();
+        // Sample and write the surfaces
+        forAll(*this, surfi)
+        {
+            const sampledSurface& s = operator[](surfi);
+
+            #define GenerateFieldTypeValues(Type, nullArg)       \
+                PtrList<const Field<Type>> field##Type##Values = \
+                    sampleType<Type>(surfi, fieldNames, interpolation##Type##s);
+            FOR_ALL_FIELD_TYPES(GenerateFieldTypeValues);
+            #undef GenerateFieldTypeValues
+
+            if (Pstream::parRun())
+            {
+                if (Pstream::master() && mergeList_[surfi].faces.size())
+                {
+                    formatter_->write
+                    (
+                        outputPath_/mesh_.time().timeName(),
+                        s.name(),
+                        mergeList_[surfi].points,
+                        mergeList_[surfi].faces,
+                        fieldNames,
+                        s.interpolate()
+                        #define FieldTypeValuesParameter(Type, nullArg) \
+                            , field##Type##Values
+                        FOR_ALL_FIELD_TYPES(FieldTypeValuesParameter)
+                        #undef FieldTypeValuesParameter
+                    );
+                }
+            }
+            else
+            {
+                if (s.faces().size())
+                {
+                    formatter_->write
+                    (
+                        outputPath_/mesh_.time().timeName(),
+                        s.name(),
+                        s.points(),
+                        s.faces(),
+                        fieldNames,
+                        s.interpolate()
+                        #define FieldTypeValuesParameter(Type, nullArg) \
+                            , field##Type##Values
+                        FOR_ALL_FIELD_TYPES(FieldTypeValuesParameter)
+                        #undef FieldTypeValuesParameter
+                    );
+                }
+            }
+        }
     }
 
     return true;

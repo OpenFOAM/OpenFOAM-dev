@@ -32,157 +32,151 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::functionObjects::sampledSurfaces::writeSurface
+Foam::PtrList<const Foam::Field<Type>>
+Foam::functionObjects::sampledSurfaces::sampleLocalType
 (
-    const Field<Type>& values,
-    const label surfI,
-    const word& fieldName,
-    const fileName& outputDir
+    const label surfi,
+    const wordList& fieldNames,
+    HashPtrTable<interpolation<Type>>& interpolations
 )
 {
-    const sampledSurface& s = operator[](surfI);
+    PtrList<const Field<Type>> fieldTypeValues(fieldNames.size());
+
+    const sampledSurface& s = operator[](surfi);
+
+    autoPtr<interpolation<Type>> interpolationPtr;
+
+    forAll(fieldNames, fieldi)
+    {
+        const word& name = fieldNames[fieldi];
+
+        if (mesh_.foundObject<VolField<Type>>(name))
+        {
+            const VolField<Type>& vf =
+                mesh_.lookupObject<VolField<Type>>(name);
+
+            if (s.interpolate())
+            {
+                if (!interpolations.found(name))
+                {
+                    interpolations.insert
+                    (
+                        name,
+                        interpolation<Type>::New
+                        (
+                            interpolationScheme_,
+                            vf
+                        ).ptr()
+                    );
+                }
+
+                fieldTypeValues.set
+                (
+                    fieldi,
+                    s.interpolate(*interpolations[name]).ptr()
+                );
+            }
+            else
+            {
+                fieldTypeValues.set(fieldi, s.sample(vf).ptr());
+            }
+        }
+        else if (mesh_.foundObject<SurfaceField<Type>>(name))
+        {
+            const SurfaceField<Type>& sf =
+                mesh_.lookupObject<SurfaceField<Type>>(name);
+
+            fieldTypeValues.set(fieldi, s.sample(sf).ptr());
+        }
+    }
+
+    return fieldTypeValues;
+}
+
+
+template<class Type>
+Foam::PtrList<const Foam::Field<Type>>
+Foam::functionObjects::sampledSurfaces::sampleType
+(
+    const label surfi,
+    const wordList& fieldNames,
+    HashPtrTable<interpolation<Type>>& interpolations
+)
+{
+    // Generate local samples
+    PtrList<const Field<Type>> fieldTypeValues =
+        sampleLocalType<Type>(surfi, fieldNames, interpolations);
 
     if (Pstream::parRun())
     {
         // Collect values from all processors
-        List<Field<Type>> gatheredValues(Pstream::nProcs());
-        gatheredValues[Pstream::myProcNo()] = values;
-        Pstream::gatherList(gatheredValues);
+        PtrList<List<Field<Type>>> gatheredTypeValues(fieldNames.size());
+        forAll(fieldNames, fieldi)
+        {
+            if (fieldTypeValues.set(fieldi))
+            {
+                gatheredTypeValues.set
+                (
+                    fieldi,
+                    new List<Field<Type>>(Pstream::nProcs())
+                );
+                gatheredTypeValues[fieldi][Pstream::myProcNo()] =
+                    fieldTypeValues[fieldi];
+                Pstream::gatherList(gatheredTypeValues[fieldi]);
+            }
+        }
 
+        // Clear the local field values
+        fieldTypeValues.clear();
+        fieldTypeValues.resize(fieldNames.size());
+
+        // Combine on the master
         if (Pstream::master())
         {
             // Combine values into single field
-            Field<Type> allValues
-            (
-                ListListOps::combine<Field<Type>>
-                (
-                    gatheredValues,
-                    accessOp<Field<Type>>()
-                )
-            );
-
-            // Renumber (point data) to correspond to merged points
-            if (mergeList_[surfI].pointsMap.size() == allValues.size())
+            forAll(fieldNames, fieldi)
             {
-                inplaceReorder(mergeList_[surfI].pointsMap, allValues);
-                allValues.setSize(mergeList_[surfI].points.size());
+                if (gatheredTypeValues.set(fieldi))
+                {
+                    fieldTypeValues.set
+                    (
+                        fieldi,
+                        new Field<Type>
+                        (
+                            ListListOps::combine<Field<Type>>
+                            (
+                                gatheredTypeValues[fieldi],
+                                accessOp<Field<Type>>()
+                            )
+                        )
+                    );
+                }
             }
 
-            // Write to time directory under outputPath_
-            // skip surface without faces (eg, a failed cut-plane)
-            if (mergeList_[surfI].faces.size())
+            // Renumber point data to correspond to merged points
+            forAll(fieldNames, fieldi)
             {
-                formatter_->write
-                (
-                    outputDir,
-                    s.name(),
-                    mergeList_[surfI].points,
-                    mergeList_[surfI].faces,
-                    fieldName,
-                    allValues,
-                    s.interpolate()
-                );
+                if (fieldTypeValues.set(fieldi))
+                {
+                    if
+                    (
+                        mergeList_[surfi].pointsMap.size()
+                     == fieldTypeValues[fieldi].size()
+                    )
+                    {
+                        Field<Type> f(fieldTypeValues[fieldi]);
+
+                        inplaceReorder(mergeList_[surfi].pointsMap, f);
+                        f.setSize(mergeList_[surfi].points.size());
+
+                        fieldTypeValues.set(fieldi, new Field<Type>(f, true));
+                    }
+                }
             }
         }
     }
-    else
-    {
-        // Write to time directory under outputPath_
-        // skip surface without faces (eg, a failed cut-plane)
-        if (s.faces().size())
-        {
-            formatter_->write
-            (
-                outputDir,
-                s.name(),
-                s.points(),
-                s.faces(),
-                fieldName,
-                values,
-                s.interpolate()
-            );
-        }
-    }
-}
 
-
-template<class Type>
-void Foam::functionObjects::sampledSurfaces::sampleAndWrite
-(
-    const GeometricField<Type, fvPatchField, volMesh>& vField
-)
-{
-    // interpolator for this field
-    autoPtr<interpolation<Type>> interpolatorPtr;
-
-    const word& fieldName = vField.name();
-    const fileName outputDir = outputPath_/vField.time().timeName();
-
-    forAll(*this, surfI)
-    {
-        const sampledSurface& s = operator[](surfI);
-
-        Field<Type> values;
-
-        if (s.interpolate())
-        {
-            if (interpolatorPtr.empty())
-            {
-                interpolatorPtr = interpolation<Type>::New
-                (
-                    interpolationScheme_,
-                    vField
-                );
-            }
-
-            values = s.interpolate(interpolatorPtr());
-        }
-        else
-        {
-            values = s.sample(vField);
-        }
-
-        writeSurface<Type>(values, surfI, fieldName, outputDir);
-    }
-}
-
-
-template<class Type>
-void Foam::functionObjects::sampledSurfaces::sampleAndWrite
-(
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
-)
-{
-    const word& fieldName   = sField.name();
-    const fileName outputDir = outputPath_/sField.time().timeName();
-
-    forAll(*this, surfI)
-    {
-        const sampledSurface& s = operator[](surfI);
-        Field<Type> values(s.sample(sField));
-        writeSurface<Type>(values, surfI, fieldName, outputDir);
-    }
-}
-
-
-template<class GeoField>
-void Foam::functionObjects::sampledSurfaces::sampleAndWrite()
-{
-    forAll(fields_, fieldi)
-    {
-        if (mesh_.thisDb().foundObject<GeoField>(fields_[fieldi]))
-        {
-            if (Pstream::master() && verbose_)
-            {
-                Pout<< "sampleAndWrite: " << fields_[fieldi] << endl;
-            }
-
-            sampleAndWrite
-            (
-                mesh_.thisDb().lookupObject<GeoField>(fields_[fieldi])
-            );
-        }
-    }
+    return fieldTypeValues;
 }
 
 

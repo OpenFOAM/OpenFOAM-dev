@@ -526,12 +526,12 @@ void Foam::writeAMIWeightsSum
         vtkSurfaceWriter(mesh.time().writeFormat()).write
         (
             file.path(),
-            file.name(),
+            "weightsSum_" + file.name(),
             mergedPoints,
             mergedFaces,
+            false,
             "weightsSum",
-            mergedWeights,
-            false
+            mergedWeights
         );
     }
 }

@@ -58,11 +58,8 @@ vertices #codeStream
         points = transform(Rz(degToRad($angle)), points);
 
         // Append points 6 and 7
-        points.append(points[0]);  // pt 6
-        points.append(points[3]);  // pt 7
-
-        points[6].x() = -$lenInlet;
-        points[7].x() = -$lenInlet;
+        points.append(points[0] - point($lenInlet, 0, 0));  // pt 6
+        points.append(points[3] - point($lenInlet, 0, 0));  // pt 7
 
         // Duplicate z points
         points.append(cmptMultiply(points, vector(1, 1, -1)));

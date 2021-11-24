@@ -308,12 +308,12 @@ Foam::tmp<Foam::triSurfacePointScalarField> Foam::automatic::load()
                 (
                     surface_.searchableSurface::time()
                 ),
-            surfaceName_.lessExt().name(),
+            "cellSize_" + surfaceName_.lessExt().name(),
             surface_.points(),
             faces,
+            true,
             "cellSize",
-            pointCellSize,
-            true
+            pointCellSize
         );
     }
 

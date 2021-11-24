@@ -322,12 +322,14 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
                 surfaceWriterPtr_->write
                 (
                     outputDir(),
-                    regionTypeNames_[regionType_] + ("_" + regionName_),
+                    fieldName
+                  + '_' + regionTypeNames_[regionType_]
+                  + '_' + regionName_,
                     points,
                     faces,
+                    false,
                     fieldName,
-                    writeValues,
-                    false
+                    writeValues
                 );
             }
         }

@@ -203,20 +203,11 @@ void Foam::FacePostProcessing<CloudType>::write()
                     fZone.name(),
                     allPoints,
                     allFaces,
+                    false,
                     "massTotal",
                     zoneMassTotal[zoneI],
-                    false
-                );
-
-                writer->write
-                (
-                    this->writeTimeDir(),
-                    fZone.name(),
-                    allPoints,
-                    allFaces,
                     "massFlowRate",
-                    zoneMassFlowRate[zoneI],
-                    false
+                    zoneMassFlowRate[zoneI]
                 );
             }
         }
