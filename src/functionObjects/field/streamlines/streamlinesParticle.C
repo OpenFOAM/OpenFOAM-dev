@@ -27,21 +27,7 @@ License
 #include "streamlinesCloud.H"
 #include "vectorFieldIOField.H"
 #include "scalarFieldIOField.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    typedef IOList<transformer> transformerIOList;
-
-    defineTemplateTypeNameAndDebugWithName
-    (
-        transformerIOList,
-        "transformerList",
-        0
-    );
-}
-
+#include "transformerIOList.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

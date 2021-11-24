@@ -84,6 +84,7 @@ primitives/Vector2D/vector2D/vector2D.C
 primitives/complex/complex.C
 primitives/globalIndexAndTransform/globalIndexAndTransform.C
 primitives/transform/transformer/transformer.C
+primitives/transform/transformer/transformerIOList.C
 primitives/quaternion/quaternion.C
 primitives/septernion/septernion.C
 primitives/triad/triad.C
