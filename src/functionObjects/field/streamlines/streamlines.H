@@ -70,6 +70,7 @@ Usage
         setFormat    | Output data type        | yes         |
         U            | Tracking velocity field name | no     | U
         direction    | Direction in which to track | yes     |
+        outside      | Track outside of periodic meshes | no | no
         fields       | Fields to sample        | yes         |
         writeTime    | Write the flow time along the streamlines | no | no
         lifetime     | Maximum number of particle tracking steps | yes |
@@ -166,6 +167,9 @@ private:
 
         //- The direction in which to track
         trackDirection trackDirection_;
+
+        //- Whether or not to track outside of the mesh in periodic geometries
+        Switch trackOutside_;
 
         //- Maximum lifetime (= number of cells) of particle
         label lifeTime_;
