@@ -372,9 +372,44 @@ tmp<surfaceScalarField> MaxwellStefan<BasicThermophysicalTransportModel>::j
 ) const
 {
     const basicSpecieMixture& composition = this->thermo().composition();
-    return
-        BasicThermophysicalTransportModel::j(Yi)
-      + jexp_[composition.index(Yi)];
+    const label d = composition.defaultSpecie();
+
+    if (composition.index(Yi) == d)
+    {
+        const PtrList<volScalarField>& Y = composition.Y();
+
+        tmp<surfaceScalarField> tjd
+        (
+            surfaceScalarField::New
+            (
+                IOobject::groupName
+                (
+                    "j" + name(d),
+                    this->momentumTransport().alphaRhoPhi().group()
+                ),
+                Yi.mesh(),
+                dimensionedScalar(dimMass/dimArea/dimTime, 0)
+            )
+        );
+
+        surfaceScalarField& jd = tjd.ref();
+
+        forAll(Y, i)
+        {
+            if (i != d)
+            {
+                jd -= this->j(Y[i]);
+            }
+        }
+
+        return tjd;
+    }
+    else
+    {
+        return
+            BasicThermophysicalTransportModel::j(Yi)
+          + jexp_[composition.index(Yi)];
+    }
 }
 
 
