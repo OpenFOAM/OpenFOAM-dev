@@ -41,6 +41,7 @@ SourceFiles
 #include "autoPtr.H"
 #include "interpolation.H"
 #include "vectorList.H"
+#include "DynamicField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,11 +73,12 @@ public:
 
         // Public data
 
-            const PtrList<interpolation<scalar>>& vsInterp_;
+            #define DeclareTypeInterpolator(Type, nullArg) \
+                const PtrList<interpolation<Type>>& Type##Interp_;
+            FOR_ALL_FIELD_TYPES(DeclareTypeInterpolator);
+            #undef DeclareTypeInterpolator
 
-            const PtrList<interpolation<vector>>& vvInterp_;
-
-            const label UIndex_;
+            const interpolation<vector>& UInterp_;
 
             bool trackForward_;
 
@@ -86,13 +88,20 @@ public:
 
             const scalar trackLength_;
 
-            DynamicList<vectorList>& allPositions_;
+            label tracki;
 
-            DynamicList<scalarList>& allTimes_;
+            DynamicField<point>& allPositions_;
 
-            List<DynamicList<scalarList>>& allScalars_;
+            DynamicField<label>& allTracks_;
 
-            List<DynamicList<vectorList>>& allVectors_;
+            DynamicField<label>& allTrackParts_;
+
+            DynamicField<scalar>& allAges_;
+
+            #define DeclareAllTypes(Type, nullArg) \
+                List<DynamicField<Type>>& all##Type##s_;
+            FOR_ALL_FIELD_TYPES(DeclareAllTypes);
+            #undef DeclareAllTypes
 
 
         // Constructors
@@ -101,31 +110,43 @@ public:
             trackingData
             (
                 streamlinesCloud& cloud,
-                const PtrList<interpolation<scalar>>& vsInterp,
-                const PtrList<interpolation<vector>>& vvInterp,
-                const label UIndex,
+                #define TypeInterpolatorArg(Type, nullArg) \
+                    const PtrList<interpolation<Type>>& Type##Interp,
+                FOR_ALL_FIELD_TYPES(TypeInterpolatorArg)
+                #undef TypeInterpolatorArg
+                const interpolation<vector>& UInterp,
                 const bool trackForward,
                 const bool trackOutside,
                 const label nSubCycle,
                 const scalar trackLength,
-                DynamicList<List<point>>& allPositions,
-                DynamicList<List<scalar>>& allTimes,
-                List<DynamicList<scalarList>>& allScalars,
-                List<DynamicList<vectorList>>& allVectors
+                DynamicField<point>& allPositions,
+                DynamicField<label>& allTracks,
+                DynamicField<label>& allTrackParts,
+                DynamicField<scalar>& allAges
+                #define AllTypesArg(Type, nullArg) \
+                    , List<DynamicField<Type>>& all##Type##s
+                FOR_ALL_FIELD_TYPES(AllTypesArg)
+                #undef AllTypesArg
             )
             :
                 particle::trackingData(cloud),
-                vsInterp_(vsInterp),
-                vvInterp_(vvInterp),
-                UIndex_(UIndex),
+                #define TypeInterpolatorInit(Type, nullArg) \
+                    Type##Interp_(Type##Interp),
+                FOR_ALL_FIELD_TYPES(TypeInterpolatorInit)
+                #undef TypeInterpolatorInit
+                UInterp_(UInterp),
                 trackForward_(trackForward),
                 trackOutside_(trackOutside),
                 nSubCycle_(nSubCycle),
                 trackLength_(trackLength),
                 allPositions_(allPositions),
-                allTimes_(allTimes),
-                allScalars_(allScalars),
-                allVectors_(allVectors)
+                allTracks_(allTracks),
+                allTrackParts_(allTrackParts),
+                allAges_(allAges)
+                #define AllTypesInit(Type, nullArg) \
+                    , all##Type##s_(all##Type##s)
+                FOR_ALL_FIELD_TYPES(AllTypesInit)
+                #undef AllTypesInit
             {}
     };
 
@@ -137,23 +158,29 @@ private:
         //- Lifetime of particle. Particle dies when reaches 0.
         label lifeTime_;
 
-        //- Current compound transform
-        transformer transform_;
+        //- Index of the track
+        label trackIndex_;
+
+        //- Index of the part of the track
+        label trackPartIndex_;
 
         //- Age of the particle
         scalar age_;
 
+        //- Current compound transform
+        transformer transform_;
+
         //- Sampled positions
-        DynamicList<point> sampledPositions_;
+        DynamicField<point> sampledPositions_;
 
-        //- Sampled times
-        DynamicList<scalar> sampledTimes_;
+        //- Sampled ages
+        DynamicField<scalar> sampledAges_;
 
-        //- Sampled scalars
-        List<DynamicList<scalar>> sampledScalars_;
-
-        //- Sampled vectors
-        List<DynamicList<vector>> sampledVectors_;
+        //- Sampled types
+        #define DeclareSampledTypes(Type, nullArg) \
+            List<DynamicField<Type>> sampled##Type##s_;
+        FOR_ALL_FIELD_TYPES(DeclareSampledTypes);
+        #undef DeclareSampledTypes
 
 
     // Private Member Functions
@@ -181,7 +208,8 @@ public:
             const polyMesh& c,
             const vector& position,
             const label celli,
-            const label lifeTime
+            const label lifeTime,
+            const label trackIndex
         );
 
         //- Construct from Istream

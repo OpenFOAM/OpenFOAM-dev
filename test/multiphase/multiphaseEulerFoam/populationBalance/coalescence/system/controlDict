@@ -60,6 +60,8 @@ functions
         writeControl        outputTime;
         writeInterval       1;
 
+        setFormat           raw;
+
         populationBalance   bubbles;
         functionType        number;
         coordinateType      volume;

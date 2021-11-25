@@ -160,17 +160,20 @@ int main(int argc, char *argv[])
 
 
     autoPtr<surfaceWriter> surfWriter;
-    autoPtr<Foam::setWriter<scalar>> setWriter;
+    autoPtr<Foam::setWriter> setWriter;
     if (writeSets)
     {
         surfWriter = surfaceWriter::New
         (
             surfaceFormat,
-            mesh.time().writeFormat()
+            mesh.time().writeFormat(),
+            mesh.time().writeCompression()
         );
-        setWriter = Foam::setWriter<scalar>::New
+        setWriter = Foam::setWriter::New
         (
-            vtkSetWriter<scalar>::typeName
+            vtkSetWriter::typeName,
+            mesh.time().writeFormat(),
+            mesh.time().writeCompression()
         );
     }
 

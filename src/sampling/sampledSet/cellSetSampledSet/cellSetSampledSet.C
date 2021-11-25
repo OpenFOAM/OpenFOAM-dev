@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,10 +49,9 @@ void Foam::sampledSets::cellSetSampledSet::genSamples()
     setSamples
     (
         List<point>(IndirectList<point>(mesh().cellCentres(), cells)),
+        identity(cells.size()),
         cells,
-        labelList(cells.size(), -1),
-        labelList(cells.size(), 0),
-        scalarList(identity(cells.size()))
+        labelList(cells.size(), -1)
     );
 }
 
@@ -71,11 +70,6 @@ Foam::sampledSets::cellSetSampledSet::cellSetSampledSet
     setName_(dict.lookup("set"))
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
 }
 
 

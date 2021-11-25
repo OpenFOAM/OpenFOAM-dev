@@ -25,90 +25,117 @@ License
 
 #include "rawSetWriter.H"
 #include "coordSet.H"
-#include "fileName.H"
 #include "OFstream.H"
+#include "OSspecific.H"
+#include "SubList.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(rawSetWriter, 0);
+    addToRunTimeSelectionTable(setWriter, rawSetWriter, word);
+    addToRunTimeSelectionTable(setWriter, rawSetWriter, dict);
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::rawSetWriter::writeSegmentSeparator(Ostream& os) const
+{
+    if (separateSegments_)
+    {
+        os << nl << nl;
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::rawSetWriter<Type>::rawSetWriter()
+Foam::rawSetWriter::rawSetWriter
+(
+    const IOstream::streamFormat writeFormat,
+    const IOstream::compressionType writeCompression
+)
 :
-    setWriter<Type>()
+    setWriter(writeFormat, writeCompression),
+    separateSegments_(true)
+{}
+
+
+Foam::rawSetWriter::rawSetWriter(const dictionary& dict)
+:
+    setWriter(dict),
+    separateSegments_(true)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::rawSetWriter<Type>::~rawSetWriter()
+Foam::rawSetWriter::~rawSetWriter()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::fileName Foam::rawSetWriter<Type>::getFileName
+void Foam::rawSetWriter::write
 (
-    const coordSet& points,
+    const fileName& outputDir,
+    const fileName& setName,
+    const coordSet& set,
     const wordList& valueSetNames
+    #define TypeValueSetsConstArg(Type, nullArg) \
+        , const UPtrList<const Field<Type>>& Type##ValueSets
+    FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+    #undef TypeValueSetsConstArg
 ) const
 {
-    return this->getBaseName(points, valueSetNames) + ".xy";
-}
-
-
-template<class Type>
-void Foam::rawSetWriter<Type>::write
-(
-    const coordSet& points,
-    const wordList& valueSetNames,
-    const List<const Field<Type>*>& valueSets,
-    Ostream& os
-) const
-{
-    // Collect sets into columns
-    List<const List<Type>*> columns(valueSets.size());
-
-    forAll(valueSets, i)
+    if (!isDir(outputDir))
     {
-        columns[i] = valueSets[i];
+        mkDir(outputDir);
     }
 
-    this->writeTable(points, columns, os);
-}
+    OFstream os
+    (
+        outputDir/setName + ".xy",
+        IOstream::ASCII,
+        IOstream::currentVersion,
+        writeCompression_
+    );
 
+    separateSegments_ = set.segments() != identity(set.size());
 
-template<class Type>
-void Foam::rawSetWriter<Type>::write
-(
-    const bool writeTracks,
-    const PtrList<coordSet>& points,
-    const wordList& valueSetNames,
-    const List<List<Field<Type>>>& valueSets,
-    Ostream& os
-) const
-{
-    if (valueSets.size() != valueSetNames.size())
-    {
-        FatalErrorInFunction
-            << "Number of variables:" << valueSetNames.size() << endl
-            << "Number of valueSets:" << valueSets.size()
-            << exit(FatalError);
-    }
+    os << '#';
 
-    List<const List<Type>*> columns(valueSets.size());
+    OStringStream oss;
+    writeValueSeparator(oss);
 
-    forAll(points, trackI)
-    {
-        // Collect sets into columns
-        forAll(valueSets, i)
-        {
-            columns[i] = &valueSets[i][trackI];
-        }
+    os << oss.str().c_str();
 
-        this->writeTable(points[trackI], columns, os);
-        os  << nl << nl;
-    }
+    writeTableHeader
+    (
+        set,
+        valueSetNames,
+        #define TypeValueSetsParameter(Type, nullArg) Type##ValueSets,
+        FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
+        #undef TypeValueSetsParameter
+        os,
+        true,
+        1 + oss.str().size()
+    );
+
+    os << nl;
+
+    writeTable
+    (
+        set,
+        #define TypeValueSetsParameter(Type, nullArg) Type##ValueSets,
+        FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
+        #undef TypeValueSetsParameter
+        os,
+        true
+    );
 }
 
 

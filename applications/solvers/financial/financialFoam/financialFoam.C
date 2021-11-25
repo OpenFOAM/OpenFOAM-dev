@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,9 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "writeCellGraph.H"
 #include "OSspecific.H"
+#include "setWriter.H"
+#include "writeFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,8 +74,20 @@ int main(int argc, char *argv[])
 
         if (runTime.writeTime())
         {
-            writeCellGraph(V, runTime.graphFormat());
-            writeCellGraph(delta, runTime.graphFormat());
+            setWriter::New(runTime.graphFormat())->write
+            (
+                runTime.globalPath()
+               /functionObjects::writeFile::outputPrefix
+               /args.executable()
+               /runTime.timeName(),
+
+                args.executable(),
+
+                coordSet(true, word::null, mesh.C().primitiveField(), "x"),
+
+                "V", V.primitiveField(),
+                "delta", delta.primitiveField()
+            );
         }
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"

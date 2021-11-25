@@ -59,8 +59,8 @@ public:
 
     // Constructors
 
-        //- Construct given write format
-        vtkSurfaceWriter(const IOstream::streamFormat writeFormat);
+        //- Inherit constructors
+        using surfaceWriter::surfaceWriter;
 
 
     //- Destructor

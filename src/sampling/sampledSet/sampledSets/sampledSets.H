@@ -36,7 +36,7 @@ SourceFiles
 #ifndef sampledSets_H
 #define sampledSets_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "sampledSet.H"
 #include "volFieldsFwd.H"
 #include "meshSearch.H"
@@ -44,6 +44,7 @@ SourceFiles
 #include "coordSet.H"
 #include "setWriter.H"
 #include "wordReList.H"
+#include "HashPtrTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,99 +57,18 @@ class objectRegistry;
 class dictionary;
 class fvMesh;
 
+namespace functionObjects
+{
+
 /*---------------------------------------------------------------------------*\
                          Class sampledSets Declaration
 \*---------------------------------------------------------------------------*/
 
 class sampledSets
 :
-    public functionObject,
+    public fvMeshFunctionObject,
     public PtrList<sampledSet>
 {
-    // Private classes
-
-        //- Class used for grouping field types
-        template<class Type>
-        class fieldGroup
-        :
-            public DynamicList<word>
-        {
-        public:
-
-            //- The set formatter
-            autoPtr<setWriter<Type>> formatter;
-
-            //- Construct null
-            fieldGroup()
-            :
-                DynamicList<word>(0),
-                formatter(nullptr)
-            {}
-
-            //- Construct for a particular format
-            fieldGroup(const word& writeFormat)
-            :
-                DynamicList<word>(0),
-                formatter(setWriter<Type>::New(writeFormat))
-            {}
-
-            //- Reset format and field list
-            void clear()
-            {
-                DynamicList<word>::clear();
-                formatter.clear();
-            }
-
-            //- Assign a new formatter
-            void operator=(const word& writeFormat)
-            {
-                formatter = setWriter<Type>::New(writeFormat);
-            }
-
-        };
-
-
-        //- Class used for sampling volFields
-        template<class Type>
-        class volFieldSampler
-        :
-            public List<Field<Type>>
-        {
-            //- Name of this collection of values
-            const word name_;
-
-        public:
-
-            //- Construct interpolating field to the sampleSets
-            volFieldSampler
-            (
-                const word& interpolationScheme,
-                const GeometricField<Type, fvPatchField, volMesh>& field,
-                const PtrList<sampledSet>&
-            );
-
-            //- Construct mapping field to the sampleSets
-            volFieldSampler
-            (
-                const GeometricField<Type, fvPatchField, volMesh>& field,
-                const PtrList<sampledSet>&
-            );
-
-            //- Construct from components
-            volFieldSampler
-            (
-                const List<Field<Type>>& values,
-                const word& name
-            );
-
-            //- Return the field name
-            const word& name() const
-            {
-                return name_;
-            }
-        };
-
-
     // Static Data Members
 
         //- Output verbosity
@@ -157,14 +77,8 @@ class sampledSets
 
     // Private Data
 
-        //- Const reference to fvMesh
-        const fvMesh& mesh_;
-
         //- Keep the dictionary to recreate sets for moving mesh cases
         dictionary dict_;
-
-        //- Load fields from files (not from objectRegistry)
-        bool loadFromFiles_;
 
         //- Output path
         fileName outputPath_;
@@ -181,66 +95,46 @@ class sampledSets
             //- Interpolation scheme to use
             word interpolationScheme_;
 
-            //- Output format to use
-            word writeFormat_;
-
-
-        // Categorised scalar/vector/tensor fields
-
-            fieldGroup<scalar> scalarFields_;
-            fieldGroup<vector> vectorFields_;
-            fieldGroup<sphericalTensor> sphericalTensorFields_;
-            fieldGroup<symmTensor> symmTensorFields_;
-            fieldGroup<tensor> tensorFields_;
-
 
         // Merging structures
 
-            PtrList<coordSet> masterSampledSets_;
-            labelListList indexSets_;
+            //- Global sets gathered on the master
+            PtrList<coordSet> masterSets_;
+
+            //- Mapping from local to global sets
+            labelListList masterSetOrders_;
+
+
+        // Calculated
+
+            //- Set formatter
+            autoPtr<setWriter> formatter_;
 
 
     // Private Member Functions
 
-        //- Clear old field groups
-        void clearFieldGroups();
-
-        //- Append fieldName to the appropriate group
-        label appendFieldGroup(const word& fieldName, const word& fieldType);
-
-        //- Classify field types, returns the number of fields
-        label classifyFields();
-
-        //- Combine points from all processors. Sort by curveDist and produce
+        //- Combine sets on all processors. Sort by curveDist and produce
         //  index list. Valid result only on master processor.
-        void combineSampledSets
-        (
-            PtrList<coordSet>& masterSampledSets,
-            labelListList& indexSets
-        );
+        void combineSampledSets();
 
-        //- Combine values from all processors.
-        //  Valid result only on master processor.
-        template<class T>
-        void combineSampledValues
-        (
-            const PtrList<volFieldSampler<T>>& sampledFields,
-            const labelListList& indexSets,
-            PtrList<volFieldSampler<T>>& masterFields
-        );
-
+        //- Sample all fields of a type on a given set
         template<class Type>
-        void writeSampleFile
+        PtrList<Field<Type>> sampleLocalType
         (
-            const coordSet& masterSampleSet,
-            const PtrList<volFieldSampler<Type>>& masterFields,
-            const label setI,
-            const fileName& timeDir,
-            const setWriter<Type>& formatter
+            const label seti,
+            const wordList& fieldNames,
+            HashPtrTable<interpolation<Type>>& interpolations
         );
 
+        //- Sample all fields of a type on a given set and combine on the
+        //  master for writing
         template<class Type>
-        void sampleAndWrite(fieldGroup<Type>& fields);
+        PtrList<Field<Type>> sampleType
+        (
+            const label seti,
+            const wordList& fieldNames,
+            HashPtrTable<interpolation<Type>>& interpolations
+        );
 
 
 public:
@@ -306,6 +200,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -27,6 +27,8 @@ License
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
+#include "sampledSetCloud.H"
+#include "points.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -45,92 +47,68 @@ namespace sampledSets
 
 void Foam::sampledSets::lineUniform::calcSamples
 (
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    DynamicList<point>& samplingPositions,
+    DynamicList<scalar>& samplingDistances,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 ) const
 {
-    // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
-    // build them, otherwise, if some processors have no particles then there
-    // is a comms mismatch.
-    mesh().tetBasePtIs();
-    mesh().oldCellCentres();
+    // Calculate all sampling points
+    const scalarField ts(scalarList(identity(nPoints_))/(nPoints_ - 1));
+    const pointField points((1 - ts)*start_ + ts*end_);
 
-    label sampleSegmentI = 0, sampleI = 0;
-    scalar sampleT = 0;
+    // Calculate the sampling topology
+    points::calcSamples
+    (
+        mesh(),
+        searchEngine(),
+        points,
+        samplingPositions,
+        samplingDistances,
+        samplingSegments,
+        samplingCells,
+        samplingFaces
+    );
 
-    while (sampleI < nPoints_)
+    // Overwrite the distances
+    forAll(samplingPositions, i)
     {
-        const point pt = (1 - sampleT)*start_ + sampleT*end_;
-
-        const label sampleCellI = searchEngine().findCell(pt);
-
-        if (sampleCellI == -1)
-        {
-            if (++ sampleI < nPoints_)
-            {
-                sampleT = scalar(sampleI)/(nPoints_ - 1);
-            }
-        }
-        else
-        {
-            passiveParticle sampleParticle(mesh(), pt, sampleCellI);
-
-            do
-            {
-                samplingPts.append(sampleParticle.position());
-                samplingCells.append(sampleParticle.cell());
-                samplingFaces.append(-1);
-                samplingSegments.append(sampleSegmentI);
-                samplingCurveDist.append(sampleT*mag(end_ - start_));
-
-                if (++ sampleI < nPoints_)
-                {
-                    sampleT = scalar(sampleI)/(nPoints_ - 1);
-                    sampleParticle.reset(1);
-                    sampleParticle.track((end_ - start_)/(nPoints_ - 1), 0);
-                }
-            }
-            while (sampleI < nPoints_ && !sampleParticle.onBoundaryFace());
-
-            ++ sampleSegmentI;
-        }
+        samplingDistances[i] = mag(samplingPositions[i] - start_);
     }
 }
 
 
 void Foam::sampledSets::lineUniform::genSamples()
 {
-    DynamicList<point> samplingPts;
+    DynamicList<point> samplingPositions;
+    DynamicList<scalar> samplingDistances;
+    DynamicList<label> samplingSegments;
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
-    DynamicList<label> samplingSegments;
-    DynamicList<scalar> samplingCurveDist;
 
     calcSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
+        samplingDistances,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 
-    samplingPts.shrink();
+    samplingPositions.shrink();
+    samplingDistances.shrink();
+    samplingSegments.shrink();
     samplingCells.shrink();
     samplingFaces.shrink();
-    samplingSegments.shrink();
-    samplingCurveDist.shrink();
 
     setSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
+        samplingDistances,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 }
 
@@ -151,11 +129,6 @@ Foam::sampledSets::lineUniform::lineUniform
     nPoints_(dict.lookup<label>("nPoints"))
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Pout);
-    }
 }
 
 

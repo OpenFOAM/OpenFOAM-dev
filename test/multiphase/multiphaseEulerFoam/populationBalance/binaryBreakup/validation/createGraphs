@@ -27,7 +27,7 @@ gnuplot<<EOF
 
     n(x,t) = N0*exp(-t*x**2.0)*2.0*t*v0
 
-    numberDensity = '../postProcessing/numberDensity/10/numberDensity.dat'
+    numberDensity = '../postProcessing/numberDensity/10/numberDensity.xy'
 
     plot '<printf "1 0.05\n1 1e-5\n"' w l lc rgb 'black' t 'Init. Cond.',\
     n(x,10.0) dt 2 lc rgb 'black' t 'Ziff and McGrady (1985)',\

@@ -42,6 +42,7 @@ License
 #include "globalIndex.H"
 #include "PatchTools.H"
 #include "writeFile.H"
+#include "coordSet.H"
 
 
 void Foam::printMeshStats(const polyMesh& mesh, const bool allTopology)
@@ -377,7 +378,7 @@ void Foam::mergeAndWrite
 
 void Foam::mergeAndWrite
 (
-    const setWriter<scalar>& writer,
+    const setWriter& writer,
     const pointSet& set
 )
 {
@@ -447,41 +448,19 @@ void Foam::mergeAndWrite
         mergedPts = pointField(mesh.points(), mergedIDs);
     }
 
-
     // Write with scalar pointID
     if (Pstream::master())
     {
-        scalarField scalarPointIDs(mergedIDs.size());
-        forAll(mergedIDs, i)
-        {
-            scalarPointIDs[i] = 1.0*mergedIDs[i];
-        }
-
-        coordSet points(set.name(), "distance", mergedPts, mag(mergedPts));
-
-        List<const scalarField*> flds(1, &scalarPointIDs);
-
-        wordList fldNames(1, "pointID");
-
-        // Output e.g. pointSet p0 to
-        // postProcessing/<time>/p0.vtk
-        fileName outputDir
+        writer.write
         (
-            set.time().path()
-          / (Pstream::parRun() ? ".." : "")
-          / "postProcessing"
-          / mesh.pointsInstance()
-          // set.name()
+            set.time().globalPath()
+           /functionObjects::writeFile::outputPrefix
+           /mesh.pointsInstance(),
+            set.name(),
+            coordSet(false, word::null, mergedPts),
+            "pointID",
+            scalarField(scalarList(mergedIDs))
         );
-        outputDir.clean();
-        mkDir(outputDir);
-
-        fileName outputFile(outputDir/writer.getFileName(points, wordList()));
-        // fileName outputFile(outputDir/set.name());
-
-        OFstream os(outputFile);
-
-        writer.write(points, fldNames, flds, os);
     }
 }
 

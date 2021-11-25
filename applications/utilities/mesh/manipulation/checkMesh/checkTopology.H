@@ -13,6 +13,6 @@ namespace Foam
         const bool,
         const bool,
         const autoPtr<surfaceWriter>&,
-        const autoPtr<setWriter<scalar>>&
+        const autoPtr<setWriter>&
     );
 }

@@ -67,6 +67,7 @@ functions
 
         writeControl        outputTime;
         writeInterval       1;
+        setFormat           raw;
         log                 yes;
 
         regionType          cellZone;

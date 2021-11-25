@@ -60,6 +60,8 @@ functions
         writeControl        outputTime;
         writeInterval       1;
 
+        setFormat           raw;
+
         populationBalance   bubbles;
         functionType        number;
         coordinateType      diameter;
@@ -74,6 +76,8 @@ functions
 
         writeControl        outputTime;
         writeInterval       1;
+
+        setFormat           raw;
 
         populationBalance   bubbles;
         functionType        volume;

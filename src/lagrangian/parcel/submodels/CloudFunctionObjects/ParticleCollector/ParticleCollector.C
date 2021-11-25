@@ -453,7 +453,7 @@ void Foam::ParticleCollector<CloudType>::write()
         {
             autoPtr<surfaceWriter> writer
             (
-                surfaceWriter::New(surfaceFormat_, time.writeFormat())
+                surfaceWriter::New(surfaceFormat_, this->coeffDict())
             );
 
             writer->write

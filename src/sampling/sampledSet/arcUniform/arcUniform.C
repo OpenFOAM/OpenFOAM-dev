@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ License
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 #include "word.H"
+#include "points.H"
 #include "unitConversion.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -48,69 +49,77 @@ namespace sampledSets
 
 void Foam::sampledSets::arcUniform::calcSamples
 (
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    DynamicList<point>& samplingPositions,
+    DynamicList<scalar>& samplingDistances,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 ) const
 {
+    // Get the coordinate system
     const vector axis1 = radial_ - (radial_ & normal_)*normal_;
     const vector axis2 = normal_ ^ axis1;
     const scalar radius = mag(axis1);
 
-    for (label i = 0; i < nPoints_; ++ i)
+    // Compute all point locations
+    const scalarField ts(scalarList(identity(nPoints_))/(nPoints_ - 1));
+    const scalarField theta((1 - ts)*startAngle_ + ts*endAngle_);
+    const scalarField c(cos(theta)), s(sin(theta));
+    const pointField points(centre_ + c*axis1 + s*axis2);
+
+    // Calculate the sampling topology
+    points::calcSamples
+    (
+        mesh(),
+        searchEngine(),
+        points,
+        samplingPositions,
+        samplingDistances,
+        samplingSegments,
+        samplingCells,
+        samplingFaces
+    );
+
+    // Overwrite the distances
+    forAll(samplingPositions, i)
     {
-        const scalar t = scalar(i)/(nPoints_ - 1);
-        const scalar theta = (1 - t)*startAngle_ + t*endAngle_;
-        const scalar c = cos(theta), s = sin(theta);
-
-        const point pt = centre_ + c*axis1 + s*axis2;
-        const label celli = searchEngine().findCell(pt);
-
-        if (celli != -1)
-        {
-            samplingPts.append(pt);
-            samplingCells.append(celli);
-            samplingFaces.append(-1);
-            samplingSegments.append(samplingSegments.size());
-            samplingCurveDist.append(radius*theta);
-        }
+        const vector v = samplingPositions[i] - centre_;
+        const scalar theta = atan2(v & axis2, v & axis1);
+        samplingDistances[i] = radius*theta;
     }
 }
 
 
 void Foam::sampledSets::arcUniform::genSamples()
 {
-    // Storage for sample points
-    DynamicList<point> samplingPts;
+    DynamicList<point> samplingPositions;
+    DynamicList<scalar> samplingDistances;
+    DynamicList<label> samplingSegments;
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
-    DynamicList<label> samplingSegments;
-    DynamicList<scalar> samplingCurveDist;
 
     calcSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
+        samplingDistances,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 
-    samplingPts.shrink();
+    samplingPositions.shrink();
+    samplingDistances.shrink();
+    samplingSegments.shrink();
     samplingCells.shrink();
     samplingFaces.shrink();
-    samplingSegments.shrink();
-    samplingCurveDist.shrink();
 
     setSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
+        samplingDistances,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 }
 
@@ -134,11 +143,6 @@ Foam::sampledSets::arcUniform::arcUniform
     nPoints_(dict.lookup<scalar>("nPoints"))
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
 }
 
 

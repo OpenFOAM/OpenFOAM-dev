@@ -193,53 +193,24 @@ int main(int argc, char *argv[])
         }
     }
 
-
     if (allTracks.size() && Pstream::master())
     {
-        PtrList<coordSet> tracks(allTracks.size());
+        DynamicList<point> allTrack;
+        DynamicList<label> allTrackIDs;
         forAll(allTracks, trackI)
         {
-            tracks.set
-            (
-                trackI,
-                new coordSet
-                (
-                    "track" + Foam::name(trackI),
-                    "distance"
-                )
-            );
-            tracks[trackI].transfer(allTracks[trackI]);
+            allTrack.append(allTracks[trackI]);
+            allTrackIDs.append(labelList(allTracks[trackI].size(), trackI));
         }
 
-        autoPtr<setWriter<scalar>> scalarFormatterPtr =
-            setWriter<scalar>::New(setFormat);
-
-        // OFstream vtkTracks(vtkPath/"particleTracks.vtk");
-        fileName vtkFile
-        (
-            scalarFormatterPtr().getFileName
-            (
-                tracks[0],
-                wordList(0)
-            )
-        );
-
-        OFstream vtkTracks
-        (
-            vtkPath/("particleTracks." + vtkFile.ext())
-        );
-
         Info<< "\nWriting particle tracks in " << setFormat
-            << " format to " << vtkTracks.name()
-            << nl << endl;
+            << " format to " << vtkPath << nl << endl;
 
-        scalarFormatterPtr().write
+        setWriter::New(setFormat, propsDict)->write
         (
-            true,
-            tracks,
-            wordList(0),
-            List<List<scalarField>>(0),
-            vtkTracks
+            vtkPath,
+            "tracks",
+            coordSet(allTrackIDs, word::null, pointField(allTrack))
         );
     }
 

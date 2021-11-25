@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,9 @@ class sampledSet
 {
     // Private Data
 
+        //- Name of the set
+        const word name_;
+
         //- Reference to mesh
         const polyMesh& mesh_;
 
@@ -75,9 +78,6 @@ class sampledSet
 protected:
 
     // Protected data
-
-        //- Segment numbers
-        labelList segments_;
 
         //- Cell numbers
         labelList cells_;
@@ -91,11 +91,20 @@ protected:
         //- Sets sample data
         void setSamples
         (
-            const List<point>& samplingPts,
-            const labelList& samplingCells,
-            const labelList& samplingFaces,
+            const List<point>& samplingPositions,
             const labelList& samplingSegments,
-            const scalarList& samplingCurveDist
+            const labelList& samplingCells,
+            const labelList& samplingFaces
+        );
+
+        //- Sets sample data
+        void setSamples
+        (
+            const List<point>& samplingPositions,
+            const List<scalar>& samplingDistances,
+            const labelList& samplingSegments,
+            const labelList& samplingCells,
+            const labelList& samplingFaces
         );
 
 
@@ -192,33 +201,41 @@ public:
 
     // Member Functions
 
+        //- Access the name
+        const word& name() const
+        {
+            return name_;
+        }
+
+        //- Access the mesh
         const polyMesh& mesh() const
         {
             return mesh_;
         }
 
+        //- Access the search engine
         const meshSearch& searchEngine() const
         {
             return searchEngine_;
         }
 
-        const labelList& segments() const
+        //- Access the positions
+        const pointField& positions() const
         {
-            return segments_;
+            return positions_();
         }
 
+        //- Access the cells
         const labelList& cells() const
         {
             return cells_;
         }
 
+        //- Access the faces
         const labelList& faces() const
         {
             return faces_;
         }
-
-        //- Output for debugging
-        Ostream& write(Ostream&) const;
 };
 
 

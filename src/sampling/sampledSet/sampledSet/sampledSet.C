@@ -45,46 +45,88 @@ namespace Foam
 
 void Foam::sampledSet::setSamples
 (
-    const List<point>& samplingPts,
-    const labelList& samplingCells,
-    const labelList& samplingFaces,
+    const List<point>& samplingPositions,
     const labelList& samplingSegments,
-    const scalarList& samplingCurveDist
+    const labelList& samplingCells,
+    const labelList& samplingFaces
 )
 {
-    setSize(samplingPts.size());
-    cells_.setSize(samplingCells.size());
-    faces_.setSize(samplingFaces.size());
-    segments_.setSize(samplingSegments.size());
-    curveDist_.setSize(samplingCurveDist.size());
-
     if
     (
-        (cells_.size() != size())
-     || (faces_.size() != size())
-     || (segments_.size() != size())
-     || (curveDist_.size() != size())
+        (samplingCells.size() != samplingPositions.size())
+     || (samplingFaces.size() != samplingPositions.size())
+     || (samplingSegments.size() != samplingPositions.size())
     )
     {
         FatalErrorInFunction
             << "sizes not equal : "
-            << "  points:" << size()
-            << "  cells:" << cells_.size()
-            << "  faces:" << faces_.size()
-            << "  segments:" << segments_.size()
-            << "  curveDist:" << curveDist_.size()
+            << "  positions:" << samplingPositions.size()
+            << "  segments:" << samplingSegments.size()
+            << "  cells:" << samplingCells.size()
+            << "  faces:" << samplingFaces.size()
             << abort(FatalError);
     }
 
-    forAll(samplingPts, sampleI)
-    {
-        operator[](sampleI) = samplingPts[sampleI];
-    }
-    curveDist_ = samplingCurveDist;
+    (*this).coordSet::operator=
+    (
+        coordSet
+        (
+            samplingSegments,
+            word::null,
+            pointField(samplingPositions),
+            axisTypeNames_[axisType::DISTANCE],
+            scalarField::null(),
+            axisTypeNames_[axis_]
+        )
+    );
 
     cells_ = samplingCells;
     faces_ = samplingFaces;
-    segments_ = samplingSegments;
+}
+
+
+void Foam::sampledSet::setSamples
+(
+    const List<point>& samplingPositions,
+    const List<scalar>& samplingDistances,
+    const labelList& samplingSegments,
+    const labelList& samplingCells,
+    const labelList& samplingFaces
+)
+{
+    if
+    (
+        (samplingDistances.size() != samplingPositions.size())
+     || (samplingCells.size() != samplingPositions.size())
+     || (samplingFaces.size() != samplingPositions.size())
+     || (samplingSegments.size() != samplingPositions.size())
+    )
+    {
+        FatalErrorInFunction
+            << "sizes not equal : "
+            << "  positions:" << samplingPositions.size()
+            << "  distances:" << samplingDistances.size()
+            << "  segments:" << samplingSegments.size()
+            << "  cells:" << samplingCells.size()
+            << "  faces:" << samplingFaces.size()
+            << abort(FatalError);
+    }
+
+    (*this).coordSet::operator=
+    (
+        coordSet
+        (
+            samplingSegments,
+            word::null,
+            pointField(samplingPositions),
+            axisTypeNames_[axisType::DISTANCE],
+            scalarField(samplingDistances),
+            axisTypeNames_[axis_]
+        )
+    );
+
+    cells_ = samplingCells;
+    faces_ = samplingFaces;
 }
 
 
@@ -98,13 +140,15 @@ Foam::sampledSet::sampledSet
     const word& axis
 )
 :
-    coordSet(name, axis),
+    coordSet(),
+    name_(name),
     mesh_(mesh),
     searchEngine_(searchEngine),
-    segments_(0),
     cells_(0),
     faces_(0)
-{}
+{
+    axis_ = axisTypeNames_[axis];
+}
 
 
 Foam::sampledSet::sampledSet
@@ -115,13 +159,23 @@ Foam::sampledSet::sampledSet
     const dictionary& dict
 )
 :
-    coordSet(name, dict.lookup("axis")),
+    coordSet(),
+    name_(name),
     mesh_(mesh),
     searchEngine_(searchEngine),
-    segments_(0),
     cells_(0),
     faces_(0)
-{}
+{
+    axis_ =
+        axisTypeNames_
+        [
+            dict.lookupOrDefault<word>
+            (
+                "axis",
+                axisTypeNames_[axisType::DEFAULT]
+            )
+        ];
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -191,23 +245,6 @@ Foam::autoPtr<Foam::sampledSet> Foam::sampledSet::New
             dict.optionalSubDict(sampleType + "Coeffs")
         )
     );
-}
-
-
-Foam::Ostream& Foam::sampledSet::write(Ostream& os) const
-{
-    coordSet::write(os);
-
-    os  << endl << "\t(celli)\t(facei)" << endl;
-
-    forAll(*this, sampleI)
-    {
-        os  << '\t' << cells_[sampleI]
-            << '\t' << faces_[sampleI]
-            << endl;
-    }
-
-    return os;
 }
 
 

@@ -37,6 +37,7 @@ SourceFiles
 
 #include "pointField.H"
 #include "word.H"
+#include "labelPair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,100 +49,168 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class coordSet
-:
-    public pointField
 {
-
 public:
 
     // Public data types
 
         //- Enumeration defining the output format for coordinates
-        enum coordFormat
+        enum class axisType
         {
             XYZ,
             X,
             Y,
             Z,
-            DISTANCE
+            DISTANCE,
+            DEFAULT
         };
 
 
-private:
-
-        //- String representation of coordFormat enums
-        static const NamedEnum<coordFormat, 5> coordFormatNames_;
+        //- String representation of axis enums
+        static const NamedEnum<axisType, 6> axisTypeNames_;
 
 
 protected:
 
-        //- Name
-        const word name_;
+    // Protected Data
 
-        //- Axis write type
-        const coordFormat axis_;
+        //- Connected segments
+        labelList segments_;
 
-        //- Cumulative distance "distance" write specifier.
-        scalarList curveDist_;
+        //- Name of the positions
+        word positionName_;
+
+        //- Point positions
+        autoPtr<pointField> positions_;
+
+        //- Name of the distances
+        word distanceName_;
+
+        //- Scalar distances
+        autoPtr<scalarField> distances_;
+
+        //- Axis
+        axisType axis_;
 
 
 public:
 
     // Constructors
 
+        //- Construct null
+        coordSet();
+
         //- Construct from components
         coordSet
         (
-            const word& name,
-            const word& axis
+            const labelList& segments,
+            const word& positionName = word::null,
+            const pointField& positions = pointField::null(),
+            const word& distanceName = word::null,
+            const scalarField& distances = scalarField::null(),
+            const word& axis = axisTypeNames_[axisType::DEFAULT]
         );
 
-
-        //- Construct from components
+        //- Construct from positions
         coordSet
         (
-            const word& name,
-            const word& axis,
-            const List<point>& points,
-            const scalarList& curveDist
+            const bool contiguous,
+            const word& positionName,
+            const pointField& positions,
+            const word& axis = axisTypeNames_[axisType::DEFAULT]
+        );
+
+        //- Construct from distances
+        coordSet
+        (
+            const bool contiguous,
+            const word& distanceName,
+            const scalarField& distances,
+            const word& axis = axisTypeNames_[axisType::DEFAULT]
         );
 
 
     // Member Functions
 
-        const word& name() const
+        //- Return the size
+        inline label size() const
         {
-            return name_;
+            return segments_.size();
         }
 
-        word axis() const
+        //- Return the segments
+        inline const labelList& segments() const
         {
-            return coordFormatNames_[axis_];
+            return segments_;
         }
 
-        //- Cumulative distance
-        const scalarList& curveDist() const
+        //- Return the axis name
+        inline word axis() const
         {
-            return curveDist_;
+            return axisTypeNames_[axis_];
         }
 
-        //- Is axis specification a vector
-        bool hasVectorAxis() const;
+        //- Is the coordinate axis a scalar?
+        bool hasScalarAxis() const;
 
-        //- Get coordinate of point according to axis specification.
-        //  If axis="distance" is the curveDist[index]
+        //- Is the coordinate axis a point?
+        bool hasPointAxis() const;
+
+        //- Get scalar coordinate (axis is x, y, z or distance)
         scalar scalarCoord(const label index) const;
 
-        //- Get point according to axis="xyz" specification
-        vector vectorCoord(const label index) const;
+        //- Get scalar coordinates (axis is x, y, z or distance)
+        tmp<scalarField> scalarCoords() const;
 
-        Ostream& write(Ostream& os) const;
+        //- Return the name of the scalar coordinates
+        word scalarName() const;
+
+        //- Get vector coordinate (axis is xyz)
+        point pointCoord(const label index) const;
+
+        //- Get vector coordinate (axis is xyz)
+        tmp<pointField> pointCoords() const;
+
+        //- Return the name of the point coordinates
+        word pointName() const;
+
+        //- Return a list of isolated vertices. These are the points that are
+        //  not adjacent to any points in the same segment.
+        labelList vertices() const;
+
+        //- Return a list of edges. These are adjacent pairs of points which
+        //  are in the same segment.
+        labelPairList edges() const;
+
+        //- Return a list of lines. These are lists of points which are in the
+        //  same segment.
+        labelListList lines() const;
+
+        //- Combine coordinate sets onto the master. Return both the combined
+        //  coordinate set, and an ordering to be used for gathering associated
+        //  fields
+        Tuple2<coordSet, labelList> gather() const;
+
+        //- Combine a field using the ordering obtained from the coordinate set
+        //  gather operation
+        template<class Type>
+        static tmp<Field<Type>> gather
+        (
+            const Field<Type>& values,
+            const labelList& order
+        );
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "coordSetTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

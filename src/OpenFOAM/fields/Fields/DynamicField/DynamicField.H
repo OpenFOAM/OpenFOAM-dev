@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -234,6 +234,23 @@ public:
 
             //- Move assignment to List
             inline void operator=(List<T>&&);
+
+
+        // IOstream Operators
+
+            // Write DynamicField to Ostream.
+            friend Ostream& operator<< <T, SizeInc, SizeMult, SizeDiv>
+            (
+                Ostream&,
+                const DynamicField<T, SizeInc, SizeMult, SizeDiv>&
+            );
+
+            //- Read from Istream, discarding contents of existing DynamicField.
+            friend Istream& operator>> <T, SizeInc, SizeMult, SizeDiv>
+            (
+                Istream&,
+                DynamicField<T, SizeInc, SizeMult, SizeDiv>&
+            );
 };
 
 

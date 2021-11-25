@@ -40,6 +40,6 @@ namespace Foam
         const polyMesh& mesh,
         const bool allGeometry,
         const autoPtr<surfaceWriter>&,
-        const autoPtr<setWriter<scalar>>&
+        const autoPtr<setWriter>&
     );
 }

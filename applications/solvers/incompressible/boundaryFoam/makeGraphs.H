@@ -13,21 +13,32 @@ volSymmTensorField R
 
 runTime.write();
 
-const word& gFormat = runTime.graphFormat();
+setWriter::New(runTime.graphFormat())->write
+(
+    runTime.globalPath()
+   /functionObjects::writeFile::outputPrefix
+   /args.executable()
+   /runTime.timeName(),
 
-makeGraph(y, flowDirection & U, "Uf", gFormat);
+    args.executable(),
 
-makeGraph(y, turbulence->nu(), gFormat);
-makeGraph(y, turbulence->k(), gFormat);
-makeGraph(y, turbulence->epsilon(), gFormat);
+    coordSet(true, "y", y),
 
-makeGraph(y, flowDirection & R & flowDirection, "Rff", gFormat);
-makeGraph(y, wallNormal & R & wallNormal, "Rww", gFormat);
-makeGraph(y, flowDirection & R & wallNormal, "Rfw", gFormat);
+    "Uf", (flowDirection & U)().primitiveField(),
 
-makeGraph(y, sqrt(mag(R.component(symmTensor::XX))), "u", gFormat);
-makeGraph(y, sqrt(mag(R.component(symmTensor::YY))), "v", gFormat);
-makeGraph(y, sqrt(mag(R.component(symmTensor::ZZ))), "w", gFormat);
-makeGraph(y, R.component(symmTensor::XY), "uv", gFormat);
+    "nu", turbulence->nu()().primitiveField(),
+    "k", turbulence->nu()().primitiveField(),
+    "epsilon", turbulence->nu()().primitiveField(),
 
-makeGraph(y, mag(fvc::grad(U)), "gammaDot", gFormat);
+    "Rff", (flowDirection & R & flowDirection)().primitiveField(),
+    "Rww", (wallNormal & R & wallNormal)().primitiveField(),
+    "Rfw", (flowDirection & R & wallNormal)().primitiveField(),
+
+    "u", sqrt(mag(R.component(symmTensor::XX)))().primitiveField(),
+    "v", sqrt(mag(R.component(symmTensor::YY)))().primitiveField(),
+    "w", sqrt(mag(R.component(symmTensor::ZZ)))().primitiveField(),
+
+    "uv", R.component(symmTensor::XY)().primitiveField(),
+
+    "gammaDot", mag(fvc::grad(U))().primitiveField()
+);

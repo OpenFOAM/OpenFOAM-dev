@@ -36,7 +36,7 @@ SourceFiles
 #define rawSurfaceWriter_H
 
 #include "surfaceWriter.H"
-
+#include "rawSetWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,44 +51,6 @@ class rawSurfaceWriter
 :
     public surfaceWriter
 {
-    // Private Data
-
-        //- Output compression, defaults to uncompressed
-        IOstream::compressionType writeCompression_;
-
-
-    // Private Member Functions
-
-        //- Write a point location
-        static inline void writeLocation
-        (
-            Ostream&,
-            const pointField&,
-            const label pointi
-        );
-
-        //- Write a face location
-        static inline void writeLocation
-        (
-            Ostream&,
-            const pointField&,
-            const faceList&,
-            const label facei
-        );
-
-        //- Write the column header for a given field
-        template<class Type>
-        static void writeHeader
-        (
-            Ostream&,
-            const word& fieldName
-        );
-
-        //- Write a piece of data
-        template<class Type>
-        static inline void writeData(Ostream&, const Type&);
-
-
 public:
 
     //- Runtime type information
@@ -97,11 +59,8 @@ public:
 
     // Constructors
 
-        //- Construct given write format
-        rawSurfaceWriter(const IOstream::streamFormat writeFormat);
-
-        //- Construct with output options
-        rawSurfaceWriter(const dictionary& optDict);
+        //- Inherit constructors
+        using surfaceWriter::surfaceWriter;
 
 
     //- Destructor

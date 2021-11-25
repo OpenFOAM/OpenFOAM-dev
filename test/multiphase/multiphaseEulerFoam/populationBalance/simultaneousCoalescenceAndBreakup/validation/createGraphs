@@ -21,8 +21,8 @@ gnuplot<<EOF
     set xrange [1:10]
     set yrange [0:0.6]
 
-    numberDensity = '../postProcessing/numberDensity/10/numberDensity.dat'
-    volumeDensity = '../postProcessing/volumeDensity/10/volumeDensity.dat'
+    numberDensity = '../postProcessing/numberDensity/10/numberDensity.xy'
+    volumeDensity = '../postProcessing/volumeDensity/10/volumeDensity.xy'
 
     kVConversion = (6/pi)**(1./3.)
 

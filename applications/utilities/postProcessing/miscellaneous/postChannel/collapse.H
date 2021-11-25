@@ -1,13 +1,3 @@
-    fileName path
-    (
-        UMean.rootPath()
-       /UMean.caseName()
-       /functionObjects::writeFile::outputPrefix
-       /"graphs"
-       /UMean.instance()
-    );
-    mkDir(path);
-
     scalarField UMeanXvalues
     (
         channelIndexing.collapse(UMean.component(vector::X)())
@@ -49,22 +39,31 @@
         0.5*(sqr(urmsValues) + sqr(vrmsValues) + sqr(wrmsValues))
     );
 
+    setWriter::New(runTime.graphFormat())->write
+    (
+        runTime.globalPath()
+       /functionObjects::writeFile::outputPrefix
+       /args.executable()
+       /runTime.timeName(),
 
-    const scalarField& y = channelIndexing.y();
+       args.executable(),
 
-    makeGraph(y, UMeanXvalues, "Uf", path, gFormat);
-    makeGraph(y, urmsValues, "u", path, gFormat);
-    makeGraph(y, vrmsValues, "v", path, gFormat);
-    makeGraph(y, wrmsValues, "w", path, gFormat);
-    makeGraph(y, RxyValues, "uv", path, gFormat);
-    makeGraph(y, kValues, "k", path, gFormat);
+       coordSet(true, "y", channelIndexing.y()),
 
-    makeGraph(y, pPrime2MeanValues, "pPrime2Mean", path, gFormat);
+       "Uf", UMeanXvalues,
 
-    /*
-    makeGraph(y, epsilonValues, "epsilon", path, gFormat);
-    makeGraph(y, nuMeanValues, "nu", path, gFormat);
-    makeGraph(y, nuPrimeValues, "nuPrime", path, gFormat);
-    makeGraph(y, gammaDotMeanValues, "gammaDot", path, gFormat);
-    makeGraph(y, gammaDotPrimeValues, "gammaDotPrime", path, gFormat);
-    */
+       "u", urmsValues,
+       "v", vrmsValues,
+       "w", wrmsValues,
+       "uv", RxyValues,
+
+       "k", kValues,
+
+       "pPrime2Mean", pPrime2MeanValues
+
+       // "epsilon", epsilonValues,
+       // "nu", nuMeanValues,
+       // "nuPrime", nuPrimeValues,
+       // "gammaDot", gammaDotMeanValues,
+       // "gammaDotPrime", gammaDotPrimeValues
+    );

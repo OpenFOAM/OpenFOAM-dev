@@ -40,7 +40,7 @@ SourceFiles
 #include "pointField.H"
 #include "faceList.H"
 #include "fileName.H"
-
+#include "setWriter.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,82 +54,15 @@ namespace Foam
 
 class surfaceWriter
 {
-
-private:
-
-    //- Helper for variadic write
-    template<class Types, class Type>
-    static inline void setFieldTypeValue
-    (
-        UPtrList<const Field<Types>>& fieldTypeValues,
-        const label fieldi,
-        const Field<Type>& fieldTypeValue
-    )
-    {}
-
-    //- Helper for variadic write
-    template<class Type>
-    static inline void setFieldTypeValue
-    (
-        UPtrList<const Field<Type>>& fieldTypeValues,
-        const label fieldi,
-        const Field<Type>& fieldTypeValue
-    )
-    {
-        fieldTypeValues.set(fieldi, &fieldTypeValue);
-    }
-
-    //- Helper for variadic write
-    static inline void unpackFieldTypeValues
-    (
-        wordList& fieldNames
-        #define FieldTypeValuesNonConstArg(Type, nullArg) \
-        , UPtrList<const Field<Type>>& field##Type##Values
-        FOR_ALL_FIELD_TYPES(FieldTypeValuesNonConstArg)
-        #undef FieldTypeValuesNonConstArg
-    )
-    {}
-
-    //- Helper for variadic write
-    template<class Type, class ... Args>
-    static inline void unpackFieldTypeValues
-    (
-        wordList& fieldNames
-        #define FieldTypeValuesNonConstArg(Type, nullArg) \
-        , UPtrList<const Field<Type>>& field##Type##Values
-        FOR_ALL_FIELD_TYPES(FieldTypeValuesNonConstArg),
-        #undef FieldTypeValuesNonConstArg
-        const word& fieldName,
-        const Field<Type>& fieldTypeValue,
-        Args& ... args
-    )
-    {
-        const label fieldi = fieldNames.size() - 1 - sizeof...(Args)/2;
-
-        fieldNames[fieldi] = fieldName;
-        #define SetFieldTypeValue(Type, nullArg) \
-            setFieldTypeValue(field##Type##Values, fieldi, fieldTypeValue);
-        FOR_ALL_FIELD_TYPES(SetFieldTypeValue);
-        #undef SetFieldTypeValue
-
-        unpackFieldTypeValues
-        (
-            fieldNames
-            #define FieldTypeValuesParameter(Type, nullArg) \
-                , field##Type##Values
-            FOR_ALL_FIELD_TYPES(FieldTypeValuesParameter),
-            #undef FieldTypeValuesParameter
-            args ...
-        );
-    }
-
-
 protected:
 
     // Protected Data
 
         //- Write format
         IOstream::streamFormat writeFormat_;
+
+        //- Write compression
+        IOstream::compressionType writeCompression_;
 
 
 public:
@@ -145,48 +78,53 @@ public:
             surfaceWriter,
             word,
             (
-                const IOstream::streamFormat writeFormat
+                const IOstream::streamFormat writeFormat,
+                const IOstream::compressionType writeCompression
             ),
-            (writeFormat)
+            (writeFormat, writeCompression)
         );
 
         declareRunTimeSelectionTable
         (
             autoPtr,
             surfaceWriter,
-            wordDict,
+            dict,
             (
-                const dictionary& optDict
+                const dictionary& dict
             ),
-            (optDict)
+            (dict)
         );
 
 
     // Selectors
 
-        //- Return a reference to the selected surfaceWriter
+        //- Select given write options
         static autoPtr<surfaceWriter> New
         (
             const word& writeType,
-            const IOstream::streamFormat writeFormat
+            const IOstream::streamFormat writeFormat,
+            const IOstream::compressionType writeCompression
         );
 
-        //- Return a reference to the selected surfaceWriter
-        //  Select with extra write option
+        //- Select given a dictionary
         static autoPtr<surfaceWriter> New
         (
             const word& writeType,
-            const dictionary& optDict
+            const dictionary& dict
         );
 
 
     // Constructors
 
-        //- Construct given write format
-        surfaceWriter(const IOstream::streamFormat writeFormat);
+        //- Construct given write options
+        surfaceWriter
+        (
+            const IOstream::streamFormat writeFormat,
+            const IOstream::compressionType writeCompression
+        );
 
-        //- Construct with output options
-        surfaceWriter(const dictionary& optDict);
+        //- Construct from dictionary
+        surfaceWriter(const dictionary& dict);
 
 
     //- Destructor
@@ -209,6 +147,37 @@ public:
             FOR_ALL_FIELD_TYPES(FieldTypeValuesConstArg)
             #undef FieldTypeValuesConstArg
         ) const = 0;
+
+        //- Write fields for a single surface to file.
+        virtual void write
+        (
+            const fileName& outputDir,      // <case>/surface/TIME
+            const fileName& surfaceName,    // name of surface
+            const pointField& points,
+            const faceList& faces,
+            const wordList& fieldNames,     // names of fields
+            const bool writePointValues
+            #define FieldTypeValuesConstArg(Type, nullArg) \
+                , const PtrList<Field<Type>>& field##Type##Values
+            FOR_ALL_FIELD_TYPES(FieldTypeValuesConstArg)
+            #undef FieldTypeValuesConstArg
+        ) const
+        {
+            write
+            (
+                outputDir,
+                surfaceName,
+                points,
+                faces,
+                fieldNames,
+                writePointValues
+                #define FieldTypeValuesParameter(Type, nullArg)            \
+                    , reinterpret_cast<const UPtrList<const Field<Type>>&> \
+                    (field##Type##Values)
+                FOR_ALL_FIELD_TYPES(FieldTypeValuesParameter)
+                #undef FieldTypeValuesParameter
+            );
+        }
 
         //- Write the surface geometry only.
         void inline write
@@ -270,7 +239,7 @@ public:
             FOR_ALL_FIELD_TYPES(DeclareFieldTypeValues);
             #undef DeclareFieldTypeValues
 
-            unpackFieldTypeValues
+            setWriter::unpackTypeValueSets
             (
                 fieldNames
                 #define FieldTypeValuesParameter(Type, nullArg) \

@@ -5,8 +5,10 @@ probes/probesGrouping.C
 coordSet/coordSet.C
 
 sampledSet/sampledSet/sampledSet.C
+sampledSet/sampledSet/sampledSetParticle.C
+sampledSet/sampledSet/sampledSetCloud.C
 sampledSet/sampledSets/sampledSets.C
-sampledSet/sampledSets/sampledSetsGrouping.C
+
 sampledSet/arcUniform/arcUniform.C
 sampledSet/boxUniform/boxUniform.C
 sampledSet/circleRandom/circleRandom.C
@@ -24,14 +26,12 @@ sampledSet/faceSetSampledSet/faceSetSampledSet.C
 
 setWriters = sampledSet/writers
 
-$(setWriters)/setWriters.C
-$(setWriters)/ensight/ensightSetWriterRunTime.C
-$(setWriters)/gnuplot/gnuplotSetWriterRunTime.C
-$(setWriters)/jplot/jplotSetWriterRunTime.C
-$(setWriters)/raw/rawSetWriterRunTime.C
-$(setWriters)/vtk/vtkSetWriterRunTime.C
-$(setWriters)/xmgrace/xmgraceSetWriterRunTime.C
-$(setWriters)/csv/csvSetWriterRunTime.C
+$(setWriters)/setWriter.C
+$(setWriters)/ensight/ensightSetWriter.C
+$(setWriters)/raw/rawSetWriter.C
+$(setWriters)/vtk/vtkSetWriter.C
+$(setWriters)/csv/csvSetWriter.C
+$(setWriters)/gnuplot/gnuplotSetWriter.C
 
 cuttingPlane/cuttingPlane.C
 
@@ -58,10 +58,6 @@ $(surfWriters)/foam/foamSurfaceWriter.C
 $(surfWriters)/proxy/proxySurfaceWriter.C
 $(surfWriters)/raw/rawSurfaceWriter.C
 $(surfWriters)/vtk/vtkSurfaceWriter.C
-
-graphField/writePatchGraph.C
-graphField/writeCellGraph.C
-graphField/makeGraph.C
 
 meshToMesh/meshToMesh.C
 meshToMesh/meshToMeshParallelOps.C

@@ -45,35 +45,46 @@ Foam::vector Foam::streamlinesParticle::interpolateFields
             << "Cell:" << celli << abort(FatalError);
     }
 
-    sampledScalars_.setSize(td.vsInterp_.size());
-    forAll(td.vsInterp_, scalarI)
-    {
-        const scalar s =
-            td.vsInterp_[scalarI].interpolate(position, celli, facei);
-
-        sampledScalars_[scalarI].append
-        (
-            td.trackOutside_ ? transform_.invTransform(s) : s
-        );
-    }
-
+    bool interpolatedU = false;
     vector U = vector::uniform(NaN);
 
-    sampledVectors_.setSize(td.vvInterp_.size());
-    forAll(td.vvInterp_, vectorI)
+    forAll(td.scalarInterp_, fieldi)
     {
-        const vector v =
-            td.vvInterp_[vectorI].interpolate(position, celli, facei);
+        #define InterpolateType(Type, nullArg)                        \
+            if (td.Type##Interp_.set(fieldi))                         \
+            {                                                         \
+                const Type s =                                        \
+                    td.Type##Interp_[fieldi].interpolate              \
+                    (                                                 \
+                        position,                                     \
+                        celli,                                        \
+                        facei                                         \
+                    );                                                \
+                                                                      \
+                sampled##Type##s_.setSize(td.Type##Interp_.size());   \
+                sampled##Type##s_[fieldi].append                      \
+                (                                                     \
+                    td.trackOutside_ ? transform_.invTransform(s) : s \
+                );                                                    \
+            }
+        FOR_ALL_FIELD_TYPES(InterpolateType);
+        #undef InterpolateType
 
-        if (vectorI == td.UIndex_)
-        {
-            U = v;
-        }
-
-        sampledVectors_[vectorI].append
+        if
         (
-            td.trackOutside_ ? transform_.invTransform(v) : v
-        );
+            td.vectorInterp_.set(fieldi)
+         && &td.vectorInterp_[fieldi] == &td.UInterp_
+        )
+        {
+            interpolatedU = true;
+            U = sampledvectors_[fieldi].last();
+        }
+    }
+
+    // Interpolate the velocity if it has not already been done
+    if (!interpolatedU)
+    {
+        U = td.UInterp_.interpolate(position, celli, facei);
     }
 
     return U;
@@ -82,30 +93,34 @@ Foam::vector Foam::streamlinesParticle::interpolateFields
 
 void Foam::streamlinesParticle::endTrack(trackingData& td)
 {
-    {
-        td.allPositions_.append(vectorList());
-        vectorList& top = td.allPositions_.last();
-        top.transfer(sampledPositions_);
-    }
+    const label n = sampledPositions_.size();
 
-    {
-        td.allTimes_.append(scalarList());
-        scalarList& top = td.allTimes_.last();
-        top.transfer(sampledTimes_);
-    }
+    const label trackPartIndex =
+        td.trackForward_ ? trackPartIndex_ : -1 - trackPartIndex_;
 
-    forAll(sampledScalars_, i)
-    {
-        td.allScalars_[i].append(scalarList());
-        scalarList& top = td.allScalars_[i].last();
-        top.transfer(sampledScalars_[i]);
-    }
+    if (!td.trackForward_) reverse(sampledPositions_);
+    td.allPositions_.append(sampledPositions_);
+    sampledPositions_.clear();
 
-    forAll(sampledVectors_, i)
+    td.allTracks_.append(List<label>(n, trackIndex_));
+    td.allTrackParts_.append(List<label>(n, trackPartIndex));
+    trackPartIndex_ ++;
+
+    if (!td.trackForward_) reverse(sampledAges_);
+    td.allAges_.append(sampledAges_);
+    sampledAges_.clear();
+
+    forAll(td.scalarInterp_, fieldi)
     {
-        td.allVectors_[i].append(vectorList());
-        vectorList& top = td.allVectors_[i].last();
-        top.transfer(sampledVectors_[i]);
+        #define EndTrackType(Type, nullArg)                                 \
+            if (td.Type##Interp_.set(fieldi))                               \
+            {                                                               \
+                if (!td.trackForward_) reverse(sampled##Type##s_[fieldi]);  \
+                td.all##Type##s_[fieldi].append(sampled##Type##s_[fieldi]); \
+                sampled##Type##s_[fieldi].clear();                          \
+            }
+        FOR_ALL_FIELD_TYPES(EndTrackType);
+        #undef EndTrackType
     }
 }
 
@@ -117,13 +132,16 @@ Foam::streamlinesParticle::streamlinesParticle
     const polyMesh& mesh,
     const vector& position,
     const label celli,
-    const label lifeTime
+    const label lifeTime,
+    const label trackIndex
 )
 :
     particle(mesh, position, celli),
     lifeTime_(lifeTime),
-    transform_(transformer::I),
-    age_(0)
+    trackIndex_(trackIndex),
+    trackPartIndex_(0),
+    age_(0),
+    transform_(transformer::I)
 {}
 
 
@@ -138,22 +156,19 @@ Foam::streamlinesParticle::streamlinesParticle
 {
     if (readFields)
     {
-        List<scalarList> sampledScalars;
-        List<vectorList> sampledVectors;
+        is  >> lifeTime_ >> trackIndex_ >> trackPartIndex_ >> age_
+            >> transform_ >> sampledPositions_ >> sampledAges_;
 
-        is  >> lifeTime_ >> transform_ >> age_ >> sampledPositions_
-            >> sampledTimes_ >> sampledScalars >> sampledVectors;
-
-        sampledScalars_.setSize(sampledScalars.size());
-        forAll(sampledScalars, i)
-        {
-            sampledScalars_[i].transfer(sampledScalars[i]);
-        }
-        sampledVectors_.setSize(sampledVectors.size());
-        forAll(sampledVectors, i)
-        {
-            sampledVectors_[i].transfer(sampledVectors[i]);
-        }
+        #define ReadSampledTypes(Type, nullArg)                     \
+            List<List<Type>> sampled##Type##s;                      \
+            is >> sampled##Type##s;                                 \
+            sampled##Type##s_.setSize(sampled##Type##s.size());     \
+            forAll(sampled##Type##s, i)                             \
+            {                                                       \
+                sampled##Type##s_[i].transfer(sampled##Type##s[i]); \
+            }
+        FOR_ALL_FIELD_TYPES(ReadSampledTypes);
+        #undef ReadSampledTypes
     }
 
     // Check state of Istream
@@ -172,12 +187,16 @@ Foam::streamlinesParticle::streamlinesParticle
 :
     particle(p),
     lifeTime_(p.lifeTime_),
-    transform_(p.transform_),
+    trackIndex_(p.trackIndex_),
+    trackPartIndex_(p.trackPartIndex_),
     age_(p.age_),
+    transform_(p.transform_),
     sampledPositions_(p.sampledPositions_),
-    sampledTimes_(p.sampledTimes_),
-    sampledScalars_(p.sampledScalars_),
-    sampledVectors_(p.sampledVectors_)
+    sampledAges_(p.sampledAges_)
+    #define SampledTypesInit(Type, nullArg) \
+        , sampled##Type##s_(p.sampled##Type##s_)
+    FOR_ALL_FIELD_TYPES(SampledTypesInit)
+    #undef SampledTypesInit
 {}
 
 
@@ -213,7 +232,7 @@ bool Foam::streamlinesParticle::move
               ? transform_.invTransformPosition(position())
               : position()
             );
-            sampledTimes_.append(age_);
+            sampledAges_.append(age_);
             vector U = interpolateFields(td, position(), cell(), face());
 
             if (!td.trackForward_)
@@ -284,7 +303,7 @@ bool Foam::streamlinesParticle::move
               ? transform_.invTransformPosition(position())
               : position()
             );
-            sampledTimes_.append(age_);
+            sampledAges_.append(age_);
             interpolateFields(td, position(), cell(), face());
 
             if (debug)
@@ -464,11 +483,33 @@ void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
     );
     c.checkFieldIOobject(c, lifeTime);
 
+    IOField<label> trackIndex
+    (
+        c.fieldIOobject("trackIndex", IOobject::MUST_READ),
+        valid
+    );
+    c.checkFieldIOobject(c, trackIndex);
+
+    IOField<label> trackPartIndex
+    (
+        c.fieldIOobject("trackPartIndex", IOobject::MUST_READ),
+        valid
+    );
+    c.checkFieldIOobject(c, trackPartIndex);
+
+    IOField<scalar> age
+    (
+        c.fieldIOobject("age", IOobject::MUST_READ),
+        valid
+    );
+    c.checkFieldIOobject(c, age);
+
     transformerIOList transform
     (
         c.fieldIOobject("transform", IOobject::MUST_READ),
         valid
     );
+    //c.checkFieldIOobject(c, transform);
 
     vectorFieldIOField sampledPositions
     (
@@ -477,20 +518,23 @@ void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
     );
     c.checkFieldIOobject(c, sampledPositions);
 
-    scalarFieldIOField sampledTimes
+    scalarFieldIOField sampledAges
     (
-        c.fieldIOobject("sampledTimes", IOobject::MUST_READ),
+        c.fieldIOobject("sampledAges", IOobject::MUST_READ),
         valid
     );
-    c.checkFieldIOobject(c, sampledTimes);
+    c.checkFieldIOobject(c, sampledAges);
 
     label i = 0;
     forAllIter(Cloud<streamlinesParticle>, c, iter)
     {
         iter().lifeTime_ = lifeTime[i];
+        iter().trackIndex_ = trackIndex[i];
+        iter().trackPartIndex_ = trackPartIndex[i];
+        iter().age_ = age[i];
         iter().transform_ = transform[i];
         iter().sampledPositions_.transfer(sampledPositions[i]);
-        iter().sampledTimes_.transfer(sampledTimes[i]);
+        iter().sampledAges_.transfer(sampledAges[i]);
         i++;
     }
 }
@@ -508,6 +552,24 @@ void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
         np
     );
 
+    IOList<label> trackIndex
+    (
+        c.fieldIOobject("trackIndex", IOobject::NO_READ),
+        np
+    );
+
+    IOList<label> trackPartIndex
+    (
+        c.fieldIOobject("trackPartIndex", IOobject::NO_READ),
+        np
+    );
+
+    IOField<scalar> age
+    (
+        c.fieldIOobject("age", IOobject::NO_READ),
+        np
+    );
+
     transformerIOList transform
     (
         c.fieldIOobject("transform", IOobject::NO_READ),
@@ -520,9 +582,9 @@ void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
         np
     );
 
-    scalarFieldIOField sampledTimes
+    scalarFieldIOField sampledAges
     (
-        c.fieldIOobject("sampledTimes", IOobject::NO_READ),
+        c.fieldIOobject("sampledAges", IOobject::NO_READ),
         np
     );
 
@@ -530,15 +592,22 @@ void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
     forAllConstIter(Cloud<streamlinesParticle>, c, iter)
     {
         lifeTime[i] = iter().lifeTime_;
+        trackIndex[i] = iter().trackIndex_;
+        trackPartIndex[i] = iter().trackPartIndex_;
+        age[i] = iter().age_;
         transform[i] = iter().transform_;
         sampledPositions[i] = iter().sampledPositions_;
-        sampledTimes[i] = iter().sampledTimes_;
+        sampledAges[i] = iter().sampledAges_;
         i++;
     }
 
     lifeTime.write(np > 0);
+    trackIndex.write(np > 0);
+    trackPartIndex.write(np > 0);
+    age.write(np > 0);
+    transform.write(np > 0);
     sampledPositions.write(np > 0);
-    sampledTimes.write(np > 0);
+    sampledAges.write(np > 0);
 }
 
 
@@ -546,14 +615,19 @@ void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const streamlinesParticle& p)
 {
+
     os  << static_cast<const particle&>(p)
         << token::SPACE << p.lifeTime_
-        << token::SPACE << p.transform_
+        << token::SPACE << p.trackIndex_
+        << token::SPACE << p.trackPartIndex_
         << token::SPACE << p.age_
+        << token::SPACE << p.transform_
         << token::SPACE << p.sampledPositions_
-        << token::SPACE << p.sampledTimes_
-        << token::SPACE << p.sampledScalars_
-        << token::SPACE << p.sampledVectors_;
+        << token::SPACE << p.sampledAges_
+        #define WriteSampledTypes(Type, nullArg) \
+            << token::SPACE << p.sampled##Type##s_
+        FOR_ALL_FIELD_TYPES(WriteSampledTypes);
+        #undef WriteSampledTypes
 
     // Check state of Ostream
     os.check("Ostream& operator<<(Ostream&, const streamlinesParticle&)");

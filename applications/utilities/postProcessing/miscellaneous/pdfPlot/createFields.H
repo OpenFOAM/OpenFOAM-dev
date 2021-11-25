@@ -16,8 +16,12 @@
 
     const bool writeData(readBool(pdfDictionary.lookup("writeData")));
 
+    const fileName pdfPath =
+        runTime.globalPath()
+       /functionObjects::writeFile::outputPrefix
+       /args.executable()
+       /runTime.timeName();
 
-    const fileName pdfPath = runTime.path()/"pdf";
     mkDir(pdfPath);
 
     Random rndGen(label(0));
@@ -35,6 +39,7 @@
     const scalar xMax = p->maxValue();
 
     autoPtr<OFstream> filePtr(nullptr);
+
     if (writeData)
     {
         fileName fName = pdfPath/(p->type() + ".data");

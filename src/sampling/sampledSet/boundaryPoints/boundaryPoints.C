@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,11 +48,10 @@ namespace sampledSets
 
 void Foam::sampledSets::boundaryPoints::calcSamples
 (
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    DynamicList<point>& samplingPositions,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 ) const
 {
     // Get the patch IDs
@@ -176,11 +175,10 @@ void Foam::sampledSets::boundaryPoints::calcSamples
             {
                 label facei = nearHit.index();
 
-                samplingPts.append(nearHit.hitPoint());
+                samplingPositions.append(nearHit.hitPoint());
+                samplingSegments.append(sampleI);
                 samplingCells.append(mesh().faceOwner()[facei]);
                 samplingFaces.append(facei);
-                samplingSegments.append(0);
-                samplingCurveDist.append(sampleI);
             }
         }
         else
@@ -196,34 +194,30 @@ void Foam::sampledSets::boundaryPoints::calcSamples
 
 void Foam::sampledSets::boundaryPoints::genSamples()
 {
-    DynamicList<point> samplingPts;
+    DynamicList<point> samplingPositions;
+    DynamicList<label> samplingSegments;
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
-    DynamicList<label> samplingSegments;
-    DynamicList<scalar> samplingCurveDist;
 
     calcSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 
-    samplingPts.shrink();
+    samplingPositions.shrink();
+    samplingSegments.shrink();
     samplingCells.shrink();
     samplingFaces.shrink();
-    samplingSegments.shrink();
-    samplingCurveDist.shrink();
 
     setSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 }
 
@@ -244,11 +238,6 @@ Foam::sampledSets::boundaryPoints::boundaryPoints
     maxDistance_(dict.lookup<scalar>("maxDistance"))
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
 }
 
 

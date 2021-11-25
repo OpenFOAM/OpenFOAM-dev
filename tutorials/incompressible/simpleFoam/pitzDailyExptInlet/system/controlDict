@@ -50,14 +50,13 @@ functions
     {
         type            streamlines;
 
-        // Where to load it from (if not already in solver)
         libs            ("libfieldFunctionObjects.so");
 
         // Output every
         writeControl    writeTime;
-        // writeInterval 10;
 
-        setFormat       vtk; // gnuplot;//xmgr;//raw;//jplot;//csv;//ensight;
+        // Write format
+        setFormat       vtk;
 
         // Track forward (+U) or backward (-U) or both
         direction       forward;
@@ -78,8 +77,6 @@ functions
         seedSampleSet
         {
             type        lineUniform;
-
-            axis        x;  // distance;
             start       (-0.0205 0.001  0.00001);
             end         (-0.0205 0.0251 0.00001);
             nPoints     10;

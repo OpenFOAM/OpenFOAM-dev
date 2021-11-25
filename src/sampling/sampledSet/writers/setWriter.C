@@ -26,14 +26,228 @@ License
 #include "setWriter.H"
 #include "coordSet.H"
 #include "OFstream.H"
-#include "OSspecific.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::autoPtr<Foam::setWriter<Type>> Foam::setWriter<Type>::New
+namespace Foam
+{
+    defineTypeNameAndDebug(setWriter, 0);
+    defineRunTimeSelectionTable(setWriter, word);
+    defineRunTimeSelectionTable(setWriter, dict);
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::setWriter::writeValueSeparator(Ostream& os) const
+{
+    os << token::SPACE;
+}
+
+
+void Foam::setWriter::writeCoordSeparator(Ostream& os) const
+{
+    os << nl;
+}
+
+
+void Foam::setWriter::writeSegmentSeparator(Ostream& os) const
+{
+    os << nl << nl;
+}
+
+
+inline Foam::Ostream& Foam::setWriter::writeWord
 (
-    const word& writeType
+    const word& w,
+    Ostream& os,
+    const bool align,
+    const unsigned long alignPad
+) const
+{
+    if (!align)
+    {
+        os << w;
+    }
+    else if (w.size() < columnWidth(os) - alignPad)
+    {
+        os << string(columnWidth(os) - alignPad - w.size(), ' ').c_str() << w;
+    }
+    else
+    {
+        os << w(columnWidth(os) - alignPad - 3).c_str() << "...";
+    }
+
+    return os;
+}
+
+
+void Foam::setWriter::writeTableHeader
+(
+    const coordSet& set,
+    const wordList& valueSetNames,
+    #define TypeValueSetsConstArg(Type, nullArg) \
+        const UPtrList<const Field<Type>>& Type##ValueSets ,
+    FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+    #undef TypeValueSetsConstArg
+    Ostream& os,
+    const bool align,
+    const unsigned long alignPad
+) const
+{
+    bool first = true;
+
+    // Write coordinate names
+    if (set.hasScalarAxis())
+    {
+        if (!first) writeValueSeparator(os);
+
+        writeWord(set.scalarName(), os, align, first*alignPad);
+        first = false;
+    }
+    if (set.hasPointAxis())
+    {
+        for (direction cmpt = 0; cmpt < pTraits<point>::nComponents; ++ cmpt)
+        {
+            if (!first) writeValueSeparator(os);
+
+            const bool separator =
+                !set.pointName().empty()
+             && strlen(pTraits<point>::componentNames[cmpt]) > 0;
+
+            const word& w =
+                set.pointName()
+              + (separator ? "_" : "")
+              + pTraits<point>::componentNames[cmpt];
+
+            writeWord(w, os, align, first*alignPad);
+            first = false;
+        }
+    }
+
+    // Write value names
+    forAll(scalarValueSets, fieldi)
+    {
+        #define WriteTypeValueSetNames(Type, nullArg)                       \
+            if (Type##ValueSets.set(fieldi))                                \
+            {                                                               \
+                const label nCmpt = pTraits<Type>::nComponents;             \
+                                                                            \
+                for (direction cmpt = 0; cmpt < nCmpt; ++ cmpt)             \
+                {                                                           \
+                    if (!first) writeValueSeparator(os);                    \
+                                                                            \
+                    const bool separator =                                  \
+                        !valueSetNames[fieldi].empty()                      \
+                     && strlen(pTraits<Type>::componentNames[cmpt]) > 0;    \
+                                                                            \
+                    const word w =                                          \
+                        valueSetNames[fieldi]                               \
+                      + (separator ? "_" : "")                              \
+                      + pTraits<Type>::componentNames[cmpt];                \
+                                                                            \
+                    writeWord(w, os, align, first*alignPad);                \
+                    first = false;                                          \
+                }                                                           \
+            }
+        FOR_ALL_FIELD_TYPES(WriteTypeValueSetNames);
+        #undef WriteTypeValueSetNames
+    }
+}
+
+
+void Foam::setWriter::writeTable
+(
+    const coordSet& set,
+    #define TypeValueSetsConstArg(Type, nullArg) \
+        const UPtrList<const Field<Type>>& Type##ValueSets ,
+    FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+    #undef TypeValueSetsConstArg
+    Ostream& os,
+    const bool align
+) const
+{
+    forAll(set, pointi)
+    {
+        if (pointi != 0)
+        {
+            writeCoordSeparator(os);
+
+            if (set.segments()[pointi] != set.segments()[pointi - 1])
+            {
+                writeSegmentSeparator(os);
+            }
+        }
+
+        bool first = true;
+
+        if (set.hasScalarAxis())
+        {
+            if (!first) writeValueSeparator(os);
+            writeValue(set.scalarCoord(pointi), os, align);
+            first = false;
+        }
+        if (set.hasPointAxis())
+        {
+            if (!first) writeValueSeparator(os);
+            writeValue(set.pointCoord(pointi), os, align);
+            first = false;
+        }
+
+        forAll(scalarValueSets, fieldi)
+        {
+            #define WriteTypeValueSets(Type, nullArg)                       \
+                if (Type##ValueSets.set(fieldi))                            \
+                {                                                           \
+                    if (!first) writeValueSeparator(os);                    \
+                    writeValue(Type##ValueSets[fieldi][pointi], os, align); \
+                    first = false;                                          \
+                }
+            FOR_ALL_FIELD_TYPES(WriteTypeValueSets);
+            #undef WriteTypeValueSets
+        }
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::setWriter::setWriter
+(
+    const IOstream::streamFormat writeFormat,
+    const IOstream::compressionType writeCompression
+)
+:
+    writeFormat_(writeFormat),
+    writeCompression_(writeCompression)
+{}
+
+
+Foam::setWriter::setWriter(const dictionary& dict)
+:
+    writeFormat_
+    (
+        dict.found("writeFormat")
+      ? IOstream::formatEnum(dict.lookup("writeFormat"))
+      : IOstream::ASCII
+    ),
+    writeCompression_
+    (
+        dict.found("writeCompression")
+      ? IOstream::compressionEnum(dict.lookup("writeCompression"))
+      : IOstream::UNCOMPRESSED
+    )
+{}
+
+
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::setWriter> Foam::setWriter::New
+(
+    const word& writeType,
+    const IOstream::streamFormat writeFormat,
+    const IOstream::compressionType writeCompression
 )
 {
     typename wordConstructorTable::iterator cstrIter =
@@ -49,209 +263,50 @@ Foam::autoPtr<Foam::setWriter<Type>> Foam::setWriter<Type>::New
             << exit(FatalError);
     }
 
-    return autoPtr<setWriter<Type>>(cstrIter()());
+    return autoPtr<setWriter>(cstrIter()(writeFormat, writeCompression));
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::fileName Foam::setWriter<Type>::getBaseName
+Foam::autoPtr<Foam::setWriter> Foam::setWriter::New
 (
-    const coordSet& points,
-    const wordList& valueSets
-) const
+    const word& writeType,
+    const dictionary& dict
+)
 {
-    fileName fName(points.name());
+    // find constructors with dictionary options
+    dictConstructorTable::iterator cstrIter =
+        dictConstructorTablePtr_->find(writeType);
 
-    forAll(valueSets, i)
+    if (cstrIter == dictConstructorTablePtr_->end())
     {
-        fName += '_' + valueSets[i];
+        const IOstream::streamFormat writeFormat =
+            dict.found("writeFormat")
+          ? IOstream::formatEnum(dict.lookup("writeFormat"))
+          : IOstream::ASCII;
+
+        const IOstream::compressionType writeCompression =
+            dict.found("writeCompression")
+          ? IOstream::compressionEnum(dict.lookup("writeCompression"))
+          : IOstream::UNCOMPRESSED;
+
+        // Revert to versions without options
+        return
+            Foam::setWriter::New
+            (
+                writeType,
+                writeFormat,
+                writeCompression
+            );
     }
 
-    return fName;
+    return autoPtr<setWriter>(cstrIter()(dict));
 }
-
-
-template<class Type>
-void Foam::setWriter<Type>::writeCoord
-(
-    const coordSet& points,
-    const label pointi,
-    Ostream& os
-) const
-{
-    if (points.hasVectorAxis())
-    {
-        write(points.vectorCoord(pointi), os);
-    }
-    else
-    {
-        write(points.scalarCoord(pointi), os);
-    }
-}
-
-
-template<class Type>
-void Foam::setWriter<Type>::writeTable
-(
-    const coordSet& points,
-    const List<Type>& values,
-    Ostream& os
-) const
-{
-    forAll(points, pointi)
-    {
-        writeCoord(points, pointi, os);
-        writeSeparator(os);
-        write(values[pointi], os);
-        os << nl;
-    }
-}
-
-
-template<class Type>
-void Foam::setWriter<Type>::writeTable
-(
-    const coordSet& points,
-    const List<const List<Type>*>& valuesPtrList,
-    Ostream& os
-) const
-{
-    forAll(points, pointi)
-    {
-        writeCoord(points, pointi, os);
-
-        forAll(valuesPtrList, i)
-        {
-            writeSeparator(os);
-
-            const List<Type>& values = *valuesPtrList[i];
-            write(values[pointi], os);
-        }
-        os << nl;
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::setWriter<Type>::setWriter()
-{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::setWriter<Type>::~setWriter()
+Foam::setWriter::~setWriter()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-void Foam::setWriter<Type>::write
-(
-    const coordSet& points,
-    const wordList& valueSetNames,
-    const List<Field<Type>>& valueSets,
-    Ostream& os
-) const
-{
-    List<const Field<Type>*> valueSetPtrs(valueSets.size());
-    forAll(valueSetPtrs, i)
-    {
-        valueSetPtrs[i] = &valueSets[i];
-    }
-    write(points, valueSetNames, valueSetPtrs, os);
-}
-
-
-template<class Type>
-Foam::Ostream& Foam::setWriter<Type>::write
-(
-    const scalar value,
-    Ostream& os
-) const
-{
-    return os << value;
-}
-
-
-template<class Type>
-template<class VSType>
-Foam::Ostream& Foam::setWriter<Type>::writeVS
-(
-    const VSType& value,
-    Ostream& os
-) const
-{
-    for (direction d=0; d<VSType::nComponents; d++)
-    {
-        if (d > 0)
-        {
-            writeSeparator(os);
-        }
-
-        os << value.component(d);
-    }
-    return os;
-}
-
-
-template<class Type>
-void Foam::setWriter<Type>::writeSeparator
-(
-    Ostream& os
-) const
-{
-    os << token::SPACE << token::TAB;
-}
-
-
-template<class Type>
-Foam::Ostream& Foam::setWriter<Type>::write
-(
-    const vector& value,
-    Ostream& os
-) const
-{
-    return writeVS(value, os);
-}
-
-
-template<class Type>
-Foam::Ostream& Foam::setWriter<Type>::write
-(
-    const sphericalTensor& value,
-    Ostream& os
-) const
-{
-    return writeVS(value, os);
-}
-
-
-template<class Type>
-Foam::Ostream& Foam::setWriter<Type>::write
-(
-    const symmTensor& value,
-    Ostream& os
-) const
-{
-    return writeVS(value, os);
-}
-
-
-template<class Type>
-Foam::Ostream& Foam::setWriter<Type>::write
-(
-    const tensor& value,
-    Ostream& os
-) const
-{
-    return writeVS(value, os);
-}
 
 
 // ************************************************************************* //

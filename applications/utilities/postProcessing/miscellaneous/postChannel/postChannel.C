@@ -38,7 +38,7 @@ Description
 #include "timeSelector.H"
 #include "volFields.H"
 #include "channelIndex.H"
-#include "makeGraph.H"
+#include "setWriter.H"
 #include "writeFile.H"
 
 using namespace Foam;
@@ -58,8 +58,6 @@ int main(int argc, char *argv[])
 
     #include "createMeshNoChangers.H"
     #include "readPhysicalProperties.H"
-
-    const word& gFormat = runTime.graphFormat();
 
     // Setup channel indexing for averaging over channel down to a line
 

@@ -47,7 +47,7 @@ gnuplot<<EOF
     # Number density at time t
     n(x,t) = (N0/v0)*phi(x,t)
 
-    numberDensity = '../postProcessing/numberDensity/10/numberDensity.dat'
+    numberDensity = '../postProcessing/numberDensity/10/numberDensity.xy'
 
     plot n0(x) ls -1 t 'Initial Condition',\
     n(x,10.0) dt 2 lc rgb 'black' t 'Scott (1968)',\

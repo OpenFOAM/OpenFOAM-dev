@@ -50,12 +50,11 @@ Description
         lifeTime        10000;
         trackLength     1e-3;
         nSubCycle       5;
-        cloudName       particleTracks;
 
         seedSampleSet
         {
-            type        uniform;
-            axis        x;  // distance;
+            type        lineUniform;
+            axis        xyz;
             start       (-0.0205 0.0001 0.00001);
             end         (-0.0205 0.0005 0.00001);
             nPoints     100;
@@ -65,26 +64,27 @@ Description
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        type         | Type name: streamlines  | yes         |
-        setFormat    | Output data type        | yes         |
-        U            | Tracking velocity field name | no     | U
-        direction    | Direction in which to track | yes     |
-        outside      | Track outside of periodic meshes | no | no
-        fields       | Fields to sample        | yes         |
-        writeTime    | Write the flow time along the streamlines | no | no
-        lifetime     | Maximum number of particle tracking steps | yes |
-        trackLength  | Tracking segment length | no          |
-        nSubCycle    | Number of tracking steps per cell | no |
-        cloudName    | Cloud name to use       | yes         |
-        seedSampleSet| Seeding method (see below)| yes       |
+        Property      | Description                | Required   | Default value
+        type          | Type name: streamlines     | yes        |
+        setFormat     | Output data type           | yes        |
+        U             | Tracking velocity field name | no       | U
+        direction     | Direction in which to track | yes       |
+        outside       | Track outside of periodic meshes | no   | no
+        fields        | Fields to sample           | yes        |
+        writeTime     | Write the flow time along the streamlines | no | no
+        lifetime      | Maximum number of particle tracking steps | yes |
+        trackLength   | Tracking segment length    | no         |
+        nSubCycle     | Number of tracking steps per cell | no  |
+        cloudName     | Cloud name to use          | no         |
+        seedSampleSet | Seeding method (see below) | yes        |
     \endtable
 
-    Where \c seedSampleSet \c type is typically one of
+    Where the \c seedSampleSet \c type is typically one of
     \plaintable
-        uniform | uniform particle seeding
-        cloud   | cloud of points
-        triSurfaceMeshPointSet | points according to a tri-surface mesh
+        lineUniform    | uniform particle seeding along a line
+        sphereRandom   | random particle seeding within a sphere
+        boundaryRandom | random particle seeding on a number of patches
+        points         | a specified set of locations
     \endplaintable
 
 Note
@@ -107,6 +107,7 @@ SourceFiles
 #include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 #include "DynamicList.H"
+#include "DynamicField.H"
 #include "scalarList.H"
 #include "vectorList.H"
 #include "setWriter.H"
@@ -183,15 +184,6 @@ private:
         //- Optional specified name of particles
         word cloudName_;
 
-        //- Type of seed
-        word seedSet_;
-
-        //- Names of scalar fields
-        wordList scalarNames_;
-
-        //- Names of vector fields
-        wordList vectorNames_;
-
         //- Write the streamlines ages
         Switch writeAge_;
 
@@ -204,36 +196,8 @@ private:
             //- Seed set engine
             autoPtr<sampledSet> sampledSetPtr_;
 
-            //- Axis of the sampled points to output
-            word sampledSetAxis_;
-
-            //- File writer for scalar data
-            autoPtr<setWriter<scalar>> scalarFormatterPtr_;
-
-            //- File writer for vector data
-            autoPtr<setWriter<vector>> vectorFormatterPtr_;
-
-
-        // Generated data
-
-            //- All tracks. Per particle the points it passed through
-            DynamicList<List<point>> allTracks_;
-
-            //- All ages. Per particle the age when it passed through the points
-            DynamicList<List<scalar>> allAges_;
-
-            //- Per scalarField, per particle, the sampled value.
-            List<DynamicList<scalarList>> allScalars_;
-
-            //- Per scalarField, per particle, the sampled value.
-            List<DynamicList<vectorList>> allVectors_;
-
-
-        //- Construct patch out of all wall patch faces
-        autoPtr<indirectPrimitivePatch> wallPatch() const;
-
-        //- Do all seeding and tracking
-        void track();
+            //- File writer
+            autoPtr<setWriter> formatterPtr_;
 
 
 public:

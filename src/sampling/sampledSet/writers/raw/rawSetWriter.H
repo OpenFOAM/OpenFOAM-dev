@@ -25,6 +25,7 @@ Class
     Foam::rawSetWriter
 
 Description
+    Write set in raw tabulated format
 
 SourceFiles
     rawSetWriter.C
@@ -45,11 +46,25 @@ namespace Foam
                         Class rawSetWriter Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
 class rawSetWriter
 :
-    public setWriter<Type>
+    public setWriter
 {
+private:
+
+    // Private Data
+
+        //- Whether or not to separate segments
+        mutable bool separateSegments_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Write a segment separator
+        virtual void writeSegmentSeparator(Ostream& os) const;
+
 
 public:
 
@@ -59,8 +74,15 @@ public:
 
     // Constructors
 
-        //- Construct null
-        rawSetWriter();
+        //- Construct given write options
+        rawSetWriter
+        (
+            const IOstream::streamFormat writeFormat,
+            const IOstream::compressionType writeCompression
+        );
+
+        //- Construct from dictionary
+        rawSetWriter(const dictionary& dict);
 
 
     //- Destructor
@@ -69,40 +91,27 @@ public:
 
     // Member Functions
 
-        virtual fileName getFileName
-        (
-            const coordSet&,
-            const wordList&
-        ) const;
-
+        //- Write a coordSet and associated data
         virtual void write
         (
-            const coordSet&,
-            const wordList&,
-            const List<const Field<Type>*>&,
-            Ostream&
+            const fileName& outputDir,
+            const fileName& setName,
+            const coordSet& set,
+            const wordList& valueSetNames
+            #define TypeValueSetsConstArg(Type, nullArg) \
+                , const UPtrList<const Field<Type>>& Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+            #undef TypeValueSetsConstArg
         ) const;
 
-        virtual void write
-        (
-            const bool writeTracks,
-            const PtrList<coordSet>&,
-            const wordList& valueSetNames,
-            const List<List<Field<Type>>>&,
-            Ostream&
-        ) const;
+        //- Inherit base class write methods
+        using setWriter::write;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "rawSetWriter.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

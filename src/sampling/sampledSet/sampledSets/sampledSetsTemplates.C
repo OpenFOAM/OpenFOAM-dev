@@ -30,271 +30,99 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-Foam::sampledSets::volFieldSampler<Type>::volFieldSampler
+Foam::PtrList<Foam::Field<Type>>
+Foam::functionObjects::sampledSets::sampleLocalType
 (
-    const word& interpolationScheme,
-    const GeometricField<Type, fvPatchField, volMesh>& field,
-    const PtrList<sampledSet>& samplers
+    const label seti,
+    const wordList& fieldNames,
+    HashPtrTable<interpolation<Type>>& interpolations
 )
-:
-    List<Field<Type>>(samplers.size()),
-    name_(field.name())
 {
-    autoPtr<interpolation<Type>> interpolator
-    (
-        interpolation<Type>::New(interpolationScheme, field)
-    );
+    PtrList<Field<Type>> fieldTypeValues(fieldNames.size());
 
-    forAll(samplers, setI)
+    const sampledSet& s = operator[](seti);
+
+    forAll(fieldNames, fieldi)
     {
-        Field<Type>& values = this->operator[](setI);
-        const sampledSet& samples = samplers[setI];
+        const word& name = fieldNames[fieldi];
 
-        values.setSize(samples.size());
-        forAll(samples, sampleI)
+        if (mesh_.foundObject<VolField<Type>>(name))
         {
-            const point& samplePt = samples[sampleI];
-            label celli = samples.cells()[sampleI];
-            label facei = samples.faces()[sampleI];
+            const VolField<Type>& vf =
+                mesh_.lookupObject<VolField<Type>>(name);
 
-            if (celli == -1 && facei == -1)
+            if (!interpolations.found(name))
             {
-                // Special condition for illegal sampling points
-                values[sampleI] = pTraits<Type>::max;
-            }
-            else
-            {
-                values[sampleI] = interpolator().interpolate
+                interpolations.insert
                 (
-                    samplePt,
-                    celli,
-                    facei
-                );
-            }
-        }
-    }
-}
-
-
-template<class Type>
-Foam::sampledSets::volFieldSampler<Type>::volFieldSampler
-(
-    const GeometricField<Type, fvPatchField, volMesh>& field,
-    const PtrList<sampledSet>& samplers
-)
-:
-    List<Field<Type>>(samplers.size()),
-    name_(field.name())
-{
-    forAll(samplers, setI)
-    {
-        Field<Type>& values = this->operator[](setI);
-        const sampledSet& samples = samplers[setI];
-
-        values.setSize(samples.size());
-        forAll(samples, sampleI)
-        {
-            label celli = samples.cells()[sampleI];
-
-            if (celli ==-1)
-            {
-                values[sampleI] = pTraits<Type>::max;
-            }
-            else
-            {
-                values[sampleI] = field[celli];
-            }
-        }
-    }
-}
-
-
-template<class Type>
-Foam::sampledSets::volFieldSampler<Type>::volFieldSampler
-(
-    const List<Field<Type>>& values,
-    const word& name
-)
-:
-    List<Field<Type>>(values),
-    name_(name)
-{}
-
-
-template<class Type>
-void Foam::sampledSets::writeSampleFile
-(
-    const coordSet& masterSampleSet,
-    const PtrList<volFieldSampler<Type>>& masterFields,
-    const label setI,
-    const fileName& timeDir,
-    const setWriter<Type>& formatter
-)
-{
-    wordList valueSetNames(masterFields.size());
-    List<const Field<Type>*> valueSets(masterFields.size());
-
-    forAll(masterFields, fieldi)
-    {
-        valueSetNames[fieldi] = masterFields[fieldi].name();
-        valueSets[fieldi] = &masterFields[fieldi][setI];
-    }
-
-    fileName fName
-    (
-        timeDir/formatter.getFileName(masterSampleSet, valueSetNames)
-    );
-
-    OFstream ofs(fName);
-    if (ofs.opened())
-    {
-        formatter.write
-        (
-            masterSampleSet,
-            valueSetNames,
-            valueSets,
-            ofs
-        );
-    }
-    else
-    {
-        WarningInFunction
-            << "File " << ofs.name() << " could not be opened. "
-            << "No data will be written" << endl;
-    }
-}
-
-
-template<class T>
-void Foam::sampledSets::combineSampledValues
-(
-    const PtrList<volFieldSampler<T>>& sampledFields,
-    const labelListList& indexSets,
-    PtrList<volFieldSampler<T>>& masterFields
-)
-{
-    forAll(sampledFields, fieldi)
-    {
-        List<Field<T>> masterValues(indexSets.size());
-
-        forAll(indexSets, setI)
-        {
-            // Collect data from all processors
-            List<Field<T>> gatheredData(Pstream::nProcs());
-            gatheredData[Pstream::myProcNo()] = sampledFields[fieldi][setI];
-            Pstream::gatherList(gatheredData);
-
-            if (Pstream::master())
-            {
-                Field<T> allData
-                (
-                    ListListOps::combine<Field<T>>
-                    (
-                        gatheredData,
-                        Foam::accessOp<Field<T>>()
-                    )
-                );
-
-                masterValues[setI] = UIndirectList<T>
-                (
-                    allData,
-                    indexSets[setI]
-                )();
-            }
-        }
-
-        masterFields.set
-        (
-            fieldi,
-            new volFieldSampler<T>
-            (
-                masterValues,
-                sampledFields[fieldi].name()
-            )
-        );
-    }
-}
-
-
-template<class Type>
-void Foam::sampledSets::sampleAndWrite
-(
-    fieldGroup<Type>& fields
-)
-{
-    if (fields.size())
-    {
-        bool interpolate = interpolationScheme_ != "cell";
-
-        // Create or use existing writer
-        if (fields.formatter.empty())
-        {
-            fields = writeFormat_;
-        }
-
-        // Storage for interpolated values
-        PtrList<volFieldSampler<Type>> sampledFields(fields.size());
-
-        forAll(fields, fieldi)
-        {
-            if (Pstream::master() && verbose_)
-            {
-                Pout<< "sampledSets::sampleAndWrite: "
-                    << fields[fieldi] << endl;
-            }
-
-            if (interpolate)
-            {
-                sampledFields.set
-                (
-                    fieldi,
-                    new volFieldSampler<Type>
+                    name,
+                    interpolation<Type>::New
                     (
                         interpolationScheme_,
-                        mesh_.lookupObject
-                        <GeometricField<Type, fvPatchField, volMesh>>
-                        (fields[fieldi]),
-                        *this
-                    )
+                        vf
+                    ).ptr()
                 );
             }
-            else
+
+            const interpolation<Type>& interp = *interpolations[name];
+
+            tmp<Field<Type>> tfield(new Field<Type>(s.size()));
+            Field<Type>& field = tfield.ref();
+
+            forAll(s, i)
             {
-                sampledFields.set
-                (
-                    fieldi,
-                    new volFieldSampler<Type>
-                    (
-                        mesh_.lookupObject
-                        <GeometricField<Type, fvPatchField, volMesh>>
-                        (fields[fieldi]),
-                        *this
-                    )
-                );
+                const point& position = s.positions()[i];
+                const label celli = s.cells()[i];
+                const label facei = s.faces()[i];
+
+                if (celli == -1 && facei == -1)
+                {
+                    // Special condition for illegal sampling points
+                    field[i] = pTraits<Type>::max;
+                }
+                else
+                {
+                    field[i] = interp.interpolate(position, celli, facei);
+                }
             }
+
+            fieldTypeValues.set(fieldi, tfield.ptr());
         }
+    }
 
-        // Combine sampled fields from processors.
-        // Note: only master results are valid
+    return fieldTypeValues;
+}
 
-        PtrList<volFieldSampler<Type>> masterFields(sampledFields.size());
-        combineSampledValues(sampledFields, indexSets_, masterFields);
 
-        if (Pstream::master())
+template<class Type>
+Foam::PtrList<Foam::Field<Type>>
+Foam::functionObjects::sampledSets::sampleType
+(
+    const label seti,
+    const wordList& fieldNames,
+    HashPtrTable<interpolation<Type>>& interpolations
+)
+{
+    PtrList<Field<Type>> fieldTypeValues =
+        sampleLocalType<Type>(seti, fieldNames, interpolations);
+
+    if (Pstream::parRun())
+    {
+        forAll(fieldNames, fieldi)
         {
-            forAll(masterSampledSets_, setI)
+            if (fieldTypeValues.set(fieldi))
             {
-                writeSampleFile
-                (
-                    masterSampledSets_[setI],
-                    masterFields,
-                    setI,
-                    outputPath_/mesh_.time().timeName(),
-                    fields.formatter()
-                );
+                fieldTypeValues[fieldi] =
+                    coordSet::gather
+                    (
+                        fieldTypeValues[fieldi],
+                        masterSetOrders_[seti]
+                    );
             }
         }
     }
+
+    return fieldTypeValues;
 }
 
 

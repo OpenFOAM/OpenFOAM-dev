@@ -58,11 +58,8 @@ public:
 
     // Constructors
 
-        //- Construct given write format
-        ensightSurfaceWriter(const IOstream::streamFormat writeFormat);
-
-        //- Construct with some output options
-        ensightSurfaceWriter(const dictionary& optDict);
+        //- Inherit constructors
+        using surfaceWriter::surfaceWriter;
 
 
     //- Destructor

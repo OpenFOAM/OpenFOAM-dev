@@ -103,17 +103,7 @@ class histogram
         label nBins_;
 
         //- Output formatter to write
-        autoPtr<setWriter<scalar>> formatterPtr_;
-
-
-    // Private Member Functions
-
-        void writeGraph
-        (
-            const coordSet& coords,
-            const word& valueName,
-            const scalarField& values
-        ) const;
+        autoPtr<setWriter> formatterPtr_;
 
 
 public:

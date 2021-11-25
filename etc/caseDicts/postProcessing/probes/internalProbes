@@ -14,6 +14,8 @@ points  (<points>);
 
 fields  (<fieldNames>);
 
+ordered no;
+
 #includeEtc "caseDicts/postProcessing/probes/internalProbes.cfg"
 
 // ************************************************************************* //

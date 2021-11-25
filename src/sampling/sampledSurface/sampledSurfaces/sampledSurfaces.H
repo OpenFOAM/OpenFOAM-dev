@@ -148,7 +148,7 @@ class sampledSurfaces
             word interpolationScheme_;
 
 
-        // surfaces
+        // Surfaces
 
             //- Information for merging surfaces
             List<mergeInfo> mergeList_;
@@ -164,7 +164,7 @@ class sampledSurfaces
 
         //- Sample all fields of a type on a given surface
         template<class Type>
-        PtrList<const Field<Type>> sampleLocalType
+        PtrList<Field<Type>> sampleLocalType
         (
             const label surfi,
             const wordList& fieldNames,
@@ -174,7 +174,7 @@ class sampledSurfaces
         //- Sample all fields of a type on a given surface and combine on the
         //  master for writing
         template<class Type>
-        PtrList<const Field<Type>> sampleType
+        PtrList<Field<Type>> sampleType
         (
             const label surfi,
             const wordList& fieldNames,

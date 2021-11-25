@@ -814,7 +814,7 @@ Foam::scalar Foam::particle::trackToStationaryTri
     // Accumulate fraction behind
     if (muH*detA < small || nTracksBehind_ > 0)
     {
-        stepFractionBehind_ += fraction*muH*detA;
+        stepFractionBehind_ += (fraction != 0 ? fraction : 1)*muH*detA;
 
         if (stepFractionBehind_ > rootSmall)
         {
@@ -1011,7 +1011,7 @@ Foam::scalar Foam::particle::trackToMovingTri
     // Accumulate fraction behind
     if (muH*detA[0] < small || nTracksBehind_ > 0)
     {
-        stepFractionBehind_ += fraction*muH*detA[0];
+        stepFractionBehind_ += (fraction != 0 ? fraction : 1)*muH*detA[0];
 
         if (stepFractionBehind_ > rootSmall)
         {

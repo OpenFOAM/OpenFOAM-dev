@@ -6,7 +6,7 @@ then
     exit 1
 fi
 
-graphFile=$(foamListTimes -latestTime)/line_alpha.gas_T.liquid_T.gas.xy
+graphFile=$(foamListTimes -latestTime)/line.xy
 surfaceFile=$(cd postProcessing/inflow && ls -1tr */* | tail -n 1)
 
 gnuplot<<EOF

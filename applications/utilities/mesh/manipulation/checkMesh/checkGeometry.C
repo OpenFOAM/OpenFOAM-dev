@@ -523,7 +523,11 @@ void Foam::writeAMIWeightsSum
     // Write the surface
     if (Pstream::master())
     {
-        vtkSurfaceWriter(mesh.time().writeFormat()).write
+        vtkSurfaceWriter
+        (
+            mesh.time().writeFormat(),
+            mesh.time().writeCompression()
+        ).write
         (
             file.path(),
             "weightsSum_" + file.name(),
@@ -581,7 +585,7 @@ Foam::label Foam::checkGeometry
     const polyMesh& mesh,
     const bool allGeometry,
     const autoPtr<surfaceWriter>& surfWriter,
-    const autoPtr<Foam::setWriter<scalar>>& setWriter
+    const autoPtr<Foam::setWriter>& setWriter
 )
 {
     label noFailedChecks = 0;

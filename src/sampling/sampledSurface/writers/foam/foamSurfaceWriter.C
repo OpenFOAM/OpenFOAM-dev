@@ -34,18 +34,8 @@ namespace Foam
 {
     defineTypeNameAndDebug(foamSurfaceWriter, 0);
     addToRunTimeSelectionTable(surfaceWriter, foamSurfaceWriter, word);
+    addToRunTimeSelectionTable(surfaceWriter, foamSurfaceWriter, dict);
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::foamSurfaceWriter::foamSurfaceWriter
-(
-    const IOstream::streamFormat writeFormat
-)
-:
-    surfaceWriter(writeFormat)
-{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -82,11 +72,23 @@ void Foam::foamSurfaceWriter::write
         Info<< "Writing geometry to " << surfaceDir << endl;
     }
 
+    auto stream = [&](const fileName& file)
+    {
+        return
+            OFstream
+            (
+                file,
+                writeFormat_,
+                IOstream::currentVersion,
+                writeCompression_
+            );
+    };
+
     // Points
-    OFstream(surfaceDir/"points", writeFormat_)() << points;
+    stream(surfaceDir/"points")() << points;
 
     // Faces
-    OFstream(surfaceDir/"faces", writeFormat_)() << faces;
+    stream(surfaceDir/"faces")() << faces;
 
     // Face centers. Not really necessary but very handy when reusing as inputs
     // for e.g. timeVaryingMapped bc.
@@ -95,7 +97,7 @@ void Foam::foamSurfaceWriter::write
     {
         faceCentres[facei] = faces[facei].centre(points);
     }
-    OFstream(surfaceDir/"faceCentres", writeFormat_)() << faceCentres;
+    stream(surfaceDir/"faceCentres")() << faceCentres;
 
     // Fields
     forAll(fieldNames, fieldi)
@@ -106,25 +108,25 @@ void Foam::foamSurfaceWriter::write
                 << surfaceDir << endl;
         }
 
-        #define WriteFieldType(Type, nullArg)                          \
-            if (field##Type##Values.set(fieldi))                       \
-            {                                                          \
-                const fileName valuesDir                               \
-                (                                                      \
-                    surfaceDir                                         \
-                   /(                                                  \
-                       word(pTraits<Type>::typeName)                   \
-                     + word(Field<Type>::typeName)                     \
-                    )                                                  \
-                );                                                     \
-                                                                       \
-                if (!isDir(valuesDir))                                 \
-                {                                                      \
-                    mkDir(valuesDir);                                  \
-                }                                                      \
-                                                                       \
-                OFstream(valuesDir/fieldNames[fieldi], writeFormat_)() \
-                    << field##Type##Values[fieldi];                    \
+        #define WriteFieldType(Type, nullArg)          \
+            if (field##Type##Values.set(fieldi))       \
+            {                                          \
+                const fileName valuesDir               \
+                (                                      \
+                    surfaceDir                         \
+                   /(                                  \
+                       word(pTraits<Type>::typeName)   \
+                     + word(Field<Type>::typeName)     \
+                    )                                  \
+                );                                     \
+                                                       \
+                if (!isDir(valuesDir))                 \
+                {                                      \
+                    mkDir(valuesDir);                  \
+                }                                      \
+                                                       \
+                stream(valuesDir/fieldNames[fieldi])() \
+                    << field##Type##Values[fieldi];    \
             }
         FOR_ALL_FIELD_TYPES(WriteFieldType);
         #undef WriteFieldType

@@ -32,15 +32,8 @@ namespace Foam
 {
     defineTypeNameAndDebug(noSurfaceWriter, 0);
     addToRunTimeSelectionTable(surfaceWriter, noSurfaceWriter, word);
+    addToRunTimeSelectionTable(surfaceWriter, noSurfaceWriter, dict);
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::noSurfaceWriter::noSurfaceWriter(const IOstream::streamFormat writeFormat)
-:
-    surfaceWriter(writeFormat)
-{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

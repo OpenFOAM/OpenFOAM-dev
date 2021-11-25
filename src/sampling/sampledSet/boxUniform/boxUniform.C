@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,11 +48,10 @@ namespace sampledSets
 
 void Foam::sampledSets::boxUniform::calcSamples
 (
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    DynamicList<point>& samplingPositions,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 ) const
 {
     for (label k = 0; k < nPoints_.z(); ++ k)
@@ -72,11 +71,13 @@ void Foam::sampledSets::boxUniform::calcSamples
 
                 if (celli != -1)
                 {
-                    samplingPts.append(pt);
+                    samplingPositions.append(pt);
+                    samplingSegments.append
+                    (
+                        i + j*nPoints_.x() + k*nPoints_.x()*nPoints_.y()
+                    );
                     samplingCells.append(celli);
                     samplingFaces.append(-1);
-                    samplingSegments.append(0);
-                    samplingCurveDist.append(scalar(i));
                 }
             }
         }
@@ -86,35 +87,30 @@ void Foam::sampledSets::boxUniform::calcSamples
 
 void Foam::sampledSets::boxUniform::genSamples()
 {
-    // Storage for sample points
-    DynamicList<point> samplingPts;
+    DynamicList<point> samplingPositions;
+    DynamicList<label> samplingSegments;
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
-    DynamicList<label> samplingSegments;
-    DynamicList<scalar> samplingCurveDist;
 
     calcSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 
-    samplingPts.shrink();
+    samplingPositions.shrink();
+    samplingSegments.shrink();
     samplingCells.shrink();
     samplingFaces.shrink();
-    samplingSegments.shrink();
-    samplingCurveDist.shrink();
 
     setSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 }
 
@@ -134,11 +130,6 @@ Foam::sampledSets::boxUniform::boxUniform
     nPoints_(dict.lookup("nPoints"))
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
 }
 
 

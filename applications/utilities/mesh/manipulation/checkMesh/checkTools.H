@@ -35,7 +35,7 @@ namespace Foam
 
     //- Write vtk representation of (assembled) pointSet to 'set' file in
     //  postProcessing/ directory
-    void mergeAndWrite(const setWriter<scalar>&, const pointSet&);
+    void mergeAndWrite(const setWriter&, const pointSet&);
 }
 
 

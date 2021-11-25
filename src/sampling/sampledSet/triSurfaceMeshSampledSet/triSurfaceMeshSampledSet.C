@@ -47,11 +47,10 @@ namespace sampledSets
 
 void Foam::sampledSets::triSurfaceMeshSampledSet::calcSamples
 (
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    DynamicList<point>& samplingPositions,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 ) const
 {
     forAll(points_, i)
@@ -61,11 +60,10 @@ void Foam::sampledSets::triSurfaceMeshSampledSet::calcSamples
 
         if (celli != -1)
         {
-            samplingPts.append(pt);
+            samplingPositions.append(pt);
+            samplingSegments.append(i);
             samplingCells.append(celli);
             samplingFaces.append(-1);
-            samplingSegments.append(0);
-            samplingCurveDist.append(scalar(i));
         }
     }
 }
@@ -73,35 +71,30 @@ void Foam::sampledSets::triSurfaceMeshSampledSet::calcSamples
 
 void Foam::sampledSets::triSurfaceMeshSampledSet::genSamples()
 {
-    // Storage for sample points
-    DynamicList<point> samplingPts;
+    DynamicList<point> samplingPositions;
+    DynamicList<label> samplingSegments;
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
-    DynamicList<label> samplingSegments;
-    DynamicList<scalar> samplingCurveDist;
 
     calcSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 
-    samplingPts.shrink();
+    samplingPositions.shrink();
+    samplingSegments.shrink();
     samplingCells.shrink();
     samplingFaces.shrink();
-    samplingSegments.shrink();
-    samplingCurveDist.shrink();
 
     setSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 }
 
@@ -138,11 +131,6 @@ Foam::sampledSets::triSurfaceMeshSampledSet::triSurfaceMeshSampledSet
     )
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
 }
 
 

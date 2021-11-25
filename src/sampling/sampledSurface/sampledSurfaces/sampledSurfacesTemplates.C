@@ -32,7 +32,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-Foam::PtrList<const Foam::Field<Type>>
+Foam::PtrList<Foam::Field<Type>>
 Foam::functionObjects::sampledSurfaces::sampleLocalType
 (
     const label surfi,
@@ -40,11 +40,9 @@ Foam::functionObjects::sampledSurfaces::sampleLocalType
     HashPtrTable<interpolation<Type>>& interpolations
 )
 {
-    PtrList<const Field<Type>> fieldTypeValues(fieldNames.size());
+    PtrList<Field<Type>> fieldTypeValues(fieldNames.size());
 
     const sampledSurface& s = operator[](surfi);
-
-    autoPtr<interpolation<Type>> interpolationPtr;
 
     forAll(fieldNames, fieldi)
     {
@@ -95,7 +93,7 @@ Foam::functionObjects::sampledSurfaces::sampleLocalType
 
 
 template<class Type>
-Foam::PtrList<const Foam::Field<Type>>
+Foam::PtrList<Foam::Field<Type>>
 Foam::functionObjects::sampledSurfaces::sampleType
 (
     const label surfi,
@@ -104,7 +102,7 @@ Foam::functionObjects::sampledSurfaces::sampleType
 )
 {
     // Generate local samples
-    PtrList<const Field<Type>> fieldTypeValues =
+    PtrList<Field<Type>> fieldTypeValues =
         sampleLocalType<Type>(surfi, fieldNames, interpolations);
 
     if (Pstream::parRun())

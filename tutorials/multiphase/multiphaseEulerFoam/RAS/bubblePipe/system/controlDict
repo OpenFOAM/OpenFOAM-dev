@@ -81,6 +81,8 @@ functions
         writeControl        outputTime;
         writeInterval       1;
 
+        setFormat           raw;
+
         populationBalance   bubbles;
         regionType          cellZone;
         name                injection;
@@ -97,6 +99,8 @@ functions
 
         writeControl        outputTime;
         writeInterval       1;
+
+        setFormat           raw;
 
         populationBalance   bubbles;
         regionType          cellZone;

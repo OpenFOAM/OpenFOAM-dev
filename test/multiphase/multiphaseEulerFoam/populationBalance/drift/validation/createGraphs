@@ -23,7 +23,7 @@ gnuplot<<EOF
 
     plot '<printf "1.876749927 0\n1.876749927 0.01\n4.144510443 0.01\n4.144510443 0\n"' w l dt 2 lc rgb 'black' t 'Initial condition',\
     '<printf "7.957828406 0\n7.957828406 0.01\n10.14451044 0.01\n10.14451044 0\n"' w l lc rgb 'black' t 'Exact',\
-    '../postProcessing/numberDensity/6/numberDensity.dat' u 1:4 w lp ls 4 lc rgb 'black' t 'Numerical'
+    '../postProcessing/numberDensity/6/numberDensity.xy' u 1:4 w lp ls 4 lc rgb 'black' t 'Numerical'
 
     set output '../moments.eps'
 

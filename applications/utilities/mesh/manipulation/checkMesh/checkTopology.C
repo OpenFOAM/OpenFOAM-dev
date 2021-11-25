@@ -44,7 +44,7 @@ Foam::label Foam::checkTopology
     const bool allTopology,
     const bool allGeometry,
     const autoPtr<surfaceWriter>& surfWriter,
-    const autoPtr<Foam::setWriter<scalar>>& setWriter
+    const autoPtr<Foam::setWriter>& setWriter
 )
 {
     label noFailedChecks = 0;

@@ -27,113 +27,135 @@ License
 #include "coordSet.H"
 #include "fileName.H"
 #include "OFstream.H"
+#include "OSspecific.H"
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+namespace Foam
+{
+    defineTypeNameAndDebug(gnuplotSetWriter, 0);
+    addToRunTimeSelectionTable(setWriter, gnuplotSetWriter, word);
+    addToRunTimeSelectionTable(setWriter, gnuplotSetWriter, dict);
+}
 
-template<class Type>
-Foam::gnuplotSetWriter<Type>::gnuplotSetWriter()
-:
-    setWriter<Type>()
-{}
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::gnuplotSetWriter<Type>::~gnuplotSetWriter()
+Foam::gnuplotSetWriter::~gnuplotSetWriter()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::fileName Foam::gnuplotSetWriter<Type>::getFileName
+void Foam::gnuplotSetWriter::write
 (
-    const coordSet& points,
+    const fileName& outputDir,
+    const fileName& setName,
+    const coordSet& set,
     const wordList& valueSetNames
+    #define TypeValueSetsConstArg(Type, nullArg) \
+        , const UPtrList<const Field<Type>>& Type##ValueSets
+    FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+    #undef TypeValueSetsConstArg
 ) const
 {
-    return this->getBaseName(points, valueSetNames) + ".gplt";
-}
-
-
-template<class Type>
-void Foam::gnuplotSetWriter<Type>::write
-(
-    const coordSet& points,
-    const wordList& valueSetNames,
-    const List<const Field<Type>*>& valueSets,
-    Ostream& os
-) const
-{
-    os  << "set term postscript color" << nl
-        << "set output \"" << points.name() << ".ps\"" << nl
-        << "plot";
-
-    forAll(valueSets, i)
-    {
-        if (i != 0)
-        {
-            os << ',';
-        }
-
-        os  << " \"-\" title \"" << valueSetNames[i] << "\" with lines";
-    }
-    os  << nl;
-
-
-    forAll(valueSets, i)
-    {
-        this->writeTable(points, *valueSets[i], os);
-        os  << "e" << nl;
-    }
-}
-
-
-template<class Type>
-void Foam::gnuplotSetWriter<Type>::write
-(
-    const bool writeTracks,
-    const PtrList<coordSet>& trackPoints,
-    const wordList& valueSetNames,
-    const List<List<Field<Type>>>& valueSets,
-    Ostream& os
-) const
-{
-    if (valueSets.size() != valueSetNames.size())
+    if (!set.hasScalarAxis())
     {
         FatalErrorInFunction
-            << "Number of variables:" << valueSetNames.size() << endl
-            << "Number of valueSets:" << valueSets.size()
+            << "Cannot write " << setName << " in " << typeName
+            << " format as it does not have a scalar axis"
             << exit(FatalError);
     }
-    if (trackPoints.size() > 0)
+
+    if (!isDir(outputDir))
     {
-        os  << "set term postscript color" << nl
-            << "set output \"" << trackPoints[0].name() << ".ps\"" << nl;
+        mkDir(outputDir);
+    }
 
-        forAll(trackPoints, trackI)
-        {
-            os  << "plot";
+    OFstream os
+    (
+        outputDir/setName + ".gplt",
+        IOstream::ASCII,
+        IOstream::currentVersion,
+        writeCompression_
+    );
 
-            forAll(valueSets, i)
-            {
-                if (i != 0)
-                {
-                    os << ',';
-                }
+    os << "$data << EOD" << nl;
 
-                os  << " \"-\" title \"" << valueSetNames[i] << "\" with lines";
+    writeTable
+    (
+        set.axis() == coordSet::axisTypeNames_[coordSet::axisType::DEFAULT]
+      ? coordSet
+        (
+            set.segments(),
+            word::null,
+            pointField::null(),
+            set.scalarName(),
+            set.scalarCoords()
+        )
+      : set,
+        #define TypeValueSetsParameter(Type, nullArg) Type##ValueSets,
+        FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
+        #undef TypeValueSetsParameter
+        os
+    );
+
+    os << nl << "EOD" << nl << nl;
+
+    os  << "set term postscript color" << nl
+        << "set output \"" << setName.c_str() << ".ps\"" << nl
+        << "set xlabel \"" << set.scalarName() << "\"" << nl;
+
+    if (valueSetNames.size() == 2)
+    {
+        os  << "set ytics nomirror" << nl
+            << "set ylabel \"" << valueSetNames[0] << "\"" << nl
+            << "set y2tics nomirror" << nl
+            << "set y2label \"" << valueSetNames[1] << "\"" << nl;
+    }
+
+    os << nl << "plot ";
+
+    label columni = 0;
+
+    forAll(valueSetNames, fieldi)
+    {
+        #define PlotTypeValueSets(Type, nullArg)                            \
+            if (Type##ValueSets.set(fieldi))                                \
+            {                                                               \
+                for                                                         \
+                (                                                           \
+                    direction cmpt = 0;                                     \
+                    cmpt < pTraits<Type>::nComponents;                      \
+                    cmpt++                                                  \
+                )                                                           \
+                {                                                           \
+                    const bool separator =                                  \
+                        !valueSetNames[fieldi].empty()                      \
+                     && strlen(pTraits<Type>::componentNames[cmpt]) > 0;    \
+                                                                            \
+                    const word w =                                          \
+                        valueSetNames[fieldi]                               \
+                      + (separator ? "_" : "")                              \
+                      + pTraits<Type>::componentNames[cmpt];                \
+                                                                            \
+                    if (columni != 0) os << ", ";                           \
+                                                                            \
+                    os  << "$data us 1:" << 2 + columni;                    \
+                                                                            \
+                    if (valueSetNames.size() == 2)                          \
+                    {                                                       \
+                        os  << " axis x1y" << 1 + fieldi;                   \
+                    }                                                       \
+                                                                            \
+                    os  << " title \"" << w << "\" with lines";             \
+                                                                            \
+                    ++ columni;                                             \
+                }                                                           \
             }
-            os << nl;
-
-            forAll(valueSets, i)
-            {
-                this->writeTable(trackPoints[trackI], valueSets[i][trackI], os);
-                os  << "e" << nl;
-            }
-        }
+        FOR_ALL_FIELD_TYPES(PlotTypeValueSets)
+        #undef PlotTypeValueSets
     }
 }
 

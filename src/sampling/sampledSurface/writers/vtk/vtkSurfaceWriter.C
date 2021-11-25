@@ -34,18 +34,8 @@ namespace Foam
 {
     defineTypeNameAndDebug(vtkSurfaceWriter, 0);
     addToRunTimeSelectionTable(surfaceWriter, vtkSurfaceWriter, word);
+    addToRunTimeSelectionTable(surfaceWriter, vtkSurfaceWriter, dict);
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::vtkSurfaceWriter::vtkSurfaceWriter
-(
-    const IOstream::streamFormat writeFormat
-)
-:
-    surfaceWriter(writeFormat)
-{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

@@ -27,6 +27,8 @@ License
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
+#include "treeDataCell.H"
+#include "sampledSetCloud.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,176 +51,211 @@ void Foam::sampledSets::lineFace::calcSamples
     const meshSearch& searchEngine,
     const vector& start,
     const vector& end,
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    const bool storeFaces,
+    const bool storeCells,
+    DynamicList<point>& samplingPositions,
+    DynamicList<scalar>& samplingDistances,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 )
 {
-    // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
-    // build them, otherwise, if some processors have no particles then there
-    // is a comms mismatch.
-    mesh.tetBasePtIs();
-    mesh.oldCellCentres();
-
-    // Create lists of initial positions from which to track, the faces and
-    // cells associated with those positions, and whether the track  propagates
-    // forward (true) or backward (false) along the line from start to end
-    DynamicList<point> initialPts;
-    DynamicList<label> initialFaces, initialCells;
-    DynamicList<bool> initialDirections;
-
-    // Add boundary hits
-    const List<pointIndexHit> bHits = searchEngine.intersections(start, end);
-    forAll(bHits, bHiti)
+    // Get all candidates for starting the tracks
+    List<DynamicList<label>> procCandidateCells(Pstream::nProcs());
+    List<DynamicList<scalar>> procCandidateTs(Pstream::nProcs());
     {
-        initialPts.append(bHits[bHiti].hitPoint());
-        const label facei = bHits[bHiti].index();
-        initialFaces.append(facei);
-        initialCells.append(mesh.faceOwner()[facei]);
-        initialDirections.append((mesh.faceAreas()[facei] & (end - start)) < 0);
-    }
-
-    // Add the start and end points if they can be found within the mesh
-    const label startCelli = searchEngine.findCell(start);
-    if (startCelli != -1)
-    {
-        initialPts.append(start);
-        initialFaces.append(-1);
-        initialCells.append(startCelli);
-        initialDirections.append(true);
-    }
-    const label endCelli = searchEngine.findCell(end);
-    if (endCelli != -1)
-    {
-        initialPts.append(end);
-        initialFaces.append(-1);
-        initialCells.append(endCelli);
-        initialDirections.append(false);
-    }
-
-    // Loop over the initial points, starting new segments each time
-    label sampleSegmenti = 0;
-    DynamicList<Pair<point>> lines;
-    forAll(initialPts, initiali)
-    {
-        // Get the sign
-        const scalar sign = initialDirections[initiali] ? +1 : -1;
-
-        // Create a particle. Track backwards into the boundary face so that
-        // the particle has the correct topology.
-        passiveParticle sampleParticle
-        (
-            mesh,
-            initialPts[initiali],
-            initialCells[initiali]
-        );
-        if (initialFaces[initiali] != -1)
+        const label startCelli = searchEngine.findCell(start);
+        if (startCelli != -1)
         {
-            sampleParticle.track(sign*(start - end), 0);
-            if (!sampleParticle.onBoundaryFace())
-            {
-                FatalErrorInFunction
-                    << "Failed to associate with the starting boundary face"
-                    << exit(FatalError);
-            }
+            procCandidateCells[Pstream::myProcNo()].append(startCelli);
+            procCandidateTs[Pstream::myProcNo()].append(0);
         }
 
-        // Track until a boundary is hit, appending the face intersections
-        // to the lists of samples, and storing the line
-        DynamicList<point> segmentPts;
-        DynamicList<label> segmentCells, segmentFaces;
-        Pair<point> line(sampleParticle.position(), sampleParticle.position());
-        while (true)
+        const label endCelli = searchEngine.findCell(end);
+        if (endCelli != -1)
         {
-            const point pt = sampleParticle.position();
-            const scalar dist = mag(pt - (sign > 0 ? start : end));
-            const bool first = segmentPts.size() == 0;
-
-            if (sampleParticle.onFace())
-            {
-                segmentPts.append(pt);
-                segmentCells.append(sampleParticle.cell());
-                segmentFaces.append(sampleParticle.face());
-            }
-
-            const vector s =
-                sign*(end - start)*(1 - dist/mag(end - start));
-
-            sampleParticle.reset(1);
-
-            if
-            (
-                (!first && sampleParticle.onBoundaryFace())
-             || sampleParticle.trackToCell(s, 0) == 0
-            )
-            {
-                break;
-            }
-        }
-        line[1] = sampleParticle.position();
-
-        // Reverse if going backwards
-        if (sign < 0)
-        {
-            inplaceReverseList(segmentPts);
-            inplaceReverseList(segmentCells);
-            inplaceReverseList(segmentFaces);
-            line = reverse(line);
+            procCandidateCells[Pstream::myProcNo()].append(endCelli);
+            procCandidateTs[Pstream::myProcNo()].append(1);
         }
 
-        // Mark point as not to be kept if they fall within the bounds of
-        // previous lines
-        boolList segmentKeep(segmentPts.size(), true);
-        forAll(segmentPts, segmentPti)
+        const List<pointIndexHit> bHits =
+            searchEngine.intersections(start, end);
+        forAll(bHits, bHiti)
         {
-            forAll(lines, linei)
+            for (label bHitj = bHiti + 1; bHitj < bHits.size(); ++ bHitj)
             {
-                const Pair<point>& l = lines[linei];
-                const vector dlHat = normalised(l[1] - l[0]);
-                if (magSqr(dlHat) == 0)
+                const point midP =
+                    (bHits[bHiti].hitPoint() + bHits[bHitj].hitPoint())/2;
+
+                const label midCelli = searchEngine.findCell(midP);
+                const scalar midT = mag(midP - start)/mag(end - start);
+
+                if (midCelli != -1)
                 {
-                    continue;
-                }
-                const scalar dot0 = (segmentPts[segmentPti] - l[0]) & dlHat;
-                const scalar dot1 = (l[1] - segmentPts[segmentPti]) & dlHat;
-                if (dot0 > 0 && dot1 > 0)
-                {
-                    segmentKeep[segmentPti] = false;
-                    break;
+                    procCandidateCells[Pstream::myProcNo()].append(midCelli);
+                    procCandidateTs[Pstream::myProcNo()].append(midT);
                 }
             }
         }
+    }
+    Pstream::gatherList(procCandidateCells);
+    Pstream::scatterList(procCandidateCells);
+    Pstream::gatherList(procCandidateTs);
+    Pstream::scatterList(procCandidateTs);
 
-        // Store the line
-        lines.append(line);
+    // Tracking data
+    const List<point> startEnd({start, end});
+    const List<point> endStart({end, start});
+    DynamicList<point> halfSegmentPositions;
+    DynamicList<scalar> halfSegmentDistances;
+    DynamicList<label> halfSegmentCells;
+    DynamicList<label> halfSegmentFaces;
 
-        // Add new segments to the lists, breaking the segment anywhere that
-        // points are not kept
-        bool newSampleSegment = false;
-        forAll(segmentPts, segmentPti)
+    // Create a cloud with which to track segments
+    sampledSetCloud particles
+    (
+        mesh,
+        lineFace::typeName,
+        IDLList<sampledSetParticle>()
+    );
+
+    // Create each segment in turn
+    label segmenti = 0;
+    forAll(procCandidateCells, proci)
+    {
+        forAll(procCandidateCells[proci], candidatei)
         {
-            if (segmentKeep[segmentPti])
+            const label celli = procCandidateCells[proci][candidatei];
+
+            if (celli == -1) continue;
+
+            const scalar t = procCandidateTs[proci][candidatei];
+            const point p = (1 - t)*start + t*end;
+
+            // Track in both directions to form parts of the segment either
+            // side of the candidate
+            Pair<scalar> segmentT;
+            forAll(segmentT, i)
             {
-                samplingPts.append(segmentPts[segmentPti]);
-                samplingCells.append(segmentCells[segmentPti]);
-                samplingFaces.append(segmentFaces[segmentPti]);
-                samplingSegments.append(sampleSegmenti);
-                samplingCurveDist.append(mag(segmentPts[segmentPti] - start));
-                newSampleSegment = true;
+                sampledSetParticle::trackingData tdBwd
+                (
+                    particles,
+                    i == 0 ? endStart : startEnd,
+                    false,
+                    storeFaces,
+                    storeCells,
+                    halfSegmentPositions,
+                    halfSegmentDistances,
+                    halfSegmentCells,
+                    halfSegmentFaces
+                );
+
+                particles.clear();
+                if (proci == Pstream::myProcNo())
+                {
+                    particles.addParticle
+                    (
+                        new sampledSetParticle
+                        (
+                            mesh,
+                            p,
+                            celli,
+                            0,
+                            i == 0 ? t : 1 - t,
+                            0
+                        )
+                    );
+                }
+
+                particles.move(particles, tdBwd, rootGreat);
+
+                segmentT[i] =
+                    returnReduce
+                    (
+                        particles.size()
+                      ? mag(particles.first()->position() - start)
+                       /mag(end - start)
+                      : i == 0 ? vGreat : -vGreat,
+                        [i](const scalar a, const scalar b)
+                        {
+                            return (i == 0) == (a < b) ? a : b;
+                        }
+                    );
+
+                if (i == 0)
+                {
+                    reverse(halfSegmentPositions);
+                    reverse(halfSegmentDistances);
+                    reverse(halfSegmentCells);
+                    reverse(halfSegmentFaces);
+                }
+
+                const label n = halfSegmentPositions.size();
+
+                samplingPositions.append(halfSegmentPositions);
+                samplingSegments.append(labelList(n, segmenti));
+                samplingCells.append(halfSegmentCells);
+                samplingFaces.append(halfSegmentFaces);
+
+                halfSegmentPositions.clear();
+                halfSegmentDistances.clear();
+                halfSegmentCells.clear();
+                halfSegmentFaces.clear();
+
+                // If storing cells we need to store the starting cells between
+                // the tracks
+                if (proci == Pstream::myProcNo() && i == 1 && storeCells)
+                {
+                    particle trackBwd(mesh, p, celli), trackFwd(trackBwd);
+                    trackBwd.trackToFace(start - p, 0);
+                    trackFwd.trackToFace(end - p, 0);
+                    if (trackBwd.onFace() && trackFwd.onFace())
+                    {
+                        samplingPositions.append
+                        (
+                            (trackBwd.position() + trackFwd.position())/2
+                        );
+                        samplingSegments.append(segmenti);
+                        samplingCells.append(celli);
+                        samplingFaces.append(-1);
+                    }
+                }
             }
-            else if (newSampleSegment)
+
+            // Disable all candidates that fall within the bounds of the
+            // computed segment
+            forAll(procCandidateCells, procj)
             {
-                ++ sampleSegmenti;
-                newSampleSegment = false;
+                forAll(procCandidateCells[procj], candidatej)
+                {
+                    const label cellj = procCandidateCells[procj][candidatej];
+
+                    if (cellj == -1) continue;
+
+                    const scalar t = procCandidateTs[procj][candidatej];
+
+                    if
+                    (
+                        t > segmentT.first() - rootSmall
+                     && t < segmentT.second() + rootSmall
+                    )
+                    {
+                        procCandidateCells[procj][candidatej] = -1;
+                        procCandidateTs[procj][candidatej] = NaN;
+                    }
+                }
             }
+
+            // Move onto the next segment
+            segmenti ++;
         }
-        if (newSampleSegment)
-        {
-            ++ sampleSegmenti;
-            newSampleSegment = false;
-        }
+    }
+
+    // Set the distances
+    samplingDistances.resize(samplingPositions.size());
+    forAll(samplingPositions, i)
+    {
+        samplingDistances[i] = mag(samplingPositions[i] - start);
     }
 }
 
@@ -227,11 +264,11 @@ void Foam::sampledSets::lineFace::calcSamples
 
 void Foam::sampledSets::lineFace::calcSamples
 (
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    DynamicList<point>& samplingPositions,
+    DynamicList<scalar>& samplingDistances,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 ) const
 {
     calcSamples
@@ -240,45 +277,47 @@ void Foam::sampledSets::lineFace::calcSamples
         searchEngine(),
         start_,
         end_,
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        true,
+        false,
+        samplingPositions,
+        samplingDistances,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 }
 
 
 void Foam::sampledSets::lineFace::genSamples()
 {
-    DynamicList<point> samplingPts;
+    DynamicList<point> samplingPositions;
+    DynamicList<scalar> samplingDistances;
+    DynamicList<label> samplingSegments;
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
-    DynamicList<label> samplingSegments;
-    DynamicList<scalar> samplingCurveDist;
 
     calcSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
+        samplingDistances,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 
-    samplingPts.shrink();
+    samplingPositions.shrink();
+    samplingDistances.shrink();
+    samplingSegments.shrink();
     samplingCells.shrink();
     samplingFaces.shrink();
-    samplingSegments.shrink();
-    samplingCurveDist.shrink();
 
     setSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
+        samplingDistances,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 }
 
@@ -298,11 +337,6 @@ Foam::sampledSets::lineFace::lineFace
     end_(dict.lookup("end"))
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
 }
 
 

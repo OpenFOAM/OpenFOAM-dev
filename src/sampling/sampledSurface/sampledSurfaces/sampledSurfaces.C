@@ -150,8 +150,8 @@ bool Foam::functionObjects::sampledSurfaces::write()
         {
             const sampledSurface& s = operator[](surfi);
 
-            #define GenerateFieldTypeValues(Type, nullArg)       \
-                PtrList<const Field<Type>> field##Type##Values = \
+            #define GenerateFieldTypeValues(Type, nullArg) \
+                PtrList<Field<Type>> field##Type##Values = \
                     sampleType<Type>(surfi, fieldNames, interpolation##Type##s);
             FOR_ALL_FIELD_TYPES(GenerateFieldTypeValues);
             #undef GenerateFieldTypeValues
@@ -210,6 +210,7 @@ bool Foam::functionObjects::sampledSurfaces::read(const dictionary& dict)
         dict.lookup("fields") >> fields_;
 
         dict.lookup("interpolationScheme") >> interpolationScheme_;
+
         const word writeType(dict.lookup("surfaceFormat"));
 
         // Define the surface formatter

@@ -25,25 +25,17 @@ Class
     Foam::setWriter
 
 Description
-    Base class for graphics format writing. Entry points are
-    - write(..). \n
-      Write to an Ostream a table of points with corresponding values.
-    - write(scalar/vector/sphericalTensor/symmTensor/tensor). \n
-      Write single scalar/vector/sphericalTensor/symmTensor/tensor.
-      Default is to write space separated components.
+    Base class for writing coordinate sets with data
 
     Example:
     \verbatim
-        // Construct setWriter of xmgr type
-        autoPtr<setWriter<scalar>> scalarFormatter =
-            setWriter<scalar>::New("xmgr");
-
-        // Output list of points and corresponding values
-        scalarFormatter().write
+        setWriter::New("vtk")->write
         (
-            coordSet(...)
-            "U.component(0)",   // name of values
-            vals                // values
+            "myDirectory",
+            "mySet",
+            coordSet(points, true),
+            "p", p,
+            "U", U
         );
     \endverbatim
 
@@ -55,61 +47,172 @@ SourceFiles
 #ifndef setWriter_H
 #define setWriter_H
 
-#include "fileName.H"
-#include "wordList.H"
-#include "vector.H"
-#include "tensor.H"
-#include "typeInfo.H"
 #include "runTimeSelectionTables.H"
 #include "autoPtr.H"
-#include "Field.H"
+#include "fieldTypes.H"
+#include "coordSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Forward declaration of classes
-class coordSet;
-
 /*---------------------------------------------------------------------------*\
                            Class setWriter Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
 class setWriter
 {
+public:
+
+    // Public Static Functions
+
+        //- Helper for variadic write
+        template<class Types, class Type>
+        static inline void setTypeValueSet
+        (
+            UPtrList<const Field<Types>>& valueSets,
+            const label valueSeti,
+            const Field<Type>& valueSet
+        )
+        {}
+
+        //- Helper for variadic write
+        template<class Type>
+        static inline void setTypeValueSet
+        (
+            UPtrList<const Field<Type>>& valueSets,
+            const label valueSeti,
+            const Field<Type>& valueSet
+        )
+        {
+            valueSets.set(valueSeti, &valueSet);
+        }
+
+        //- Helper for variadic write
+        static inline void unpackTypeValueSets
+        (
+            wordList& valueSetNames
+            #define TypeValueSetsNonConstArg(Type, nullArg) \
+                , UPtrList<const Field<Type>>& Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsNonConstArg)
+            #undef TypeValueSetsNonConstArg
+        )
+        {}
+
+        //- Helper for variadic write
+        template<class Type, class ... Args>
+        static inline void unpackTypeValueSets
+        (
+            wordList& valueSetNames
+            #define TypeValueSetsNonConstArg(Type, nullArg) \
+                , UPtrList<const Field<Type>>& Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsNonConstArg),
+            #undef TypeValueSetsNonConstArg
+            const word& valueSetName,
+            const Field<Type>& valueSet,
+            Args& ... args
+        )
+        {
+            const label valueSeti =
+                valueSetNames.size() - 1 - sizeof...(Args)/2;
+
+            valueSetNames[valueSeti] = valueSetName;
+            #define SetTypeValueSet(Type, nullArg) \
+                setTypeValueSet(Type##ValueSets, valueSeti, valueSet);
+            FOR_ALL_FIELD_TYPES(SetTypeValueSet);
+            #undef SetTypeValueSet
+
+            unpackTypeValueSets
+            (
+                valueSetNames
+                #define TypeValueSetsParameter(Type, nullArg) \
+                    , Type##ValueSets
+                FOR_ALL_FIELD_TYPES(TypeValueSetsParameter),
+                #undef TypeValueSetsParameter
+                args ...
+            );
+        }
+
 
 protected:
 
-    //- Generates filename from coordSet and sampled fields
-    fileName getBaseName(const coordSet&, const wordList&) const;
+    // Protected Data
 
-    void writeCoord(const coordSet&, const label sampleI, Ostream&) const;
+        //- Write format
+        IOstream::streamFormat writeFormat_;
 
-    //- Writes single-column ascii write. Column 1 is coordSet coordinate,
-    //  columns 2 is the value. Uses write() function
-    //  to write coordinate in correct format.
-    void writeTable(const coordSet&, const List<Type>&, Ostream&) const;
+        //- Write compression
+        IOstream::compressionType writeCompression_;
 
-    //- Writes multi-column ascii write. Column 1 is coordSet coordinate,
-    //  columns 2..n are the values. Uses write() function
-    //  to write coordinate in correct format.
-    void writeTable
-    (
-        const coordSet&,
-        const List<const List<Type>*>&,
-        Ostream& os
-    ) const;
 
-    //- Writes a separator. Used by write functions.
-    virtual void writeSeparator(Ostream& os) const;
+    // Protected Member Functions
+
+        //- Write a value separator
+        virtual void writeValueSeparator(Ostream& os) const;
+
+        //- Write a coordinate separator
+        virtual void writeCoordSeparator(Ostream& os) const;
+
+        //- Write a segment separator
+        virtual void writeSegmentSeparator(Ostream& os) const;
+
+        //- Width of columns in tabulated output
+        static inline unsigned long columnWidth(Ostream& os)
+        {
+            return os.precision() + 7;
+        }
+
+        //- Write a word
+        inline Ostream& writeWord
+        (
+            const word& w,
+            Ostream& os,
+            const bool align = false,
+            const unsigned long alignPad = 0
+        ) const;
+
+        //- Write a value
+        template<class Type>
+        Ostream& writeValue
+        (
+            const Type& value,
+            Ostream& os,
+            const bool align = false
+        ) const;
+
+        //- Write multi-column table header
+        void writeTableHeader
+        (
+            const coordSet& set,
+            const wordList& valueSetNames,
+            #define TypeValueSetsConstArg(Type, nullArg) \
+                const UPtrList<const Field<Type>>& Type##ValueSets ,
+            FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+            #undef TypeValueSetsConstArg
+            Ostream& os,
+            const bool align = false,
+            const unsigned long alignPad = 0
+        ) const;
+
+        //- Write multi-column table of data
+        void writeTable
+        (
+            const coordSet& set,
+            #define TypeValueSetsConstArg(Type, nullArg) \
+                const UPtrList<const Field<Type>>& Type##ValueSets ,
+            FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+            #undef TypeValueSetsConstArg
+            Ostream& os,
+            const bool align = false
+        ) const;
 
 
 public:
 
     //- Runtime type information
     TypeName("setWriter");
+
 
     // Declare run-time constructor selection table
 
@@ -118,21 +221,56 @@ public:
             autoPtr,
             setWriter,
             word,
-            (),
-            ()
+            (
+                const IOstream::streamFormat writeFormat,
+                const IOstream::compressionType writeCompression
+            ),
+            (writeFormat, writeCompression)
+        );
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            setWriter,
+            dict,
+            (
+                const dictionary& dict
+            ),
+            (dict)
         );
 
 
     // Selectors
 
-        //- Return a reference to the selected setWriter
-        static autoPtr<setWriter> New(const word& writeFormat);
+        //- Select given write options
+        static autoPtr<setWriter> New
+        (
+            const word& writeType,
+            const IOstream::streamFormat writeFormat =
+                IOstream::ASCII,
+            const IOstream::compressionType writeCompression =
+                IOstream::UNCOMPRESSED
+        );
+
+        //- Select given a dictionary
+        static autoPtr<setWriter> New
+        (
+            const word& writeType,
+            const dictionary& dict
+        );
 
 
     // Constructors
 
-        //- Construct null
-        setWriter();
+        //- Construct given write options
+        setWriter
+        (
+            const IOstream::streamFormat writeFormat,
+            const IOstream::compressionType writeCompression
+        );
+
+        //- Construct from dictionary
+        setWriter(const dictionary& dict);
 
 
     //- Destructor
@@ -141,65 +279,102 @@ public:
 
     // Member Functions
 
-        //- Generate file name with correct extension
-        virtual fileName getFileName
-        (
-            const coordSet&,
-            const wordList&
-        ) const = 0;
-
-        //- General entry point for writing.
-        //  The data is organised in a set of point with one or more values
-        //  per point
+        //- Write a coordSet and associated data
         virtual void write
         (
-            const coordSet&,
-            const wordList&,
-            const List<const Field<Type>*>&,
-            Ostream&
+            const fileName& outputDir,
+            const fileName& setName,
+            const coordSet& set,
+            const wordList& valueSetNames
+            #define TypeValueSetsConstArg(Type, nullArg) \
+                , const UPtrList<const Field<Type>>& Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+            #undef TypeValueSetsConstArg
         ) const = 0;
 
-        //- General entry point for writing.
-        //  The data is organised in a set of point with one or more values
-        //  per point
+        //- Write a coordSet and associated data
         virtual void write
         (
-            const coordSet&,
-            const wordList&,
-            const List<Field<Type>>&,
-            Ostream&
-        ) const;
+            const fileName& outputDir,
+            const fileName& setName,
+            const coordSet& set,
+            const wordList& valueSetNames
+            #define TypeValueSetsConstArg(Type, nullArg) \
+                , const PtrList<Field<Type>>& Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+            #undef TypeValueSetsConstArg
+        ) const
+        {
+            write
+            (
+                outputDir,
+                setName,
+                set,
+                valueSetNames
+                #define TypeValueSetsParameter(Type, nullArg)              \
+                    , reinterpret_cast<const UPtrList<const Field<Type>>&> \
+                    (Type##ValueSets)
+                FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
+                #undef TypeValueSetsParameter
+            );
+        }
 
-        //- General entry point for writing of multiple coordSets.
-        //  Each coordSet (track) has same data variables.
-        //  The data is per variable, per track, per point of track.
-        //  If writeTracks adds connecting lines (wherever applicable)
-        virtual void write
+        //- Write fields for a single surface to file. For use in code where
+        //  the fields that are to be written are known. Takes any number of
+        //  name, values arguments at the end. E.g.:
+        //
+        //  write
+        //  (
+        //      // Output options
+        //      "myDirectory", "mySet",
+        //
+        //      // Geometry
+        //      coordSet(points, true),
+        //
+        //      // Fields
+        //      "p", Field<scalar>(points.size(), ...),
+        //      "U", Field<vector>(points.size(), ...)
+        //  );
+        //
+        template<class ... Args>
+        void inline write
         (
-            const bool writeTracks,
-            const PtrList<coordSet>&,
-            const wordList& valueSetNames,
-            const List<List<Field<Type>>>&,
-            Ostream&
-        ) const = 0;
+            const fileName& outputDir,
+            const fileName& setName,
+            const coordSet& set,
+            const Args& ... args
+        ) const
+        {
+            const label nFields = sizeof...(Args)/2;
 
-        //- Write scalar as ascii
-        virtual Ostream& write(const scalar, Ostream&) const;
+            wordList valueSetNames(nFields);
+            #define DeclareTypeValueSets(Type, nullArg) \
+                UPtrList<const Field<Type>> Type##ValueSets(nFields);
+            FOR_ALL_FIELD_TYPES(DeclareTypeValueSets);
+            #undef DeclareTypeValueSets
 
-        template<class VSType>
-        Ostream& writeVS(const VSType&, Ostream&) const;
+            unpackTypeValueSets
+            (
+                valueSetNames
+                #define TypeValueSetsParameter(Type, nullArg) \
+                    , Type##ValueSets
+                FOR_ALL_FIELD_TYPES(TypeValueSetsParameter),
+                #undef TypeValueSetsParameter
+                args ...
+            );
 
-        //- Write vector. Tab separated ascii
-        virtual Ostream& write(const vector&, Ostream&) const;
-
-        //- Write sphericalTensor. Tab separated ascii
-        virtual Ostream& write(const sphericalTensor&, Ostream&) const;
-
-        //- Write symmTensor. Tab separated ascii
-        virtual Ostream& write(const symmTensor&, Ostream&) const;
-
-        //- Write tensor. Tab separated ascii
-        virtual Ostream& write(const tensor&, Ostream&) const;
+            write
+            (
+                outputDir,
+                setName,
+                set,
+                valueSetNames
+                #define TypeValueSetsParameter(Type, nullArg) \
+                    , Type##ValueSets
+                FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
+                #undef TypeValueSetsParameter
+            );
+        }
 };
 
 
@@ -210,9 +385,8 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "setWriter.C"
+    #include "setWriterTemplates.C"
 #endif
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

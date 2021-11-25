@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "histogram.H"
+#include "coordSet.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -36,33 +37,6 @@ namespace functionObjects
     defineTypeNameAndDebug(histogram, 0);
     addToRunTimeSelectionTable(functionObject, histogram, dictionary);
 }
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::functionObjects::histogram::writeGraph
-(
-    const coordSet& coords,
-    const word& fieldName,
-    const scalarField& values
-) const
-{
-    const wordList fieldNames(1, fieldName);
-
-    fileName outputPath = file_.baseTimeDir();
-    mkDir(outputPath);
-    OFstream graphFile
-    (
-        outputPath/formatterPtr_().getFileName(coords, fieldNames)
-    );
-
-    Log << "    Writing histogram of " << fieldName
-        << " to " << graphFile.name() << endl;
-
-    List<const scalarField*> yPtrs(1);
-    yPtrs[0] = &values;
-    formatterPtr_().write(coords, fieldNames, yPtrs, graphFile);
 }
 
 
@@ -97,8 +71,7 @@ bool Foam::functionObjects::histogram::read(const dictionary& dict)
     min_ = dict.lookupOrDefault<scalar>("min", 0);
     dict.lookup("nBins") >> nBins_;
 
-    word format(dict.lookup("setFormat"));
-    formatterPtr_ = setWriter<scalar>::New(format);
+    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
 
     return true;
 }
@@ -153,13 +126,12 @@ bool Foam::functionObjects::histogram::write()
     );
 
     // Calculate the mid-points of bins for the graph axis
-    pointField xBin(nBins_);
+    scalarField xBin(nBins_);
     const scalar delta = (max_- min_)/nBins_;
-
     scalar x = min_ + 0.5*delta;
     forAll(xBin, i)
     {
-        xBin[i] = point(x, 0, 0);
+        xBin[i] = x;
         x += delta;
     }
 
@@ -185,15 +157,14 @@ bool Foam::functionObjects::histogram::write()
         {
             volFrac /= sumVol;
 
-            const coordSet coords
+            formatterPtr_().write
             (
-                "Volume_Fraction",
-                "x",
-                xBin,
-                mag(xBin)
+                file_.baseTimeDir(),
+                typeName,
+                coordSet(true, fieldName_, xBin),
+                field.name(),
+                volFrac
             );
-
-            writeGraph(coords, field.name(), volFrac);
         }
     }
 

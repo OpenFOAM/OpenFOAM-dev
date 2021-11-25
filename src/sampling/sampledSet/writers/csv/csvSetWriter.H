@@ -46,22 +46,19 @@ namespace Foam
                         Class csvSetWriter Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
 class csvSetWriter
 :
-    public setWriter<Type>
+    public setWriter
 {
-
-    // Private Member Functions
-
-        void writeCoordHeader(const coordSet&, Ostream&) const;
-
-        void writeHeader(const coordSet&, const wordList&, Ostream&) const;
-
-
 protected:
 
-    virtual void writeSeparator(Ostream&) const;
+    // Protected Member Functions
+
+        //- Write a value separator
+        virtual void writeValueSeparator(Ostream& os) const;
+
+        //- Write a segment separator
+        virtual void writeSegmentSeparator(Ostream& os) const;
 
 
 public:
@@ -72,8 +69,8 @@ public:
 
     // Constructors
 
-        //- Construct null
-        csvSetWriter();
+        //- Inherit constructors
+        using setWriter::setWriter;
 
 
     //- Destructor
@@ -82,27 +79,17 @@ public:
 
     // Member Functions
 
-        virtual fileName getFileName
-        (
-            const coordSet&,
-            const wordList&
-        ) const;
-
+        //- Write a coordSet and associated data
         virtual void write
         (
-            const coordSet&,
-            const wordList&,
-            const List<const Field<Type>*>&,
-            Ostream&
-        ) const;
-
-        virtual void write
-        (
-            const bool writeTracks,
-            const PtrList<coordSet>&,
-            const wordList& valueSetNames,
-            const List<List<Field<Type>>>&,
-            Ostream&
+            const fileName& outputDir,
+            const fileName& setName,
+            const coordSet& set,
+            const wordList& valueSetNames
+            #define TypeValueSetsConstArg(Type, nullArg) \
+                , const UPtrList<const Field<Type>>& Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+            #undef TypeValueSetsConstArg
         ) const;
 };
 
@@ -110,12 +97,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "csvSetWriter.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

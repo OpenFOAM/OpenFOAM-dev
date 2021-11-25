@@ -25,176 +25,72 @@ License
 
 #include "vtkSetWriter.H"
 #include "coordSet.H"
-#include "fileName.H"
+#include "faceList.H"
 #include "OFstream.H"
+#include "OSspecific.H"
+#include "vtkWritePolyData.H"
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+namespace Foam
+{
+    defineTypeNameAndDebug(vtkSetWriter, 0);
+    addToRunTimeSelectionTable(setWriter, vtkSetWriter, word);
+    addToRunTimeSelectionTable(setWriter, vtkSetWriter, dict);
+}
 
-template<class Type>
-Foam::vtkSetWriter<Type>::vtkSetWriter()
-:
-    setWriter<Type>()
-{}
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::vtkSetWriter<Type>::~vtkSetWriter()
+Foam::vtkSetWriter::~vtkSetWriter()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::fileName Foam::vtkSetWriter<Type>::getFileName
+void Foam::vtkSetWriter::write
 (
-    const coordSet& points,
+    const fileName& outputDir,
+    const fileName& setName,
+    const coordSet& set,
     const wordList& valueSetNames
+    #define TypeValueSetsConstArg(Type, nullArg) \
+        , const UPtrList<const Field<Type>>& Type##ValueSets
+    FOR_ALL_FIELD_TYPES(TypeValueSetsConstArg)
+    #undef TypeValueSetsConstArg
 ) const
 {
-    return this->getBaseName(points, valueSetNames) + ".vtk";
-}
-
-
-template<class Type>
-void Foam::vtkSetWriter<Type>::write
-(
-    const coordSet& points,
-    const wordList& valueSetNames,
-    const List<const Field<Type>*>& valueSets,
-    Ostream& os
-) const
-{
-    os  << "# vtk DataFile Version 2.0" << nl
-        << points.name() << nl
-        << "ASCII" << nl
-        << "DATASET POLYDATA" << nl
-        << "POINTS " << points.size() << " float" << nl;
-
-    forAll(points, i)
-    {
-        const vector& pt = points[i];
-        os  << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
-    }
-
-    os  << "VERTICES " << points.size() << ' ' << 2*points.size() << nl;
-
-    forAll(points, i)
-    {
-        os  << 1 << ' ' << i << endl;
-    }
-
-    os  << "POINT_DATA " << points.size() << nl
-        << " FIELD attributes " << valueSetNames.size() << nl;
-
-    forAll(valueSetNames, setI)
-    {
-        os  << valueSetNames[setI] << ' ' << pTraits<Type>::nComponents << ' '
-            << points.size() << " float" << nl;
-
-        const Field<Type>& fld = *valueSets[setI];
-
-        forAll(fld, pointi)
-        {
-            if (pointi != 0)
-            {
-                os  << ' ';
-            }
-            setWriter<Type>::write(fld[pointi], os);
-        }
-        os  << nl;
-    }
-}
-
-
-template<class Type>
-void Foam::vtkSetWriter<Type>::write
-(
-    const bool writeTracks,
-    const PtrList<coordSet>& tracks,
-    const wordList& valueSetNames,
-    const List<List<Field<Type>>>& valueSets,
-    Ostream& os
-) const
-{
-    if (valueSets.size() != valueSetNames.size())
+    if (!set.hasPointAxis())
     {
         FatalErrorInFunction
-            << "Number of variables:" << valueSetNames.size() << endl
-            << "Number of valueSets:" << valueSets.size()
+            << "Cannot write " << setName << " in " << typeName
+            << " format as it does not have a point axis"
             << exit(FatalError);
     }
 
-    label nTracks = tracks.size();
-    label nPoints = 0;
-    forAll(tracks, i)
+    if (!isDir(outputDir))
     {
-        nPoints += tracks[i].size();
+        mkDir(outputDir);
     }
 
-    os  << "# vtk DataFile Version 2.0" << nl
-        << tracks[0].name() << nl
-        << "ASCII" << nl
-        << "DATASET POLYDATA" << nl
-        << "POINTS " << nPoints << " float" << nl;
-
-    forAll(tracks, trackI)
-    {
-        const coordSet& points = tracks[trackI];
-        forAll(points, i)
-        {
-            const vector& pt = points[i];
-            os  << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
-        }
-    }
-
-    if (writeTracks)
-    {
-        os  << "LINES " << nTracks << ' ' << nPoints+nTracks << nl;
-
-        // Write ids of track points to file
-        label globalPtI = 0;
-        forAll(tracks, trackI)
-        {
-            const coordSet& points = tracks[trackI];
-
-            os  << points.size();
-            forAll(points, i)
-            {
-                os  << ' ' << globalPtI;
-                globalPtI++;
-            }
-            os << nl;
-        }
-    }
-
-    os  << "POINT_DATA " << nPoints << nl
-        << " FIELD attributes " << valueSetNames.size() << nl;
-
-    forAll(valueSetNames, setI)
-    {
-        os  << valueSetNames[setI] << ' ' << pTraits<Type>::nComponents << ' '
-            << nPoints << " float" << nl;
-
-        const List<Field<Type>>& fieldVals = valueSets[setI];
-
-        forAll(fieldVals, i)
-        {
-            const Field<Type>& vals = fieldVals[i];
-
-            forAll(vals, j)
-            {
-                if (j != 0)
-                {
-                    os  << ' ';
-                }
-                setWriter<Type>::write(vals[j], os);
-            }
-            os  << nl;
-        }
-    }
+    // Write
+    vtkWritePolyData::write
+    (
+        outputDir/setName + ".vtk",
+        setName,
+        false,
+        set.pointCoords()(),
+        set.vertices(),
+        set.lines(),
+        faceList(),
+        valueSetNames,
+        boolList(valueSetNames.size(), true),
+        UPtrList<const Field<label>>(valueSetNames.size())
+        #define TypeValueSetsParameter(Type, nullArg) , Type##ValueSets
+        FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
+        #undef TypeValueSetsParameter
+    );
 }
 
 

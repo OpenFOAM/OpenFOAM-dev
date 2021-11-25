@@ -300,7 +300,8 @@ Foam::tmp<Foam::triSurfacePointScalarField> Foam::automatic::load()
 
         vtkSurfaceWriter
         (
-            surface_.searchableSurface::time().writeFormat()
+            surface_.searchableSurface::time().writeFormat(),
+            surface_.searchableSurface::time().writeCompression()
         ).write
         (
             surface_.searchableSurface::time().constant()/

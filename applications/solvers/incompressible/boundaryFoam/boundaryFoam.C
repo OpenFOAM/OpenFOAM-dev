@@ -41,7 +41,8 @@ Description
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "wallFvPatch.H"
-#include "makeGraph.H"
+#include "setWriter.H"
+#include "writeFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

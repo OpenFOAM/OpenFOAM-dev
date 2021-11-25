@@ -134,8 +134,8 @@ protected:
         //- File containing data for all functionTypes except moments
         writeFile file_;
 
-        //- Output formatter, set to raw
-        autoPtr<setWriter<scalar>> scalarFormatter_;
+        //- Output formatter
+        autoPtr<setWriter> formatterPtr_;
 
         //- Reference to populationBalanceModel
         const Foam::diameterModels::populationBalanceModel& popBal_;
@@ -148,6 +148,9 @@ protected:
 
         //- List of volume-averaged number concentrations
         scalarField N_;
+
+        //- ???
+        scalarField V_;
 
         //- List of volume-averaged surface areas
         scalarField a_;
@@ -167,17 +170,28 @@ protected:
         //- Highest moment order
         label maxOrder_;
 
-        //- Bins (representative volume/area/diameter)
-        pointField bins_;
-
-        //- Bin component used according to chosen coordinate type
-        label binCmpt_;
-
 
     // Protected Member Functions
 
         //- Filter field according to cellIds
         tmp<scalarField> filterField(const scalarField& field) const;
+
+        //- Bin component used according to chosen coordinate type
+        inline const scalarField& bin() const
+        {
+            switch (coordinateType_)
+            {
+                case ctVolume:
+                    return V_;
+                case ctArea:
+                    return a_;
+                case ctDiameter:
+                    return d_;
+                case ctProjectedAreaDiameter:
+                    return d_;
+            }
+            return scalarField::null();
+        }
 
         //- Correct volume averages
         void correctVolAverages();
@@ -193,14 +207,6 @@ protected:
 
         //- Output file header information for functionType moments
         virtual void writeFileHeader(const label i);
-
-        //- Output function for all functionType number/volume
-        void writeGraph
-        (
-            const coordSet& coords,
-            const word& functionTypeName,
-            const scalarField& values
-        );
 
 
 public:

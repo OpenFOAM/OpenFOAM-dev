@@ -22,4 +22,13 @@ $(turbulence)/turbGen.C
 
 $(noise)/noiseFFT.C
 
+graph/curve/curve.C
+graph/graph.C
+
+writers = graph/writers
+$(writers)/rawGraph/rawGraph.C
+$(writers)/gnuplotGraph/gnuplotGraph.C
+$(writers)/xmgrGraph/xmgrGraph.C
+$(writers)/jplotGraph/jplotGraph.C
+
 LIB = $(FOAM_LIBBIN)/librandomProcesses

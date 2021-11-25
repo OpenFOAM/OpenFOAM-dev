@@ -36,25 +36,9 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(ensightSurfaceWriter, 0);
-    addToRunTimeSelectionTable(surfaceWriter, ensightSurfaceWriter, wordDict);
+    addToRunTimeSelectionTable(surfaceWriter, ensightSurfaceWriter, word);
+    addToRunTimeSelectionTable(surfaceWriter, ensightSurfaceWriter, dict);
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::ensightSurfaceWriter::ensightSurfaceWriter
-(
-    const IOstream::streamFormat writeFormat
-)
-:
-    surfaceWriter(writeFormat)
-{}
-
-
-Foam::ensightSurfaceWriter::ensightSurfaceWriter(const dictionary& optDict)
-:
-    surfaceWriter(optDict)
-{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -118,7 +102,7 @@ void Foam::ensightSurfaceWriter::write
             {                                                           \
                 osCase                                                  \
                     << ensightPTraits<Type>::typeName << " per "        \
-                    << word(writePointValues? "node:" : "element:")     \
+                    << word(writePointValues ? "node:" : "element:")    \
                     << setw(10) << 1 << "       " << fieldNames[fieldi] \
                     << "       " << surfaceName.c_str() << ".***."      \
                     << fieldNames[fieldi] << nl;                        \

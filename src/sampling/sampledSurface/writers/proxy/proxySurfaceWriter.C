@@ -38,7 +38,7 @@ namespace Foam
 
 Foam::proxySurfaceWriter::proxySurfaceWriter(const word& ext)
 :
-    surfaceWriter(IOstream::ASCII),
+    surfaceWriter(IOstream::ASCII, IOstream::UNCOMPRESSED),
     ext_(ext)
 {}
 

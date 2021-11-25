@@ -38,6 +38,29 @@ License
 #include "writeFile.H"
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+template<class Type>
+void gatherAndFlatten(DynamicField<Type>& field)
+{
+    List<List<Type>> gatheredField(Pstream::nProcs());
+    gatheredField[Pstream::myProcNo()] = field;
+    Pstream::gatherList(gatheredField);
+
+    field =
+        ListListOps::combine<List<Type>>
+        (
+            gatheredField,
+            accessOp<List<Type>>()
+        );
+}
+
+}
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -54,250 +77,6 @@ namespace Foam
 
         const NamedEnum<streamlines::trackDirection, 3>
             streamlines::trackDirectionNames_;
-    }
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::indirectPrimitivePatch>
-Foam::functionObjects::streamlines::wallPatch() const
-{
-    const polyBoundaryMesh& patches = mesh_.boundaryMesh();
-
-    label nFaces = 0;
-
-    forAll(patches, patchi)
-    {
-        if (isA<wallPolyPatch>(patches[patchi]))
-        {
-            nFaces += patches[patchi].size();
-        }
-    }
-
-    labelList addressing(nFaces);
-
-    nFaces = 0;
-
-    forAll(patches, patchi)
-    {
-        if (isA<wallPolyPatch>(patches[patchi]))
-        {
-            const polyPatch& pp = patches[patchi];
-
-            forAll(pp, i)
-            {
-                addressing[nFaces++] = pp.start()+i;
-            }
-        }
-    }
-
-    return autoPtr<indirectPrimitivePatch>
-    (
-        new indirectPrimitivePatch
-        (
-            IndirectList<face>
-            (
-                mesh_.faces(),
-                addressing
-            ),
-            mesh_.points()
-        )
-    );
-}
-
-
-void Foam::functionObjects::streamlines::track()
-{
-    IDLList<streamlinesParticle> initialParticles;
-    streamlinesCloud particles
-    (
-        mesh_,
-        cloudName_,
-        initialParticles
-    );
-
-    const sampledSet& seedPoints = sampledSetPtr_();
-
-    forAll(seedPoints, i)
-    {
-        particles.addParticle
-        (
-            new streamlinesParticle
-            (
-                mesh_,
-                seedPoints[i],
-                seedPoints.cells()[i],
-                lifeTime_
-            )
-        );
-    }
-
-    label nSeeds = returnReduce(particles.size(), sumOp<label>());
-
-    Info << "    seeded " << nSeeds << " particles" << endl;
-
-    // Read or lookup fields
-    PtrList<volScalarField> vsFlds;
-    PtrList<interpolation<scalar>> vsInterp;
-    PtrList<volVectorField> vvFlds;
-    PtrList<interpolation<vector>> vvInterp;
-
-    label UIndex = -1;
-
-    label nScalar = 0;
-    label nVector = 0;
-
-    forAll(fields_, i)
-    {
-        if (mesh_.foundObject<volScalarField>(fields_[i]))
-        {
-            nScalar++;
-        }
-        else if (mesh_.foundObject<volVectorField>(fields_[i]))
-        {
-            nVector++;
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Cannot find field " << fields_[i] << nl
-                << "Valid scalar fields are:"
-                << mesh_.names(volScalarField::typeName) << nl
-                << "Valid vector fields are:"
-                << mesh_.names(volVectorField::typeName)
-                << exit(FatalError);
-        }
-    }
-    vsInterp.setSize(nScalar);
-    nScalar = 0;
-    vvInterp.setSize(nVector);
-    nVector = 0;
-
-    forAll(fields_, i)
-    {
-        if (mesh_.foundObject<volScalarField>(fields_[i]))
-        {
-            const volScalarField& f = mesh_.lookupObject<volScalarField>
-            (
-                fields_[i]
-            );
-            vsInterp.set
-            (
-                nScalar++,
-                interpolation<scalar>::New
-                (
-                    interpolationScheme_,
-                    f
-                )
-            );
-        }
-        else if (mesh_.foundObject<volVectorField>(fields_[i]))
-        {
-            const volVectorField& f = mesh_.lookupObject<volVectorField>
-            (
-                fields_[i]
-            );
-
-            if (f.name() == UName_)
-            {
-                UIndex = nVector;
-            }
-
-            vvInterp.set
-            (
-                nVector++,
-                interpolation<vector>::New
-                (
-                    interpolationScheme_,
-                    f
-                )
-            );
-        }
-    }
-
-    // Store the names
-    scalarNames_.setSize(vsInterp.size());
-    forAll(vsInterp, i)
-    {
-        scalarNames_[i] = vsInterp[i].psi().name();
-    }
-    vectorNames_.setSize(vvInterp.size());
-    forAll(vvInterp, i)
-    {
-        vectorNames_[i] = vvInterp[i].psi().name();
-    }
-
-    // Check that we know the index of U in the interpolators.
-
-    if (UIndex == -1)
-    {
-        FatalErrorInFunction
-            << "Cannot find field to move particles with : " << UName_ << nl
-            << "This field has to be present in the sampled fields " << fields_
-            << " and in the objectRegistry."
-            << exit(FatalError);
-    }
-
-    // Sampled data
-    // ~~~~~~~~~~~~
-
-    // Size to maximum expected sizes.
-    allTracks_.clear();
-    allTracks_.setCapacity(nSeeds);
-    allAges_.clear();
-    allAges_.setCapacity(nSeeds);
-    allScalars_.setSize(vsInterp.size());
-    forAll(allScalars_, i)
-    {
-        allScalars_[i].clear();
-        allScalars_[i].setCapacity(nSeeds);
-    }
-    allVectors_.setSize(vvInterp.size());
-    forAll(allVectors_, i)
-    {
-        allVectors_[i].clear();
-        allVectors_[i].setCapacity(nSeeds);
-    }
-
-
-    // Additional particle info
-    streamlinesParticle::trackingData td
-    (
-        particles,
-        vsInterp,
-        vvInterp,
-        UIndex,         // index of U in vvInterp
-
-        trackDirection_ == trackDirection::forward,
-        trackOutside_,
-
-        nSubCycle_,     // automatic track control:step through cells in steps?
-        trackLength_,   // fixed track length
-
-        allTracks_,
-        allAges_,
-        allScalars_,
-        allVectors_
-    );
-
-    // Set very large dt. Note: cannot use great since 1/great is small
-    // which is a trigger value for the tracking...
-    const scalar trackTime = Foam::sqrt(great);
-
-    // Track
-    if (trackDirection_ == trackDirection::both)
-    {
-        initialParticles = particles;
-    }
-
-    particles.move(particles, td, trackTime);
-
-    if (trackDirection_ == trackDirection::both)
-    {
-        particles.IDLList<streamlinesParticle>::operator=(initialParticles);
-        td.trackForward_ = !td.trackForward_;
-        particles.move(particles, td, trackTime);
     }
 }
 
@@ -337,34 +116,17 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
     Info<< type() << " " << name() << ":" << nl;
 
     dict.lookup("fields") >> fields_;
-    UName_ = dict.lookupOrDefault("U", word("U"));
 
-    if (findIndex(fields_, UName_) == -1)
-    {
-        FatalIOErrorInFunction(dict)
-            << "Velocity field for tracking " << UName_
-            << " should be present in the list of fields " << fields_
-            << exit(FatalIOError);
-    }
+    UName_ = dict.lookupOrDefault("U", word("U"));
 
     writeAge_ = dict.lookupOrDefault<Switch>("writeAge", true);
 
-    // The trackForward entry is maintained here for backwards compatibility
-    if (!dict.found("direction") && dict.found("trackForward"))
-    {
-        trackDirection_ =
-            dict.lookup<bool>("trackForward")
-          ? trackDirection::forward
-          : trackDirection::backward;
-    }
-    else
-    {
-        trackDirection_ = trackDirectionNames_[word(dict.lookup("direction"))];
-    }
+    trackDirection_ = trackDirectionNames_[word(dict.lookup("direction"))];
 
     trackOutside_ = dict.lookupOrDefault<Switch>("outside", false);
 
     dict.lookup("lifeTime") >> lifeTime_;
+
     if (lifeTime_ < 1)
     {
         FatalErrorInFunction
@@ -372,10 +134,8 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
             << exit(FatalError);
     }
 
-
     bool subCycling = dict.found("nSubCycle");
     bool fixedLength = dict.found("trackLength");
-
     if (subCycling && fixedLength)
     {
         FatalIOErrorInFunction(dict)
@@ -384,33 +144,27 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
             << "trackLength')"
             << exit(FatalIOError);
     }
-
-
-    nSubCycle_ = 1;
-    if (dict.readIfPresent("nSubCycle", nSubCycle_))
+    if (subCycling)
     {
+        nSubCycle_ = max(dict.lookup<scalar>("nSubCycle"), 1);
         trackLength_ = vGreat;
-        if (nSubCycle_ < 1)
-        {
-            nSubCycle_ = 1;
-        }
         Info<< "    automatic track length specified through"
             << " number of sub cycles : " << nSubCycle_ << nl << endl;
     }
     else
     {
+        nSubCycle_ = 1;
         dict.lookup("trackLength") >> trackLength_;
-
         Info<< "    fixed track length specified : "
             << trackLength_ << nl << endl;
     }
 
-
-    interpolationScheme_ = dict.lookupOrDefault
-    (
-        "interpolationScheme",
-        interpolationCellPoint<scalar>::typeName
-    );
+    interpolationScheme_ =
+        dict.lookupOrDefault
+        (
+            "interpolationScheme",
+            interpolationCellPoint<scalar>::typeName
+        );
 
     cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamlines");
 
@@ -423,10 +177,8 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
         meshSearchPtr_(),
         dict.subDict("seedSampleSet")
     );
-    sampledSetAxis_ = sampledSetPtr_->axis();
 
-    scalarFormatterPtr_ = setWriter<scalar>::New(dict.lookup("setFormat"));
-    vectorFormatterPtr_ = setWriter<vector>::New(dict.lookup("setFormat"));
+    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
 
     return true;
 }
@@ -451,276 +203,382 @@ bool Foam::functionObjects::streamlines::write()
 {
     Info<< type() << " " << name() << " write:" << nl;
 
-    const Time& runTime = obr_.time();
+    // Create list of available fields
+    wordList fieldNames;
+    forAll(fields_, fieldi)
+    {
+        if
+        (
+            false
+            #define FoundTypeField(Type, nullArg) \
+              || foundObject<VolField<Type>>(fields_[fieldi])
+            FOR_ALL_FIELD_TYPES(FoundTypeField)
+            #undef FoundTypeField
+        )
+        {
+            fieldNames.append(fields_[fieldi]);
+        }
+        else
+        {
+            cannotFindObject(fields_[fieldi]);
+        }
+    }
 
-    // Do all injection and tracking
-    track();
+    // Lookup fields and construct interpolators
+    #define DeclareTypeInterpolator(Type, nullArg) \
+        PtrList<interpolation<Type>> Type##Interp(fieldNames.size());
+    FOR_ALL_FIELD_TYPES(DeclareTypeInterpolator);
+    #undef DeclareTypeInterpolator
+    forAll(fieldNames, fieldi)
+    {
+        #define ConstructTypeInterpolator(Type, nullArg)                       \
+            if (mesh_.foundObject<VolField<Type>>(fieldNames[fieldi]))         \
+            {                                                                  \
+                Type##Interp.set                                               \
+                (                                                              \
+                    fieldi,                                                    \
+                    interpolation<Type>::New                                   \
+                    (                                                          \
+                        interpolationScheme_,                                  \
+                        mesh_.lookupObject<VolField<Type>>(fieldNames[fieldi]) \
+                    )                                                          \
+                );                                                             \
+            }
+        FOR_ALL_FIELD_TYPES(ConstructTypeInterpolator);
+        #undef ConstructTypeInterpolator
+    }
 
+    // Create a velocity interpolator if it is not already available
+    const label UIndex = findIndex(fieldNames, UName_);
+    tmpNrc<interpolation<vector>> UInterp(nullptr);
+    if (UIndex == -1)
+    {
+        UInterp =
+            tmpNrc<interpolation<vector>>
+            (
+                interpolation<vector>::New
+                (
+                    interpolationScheme_,
+                    mesh_.lookupObject<volVectorField>(UName_)
+                ).ptr()
+            );
+    }
 
+    // Do tracking to create sampled data
+    DynamicField<point> allPositions;
+    DynamicField<label> allTracks;
+    DynamicField<label> allTrackParts;
+    DynamicField<scalar> allAges;
+    #define DeclareAllTypes(Type, nullArg) \
+        List<DynamicField<Type>> all##Type##s(fieldNames.size());
+    FOR_ALL_FIELD_TYPES(DeclareAllTypes);
+    #undef DeclareAllTypes
+    {
+        // Create a cloud and initialise with points from the sampled set
+        globalIndex gi(sampledSetPtr_().size());
+        streamlinesCloud particles
+        (
+            mesh_,
+            cloudName_,
+            IDLList<streamlinesParticle>()
+        );
+        forAll(sampledSetPtr_(), i)
+        {
+            particles.addParticle
+            (
+                new streamlinesParticle
+                (
+                    mesh_,
+                    sampledSetPtr_().positions()[i],
+                    sampledSetPtr_().cells()[i],
+                    lifeTime_,
+                    gi.toGlobal(i)
+                )
+            );
+        }
+
+        // Report the number of successful seeds
+        const label nSeeds = returnReduce(particles.size(), sumOp<label>());
+        Info << "    Seeded " << nSeeds << " particles" << endl;
+
+        // Create tracking data
+        streamlinesParticle::trackingData td
+        (
+            particles,
+            #define TypeInterpolatorParameter(Type, nullArg) \
+                Type##Interp,
+            FOR_ALL_FIELD_TYPES(TypeInterpolatorParameter)
+            #undef TypeInterpolatorParameter
+            UIndex != -1 ? vectorInterp[UIndex] : UInterp(),
+            trackDirection_ == trackDirection::forward,
+            trackOutside_,
+            nSubCycle_,
+            trackLength_,
+            allPositions,
+            allTracks,
+            allTrackParts,
+            allAges
+            #define AllTypesParameter(Type, nullArg) \
+                , all##Type##s
+            FOR_ALL_FIELD_TYPES(AllTypesParameter)
+            #undef AllTypesParameter
+        );
+
+        // Track
+        IDLList<streamlinesParticle> initialParticles;
+        if (trackDirection_ == trackDirection::both)
+        {
+            initialParticles = particles;
+        }
+
+        particles.move(particles, td, rootGreat);
+
+        if (trackDirection_ == trackDirection::both)
+        {
+            particles.IDLList<streamlinesParticle>::operator=(initialParticles);
+            td.trackForward_ = !td.trackForward_;
+            particles.move(particles, td, rootGreat);
+        }
+    }
+
+    // Gather data on the master
     if (Pstream::parRun())
     {
-        // Append slave tracks to master ones
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        globalIndex globalTrackIDs(allTracks_.size());
-
-        // Construct a distribution map to pull all to the master.
-        labelListList sendMap(Pstream::nProcs());
-        labelListList recvMap(Pstream::nProcs());
-
-        if (Pstream::master())
+        gatherAndFlatten(allPositions);
+        gatherAndFlatten(allTracks);
+        gatherAndFlatten(allTrackParts);
+        gatherAndFlatten(allAges);
+        forAll(fieldNames, fieldi)
         {
-            // Master: receive all. My own first, then consecutive
-            // processors.
-            label trackI = 0;
-
-            forAll(recvMap, proci)
-            {
-                labelList& fromProc = recvMap[proci];
-                fromProc.setSize(globalTrackIDs.localSize(proci));
-                forAll(fromProc, i)
-                {
-                    fromProc[i] = trackI++;
+            #define GatherAndFlattenAllTypes(Type, nullArg) \
+                if (Type##Interp.set(fieldi))               \
+                {                                           \
+                    gatherAndFlatten(all##Type##s[fieldi]); \
                 }
+            FOR_ALL_FIELD_TYPES(GatherAndFlattenAllTypes);
+            #undef GatherAndFlattenAllTypes
+        }
+    }
+
+    // Report the total number of samples
+    Info<< "    Sampled " << allPositions.size() << " locations" << endl;
+
+    // Bin-sort by track and trackPart to build an ordering
+    labelList order(allPositions.size());
+    if (Pstream::master())
+    {
+        const label nTracks = max(allTracks) + 1;
+        const label trackParti0 = min(allTrackParts);
+        const label trackParti1 = max(allTrackParts) + 1;
+
+        labelListList trackPartCounts
+        (
+            nTracks,
+            labelList(trackParti1 - trackParti0, 0)
+        );
+        forAll(allPositions, samplei)
+        {
+            const label tracki = allTracks[samplei];
+            const label trackParti = -trackParti0 + allTrackParts[samplei];
+            trackPartCounts[tracki][trackParti] ++;
+        }
+
+        label offset = 0;
+        labelListList trackPartOffsets
+        (
+            nTracks,
+            labelList(trackParti1 - trackParti0, 0)
+        );
+        forAll(trackPartOffsets, tracki)
+        {
+            forAll(trackPartOffsets[tracki], trackParti)
+            {
+                trackPartOffsets[tracki][trackParti] += offset;
+                offset += trackPartCounts[tracki][trackParti];
             }
         }
 
-        labelList& toMaster = sendMap[0];
-        toMaster.setSize(globalTrackIDs.localSize());
-        forAll(toMaster, i)
+        forAll(trackPartCounts, tracki)
         {
-            toMaster[i] = i;
+            trackPartCounts[tracki] = 0;
         }
 
-        const mapDistribute distMap
-        (
-            globalTrackIDs.size(),
-            move(sendMap),
-            move(recvMap)
-        );
-
-
-        // Distribute the track positions. Note: use scheduled comms
-        // to prevent buffering.
-        mapDistributeBase::distribute
-        (
-            Pstream::commsTypes::scheduled,
-            distMap.schedule(),
-            distMap.constructSize(),
-            distMap.subMap(),
-            false,
-            distMap.constructMap(),
-            false,
-            allTracks_,
-            flipOp()
-        );
-
-        // Distribute the ages
-        mapDistributeBase::distribute
-        (
-            Pstream::commsTypes::scheduled,
-            distMap.schedule(),
-            distMap.constructSize(),
-            distMap.subMap(),
-            false,
-            distMap.constructMap(),
-            false,
-            allAges_,
-            flipOp()
-        );
-
-        // Distribute the scalars
-        forAll(allScalars_, scalari)
+        forAll(allPositions, samplei)
         {
-            allScalars_[scalari].shrink();
-            mapDistributeBase::distribute
-            (
-                Pstream::commsTypes::scheduled,
-                distMap.schedule(),
-                distMap.constructSize(),
-                distMap.subMap(),
-                false,
-                distMap.constructMap(),
-                false,
-                allScalars_[scalari],
-                flipOp()
-            );
-            allScalars_[scalari].setCapacity(allScalars_[scalari].size());
-        }
-        // Distribute the vectors
-        forAll(allVectors_, vectori)
-        {
-            allVectors_[vectori].shrink();
-            mapDistributeBase::distribute
-            (
-                Pstream::commsTypes::scheduled,
-                distMap.schedule(),
-                distMap.constructSize(),
-                distMap.subMap(),
-                false,
-                distMap.constructMap(),
-                false,
-                allVectors_[vectori],
-                flipOp()
-            );
-            allVectors_[vectori].setCapacity(allVectors_[vectori].size());
+            const label tracki = allTracks[samplei];
+            const label trackParti = -trackParti0 + allTrackParts[samplei];
+
+            order[samplei] =
+                trackPartOffsets[tracki][trackParti]
+              + trackPartCounts[tracki][trackParti];
+
+            trackPartCounts[tracki][trackParti] ++;
         }
     }
 
+    //auto reportTrackParts = [&]()
+    //{
+    //    Info<< nl;
+    //    forAll(allPositions, samplei)
+    //    {
+    //        if
+    //        (
+    //            samplei == 0
+    //         || allTracks[samplei] != allTracks[samplei - 1]
+    //         || allTrackParts[samplei] != allTrackParts[samplei - 1]
+    //        )
+    //        {
+    //            Info<< "track #" << allTracks[samplei]
+    //                << " part #" << allTrackParts[samplei]
+    //                << " from i=" << samplei << " to ";
+    //        }
+    //        if
+    //        (
+    //            samplei == allPositions.size() - 1
+    //         || allTracks[samplei + 1] != allTracks[samplei]
+    //         || allTrackParts[samplei + 1] != allTrackParts[samplei]
+    //        )
+    //        {
+    //            Info<< "i=" << samplei << nl;
+    //        }
+    //    }
+    //};
 
-    label n = 0;
-    forAll(allTracks_, trackI)
+    //reportTrackParts();
+
+    // Reorder
+    if (Pstream::master())
     {
-        n += allTracks_[trackI].size();
+        allPositions.rmap(allPositions, order);
+        allTracks.rmap(allTracks, order);
+        allTrackParts.rmap(allTrackParts, order);
+        allAges.rmap(allAges, order);
+        forAll(fieldNames, fieldi)
+        {
+            #define RMapAllTypes(Type, nullArg)                             \
+                if (Type##Interp.set(fieldi))                               \
+                {                                                           \
+                    all##Type##s[fieldi].rmap(all##Type##s[fieldi], order); \
+                }
+            FOR_ALL_FIELD_TYPES(RMapAllTypes);
+            #undef RMapAllTypes
+        }
     }
 
-    Info<< "    Tracks:" << allTracks_.size() << nl
-        << "    Total samples:" << n
-        << endl;
+    //reportTrackParts();
 
+    // Relabel tracks and track parts into track labels only, and join the
+    // forward and backward track parts that are connected to the seed
+    if (Pstream::master())
+    {
+        label samplei = 0, tracki = 0;
+        forAll(allPositions, samplej)
+        {
+            const label trackj = allTracks[samplej];
+            const label trackPartj = allTrackParts[samplej];
 
-    // Massage into form suitable for writers
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            allPositions[samplei] = allPositions[samplej];
+            allTracks[samplei] = tracki;
+            allTrackParts[samplei] = 0;
+            allAges[samplei] = allAges[samplej];
+            forAll(fieldNames, fieldi)
+            {
+                #define ShuffleUpAllTypes(Type, nullArg)   \
+                    if (Type##Interp.set(fieldi))          \
+                    {                                      \
+                        all##Type##s[fieldi][samplei] =    \
+                            all##Type##s[fieldi][samplej]; \
+                    }
+                FOR_ALL_FIELD_TYPES(ShuffleUpAllTypes);
+                #undef ShuffleUpAllTypes
+            }
 
-    if (Pstream::master() && allTracks_.size())
+            const bool joinNewParts =
+                samplej != allPositions.size() - 1
+             && trackPartj == -1
+             && allTrackParts[samplej + 1] == 0;
+
+            if (!joinNewParts) samplei ++;
+
+            const bool newPart =
+                samplej == allPositions.size() - 1
+             || trackj != allTracks[samplej + 1]
+             || trackPartj != allTrackParts[samplej + 1];
+
+            if (!joinNewParts && newPart) tracki ++;
+        }
+
+        allPositions.resize(samplei);
+        allTracks.resize(samplei);
+        allTrackParts.resize(samplei);
+        allAges.resize(samplei);
+        forAll(fieldNames, fieldi)
+        {
+            #define ResizeAllTypes(Type, nullArg)         \
+                if (Type##Interp.set(fieldi))             \
+                {                                         \
+                    all##Type##s[fieldi].resize(samplei); \
+                }
+            FOR_ALL_FIELD_TYPES(ResizeAllTypes);
+            #undef ResizeAllTypes
+        }
+    }
+
+    //reportTrackParts();
+
+    // Write
+    if (Pstream::master() && allPositions.size())
     {
         // Make output directory
-
-        fileName vtkPath
+        fileName outputPath
         (
-            runTime.globalPath()/writeFile::outputPrefix/"sets"/name()
+            mesh_.time().globalPath()/writeFile::outputPrefix/name()
         );
         if (mesh_.name() != fvMesh::defaultRegion)
         {
-            vtkPath = vtkPath/mesh_.name();
+            outputPath = outputPath/mesh_.name();
         }
-        vtkPath = vtkPath/mesh_.time().timeName();
-        mkDir(vtkPath);
+        outputPath = outputPath/mesh_.time().timeName();
+        mkDir(outputPath);
 
-        // Convert track positions
-
-        PtrList<coordSet> tracks(allTracks_.size());
-        forAll(allTracks_, trackI)
+        // Pass data to the formatter to write
+        const label nValueSets = fieldNames.size() + writeAge_;
+        wordList valueSetNames(nValueSets);
+        #define DeclareTypeValueSets(Type, nullArg) \
+            UPtrList<const Field<Type>> Type##ValueSets(nValueSets);
+        FOR_ALL_FIELD_TYPES(DeclareTypeValueSets);
+        #undef DeclareTypeValueSets
+        if (writeAge_)
         {
-            tracks.set
-            (
-                trackI,
-                new coordSet
-                (
-                    "track" + Foam::name(trackI),
-                    sampledSetAxis_                 //"xyz"
-                )
-            );
-            tracks[trackI].transfer(allTracks_[trackI]);
+            valueSetNames[0] = "age";
+            scalarValueSets.set(0, &allAges);
         }
-
-        // Convert scalar values
-
-        if (allScalars_.size() > 0 || writeAge_)
+        forAll(fieldNames, fieldi)
         {
-            List<List<scalarField>> ageAndScalarValues
-            (
-                allScalars_.size() + writeAge_
-            );
-            wordList ageAndScalarNames(allScalars_.size() + writeAge_);
+            valueSetNames[fieldi + writeAge_] = fieldNames[fieldi];
 
-            if (writeAge_)
-            {
-                DynamicList<scalarList>& allTrackAges = allAges_;
-
-                ageAndScalarValues[0].setSize(allTrackAges.size());
-                forAll(allTrackAges, trackI)
-                {
-                    ageAndScalarValues[0][trackI].transfer
-                    (
-                        allTrackAges[trackI]
-                    );
+            #define SetTypeValueSetPtr(Type, nullArg) \
+                if (Type##Interp.set(fieldi))         \
+                {                                     \
+                    Type##ValueSets.set               \
+                    (                                 \
+                        fieldi + writeAge_,           \
+                        &all##Type##s[fieldi]         \
+                    );                                \
                 }
-
-                ageAndScalarNames[0] = "age";
-            }
-
-            forAll(allScalars_, scalari)
-            {
-                const label ageAndScalari = scalari + writeAge_;
-
-                DynamicList<scalarList>& allTrackVals = allScalars_[scalari];
-
-                ageAndScalarValues[ageAndScalari].setSize(allTrackVals.size());
-                forAll(allTrackVals, trackI)
-                {
-                    ageAndScalarValues[ageAndScalari][trackI].transfer
-                    (
-                        allTrackVals[trackI]
-                    );
-                }
-
-                ageAndScalarNames[ageAndScalari] = scalarNames_[scalari];
-            }
-
-            fileName vtkFile
-            (
-                vtkPath
-              / scalarFormatterPtr_().getFileName
-                (
-                    tracks[0],
-                    ageAndScalarNames
-                )
-            );
-
-            Info<< "    Writing data to " << vtkFile.path() << endl;
-
-            scalarFormatterPtr_().write
-            (
-                true,           // writeTracks
-                tracks,
-                ageAndScalarNames,
-                ageAndScalarValues,
-                OFstream(vtkFile)()
-            );
+            FOR_ALL_FIELD_TYPES(SetTypeValueSetPtr);
+            #undef SetTypeValueSetPtr
         }
-
-        // Convert vector values
-
-        if (allVectors_.size() > 0)
-        {
-            List<List<vectorField>> vectorValues(allVectors_.size());
-
-            forAll(allVectors_, vectori)
-            {
-                DynamicList<vectorList>& allTrackVals = allVectors_[vectori];
-
-                vectorValues[vectori].setSize(allTrackVals.size());
-                forAll(allTrackVals, trackI)
-                {
-                    vectorValues[vectori][trackI].transfer
-                    (
-                        allTrackVals[trackI]
-                    );
-                }
-            }
-
-            fileName vtkFile
-            (
-                vtkPath
-              / vectorFormatterPtr_().getFileName
-                (
-                    tracks[0],
-                    vectorNames_
-                )
-            );
-
-            Info<< "    Writing data to " << vtkFile.path() << endl;
-
-            vectorFormatterPtr_().write
-            (
-                true,           // writeTracks
-                tracks,
-                vectorNames_,
-                vectorValues,
-                OFstream(vtkFile)()
-            );
-        }
+        formatterPtr_->write
+        (
+            outputPath,
+            "tracks",
+            coordSet(allTracks, word::null, allPositions),
+            valueSetNames
+            #define TypeValueSetsParameter(Type, nullArg) , Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
+            #undef TypeValueSetsParameter
+        );
     }
 
     return true;

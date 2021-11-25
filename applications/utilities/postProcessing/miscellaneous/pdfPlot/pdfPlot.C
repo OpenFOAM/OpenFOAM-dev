@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,8 @@ Description
 
 #include "fvCFD.H"
 #include "distributionModel.H"
-#include "makeGraph.H"
+#include "setWriter.H"
+#include "writeFile.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -66,13 +67,19 @@ int main(int argc, char *argv[])
     }
 
     scalarField x(nIntervals);
-
     forAll(x, i)
     {
         x[i] = xMin + i*(xMax - xMin)/(nIntervals - 1);
     }
 
-    makeGraph(x, samples, p->type(), pdfPath, runTime.graphFormat());
+    setWriter::New(runTime.graphFormat())->write
+    (
+        pdfPath,
+        args.executable(),
+        coordSet(true, "x", x),
+        p->type(),
+        samples
+    );
 
     Info<< "End\n" << endl;
 

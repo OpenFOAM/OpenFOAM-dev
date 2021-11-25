@@ -59,8 +59,8 @@ public:
 
     // Constructors
 
-        //- Construct given write format
-        foamSurfaceWriter(const IOstream::streamFormat writeFormat);
+        //- Inherit constructors
+        using surfaceWriter::surfaceWriter;
 
 
     //- Destructor

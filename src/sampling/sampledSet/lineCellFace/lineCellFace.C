@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,104 +45,60 @@ namespace sampledSets
 
 void Foam::sampledSets::lineCellFace::calcSamples
 (
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    DynamicList<point>& samplingPositions,
+    DynamicList<scalar>& samplingDistances,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 ) const
 {
-    // Run the algorithm from lineFaceSet to get all the face intersections
-    DynamicList<point> facePts;
-    DynamicList<label> faceCells;
-    DynamicList<label> faceFaces;
-    DynamicList<label> faceSegments;
-    DynamicList<scalar> faceCurveDist;
     lineFace::calcSamples
     (
         mesh(),
         searchEngine(),
         start_,
         end_,
-        facePts,
-        faceCells,
-        faceFaces,
-        faceSegments,
-        faceCurveDist
+        true,
+        true,
+        samplingPositions,
+        samplingDistances,
+        samplingSegments,
+        samplingCells,
+        samplingFaces
     );
-
-    // If there are no intersections then quit
-    if (!facePts.size())
-    {
-        return;
-    }
-
-    // Append all the face intersections to the set, additionally adding mid
-    // points when the segment is the same
-    samplingPts.append(facePts[0]);
-    samplingCells.append(faceCells[0]);
-    samplingFaces.append(faceFaces[0]);
-    samplingSegments.append(faceSegments[0]);
-    samplingCurveDist.append(faceCurveDist[0]);
-
-    for (label facei = 1; facei < facePts.size(); ++ facei)
-    {
-        lineCell::calcMidPointSample
-        (
-            mesh(),
-            samplingPts.last(),
-            samplingFaces.last(),
-            samplingSegments.last(),
-            samplingCurveDist.last(),
-            facePts[facei],
-            faceFaces[facei],
-            faceSegments[facei],
-            samplingPts,
-            samplingCells,
-            samplingFaces,
-            samplingSegments,
-            samplingCurveDist
-        );
-
-        samplingPts.append(facePts[facei]);
-        samplingCells.append(faceCells[facei]);
-        samplingFaces.append(faceFaces[facei]);
-        samplingSegments.append(faceSegments[facei]);
-        samplingCurveDist.append(faceCurveDist[facei]);
-    }
 }
 
 
 void Foam::sampledSets::lineCellFace::genSamples()
 {
-    DynamicList<point> samplingPts;
+    DynamicList<point> samplingPositions;
+    DynamicList<scalar> samplingDistances;
+    DynamicList<label> samplingSegments;
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
-    DynamicList<label> samplingSegments;
-    DynamicList<scalar> samplingCurveDist;
 
     calcSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
+        samplingDistances,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 
-    samplingPts.shrink();
+    samplingPositions.shrink();
+    samplingDistances.shrink();
+    samplingSegments.shrink();
     samplingCells.shrink();
     samplingFaces.shrink();
-    samplingSegments.shrink();
-    samplingCurveDist.shrink();
 
     setSamples
     (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
+        samplingPositions,
+        samplingDistances,
         samplingSegments,
-        samplingCurveDist
+        samplingCells,
+        samplingFaces
     );
 }
 
@@ -162,11 +118,6 @@ Foam::sampledSets::lineCellFace::lineCellFace
     end_(dict.lookup("end"))
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
 }
 
 
@@ -185,11 +136,6 @@ Foam::sampledSets::lineCellFace::lineCellFace
     end_(end)
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
 }
 
 

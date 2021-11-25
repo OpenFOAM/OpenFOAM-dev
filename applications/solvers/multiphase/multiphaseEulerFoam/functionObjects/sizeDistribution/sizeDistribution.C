@@ -130,15 +130,9 @@ void Foam::functionObjects::sizeDistribution::correctVolAverages()
         }
 
         N_[i] = gSum(V*Ni)/this->V();
+        V_[i] = fi.x().value();
         a_[i] = gSum(V*ai)/this->V();
         d_[i] = gSum(V*di)/this->V();
-    }
-
-    forAll(bins_, i)
-    {
-        const Foam::diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
-
-        bins_[i] = point(fi.x().value(), a_[i], d_[i]);
     }
 }
 
@@ -154,13 +148,15 @@ void Foam::functionObjects::sizeDistribution::writeMoments()
         writeTime(file());
     }
 
+    const scalarField& bin = this->bin();
+
     for (label k = 0; k <= maxOrder_; k++)
     {
         scalar result = 0;
 
         forAll(N_, i)
         {
-            result += pow(bins_[i][binCmpt_], k)*N_[i];
+            result += pow(bin[i], k)*N_[i];
         }
 
         if (Pstream::master())
@@ -192,23 +188,25 @@ void Foam::functionObjects::sizeDistribution::writeStdDev()
     scalar mean = 0;
     scalar var = 0;
 
-    if(sum(N_) != 0)
+    const scalarField& bin = this->bin();
+
+    if (sum(N_) != 0)
     {
         if (geometric_)
         {
-            mean = exp(sum(Foam::log(bins_.component(binCmpt_))*N_/sum(N_)));
+            mean = exp(sum(Foam::log(bin)*N_/sum(N_)));
 
             var =
-                sum(sqr(Foam::log(bins_.component(binCmpt_)) - Foam::log(mean))
+                sum(sqr(Foam::log(bin) - Foam::log(mean))
                *N_/sum(N_));
 
             stdDev = exp(sqrt(var));
         }
         else
         {
-            mean = sum(bins_.component(binCmpt_)*N_/sum(N_));
+            mean = sum(bin*N_/sum(N_));
 
-            var = sum(sqr(bins_.component(binCmpt_) - mean)*N_/sum(N_));
+            var = sum(sqr(bin - mean)*N_/sum(N_));
 
             stdDev = sqrt(var);
         }
@@ -225,6 +223,8 @@ void Foam::functionObjects::sizeDistribution::writeDistribution()
 {
     scalarField result(N_);
 
+    const scalarField& bin = this->bin();
+
     switch (functionType_)
     {
         case ftNumber:
@@ -239,7 +239,7 @@ void Foam::functionObjects::sizeDistribution::writeDistribution()
             Log << "    writing volume distribution. "
                 << endl;
 
-            result *= bins_.component(0);
+            result *= V_;
 
             break;
         }
@@ -263,12 +263,12 @@ void Foam::functionObjects::sizeDistribution::writeDistribution()
     {
         List<scalar> bndrs(N_.size() + 1);
 
-        bndrs.first() = bins_.first()[binCmpt_];
-        bndrs.last() = bins_.last()[binCmpt_];
+        bndrs.first() = bin.first();
+        bndrs.last() = bin.last();
 
         for (label i = 1; i < N_.size(); i++)
         {
-            bndrs[i] = (bins_[i][binCmpt_] + bins_[i-1][binCmpt_])/2.0;
+            bndrs[i] = (bin[i]+ bin[i-1])/2.0;
         }
 
         forAll(result, i)
@@ -287,15 +287,19 @@ void Foam::functionObjects::sizeDistribution::writeDistribution()
 
     if (Pstream::master())
     {
-        const coordSet coords
+        formatterPtr_->write
         (
-            "sizeDistribution",
-            "xyz",
-            bins_,
-            mag(bins_)
+            file_.baseTimeDir(),
+            name(),
+            coordSet(true, "volume", V_),
+            "area",
+            a_,
+            "diameter",
+            d_,
+            word(functionTypeNames_[functionType_])
+          + (densityFunction_ ? "Density" : "Concentration"),
+            result
         );
-
-        writeGraph(coords, functionTypeNames_[functionType_], result);
     }
 }
 
@@ -347,44 +351,6 @@ void Foam::functionObjects::sizeDistribution::writeFileHeader
 }
 
 
-void Foam::functionObjects::sizeDistribution::writeGraph
-(
-    const coordSet& coords,
-    const word& functionTypeName,
-    const scalarField& values
-)
-{
-    const wordList functionTypeNames(1, functionTypeName);
-
-    fileName outputPath = file_.baseTimeDir();
-
-    mkDir(outputPath);
-    OFstream graphFile
-    (
-        outputPath/(this->name() + ".dat")
-    );
-
-    volRegion::writeFileHeader(file_, graphFile);
-
-    file_.writeCommented(graphFile, "Volume area diameter " + functionTypeName);
-
-    if (densityFunction_)
-    {
-        graphFile << "Density";
-    }
-    else
-    {
-        graphFile << "Concentration";
-    }
-
-    graphFile << endl;
-
-    List<const scalarField*> yPtrs(1);
-    yPtrs[0] = &values;
-    scalarFormatter_().write(coords, functionTypeNames, yPtrs, graphFile);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::sizeDistribution::sizeDistribution
@@ -409,42 +375,11 @@ Foam::functionObjects::sizeDistribution::sizeDistribution
     functionType_(functionTypeNames_.read(dict.lookup("functionType"))),
     coordinateType_(coordinateTypeNames_.read(dict.lookup("coordinateType"))),
     N_(popBal_.sizeGroups().size(), 0),
+    V_(popBal_.sizeGroups().size(), 0),
     a_(popBal_.sizeGroups().size(), 0),
-    d_(popBal_.sizeGroups().size(), 0),
-    bins_(N_.size()),
-    binCmpt_(0)
+    d_(popBal_.sizeGroups().size(), 0)
 {
     read(dict);
-
-    switch (coordinateType_)
-    {
-        case ctVolume:
-        {
-            binCmpt_ = 0;
-
-            break;
-        }
-        case ctArea:
-        {
-            binCmpt_ = 1;
-
-            break;
-        }
-        case ctDiameter:
-        {
-            binCmpt_ = 2;
-
-            break;
-        }
-        case ctProjectedAreaDiameter:
-        {
-            binCmpt_ = 2;
-
-            break;
-        }
-    }
-
-    scalarFormatter_ = setWriter<scalar>::New("raw");
 }
 
 
@@ -464,6 +399,8 @@ bool Foam::functionObjects::sizeDistribution::read(const dictionary& dict)
     densityFunction_ = dict.lookupOrDefault<Switch>("densityFunction", false);
     geometric_ = dict.lookupOrDefault<Switch>("geometric", false);
     maxOrder_ = dict.lookupOrDefault("maxOrder", 3);
+
+    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
 
     resetName(name());
 

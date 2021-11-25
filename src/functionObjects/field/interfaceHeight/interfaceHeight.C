@@ -77,13 +77,16 @@ void Foam::functionObjects::interfaceHeight::writePositions()
             "",
             mesh_,
             meshSearch(mesh_),
-            "xyz",
+            coordSet::axisTypeNames_[coordSet::axisType::XYZ],
             locations_[li] + gHat*mesh_.bounds().mag(),
             locations_[li] - gHat*mesh_.bounds().mag()
         );
 
         // Find the height of the location above the boundary
-        scalar hLB = set.size() ? - gHat & (locations_[li] - set[0]) : - vGreat;
+        scalar hLB =
+            set.size()
+          ? - gHat & (locations_[li] - set.pointCoord(0))
+          : - vGreat;
         reduce(hLB, maxOp<scalar>());
 
         // Calculate the integrals of length and length*alpha along the sampling
@@ -97,7 +100,7 @@ void Foam::functionObjects::interfaceHeight::writePositions()
                 continue;
             }
 
-            const vector& p0 = set[si], p1 = set[si+1];
+            const vector& p0 = set.pointCoord(si), p1 = set.pointCoord(si+1);
             const label c0 = set.cells()[si], c1 = set.cells()[si+1];
             const label f0 = set.faces()[si], f1 = set.faces()[si+1];
             const scalar a0 = interpolator->interpolate(p0, c0, f0);

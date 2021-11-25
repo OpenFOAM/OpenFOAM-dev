@@ -629,7 +629,7 @@ int main(int argc, char *argv[])
                     faces[i] = surf[i].triFaceFace();
                 }
 
-                vtkSurfaceWriter(IOstream::ASCII).write
+                vtkSurfaceWriter(IOstream::ASCII, IOstream::UNCOMPRESSED).write
                 (
                     surfFileName.path(),
                     "zone_" + surfFileNameBase,

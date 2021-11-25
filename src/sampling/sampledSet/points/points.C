@@ -27,6 +27,7 @@ License
 #include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
+#include "sampledSetCloud.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -41,15 +42,137 @@ namespace sampledSets
 }
 
 
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+void Foam::sampledSets::points::calcSamples
+(
+    const polyMesh& mesh,
+    const meshSearch& searchEngine,
+    const pointField& points,
+    DynamicList<point>& samplingPositions,
+    DynamicList<scalar>& samplingDistances,
+    DynamicList<label>& samplingSegments,
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
+)
+{
+    // Create a cloud with which to track segments
+    sampledSetCloud particles
+    (
+        mesh,
+        points::typeName,
+        IDLList<sampledSetParticle>()
+    );
+
+    // Consider each point
+    label segmenti = 0, samplei = 0, pointi0 = labelMax, pointi = 0;
+    scalar distance = 0;
+    while (pointi < points.size())
+    {
+        // Sum the distance to the start of the track
+        for (label pointj = pointi0; pointj < pointi; ++ pointj)
+        {
+            distance += mag(points[pointj + 1] - points[pointj]);
+        }
+
+        // Update the old point index
+        pointi0 = pointi;
+
+        // Get unique processor and cell that this sample point is in
+        const labelPair procAndCelli = returnReduce
+        (
+            labelPair
+            (
+                Pstream::myProcNo(),
+                searchEngine.findCell(points[pointi])
+            ),
+            [](const labelPair& a, const labelPair& b)
+            {
+                return
+                    a.second() != -1 && b.second() != -1
+                  ? a.first() < b.first() ? a : b
+                  : a.second() != -1 ? a : b;
+            }
+        );
+
+        // Skip this point if it is not in the global mesh
+        if (procAndCelli.second() == -1)
+        {
+            ++ pointi;
+        }
+
+        // If the point is in the global mesh then track to create a segment
+        else
+        {
+            sampledSetParticle::trackingData td
+            (
+                particles,
+                points,
+                true,
+                false,
+                false,
+                samplingPositions,
+                samplingDistances,
+                samplingCells,
+                samplingFaces
+            );
+
+            // Clear the cloud, then, if the point is in this local mesh,
+            // initialise a particle at the point
+            particles.clear();
+            if (procAndCelli.first() == Pstream::myProcNo())
+            {
+                particles.addParticle
+                (
+                    new sampledSetParticle
+                    (
+                        mesh,
+                        points[pointi],
+                        procAndCelli.second(),
+                        pointi,
+                        1,
+                        distance
+                    )
+                );
+
+                particles.first()->store(particles, td);
+            }
+
+            // Track to create this segment
+            particles.move(particles, td, rootGreat);
+
+            // Set the segment indices
+            samplingSegments.append
+            (
+                labelList
+                (
+                    samplingPositions.size() - samplingSegments.size(),
+                    segmenti
+                )
+            );
+
+            // Move on to the next segment
+            ++ segmenti;
+
+            // Determine the global number of samples completed
+            const label samplei0 = samplei;
+            samplei = returnReduce(samplingPositions.size(), sumOp<label>());
+
+            // Move to the next unsampled point
+            pointi += samplei - samplei0;
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::sampledSets::points::calcSamplesUnordered
 (
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    DynamicList<point>& samplingPositions,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 ) const
 {
     forAll(points_, i)
@@ -59,122 +182,96 @@ void Foam::sampledSets::points::calcSamplesUnordered
 
         if (celli != -1)
         {
-            samplingPts.append(pt);
+            samplingPositions.append(pt);
+            samplingSegments.append(i);
             samplingCells.append(celli);
             samplingFaces.append(-1);
-            samplingSegments.append(samplingSegments.size());
-            samplingCurveDist.append(scalar(i));
         }
     }
 }
 
+
 void Foam::sampledSets::points::calcSamplesOrdered
 (
-    DynamicList<point>& samplingPts,
-    DynamicList<label>& samplingCells,
-    DynamicList<label>& samplingFaces,
+    DynamicList<point>& samplingPositions,
+    DynamicList<scalar>& samplingDistances,
     DynamicList<label>& samplingSegments,
-    DynamicList<scalar>& samplingCurveDist
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
 ) const
 {
-    // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
-    // build them, otherwise, if some processors have no particles then there
-    // is a comms mismatch.
-    mesh().tetBasePtIs();
-    mesh().oldCellCentres();
-
-    const label n = points_.size();
-
-    label sampleSegmentI = 0;
-    label sampleI = 0;
-    scalar sampleDist = 0;
-
-    while (sampleI < n)
-    {
-        const point pt = points_[sampleI];
-
-        const label sampleCellI = searchEngine().findCell(pt);
-
-        if (sampleCellI == -1)
-        {
-            if (++ sampleI < n)
-            {
-                sampleDist += mag(points_[sampleI] - points_[sampleI - 1]);
-            }
-        }
-        else
-        {
-            passiveParticle sampleParticle(mesh(), pt, sampleCellI);
-
-            do
-            {
-                samplingPts.append(sampleParticle.position());
-                samplingCells.append(sampleParticle.cell());
-                samplingFaces.append(-1);
-                samplingSegments.append(sampleSegmentI);
-                samplingCurveDist.append(sampleDist);
-
-                if (++ sampleI < n)
-                {
-                    const vector s = points_[sampleI] - points_[sampleI - 1];
-                    sampleDist += mag(s);
-                    sampleParticle.reset(1);
-                    sampleParticle.track(s, 0);
-                }
-            }
-            while (sampleI < n && !sampleParticle.onBoundaryFace());
-
-            ++ sampleSegmentI;
-        }
-    }
+    // Calculate the sampling topology
+    calcSamples
+    (
+        mesh(),
+        searchEngine(),
+        pointField(points_),
+        samplingPositions,
+        samplingDistances,
+        samplingSegments,
+        samplingCells,
+        samplingFaces
+    );
 }
 
 
 void Foam::sampledSets::points::genSamples()
 {
-    DynamicList<point> samplingPts;
+    DynamicList<point> samplingPositions;
+    DynamicList<scalar> samplingDistances;
+    DynamicList<label> samplingSegments;
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
-    DynamicList<label> samplingSegments;
-    DynamicList<scalar> samplingCurveDist;
 
     if (!ordered_)
     {
         calcSamplesUnordered
         (
-            samplingPts,
-            samplingCells,
-            samplingFaces,
+            samplingPositions,
             samplingSegments,
-            samplingCurveDist
+            samplingCells,
+            samplingFaces
         );
     }
     else
     {
         calcSamplesOrdered
         (
-            samplingPts,
-            samplingCells,
-            samplingFaces,
+            samplingPositions,
+            samplingDistances,
             samplingSegments,
-            samplingCurveDist
+            samplingCells,
+            samplingFaces
         );
     }
 
-    samplingPts.shrink();
+    samplingPositions.shrink();
+    samplingDistances.shrink();
+    samplingSegments.shrink();
     samplingCells.shrink();
     samplingFaces.shrink();
-    samplingSegments.shrink();
-    samplingCurveDist.shrink();
 
-    setSamples
-    (
-        samplingPts,
-        samplingCells,
-        samplingFaces,
-        samplingSegments,
-        samplingCurveDist
-    );
+    if (!ordered_)
+    {
+        setSamples
+        (
+            samplingPositions,
+            samplingSegments,
+            samplingCells,
+            samplingFaces
+        );
+    }
+    else
+    {
+        setSamples
+        (
+            samplingPositions,
+            samplingDistances,
+            samplingSegments,
+            samplingCells,
+            samplingFaces
+        );
+    }
 }
 
 
@@ -193,11 +290,6 @@ Foam::sampledSets::points::points
     ordered_(dict.lookup("ordered"))
 {
     genSamples();
-
-    if (debug)
-    {
-        write(Info);
-    }
 }
 
 
