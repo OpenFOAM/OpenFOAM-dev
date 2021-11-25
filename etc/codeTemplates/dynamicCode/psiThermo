@@ -39,11 +39,9 @@ mixture
 transport
 (
     const
-    logPolynomial
     polynomial
     sutherland
     tabulated
-    WLF
 );
 
 thermo

@@ -40,7 +40,6 @@ mixture
 transport
 (
     const
-    logPolynomial
     polynomial
     sutherland
 );
