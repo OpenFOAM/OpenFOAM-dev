@@ -1,5 +1,3 @@
-tmp<fv::convectionScheme<scalar>> mvConvection(nullptr);
-
 if (Y.size())
 {
     mvConvection = tmp<fv::convectionScheme<scalar>>

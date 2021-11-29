@@ -82,23 +82,30 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
+        // Optional number of energy correctors
+        const int nEcorr = pimples.dict().lookupOrDefault<int>("nEcorr", 1);
+
         // --- PIMPLE loop
         while (pimples.loop())
         {
-            forAll(fluidRegions, i)
-            {
-                Info<< "\nSolving for fluid region "
-                    << fluidRegions[i].name() << endl;
-                #include "setRegionFluidFields.H"
-                #include "solveFluid.H"
-            }
+            tmp<fvVectorMatrix> tUEqn;
 
-            forAll(solidRegions, i)
+            for(int Ecorr=0; Ecorr<nEcorr; Ecorr++)
             {
-                Info<< "\nSolving for solid region "
-                    << solidRegions[i].name() << endl;
-                #include "setRegionSolidFields.H"
-                #include "solveSolid.H"
+                forAll(solidRegions, i)
+                {
+                    Info<< "\nSolving for solid region "
+                        << solidRegions[i].name() << endl;
+                    #include "setRegionSolidFields.H"
+                    #include "solveSolid.H"
+                }
+                forAll(fluidRegions, i)
+                {
+                    Info<< "\nSolving for fluid region "
+                        << fluidRegions[i].name() << endl;
+                    #include "setRegionFluidFields.H"
+                    #include "solveFluid.H"
+                }
             }
         }
 
