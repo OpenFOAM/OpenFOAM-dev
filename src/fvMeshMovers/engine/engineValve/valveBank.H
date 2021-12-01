@@ -65,9 +65,9 @@ public:
 
             forAll(valveEntries, valveI)
             {
-                valveI,
                 set
                 (
+                    valveI,
                     new engineValve
                     (
                         valveEntries[valveI].keyword(),
