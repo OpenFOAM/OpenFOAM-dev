@@ -141,7 +141,8 @@ Foam::fv::sixDoFAccelerationSource::sixDoFAccelerationSource
         mesh.foundObject<uniformDimensionedVectorField>("g")
       ? dimensionedVector(mesh.lookupObject<uniformDimensionedVectorField>("g"))
       : dimensionedVector("g", dimAcceleration, Zero)
-    )
+    ),
+    CofG ("CofG", dimLength, coeffs().lookupOrDefault<vector>("CofG", Zero))
 {
     readCoeffs();
 }

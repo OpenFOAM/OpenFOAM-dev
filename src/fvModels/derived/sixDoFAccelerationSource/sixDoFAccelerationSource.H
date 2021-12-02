@@ -35,6 +35,8 @@ Usage
         type            sixDoFAccelerationSource;
 
         accelerations   <function1>;
+        
+        CofG			(0 0 0);
     }
     \endverbatim
 
@@ -89,7 +91,9 @@ private:
 
         //- Optional gravitational acceleration
         dimensionedVector g_;
-
+        
+        //- Center of gravity
+        dimensionedVector CofG;
 
     // Private Member Functions
 

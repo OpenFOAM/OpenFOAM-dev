@@ -81,8 +81,8 @@ void Foam::fv::sixDoFAccelerationSource::addSup
     eqn -=
     (
         rho*(2*Omega ^ eqn.psi())         // Coriolis force
-      + rho*(Omega ^ (Omega ^ mesh().C())) // Centrifugal force
-      + rho*(dOmegaDT ^ mesh().C())        // Angular acceleration force
+      + rho*(Omega ^ (Omega ^ (mesh().C()-CofG))) // Centrifugal force
+      + rho*(dOmegaDT ^ (mesh().C()-CofG))        // Angular acceleration force
     );
 }
 
