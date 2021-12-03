@@ -94,16 +94,16 @@ class wallHeatFlux
     public logFiles,
     public writeLocalObjects
 {
+    // Private Data
 
-protected:
-
-    // Protected data
+        //- The name of the phase
+        word phaseName_;
 
         //- Optional list of patches to process
         labelHashSet patchSet_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- File header information
         virtual void writeFileHeader(const label i);

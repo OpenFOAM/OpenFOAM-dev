@@ -117,9 +117,11 @@ Foam::functionObjects::wallHeatFlux::wallHeatFlux
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
     writeLocalObjects(obr_, log),
+    phaseName_(word::null),
     patchSet_()
 {
     read(dict);
+    resetLocalObjectName(IOobject::groupName(type(), phaseName_));
 }
 
 
@@ -135,6 +137,8 @@ bool Foam::functionObjects::wallHeatFlux::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
     writeLocalObjects::read(dict);
+
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 
     const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
@@ -192,30 +196,35 @@ bool Foam::functionObjects::wallHeatFlux::read(const dictionary& dict)
 
 bool Foam::functionObjects::wallHeatFlux::execute()
 {
-    word name(type());
+    const word fieldName(IOobject::groupName(type(), phaseName_));
+
+    const word thermophysicalTransportModelName
+    (
+        IOobject::groupName(thermophysicalTransportModel::typeName, phaseName_)
+    );
 
     if
     (
         foundObject<thermophysicalTransportModel>
         (
-            thermophysicalTransportModel::typeName
+            thermophysicalTransportModelName
         )
     )
     {
         const thermophysicalTransportModel& ttm =
             lookupObject<thermophysicalTransportModel>
             (
-                thermophysicalTransportModel::typeName
+                thermophysicalTransportModelName
             );
 
-        return store(name, calcWallHeatFlux(ttm.q()));
+        return store(fieldName, calcWallHeatFlux(ttm.q()));
     }
     else if (foundObject<solidThermo>(physicalProperties::typeName))
     {
         const solidThermo& thermo =
             lookupObject<solidThermo>(physicalProperties::typeName);
 
-        return store(name, calcWallHeatFlux(thermo.q()));
+        return store(fieldName, calcWallHeatFlux(thermo.q()));
     }
     else
     {
@@ -236,8 +245,10 @@ bool Foam::functionObjects::wallHeatFlux::write()
 
     logFiles::write();
 
-    const volScalarField& wallHeatFlux =
-        obr_.lookupObject<volScalarField>(type());
+    const volScalarField& wallHeatFlux = obr_.lookupObject<volScalarField>
+    (
+        IOobject::groupName(type(), phaseName_)
+    );
 
     const fvPatchList& patches = mesh_.boundary();
 
