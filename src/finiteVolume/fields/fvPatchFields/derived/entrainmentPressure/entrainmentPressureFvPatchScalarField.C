@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,12 +85,23 @@ entrainmentPressureFvPatchScalarField
 
 void Foam::entrainmentPressureFvPatchScalarField::updateCoeffs()
 {
+    const surfaceScalarField& phi =
+        db().lookupObject<surfaceScalarField>(phiName_);
+
     const fvsPatchField<scalar>& phip =
-        patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
+        patch().patchField<surfaceScalarField, scalar>(phi);
 
-    const scalarField Unp(phip/patch().magSf());
+    scalarField Unp(phip/patch().magSf());
 
-    dynamicPressureFvPatchScalarField::updateCoeffs(p0_, - 0.5*Unp*mag(Unp));
+    if (phi.dimensions() == dimMassFlux)
+    {
+        const fvPatchField<scalar>& rhop =
+            patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+
+        Unp /= rhop;
+    }
+
+    dynamicPressureFvPatchScalarField::updateCoeffs(p0_, -0.5*Unp*mag(Unp));
 }
 
 

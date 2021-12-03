@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,17 +82,17 @@ Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 
 Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 (
-    const dynamicPressureFvPatchScalarField& ptf,
+    const dynamicPressureFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    rhoName_(ptf.rhoName_),
-    psiName_(ptf.psiName_),
-    gamma_(ptf.gamma_),
-    p0_(mapper(ptf.p0_))
+    fixedValueFvPatchScalarField(psf, p, iF, mapper),
+    rhoName_(psf.rhoName_),
+    psiName_(psf.psiName_),
+    gamma_(psf.gamma_),
+    p0_(mapper(psf.p0_))
 {}
 
 
@@ -124,16 +124,16 @@ void Foam::dynamicPressureFvPatchScalarField::autoMap
 
 void Foam::dynamicPressureFvPatchScalarField::rmap
 (
-    const fvPatchScalarField& ptf,
+    const fvPatchScalarField& psf,
     const labelList& addr
 )
 {
-    fixedValueFvPatchScalarField::rmap(ptf, addr);
+    fixedValueFvPatchScalarField::rmap(psf, addr);
 
-    const dynamicPressureFvPatchScalarField& tiptf =
-        refCast<const dynamicPressureFvPatchScalarField>(ptf);
+    const dynamicPressureFvPatchScalarField& dpsf =
+        refCast<const dynamicPressureFvPatchScalarField>(psf);
 
-    p0_.rmap(tiptf.p0_, addr);
+    p0_.rmap(dpsf.p0_, addr);
 }
 
 
@@ -168,7 +168,7 @@ void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
 
             if (gamma_ > 1)
             {
-                scalar gM1ByG = (gamma_ - 1)/gamma_;
+                const scalar gM1ByG = (gamma_ - 1)/gamma_;
 
                 operator==(p0p/pow(scalar(1) + psip*gM1ByG*Kp, 1/gM1ByG));
             }
