@@ -26,7 +26,7 @@ Class
 
 Description
     Calculates and write the shear-stress at wall patches as
-    the volVectorField field 'wallShearStress'.
+    the volVectorField field 'wallShearStress' or 'wallShearStress.<phase>'.
 
         \f[
             Stress = R \dot n
@@ -55,9 +55,10 @@ Description
 
 Usage
     \table
-        Property | Description               | Required    | Default value
+        Property | Description                | Required   | Default value
         type     | type name: wallShearStress | yes        |
         patches  | list of patches to process | no         | all wall patches
+        phase    | phase name                 | no         |
     \endtable
 
 Note
@@ -102,16 +103,16 @@ class wallShearStress
     public logFiles,
     public writeLocalObjects
 {
+    // Private Data
 
-protected:
-
-    // Protected data
+        //- The name of the phase
+        word phaseName_;
 
         //- Optional list of patches to process
         labelHashSet patchSet_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- File header information
         virtual void writeFileHeader(const label i);

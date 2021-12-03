@@ -102,9 +102,11 @@ Foam::functionObjects::wallShearStress::wallShearStress
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
     writeLocalObjects(obr_, log),
+    phaseName_(word::null),
     patchSet_()
 {
     read(dict);
+    resetLocalObjectName(IOobject::groupName(type(), phaseName_));
 }
 
 
@@ -120,6 +122,8 @@ bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
     writeLocalObjects::read(dict);
+
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 
     const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
@@ -177,34 +181,38 @@ bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 
 bool Foam::functionObjects::wallShearStress::execute()
 {
+    const word fieldName(IOobject::groupName(type(), phaseName_));
+
     typedef compressible::momentumTransportModel cmpModel;
     typedef incompressible::momentumTransportModel icoModel;
 
-    tmp<volSymmTensorField> tau;
-    if (mesh_.foundObject<cmpModel>(momentumTransportModel::typeName))
+    const word momentumTransportModelName
+    (
+        IOobject::groupName(momentumTransportModel::typeName, phaseName_)
+    );
+
+    if (mesh_.foundObject<cmpModel>(momentumTransportModelName))
     {
         const cmpModel& model =
-            mesh_.lookupObject<cmpModel>(momentumTransportModel::typeName);
+            mesh_.lookupObject<cmpModel>(momentumTransportModelName);
 
-        tau = model.devTau();
+        return store(fieldName, calcShearStress(model.devTau()));
     }
-    else if (mesh_.foundObject<icoModel>(momentumTransportModel::typeName))
+    else if (mesh_.foundObject<icoModel>(momentumTransportModelName))
     {
         const icoModel& model =
-            mesh_.lookupObject<icoModel>(momentumTransportModel::typeName);
+            mesh_.lookupObject<icoModel>(momentumTransportModelName);
 
-        tau = model.devSigma();
+        return store(fieldName, calcShearStress(model.devSigma()));
     }
     else
     {
         FatalErrorInFunction
             << "Unable to find turbulence model in the "
             << "database" << exit(FatalError);
+
+        return false;
     }
-
-    word name(type());
-
-    return store(name, calcShearStress(tau));
 }
 
 
@@ -216,8 +224,10 @@ bool Foam::functionObjects::wallShearStress::write()
 
     logFiles::write();
 
-    const volVectorField& wallShearStress =
-        obr_.lookupObject<volVectorField>(type());
+    const volVectorField& wallShearStress = obr_.lookupObject<volVectorField>
+    (
+        IOobject::groupName(type(), phaseName_)
+    );
 
     const fvPatchList& patches = mesh_.boundary();
 
