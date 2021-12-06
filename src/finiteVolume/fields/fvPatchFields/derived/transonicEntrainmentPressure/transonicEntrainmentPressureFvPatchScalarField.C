@@ -173,8 +173,13 @@ void Foam::transonicEntrainmentPressureFvPatchScalarField::updateCoeffs()
     const scalar Mb = 0.5;
 
     refValue() =
-        p0_/pow(scalar(1) - (0.5*gM1ByG)*psip*Unp*mag(Unp), 1/gM1ByG);
-    valueFraction() = 1 - min((Ma - Mb)/(1 - Mb), scalar(1));
+        p0_
+       /pow
+        (
+            1 - (0.5*gM1ByG)*psip*negPart(Unp)*mag(Unp),
+            1/gM1ByG
+        );
+    valueFraction() = 1 - min(max(Ma - Mb, scalar(0))/(1 - Mb), scalar(1));
 
     mixedFvPatchField<scalar>::updateCoeffs();
 }
