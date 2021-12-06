@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,8 @@ SourceFiles
 namespace Foam
 {
 
-class pointMesh;
 class polyMesh;
+class mapDistributePolyMesh;
 
 /*---------------------------------------------------------------------------*\
                       Class pointConstraints Declaration
@@ -66,14 +66,14 @@ class pointConstraints
 {
     // Private Data
 
-        // Patch-patch constraints
+        //- Mesh points on which to apply special constraints
+        labelList patchPatchPointConstraintPoints_;
 
-            //- Mesh points on which to apply special constraints
-            labelList patchPatchPointConstraintPoints_;
-            //- Special constraints (as tensors)
-            tensorField patchPatchPointConstraintTensors_;
-            //- Special constraints (raw)
-            List<pointConstraint> patchPatchPointConstraints_;
+        //- Special constraints (as tensors)
+        tensorField patchPatchPointConstraintTensors_;
+
+        //- Special constraints (raw)
+        List<pointConstraint> patchPatchPointConstraints_;
 
 
     // Private Member Functions
@@ -126,11 +126,14 @@ public:
 
         // Edit
 
-            //- Update mesh topology using the morph engine
-            void updateMesh(const mapPolyMesh&);
-
             //- Correct weighting factors for moving mesh.
-            bool movePoints();
+            virtual bool movePoints();
+
+            //- Update mesh topology using the morph engine
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update corresponding to the given distribution map
+            virtual void distribute(const mapDistributePolyMesh&);
 
 
         // Interpolation functions
@@ -193,6 +196,7 @@ void pointConstraints::constrainCorners<scalar>
 (
     GeometricField<scalar, pointPatchField, pointMesh>& pf
 ) const;
+
 template<>
 void pointConstraints::constrainCorners<label>
 (

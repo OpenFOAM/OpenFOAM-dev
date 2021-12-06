@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,6 +119,9 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&);
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const mapDistributePolyMesh&);
 
 
     // Member Operators

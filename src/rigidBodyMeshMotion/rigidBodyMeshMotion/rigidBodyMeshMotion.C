@@ -415,8 +415,6 @@ void Foam::rigidBodyMeshMotion::updateMesh(const mapPolyMesh& mpm)
 {
     // pointMesh already updates pointFields
 
-    motionSolver::updateMesh(mpm);
-
     // Get the new points either from the map or the mesh
     const pointField& points =
     (
@@ -426,7 +424,7 @@ void Foam::rigidBodyMeshMotion::updateMesh(const mapPolyMesh& mpm)
     );
 
     const pointMesh& pMesh = pointMesh::New(mesh());
-    pointField points0(points);
+    pointField points0(mesh().points());
 
     // Iterate to update the transformation of the new points to the
     // corresponding points0, required because the body-point weights are
@@ -477,7 +475,8 @@ void Foam::rigidBodyMeshMotion::updateMesh(const mapPolyMesh& mpm)
             {
                 if (mpm.reversePointMap()[oldPointi] == pointi)
                 {
-                    points0[pointi] = points0_[oldPointi];
+                    // points0[pointi] = points0_[oldPointi];
+                    points0[pointi] = points0_[pointi];
                 }
                 else
                 {

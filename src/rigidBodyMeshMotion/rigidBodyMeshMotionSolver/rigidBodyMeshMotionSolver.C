@@ -302,9 +302,18 @@ void Foam::rigidBodyMeshMotionSolver::movePoints(const pointField& points)
 }
 
 
-void Foam::rigidBodyMeshMotionSolver::updateMesh(const mapPolyMesh& mpm)
+void Foam::rigidBodyMeshMotionSolver::updateMesh(const mapPolyMesh& map)
 {
-    meshSolverPtr_->updateMesh(mpm);
+    meshSolverPtr_->updateMesh(map);
+}
+
+
+void Foam::rigidBodyMeshMotionSolver::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{
+    meshSolverPtr_->distribute(map);
 }
 
 

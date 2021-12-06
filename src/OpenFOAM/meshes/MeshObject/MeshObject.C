@@ -148,7 +148,7 @@ Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     {
         if (meshObject::debug)
         {
-           Pout<< "MeshObject::New(" << Mesh::typeName
+            Pout<< "MeshObject::New(" << Mesh::typeName
                 << "&, const Data1&) : constructing " << Type::typeName
                 << " for region " << mesh.name() << endl;
         }
@@ -187,7 +187,7 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     {
         if (meshObject::debug)
         {
-           Pout<< "MeshObject::New(const " << Mesh::typeName
+            Pout<< "MeshObject::New(const " << Mesh::typeName
                 << "&, const Data1&) : constructing " << Type::typeName
                 << " for region " << mesh.name() << endl;
         }
@@ -288,7 +288,7 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
 
 
 template<class Mesh>
-void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
+void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& map)
 {
     HashTable<GeometricMeshObject<Mesh>*> meshObjects
     (
@@ -298,7 +298,7 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
     if (meshObject::debug)
     {
         Pout<< "meshObject::updateMesh(objectRegistry&, "
-               "const mapPolyMesh& mpm) : updating " << Mesh::typeName
+               "const mapPolyMesh& map) : updating " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
 
@@ -315,7 +315,7 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
             {
                 Pout<< "    Updating " << iter()->name() << endl;
             }
-            dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->updateMesh(mpm);
+            dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->updateMesh(map);
         }
         else
         {
@@ -325,6 +325,41 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
             }
             obr.checkOut(*iter());
         }
+    }
+}
+
+
+template<class Mesh>
+void Foam::meshObject::distribute
+(
+    objectRegistry& obr,
+    const mapDistributePolyMesh& map
+)
+{
+    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    (
+        obr.lookupClass<GeometricMeshObject<Mesh>>()
+    );
+
+    if (meshObject::debug)
+    {
+        Pout<< "meshObject::distribute(objectRegistry&, "
+               "const mapDistributePolyMesh& map) : updating " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
+    forAllIter
+    (
+        typename HashTable<GeometricMeshObject<Mesh>*>,
+        meshObjects,
+        iter
+    )
+    {
+        if (meshObject::debug)
+        {
+            Pout<< "    Distributing " << iter()->name() << endl;
+        }
+        iter()->distribute(map);
     }
 }
 

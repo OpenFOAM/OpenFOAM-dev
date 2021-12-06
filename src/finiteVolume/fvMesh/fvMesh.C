@@ -224,8 +224,6 @@ void Foam::fvMesh::storeOldVol(const scalarField& V)
             V0 = V;
         }
 
-        curTimeIndex_ = time().timeIndex();
-
         if (debug)
         {
             Pout<< FUNCTION_NAME
@@ -482,9 +480,28 @@ bool Foam::fvMesh::dynamic() const
 
 bool Foam::fvMesh::update()
 {
-    bool updated = topoChanger_->update();
-    updated = distributor_->update() || updated;
+    bool updated = false;
+
+    if (curTimeIndex_ < time().timeIndex())
+    {
+        const bool hasV0 = V0Ptr_;
+
+        deleteDemandDrivenData(V0Ptr_);
+        deleteDemandDrivenData(V00Ptr_);
+
+        updated = topoChanger_->update() || updated;
+        updated = distributor_->update() || updated;
+
+        // Reset the old-time cell volumes prior to mesh-motion
+        if (hasV0)
+        {
+            storeOldVol(V());
+        }
+    }
+
     updated = mover_->update() || updated;
+
+    curTimeIndex_ = time().timeIndex();
 
     return updated;
 }
@@ -679,7 +696,7 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
     // Map all the clouds in the objectRegistry
     mapClouds(*this, meshMap);
 
-
+/*
     const labelList& cellMap = meshMap.cellMap();
 
     // Map the old volume. Just map to new cell labels.
@@ -767,6 +784,7 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
                 << nMerged << " out of " << nCells() << " cells" << endl;
         }
     }
+*/
 }
 
 
@@ -849,10 +867,10 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 }
 
 
-void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
+void Foam::fvMesh::updateMesh(const mapPolyMesh& map)
 {
     // Update polyMesh. This needs to keep volume existent!
-    polyMesh::updateMesh(mpm);
+    polyMesh::updateMesh(map);
 
     if (VPtr_)
     {
@@ -860,32 +878,32 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
         // incremented.  This will update V0, V00
         if (V0Ptr_)
         {
-            storeOldVol(mpm.oldCellVolumes());
+            storeOldVol(map.oldCellVolumes());
         }
 
         // Few checks
-        if (VPtr_ && (V().size() != mpm.nOldCells()))
+        if (VPtr_ && (V().size() != map.nOldCells()))
         {
             FatalErrorInFunction
                 << "V:" << V().size()
                 << " not equal to the number of old cells "
-                << mpm.nOldCells()
+                << map.nOldCells()
                 << exit(FatalError);
         }
-        if (V0Ptr_ && (V0Ptr_->size() != mpm.nOldCells()))
+        if (V0Ptr_ && (V0Ptr_->size() != map.nOldCells()))
         {
             FatalErrorInFunction
                 << "V0:" << V0Ptr_->size()
                 << " not equal to the number of old cells "
-                << mpm.nOldCells()
+                << map.nOldCells()
                 << exit(FatalError);
         }
-        if (V00Ptr_ && (V00Ptr_->size() != mpm.nOldCells()))
+        if (V00Ptr_ && (V00Ptr_->size() != map.nOldCells()))
         {
             FatalErrorInFunction
                 << "V0:" << V00Ptr_->size()
                 << " not equal to the number of old cells "
-                << mpm.nOldCells()
+                << map.nOldCells()
                 << exit(FatalError);
         }
     }
@@ -894,7 +912,7 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
     clearGeomNotOldVol();
 
     // Map all fields
-    mapFields(mpm);
+    mapFields(map);
 
     // Clear the current volume and other geometry factors
     surfaceInterpolation::clearOut();
@@ -902,36 +920,30 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    meshObject::updateMesh<fvMesh>(*this, mpm);
-    meshObject::updateMesh<lduMesh>(*this, mpm);
+    meshObject::updateMesh<fvMesh>(*this, map);
+    meshObject::updateMesh<lduMesh>(*this, map);
 
     if (topoChanger_.valid())
     {
-        topoChanger_->updateMesh(mpm);
+        topoChanger_->updateMesh(map);
     }
 
     if (distributor_.valid())
     {
-        distributor_->updateMesh(mpm);
+        distributor_->updateMesh(map);
     }
 
     if (mover_.valid())
     {
-        mover_->updateMesh(mpm);
-
-        // Reset the old-time cell volumes prior to mesh-motion
-        if (V0Ptr_)
-        {
-            *V0Ptr_ = V();
-        }
+        mover_->updateMesh(map);
     }
 }
 
 
-void Foam::fvMesh::distribute(const mapDistributePolyMesh& mdpm)
+void Foam::fvMesh::distribute(const mapDistributePolyMesh& map)
 {
-    // Update polyMesh. This needs to keep volume existent!
-    // polyMesh::distribute(mdpm);
+    // Distribute polyMesh data
+    polyMesh::distribute(map);
 
     // if (VPtr_)
     // {
@@ -939,42 +951,42 @@ void Foam::fvMesh::distribute(const mapDistributePolyMesh& mdpm)
     //     // incremented.  This will update V0, V00
     //     if (V0Ptr_)
     //     {
-    //         storeOldVol(mpm.oldCellVolumes());
+    //         storeOldVol(map.oldCellVolumes());
     //     }
     //
     //     // Few checks
-    //     if (VPtr_ && (V().size() != mdpm.nOldCells()))
+    //     if (VPtr_ && (V().size() != map.nOldCells()))
     //     {
     //         FatalErrorInFunction
     //             << "V:" << V().size()
     //             << " not equal to the number of old cells "
-    //             << mdpm.nOldCells()
+    //             << map.nOldCells()
     //             << exit(FatalError);
     //     }
-    //     if (V0Ptr_ && (V0Ptr_->size() != mdpm.nOldCells()))
+    //     if (V0Ptr_ && (V0Ptr_->size() != map.nOldCells()))
     //     {
     //         FatalErrorInFunction
     //             << "V0:" << V0Ptr_->size()
     //             << " not equal to the number of old cells "
-    //             << mdpm.nOldCells()
+    //             << map.nOldCells()
     //             << exit(FatalError);
     //     }
-    //     if (V00Ptr_ && (V00Ptr_->size() != mdpm.nOldCells()))
+    //     if (V00Ptr_ && (V00Ptr_->size() != map.nOldCells()))
     //     {
     //         FatalErrorInFunction
     //             << "V0:" << V00Ptr_->size()
     //             << " not equal to the number of old cells "
-    //             << mdpm.nOldCells()
+    //             << map.nOldCells()
     //             << exit(FatalError);
     //     }
     // }
 
     // Clear the sliced fields
-    // clearGeomNotOldVol();
-    clearGeom();
+    clearGeomNotOldVol();
+    // clearGeom();
 
     // Map all fields
-    // mapFields(mdpm);
+    // mapFields(map);
 
     // Clear the current volume and other geometry factors
     surfaceInterpolation::clearOut();
@@ -982,12 +994,12 @@ void Foam::fvMesh::distribute(const mapDistributePolyMesh& mdpm)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    // meshObject::updateMesh<fvMesh>(*this, mdpm);
-    // meshObject::updateMesh<lduMesh>(*this, mdpm);
+    // meshObject::distribute<fvMesh>(*this, map);
+    // meshObject::distribute<lduMesh>(*this, map);
 
-    topoChanger_->distribute(mdpm);
-    distributor_->distribute(mdpm);
-    mover_->distribute(mdpm);
+    topoChanger_->distribute(map);
+    distributor_->distribute(map);
+    mover_->distribute(map);
 }
 
 

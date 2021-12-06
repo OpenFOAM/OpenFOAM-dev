@@ -77,6 +77,7 @@ namespace Foam
 
 // Forward declarations
 class mapPolyMesh;
+class mapDistributePolyMesh;
 
 /*---------------------------------------------------------------------------*\
                          Class MeshObject Declaration
@@ -155,6 +156,7 @@ public:
     // Declare name of the class and its debug switch
     ClassName("meshObject");
 
+
     // Constructors
 
         meshObject(const word& typeName, const objectRegistry& obr);
@@ -171,7 +173,11 @@ public:
         static void updateMesh(objectRegistry&, const mapPolyMesh&);
 
         template<class Mesh>
+        static void distribute(objectRegistry&, const mapDistributePolyMesh&);
+
+        template<class Mesh>
         static void addPatch(objectRegistry&, const label patchi);
+
         template<class Mesh>
         static void reorderPatches
         (
@@ -238,6 +244,9 @@ public:
     :
         TopologicalMeshObject<Mesh>(typeName, io)
     {}
+
+    virtual void distribute(const mapDistributePolyMesh& map) // = 0;
+    {}
 };
 
 
@@ -287,7 +296,7 @@ public:
         MoveableMeshObject<Mesh>(typeName, io)
     {}
 
-    virtual void updateMesh(const mapPolyMesh& mpm) = 0;
+    virtual void updateMesh(const mapPolyMesh& map) = 0;
 };
 
 

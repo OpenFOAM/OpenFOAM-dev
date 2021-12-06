@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,7 @@ void Foam::polyMesh::updateMesh(const mapPolyMesh& mpm)
 
     // Remove the stored tet base points
     tetBasePtIsPtr_.clear();
+
     // Remove the cell tree
     cellTreePtr_.clear();
 
@@ -123,6 +124,13 @@ void Foam::polyMesh::updateMesh(const mapPolyMesh& mpm)
     solutionD_ = Zero;
 
     const_cast<Time&>(time()).functionObjects().updateMesh(mpm);
+}
+
+
+void Foam::polyMesh::distribute(const mapDistributePolyMesh& map)
+{
+    // meshObject::distribute<polyMesh>(*this, map);
+    meshObject::distribute<pointMesh>(*this, map);
 }
 
 

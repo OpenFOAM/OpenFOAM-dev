@@ -1312,8 +1312,11 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
 
 void Foam::fvMeshDistribute::mapFields(const mapPolyMesh& map)
 {
+    meshObject::updateMesh<polyMesh>(mesh_, map);
+    meshObject::updateMesh<pointMesh>(mesh_, map);
     mesh_.mapFields(map);
     meshObject::updateMesh<fvMesh>(mesh_, map);
+    meshObject::updateMesh<lduMesh>(mesh_, map);
 }
 
 
@@ -1970,34 +1973,33 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     const wordList pointTensors(mesh_.names(pointTensorField::typeName));
     checkEqualWordList("pointTensorFields", pointTensors);
 
-
-
-    typedef volScalarField::Internal dimScalType;
-    const wordList dimScalars(mesh_.names(dimScalType::typeName));
+    const wordList dimScalars(mesh_.names(volScalarField::Internal::typeName));
     checkEqualWordList("volScalarField::Internal", dimScalars);
 
-    typedef volVectorField::Internal dimVecType;
-    const wordList dimVectors(mesh_.names(dimVecType::typeName));
+    const wordList dimVectors(mesh_.names(volVectorField::Internal::typeName));
     checkEqualWordList("volVectorField::Internal", dimVectors);
 
-    typedef volSphericalTensorField::Internal dimSphereType;
-    const wordList dimSphereTensors(mesh_.names(dimSphereType::typeName));
+    const wordList dimSphereTensors
+    (
+        mesh_.names(volSphericalTensorField::Internal::typeName)
+    );
     checkEqualWordList
     (
         "volSphericalTensorField::Internal",
         dimSphereTensors
     );
 
-    typedef volSymmTensorField::Internal dimSymmTensorType;
-    const wordList dimSymmTensors(mesh_.names(dimSymmTensorType::typeName));
+    const wordList dimSymmTensors
+    (
+        mesh_.names(volSymmTensorField::Internal::typeName)
+    );
     checkEqualWordList
     (
         "volSymmTensorField::Internal",
         dimSymmTensors
     );
 
-    typedef volTensorField::Internal dimTensorType;
-    const wordList dimTensors(mesh_.names(dimTensorType::typeName));
+    const wordList dimTensors(mesh_.names(volTensorField::Internal::typeName));
     checkEqualWordList("volTensorField::Internal", dimTensors);
 
 

@@ -97,11 +97,8 @@ public:
         //- Update corresponding to the given distribution map
         virtual void distribute(const mapDistributePolyMesh&);
 
-
-        // Write
-
-            //- Write the motion solver state
-            virtual bool write(const bool write = true) const;
+        //- Write the motion solver state
+        virtual bool write(const bool write = true) const;
 
 
     // Member Operators

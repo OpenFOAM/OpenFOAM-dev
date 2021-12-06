@@ -313,6 +313,31 @@ void Foam::fvMeshDistribute::correctProcessorPatchFields()
 }
 
 
+namespace Foam
+{
+
+template<class Type>
+inline Type max
+(
+    const pointPatchField<Type>& f
+)
+{
+    return pTraits<Type>::min;
+}
+
+
+template<class Type>
+inline Type min
+(
+    const pointPatchField<Type>& f
+)
+{
+    return pTraits<Type>::max;
+}
+
+}
+
+
 template<class GeoField>
 void Foam::fvMeshDistribute::sendFields
 (

@@ -26,6 +26,7 @@ License
 #include "fvMeshMoversInterpolator.H"
 #include "volFields.H"
 #include "pointFields.H"
+#include "points0MotionSolver.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -51,7 +52,7 @@ Foam::fvMeshMovers::interpolator::interpolator(fvMesh& mesh)
     points0_
     (
         displacement_
-      ? new pointIOField(fvMesh::points0IO(mesh))
+      ? new pointVectorField(points0MotionSolver::readPoints0(mesh))
       : nullptr
     ),
     velocityMotionCorrection_(mesh, dict())

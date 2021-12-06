@@ -85,7 +85,7 @@ class interpolator
         const Switch displacement_;
 
         //- Starting points
-        autoPtr<pointIOField> points0_;
+        autoPtr<pointVectorField> points0_;
 
         //- Optional list of vectorFields to update for mesh motion
         //  For modern solvers using Uf and correctPhi to update the flux

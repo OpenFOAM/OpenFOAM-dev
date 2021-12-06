@@ -184,8 +184,6 @@ void Foam::solidBodyMotionSolver::updateMesh(const mapPolyMesh& mpm)
 {
     // pointMesh already updates pointFields
 
-    motionSolver::updateMesh(mpm);
-
     // Get the new points either from the map or the mesh
     const pointField& points =
     (

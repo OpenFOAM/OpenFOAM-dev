@@ -80,9 +80,11 @@ void Foam::fvMeshMovers::motionSolver::updateMesh(const mapPolyMesh& mpm)
 
 void Foam::fvMeshMovers::motionSolver::distribute
 (
-    const mapDistributePolyMesh&
+    const mapDistributePolyMesh& map
 )
-{}
+{
+    motionPtr_->distribute(map);
+}
 
 
 bool Foam::fvMeshMovers::motionSolver::write(const bool write) const

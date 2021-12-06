@@ -32,6 +32,82 @@ namespace Foam
     defineTypeNameAndDebug(points0MotionSolver, 0);
 }
 
+
+Foam::pointVectorField Foam::points0MotionSolver::readPoints0
+(
+    const polyMesh& mesh
+)
+{
+    const word instance
+    (
+        mesh.time().findInstance
+        (
+            mesh.meshDir(),
+            "points0",
+            IOobject::READ_IF_PRESENT
+        )
+    );
+
+    if (instance != mesh.time().constant())
+    {
+        // Points0 written to a time folder
+
+        return pointVectorField
+        (
+            IOobject
+            (
+                "points0",
+                instance,
+                polyMesh::meshSubDir,
+                mesh,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            pointMesh::New(mesh)
+        );
+    }
+    else
+    {
+        // Return copy of original mesh points
+
+        pointIOField points
+        (
+            IOobject
+            (
+                "points",
+                mesh.time().constant(),
+                polyMesh::meshSubDir,
+                mesh,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE,
+                false
+            )
+        );
+
+        pointVectorField points0
+        (
+            IOobject
+            (
+                "points0",
+                instance,
+                polyMesh::meshSubDir,
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            pointMesh::New(mesh),
+            dimensionedVector(dimLength, Zero)
+        );
+
+        points0.primitiveFieldRef() = points;
+
+        return points0;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::points0MotionSolver::points0MotionSolver
@@ -42,7 +118,7 @@ Foam::points0MotionSolver::points0MotionSolver
 )
 :
     motionSolver(mesh, dict, type),
-    points0_(pointIOField(polyMesh::points0IO(mesh)))
+    points0_(readPoints0(mesh))
 {
     if (points0_.size() != mesh.nPoints())
     {
@@ -81,6 +157,13 @@ void Foam::points0MotionSolver::updateMesh(const mapPolyMesh& mpm)
 {
     NotImplemented;
 }
+
+
+void Foam::points0MotionSolver::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{}
 
 
 // ************************************************************************* //

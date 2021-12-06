@@ -359,15 +359,22 @@ Foam::pointConstraints::~pointConstraints()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::pointConstraints::movePoints()
+{
+    return true;
+}
+
+
 void Foam::pointConstraints::updateMesh(const mapPolyMesh&)
 {
     makePatchPatchAddressing();
 }
 
 
-bool Foam::pointConstraints::movePoints()
+void Foam::pointConstraints::distribute(const mapDistributePolyMesh& map)
 {
-    return true;
+    FatalErrorInFunction << abort(FatalError);
+    makePatchPatchAddressing();
 }
 
 

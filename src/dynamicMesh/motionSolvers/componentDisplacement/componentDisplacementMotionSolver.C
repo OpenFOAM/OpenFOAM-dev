@@ -144,8 +144,6 @@ void Foam::componentDisplacementMotionSolver::updateMesh(const mapPolyMesh& mpm)
 {
     // pointMesh already updates pointFields.
 
-    motionSolver::updateMesh(mpm);
-
     // Map points0_. Bit special since we somehow have to come up with
     // a sensible points0 position for introduced points.
     // Find out scaling between points0 and current points
@@ -195,6 +193,13 @@ void Foam::componentDisplacementMotionSolver::updateMesh(const mapPolyMesh& mpm)
     }
     points0_.transfer(newPoints0);
 }
+
+
+void Foam::componentDisplacementMotionSolver::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{}
 
 
 // ************************************************************************* //

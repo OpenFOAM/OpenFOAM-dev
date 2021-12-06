@@ -290,6 +290,7 @@ class fvMeshDistribute
                 const labelList& sourcePointMaster,
                 Ostream& toDomain
             );
+
             //- Send subset of fields
             template<class GeoField>
             static void sendFields

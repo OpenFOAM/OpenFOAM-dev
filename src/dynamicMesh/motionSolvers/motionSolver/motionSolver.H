@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,7 @@ namespace Foam
 // Forward class declarations
 class polyMesh;
 class mapPolyMesh;
+class mapDistributePolyMesh;
 
 /*---------------------------------------------------------------------------*\
                         Class motionSolver Declaration
@@ -148,6 +149,9 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&) = 0;
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const mapDistributePolyMesh&) = 0;
 
         //- Optionally write motion state information for restart
         virtual bool write() const;

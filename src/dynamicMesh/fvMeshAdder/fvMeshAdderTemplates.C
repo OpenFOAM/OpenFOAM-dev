@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ void Foam::fvMeshAdder::MapVolField
 
         forAll(oldPatchMap, patchi)
         {
-            label newPatchi = oldPatchMap[patchi];
+            const label newPatchi = oldPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -91,7 +91,7 @@ void Foam::fvMeshAdder::MapVolField
 
         forAll(oldPatchMap, patchi)
         {
-            label newPatchi = oldPatchMap[patchi];
+            const label newPatchi = oldPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -125,7 +125,7 @@ void Foam::fvMeshAdder::MapVolField
 
         forAll(oldPatchMap, patchi)
         {
-            label newPatchi = oldPatchMap[patchi];
+            const label newPatchi = oldPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -177,7 +177,7 @@ void Foam::fvMeshAdder::MapVolField
         // Add addedMesh patches
         forAll(addedPatchMap, patchi)
         {
-            label newPatchi = addedPatchMap[patchi];
+            const label newPatchi = addedPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -191,7 +191,7 @@ void Foam::fvMeshAdder::MapVolField
                     // patchField
 
                     // From new patch faces to patch faces on added mesh.
-                    labelList newToAdded
+                    const labelList newToAdded
                     (
                         calcPatchMap
                         (
@@ -225,9 +225,11 @@ void Foam::fvMeshAdder::MapVolField
                     labelList addedToNew(oldPatch.size(), -1);
                     forAll(addedToNew, i)
                     {
-                        label addedFacei = oldPatch.start()+i;
-                        label newFacei = meshMap.addedFaceMap()[addedFacei];
-                        label patchFacei = newFacei-newPatch.start();
+                        const label addedFacei = oldPatch.start() + i;
+                        const label newFacei =
+                            meshMap.addedFaceMap()[addedFacei];
+                        const label patchFacei = newFacei-newPatch.start();
+
                         if (patchFacei >= 0 && patchFacei < newPatch.size())
                         {
                             addedToNew[i] = patchFacei;
@@ -368,11 +370,11 @@ void Foam::fvMeshAdder::MapSurfaceField
         {
             const fvsPatchField<Type>& pf = bfld[patchi];
 
-            label start = oldPatchStarts[patchi];
+            const label start = oldPatchStarts[patchi];
 
             forAll(pf, i)
             {
-                label newFacei = meshMap.oldFaceMap()[start + i];
+                const label newFacei = meshMap.oldFaceMap()[start + i];
 
                 if (newFacei >= 0 && newFacei < mesh.nInternalFaces())
                 {
@@ -396,7 +398,7 @@ void Foam::fvMeshAdder::MapSurfaceField
 
         forAll(oldPatchMap, patchi)
         {
-            label newPatchi = oldPatchMap[patchi];
+            const label newPatchi = oldPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -411,7 +413,7 @@ void Foam::fvMeshAdder::MapSurfaceField
 
         forAll(oldPatchMap, patchi)
         {
-            label newPatchi = oldPatchMap[patchi];
+            const label newPatchi = oldPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -445,11 +447,11 @@ void Foam::fvMeshAdder::MapSurfaceField
 
         forAll(oldPatchMap, patchi)
         {
-            label newPatchi = oldPatchMap[patchi];
+            const label newPatchi = oldPatchMap[patchi];
 
             if (newPatchi != -1)
             {
-                labelList newToOld
+                const labelList newToOld
                 (
                     calcPatchMap
                     (
@@ -496,7 +498,7 @@ void Foam::fvMeshAdder::MapSurfaceField
         // Add addedMesh patches
         forAll(addedPatchMap, patchi)
         {
-            label newPatchi = addedPatchMap[patchi];
+            const label newPatchi = addedPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -510,7 +512,7 @@ void Foam::fvMeshAdder::MapSurfaceField
                     // patchField
 
                     // From new patch faces to patch faces on added mesh.
-                    labelList newToAdded
+                    const labelList newToAdded
                     (
                         calcPatchMap
                         (
@@ -544,9 +546,11 @@ void Foam::fvMeshAdder::MapSurfaceField
                     labelList addedToNew(oldPatch.size(), -1);
                     forAll(addedToNew, i)
                     {
-                        label addedFacei = oldPatch.start()+i;
-                        label newFacei = meshMap.addedFaceMap()[addedFacei];
-                        label patchFacei = newFacei-newPatch.start();
+                        const label addedFacei = oldPatch.start() + i;
+                        const label newFacei =
+                            meshMap.addedFaceMap()[addedFacei];
+                        const label patchFacei = newFacei-newPatch.start();
+
                         if (patchFacei >= 0 && patchFacei < newPatch.size())
                         {
                             addedToNew[i] = patchFacei;
@@ -688,7 +692,7 @@ void Foam::fvMeshAdder::MapPointField
 
         forAll(oldPatchMap, patchi)
         {
-            label newPatchi = oldPatchMap[patchi];
+            const label newPatchi = oldPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -703,7 +707,7 @@ void Foam::fvMeshAdder::MapPointField
 
         forAll(oldPatchMap, patchi)
         {
-            label newPatchi = oldPatchMap[patchi];
+            const label newPatchi = oldPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -718,8 +722,10 @@ void Foam::fvMeshAdder::MapPointField
 
         // Sort deleted ones last so is now in newPatch ordering
         bfld.reorder(oldToNew);
+
         // Extend to covers all patches
         bfld.setSize(mesh.boundary().size());
+
         // Delete unused patches
         for
         (
@@ -737,13 +743,15 @@ void Foam::fvMeshAdder::MapPointField
 
         forAll(oldPatchMap, patchi)
         {
-            label newPatchi = oldPatchMap[patchi];
+            const label newPatchi = oldPatchMap[patchi];
 
             if (newPatchi != -1)
             {
                 const labelList& oldMp = oldMeshPoints[patchi];
                 const pointPatch& newPp = mesh.boundary()[newPatchi];
                 const labelList& newMeshPoints = newPp.meshPoints();
+                const labelList& oldPointMap = meshMap.oldPointMap();
+
                 Map<label> newMeshPointMap(2*newMeshPoints.size());
                 forAll(newMeshPoints, ppi)
                 {
@@ -753,10 +761,11 @@ void Foam::fvMeshAdder::MapPointField
                 labelList newToOld(newPp.size(), -1);
                 forAll(oldMp, oldPointi)
                 {
-                    label newPointi = oldMp[oldPointi];
+                    const label newPointi = oldPointMap[oldMp[oldPointi]];
 
                     Map<label>::const_iterator fnd =
                         newMeshPointMap.find(newPointi);
+
                     if (fnd == newMeshPointMap.end())
                     {
                         // Possibly an internal point
@@ -784,7 +793,7 @@ void Foam::fvMeshAdder::MapPointField
                     (
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new pointPatch
-                        fld(), // new internal field
+                        fld(),                          // new internal field
                         patchMapper                     // mapper (new to old)
                     )
                 );
@@ -803,7 +812,7 @@ void Foam::fvMeshAdder::MapPointField
         // Add addedMesh patches
         forAll(addedPatchMap, patchi)
         {
-            label newPatchi = addedPatchMap[patchi];
+            const label newPatchi = addedPatchMap[patchi];
 
             if (newPatchi != -1)
             {
@@ -811,6 +820,8 @@ void Foam::fvMeshAdder::MapPointField
                 const labelList& oldMp = oldPatch.meshPoints();
                 const pointPatch& newPp = mesh.boundary()[newPatchi];
                 const labelList& newMeshPoints = newPp.meshPoints();
+                const labelList& addedPointMap = meshMap.addedPointMap();
+
                 Map<label> newMpm(2*newMeshPoints.size());
                 forAll(newMeshPoints, ppi)
                 {
@@ -825,7 +836,8 @@ void Foam::fvMeshAdder::MapPointField
                     labelList newToAdded(newPp.size(), -1);
                     forAll(oldMp, oldPointi)
                     {
-                        label newPointi = oldMp[oldPointi];
+                        const label newPointi = addedPointMap[oldMp[oldPointi]];
+
                         Map<label>::const_iterator fnd = newMpm.find(newPointi);
                         if (fnd == newMpm.end())
                         {
@@ -847,7 +859,7 @@ void Foam::fvMeshAdder::MapPointField
                         (
                             fldToAdd.boundaryField()[patchi],// added field
                             mesh.boundary()[newPatchi],      // new pointPatch
-                            fld(),  // new int. field
+                            fld(),                           // new int. field
                             patchMapper                      // mapper
                         )
                     );
@@ -860,7 +872,8 @@ void Foam::fvMeshAdder::MapPointField
                     labelList oldToNew(oldPatch.size(), -1);
                     forAll(oldMp, oldPointi)
                     {
-                        label newPointi = oldMp[oldPointi];
+                        const label newPointi = addedPointMap[oldMp[oldPointi]];
+
                         Map<label>::const_iterator fnd = newMpm.find(newPointi);
                         if (fnd != newMpm.end())
                         {

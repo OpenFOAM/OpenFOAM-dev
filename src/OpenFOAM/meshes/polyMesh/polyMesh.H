@@ -64,6 +64,7 @@ namespace Foam
 // Forward declaration of classes
 class globalMeshData;
 class mapPolyMesh;
+class mapDistributePolyMesh;
 class polyMeshTetDecomposition;
 class treeDataCell;
 template<class Type> class indexedOctree;
@@ -428,9 +429,6 @@ public:
             //- Return old points for mesh motion
             virtual const pointField& oldCellCentres() const;
 
-            //- Return IO object for points0
-            static IOobject points0IO(const polyMesh& mesh);
-
             //- Return boundary mesh
             const polyBoundaryMesh& boundaryMesh() const
             {
@@ -609,7 +607,10 @@ public:
             virtual readUpdateState readUpdate();
 
             //- Update the mesh corresponding to given map
-            virtual void updateMesh(const mapPolyMesh& mpm);
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update mesh corresponding to the given distribution map
+            virtual void distribute(const mapDistributePolyMesh& map);
 
             //- Remove boundary patches
             void removeBoundary();

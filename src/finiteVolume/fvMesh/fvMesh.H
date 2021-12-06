@@ -370,12 +370,10 @@ public:
             void clearOut();
 
             //- Update mesh corresponding to the given map
-            virtual void updateMesh(const mapPolyMesh& mpm);
+            virtual void updateMesh(const mapPolyMesh& map);
 
             //- Update mesh corresponding to the given distribution map
-            //  This is a prototype implementation without field mapping
-            //  or handling of old-time volumes for mesh-morphing
-            virtual void distribute(const mapDistributePolyMesh& mdpm);
+            virtual void distribute(const mapDistributePolyMesh& map);
 
             //- Move points, returns volumes swept by faces in motion
             virtual tmp<scalarField> movePoints(const pointField&);
