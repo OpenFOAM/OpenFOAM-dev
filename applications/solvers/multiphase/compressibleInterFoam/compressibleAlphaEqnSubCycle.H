@@ -1,5 +1,3 @@
-fvModels.source(alpha1, mixture.thermo1().rho());
-
 tmp<surfaceScalarField> talphaPhi1(alphaPhi1);
 
 if (nAlphaSubCycles > 1)
