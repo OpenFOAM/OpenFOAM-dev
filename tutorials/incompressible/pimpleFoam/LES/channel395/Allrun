@@ -17,6 +17,4 @@ runApplication decomposePar -cellDist
 runParallel $application
 runApplication reconstructPar
 
-runApplication postChannel
-
 #------------------------------------------------------------------------------
