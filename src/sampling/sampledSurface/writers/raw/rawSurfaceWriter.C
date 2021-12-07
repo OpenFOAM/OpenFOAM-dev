@@ -65,7 +65,7 @@ void Foam::rawSurfaceWriter::write
     const coordSet set
     (
         false,
-        word::null,
+        writePointValues ? "point" : "face",
         writePointValues ? patch.points() : patch.faceCentres()
     );
 
