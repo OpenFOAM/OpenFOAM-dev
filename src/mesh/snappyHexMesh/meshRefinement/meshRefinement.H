@@ -591,9 +591,10 @@ public:
         meshRefinement
         (
             fvMesh& mesh,
+            const dictionary& refineDict,
             const scalar mergeDistance,
             const bool overwrite,
-            const refinementSurfaces&,
+            refinementSurfaces&,
             const refinementFeatures&,
             const refinementRegions&
         );
@@ -611,6 +612,7 @@ public:
             {
                 return mesh_;
             }
+
             fvMesh& mesh()
             {
                 return mesh_;

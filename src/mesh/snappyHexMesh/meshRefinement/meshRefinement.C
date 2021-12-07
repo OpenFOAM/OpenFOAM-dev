@@ -1160,9 +1160,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
 Foam::meshRefinement::meshRefinement
 (
     fvMesh& mesh,
+    const dictionary& refineDict,
     const scalar mergeDistance,
     const bool overwrite,
-    const refinementSurfaces& surfaces,
+    refinementSurfaces& surfaces,
     const refinementFeatures& features,
     const refinementRegions& shells
 )
@@ -1195,6 +1196,13 @@ Foam::meshRefinement::meshRefinement
     ),
     userFaceData_(0)
 {
+    surfaces.setMinLevelFields
+    (
+        shells_,
+        meshCutter_.level0EdgeLength(),
+        refineDict.lookupOrDefault<Switch>("extendedRefinementSpan", true)
+    );
+
     // recalculate intersections for all faces
     updateIntersections(identity(mesh_.nFaces()));
 }

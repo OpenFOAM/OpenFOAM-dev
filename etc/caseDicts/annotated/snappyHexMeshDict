@@ -271,6 +271,9 @@ castellatedMeshControls
     // Optional: switch off topological test for cells to-be-squashed
     //           and use geometric test instead
     // useTopologicalSnapDetection false;
+
+    // Extend refinement regions to the span of the surface facet/triangles
+    extendedRefinementSpan true;
 }
 
 // Settings for the snapping.

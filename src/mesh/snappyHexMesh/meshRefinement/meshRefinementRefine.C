@@ -813,7 +813,7 @@ Foam::label Foam::meshRefinement::markInternalRefinement
     (
         testCc,
         testLevels,
-        meshCutter().level0EdgeLength(),
+        meshCutter_.level0EdgeLength(),
         maxLevel
     );
 

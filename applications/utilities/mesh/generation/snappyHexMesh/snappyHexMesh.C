@@ -1010,12 +1010,6 @@ int main(int argc, char *argv[])
         << mesh.time().cpuTimeIncrement() << " s" << nl << endl;
 
 
-    Info<< "Setting refinement level of surface to be consistent"
-        << " with shells.." << endl;
-    surfaces.setMinLevelFields(shells);
-    Info<< "Checked shell refinement in = "
-        << mesh.time().cpuTimeIncrement() << " s" << nl << endl;
-
 
     // Read feature meshes
     // ~~~~~~~~~~~~~~~~~~~
@@ -1045,6 +1039,7 @@ int main(int argc, char *argv[])
     meshRefinement meshRefiner
     (
         mesh,
+        refineDict,
         mergeDist,          // tolerance used in sorting coordinates
         overwrite,          // overwrite mesh files?
         surfaces,           // for surface intersection refinement

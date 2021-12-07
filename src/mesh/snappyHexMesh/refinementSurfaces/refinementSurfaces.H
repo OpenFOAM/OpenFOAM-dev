@@ -211,14 +211,14 @@ public:
                 return minLevel_.size();
             }
 
-            //- Calculate minLevelFields
+            //- Calculate the refinement level for every element
+            //  of the searchablesurface
             void setMinLevelFields
             (
-                const refinementRegions& shells
+                const refinementRegions& shells,
+                const scalar level0EdgeLength,
+                const bool extendedRefinementSpan
             );
-
-            ////- Helper: count number of triangles per region
-            // static labelList countRegions(const triSurface&);
 
 
         // Searching
