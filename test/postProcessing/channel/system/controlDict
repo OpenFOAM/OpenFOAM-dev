@@ -248,6 +248,13 @@ graphsFunctions
         end=(0.500001 0.500001 0),
         fields=(p U)
     )
+
+    #includeFunc graphLayerAverage
+    (
+        patches=(inlet),
+        axis=x,
+        fields=(p U)
+    )
 }
 
 lagrangianFunctions

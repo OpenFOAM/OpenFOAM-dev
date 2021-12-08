@@ -81,4 +81,6 @@ cylindrical/cylindricalFunctionObject.C
 
 uniform/uniform.C
 
+layerAverage/layerAverage.C
+
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects
