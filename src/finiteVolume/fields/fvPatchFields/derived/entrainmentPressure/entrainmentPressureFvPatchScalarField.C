@@ -101,7 +101,11 @@ void Foam::entrainmentPressureFvPatchScalarField::updateCoeffs()
         Unp /= rhop;
     }
 
-    dynamicPressureFvPatchScalarField::updateCoeffs(p0_, -0.5*Unp*mag(Unp));
+    dynamicPressureFvPatchScalarField::updateCoeffs
+    (
+        p0_,
+        -0.5*negPart(Unp)*mag(Unp)
+    );
 }
 
 
