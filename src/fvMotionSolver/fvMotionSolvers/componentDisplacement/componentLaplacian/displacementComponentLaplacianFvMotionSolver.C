@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,16 +82,23 @@ displacementComponentLaplacianFvMotionSolver
       : -1
     )
 {
-    Switch applyPointLocation
+    typeIOobject<pointVectorField> io
     (
-        coeffDict().lookupOrDefault
-        (
-            "applyPointLocation",
-            true
-        )
+        "pointLocation",
+        fvMesh_.time().timeName(),
+        fvMesh_,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
     );
 
-    if (applyPointLocation)
+    if (debug)
+    {
+        Info<< "displacementComponentLaplacianFvMotionSolver:" << nl
+            << "    diffusivity       : " << diffusivityPtr_().type() << nl
+            << "    frozenPoints zone : " << frozenPointsZone_ << endl;
+    }
+
+    if (io.headerOk())
     {
         pointLocation_.reset
         (
@@ -109,7 +116,7 @@ displacementComponentLaplacianFvMotionSolver
             )
         );
 
-        // if (debug)
+        if (debug)
         {
             Info<< "displacementComponentLaplacianFvMotionSolver :"
                 << " Read pointVectorField "

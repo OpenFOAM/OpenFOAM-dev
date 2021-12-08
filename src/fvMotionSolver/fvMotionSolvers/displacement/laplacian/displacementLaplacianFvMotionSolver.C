@@ -104,7 +104,6 @@ Foam::displacementLaplacianFvMotionSolver::displacementLaplacianFvMotionSolver
             << "    frozenPoints zone : " << frozenPointsZone_ << endl;
     }
 
-
     if (io.headerOk())
     {
         pointLocation_.reset

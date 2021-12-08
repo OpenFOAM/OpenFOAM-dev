@@ -21,8 +21,7 @@ mover
 
     libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-    motionSolver    displacementSBRStress;   // displacementLaplacian;
-    // motionSolver    velocityComponentLaplacian z;
+    motionSolver    displacementSBRStress;
 
     // diffusivity  uniform;
     // diffusivity  directional (1 200 0);

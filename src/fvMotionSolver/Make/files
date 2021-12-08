@@ -4,6 +4,10 @@ fvMotionSolvers/displacement/laplacian/displacementLaplacianFvMotionSolver.C
 
 fvMotionSolvers/componentDisplacement/componentLaplacian/displacementComponentLaplacianFvMotionSolver.C
 
+fvMotionSolvers/velocity/laplacian/velocityLaplacianFvMotionSolver.C
+
+fvMotionSolvers/componentVelocity/componentLaplacian/velocityComponentLaplacianFvMotionSolver.C
+
 motionDiffusivity/motionDiffusivity/motionDiffusivity.C
 motionDiffusivity/uniform/uniformDiffusivity.C
 motionDiffusivity/inverseDistance/inverseDistanceDiffusivity.C
