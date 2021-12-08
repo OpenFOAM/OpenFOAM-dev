@@ -57,10 +57,6 @@ blocks
     simpleGrading ($rGrading $hGrading 1)
 );
 
-edges
-(
-);
-
 boundary
 (
     rod
@@ -106,8 +102,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //

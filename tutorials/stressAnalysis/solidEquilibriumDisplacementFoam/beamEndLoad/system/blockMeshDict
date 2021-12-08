@@ -34,10 +34,6 @@ blocks
     hex (0 1 2 3 4 5 6 7) (6 2 1) simpleGrading (1.0 1.0 1.0)
 );
 
-edges
-(
-);
-
 boundary
 (
     topSurface
@@ -77,8 +73,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //

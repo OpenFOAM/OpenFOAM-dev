@@ -63,10 +63,6 @@ blocks
     hex (10  7  8  9 26 23 24 25) (100 24 10) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 boundary
 (
     inlet

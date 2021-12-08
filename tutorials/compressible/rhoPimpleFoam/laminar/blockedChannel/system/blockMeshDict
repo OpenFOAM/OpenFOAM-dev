@@ -53,10 +53,6 @@ blocks
     hex (40 41 43 42 44 45 47 46) (256 32 1) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 defaultPatch
 {
     name frontAndBack;

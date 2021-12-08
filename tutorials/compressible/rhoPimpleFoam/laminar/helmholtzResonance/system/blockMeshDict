@@ -178,10 +178,6 @@ blocks
     hex ( 58  57  73  74 107 106 110 111) ($zs $x4 $o ) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 defaultPatch
 {
     name walls;
@@ -243,8 +239,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //

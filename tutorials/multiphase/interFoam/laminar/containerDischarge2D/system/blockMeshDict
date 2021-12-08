@@ -95,10 +95,6 @@ blocks
     simpleGrading ($horizGrading 1 $upperGrading)
 );
 
-edges
-(
-);
-
 boundary
 (
     left
@@ -184,8 +180,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //

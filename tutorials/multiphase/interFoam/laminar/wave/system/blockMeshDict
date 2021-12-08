@@ -34,10 +34,6 @@ blocks
     hex (0 1 2 3 4 5 6 7) (67 40 1) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 defaultPatch
 {
     name frontAndBack;
@@ -80,8 +76,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //

@@ -80,10 +80,6 @@ blocks
     hex (17 18 15 16 39 40 37 38) ( 7  7  2) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 boundary
 (
     walls

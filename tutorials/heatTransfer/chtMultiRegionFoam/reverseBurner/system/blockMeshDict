@@ -61,10 +61,6 @@ blocks
     hex (26 27 34 33 61 62 69 68) solid ( 4   4 1) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 defaultPatch
 {
     type wedge;
@@ -150,8 +146,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //

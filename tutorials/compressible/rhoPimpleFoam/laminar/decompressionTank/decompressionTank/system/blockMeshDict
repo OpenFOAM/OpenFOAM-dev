@@ -47,10 +47,6 @@ blocks
     hex (5 6 9 8 15 16 19 18) (30 95 1) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 boundary
 (
     outerWall
@@ -108,8 +104,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //

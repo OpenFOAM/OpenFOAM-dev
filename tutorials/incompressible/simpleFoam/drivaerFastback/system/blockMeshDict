@@ -43,10 +43,6 @@ blocks
     hex (0 1 2 3 4 5 6 7) ($xCells $yCells $zCells) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 boundary
 (
     inlet
@@ -80,8 +76,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //

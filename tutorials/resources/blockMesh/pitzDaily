@@ -85,10 +85,6 @@ blocks
     simpleGrading (2.5 $posYR 1)
 );
 
-edges
-(
-);
-
 boundary
 (
     inlet

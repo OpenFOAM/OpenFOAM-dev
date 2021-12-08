@@ -37,10 +37,6 @@ blocks
     hex (1 4 5 2 7 10 11 8) (1 40 1) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 boundary
 (
     lowerWall
@@ -84,8 +80,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //
