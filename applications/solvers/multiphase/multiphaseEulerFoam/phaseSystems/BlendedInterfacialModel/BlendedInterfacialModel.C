@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -314,69 +314,6 @@ Foam::BlendedInterfacialModel<ModelType>::BlendedInterfacialModel
     model2In1_(model2In1),
     correctFixedFluxBCs_(correctFixedFluxBCs)
 {}
-
-
-template<class ModelType>
-Foam::BlendedInterfacialModel<ModelType>::BlendedInterfacialModel
-(
-    const phasePair::dictTable& modelTable,
-    const blendingMethod& blending,
-    const phasePair& pair,
-    const orderedPhasePair& pair1In2,
-    const orderedPhasePair& pair2In1,
-    const bool correctFixedFluxBCs
-)
-:
-    regIOobject
-    (
-        IOobject
-        (
-            IOobject::groupName(typeName, pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh()
-        )
-    ),
-    phase1_(pair.phase1()),
-    phase2_(pair.phase2()),
-    blending_(blending),
-    correctFixedFluxBCs_(correctFixedFluxBCs)
-{
-    if (modelTable.found(pair))
-    {
-        model_.set
-        (
-            ModelType::New
-            (
-                modelTable[pair],
-                pair
-            ).ptr()
-        );
-    }
-
-    if (modelTable.found(pair1In2))
-    {
-        model1In2_.set
-        (
-            ModelType::New
-            (
-                modelTable[pair1In2],
-                pair1In2
-            ).ptr()
-        );
-    }
-
-    if (modelTable.found(pair2In1))
-    {
-        model2In1_.set
-        (
-            ModelType::New
-            (
-                modelTable[pair2In1],
-                pair2In1
-            ).ptr()
-        );
-    }
-}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
