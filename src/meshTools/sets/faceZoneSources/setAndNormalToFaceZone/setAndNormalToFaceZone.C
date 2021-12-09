@@ -64,7 +64,7 @@ Foam::setAndNormalToFaceZone::setAndNormalToFaceZone
 )
 :
     topoSetSource(mesh),
-    setName_(dict.lookup("faceSet")),
+    setName_(dict.lookupBackwardsCompatible<word>({"set", "faceSet"})),
     normal_(dict.lookup("normal"))
 {}
 
