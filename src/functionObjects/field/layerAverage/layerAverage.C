@@ -87,12 +87,13 @@ void Foam::functionObjects::layerAverage::walkOppositeFaces
         syncTools::swapBoundaryFaceList(mesh_, bndFaceIsFront);
 
         // Set new front faces
-        forAll(bndFaceIsFront, i)
+        forAll(bndFaceIsFront, bndFacei)
         {
-            const label facei = mesh_.nInternalFaces() + i;
+            const label facei = mesh_.nInternalFaces() + bndFacei;
 
-            if (bndFaceIsFront[i] && !blockedFace[facei])
+            if (bndFaceIsFront[bndFacei] && !blockedFace[facei])
             {
+                blockedFace[facei] = true;
                 frontFaces.append(facei);
                 frontFaceIntoOwners.append(true);
             }
@@ -140,6 +141,39 @@ void Foam::functionObjects::layerAverage::walkOppositeFaces
 
         frontFaces.transfer(newFrontFaces);
         frontFaceIntoOwners.transfer(newFrontFaceIntoOwners);
+    }
+
+    // Determine whether cells on the other sides of couplings are in layers
+    boolList bndCellIsLayer(mesh_.nFaces() - mesh_.nInternalFaces(), false);
+    forAll(bndCellIsLayer, bndFacei)
+    {
+        const label facei = mesh_.nInternalFaces() + bndFacei;
+        const label owni = mesh_.faceOwner()[facei];
+
+        bndCellIsLayer[bndFacei] = cellIsLayer[owni];
+    }
+    syncTools::swapBoundaryFaceList(mesh_, bndCellIsLayer);
+
+    // Block faces where one adjacent cell is in a layer and the other is not
+    forAll(mesh_.faces(), facei)
+    {
+        const label owni = mesh_.faceOwner()[facei];
+        if (mesh_.isInternalFace(facei))
+        {
+            const label nbri = mesh_.faceNeighbour()[facei];
+            if (cellIsLayer[owni] != cellIsLayer[nbri])
+            {
+                blockedFace[facei] = true;
+            }
+        }
+        else
+        {
+            const label bndFacei = facei - mesh_.nInternalFaces();
+            if (cellIsLayer[owni] != bndCellIsLayer[bndFacei])
+            {
+                blockedFace[facei] = true;
+            }
+        }
     }
 }
 
@@ -225,7 +259,7 @@ void Foam::functionObjects::layerAverage::calcLayers()
     x_ = layerCentres.component(axis_);
     sortMap_ = identity(layerCentres.size());
     stableSort(sortMap_, UList<scalar>::less(x_));
-    inplaceReorder(sortMap_, x_);
+    x_.map(x_, sortMap_);
 
     // If symmetric, keep only half of the coordinates
     if (symmetric_)
@@ -388,16 +422,19 @@ bool Foam::functionObjects::layerAverage::write()
     }
 
     // Write
-    formatter_->write
-    (
-        outputPath/mesh_.time().timeName(),
-        typeName,
-        coordSet(true, axisNames_[axis_], x_),
-        fieldNames
-        #define TypeValueSetsParameter(Type, nullArg) , Type##ValueSets
-        FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
-        #undef TypeValueSetsParameter
-    );
+    if (Pstream::master() && x_.size())
+    {
+        formatter_->write
+        (
+            outputPath/mesh_.time().timeName(),
+            typeName,
+            coordSet(true, axisNames_[axis_], x_),
+            fieldNames
+            #define TypeValueSetsParameter(Type, nullArg) , Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
+            #undef TypeValueSetsParameter
+        );
+    }
 
     return true;
 }
