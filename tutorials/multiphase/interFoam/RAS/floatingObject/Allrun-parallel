@@ -8,6 +8,10 @@ runApplication blockMesh
 runApplication topoSet
 runApplication subsetMesh -overwrite c0 -patch floatingObject -noFields
 runApplication setFields
-runApplication $(getApplication)
+
+runApplication decomposePar
+runParallel $(getApplication)
+runApplication reconstructParMesh
+runApplication reconstructPar
 
 #------------------------------------------------------------------------------

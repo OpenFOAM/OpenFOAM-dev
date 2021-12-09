@@ -120,4 +120,14 @@ topoChanger
 }
 
 
+distributor
+{
+    type            decomposer;
+
+    libs            ("libfvMeshDistributors.so");
+
+    redistributionInterval  10;
+}
+
+
 // ************************************************************************* //

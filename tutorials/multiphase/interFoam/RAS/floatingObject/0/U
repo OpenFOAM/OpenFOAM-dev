@@ -20,6 +20,8 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     stationaryWalls
     {
         type            noSlip;

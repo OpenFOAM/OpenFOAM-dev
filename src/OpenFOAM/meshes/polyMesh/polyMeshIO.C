@@ -206,9 +206,6 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         if (boundaryChanged)
         {
-            WarningInFunction
-                << "boundary changed, proceed with care." << endl;
-
             boundary_.clear();
             boundary_.setSize(newBoundary.size());
 

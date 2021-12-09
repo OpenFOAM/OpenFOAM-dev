@@ -218,7 +218,6 @@ Foam::labelList Foam::fvMeshDistribute::select
 }
 
 
-// Check all procs have same names and in exactly same order.
 void Foam::fvMeshDistribute::checkEqualWordList
 (
     const string& msg,
@@ -264,7 +263,6 @@ Foam::wordList Foam::fvMeshDistribute::mergeWordList(const wordList& procNames)
 }
 
 
-// Print some info on mesh.
 void Foam::fvMeshDistribute::printMeshInfo(const fvMesh& mesh)
 {
     Pout<< "Primitives:" << nl
@@ -351,7 +349,6 @@ void Foam::fvMeshDistribute::printCoupleInfo
 }
 
 
-// Finds (non-empty) patch that exposed internal and proc faces can be put into.
 Foam::label Foam::fvMeshDistribute::findInternalPatch() const
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
@@ -369,41 +366,22 @@ Foam::label Foam::fvMeshDistribute::findInternalPatch() const
         }
     }
 
-    if (internalPatchi != -1)
-    {
-        return internalPatchi;
-    }
-
-    label nonEmptyPatchi = -1;
-
-    forAllReverse(patches, patchi)
-    {
-        const polyPatch& pp = patches[patchi];
-
-        if (!isA<emptyPolyPatch>(pp) && !pp.coupled())
-        {
-            nonEmptyPatchi = patchi;
-            break;
-        }
-    }
-
-    if (nonEmptyPatchi == -1)
+    if (internalPatchi == -1)
     {
         FatalErrorInFunction
-            << "Cannot find a patch which is neither of type empty nor"
-            << " coupled in patches " << patches.names() << endl
-            << "There has to be at least one such patch for"
-            << " distribution to work" << abort(FatalError);
+            << "Cannot find a internal patch in " << patches.names() << nl
+            << "    of types " << patches.types() << nl
+            << "    An internal patch must be provided for the exposed "
+               " internal faces." << exit(FatalError);
     }
 
     if (debug)
     {
-        Pout<< "findInternalPatch : using patch " << nonEmptyPatchi
-            << " name:" << patches[nonEmptyPatchi].name()
-            << " type:" << patches[nonEmptyPatchi].type()
-            << " to put exposed faces into." << endl;
+        Pout<< "findInternalPatch : using patch " << internalPatchi
+            << " name:" << patches[internalPatchi].name()
+            << " type:" << patches[internalPatchi].type()
+            << " for the exposed internal faces." << endl;
     }
-
 
     // Do additional test for processor patches intermingled with non-proc
     // patches.
@@ -427,12 +405,10 @@ Foam::label Foam::fvMeshDistribute::findInternalPatch() const
         }
     }
 
-    return nonEmptyPatchi;
+    return internalPatchi;
 }
 
 
-// Delete all processor patches. Move any processor faces into the last
-// non-processor patch.
 Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::deleteProcPatches
 (
     const label destinationPatch
@@ -504,7 +480,6 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::deleteProcPatches
 }
 
 
-// Repatch the mesh.
 Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::repatch
 (
     const labelList& newPatchID,         // per boundary face -1 or new patchID
@@ -621,11 +596,6 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::repatch
 }
 
 
-// Detect shared points. Need processor patches to be present.
-// Background: when adding bits of mesh one can get points which
-// share the same position but are only detectable to be topologically
-// the same point when doing parallel analysis. This routine will
-// merge those points.
 Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::mergeSharedPoints
 (
     const labelList& pointToGlobalMaster,
@@ -1006,7 +976,6 @@ void Foam::fvMeshDistribute::getCouplingData
 }
 
 
-// Subset the neighbourCell/neighbourProc fields
 void Foam::fvMeshDistribute::subsetCouplingData
 (
     const fvMesh& mesh,
@@ -1085,8 +1054,6 @@ void Foam::fvMeshDistribute::subsetCouplingData
 }
 
 
-// Find cells on mesh whose faceID/procID match the neighbour cell/proc of
-// domainMesh. Store the matching face.
 void Foam::fvMeshDistribute::findCouples
 (
     const primitiveMesh& mesh,
@@ -1161,7 +1128,6 @@ void Foam::fvMeshDistribute::findCouples
 }
 
 
-// Map data on boundary faces to new mesh (resulting from adding two meshes)
 Foam::labelList Foam::fvMeshDistribute::mapBoundaryData
 (
     const primitiveMesh& mesh,      // mesh after adding
@@ -1235,7 +1201,6 @@ Foam::labelList Foam::fvMeshDistribute::mapPointData
 }
 
 
-// Remove cells. Add all exposed faces to patch oldInternalPatchi
 Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
 (
     const labelList& cellsToRemove,
@@ -1320,8 +1285,6 @@ void Foam::fvMeshDistribute::mapFields(const mapPolyMesh& map)
 }
 
 
-// Delete and add processor patches. Changes mesh and returns per neighbour proc
-// the processor patchID.
 void Foam::fvMeshDistribute::addProcPatches
 (
     const labelList& nbrProc,         // Processor that neighbour is now on
@@ -1424,7 +1387,6 @@ void Foam::fvMeshDistribute::addProcPatches
 }
 
 
-// Get boundary faces to be repatched. Is -1 or new patchID
 Foam::labelList Foam::fvMeshDistribute::getBoundaryPatch
 (
     const labelList& nbrProc,               // new processor per boundary face
@@ -1455,7 +1417,6 @@ Foam::labelList Foam::fvMeshDistribute::getBoundaryPatch
 }
 
 
-// Send mesh and coupling data.
 void Foam::fvMeshDistribute::sendMesh
 (
     const label domain,
@@ -1624,7 +1585,6 @@ void Foam::fvMeshDistribute::sendMesh
 }
 
 
-// Receive mesh. Opposite of sendMesh
 Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
 (
     const label domain,
@@ -1749,7 +1709,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::fvMeshDistribute::fvMeshDistribute(fvMesh& mesh)
 :
     mesh_(mesh)
@@ -2002,12 +1961,8 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     const wordList dimTensors(mesh_.names(volTensorField::Internal::typeName));
     checkEqualWordList("volTensorField::Internal", dimTensors);
 
-
-
     // Find patch to temporarily put exposed and processor faces into.
-    label oldInternalPatchi = findInternalPatch();
-
-
+    const label oldInternalPatchi = findInternalPatch();
 
     // Delete processor patches, starting from the back. Move all faces into
     // oldInternalPatchi.

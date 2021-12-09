@@ -46,6 +46,7 @@ boundary
             (0 4 7 3)
         );
     }
+
     atmosphere
     {
         type patch;
@@ -54,9 +55,16 @@ boundary
             (4 5 6 7)
         );
     }
+
     floatingObject
     {
         type wall;
+        faces ();
+    }
+
+    internal
+    {
+        type internal;
         faces ();
     }
 );

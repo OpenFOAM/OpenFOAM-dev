@@ -20,6 +20,8 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     stationaryWalls
     {
         type            zeroGradient;

@@ -161,32 +161,9 @@ Foam::fvMesh::readUpdateState Foam::processorMeshes::readUpdate()
         // Check if any new meshes need to be read.
         fvMesh::readUpdateState procStat = meshes_[proci].readUpdate();
 
-        /*
-        if (procStat != fvMesh::UNCHANGED)
-        {
-            Info<< "Processor " << proci
-                << " at time " << databases_[proci].timeName()
-                << " detected mesh change " << procStat
-                << endl;
-        }
-        */
-
-        // Combine into overall mesh change status
-        if (stat == fvMesh::UNCHANGED)
+        if (procStat > stat)
         {
             stat = procStat;
-        }
-        else if (stat != procStat)
-        {
-            FatalErrorInFunction
-                << "Processor " << proci
-                << " has a different polyMesh at time "
-                << databases_[proci].timeName()
-                << " compared to any previous processors." << nl
-                << "Please check time " << databases_[proci].timeName()
-                << " directories on all processors for consistent"
-                << " mesh files."
-                << exit(FatalError);
         }
     }
 
@@ -199,6 +176,7 @@ Foam::fvMesh::readUpdateState Foam::processorMeshes::readUpdate()
         // Reread all meshes and addressing
         read();
     }
+
     return stat;
 }
 

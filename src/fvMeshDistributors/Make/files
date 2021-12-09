@@ -1,0 +1,3 @@
+decomposer/fvMeshDistributorDecomposer.C
+
+LIB = $(FOAM_LIBBIN)/libfvMeshDistributors
