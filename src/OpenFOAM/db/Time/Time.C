@@ -248,20 +248,31 @@ void Foam::Time::setControls()
         )
     );
 
-    beginTime_ = timeDict.lookupOrDefault("beginTime", startTime_);
+    if (timeDict.found("beginTime"))
+    {
+        beginTime_ = userTimeToTime(timeDict.lookup<scalar>("beginTime"));
+    }
+    else
+    {
+        beginTime_ = startTime_;
+    }
 
     // Read and set the deltaT only if time-step adjustment is active
     // otherwise use the deltaT from the controlDict
     if (controlDict_.lookupOrDefault<Switch>("adjustTimeStep", false))
     {
-        if (timeDict.readIfPresent("deltaT", deltaT_))
+        if (timeDict.found("deltaT"))
         {
+            deltaT_ = userTimeToTime(timeDict.lookup<scalar>("deltaT"));
             deltaTSave_ = deltaT_;
             deltaT0_ = deltaT_;
         }
     }
 
-    timeDict.readIfPresent("deltaT0", deltaT0_);
+    if (timeDict.found("deltaT0"))
+    {
+        deltaT0_ = userTimeToTime(timeDict.lookup<scalar>("deltaT0"));
+    }
 
     if (timeDict.readIfPresent("index", startTimeIndex_))
     {
@@ -972,9 +983,18 @@ void Foam::Time::setTime(const instant& inst, const label newIndex)
         )
     );
 
-    timeDict.readIfPresent("deltaT", deltaT_);
-    timeDict.readIfPresent("deltaT0", deltaT0_);
+    if (timeDict.found("deltaT"))
+    {
+        deltaT_ = userTimeToTime(timeDict.lookup<scalar>("deltaT"));
+    }
+
+    if (timeDict.found("deltaT0"))
+    {
+        deltaT0_ = userTimeToTime(timeDict.lookup<scalar>("deltaT0"));
+    }
+
     timeDict.readIfPresent("index", timeIndex_);
+
     fileHandler().setTime(*this);
 }
 
