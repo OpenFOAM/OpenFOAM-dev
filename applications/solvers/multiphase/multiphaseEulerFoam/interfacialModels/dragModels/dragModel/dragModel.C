@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,28 +42,6 @@ const Foam::dimensionSet Foam::dragModel::dimK(1, -3, -1, 0, 0);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::dragModel::dragModel
-(
-    const phasePair& pair,
-    const bool registerObject
-)
-:
-    regIOobject
-    (
-        IOobject
-        (
-            IOobject::groupName(typeName, pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            registerObject
-        )
-    ),
-    pair_(pair)
-{}
-
 
 Foam::dragModel::dragModel
 (
