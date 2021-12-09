@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,13 +95,6 @@ public:
 
 
     // Constructors
-
-        // Construct without residual constants
-        dragModel
-        (
-            const phasePair& pair,
-            const bool registerObject
-        );
 
         // Construct with residual constants
         dragModel
