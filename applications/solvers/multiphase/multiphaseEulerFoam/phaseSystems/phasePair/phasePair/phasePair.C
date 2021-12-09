@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,11 +196,7 @@ Foam::tmp<Foam::volScalarField> Foam::phasePair::Ta() const
 
 Foam::tmp<Foam::volScalarField> Foam::phasePair::E() const
 {
-    FatalErrorInFunction
-        << "Requested aspect ratio of the dispersed phase in an unordered pair"
-        << exit(FatalError);
-
-    return phase1();
+    return dispersed().fluid().E(*this);
 }
 
 

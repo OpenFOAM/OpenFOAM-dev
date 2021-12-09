@@ -136,7 +136,7 @@ public:
         tmp<volScalarField> Ta() const;
 
         //- Aspect ratio
-        virtual tmp<volScalarField> E() const;
+        tmp<volScalarField> E() const;
 
         // Access
 

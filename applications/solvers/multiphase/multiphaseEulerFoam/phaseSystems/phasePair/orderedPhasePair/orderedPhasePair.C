@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,12 +78,6 @@ Foam::word Foam::orderedPhasePair::otherName() const
         << exit(FatalError);
 
     return word::null;
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::orderedPhasePair::E() const
-{
-    return phase1().fluid().E(*this);
 }
 
 
