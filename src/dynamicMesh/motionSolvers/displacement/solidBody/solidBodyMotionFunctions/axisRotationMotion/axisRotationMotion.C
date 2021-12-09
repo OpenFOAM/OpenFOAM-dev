@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,23 +71,30 @@ Foam::solidBodyMotionFunctions::axisRotationMotion::~axisRotationMotion()
 Foam::septernion
 Foam::solidBodyMotionFunctions::axisRotationMotion::transformation() const
 {
-    scalar t = time_.value();
+    const scalar t = time_.value() - time_.beginTime().value();
 
-    // Rotation origin (in radians)
-    vector omega
-    (
-        t*degToRad(radialVelocity_.x()),
-        t*degToRad(radialVelocity_.y()),
-        t*degToRad(radialVelocity_.z())
-    );
+    if (t > small)
+    {
+        // Rotational position (in radians)
+        const vector omega
+        (
+            t*degToRad(radialVelocity_.x()),
+            t*degToRad(radialVelocity_.y()),
+            t*degToRad(radialVelocity_.z())
+        );
 
-    scalar magOmega = mag(omega);
-    quaternion R(omega/magOmega, magOmega);
-    septernion TR(septernion(-origin_)*R*septernion(origin_));
+        const scalar magOmega = mag(omega);
+        const quaternion R(omega/magOmega, magOmega);
+        const septernion TR(septernion(-origin_)*R*septernion(origin_));
 
-    DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
+        DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 
-    return TR;
+        return TR;
+    }
+    else
+    {
+        return septernion::I;
+    }
 }
 
 
