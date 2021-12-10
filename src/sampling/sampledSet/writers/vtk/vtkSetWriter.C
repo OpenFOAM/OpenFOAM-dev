@@ -79,7 +79,7 @@ void Foam::vtkSetWriter::write
     (
         outputDir/setName + ".vtk",
         setName,
-        false,
+        writeFormat_ == IOstream::BINARY,
         set.pointCoords()(),
         set.vertices(),
         set.lines(),
