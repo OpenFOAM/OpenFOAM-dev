@@ -218,7 +218,7 @@ Foam::labelList Foam::fvMeshDistribute::select
 }
 
 
-void Foam::fvMeshDistribute::checkEqualWordList
+Foam::label Foam::fvMeshDistribute::checkEqualWordList
 (
     const string& msg,
     const wordList& lst
@@ -241,6 +241,8 @@ void Foam::fvMeshDistribute::checkEqualWordList
                 << exit(FatalError);
         }
     }
+
+    return lst.size();
 }
 
 
@@ -372,7 +374,7 @@ Foam::label Foam::fvMeshDistribute::findInternalPatch() const
             << "Cannot find a internal patch in " << patches.names() << nl
             << "    of types " << patches.types() << nl
             << "    An internal patch must be provided for the exposed "
-               " internal faces." << exit(FatalError);
+               "internal faces." << exit(FatalError);
     }
 
     if (debug)
@@ -406,6 +408,43 @@ Foam::label Foam::fvMeshDistribute::findInternalPatch() const
     }
 
     return internalPatchi;
+}
+
+Foam::label Foam::fvMeshDistribute::findNonEmptyPatch() const
+{
+    const polyBoundaryMesh& patches = mesh_.boundaryMesh();
+
+    label nonEmptyPatchi = -1;
+
+    forAllReverse(patches, patchi)
+    {
+        const polyPatch& pp = patches[patchi];
+
+        if (!isA<emptyPolyPatch>(pp) && !pp.coupled())
+        {
+            nonEmptyPatchi = patchi;
+            break;
+        }
+    }
+
+    if (nonEmptyPatchi == -1)
+    {
+        FatalErrorInFunction
+            << "Cannot find a non-empty patch in " << patches.names() << nl
+            << "    of types " << patches.types() << nl
+            << "    An non-empty patch must be provided for the exposed "
+               "internal faces." << exit(FatalError);
+    }
+
+    if (debug)
+    {
+        Pout<< "findNonEmptyPatch : using patch " << nonEmptyPatchi
+            << " name:" << patches[nonEmptyPatchi].name()
+            << " type:" << patches[nonEmptyPatchi].type()
+            << " for the exposed non-empty faces." << endl;
+    }
+
+    return nonEmptyPatchi;
 }
 
 
@@ -1883,66 +1922,76 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     //mesh_.clearOut();
     mesh_.resetMotion();
 
+    label nFields = 0;
+
     // Get data to send. Make sure is synchronised
     const wordList volScalars(mesh_.names(volScalarField::typeName));
-    checkEqualWordList("volScalarFields", volScalars);
+    nFields += checkEqualWordList("volScalarFields", volScalars);
     const wordList volVectors(mesh_.names(volVectorField::typeName));
-    checkEqualWordList("volVectorFields", volVectors);
+    nFields += checkEqualWordList("volVectorFields", volVectors);
     const wordList volSphereTensors
     (
         mesh_.names(volSphericalTensorField::typeName)
     );
-    checkEqualWordList("volSphericalTensorFields", volSphereTensors);
+    nFields += checkEqualWordList("volSphericalTensorFields", volSphereTensors);
     const wordList volSymmTensors(mesh_.names(volSymmTensorField::typeName));
-    checkEqualWordList("volSymmTensorFields", volSymmTensors);
+    nFields += checkEqualWordList("volSymmTensorFields", volSymmTensors);
     const wordList volTensors(mesh_.names(volTensorField::typeName));
-    checkEqualWordList("volTensorField", volTensors);
+    nFields += checkEqualWordList("volTensorField", volTensors);
 
     const wordList surfScalars(mesh_.names(surfaceScalarField::typeName));
-    checkEqualWordList("surfaceScalarFields", surfScalars);
+    nFields += checkEqualWordList("surfaceScalarFields", surfScalars);
     const wordList surfVectors(mesh_.names(surfaceVectorField::typeName));
-    checkEqualWordList("surfaceVectorFields", surfVectors);
+    nFields += checkEqualWordList("surfaceVectorFields", surfVectors);
     const wordList surfSphereTensors
     (
         mesh_.names(surfaceSphericalTensorField::typeName)
     );
-    checkEqualWordList("surfaceSphericalTensorFields", surfSphereTensors);
+    nFields += checkEqualWordList
+    (
+        "surfaceSphericalTensorFields",
+        surfSphereTensors
+    );
     const wordList surfSymmTensors
     (
         mesh_.names(surfaceSymmTensorField::typeName)
     );
-    checkEqualWordList("surfaceSymmTensorFields", surfSymmTensors);
+    nFields += checkEqualWordList("surfaceSymmTensorFields", surfSymmTensors);
     const wordList surfTensors(mesh_.names(surfaceTensorField::typeName));
-    checkEqualWordList("surfaceTensorFields", surfTensors);
+    nFields += checkEqualWordList("surfaceTensorFields", surfTensors);
 
     const wordList pointScalars(mesh_.names(pointScalarField::typeName));
-    checkEqualWordList("pointScalarFields", pointScalars);
+    nFields += checkEqualWordList("pointScalarFields", pointScalars);
     const wordList pointVectors(mesh_.names(pointVectorField::typeName));
-    checkEqualWordList("pointVectorFields", pointVectors);
+    nFields += checkEqualWordList("pointVectorFields", pointVectors);
     const wordList pointSphereTensors
     (
         mesh_.names(pointSphericalTensorField::typeName)
     );
-    checkEqualWordList("pointSphericalTensorFields", pointSphereTensors);
+    nFields += checkEqualWordList
+    (
+        "pointSphericalTensorFields",
+        pointSphereTensors
+    );
     const wordList pointSymmTensors
     (
         mesh_.names(pointSymmTensorField::typeName)
     );
-    checkEqualWordList("pointSymmTensorFields", pointSymmTensors);
+    nFields += checkEqualWordList("pointSymmTensorFields", pointSymmTensors);
     const wordList pointTensors(mesh_.names(pointTensorField::typeName));
-    checkEqualWordList("pointTensorFields", pointTensors);
+    nFields += checkEqualWordList("pointTensorFields", pointTensors);
 
     const wordList dimScalars(mesh_.names(volScalarField::Internal::typeName));
-    checkEqualWordList("volScalarField::Internal", dimScalars);
+    nFields += checkEqualWordList("volScalarField::Internal", dimScalars);
 
     const wordList dimVectors(mesh_.names(volVectorField::Internal::typeName));
-    checkEqualWordList("volVectorField::Internal", dimVectors);
+    nFields += checkEqualWordList("volVectorField::Internal", dimVectors);
 
     const wordList dimSphereTensors
     (
         mesh_.names(volSphericalTensorField::Internal::typeName)
     );
-    checkEqualWordList
+    nFields += checkEqualWordList
     (
         "volSphericalTensorField::Internal",
         dimSphereTensors
@@ -1952,17 +2001,22 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     (
         mesh_.names(volSymmTensorField::Internal::typeName)
     );
-    checkEqualWordList
+    nFields += checkEqualWordList
     (
         "volSymmTensorField::Internal",
         dimSymmTensors
     );
 
     const wordList dimTensors(mesh_.names(volTensorField::Internal::typeName));
-    checkEqualWordList("volTensorField::Internal", dimTensors);
+    nFields += checkEqualWordList("volTensorField::Internal", dimTensors);
 
-    // Find patch to temporarily put exposed and processor faces into.
-    const label oldInternalPatchi = findInternalPatch();
+    // Find patch to temporarily put exposed internal and processor faces into.
+    // If there are no fields patch 0 is used,
+    // If there are fields the internal patch is used.
+    const label oldInternalPatchi =
+        nFields
+      ? findInternalPatch()
+      : findNonEmptyPatch();
 
     // Delete processor patches, starting from the back. Move all faces into
     // oldInternalPatchi.
