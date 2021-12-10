@@ -118,9 +118,9 @@ License
 //        // (unless the faces are absolutely planar)
 //        labelHashSet retestFaces(6*mergeSets.size());
 //
-//        forAll(mergeSets, setI)
+//        forAll(mergeSets, seti)
 //        {
-//            label oldMasterI = mergeSets[setI][0];
+//            label oldMasterI = mergeSets[seti][0];
 //
 //            label facei = map().reverseFaceMap()[oldMasterI];
 //
@@ -303,11 +303,11 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
         if (debug&meshRefinement::MESH)
         {
             faceSet allSets(mesh_, "allFaceSets", allFaceSets.size());
-            forAll(allFaceSets, setI)
+            forAll(allFaceSets, seti)
             {
-                forAll(allFaceSets[setI], i)
+                forAll(allFaceSets[seti], i)
                 {
-                    allSets.insert(allFaceSets[setI][i]);
+                    allSets.insert(allFaceSets[seti][i]);
                 }
             }
             Pout<< "Writing all faces to be merged to set "
@@ -360,9 +360,9 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
         // (unless the faces are absolutely planar)
         labelHashSet retestFaces(2*allFaceSets.size());
 
-        forAll(allFaceSets, setI)
+        forAll(allFaceSets, seti)
         {
-            const label oldMasterI = allFaceSets[setI][0];
+            const label oldMasterI = allFaceSets[seti][0];
             retestFaces.insert(map().reverseFaceMap()[oldMasterI]);
         }
         updateMesh(map, growFaceCellFace(retestFaces));
@@ -448,9 +448,9 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
 
             DynamicList<label> mastersToRestore(allFaceSets.size());
 
-            forAll(allFaceSets, setI)
+            forAll(allFaceSets, seti)
             {
-                const label masterFacei = faceCombiner.masterFace()[setI];
+                const label masterFacei = faceCombiner.masterFace()[seti];
 
                 if (masterFacei != -1)
                 {

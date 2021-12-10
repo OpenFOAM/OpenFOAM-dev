@@ -144,13 +144,13 @@ void Foam::snappyLayerDriver::checkManifold
     // Check for edge-faces (surface pinched at edge)
     const labelListList& edgeFaces = fp.edgeFaces();
 
-    forAll(edgeFaces, edgeI)
+    forAll(edgeFaces, edgei)
     {
-        const labelList& eFaces = edgeFaces[edgeI];
+        const labelList& eFaces = edgeFaces[edgei];
 
         if (eFaces.size() > 2)
         {
-            const edge& e = fp.edges()[edgeI];
+            const edge& e = fp.edges()[edgei];
 
             nonManifoldPoints.insert(fp.meshPoints()[e[0]]);
             nonManifoldPoints.insert(fp.meshPoints()[e[1]]);
@@ -297,18 +297,18 @@ void Foam::snappyLayerDriver::handleNonManifolds
     checkManifold(pp, nonManifoldPoints);
 
     // 2. Remote check for boundary edges on coupled boundaries
-    forAll(edgeGlobalFaces, edgeI)
+    forAll(edgeGlobalFaces, edgei)
     {
         if
         (
-            pp.edgeFaces()[edgeI].size() == 1
-         && edgeGlobalFaces[edgeI].size() > 2
+            pp.edgeFaces()[edgei].size() == 1
+         && edgeGlobalFaces[edgei].size() > 2
         )
         {
             // So boundary edges that are connected to more than 2 processors
             // i.e. a non-manifold edge which is exactly on a processor
             // boundary.
-            const edge& e = pp.edges()[edgeI];
+            const edge& e = pp.edges()[edgei];
             nonManifoldPoints.insert(pp.meshPoints()[e[0]]);
             nonManifoldPoints.insert(pp.meshPoints()[e[1]]);
         }
@@ -331,19 +331,19 @@ void Foam::snappyLayerDriver::handleNonManifolds
             0
         );
 
-        forAll(edgeGlobalFaces, edgeI)
+        forAll(edgeGlobalFaces, edgei)
         {
-            label meshEdgeI = meshEdges[edgeI];
+            label meshEdgeI = meshEdges[edgei];
 
             if
             (
-                pp.edgeFaces()[edgeI].size() == 1
-             && edgeGlobalFaces[edgeI].size() == 1
+                pp.edgeFaces()[edgei].size() == 1
+             && edgeGlobalFaces[edgei].size() == 1
              && isCoupledEdge[meshEdgeI]
             )
             {
                 // Edge of patch but no continuation across processor.
-                const edge& e = pp.edges()[edgeI];
+                const edge& e = pp.edges()[edgei];
                 // Pout<< "** Stopping extrusion on edge "
                 //    << pp.localPoints()[e[0]]
                 //    << pp.localPoints()[e[1]] << endl;
@@ -406,11 +406,11 @@ void Foam::snappyLayerDriver::handleFeatureAngle
 
         const labelListList& edgeFaces = pp.edgeFaces();
 
-        forAll(edgeFaces, edgeI)
+        forAll(edgeFaces, edgei)
         {
-            const labelList& eFaces = pp.edgeFaces()[edgeI];
+            const labelList& eFaces = pp.edgeFaces()[edgei];
 
-            label meshEdgeI = meshEdges[edgeI];
+            label meshEdgeI = meshEdges[edgei];
 
             forAll(eFaces, i)
             {
@@ -450,11 +450,11 @@ void Foam::snappyLayerDriver::handleFeatureAngle
 
         // Now on coupled edges the edgeNormal will have been truncated and
         // only be still be the old value where two faces have the same normal
-        forAll(edgeFaces, edgeI)
+        forAll(edgeFaces, edgei)
         {
-            const labelList& eFaces = pp.edgeFaces()[edgeI];
+            const labelList& eFaces = pp.edgeFaces()[edgei];
 
-            label meshEdgeI = meshEdges[edgeI];
+            label meshEdgeI = meshEdges[edgei];
 
             const vector& n = edgeNormal[meshEdgeI];
 
@@ -464,7 +464,7 @@ void Foam::snappyLayerDriver::handleFeatureAngle
 
                 if (cos < minCos)
                 {
-                    const edge& e = pp.edges()[edgeI];
+                    const edge& e = pp.edges()[edgei];
 
                     unmarkExtrusion
                     (
@@ -1546,9 +1546,9 @@ void Foam::snappyLayerDriver::getPatchDisplacement
 
             forAll(pEdges, i)
             {
-                label edgeI = pEdges[i];
+                label edgei = pEdges[i];
 
-                label otherPointi = pp.edges()[edgeI].otherVertex(patchPointi);
+                label otherPointi = pp.edges()[edgei].otherVertex(patchPointi);
 
                 if (extrudeStatus[otherPointi] != NOEXTRUDE)
                 {
@@ -1607,10 +1607,10 @@ bool Foam::snappyLayerDriver::sameEdgeNeighbour
     const labelListList& globalEdgeFaces,
     const label myGlobalFacei,
     const label nbrGlobFacei,
-    const label edgeI
+    const label edgei
 ) const
 {
-    const labelList& eFaces = globalEdgeFaces[edgeI];
+    const labelList& eFaces = globalEdgeFaces[edgei];
     if (eFaces.size() == 2)
     {
         return edge(myGlobalFacei, nbrGlobFacei) == edge(eFaces[0], eFaces[1]);
@@ -1627,14 +1627,14 @@ void Foam::snappyLayerDriver::getVertexString
     const indirectPrimitivePatch& pp,
     const labelListList& globalEdgeFaces,
     const label facei,
-    const label edgeI,
+    const label edgei,
     const label myGlobFacei,
     const label nbrGlobFacei,
     DynamicList<label>& vertices
 ) const
 {
     const labelList& fEdges = pp.faceEdges()[facei];
-    label fp = findIndex(fEdges, edgeI);
+    label fp = findIndex(fEdges, edgei);
 
     if (fp == -1)
     {
@@ -1874,13 +1874,13 @@ Foam::label Foam::snappyLayerDriver::truncateDisplacement
         label nButterFly = 0;
         {
             DynamicList<label> stringedVerts;
-            forAll(pp.edges(), edgeI)
+            forAll(pp.edges(), edgei)
             {
-                const labelList& globFaces = edgeGlobalFaces[edgeI];
+                const labelList& globFaces = edgeGlobalFaces[edgei];
 
                 if (globFaces.size() == 2)
                 {
-                    label myFacei = pp.edgeFaces()[edgeI][0];
+                    label myFacei = pp.edgeFaces()[edgei][0];
                     label myGlobalFacei = globalFaces.toGlobal
                     (
                         pp.addressing()[myFacei]
@@ -1896,7 +1896,7 @@ Foam::label Foam::snappyLayerDriver::truncateDisplacement
                         pp,
                         edgeGlobalFaces,
                         myFacei,
-                        edgeI,
+                        edgei,
                         myGlobalFacei,
                         nbrGlobalFacei,
                         stringedVerts

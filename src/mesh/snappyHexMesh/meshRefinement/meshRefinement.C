@@ -721,11 +721,11 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
             nei = mesh_.faceNeighbour()[facei];
         }
 
-        const label zoneI = mesh_.faceZones().whichZone(facei);
+        const label zonei = mesh_.faceZones().whichZone(facei);
         bool zoneFlip = false;
-        if (zoneI != -1)
+        if (zonei != -1)
         {
-            const faceZone& fz = mesh_.faceZones()[zoneI];
+            const faceZone& fz = mesh_.faceZones()[zonei];
             zoneFlip = fz.flipMap()[fz.whichFace(facei)];
         }
 
@@ -746,7 +746,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
             nei,                        // neighbour
             false,                      // face flip
             patchi,                     // patch for face
-            zoneI,                      // zone for face
+            zonei,                      // zone for face
             zoneFlip                    // face flip in zone
         );
 
@@ -760,7 +760,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
             facei,                      // master face
             false,                      // face flip
             patchi,                     // patch for face
-            zoneI,                      // zone for face
+            zonei,                      // zone for face
             zoneFlip                    // face flip in zone
         );
     }
@@ -1362,9 +1362,9 @@ Foam::label Foam::meshRefinement::countHits() const
 //        else
 //        {
 //            // region is local to the processor.
-//            label localRegionI = globalToLocalRegion[globalRegion[celli]];
+//            label localRegioni = globalToLocalRegion[globalRegion[celli]];
 //
-//            distribution[celli] = regionDistribution[localRegionI];
+//            distribution[celli] = regionDistribution[localRegioni];
 //        }
 //    }
 //
@@ -1432,9 +1432,9 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::meshRefinement::balance
                 // Get faces whose owner and neighbour should stay together,
                 // i.e. they are not 'blocked'.
 
-                forAll(surfZones, surfI)
+                forAll(surfZones, surfi)
                 {
-                    const word& fzName = surfZones[surfI].faceZoneName();
+                    const word& fzName = surfZones[surfi].faceZoneName();
 
                     if (fzName.size())
                     {
@@ -1872,9 +1872,9 @@ void Foam::meshRefinement::checkCoupledFaceZones(const polyMesh& mesh)
 
     labelList faceToZone(mesh.nFaces() - mesh.nInternalFaces(), -1);
 
-    forAll(fZones, zoneI)
+    forAll(fZones, zonei)
     {
-        const faceZone& fZone = fZones[zoneI];
+        const faceZone& fZone = fZones[zonei];
 
         forAll(fZone, i)
         {
@@ -1884,9 +1884,9 @@ void Foam::meshRefinement::checkCoupledFaceZones(const polyMesh& mesh)
             {
                 if (faceToZone[bFacei] == -1)
                 {
-                    faceToZone[bFacei] = zoneI;
+                    faceToZone[bFacei] = zonei;
                 }
-                else if (faceToZone[bFacei] == zoneI)
+                else if (faceToZone[bFacei] == zonei)
                 {
                     FatalErrorInFunction
                         << "Face " << fZone[i] << " in zone "
@@ -1940,9 +1940,9 @@ void Foam::meshRefinement::calculateEdgeWeights
     edgeWeights.setSize(isMasterEdge.size());
     invSumWeight.setSize(meshPoints.size());
 
-    forAll(edges, edgeI)
+    forAll(edges, edgei)
     {
-        const edge& e = edges[edgeI];
+        const edge& e = edges[edgei];
         scalar eMag = max
         (
             small,
@@ -1952,7 +1952,7 @@ void Foam::meshRefinement::calculateEdgeWeights
               - pts[meshPoints[e[0]]]
             )
         );
-        edgeWeights[edgeI] = 1.0/eMag;
+        edgeWeights[edgei] = 1.0/eMag;
     }
 
     // Sum per point all edge weights
@@ -2100,7 +2100,7 @@ void Foam::meshRefinement::selectSeparatedCoupledFaces(boolList& selected) const
 Foam::label Foam::meshRefinement::findRegion
 (
     const polyMesh& mesh,
-    const labelList& cellToRegion,
+    const labelList& cellRegion,
     const vector& perturbVec,
     const point& location
 )
@@ -2109,7 +2109,7 @@ Foam::label Foam::meshRefinement::findRegion
     label celli = mesh.findCell(location);
     if (celli != -1)
     {
-        regioni = cellToRegion[celli];
+        regioni = cellRegion[celli];
     }
     reduce(regioni, maxOp<label>());
 
@@ -2119,7 +2119,7 @@ Foam::label Foam::meshRefinement::findRegion
         celli = mesh.findCell(location + perturbVec);
         if (celli != -1)
         {
-            regioni = cellToRegion[celli];
+            regioni = cellRegion[celli];
         }
         reduce(regioni, maxOp<label>());
     }
@@ -2562,9 +2562,9 @@ Foam::PackedBoolList Foam::meshRefinement::getMasterEdges
     const globalIndex globalEdges(meshEdges.size());
 
     labelList myEdges(meshEdges.size());
-    forAll(meshEdges, edgeI)
+    forAll(meshEdges, edgei)
     {
-        myEdges[edgeI] = globalEdges.toGlobal(edgeI);
+        myEdges[edgei] = globalEdges.toGlobal(edgei);
     }
 
     syncTools::syncEdgeList
@@ -2578,11 +2578,11 @@ Foam::PackedBoolList Foam::meshRefinement::getMasterEdges
 
 
     PackedBoolList isMasterEdge(meshEdges.size());
-    forAll(meshEdges, edgeI)
+    forAll(meshEdges, edgei)
     {
-        if (myEdges[edgeI] == globalEdges.toGlobal(edgeI))
+        if (myEdges[edgei] == globalEdges.toGlobal(edgei))
         {
-            isMasterEdge[edgeI] = true;
+            isMasterEdge[edgei] = true;
         }
     }
 
@@ -2648,9 +2648,9 @@ const
         Pstream::listCombineScatter(nCells);
 
         Info<< "Cells per refinement level:" << endl;
-        forAll(nCells, levelI)
+        forAll(nCells, leveli)
         {
-            Info<< "    " << levelI << '\t' << nCells[levelI]
+            Info<< "    " << leveli << '\t' << nCells[leveli]
                 << endl;
         }
     }

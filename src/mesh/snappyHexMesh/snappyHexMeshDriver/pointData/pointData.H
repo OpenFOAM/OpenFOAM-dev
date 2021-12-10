@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,8 +113,8 @@ public:
             (
                 const polyMesh& mesh,
                 const label pointi,
-                const label edgeI,
-                const pointData& edgeInfo,
+                const label edgei,
+                const pointData& edgeinfo,
                 const scalar tol,
                 TrackingData& td
             );
@@ -146,7 +146,7 @@ public:
             inline bool updateEdge
             (
                 const polyMesh& mesh,
-                const label edgeI,
+                const label edgei,
                 const label pointi,
                 const pointData& pointInfo,
                 const scalar tol,

@@ -87,7 +87,7 @@ inline bool Foam::patchFaceOrientation::updateEdge
 (
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
-    const label edgeI,
+    const label edgei,
     const label facei,
     const patchFaceOrientation& faceInfo,
     const scalar tol,
@@ -100,7 +100,7 @@ inline bool Foam::patchFaceOrientation::updateEdge
     }
 
     const face& f = patch.localFaces()[facei];
-    const edge& e = patch.edges()[edgeI];
+    const edge& e = patch.edges()[edgei];
 
     patchFaceOrientation consistentInfo(faceInfo);
 
@@ -122,7 +122,7 @@ inline bool Foam::patchFaceOrientation::updateEdge
 (
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
-    const patchFaceOrientation& edgeInfo,
+    const patchFaceOrientation& edgeinfo,
     const bool sameOrientation,
     const scalar tol,
     TrackingData& td
@@ -133,8 +133,8 @@ inline bool Foam::patchFaceOrientation::updateEdge
         return false;
     }
 
-    // Create (flipped/unflipped) version of edgeInfo
-    patchFaceOrientation consistentInfo(edgeInfo);
+    // Create (flipped/unflipped) version of edgeinfo
+    patchFaceOrientation consistentInfo(edgeinfo);
 
     if (!sameOrientation)
     {
@@ -153,8 +153,8 @@ inline bool Foam::patchFaceOrientation::updateFace
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
     const label facei,
-    const label edgeI,
-    const patchFaceOrientation& edgeInfo,
+    const label edgei,
+    const patchFaceOrientation& edgeinfo,
     const scalar tol,
     TrackingData& td
 )
@@ -166,10 +166,10 @@ inline bool Foam::patchFaceOrientation::updateFace
 
     // Transfer flip to face
     const face& f = patch.localFaces()[facei];
-    const edge& e = patch.edges()[edgeI];
+    const edge& e = patch.edges()[edgei];
 
-    // Create (flipped/unflipped) version of edgeInfo
-    patchFaceOrientation consistentInfo(edgeInfo);
+    // Create (flipped/unflipped) version of edgeinfo
+    patchFaceOrientation consistentInfo(edgeinfo);
 
     if (f.edgeDirection(e) > 0)
     {

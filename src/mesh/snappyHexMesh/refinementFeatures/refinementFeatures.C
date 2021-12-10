@@ -37,9 +37,9 @@ void Foam::refinementFeatures::read
     const PtrList<dictionary>& featDicts
 )
 {
-    forAll(featDicts, featI)
+    forAll(featDicts, feati)
     {
-        const dictionary& dict = featDicts[featI];
+        const dictionary& dict = featDicts[feati];
 
         fileName featFileName(dict.lookup("file"));
 
@@ -71,7 +71,7 @@ void Foam::refinementFeatures::read
             eMeshPtr().writeStats(Info);
             Info<< decrIndent << endl;
 
-            set(featI, new extendedFeatureEdgeMesh(extFeatObj, eMeshPtr()));
+            set(feati, new extendedFeatureEdgeMesh(extFeatObj, eMeshPtr()));
         }
         else
         {
@@ -140,10 +140,10 @@ void Foam::refinementFeatures::read
 
             const edgeList& edges = eMesh.edges();
             edgeList newEdges(edges.size());
-            forAll(edges, edgeI)
+            forAll(edges, edgei)
             {
-                const edge& e = edges[edgeI];
-                newEdges[edgeI] = edge
+                const edge& e = edges[edgei];
+                newEdges[edgei] = edge
                 (
                     oldToNew[e[0]],
                     oldToNew[e[1]]
@@ -180,10 +180,10 @@ void Foam::refinementFeatures::read
             // eeMesh.writeStats(Info);
             // Info<< decrIndent << endl;
 
-            set(featI, new extendedFeatureEdgeMesh(featObj, eeMesh));
+            set(feati, new extendedFeatureEdgeMesh(featObj, eeMesh));
         }
 
-        const extendedEdgeMesh& eMesh = operator[](featI);
+        const extendedEdgeMesh& eMesh = operator[](feati);
 
         if (dict.found("levels"))
         {
@@ -197,29 +197,29 @@ void Foam::refinementFeatures::read
                     << exit(FatalError);
             }
 
-            distances_[featI].setSize(distLevels.size());
-            levels_[featI].setSize(distLevels.size());
+            distances_[feati].setSize(distLevels.size());
+            levels_[feati].setSize(distLevels.size());
 
             forAll(distLevels, j)
             {
-                distances_[featI][j] = distLevels[j].first();
-                levels_[featI][j] = distLevels[j].second();
+                distances_[feati][j] = distLevels[j].first();
+                levels_[feati][j] = distLevels[j].second();
 
                 // Check in incremental order
                 if (j > 0)
                 {
                     if
                     (
-                        (distances_[featI][j] <= distances_[featI][j-1])
-                     || (levels_[featI][j] > levels_[featI][j-1])
+                        (distances_[feati][j] <= distances_[feati][j-1])
+                     || (levels_[feati][j] > levels_[feati][j-1])
                     )
                     {
                         FatalErrorInFunction
                             << " : Refinement should be specified in order"
                             << " of increasing distance"
                             << " (and decreasing refinement level)." << endl
-                            << "Distance:" << distances_[featI][j]
-                            << " refinementLevel:" << levels_[featI][j]
+                            << "Distance:" << distances_[feati][j]
+                            << " refinementLevel:" << levels_[feati][j]
                             << exit(FatalError);
                     }
                 }
@@ -228,26 +228,26 @@ void Foam::refinementFeatures::read
         else
         {
             // Look up 'level' for single level
-            levels_[featI] = labelList(1, dict.lookup<label>("level"));
-            distances_[featI] = scalarField(1, 0.0);
+            levels_[feati] = labelList(1, dict.lookup<label>("level"));
+            distances_[feati] = scalarField(1, 0.0);
         }
 
         Info<< "Refinement level according to distance to "
             << featFileName << " (" << eMesh.points().size() << " points, "
             << eMesh.edges().size() << " edges)." << endl;
-        forAll(levels_[featI], j)
+        forAll(levels_[feati], j)
         {
-            Info<< "    level " << levels_[featI][j]
-                << " for all cells within " << distances_[featI][j]
+            Info<< "    level " << levels_[feati][j]
+                << " for all cells within " << distances_[feati][j]
                 << " metre." << endl;
         }
     }
 }
 
 
-void Foam::refinementFeatures::buildTrees(const label featI)
+void Foam::refinementFeatures::buildTrees(const label feati)
 {
-    const extendedEdgeMesh& eMesh = operator[](featI);
+    const extendedEdgeMesh& eMesh = operator[](feati);
     const pointField& points = eMesh.points();
     const edgeList& edges = eMesh.edges();
 
@@ -260,7 +260,7 @@ void Foam::refinementFeatures::buildTrees(const label featI)
 
     edgeTrees_.set
     (
-        featI,
+        feati,
         new indexedOctree<treeDataEdge>
         (
             treeDataEdge
@@ -282,7 +282,7 @@ void Foam::refinementFeatures::buildTrees(const label featI)
 
     pointTrees_.set
     (
-        featI,
+        feati,
         new indexedOctree<treeDataPoint>
         (
             treeDataPoint(points, featurePoints),
@@ -299,13 +299,13 @@ void Foam::refinementFeatures::buildTrees(const label featI)
 void Foam::refinementFeatures::findHigherLevel
 (
     const pointField& pt,
-    const label featI,
+    const label feati,
     labelList& maxLevel
 ) const
 {
-    const labelList& levels = levels_[featI];
+    const labelList& levels = levels_[feati];
 
-    const scalarField& distances = distances_[featI];
+    const scalarField& distances = distances_[feati];
 
     // Collect all those points that have a current maxLevel less than
     // (any of) the shell. Also collect the furthest distance allowable
@@ -314,52 +314,52 @@ void Foam::refinementFeatures::findHigherLevel
     pointField candidates(pt.size());
     labelList candidateMap(pt.size());
     scalarField candidateDistSqr(pt.size());
-    label candidateI = 0;
+    label candidatei = 0;
 
     forAll(maxLevel, pointi)
     {
-        forAllReverse(levels, levelI)
+        forAllReverse(levels, leveli)
         {
-            if (levels[levelI] > maxLevel[pointi])
+            if (levels[leveli] > maxLevel[pointi])
             {
-                candidates[candidateI] = pt[pointi];
-                candidateMap[candidateI] = pointi;
-                candidateDistSqr[candidateI] = sqr(distances[levelI]);
-                candidateI++;
+                candidates[candidatei] = pt[pointi];
+                candidateMap[candidatei] = pointi;
+                candidateDistSqr[candidatei] = sqr(distances[leveli]);
+                candidatei++;
                 break;
             }
         }
     }
-    candidates.setSize(candidateI);
-    candidateMap.setSize(candidateI);
-    candidateDistSqr.setSize(candidateI);
+    candidates.setSize(candidatei);
+    candidateMap.setSize(candidatei);
+    candidateDistSqr.setSize(candidatei);
 
     // Do the expensive nearest test only for the candidate points.
-    const indexedOctree<treeDataEdge>& tree = edgeTrees_[featI];
+    const indexedOctree<treeDataEdge>& tree = edgeTrees_[feati];
 
     List<pointIndexHit> nearInfo(candidates.size());
-    forAll(candidates, candidateI)
+    forAll(candidates, candidatei)
     {
-        nearInfo[candidateI] = tree.findNearest
+        nearInfo[candidatei] = tree.findNearest
         (
-            candidates[candidateI],
-            candidateDistSqr[candidateI]
+            candidates[candidatei],
+            candidateDistSqr[candidatei]
         );
     }
 
     // Update maxLevel
-    forAll(nearInfo, candidateI)
+    forAll(nearInfo, candidatei)
     {
-        if (nearInfo[candidateI].hit())
+        if (nearInfo[candidatei].hit())
         {
             // Check which level it actually is in.
             label minDistI = findLower
             (
                 distances,
-                mag(nearInfo[candidateI].hitPoint()-candidates[candidateI])
+                mag(nearInfo[candidatei].hitPoint()-candidates[candidatei])
             );
 
-            label pointi = candidateMap[candidateI];
+            label pointi = candidateMap[candidatei];
 
             // pt is in between shell[minDistI] and shell[minDistI+1]
             maxLevel[pointi] = levels[minDistI+1];
@@ -381,9 +381,9 @@ Foam::refinementFeatures::regionEdgeTrees() const
         );
         PtrList<indexedOctree<treeDataEdge>>& trees = regionEdgeTreesPtr_();
 
-        forAll(*this, featI)
+        forAll(*this, feati)
         {
-            const extendedEdgeMesh& eMesh = operator[](featI);
+            const extendedEdgeMesh& eMesh = operator[](feati);
             const pointField& points = eMesh.points();
             const edgeList& edges = eMesh.edges();
 
@@ -396,7 +396,7 @@ Foam::refinementFeatures::regionEdgeTrees() const
 
             trees.set
             (
-                featI,
+                feati,
                 new indexedOctree<treeDataEdge>
                 (
                     treeDataEdge
@@ -531,32 +531,32 @@ void Foam::refinementFeatures::findNearestEdge
     nearNormal.setSize(samples.size());
     nearNormal = Zero;
 
-    forAll(edgeTrees_, featI)
+    forAll(edgeTrees_, feati)
     {
-        const indexedOctree<treeDataEdge>& tree = edgeTrees_[featI];
+        const indexedOctree<treeDataEdge>& tree = edgeTrees_[feati];
 
         if (tree.shapes().size() > 0)
         {
-            forAll(samples, sampleI)
+            forAll(samples, samplei)
             {
-                const point& sample = samples[sampleI];
+                const point& sample = samples[samplei];
 
                 scalar distSqr;
-                if (nearInfo[sampleI].hit())
+                if (nearInfo[samplei].hit())
                 {
-                    distSqr = magSqr(nearInfo[sampleI].hitPoint()-sample);
+                    distSqr = magSqr(nearInfo[samplei].hitPoint()-sample);
                 }
                 else
                 {
-                    distSqr = nearestDistSqr[sampleI];
+                    distSqr = nearestDistSqr[samplei];
                 }
 
                 pointIndexHit info = tree.findNearest(sample, distSqr);
 
                 if (info.hit())
                 {
-                    nearFeature[sampleI] = featI;
-                    nearInfo[sampleI] = pointIndexHit
+                    nearFeature[samplei] = feati;
+                    nearInfo[samplei] = pointIndexHit
                     (
                         info.hit(),
                         info.hitPoint(),
@@ -564,9 +564,9 @@ void Foam::refinementFeatures::findNearestEdge
                     );
 
                     const treeDataEdge& td = tree.shapes();
-                    const edge& e = td.edges()[nearInfo[sampleI].index()];
-                    nearNormal[sampleI] =  e.vec(td.points());
-                    nearNormal[sampleI] /= mag(nearNormal[sampleI])+vSmall;
+                    const edge& e = td.edges()[nearInfo[samplei].index()];
+                    nearNormal[samplei] =  e.vec(td.points());
+                    nearNormal[samplei] /= mag(nearNormal[samplei])+vSmall;
                 }
             }
         }
@@ -594,22 +594,22 @@ void Foam::refinementFeatures::findNearestRegionEdge
     const PtrList<indexedOctree<treeDataEdge>>& regionTrees =
         regionEdgeTrees();
 
-    forAll(regionTrees, featI)
+    forAll(regionTrees, feati)
     {
-        const indexedOctree<treeDataEdge>& regionTree = regionTrees[featI];
+        const indexedOctree<treeDataEdge>& regionTree = regionTrees[feati];
 
-        forAll(samples, sampleI)
+        forAll(samples, samplei)
         {
-            const point& sample = samples[sampleI];
+            const point& sample = samples[samplei];
 
             scalar distSqr;
-            if (nearInfo[sampleI].hit())
+            if (nearInfo[samplei].hit())
             {
-                distSqr = magSqr(nearInfo[sampleI].hitPoint()-sample);
+                distSqr = magSqr(nearInfo[samplei].hitPoint()-sample);
             }
             else
             {
-                distSqr = nearestDistSqr[sampleI];
+                distSqr = nearestDistSqr[samplei];
             }
 
             // Find anything closer than current best
@@ -619,17 +619,17 @@ void Foam::refinementFeatures::findNearestRegionEdge
             {
                 const treeDataEdge& td = regionTree.shapes();
 
-                nearFeature[sampleI] = featI;
-                nearInfo[sampleI] = pointIndexHit
+                nearFeature[samplei] = feati;
+                nearInfo[samplei] = pointIndexHit
                 (
                     info.hit(),
                     info.hitPoint(),
                     regionTree.shapes().edgeLabels()[info.index()]
                 );
 
-                const edge& e = td.edges()[nearInfo[sampleI].index()];
-                nearNormal[sampleI] =  e.vec(td.points());
-                nearNormal[sampleI] /= mag(nearNormal[sampleI])+vSmall;
+                const edge& e = td.edges()[nearInfo[samplei].index()];
+                nearNormal[samplei] =  e.vec(td.points());
+                nearNormal[samplei] /= mag(nearNormal[samplei])+vSmall;
             }
         }
     }
@@ -649,39 +649,39 @@ void Foam::refinementFeatures::findNearestRegionEdge
 //    nearIndex.setSize(samples.size());
 //    nearIndex = -1;
 //
-//    forAll(pointTrees_, featI)
+//    forAll(pointTrees_, feati)
 //    {
-//        const indexedOctree<treeDataPoint>& tree = pointTrees_[featI];
+//        const indexedOctree<treeDataPoint>& tree = pointTrees_[feati];
 //
 //        if (tree.shapes().pointLabels().size() > 0)
 //        {
-//            forAll(samples, sampleI)
+//            forAll(samples, samplei)
 //            {
-//                const point& sample = samples[sampleI];
+//                const point& sample = samples[samplei];
 //
 //                scalar distSqr;
-//                if (nearFeature[sampleI] != -1)
+//                if (nearFeature[samplei] != -1)
 //                {
-//                    label nearFeatI = nearFeature[sampleI];
+//                    label nearFeatI = nearFeature[samplei];
 //                    const indexedOctree<treeDataPoint>& nearTree =
 //                        pointTrees_[nearFeatI];
 //                    label featPointi =
-//                        nearTree.shapes().pointLabels()[nearIndex[sampleI]];
+//                        nearTree.shapes().pointLabels()[nearIndex[samplei]];
 //                    const point& featPt =
 //                        operator[](nearFeatI).points()[featPointi];
 //                    distSqr = magSqr(featPt-sample);
 //                }
 //                else
 //                {
-//                    distSqr = nearestDistSqr[sampleI];
+//                    distSqr = nearestDistSqr[samplei];
 //                }
 //
 //                pointIndexHit info = tree.findNearest(sample, distSqr);
 //
 //                if (info.hit())
 //                {
-//                    nearFeature[sampleI] = featI;
-//                    nearIndex[sampleI] = info.index();
+//                    nearFeature[samplei] = feati;
+//                    nearIndex[samplei] = info.index();
 //                }
 //            }
 //        }
@@ -702,32 +702,32 @@ void Foam::refinementFeatures::findNearestPoint
     nearInfo.setSize(samples.size());
     nearInfo = pointIndexHit();
 
-    forAll(pointTrees_, featI)
+    forAll(pointTrees_, feati)
     {
-        const indexedOctree<treeDataPoint>& tree = pointTrees_[featI];
+        const indexedOctree<treeDataPoint>& tree = pointTrees_[feati];
 
         if (tree.shapes().pointLabels().size() > 0)
         {
-            forAll(samples, sampleI)
+            forAll(samples, samplei)
             {
-                const point& sample = samples[sampleI];
+                const point& sample = samples[samplei];
 
                 scalar distSqr;
-                if (nearFeature[sampleI] != -1)
+                if (nearFeature[samplei] != -1)
                 {
-                    distSqr = magSqr(nearInfo[sampleI].hitPoint()-sample);
+                    distSqr = magSqr(nearInfo[samplei].hitPoint()-sample);
                 }
                 else
                 {
-                    distSqr = nearestDistSqr[sampleI];
+                    distSqr = nearestDistSqr[samplei];
                 }
 
                 pointIndexHit info = tree.findNearest(sample, distSqr);
 
                 if (info.hit())
                 {
-                    nearFeature[sampleI] = featI;
-                    nearInfo[sampleI] = pointIndexHit
+                    nearFeature[samplei] = feati;
+                    nearInfo[samplei] = pointIndexHit
                     (
                         info.hit(),
                         info.hitPoint(),
@@ -750,9 +750,9 @@ void Foam::refinementFeatures::findHigherLevel
     // Maximum level of any shell. Start off with level of point.
     maxLevel = ptLevel;
 
-    forAll(*this, featI)
+    forAll(*this, feati)
     {
-        findHigherLevel(pt, featI, maxLevel);
+        findHigherLevel(pt, feati, maxLevel);
     }
 }
 
@@ -760,9 +760,9 @@ void Foam::refinementFeatures::findHigherLevel
 Foam::scalar Foam::refinementFeatures::maxDistance() const
 {
     scalar overallMax = -great;
-    forAll(distances_, featI)
+    forAll(distances_, feati)
     {
-        overallMax = max(overallMax, max(distances_[featI]));
+        overallMax = max(overallMax, max(distances_[feati]));
     }
     return overallMax;
 }

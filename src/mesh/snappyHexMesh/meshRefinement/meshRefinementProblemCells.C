@@ -101,30 +101,30 @@ void Foam::meshRefinement::findNearest
     nearestNormal.setSize(nearestInfo.size());
     nearestRegion.setSize(nearestInfo.size());
 
-    forAll(allSurfaces, surfI)
+    forAll(allSurfaces, surfi)
     {
         DynamicList<pointIndexHit> localHits;
 
         forAll(nearestSurface, i)
         {
-            if (nearestSurface[i] == surfI)
+            if (nearestSurface[i] == surfi)
             {
                 localHits.append(nearestInfo[i]);
             }
         }
 
-        const label geomI = surfaces_.surfaces()[surfI];
+        const label geomi = surfaces_.surfaces()[surfi];
 
         pointField localNormals;
-        surfaces_.geometry()[geomI].getNormal(localHits, localNormals);
+        surfaces_.geometry()[geomi].getNormal(localHits, localNormals);
 
         labelList localRegion;
-        surfaces_.geometry()[geomI].getRegion(localHits, localRegion);
+        surfaces_.geometry()[geomi].getRegion(localHits, localRegion);
 
         label localI = 0;
         forAll(nearestSurface, i)
         {
-            if (nearestSurface[i] == surfI)
+            if (nearestSurface[i] == surfi)
             {
                 nearestNormal[i] = localNormals[localI];
                 nearestRegion[i] = localRegion[localI];
@@ -162,9 +162,9 @@ Foam::Map<Foam::label> Foam::meshRefinement::findEdgeConnectedProblemCells
 
     const labelList& cellLevel = meshCutter_.cellLevel();
 
-    forAll(edgeFaces, edgeI)
+    forAll(edgeFaces, edgei)
     {
-        const labelList& eFaces = edgeFaces[edgeI];
+        const labelList& eFaces = edgeFaces[edgei];
 
         if (eFaces.size() == 2)
         {
@@ -646,7 +646,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
         const pointField& localPoints = pp.localPoints();
         const labelList& meshPoints = pp.meshPoints();
 
-        List<pointIndexHit> hitInfo;
+        List<pointIndexHit> hitinfo;
         labelList hitSurface;
         surfaces_.findNearest
         (
@@ -654,17 +654,17 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
             localPoints,
             scalarField(localPoints.size(), sqr(great)),    // sqr of attraction
             hitSurface,
-            hitInfo
+            hitinfo
         );
 
         // Start off from current points
         newPoints = mesh_.points();
 
-        forAll(hitInfo, i)
+        forAll(hitinfo, i)
         {
-            if (hitInfo[i].hit())
+            if (hitinfo[i].hit())
             {
-                newPoints[meshPoints[i]] = hitInfo[i].hitPoint();
+                newPoints[meshPoints[i]] = hitinfo[i].hitPoint();
             }
         }
 

@@ -391,12 +391,12 @@ Foam::label Foam::snappyRefineDriver::gapOnlyRefine
                 }
 
                 // Get coupled boundary condition values
-                boolList neiIsCandidateCell;
+                boolList neiisCandidateCell;
                 syncTools::swapBoundaryCellList
                 (
                     mesh,
                     isCandidateCell,
-                    neiIsCandidateCell
+                    neiisCandidateCell
                 );
 
                 // Boundary faces
@@ -410,7 +410,7 @@ Foam::label Foam::snappyRefineDriver::gapOnlyRefine
                     label own = mesh.faceOwner()[facei];
                     label bFacei = facei-mesh.nInternalFaces();
 
-                    if (isCandidateCell[own] != neiIsCandidateCell[bFacei])
+                    if (isCandidateCell[own] != neiisCandidateCell[bFacei])
                     {
                         newIsCandidateCell[own] = true;
                     }

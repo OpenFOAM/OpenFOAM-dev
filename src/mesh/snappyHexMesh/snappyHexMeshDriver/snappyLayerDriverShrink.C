@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,12 +54,12 @@ void Foam::snappyLayerDriver::sumWeights
 
     invSumWeight = 0;
 
-    forAll(edges, edgeI)
+    forAll(edges, edgei)
     {
-        if (isMasterEdge.get(meshEdges[edgeI]) == 1)
+        if (isMasterEdge.get(meshEdges[edgei]) == 1)
         {
-            const edge& e = edges[edgeI];
-            // scalar eWeight = edgeWeights[edgeI];
+            const edge& e = edges[edgei];
+            // scalar eWeight = edgeWeights[edgei];
             // scalar eWeight = 1.0;
 
             scalar eMag = max
@@ -431,7 +431,7 @@ void Foam::snappyLayerDriver::smoothNormals
 bool Foam::snappyLayerDriver::isMaxEdge
 (
     const List<pointData>& pointWallDist,
-    const label edgeI,
+    const label edgei,
     const scalar minCos
 ) const
 {
@@ -440,7 +440,7 @@ bool Foam::snappyLayerDriver::isMaxEdge
 
     // Do not mark edges with one side on moving wall.
 
-    const edge& e = mesh.edges()[edgeI];
+    const edge& e = mesh.edges()[edgei];
 
     vector v0(points[e[0]] - pointWallDist[e[0]].origin());
     scalar magV0(mag(v0));
@@ -538,17 +538,17 @@ void Foam::snappyLayerDriver::handleFeatureAngleLayerTerminations
     const vectorField& faceNormals = pp.faceNormals();
     const labelList& meshPoints = pp.meshPoints();
 
-    forAll(edgeFaces, edgeI)
+    forAll(edgeFaces, edgei)
     {
-        const labelList& eFaces = edgeFaces[edgeI];
+        const labelList& eFaces = edgeFaces[edgei];
 
-        edgeFaceNormals[edgeI].setSize(eFaces.size());
-        edgeFaceExtrude[edgeI].setSize(eFaces.size());
+        edgeFaceNormals[edgei].setSize(eFaces.size());
+        edgeFaceExtrude[edgei].setSize(eFaces.size());
         forAll(eFaces, i)
         {
             label facei = eFaces[i];
-            edgeFaceNormals[edgeI][i] = faceNormals[facei];
-            edgeFaceExtrude[edgeI][i] = extrudedFaces[facei];
+            edgeFaceNormals[edgei][i] = faceNormals[facei];
+            edgeFaceExtrude[edgei][i] = extrudedFaces[facei];
         }
     }
 
@@ -571,14 +571,14 @@ void Foam::snappyLayerDriver::handleFeatureAngleLayerTerminations
     );
 
 
-    forAll(edgeFaceNormals, edgeI)
+    forAll(edgeFaceNormals, edgei)
     {
-        const List<point>& eFaceNormals = edgeFaceNormals[edgeI];
-        const List<bool>& eFaceExtrude = edgeFaceExtrude[edgeI];
+        const List<point>& eFaceNormals = edgeFaceNormals[edgei];
+        const List<bool>& eFaceExtrude = edgeFaceExtrude[edgei];
 
         if (eFaceNormals.size() == 2)
         {
-            const edge& e = pp.edges()[edgeI];
+            const edge& e = pp.edges()[edgei];
             label v0 = e[0];
             label v1 = e[1];
 
@@ -770,11 +770,11 @@ void Foam::snappyLayerDriver::findIsolatedRegions
 
     labelList isolatedPoint(pp.nPoints(),0);
 
-    forAll(edges, edgeI)
+    forAll(edges, edgei)
     {
-        if (isMasterEdge.get(meshEdges[edgeI]) == 1)
+        if (isMasterEdge.get(meshEdges[edgei]) == 1)
         {
-            const edge& e = edges[edgeI];
+            const edge& e = edges[edgei];
 
             label v0 = e[0];
             label v1 = e[1];
@@ -1037,9 +1037,9 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
 
         const edgeList& edges = mesh.edges();
 
-        forAll(edges, edgeI)
+        forAll(edges, edgei)
         {
-            const edge& e = edges[edgeI];
+            const edge& e = edges[edgei];
 
             if
             (
@@ -1049,7 +1049,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
             {
                 // Unvisited point. See above about nUnvisit warning
             }
-            else if (isMaxEdge(pointWallDist, edgeI, minMedialAxisAngleCos))
+            else if (isMaxEdge(pointWallDist, edgei, minMedialAxisAngleCos))
             {
                 // Both end points of edge have very different nearest wall
                 // point. Mark both points as medial axis points.

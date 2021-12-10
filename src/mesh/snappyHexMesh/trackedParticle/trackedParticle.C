@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -273,14 +273,14 @@ void Foam::trackedParticle::correctAfterParallelTransfer
 {
     particle::correctAfterParallelTransfer(patchi, td);
 
-    label edgeI = k();
-    if (edgeI != -1)
+    label edgei = k();
+    if (edgei != -1)
     {
-        label featI = i();
+        label feati = i();
 
         // Mark edge we're currently on (was set on sending processor but not
         // receiving sender)
-        td.featureEdgeVisited_[featI].set(edgeI, 1u);
+        td.featureEdgeVisited_[feati].set(edgei, 1u);
     }
 }
 

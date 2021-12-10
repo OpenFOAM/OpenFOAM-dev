@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -288,7 +288,7 @@ void Foam::medialAxisMeshMover::smoothNormals
 bool Foam::medialAxisMeshMover::isMaxEdge
 (
     const List<pointData>& pointWallDist,
-    const label edgeI,
+    const label edgei,
     const scalar minCos
 ) const
 {
@@ -296,7 +296,7 @@ bool Foam::medialAxisMeshMover::isMaxEdge
 
     // Do not mark edges with one side on moving wall.
 
-    const edge& e = mesh().edges()[edgeI];
+    const edge& e = mesh().edges()[edgei];
 
     vector v0(points[e[0]] - pointWallDist[e[0]].origin());
     scalar magV0(mag(v0));
@@ -531,9 +531,9 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
 
         const edgeList& edges = mesh().edges();
 
-        forAll(edges, edgeI)
+        forAll(edges, edgei)
         {
-            const edge& e = edges[edgeI];
+            const edge& e = edges[edgei];
 
             if
             (
@@ -564,7 +564,7 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
                 }
 
             }
-            else if (isMaxEdge(pointWallDist, edgeI, minMedialAxisAngleCos))
+            else if (isMaxEdge(pointWallDist, edgei, minMedialAxisAngleCos))
             {
                 // Both end points of edge have very different nearest wall
                 // point. Mark both points as medial axis points.
@@ -1120,17 +1120,17 @@ handleFeatureAngleLayerTerminations
     const labelListList& edgeFaces = pp.edgeFaces();
     const vectorField& faceNormals = pp.faceNormals();
 
-    forAll(edgeFaces, edgeI)
+    forAll(edgeFaces, edgei)
     {
-        const labelList& eFaces = edgeFaces[edgeI];
+        const labelList& eFaces = edgeFaces[edgei];
 
-        edgeFaceNormals[edgeI].setSize(eFaces.size());
-        edgeFaceExtrude[edgeI].setSize(eFaces.size());
+        edgeFaceNormals[edgei].setSize(eFaces.size());
+        edgeFaceExtrude[edgei].setSize(eFaces.size());
         forAll(eFaces, i)
         {
             label facei = eFaces[i];
-            edgeFaceNormals[edgeI][i] = faceNormals[facei];
-            edgeFaceExtrude[edgeI][i] = extrudedFaces[facei];
+            edgeFaceNormals[edgei][i] = faceNormals[facei];
+            edgeFaceExtrude[edgei][i] = extrudedFaces[facei];
         }
     }
 
@@ -1153,14 +1153,14 @@ handleFeatureAngleLayerTerminations
     );
 
 
-    forAll(edgeFaceNormals, edgeI)
+    forAll(edgeFaceNormals, edgei)
     {
-        const List<point>& eFaceNormals = edgeFaceNormals[edgeI];
-        const List<bool>& eFaceExtrude = edgeFaceExtrude[edgeI];
+        const List<point>& eFaceNormals = edgeFaceNormals[edgei];
+        const List<bool>& eFaceExtrude = edgeFaceExtrude[edgei];
 
         if (eFaceNormals.size() == 2)
         {
-            const edge& e = pp.edges()[edgeI];
+            const edge& e = pp.edges()[edgei];
             label v0 = e[0];
             label v1 = e[1];
 
@@ -1408,11 +1408,11 @@ void Foam::medialAxisMeshMover::findIsolatedRegions
 
     labelList isolatedPoint(pp.nPoints(),0);
 
-    forAll(edges, edgeI)
+    forAll(edges, edgei)
     {
-        if (isPatchMasterEdge[edgeI])
+        if (isPatchMasterEdge[edgei])
         {
-            const edge& e = edges[edgeI];
+            const edge& e = edges[edgei];
 
             label v0 = e[0];
             label v1 = e[1];

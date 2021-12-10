@@ -257,15 +257,15 @@ Foam::Map<Foam::labelPair> Foam::meshRefinement::getZoneBafflePatches
         if (faceZoneName.size())
         {
             // Get zone
-            const label zoneI = fZones.findZoneID(faceZoneName);
-            const faceZone& fZone = fZones[zoneI];
+            const label zonei = fZones.findZoneID(faceZoneName);
+            const faceZone& fZone = fZones[zonei];
 
             // Get patch allocated for zone
-            const label globalRegionI = surfaces_.globalRegion(surfi, 0);
+            const label globalRegioni = surfaces_.globalRegion(surfi, 0);
             const labelPair zPatches
             (
-                globalToMasterPatch[globalRegionI],
-                globalToSlavePatch[globalRegionI]
+                globalToMasterPatch[globalRegioni],
+                globalToSlavePatch[globalRegioni]
             );
 
             Info<< "For zone " << fZone.name() << " found patches "
@@ -456,13 +456,13 @@ void Foam::meshRefinement::checkZoneFaces() const
             forAll(pp, i)
             {
                 const label facei = pp.start() + i;
-                const label zoneI = fZones.whichZone(facei);
+                const label zonei = fZones.whichZone(facei);
 
-                if (zoneI != -1)
+                if (zonei != -1)
                 {
                     FatalErrorInFunction
                         << "face:" << facei << " on patch " << pp.name()
-                        << " is in zone " << fZones[zoneI].name()
+                        << " is in zone " << fZones[zonei].name()
                         << exit(FatalError);
                 }
             }
@@ -1220,7 +1220,7 @@ void Foam::meshRefinement::findCellZoneInsideWalk
             << endl;
 
         // Find the region containing the insidePoint
-        label regionInMeshi = findRegion
+        label regioninMeshi = findRegion
         (
             mesh_,
             cellRegion,
@@ -1230,10 +1230,10 @@ void Foam::meshRefinement::findCellZoneInsideWalk
 
         Info<< "For surface " << surfaces_.names()[surfi]
             << " found point " << insidePoint
-            << " in global region " << regionInMeshi
+            << " in global region " << regioninMeshi
             << " out of " << cellRegion.nRegions() << " regions." << endl;
 
-        if (regionInMeshi == -1)
+        if (regioninMeshi == -1)
         {
             FatalErrorInFunction
                 << "Point " << insidePoint
@@ -1245,7 +1245,7 @@ void Foam::meshRefinement::findCellZoneInsideWalk
         // Set all cells with this region
         forAll(cellRegion, celli)
         {
-            if (cellRegion[celli] == regionInMeshi)
+            if (cellRegion[celli] == regioninMeshi)
             {
                 if (cellToZone[celli] == -2)
                 {
@@ -1286,14 +1286,14 @@ bool Foam::meshRefinement::calcRegionToZone
         // Jump. Change one of the sides to my type.
 
         // 1. Interface between my type and unset region.
-        // Set region to regionInMesh
+        // Set region to regioninMesh
 
         if (regionToCellZone[ownRegion] == -2)
         {
             if (regionToCellZone[neiRegion] == surfZoneI)
             {
                 // Face between unset and my region. Put unset
-                // region into regionInMesh
+                // region into regioninMesh
                 regionToCellZone[ownRegion] = -1;
                 changed = true;
             }
@@ -1310,7 +1310,7 @@ bool Foam::meshRefinement::calcRegionToZone
             if (regionToCellZone[ownRegion] == surfZoneI)
             {
                 // Face between unset and my region. Put unset
-                // region into regionInMesh
+                // region into regioninMesh
                 regionToCellZone[neiRegion] = -1;
                 changed = true;
             }
@@ -1381,7 +1381,7 @@ void Foam::meshRefinement::findCellZoneTopo
     // Find the regions containing the insidePoints
     forAll(insidePoints, i)
     {
-        const label regionInMeshi = findRegion
+        const label regioninMeshi = findRegion
         (
             mesh_,
             cellRegion,
@@ -1390,10 +1390,10 @@ void Foam::meshRefinement::findCellZoneTopo
         );
 
         Info<< "Found point " << insidePoints[i]
-            << " in global region " << regionInMeshi
+            << " in global region " << regioninMeshi
             << " out of " << cellRegion.nRegions() << " regions." << endl;
 
-        if (regionInMeshi == -1)
+        if (regioninMeshi == -1)
         {
             FatalErrorInFunction
                 << "Point " << insidePoints[i]
@@ -1403,9 +1403,9 @@ void Foam::meshRefinement::findCellZoneTopo
         }
 
         // Mark default region with zone -1.
-        if (regionToCellZone[regionInMeshi] == -2)
+        if (regionToCellZone[regioninMeshi] == -2)
         {
-            regionToCellZone[regionInMeshi] = -1;
+            regionToCellZone[regioninMeshi] = -1;
         }
     }
 
@@ -1417,7 +1417,7 @@ void Foam::meshRefinement::findCellZoneTopo
         // Synchronise regionToCellZone.
         // Note:
         // - region numbers are identical on all processors
-        // - regionInMesh is identical ,,
+        // - regioninMesh is identical ,,
         // - cellZones are identical ,,
         // This done at top of loop to account for geometric matching
         // not being synchronised.
@@ -1509,24 +1509,24 @@ void Foam::meshRefinement::findCellZoneTopo
     }
 
 
-    forAll(regionToCellZone, regionI)
+    forAll(regionToCellZone, regioni)
     {
-        const label zoneI = regionToCellZone[regionI];
+        const label zonei = regionToCellZone[regioni];
 
-        if (zoneI ==  -2)
+        if (zonei ==  -2)
         {
             FatalErrorInFunction
-                << "For region " << regionI << " haven't set cell zone."
+                << "For region " << regioni << " haven't set cell zone."
                 << exit(FatalError);
         }
     }
 
     if (debug)
     {
-        forAll(regionToCellZone, regionI)
+        forAll(regionToCellZone, regioni)
         {
-            Pout<< "Region " << regionI
-                << " becomes cellZone:" << regionToCellZone[regionI]
+            Pout<< "Region " << regioni
+                << " becomes cellZone:" << regionToCellZone[regioni]
                 << endl;
         }
     }
@@ -1903,11 +1903,11 @@ Foam::label Foam::meshRefinement::markPatchZones
             {
                 const label edgei = fEdges[fEdgei];
 
-                patchEdgeFaceRegion& edgeInfo = allEdgeInfo[edgei];
+                patchEdgeFaceRegion& edgeinfo = allEdgeInfo[edgei];
 
                 if
                 (
-                    edgeInfo.updateEdge<int>
+                    edgeinfo.updateEdge<int>
                     (
                         mesh_,
                         patch,
@@ -1920,7 +1920,7 @@ Foam::label Foam::meshRefinement::markPatchZones
                 )
                 {
                     changedEdges.append(edgei);
-                    changedInfo.append(edgeInfo);
+                    changedInfo.append(edgeinfo);
                 }
             }
         }
@@ -2087,11 +2087,11 @@ void Foam::meshRefinement::consistentOrientation
             {
                 const label edgei = fEdges[fEdgei];
 
-                patchFaceOrientation& edgeInfo = allEdgeInfo[edgei];
+                patchFaceOrientation& edgeinfo = allEdgeInfo[edgei];
 
                 if
                 (
-                    edgeInfo.updateEdge<int>
+                    edgeinfo.updateEdge<int>
                     (
                         mesh_,
                         patch,
@@ -2104,7 +2104,7 @@ void Foam::meshRefinement::consistentOrientation
                 )
                 {
                     changedEdges.append(edgei);
-                    changedInfo.append(edgeInfo);
+                    changedInfo.append(edgeinfo);
                 }
             }
         }
@@ -2577,7 +2577,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
             {
                 const label own = faceOwner[facei];
 
-                if (cellRegion[own] != -1)
+                if (cellRegion[own] == -1)
                 {
                     cellRegion[own] = labelMax;
 
@@ -2594,7 +2594,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
                 {
                     const label nei = faceNeighbour[facei];
 
-                    if (cellRegion[nei] != -1)
+                    if (cellRegion[nei] == -1)
                     {
                         cellRegion[nei] = labelMax;
 
@@ -3141,9 +3141,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
             );
 
             Map<label> nPosOrientation(2*nZones);
-            for (label zoneI = 0; zoneI < nZones; zoneI++)
+            for (label zonei = 0; zonei < nZones; zonei++)
             {
-                nPosOrientation.insert(zoneI, 0);
+                nPosOrientation.insert(zonei, 0);
             }
 
             // Make orientations consistent in a topological way. This just
@@ -3190,9 +3190,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
                 << " (negative denotes wrong orientation) :"
                 << endl;
 
-            for (label zoneI = 0; zoneI < nZones; zoneI++)
+            for (label zonei = 0; zonei < nZones; zonei++)
             {
-                Info<< "    " << zoneI << "\t" << nPosOrientation[zoneI]
+                Info<< "    " << zonei << "\t" << nPosOrientation[zonei]
                     << endl;
             }
             Info<< endl;
@@ -3323,9 +3323,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
 
     forAll(cellToZone, celli)
     {
-        const label zoneI = cellToZone[celli];
+        const label zonei = cellToZone[celli];
 
-        if (zoneI >= 0)
+        if (zonei >= 0)
         {
             meshMod.setAction
             (
@@ -3333,7 +3333,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
                 (
                     celli,
                     false,          // removeFromZone
-                    zoneI
+                    zonei
                 )
             );
         }
@@ -3365,9 +3365,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
     if (mesh_.cellZones().size() > 0)
     {
         Info<< "CellZones:" << endl;
-        forAll(mesh_.cellZones(), zoneI)
+        forAll(mesh_.cellZones(), zonei)
         {
-            const cellZone& cz = mesh_.cellZones()[zoneI];
+            const cellZone& cz = mesh_.cellZones()[zonei];
             Info<< "    " << cz.name()
                 << "\tsize:" << returnReduce(cz.size(), sumOp<label>())
                 << endl;
@@ -3377,9 +3377,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
     if (mesh_.faceZones().size() > 0)
     {
         Info<< "FaceZones:" << endl;
-        forAll(mesh_.faceZones(), zoneI)
+        forAll(mesh_.faceZones(), zonei)
         {
-            const faceZone& fz = mesh_.faceZones()[zoneI];
+            const faceZone& fz = mesh_.faceZones()[zonei];
             Info<< "    " << fz.name()
                 << "\tsize:" << returnReduce(fz.size(), sumOp<label>())
                 << endl;

@@ -337,25 +337,25 @@ void Foam::refinementRegions::findHigherLevel
         pointField candidates(pt.size());
         labelList candidateMap(pt.size());
         scalarField candidateDistSqr(pt.size());
-        label candidateI = 0;
+        label candidatei = 0;
 
         forAll(maxLevel, pointi)
         {
-            forAllReverse(levels, levelI)
+            forAllReverse(levels, leveli)
             {
-                if (levels[levelI] > maxLevel[pointi])
+                if (levels[leveli] > maxLevel[pointi])
                 {
-                    candidates[candidateI] = pt[pointi];
-                    candidateMap[candidateI] = pointi;
-                    candidateDistSqr[candidateI] = sqr(distances[levelI]);
-                    candidateI++;
+                    candidates[candidatei] = pt[pointi];
+                    candidateMap[candidatei] = pointi;
+                    candidateDistSqr[candidatei] = sqr(distances[leveli]);
+                    candidatei++;
                     break;
                 }
             }
         }
-        candidates.setSize(candidateI);
-        candidateMap.setSize(candidateI);
-        candidateDistSqr.setSize(candidateI);
+        candidates.setSize(candidatei);
+        candidateMap.setSize(candidatei);
+        candidateDistSqr.setSize(candidatei);
 
         // Do the expensive nearest test only for the candidate points.
         List<pointIndexHit> nearInfo;
@@ -367,18 +367,18 @@ void Foam::refinementRegions::findHigherLevel
         );
 
         // Update maxLevel
-        forAll(nearInfo, candidateI)
+        forAll(nearInfo, candidatei)
         {
-            if (nearInfo[candidateI].hit())
+            if (nearInfo[candidatei].hit())
             {
                 // Check which level it actually is in.
                 label minDistI = findLower
                 (
                     distances,
-                    mag(nearInfo[candidateI].hitPoint()-candidates[candidateI])
+                    mag(nearInfo[candidatei].hitPoint()-candidates[candidatei])
                 );
 
-                label pointi = candidateMap[candidateI];
+                label pointi = candidateMap[candidatei];
 
                 // pt is in between shell[minDistI] and shell[minDistI+1]
                 maxLevel[pointi] = levels[minDistI+1];
@@ -400,21 +400,21 @@ void Foam::refinementRegions::findHigherLevel
         pointField candidates(pt.size());
         labelList candidateMap(pt.size());
         scalarField candidateDistSqr(pt.size());
-        label candidateI = 0;
+        label candidatei = 0;
 
         forAll(pt, pointi)
         {
             if (levels[0] > maxLevel[pointi])
             {
-                candidates[candidateI] = pt[pointi];
-                candidateMap[candidateI] = pointi;
-                candidateDistSqr[candidateI] = sqr(distances_[shelli][0]);
-                candidateI++;
+                candidates[candidatei] = pt[pointi];
+                candidateMap[candidatei] = pointi;
+                candidateDistSqr[candidatei] = sqr(distances_[shelli][0]);
+                candidatei++;
             }
         }
-        candidates.setSize(candidateI);
-        candidateMap.setSize(candidateI);
-        candidateDistSqr.setSize(candidateI);
+        candidates.setSize(candidatei);
+        candidateMap.setSize(candidatei);
+        candidateDistSqr.setSize(candidatei);
 
         // Do the expensive nearest test only for the candidate points.
         List<pointIndexHit> nearInfo;
@@ -432,9 +432,9 @@ void Foam::refinementRegions::findHigherLevel
         );
 
         // Update maxLevel
-        forAll(nearInfo, candidateI)
+        forAll(nearInfo, candidatei)
         {
-            if (nearInfo[candidateI].hit())
+            if (nearInfo[candidatei].hit())
             {
                 const scalar span
                 (
@@ -442,8 +442,8 @@ void Foam::refinementRegions::findHigherLevel
                     (
                         tsm,
                         closeness_[shelli],
-                        nearInfo[candidateI].rawPoint(),
-                        nearInfo[candidateI].index()
+                        nearInfo[candidatei].rawPoint(),
+                        nearInfo[candidatei].index()
                     )
                 );
 
@@ -454,11 +454,11 @@ void Foam::refinementRegions::findHigherLevel
                         log2(cellsAcrossSpan_[shelli]*level0EdgeLength/span) + 1
                     );
 
-                    maxLevel[candidateMap[candidateI]] = min(levels[0], level);
+                    maxLevel[candidateMap[candidatei]] = min(levels[0], level);
                 }
                 else
                 {
-                    maxLevel[candidateMap[candidateI]] = levels[0];
+                    maxLevel[candidateMap[candidatei]] = levels[0];
                 }
             }
         }
@@ -472,19 +472,19 @@ void Foam::refinementRegions::findHigherLevel
 
         pointField candidates(pt.size());
         labelList candidateMap(pt.size());
-        label candidateI = 0;
+        label candidatei = 0;
 
         forAll(maxLevel, pointi)
         {
             if (levels[0] > maxLevel[pointi])
             {
-                candidates[candidateI] = pt[pointi];
-                candidateMap[candidateI] = pointi;
-                candidateI++;
+                candidates[candidatei] = pt[pointi];
+                candidateMap[candidatei] = pointi;
+                candidatei++;
             }
         }
-        candidates.setSize(candidateI);
-        candidateMap.setSize(candidateI);
+        candidates.setSize(candidatei);
+        candidateMap.setSize(candidatei);
 
         // Do the expensive nearest test only for the candidate points.
         List<volumeType> volType;
@@ -527,9 +527,9 @@ Foam::refinementRegions::refinementRegions
 
     // Count number of shells.
     label shelli = 0;
-    forAll(allGeometry.names(), geomI)
+    forAll(allGeometry.names(), geomi)
     {
-        const word& geomName = allGeometry_.names()[geomI];
+        const word& geomName = allGeometry_.names()[geomi];
 
         if (shellsDict.found(geomName))
         {
@@ -548,9 +548,9 @@ Foam::refinementRegions::refinementRegions
     HashSet<word> unmatchedKeys(shellsDict.toc());
     shelli = 0;
 
-    forAll(allGeometry_.names(), geomI)
+    forAll(allGeometry_.names(), geomi)
     {
-        const word& geomName = allGeometry_.names()[geomI];
+        const word& geomName = allGeometry_.names()[geomi];
 
         const entry* ePtr = shellsDict.lookupEntryPtr(geomName, false, true);
 
@@ -559,7 +559,7 @@ Foam::refinementRegions::refinementRegions
             const dictionary& dict = ePtr->dict();
             unmatchedKeys.erase(ePtr->keyword());
 
-            shells_[shelli] = geomI;
+            shells_[shelli] = geomi;
             modes_[shelli] = refineModeNames_.read(dict.lookup("mode"));
 
             // Read pairs of distance+level
@@ -571,7 +571,7 @@ Foam::refinementRegions::refinementRegions
              || modes_[shelli] == refineMode::outsideSpan
             )
             {
-                const searchableSurface& surface = allGeometry_[geomI];
+                const searchableSurface& surface = allGeometry_[geomi];
 
                 if (isA<triSurfaceMesh>(surface))
                 {

@@ -290,7 +290,7 @@ private:
                     const labelListList& globalEdgeFaces,
                     const label myGlobalFacei,
                     const label nbrGlobFacei,
-                    const label edgeI
+                    const label edgei
                 ) const;
 
                 //- For truncateDisplacement: find strings of edges
@@ -299,7 +299,7 @@ private:
                     const indirectPrimitivePatch& pp,
                     const labelListList& globalEdgeFaces,
                     const label facei,
-                    const label edgeI,
+                    const label edgei,
                     const label myGlobFacei,
                     const label nbrGlobFacei,
                     DynamicList<label>& vertices
@@ -467,7 +467,7 @@ private:
                 bool isMaxEdge
                 (
                     const List<pointData>&,
-                    const label edgeI,
+                    const label edgei,
                     const scalar minCos
                 ) const;
 

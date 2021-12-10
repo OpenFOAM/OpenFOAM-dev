@@ -248,13 +248,13 @@ void Foam::meshRefinement::weightedSum
     sum.setSize(meshPoints.size());
     sum = Zero;
 
-    forAll(edges, edgeI)
+    forAll(edges, edgei)
     {
-        if (isMasterEdge[edgeI])
+        if (isMasterEdge[edgei])
         {
-            const edge& e = edges[edgeI];
+            const edge& e = edges[edgei];
 
-            const scalar eWeight = edgeWeights[edgeI];
+            const scalar eWeight = edgeWeights[edgei];
 
             const label v0 = e[0];
             const label v1 = e[1];

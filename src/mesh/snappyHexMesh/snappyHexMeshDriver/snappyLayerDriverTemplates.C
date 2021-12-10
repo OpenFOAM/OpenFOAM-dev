@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,12 +45,12 @@ void Foam::snappyLayerDriver::averageNeighbours
 
     average = Zero;
 
-    forAll(edges, edgeI)
+    forAll(edges, edgei)
     {
-        if (isMasterEdge.get(meshEdges[edgeI]) == 1)
+        if (isMasterEdge.get(meshEdges[edgei]) == 1)
         {
-            const edge& e = edges[edgeI];
-            // scalar eWeight = edgeWeights[edgeI];
+            const edge& e = edges[edgei];
+            // scalar eWeight = edgeWeights[edgei];
             // scalar eWeight =  1.0;
             scalar eMag = max
             (

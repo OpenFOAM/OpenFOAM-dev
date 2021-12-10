@@ -190,9 +190,9 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
     {
         const labelList& pFaces = pointFaces[patchPointi];
 
-        forAll(pFaces, pfI)
+        forAll(pFaces, pfi)
         {
-            label facei = pFaces[pfI];
+            label facei = pFaces[pfi];
 
             if (isMasterFace.get(pp.addressing()[facei]))
             {
@@ -424,9 +424,9 @@ Foam::tmp<Foam::scalarField> Foam::snappySnapDriver::edgePatchDist
     // Set initial changed points to all the patch points
     List<pointEdgePoint> wallInfo(pp.nPoints());
 
-    forAll(pp.localPoints(), ppI)
+    forAll(pp.localPoints(), ppi)
     {
-        wallInfo[ppI] = pointEdgePoint(pp.localPoints()[ppI], 0.0);
+        wallInfo[ppi] = pointEdgePoint(pp.localPoints()[ppi], 0.0);
     }
 
     // Current info on points
@@ -450,9 +450,9 @@ Foam::tmp<Foam::scalarField> Foam::snappySnapDriver::edgePatchDist
     tmp<scalarField> tedgeDist(new scalarField(mesh.nEdges()));
     scalarField& edgeDist = tedgeDist.ref();
 
-    forAll(allEdgeInfo, edgeI)
+    forAll(allEdgeInfo, edgei)
     {
-        edgeDist[edgeI] = Foam::sqrt(allEdgeInfo[edgeI].distSqr());
+        edgeDist[edgei] = Foam::sqrt(allEdgeInfo[edgei].distSqr());
     }
 
 
@@ -472,11 +472,11 @@ Foam::tmp<Foam::scalarField> Foam::snappySnapDriver::edgePatchDist
     //        dimensionedScalar(dimless, 0)
     //    );
     //
-    //    forAll(allEdgeInfo, edgeI)
+    //    forAll(allEdgeInfo, edgei)
     //    {
-    //        scalar d = Foam::sqrt(allEdgeInfo[edgeI].distSqr());
+    //        scalar d = Foam::sqrt(allEdgeInfo[edgei].distSqr());
     //
-    //        const edge& e = mesh.edges()[edgeI];
+    //        const edge& e = mesh.edges()[edgei];
     //
     //        pointDist[e[0]] += d;
     //        pointDist[e[1]] += d;
@@ -509,12 +509,12 @@ void Foam::snappySnapDriver::dumpMove
 
     label vertI = 0;
 
-    forAll(meshPts, ptI)
+    forAll(meshPts, pti)
     {
-        meshTools::writeOBJ(nearestStream, meshPts[ptI]);
+        meshTools::writeOBJ(nearestStream, meshPts[pti]);
         vertI++;
 
-        meshTools::writeOBJ(nearestStream, surfPts[ptI]);
+        meshTools::writeOBJ(nearestStream, surfPts[pti]);
         vertI++;
 
         nearestStream<< "l " << vertI-1 << ' ' << vertI << nl;
@@ -626,9 +626,9 @@ Foam::scalarField Foam::snappySnapDriver::calcSnapDistance
     {
         const labelList& pEdges = pointEdges[pointi];
 
-        forAll(pEdges, pEdgeI)
+        forAll(pEdges, pEdgei)
         {
-            const edge& e = edges[pEdges[pEdgeI]];
+            const edge& e = edges[pEdges[pEdgei]];
 
             scalar len = e.mag(localPoints);
 
@@ -752,16 +752,16 @@ Foam::labelList Foam::snappySnapDriver::getZoneSurfacePoints
     const word& zoneName
 )
 {
-    label zoneI = mesh.faceZones().findZoneID(zoneName);
+    label zonei = mesh.faceZones().findZoneID(zoneName);
 
-    if (zoneI == -1)
+    if (zonei == -1)
     {
         FatalErrorInFunction
             << "Cannot find zone " << zoneName
             << exit(FatalError);
     }
 
-    const faceZone& fZone = mesh.faceZones()[zoneI];
+    const faceZone& fZone = mesh.faceZones()[zonei];
 
 
     // Could use PrimitivePatch & localFaces to extract points but might just
@@ -811,9 +811,9 @@ Foam::tmp<Foam::pointField> Foam::snappySnapDriver::avgCellCentres
     {
         const labelList& pFaces = pointFaces[pointi];
 
-        forAll(pFaces, pfI)
+        forAll(pFaces, pfi)
         {
-            label facei = pFaces[pfI];
+            label facei = pFaces[pfi];
             label meshFacei = pp.addressing()[facei];
 
             label own = mesh.faceOwner()[meshFacei];
@@ -1489,7 +1489,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         {
-            List<pointIndexHit> hitInfo;
+            List<pointIndexHit> hitinfo;
             labelList hitSurface;
 
             if (nearestNormal.size() == localPoints.size())
@@ -1502,16 +1502,16 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
                     localPoints,
                     sqr(snapDist),
                     hitSurface,
-                    hitInfo,
+                    hitinfo,
                     hitRegion,
                     hitNormal
                 );
 
-                forAll(hitInfo, pointi)
+                forAll(hitinfo, pointi)
                 {
-                    if (hitInfo[pointi].hit())
+                    if (hitinfo[pointi].hit())
                     {
-                        nearestPoint[pointi] = hitInfo[pointi].hitPoint();
+                        nearestPoint[pointi] = hitinfo[pointi].hitPoint();
                         nearestNormal[pointi] = hitNormal[pointi];
                     }
                 }
@@ -1524,16 +1524,16 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
                     localPoints,
                     sqr(snapDist),        // sqr of attract distance
                     hitSurface,
-                    hitInfo
+                    hitinfo
                 );
             }
 
-            forAll(hitInfo, pointi)
+            forAll(hitinfo, pointi)
             {
-                if (hitInfo[pointi].hit())
+                if (hitinfo[pointi].hit())
                 {
                     patchDisp[pointi] =
-                        hitInfo[pointi].hitPoint()
+                        hitinfo[pointi].hitPoint()
                       - localPoints[pointi];
 
                     snapSurf[pointi] = hitSurface[pointi];
@@ -1572,7 +1572,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
             );
 
             // Find nearest for points both on faceZone and pp.
-            List<pointIndexHit> hitInfo;
+            List<pointIndexHit> hitinfo;
             labelList hitSurface;
 
             if (nearestNormal.size() == localPoints.size())
@@ -1585,17 +1585,17 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
                     pointField(localPoints, zonePointIndices),
                     sqr(scalarField(minSnapDist, zonePointIndices)),
                     hitSurface,
-                    hitInfo,
+                    hitinfo,
                     hitRegion,
                     hitNormal
                 );
 
-                forAll(hitInfo, i)
+                forAll(hitinfo, i)
                 {
-                    if (hitInfo[i].hit())
+                    if (hitinfo[i].hit())
                     {
                         label pointi = zonePointIndices[i];
-                        nearestPoint[pointi] = hitInfo[i].hitPoint();
+                        nearestPoint[pointi] = hitinfo[i].hitPoint();
                         nearestNormal[pointi] = hitNormal[i];
                     }
                 }
@@ -1608,18 +1608,18 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
                     pointField(localPoints, zonePointIndices),
                     sqr(scalarField(minSnapDist, zonePointIndices)),
                     hitSurface,
-                    hitInfo
+                    hitinfo
                 );
             }
 
-            forAll(hitInfo, i)
+            forAll(hitinfo, i)
             {
                 label pointi = zonePointIndices[i];
 
-                if (hitInfo[i].hit())
+                if (hitinfo[i].hit())
                 {
                     patchDisp[pointi] =
-                        hitInfo[i].hitPoint()
+                        hitinfo[i].hitPoint()
                       - localPoints[pointi];
 
                     minSnapDist[pointi] = min
@@ -2187,14 +2187,14 @@ void Foam::snappySnapDriver::doSnap
         // Per point whether it need to be duplicated
         PackedBoolList duplicatePoint(mesh.nPoints());
         label nDuplicatePoints = 0;
-        forAll(surfZones, surfI)
+        forAll(surfZones, surfi)
         {
-            const word& faceZoneName = surfZones[surfI].faceZoneName();
+            const word& faceZoneName = surfZones[surfi].faceZoneName();
 
             if (faceZoneName.size())
             {
                 const surfaceZonesInfo::faceZoneType& faceType =
-                    surfZones[surfI].faceType();
+                    surfZones[surfi].faceType();
 
                 if
                 (
@@ -2203,12 +2203,12 @@ void Foam::snappySnapDriver::doSnap
                 )
                 {
                     // Filter out all faces for this zone.
-                    label zoneI = fZones.findZoneID(faceZoneName);
-                    const faceZone& fZone = fZones[zoneI];
+                    label zonei = fZones.findZoneID(faceZoneName);
+                    const faceZone& fZone = fZones[zonei];
                     forAll(fZone, i)
                     {
                         label facei = fZone[i];
-                        filterFace[facei] = zoneI;
+                        filterFace[facei] = zonei;
                         nFilterFaces++;
                     }
 
@@ -2233,7 +2233,7 @@ void Foam::snappySnapDriver::doSnap
                         }
                     }
 
-                    Info<< "Surface : " << surfaces.names()[surfI] << nl
+                    Info<< "Surface : " << surfaces.names()[surfi] << nl
                         << "    faces to become baffle : "
                         << returnReduce(nFilterFaces, sumOp<label>()) << nl
                         << "    points to duplicate    : "
