@@ -159,9 +159,6 @@ surfaceTension
 interfaceCompression
 ();
 
-aspectRatio
-();
-
 drag
 ();
 

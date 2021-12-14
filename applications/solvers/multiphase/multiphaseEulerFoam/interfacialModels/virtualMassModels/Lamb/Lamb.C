@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "Lamb.H"
 #include "phasePair.H"
+#include "aspectRatioModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -53,7 +54,8 @@ Foam::virtualMassModels::Lamb::Lamb
     const bool registerObject
 )
 :
-    virtualMassModel(dict, pair, registerObject)
+    virtualMassModel(dict, pair, registerObject),
+    aspectRatio_(aspectRatioModel::New(dict.subDict("aspectRatio"), pair))
 {}
 
 
@@ -67,7 +69,7 @@ Foam::virtualMassModels::Lamb::~Lamb()
 
 Foam::tmp<Foam::volScalarField> Foam::virtualMassModels::Lamb::Cvm() const
 {
-    volScalarField E(min(max(pair_.E(), small), 1 - small));
+    volScalarField E(min(max(aspectRatio_->E(), small), 1 - small));
     volScalarField rtOmEsq(sqrt(1 - sqr(E)));
 
     return

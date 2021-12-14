@@ -141,19 +141,6 @@ surfaceTension
 interfaceCompression
 ();
 
-aspectRatio
-(
-    (air1 in water)
-    {
-        type            Wellek;
-    }
-
-    (air2 in water)
-    {
-        type            Wellek;
-    }
-);
-
 drag
 (
     (air1 in water)
@@ -216,9 +203,9 @@ lift
         {
             type        Tomiyama;
 
-            swarmCorrection
+            aspectRatio
             {
-                type    none;
+                type    Wellek;
             }
         }
     }
@@ -237,9 +224,9 @@ lift
         {
             type        Tomiyama;
 
-            swarmCorrection
+            aspectRatio
             {
-                type    none;
+                type    Wellek;
             }
         }
     }

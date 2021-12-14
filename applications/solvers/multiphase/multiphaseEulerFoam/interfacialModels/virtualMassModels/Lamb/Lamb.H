@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,7 @@ namespace Foam
 {
 
 class phasePair;
+class aspectRatioModel;
 
 namespace virtualMassModels
 {
@@ -62,6 +63,14 @@ class Lamb
 :
     public virtualMassModel
 {
+private:
+
+    //- Private Data
+
+        //- The aspect ratio model
+        autoPtr<aspectRatioModel> aspectRatio_;
+
+
 public:
 
     //- Runtime type information

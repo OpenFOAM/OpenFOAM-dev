@@ -78,21 +78,6 @@ surfaceTension
 interfaceCompression
 ();
 
-aspectRatio
-(
-    (air in water)
-    {
-        type            constant;
-        E0              1.0;
-    }
-
-    (water in air)
-    {
-        type            constant;
-        E0              1.0;
-    }
-);
-
 drag
 (
     (air in water)

@@ -314,33 +314,16 @@ bool Foam::phaseSystem::foundSubModel(const phasePair& key) const
 
     if (key.ordered())
     {
-        if (mesh().foundObject<modelType>(name))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return mesh().foundObject<modelType>(name);
     }
     else
     {
-        if
-        (
+        return
             mesh().foundObject<modelType>(name)
-         ||
-            mesh().foundObject<modelType>
+         || mesh().foundObject<modelType>
             (
                 IOobject::groupName(modelType::typeName, key.otherName())
-            )
-        )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+            );
     }
 }
 

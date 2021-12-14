@@ -128,9 +128,6 @@ populationBalanceCoeffs
     }
 }
 
-aspectRatio
-();
-
 blending
 {
     default

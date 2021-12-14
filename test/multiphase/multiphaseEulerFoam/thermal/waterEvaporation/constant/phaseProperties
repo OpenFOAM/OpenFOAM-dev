@@ -65,21 +65,6 @@ saturation
     }
 );
 
-aspectRatio
-(
-    (steam in water)
-    {
-        type            constant;
-        E0              1.0;
-    }
-
-    (water in steam)
-    {
-        type            constant;
-        E0              1.0;
-    }
-);
-
 drag
 (
 );
