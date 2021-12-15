@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "domainDecomposition.H"
-#include "IOstreams.H"
-#include "boolList.H"
-#include "cyclicPolyPatch.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -94,10 +91,10 @@ void Foam::domainDecomposition::addInterProcFace
 }
 
 
-void Foam::domainDecomposition::decomposeMesh(const fileName& dict)
+void Foam::domainDecomposition::decomposeMesh()
 {
     // Decide which cell goes to which processor
-    distributeCells(dict);
+    distributeCells();
 
     // Distribute the cells according to the given processor label
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,13 +74,6 @@ public:
 
 
     // Member Functions
-
-        //- Manual decompose does not care about proc boundaries - is all
-        //  up to the user.
-        virtual bool parallelAware() const
-        {
-            return true;
-        }
 
         //- Return for every coordinate the wanted processor number. Use the
         //  mesh connectivity (if needed)

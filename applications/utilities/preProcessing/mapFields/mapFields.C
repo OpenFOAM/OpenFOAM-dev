@@ -32,10 +32,15 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "fvMesh.H"
+#include "surfaceMesh.H"
+#include "decompositionMethod.H"
 #include "meshToMesh0.H"
 #include "processorFvPatch.H"
 #include "MapMeshes.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -320,19 +325,13 @@ int main(int argc, char *argv[])
 
     if (parallelSource && !parallelTarget)
     {
-        IOdictionary decompositionDict
+        const int nProcs
         (
-            IOobject
+            decompositionMethod::decomposeParDict(runTimeSource).lookup<int>
             (
-                "decomposeParDict",
-                runTimeSource.system(),
-                runTimeSource,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE
+                "numberOfSubdomains"
             )
         );
-
-        const int nProcs(decompositionDict.lookup<int>("numberOfSubdomains"));
 
         Info<< "Create target mesh\n" << endl;
 
@@ -401,19 +400,13 @@ int main(int argc, char *argv[])
     }
     else if (!parallelSource && parallelTarget)
     {
-        IOdictionary decompositionDict
+        const int nProcs
         (
-            IOobject
+            decompositionMethod::decomposeParDict(runTimeSource).lookup<int>
             (
-                "decomposeParDict",
-                runTimeTarget.system(),
-                runTimeTarget,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE
+                "numberOfSubdomains"
             )
         );
-
-        const int nProcs(decompositionDict.lookup<int>("numberOfSubdomains"));
 
         Info<< "Create source mesh\n" << endl;
 
@@ -482,39 +475,20 @@ int main(int argc, char *argv[])
     }
     else if (parallelSource && parallelTarget)
     {
-        IOdictionary decompositionDictSource
-        (
-            IOobject
-            (
-                "decomposeParDict",
-                runTimeSource.system(),
-                runTimeSource,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE
-            )
-        );
-
         const int nProcsSource
         (
-            decompositionDictSource.lookup<int>("numberOfSubdomains")
-        );
-
-
-        IOdictionary decompositionDictTarget
-        (
-            IOobject
+            decompositionMethod::decomposeParDict(runTimeSource).lookup<int>
             (
-                "decomposeParDict",
-                runTimeTarget.system(),
-                runTimeTarget,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE
+                "numberOfSubdomains"
             )
         );
 
         const int nProcsTarget
         (
-            decompositionDictTarget.lookup<int>("numberOfSubdomains")
+            decompositionMethod::decomposeParDict(runTimeTarget).lookup<int>
+            (
+                "numberOfSubdomains"
+            )
         );
 
         List<boundBox> bbsTarget(nProcsTarget);

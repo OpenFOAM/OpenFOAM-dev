@@ -24,20 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "domainDecomposition.H"
-#include "dictionary.H"
-#include "labelIOList.H"
-#include "processorPolyPatch.H"
-#include "processorCyclicPolyPatch.H"
-#include "fvMesh.H"
-#include "OSspecific.H"
-#include "Map.H"
-#include "DynamicList.H"
+#include "decompositionMethod.H"
 #include "fvFieldDecomposer.H"
 #include "IOobjectList.H"
 #include "cellSet.H"
 #include "faceSet.H"
 #include "pointSet.H"
-#include "decompositionModel.H"
 #include "hexRef8Data.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -71,8 +63,7 @@ void Foam::domainDecomposition::mark
 
 Foam::domainDecomposition::domainDecomposition
 (
-    const IOobject& io,
-    const fileName& dictFile
+    const IOobject& io
 )
 :
     fvMesh(io, false),
@@ -96,11 +87,8 @@ Foam::domainDecomposition::domainDecomposition
     ),
     nProcs_
     (
-        decompositionModel::New
-        (
-            *this,
-            dictFile
-        ).lookup<int>("numberOfSubdomains")
+        decompositionMethod::decomposeParDict(time())
+       .lookup<int>("numberOfSubdomains")
     ),
     distributed_(false),
     cellToProc_(nCells()),
@@ -115,11 +103,11 @@ Foam::domainDecomposition::domainDecomposition
     procProcessorPatchSubPatchIDs_(nProcs_),
     procProcessorPatchSubPatchStarts_(nProcs_)
 {
-    decompositionModel::New
+    decompositionMethod::decomposeParDict(time()).readIfPresent
     (
-        *this,
-        dictFile
-    ).readIfPresent("distributed", distributed_);
+        "distributed",
+        distributed_
+    );
 }
 
 

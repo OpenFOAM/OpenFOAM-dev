@@ -813,36 +813,19 @@ Foam::distributedTriSurfaceMesh::independentlyDistributedBbs
     const triSurface& s
 )
 {
-    if (!decomposer_.valid())
+    if (!distributor_.valid())
     {
-        // Use current decomposer.
+        // Use current distributor.
         // Note: or always use hierarchical?
-        IOdictionary decomposeDict
+        distributor_ = decompositionMethod::NewDistributor
         (
-            IOobject
-            (
-                "decomposeParDict",
-                searchableSurface::time().system(),
-                searchableSurface::time(),
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
+            decompositionMethod::decomposeParDict(searchableSurface::time())
         );
-        decomposer_ = decompositionMethod::New(decomposeDict);
 
-        if (!decomposer_().parallelAware())
+        if (!isA<geomDecomp>(distributor_()))
         {
             FatalErrorInFunction
-                << "The decomposition method " << decomposer_().typeName
-                << " does not decompose in parallel."
-                << " Please choose one that does." << exit(FatalError);
-        }
-
-        if (!isA<geomDecomp>(decomposer_()))
-        {
-            FatalErrorInFunction
-                << "The decomposition method " << decomposer_().typeName
+                << "The decomposition method " << distributor_().typeName
                 << " is not a geometric decomposition method." << endl
                 << "Only geometric decomposition methods are currently"
                 << " supported."
@@ -858,10 +841,10 @@ Foam::distributedTriSurfaceMesh::independentlyDistributedBbs
     }
 
 
-    geomDecomp& decomposer = refCast<geomDecomp>(decomposer_());
+    geomDecomp& distributor = refCast<geomDecomp>(distributor_());
 
     // Do the actual decomposition
-    labelList distribution(decomposer.decompose(triCentres));
+    labelList distribution(distributor.decompose(triCentres));
 
     // Find bounding box for all triangles on new distribution.
 

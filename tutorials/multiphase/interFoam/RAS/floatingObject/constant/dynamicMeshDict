@@ -122,7 +122,7 @@ topoChanger
 
 distributor
 {
-    type            decomposer;
+    type            distributor;
 
     libs            ("libfvMeshDistributors.so");
 

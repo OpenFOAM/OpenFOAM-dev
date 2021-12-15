@@ -400,45 +400,19 @@ int main(int argc, char *argv[])
     printMeshData(mesh);
 
 
-
-    IOdictionary decompositionDict
-    (
-        IOobject
-        (
-            "decomposeParDict",
-            runTime.system(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    );
-
     labelList finalDecomp;
 
     // Create decompositionMethod and new decomposition
     {
-        autoPtr<decompositionMethod> decomposer
+        autoPtr<decompositionMethod> distributor
         (
-            decompositionMethod::New
+            decompositionMethod::NewDistributor
             (
-                decompositionDict
+                decompositionMethod::decomposeParDict(runTime)
             )
         );
 
-        if (!decomposer().parallelAware())
-        {
-            WarningInFunction
-                << "You have selected decomposition method "
-                << decomposer().typeName
-                << " which does" << endl
-                << "not synchronise the decomposition across"
-                << " processor patches." << endl
-                << "    You might want to select a decomposition method which"
-                << " is aware of this. Continuing."
-                << endl;
-        }
-
-        finalDecomp = decomposer().decompose(mesh, mesh.cellCentres());
+        finalDecomp = distributor().decompose(mesh, mesh.cellCentres());
     }
 
     // Dump decomposition to volScalarField

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,12 +176,6 @@ public:
 
 
     // Member Functions
-
-        //- Hierarchgeom is aware of processor boundaries
-        virtual bool parallelAware() const
-        {
-            return true;
-        }
 
         //- Return for every coordinate the wanted processor number.
         virtual labelList decompose

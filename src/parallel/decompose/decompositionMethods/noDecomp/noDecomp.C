@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,8 @@ License
 namespace Foam
 {
     defineTypeName(noDecomp);
-
-    addToRunTimeSelectionTable(decompositionMethod, noDecomp, dictionary);
+    addToRunTimeSelectionTable(decompositionMethod, noDecomp, decomposer);
+    addToRunTimeSelectionTable(decompositionMethod, noDecomp, distributor);
 }
 
 

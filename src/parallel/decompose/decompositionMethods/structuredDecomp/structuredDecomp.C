@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,14 @@ namespace Foam
     (
         decompositionMethod,
         structuredDecomp,
-        dictionary
+        decomposer
+    );
+
+    addToRunTimeSelectionTable
+    (
+        decompositionMethod,
+        structuredDecomp,
+        distributor
     );
 }
 
@@ -53,17 +60,11 @@ Foam::structuredDecomp::structuredDecomp(const dictionary& decompositionDict)
     patches_(methodDict_.lookup("patches"))
 {
     methodDict_.set("numberOfSubdomains", nDomains());
-    method_ = decompositionMethod::New(methodDict_);
+    method_ = decompositionMethod::NewDecomposer(methodDict_);
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::structuredDecomp::parallelAware() const
-{
-    return method_().parallelAware();
-}
-
 
 Foam::labelList Foam::structuredDecomp::decompose
 (

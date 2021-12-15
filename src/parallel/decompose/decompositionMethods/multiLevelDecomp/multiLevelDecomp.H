@@ -106,10 +106,6 @@ public:
 
     // Member Functions
 
-        //- Is method parallel aware (i.e. does it synchronise domains across
-        //  proc boundaries)
-        virtual bool parallelAware() const;
-
         //- Inherit decompose from decompositionMethod
         using decompositionMethod::decompose;
 

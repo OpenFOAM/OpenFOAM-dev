@@ -57,9 +57,17 @@ namespace Foam
     (
         decompositionMethod,
         scotchDecomp,
-        dictionary
+        decomposer
+    );
+
+    addToRunTimeSelectionTable
+    (
+        decompositionMethod,
+        scotchDecomp,
+        distributor
     );
 }
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

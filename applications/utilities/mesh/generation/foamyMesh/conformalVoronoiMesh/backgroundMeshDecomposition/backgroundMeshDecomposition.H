@@ -124,9 +124,6 @@ class backgroundMeshDecomposition
         //  a point that is not found on any processor is in the domain at all
         treeBoundBox globalBackgroundBounds_;
 
-        //- Decomposition dictionary
-        IOdictionary decomposeDict_;
-
         //- Decomposition method
         autoPtr<decompositionMethod> decomposerPtr_;
 

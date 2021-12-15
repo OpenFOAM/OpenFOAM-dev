@@ -16,7 +16,6 @@ FoamFile
 
 numberOfSubdomains  2;
 
-
 // Optional decomposition constraints
 /*
 constraints
@@ -28,12 +27,14 @@ constraints
        // sharing the same points
        type    preserveBaffles;
    }
+
    preserveFaceZones
    {
        //- Keep owner and neighbour on same processor for faces in zones
        type    preserveFaceZones;
        zones   (".*");
    }
+
    preservePatches
    {
        //- Keep owner and neighbour on same processor for faces in patches
@@ -43,6 +44,7 @@ constraints
        type    preservePatches;
        patches (".*");
    }
+
    singleProcessorFaceSets
    {
        //- Keep all of faceSet on a single processor. This puts all cells
@@ -55,6 +57,7 @@ constraints
        type    singleProcessorFaceSets;
        singleProcessorFaceSets ((f1 -1));
    }
+
    refinementHistory
    {
        //- Decompose cells such that all cell originating from single cell
@@ -63,31 +66,6 @@ constraints
    }
 }
 */
-
-
-// Deprecated form of specifying decomposition constraints:
-//- Keep owner and neighbour on same processor for faces in zones:
-// preserveFaceZones (heater solid1 solid3);
-
-//- Keep owner and neighbour on same processor for faces in patches:
-//  (makes sense only for cyclic patches. Not suitable for e.g. cyclicAMI
-//   since these are not coupled on the patch level. Use
-//   singleProcessorFaceSets for those)
-// preservePatches (cyclic_half0 cyclic_half1);
-
-//- Keep all of faceSet on a single processor. This puts all cells
-//  connected with a point, edge or face on the same processor.
-//  (just having face connected cells might not guarantee a balanced
-//  decomposition)
-// The processor can be -1 (the decompositionMethod chooses the processor
-// for a good load balance) or explicitly provided (upsets balance).
-// singleProcessorFaceSets ((f0 -1));
-
-//- Keep owner and neighbour of baffles on same processor (i.e. keep it
-//  detectable as a baffle). Baffles are two boundary face sharing the
-//  same points.
-// preserveBaffles true;
-
 
 //- Use the volScalarField named here as a weight for each cell in the
 //  decomposition.  For example, use a particle population field to decompose

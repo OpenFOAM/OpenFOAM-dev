@@ -79,10 +79,12 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
-#include "OSspecific.H"
-#include "fvCFD.H"
-#include "IOobjectList.H"
 #include "domainDecomposition.H"
+#include "decompositionMethod.H"
+#include "argList.H"
+#include "timeSelector.H"
+#include "regionProperties.H"
+
 #include "labelIOField.H"
 #include "labelFieldIOField.H"
 #include "scalarIOField.H"
@@ -95,16 +97,14 @@ Usage
 #include "symmTensorFieldIOField.H"
 #include "tensorIOField.H"
 #include "tensorFieldIOField.H"
-#include "pointFields.H"
-#include "regionProperties.H"
-#include "systemDict.H"
 
 #include "readFields.H"
 #include "dimFieldDecomposer.H"
 #include "fvFieldDecomposer.H"
 #include "pointFieldDecomposer.H"
 #include "lagrangianFieldDecomposer.H"
-#include "decompositionModel.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -277,9 +277,6 @@ int main(int argc, char *argv[])
     bool forceOverwrite          = args.optionFound("force");
     bool ifRequiredDecomposition = args.optionFound("ifRequired");
 
-    const word dictName("decomposeParDict");
-
-
     if (decomposeGeomOnly)
     {
         Info<< "Skipping decomposing fields"
@@ -381,16 +378,10 @@ int main(int argc, char *argv[])
         // Determine the existing processor count directly
         label nProcs = fileHandler().nProcs(runTime.path(), regionDir);
 
-        // Get the dictionary IO
-        const typeIOobject<IOdictionary> dictIO
-        (
-            systemDictIO(dictName, args, runTime, regionName)
-        );
-
-        // Get requested numberOfSubdomains. Note: have no mesh yet so
-        // cannot use decompositionModel::New
+        // Get requested numberOfSubdomains
         const label nDomains =
-            IOdictionary(dictIO).lookup<label>("numberOfSubdomains");
+            decompositionMethod::decomposeParDict(runTime)
+           .lookup<label>("numberOfSubdomains");
 
         // Give file handler a chance to determine the output directory
         const_cast<fileOperation&>(fileHandler()).setNProcs(nDomains);
@@ -405,7 +396,7 @@ int main(int argc, char *argv[])
                     << nProcs << " domains"
                     << nl
                     << "instead of " << nDomains
-                    << " domains as specified in " << dictName
+                    << " domains as specified in decomposeParDict"
                     << nl
                     << exit(FatalError);
             }
@@ -431,14 +422,13 @@ int main(int argc, char *argv[])
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
-            ),
-            dictIO.objectPath()
+            )
         );
 
         // Decompose the mesh
         if (!decomposeFieldsOnly)
         {
-            mesh.decomposeMesh(dictIO.objectPath());
+            mesh.decomposeMesh();
 
             mesh.writeDecomposition(decomposeSets);
 

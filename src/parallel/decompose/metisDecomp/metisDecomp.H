@@ -82,12 +82,6 @@ public:
 
     // Member Functions
 
-        virtual bool parallelAware() const
-        {
-            // Metis does not know about proc boundaries
-            return false;
-        }
-
         //- Inherit decompose from decompositionMethod
         using decompositionMethod::decompose;
 

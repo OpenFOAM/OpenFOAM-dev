@@ -21,12 +21,10 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-InClass
-    decompositionMethod
-
 \*---------------------------------------------------------------------------*/
 
 #include "decompositionMethod.H"
+#include "Time.H"
 #include "globalIndex.H"
 #include "syncTools.H"
 #include "Tuple2.H"
@@ -46,8 +44,10 @@ InClass
 namespace Foam
 {
     defineTypeNameAndDebug(decompositionMethod, 0);
-    defineRunTimeSelectionTable(decompositionMethod, dictionary);
+    defineRunTimeSelectionTable(decompositionMethod, decomposer);
+    defineRunTimeSelectionTable(decompositionMethod, distributor);
 }
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -64,15 +64,9 @@ Foam::decompositionMethod::decompositionMethod
 {
     // Read any constraints
     wordList constraintTypes_;
+
     if (decompositionDict_.found("constraints"))
     {
-        // PtrList<dictionary> constraintsList
-        //(
-        //    decompositionDict_.lookup("constraints")
-        //);
-        // forAll(constraintsList, i)
-        //{
-        //    const dictionary& dict = constraintsList[i];
         const dictionary& constraintsList = decompositionDict_.subDict
         (
             "constraints"
@@ -93,110 +87,91 @@ Foam::decompositionMethod::decompositionMethod
             );
         }
     }
-
-    // Backwards compatibility
-    if
-    (
-        decompositionDict_.found("preserveBaffles")
-     && findIndex
-        (
-            constraintTypes_,
-            decompositionConstraints::preserveBafflesConstraint::typeName
-        ) == -1
-    )
-    {
-        constraints_.append
-        (
-            new decompositionConstraints::preserveBafflesConstraint()
-        );
-    }
-
-    if
-    (
-        decompositionDict_.found("preservePatches")
-     && findIndex
-        (
-            constraintTypes_,
-            decompositionConstraints::preservePatchesConstraint::typeName
-        ) == -1
-    )
-    {
-        const wordReList pNames(decompositionDict_.lookup("preservePatches"));
-
-        constraints_.append
-        (
-            new decompositionConstraints::preservePatchesConstraint(pNames)
-        );
-    }
-
-    if
-    (
-        decompositionDict_.found("preserveFaceZones")
-     && findIndex
-        (
-            constraintTypes_,
-            decompositionConstraints::preserveFaceZonesConstraint::typeName
-        ) == -1
-    )
-    {
-        const wordReList zNames(decompositionDict_.lookup("preserveFaceZones"));
-
-        constraints_.append
-        (
-            new decompositionConstraints::preserveFaceZonesConstraint(zNames)
-        );
-    }
-
-    if
-    (
-        decompositionDict_.found("singleProcessorFaceSets")
-     && findIndex
-        (
-            constraintTypes_,
-            decompositionConstraints::preserveFaceZonesConstraint::typeName
-        ) == -1
-    )
-    {
-        const List<Tuple2<word, label>> zNameAndProcs
-        (
-            decompositionDict_.lookup("singleProcessorFaceSets")
-        );
-
-        constraints_.append
-        (
-            new decompositionConstraints::singleProcessorFaceSetsConstraint
-            (
-                zNameAndProcs
-            )
-        );
-    }
 }
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::decompositionMethod> Foam::decompositionMethod::New
+Foam::autoPtr<Foam::decompositionMethod>
+Foam::decompositionMethod::NewDecomposer
 (
     const dictionary& decompositionDict
 )
 {
-    const word methodType(decompositionDict.lookup("method"));
+    const word methodType
+    (
+        decompositionDict.lookupBackwardsCompatible<word>
+        (
+            {"decomposer", "method"}
+        )
+    );
 
-    Info<< "Selecting decompositionMethod " << methodType << endl;
+    Info<< "Selecting decomposer " << methodType << endl;
 
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(methodType);
+    decomposerConstructorTable::iterator cstrIter =
+        decomposerConstructorTablePtr_->find(methodType);
 
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    if (cstrIter == decomposerConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown decompositionMethod "
+            << "Unknown decomposer "
             << methodType << nl << nl
-            << "Valid decompositionMethods are : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
+            << "Valid decomposers are : " << endl
+            << decomposerConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 
     return autoPtr<decompositionMethod>(cstrIter()(decompositionDict));
+}
+
+
+Foam::autoPtr<Foam::decompositionMethod>
+Foam::decompositionMethod::NewDistributor
+(
+    const dictionary& distributionDict
+)
+{
+    const word methodType
+    (
+        distributionDict.lookupBackwardsCompatible<word>
+        (
+            {"distributor", "method"}
+        )
+    );
+
+    Info<< "Selecting distributor " << methodType << endl;
+
+    distributorConstructorTable::iterator cstrIter =
+        distributorConstructorTablePtr_->find(methodType);
+
+    if (cstrIter == distributorConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown distributor "
+            << methodType << nl << nl
+            << "Valid distributors are : " << endl
+            << distributorConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<decompositionMethod>(cstrIter()(distributionDict));
+}
+
+
+Foam::dictionary Foam::decompositionMethod::decomposeParDict(const Time& time)
+{
+    return IOdictionary
+    (
+        IOobject
+        (
+            "decomposeParDict",
+            time.system(),
+            time,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
 }
 
 

@@ -844,9 +844,9 @@ int main(int argc, char *argv[])
         bool oldParRun = UPstream::parRun();
         UPstream::parRun() = false;
 
-        autoPtr<decompositionMethod> decomposePtr = decompositionMethod::New
+        autoPtr<decompositionMethod> decomposePtr
         (
-            decomposeDict
+            decompositionMethod::NewDecomposer(decomposeDict)
         );
 
         labelList cellToRegion

@@ -1,5 +1,4 @@
 EXE_INC = \
-    -I$(LIB_SRC)/parallel/decompose/decompose/lnInclude \
     -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
@@ -9,7 +8,6 @@ EXE_INC = \
 
 EXE_LIBS = \
     -ldynamicMesh \
-    -ldecompose \
     -lgenericPatchFields \
     -ldecompositionMethods -L$(FOAM_LIBBIN)/dummy -lmetisDecomp -lscotchDecomp \
     -llagrangian \

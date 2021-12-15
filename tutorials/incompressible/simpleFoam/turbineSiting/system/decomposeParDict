@@ -9,34 +9,20 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
     object      decomposeParDict;
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 numberOfSubdomains 4;
 
-method          simple;
-
-simpleCoeffs
-{
-    n               (2 2 1);
-}
+decomposer      hierarchical;
+distributor     ptscotch;
 
 hierarchicalCoeffs
 {
-    n               (1 1 1);
-    order           xyz;
+    n           (2 2 1);
+    order       xyz;
 }
-
-manualCoeffs
-{
-    dataFile        "";
-}
-
-distributed     no;
-
-roots           ( );
-
 
 // ************************************************************************* //

@@ -108,9 +108,6 @@ runApplication decomposePar -copyZero
 
 refineBackgroundMesh $nRefine
 
-# echo "Switching to ptscotch for dynamic load balancing with snappyHexMesh"
-# setKeyword method ptscotch system/decomposeParDict
-
 runParallel snappyHexMesh -overwrite
 
 runParallel checkMesh

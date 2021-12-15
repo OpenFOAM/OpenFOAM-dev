@@ -55,8 +55,14 @@ namespace Foam
 {
     defineTypeNameAndDebug(ptscotchDecomp, 0);
 
-    addToRunTimeSelectionTable(decompositionMethod, ptscotchDecomp, dictionary);
+    addToRunTimeSelectionTable
+    (
+        decompositionMethod,
+        ptscotchDecomp,
+        distributor
+    );
 }
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshDistributorDecomposer.H"
+#include "fvMeshDistributorsDistributor.H"
 #include "decompositionMethod.H"
 #include "fvMeshDistribute.H"
 #include "mapDistributePolyMesh.H"
@@ -35,11 +35,11 @@ namespace Foam
 {
 namespace fvMeshDistributors
 {
-    defineTypeNameAndDebug(decomposer, 0);
+    defineTypeNameAndDebug(distributor, 0);
     addToRunTimeSelectionTable
     (
         fvMeshDistributor,
-        decomposer,
+        distributor,
         fvMesh
     );
 }
@@ -48,77 +48,54 @@ namespace fvMeshDistributors
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::fvMeshDistributors::decomposer::readDict()
+void Foam::fvMeshDistributors::distributor::readDict()
 {
-    const dictionary& decomposerDict(dict());
+    const dictionary& distributorDict(dict());
 
     redistributionInterval_ =
-        decomposerDict.lookupOrDefault("redistributionInterval", 10);
+        distributorDict.lookupOrDefault("redistributionInterval", 10);
 
     maxImbalance_ =
-        decomposerDict.lookupOrDefault<scalar>("maxImbalance", 0.1);
+        distributorDict.lookupOrDefault<scalar>("maxImbalance", 0.1);
 }
 
 
-void Foam::fvMeshDistributors::decomposer::redecompose()
+void Foam::fvMeshDistributors::distributor::distribute()
 {
     fvMesh& mesh = this->mesh();
 
-    IOdictionary decompositionDict
+    // Create new decomposition distribution
+    labelList distribution
     (
-        IOobject
-        (
-            "decomposeParDict",
-            mesh.time().system(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
+        distributor_->decompose(mesh, mesh.cellCentres())
     );
-
-    labelList finalDecomp;
-
-    // Create decompositionMethod and new decomposition
-    {
-        autoPtr<decompositionMethod> decomposer
-        (
-            decompositionMethod::New
-            (
-                decompositionDict
-            )
-        );
-
-        if (!decomposer().parallelAware())
-        {
-            WarningInFunction
-                << "You have selected decomposition method "
-                << decomposer().typeName
-                << " which does" << endl
-                << "not synchronise the decomposition across"
-                << " processor patches." << endl
-                << "    You might want to select a decomposition method which"
-                << " is aware of this. Continuing."
-                << endl;
-        }
-
-        finalDecomp = decomposer().decompose(mesh, mesh.cellCentres());
-    }
 
     // Mesh distribution engine
     fvMeshDistribute distributor(mesh);
 
     // Do actual sending/receiving of mesh
-    autoPtr<mapDistributePolyMesh> map = distributor.distribute(finalDecomp);
+    autoPtr<mapDistributePolyMesh> map
+    (
+        distributor.distribute(distribution)
+    );
 
+    // Distribute the mesh data
     mesh.distribute(map);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshDistributors::decomposer::decomposer(fvMesh& mesh)
+Foam::fvMeshDistributors::distributor::distributor(fvMesh& mesh)
 :
     fvMeshDistributor(mesh),
+    distributor_
+    (
+        decompositionMethod::NewDistributor
+        (
+            decompositionMethod::decomposeParDict(mesh.time())
+        )
+    ),
     redistributionInterval_(1),
     maxImbalance_(0.1),
     timeIndex_(-1)
@@ -129,13 +106,13 @@ Foam::fvMeshDistributors::decomposer::decomposer(fvMesh& mesh)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fvMeshDistributors::decomposer::~decomposer()
+Foam::fvMeshDistributors::distributor::~distributor()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fvMeshDistributors::decomposer::update()
+bool Foam::fvMeshDistributors::distributor::update()
 {
     if
     (
@@ -158,13 +135,9 @@ bool Foam::fvMeshDistributors::decomposer::update()
 
         if (imbalance > maxImbalance_)
         {
-            if (debug)
-            {
-                Info<< "Redistributing mesh with imbalance "
-                    << imbalance << endl;
-            }
+            Info<< "Redistributing mesh with imbalance " << imbalance << endl;
 
-            redecompose();
+            distribute();
 
             return true;
         }
@@ -180,18 +153,18 @@ bool Foam::fvMeshDistributors::decomposer::update()
 }
 
 
-void Foam::fvMeshDistributors::decomposer::updateMesh(const mapPolyMesh&)
+void Foam::fvMeshDistributors::distributor::updateMesh(const mapPolyMesh&)
 {}
 
 
-void Foam::fvMeshDistributors::decomposer::distribute
+void Foam::fvMeshDistributors::distributor::distribute
 (
     const mapDistributePolyMesh&
 )
 {}
 
 
-bool Foam::fvMeshDistributors::decomposer::write(const bool write) const
+bool Foam::fvMeshDistributors::distributor::write(const bool write) const
 {
     return true;
 }

@@ -803,18 +803,13 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
     bFTreePtr_(),
     allBackgroundMeshBounds_(Pstream::nProcs()),
     globalBackgroundBounds_(),
-    decomposeDict_
+    decomposerPtr_
     (
-        IOobject
+        decompositionMethod::NewDecomposer
         (
-            "decomposeParDict",
-            runTime_.system(),
-            runTime_,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
+            decompositionMethod::decomposeParDict(runTime)
         )
     ),
-    decomposerPtr_(decompositionMethod::New(decomposeDict_)),
     spanScale_(coeffsDict.lookup<scalar>("spanScale")),
     minCellSizeLimit_
     (
@@ -828,15 +823,6 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
     {
         FatalErrorInFunction
             << "This cannot be used when not running in parallel."
-            << exit(FatalError);
-    }
-
-    if (!decomposerPtr_().parallelAware())
-    {
-        FatalErrorInFunction
-            << "You have selected decomposition method "
-            << decomposerPtr_().typeName
-            << " which is not parallel aware." << endl
             << exit(FatalError);
     }
 

@@ -41,6 +41,5 @@ fi
 
 wclean metisDecomp
 wclean decompositionMethods
-wclean decompose
 
 #------------------------------------------------------------------------------

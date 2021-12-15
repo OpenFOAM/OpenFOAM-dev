@@ -79,10 +79,6 @@ public:
 
     // Member Functions
 
-        //- Is method parallel aware (i.e. does it synchronise domains across
-        //  proc boundaries)
-        virtual bool parallelAware() const;
-
         //- Return for every coordinate the wanted processor number. Use the
         //  mesh connectivity (if needed)
         virtual labelList decompose

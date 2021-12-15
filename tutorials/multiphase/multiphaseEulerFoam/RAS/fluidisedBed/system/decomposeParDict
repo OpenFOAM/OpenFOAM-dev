@@ -15,22 +15,11 @@ FoamFile
 
 numberOfSubdomains  4;
 
-/*
-    Main methods are:
-    1) Geometric: "simple"; "hierarchical", with ordered sorting, e.g. xyz, yxz
-    2) Scotch: "scotch", when running in serial; "ptscotch", running in parallel
-*/
-
 method              hierarchical;
-
-simpleCoeffs
-{
-    n               (1 4 1); // total must match numberOfSubdomains
-}
 
 hierarchicalCoeffs
 {
-    n               (1 4 1); // total must match numberOfSubdomains
+    n               (1 4 1);
     order           xyz;
 }
 

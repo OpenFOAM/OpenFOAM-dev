@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,26 +25,23 @@ License
 
 #include "domainDecomposition.H"
 #include "decompositionMethod.H"
-#include "cpuTime.H"
-#include "cellSet.H"
-#include "regionSplit.H"
-#include "Tuple2.H"
-#include "faceSet.H"
-#include "decompositionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::domainDecomposition::distributeCells(const fileName& dict)
+void Foam::domainDecomposition::distributeCells()
 {
     Info<< "\nCalculating distribution of cells" << endl;
 
     cpuTime decompositionTime;
-    const decompositionModel& method = decompositionModel::New(*this, dict);
+    const dictionary decomposeParDict
+    (
+        decompositionMethod::decomposeParDict(time())
+    );
 
     scalarField cellWeights;
-    if (method.found("weightField"))
+    if (decomposeParDict.found("weightField"))
     {
-        word weightName = method.lookup("weightField");
+        const word weightName = decomposeParDict.lookup("weightField");
 
         volScalarField weights
         (
@@ -61,7 +58,9 @@ void Foam::domainDecomposition::distributeCells(const fileName& dict)
         cellWeights = weights.primitiveField();
     }
 
-    cellToProc_ = method.decomposer().decompose(*this, cellWeights);
+    cellToProc_ =
+        decompositionMethod::NewDecomposer(decomposeParDict)
+        ->decompose(*this, cellWeights);
 
     Info<< "\nFinished decomposition in "
         << decompositionTime.elapsedCpuTime()

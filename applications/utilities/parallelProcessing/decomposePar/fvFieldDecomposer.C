@@ -25,7 +25,6 @@ License
 
 #include "fvFieldDecomposer.H"
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::labelList Foam::fvFieldDecomposer::patchFieldDecomposer::alignAddressing

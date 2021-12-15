@@ -97,7 +97,7 @@ private:
         scalar mergeDist_;
 
         //- Decomposition used when independently decomposing surface.
-        autoPtr<decompositionMethod> decomposer_;
+        autoPtr<decompositionMethod> distributor_;
 
         //- Bounding box settings
         IOdictionary dict_;

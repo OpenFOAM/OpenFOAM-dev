@@ -5,9 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication blockMesh
-runApplication -a foamDictionary -entry "method" -set "hierarchical" system/decomposeParDict
 runApplication decomposePar -copyZero
-runApplication -a foamDictionary -entry "method" -set "ptscotch" system/decomposeParDict
 runParallel snappyHexMesh -overwrite
 
 runParallel topoSet

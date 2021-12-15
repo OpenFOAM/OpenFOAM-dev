@@ -522,27 +522,18 @@ int main(int argc, char *argv[])
         printMeshData(mesh);
 
         // Allocate a decomposer
-        IOdictionary decompositionDict
-        (
-            IOobject
-            (
-                "decomposeParDict",
-                runTime.system(),
-                mesh,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE
-            )
-        );
-
         autoPtr<decompositionMethod> decomposer
         (
-            decompositionMethod::New
+            decompositionMethod::NewDecomposer
             (
-                decompositionDict
+                decompositionMethod::decomposeParDict(runTime)
             )
         );
 
-        labelList decomp = decomposer().decompose(mesh, mesh.cellCentres());
+        const labelList decomp
+        (
+            decomposer().decompose(mesh, mesh.cellCentres())
+        );
 
         // Global matching tolerance
         const scalar tolDim = getMergeDistance

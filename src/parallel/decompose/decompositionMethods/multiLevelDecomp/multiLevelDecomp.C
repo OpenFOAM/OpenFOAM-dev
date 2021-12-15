@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,14 @@ namespace Foam
     (
         decompositionMethod,
         multiLevelDecomp,
-        dictionary
+        decomposer
+    );
+
+    addToRunTimeSelectionTable
+    (
+        decompositionMethod,
+        multiLevelDecomp,
+        distributor
     );
 }
 
@@ -253,10 +260,12 @@ void Foam::multiLevelDecomp::decompose
                     << endl;
             }
 
-            autoPtr<decompositionMethod> method0 = decompositionMethod::New
-            (
-                myDict
-            );
+            autoPtr<decompositionMethod> method0 =
+                decompositionMethod::NewDecomposer
+                (
+                    myDict
+                );
+
             labelList dist
             (
                 method0().decompose
@@ -336,7 +345,7 @@ Foam::multiLevelDecomp::multiLevelDecomp(const dictionary& decompositionDict)
     label i = 0;
     forAllConstIter(dictionary, methodsDict_, iter)
     {
-        methods_.set(i++, decompositionMethod::New(iter().dict()));
+        methods_.set(i++, decompositionMethod::NewDecomposer(iter().dict()));
     }
 
     label n = 1;
@@ -361,19 +370,6 @@ Foam::multiLevelDecomp::multiLevelDecomp(const dictionary& decompositionDict)
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::multiLevelDecomp::parallelAware() const
-{
-    forAll(methods_, i)
-    {
-        if (!methods_[i].parallelAware())
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
 
 Foam::labelList Foam::multiLevelDecomp::decompose
 (

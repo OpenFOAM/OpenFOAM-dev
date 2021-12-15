@@ -22,17 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvMeshDistributor::decomposer
+    Foam::fvMeshDistributors::distributor
 
 Description
-    Dynamic mesh redistribution using the decomposer
+    Dynamic mesh redistribution using the distributor specified in
+    decomposeParDict
 
 Usage
     Example of single field based refinement in all cells:
     \verbatim
     distributor
     {
-        type            decomposer;
+        type            distributor;
 
         libs            ("libfvMeshDistributors.so");
 
@@ -46,12 +47,12 @@ Usage
     \endverbatim
 
 SourceFiles
-    fvMeshDistributorDecomposer.C
+    fvMeshDistributorsDistributor.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshDistributorDecomposer_H
-#define fvMeshDistributorDecomposer_H
+#ifndef fvMeshDistributorsDistributor_H
+#define fvMeshDistributorsDistributor_H
 
 #include "fvMeshDistributor.H"
 
@@ -59,18 +60,23 @@ SourceFiles
 
 namespace Foam
 {
+    class decompositionMethod;
+
 namespace fvMeshDistributors
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class decomposer Declaration
+                          Class distributor Declaration
 \*---------------------------------------------------------------------------*/
 
-class decomposer
+class distributor
 :
     public fvMeshDistributor
 {
     // Private Member Data
+
+        //- Cache the decomposer/distributor
+        autoPtr<decompositionMethod> distributor_;
 
         //- Time-step interval between redistribution calls
         label redistributionInterval_;
@@ -88,32 +94,32 @@ class decomposer
         //- Read the projection parameters from dictionary
         void readDict();
 
-        //- Re-decompose the mesh for redistribution
-        void redecompose();
+        //- Distribute the mesh and mesh data
+        void distribute();
 
 
 public:
 
     //- Runtime type information
-    TypeName("decomposer");
+    TypeName("distributor");
 
 
     // Constructors
 
         //- Construct from fvMesh
-        explicit decomposer(fvMesh& mesh);
+        explicit distributor(fvMesh& mesh);
 
         //- Disallow default bitwise copy construction
-        decomposer(const decomposer&) = delete;
+        distributor(const distributor&) = delete;
 
 
     //- Destructor
-    virtual ~decomposer();
+    virtual ~distributor();
 
 
     // Member Functions
 
-        //- Distribute the mesh
+        //- Distribute the
         virtual bool update();
 
         //- Update corresponding to the given map
@@ -132,7 +138,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const decomposer&) = delete;
+        void operator=(const distributor&) = delete;
 };
 
 
