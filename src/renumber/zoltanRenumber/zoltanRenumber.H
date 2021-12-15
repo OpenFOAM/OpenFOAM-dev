@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,26 @@ Class
     Foam::zoltanRenumber
 
 Description
-    Use Zoltan
+    Use Zoltan for renumbering a case in parallel.
+
+    Note: Zoltan methods do not support serial operation.
+
+    Zoltan install:
+    - in your ~/.bashrc:
+            export ZOLTAN_ARCH_PATH=\
+                $WM_THIRD_PARTY_DIR/platforms/linux64Gcc/Zoltan_XXX
+    - unpack into $WM_THIRD_PARTY_DIR
+    - cd Zoltan_XXX
+    - mkdir build
+    - cd build
+    - export CCFLAGS="-fPIC"
+    - export CXXFLAGS="-fPIC"
+    - export CFLAGS="-fPIC"
+    - ../configure \
+        --prefix=$ZOLTAN_ARCH_DIR \
+        --with-ccflags=-fPIC --with-cxxflags=-fPIC
+    - make everything
+    - make install
 
 SourceFiles
     zoltanRenumber.C

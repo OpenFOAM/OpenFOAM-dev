@@ -13,11 +13,11 @@ then
     export LINK_FLAGS="${LINK_FLAGS} -lSloanRenumber"
 fi
 
-if [ -f "${ZOLTAN_ARCH_PATH}/lib/libzoltan.a" -a -f "${FOAM_LIBBIN}/libzoltanRenumber.so" ]
+if [ -f "${ZOLTAN_ARCH_PATH}/lib64/libzoltan.a" -a -f "${FOAM_LIBBIN}/libzoltanRenumber.so" ]
 then
     echo "Found libzoltanRenumber.so  --  enabling zoltan renumbering support."
     export COMPILE_FLAGS="-DFOAM_USE_ZOLTAN"
-    export LINK_FLAGS="${LINK_FLAGS} -lzoltanRenumber -L${ZOLTAN_ARCH_PATH}/lib -lzoltan"
+    export LINK_FLAGS="${LINK_FLAGS} -lzoltanRenumber -L${ZOLTAN_ARCH_PATH}/lib64 -lzoltan"
 fi
 
 wmake $targetType
