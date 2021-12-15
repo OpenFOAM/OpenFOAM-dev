@@ -52,7 +52,7 @@ protected:
 
     // Protected data
 
-        const dictionary& decompositionDict_;
+        dictionary decompositionDict_;
         label nProcessors_;
 
         //- Optional constraints
@@ -148,7 +148,6 @@ public:
 
             //- Like decompose but with uniform weights on the points
             virtual labelList decompose(const polyMesh&, const pointField&);
-
 
             //- Return for every coordinate the wanted processor number. Gets
             //  passed agglomeration map (from fine to coarse cells) and coarse

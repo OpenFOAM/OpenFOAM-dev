@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,7 @@ Foam::autoPtr<Foam::decompositionMethod> Foam::decompositionMethod::New
 {
     const word methodType(decompositionDict.lookup("method"));
 
-    Pout<< "Selecting decompositionMethod " << methodType << endl;
+    Info<< "Selecting decompositionMethod " << methodType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(methodType);

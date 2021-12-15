@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -263,7 +263,6 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 //}
 
 
-// Call scotch with options from dictionary.
 Foam::label Foam::ptscotchDecomp::decompose
 (
     const fileName& meshPath,
@@ -290,7 +289,6 @@ Foam::label Foam::ptscotchDecomp::decompose
 }
 
 
-// Call scotch with options from dictionary.
 Foam::label Foam::ptscotchDecomp::decompose
 (
     const fileName& meshPath,
@@ -621,10 +619,13 @@ Foam::label Foam::ptscotchDecomp::decompose
     {
         Pout<< "SCOTCH_dgraphExit" << endl;
     }
+
     // Release storage for graph
     SCOTCH_dgraphExit(&grafdat);
+
     // Release storage for strategy
     SCOTCH_stratExit(&stradat);
+
     // Release storage for network topology
     SCOTCH_archExit(&archdat);
 
