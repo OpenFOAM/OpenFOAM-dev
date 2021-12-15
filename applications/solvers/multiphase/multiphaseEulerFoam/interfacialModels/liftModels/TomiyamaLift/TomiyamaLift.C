@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "TomiyamaLift.H"
 #include "phasePair.H"
+#include "aspectRatioModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -47,7 +48,8 @@ Foam::liftModels::TomiyamaLift::TomiyamaLift
     const phasePair& pair
 )
 :
-    liftModel(dict, pair)
+    liftModel(dict, pair),
+    aspectRatio_(aspectRatioModel::New(dict.subDict("aspectRatio"), pair))
 {}
 
 
@@ -61,7 +63,10 @@ Foam::liftModels::TomiyamaLift::~TomiyamaLift()
 
 Foam::tmp<Foam::volScalarField> Foam::liftModels::TomiyamaLift::Cl() const
 {
-    const volScalarField EoH(pair_.EoH2());
+    const volScalarField EoH
+    (
+        pair_.Eo(pair_.dispersed().d()/cbrt(aspectRatio_->E()))
+    );
 
     const volScalarField f
     (

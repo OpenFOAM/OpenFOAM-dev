@@ -78,21 +78,6 @@ surfaceTension
     }
 );
 
-aspectRatio
-(
-    (gas in liquid)
-    {
-        type            constant;
-        E0              1.0;
-    }
-
-    (liquid in gas)
-    {
-        type            constant;
-        E0              1.0;
-    }
-);
-
 drag
 (
     (gas in liquid)

@@ -90,45 +90,6 @@ surfaceTension
     }
 );
 
-aspectRatio
-(
-    (air in water)
-    {
-        type            constant;
-        E0              1.0;
-    }
-
-    (water in air)
-    {
-        type            constant;
-        E0              1.0;
-    }
-
-    (air in solid)
-    {
-        type            constant;
-        E0              1.0;
-    }
-
-    (solid in air)
-    {
-        type            constant;
-        E0              1.0;
-    }
-
-    (water in solid)
-    {
-        type            constant;
-        E0              1.0;
-    }
-
-    (solid in water)
-    {
-        type            constant;
-        E0              1.0;
-    }
-);
-
 drag
 (
     (air in water)

@@ -65,12 +65,6 @@ private:
         const uniformDimensionedVectorField& g_;
 
 
-    // Private Member Functions
-
-        // Etvos number for given diameter
-        tmp<volScalarField> EoH(const volScalarField& d) const;
-
-
 public:
 
     // Constructors
@@ -120,11 +114,8 @@ public:
         //- Eotvos number
         tmp<volScalarField> Eo() const;
 
-        //- Eotvos number based on hydraulic diameter type 1
-        tmp<volScalarField> EoH1() const;
-
-        //- Eotvos number based on hydraulic diameter type 2
-        tmp<volScalarField> EoH2() const;
+        //- Eotvos number for given diameter
+        tmp<volScalarField> Eo(const volScalarField& d) const;
 
         //- Surface tension coefficient
         tmp<volScalarField> sigma() const;
@@ -135,8 +126,6 @@ public:
         //- Takahashi Number
         tmp<volScalarField> Ta() const;
 
-        //- Aspect ratio
-        tmp<volScalarField> E() const;
 
         // Access
 

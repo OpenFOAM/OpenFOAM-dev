@@ -63,10 +63,6 @@ surfaceTension
     }
 );
 
-aspectRatio
-(
-);
-
 drag
 (
     (solids in gas)

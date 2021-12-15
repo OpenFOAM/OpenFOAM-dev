@@ -61,9 +61,6 @@ surfaceTension
     }
 );
 
-aspectRatio
-();
-
 drag
 (
     (particles in air)

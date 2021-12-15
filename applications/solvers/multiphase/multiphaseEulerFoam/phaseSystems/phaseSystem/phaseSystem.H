@@ -60,7 +60,6 @@ namespace Foam
 class blendingMethod;
 template<class modelType> class BlendedInterfacialModel;
 class surfaceTensionModel;
-class aspectRatioModel;
 class pressureReference;
 class nonOrthogonalSolutionControl;
 
@@ -126,15 +125,6 @@ protected:
             >
             surfaceTensionModelTable;
 
-        typedef
-            HashTable
-            <
-                autoPtr<aspectRatioModel>,
-                phasePairKey,
-                phasePairKey::hash
-            >
-            aspectRatioModelTable;
-
         typedef HashTable<scalar, phasePairKey, phasePairKey::hash>
             cAlphaTable;
 
@@ -189,9 +179,6 @@ protected:
 
             //- Surface tension models
             surfaceTensionModelTable surfaceTensionModels_;
-
-            //- Aspect ratio models
-            aspectRatioModelTable aspectRatioModels_;
 
 
         //- Flag to indicate that returned lists of fields are "complete"; i.e.,

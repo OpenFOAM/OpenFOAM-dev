@@ -65,9 +65,6 @@ surfaceTension
     }
 );
 
-aspectRatio
-();
-
 interfaceCompression
 ();
 

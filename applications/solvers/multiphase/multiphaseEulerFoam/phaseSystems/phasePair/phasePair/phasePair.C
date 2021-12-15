@@ -27,20 +27,6 @@ License
 #include "phaseSystem.H"
 #include "surfaceTensionModel.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField> Foam::phasePair::EoH
-(
-    const volScalarField& d
-) const
-{
-    return
-        mag(dispersed().rho() - continuous().rho())
-       *mag(g())
-       *sqr(d)
-       /sigma();
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -138,29 +124,20 @@ Foam::tmp<Foam::volScalarField> Foam::phasePair::Pr() const
 
 Foam::tmp<Foam::volScalarField> Foam::phasePair::Eo() const
 {
-    return EoH(dispersed().d());
+    return Eo(dispersed().d());
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::phasePair::EoH1() const
+Foam::tmp<Foam::volScalarField> Foam::phasePair::Eo
+(
+    const volScalarField& d
+) const
 {
     return
-        EoH
-        (
-            dispersed().d()
-           *cbrt(1 + 0.163*pow(Eo(), 0.757))
-        );
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::phasePair::EoH2() const
-{
-    return
-        EoH
-        (
-            dispersed().d()
-           /cbrt(E())
-        );
+        mag(dispersed().rho() - continuous().rho())
+       *mag(g())
+       *sqr(d)
+       /sigma();
 }
 
 
@@ -191,12 +168,6 @@ Foam::tmp<Foam::volScalarField> Foam::phasePair::Mo() const
 Foam::tmp<Foam::volScalarField> Foam::phasePair::Ta() const
 {
     return Re()*pow(Mo(), 0.23);
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::phasePair::E() const
-{
-    return dispersed().fluid().E(*this);
 }
 
 

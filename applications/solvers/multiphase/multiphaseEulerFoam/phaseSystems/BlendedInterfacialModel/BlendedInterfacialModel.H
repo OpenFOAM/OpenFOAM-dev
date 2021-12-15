@@ -36,7 +36,6 @@ SourceFiles
 
 #include "blendingMethod.H"
 #include "phasePair.H"
-#include "orderedPhasePair.H"
 #include "HashPtrTable.H"
 #include "hashedWordList.H"
 #include "geometricZeroField.H"

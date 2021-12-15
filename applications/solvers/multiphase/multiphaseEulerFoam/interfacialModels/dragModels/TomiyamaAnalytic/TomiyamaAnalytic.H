@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,9 @@ SourceFiles
 
 namespace Foam
 {
+
+class aspectRatioModel;
+
 namespace dragModels
 {
 
@@ -70,6 +73,9 @@ class TomiyamaAnalytic
 
         //- Residual aspect ratio
         const dimensionedScalar residualE_;
+
+        //- The aspect ratio model
+        autoPtr<aspectRatioModel> aspectRatio_;
 
 
 public:

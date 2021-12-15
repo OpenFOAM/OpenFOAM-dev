@@ -473,7 +473,6 @@ Foam::phaseSystem::phaseSystem
 
     // Sub-models
     generatePairsAndSubModels("surfaceTension", surfaceTensionModels_);
-    generatePairsAndSubModels("aspectRatio", aspectRatioModels_);
 
     // Update motion fields
     correctKinematics();
@@ -561,25 +560,6 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
     else
     {
         return U/sumAlphaMoving();
-    }
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::phaseSystem::E(const phasePairKey& key) const
-{
-    if (aspectRatioModels_.found(key))
-    {
-        return aspectRatioModels_[key]->E();
-    }
-    else
-    {
-        return volScalarField::New
-        (
-            aspectRatioModel::typeName + ":E",
-            mesh_,
-            dimensionedScalar(dimless, 1)
-        );
     }
 }
 
