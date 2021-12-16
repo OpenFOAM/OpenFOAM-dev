@@ -72,6 +72,14 @@ Foam::LiquidEvaporation<CloudType>::LiquidEvaporation
 :
     PhaseChangeModel<CloudType>(dict, owner, typeName),
     liquids_(owner.thermo().liquids()),
+    condensation_
+    (
+        this->coeffDict().template lookupOrDefault<Switch>
+        (
+            "condensation",
+            false
+        )
+    ),
     activeLiquids_(this->coeffDict().lookup("activeLiquids")),
     liqToCarrierMap_(activeLiquids_.size(), -1),
     liqToLiqMap_(activeLiquids_.size(), -1)
@@ -200,7 +208,13 @@ void Foam::LiquidEvaporation<CloudType>::calculate
         const scalar Cinf = Xc[gid]*pc/(RR*Ts);
 
         // molar flux of vapour [kmol/m2/s]
-        const scalar Ni = max(kc*(Cs - Cinf), 0.0);
+        scalar Ni = kc*(Cs - Cinf);
+
+        // limit if not permitting condensation
+        if (!condensation_)
+        {
+            Ni = max(Ni, 0);
+        }
 
         // mass transfer [kg]
         dMassPC[lid] += Ni*pi*sqr(d)*liquids_.properties()[lid].W()*dt;

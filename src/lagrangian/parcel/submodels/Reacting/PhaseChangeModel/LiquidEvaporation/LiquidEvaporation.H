@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,9 @@ protected:
 
         //- Global liquid properties data
         const liquidMixtureProperties& liquids_;
+
+        //- Whether or not to permit condensation (default false)
+        Switch condensation_;
 
         //- List of active liquid names
         List<word> activeLiquids_;
