@@ -791,28 +791,20 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
         {
             if (mechRedActive_)
             {
+                // Compute concentrations
                 for (label i=0; i<nSpecie_; i++)
                 {
-                    const scalar Yi = Yvf_[i][celli];
-                    c_[i] = rho0*Yi/specieThermos_[i].W();
+                    c_[i] = rho0*Y_[i]/specieThermos_[i].W();
                 }
 
                 // Reduce mechanism change the number of species (only active)
-                mechRed_.reduceMechanism
-                (
-                    p,
-                    T,
-                    c_,
-                    sc_,
-                    cTos_,
-                    sToc_,
-                    celli
-                );
+                mechRed_.reduceMechanism(p, T, c_, cTos_, sToc_, celli);
 
+                // Set the simplified mass fraction field
                 sY_.setSize(nSpecie_);
                 for (label i=0; i<nSpecie_; i++)
                 {
-                    sY_[i] = specieThermos_[sToc(i)].W()*sc_[i]/rho0;
+                    sY_[i] = Y_[sToc(i)];
                 }
             }
 

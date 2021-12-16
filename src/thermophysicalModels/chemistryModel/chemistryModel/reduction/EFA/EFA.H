@@ -34,7 +34,7 @@ SourceFiles
 #ifndef EFA_H
 #define EFA_H
 
-#include "chemistryReduction.H"
+#include "chemistryReductionMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,7 +50,7 @@ namespace chemistryReductionMethods
 template<class ThermoType>
 class EFA
 :
-    public chemistryReduction<ThermoType>
+    public chemistryReductionMethod<ThermoType>
 {
     // Private Data
 
@@ -85,7 +85,6 @@ public:
             const scalar p,
             const scalar T,
             const scalarField& c,
-            DynamicField<scalar>& sc,
             List<label>& ctos,
             DynamicList<label>& stoc,
             const label li

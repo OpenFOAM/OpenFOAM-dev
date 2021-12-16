@@ -34,7 +34,7 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
     chemistryModel<ThermoType>& chemistry
 )
 :
-    chemistryReduction<ThermoType>(dict, chemistry),
+    chemistryReductionMethod<ThermoType>(dict, chemistry),
     searchInitSet_(),
     zprime_(0),
     nbCLarge_(3),
@@ -237,13 +237,12 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
     const scalar p,
     const scalar T,
     const scalarField& c,
-    DynamicField<scalar>& sc,
     List<label>& ctos,
     DynamicList<label>& stoc,
     const label li
 )
 {
-    chemistryReduction<ThermoType>::initReduceMechanism();
+    chemistryReductionMethod<ThermoType>::initReduceMechanism();
 
     scalarField c1(this->chemistry_.nEqns(), 0.0);
     for(label i=0; i<this->nSpecie(); i++)
@@ -494,7 +493,6 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
     // Using the rAB matrix (numerator and denominator separated)
     // compute the R value according to the search initiating set
     scalarField Rvalue(this->nSpecie(),0.0);
-    label speciesNumber = 0;
 
     // Set all species to inactive and activate them according
     // to rAB and initial set
@@ -517,17 +515,14 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
             // When phiLarge and phiProgress >= phiTol then
             // CO, HO2 and fuel are in the SIS
             Q.push(COId_);
-            speciesNumber++;
             this->activeSpecies_[COId_] = true;
             Rvalue[COId_] = 1.0;
             Q.push(HO2Id_);
-            speciesNumber++;
             this->activeSpecies_[HO2Id_] = true;
             Rvalue[HO2Id_] = 1.0;
             forAll(fuelSpeciesID_,i)
             {
                 Q.push(fuelSpeciesID_[i]);
-                speciesNumber++;
                 this->activeSpecies_[fuelSpeciesID_[i]] = true;
                 Rvalue[fuelSpeciesID_[i]] = 1.0;
             }
@@ -538,11 +533,9 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
             // When phiLarge < phiTol and phiProgress >= phiTol then
             // CO, HO2 are in the SIS
             Q.push(COId_);
-            speciesNumber++;
             this->activeSpecies_[COId_] = true;
             Rvalue[COId_] = 1.0;
             Q.push(HO2Id_);
-            speciesNumber++;
             this->activeSpecies_[HO2Id_] = true;
             Rvalue[HO2Id_] = 1.0;
 
@@ -551,7 +544,6 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
                 forAll(fuelSpeciesID_,i)
                 {
                     Q.push(fuelSpeciesID_[i]);
-                    speciesNumber++;
                     this->activeSpecies_[fuelSpeciesID_[i]] = true;
                     Rvalue[fuelSpeciesID_[i]] = 1.0;
                 }
@@ -562,12 +554,10 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
             // When phiLarge and phiProgress< phiTol then
             // CO2, H2O are in the SIS
             Q.push(CO2Id_);
-            speciesNumber++;
             this->activeSpecies_[CO2Id_] = true;
             Rvalue[CO2Id_] = 1.0;
 
             Q.push(H2OId_);
-            speciesNumber++;
             this->activeSpecies_[H2OId_] = true;
             Rvalue[H2OId_] = 1.0;
             if (forceFuelInclusion_)
@@ -575,7 +565,6 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
                 forAll(fuelSpeciesID_,i)
                 {
                     Q.push(fuelSpeciesID_[i]);
-                    speciesNumber++;
                     this->activeSpecies_[fuelSpeciesID_[i]] = true;
                     Rvalue[fuelSpeciesID_[i]] = 1.0;
                 }
@@ -585,7 +574,6 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
         if (T>NOxThreshold_ && NOId_!=-1)
         {
             Q.push(NOId_);
-            speciesNumber++;
             this->activeSpecies_[NOId_] = true;
             Rvalue[NOId_] = 1.0;
         }
@@ -596,7 +584,6 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
         {
             label q = SIS[i];
             this->activeSpecies_[q] = true;
-            speciesNumber++;
             Q.push(q);
             Rvalue[q] = 1.0;
         }
@@ -631,7 +618,6 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
                         if (!this->activeSpecies_[otherSpec])
                         {
                             this->activeSpecies_[otherSpec] = true;
-                            speciesNumber++;
                         }
                     }
                 }
@@ -639,64 +625,7 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
         }
     }
 
-    // Put a flag on the reactions containing at least one removed species
-    forAll(this->chemistry_.reactions(), i)
-    {
-        const Reaction<ThermoType>& R = this->chemistry_.reactions()[i];
-        this->reactionsDisabled_[i] = false;
-
-        forAll(R.lhs(), s)
-        {
-            label ss = R.lhs()[s].index;
-            if (!this->activeSpecies_[ss])
-            {
-                // Flag the reaction to disable it
-                this->reactionsDisabled_[i] = true;
-                break;
-            }
-        }
-        if (!this->reactionsDisabled_[i])
-        {
-            forAll(R.rhs(), s)
-            {
-                label ss = R.rhs()[s].index;
-                if (!this->activeSpecies_[ss])
-                {
-                    // Flag the reaction to disable it
-                    this->reactionsDisabled_[i] = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    this->nActiveSpecies_ = speciesNumber;
-    sc.setSize(this->nActiveSpecies_ + 2);
-    stoc.setSize(this->nActiveSpecies_);
-
-    label j = 0;
-    for (label i=0; i<this->nSpecie(); i++)
-    {
-        if (this->activeSpecies_[i])
-        {
-            stoc[j] = i;
-            sc[j] = c[i];
-            ctos[i] = j++;
-            if (!this->chemistry_.active(i))
-            {
-                this->chemistry_.setActive(i);
-            }
-        }
-        else
-        {
-            ctos[i] = -1;
-        }
-     }
-
-    sc[this->nActiveSpecies_] = T;
-    sc[this->nActiveSpecies_ + 1] = p;
-
-    chemistryReduction<ThermoType>::endReduceMechanism();
+    chemistryReductionMethod<ThermoType>::endReduceMechanism(ctos, stoc);
 }
 
 

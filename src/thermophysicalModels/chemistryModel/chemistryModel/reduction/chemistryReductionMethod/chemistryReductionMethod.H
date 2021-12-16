@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,9 @@ Description
 
 SourceFiles
     chemistryReductionMethod.C
+    chemistryReductionMethods.C
+    chemistryReductionMethodNew.C
+    chemistryReductionMethodI.H
 
 \*---------------------------------------------------------------------------*/
 
@@ -37,6 +40,9 @@ SourceFiles
 
 #include "IOdictionary.H"
 #include "DynamicField.H"
+#include "Switch.H"
+#include "clockTime.H"
+#include "OFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,26 +53,71 @@ template<class ThermoType>
 class chemistryModel;
 
 /*---------------------------------------------------------------------------*\
-                       Class chemistrySolver Declaration
+                   Class chemistryReductionMethod Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
 class chemistryReductionMethod
 {
-    // Private Data
-
-        //- Cache the number of species
-        const label nSpecie_;
-
-
 protected:
 
     // Protected Data
 
+        //- Dictionary that store the algorithm data
+        const dictionary coeffsDict_;
+
+        //- Reference to the chemistry model
+        chemistryModel<ThermoType>& chemistry_;
+
+        //- Total number of species
+        const label nSpecie_;
+
         //- Number of active species
         label nActiveSpecies_;
 
+        //- List of disabled reactions (disabled = true)
         Field<bool> reactionsDisabled_;
+
+        //- List of active species (active = true)
+        List<bool> activeSpecies_;
+
+
+    //- Protected Member Functions
+
+        //- Initialise reduction of the mechanism
+        void initReduceMechanism();
+
+        //- End reduction of the mechanism
+        void endReduceMechanism(List<label>& ctos, DynamicList<label>& stoc);
+
+
+private:
+
+    // Private Data
+
+        //- Switch to select performance logging
+        Switch log_;
+
+        //- Tolerance for the mechanism reduction algorithm
+        scalar tolerance_;
+
+        //- Clock time for logging
+        const clockTime clockTime_;
+
+        //- ...
+        int64_t sumnActiveSpecies_;
+
+        //- ...
+        int64_t sumn_;
+
+        //- ...
+        scalar reduceMechCpuTime_;
+
+        // Log file for the average time spent reducing the chemistry
+        autoPtr<OFstream> cpuReduceFile_;
+
+        // Write average number of species
+        autoPtr<OFstream> nActiveSpeciesFile_;
 
 
 public:
@@ -114,8 +165,11 @@ public:
 
     // Member Functions
 
-        //- Is mechanism reduction active?
-        virtual bool active() const = 0;
+        //- Return mechanism reduction active
+        virtual bool active() const
+        {
+            return true;
+        }
 
         //- Return the number of species
         inline label nSpecie();
@@ -126,10 +180,11 @@ public:
         //- Return the tolerance
         inline scalar tolerance() const;
 
-        inline bool reactionDisabled(const label i) const
-        {
-            return reactionsDisabled_[i];
-        }
+        //- Return the active species
+        inline const List<bool>& activeSpecies() const;
+
+        //- Return whether or not a reaction is disabled
+        inline bool reactionDisabled(const label i) const;
 
         //- Reduce the mechanism
         virtual void reduceMechanism
@@ -137,13 +192,13 @@ public:
             const scalar p,
             const scalar T,
             const scalarField& c,
-            DynamicField<scalar>& sc,
             List<label>& ctos,
             DynamicList<label>& stoc,
             const label li
         ) = 0;
 
-        virtual void update() = 0;
+        //- ...
+        virtual void update();
 };
 
 

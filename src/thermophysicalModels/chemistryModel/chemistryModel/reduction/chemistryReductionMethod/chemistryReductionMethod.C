@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,10 +35,25 @@ Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
     Foam::chemistryModel<ThermoType>& chemistry
 )
 :
+    coeffsDict_(dict.subDict("reduction")),
+    chemistry_(chemistry),
     nSpecie_(chemistry.nSpecie()),
     nActiveSpecies_(chemistry.nSpecie()),
-    reactionsDisabled_(chemistry.reactions().size(), false)
-{}
+    reactionsDisabled_(chemistry.nReaction(), false),
+    activeSpecies_(chemistry.nSpecie(), false),
+    log_(coeffsDict_.lookupOrDefault<Switch>("log", false)),
+    tolerance_(coeffsDict_.lookupOrDefault<scalar>("tolerance", 1e-4)),
+    clockTime_(clockTime()),
+    sumnActiveSpecies_(0),
+    sumn_(0),
+    reduceMechCpuTime_(0)
+{
+    if (log_)
+    {
+        cpuReduceFile_ = chemistry.logFile("cpu_reduce.out");
+        nActiveSpeciesFile_ = chemistry.logFile("nActiveSpecies.out");
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -46,6 +61,113 @@ Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
 template<class ThermoType>
 Foam::chemistryReductionMethod<ThermoType>::~chemistryReductionMethod()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ThermoType>
+void Foam::chemistryReductionMethod<ThermoType>::initReduceMechanism()
+{
+    if (log_)
+    {
+        clockTime_.timeIncrement();
+    }
+}
+
+
+template<class ThermoType>
+void Foam::chemistryReductionMethod<ThermoType>::endReduceMechanism
+(
+    List<label>& ctos,
+    DynamicList<label>& stoc
+)
+{
+    // Disable reactions containing removed species
+    forAll(chemistry_.reactions(), i)
+    {
+        const Reaction<ThermoType>& R = chemistry_.reactions()[i];
+        reactionsDisabled_[i] = false;
+
+        forAll(R.lhs(), s)
+        {
+            label ss = R.lhs()[s].index;
+            if (!activeSpecies_[ss])
+            {
+                reactionsDisabled_[i] = true;
+                break;
+            }
+        }
+
+        if (!reactionsDisabled_[i])
+        {
+            forAll(R.rhs(), s)
+            {
+                label ss = R.rhs()[s].index;
+                if (!activeSpecies_[ss])
+                {
+                    reactionsDisabled_[i] = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Set the total number of active species
+    nActiveSpecies_ = count(activeSpecies_, true);
+
+    // Set the indexing arrays
+    stoc.setSize(nActiveSpecies_);
+    for (label i=0, j=0; i<nSpecie(); i++)
+    {
+        if (activeSpecies_[i])
+        {
+            stoc[j] = i;
+            ctos[i] = j++;
+            if (!chemistry_.active(i))
+            {
+                chemistry_.setActive(i);
+            }
+        }
+        else
+        {
+            ctos[i] = -1;
+        }
+    }
+
+    // Change the number of species in the chemistry model
+    chemistry_.setNSpecie(nActiveSpecies_);
+
+    if (log_)
+    {
+        sumnActiveSpecies_ += nActiveSpecies_;
+        sumn_++;
+        reduceMechCpuTime_ += clockTime_.timeIncrement();
+    }
+}
+
+
+template<class ThermoType>
+void Foam::chemistryReductionMethod<ThermoType>::update()
+{
+    if (log_)
+    {
+        cpuReduceFile_()
+            << chemistry_.time().userTimeValue()
+            << "    " << reduceMechCpuTime_ << endl;
+
+        if (sumn_)
+        {
+            // Write average number of species
+            nActiveSpeciesFile_()
+                << chemistry_.time().userTimeValue()
+                << "    " << sumnActiveSpecies_/sumn_ << endl;
+        }
+
+        sumnActiveSpecies_ = 0;
+        sumn_ = 0;
+        reduceMechCpuTime_ = 0;
+    }
+}
 
 
 // ************************************************************************* //

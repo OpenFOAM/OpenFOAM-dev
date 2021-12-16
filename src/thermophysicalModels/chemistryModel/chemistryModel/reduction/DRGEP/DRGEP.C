@@ -35,7 +35,7 @@ Foam::chemistryReductionMethods::DRGEP<ThermoType>::DRGEP
     chemistryModel<ThermoType>& chemistry
 )
 :
-    chemistryReduction<ThermoType>(dict, chemistry),
+    chemistryReductionMethod<ThermoType>(dict, chemistry),
     searchInitSet_(),
     sC_(this->nSpecie(), 0),
     sH_(this->nSpecie(), 0),
@@ -43,7 +43,7 @@ Foam::chemistryReductionMethods::DRGEP<ThermoType>::DRGEP
     sN_(this->nSpecie(), 0),
     NGroupBased_(50)
 {
-    chemistryReduction<ThermoType>::initReduceMechanism();
+    chemistryReductionMethod<ThermoType>::initReduceMechanism();
 
     const wordHashSet initSet(this->coeffsDict_.lookup("initialSet"));
     forAllConstIter(wordHashSet, initSet, iter)
@@ -106,7 +106,6 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
     const scalar p,
     const scalar T,
     const scalarField& c,
-    DynamicField<scalar>& sc,
     List<label>& ctos,
     DynamicList<label>& stoc,
     const label li
@@ -323,15 +322,16 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
     // Using the rAB matrix (numerator and denominator separated)
     // compute the R value according to the search initiating set
     scalarField Rvalue(this->nSpecie(),0.0);
-    label speciesNumber = 0;
     List<bool> disabledSpecies(this->nSpecie(),false);
 
     // set all species to inactive and activate them according
     // to rAB and initial set
+    label NActiveSpecies = 0;
     for (label i=0; i<this->nSpecie(); i++)
     {
         this->activeSpecies_[i] = false;
     }
+
     // Initialise the FIFOStack for search set
     FIFOStack<label> Q;
     const labelList& SIS(this->searchInitSet_);
@@ -384,7 +384,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
         if (alphaA > this->tolerance())
         {
             this->activeSpecies_[q] = true;
-            speciesNumber++;
+            NActiveSpecies ++;
             Q.push(q);
             QStart.append(q);
             alphaQ.append(1.0);
@@ -413,7 +413,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
         Q.push(specID);
         QStart.append(specID);
         alphaQ.append(1.0);
-        speciesNumber++;
+        NActiveSpecies ++;
         Rvalue[specID] = 1.0;
         this->activeSpecies_[specID] = true;
     }
@@ -446,7 +446,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
                         if (!this->activeSpecies_[otherSpec])
                         {
                             this->activeSpecies_[otherSpec] = true;
-                            speciesNumber++;
+                            NActiveSpecies ++;
                         }
                     }
                 }
@@ -456,7 +456,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
 
     // Group-based reduction
     // number of species disabled in the first step
-    label NDisabledSpecies(this->nSpecie()-speciesNumber);
+    label NDisabledSpecies(this->nSpecie() - NActiveSpecies);
 
     // while the number of removed species is greater than NGroupBased, the rAB
     // are reevaluated according to the group based definition for each loop the
@@ -648,7 +648,6 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
                                 if (!this->activeSpecies_[otherSpec])
                                 {
                                     this->activeSpecies_[otherSpec] = true;
-                                    speciesNumber++;
                                     NDisabledSpecies--;
                                 }
                             }
@@ -659,62 +658,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
         }
     }
 
-    // End of group-based reduction
-
-    // Put a flag on the reactions containing at least one removed species
-    forAll(this->chemistry_.reactions(), i)
-    {
-        const Reaction<ThermoType>& R = this->chemistry_.reactions()[i];
-        this->reactionsDisabled_[i] = false;
-        forAll(R.lhs(), s)
-        {
-            label ss = R.lhs()[s].index;
-            if (!this->activeSpecies_[ss])
-            {
-                this->reactionsDisabled_[i] = true;
-                break;
-            }
-        }
-        if (!this->reactionsDisabled_[i])
-        {
-            forAll(R.rhs(), s)
-            {
-                label ss = R.rhs()[s].index;
-                if (!this->activeSpecies_[ss])
-                {
-                    this->reactionsDisabled_[i] = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    this->nActiveSpecies_ = speciesNumber;
-    sc.setSize(this->nActiveSpecies_+2);
-    stoc.setSize(this->nActiveSpecies_);
-
-    label j = 0;
-    for (label i=0; i<this->nSpecie(); i++)
-    {
-        if (this->activeSpecies_[i])
-        {
-            stoc[j] = i;
-            sc[j] = c[i];
-            ctos[i] = j++;
-            if (!this->chemistry_.active(i))
-            {
-                this->chemistry_.setActive(i);
-            }
-        }
-        else
-        {
-            ctos[i] = -1;
-        }
-    }
-    sc[this->nActiveSpecies_] = T;
-    sc[this->nActiveSpecies_+1] = p;
-
-    chemistryReduction<ThermoType>::endReduceMechanism();
+    chemistryReductionMethod<ThermoType>::endReduceMechanism(ctos, stoc);
 }
 
 
