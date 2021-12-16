@@ -35,7 +35,6 @@ SourceFiles
 #ifndef surfaceFilmRegionModel_H
 #define surfaceFilmRegionModel_H
 
-#include "surfaceFilmModel.H"
 #include "singleLayerRegion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -53,7 +52,6 @@ namespace surfaceFilmModels
 
 class surfaceFilmRegionModel
 :
-    public surfaceFilmModel,
     public singleLayerRegion
 {
     // Private data

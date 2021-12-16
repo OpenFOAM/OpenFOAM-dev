@@ -1,8 +1,5 @@
 # Surface film models
-surfaceFilmModel/surfaceFilmModel.C
-surfaceFilmModel/surfaceFilmModelNew.C
 surfaceFilmRegionModel/surfaceFilmRegionModel.C
-noFilm/noFilm.C
 kinematicSingleLayer/kinematicSingleLayer.C
 thermoSingleLayer/thermoSingleLayer.C
 

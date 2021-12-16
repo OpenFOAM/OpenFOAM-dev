@@ -58,21 +58,12 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
 )
 :
     fvModel(sourceName, modelType, dict, mesh),
-    phaseName_(dict.lookup("phase")),
-    thermo_
+    surfaceFilm_
     (
-        mesh.lookupObject<fluidThermo>
-        (
-            IOobject::groupName(physicalProperties::typeName, phaseName_)
-        )
-    ),
-    film_
-    (
-        regionModels::surfaceFilmModel::New
-        (
-            mesh,
-            mesh.lookupObject<uniformDimensionedVectorField>("g")
-        )
+        regionModels::surfaceFilmModels::thermoSingleLayer::typeName,
+        mesh,
+        mesh.lookupObject<uniformDimensionedVectorField>("g"),
+        "surfaceFilm"
     ),
     curTimeIndex_(-1)
 {}
@@ -82,7 +73,14 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
 
 Foam::wordList Foam::fv::VoFSurfaceFilm::addSupFields() const
 {
-    return wordList({thermo_.rho()().name(), "U", "T"});
+    return wordList
+    (
+        {
+            surfaceFilm_.rhoPrimary().name(),
+            surfaceFilm_.UPrimary().name(),
+            surfaceFilm_.TPrimary().name()
+        }
+    );
 }
 
 
@@ -93,7 +91,7 @@ void Foam::fv::VoFSurfaceFilm::correct()
         return;
     }
 
-    film_->evolve();
+    surfaceFilm_.evolve();
 
     curTimeIndex_ = mesh().time().timeIndex();
 }
@@ -111,17 +109,18 @@ void Foam::fv::VoFSurfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == thermo_.rho()().name())
+    if (fieldName == surfaceFilm_.rhoPrimary().name())
     {
-        eqn += film_->Srho();
+        eqn += surfaceFilm_.Srho();
     }
-    else if (fieldName == "T")
+    else if (fieldName == surfaceFilm_.TPrimary().name())
     {
-        const volScalarField::Internal Cv(thermo_.Cv());
+        const volScalarField::Internal Cv(surfaceFilm_.primaryThermo().Cv());
 
         eqn +=
-            film_->Sh()()/Cv
-          + film_->Srho()*(eqn.psi() - thermo_.he()/Cv);
+            surfaceFilm_.Sh()()/Cv
+          + surfaceFilm_.Srho()
+           *(eqn.psi() - surfaceFilm_.primaryThermo().he()/Cv);
     }
     else
     {
@@ -144,7 +143,7 @@ void Foam::fv::VoFSurfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    eqn += film_->SU();
+    eqn += surfaceFilm_.SU();
 }
 
 

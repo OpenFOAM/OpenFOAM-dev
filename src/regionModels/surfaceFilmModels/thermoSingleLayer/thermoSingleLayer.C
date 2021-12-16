@@ -60,8 +60,6 @@ namespace surfaceFilmModels
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(thermoSingleLayer, 0);
-addToRunTimeSelectionTable(surfaceFilmRegionModel, thermoSingleLayer, mesh);
-
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 

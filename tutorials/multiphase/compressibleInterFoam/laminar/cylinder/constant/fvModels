@@ -29,8 +29,6 @@ VoFSurfaceFilm
     type    VoFSurfaceFilm;
 
     libs    ("libVoFSurfaceFilm.so");
-
-    phase   liquid;
 }
 
 // ************************************************************************* //

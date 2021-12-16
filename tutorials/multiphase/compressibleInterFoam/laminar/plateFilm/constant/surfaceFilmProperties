@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-surfaceFilmModel thermoSingleLayer;
-
 regionName      plateRegion;
 
 phase           liquid;

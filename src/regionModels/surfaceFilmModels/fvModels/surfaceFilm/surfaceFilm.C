@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceFilm.H"
+#include "uniformDimensionedFields.H"
 #include "basicSpecieMixture.H"
 #include "fvMatrix.H"
 #include "addToRunTimeSelectionTable.H"
@@ -57,17 +58,12 @@ Foam::fv::surfaceFilm::surfaceFilm
 )
 :
     fvModel(sourceName, modelType, dict, mesh),
-    primaryThermo_
-    (
-        mesh.lookupObject<fluidThermo>(physicalProperties::typeName)
-    ),
     surfaceFilm_
     (
-        regionModels::surfaceFilmModel::New
-        (
-            mesh,
-            mesh.lookupObject<uniformDimensionedVectorField>("g")
-        )
+        regionModels::surfaceFilmModels::thermoSingleLayer::typeName,
+        mesh,
+        mesh.lookupObject<uniformDimensionedVectorField>("g"),
+        "surfaceFilm"
     ),
     curTimeIndex_(-1)
 {}
@@ -77,12 +73,19 @@ Foam::fv::surfaceFilm::surfaceFilm
 
 Foam::wordList Foam::fv::surfaceFilm::addSupFields() const
 {
-    wordList fieldNames({"rho", "U", primaryThermo_.he().name()});
+    wordList fieldNames
+    (
+        {
+            surfaceFilm_.rhoPrimary().name(),
+            surfaceFilm_.UPrimary().name(),
+            surfaceFilm_.primaryThermo().he().name()
+        }
+    );
 
-    if (isA<basicSpecieMixture>(primaryThermo_))
+    if (isA<basicSpecieMixture>(surfaceFilm_.primaryThermo()))
     {
         const basicSpecieMixture& composition =
-            refCast<const basicSpecieMixture>(primaryThermo_);
+            refCast<const basicSpecieMixture>(surfaceFilm_.primaryThermo());
 
         const PtrList<volScalarField>& Y = composition.Y();
 
@@ -106,7 +109,7 @@ void Foam::fv::surfaceFilm::correct()
         return;
     }
 
-    surfaceFilm_->evolve();
+    surfaceFilm_.evolve();
 
     curTimeIndex_ = mesh().time().timeIndex();
 }
@@ -123,9 +126,9 @@ void Foam::fv::surfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == "rho")
+    if (fieldName == surfaceFilm_.rhoPrimary().name())
     {
-        eqn += surfaceFilm_->Srho();
+        eqn += surfaceFilm_.Srho();
     }
     else
     {
@@ -148,26 +151,27 @@ void Foam::fv::surfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == "rho")
+    if (fieldName == surfaceFilm_.rhoPrimary().name())
     {
-        eqn += surfaceFilm_->Srho();
+        eqn += surfaceFilm_.Srho();
     }
-    else if (fieldName == primaryThermo_.he().name())
+    else if (fieldName == surfaceFilm_.primaryThermo().he().name())
     {
-        eqn += surfaceFilm_->Sh();
+        eqn += surfaceFilm_.Sh();
     }
     else if
     (
-        isA<basicSpecieMixture>(primaryThermo_)
-     && refCast<const basicSpecieMixture>(primaryThermo_).contains
+        isA<basicSpecieMixture>(surfaceFilm_.primaryThermo())
+     && refCast<const basicSpecieMixture>(surfaceFilm_.primaryThermo()).contains
         (
             eqn.psi().name()
         )
     )
     {
-        eqn += surfaceFilm_->SYi
+        eqn += surfaceFilm_.SYi
         (
-            refCast<const basicSpecieMixture>(primaryThermo_).index(eqn.psi())
+            refCast<const basicSpecieMixture>(surfaceFilm_.primaryThermo())
+           .index(eqn.psi())
         );
     }
     else
@@ -191,9 +195,9 @@ void Foam::fv::surfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == "U")
+    if (fieldName == surfaceFilm_.UPrimary().name())
     {
-        eqn += surfaceFilm_->SU();
+        eqn += surfaceFilm_.SU();
     }
     else
     {
