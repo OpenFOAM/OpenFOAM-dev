@@ -67,6 +67,10 @@ class surfaceFilm
         //- The surface film model
         regionModels::surfaceFilmModels::thermoSingleLayer surfaceFilm_;
 
+        //- List of fields for which the fvModel adds source term
+        //  to the transport equation
+        wordList fieldNames_;
+
         //- Current time index (used for updating)
         mutable label curTimeIndex_;
 

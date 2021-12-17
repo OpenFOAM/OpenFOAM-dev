@@ -65,23 +65,21 @@ Foam::fv::surfaceFilm::surfaceFilm
         mesh.lookupObject<uniformDimensionedVectorField>("g"),
         "surfaceFilm"
     ),
-    curTimeIndex_(-1)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::wordList Foam::fv::surfaceFilm::addSupFields() const
-{
-    wordList fieldNames
+    fieldNames_
     (
         {
-            surfaceFilm_.rhoPrimary().name(),
+            mesh.foundObject<volScalarField>
+            (
+                IOobject::groupName("rho", surfaceFilm_.phaseName())
+            )
+          ? IOobject::groupName("rho", surfaceFilm_.phaseName())
+          : surfaceFilm_.primaryThermo().rho()().name(),
             surfaceFilm_.UPrimary().name(),
             surfaceFilm_.primaryThermo().he().name()
         }
-    );
-
+    ),
+    curTimeIndex_(-1)
+{
     if (isA<basicSpecieMixture>(surfaceFilm_.primaryThermo()))
     {
         const basicSpecieMixture& composition =
@@ -93,12 +91,18 @@ Foam::wordList Foam::fv::surfaceFilm::addSupFields() const
         {
             if (composition.solve(i))
             {
-                fieldNames.append(Y[i].name());
+                fieldNames_.append(Y[i].name());
             }
         }
     }
+}
 
-    return fieldNames;
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::wordList Foam::fv::surfaceFilm::addSupFields() const
+{
+    return fieldNames_;
 }
 
 
@@ -126,7 +130,7 @@ void Foam::fv::surfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == surfaceFilm_.rhoPrimary().name())
+    if (fieldName == fieldNames_[0])
     {
         eqn += surfaceFilm_.Srho();
     }
@@ -151,11 +155,11 @@ void Foam::fv::surfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == surfaceFilm_.rhoPrimary().name())
+    if (fieldName == fieldNames_[0])
     {
         eqn += surfaceFilm_.Srho();
     }
-    else if (fieldName == surfaceFilm_.primaryThermo().he().name())
+    else if (fieldName == fieldNames_[2])
     {
         eqn += surfaceFilm_.Sh();
     }
@@ -195,7 +199,7 @@ void Foam::fv::surfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == surfaceFilm_.UPrimary().name())
+    if (fieldName == fieldNames_[1])
     {
         eqn += surfaceFilm_.SU();
     }
