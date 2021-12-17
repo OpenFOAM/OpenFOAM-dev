@@ -138,16 +138,15 @@ namespace Foam
 #include "JanevReactionRate.H"
 #include "powerSeriesReactionRate.H"
 
+#include "LangmuirHinshelwoodReactionRate.H"
+#include "MichaelisMentenReactionRate.H"
+
 #include "ChemicallyActivatedReactionRate.H"
 #include "FallOffReactionRate.H"
 
 #include "LindemannFallOffFunction.H"
 #include "SRIFallOffFunction.H"
 #include "TroeFallOffFunction.H"
-
-#include "LangmuirHinshelwoodReactionRate.H"
-
-#include "MichaelisMentenReactionRate.H"
 
 namespace Foam
 {
@@ -158,6 +157,9 @@ namespace Foam
     makeIRNReactions(thirdBodyArrheniusReactionRate, ThermoPhysics);
     makeIRReactions(JanevReactionRate, ThermoPhysics);
     makeIRReactions(powerSeriesReactionRate, ThermoPhysics);
+
+    makeIRReactions(LangmuirHinshelwoodReactionRate, ThermoPhysics);
+    makeIReactions(MichaelisMentenReactionRate, ThermoPhysics);
 
     makeIRRPressureDependentReactions
     (
