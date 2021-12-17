@@ -145,6 +145,12 @@ public:
         //- Construct from components
         chemistryReductionMethod
         (
+            chemistryModel<ThermoType>& chemistry
+        );
+
+        //- Construct from components
+        chemistryReductionMethod
+        (
             const IOdictionary& dict,
             chemistryModel<ThermoType>& chemistry
         );

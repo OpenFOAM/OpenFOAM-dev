@@ -34,7 +34,7 @@ Foam::chemistryReductionMethods::none<ThermoType>::none
     chemistryModel<ThermoType>& chemistry
 )
 :
-    chemistryReductionMethod<ThermoType>(dict, chemistry)
+    chemistryReductionMethod<ThermoType>(chemistry)
 {}
 
 

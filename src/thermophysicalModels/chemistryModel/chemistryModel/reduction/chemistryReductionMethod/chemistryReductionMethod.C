@@ -31,6 +31,27 @@ License
 template<class ThermoType>
 Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
 (
+    Foam::chemistryModel<ThermoType>& chemistry
+)
+:
+    coeffsDict_(),
+    chemistry_(chemistry),
+    nSpecie_(chemistry.nSpecie()),
+    nActiveSpecies_(chemistry.nSpecie()),
+    reactionsDisabled_(chemistry.nReaction(), false),
+    activeSpecies_(chemistry.nSpecie(), true),
+    log_(false),
+    tolerance_(NaN),
+    clockTime_(clockTime()),
+    sumnActiveSpecies_(0),
+    sumn_(0),
+    reduceMechCpuTime_(0)
+{}
+
+
+template<class ThermoType>
+Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
+(
     const Foam::IOdictionary& dict,
     Foam::chemistryModel<ThermoType>& chemistry
 )
