@@ -323,6 +323,9 @@ public:
 
         // Thermo properties
 
+            //- Return the name of the phase deposited to form the film
+            inline const word& phaseName() const;
+
             //- Return the film density [kg/m^3]
             inline const volScalarField& rho() const;
 

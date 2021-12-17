@@ -43,6 +43,12 @@ inline const dimensionedScalar& kinematicSingleLayer::deltaSmall() const
 }
 
 
+inline const word& kinematicSingleLayer::phaseName() const
+{
+    return phaseName_;
+}
+
+
 inline const volScalarField& kinematicSingleLayer::rho() const
 {
     return thermo_->rho();
