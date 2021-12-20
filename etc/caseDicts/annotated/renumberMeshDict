@@ -43,7 +43,9 @@ method          CuthillMcKee;
 //method          random;
 //method          structured;
 //method          spring;
-//method          zoltan;             // only if compiled with zoltan support
+
+//method          zoltan;
+//libs            ("libzoltanRenumber.so");
 
 //CuthillMcKeeCoeffs
 //{

@@ -90,121 +90,6 @@ static void get_vertex_list
 }
 
 
-static void get_num_edges_list
-(
-    void* data,
-    int nGID,
-    int nLID,
-    int nCells,
-    ZOLTAN_ID_PTR globalIDs,
-    ZOLTAN_ID_PTR localIDs,
-    int* numEdges,
-    int* ierr
-)
-{
-  const Foam::polyMesh& mesh = *static_cast<const Foam::polyMesh*>(data);
-
-    if ((nGID != 1) || (nLID != 1) || (nCells != mesh.nCells()))
-    {
-        *ierr = ZOLTAN_FATAL;
-        return;
-    }
-
-    for (Foam::label i=0; i<nCells; i++)
-    {
-        const Foam::cell& cFaces = mesh.cells()[localIDs[i]];
-
-        forAll(cFaces, cFacei)
-        {
-            Foam::label n = 0;
-
-            if (mesh.isInternalFace(cFaces[cFacei]))
-            {
-                n++;
-            }
-
-            numEdges[i] = n;
-        }
-    }
-
-    *ierr = ZOLTAN_OK;
-}
-
-
-static void get_edge_list
-(
-    void* data,
-    int nGID,
-    int nLID,
-    int nCells,
-    ZOLTAN_ID_PTR globalIDs,
-    ZOLTAN_ID_PTR localIDs,
-    int* num_edges,
-    ZOLTAN_ID_PTR nborGID,
-    int* nborProc,
-    int wgt_dim,
-    float* ewgts,
-    int* ierr
-)
-{
-    const Foam::polyMesh& mesh = *static_cast<const Foam::polyMesh*>(data);
-
-    if
-    (
-        (nGID != 1)
-     || (nLID != 1)
-     || (nCells != mesh.nCells())
-     || (wgt_dim != 1)
-    )
-    {
-        *ierr = ZOLTAN_FATAL;
-        return;
-    }
-
-    ZOLTAN_ID_TYPE* nextNbor = nborGID;
-    int* nextProc = nborProc;
-    float* nextWgt = ewgts;
-
-    for (Foam::label i=0; i < nCells; i++)
-    {
-        const Foam::label celli = localIDs[i];
-        const Foam::cell& cFaces = mesh.cells()[celli];
-
-        forAll(cFaces, cFacei)
-        {
-            Foam::label n = 0;
-
-            const Foam::label facei = cFaces[cFacei];
-
-            if (mesh.isInternalFace(facei))
-            {
-                Foam::label nbr = mesh.faceOwner()[facei];
-
-                if (nbr == celli)
-                {
-                    nbr = mesh.faceNeighbour()[facei];
-                }
-
-                // Note: global index
-                *nextNbor++ = nbr;
-                *nextProc++ = 0;
-                *nextWgt++ = 1.0;
-
-                n++;
-            }
-
-            if (n != num_edges[i])
-            {
-                *ierr = ZOLTAN_FATAL;
-                return;
-            }
-        }
-    }
-
-    *ierr = ZOLTAN_OK;
-}
-
-
 static int get_mesh_dim(void* data, int* ierr)
 {
     const Foam::polyMesh& mesh = *static_cast<const Foam::polyMesh*>(data);
@@ -266,8 +151,7 @@ static void get_geom_list
 
 Foam::zoltanRenumber::zoltanRenumber(const dictionary& renumberDict)
 :
-    renumberMethod(renumberDict),
-    coeffsDict_(renumberDict.optionalSubDict(typeName+"Coeffs"))
+    renumberMethod(renumberDict)
 {}
 
 
@@ -301,6 +185,10 @@ Foam::labelList Foam::zoltanRenumber::renumber
     struct Zoltan_Struct *zz = Zoltan_Create(PstreamGlobals::MPI_COMM_FOAM);
 
     {
+        // Set default order method to LOCAL_HSFC
+        Zoltan_Set_Param(zz, "ORDER_METHOD", "LOCAL_HSFC");
+        Zoltan_Set_Param(zz, "ORDER_TYPE", "LOCAL");
+
         forAllConstIter(IDLList<entry>, coeffsDict_, iter)
         {
             if (!iter().isDict())
@@ -317,18 +205,12 @@ Foam::labelList Foam::zoltanRenumber::renumber
 
         void* meshPtr = &const_cast<polyMesh&>(mesh);
 
-        Zoltan_Set_Param(zz, "ORDER_TYPE", "LOCAL");
-
         Zoltan_Set_Num_Obj_Fn(zz, get_number_of_vertices, meshPtr);
         Zoltan_Set_Obj_List_Fn(zz, get_vertex_list, meshPtr);
 
         // Callbacks for geometry
         Zoltan_Set_Num_Geom_Fn(zz, get_mesh_dim, meshPtr);
         Zoltan_Set_Geom_Multi_Fn(zz, get_geom_list, meshPtr);
-
-        // Callbacks for connectivity
-        Zoltan_Set_Num_Edges_Multi_Fn(zz, get_num_edges_list, meshPtr);
-        Zoltan_Set_Edge_List_Multi_Fn(zz, get_edge_list, meshPtr);
     }
 
     // Local to global cell index mapper

@@ -32,7 +32,7 @@ Description
     Zoltan install:
     - in your ~/.bashrc:
             export ZOLTAN_ARCH_PATH=\
-                $WM_THIRD_PARTY_DIR/platforms/linux64Gcc/Zoltan_XXX
+                $WM_THIRD_PARTY_DIR/platforms/linux64Gcc/Zoltan-XXX
     - unpack into $WM_THIRD_PARTY_DIR
     - cd Zoltan_XXX
     - mkdir build
@@ -41,7 +41,7 @@ Description
     - export CXXFLAGS="-fPIC"
     - export CFLAGS="-fPIC"
     - ../configure \
-        --prefix=$ZOLTAN_ARCH_DIR \
+        --prefix=$ZOLTAN_ARCH_PATH \
         --with-ccflags=-fPIC --with-cxxflags=-fPIC
     - make everything
     - make install

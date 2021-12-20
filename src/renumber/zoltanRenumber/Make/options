@@ -8,4 +8,5 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
-    -lmeshTools
+    -lmeshTools \
+    -L${ZOLTAN_ARCH_PATH}/lib64 -lzoltan
