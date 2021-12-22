@@ -29,22 +29,13 @@ Description
 
     Note: Zoltan methods do not support serial operation.
 
-    Zoltan install:
-    - in your ~/.bashrc:
-            export ZOLTAN_ARCH_PATH=\
-                $WM_THIRD_PARTY_DIR/platforms/linux64Gcc/Zoltan-XXX
-    - unpack into $WM_THIRD_PARTY_DIR
-    - cd Zoltan_XXX
-    - mkdir build
-    - cd build
-    - export CCFLAGS="-fPIC"
-    - export CXXFLAGS="-fPIC"
-    - export CFLAGS="-fPIC"
-    - ../configure \
-        --prefix=$ZOLTAN_ARCH_PATH \
-        --with-ccflags=-fPIC --with-cxxflags=-fPIC
-    - make everything
-    - make install
+Usage
+
+    To select the Zoltan Hilbert space filling curves renumber method add the
+    following entries to renumberMeshDict:
+
+        method          zoltan;
+        libs            ("libzoltanRenumber.so");
 
 SourceFiles
     zoltanRenumber.C

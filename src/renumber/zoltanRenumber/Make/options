@@ -4,9 +4,7 @@ EXE_INC = \
     $(PFLAGS) $(PINC) \
     -I$(FOAM_SRC)/Pstream/mpi/lnInclude \
     -I$(FOAM_SRC)/renumber/renumberMethods/lnInclude \
-    -I$(ZOLTAN_ARCH_PATH)/include/ \
-    -I$(LIB_SRC)/meshTools/lnInclude
+    -I$(ZOLTAN_ARCH_PATH)/include
 
 LIB_LIBS = \
-    -lmeshTools \
-    -L${ZOLTAN_ARCH_PATH}/lib64 -lzoltan
+    -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) -lzoltan
