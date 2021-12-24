@@ -183,9 +183,15 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
 }
 
 
-void Foam::fv::limitTemperature::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::limitTemperature::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::limitTemperature::distribute(const mapDistributePolyMesh& map)
+{
+    set_.distribute(map);
 }
 
 

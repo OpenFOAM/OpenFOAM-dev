@@ -70,6 +70,7 @@ namespace Foam
 {
 
 class fvMesh;
+class mapDistributePolyMesh;
 
 /*---------------------------------------------------------------------------*\
                         Class fvCellSet Declaration
@@ -167,6 +168,9 @@ public:
 
             //- Update for mesh changes
             void updateMesh(const mapPolyMesh&);
+
+            //- Update mesh corresponding to the given distribution map
+            void distribute(const mapDistributePolyMesh&);
 
             //- Update for mesh motion
             void movePoints();

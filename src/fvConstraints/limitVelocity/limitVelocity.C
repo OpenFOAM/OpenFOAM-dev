@@ -128,9 +128,15 @@ bool Foam::fv::limitVelocity::constrain(volVectorField& U) const
 }
 
 
-void Foam::fv::limitVelocity::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::limitVelocity::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::limitVelocity::distribute(const mapDistributePolyMesh& map)
+{
+    set_.distribute(map);
 }
 
 

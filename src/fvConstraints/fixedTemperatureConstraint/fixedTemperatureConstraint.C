@@ -156,9 +156,18 @@ bool Foam::fv::fixedTemperatureConstraint::constrain
 }
 
 
-void Foam::fv::fixedTemperatureConstraint::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::fixedTemperatureConstraint::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::fixedTemperatureConstraint::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{
+    set_.distribute(map);
 }
 
 

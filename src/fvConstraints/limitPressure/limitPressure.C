@@ -219,6 +219,21 @@ bool Foam::fv::limitPressure::constrain(volScalarField& p) const
 }
 
 
+void Foam::fv::limitPressure::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::limitPressure::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::limitPressure::movePoints()
+{
+    return true;
+}
+
+
+
 bool Foam::fv::limitPressure::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))

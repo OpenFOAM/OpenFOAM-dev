@@ -117,9 +117,18 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::fixedValueConstraint::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::fixedValueConstraint::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::fixedValueConstraint::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{
+    set_.distribute(map);
 }
 
 

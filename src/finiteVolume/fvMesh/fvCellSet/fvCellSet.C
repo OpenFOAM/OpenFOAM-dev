@@ -174,6 +174,13 @@ void Foam::fvCellSet::updateMesh(const mapPolyMesh&)
 }
 
 
+void Foam::fvCellSet::distribute(const mapDistributePolyMesh&)
+{
+    setCells();
+    setV();
+}
+
+
 void Foam::fvCellSet::movePoints()
 {
     if (selectionMode_ == selectionModeType::points)
