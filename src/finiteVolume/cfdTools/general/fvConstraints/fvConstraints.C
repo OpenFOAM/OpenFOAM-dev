@@ -237,13 +237,24 @@ bool Foam::fvConstraints::constrainsField(const word& fieldName) const
 }
 
 
-void Foam::fvConstraints::updateMesh(const mapPolyMesh& mpm)
+void Foam::fvConstraints::updateMesh(const mapPolyMesh& map)
 {
     PtrListDictionary<fvConstraint>& constraintList(*this);
 
     forAll(constraintList, i)
     {
-        constraintList[i].updateMesh(mpm);
+        constraintList[i].updateMesh(map);
+    }
+}
+
+
+void Foam::fvConstraints::distribute(const mapDistributePolyMesh& map)
+{
+    PtrListDictionary<fvConstraint>& constraintList(*this);
+
+    forAll(constraintList, i)
+    {
+        constraintList[i].distribute(map);
     }
 }
 

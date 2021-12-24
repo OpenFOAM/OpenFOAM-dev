@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,11 +145,14 @@ public:
         //- Return reference to cached normal-to-wall field
         const volVectorField& n() const;
 
-        //- Update the y-field when the mesh moves
-        virtual bool movePoints();
-
         //- Update the y-field when the mesh changes
         virtual void updateMesh(const mapPolyMesh&);
+
+        //- Update mesh corresponding to the given distribution map
+        virtual void distribute(const mapDistributePolyMesh&);
+
+        //- Update the y-field when the mesh moves
+        virtual bool movePoints();
 
 
     // Member Operators

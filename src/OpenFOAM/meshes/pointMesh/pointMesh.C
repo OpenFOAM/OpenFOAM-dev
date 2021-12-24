@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,14 +35,12 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(pointMesh, 0);
-
+    defineTypeNameAndDebug(pointMesh, 0);
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::pointMesh::mapFields(const mapPolyMesh& mpm)
+void Foam::pointMesh::mapFields(const mapPolyMesh& map)
 {
     if (debug)
     {
@@ -51,7 +49,7 @@ void Foam::pointMesh::mapFields(const mapPolyMesh& mpm)
             << endl;
     }
     // Create a mapper
-    const pointMeshMapper m(*this, mpm);
+    const pointMeshMapper m(*this, map);
 
     MapGeometricFields<scalar, pointPatchField, pointMeshMapper, pointMesh>(m);
     MapGeometricFields<vector, pointPatchField, pointMeshMapper, pointMesh>(m);
@@ -121,6 +119,36 @@ void Foam::pointMesh::reset(const bool validBoundary)
 }
 
 
+void Foam::pointMesh::updateMesh(const mapPolyMesh& map)
+{
+    if (debug)
+    {
+        Pout<< "pointMesh::updateMesh(const mapPolyMesh&): "
+            << "Updating for topology changes." << endl;
+        Pout<< endl;
+    }
+    boundary_.updateMesh();
+
+    // Map all registered point fields
+    mapFields(map);
+}
+
+
+void Foam::pointMesh::distribute(const mapDistributePolyMesh& map)
+{
+    if (debug)
+    {
+        Pout<< "pointMesh::distribute(const mapDistributePolyMesh&): "
+            << "Distribute." << endl;
+        Pout<< endl;
+    }
+    boundary_.updateMesh();
+
+    // All registered pointFields are currently distributed by fvMeshDistribute
+    // mapFields(map);
+}
+
+
 bool Foam::pointMesh::movePoints()
 {
     if (debug)
@@ -132,21 +160,6 @@ bool Foam::pointMesh::movePoints()
     boundary_.movePoints(GeoMesh<polyMesh>::mesh_.points());
 
     return true;
-}
-
-
-void Foam::pointMesh::updateMesh(const mapPolyMesh& mpm)
-{
-    if (debug)
-    {
-        Pout<< "pointMesh::updateMesh(const mapPolyMesh&): "
-            << "Updating for topology changes." << endl;
-        Pout<< endl;
-    }
-    boundary_.updateMesh();
-
-    // Map all registered point fields
-    mapFields(mpm);
 }
 
 

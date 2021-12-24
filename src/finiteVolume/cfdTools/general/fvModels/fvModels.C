@@ -248,13 +248,24 @@ void Foam::fvModels::preUpdateMesh()
 }
 
 
-void Foam::fvModels::updateMesh(const mapPolyMesh& mpm)
+void Foam::fvModels::updateMesh(const mapPolyMesh& map)
 {
     PtrListDictionary<fvModel>& modelList(*this);
 
     forAll(modelList, i)
     {
-        modelList[i].updateMesh(mpm);
+        modelList[i].updateMesh(map);
+    }
+}
+
+
+void Foam::fvModels::distribute(const mapDistributePolyMesh& map)
+{
+    PtrListDictionary<fvModel>& modelList(*this);
+
+    forAll(modelList, i)
+    {
+        modelList[i].distribute(map);
     }
 }
 

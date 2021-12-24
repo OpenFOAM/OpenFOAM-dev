@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,15 +137,19 @@ public:
             return patchIDs_;
         }
 
+        //- Update cached topology and geometry when the mesh changes
+        virtual void updateMesh(const mapPolyMesh&)
+        {}
+
+        //- Update mesh corresponding to the given distribution map
+        virtual void distribute(const mapDistributePolyMesh&)
+        {}
+
         //- Update cached geometry when the mesh moves
         virtual bool movePoints()
         {
             return true;
         }
-
-        //- Update cached topology and geometry when the mesh changes
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
 
         //- Correct the given distance-to-patch field
         virtual bool correct(volScalarField& y) = 0;

@@ -167,7 +167,11 @@ void Foam::fvModel::preUpdateMesh()
 {}
 
 
-void Foam::fvModel::updateMesh(const mapPolyMesh& mpm)
+void Foam::fvModel::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fvModel::distribute(const mapDistributePolyMesh&)
 {}
 
 

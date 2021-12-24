@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,6 +177,20 @@ const Foam::volVectorField& Foam::wallDist::n() const
 }
 
 
+void Foam::wallDist::updateMesh(const mapPolyMesh& map)
+{
+    pdm_->updateMesh(map);
+    movePoints();
+}
+
+
+void Foam::wallDist::distribute(const mapDistributePolyMesh& map)
+{
+    pdm_->distribute(map);
+    movePoints();
+}
+
+
 bool Foam::wallDist::movePoints()
 {
     if (pdm_->movePoints())
@@ -194,13 +208,6 @@ bool Foam::wallDist::movePoints()
     {
         return false;
     }
-}
-
-
-void Foam::wallDist::updateMesh(const mapPolyMesh& mpm)
-{
-    pdm_->updateMesh(mpm);
-    movePoints();
 }
 
 

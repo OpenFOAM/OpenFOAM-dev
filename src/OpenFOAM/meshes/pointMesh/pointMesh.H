@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,11 +124,14 @@ public:
 
         // Mesh callbacks
 
+            //- Update the mesh corresponding to given map
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update mesh corresponding to the given distribution map
+            virtual void distribute(const mapDistributePolyMesh&);
+
             //- Move points
             virtual bool movePoints();
-
-            //- Update the mesh corresponding to given map
-            virtual void updateMesh(const mapPolyMesh& mpm);
 
             //- Reordered/removed trailing patches. If validBoundary call is
             //  parallel synced and all add the same patch with same settings

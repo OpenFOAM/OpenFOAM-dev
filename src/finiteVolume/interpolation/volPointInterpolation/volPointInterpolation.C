@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -363,6 +363,12 @@ Foam::volPointInterpolation::~volPointInterpolation()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::volPointInterpolation::updateMesh(const mapPolyMesh&)
+{
+    makeWeights();
+}
+
+
+void Foam::volPointInterpolation::distribute(const mapDistributePolyMesh&)
 {
     makeWeights();
 }

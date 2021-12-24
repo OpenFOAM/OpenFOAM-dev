@@ -30,8 +30,8 @@ Description
 
     MeshObject is templated on the type of mesh it is allocated to, the type of
     the mesh object (TopologicalMeshObject, GeometricMeshObject,
-    MoveableMeshObject, UpdateableMeshObject) and the type of the actual object
-    it is created for example:
+    MoveableMeshObject, DistributeableMeshObject, UpdateableMeshObject) and the
+    type of the actual object it is created for example:
 
     \verbatim
     class leastSquaresVectors
@@ -244,9 +244,6 @@ public:
     :
         TopologicalMeshObject<Mesh>(typeName, io)
     {}
-
-    virtual void distribute(const mapDistributePolyMesh& map) // = 0;
-    {}
 };
 
 
@@ -276,24 +273,49 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
+                   Class DistributeableMeshObject Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Mesh>
+class DistributeableMeshObject
+:
+    public MoveableMeshObject<Mesh>
+{
+public:
+
+    DistributeableMeshObject(const word& typeName, const objectRegistry& obr)
+    :
+        MoveableMeshObject<Mesh>(typeName, obr)
+    {}
+
+    DistributeableMeshObject(const word& typeName, const IOobject& io)
+    :
+        MoveableMeshObject<Mesh>(typeName, io)
+    {}
+
+    virtual void distribute(const mapDistributePolyMesh& map) = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
                     Class UpdateableMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
 class UpdateableMeshObject
 :
-    public MoveableMeshObject<Mesh>
+    public DistributeableMeshObject<Mesh>
 {
 public:
 
     UpdateableMeshObject(const word& typeName, const objectRegistry& obr)
     :
-        MoveableMeshObject<Mesh>(typeName, obr)
+        DistributeableMeshObject<Mesh>(typeName, obr)
     {}
 
     UpdateableMeshObject(const word& typeName, const IOobject& io)
     :
-        MoveableMeshObject<Mesh>(typeName, io)
+        DistributeableMeshObject<Mesh>(typeName, io)
     {}
 
     virtual void updateMesh(const mapPolyMesh& map) = 0;

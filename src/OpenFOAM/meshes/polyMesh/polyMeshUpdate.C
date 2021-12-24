@@ -129,7 +129,7 @@ void Foam::polyMesh::updateMesh(const mapPolyMesh& mpm)
 
 void Foam::polyMesh::distribute(const mapDistributePolyMesh& map)
 {
-    // meshObject::distribute<polyMesh>(*this, map);
+    meshObject::distribute<polyMesh>(*this, map);
     meshObject::distribute<pointMesh>(*this, map);
 }
 

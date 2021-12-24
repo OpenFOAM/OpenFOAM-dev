@@ -288,6 +288,53 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
 
 
 template<class Mesh>
+void Foam::meshObject::distribute
+(
+    objectRegistry& obr,
+    const mapDistributePolyMesh& map
+)
+{
+    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    (
+        obr.lookupClass<GeometricMeshObject<Mesh>>()
+    );
+
+    if (meshObject::debug)
+    {
+        Pout<< "meshObject::distribute(objectRegistry&, "
+               "const mapDistributePolyMesh& map) : updating " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
+    forAllIter
+    (
+        typename HashTable<GeometricMeshObject<Mesh>*>,
+        meshObjects,
+        iter
+    )
+    {
+        if (isA<UpdateableMeshObject<Mesh>>(*iter()))
+        {
+            if (meshObject::debug)
+            {
+                Pout<< "    Distributing " << iter()->name() << endl;
+            }
+            dynamic_cast<DistributeableMeshObject<Mesh>*>(iter())
+            ->distribute(map);
+        }
+        else
+        {
+            if (meshObject::debug)
+            {
+                Pout<< "    Destroying " << iter()->name() << endl;
+            }
+            obr.checkOut(*iter());
+        }
+    }
+}
+
+
+template<class Mesh>
 void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& map)
 {
     HashTable<GeometricMeshObject<Mesh>*> meshObjects
@@ -325,41 +372,6 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& map)
             }
             obr.checkOut(*iter());
         }
-    }
-}
-
-
-template<class Mesh>
-void Foam::meshObject::distribute
-(
-    objectRegistry& obr,
-    const mapDistributePolyMesh& map
-)
-{
-    HashTable<GeometricMeshObject<Mesh>*> meshObjects
-    (
-        obr.lookupClass<GeometricMeshObject<Mesh>>()
-    );
-
-    if (meshObject::debug)
-    {
-        Pout<< "meshObject::distribute(objectRegistry&, "
-               "const mapDistributePolyMesh& map) : updating " << Mesh::typeName
-            << " meshObjects for region " << obr.name() << endl;
-    }
-
-    forAllIter
-    (
-        typename HashTable<GeometricMeshObject<Mesh>*>,
-        meshObjects,
-        iter
-    )
-    {
-        if (meshObject::debug)
-        {
-            Pout<< "    Distributing " << iter()->name() << endl;
-        }
-        iter()->distribute(map);
     }
 }
 
