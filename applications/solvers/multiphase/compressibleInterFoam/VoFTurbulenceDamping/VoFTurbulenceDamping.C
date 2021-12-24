@@ -207,4 +207,18 @@ void Foam::fv::VoFTurbulenceDamping::addSup
 }
 
 
+void Foam::fv::VoFTurbulenceDamping::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::VoFTurbulenceDamping::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::VoFTurbulenceDamping::movePoints()
+{
+    return true;
+}
+
+
 // ************************************************************************* //

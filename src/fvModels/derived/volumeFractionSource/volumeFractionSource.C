@@ -318,6 +318,20 @@ FOR_ALL_FIELD_TYPES
 );
 
 
+void Foam::fv::volumeFractionSource::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::volumeFractionSource::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::volumeFractionSource::movePoints()
+{
+    return true;
+}
+
+
 bool Foam::fv::volumeFractionSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

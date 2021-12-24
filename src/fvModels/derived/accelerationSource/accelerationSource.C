@@ -111,9 +111,15 @@ void Foam::fv::accelerationSource::addSup
 }
 
 
-void Foam::fv::accelerationSource::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::accelerationSource::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::accelerationSource::distribute(const mapDistributePolyMesh& map)
+{
+    set_.distribute(map);
 }
 
 

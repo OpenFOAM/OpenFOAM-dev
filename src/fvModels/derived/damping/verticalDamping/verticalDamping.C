@@ -106,4 +106,18 @@ void Foam::fv::verticalDamping::addSup
 }
 
 
+void Foam::fv::verticalDamping::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::verticalDamping::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::verticalDamping::movePoints()
+{
+    return true;
+}
+
+
 // ************************************************************************* //

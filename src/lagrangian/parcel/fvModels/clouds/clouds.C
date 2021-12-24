@@ -330,4 +330,20 @@ void Foam::fv::clouds::preUpdateMesh()
 }
 
 
+void Foam::fv::clouds::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::clouds::distribute(const mapDistributePolyMesh&)
+{
+    NotImplemented;
+}
+
+
+bool Foam::fv::clouds::movePoints()
+{
+    return true;
+}
+
+
 // ************************************************************************* //

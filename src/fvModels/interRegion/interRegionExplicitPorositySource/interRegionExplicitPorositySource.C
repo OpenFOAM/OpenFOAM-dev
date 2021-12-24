@@ -168,6 +168,23 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 }
 
 
+void Foam::fv::interRegionExplicitPorositySource::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::interRegionExplicitPorositySource::distribute
+(
+    const mapDistributePolyMesh&
+)
+{}
+
+
+bool Foam::fv::interRegionExplicitPorositySource::movePoints()
+{
+    return true;
+}
+
+
 bool Foam::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
 {
     if (interRegionModel::read(dict))

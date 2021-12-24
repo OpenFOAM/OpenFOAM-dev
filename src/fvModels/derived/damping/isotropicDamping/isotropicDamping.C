@@ -117,6 +117,20 @@ void Foam::fv::isotropicDamping::addSup
 }
 
 
+void Foam::fv::isotropicDamping::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::isotropicDamping::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::isotropicDamping::movePoints()
+{
+    return true;
+}
+
+
 bool Foam::fv::isotropicDamping::read(const dictionary& dict)
 {
     if (damping::read(dict))

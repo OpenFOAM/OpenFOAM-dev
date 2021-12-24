@@ -176,6 +176,23 @@ void Foam::fv::sixDoFAccelerationSource::addSup
 }
 
 
+void Foam::fv::sixDoFAccelerationSource::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::sixDoFAccelerationSource::distribute
+(
+    const mapDistributePolyMesh&
+)
+{}
+
+
+bool Foam::fv::sixDoFAccelerationSource::movePoints()
+{
+    return true;
+}
+
+
 bool Foam::fv::sixDoFAccelerationSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

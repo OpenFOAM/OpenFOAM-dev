@@ -94,4 +94,18 @@ void Foam::fv::radiation::addSup
 }
 
 
+void Foam::fv::radiation::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::radiation::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::radiation::movePoints()
+{
+    return true;
+}
+
+
 // ************************************************************************* //

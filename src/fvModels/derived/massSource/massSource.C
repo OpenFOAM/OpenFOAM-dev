@@ -267,9 +267,15 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::massSource);
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::massSource);
 
 
-void Foam::fv::massSource::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::massSource::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::massSource::distribute(const mapDistributePolyMesh& map)
+{
+    set_.distribute(map);
 }
 
 

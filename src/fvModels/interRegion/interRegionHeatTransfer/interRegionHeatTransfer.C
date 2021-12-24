@@ -212,6 +212,20 @@ void Foam::fv::interRegionHeatTransfer::correct()
 }
 
 
+void Foam::fv::interRegionHeatTransfer::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::interRegionHeatTransfer::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::interRegionHeatTransfer::movePoints()
+{
+    return true;
+}
+
+
 bool Foam::fv::interRegionHeatTransfer::read(const dictionary& dict)
 {
     if (interRegionModel::read(dict))

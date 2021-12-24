@@ -109,6 +109,20 @@ FOR_ALL_FIELD_TYPES
 );
 
 
+void Foam::fv::phaseLimitStabilisation::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::phaseLimitStabilisation::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::phaseLimitStabilisation::movePoints()
+{
+    return true;
+}
+
+
 bool Foam::fv::phaseLimitStabilisation::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

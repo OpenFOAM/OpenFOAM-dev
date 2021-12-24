@@ -150,9 +150,15 @@ void Foam::fv::heatSource::addSup
 }
 
 
-void Foam::fv::heatSource::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::heatSource::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::heatSource::distribute(const mapDistributePolyMesh& map)
+{
+    set_.distribute(map);
 }
 
 

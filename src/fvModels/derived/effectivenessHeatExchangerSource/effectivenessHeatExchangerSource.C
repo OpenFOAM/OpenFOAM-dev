@@ -313,10 +313,19 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
 
 void Foam::fv::effectivenessHeatExchangerSource::updateMesh
 (
-    const mapPolyMesh& mpm
+    const mapPolyMesh& map
 )
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::effectivenessHeatExchangerSource::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{
+    set_.distribute(map);
 }
 
 

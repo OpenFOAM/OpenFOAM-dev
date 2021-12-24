@@ -155,4 +155,22 @@ void Foam::fv::VoFClouds::addSup
 }
 
 
+void Foam::fv::VoFClouds::updateMesh(const mapPolyMesh&)
+{
+    NotImplemented;
+}
+
+
+void Foam::fv::VoFClouds::distribute(const mapDistributePolyMesh&)
+{
+    NotImplemented;
+}
+
+
+bool Foam::fv::VoFClouds::movePoints()
+{
+    return true;
+}
+
+
 // ************************************************************************* //

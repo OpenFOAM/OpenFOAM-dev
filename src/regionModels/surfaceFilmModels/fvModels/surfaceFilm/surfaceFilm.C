@@ -212,4 +212,18 @@ void Foam::fv::surfaceFilm::addSup
 }
 
 
+void Foam::fv::surfaceFilm::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::surfaceFilm::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::surfaceFilm::movePoints()
+{
+    return true;
+}
+
+
 // ************************************************************************* //

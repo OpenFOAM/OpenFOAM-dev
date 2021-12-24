@@ -159,9 +159,15 @@ void Foam::fv::heatTransfer::correct()
 }
 
 
-void Foam::fv::heatTransfer::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::heatTransfer::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::heatTransfer::distribute(const mapDistributePolyMesh& map)
+{
+    set_.distribute(map);
 }
 
 

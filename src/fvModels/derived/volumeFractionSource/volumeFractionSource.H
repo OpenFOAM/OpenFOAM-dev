@@ -230,6 +230,18 @@ public:
             FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_SUP);
 
 
+        // Mesh changes
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update mesh corresponding to the given distribution map
+            virtual void distribute(const mapDistributePolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
+
+
         // IO
 
             //- Read dictionary

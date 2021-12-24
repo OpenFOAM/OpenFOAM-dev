@@ -630,9 +630,15 @@ void Foam::fv::rotorDiskSource::addSup
 }
 
 
-void Foam::fv::rotorDiskSource::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::rotorDiskSource::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::rotorDiskSource::distribute(const mapDistributePolyMesh& map)
+{
+    set_.distribute(map);
 }
 
 

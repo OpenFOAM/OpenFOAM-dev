@@ -139,9 +139,18 @@ void Foam::fv::explicitPorositySource::addSup
 }
 
 
-void Foam::fv::explicitPorositySource::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::explicitPorositySource::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::explicitPorositySource::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{
+    set_.distribute(map);
 }
 
 

@@ -188,6 +188,23 @@ void Foam::fv::solidEquilibriumEnergySource::addSup
 }
 
 
+void Foam::fv::solidEquilibriumEnergySource::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::solidEquilibriumEnergySource::distribute
+(
+    const mapDistributePolyMesh&
+)
+{}
+
+
+bool Foam::fv::solidEquilibriumEnergySource::movePoints()
+{
+    return true;
+}
+
+
 bool Foam::fv::solidEquilibriumEnergySource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

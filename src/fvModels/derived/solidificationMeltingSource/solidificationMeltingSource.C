@@ -356,9 +356,18 @@ void Foam::fv::solidificationMeltingSource::addSup
 }
 
 
-void Foam::fv::solidificationMeltingSource::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::solidificationMeltingSource::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::solidificationMeltingSource::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{
+    set_.distribute(map);
 }
 
 

@@ -168,9 +168,6 @@ public:
             //- Solve the Lagrangian clouds and update the sources
             virtual void correct();
 
-            //- Prepare for mesh update
-            virtual void preUpdateMesh();
-
 
         // Add explicit and implicit contributions to compressible equation
 
@@ -203,6 +200,21 @@ public:
                 fvMatrix<vector>& eqn,
                 const word& fieldName
             ) const;
+
+
+        // Mesh changes
+
+            //- Prepare for mesh update
+            virtual void preUpdateMesh();
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update mesh corresponding to the given distribution map
+            virtual void distribute(const mapDistributePolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
 
 
     // Member Operators

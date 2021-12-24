@@ -182,22 +182,6 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 }
 
 
-void Foam::fv::VoFSolidificationMeltingSource::updateMesh
-(
-    const mapPolyMesh& mpm
-)
-{
-    set_.updateMesh(mpm);
-}
-
-
-bool Foam::fv::VoFSolidificationMeltingSource::movePoints()
-{
-    set_.movePoints();
-    return true;
-}
-
-
 void Foam::fv::VoFSolidificationMeltingSource::correct()
 {
     if (debug)
@@ -235,6 +219,31 @@ void Foam::fv::VoFSolidificationMeltingSource::correct()
     }
 
     alphaSolid_.correctBoundaryConditions();
+}
+
+
+void Foam::fv::VoFSolidificationMeltingSource::updateMesh
+(
+    const mapPolyMesh& map
+)
+{
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::VoFSolidificationMeltingSource::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{
+    set_.distribute(map);
+}
+
+
+bool Foam::fv::VoFSolidificationMeltingSource::movePoints()
+{
+    set_.movePoints();
+    return true;
 }
 
 

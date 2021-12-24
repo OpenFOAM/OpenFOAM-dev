@@ -169,9 +169,15 @@ void Foam::fv::actuationDiskSource::addSup
 }
 
 
-void Foam::fv::actuationDiskSource::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::actuationDiskSource::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void Foam::fv::actuationDiskSource::distribute(const mapDistributePolyMesh& map)
+{
+    set_.distribute(map);
 }
 
 

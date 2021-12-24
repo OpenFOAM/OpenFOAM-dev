@@ -130,6 +130,20 @@ void Foam::fv::buoyancyForce::addSup
 }
 
 
+void Foam::fv::buoyancyForce::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::fv::buoyancyForce::distribute(const mapDistributePolyMesh&)
+{}
+
+
+bool Foam::fv::buoyancyForce::movePoints()
+{
+    return true;
+}
+
+
 bool Foam::fv::buoyancyForce::read(const dictionary& dict)
 {
     if (fvModel::read(dict))

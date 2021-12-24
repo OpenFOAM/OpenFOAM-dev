@@ -172,6 +172,18 @@ public:
         ) const;
 
 
+        // Mesh changes
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update mesh corresponding to the given distribution map
+            virtual void distribute(const mapDistributePolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
+
+
     // Member Operators
 
         //- Disallow default bitwise assignment

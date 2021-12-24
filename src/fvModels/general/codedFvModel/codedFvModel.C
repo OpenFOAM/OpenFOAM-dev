@@ -256,9 +256,15 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::codedFvModel);
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::codedFvModel);
 
 
-void Foam::fv::codedFvModel::updateMesh(const mapPolyMesh& mpm)
+void Foam::fv::codedFvModel::updateMesh(const mapPolyMesh& map)
 {
-    redirectFvModel().updateMesh(mpm);
+    redirectFvModel().updateMesh(map);
+}
+
+
+void Foam::fv::codedFvModel::distribute(const mapDistributePolyMesh& map)
+{
+    redirectFvModel().distribute(map);
 }
 
 
