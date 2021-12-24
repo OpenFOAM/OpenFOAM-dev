@@ -54,9 +54,7 @@ class TimeState
 :
     public dimensionedScalar
 {
-
-// ***HGW temporary until
-protected:
+    // Private Member Data
 
         label timeIndex_;
         scalar deltaT_;
