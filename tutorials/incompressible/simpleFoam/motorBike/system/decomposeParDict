@@ -18,11 +18,19 @@ numberOfSubdomains  6;
 
 decomposer      hierarchical;
 distributor     ptscotch;
+// distributor     zoltan;
+// libs            ("libzoltanDecomp.so");
 
 hierarchicalCoeffs
 {
     n               (3 2 1);
     order           xyz;
+}
+
+zoltanCoeffs
+{
+    lb_method       hypergraph;
+    lb_approach     partition;
 }
 
 

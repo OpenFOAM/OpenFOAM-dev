@@ -16,16 +16,17 @@ fi
 # Define how to clean an mpi-versioned library
 wcleanMpiLib()
 {
-    for libName
-    do
     (
+        version="$1"
+        libName="$2"
+
         WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
         whichmpi="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$FOAM_MPI"
-        whichscotch="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$SCOTCH_VERSION"
+        whichscotch="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$version"
         wclean $libName
     )
-    done
 }
+
 
 if [ -n "$SCOTCH_ARCH_PATH" ]
 then
@@ -33,13 +34,21 @@ then
 
     if [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
     then
-        wcleanMpiLib ptscotchDecomp
+        wcleanMpiLib $SCOTCH_VERSION ptscotchDecomp
     fi
 else
     echo "    skipping scotchDecomp (ptscotchDecomp)"
 fi
 
+
+if [ -n "$ZOLTAN_ARCH_PATH" ]
+then
+   wcleanMpiLib 3.90 zoltanDecomp
+fi
+
+
 wclean metisDecomp
 wclean decompositionMethods
+
 
 #------------------------------------------------------------------------------

@@ -18,6 +18,8 @@ numberOfSubdomains 8;
 
 decomposer      hierarchical;
 distributor     hierarchical;
+// distributor     zoltan;
+// libs            ("libzoltanDecomp.so");
 
 simpleCoeffs
 {

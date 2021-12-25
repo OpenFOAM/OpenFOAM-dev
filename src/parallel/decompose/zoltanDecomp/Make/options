@@ -1,0 +1,10 @@
+-include $(GENERAL_RULES)/mplibType
+
+EXE_INC = \
+    $(PFLAGS) $(PINC) \
+    -I$(FOAM_SRC)/Pstream/mpi/lnInclude \
+    -I$(ZOLTAN_ARCH_PATH)/include/ \
+    -I../decompositionMethods/lnInclude
+
+LIB_LIBS = \
+    -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) -lzoltan

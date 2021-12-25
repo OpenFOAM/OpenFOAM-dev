@@ -30,7 +30,6 @@ Description
     Note: Zoltan methods do not support serial operation.
 
 Usage
-
     To select the Zoltan Hilbert space filling curves renumber method add the
     following entries to renumberMeshDict:
 

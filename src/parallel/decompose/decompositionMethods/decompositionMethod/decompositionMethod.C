@@ -108,6 +108,13 @@ Foam::decompositionMethod::NewDecomposer
 
     Info<< "Selecting decomposer " << methodType << endl;
 
+    libs.open
+    (
+        decompositionDict,
+        "libs",
+        decomposerConstructorTablePtr_
+    );
+
     decomposerConstructorTable::iterator cstrIter =
         decomposerConstructorTablePtr_->find(methodType);
 
@@ -140,6 +147,13 @@ Foam::decompositionMethod::NewDistributor
     );
 
     Info<< "Selecting distributor " << methodType << endl;
+
+    libs.open
+    (
+        distributionDict,
+        "libs",
+        distributorConstructorTablePtr_
+    );
 
     distributorConstructorTable::iterator cstrIter =
         distributorConstructorTablePtr_->find(methodType);
@@ -288,7 +302,7 @@ void Foam::decompositionMethod::calcCellCells
     // Get agglomerate owner on other side of coupled faces
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    labelList globalNeighbour(mesh.nFaces()-mesh.nInternalFaces());
+    labelList globalNeighbour(mesh.nFaces() - mesh.nInternalFaces());
 
     forAll(patches, patchi)
     {
@@ -338,7 +352,7 @@ void Foam::decompositionMethod::calcCellCells
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
             label facei = pp.start();
-            label bFacei = pp.start()-mesh.nInternalFaces();
+            label bFacei = pp.start() - mesh.nInternalFaces();
 
             forAll(pp, i)
             {
@@ -389,7 +403,7 @@ void Foam::decompositionMethod::calcCellCells
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
             label facei = pp.start();
-            label bFacei = pp.start()-mesh.nInternalFaces();
+            label bFacei = pp.start() - mesh.nInternalFaces();
 
             forAll(pp, i)
             {
@@ -479,7 +493,7 @@ void Foam::decompositionMethod::calcCellCells
     // Get agglomerate owner on other side of coupled faces
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    labelList globalNeighbour(mesh.nFaces()-mesh.nInternalFaces());
+    labelList globalNeighbour(mesh.nFaces() - mesh.nInternalFaces());
 
     forAll(patches, patchi)
     {
