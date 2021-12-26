@@ -385,4 +385,13 @@ void Foam::parcelCloudList::storeGlobalPositions()
 }
 
 
+void Foam::parcelCloudList::distribute(const mapDistributePolyMesh& map)
+{
+    forAll(*this, i)
+    {
+        operator[](i).distribute(map);
+    }
+}
+
+
 // ************************************************************************* //

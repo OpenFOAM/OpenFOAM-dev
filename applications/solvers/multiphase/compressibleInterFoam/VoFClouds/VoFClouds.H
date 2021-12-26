@@ -145,6 +145,9 @@ public:
 
         // Mesh changes
 
+            //- Prepare for mesh update
+            virtual void preUpdateMesh();
+
             //- Update for mesh changes
             virtual void updateMesh(const mapPolyMesh&);
 

@@ -334,9 +334,9 @@ void Foam::fv::clouds::updateMesh(const mapPolyMesh&)
 {}
 
 
-void Foam::fv::clouds::distribute(const mapDistributePolyMesh&)
+void Foam::fv::clouds::distribute(const mapDistributePolyMesh& map)
 {
-    NotImplemented;
+    cloudsPtr_().distribute(map);
 }
 
 

@@ -176,6 +176,9 @@ public:
         //  positions in the database for use during mapping.
         void storeGlobalPositions();
 
+        //- Update mesh corresponding to the given distribution map
+        void distribute(const mapDistributePolyMesh&);
+
 
     // Member Operators
 

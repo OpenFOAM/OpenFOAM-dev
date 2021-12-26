@@ -155,16 +155,20 @@ void Foam::fv::VoFClouds::addSup
 }
 
 
-void Foam::fv::VoFClouds::updateMesh(const mapPolyMesh&)
+void Foam::fv::VoFClouds::preUpdateMesh()
 {
-    NotImplemented;
+    // Store the particle positions
+    clouds_.storeGlobalPositions();
 }
+
+
+void Foam::fv::VoFClouds::updateMesh(const mapPolyMesh&)
+{}
 
 
 void Foam::fv::VoFClouds::distribute(const mapDistributePolyMesh& map)
 {
-    // clouds_.distribute(map);
-    NotImplemented;
+    clouds_.distribute(map);
 }
 
 
