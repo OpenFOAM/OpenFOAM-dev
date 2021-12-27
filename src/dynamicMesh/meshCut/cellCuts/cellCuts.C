@@ -3010,54 +3010,6 @@ Foam::cellCuts::cellCuts
 Foam::cellCuts::cellCuts
 (
     const polyMesh& mesh,
-    const cellLooper& cellCutter,
-    const labelList& cellLabels,
-    const List<plane>& cutPlanes
-)
-:
-    edgeVertex(mesh),
-    pointIsCut_(mesh.nPoints(), false),
-    edgeIsCut_(mesh.nEdges(), false),
-    edgeWeight_(mesh.nEdges(), -great),
-    faceSplitCut_(cellLabels.size()),
-    cellLoops_(mesh.nCells()),
-    nLoops_(-1),
-    cellAnchorPoints_(mesh.nCells())
-{
-    if (debug)
-    {
-        Pout<< "cellCuts : constructor from cellCutter with prescribed plane"
-            << endl;
-    }
-
-    // Update pointIsCut, edgeIsCut, faceSplitCut from cell loops.
-    // Makes sure cuts are consistent
-    setFromCellCutter(cellCutter, cellLabels, cutPlanes);
-
-    // Adds cuts on other side of coupled boundaries
-    syncProc();
-
-    // Calculate planes and flip cellLoops if necessary
-    orientPlanesAndLoops();
-
-    if (debug)
-    {
-        check();
-    }
-
-    clearOut();
-
-    if (debug)
-    {
-        Pout<< "cellCuts : leaving constructor from cellCutter with prescribed"
-            << " plane" << endl;
-    }
-}
-
-
-Foam::cellCuts::cellCuts
-(
-    const polyMesh& mesh,
     const boolList& pointIsCut,
     const boolList& edgeIsCut,
     const scalarField& edgeWeight,

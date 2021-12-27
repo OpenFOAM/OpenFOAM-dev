@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -495,16 +495,6 @@ public:
             const polyMesh& mesh,
             const cellLooper& cellCutter,
             const List<refineCell>& refCells
-        );
-
-        //- Construct from list of cells to cut and plane to cut with and
-        //  celllooper. (constructor above always cuts through cell centre)
-        cellCuts
-        (
-            const polyMesh& mesh,
-            const cellLooper& cellCutter,
-            const labelList& cellLabels,
-            const List<plane>& cutPlanes
         );
 
         //- Construct from components
