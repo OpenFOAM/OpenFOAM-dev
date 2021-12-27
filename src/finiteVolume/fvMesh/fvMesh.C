@@ -679,8 +679,13 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
     (mapper);
     MapGeometricFields<vector, fvsPatchField, fvMeshMapper, surfaceMesh>
     (mapper);
-    MapGeometricFields<symmTensor, fvsPatchField, fvMeshMapper, surfaceMesh>
-    (mapper);
+    MapGeometricFields
+    <
+        sphericalTensor,
+        fvsPatchField,
+        fvMeshMapper,
+        surfaceMesh
+    >(mapper);
     MapGeometricFields<symmTensor, fvsPatchField, fvMeshMapper, surfaceMesh>
     (mapper);
     MapGeometricFields<tensor, fvsPatchField, fvMeshMapper, surfaceMesh>
