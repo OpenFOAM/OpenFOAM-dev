@@ -802,7 +802,7 @@ bool Foam::cp(const fileName& src, const fileName& dest, const bool followLink)
         destStream << srcStream.rdbuf();
 
         // Final check.
-        if (!srcStream.eof() || !destStream)
+        if (!destStream)
         {
             return false;
         }
