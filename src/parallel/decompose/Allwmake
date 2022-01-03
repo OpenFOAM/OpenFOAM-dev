@@ -57,8 +57,7 @@ then
 
     if [ -n "$ZOLTAN_ARCH_PATH" ] \
     && [ -r "$ZOLTAN_ARCH_PATH/include/zoltan.h" ] \
-    && [ -r "$FOAM_EXT_LIBBIN/$FOAM_MPI/libzoltan.a" ] \
-    && [ -n "$WM_MPLIB" ] && [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
+    && [ -r "$FOAM_EXT_LIBBIN/$FOAM_MPI/libzoltan.a" ]
     then
         wmakeMpiLib $ZOLTAN_VERSION zoltanDecomp
     else
