@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Description
         \vartable
             p_p     | pressure at patch [m^2/s^2]
             p_0     | reference pressure [m^2/s^2]
-            U       | patch normal velocity [m/s]
+            Un      | patch normal velocity [m/s]
         \endvartable
 
     This condition is particularly suitable for boundaries on which the flow
