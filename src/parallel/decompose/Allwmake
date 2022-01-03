@@ -70,8 +70,8 @@ else
 fi
 
 
-# Try and build metisDecomp (has own logic)
-(cd metisDecomp && ./Allwmake $targetType)
+# Optionally build metisDecomp with its Allwmake
+wmake -a $targetType metisDecomp
 
 wmake $targetType decompositionMethods
 

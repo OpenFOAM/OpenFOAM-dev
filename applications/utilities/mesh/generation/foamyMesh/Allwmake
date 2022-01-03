@@ -28,7 +28,7 @@ wmake $targetType conformalVoronoi2DMesh
 wmake $targetType foamyQuadMesh
 wmake $targetType foamyHexMesh
 #wmake $targetType foamyHexMeshBackgroundMesh
-#(cd foamyHexMeshSurfaceSimplify && ./Allwmake $targetType $*)
+#wmake -a $targetType foamyHexMeshSurfaceSimplify
 #wmake $targetType cellSizeAndAlignmentGrid
 
 #------------------------------------------------------------------------------
