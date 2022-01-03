@@ -55,7 +55,10 @@ then
     . $settings
     echo "    using ZOLTAN_ARCH_PATH=$ZOLTAN_ARCH_PATH"
 
-    if [ -n "$ZOLTAN_ARCH_PATH" ] && [ -n "$WM_MPLIB" ] && [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
+    if [ -n "$ZOLTAN_ARCH_PATH" ] \
+    && [ -r "$ZOLTAN_ARCH_PATH/include/zoltan.h" ] \
+    && [ -r "$FOAM_EXT_LIBBIN/$FOAM_MPI/libzoltan.a" ] \
+    && [ -n "$WM_MPLIB" ] && [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
     then
         wmakeMpiLib $ZOLTAN_VERSION zoltanDecomp
     else
