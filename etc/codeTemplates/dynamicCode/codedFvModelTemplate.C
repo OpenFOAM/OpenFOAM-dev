@@ -179,9 +179,18 @@ void ${typeName}FvModel${SourceType}::addSup
 }
 
 
-void ${typeName}FvModel${SourceType}::updateMesh(const mapPolyMesh& mpm)
+void ${typeName}FvModel${SourceType}::updateMesh(const mapPolyMesh& map)
 {
-    set_.updateMesh(mpm);
+    set_.updateMesh(map);
+}
+
+
+void ${typeName}FvModel${SourceType}::distribute
+(
+    const mapDistributePolyMesh& map
+)
+{
+    set_.distribute(map);
 }
 
 
