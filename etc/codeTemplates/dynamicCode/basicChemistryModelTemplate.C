@@ -213,14 +213,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "LangmuirHinshelwoodReactionRate.H"
-
-namespace Foam
-{
-    makeIRReactions(LangmuirHinshelwoodReactionRate, ThermoPhysics);
-}
-
-
 #include "fluxLimitedLangmuirHinshelwoodReactionRate.H"
 
 namespace Foam
