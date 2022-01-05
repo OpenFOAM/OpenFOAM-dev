@@ -66,8 +66,10 @@ functions
 
         fields
         (
-            rhoPhi
+            phi
         );
+
+        weightField     alpha.water;
     }
 
     outletFlux
