@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "LiquidEvaporation.H"
 #include "specie.H"
 #include "mathematicalConstants.H"
-
 using namespace Foam::constant::mathematical;
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -139,8 +138,9 @@ Foam::LiquidEvaporation<CloudType>::~LiquidEvaporation()
 template<class CloudType>
 void Foam::LiquidEvaporation<CloudType>::calculate
 (
+    const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar dt,
-    const label celli,
     const scalar Re,
     const scalar Pr,
     const scalar d,
@@ -173,7 +173,7 @@ void Foam::LiquidEvaporation<CloudType>::calculate
     }
 
     // construct carrier phase species volume fractions for cell, celli
-    const scalarField Xc(calcXc(celli));
+    const scalarField Xc(calcXc(p.cell()));
 
     // calculate mass transfer of each specie in liquid
     forAll(activeLiquids_, i)
