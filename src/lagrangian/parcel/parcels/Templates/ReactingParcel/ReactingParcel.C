@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,11 +82,17 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
     const scalar Tdash = min(T, TMax);
     const scalar Tsdash = min(Ts, TMax);
 
+    const typename TrackCloudType::parcelType& p =
+        static_cast<const typename TrackCloudType::parcelType&>(*this);
+    typename TrackCloudType::parcelType::trackingData& ttd =
+        static_cast<typename TrackCloudType::parcelType::trackingData&>(td);
+
     // Calculate mass transfer due to phase change
     phaseChange.calculate
     (
+        p,
+        ttd,
         dt,
-        this->cell(),
         Re,
         Pr,
         d,

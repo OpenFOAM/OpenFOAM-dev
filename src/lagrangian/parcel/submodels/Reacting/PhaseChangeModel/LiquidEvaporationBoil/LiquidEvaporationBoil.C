@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,8 +131,9 @@ Foam::LiquidEvaporationBoil<CloudType>::~LiquidEvaporationBoil()
 template<class CloudType>
 void Foam::LiquidEvaporationBoil<CloudType>::calculate
 (
+    const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar dt,
-    const label celli,
     const scalar Re,
     const scalar Pr,
     const scalar d,
@@ -171,7 +172,7 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
     scalar rhos = ps*liquids_.W(X)/(RR*Ts);
 
     // construct carrier phase species volume fractions for cell, celli
-    const scalarField XcMix(calcXc(celli));
+    const scalarField XcMix(calcXc(p.cell()));
 
     // carrier thermo properties
     scalar Hsc = 0.0;
@@ -180,7 +181,7 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
     scalar kappac = 0.0;
     forAll(this->owner().composition().carrier().Y(), i)
     {
-        scalar Yc = this->owner().composition().carrier().Y()[i][celli];
+        scalar Yc = this->owner().composition().carrier().Y()[i][p.cell()];
         Hc += Yc*this->owner().composition().carrier().Ha(i, pc, Tc);
         Hsc += Yc*this->owner().composition().carrier().Ha(i, ps, Ts);
         Cpc += Yc*this->owner().composition().carrier().Cp(i, ps, Ts);
