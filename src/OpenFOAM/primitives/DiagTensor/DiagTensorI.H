@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,6 +109,12 @@ template<class Cmpt>
 inline Cmpt& Foam::DiagTensor<Cmpt>::zz()
 {
     return this->v_[ZZ];
+}
+
+template<class Cmpt>
+inline Foam::DiagTensor<Cmpt>::operator Foam::Vector<Cmpt>() const
+{
+    return Vector<Cmpt>(xx(), yy(), zz());
 }
 
 

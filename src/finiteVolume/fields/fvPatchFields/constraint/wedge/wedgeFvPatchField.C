@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,10 +141,10 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::wedgeFvPatchField<Type>::snGradTransformDiag() const
 {
-    const diagTensor diagT =
-        0.5*diag(I - refCast<const wedgeFvPatch>(this->patch()).cellT());
-
-    const vector diagV(diagT.xx(), diagT.yy(), diagT.zz());
+    const vector diagV
+    (
+        0.5*diag(I - refCast<const wedgeFvPatch>(this->patch()).cellT())
+    );
 
     return tmp<Field<Type>>
     (

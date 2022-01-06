@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,6 +102,9 @@ public:
             inline Cmpt& xx();
             inline Cmpt& yy();
             inline Cmpt& zz();
+
+         //- Explicit conversion to vector
+         explicit inline operator Vector<Cmpt>() const;
 };
 
 
