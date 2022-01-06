@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,24 +69,26 @@ public:
 
         //- Helper for variadic write
         template<class Types, class Type>
-        static inline void setTypeValueSet
+        static inline void appendTypeValueSet
         (
             UPtrList<const Field<Types>>& valueSets,
-            const label valueSeti,
-            const Field<Type>& valueSet
-        )
-        {}
-
-        //- Helper for variadic write
-        template<class Type>
-        static inline void setTypeValueSet
-        (
-            UPtrList<const Field<Type>>& valueSets,
-            const label valueSeti,
             const Field<Type>& valueSet
         )
         {
-            valueSets.set(valueSeti, &valueSet);
+            valueSets.resize(valueSets.size() + 1);
+            valueSets.set(valueSets.size() - 1, nullptr);
+        }
+
+        //- Helper for variadic write
+        template<class Type>
+        static inline void appendTypeValueSet
+        (
+            UPtrList<const Field<Type>>& valueSets,
+            const Field<Type>& valueSet
+        )
+        {
+            valueSets.resize(valueSets.size() + 1);
+            valueSets.set(valueSets.size() - 1, &valueSet);
         }
 
         //- Helper for variadic write
@@ -114,14 +116,11 @@ public:
             Args& ... args
         )
         {
-            const label valueSeti =
-                valueSetNames.size() - 1 - sizeof...(Args)/2;
-
-            valueSetNames[valueSeti] = valueSetName;
-            #define SetTypeValueSet(Type, nullArg) \
-                setTypeValueSet(Type##ValueSets, valueSeti, valueSet);
-            FOR_ALL_FIELD_TYPES(SetTypeValueSet);
-            #undef SetTypeValueSet
+            valueSetNames.append(valueSetName);
+            #define AppendTypeValueSet(Type, nullArg) \
+                appendTypeValueSet(Type##ValueSets, valueSet);
+            FOR_ALL_FIELD_TYPES(AppendTypeValueSet);
+            #undef AppendTypeValueSet
 
             unpackTypeValueSets
             (
@@ -130,6 +129,68 @@ public:
                     , Type##ValueSets
                 FOR_ALL_FIELD_TYPES(TypeValueSetsParameter),
                 #undef TypeValueSetsParameter
+                args ...
+            );
+        }
+
+        //- Helper for variadic write
+        template<class Type, class ... Args>
+        static inline void unpackTypeValueSets
+        (
+            wordList& valueSetNames
+            #define TypeValueSetsNonConstArg(Type, nullArg) \
+                , UPtrList<const Field<Type>>& Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsNonConstArg),
+            #undef TypeValueSetsNonConstArg
+            const wordList& valueSetNamesPart,
+            const UPtrList<const Field<Type>>& valueSetsPart,
+            Args& ... args
+        )
+        {
+            forAll(valueSetNamesPart, i)
+            {
+                valueSetNames.append(valueSetNamesPart[i]);
+                #define AppendTypeValueSet(Type, nullArg) \
+                    appendTypeValueSet(Type##ValueSets, valueSetsPart[i]);
+                FOR_ALL_FIELD_TYPES(AppendTypeValueSet);
+                #undef AppendTypeValueSet
+            }
+
+            unpackTypeValueSets
+            (
+                valueSetNames
+                #define TypeValueSetsParameter(Type, nullArg) \
+                    , Type##ValueSets
+                FOR_ALL_FIELD_TYPES(TypeValueSetsParameter),
+                #undef TypeValueSetsParameter
+                args ...
+            );
+        }
+
+        //- Helper for variadic write
+        template<class Type, class ... Args>
+        static inline void unpackTypeValueSets
+        (
+            wordList& valueSetNames
+            #define TypeValueSetsNonConstArg(Type, nullArg) \
+                , UPtrList<const Field<Type>>& Type##ValueSets
+            FOR_ALL_FIELD_TYPES(TypeValueSetsNonConstArg),
+            #undef TypeValueSetsNonConstArg
+            const wordList& valueSetNamesPart,
+            const PtrList<Field<Type>>& valueSetsPart,
+            Args& ... args
+        )
+        {
+            unpackTypeValueSets
+            (
+                valueSetNames
+                #define TypeValueSetsParameter(Type, nullArg) \
+                    , Type##ValueSets
+                FOR_ALL_FIELD_TYPES(TypeValueSetsParameter),
+                #undef TypeValueSetsParameter
+                valueSetNamesPart,
+                reinterpret_cast<const UPtrList<const Field<Type>>&>
+                (valueSetsPart),
                 args ...
             );
         }
@@ -345,11 +406,9 @@ public:
             const Args& ... args
         ) const
         {
-            const label nFields = sizeof...(Args)/2;
-
-            wordList valueSetNames(nFields);
+            wordList valueSetNames;
             #define DeclareTypeValueSets(Type, nullArg) \
-                UPtrList<const Field<Type>> Type##ValueSets(nFields);
+                UPtrList<const Field<Type>> Type##ValueSets;
             FOR_ALL_FIELD_TYPES(DeclareTypeValueSets);
             #undef DeclareTypeValueSets
 
