@@ -73,43 +73,27 @@ functions
         )
     )
 
-    probabilityDensity.injection
-    {
-        type                sizeDistribution;
-        functionObjectLibs  ("libmultiphaseEulerFoamFunctionObjects.so");
+    #includeFunc sizeDistribution
+    (
+        populationBalance=bubbles,
+        regionType=cellZone,
+        name=injection,
+        functionType=volumeDensity,
+        coordinateType=diameter,
+        normalise=yes,
+        funcName=probabilityDensity.injection
+    )
 
-        writeControl        outputTime;
-        writeInterval       1;
-
-        setFormat           raw;
-
-        populationBalance   bubbles;
-        regionType          cellZone;
-        name                injection;
-        functionType        volume;
-        coordinateType      diameter;
-        densityFunction     yes;
-        normalise           yes;
-    }
-
-    probabilityDensity.outlet
-    {
-        type                sizeDistribution;
-        functionObjectLibs  ("libmultiphaseEulerFoamFunctionObjects.so");
-
-        writeControl        outputTime;
-        writeInterval       1;
-
-        setFormat           raw;
-
-        populationBalance   bubbles;
-        regionType          cellZone;
-        name                outlet;
-        functionType        volume;
-        coordinateType      diameter;
-        densityFunction     yes;
-        normalise           yes;
-    }
+    #includeFunc sizeDistribution
+    (
+        populationBalance=bubbles,
+        regionType=cellZone,
+        name=outlet,
+        functionType=volumeDensity,
+        coordinateType=diameter,
+        normalise=yes,
+        funcName=probabilityDensity.outlet
+    )
 }
 
 // ************************************************************************* //

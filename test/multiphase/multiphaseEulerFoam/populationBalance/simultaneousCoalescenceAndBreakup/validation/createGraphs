@@ -28,12 +28,12 @@ gnuplot<<EOF
 
     plot '-' w l lc rgb 'black' t 'NDF, Vanni (2000)',\
     '-' w l dt 2 lc rgb 'black' t 'VDF, Vanni (2000)',\
-    numberDensity every ::0::12 u (\$3/kVConversion):(\$4*kVConversion) w p pt 1 lc rgb 'black' t 'air1',\
-    numberDensity every ::13::22 u (\$3/kVConversion):(\$4*kVConversion) w p pt 5 lc rgb 'black' t 'air2',\
-    numberDensity every ::23::30 u (\$3/kVConversion):(\$4*kVConversion) w p pt 9 lc rgb 'black' t 'air3',\
-    volumeDensity every ::0::12 u (\$3/kVConversion):(\$4*kVConversion) w p pt 2 lc rgb 'black' t 'air1',\
-    volumeDensity every ::13::22 u (\$3/kVConversion):(\$4*kVConversion) w p pt 6 lc rgb 'black' t 'air2',\
-    volumeDensity every ::23::30 u (\$3/kVConversion):(\$4*kVConversion) w p pt 10 lc rgb 'black' t 'air3'
+    numberDensity every ::0::12 u (\$1/kVConversion):(\$2*kVConversion) w p pt 1 lc rgb 'black' t 'air1',\
+    numberDensity every ::13::22 u (\$1/kVConversion):(\$2*kVConversion) w p pt 5 lc rgb 'black' t 'air2',\
+    numberDensity every ::23::30 u (\$1/kVConversion):(\$2*kVConversion) w p pt 9 lc rgb 'black' t 'air3',\
+    volumeDensity every ::0::12 u (\$1/kVConversion):(\$2*kVConversion) w p pt 2 lc rgb 'black' t 'air1',\
+    volumeDensity every ::13::22 u (\$1/kVConversion):(\$2*kVConversion) w p pt 6 lc rgb 'black' t 'air2',\
+    volumeDensity every ::23::30 u (\$1/kVConversion):(\$2*kVConversion) w p pt 10 lc rgb 'black' t 'air3'
     1.000   0.042
     1.460   0.062
     1.950   0.083

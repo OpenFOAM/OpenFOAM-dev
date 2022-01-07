@@ -60,7 +60,7 @@ functions
         writeInterval   0.5;
         setFormat       raw;
         log             yes;
-        functionType    volume;
+        functionType    volumeConcentration;
         coordinateType  diameter;
         regionType      cellZone;
         name            x349;
@@ -74,7 +74,7 @@ functions
         writeInterval   0.5;
         setFormat       raw;
         log             yes;
-        functionType    volume;
+        functionType    volumeConcentration;
         coordinateType  diameter;
         regionType      cellZone;
         name            x349_bulk;
@@ -88,7 +88,7 @@ functions
         writeInterval   0.5;
         setFormat       raw;
         log             yes;
-        functionType    volume;
+        functionType    volumeConcentration;
         coordinateType  diameter;
         regionType      cellZone;
         name            x349_wall;

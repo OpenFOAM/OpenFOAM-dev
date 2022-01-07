@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,42 +25,42 @@ Class
     Foam::functionObjects::sizeDistribution
 
 Description
-    This function object calculates and outputs volume-averaged information
-    about the size distribution of the dispersed phase, such as the number
-    density function or its moments. It is designed to be used exclusively with
-    the population balance modeling functionality of the multiphaseEulerFoam
-    solver. It can be applied to a specific cellZone or the entire domain. The
-    function type determines whether the density function and its moments are
-    based on the number of dispersed phase elements in a size group or their
-    total volume.
+    Writes out the size distribution computed with multiphaseEulerFoam for the
+    entire domain or a volume region. Requires solver post-processing.
+
+    The following function object specification for example returns the volume-
+    based number density function:
 
     Example of function object specification:
     \verbatim
     numberDensity
     {
-        type           sizeDistribution;
-        libs ("libmultiphaseEulerFoamFunctionObjects.so");
-        ...
+        type                sizeDistribution;
+        libs                ("libmultiphaseEulerFoamFunctionObjects.so");
+        writeControl        writeTime;
         populationBalance   bubbles;
-        regionType          cellZone;
-        name                zone0;
-        functionType        number;
+        functionType        numberDensity;
         coordinateType      volume;
-        densityFunction     yes;
+        setFormat           raw;
     }
     \endverbatim
 
 Usage
     \table
-        Property     | Description               | Required | Default value
-        type         | type name: sizeDistribution | yes    |
-        populationBalance | corresponding populationBalance | yes |
-        functionType | number/volume/moments/stdDev | yes   |
-        coordinateType | used for density/moment calculation | yes |
-        normalise    | normalise concentrations  | no       | no
-        densityFunction | compute densityFunction | no      | no
-        logBased     | use log of coordinate for density | no | no
-        maxOrder     | maxim order of moment output | no    | 3
+        Property          | Description                    | Required  | Default
+        populationBalance | population balance name        | yes       |
+        functionType      | function type                  | yes       |
+        coordinateType    | particle property              | yes       |
+        allCoordinates    | write all coordinate values    | no        | false
+        normalise         | divide by total concentration  | no        | false
+        logTransform      | class width based on log of coordinate\\
+                                                           | no        | false
+        weightType        | weighting in case of field-dependent particle\\
+                            properties                     | no\\
+                                                           | numberConcentration
+        regionType        | cellZone or all                | no        | all
+        name              | name of cellZone if required   | no        |
+        setFormat         | output format                  | yes       |
     \endtable
 
 SourceFiles
@@ -73,7 +73,6 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "volRegion.H"
-#include "logFiles.H"
 #include "populationBalanceModel.H"
 #include "writeFile.H"
 #include "setWriter.H"
@@ -92,8 +91,7 @@ namespace functionObjects
 class sizeDistribution
 :
     public fvMeshFunctionObject,
-    public volRegion,
-    public logFiles
+    public volRegion
 {
 public:
 
@@ -102,111 +100,101 @@ public:
         //- Function type enumeration
         enum functionType
         {
-            ftMoments,
-            ftStdDev,
-            ftNumber,
-            ftVolume
+            numberConcentration,
+            numberDensity,
+            volumeConcentration,
+            volumeDensity,
+            areaConcentration,
+            areaDensity
         };
 
-        //- Ordinate type names
-        static const NamedEnum<functionType, 4> functionTypeNames_;
+        //- Function type names
+        static const NamedEnum<functionType, 6> functionTypeNames_;
 
         //- Coordinate type enumeration
         enum coordinateType
         {
-            ctVolume,
-            ctArea,
-            ctDiameter,
-            ctProjectedAreaDiameter
+            volume,
+            area,
+            diameter,
+            projectedAreaDiameter
         };
 
         //- Coordinate type names
         static const NamedEnum<coordinateType, 4> coordinateTypeNames_;
 
+        //- Enumeration for the weight types
+        enum class weightType
+        {
+            numberConcentration,
+            volumeConcentration,
+            areaConcentration,
+            cellVolume
+        };
 
-protected:
+        //- Names of the weight types
+        static const NamedEnum<weightType, 4> weightTypeNames_;
 
-    // Protected Data
 
-        //- Reference to fvMesh
-        const fvMesh& mesh_;
+private:
 
-        //- File containing data for all functionTypes except moments
+    // Private Data
+
+        //- Write file
         writeFile file_;
 
-        //- Output formatter
-        autoPtr<setWriter> formatterPtr_;
+        //- Reference to mesh
+        const fvMesh& mesh_;
 
-        //- Reference to populationBalanceModel
+        //- Reference to population balance
         const Foam::diameterModels::populationBalanceModel& popBal_;
 
-        //- Function to evaluate
+        //- Function type
         functionType functionType_;
 
-        //- Abscissa type
+        //- Coordinate type
         coordinateType coordinateType_;
 
-        //- List of volume-averaged number concentrations
-        scalarField N_;
+        //- Add values for all coordinate types to output
+        Switch allCoordinates_;
 
-        //- ???
-        scalarField V_;
-
-        //- List of volume-averaged surface areas
-        scalarField a_;
-
-        //- List of volume-averaged diameters
-        scalarField d_;
-
-        //- Normalise number/volume concentrations
+        //- Normalise result through division by sum
         Switch normalise_;
 
-        //- Determines whether density function is calculated
-        Switch densityFunction_;
+        //- Log transform
+        Switch logTransform_;
 
-        //- Geometric standard deviation/density function
-        Switch geometric_;
+        //- Weight types, relevant if particle properties are field dependent
+        weightType weightType_;
 
-        //- Highest moment order
-        label maxOrder_;
+        //- Set formatter
+        autoPtr<setWriter> formatterPtr_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
-        //- Filter field according to cellIds
+        //- Function type symbolic name for shorter file header
+        word functionTypeSymbolicName();
+
+        //- Coordinate type symbolic name for shorter file header
+        word coordinateTypeSymbolicName(const coordinateType& cType);
+
+        //- Filter a field according to cellIds
         tmp<scalarField> filterField(const scalarField& field) const;
 
-        //- Bin component used according to chosen coordinate type
-        inline const scalarField& bin() const
-        {
-            switch (coordinateType_)
-            {
-                case ctVolume:
-                    return V_;
-                case ctArea:
-                    return a_;
-                case ctDiameter:
-                    return d_;
-                case ctProjectedAreaDiameter:
-                    return d_;
-            }
-            return scalarField::null();
-        }
+        //- Field averaged coordinate value
+        scalar averageCoordinateValue
+        (
+            const diameterModels::sizeGroup& fi,
+            const coordinateType& cType
+        );
 
-        //- Correct volume averages
-        void correctVolAverages();
-
-        //- Write moments
-        void writeMoments();
-
-        //- Write standard deviation
-        void writeStdDev();
-
-        //- Write distribution
-        void writeDistribution();
-
-        //- Output file header information for functionType moments
-        virtual void writeFileHeader(const label i);
+        //- Weighted average
+        scalar weightedAverage
+        (
+            const scalarField& fld,
+            const diameterModels::sizeGroup& fi
+        );
 
 
 public:
@@ -235,20 +223,17 @@ public:
 
     // Member Functions
 
-        //- Read the sizeDistribution data
-        virtual bool read(const dictionary&);
-
         //- Return the list of fields required
         virtual wordList fields() const
         {
             return wordList::null();
         }
 
+        //- Read the sizeDistribution data
+        virtual bool read(const dictionary&);
+
         //- Execute, currently does nothing
         virtual bool execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual bool end();
 
         //- Calculate and write the size distribution
         virtual bool write();

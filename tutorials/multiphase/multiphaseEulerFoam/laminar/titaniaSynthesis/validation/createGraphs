@@ -27,7 +27,7 @@ gnuplot<<EOF
          "$graphFile" u 1:5 axis x1y2 w l t '{/Symbol a}_{particles}'
 EOF
 
-resultFile=../postProcessing/numberConcentration/$time/numberConcentration.xy
+resultFile=../postProcessing/numberDensity/$time/numberDensity.xy
 
 gnuplot<<EOF
     set terminal postscript eps color enhanced font "Helvetica,20"
@@ -43,9 +43,9 @@ gnuplot<<EOF
     set xrange [1e-3:1]
     set yrange [1e-3:3]
 
-    plot "$resultFile" u (\$3/1e-6):4 w lp t 'Size distribution',\
-         "$resultFile" u (\$3/1e-6):(\$2/\$1) axis x1y2 w l t '{/Symbol k}',\
-         "$resultFile" u (\$3/1e-6):(6./((6./pi*\$1)**(1./3.))) axis x1y2 w l t '{/Symbol k} lower bound'
+    plot "$resultFile" u (\$1/1e-6):2 w lp t 'Size distribution',\
+         "$resultFile" u (\$1/1e-6):(\$4/\$3) axis x1y2 w l t '{/Symbol k}',\
+         "$resultFile" u (\$1/1e-6):(6./((6./pi*\$3)**(1./3.))) axis x1y2 w l t '{/Symbol k} lower bound'
 EOF
 
 #------------------------------------------------------------------------------

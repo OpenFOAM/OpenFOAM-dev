@@ -23,7 +23,7 @@ gnuplot<<EOF
 
     plot '<printf "7.548417545 0\n7.548417545 0.01\n10.62698298 0.01\n10.62698298 0\n"' w l dt 2 lc rgb 'black' t 'Initial condition',\
     '<printf "3.548417545 0\n3.548417545 0.01\n6.626982979 0.01\n6.626982979 0\n"' w l lc rgb 'black' t 'Exact',\
-    '../postProcessing/numberDensity/4/numberDensity.xy' u 1:4 w lp ls 4 lc rgb 'black' t 'Numerical'
+    '../postProcessing/numberDensity/4/numberDensity.xy' u 1:2 w lp ls 4 lc rgb 'black' t 'Numerical'
 
     set output '../moments.eps'
 
@@ -36,9 +36,9 @@ gnuplot<<EOF
     set yrange [0:1.5]
     set key top right
 
-    plot '../postProcessing/moments/0/moments.dat' every 2 u 1:(\$2/0.030785654) w p pt 5 lc rgb 'black' t 'j=0 (Numbers), numerical',\
+    plot '../postProcessing/probes/0/integerMoment0(N,v).bubbles' u 1:(\$2/0.030785654) w p pt 5 lc rgb 'black' t 'j=0 (Numbers), numerical',\
     '<printf "0 1\n6 1\n"' w l lc rgb 'black' t 'j=0 (Numbers), exact',\
-    '../postProcessing/moments/0/moments.dat' u 1:(\$3/0.279433081) every 2 w p pt 6 lc rgb 'black' t 'j=1 (Volume), numerical',\
+    '../postProcessing/probes/0/integerMoment1(N,v).bubbles' u 1:(\$2/0.279433081) w p pt 6 lc rgb 'black' t 'j=1 (Volume), numerical',\
     '<printf "0 1\n6 0.33333\n"' w l dt 2 lc rgb 'black' t 'j=1 (Volume), exact'
 EOF
 

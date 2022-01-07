@@ -52,21 +52,13 @@ maxDeltaT       1;
 
 functions
 {
-    numberDensity
-    {
-        type                sizeDistribution;
-        functionObjectLibs  ("libmultiphaseEulerFoamFunctionObjects.so");
-
-        writeControl        outputTime;
-        writeInterval       1;
-
-        setFormat           raw;
-
-        populationBalance   bubbles;
-        functionType        number;
-        coordinateType      volume;
-        densityFunction     yes;
-    }
+    #includeFunc sizeDistribution
+    (
+        populationBalance=bubbles,
+        functionType=numberDensity,
+        coordinateType=volume,
+        funcName=numberDensity
+    )
 }
 
 // ************************************************************************* //

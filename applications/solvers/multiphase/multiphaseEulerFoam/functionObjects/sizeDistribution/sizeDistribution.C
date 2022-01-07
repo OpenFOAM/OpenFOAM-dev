@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,10 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sizeDistribution.H"
-#include "Time.H"
-#include "fvMesh.H"
 #include "addToRunTimeSelectionTable.H"
-#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -45,19 +42,21 @@ const char*
 Foam::NamedEnum
 <
     Foam::functionObjects::sizeDistribution::functionType,
-    4
+    6
 >::names[] =
 {
-    "moments",
-    "standardDeviation",
-    "number",
-    "volume"
+    "numberConcentration",
+    "numberDensity",
+    "volumeConcentration",
+    "volumeDensity",
+    "areaConcentration",
+    "areaDensity"
 };
 
 const Foam::NamedEnum
 <
     Foam::functionObjects::sizeDistribution::functionType,
-    4
+    6
 > Foam::functionObjects::sizeDistribution::functionTypeNames_;
 
 template<>
@@ -80,10 +79,122 @@ const Foam::NamedEnum
     4
 > Foam::functionObjects::sizeDistribution::coordinateTypeNames_;
 
+
+namespace Foam
+{
+    template<>
+    const char* NamedEnum
+    <
+        Foam::functionObjects::sizeDistribution::weightType,
+        4
+    >::names[] =
+    {
+        "numberConcentration",
+        "volumeConcentration",
+        "areaConcentration",
+        "cellVolume"
+    };
+}
+
+
+const Foam::NamedEnum
+<
+    Foam::functionObjects::sizeDistribution::weightType,
+    4
+>
+Foam::functionObjects::sizeDistribution::weightTypeNames_;
+
 using Foam::constant::mathematical::pi;
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
+
+Foam::word Foam::functionObjects::sizeDistribution::functionTypeSymbolicName()
+{
+    word functionTypeSymbolicName(word::null);
+
+    switch (functionType_)
+    {
+        case functionType::numberConcentration:
+        {
+            functionTypeSymbolicName = "N";
+
+            break;
+        }
+        case functionType::numberDensity:
+        {
+            functionTypeSymbolicName = "n";
+
+            break;
+        }
+        case functionType::volumeConcentration:
+        {
+            functionTypeSymbolicName = "V";
+
+            break;
+        }
+        case functionType::volumeDensity:
+        {
+            functionTypeSymbolicName = "v";
+
+            break;
+        }
+        case functionType::areaConcentration:
+        {
+            functionTypeSymbolicName = "A";
+
+            break;
+        }
+        case functionType::areaDensity:
+        {
+            functionTypeSymbolicName = "a";
+
+            break;
+        }
+    }
+
+    return functionTypeSymbolicName;
+}
+
+
+Foam::word Foam::functionObjects::sizeDistribution::coordinateTypeSymbolicName
+(
+    const coordinateType& cType
+)
+{
+    word coordinateTypeSymbolicName(word::null);
+
+    switch (cType)
+    {
+        case coordinateType::volume:
+        {
+            coordinateTypeSymbolicName = "v";
+
+            break;
+        }
+        case coordinateType::area:
+        {
+            coordinateTypeSymbolicName = "a";
+
+            break;
+        }
+        case coordinateType::diameter:
+        {
+            coordinateTypeSymbolicName = "d";
+
+            break;
+        }
+        case coordinateType::projectedAreaDiameter:
+        {
+            coordinateTypeSymbolicName = "dPa";
+
+            break;
+        }
+    }
+
+    return coordinateTypeSymbolicName;
+}
+
 
 Foam::tmp<Foam::scalarField>
 Foam::functionObjects::sizeDistribution::filterField
@@ -102,252 +213,120 @@ Foam::functionObjects::sizeDistribution::filterField
 }
 
 
-void Foam::functionObjects::sizeDistribution::correctVolAverages()
+Foam::scalar Foam::functionObjects::sizeDistribution::averageCoordinateValue
+(
+    const Foam::diameterModels::sizeGroup& fi,
+    const coordinateType& cType
+)
 {
-    forAll(N_, i)
+    scalar averageCoordinateValue(Zero);
+
+    switch (cType)
     {
-        const Foam::diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
-
-        scalarField Ni(filterField(fi*fi.phase()/fi.x()));
-        scalarField V(filterField(mesh_.V()));
-        scalarField ai(filterField(fi.a()));
-        scalarField di(Ni.size());
-
-        switch (coordinateType_)
+        case coordinateType::volume:
         {
-            case ctProjectedAreaDiameter:
-            {
-                di = sqrt(ai/pi);
-
-                break;
-            }
-            default:
-            {
-                di = fi.d();
-
-                break;
-            }
-        }
-
-        N_[i] = gSum(V*Ni)/this->V();
-        V_[i] = fi.x().value();
-        a_[i] = gSum(V*ai)/this->V();
-        d_[i] = gSum(V*di)/this->V();
-    }
-}
-
-
-void Foam::functionObjects::sizeDistribution::writeMoments()
-{
-    logFiles::write();
-
-    Log << "    writing moments of size distribution." << endl;
-
-    if (Pstream::master())
-    {
-        writeTime(file());
-    }
-
-    const scalarField& bin = this->bin();
-
-    for (label k = 0; k <= maxOrder_; k++)
-    {
-        scalar result = 0;
-
-        forAll(N_, i)
-        {
-            result += pow(bin[i], k)*N_[i];
-        }
-
-        if (Pstream::master())
-        {
-            file() << tab << result;
-        }
-    }
-
-    if (Pstream::master())
-    {
-        file() << endl;
-    }
-}
-
-
-void Foam::functionObjects::sizeDistribution::writeStdDev()
-{
-    logFiles::write();
-
-    Log << "    writing standard deviation of size distribution."
-        << endl;
-
-    if (Pstream::master())
-    {
-        writeTime(file());
-    }
-
-    scalar stdDev = 0;
-    scalar mean = 0;
-    scalar var = 0;
-
-    const scalarField& bin = this->bin();
-
-    if (sum(N_) != 0)
-    {
-        if (geometric_)
-        {
-            mean = exp(sum(Foam::log(bin)*N_/sum(N_)));
-
-            var =
-                sum(sqr(Foam::log(bin) - Foam::log(mean))
-               *N_/sum(N_));
-
-            stdDev = exp(sqrt(var));
-        }
-        else
-        {
-            mean = sum(bin*N_/sum(N_));
-
-            var = sum(sqr(bin - mean)*N_/sum(N_));
-
-            stdDev = sqrt(var);
-        }
-    }
-
-    if (Pstream::master())
-    {
-        file() << tab << stdDev << tab << mean << tab << var << endl;
-    }
-}
-
-
-void Foam::functionObjects::sizeDistribution::writeDistribution()
-{
-    scalarField result(N_);
-
-    const scalarField& bin = this->bin();
-
-    switch (functionType_)
-    {
-        case ftNumber:
-        {
-            Log << "    writing number distribution. "
-                << endl;
+            averageCoordinateValue = fi.x().value();
 
             break;
         }
-        case ftVolume:
+        case coordinateType::area:
         {
-            Log << "    writing volume distribution. "
-                << endl;
-
-            result *= V_;
+            averageCoordinateValue =
+                weightedAverage(fi.a(), fi);
 
             break;
         }
-        default:
+        case coordinateType::diameter:
         {
+            averageCoordinateValue =
+                weightedAverage(fi.d(), fi);
+
             break;
         }
+        case coordinateType::projectedAreaDiameter:
+        {
+            averageCoordinateValue =
+                weightedAverage(sqrt(fi.a()/pi), fi);
 
+            break;
+        }
     }
 
-    if (normalise_)
+    return averageCoordinateValue;
+}
+
+
+Foam::scalar Foam::functionObjects::sizeDistribution::weightedAverage
+(
+    const Foam::scalarField& fld,
+    const Foam::diameterModels::sizeGroup& fi
+)
+{
+    scalar weightedAverage(Zero);
+
+    switch (weightType_)
     {
-        if(sum(result) != 0)
+        case weightType::numberConcentration:
         {
-            result /= sum(result);
-        }
+            scalarField Ni(filterField(fi*fi.phase()/fi.x().value()));
 
-    }
-
-    if (densityFunction_)
-    {
-        List<scalar> bndrs(N_.size() + 1);
-
-        bndrs.first() = bin.first();
-        bndrs.last() = bin.last();
-
-        for (label i = 1; i < N_.size(); i++)
-        {
-            bndrs[i] = (bin[i]+ bin[i-1])/2.0;
-        }
-
-        forAll(result, i)
-        {
-            if (geometric_)
+            if (gSum(Ni) == 0)
             {
-                result[i] /=
-                    (Foam::log(bndrs[i+1]) - Foam::log(bndrs[i]));
+                weightedAverage =
+                    gSum(filterField(mesh_.V()*fld))/this->V();
             }
             else
             {
-                result[i] /= (bndrs[i+1] - bndrs[i]);
+                weightedAverage =
+                    gSum(Ni*filterField(fld))/gSum(Ni);
             }
+
+            break;
         }
-    }
-
-    if (Pstream::master())
-    {
-        formatterPtr_->write
-        (
-            file_.baseTimeDir(),
-            name(),
-            coordSet(true, "volume", V_),
-            "area",
-            a_,
-            "diameter",
-            d_,
-            word(functionTypeNames_[functionType_])
-          + (densityFunction_ ? "Density" : "Concentration"),
-            result
-        );
-    }
-}
-
-
-void Foam::functionObjects::sizeDistribution::writeFileHeader
-(
-    const label i
-)
-{
-    volRegion::writeFileHeader(*this, file());
-
-    writeHeaderValue
-    (
-        file(),
-        "Coordinate",
-        word(coordinateTypeNames_[coordinateType_])
-    );
-
-    word str("Time");
-
-    switch (functionType_)
-    {
-        case ftMoments:
+        case weightType::volumeConcentration:
         {
-            for (label k = 0; k <= maxOrder_; k++)
+            scalarField Vi(filterField(fi*fi.phase()));
+
+            if (gSum(Vi) == 0)
             {
-                str += (" k=" + std::to_string(k));
+                weightedAverage =
+                    gSum(filterField(mesh_.V()*fld))/this->V();
+            }
+            else
+            {
+                weightedAverage =
+                    gSum(Vi*filterField(fld))/gSum(Vi);
             }
 
             break;
         }
-
-        case ftStdDev:
+        case weightType::areaConcentration:
         {
-            str += " standardDeviation mean variance";
+            scalarField Ai(filterField(fi.a().ref()*fi.phase()));
+
+            if (gSum(Ai) == 0)
+            {
+                weightedAverage =
+                    gSum(filterField(mesh_.V()*fld))/this->V();
+            }
+            else
+            {
+                weightedAverage =
+                    gSum(Ai*filterField(fld))/gSum(Ai);
+            }
 
             break;
         }
-
-        default:
+        case weightType::cellVolume:
         {
+            weightedAverage =
+                gSum(filterField(mesh_.V()*fld))/this->V();
+
             break;
         }
     }
 
-    writeCommented(file(), str);
-
-    file() << endl;
+    return weightedAverage;
 }
 
 
@@ -362,9 +341,8 @@ Foam::functionObjects::sizeDistribution::sizeDistribution
 :
     fvMeshFunctionObject(name, runTime, dict),
     volRegion(fvMeshFunctionObject::mesh_, dict),
-    logFiles(obr_, name),
-    mesh_(fvMeshFunctionObject::mesh_),
     file_(obr_, name),
+    mesh_(fvMeshFunctionObject::mesh_),
     popBal_
     (
         obr_.lookupObject<Foam::diameterModels::populationBalanceModel>
@@ -374,10 +352,26 @@ Foam::functionObjects::sizeDistribution::sizeDistribution
     ),
     functionType_(functionTypeNames_.read(dict.lookup("functionType"))),
     coordinateType_(coordinateTypeNames_.read(dict.lookup("coordinateType"))),
-    N_(popBal_.sizeGroups().size(), 0),
-    V_(popBal_.sizeGroups().size(), 0),
-    a_(popBal_.sizeGroups().size(), 0),
-    d_(popBal_.sizeGroups().size(), 0)
+    allCoordinates_
+    (
+        dict.lookupOrDefault<Switch>("allCoordinates", false)
+    ),
+    normalise_(dict.lookupOrDefault<Switch>("normalise", false)),
+    logTransform_
+    (
+        dict.lookupOrDefaultBackwardsCompatible<Switch>
+        (
+            {"logTransform", "geometric"},
+            false
+        )
+    ),
+    weightType_
+    (
+        dict.found("weightType")
+      ? weightTypeNames_.read(dict.lookup("weightType"))
+      : weightType::numberConcentration
+    ),
+    formatterPtr_(nullptr)
 {
     read(dict);
 }
@@ -393,16 +387,11 @@ Foam::functionObjects::sizeDistribution::~sizeDistribution()
 
 bool Foam::functionObjects::sizeDistribution::read(const dictionary& dict)
 {
+    Log << type() << " " << name() << ":" << nl;
+
     fvMeshFunctionObject::read(dict);
 
-    normalise_ = dict.lookupOrDefault<Switch>("normalise", false);
-    densityFunction_ = dict.lookupOrDefault<Switch>("densityFunction", false);
-    geometric_ = dict.lookupOrDefault<Switch>("geometric", false);
-    maxOrder_ = dict.lookupOrDefault("maxOrder", 3);
-
     formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
-
-    resetName(name());
 
     return false;
 }
@@ -414,43 +403,255 @@ bool Foam::functionObjects::sizeDistribution::execute()
 }
 
 
-bool Foam::functionObjects::sizeDistribution::end()
-{
-    return true;
-}
-
-
 bool Foam::functionObjects::sizeDistribution::write()
 {
     Log << type() << " " << name() << " write:" << nl;
 
-    correctVolAverages();
+    const UPtrList<diameterModels::sizeGroup>& sizeGroups =
+        popBal_.sizeGroups();
+
+    scalarField coordinateValues(sizeGroups.size());
+    scalarField boundaryValues(sizeGroups.size() + 1);
+    scalarField resultValues(sizeGroups.size());
+
+    forAll(sizeGroups, i)
+    {
+        const diameterModels::sizeGroup& fi = sizeGroups[i];
+
+        coordinateValues[i] = averageCoordinateValue(fi, coordinateType_);
+    }
+
+    if
+    (
+        functionType_ == functionType::numberDensity
+     || functionType_ == functionType::volumeDensity
+     || functionType_ == functionType::areaDensity
+    )
+    {
+        if (logTransform_)
+        {
+            boundaryValues.first() = Foam::log(coordinateValues.first());
+            boundaryValues.last() = Foam::log(coordinateValues.last());
+
+            for (label i = 1; i < boundaryValues.size() - 1; i++)
+            {
+                boundaryValues[i] =
+                    0.5
+                   *(
+                        Foam::log(coordinateValues[i])
+                      + Foam::log(coordinateValues[i-1])
+                    );
+            }
+        }
+        else
+        {
+            boundaryValues.first() = coordinateValues.first();
+            boundaryValues.last() = coordinateValues.last();
+
+            for (label i = 1; i < boundaryValues.size() - 1; i++)
+            {
+                boundaryValues[i] =
+                    (coordinateValues[i] + coordinateValues[i-1])/2;
+            }
+        }
+    }
 
     switch (functionType_)
     {
-        case ftMoments:
+        case functionType::numberConcentration:
         {
-            writeMoments();
+            forAll(sizeGroups, i)
+            {
+                const diameterModels::sizeGroup& fi = sizeGroups[i];
+
+                resultValues[i] =
+                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))*this->V();
+            }
+
+            if (normalise_ && sum(resultValues) != 0)
+            {
+                resultValues /= sum(resultValues);
+            }
 
             break;
         }
-
-        case ftStdDev:
+        case functionType::numberDensity:
         {
-            writeStdDev();
+            forAll(sizeGroups, i)
+            {
+                const diameterModels::sizeGroup& fi = sizeGroups[i];
+
+                resultValues[i] =
+                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))*this->V();
+            }
+
+            if (normalise_ && sum(resultValues) != 0)
+            {
+                resultValues /= sum(resultValues);
+            }
+
+            forAll(resultValues, i)
+            {
+                resultValues[i] /= (boundaryValues[i+1] - boundaryValues[i]);
+            }
 
             break;
         }
-
-        default:
+        case functionType::volumeConcentration:
         {
-            writeDistribution();
+            forAll(sizeGroups, i)
+            {
+                const diameterModels::sizeGroup& fi = sizeGroups[i];
+
+                resultValues[i] =
+                    gSum(filterField(mesh_.V()*fi*fi.phase()))*this->V();
+            }
+
+            if (normalise_ && sum(resultValues) != 0)
+            {
+                resultValues /= sum(resultValues);
+            }
+
+            break;
+        }
+        case functionType::volumeDensity:
+        {
+            forAll(sizeGroups, i)
+            {
+                const diameterModels::sizeGroup& fi = sizeGroups[i];
+
+                resultValues[i] =
+                    gSum(filterField(mesh_.V()*fi*fi.phase()))*this->V();
+            }
+
+            if (normalise_ && sum(resultValues) != 0)
+            {
+                resultValues /= sum(resultValues);
+            }
+
+            forAll(resultValues, i)
+            {
+                resultValues[i] /= (boundaryValues[i+1] - boundaryValues[i]);
+            }
+
+            break;
+        }
+        case functionType::areaConcentration:
+        {
+            forAll(sizeGroups, i)
+            {
+                const diameterModels::sizeGroup& fi = sizeGroups[i];
+
+                resultValues[i] =
+                    gSum
+                    (
+                        filterField(mesh_.V()*fi.a().ref()*fi*fi.phase()/fi.x())
+                    )
+                   *this->V();
+            }
+
+            if (normalise_ && sum(resultValues) != 0)
+            {
+                resultValues /= sum(resultValues);
+            }
+
+            break;
+        }
+        case functionType::areaDensity:
+        {
+            forAll(sizeGroups, i)
+            {
+                const diameterModels::sizeGroup& fi = sizeGroups[i];
+
+                resultValues[i] =
+                    gSum
+                    (
+                        filterField(mesh_.V()*fi.a().ref()*fi*fi.phase()/fi.x())
+                    )
+                   *this->V();
+            }
+
+            if (normalise_ && sum(resultValues) != 0)
+            {
+                resultValues /= sum(resultValues);
+            }
+
+            forAll(resultValues, i)
+            {
+                resultValues[i] /= (boundaryValues[i+1] - boundaryValues[i]);
+            }
 
             break;
         }
     }
 
-    Log << endl;
+
+    if (allCoordinates_)
+    {
+        wordList otherCoordinateSymbolicNames(coordinateTypeNames_.size());
+        PtrList<scalarField> otherCoordinateValues(coordinateTypeNames_.size());
+        typedef NamedEnum<coordinateType, 4> namedEnumCoordinateType;
+
+        forAllConstIter(namedEnumCoordinateType, coordinateTypeNames_, iter)
+        {
+            const coordinateType cType = coordinateTypeNames_[iter.key()];
+
+            otherCoordinateSymbolicNames[cType] =
+                coordinateTypeSymbolicName(cType);
+
+            otherCoordinateValues.set
+            (
+                cType,
+                new scalarField(popBal_.sizeGroups().size())
+            );
+
+            forAll(sizeGroups, i)
+            {
+                const diameterModels::sizeGroup& fi = sizeGroups[i];
+
+                otherCoordinateValues[cType][i] =
+                    averageCoordinateValue(fi, cType);
+            }
+        }
+
+        if (Pstream::master())
+        {
+            formatterPtr_->write
+            (
+                file_.baseTimeDir(),
+                name(),
+                coordSet
+                (
+                    true,
+                    coordinateTypeSymbolicName(coordinateType_),
+                    coordinateValues
+                ),
+                functionTypeSymbolicName(),
+                resultValues,
+                otherCoordinateSymbolicNames,
+                otherCoordinateValues
+            );
+        }
+    }
+    else
+    {
+        if (Pstream::master())
+        {
+            formatterPtr_->write
+            (
+                file_.baseTimeDir(),
+                name(),
+                coordSet
+                (
+                    true,
+                    coordinateTypeSymbolicName(coordinateType_),
+                    coordinateValues
+                ),
+                functionTypeSymbolicName(),
+                resultValues
+            );
+        }
+    }
 
     return true;
 }
