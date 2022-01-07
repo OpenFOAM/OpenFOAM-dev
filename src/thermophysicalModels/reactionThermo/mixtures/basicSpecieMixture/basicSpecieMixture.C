@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,7 +200,7 @@ void Foam::basicSpecieMixture::correctMassFractions()
             Yt += Y_[i];
         }
 
-        if (mag(max(Yt).value()) < rootVSmall)
+        if (mag(min(Yt).value()) < rootVSmall)
         {
             FatalErrorInFunction
                 << "Sum of mass fractions is zero for species " << species()
