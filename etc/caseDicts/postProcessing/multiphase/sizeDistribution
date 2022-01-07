@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes out the size distribution computed with multiphaseEulerFoam for the
+    entire domain or a volume region. Requires solver post-processing.
+
+\*---------------------------------------------------------------------------*/
+
+type                sizeDistribution;
+libs                ("libmultiphaseEulerFoamFunctionObjects.so");
+
+populationBalance   <populationBalance>;
+functionType        <function>;           // numberConcentration, numberDensity
+                                          // volumeConcentration, volumeDensity
+                                          // areaConcentration, areaDensity
+coordinateType      <coordinate>;         // volume, area, diameter,
+                                          // projectedAreaDiameter
+allCoordinates      false;                // defaults to false
+normalise           false;                // defaults to false
+logTransform        false;                // defaults to false, only relevant
+                                          // for density functions
+weightType          numberConcentration;  // volumeConcentration,
+                                          // areaConcentration, cellVolume
+                                          // relevant for field-dependent
+                                          // particle properties, defaults to
+                                          // numberConcentration
+regionType          all;                  // cellZone
+                                          // defaults to all
+name                cellZoneName;         // relevant for regionType all
+
+
+setFormat           raw;
+writeControl        writeTime;
+
+
+// ************************************************************************* //

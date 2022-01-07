@@ -28,7 +28,7 @@ deltaT          0.01;
 
 writeControl    runTime;
 
-writeInterval   4;
+writeInterval   0.2;
 
 purgeWrite      0;
 
@@ -52,37 +52,38 @@ maxDeltaT       1;
 
 functions
 {
-    numberDensity
-    {
-        type                sizeDistribution;
-        functionObjectLibs  ("libmultiphaseEulerFoamFunctionObjects.so");
+    #includeFunc sizeDistribution
+    (
+        populationBalance=bubbles,
+        functionType=numberDensity,
+        coordinateType=volume,
+        funcName=numberDensity
+    )
 
-        writeControl        outputTime;
-        writeInterval       1;
+    #includeFunc moments
+    (
+        populationBalance=bubbles,
+        momentType=integerMoment,
+        coordinateType=volume,
+        order=1
+    )
 
-        setFormat           raw;
+    #includeFunc moments
+    (
+        populationBalance=bubbles,
+        momentType=integerMoment,
+        coordinateType=volume,
+        order=0
+    )
 
-        populationBalance   bubbles;
-        functionType        number;
-        coordinateType      volume;
-        densityFunction     yes;
-    }
-
-    moments
-    {
-        type                sizeDistribution;
-        functionObjectLibs  ("libmultiphaseEulerFoamFunctionObjects.so");
-
-        writeControl        runTime;
-        writeInterval       0.1;
-
-        setFormat           raw;
-
-        populationBalance   bubbles;
-        functionType        moments;
-        coordinateType      volume;
-        maxOrder            1;
-    }
+    #includeFunc probes
+    (
+        funcName=probes,
+        points=((0.5 0.5 0.5)),
+        integerMoment0(N,v).bubbles,
+        integerMoment1(N,v).bubbles,
+        writeControl=writeTime
+    )
 }
 
 // ************************************************************************* //

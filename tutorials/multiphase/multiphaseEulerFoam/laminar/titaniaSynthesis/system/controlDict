@@ -60,26 +60,18 @@ functions
         fields=(TiCl4.vapor O2.vapor Cl2.vapor alpha.particles)
     )
 
-    numberConcentration
-    {
-        type                sizeDistribution;
-        functionObjectLibs  ("libmultiphaseEulerFoamFunctionObjects.so");
-
-        writeControl        outputTime;
-        writeInterval       1;
-        setFormat           raw;
-        log                 yes;
-
-        regionType          cellZone;
-        name                outlet;
-
-        populationBalance   aggregates;
-        functionType        number;
-        coordinateType      projectedAreaDiameter;
-        densityFunction     yes;
-        normalise           yes;
-        geometric           yes;
-    }
+    #includeFunc sizeDistribution
+    (
+        populationBalance=aggregates,
+        regionType=cellZone,
+        name=outlet,
+        functionType=numberDensity,
+        coordinateType=projectedAreaDiameter,
+        allCoordinates=yes,
+        normalise=yes,
+        logTransform=yes,
+        funcName=numberDensity
+    )
 
     #includeFunc writeObjects
     (

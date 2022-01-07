@@ -43,8 +43,8 @@ gnuplot<<EOF
     set ylabel '({/Symbol a}/{/Symbol a}_{tot})/{/Symbol D}d (mm^{-1})'
     set xtics 1
 
-    plot "$injectionFile" u (\$3/1e-3):(\$4/1e3) w histeps lw 3 lc rgb 'green' t 'injection',\
-         "$outletFile" u (\$3/1e-3):(\$4/1e3) w histeps lw 3 lc rgb 'red' t 'outlet'
+    plot "$injectionFile" u (\$1/1e-3):(\$2/1e3) w histeps lw 3 lc rgb 'green' t 'injection',\
+         "$outletFile" u (\$1/1e-3):(\$2/1e3) w histeps lw 3 lc rgb 'red' t 'outlet'
 EOF
 
 #------------------------------------------------------------------------------
