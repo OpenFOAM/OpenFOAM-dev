@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -302,18 +302,18 @@ Foam::basicThermo::implementation::implementation
         mesh
     ),
 
-    alpha_
+    kappa_
     (
         IOobject
         (
-            phasePropertyName("thermo:alpha", phaseName),
+            phasePropertyName("thermo:kappa", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimensionSet(1, -1, -1, 0, 0), Zero)
+        dimensionedScalar(dimEnergy/dimTime/dimLength/dimTemperature, Zero)
     ),
 
     dpdt_(lookupOrDefault<Switch>("dpdt", true))
@@ -395,18 +395,9 @@ Foam::volScalarField& Foam::basicThermo::implementation::T()
 }
 
 
-const Foam::volScalarField& Foam::basicThermo::implementation::alpha() const
+const Foam::volScalarField& Foam::basicThermo::implementation::kappa() const
 {
-    return alpha_;
-}
-
-
-const Foam::scalarField& Foam::basicThermo::implementation::alpha
-(
-    const label patchi
-) const
-{
-    return alpha_.boundaryField()[patchi];
+    return kappa_;
 }
 
 

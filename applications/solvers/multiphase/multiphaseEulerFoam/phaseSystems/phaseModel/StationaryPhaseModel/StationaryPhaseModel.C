@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -280,7 +280,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::scalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
 {
-    return this->thermo().kappa(patchi);
+    return this->thermo().kappa().boundaryField()[patchi];
 }
 
 
@@ -318,7 +318,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::divq(volScalarField& he) const
 
     return -fvm::laplacian
     (
-        fvc::interpolate(alpha)*fvc::interpolate(this->thermo().alpha()),
+        fvc::interpolate(alpha)*fvc::interpolate(this->thermo().alphahe()),
         he
     );
 }

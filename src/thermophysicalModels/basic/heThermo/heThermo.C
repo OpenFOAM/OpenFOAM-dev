@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -672,42 +672,15 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::W
 
 template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::volScalarField>
-Foam::heThermo<BasicThermo, MixtureType>::kappa() const
-{
-    return volScalarField::New("kappa", Cp_*this->alpha_);
-}
-
-
-template<class BasicThermo, class MixtureType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::kappa
-(
-    const label patchi
-) const
-{
-    return
-        Cp
-        (
-            this->T_.boundaryField()[patchi],
-            patchi
-        )*this->alpha_.boundaryField()[patchi];
-}
-
-
-template<class BasicThermo, class MixtureType>
-Foam::tmp<Foam::volScalarField>
 Foam::heThermo<BasicThermo, MixtureType>::alphahe() const
 {
     if (MixtureType::thermoType::enthalpy())
     {
-        return volScalarField::New("alphahe", this->alpha_);
+        return volScalarField::New("alphahe", this->kappa_/Cp_);
     }
     else
     {
-        return volScalarField::New
-        (
-            "alphahe",
-            this->gamma()*this->alpha_
-        );
+        return volScalarField::New("alphahe", this->kappa_/Cv_);
     }
 }
 
@@ -718,16 +691,11 @@ Foam::heThermo<BasicThermo, MixtureType>::alphahe(const label patchi) const
 {
     if (MixtureType::thermoType::enthalpy())
     {
-        return this->alpha_.boundaryField()[patchi];
+        return this->kappa_.boundaryField()[patchi]/Cp_.boundaryField()[patchi];
     }
     else
     {
-        return
-            this->gamma
-            (
-                this->T_.boundaryField()[patchi],
-                patchi
-            )*this->alpha_.boundaryField()[patchi];
+        return this->kappa_.boundaryField()[patchi]/Cv_.boundaryField()[patchi];
     }
 }
 
@@ -739,7 +707,7 @@ Foam::heThermo<BasicThermo, MixtureType>::kappaEff
     const volScalarField& alphat
 ) const
 {
-    return volScalarField::New("kappaEff", Cp_*(this->alpha_ + alphat));
+    return volScalarField::New("kappaEff", this->kappa_ + Cp_*alphat);
 }
 
 
@@ -752,12 +720,8 @@ Foam::heThermo<BasicThermo, MixtureType>::kappaEff
 ) const
 {
     return
-        Cp
-        (
-            this->T_.boundaryField()[patchi],
-            patchi
-        )
-       *(this->alpha_.boundaryField()[patchi] + alphat);
+        this->kappa_.boundaryField()[patchi]
+      + Cp(this->T_.boundaryField()[patchi], patchi)*alphat;
 }
 
 
@@ -770,14 +734,14 @@ Foam::heThermo<BasicThermo, MixtureType>::alphaEff
 {
     if (MixtureType::thermoType::enthalpy())
     {
-        return volScalarField::New("alphaEff", this->alpha_ + alphat);
+        return volScalarField::New("alphaEff", this->kappa_/Cp_ + alphat);
     }
     else
     {
         return volScalarField::New
         (
             "alphaEff",
-            this->gamma()*(this->alpha_ + alphat)
+            (this->kappa_ + Cp_*alphat)/Cv_
         );
     }
 }
@@ -793,16 +757,17 @@ Foam::heThermo<BasicThermo, MixtureType>::alphaEff
 {
     if (MixtureType::thermoType::enthalpy())
     {
-        return (this->alpha_.boundaryField()[patchi] + alphat);
+        return
+            this->kappa_.boundaryField()[patchi]/Cp_.boundaryField()[patchi]
+          + alphat;
     }
     else
     {
         return
-            this->gamma
-            (
-                this->T_.boundaryField()[patchi],
-                patchi
-            )*(this->alpha_.boundaryField()[patchi] + alphat);
+        (
+            this->kappa_.boundaryField()[patchi]
+          + Cp_.boundaryField()[patchi]*alphat
+        )/Cv_.boundaryField()[patchi];
     }
 }
 

@@ -42,7 +42,7 @@ solution
         thermo:mu.air   cell;
         T.air           cell;
         Cp.air          cell;
-        kappa           cell;
+        thermo:kappa.air cell;
         p               cell;
     }
 

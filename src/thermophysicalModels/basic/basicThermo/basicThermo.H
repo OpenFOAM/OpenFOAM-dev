@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,11 +113,11 @@ protected:
 
     // Protected Member Functions
 
-        //- Return the enthalpy/internal energy field boundary types
+        //- Enthalpy/internal energy field boundary types
         //  by interrogating the temperature field boundary types
         wordList heBoundaryTypes();
 
-        //- Return the enthalpy/internal energy field boundary base types
+        //- Enthalpy/internal energy field boundary base types
         //  by interrogating the temperature field boundary types
         wordList heBoundaryBaseTypes();
 
@@ -147,7 +147,7 @@ public:
 
     // Static Member Functions
 
-        //- Return the name of a property for a given phase
+        //- Name of a property for a given phase
         static word phasePropertyName(const word& name, const word& phaseName)
         {
             return IOobject::groupName(name, phaseName);
@@ -194,16 +194,16 @@ public:
 
     // Member Functions
 
-        //- Return the dictionary
+        //- Properties dictionary
         virtual const IOdictionary& properties() const = 0;
 
-        //- Access the dictionary
+        //- Non-const access the properties dictionary
         virtual IOdictionary& properties() = 0;
 
-        //- Return the phase name
+        //- Phase name
         virtual const word& phaseName() const = 0;
 
-        //- Return the name of a property for a given phase
+        //- Name of a property for a given phase
         word phasePropertyName(const word& name) const
         {
             return phasePropertyName(name, phaseName());
@@ -229,7 +229,7 @@ public:
         //- Update properties
         virtual void correct() = 0;
 
-        //- Return the name of the thermo physics
+        //- Name of the thermo physics
         virtual word thermoName() const = 0;
 
         //- Return true if the equation of state is incompressible
@@ -362,10 +362,16 @@ public:
             ) const = 0;
 
             //- Heat capacity at constant pressure [J/kg/K]
-            virtual tmp<volScalarField> Cp() const = 0;
+            virtual const volScalarField& Cp() const = 0;
 
             //- Heat capacity at constant volume [J/kg/K]
-            virtual tmp<volScalarField> Cv() const = 0;
+            virtual const volScalarField& Cv() const = 0;
+
+
+        // Access to transport state variables
+
+            //- Thermal conductivity of mixture [W/m/K]
+            virtual const volScalarField& kappa() const = 0;
 
 
         // Fields derived from thermodynamic state variables
@@ -402,28 +408,12 @@ public:
             ) const = 0;
 
 
-        // Access to transport state variables
-
-            //- Thermal diffusivity for enthalpy of mixture [kg/m/s]
-            virtual const volScalarField& alpha() const = 0;
-
-            //- Thermal diffusivity for enthalpy of mixture for patch [kg/m/s]
-            virtual const scalarField& alpha(const label patchi) const = 0;
-
-
         // Fields derived from transport state variables
 
-            //- Thermal diffusivity for temperature of mixture [W/m/K]
-            virtual tmp<volScalarField> kappa() const = 0;
-
-            //- Thermal diffusivity for temperature of mixture
-            //  for patch [W/m/K]
-            virtual tmp<scalarField> kappa(const label patchi) const = 0;
-
-            //- Thermal diffusivity for energy of mixture [kg/m/s]
+            //- Thermal diffusivity of energy of mixture [kg/m/s]
             virtual tmp<volScalarField> alphahe() const = 0;
 
-            //- Thermal diffusivity for energy of mixture for patch [kg/m/s]
+            //- Thermal diffusivity of energy of mixture for patch [kg/m/s]
             virtual tmp<scalarField> alphahe(const label patchi) const = 0;
 };
 
@@ -450,8 +440,8 @@ protected:
             //- Temperature [K]
             volScalarField T_;
 
-            //- Laminar thermal diffusivity [kg/m/s]
-            volScalarField alpha_;
+            //- Thermal conductivity [W/m/K]
+            volScalarField kappa_;
 
 
         //- Should the dpdt term be included in the enthalpy equation
@@ -482,19 +472,19 @@ public:
 
     // Member Functions
 
-        //- Return the dictionary
+        //- Properties dictionary
         virtual const IOdictionary& properties() const
         {
             return *this;
         }
 
-        //- Access the dictionary
+        //- Non-const access the properties dictionary
         virtual IOdictionary& properties()
         {
             return *this;
         }
 
-        //- Phase-name
+        //- Phase name
         virtual const word& phaseName() const
         {
             return phaseName_;
@@ -519,12 +509,8 @@ public:
 
         // Access to transport state variables
 
-            //- Return the thermal diffusivity for enthalpy of mixture [kg/m/s]
-            virtual const volScalarField& alpha() const;
-
-            //- Return the thermal diffusivity for enthalpy of mixture for
-            //  patch [kg/m/s]
-            virtual const scalarField& alpha(const label patchi) const;
+            //- Thermal conductivity of mixture [W/m/K]
+            virtual const volScalarField& kappa() const;
 
 
         //- Read thermophysical properties dictionary

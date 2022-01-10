@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,7 +185,11 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    const tmp<scalarField> talphaw = phase.thermo().alpha(patchi);
+    const tmp<scalarField> talphaw
+    (
+        phase.thermo().kappa().boundaryField()[patchi]
+       /phase.thermo().Cp().boundaryField()[patchi]
+    );
     const scalarField& alphaw = talphaw();
 
     const tmp<volScalarField> tk = turbModel.k();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
     scalarField& CvCells = this->Cv_.primitiveFieldRef();
     scalarField& psiCells = this->psi_.primitiveFieldRef();
     scalarField& muCells = this->mu_.primitiveFieldRef();
-    scalarField& alphaCells = this->alpha_.primitiveFieldRef();
+    scalarField& kappaCells = this->kappa_.primitiveFieldRef();
 
     forAll(TCells, celli)
     {
@@ -64,9 +64,8 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
         psiCells[celli] = thermoMixture.psi(pCells[celli], TCells[celli]);
 
         muCells[celli] = transportMixture.mu(pCells[celli], TCells[celli]);
-        alphaCells[celli] =
-            transportMixture.kappa(pCells[celli], TCells[celli])
-           /CpCells[celli];
+        kappaCells[celli] =
+            transportMixture.kappa(pCells[celli], TCells[celli]);
 
         TuCells[celli] = this->cellReactants(celli).THE
         (
@@ -103,8 +102,8 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
     volScalarField::Boundary& muBf =
         this->mu_.boundaryFieldRef();
 
-    volScalarField::Boundary& alphaBf =
-        this->alpha_.boundaryFieldRef();
+    volScalarField::Boundary& kappaBf =
+        this->kappa_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)
     {
@@ -117,7 +116,7 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
         fvPatchScalarField& phe = heBf[patchi];
         fvPatchScalarField& pheu = heuBf[patchi];
         fvPatchScalarField& pmu = muBf[patchi];
-        fvPatchScalarField& palpha = alphaBf[patchi];
+        fvPatchScalarField& pkappa = kappaBf[patchi];
 
         if (pT.fixesValue())
         {
@@ -137,9 +136,7 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
                 ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
-                palpha[facei] =
-                    transportMixture.kappa(pp[facei], pT[facei])
-                   /pCp[facei];
+                pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
             }
         }
         else
@@ -160,9 +157,7 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
                 ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
-                palpha[facei] =
-                    transportMixture.kappa(pp[facei], pT[facei])
-                   /pCp[facei];
+                pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
 
                 pTu[facei] =
                     this->patchFaceReactants(patchi, facei)

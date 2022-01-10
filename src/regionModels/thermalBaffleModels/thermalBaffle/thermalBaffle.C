@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ void thermalBaffle::solveEnergy()
     volScalarField& Q = tQ.ref();
 
     volScalarField rho("rho", thermo_->rho());
-    volScalarField alpha("alpha", thermo_->alpha());
+    volScalarField alphahe(thermo_->alphahe());
 
 
     // If region is one-dimension variable thickness
@@ -106,7 +106,7 @@ void thermalBaffle::solveEnergy()
 
                 rho[cellId] *= delta_.value()/thickness_[localFacei];
 
-                alpha[cellId] *= delta_.value()/thickness_[localFacei];
+                alphahe[cellId] *= delta_.value()/thickness_[localFacei];
             }
         }
     }
@@ -117,8 +117,8 @@ void thermalBaffle::solveEnergy()
 
     fvScalarMatrix hEqn
     (
-        fvm::ddt(rho, h_)
-      - fvm::laplacian(alpha, h_)
+        fvm::ddt(rho, he_)
+      - fvm::laplacian(alphahe, he_)
      ==
         Q
     );
@@ -127,7 +127,7 @@ void thermalBaffle::solveEnergy()
     {
         surfaceScalarField phiMesh
         (
-            fvc::interpolate(rho*h_)*regionMesh().phi()
+            fvc::interpolate(rho*he_)*regionMesh().phi()
         );
 
         hEqn -= fvc::div(phiMesh);
@@ -155,7 +155,7 @@ thermalBaffle::thermalBaffle
     thermalBaffleModel(modelType, mesh, dict),
     nNonOrthCorr_(solution().lookup<label>("nNonOrthCorr")),
     thermo_(solidThermo::New(regionMesh())),
-    h_(thermo_->he()),
+    he_(thermo_->he()),
     Qs_
     (
         IOobject
@@ -205,7 +205,7 @@ thermalBaffle::thermalBaffle
     thermalBaffleModel(modelType, mesh),
     nNonOrthCorr_(solution().lookup<label>("nNonOrthCorr")),
     thermo_(solidThermo::New(regionMesh())),
-    h_(thermo_->he()),
+    he_(thermo_->he()),
     Qs_
     (
         IOobject
@@ -328,14 +328,14 @@ void thermalBaffle::info()
     forAll(coupledPatches, i)
     {
         const label patchi = coupledPatches[i];
-        const fvPatchScalarField& ph = h_.boundaryField()[patchi];
+        const fvPatchScalarField& phe = he_.boundaryField()[patchi];
         const word patchName = regionMesh().boundary()[patchi].name();
         Info<< indent << "Q : " << patchName << indent <<
             gSum
             (
                 mag(regionMesh().Sf().boundaryField()[patchi])
-              * ph.snGrad()
-              * thermo_->alpha().boundaryField()[patchi]
+               *phe.snGrad()
+               *thermo_->alphahe(patchi)
             ) << endl;
     }
 }

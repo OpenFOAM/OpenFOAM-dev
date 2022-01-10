@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ Fourier<BasicThermophysicalTransportModel>::divq(volScalarField& he) const
     // Return heat flux source as an implicit energy correction
     // to the temperature gradient flux
     return
-        -correction(fvm::laplacian(this->alpha()*thermo.alpha(), he))
+        -correction(fvm::laplacian(this->alpha()*thermo.alphahe(), he))
         -fvc::laplacian(this->alpha()*thermo.kappa(), thermo.T());
 }
 

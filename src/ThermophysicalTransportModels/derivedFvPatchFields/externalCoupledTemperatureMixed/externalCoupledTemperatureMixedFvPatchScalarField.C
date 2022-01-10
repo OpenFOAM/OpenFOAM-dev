@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
 
         const fvPatchScalarField& hep = thermo.he().boundaryField()[patchi];
 
-        qDot = thermo.alpha().boundaryField()[patchi]*hep.snGrad();
+        qDot = thermo.alphahe(patchi)*hep.snGrad();
     }
     else
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,7 +185,7 @@ public:
             return volScalarField::New
             (
                 "DEff",
-                this->thermo().alpha() + alphat()
+                this->thermo().kappa()/this->thermo().Cp() + alphat()
             );
         }
 
@@ -197,7 +197,10 @@ public:
             const label patchi
         ) const
         {
-            return this->thermo().alpha(patchi) + alphat(patchi);
+            return
+                this->thermo().kappa().boundaryField()[patchi]
+               /this->thermo().Cp().boundaryField()[patchi]
+              + alphat(patchi);
         }
 
         //- Return the heat flux [W/m^2]

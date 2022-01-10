@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,10 +168,16 @@ public:
             virtual const volScalarField& he() const;
 
             //- Heat capacity at constant pressure [J/kg/K]
-            virtual tmp<volScalarField> Cp() const;
+            virtual const volScalarField& Cp() const;
 
             //- Heat capacity at constant volume [J/kg/K]
-            virtual tmp<volScalarField> Cv() const;
+            virtual const volScalarField& Cv() const;
+
+
+        // Access to transport state variables
+
+            //- Thermal diffusivity for temperature of mixture [W/m/K]
+            virtual const volScalarField& kappa() const;
 
 
         // Fields derived from thermodynamic state variables
@@ -301,12 +307,6 @@ public:
 
 
         // Fields derived from transport state variables
-
-            //- Thermal diffusivity for temperature of mixture [W/m/K]
-            virtual tmp<volScalarField> kappa() const;
-
-            //- Thermal diffusivity for temperature of mixture for patch [W/m/K]
-            virtual tmp<scalarField> kappa(const label patchi) const;
 
             //- Thermal diffusivity for energy of mixture [kg/m/s]
             virtual tmp<volScalarField> alphahe() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
     scalarField& CpCells = this->Cp_.primitiveFieldRef();
     scalarField& CvCells = this->Cv_.primitiveFieldRef();
     scalarField& rhoCells = this->rho_.primitiveFieldRef();
-    scalarField& alphaCells = this->alpha_.primitiveFieldRef();
+    scalarField& kappaCells = this->kappa_.primitiveFieldRef();
 
     forAll(TCells, celli)
     {
@@ -61,9 +61,8 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
         CvCells[celli] = thermoMixture.Cv(pCells[celli], TCells[celli]);
         rhoCells[celli] = thermoMixture.rho(pCells[celli], TCells[celli]);
 
-        alphaCells[celli] =
-            transportMixture.kappa(pCells[celli], TCells[celli])
-           /thermoMixture.Cv(pCells[celli], TCells[celli]);
+        kappaCells[celli] =
+            transportMixture.kappa(pCells[celli], TCells[celli]);
     }
 
 
@@ -84,8 +83,8 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
     volScalarField::Boundary& rhoBf =
         this->rho_.boundaryFieldRef();
 
-    volScalarField::Boundary& alphaBf =
-        this->alpha_.boundaryFieldRef();
+    volScalarField::Boundary& kappaBf =
+        this->kappa_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)
     {
@@ -95,7 +94,7 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
         fvPatchScalarField& pCp = CpBf[patchi];
         fvPatchScalarField& pCv = CvBf[patchi];
         fvPatchScalarField& prho = rhoBf[patchi];
-        fvPatchScalarField& palpha = alphaBf[patchi];
+        fvPatchScalarField& pkappa = kappaBf[patchi];
 
         if (pT.fixesValue())
         {
@@ -115,9 +114,7 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
 
-                palpha[facei] =
-                    transportMixture.kappa(pp[facei], pT[facei])
-                   /thermoMixture.Cv(pp[facei], pT[facei]);
+                pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
             }
         }
         else
@@ -138,14 +135,12 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
 
-                palpha[facei] =
-                    transportMixture.kappa(pp[facei], pT[facei])
-                   /thermoMixture.Cv(pp[facei], pT[facei]);
+                pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
             }
         }
     }
 
-    this->alpha_.correctBoundaryConditions();
+    this->kappa_.correctBoundaryConditions();
 }
 
 
@@ -359,7 +354,15 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::divq
       - (
             isotropic()
           ?   fvc::laplacian(this->kappa(), this->T_)
-            + correction(fvm::laplacian(this->alpha(), e))
+            + correction
+              (
+                  fvm::laplacian
+                  (
+                      this->kappa()/this->Cv(),
+                      e,
+                      "laplacian(alphae,e)"
+                  )
+              )
           :   fvc::laplacian(KappaLocal(), this->T_)
             + correction
               (
@@ -367,7 +370,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::divq
                   (
                       KappaLocal()/this->Cv(),
                       e,
-                      "laplacian(" + this->alpha().name() + ",e)"
+                      "laplacian(alphae,e)"
                   )
               )
         );

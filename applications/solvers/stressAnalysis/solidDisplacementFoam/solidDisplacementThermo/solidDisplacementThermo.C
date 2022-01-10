@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -399,7 +399,13 @@ Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::THE
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::solidDisplacementThermo::Cp() const
+const Foam::volScalarField& Foam::solidDisplacementThermo::Cp() const
+{
+    return Cp_;
+}
+
+
+const Foam::volScalarField& Foam::solidDisplacementThermo::Cv() const
 {
     return Cp_;
 }
@@ -412,12 +418,6 @@ Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::Cp
 ) const
 {
     return Cp_.boundaryField()[patchi];
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::solidDisplacementThermo::Cv() const
-{
-    return Cp_;
 }
 
 
@@ -447,18 +447,9 @@ Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::Cpv
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::solidDisplacementThermo::kappa() const
+const Foam::volScalarField& Foam::solidDisplacementThermo::kappa() const
 {
     return kappa_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::kappa
-(
-    const label patchi
-) const
-{
-    return kappa_.boundaryField()[patchi];
 }
 
 

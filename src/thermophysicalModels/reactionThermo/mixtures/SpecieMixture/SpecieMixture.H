@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -256,7 +256,7 @@ public:
         // with inheritance of virtual functions in heThermo
 
             //- Heat capacity at constant pressure for patch [J/kg/K]
-            virtual tmp<volScalarField> Cp() const = 0;
+            virtual const volScalarField& Cp() const = 0;
 
             //- Heat capacity at constant pressure for patch [J/kg/K]
             virtual tmp<scalarField> Cp
@@ -266,7 +266,7 @@ public:
             ) const = 0;
 
             //- Heat capacity at constant volume [J/kg/K]
-            virtual tmp<volScalarField> Cv() const = 0;
+            virtual const volScalarField& Cv() const = 0;
 
             //- Heat capacity at constant volume for patch [J/kg/K]
             virtual tmp<scalarField> Cv
@@ -274,12 +274,6 @@ public:
                 const scalarField& T,
                 const label patchi
             ) const = 0;
-
-            //- Thermal diffusivity for temperature of mixture [W/m/K]
-            virtual tmp<volScalarField> kappa() const = 0;
-
-            //- Thermal diffusivity for temperature of mixture for patch [W/m/K]
-            virtual tmp<scalarField> kappa(const label patchi) const = 0;
 };
 
 

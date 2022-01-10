@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,7 @@ unityLewisFourier<BasicThermophysicalTransportModel>::q() const
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -fvc::interpolate(this->alpha()*this->thermo().alpha())
+       -fvc::interpolate(this->alpha()*this->thermo().alphahe())
        *fvc::snGrad(this->thermo().he())
     );
 }
@@ -109,7 +109,7 @@ tmp<fvScalarMatrix>
 unityLewisFourier<BasicThermophysicalTransportModel>::
 divq(volScalarField& he) const
 {
-    return -fvm::laplacian(this->alpha()*this->thermo().alpha(), he);
+    return -fvm::laplacian(this->alpha()*this->thermo().alphahe(), he);
 }
 
 

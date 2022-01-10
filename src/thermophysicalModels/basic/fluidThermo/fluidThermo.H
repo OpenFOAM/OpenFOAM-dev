@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,29 +148,30 @@ public:
 
         // Fields derived from transport state variables
 
-            //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture [W/m/K]
+            //- Effective thermal turbulent conductivity of mixture
+            //  for patch [W/m/K]
             virtual tmp<volScalarField> kappaEff
             (
                 const volScalarField&
             ) const = 0;
 
-            //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [W/m/K]
+            //- Effective thermal turbulent conductivity of mixture
+            //  for patch [W/m/K]
             virtual tmp<scalarField> kappaEff
             (
                 const scalarField& alphat,
                 const label patchi
             ) const = 0;
 
-            //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
+            //- Effective turbulent thermal diffusivity of energy
+            //  of mixture [kg/m/s]
             virtual tmp<volScalarField> alphaEff
             (
                 const volScalarField& alphat
             ) const = 0;
 
-            //- Effective thermal turbulent diffusivity of mixture
-            //  for patch [kg/m/s]
+            //- Effective turbulent thermal diffusivity of energy
+            //  of mixture for patch [kg/m/s]
             virtual tmp<scalarField> alphaEff
             (
                 const scalarField& alphat,
