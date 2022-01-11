@@ -23,7 +23,7 @@ weightType          numberConcentration;  // volumeConcentration,
                                           // areaConcentration
                                           // defaults to numberConcentration
 order               0;                    // relevant for integer moments only
-mean                arithmetic;           // geometric
+meanType            arithmetic;           // geometric
                                           // relevant for non-integer moments,
                                           // defaults to arithmetic
 

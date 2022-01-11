@@ -736,7 +736,7 @@ Foam::functionObjects::moments::moments
     coordinateType_(coordinateTypeNames_.read(dict.lookup("coordinateType"))),
     weightType_
     (
-        dict.found("weight")
+        dict.found("weightType")
       ? weightTypeNames_.read(dict.lookup("weightType"))
       : weightType::numberConcentration
     ),

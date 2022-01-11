@@ -428,31 +428,18 @@ bool Foam::functionObjects::sizeDistribution::write()
      || functionType_ == functionType::areaDensity
     )
     {
+        boundaryValues.first() = coordinateValues.first();
+        boundaryValues.last() = coordinateValues.last();
+
+        for (label i = 1; i < boundaryValues.size() - 1; i++)
+        {
+            boundaryValues[i] =
+                0.5*(coordinateValues[i] + coordinateValues[i-1]);
+        }
+
         if (logTransform_)
         {
-            boundaryValues.first() = Foam::log(coordinateValues.first());
-            boundaryValues.last() = Foam::log(coordinateValues.last());
-
-            for (label i = 1; i < boundaryValues.size() - 1; i++)
-            {
-                boundaryValues[i] =
-                    0.5
-                   *(
-                        Foam::log(coordinateValues[i])
-                      + Foam::log(coordinateValues[i-1])
-                    );
-            }
-        }
-        else
-        {
-            boundaryValues.first() = coordinateValues.first();
-            boundaryValues.last() = coordinateValues.last();
-
-            for (label i = 1; i < boundaryValues.size() - 1; i++)
-            {
-                boundaryValues[i] =
-                    (coordinateValues[i] + coordinateValues[i-1])/2;
-            }
+            boundaryValues = Foam::log(boundaryValues);
         }
     }
 

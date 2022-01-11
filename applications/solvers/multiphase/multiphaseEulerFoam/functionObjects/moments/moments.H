@@ -232,10 +232,10 @@ public:
             return wordList::null();
         }
 
-        //- Calculate the force fields
+        //- Calculate the moment fields
         virtual bool execute();
 
-        //- Write the force fields
+        //- Write the moment fields
         virtual bool write();
 
 
