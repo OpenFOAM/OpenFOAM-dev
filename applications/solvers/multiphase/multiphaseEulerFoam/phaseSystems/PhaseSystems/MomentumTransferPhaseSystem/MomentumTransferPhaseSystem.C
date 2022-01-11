@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -753,24 +753,35 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
         turbulentDispersionModelIter
     )
     {
-        const surfaceScalarField Ff(turbulentDispersionModelIter()->Ff());
         const phasePair&
             pair(this->phasePairs_[turbulentDispersionModelIter.key()]);
 
-        addField
+        const surfaceScalarField Df
         (
-            pair.phase1(),
-            "phiFf",
-            rAUfs[pair.phase1().index()]*Ff,
-            phiFfs
+            fvc::interpolate(turbulentDispersionModelIter()->D())
         );
-        addField
+
+        const surfaceScalarField DByA1f(rAUfs[pair.phase1().index()]*Df);
+        const surfaceScalarField DByA2f(rAUfs[pair.phase2().index()]*Df);
+
+        const volScalarField alpha12(pair.phase1() + pair.phase2());
+        const surfaceScalarField snGradAlpha1By12
         (
-            pair.phase2(),
-            "phiFf",
-           -rAUfs[pair.phase2().index()]*Ff,
-            phiFfs
+            fvc::snGrad
+            (
+                pair.phase1()/max(alpha12, pair.phase1().residualAlpha())
+            )*this->mesh_.magSf()
         );
+        const surfaceScalarField snGradAlpha2By12
+        (
+            fvc::snGrad
+            (
+                pair.phase2()/max(alpha12, pair.phase2().residualAlpha())
+            )*this->mesh_.magSf()
+        );
+
+        addField(pair.phase1(), "phiF", DByA1f*snGradAlpha1By12, phiFfs);
+        addField(pair.phase2(), "phiF", DByA2f*snGradAlpha2By12, phiFfs);
     }
 
     if (this->fillFields_)

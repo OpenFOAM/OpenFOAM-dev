@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,6 @@ License
 
 #include "turbulentDispersionModel.H"
 #include "phasePair.H"
-#include "fvcGrad.H"
-#include "surfaceInterpolate.H"
-#include "fvcSnGrad.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "BlendedInterfacialModel.H"
 
@@ -41,7 +38,6 @@ namespace Foam
 }
 
 const Foam::dimensionSet Foam::turbulentDispersionModel::dimD(1, -1, -2, 0, 0);
-const Foam::dimensionSet Foam::turbulentDispersionModel::dimF(1, -2, -2, 0, 0);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -79,43 +75,6 @@ Foam::turbulentDispersionModel::continuousTurbulence() const
                 pair_.continuous().name()
             )
         );
-}
-
-
-Foam::tmp<Foam::volVectorField>
-Foam::turbulentDispersionModel::F() const
-{
-    return
-        D()
-       *fvc::grad
-        (
-            pair_.dispersed()
-           /max
-            (
-                pair_.dispersed() + pair_.continuous(),
-                pair_.dispersed().residualAlpha()
-            )
-        );
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::turbulentDispersionModel::Ff() const
-{
-    return
-    pair_.phase1().mesh().magSf()
-   *(
-        fvc::interpolate(D())
-       *fvc::snGrad
-        (
-            pair_.dispersed()
-           /max
-            (
-                pair_.dispersed() + pair_.continuous(),
-                pair_.dispersed().residualAlpha()
-            )
-        )
-    );
 }
 
 

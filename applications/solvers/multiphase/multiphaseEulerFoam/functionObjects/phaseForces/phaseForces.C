@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "phaseForces.H"
 #include "addToRunTimeSelectionTable.H"
 #include "BlendedInterfacialModel.H"
+#include "fvcGrad.H"
 #include "dragModel.H"
 #include "virtualMassModel.H"
 #include "liftModel.H"
@@ -277,7 +278,12 @@ bool Foam::functionObjects::phaseForces::execute()
             if (fluid_.foundBlendedSubModel<turbulentDispersionModel>(pair))
             {
                 *forceFields_[turbulentDispersionModel::typeName] +=
-                    nonDragForce<turbulentDispersionModel>(pair);
+                    fluid_.lookupBlendedSubModel<turbulentDispersionModel>
+                    (
+                        pair
+                    ).D()
+                   *(&pair.phase1() == &phase_ ? -1 : +1)
+                   *fvc::grad(pair.phase1()/(pair.phase1() + pair.phase2()));
             }
         }
     }

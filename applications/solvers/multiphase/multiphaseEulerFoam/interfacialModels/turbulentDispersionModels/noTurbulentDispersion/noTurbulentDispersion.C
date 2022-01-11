@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,20 +75,6 @@ Foam::turbulentDispersionModels::noTurbulentDispersion::D() const
         "zero",
         mesh,
         dimensionedScalar(dimD, 0)
-    );
-}
-
-
-Foam::tmp<Foam::volVectorField>
-Foam::turbulentDispersionModels::noTurbulentDispersion::F() const
-{
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
-    return volVectorField::New
-    (
-        "zero",
-        mesh,
-        dimensionedVector(dimF, Zero)
     );
 }
 
