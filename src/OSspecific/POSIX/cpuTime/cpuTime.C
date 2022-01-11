@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,58 +24,44 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cpuTime.H"
-#include <unistd.h>
-
-// * * * * * * * * * * * * * * * Static Members  * * * * * * * * * * * * * * //
-
-const long Foam::cpuTime::Hz_(sysconf(_SC_CLK_TCK));
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::cpuTime::getTime(timeType& t)
+inline double Foam::cpuTime::timeDifference
+(
+    const clock_t prev,
+    const clock_t cur
+) const
 {
-    times(&t);
-}
-
-
-double Foam::cpuTime::timeDifference(const timeType& beg, const timeType& end)
-{
-    return
-    (
-        double
-        (
-            (end.tms_utime + end.tms_stime)
-          - (beg.tms_utime + beg.tms_stime)
-        )/Hz_
-    );
+    return double(cur - prev)/CLOCKS_PER_SEC;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::cpuTime::cpuTime()
-{
-    getTime(startTime_);
-    lastTime_ = startTime_;
-    newTime_ = startTime_;
-}
+:
+    startTime_(clock()),
+    prevTime_(startTime_),
+    curTime_(startTime_)
+
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 double Foam::cpuTime::elapsedCpuTime() const
 {
-    getTime(newTime_);
-    return timeDifference(startTime_, newTime_);
+    curTime_ = clock();
+    return timeDifference(startTime_, curTime_);
 }
 
 
 double Foam::cpuTime::cpuTimeIncrement() const
 {
-    lastTime_ = newTime_;
-    getTime(newTime_);
-    return timeDifference(lastTime_, newTime_);
+    prevTime_ = curTime_;
+    curTime_ = clock();
+    return timeDifference(prevTime_, curTime_);
 }
 
 

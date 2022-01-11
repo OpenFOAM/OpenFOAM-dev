@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,9 @@ Class
 Description
     Starts timing CPU usage and return elapsed time from start.
 
+    Uses the POSIX clock() function which return the processor time consumed
+    in clock ticks @ CLOCKS_PER_SEC clock ticks per second.
+
 See also
     clockTime
 
@@ -39,7 +42,6 @@ SourceFiles
 #define cpuTime_H
 
 #include <time.h>
-#include <sys/times.h>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,24 +56,25 @@ class cpuTime
 {
     // Private Data
 
-        //- Time structure used
-        typedef struct tms timeType;
+        //- Start CPU clock tick count
+        clock_t startTime_;
 
-        //- Clock-ticks per second
-        static const long Hz_;
+        //- Previous CPU clock tick count
+        mutable clock_t prevTime_;
 
-        //- The start time
-        timeType startTime_;
-        mutable timeType lastTime_;
-        mutable timeType newTime_;
+        //- Current CPU clock tick count
+        mutable clock_t curTime_;
+
 
     // Private Member Functions
 
-        //- Retrieve the current time values from the system
-        static void getTime(timeType&);
-
-        //- Difference between two times
-        static double timeDifference(const timeType& beg, const timeType& end);
+        //- Return the difference between two times clock tick counts
+        //  as elapsed CPU time (in seconds)
+        inline double timeDifference
+        (
+            const clock_t prev,
+            const clock_t cur
+        ) const;
 
 
 public:
