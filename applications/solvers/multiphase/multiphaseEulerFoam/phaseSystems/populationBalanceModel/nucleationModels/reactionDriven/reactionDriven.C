@@ -62,17 +62,7 @@ reactionDriven
     dNuc_("nucleationDiameter", dimLength, dict),
     reactingPhase_
     (
-        popBal_.mesh().lookupObject<phaseModel>
-        (
-            IOobject::groupName("alpha", dict.lookup("reactingPhase"))
-        )
-    ),
-    pair_
-    (
-        popBal_.fluid().phasePairs()
-        [
-            phasePair(velGroup_.phase(), reactingPhase_)
-        ]
+        popBal_.fluid().phases()[dict.lookup<word>("reactingPhase")]
     ),
     dmdtfName_(dict.lookup("dmdtf")),
     specieName_(dict.lookup("specie"))
@@ -104,22 +94,20 @@ Foam::diameterModels::nucleationModels::reactionDriven::addToNucleationRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const volScalarField& rho = fi.phase().rho();
 
+    const phaseInterface interface(velGroup_.phase(), reactingPhase_);
+
     const volScalarField& dmidtf =
         popBal_.mesh().lookupObject<volScalarField>
         (
             IOobject::groupName
             (
-                IOobject::groupName
-                (
-                    dmdtfName_,
-                    specieName_
-                ),
-                pair_.name()
+                IOobject::groupName(dmdtfName_, specieName_),
+                interface.name()
             )
         );
 
     const scalar dmidtfSign =
-        velGroup_.phase().name() == pair_.first() ? +1 : -1;
+        interface.index(velGroup_.phase()) == 0 ? +1 : -1;
 
     nucleationRate +=
         popBal_.eta(i, pi/6*pow3(dNuc_))*dmidtfSign*dmidtf/rho/fi.x();

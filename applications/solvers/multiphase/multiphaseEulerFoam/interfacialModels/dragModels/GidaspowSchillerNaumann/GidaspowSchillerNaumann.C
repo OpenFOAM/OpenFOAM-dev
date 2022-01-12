@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "GidaspowSchillerNaumann.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,11 @@ namespace dragModels
 Foam::dragModels::GidaspowSchillerNaumann::GidaspowSchillerNaumann
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dispersedDragModel(dict, interface, registerObject),
     residualRe_("residualRe", dimless, dict)
 {}
 
@@ -66,10 +65,10 @@ Foam::dragModels::GidaspowSchillerNaumann::CdRe() const
 {
     const volScalarField alpha2
     (
-        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
     );
 
-    const volScalarField Re(alpha2*pair_.Re());
+    const volScalarField Re(alpha2*interface_.Re());
 
     const volScalarField CdsRe
     (
@@ -80,7 +79,7 @@ Foam::dragModels::GidaspowSchillerNaumann::CdRe() const
     return
         CdsRe
        *pow(alpha2, -2.65)
-       *max(pair_.continuous(), pair_.continuous().residualAlpha());
+       *max(interface_.continuous(), interface_.continuous().residualAlpha());
 }
 
 

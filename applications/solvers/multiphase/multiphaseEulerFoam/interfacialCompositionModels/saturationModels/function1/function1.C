@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,14 +43,11 @@ namespace saturationModels
 Foam::saturationModels::function1::function1
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    saturationModel(pair),
-    function_
-    (
-        Function1<scalar>::New("function", dict)
-    )
+    saturationModel(dict, interface),
+    function_(Function1<scalar>::New("function", dict))
 {}
 
 

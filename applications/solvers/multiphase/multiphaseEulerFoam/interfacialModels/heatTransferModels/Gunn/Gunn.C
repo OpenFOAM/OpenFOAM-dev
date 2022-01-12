@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Gunn.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,10 +43,14 @@ namespace heatTransferModels
 Foam::heatTransferModels::Gunn::Gunn
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    heatTransferModel(dict, pair)
+    heatTransferModel(dict, interface),
+    interface_
+    (
+        interface.modelCast<heatTransferModel, dispersedPhaseInterface>()
+    )
 {}
 
 
@@ -64,7 +67,7 @@ Foam::heatTransferModels::Gunn::K(const scalar residualAlpha) const
 {
     const volScalarField alpha2
     (
-        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
     );
 
     const volScalarField sqrAlpha2(sqr(alpha2));
@@ -72,15 +75,15 @@ Foam::heatTransferModels::Gunn::K(const scalar residualAlpha) const
     const volScalarField Nu
     (
         (7 - 10*alpha2 + 5*sqrAlpha2)
-       *(1 + 0.7*pow(pair_.Re(), 0.2)*cbrt(pair_.Pr()))
+       *(1 + 0.7*pow(interface_.Re(), 0.2)*cbrt(interface_.Pr()))
       + (1.33 - 2.4*alpha2 + 1.2*sqrAlpha2)
-       *pow(pair_.Re(), 0.7)*cbrt(pair_.Pr())
+       *pow(interface_.Re(), 0.7)*cbrt(interface_.Pr())
     );
 
     return
-        6*max(pair_.dispersed(), residualAlpha)
-       *pair_.continuous().thermo().kappa()
-       *Nu/sqr(pair_.dispersed().d());
+        6*max(interface_.dispersed(), residualAlpha)
+       *interface_.continuous().thermo().kappa()
+       *Nu/sqr(interface_.dispersed().d());
 }
 
 

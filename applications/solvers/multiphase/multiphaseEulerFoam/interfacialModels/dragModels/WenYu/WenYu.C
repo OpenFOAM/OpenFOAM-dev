@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "WenYu.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,11 @@ namespace dragModels
 Foam::dragModels::WenYu::WenYu
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dispersedDragModel(dict, interface, registerObject),
     residualRe_("residualRe", dimless, dict)
 {}
 
@@ -65,10 +64,10 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::WenYu::CdRe() const
 {
     const volScalarField alpha2
     (
-        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
     );
 
-    const volScalarField Res(alpha2*pair_.Re());
+    const volScalarField Res(alpha2*interface_.Re());
     const volScalarField CdsRes
     (
         neg(Res - 1000)*24*(1.0 + 0.15*pow(Res, 0.687))
@@ -78,7 +77,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::WenYu::CdRe() const
     return
         CdsRes
        *pow(alpha2, -3.65)
-       *max(pair_.continuous(), pair_.continuous().residualAlpha());
+       *max(interface_.continuous(), interface_.continuous().residualAlpha());
 }
 
 

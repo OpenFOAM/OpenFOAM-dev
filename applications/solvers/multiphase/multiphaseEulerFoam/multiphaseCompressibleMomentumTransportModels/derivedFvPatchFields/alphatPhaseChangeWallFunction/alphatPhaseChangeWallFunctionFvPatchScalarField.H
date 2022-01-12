@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,12 +39,14 @@ SourceFiles
 #define alphatPhaseChangeWallFunctionFvPatchScalarField_H
 
 #include "alphatPhaseJayatillekeWallFunctionFvPatchScalarField.H"
-#include "phasePairKey.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class phaseInterface;
+
 namespace compressible
 {
 
@@ -120,14 +122,14 @@ public:
 
     // Member Functions
 
-        //- Is there phase change mass transfer for this phasePair
-        bool activePhasePair(const phasePairKey&) const;
+        //- Is there phase change mass transfer for this interface?
+        bool activeInterface(const phaseInterface&) const;
 
         //- Return the rate of phase-change
         const scalarField& dmdtf() const;
 
-        //- Return the rate of phase-change for specific phase pair
-        const scalarField& dmdtf(const phasePairKey&) const;
+        //- Return the rate of phase-change for an interface
+        const scalarField& dmdtf(const phaseInterface&) const;
 
 
         // Mapping functions

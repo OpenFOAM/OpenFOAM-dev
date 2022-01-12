@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Henry.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,20 +43,20 @@ namespace interfaceCompositionModels
 Foam::interfaceCompositionModels::Henry::Henry
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    interfaceCompositionModel(dict, pair),
+    interfaceCompositionModel(dict, interface),
     k_(dict.lookup("k")),
     YSolvent_
     (
         IOobject
         (
-            IOobject::groupName("YSolvent", pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh()
+            IOobject::groupName("YSolvent", this->interface().name()),
+            interface.mesh().time().timeName(),
+            interface.mesh()
         ),
-        pair.phase1().mesh(),
+        interface.mesh(),
         dimensionedScalar(dimless, 1)
     )
 {
@@ -120,8 +119,8 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::Henry::YfPrime
 {
     return volScalarField::New
     (
-        IOobject::groupName("YfPrime", pair().name()),
-        pair().phase1().mesh(),
+        IOobject::groupName("YfPrime", interface().name()),
+        interface().mesh(),
         dimensionedScalar(dimless/dimTemperature, 0)
     );
 }

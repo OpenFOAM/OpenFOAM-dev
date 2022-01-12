@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ThermalPhaseChangePhaseSystem.H"
+#include "heatTransferModel.H"
 #include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 #include "fvcVolumeIntegrate.H"
 #include "fvmSup.H"
@@ -39,20 +40,18 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::addDmdts
 {
     forAllConstIter(phaseSystem::dmdtfTable, dmdtfs_, dmdtfIter)
     {
-        const phasePair& pair = this->phasePairs_[dmdtfIter.key()];
-        const volScalarField& dmdtf = *dmdtfIter();
+        const phaseInterface interface(*this, dmdtfIter.key());
 
-        addField(pair.phase1(), "dmdt", dmdtf, dmdts);
-        addField(pair.phase2(), "dmdt", - dmdtf, dmdts);
+        addField(interface.phase1(), "dmdt", *dmdtfIter(), dmdts);
+        addField(interface.phase2(), "dmdt", - *dmdtfIter(), dmdts);
     }
 
     forAllConstIter(phaseSystem::dmdtfTable, nDmdtfs_, nDmdtfIter)
     {
-        const phasePair& pair = this->phasePairs_[nDmdtfIter.key()];
-        const volScalarField& nDmdtf = *nDmdtfIter();
+        const phaseInterface interface(*this, nDmdtfIter.key());
 
-        addField(pair.phase1(), "dmdt", nDmdtf, dmdts);
-        addField(pair.phase2(), "dmdt", - nDmdtf, dmdts);
+        addField(interface.phase1(), "dmdt", *nDmdtfIter(), dmdts);
+        addField(interface.phase2(), "dmdt", - *nDmdtfIter(), dmdts);
     }
 }
 
@@ -74,11 +73,7 @@ ThermalPhaseChangePhaseSystem
         this->template lookupOrDefault<Switch>("pressureImplicit", true)
     )
 {
-    this->generatePairsAndSubModels
-    (
-        "saturation",
-        saturationModels_
-    );
+    this->generateInterfacialModels("saturation", saturationModels_);
 
     // Check that models have been specified in the correct combinations
     forAllConstIter
@@ -88,22 +83,23 @@ ThermalPhaseChangePhaseSystem
         saturationModelIter
     )
     {
-        const phasePair& pair =
-            this->phasePairs_[saturationModelIter.key()];
+        const phaseInterface& interface = saturationModelIter()->interface();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
 
-        this->template validateMassTransfer<saturationModel>(pair);
+        this->template validateMassTransfer<saturationModel>(interface);
 
         if
         (
-            !this->heatTransferModels_.found(pair)
-         || !this->heatTransferModels_[pair].first().valid()
-         || !this->heatTransferModels_[pair].second().valid()
+            !this->heatTransferModels_.found(interface)
+         || !this->heatTransferModels_[interface]->haveModelInThe(phase1)
+         || !this->heatTransferModels_[interface]->haveModelInThe(phase2)
         )
         {
              FatalErrorInFunction
-                 << "A heat transfer model for both sides of the " << pair
-                 << "pair is not specified. This is required by the "
-                 << "corresponding saturation model"
+                 << "A heat transfer model for both sides of the "
+                 << interface.name() << " interface is not specified. This is "
+                 << "required by the corresponding saturation model"
                  << exit(FatalError);
         }
     }
@@ -116,12 +112,11 @@ ThermalPhaseChangePhaseSystem
         saturationModelIter
     )
     {
-        const phasePair& pair =
-            this->phasePairs_[saturationModelIter.key()];
+        const phaseInterface& interface = saturationModelIter()->interface();
 
         dmdtfs_.insert
         (
-            pair,
+            interface,
             new volScalarField
             (
                 IOobject
@@ -129,7 +124,7 @@ ThermalPhaseChangePhaseSystem
                     IOobject::groupName
                     (
                         "thermalPhaseChange:dmdtf",
-                        pair.name()
+                        interface.name()
                     ),
                     this->mesh().time().timeName(),
                     this->mesh(),
@@ -143,7 +138,7 @@ ThermalPhaseChangePhaseSystem
 
         d2mdtdpfs_.insert
         (
-            pair,
+            interface,
             new volScalarField
             (
                 IOobject
@@ -151,7 +146,7 @@ ThermalPhaseChangePhaseSystem
                     IOobject::groupName
                     (
                         "thermalPhaseChange:d2mdtdpf",
-                        pair.name()
+                        interface.name()
                     ),
                     this->mesh().time().timeName(),
                     this->mesh(),
@@ -165,7 +160,7 @@ ThermalPhaseChangePhaseSystem
 
         Tfs_.insert
         (
-            pair,
+            interface,
             new volScalarField
             (
                 IOobject
@@ -173,20 +168,23 @@ ThermalPhaseChangePhaseSystem
                     IOobject::groupName
                     (
                         "thermalPhaseChange:Tf",
-                        pair.name()
+                        interface.name()
                     ),
                     this->mesh().time().timeName(),
                     this->mesh(),
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
                 ),
-                (pair.phase1().thermo().T() + pair.phase2().thermo().T())/2
+                (
+                    interface.phase1().thermo().T()
+                  + interface.phase2().thermo().T()
+                )/2
             )
         );
 
         nDmdtfs_.insert
         (
-            pair,
+            interface,
             new volScalarField
             (
                 IOobject
@@ -194,7 +192,7 @@ ThermalPhaseChangePhaseSystem
                     IOobject::groupName
                     (
                         "thermalPhaseChange:nucleation:dmdtf",
-                        pair.name()
+                        interface.name()
                     ),
                     this->mesh().time().timeName(),
                     this->mesh(),
@@ -223,7 +221,7 @@ template<class BasePhaseSystem>
 const Foam::saturationModel&
 Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::saturation
 (
-    const phasePairKey& key
+    const phaseInterfaceKey& key
 ) const
 {
     return saturationModels_[key];
@@ -234,22 +232,19 @@ template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
 Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdtf
 (
-    const phasePairKey& key
+    const phaseInterfaceKey& key
 ) const
 {
     tmp<volScalarField> tDmdtf = BasePhaseSystem::dmdtf(key);
 
-    const scalar dmdtfSign =
-        Pair<word>::compare(this->phasePairs_[key], key);
-
     if (dmdtfs_.found(key))
     {
-        tDmdtf.ref() += dmdtfSign**dmdtfs_[key];
+        tDmdtf.ref() += *dmdtfs_[key];
     }
 
     if (nDmdtfs_.found(key))
     {
-        tDmdtf.ref() += dmdtfSign**nDmdtfs_[key];
+        tDmdtf.ref() += *nDmdtfs_[key];
     }
 
     return tDmdtf;
@@ -276,11 +271,10 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::d2mdtdps() const
 
     forAllConstIter(phaseSystem::dmdtfTable, d2mdtdpfs_, d2mdtdpfIter)
     {
-        const phasePair& pair = this->phasePairs_[d2mdtdpfIter.key()];
-        const volScalarField& d2mdtdpf = *d2mdtdpfIter();
+        const phaseInterface interface(*this, d2mdtdpfIter.key());
 
-        addField(pair.phase1(), "d2mdtdp", d2mdtdpf, d2mdtdps);
-        addField(pair.phase2(), "d2mdtdp", - d2mdtdpf, d2mdtdps);
+        addField(interface.phase1(), "d2mdtdp", *d2mdtdpfIter(), d2mdtdps);
+        addField(interface.phase2(), "d2mdtdp", - *d2mdtdpfIter(), d2mdtdps);
     }
 
     return d2mdtdps;
@@ -334,9 +328,14 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
     phaseSystem::dmdtfTable Tns;
     forAllConstIter(phaseSystem::dmdtfTable, nDmdtfs_, nDmdtfIter)
     {
-        const phasePair& pair = this->phasePairs_[nDmdtfIter.key()];
+        const phaseInterface interface(*this, nDmdtfIter.key());
         const saturationModel& satModel = this->saturation(nDmdtfIter.key());
-        Tns.insert(pair, satModel.Tsat(pair.phase1().thermo().p()).ptr());
+
+        Tns.insert
+        (
+            interface,
+            satModel.Tsat(interface.phase1().thermo().p()).ptr()
+        );
     }
 
     // Mass transfer terms
@@ -347,11 +346,14 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
 
             forAllConstIter(phaseSystem::dmdtfTable, dmdtfs_, dmdtfIter)
             {
-                const phasePair& pair = this->phasePairs_[dmdtfIter.key()];
-                const volScalarField& dmdtf = *dmdtfIter();
+                const phaseInterface interface(*this, dmdtfIter.key());
 
-                dmidtfs.insert(pair, new HashPtrTable<volScalarField>());
-                dmidtfs[pair]->insert(volatile_, new volScalarField(dmdtf));
+                dmidtfs.insert(interface, new HashPtrTable<volScalarField>());
+                dmidtfs[interface]->insert
+                (
+                    volatile_,
+                    new volScalarField(*dmdtfIter())
+                );
             }
 
             this->addDmidtHefs
@@ -368,11 +370,14 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
 
             forAllConstIter(phaseSystem::dmdtfTable, nDmdtfs_, nDmdtfIter)
             {
-                const phasePair& pair = this->phasePairs_[nDmdtfIter.key()];
-                const volScalarField& nDmdtf = *nDmdtfIter();
+                const phaseInterface interface(*this, nDmdtfIter.key());
 
-                nDmidtfs.insert(pair, new HashPtrTable<volScalarField>());
-                nDmidtfs[pair]->insert(volatile_, new volScalarField(nDmdtf));
+                nDmidtfs.insert(interface, new HashPtrTable<volScalarField>());
+                nDmidtfs[interface]->insert
+                (
+                    volatile_,
+                    new volScalarField(*nDmdtfIter())
+                );
             }
 
             this->addDmidtHefs
@@ -447,11 +452,14 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::specieTransfer() const
 
             forAllConstIter(phaseSystem::dmdtfTable, dmdtfs_, dmdtfIter)
             {
-                const phasePair& pair = this->phasePairs_[dmdtfIter.key()];
-                const volScalarField& dmdtf = *dmdtfIter();
+                const phaseInterface interface(*this, dmdtfIter.key());
 
-                dmidtfs.insert(pair, new HashPtrTable<volScalarField>());
-                dmidtfs[pair]->insert(volatile_, new volScalarField(dmdtf));
+                dmidtfs.insert(interface, new HashPtrTable<volScalarField>());
+                dmidtfs[interface]->insert
+                (
+                    volatile_,
+                    new volScalarField(*dmdtfIter())
+                );
             }
 
             this->addDmidtYf(dmidtfs, eqns);
@@ -462,11 +470,14 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::specieTransfer() const
 
             forAllConstIter(phaseSystem::dmdtfTable, nDmdtfs_, nDmdtfIter)
             {
-                const phasePair& pair = this->phasePairs_[nDmdtfIter.key()];
-                const volScalarField& nDmdtf = *nDmdtfIter();
+                const phaseInterface interface(*this, nDmdtfIter.key());
 
-                nDmidtfs.insert(pair, new HashPtrTable<volScalarField>());
-                nDmidtfs[pair]->insert(volatile_, new volScalarField(nDmdtf));
+                nDmidtfs.insert(interface, new HashPtrTable<volScalarField>());
+                nDmidtfs[interface]->insert
+                (
+                    volatile_,
+                    new volScalarField(*nDmdtfIter())
+                );
             }
 
             this->addDmidtYf(nDmidtfs, eqns);
@@ -508,31 +519,46 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
         saturationModelIter
     )
     {
-        const phasePair& pair = this->phasePairs_[saturationModelIter.key()];
-
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseInterface& interface = saturationModelIter()->interface();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
         const rhoThermo& thermo1 = phase1.thermo();
         const rhoThermo& thermo2 = phase2.thermo();
         const volScalarField& T1(thermo1.T());
         const volScalarField& T2(thermo2.T());
 
+        const sidedBlendedHeatTransferModel& heatTransferModel =
+            this->heatTransferModels_[interface];
+
         // Interfacial mass transfer update
         {
-            volScalarField& dmdtf(*this->dmdtfs_[pair]);
-            volScalarField& Tf(*this->Tfs_[pair]);
+            volScalarField& dmdtf(*this->dmdtfs_[interface]);
+            volScalarField& Tf(*this->Tfs_[interface]);
 
             const volScalarField Tsat(saturationModelIter()->Tsat(thermo1.p()));
 
             const volScalarField L
             (
                 volatile_ != "none"
-              ? this->Li(pair, volatile_, dmdtf, Tsat, latentHeatScheme::upwind)
-              : this->L(pair, dmdtf, Tsat, latentHeatScheme::upwind)
+              ? this->Li
+                (
+                    interface,
+                    volatile_,
+                    dmdtf,
+                    Tsat,
+                    latentHeatScheme::upwind
+                )
+              : this->L
+                (
+                    interface,
+                    dmdtf,
+                    Tsat,
+                    latentHeatScheme::upwind
+                )
             );
 
-            volScalarField H1(this->heatTransferModels_[pair].first()->K(0));
-            volScalarField H2(this->heatTransferModels_[pair].second()->K(0));
+            volScalarField H1(heatTransferModel.modelInThe(phase1).K(0));
+            volScalarField H2(heatTransferModel.modelInThe(phase2).K(0));
 
             volScalarField dmdtfNew((H1*(Tsat - T1) + H2*(Tsat - T2))/L);
 
@@ -545,7 +571,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
 
             if (pressureImplicit_)
             {
-                volScalarField& d2mdtdpf(*this->d2mdtdpfs_[pair]);
+                volScalarField& d2mdtdpf(*this->d2mdtdpfs_[interface]);
 
                 const dimensionedScalar dp(rootSmall*thermo1.p().average());
 
@@ -567,8 +593,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                 }
             }
 
-            H1 = this->heatTransferModels_[pair].first()->K();
-            H2 = this->heatTransferModels_[pair].second()->K();
+            H1 = heatTransferModel.modelInThe(phase1).K();
+            H2 = heatTransferModel.modelInThe(phase2).K();
 
             // Limit the H[12] to avoid /0
             H1.max(small);
@@ -597,15 +623,15 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
 
         // Nucleation mass transfer update
         {
-            volScalarField& nDmdtf(*this->nDmdtfs_[pair]);
+            volScalarField& nDmdtf(*this->nDmdtfs_[interface]);
 
             nDmdtf = Zero;
 
             bool wallBoilingActive = false;
 
-            forAllConstIter(phasePair, pair, pairIter)
+            forAllConstIter(phaseInterface, interface, interfaceIter)
             {
-                const phaseModel& phase = pairIter();
+                const phaseModel& phase = interfaceIter();
 
                 const word alphatName =
                     IOobject::groupName("alphat", phase.name());
@@ -628,15 +654,15 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                                     alphatp
                                 );
 
-                            if (alphatw.activePhasePair(pair))
+                            if (alphatw.activeInterface(interface))
                             {
                                 wallBoilingActive = true;
 
                                 const scalarField& patchDmdtf =
-                                    alphatw.dmdtf(pair);
+                                    alphatw.dmdtf(interface);
 
                                 const scalar sign =
-                                    pairIter.index() == 0 ? +1 : -1;
+                                    interfaceIter.index() == 0 ? +1 : -1;
 
                                 forAll(patchDmdtf, facei)
                                 {

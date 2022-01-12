@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,20 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "heatTransferModel.H"
-#include "phasePair.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface,
+    const bool outer
 )
 {
-    word heatTransferModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        outer ? interface.fluid().modelSubDict<heatTransferModel>(dict) : dict;
+
+    const word heatTransferModelType(modelDict.lookup("type"));
 
     Info<< "Selecting heatTransferModel for "
-        << pair << ": " << heatTransferModelType << endl;
+        << interface.name() << ": " << heatTransferModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(heatTransferModelType);
@@ -52,7 +56,35 @@ Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(modelDict, interface);
+}
+
+
+Foam::autoPtr<Foam::blendedHeatTransferModel>
+Foam::blendedHeatTransferModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return autoPtr<blendedHeatTransferModel>
+    (
+        new blendedHeatTransferModel(dict, interface)
+    );
+}
+
+
+Foam::autoPtr<Foam::sidedBlendedHeatTransferModel>
+Foam::sidedBlendedHeatTransferModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return autoPtr<sidedBlendedHeatTransferModel>
+    (
+        new sidedBlendedHeatTransferModel(dict, interface)
+    );
 }
 
 

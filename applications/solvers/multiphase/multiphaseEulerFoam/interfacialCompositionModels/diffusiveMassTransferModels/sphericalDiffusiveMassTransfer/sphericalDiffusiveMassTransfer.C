@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sphericalDiffusiveMassTransfer.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,10 +49,18 @@ Foam::diffusiveMassTransferModels::sphericalDiffusiveMassTransfer::
 sphericalDiffusiveMassTransfer
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    diffusiveMassTransferModel(dict, pair),
+    diffusiveMassTransferModel(dict, interface),
+    interface_
+    (
+        interface.modelCast
+        <
+            diffusiveMassTransferModel,
+            dispersedPhaseInterface
+        >()
+    ),
     Le_("Le", dimless, dict)
 {}
 
@@ -70,7 +77,7 @@ Foam::diffusiveMassTransferModels::sphericalDiffusiveMassTransfer::
 Foam::tmp<Foam::volScalarField>
 Foam::diffusiveMassTransferModels::sphericalDiffusiveMassTransfer::K() const
 {
-    return 60*pair_.dispersed()/sqr(pair_.dispersed().d());
+    return 60*interface_.dispersed()/sqr(interface_.dispersed().d());
 }
 
 

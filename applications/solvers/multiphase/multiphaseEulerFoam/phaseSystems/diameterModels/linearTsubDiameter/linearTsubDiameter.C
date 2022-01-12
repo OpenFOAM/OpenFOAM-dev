@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,20 +99,14 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::linearTsub::d() const
 
 void Foam::diameterModels::linearTsub::correct()
 {
-    // Lookup the fluid model
-    const phaseSystem& fluid =
-        refCast<const phaseSystem>
-        (
-            phase().mesh().lookupObject<phaseSystem>("phaseProperties")
-        );
+    const phaseSystem& fluid = phase().fluid();
+    const phaseModel& liquid = fluid.phases()[liquidPhaseName_];
+    const phaseInterface interface(phase(), liquid);
 
-    const phaseModel& liquid(fluid.phases()[liquidPhaseName_]);
-    const phasePair pair(phase(), liquid);
-
-    if (fluid.foundSubModel<saturationModel>(pair))
+    if (fluid.foundInterfacialModel<saturationModel>(interface))
     {
         const saturationModel& satModel =
-            fluid.lookupSubModel<saturationModel>(pair);
+            fluid.lookupInterfacialModel<saturationModel>(interface);
 
         const volScalarField Tsub
         (

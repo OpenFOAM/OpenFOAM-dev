@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "reactionDriven.H"
-#include "phasePair.H"
 #include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -45,23 +44,20 @@ namespace phaseTransferModels
 Foam::phaseTransferModels::reactionDriven::reactionDriven
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    phaseTransferModel(dict, pair),
+    phaseTransferModel(dict, interface),
+    interface_(interface),
     reactingName_(dict.lookup("reactingPhase")),
     reactingPhase_
     (
-        reactingName_ == pair_.first() ? pair_.phase1() : pair_.phase2()
+        reactingName_ == interface_.phase1().name()
+      ? interface_.phase1()
+      : interface_.phase2()
     ),
-    otherPhase_
-    (
-        pair.otherPhase(reactingPhase_)
-    ),
-    sign_
-    (
-        reactingName_ == pair_.first() ? -1 : 1
-    ),
+    otherPhase_(interface.otherPhase(reactingPhase_)),
+    sign_(reactingName_ == interface_.phase1().name() ? -1 : 1),
     species_(dict.lookup("species"))
 {}
 

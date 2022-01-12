@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallLubricationModel.H"
-#include "phasePair.H"
-#include "fvcFlux.H"
-#include "surfaceInterpolate.H"
 #include "wallFvPatch.H"
-#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -72,11 +68,10 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModel::zeroGradWalls
 Foam::wallLubricationModel::wallLubricationModel
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    wallDependentModel(pair.phase1().mesh()),
-    pair_(pair)
+    wallDependentModel(interface.mesh())
 {}
 
 
@@ -88,15 +83,30 @@ Foam::wallLubricationModel::~wallLubricationModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volVectorField> Foam::wallLubricationModel::F() const
+Foam::tmp<Foam::volVectorField> Foam::blendedWallLubricationModel::F() const
 {
-    return pair_.dispersed()*Fi();
+    return
+        evaluate
+        (
+            &wallLubricationModel::F,
+            "F",
+            wallLubricationModel::dimF,
+            true
+        );
 }
 
 
-Foam::tmp<Foam::surfaceScalarField> Foam::wallLubricationModel::Ff() const
+Foam::tmp<Foam::surfaceScalarField>
+Foam::blendedWallLubricationModel::Ff() const
 {
-    return fvc::interpolate(pair_.dispersed())*fvc::flux(Fi());
+    return
+        evaluate
+        (
+            &wallLubricationModel::Ff,
+            "Ff",
+            wallLubricationModel::dimF*dimArea,
+            true
+        );
 }
 
 

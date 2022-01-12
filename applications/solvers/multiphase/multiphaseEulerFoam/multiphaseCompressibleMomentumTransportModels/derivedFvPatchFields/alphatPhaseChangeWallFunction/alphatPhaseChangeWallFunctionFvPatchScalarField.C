@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,8 @@ License
 #include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
+#include "phaseInterface.H"
+#include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -119,9 +121,15 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool alphatPhaseChangeWallFunctionFvPatchScalarField::
-activePhasePair(const phasePairKey& phasePair) const
+activeInterface(const phaseInterface& interface) const
 {
-    if (phasePair == phasePairKey(otherPhaseName_, internalField().group()))
+    const phaseSystem& fluid = interface.fluid();
+
+    if
+    (
+        interface.contains(fluid.phases()[internalField().group()])
+     && interface.contains(fluid.phases()[otherPhaseName_])
+    )
     {
         return true;
     }
@@ -140,16 +148,17 @@ alphatPhaseChangeWallFunctionFvPatchScalarField::dmdtf() const
 
 
 const scalarField& alphatPhaseChangeWallFunctionFvPatchScalarField::
-dmdtf(const phasePairKey& phasePair) const
+dmdtf(const phaseInterface& interface) const
 {
-    if (activePhasePair(phasePair))
+    if (activeInterface(interface))
     {
         return dmdtf_;
     }
     else
     {
         FatalErrorInFunction
-            << " dmdtf requested for invalid phasePair!"
+            << "Phase change mass transfer rate requested for interface on "
+            << "which there is no phase change "
             << abort(FatalError);
 
         return dmdtf_;

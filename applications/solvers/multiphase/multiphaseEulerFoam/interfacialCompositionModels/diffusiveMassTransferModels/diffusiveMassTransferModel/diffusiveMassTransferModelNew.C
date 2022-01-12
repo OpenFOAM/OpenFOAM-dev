@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "diffusiveMassTransferModel.H"
-#include "phasePair.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
@@ -32,13 +31,16 @@ Foam::autoPtr<Foam::diffusiveMassTransferModel>
 Foam::diffusiveMassTransferModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 {
-    word diffusiveMassTransferModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        interface.fluid().modelSubDict<diffusiveMassTransferModel>(dict);
+
+    const word diffusiveMassTransferModelType(modelDict.lookup("type"));
 
     Info<< "Selecting diffusiveMassTransferModel for "
-        << pair << ": " << diffusiveMassTransferModelType << endl;
+        << interface.name() << ": " << diffusiveMassTransferModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(diffusiveMassTransferModelType);
@@ -53,7 +55,35 @@ Foam::diffusiveMassTransferModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(modelDict, interface);
+}
+
+
+Foam::autoPtr<Foam::blendedDiffusiveMassTransferModel>
+Foam::blendedDiffusiveMassTransferModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return autoPtr<blendedDiffusiveMassTransferModel>
+    (
+        new blendedDiffusiveMassTransferModel(dict, interface)
+    );
+}
+
+
+Foam::autoPtr<Foam::sidedBlendedDiffusiveMassTransferModel>
+Foam::sidedBlendedDiffusiveMassTransferModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return autoPtr<sidedBlendedDiffusiveMassTransferModel>
+    (
+        new sidedBlendedDiffusiveMassTransferModel(dict, interface)
+    );
 }
 
 

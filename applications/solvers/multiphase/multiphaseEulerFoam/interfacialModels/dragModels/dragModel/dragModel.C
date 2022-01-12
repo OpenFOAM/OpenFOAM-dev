@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,10 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dragModel.H"
-#include "phasePair.H"
-#include "noSwarm.H"
-#include "surfaceInterpolate.H"
-#include "BlendedInterfacialModel.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -46,7 +43,7 @@ const Foam::dimensionSet Foam::dragModel::dimK(1, -3, -1, 0, 0);
 Foam::dragModel::dragModel
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
@@ -54,24 +51,13 @@ Foam::dragModel::dragModel
     (
         IOobject
         (
-            IOobject::groupName(typeName, pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh(),
+            IOobject::groupName(typeName, interface.name()),
+            interface.mesh().time().timeName(),
+            interface.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             registerObject
         )
-    ),
-    pair_(pair),
-    swarmCorrection_
-    (
-        dict.found("swarmCorrection")
-      ? swarmCorrection::New
-        (
-            dict.subDict("swarmCorrection"),
-            pair
-        )
-      : autoPtr<swarmCorrection>(new swarmCorrections::noSwarm(dict, pair))
     )
 {}
 
@@ -84,38 +70,21 @@ Foam::dragModel::~dragModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::dragModel::Ki() const
-{
-    return
-        0.75
-       *CdRe()
-       *swarmCorrection_->Cs()
-       *pair_.continuous().rho()
-       *pair_.continuous().thermo().nu()
-       /sqr(pair_.dispersed().d());
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::dragModel::K() const
-{
-    return max(pair_.dispersed(), pair_.dispersed().residualAlpha())*Ki();
-}
-
-
-Foam::tmp<Foam::surfaceScalarField> Foam::dragModel::Kf() const
-{
-    return
-        max
-        (
-            fvc::interpolate(pair_.dispersed()),
-            pair_.dispersed().residualAlpha()
-        )*fvc::interpolate(Ki());
-}
-
-
 bool Foam::dragModel::writeData(Ostream& os) const
 {
     return os.good();
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::blendedDragModel::K() const
+{
+    return evaluate(&dragModel::K, "K", dragModel::dimK, false);
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::blendedDragModel::Kf() const
+{
+    return evaluate(&dragModel::Kf, "Kf", dragModel::dimK, false);
 }
 
 

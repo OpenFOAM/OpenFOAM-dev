@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "interfaceCompositionModel.H"
 #include "phaseModel.H"
-#include "phasePair.H"
 #include "phaseSystem.H"
 #include "rhoReactionThermo.H"
 
@@ -34,6 +33,7 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(interfaceCompositionModel, 0);
+    defineSidedInterfacialModelTypeNameAndDebug(interfaceCompositionModel, 0);
     defineRunTimeSelectionTable(interfaceCompositionModel, dictionary);
 }
 
@@ -43,41 +43,17 @@ namespace Foam
 Foam::interfaceCompositionModel::interfaceCompositionModel
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    pair_(pair),
+    interface_
+    (
+        interface.modelCast<interfaceCompositionModel, sidedPhaseInterface>()
+    ),
     species_(dict.lookup("species")),
     Le_("Le", dimless, dict),
-    phase_
-    (
-        // !!! This is a hack, to let the models know which side of the
-        // interface it applies to. In general, we are going to need improve
-        // the phase-pair system to take into account model sidedness and other
-        // types of asymmetry from just dispersed/continuous.
-        pair.phase1().name() == IOobject::group(dict.dictName())
-      ? pair.phase1()
-      : pair.phase2()
-    ),
-    otherPhase_(pair.otherPhase(phase_)),
-    thermo_
-    (
-        phase_.mesh().lookupObject<rhoReactionThermo>
-        (
-            IOobject::groupName(physicalProperties::typeName, phase_.name())
-        )
-    ),
-    otherThermo_
-    (
-        otherPhase_.mesh().lookupObject<rhoThermo>
-        (
-            IOobject::groupName
-            (
-                physicalProperties::typeName,
-                otherPhase_.name()
-            )
-        )
-    )
+    thermo_(refCast<const rhoReactionThermo>(interface_.phase().thermo())),
+    otherThermo_(interface_.otherPhase().thermo())
 {}
 
 
@@ -122,7 +98,7 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModel::D
 
     return volScalarField::New
     (
-        IOobject::groupName("D", pair_.name()),
+        IOobject::groupName("D" + speciesName, interface_.name()),
         composition().kappa(speciei, p, T)
        /composition().Cp(speciei, p, T)
        /composition().rho(speciei, p, T)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VakhrushevEfremov.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,10 @@ namespace aspectRatioModels
 Foam::aspectRatioModels::VakhrushevEfremov::VakhrushevEfremov
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    aspectRatioModel(dict, pair)
+    aspectRatioModel(dict, interface)
 {}
 
 
@@ -67,7 +66,7 @@ Foam::aspectRatioModels::VakhrushevEfremov::~VakhrushevEfremov()
 Foam::tmp<Foam::volScalarField>
 Foam::aspectRatioModels::VakhrushevEfremov::E() const
 {
-    const volScalarField Ta(pair_.Ta());
+    const volScalarField Ta(interface_.Ta());
 
     return
         neg(Ta - 1)

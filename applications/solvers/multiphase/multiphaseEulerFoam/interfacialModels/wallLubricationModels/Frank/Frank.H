@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,15 +51,12 @@ SourceFiles
 #ifndef Frank_H
 #define Frank_H
 
-#include "wallLubricationModel.H"
+#include "dispersedWallLubricationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace wallLubricationModels
 {
 
@@ -69,7 +66,7 @@ namespace wallLubricationModels
 
 class Frank
 :
-    public wallLubricationModel
+    public dispersedWallLubricationModel
 {
     // Private Data
 
@@ -91,11 +88,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         Frank
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

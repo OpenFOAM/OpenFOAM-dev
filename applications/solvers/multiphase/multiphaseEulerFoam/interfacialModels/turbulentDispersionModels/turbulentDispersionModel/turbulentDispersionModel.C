@@ -24,9 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "turbulentDispersionModel.H"
-#include "phasePair.H"
 #include "phaseCompressibleMomentumTransportModel.H"
-#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -45,10 +43,8 @@ const Foam::dimensionSet Foam::turbulentDispersionModel::dimD(1, -1, -2, 0, 0);
 Foam::turbulentDispersionModel::turbulentDispersionModel
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
-:
-    pair_(pair)
 {}
 
 
@@ -60,20 +56,15 @@ Foam::turbulentDispersionModel::~turbulentDispersionModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::phaseCompressible::momentumTransportModel&
-Foam::turbulentDispersionModel::continuousTurbulence() const
+Foam::tmp<Foam::volScalarField> Foam::blendedTurbulentDispersionModel::D() const
 {
     return
-        pair_.phase1().mesh().lookupObject
-        <
-            phaseCompressible::momentumTransportModel
-        >
+        evaluate
         (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                pair_.continuous().name()
-            )
+            &turbulentDispersionModel::D,
+            "F",
+            turbulentDispersionModel::dimD,
+            true
         );
 }
 

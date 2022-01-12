@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceTensionModel.H"
-#include "phasePair.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -42,23 +41,10 @@ const Foam::dimensionSet Foam::surfaceTensionModel::dimSigma(1, 0, -2, 0, 0);
 Foam::surfaceTensionModel::surfaceTensionModel
 (
     const dictionary& dict,
-    const phasePair& pair,
-    const bool registerObject
+    const phaseInterface& interface
 )
 :
-    regIOobject
-    (
-        IOobject
-        (
-            IOobject::groupName(typeName, pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            registerObject
-        )
-    ),
-    pair_(pair)
+    interface_(interface)
 {}
 
 
@@ -66,14 +52,6 @@ Foam::surfaceTensionModel::surfaceTensionModel
 
 Foam::surfaceTensionModel::~surfaceTensionModel()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::surfaceTensionModel::writeData(Ostream& os) const
-{
-    return os.good();
-}
 
 
 // ************************************************************************* //

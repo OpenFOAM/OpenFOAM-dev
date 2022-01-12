@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::phasePairKey
+    Foam::phaseInterfaceKey
 
 Description
+    Word-pair based class used for keying interface models in hash tables.
 
 SourceFiles
+    phaseInterfaceKey.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef phasePairKey_H
-#define phasePairKey_H
+#ifndef phaseInterfaceKey_H
+#define phaseInterfaceKey_H
 
 #include "Pair.H"
+#include "word.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -42,28 +45,32 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-class phasePairKey;
+class phaseModel;
+class phaseInterface;
+class phaseInterfaceKey;
 
-bool operator==(const phasePairKey&, const phasePairKey&);
-bool operator!=(const phasePairKey&, const phasePairKey&);
+bool operator==(const phaseInterfaceKey&, const phaseInterfaceKey&);
+bool operator!=(const phaseInterfaceKey&, const phaseInterfaceKey&);
 
-Istream& operator>>(Istream&, phasePairKey&);
-Ostream& operator<<(Ostream&, const phasePairKey&);
-
+Istream& operator>>(Istream&, phaseInterfaceKey&);
+Ostream& operator<<(Ostream&, const phaseInterfaceKey&);
 
 /*---------------------------------------------------------------------------*\
-                        Class phasePairKey Declaration
+                       Class phaseInterfaceKey Declaration
 \*---------------------------------------------------------------------------*/
 
-class phasePairKey
+class phaseInterfaceKey
 :
     public Pair<word>
 {
 public:
 
+    // Public Classes
+
+        //- Hashing class
         class hash
         :
-            public Hash<phasePairKey>
+            public Hash<phaseInterfaceKey>
         {
         public:
 
@@ -75,17 +82,9 @@ public:
 
             // Member Operators
 
-                // Generate a hash from a phase pair key
-                label operator()(const phasePairKey& key) const;
+                // Generate a hash from a phase interface key
+                label operator()(const phaseInterfaceKey& key) const;
         };
-
-
-private:
-
-    // Private Data
-
-        //- Flag to indicate whether ordering is important
-        bool ordered_;
 
 
 public:
@@ -93,40 +92,40 @@ public:
     // Constructors
 
         //- Construct null
-        phasePairKey();
+        phaseInterfaceKey();
 
-        //- Construct from names and the ordering flag
-        phasePairKey
-        (
-            const word& name1,
-            const word& name2,
-            const bool ordered = false
-        );
+        //- Construct from phases
+        phaseInterfaceKey(const phaseModel& phase1, const phaseModel& phase2);
+
+        //- Construct from phase interface
+        phaseInterfaceKey(const phaseInterface& interface);
 
 
     // Destructor
-    virtual ~phasePairKey();
-
-
-    // Access
-
-        //- Return the ordered flag
-        bool ordered() const;
+    virtual ~phaseInterfaceKey();
 
 
     // Friend Operators
 
         //- Test if keys are equal
-        friend bool operator==(const phasePairKey& a, const phasePairKey& b);
+        friend bool operator==
+        (
+            const phaseInterfaceKey& a,
+            const phaseInterfaceKey& b
+        );
 
         //- Test if keys are unequal
-        friend bool operator!=(const phasePairKey& a, const phasePairKey& b);
+        friend bool operator!=
+        (
+            const phaseInterfaceKey& a,
+            const phaseInterfaceKey& b
+        );
 
-        //- Read from stdin
-        friend Istream& operator>>(Istream& is, phasePairKey& key);
+        //- Read from stream
+        friend Istream& operator>>(Istream& is, phaseInterfaceKey& key);
 
-        //- Write to stdout
-        friend Ostream& operator<<(Ostream& os, const phasePairKey& key);
+        //- Write to stream
+        friend Ostream& operator<<(Ostream& os, const phaseInterfaceKey& key);
 };
 
 

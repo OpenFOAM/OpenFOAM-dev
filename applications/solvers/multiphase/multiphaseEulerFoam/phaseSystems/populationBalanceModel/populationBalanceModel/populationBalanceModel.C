@@ -174,46 +174,6 @@ void Foam::diameterModels::populationBalanceModel::registerSizeGroups
 }
 
 
-void Foam::diameterModels::populationBalanceModel::createPhasePairs()
-{
-    forAll(velocityGroups_, i)
-    {
-        const phaseModel& phasei = velocityGroups_[i].phase();
-
-        forAll(velocityGroups_, j)
-        {
-            const phaseModel& phasej = velocityGroups_[j].phase();
-
-            if (&phasei != &phasej)
-            {
-                const phasePairKey key
-                (
-                    phasei.name(),
-                    phasej.name(),
-                    false
-                );
-
-                if (!phasePairs_.found(key))
-                {
-                    phasePairs_.insert
-                    (
-                        key,
-                        autoPtr<phasePair>
-                        (
-                            new phasePair
-                            (
-                                phasei,
-                                phasej
-                            )
-                        )
-                    );
-                }
-            }
-        }
-    }
-}
-
-
 void Foam::diameterModels::populationBalanceModel::precompute()
 {
     forAll(coalescenceModels_, model)
@@ -280,36 +240,24 @@ void Foam::diameterModels::populationBalanceModel::birthByCoalescence
 
         Su_[i] += Sui_;
 
-        const phasePairKey pairij
-        (
-            fi.phase().name(),
-            fj.phase().name()
-        );
+        const phaseInterface interfaceij(fi.phase(), fj.phase());
 
-        if (pDmdt_.found(pairij))
+        if (pDmdt_.found(interfaceij))
         {
-            const scalar dmdtSign
-            (
-                Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
-            );
+            const scalar dmdtSign =
+                interfaceij.index(fi.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[pairij] += dmdtSign*fj.x()/v*Sui_*fj.phase().rho();
+            *pDmdt_[interfaceij] += dmdtSign*fj.x()/v*Sui_*fj.phase().rho();
         }
 
-        const phasePairKey pairik
-        (
-            fi.phase().name(),
-            fk.phase().name()
-        );
+        const phaseInterface interfaceik(fi.phase(), fk.phase());
 
-        if (pDmdt_.found(pairik))
+        if (pDmdt_.found(interfaceik))
         {
-            const scalar dmdtSign
-            (
-                Pair<word>::compare(pDmdt_.find(pairik).key(), pairik)
-            );
+            const scalar dmdtSign =
+                interfaceik.index(fi.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[pairik] += dmdtSign*fk.x()/v*Sui_*fk.phase().rho();
+            *pDmdt_[interfaceik] += dmdtSign*fk.x()/v*Sui_*fk.phase().rho();
         }
 
         sizeGroups_[i].shapeModelPtr()->addCoalescence(Sui_, fj, fk);
@@ -353,20 +301,14 @@ void Foam::diameterModels::populationBalanceModel::birthByBreakup
 
         Su_[i] += Sui_;
 
-        const phasePairKey pair
-        (
-            fi.phase().name(),
-            fk.phase().name()
-        );
+        const phaseInterface interface(fi.phase(), fk.phase());
 
-        if (pDmdt_.found(pair))
+        if (pDmdt_.found(interface))
         {
-            const scalar dmdtSign
-            (
-                Pair<word>::compare(pDmdt_.find(pair).key(), pair)
-            );
+            const scalar dmdtSign =
+                interface.index(fi.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[pair] += dmdtSign*Sui_*fk.phase().rho();
+            *pDmdt_[interface] += dmdtSign*Sui_*fk.phase().rho();
         }
 
         sizeGroups_[i].shapeModelPtr()->addBreakup(Sui_, fk);
@@ -436,20 +378,14 @@ void Foam::diameterModels::populationBalanceModel::birthByBinaryBreakup
 
     sizeGroups_[i].shapeModelPtr()->addBreakup(Sui_, fj);
 
-    const phasePairKey pairij
-    (
-        fi.phase().name(),
-        fj.phase().name()
-    );
+    const phaseInterface interfaceij(fi.phase(), fj.phase());
 
-    if (pDmdt_.found(pairij))
+    if (pDmdt_.found(interfaceij))
     {
-        const scalar dmdtSign
-        (
-            Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
-        );
+        const scalar dmdtSign =
+            interfaceij.index(fi.phase()) == 0 ? +1 : -1;
 
-        *pDmdt_[pairij] += dmdtSign*Sui_*fj.phase().rho();
+        *pDmdt_[interfaceij] += dmdtSign*Sui_*fj.phase().rho();
     }
 
     dimensionedScalar Eta;
@@ -469,24 +405,14 @@ void Foam::diameterModels::populationBalanceModel::birthByBinaryBreakup
 
         Su_[k] += Suk;
 
-        const phasePairKey pairkj
-        (
-            fk.phase().name(),
-            fj.phase().name()
-        );
+        const phaseInterface interfacekj(fk.phase(), fj.phase());
 
-        if (pDmdt_.found(pairkj))
+        if (pDmdt_.found(interfacekj))
         {
-            const scalar dmdtSign
-            (
-                Pair<word>::compare
-                (
-                    pDmdt_.find(pairkj).key(),
-                    pairkj
-                )
-            );
+            const scalar dmdtSign =
+                interfacekj.index(fk.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[pairkj] += dmdtSign*Suk*fj.phase().rho();
+            *pDmdt_[interfacekj] += dmdtSign*Suk*fj.phase().rho();
         }
 
         sizeGroups_[k].shapeModelPtr()->addBreakup(Suk, fj);
@@ -527,20 +453,14 @@ void Foam::diameterModels::populationBalanceModel::drift
 
         Su_[i+1] += Sue;
 
-        const phasePairKey pairij
-        (
-            fp.phase().name(),
-            fe.phase().name()
-        );
+        const phaseInterface interfaceij(fp.phase(), fe.phase());
 
-        if (pDmdt_.found(pairij))
+        if (pDmdt_.found(interfaceij))
         {
-            const scalar dmdtSign
-            (
-                Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
-            );
+            const scalar dmdtSign =
+                interfaceij.index(fp.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[pairij] -= dmdtSign*Sue*fp.phase().rho();
+            *pDmdt_[interfaceij] -= dmdtSign*Sue*fp.phase().rho();
         }
 
         sizeGroups_[i+1].shapeModelPtr()->addDrift(Sue, fp, model);
@@ -564,20 +484,14 @@ void Foam::diameterModels::populationBalanceModel::drift
 
         Su_[i-1] += Suw;
 
-        const phasePairKey pairih
-        (
-            fp.phase().name(),
-            fw.phase().name()
-        );
+        const phaseInterface interfaceih(fp.phase(), fw.phase());
 
-        if (pDmdt_.found(pairih))
+        if (pDmdt_.found(interfaceih))
         {
-            const scalar dmdtSign
-            (
-                Pair<word>::compare(pDmdt_.find(pairih).key(), pairih)
-            );
+            const scalar dmdtSign =
+                interfaceih.index(fp.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[pairih] -= dmdtSign*Suw*fp.phase().rho();
+            *pDmdt_[interfaceih] -= dmdtSign*Suw*fp.phase().rho();
         }
 
         sizeGroups_[i-1].shapeModelPtr()->addDrift(Suw, fp, model);
@@ -617,14 +531,9 @@ void Foam::diameterModels::populationBalanceModel::sources()
         Sp_[i] = Zero;
     }
 
-    forAllConstIter
-    (
-        phasePairTable,
-        phasePairs(),
-        phasePairIter
-    )
+    forAllIter(phaseSystem::dmdtfTable, pDmdt_, pDmdtIter)
     {
-        *pDmdt_(phasePairIter()) = Zero;
+        *pDmdtIter() = Zero;
     }
 
     forAll(coalescencePairs_, coalescencePairi)
@@ -766,7 +675,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
 (
     const phaseSystem& fluid,
     const word& name,
-    HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>& pDmdt
+    phaseSystem::dmdtfTable& pDmdt
 )
 :
     regIOobject
@@ -849,8 +758,6 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     sourceUpdateCounter_(0)
 {
     this->registerVelocityGroups();
-
-    this->createPhasePairs();
 
     if (sizeGroups().size() < 3)
     {
@@ -1104,11 +1011,7 @@ Foam::diameterModels::populationBalanceModel::sigmaWithContinuousPhase
     const phaseModel& dispersedPhase
 ) const
 {
-    return
-        fluid_.lookupSubModel<surfaceTensionModel>
-        (
-            phasePair(dispersedPhase, continuousPhase_)
-        ).sigma();
+    return phaseInterface(dispersedPhase, continuousPhase_).sigma();
 }
 
 

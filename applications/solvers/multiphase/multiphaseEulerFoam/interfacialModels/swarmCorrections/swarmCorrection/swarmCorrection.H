@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,9 @@ Class
     Foam::swarmCorrection
 
 Description
+    Drag model modifier to take into account large fractions (swarms) of the
+    dispersed phase. Often not appropriate as these effects are a fundamental
+    part of the drag model formulation (e.g. Ergun). Use with care.
 
 SourceFiles
     swarmCorrection.C
@@ -40,11 +43,10 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "dispersedPhaseInterface.H"
 
 namespace Foam
 {
-
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                        Class swarmCorrection Declaration
@@ -56,8 +58,8 @@ protected:
 
     // Protected data
 
-        //- Phase pair
-        const phasePair& pair_;
+        //- Interface
+        const dispersedPhaseInterface interface_;
 
 
 public:
@@ -74,19 +76,19 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         ),
-        (dict, pair)
+        (dict, interface)
     );
 
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         swarmCorrection
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -99,7 +101,7 @@ public:
         static autoPtr<swarmCorrection> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

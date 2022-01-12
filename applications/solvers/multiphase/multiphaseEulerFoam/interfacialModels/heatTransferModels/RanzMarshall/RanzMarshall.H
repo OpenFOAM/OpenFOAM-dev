@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,12 @@ class RanzMarshall
 :
     public heatTransferModel
 {
+    // Private Data
+
+        //- Interface
+        const dispersedPhaseInterface interface_;
+
+
 public:
 
     //- Runtime type information
@@ -61,11 +67,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         RanzMarshall
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

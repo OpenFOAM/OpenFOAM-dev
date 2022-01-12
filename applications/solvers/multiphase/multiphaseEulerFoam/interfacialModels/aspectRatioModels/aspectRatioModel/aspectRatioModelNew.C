@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "aspectRatioModel.H"
-#include "phasePair.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
@@ -32,13 +32,13 @@ Foam::autoPtr<Foam::aspectRatioModel>
 Foam::aspectRatioModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 {
-    word aspectRatioModelType(dict.lookup("type"));
+    const word aspectRatioModelType(dict.lookup("type"));
 
     Info<< "Selecting aspectRatioModel for "
-        << pair << ": " << aspectRatioModelType << endl;
+        << interface.name() << ": " << aspectRatioModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(aspectRatioModelType);
@@ -53,7 +53,7 @@ Foam::aspectRatioModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(dict, interface);
 }
 
 

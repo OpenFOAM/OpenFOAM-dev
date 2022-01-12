@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Frossling.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,18 @@ namespace diffusiveMassTransferModels
 Foam::diffusiveMassTransferModels::Frossling::Frossling
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    diffusiveMassTransferModel(dict, pair),
+    diffusiveMassTransferModel(dict, interface),
+    interface_
+    (
+        interface.modelCast
+        <
+            diffusiveMassTransferModel,
+            dispersedPhaseInterface
+        >()
+    ),
     Le_("Le", dimless, dict)
 {}
 
@@ -68,9 +75,12 @@ Foam::diffusiveMassTransferModels::Frossling::~Frossling()
 Foam::tmp<Foam::volScalarField>
 Foam::diffusiveMassTransferModels::Frossling::K() const
 {
-    volScalarField Sh(2 + 0.552*sqrt(pair_.Re())*cbrt(Le_*pair_.Pr()));
+    const volScalarField Sh
+    (
+        2 + 0.552*sqrt(interface_.Re())*cbrt(Le_*interface_.Pr())
+    );
 
-    return 6*pair_.dispersed()*Sh/sqr(pair_.dispersed().d());
+    return 6*interface_.dispersed()*Sh/sqr(interface_.dispersed().d());
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "phaseChange.H"
 #include "addToRunTimeSelectionTable.H"
 #include "phaseSystem.H"
-#include "phasePairKey.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -52,18 +51,18 @@ Foam::diameterModels::driftModels::phaseChange::phaseChange
 )
 :
     driftModel(popBal, dict),
-    pairKeys_(dict.lookup("pairs")),
+    interfaces_
+    (
+        dict.lookup("interfaces"),
+        phaseInterface::iNew(popBal_.fluid())
+    ),
     numberWeighted_(dict.lookupOrDefault<Switch>("numberWeighted", false)),
-    W_(pairKeys_.size()),
+    W_(interfaces_.size()),
     dmdtfName_(dict.lookup("dmdtf")),
     specieName_(dict.lookupOrDefault("specie", word()))
 {
-    const phaseSystem& fluid = popBal_.fluid();
-
-    forAll(pairKeys_, i)
+    forAll(interfaces_, i)
     {
-        const phasePair& pair = fluid.phasePairs()[pairKeys_[i]];
-
         W_.set
         (
             i,
@@ -71,7 +70,7 @@ Foam::diameterModels::driftModels::phaseChange::phaseChange
             (
                 IOobject
                 (
-                    IOobject::groupName(type() + ":W", pair.name()),
+                    IOobject::groupName(type() + ":W", interfaces_[i].name()),
                     popBal_.mesh().time().timeName(),
                     popBal_.mesh()
                 ),
@@ -91,36 +90,30 @@ Foam::diameterModels::driftModels::phaseChange::phaseChange
 
 void Foam::diameterModels::driftModels::phaseChange::precompute()
 {
-    const phaseSystem& fluid = popBal_.fluid();
-
-    forAll(pairKeys_, i)
+    forAll(interfaces_, i)
     {
         W_[i] = Zero;
     }
 
-    forAll(pairKeys_, k)
+    forAll(interfaces_, k)
     {
-        if (fluid.phasePairs().found(pairKeys_[k]))
+        forAll(popBal_.velocityGroups(), j)
         {
-            const phasePair& pair = fluid.phasePairs()[pairKeys_[k]];
+            const velocityGroup& vgj = popBal_.velocityGroups()[j];
 
-            forAll(popBal_.velocityGroups(), j)
+            if (interfaces_[k].contains(vgj.phase()))
             {
-                const velocityGroup& vgj = popBal_.velocityGroups()[j];
-                if (pair.contains(vgj.phase()))
+                forAll(vgj.sizeGroups(), i)
                 {
-                    forAll(vgj.sizeGroups(), i)
-                    {
-                        const sizeGroup& fi = vgj.sizeGroups()[i];
+                    const sizeGroup& fi = vgj.sizeGroups()[i];
 
-                        if (numberWeighted_)
-                        {
-                            W_[k] += fi*max(fi.phase(), small)/fi.x();
-                        }
-                        else
-                        {
-                            W_[k] += fi*max(fi.phase(), small)/fi.x()*fi.a();
-                        }
+                    if (numberWeighted_)
+                    {
+                        W_[k] += fi*max(fi.phase(), small)/fi.x();
+                    }
+                    else
+                    {
+                        W_[k] += fi*max(fi.phase(), small)/fi.x()*fi.a();
                     }
                 }
             }
@@ -137,12 +130,9 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
 {
     const velocityGroup& vg = popBal_.sizeGroups()[i].VelocityGroup();
 
-    forAll(pairKeys_, k)
+    forAll(interfaces_, k)
     {
-        const phasePair& pair =
-                popBal_.fluid().phasePairs()[pairKeys_[k]];
-
-        if (pair.contains(vg.phase()))
+        if (interfaces_[k].contains(vg.phase()))
         {
             const volScalarField& dmidtf =
                 popBal_.mesh().lookupObject<volScalarField>
@@ -154,12 +144,12 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
                             dmdtfName_,
                             specieName_
                         ),
-                        pair.name()
+                        interfaces_[k].name()
                     )
                 );
 
             const scalar dmidtfSign =
-                vg.phase().name() == pair.first() ? +1 : -1;
+                interfaces_[k].index(vg.phase()) == 0 ? +1 : -1;
 
             const sizeGroup& fi = popBal_.sizeGroups()[i];
 

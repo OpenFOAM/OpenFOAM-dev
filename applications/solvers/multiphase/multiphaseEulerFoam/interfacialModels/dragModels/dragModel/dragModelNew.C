@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,20 +24,25 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dragModel.H"
-#include "phasePair.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::dragModel> Foam::dragModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface,
+    const bool outer,
+    const bool registerObject
 )
 {
-    word dragModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        outer ? interface.fluid().modelSubDict<dragModel>(dict) : dict;
+
+    const word dragModelType(modelDict.lookup("type"));
 
     Info<< "Selecting dragModel for "
-        << pair << ": " << dragModelType << endl;
+        << interface.name() << ": " << dragModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(dragModelType);
@@ -52,7 +57,17 @@ Foam::autoPtr<Foam::dragModel> Foam::dragModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair, true);
+    return cstrIter()(modelDict, interface, registerObject);
+}
+
+
+Foam::autoPtr<Foam::blendedDragModel> Foam::blendedDragModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return autoPtr<blendedDragModel>(new blendedDragModel(dict, interface));
 }
 
 

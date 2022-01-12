@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,10 +48,10 @@ namespace saturationModels
 Foam::saturationModels::AntoineExtended::AntoineExtended
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    Antoine(dict, pair),
+    Antoine(dict, interface),
     D_("D", dimless, dict),
     F_("F", dimless, dict),
     E_("E", dimless/pow(dimTemperature, F_), dict)

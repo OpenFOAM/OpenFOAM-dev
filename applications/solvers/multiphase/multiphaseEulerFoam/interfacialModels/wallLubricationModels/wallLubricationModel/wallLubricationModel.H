@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ Class
     Foam::wallLubricationModel
 
 Description
+    Model for the wall lubrication force between two phases
 
 SourceFiles
     wallLubricationModel.C
@@ -41,11 +42,10 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "BlendedInterfacialModel.H"
 
 namespace Foam
 {
-
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                     Class wallLubricationModel Declaration
@@ -56,12 +56,6 @@ class wallLubricationModel
     public wallDependentModel
 {
 protected:
-
-    // Protected data
-
-        //- Phase pair
-        const phasePair& pair_;
-
 
     // Protected member functions
 
@@ -84,9 +78,9 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair
+                const phaseInterface& interface
             ),
-            (dict, pair)
+            (dict, interface)
         );
 
 
@@ -95,14 +89,17 @@ public:
         //- Coefficient dimensions
         static const dimensionSet dimF;
 
+        //- Does this model require correcting on fixed flux boundaries?
+        static const bool correctFixedFluxBCs = true;
+
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         wallLubricationModel
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -115,20 +112,55 @@ public:
         static autoPtr<wallLubricationModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface,
+            const bool outer=true
         );
 
 
     // Member Functions
 
-        //- Return phase-intensive wall lubrication force
-        virtual tmp<volVectorField> Fi() const = 0;
-
         //- Return wall lubrication force
-        virtual tmp<volVectorField> F() const;
+        virtual tmp<volVectorField> F() const = 0;
 
         //- Return face wall lubrication force
-        virtual tmp<surfaceScalarField> Ff() const;
+        virtual tmp<surfaceScalarField> Ff() const = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                   Class blendedWallLubricationModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class blendedWallLubricationModel
+:
+    public BlendedInterfacialModel<wallLubricationModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            BlendedInterfacialModel<wallLubricationModel>::
+            BlendedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<blendedWallLubricationModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
+
+
+    // Member Functions
+
+        //- Return wall lubrication force
+        tmp<volVectorField> F() const;
+
+        //- Return face wall lubrication force
+        tmp<surfaceScalarField> Ff() const;
 };
 
 

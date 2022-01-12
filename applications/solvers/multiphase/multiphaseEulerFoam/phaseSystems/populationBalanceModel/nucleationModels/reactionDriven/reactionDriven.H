@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,9 +62,6 @@ class reactionDriven
 
         //- Phase in which the reaction occurs
         const phaseModel& reactingPhase_;
-
-        //- PhasePair between which the nucleation occurs
-        const phasePair pair_;
 
         //- Name of the mass transfer rate
         const word dmdtfName_;

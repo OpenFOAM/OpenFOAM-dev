@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constantAspectRatio.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,10 @@ namespace aspectRatioModels
 Foam::aspectRatioModels::constantAspectRatio::constantAspectRatio
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    aspectRatioModel(dict, pair),
+    aspectRatioModel(dict, interface),
     E0_("E0", dimless, dict)
 {}
 
@@ -68,12 +67,10 @@ Foam::aspectRatioModels::constantAspectRatio::~constantAspectRatio()
 Foam::tmp<Foam::volScalarField>
 Foam::aspectRatioModels::constantAspectRatio::E() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return volScalarField::New
     (
         aspectRatioModel::typeName + ":E",
-        mesh,
+        interface_.mesh(),
         E0_
     );
 }

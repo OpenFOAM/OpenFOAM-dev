@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,62 +35,61 @@ PopulationBalancePhaseSystem
 )
 :
     BasePhaseSystem(mesh),
-
     populationBalances_
     (
         this->lookup("populationBalances"),
         diameterModels::populationBalanceModel::iNew(*this, dmdtfs_)
     )
 {
-    forAll(populationBalances_, i)
+    forAll(populationBalances_, popBali)
     {
-        const Foam::diameterModels::populationBalanceModel& popBal =
-            populationBalances_[i];
+        const diameterModels::populationBalanceModel& popBal =
+            populationBalances_[popBali];
 
-        forAllConstIter(phaseSystem::phasePairTable, popBal.phasePairs(), iter)
+        forAll(popBal.velocityGroups(), velGrp1i)
         {
-            const phasePairKey& key = iter.key();
+            const diameterModels::velocityGroup& velGrp1 =
+                popBal.velocityGroups()[velGrp1i];
 
-            if (!this->phasePairs_.found(key))
+            for
+            (
+                label velGrp2i = velGrp1i + 1;
+                velGrp2i < popBal.velocityGroups().size();
+                ++ velGrp2i
+            )
             {
-                this->phasePairs_.insert
+                const diameterModels::velocityGroup& velGrp2 =
+                    popBal.velocityGroups()[velGrp2i];
+
+                const phaseInterface interface
                 (
-                    key,
-                    autoPtr<phasePair>
+                    velGrp1.phase(),
+                    velGrp2.phase()
+                );
+
+                this->template validateMassTransfer
+                    <diameterModels::populationBalanceModel>(interface);
+
+                dmdtfs_.insert
+                (
+                    interface,
+                    new volScalarField
                     (
-                        new phasePair
+                        IOobject
                         (
-                            this->phaseModels_[key.first()],
-                            this->phaseModels_[key.second()]
-                        )
+                            IOobject::groupName
+                            (
+                                "populationBalance:dmdtf",
+                                interface.name()
+                            ),
+                            this->mesh().time().timeName(),
+                            this->mesh()
+                        ),
+                        this->mesh(),
+                        dimensionedScalar(dimDensity/dimTime, 0)
                     )
                 );
             }
-
-            this->template validateMassTransfer
-            <
-                diameterModels::populationBalanceModel
-            >(this->phasePairs_[key]);
-
-            dmdtfs_.insert
-            (
-                key,
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        IOobject::groupName
-                        (
-                            "populationBalance:dmdtf",
-                            this->phasePairs_[key]->name()
-                        ),
-                        this->mesh().time().timeName(),
-                        this->mesh()
-                    ),
-                    this->mesh(),
-                    dimensionedScalar(dimDensity/dimTime, 0)
-                )
-            );
         }
     }
 }
@@ -110,16 +109,14 @@ template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
 Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdtf
 (
-    const phasePairKey& key
+    const phaseInterfaceKey& key
 ) const
 {
     tmp<volScalarField> tDmdtf = BasePhaseSystem::dmdtf(key);
 
     if (dmdtfs_.found(key))
     {
-        const label dmdtSign(Pair<word>::compare(this->phasePairs_[key], key));
-
-        tDmdtf.ref() += dmdtSign**dmdtfs_[key];
+        tDmdtf.ref() += *dmdtfs_[key];
     }
 
     return tDmdtf;
@@ -134,11 +131,10 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
 
     forAllConstIter(phaseSystem::dmdtfTable, dmdtfs_, dmdtfIter)
     {
-        const phasePair& pair = this->phasePairs_[dmdtfIter.key()];
-        const volScalarField& pDmdt = *dmdtfIter();
+        const phaseInterface interface(*this, dmdtfIter.key());
 
-        addField(pair.phase1(), "dmdt", pDmdt, dmdts);
-        addField(pair.phase2(), "dmdt", - pDmdt, dmdts);
+        addField(interface.phase1(), "dmdt", *dmdtfIter(), dmdts);
+        addField(interface.phase2(), "dmdt", - *dmdtfIter(), dmdts);
     }
 
     return dmdts;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,11 +41,12 @@ SourceFiles
 #include "HashPtrTable.H"
 #include "hashedWordList.H"
 #include "runTimeSelectionTables.H"
+#include "BlendedInterfacialModel.H"
 
 namespace Foam
 {
 
-class phasePair;
+class phaseSystem;
 
 /*---------------------------------------------------------------------------*\
                      Class phaseTransferModel Declaration
@@ -55,14 +56,6 @@ class phaseTransferModel
 :
     public regIOobject
 {
-protected:
-
-    // Protected data
-
-        //- Phase pair
-        const phasePair& pair_;
-
-
 public:
 
     //- Runtime type information
@@ -78,9 +71,9 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair
+                const phaseInterface& interface
             ),
-            (dict, pair)
+            (dict, interface)
         );
 
 
@@ -89,17 +82,20 @@ public:
         //- Mass transfer rate dimensions
         static const dimensionSet dimDmdt;
 
+        //- Does this model require correcting on fixed flux boundaries?
+        static const bool correctFixedFluxBCs = false;
+
         //- Empty species list
         static const hashedWordList noSpecies_;
 
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         phaseTransferModel
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -112,7 +108,7 @@ public:
         static autoPtr<phaseTransferModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -132,6 +128,49 @@ public:
 
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                   Class blendedPhaseTransferModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class blendedPhaseTransferModel
+:
+    public BlendedInterfacialModel<phaseTransferModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            BlendedInterfacialModel<phaseTransferModel>::
+            BlendedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<blendedPhaseTransferModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
+
+
+    // Member Functions
+
+        //- Whether or not there is a mass transfer rate for the mixture
+        bool mixture() const;
+
+        //- The mass transfer rate for the mixture
+        tmp<volScalarField> dmdtf() const;
+
+        //- The list of individual species that are transferred
+        hashedWordList species() const;
+
+        //- The mass transfer rate for individual species
+        HashPtrTable<volScalarField> dmidtf() const;
 };
 
 

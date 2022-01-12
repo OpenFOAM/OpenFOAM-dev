@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "TomiyamaKataokaZunSakaguchi.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,11 +48,11 @@ namespace dragModels
 Foam::dragModels::TomiyamaKataokaZunSakaguchi::TomiyamaKataokaZunSakaguchi
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dispersedDragModel(dict, interface, registerObject),
     residualRe_("residualRe", dimless, dict),
     residualEo_("residualEo", dimless, dict)
 {}
@@ -70,8 +69,8 @@ Foam::dragModels::TomiyamaKataokaZunSakaguchi::~TomiyamaKataokaZunSakaguchi()
 Foam::tmp<Foam::volScalarField>
 Foam::dragModels::TomiyamaKataokaZunSakaguchi::CdRe() const
 {
-    volScalarField Re(pair_.Re());
-    volScalarField Eo(max(pair_.Eo(), residualEo_));
+    volScalarField Re(interface_.Re());
+    volScalarField Eo(max(interface_.Eo(), residualEo_));
 
     return
         max
@@ -79,7 +78,7 @@ Foam::dragModels::TomiyamaKataokaZunSakaguchi::CdRe() const
             24*(1 + 0.15*pow(Re, 0.687))/max(Re, residualRe_),
             8*Eo/(3*(Eo + 4.0))
         )
-       *max(pair_.Re(), residualRe_);
+       *max(interface_.Re(), residualRe_);
 }
 
 

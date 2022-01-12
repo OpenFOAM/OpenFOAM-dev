@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "noWallLubrication.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,11 @@ namespace wallLubricationModels
 Foam::wallLubricationModels::noWallLubrication::noWallLubrication
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    wallLubricationModel(dict, pair)
+    wallLubricationModel(dict, interface),
+    interface_(interface)
 {}
 
 
@@ -65,29 +65,25 @@ Foam::wallLubricationModels::noWallLubrication::~noWallLubrication()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volVectorField>
-Foam::wallLubricationModels::noWallLubrication::Fi() const
+Foam::wallLubricationModels::noWallLubrication::F() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return volVectorField::New
     (
-        "noWallLubrication:Fi",
-        mesh,
+        "F",
+        interface_.mesh(),
         dimensionedVector(dimF, Zero)
     );
 }
 
 
-Foam::tmp<Foam::volVectorField>
-Foam::wallLubricationModels::noWallLubrication::F() const
+Foam::tmp<Foam::surfaceScalarField>
+Foam::wallLubricationModels::noWallLubrication::Ff() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
-    return volVectorField::New
+    return surfaceScalarField::New
     (
-        "noWallLubrication:F",
-        mesh,
-        dimensionedVector(dimF, Zero)
+        "F",
+        interface_.mesh(),
+        dimensionedScalar(dimF*dimArea, Zero)
     );
 }
 

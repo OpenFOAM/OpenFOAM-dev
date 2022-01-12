@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ Class
     Foam::heatTransferModel
 
 Description
+    Model for heat transfer between phases
 
 SourceFiles
     heatTransferModel.C
@@ -39,11 +40,11 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "BlendedInterfacialModel.H"
+#include "SidedInterfacialModel.H"
 
 namespace Foam
 {
-
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                       Class heatTransferModel Declaration
@@ -54,9 +55,6 @@ class heatTransferModel
 protected:
 
     // Protected data
-
-        //- Phase pair
-        const phasePair& pair_;
 
         //- Residual phase fraction
         const dimensionedScalar residualAlpha_;
@@ -77,9 +75,9 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair
+                const phaseInterface& interface
             ),
-            (dict, pair)
+            (dict, interface)
         );
 
 
@@ -88,14 +86,17 @@ public:
         //- Coefficient dimensions
         static const dimensionSet dimK;
 
+        //- Does this model require correcting on fixed flux boundaries?
+        static const bool correctFixedFluxBCs = false;
+
 
     // Constructors
 
-        //- Construct froma dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         heatTransferModel
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -108,7 +109,8 @@ public:
         static autoPtr<heatTransferModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface,
+            const bool outer=true
         );
 
 
@@ -124,6 +126,71 @@ public:
         //    ddt(alpha2*rho2*hb) + ... = ... K*(Tb - Ta)
         //  with a specified residual volume fraction
         virtual tmp<volScalarField> K(const scalar residualAlpha) const = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                   Class blendedHeatTransferModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class blendedHeatTransferModel
+:
+    public BlendedInterfacialModel<heatTransferModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            BlendedInterfacialModel<heatTransferModel>::
+            BlendedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<blendedHeatTransferModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
+
+
+    // Member Functions
+
+        //- Return the heatTransfer coefficient K
+        tmp<volScalarField> K() const;
+
+        //- Return the heatTransfer coefficient K
+        tmp<volScalarField> K(const scalar residualAlpha) const;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                 Class sidedBlendedHeatTransferModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class sidedBlendedHeatTransferModel
+:
+    public SidedInterfacialModel<blendedHeatTransferModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            SidedInterfacialModel<blendedHeatTransferModel>::
+            SidedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<sidedBlendedHeatTransferModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
 };
 
 

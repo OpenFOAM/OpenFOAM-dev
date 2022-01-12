@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,15 +49,12 @@ SourceFiles
 #ifndef TomiyamaWallLubrication_H
 #define TomiyamaWallLubrication_H
 
-#include "wallLubricationModel.H"
+#include "dispersedWallLubricationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace wallLubricationModels
 {
 
@@ -67,7 +64,7 @@ namespace wallLubricationModels
 
 class TomiyamaWallLubrication
 :
-    public wallLubricationModel
+    public dispersedWallLubricationModel
 {
     // Private Data
 
@@ -83,11 +80,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         TomiyamaWallLubrication
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -98,7 +95,7 @@ public:
     // Member Functions
 
         //- Return phase-intensive wall lubrication force
-        tmp<volVectorField> Fi() const;
+        virtual tmp<volVectorField> Fi() const;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,9 +40,6 @@ SourceFiles
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace wallDampingModels
 {
 
@@ -70,11 +67,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         linear
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

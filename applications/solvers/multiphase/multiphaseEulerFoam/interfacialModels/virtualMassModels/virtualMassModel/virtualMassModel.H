@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ Class
     Foam::virtualMassModel
 
 Description
+    Model for virtual mass between phases
 
 SourceFiles
     virtualMassModel.C
@@ -40,11 +41,10 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "BlendedInterfacialModel.H"
 
 namespace Foam
 {
-
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                       Class virtualMassModel Declaration
@@ -54,14 +54,6 @@ class virtualMassModel
 :
     public regIOobject
 {
-protected:
-
-    // Protected data
-
-        //- Phase pair
-        const phasePair& pair_;
-
-
 public:
 
     //- Runtime type information
@@ -77,10 +69,10 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair,
+                const phaseInterface& interface,
                 const bool registerObject
             ),
-            (dict, pair, registerObject)
+            (dict, interface, registerObject)
         );
 
 
@@ -89,14 +81,17 @@ public:
         //- Coefficient dimensions
         static const dimensionSet dimK;
 
+        //- Does this model require correcting on fixed flux boundaries?
+        static const bool correctFixedFluxBCs = true;
+
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         virtualMassModel
         (
             const dictionary& dict,
-            const phasePair& pair,
+            const phaseInterface& interface,
             const bool registerObject
         );
 
@@ -110,33 +105,63 @@ public:
         static autoPtr<virtualMassModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface,
+            const bool outer=true,
+            const bool registerObject=true
         );
 
 
     // Member Functions
 
-        //- Return the virtual mass coefficient
-        virtual tmp<volScalarField> Cvm() const = 0;
-
-        //- Return the phase-intensive virtual mass coefficient Ki
-        //  used in the momentum equation
-        //    ddt(alpha1*rho1*U1) + ... = ... alphad*K*(DU1_Dt - DU2_Dt)
-        //    ddt(alpha2*rho2*U2) + ... = ... alphad*K*(DU1_Dt - DU2_Dt)
-        virtual tmp<volScalarField> Ki() const;
-
         //- Return the virtual mass coefficient K
         //  used in the momentum equation
         //    ddt(alpha1*rho1*U1) + ... = ... K*(DU1_Dt - DU2_Dt)
         //    ddt(alpha2*rho2*U2) + ... = ... K*(DU1_Dt - DU2_Dt)
-        virtual tmp<volScalarField> K() const;
+        virtual tmp<volScalarField> K() const = 0;
 
         //- Return the virtual mass coefficient Kf
         //  used in the face-momentum equations
-        virtual tmp<surfaceScalarField> Kf() const;
+        virtual tmp<surfaceScalarField> Kf() const = 0;
 
         // Dummy write for regIOobject
         bool writeData(Ostream& os) const;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                      Class blendedVirtualMassModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class blendedVirtualMassModel
+:
+    public BlendedInterfacialModel<virtualMassModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            BlendedInterfacialModel<virtualMassModel>
+          ::BlendedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<blendedVirtualMassModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
+
+
+    // Member Functions
+
+        //- Return the lift coefficient K
+        tmp<volScalarField> K() const;
+
+        //- Return the lift coefficient Kf
+        tmp<surfaceScalarField> Kf() const;
 };
 
 

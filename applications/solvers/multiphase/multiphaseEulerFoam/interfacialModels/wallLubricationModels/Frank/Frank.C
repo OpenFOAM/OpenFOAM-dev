@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Frank.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,10 @@ namespace wallLubricationModels
 Foam::wallLubricationModels::Frank::Frank
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    wallLubricationModel(dict, pair),
+    dispersedWallLubricationModel(dict, interface),
     Cwd_("Cwd", dimless, dict),
     Cwc_("Cwc", dimless, dict),
     p_(dict.lookup<scalar>("p"))
@@ -69,13 +68,13 @@ Foam::wallLubricationModels::Frank::~Frank()
 
 Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Frank::Fi() const
 {
-    volVectorField Ur(pair_.Ur());
+    const volVectorField Ur(interface_.Ur());
 
     const volVectorField& n(nWall());
     const volScalarField& y(yWall());
 
-    volScalarField Eo(pair_.Eo());
-    volScalarField yTilde(y/(Cwc_*pair_.dispersed().d()));
+    const volScalarField Eo(interface_.Eo());
+    const volScalarField yTilde(y/(Cwc_*interface_.dispersed().d()));
 
     return zeroGradWalls
     (
@@ -89,7 +88,7 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Frank::Fi() const
             dimensionedScalar(dimless/dimLength, 0),
             (1 - yTilde)/(Cwd_*y*pow(yTilde, p_ - 1))
         )
-       *pair_.continuous().rho()
+       *interface_.continuous().rho()
        *magSqr(Ur - (Ur & n)*n)
        *n
     );

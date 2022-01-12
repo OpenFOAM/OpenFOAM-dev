@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,9 @@ tmp<volScalarField> NicenoKEqn<BasicMomentumTransportModel>::bubbleG() const
     const phaseSystem& fluid = liquid.fluid();
     const phaseModel& gas = fluid.otherPhase(liquid);
 
-    const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
+    const dragModels::dispersedDragModel& drag =
+        fluid.lookupInterfacialModel<dragModels::dispersedDragModel>
+        (dispersedPhaseInterface(gas, liquid));
 
     volScalarField magUr(mag(this->U_ - gasTurbulence.U()));
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "deposition.H"
-#include "phasePair.H"
 #include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -45,10 +44,11 @@ namespace phaseTransferModels
 Foam::phaseTransferModels::deposition::deposition
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    phaseTransferModel(dict, pair),
+    phaseTransferModel(dict, interface),
+    interface_(interface),
     dropletName_(dict.lookup("droplet")),
     surfaceName_(dict.lookup("surface")),
     efficiency_(dict.lookup<scalar>("efficiency"))
@@ -74,21 +74,21 @@ Foam::phaseTransferModels::deposition::dmdtf() const
 {
     const phaseModel* dropletPtr = nullptr;
     scalar sign = 1;
-    if (dropletName_ == pair_.first())
+    if (dropletName_ == interface_.phase1().name())
     {
-        dropletPtr = &pair_.phase1();
+        dropletPtr = &interface_.phase1();
         sign = -1;
     }
-    else if (dropletName_ == pair_.second())
+    else if (dropletName_ == interface_.phase2().name())
     {
-        dropletPtr = &pair_.phase2();
+        dropletPtr = &interface_.phase2();
         sign = 1;
     }
     else
     {
         FatalErrorInFunction
             << "The specified droplet phase, " << dropletName_ << ", is not in "
-            << "the " << pair_ << " pair"
+            << "the " << interface_ << " pair"
             << exit(FatalError);
     }
 

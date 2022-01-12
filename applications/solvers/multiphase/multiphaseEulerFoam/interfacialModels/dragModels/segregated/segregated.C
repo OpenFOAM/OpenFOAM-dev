@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "segregated.H"
-#include "phasePair.H"
 #include "fvcGrad.H"
 #include "surfaceInterpolate.H"
 #include "zeroGradientFvPatchFields.H"
@@ -47,11 +46,12 @@ namespace dragModels
 Foam::dragModels::segregated::segregated
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dragModel(dict, interface, registerObject),
+    interface_(interface.modelCast<dragModel, segregatedPhaseInterface>()),
     m_("m", dimless, dict),
     n_("n", dimless, dict)
 {}
@@ -65,29 +65,18 @@ Foam::dragModels::segregated::~segregated()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::CdRe() const
-{
-    FatalErrorInFunction
-        << "Not implemented."
-        << "Drag coefficient not defined for the segregated model."
-        << exit(FatalError);
-
-    return pair_.phase1();
-}
-
-
 Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
 {
-    const fvMesh& mesh(pair_.phase1().mesh());
+    const fvMesh& mesh(interface_.phase1().mesh());
 
-    const volScalarField& alpha1(pair_.phase1());
-    const volScalarField& alpha2(pair_.phase2());
+    const volScalarField& alpha1(interface_.phase1());
+    const volScalarField& alpha2(interface_.phase2());
 
-    const volScalarField& rho1(pair_.phase1().rho());
-    const volScalarField& rho2(pair_.phase2().rho());
+    const volScalarField& rho1(interface_.phase1().rho());
+    const volScalarField& rho2(interface_.phase2().rho());
 
-    tmp<volScalarField> tnu1(pair_.phase1().thermo().nu());
-    tmp<volScalarField> tnu2(pair_.phase2().thermo().nu());
+    tmp<volScalarField> tnu1(interface_.phase1().thermo().nu());
+    tmp<volScalarField> tnu2(interface_.phase2().thermo().nu());
 
     const volScalarField& nu1(tnu1());
     const volScalarField& nu2(tnu2());
@@ -109,7 +98,10 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
 
     const dimensionedScalar residualAlpha
     (
-        (pair_.phase1().residualAlpha() + pair_.phase2().residualAlpha())/2
+        (
+            interface_.phase1().residualAlpha()
+          + interface_.phase2().residualAlpha()
+        )/2
     );
 
     const volScalarField I1(alpha1/max(alpha1 + alpha2, residualAlpha));
@@ -127,12 +119,12 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
 
     const volScalarField limitedAlpha1
     (
-        max(alpha1, pair_.phase1().residualAlpha())
+        max(alpha1, interface_.phase1().residualAlpha())
     );
 
     const volScalarField limitedAlpha2
     (
-        max(alpha2, pair_.phase2().residualAlpha())
+        max(alpha2, interface_.phase2().residualAlpha())
     );
 
     const volScalarField muAlphaI
@@ -143,7 +135,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
 
     const volScalarField ReI
     (
-        pair_.rho()*pair_.magUr()
+        interface_.rho()*interface_.magUr()
        /(magGradI*limitedAlpha1*limitedAlpha2*muI)
     );
 

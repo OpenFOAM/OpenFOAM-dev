@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,20 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "virtualMassModel.H"
-#include "phasePair.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::virtualMassModel> Foam::virtualMassModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface,
+    const bool outer,
+    const bool registerObject
 )
 {
-    word virtualMassModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        outer ? interface.fluid().modelSubDict<virtualMassModel>(dict) : dict;
+
+    const word virtualMassModelType(modelDict.lookup("type"));
 
     Info<< "Selecting virtualMassModel for "
-        << pair << ": " << virtualMassModelType << endl;
+        << interface.name() << ": " << virtualMassModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(virtualMassModelType);
@@ -52,7 +56,21 @@ Foam::autoPtr<Foam::virtualMassModel> Foam::virtualMassModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair, true);
+    return cstrIter()(modelDict, interface, registerObject);
+}
+
+
+Foam::autoPtr<Foam::blendedVirtualMassModel> Foam::blendedVirtualMassModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return
+        autoPtr<blendedVirtualMassModel>
+        (
+            new blendedVirtualMassModel(dict, interface)
+        );
 }
 
 

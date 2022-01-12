@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "noTurbulentDispersion.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,11 @@ namespace turbulentDispersionModels
 Foam::turbulentDispersionModels::noTurbulentDispersion::noTurbulentDispersion
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    turbulentDispersionModel(dict, pair)
+    turbulentDispersionModel(dict, interface),
+    interface_(interface)
 {}
 
 
@@ -68,12 +68,10 @@ Foam::turbulentDispersionModels::noTurbulentDispersion::
 Foam::tmp<Foam::volScalarField>
 Foam::turbulentDispersionModels::noTurbulentDispersion::D() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return volScalarField::New
     (
-        "zero",
-        mesh,
+        "D",
+        interface_.mesh(),
         dimensionedScalar(dimD, 0)
     );
 }

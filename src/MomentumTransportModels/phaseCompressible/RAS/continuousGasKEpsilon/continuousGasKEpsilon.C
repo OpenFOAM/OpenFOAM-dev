@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 #include "fvConstraints.H"
 #include "phaseSystem.H"
 #include "dragModel.H"
-#include "virtualMassModel.H"
+#include "dispersedVirtualMassModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -123,8 +123,10 @@ void continuousGasKEpsilon<BasicMomentumTransportModel>::correctNut()
     const phaseSystem& fluid = gas.fluid();
     const phaseModel& liquid = fluid.otherPhase(gas);
 
-    const virtualMassModel& virtualMass =
-        fluid.lookupSubModel<virtualMassModel>(gas, liquid);
+    const virtualMassModels::dispersedVirtualMassModel& virtualMass =
+        fluid.lookupInterfacialModel
+        <virtualMassModels::dispersedVirtualMassModel>
+        (dispersedPhaseInterface(gas, liquid));
 
     volScalarField thetal(liquidTurbulence.k()/liquidTurbulence.epsilon());
     volScalarField rhodv(gas.rho() + virtualMass.Cvm()*liquid.rho());
@@ -209,8 +211,10 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::rhoEff() const
     const phaseSystem& fluid = gas.fluid();
     const phaseModel& liquid = fluid.otherPhase(gas);
 
-    const virtualMassModel& virtualMass =
-        fluid.lookupSubModel<virtualMassModel>(gas, liquid);
+    const virtualMassModels::dispersedVirtualMassModel& virtualMass =
+        fluid.lookupInterfacialModel
+        <virtualMassModels::dispersedVirtualMassModel>
+        (dispersedPhaseInterface(gas, liquid));
 
     return volScalarField::New
     (

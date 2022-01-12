@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,11 +50,7 @@ SourceFiles
 namespace Foam
 {
 
-template<class modelType>
-class BlendedInterfacialModel;
-
-class blendingMethod;
-class heatTransferModel;
+class sidedBlendedHeatTransferModel;
 
 /*---------------------------------------------------------------------------*\
             Class TwoResistanceHeatTransferPhaseSystem Declaration
@@ -72,9 +68,9 @@ protected:
 
         typedef HashTable
         <
-            Pair<autoPtr<BlendedInterfacialModel<heatTransferModel>>>,
-            phasePairKey,
-            phasePairKey::hash
+            autoPtr<sidedBlendedHeatTransferModel>,
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > heatTransferModelTable;
 
         typedef

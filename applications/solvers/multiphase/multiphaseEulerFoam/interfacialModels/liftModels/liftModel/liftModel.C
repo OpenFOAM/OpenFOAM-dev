@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "liftModel.H"
-#include "phasePair.H"
-#include "fvcCurl.H"
-#include "fvcFlux.H"
-#include "surfaceInterpolate.H"
-#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -47,10 +42,8 @@ const Foam::dimensionSet Foam::liftModel::dimF(1, -2, -2, 0, 0);
 Foam::liftModel::liftModel
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
-:
-    pair_(pair)
 {}
 
 
@@ -62,26 +55,15 @@ Foam::liftModel::~liftModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volVectorField> Foam::liftModel::Fi() const
+Foam::tmp<Foam::volVectorField> Foam::blendedLiftModel::F() const
 {
-    return
-        Cl()
-       *pair_.continuous().rho()
-       *(
-            pair_.Ur() ^ fvc::curl(pair_.continuous().U())
-        );
+    return evaluate(&liftModel::F, "F", liftModel::dimF, true);
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::liftModel::F() const
+Foam::tmp<Foam::surfaceScalarField> Foam::blendedLiftModel::Ff() const
 {
-    return pair_.dispersed()*Fi();
-}
-
-
-Foam::tmp<Foam::surfaceScalarField> Foam::liftModel::Ff() const
-{
-    return fvc::interpolate(pair_.dispersed())*fvc::flux(Fi());
+    return evaluate(&liftModel::Ff, "Ff", liftModel::dimF*dimArea, true);
 }
 
 

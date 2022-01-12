@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SchillerNaumann.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,11 @@ namespace dragModels
 Foam::dragModels::SchillerNaumann::SchillerNaumann
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dispersedDragModel(dict, interface, registerObject),
     residualRe_("residualRe", dimless, dict)
 {}
 
@@ -63,7 +62,7 @@ Foam::dragModels::SchillerNaumann::~SchillerNaumann()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::SchillerNaumann::CdRe() const
 {
-    volScalarField Re(pair_.Re());
+    volScalarField Re(interface_.Re());
 
     return
         neg(Re - 1000)*24*(1.0 + 0.15*pow(Re, 0.687))

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,20 +24,26 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallLubricationModel.H"
-#include "phasePair.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::wallLubricationModel> Foam::wallLubricationModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface,
+    const bool outer
 )
 {
-    word wallLubricationModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        outer
+      ? interface.fluid().modelSubDict<wallLubricationModel>(dict)
+      : dict;
+
+    const word wallLubricationModelType(modelDict.lookup("type"));
 
     Info<< "Selecting wallLubricationModel for "
-        << pair << ": " << wallLubricationModelType << endl;
+        << interface.name() << ": " << wallLubricationModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(wallLubricationModelType);
@@ -52,7 +58,22 @@ Foam::autoPtr<Foam::wallLubricationModel> Foam::wallLubricationModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(modelDict, interface);
+}
+
+
+Foam::autoPtr<Foam::blendedWallLubricationModel>
+Foam::blendedWallLubricationModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return
+        autoPtr<blendedWallLubricationModel>
+        (
+            new blendedWallLubricationModel(dict, interface)
+        );
 }
 
 

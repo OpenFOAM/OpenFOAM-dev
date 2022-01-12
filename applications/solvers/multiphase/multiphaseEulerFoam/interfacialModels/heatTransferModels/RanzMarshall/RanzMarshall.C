@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "RanzMarshall.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,10 +43,14 @@ namespace heatTransferModels
 Foam::heatTransferModels::RanzMarshall::RanzMarshall
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    heatTransferModel(dict, pair)
+    heatTransferModel(dict, interface),
+    interface_
+    (
+        interface.modelCast<heatTransferModel, dispersedPhaseInterface>()
+    )
 {}
 
 
@@ -62,14 +65,14 @@ Foam::heatTransferModels::RanzMarshall::~RanzMarshall()
 Foam::tmp<Foam::volScalarField>
 Foam::heatTransferModels::RanzMarshall::K(const scalar residualAlpha) const
 {
-    volScalarField Nu(2 + 0.6*sqrt(pair_.Re())*cbrt(pair_.Pr()));
+    volScalarField Nu(2 + 0.6*sqrt(interface_.Re())*cbrt(interface_.Pr()));
 
     return
         6
-       *max(pair_.dispersed(), residualAlpha)
-       *pair_.continuous().thermo().kappa()
+       *max(interface_.dispersed(), residualAlpha)
+       *interface_.continuous().thermo().kappa()
        *Nu
-       /sqr(pair_.dispersed().d());
+       /sqr(interface_.dispersed().d());
 }
 
 

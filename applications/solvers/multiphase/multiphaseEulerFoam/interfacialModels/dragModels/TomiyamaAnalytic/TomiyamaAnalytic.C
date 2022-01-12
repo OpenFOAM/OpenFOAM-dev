@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "TomiyamaAnalytic.H"
-#include "phasePair.H"
 #include "aspectRatioModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -45,15 +44,15 @@ namespace dragModels
 Foam::dragModels::TomiyamaAnalytic::TomiyamaAnalytic
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dispersedDragModel(dict, interface, registerObject),
     residualRe_("residualRe", dimless, dict),
     residualEo_("residualEo", dimless, dict),
     residualE_("residualE", dimless, dict),
-    aspectRatio_(aspectRatioModel::New(dict.subDict("aspectRatio"), pair))
+    aspectRatio_(aspectRatioModel::New(dict.subDict("aspectRatio"), interface))
 {}
 
 
@@ -68,7 +67,7 @@ Foam::dragModels::TomiyamaAnalytic::~TomiyamaAnalytic()
 Foam::tmp<Foam::volScalarField>
 Foam::dragModels::TomiyamaAnalytic::CdRe() const
 {
-    const volScalarField Eo(max(pair_.Eo(), residualEo_));
+    const volScalarField Eo(max(interface_.Eo(), residualEo_));
     const volScalarField E(max(aspectRatio_->E(), residualE_));
 
     const volScalarField OmEsq(max(1 - sqr(E), sqr(residualE_)));
@@ -84,7 +83,7 @@ Foam::dragModels::TomiyamaAnalytic::CdRe() const
           + 16*pow(E, 4.0/3.0)
         )
        /sqr(F)
-       *max(pair_.Re(), residualRe_);
+       *max(interface_.Re(), residualRe_);
 }
 
 

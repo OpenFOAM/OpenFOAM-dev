@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,20 +24,19 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallDampingModel.H"
-#include "phasePair.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::wallDampingModel> Foam::wallDampingModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 {
-    word wallDampingModelType(dict.lookup("type"));
+    const word wallDampingModelType(dict.lookup("type"));
 
     Info<< "Selecting wallDampingModel for "
-        << pair << ": " << wallDampingModelType << endl;
+        << interface.name() << ": " << wallDampingModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(wallDampingModelType);
@@ -52,7 +51,7 @@ Foam::autoPtr<Foam::wallDampingModel> Foam::wallDampingModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(dict, interface);
 }
 
 

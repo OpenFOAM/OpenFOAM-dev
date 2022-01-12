@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "timeScaleFilteredDrag.H"
-#include "phasePair.H"
 #include "swarmCorrection.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -45,17 +44,25 @@ namespace dragModels
 Foam::dragModels::timeScaleFilteredDrag::timeScaleFilteredDrag
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict.subDict("dragModel"), pair, registerObject),
+    dispersedDragModel(dict.subDict("dragModel"), interface, registerObject),
     dragModel_
     (
-        dragModel::New(dict.subDict("dragModel"), pair)
+        dragModel::New(dict.subDict("dragModel"), interface, false, false)
     ),
     minRelaxTime_("minRelaxTime", dimTime, dict)
-{}
+{
+    if (!isA<dispersedDragModel>(dragModel_()))
+    {
+        FatalErrorInFunction
+            << "The sub-drag-model of a " << type()
+            << " drag model must be for a dispersed configuration"
+            << exit(FatalError);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -71,16 +78,16 @@ Foam::dragModels::timeScaleFilteredDrag::CdRe() const
 {
     const volScalarField limit
     (
-        sqr(pair_.dispersed().d())
-       *pair_.dispersed().rho()
+        sqr(interface_.dispersed().d())
+       *interface_.dispersed().rho()
        /0.75
        /swarmCorrection_->Cs()
-       /pair_.continuous().rho()
-       /pair_.continuous().thermo().nu()
+       /interface_.continuous().rho()
+       /interface_.continuous().thermo().nu()
        /minRelaxTime_
     );
 
-    return min(dragModel_->CdRe(), limit);
+    return min(refCast<const dispersedDragModel>(dragModel_()).CdRe(), limit);
 }
 
 

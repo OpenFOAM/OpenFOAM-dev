@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Gibilaro.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,11 @@ namespace dragModels
 Foam::dragModels::Gibilaro::Gibilaro
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject)
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -64,13 +63,13 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Gibilaro::CdRe() const
 {
     const volScalarField alpha2
     (
-        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
     );
 
     return
         (4.0/3.0)
-       *(17.3/alpha2 + 0.336*pair_.Re())
-       *max(pair_.continuous(), pair_.continuous().residualAlpha())
+       *(17.3/alpha2 + 0.336*interface_.Re())
+       *max(interface_.continuous(), interface_.continuous().residualAlpha())
        *pow(alpha2, -2.8);
 }
 

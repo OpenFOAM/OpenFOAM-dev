@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "TwoResistanceHeatTransferPhaseSystem.H"
-#include "BlendedInterfacialModel.H"
 #include "heatTransferModel.H"
 #include "fvmSup.H"
 #include "rhoReactionThermo.H"
@@ -52,21 +51,22 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
     // Loop the pairs
     forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfIter)
     {
-        const phasePairKey& key = dmdtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
+        const phaseInterface interface(*this, dmdtfIter.key());
 
-        const volScalarField dmdtf(Pair<word>::compare(pair, key)**dmdtfIter());
+        const volScalarField& dmdtf = *dmdtfIter();
 
-        const volScalarField& Tf = *Tfs[key];
+        const volScalarField& Tf = *Tfs[interface];
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
         const rhoThermo& thermo1 = phase1.thermo();
         const rhoThermo& thermo2 = phase2.thermo();
 
         // Transfer coefficients
-        const volScalarField H1(heatTransferModels_[key].first()->K());
-        const volScalarField H2(heatTransferModels_[key].second()->K());
+        const sidedBlendedHeatTransferModel& heatTransferModel =
+            heatTransferModels_[interface];
+        const volScalarField H1(heatTransferModel.modelInThe(phase1).K());
+        const volScalarField H2(heatTransferModel.modelInThe(phase2).K());
         const volScalarField H1Fac(H1/(H1 + H2));
         const volScalarField HEff(H1Fac*H2);
 
@@ -85,7 +85,7 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
             }
             case latentHeatTransfer::mass:
             {
-                const volScalarField L(this->L(pair, dmdtf, Tf, scheme));
+                const volScalarField L(this->L(interface, dmdtf, Tf, scheme));
 
                 *eqns[phase1.name()] += H1Fac*dmdtf*L;
                 *eqns[phase2.name()] += (1 - H1Fac)*dmdtf*L;
@@ -118,19 +118,20 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
     // Loop the pairs
     forAllConstIter(phaseSystem::dmidtfTable, dmidtfs, dmidtfIter)
     {
-        const phasePairKey& key = dmidtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
+        const phaseInterface interface(*this, dmidtfIter.key());
 
-        const volScalarField& Tf = *Tfs[key];
+        const volScalarField& Tf = *Tfs[interface];
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
         const rhoThermo& thermo1 = phase1.thermo();
         const rhoThermo& thermo2 = phase2.thermo();
 
         // Transfer coefficients
-        const volScalarField H1(heatTransferModels_[key].first()->K());
-        const volScalarField H2(heatTransferModels_[key].second()->K());
+        const sidedBlendedHeatTransferModel& heatTransferModel =
+            heatTransferModels_[interface];
+        const volScalarField H1(heatTransferModel.modelInThe(phase1).K());
+        const volScalarField H2(heatTransferModel.modelInThe(phase2).K());
         const volScalarField H1Fac(H1/(H1 + H2));
         const volScalarField HEff(H1Fac*H2);
 
@@ -139,11 +140,7 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
         {
             const word& specie = dmidtfJter.key();
 
-            // Mass transfer rates
-            const volScalarField dmidtf
-            (
-                Pair<word>::compare(pair, key)**dmidtfJter()
-            );
+            const volScalarField& dmidtf = *dmidtfJter();
 
             // Latent heat contribution
             switch (transfer)
@@ -158,7 +155,7 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
                 {
                     const volScalarField Li
                     (
-                        this->Li(pair, specie, dmidtf, Tf, scheme)
+                        this->Li(interface, specie, dmidtf, Tf, scheme)
                     );
 
                     *eqns[phase1.name()] += H1Fac*dmidtf*Li;
@@ -204,12 +201,7 @@ TwoResistanceHeatTransferPhaseSystem
 :
     HeatTransferPhaseSystem<BasePhaseSystem>(mesh)
 {
-    this->generatePairsAndSubModels
-    (
-        "heatTransfer",
-        heatTransferModels_,
-        false
-    );
+    this->generateInterfacialModels("heatTransfer", heatTransferModels_);
 
     // Check that models have been specified on both sides of the interfaces
     forAllConstIter
@@ -219,21 +211,18 @@ TwoResistanceHeatTransferPhaseSystem
         heatTransferModelIter
     )
     {
-        const phasePair& pair = this->phasePairs_[heatTransferModelIter.key()];
+        const phaseInterface& interface = heatTransferModelIter()->interface();
 
-        if (!heatTransferModels_[pair].first().valid())
+        forAllConstIter(phaseInterface, interface, iter)
         {
-            FatalErrorInFunction
-                << "A heat transfer model for the " << pair.phase1().name()
-                << " side of the " << pair << " pair is not specified"
-                << exit(FatalError);
-        }
-        if (!heatTransferModels_[pair].second().valid())
-        {
-            FatalErrorInFunction
-                << "A heat transfer model for the " << pair.phase2().name()
-                << " side of the " << pair << " pair is not specified"
-                << exit(FatalError);
+            if (!heatTransferModelIter()->haveModelInThe(iter()))
+            {
+                FatalErrorInFunction
+                    << "A heat transfer model for the " << iter().name()
+                    << " side of the " << interface.name()
+                    << " interface is not specified"
+                    << exit(FatalError);
+            }
         }
     }
 }
@@ -279,17 +268,17 @@ heatTransfer() const
         heatTransferModelIter
     )
     {
-        const phasePair& pair = this->phasePairs_[heatTransferModelIter.key()];
+        const sidedBlendedHeatTransferModel& model = heatTransferModelIter()();
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseModel& phase1 = model.interface().phase1();
+        const phaseModel& phase2 = model.interface().phase2();
         const volScalarField& he1 = phase1.thermo().he();
         const volScalarField& he2 = phase2.thermo().he();
         const volScalarField Cpv1(phase1.thermo().Cpv());
         const volScalarField Cpv2(phase2.thermo().Cpv());
 
-        const volScalarField H1(heatTransferModelIter().first()->K());
-        const volScalarField H2(heatTransferModelIter().second()->K());
+        const volScalarField H1(model.modelInThe(phase1).K());
+        const volScalarField H2(model.modelInThe(phase2).K());
         const volScalarField HEff(H1*H2/(H1 + H2));
 
         *eqns[phase1.name()] +=

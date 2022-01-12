@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ SourceFiles
 #define segregated_H
 
 #include "dragModel.H"
+#include "segregatedPhaseInterface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,6 +62,9 @@ class segregated
 {
     // Private Data
 
+        //- Interface
+        const segregatedPhaseInterface interface_;
+
         //- M coefficient
         const dimensionedScalar m_;
 
@@ -76,11 +80,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         segregated
         (
             const dictionary& dict,
-            const phasePair& pair,
+            const phaseInterface& interface,
             const bool registerObject
         );
 
@@ -90,9 +94,6 @@ public:
 
 
     // Member Functions
-
-        //- Drag coefficient
-        virtual tmp<volScalarField> CdRe() const;
 
         //- The drag function used in the momentum equation
         virtual tmp<volScalarField> K() const;

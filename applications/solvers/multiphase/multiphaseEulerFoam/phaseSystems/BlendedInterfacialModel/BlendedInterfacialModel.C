@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "BlendedInterfacialModel.H"
+#include "phaseSystem.H"
+#include "dispersedDisplacedPhaseInterface.H"
+#include "segregatedDisplacedPhaseInterface.H"
 #include "fixedValueFvsPatchFields.H"
 #include "surfaceInterpolate.H"
 
@@ -31,7 +34,7 @@ License
 
 namespace Foam
 {
-namespace blendedInterfacialModel
+namespace blendedInterfacialModel2
 {
 
 template<class GeoField>
@@ -49,8 +52,9 @@ inline tmp<Foam::surfaceScalarField> interpolate(tmp<volScalarField> f)
     return fvc::interpolate(f);
 }
 
-} // End namespace blendedInterfacialModel
+} // End namespace blendedInterfacialModel2
 } // End namespace Foam
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -58,14 +62,14 @@ template<class ModelType>
 template<template<class> class PatchField, class GeoMesh>
 void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
 (
-    tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1,
-    tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2,
+    tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1D2,
+    tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2D1,
     const bool subtract
 ) const
 {
     typedef GeometricField<scalar, PatchField, GeoMesh> scalarGeoField;
 
-    if (model_.valid() && subtract)
+    if ((modelGeneral_.valid() || model1SegregatedWith2_.valid()) && subtract)
     {
         FatalErrorInFunction
             << "Cannot treat an interfacial model with no distinction between "
@@ -73,23 +77,88 @@ void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
             << exit(FatalError);
     }
 
-    if (model_.valid() || model1In2_.valid())
+    if (model1SegregatedWith2_.valid() || model1DispersedIn2_.valid())
     {
-        f1 =
-            blendedInterfacialModel::interpolate<scalarGeoField>
+        f1D2 =
+            blendedInterfacialModel2::interpolate<scalarGeoField>
             (
-                blending_.f1(phase1_, phase2_)
+                blending_->f1(interface_.phase1(), interface_.phase2())
             );
     }
 
-    if (model_.valid() || model2In1_.valid())
+    if (model1SegregatedWith2_.valid() || model2DispersedIn1_.valid())
     {
-        f2 =
+        f2D1 =
             (subtract ? -1 : +1)
-           *blendedInterfacialModel::interpolate<scalarGeoField>
+           *blendedInterfacialModel2::interpolate<scalarGeoField>
             (
-                blending_.f2(phase1_, phase2_)
+                blending_->f2(interface_.phase1(), interface_.phase2())
             );
+    }
+}
+
+
+template<class ModelType>
+template<template<class> class PatchField, class GeoMesh>
+void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
+(
+    tmp<GeometricField<scalar, PatchField, GeoMesh>>& fG,
+    tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1D2,
+    tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2D1,
+    tmp<GeometricField<scalar, PatchField, GeoMesh>>& fS,
+    const bool subtract
+) const
+{
+    typedef GeometricField<scalar, PatchField, GeoMesh> scalarGeoField;
+
+    // Get the dispersed blending coefficients
+    calculateBlendingCoeffs(f1D2, f2D1, subtract);
+
+    // Create a segregated blending coefficient if necessary
+    if (model1SegregatedWith2_.valid())
+    {
+        fS =
+            scalarGeoField::New
+            (
+                ModelType::typeName + ":"
+              + IOobject::groupName("fS", interface_.name()),
+                interface_.mesh(),
+                dimensionedScalar(dimless, 1)
+            );
+        if (model1DispersedIn2_.valid())
+        {
+            fS.ref() -= f1D2();
+        }
+        if (model2DispersedIn1_.valid())
+        {
+            fS.ref() -= f2D1();
+        }
+    }
+
+    // Create a general blending coefficient if necessary
+    if (modelGeneral_.valid())
+    {
+        fG =
+            scalarGeoField::New
+            (
+                ModelType::typeName + ":"
+              + IOobject::groupName("fG", interface_.name()),
+                interface_.mesh(),
+                dimensionedScalar(dimless, 1)
+            );
+
+        if (model1DispersedIn2_.valid())
+        {
+            fG.ref() -= f1D2();
+        }
+        if (model2DispersedIn1_.valid())
+        {
+            fG.ref() -= f2D1();
+        }
+        if (model1SegregatedWith2_.valid())
+        {
+            fG.ref() -= fS();
+        }
     }
 }
 
@@ -110,17 +179,17 @@ void Foam::BlendedInterfacialModel<ModelType>::correctFixedFluxBCs
         if
         (
             (
-                !phase1_.stationary()
+                !interface_.phase1().stationary()
              && isA<fixedValueFvsPatchScalarField>
                 (
-                    phase1_.phi()().boundaryField()[patchi]
+                    interface_.phase1().phi()().boundaryField()[patchi]
                 )
             )
          || (
-                !phase2_.stationary()
+                !interface_.phase2().stationary()
              && isA<fixedValueFvsPatchScalarField>
                 (
-                    phase2_.phi()().boundaryField()[patchi]
+                    interface_.phase2().phi()().boundaryField()[patchi]
                 )
             )
         )
@@ -130,6 +199,8 @@ void Foam::BlendedInterfacialModel<ModelType>::correctFixedFluxBCs
     }
 }
 
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class ModelType>
 template
@@ -153,37 +224,48 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     typedef GeometricField<scalar, PatchField, GeoMesh> scalarGeoField;
     typedef GeometricField<Type, PatchField, GeoMesh> typeGeoField;
 
-    tmp<scalarGeoField> f1, f2;
-    calculateBlendingCoeffs(f1, f2, subtract);
+    // Get the blending coefficients
+    tmp<scalarGeoField> fG, f1D2, f2D1, fS;
+    calculateBlendingCoeffs(fG, f1D2, f2D1, fS, subtract);
 
+    // Construct the result
     tmp<typeGeoField> x =
         typeGeoField::New
         (
             ModelType::typeName + ":"
-          + IOobject::groupName(name, phasePair(phase1_, phase2_).name()),
-            phase1_.mesh(),
+          + IOobject::groupName(name, interface_.name()),
+            interface_.mesh(),
             dimensioned<Type>(dims, Zero)
         );
 
-    if (model_.valid())
+    // Add the model contributions to the result
+    if (modelGeneral_.valid())
     {
-        x.ref() += (scalar(1) - f1() - f2())*(model_().*method)(args ...);
+        x.ref() += fG*(modelGeneral_().*method)(args ...);
+    }
+    if (model1DispersedIn2_.valid())
+    {
+        x.ref() += f1D2*(model1DispersedIn2_().*method)(args ...);
+    }
+    if (model2DispersedIn1_.valid())
+    {
+        x.ref() += f2D1*(model2DispersedIn1_().*method)(args ...);
+    }
+    if (model1SegregatedWith2_.valid())
+    {
+        x.ref() += fS*(model1SegregatedWith2_().*method)(args ...);
     }
 
-    if (model1In2_.valid())
-    {
-        x.ref() += f1*(model1In2_().*method)(args ...);
-    }
-
-    if (model2In1_.valid())
-    {
-        x.ref() += f2*(model2In1_().*method)(args ...);
-    }
-
+    // Correct boundary conditions if necessary
     if
     (
-        correctFixedFluxBCs_
-     && (model_.valid() || model1In2_.valid() || model2In1_.valid())
+        ModelType::correctFixedFluxBCs
+     && (
+            modelGeneral_.valid()
+         || model1DispersedIn2_.valid()
+         || model2DispersedIn1_.valid()
+         || model1SegregatedWith2_.valid()
+        )
     )
     {
         correctFixedFluxBCs(x.ref());
@@ -215,11 +297,14 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     typedef GeometricField<scalar, PatchField, GeoMesh> scalarGeoField;
     typedef GeometricField<Type, PatchField, GeoMesh> typeGeoField;
 
-    tmp<scalarGeoField> f1, f2;
-    calculateBlendingCoeffs(f1, f2, subtract);
+    // Get the blending coefficients
+    tmp<scalarGeoField> fG, f1D2, f2D1, fS;
+    calculateBlendingCoeffs(fG, f1D2, f2D1, fS, subtract);
 
+    // Construct the result
     HashPtrTable<typeGeoField> xs;
 
+    // Add the model contributions to the result
     auto addToXs = [&]
     (
         const scalarGeoField& f,
@@ -243,7 +328,7 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
                       + IOobject::groupName
                         (
                             IOobject::groupName(name, dxIter.key()),
-                            phasePair(phase1_, phase2_).name()
+                            interface_.name()
                         ),
                         f**dxIter()
                     ).ptr()
@@ -251,26 +336,33 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
             }
         }
     };
-
-    if (model_.valid())
+    if (modelGeneral_.valid())
     {
-        addToXs(scalar(1) - f1() - f2(), (model_().*method)(args ...));
+        addToXs(fG, (modelGeneral_().*method)(args ...));
+    }
+    if (model1DispersedIn2_.valid())
+    {
+        addToXs(f1D2, (model1DispersedIn2_().*method)(args ...));
+    }
+    if (model2DispersedIn1_.valid())
+    {
+        addToXs(f2D1, (model2DispersedIn1_().*method)(args ...));
+    }
+    if (model1SegregatedWith2_.valid())
+    {
+        addToXs(fS, (model1SegregatedWith2_().*method)(args ...));
     }
 
-    if (model1In2_.valid())
-    {
-        addToXs(f1, (model1In2_().*method)(args ...));
-    }
-
-    if (model2In1_.valid())
-    {
-        addToXs(f2, (model2In1_().*method)(args ...));
-    }
-
+    // Correct boundary conditions if necessary
     if
     (
-        correctFixedFluxBCs_
-     && (model_.valid() || model1In2_.valid() || model2In1_.valid())
+        ModelType::correctFixedFluxBCs
+     && (
+            modelGeneral_.valid()
+         || model1DispersedIn2_.valid()
+         || model2DispersedIn1_.valid()
+         || model1SegregatedWith2_.valid()
+        )
     )
     {
         forAllIter(typename HashPtrTable<typeGeoField>, xs, xIter)
@@ -283,37 +375,185 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
 }
 
 
+template<class ModelType>
+template<class ... Args>
+bool Foam::BlendedInterfacialModel<ModelType>::evaluate
+(
+    bool (ModelType::*method)(Args ...) const,
+    Args ... args
+) const
+{
+    return
+        (
+            modelGeneral_.valid()
+         && (modelGeneral_().*method)(args ...)
+        )
+     || (
+            model1DispersedIn2_.valid()
+         && (model1DispersedIn2_().*method)(args ...)
+        )
+     || (
+            model2DispersedIn1_.valid()
+         && (model2DispersedIn1_().*method)(args ...)
+        )
+     || (
+            model1SegregatedWith2_.valid()
+         && (model1SegregatedWith2_().*method)(args ...)
+        );
+}
+
+
+template<class ModelType>
+template<class ... Args>
+Foam::hashedWordList Foam::BlendedInterfacialModel<ModelType>::evaluate
+(
+    const hashedWordList& (ModelType::*method)(Args ...) const,
+    Args ... args
+) const
+{
+    wordList result;
+
+    if (modelGeneral_.valid())
+    {
+        result.append((modelGeneral_().*method)(args ...));
+    }
+    if (model1DispersedIn2_.valid())
+    {
+        result.append((model1DispersedIn2_().*method)(args ...));
+    }
+    if (model2DispersedIn1_.valid())
+    {
+        result.append((model2DispersedIn1_().*method)(args ...));
+    }
+    if (model1SegregatedWith2_.valid())
+    {
+        result.append((model1SegregatedWith2_().*method)(args ...));
+    }
+
+    return hashedWordList(move(result));
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ModelType>
 Foam::BlendedInterfacialModel<ModelType>::BlendedInterfacialModel
 (
-    const phaseModel& phase1,
-    const phaseModel& phase2,
-    const blendingMethod& blending,
-    autoPtr<ModelType> model,
-    autoPtr<ModelType> model1In2,
-    autoPtr<ModelType> model2In1,
-    const bool correctFixedFluxBCs
+    const dictionary& dict,
+    const phaseInterface& interface
 )
 :
     regIOobject
     (
         IOobject
         (
-            IOobject::groupName(typeName, phasePair(phase1, phase2).name()),
-            phase1.mesh().time().timeName(),
-            phase1.mesh()
+            IOobject::groupName(typeName, interface.name()),
+            interface.fluid().mesh().time().timeName(),
+            interface.fluid().mesh()
         )
     ),
-    phase1_(phase1),
-    phase2_(phase2),
-    blending_(blending),
-    model_(model),
-    model1In2_(model1In2),
-    model2In1_(model2In1),
-    correctFixedFluxBCs_(correctFixedFluxBCs)
-{}
+    interface_(interface)
+{
+    // Construct blending functions
+    const dictionary& blendingDict = interface.fluid().subDict("blending");
+    blending_ =
+        blendingMethod::New
+        (
+            ModelType::typeName,
+            blendingDict.found(ModelType::typeName)
+          ? blendingDict.subDict(ModelType::typeName)
+          : blendingDict.subDict("default"),
+            interface.fluid().phases().toc()
+        );
+
+    // Construct the models
+    PtrList<phaseInterface> interfaces;
+    PtrList<ModelType> models;
+    interface.fluid().generateInterfacialModels
+    <
+        ModelType,
+        dispersedDisplacedPhaseInterface,
+        segregatedDisplacedPhaseInterface,
+        displacedPhaseInterface,
+        dispersedPhaseInterface,
+        segregatedPhaseInterface,
+        phaseInterface
+    >
+    (
+        dict,
+        interface,
+        interfaces,
+        models
+    );
+
+    // Define local set function
+    auto set = [&]
+    (
+        const phaseInterface& interface,
+        ModelType* model,
+        autoPtr<ModelType>& modelGeneral,
+        autoPtr<ModelType>& model1DispersedIn2,
+        autoPtr<ModelType>& model2DispersedIn1,
+        autoPtr<ModelType>& model1SegregatedWith2
+    )
+    {
+        if (isA<dispersedPhaseInterface>(interface))
+        {
+            const phaseModel& dispersed =
+                refCast<const dispersedPhaseInterface>(interface).dispersed();
+
+            interface_.index(dispersed) == 0
+          ? model1DispersedIn2.set(model)
+          : model2DispersedIn1.set(model);
+        }
+        else if (isA<segregatedPhaseInterface>(interface))
+        {
+            model1SegregatedWith2.set(model);
+        }
+        else
+        {
+            modelGeneral.set(model);
+        }
+    };
+
+    // Unpack the interface and model lists to populate the models used for the
+    // different parts of the blending space
+    forAll(interfaces, i)
+    {
+        if (isA<displacedPhaseInterface>(interfaces[i]))
+        {
+            /*
+            const phaseModel& displacing =
+                refCast<const displacedPhaseInterface>
+                (interfaces[i]).displacing();
+
+            set
+            (
+                interfaces[i],
+                models[i],
+                modelGeneralDisplaced_[displacing.index()],
+                model1DispersedIn2Displaced_[displacing.index()],
+                model2DispersedIn1Displaced_[displacing.index()],
+                model1SegregatedWith2Displaced_[displacing.index()]
+            );
+            */
+
+            NotImplemented;
+        }
+        else
+        {
+            set
+            (
+                interfaces[i],
+                models.set(i, nullptr).ptr(),
+                modelGeneral_,
+                model1DispersedIn2_,
+                model2DispersedIn1_,
+                model1SegregatedWith2_
+            );
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -326,103 +566,10 @@ Foam::BlendedInterfacialModel<ModelType>::~BlendedInterfacialModel()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class ModelType>
-Foam::tmp<Foam::volScalarField>
-Foam::BlendedInterfacialModel<ModelType>::K() const
+const Foam::phaseInterface&
+Foam::BlendedInterfacialModel<ModelType>::interface() const
 {
-    tmp<volScalarField> (ModelType::*k)() const = &ModelType::K;
-
-    return evaluate(k, "K", ModelType::dimK, false);
-}
-
-
-template<class ModelType>
-Foam::tmp<Foam::volScalarField>
-Foam::BlendedInterfacialModel<ModelType>::K(const scalar residualAlpha) const
-{
-    tmp<volScalarField> (ModelType::*k)(const scalar) const = &ModelType::K;
-
-    return evaluate(k, "K", ModelType::dimK, false, residualAlpha);
-}
-
-
-template<class ModelType>
-Foam::tmp<Foam::surfaceScalarField>
-Foam::BlendedInterfacialModel<ModelType>::Kf() const
-{
-    return evaluate(&ModelType::Kf, "Kf", ModelType::dimK, false);
-}
-
-
-template<class ModelType>
-template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
-Foam::BlendedInterfacialModel<ModelType>::F() const
-{
-    return evaluate(&ModelType::F, "F", ModelType::dimF, true);
-}
-
-
-template<class ModelType>
-Foam::tmp<Foam::surfaceScalarField>
-Foam::BlendedInterfacialModel<ModelType>::Ff() const
-{
-    return evaluate(&ModelType::Ff, "Ff", ModelType::dimF*dimArea, true);
-}
-
-
-template<class ModelType>
-Foam::tmp<Foam::volScalarField>
-Foam::BlendedInterfacialModel<ModelType>::D() const
-{
-    return evaluate(&ModelType::D, "D", ModelType::dimD, false);
-}
-
-
-template<class ModelType>
-bool Foam::BlendedInterfacialModel<ModelType>::mixture() const
-{
-    return
-        (model1In2_.valid() && model1In2_->mixture())
-     || (model2In1_.valid() && model2In1_->mixture())
-     || (model_.valid() && model_->mixture());
-}
-
-
-template<class ModelType>
-Foam::tmp<Foam::volScalarField>
-Foam::BlendedInterfacialModel<ModelType>::dmdtf() const
-{
-    return evaluate(&ModelType::dmdtf, "dmdtf", ModelType::dimDmdt, true);
-}
-
-
-template<class ModelType>
-Foam::hashedWordList Foam::BlendedInterfacialModel<ModelType>::species() const
-{
-    wordList species;
-
-    if (model1In2_.valid())
-    {
-        species.append(model1In2_->species());
-    }
-    if (model2In1_.valid())
-    {
-        species.append(model2In1_->species());
-    }
-    if (model_.valid())
-    {
-        species.append(model_->species());
-    }
-
-    return hashedWordList(move(species));
-}
-
-
-template<class ModelType>
-Foam::HashPtrTable<Foam::volScalarField>
-Foam::BlendedInterfacialModel<ModelType>::dmidtf() const
-{
-    return evaluate(&ModelType::dmidtf, "dmidtf", ModelType::dimDmdt, true);
+    return interface_;
 }
 
 

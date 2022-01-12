@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "OneResistanceHeatTransferPhaseSystem.H"
-#include "BlendedInterfacialModel.H"
 #include "heatTransferModel.H"
 #include "fvmSup.H"
 
@@ -39,12 +38,7 @@ OneResistanceHeatTransferPhaseSystem
 :
     HeatTransferPhaseSystem<BasePhaseSystem>(mesh)
 {
-    this->generatePairsAndSubModels
-    (
-        "heatTransfer",
-        heatTransferModels_,
-        false
-    );
+    this->generateInterfacialModels("heatTransfer", heatTransferModels_);
 }
 
 
@@ -89,11 +83,11 @@ heatTransfer() const
         heatTransferModelIter
     )
     {
+        const phaseInterface interface(*this, heatTransferModelIter.key());
+
         const volScalarField K(heatTransferModelIter()->K());
 
-        const phasePair& pair(this->phasePairs_[heatTransferModelIter.key()]);
-
-        forAllConstIter(phasePair, pair, iter)
+        forAllConstIter(phaseInterface, interface, iter)
         {
             const phaseModel& phase = iter();
             const phaseModel& otherPhase = iter.otherPhase();

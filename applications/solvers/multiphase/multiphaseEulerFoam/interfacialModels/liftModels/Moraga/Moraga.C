@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Moraga.H"
-#include "phasePair.H"
 #include "fvcGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -45,10 +44,10 @@ namespace liftModels
 Foam::liftModels::Moraga::Moraga
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    liftModel(dict, pair)
+    dispersedLiftModel(dict, interface)
 {}
 
 
@@ -62,13 +61,13 @@ Foam::liftModels::Moraga::~Moraga()
 
 Foam::tmp<Foam::volScalarField> Foam::liftModels::Moraga::Cl() const
 {
-    volScalarField Re(pair_.Re());
+    volScalarField Re(interface_.Re());
 
     volScalarField sqrSr
     (
-        sqr(pair_.dispersed().d())
-       /pair_.continuous().thermo().nu()
-       *mag(fvc::grad(pair_.continuous().U()))
+        sqr(interface_.dispersed().d())
+       /interface_.continuous().thermo().nu()
+       *mag(fvc::grad(interface_.continuous().U()))
     );
 
     if

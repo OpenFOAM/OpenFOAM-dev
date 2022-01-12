@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,15 +39,14 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
     // Loop the pairs
     forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfIter)
     {
-        const phasePairKey& key = dmdtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
+        const phaseInterface interface(*this, dmdtfIter.key());
 
-        const volScalarField dmdtf(Pair<word>::compare(pair, key)**dmdtfIter());
+        const volScalarField& dmdtf = *dmdtfIter();
         const volScalarField dmdtf21(posPart(dmdtf));
         const volScalarField dmdtf12(negPart(dmdtf));
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
         const rhoThermo& thermo1 = phase1.thermo();
         const rhoThermo& thermo2 = phase2.thermo();
         const volScalarField& he1 = thermo1.he();
@@ -86,11 +85,10 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
     // Loop the pairs
     forAllConstIter(phaseSystem::dmidtfTable, dmidtfs, dmidtfIter)
     {
-        const phasePairKey& key = dmidtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
+        const phaseInterface interface(*this, dmidtfIter.key());
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
         const rhoThermo& thermo1 = phase1.thermo();
         const rhoThermo& thermo2 = phase2.thermo();
         const basicSpecieMixture* compositionPtr1 =
@@ -114,10 +112,7 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
             const word& specie = dmidtfJter.key();
 
             // Mass transfer rates
-            const volScalarField dmidtf
-            (
-                Pair<word>::compare(pair, key)**dmidtfJter()
-            );
+            const volScalarField& dmidtf = *dmidtfJter();
             const volScalarField dmidtf21(posPart(dmidtf));
             const volScalarField dmidtf12(negPart(dmidtf));
 
@@ -190,17 +185,16 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefsWithoutL
     // Loop the pairs
     forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfIter)
     {
-        const phasePairKey& key = dmdtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
+        const phaseInterface interface(*this, dmdtfIter.key());
 
-        const volScalarField dmdtf(Pair<word>::compare(pair, key)**dmdtfIter());
+        const volScalarField& dmdtf = *dmdtfIter();
         const volScalarField dmdtf21(posPart(dmdtf));
         const volScalarField dmdtf12(negPart(dmdtf));
 
-        const volScalarField& Tf = *Tfs[key];
+        const volScalarField& Tf = *Tfs[dmdtfIter.key()];
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
         const rhoThermo& thermo1 = phase1.thermo();
         const rhoThermo& thermo2 = phase2.thermo();
         const volScalarField& he1 = thermo1.he();
@@ -257,20 +251,19 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmdtL
     // Loop the pairs
     forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfIter)
     {
-        const phasePairKey& key = dmdtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
+        const phaseInterface interface(*this, dmdtfIter.key());
 
-        const volScalarField dmdtf(Pair<word>::compare(pair, key)**dmdtfIter());
+        const volScalarField& dmdtf = *dmdtfIter();
         const volScalarField dmdtf21(posPart(dmdtf));
         const volScalarField dmdtf12(negPart(dmdtf));
 
-        const volScalarField& Tf = *Tfs[key];
+        const volScalarField& Tf = *Tfs[dmdtfIter.key()];
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
 
         // Latent heat contribution
-        const volScalarField L(this->L(pair, dmdtf, Tf, scheme));
+        const volScalarField L(this->L(interface, dmdtf, Tf, scheme));
         *eqns[phase1.name()] += ((1 - weight)*dmdtf12 + weight*dmdtf21)*L;
         *eqns[phase2.name()] += ((1 - weight)*dmdtf21 + weight*dmdtf12)*L;
     }
@@ -306,13 +299,12 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefsWithoutL
     // Loop the pairs
     forAllConstIter(phaseSystem::dmidtfTable, dmidtfs, dmidtfIter)
     {
-        const phasePairKey& key = dmidtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
+        const phaseInterface interface(*this, dmidtfIter.key());
 
-        const volScalarField& Tf = *Tfs[key];
+        const volScalarField& Tf = *Tfs[dmidtfIter.key()];
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
         const rhoThermo& thermo1 = phase1.thermo();
         const rhoThermo& thermo2 = phase2.thermo();
         const basicSpecieMixture* compositionPtr1 =
@@ -338,10 +330,7 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefsWithoutL
             const word& specie = dmidtfJter.key();
 
             // Mass transfer rates
-            const volScalarField dmidtf
-            (
-                Pair<word>::compare(pair, key)**dmidtfJter()
-            );
+            const volScalarField& dmidtf = *dmidtfJter();
             const volScalarField dmidtf21(posPart(dmidtf));
             const volScalarField dmidtf12(negPart(dmidtf));
 
@@ -444,13 +433,12 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtL
     // Loop the pairs
     forAllConstIter(phaseSystem::dmidtfTable, dmidtfs, dmidtfIter)
     {
-        const phasePairKey& key = dmidtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
+        const phaseInterface interface(*this, dmidtfIter.key());
 
-        const volScalarField& Tf = *Tfs[key];
+        const volScalarField& Tf = *Tfs[dmidtfIter.key()];
 
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
+        const phaseModel& phase1 = interface.phase1();
+        const phaseModel& phase2 = interface.phase2();
 
         // Loop the species
         forAllConstIter(HashPtrTable<volScalarField>, *dmidtfIter(), dmidtfJter)
@@ -458,15 +446,15 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtL
             const word& specie = dmidtfJter.key();
 
             // Mass transfer rates
-            const volScalarField dmidtf
-            (
-                Pair<word>::compare(pair, key)**dmidtfJter()
-            );
+            const volScalarField& dmidtf = *dmidtfJter();
             const volScalarField dmidtf21(posPart(dmidtf));
             const volScalarField dmidtf12(negPart(dmidtf));
 
             // Latent heat contribution
-            const volScalarField Li(this->Li(pair, specie, dmidtf, Tf, scheme));
+            const volScalarField Li
+            (
+                this->Li(interface, specie, dmidtf, Tf, scheme)
+            );
             *eqns[phase1.name()] +=
                 ((1 - weight)*dmidtf12 + weight*dmidtf21)*Li;
             *eqns[phase2.name()] +=
@@ -518,14 +506,14 @@ template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
 Foam::HeatTransferPhaseSystem<BasePhaseSystem>::L
 (
-    const phasePair& pair,
+    const phaseInterface& interface,
     const volScalarField& dmdtf,
     const volScalarField& Tf,
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = pair.phase1().thermo();
-    const rhoThermo& thermo2 = pair.phase2().thermo();
+    const rhoThermo& thermo1 = interface.phase1().thermo();
+    const rhoThermo& thermo2 = interface.phase2().thermo();
 
     // Interface enthalpies
     const volScalarField haf1(thermo1.ha(thermo1.p(), Tf));
@@ -557,15 +545,15 @@ template<class BasePhaseSystem>
 Foam::tmp<Foam::scalarField>
 Foam::HeatTransferPhaseSystem<BasePhaseSystem>::L
 (
-    const phasePair& pair,
+    const phaseInterface& interface,
     const scalarField& dmdtf,
     const scalarField& Tf,
     const labelUList& cells,
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = pair.phase1().thermo();
-    const rhoThermo& thermo2 = pair.phase2().thermo();
+    const rhoThermo& thermo1 = interface.phase1().thermo();
+    const rhoThermo& thermo2 = interface.phase2().thermo();
 
     // Interface enthalpies
     const scalarField haf1(thermo1.ha(Tf, cells));
@@ -600,15 +588,15 @@ template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
 Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
 (
-    const phasePair& pair,
+    const phaseInterface& interface,
     const word& specie,
     const volScalarField& dmdtf,
     const volScalarField& Tf,
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = pair.phase1().thermo();
-    const rhoThermo& thermo2 = pair.phase2().thermo();
+    const rhoThermo& thermo1 = interface.phase1().thermo();
+    const rhoThermo& thermo2 = interface.phase2().thermo();
     const basicSpecieMixture* compositionPtr1 =
         isA<rhoReactionThermo>(thermo1)
       ? &refCast<const rhoReactionThermo>(thermo1).composition()
@@ -672,7 +660,7 @@ template<class BasePhaseSystem>
 Foam::tmp<Foam::scalarField>
 Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
 (
-    const phasePair& pair,
+    const phaseInterface& interface,
     const word& specie,
     const scalarField& dmdtf,
     const scalarField& Tf,
@@ -680,8 +668,8 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = pair.phase1().thermo();
-    const rhoThermo& thermo2 = pair.phase2().thermo();
+    const rhoThermo& thermo1 = interface.phase1().thermo();
+    const rhoThermo& thermo2 = interface.phase2().thermo();
     const basicSpecieMixture* compositionPtr1 =
         isA<rhoReactionThermo>(thermo1)
       ? &refCast<const rhoReactionThermo>(thermo1).composition()

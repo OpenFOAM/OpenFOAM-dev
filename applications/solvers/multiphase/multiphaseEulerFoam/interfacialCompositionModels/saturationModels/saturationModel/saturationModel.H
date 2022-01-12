@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,8 @@ Class
     Foam::saturationModel
 
 Description
+    Model to describe the dependence of saturation pressure on temperature, and
+    vice versa
 
 SourceFiles
     saturationModel.C
@@ -35,11 +37,10 @@ SourceFiles
 #ifndef saturationModel_H
 #define saturationModel_H
 
-#include "IOdictionary.H"
 #include "volFields.H"
 #include "dictionary.H"
+#include "phaseInterface.H"
 #include "runTimeSelectionTables.H"
-#include "phasePair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,8 +53,14 @@ namespace Foam
 
 class saturationModel
 :
-    public IOdictionary
+    public regIOobject
 {
+    // Private Data
+
+        //- The interface
+        const phaseInterface interface_;
+
+
 public:
 
     //- Runtime type information
@@ -67,28 +74,30 @@ public:
         saturationModel,
         dictionary,
         (
-            const dictionary& dict, const phasePair& pair
+            const dictionary& dict,
+            const phaseInterface& interface
         ),
-        (dict, pair)
+        (dict, interface)
     );
 
 
     // Constructors
 
-        //- Construct null
-        saturationModel(const phasePair& pair);
-
-        //- Disallow default bitwise copy construction
-        saturationModel(const saturationModel&) = delete;
+        //- Construct from a dictionary and an interface
+        saturationModel
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
 
 
     // Selectors
 
-        //- Select null constructed
         static autoPtr<saturationModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface,
+            const bool outer=true
         );
 
 
@@ -97,6 +106,9 @@ public:
 
 
     // Member Functions
+
+        //- Access the interface
+        const phaseInterface& interface() const;
 
         //- Saturation pressure
         virtual tmp<volScalarField> pSat
@@ -122,11 +134,8 @@ public:
             const volScalarField& p
         ) const = 0;
 
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const saturationModel&) = delete;
+        //- Dummy write for regIOobject
+        bool writeData(Ostream& os) const;
 };
 
 

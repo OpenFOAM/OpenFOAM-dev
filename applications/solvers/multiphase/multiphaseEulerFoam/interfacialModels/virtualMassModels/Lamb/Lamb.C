@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Lamb.H"
-#include "phasePair.H"
 #include "aspectRatioModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -50,12 +49,12 @@ namespace virtualMassModels
 Foam::virtualMassModels::Lamb::Lamb
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    virtualMassModel(dict, pair, registerObject),
-    aspectRatio_(aspectRatioModel::New(dict.subDict("aspectRatio"), pair))
+    dispersedVirtualMassModel(dict, interface, registerObject),
+    aspectRatio_(aspectRatioModel::New(dict.subDict("aspectRatio"), interface))
 {}
 
 

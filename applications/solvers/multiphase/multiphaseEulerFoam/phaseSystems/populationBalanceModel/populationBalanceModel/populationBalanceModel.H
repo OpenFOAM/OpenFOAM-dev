@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,7 +150,7 @@ SourceFiles
 #define populationBalanceModel_H
 
 #include "sizeGroup.H"
-#include "phasePair.H"
+#include "phaseSystem.H"
 #include "pimpleControl.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "HashPtrTable.H"
@@ -160,9 +160,6 @@ SourceFiles
 
 namespace Foam
 {
-
-class phaseSystem;
-
 namespace diameterModels
 {
 
@@ -182,24 +179,13 @@ class populationBalanceModel
 {
 private:
 
-    // Private Typedefs
-
-        typedef
-            HashTable<autoPtr<phasePair>, phasePairKey, phasePairKey::hash>
-            phasePairTable;
-
-        typedef
-            HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            pDmdtTable;
-
-
     // Private Data
 
         //- Reference to the phaseSystem
         const phaseSystem& fluid_;
 
         //- Interfacial mass transfer rates
-        pDmdtTable& pDmdt_;
+        phaseSystem::dmdtfTable& pDmdt_;
 
         //- Reference to the mesh
         const fvMesh& mesh_;
@@ -221,9 +207,6 @@ private:
 
         //- sizeGroups belonging to this populationBalance
         UPtrList<sizeGroup> sizeGroups_;
-
-        //- List of unordered phasePairs in this populationBalance
-        phasePairTable phasePairs_;
 
         //- sizeGroup boundaries
         PtrList<dimensionedScalar> v_;
@@ -348,8 +331,8 @@ public:
             HashPtrTable
             <
                 volScalarField,
-                phasePairKey,
-                phasePairKey::hash
+                phaseInterfaceKey,
+                phaseInterfaceKey::hash
             >& pDmdt
         );
 
@@ -362,16 +345,14 @@ public:
         {
             const phaseSystem& fluid_;
 
-            HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>&
-                pDmdt_;
+            phaseSystem::dmdtfTable& pDmdt_;
 
         public:
 
             iNew
             (
                 const phaseSystem& fluid,
-                HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>&
-                    pDmdt
+                phaseSystem::dmdtfTable& pDmdt
             )
             :
                 fluid_(fluid),
@@ -424,9 +405,6 @@ public:
         //- Return the sizeGroups belonging to this populationBalance
         inline const UPtrList<sizeGroup>& sizeGroups() const;
 
-        //- Return list of unordered phasePairs in this populationBalance
-        inline const phasePairTable& phasePairs() const;
-
         //- Return implicit source terms
         inline const volScalarField& Sp(const label i) const;
 
@@ -441,10 +419,6 @@ public:
 
         //- Return average velocity
         inline const volVectorField& U() const;
-
-        //- Returns true if both phases are velocity groups and
-        //  belong to this populationBalance
-        inline bool isVelocityGroupPair(const phasePair& pair) const;
 
         //- Return allocation coefficient
         const dimensionedScalar eta

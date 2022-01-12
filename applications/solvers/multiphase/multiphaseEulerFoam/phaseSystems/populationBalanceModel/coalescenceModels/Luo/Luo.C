@@ -25,7 +25,7 @@ License
 
 #include "Luo.H"
 #include "addToRunTimeSelectionTable.H"
-#include "virtualMassModel.H"
+#include "dispersedVirtualMassModel.H"
 #include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -80,18 +80,18 @@ addToCoalescenceRate
 
     if
     (
-        popBal_.fluid().foundSubModel<virtualMassModel>
+        popBal_.fluid().foundInterfacialModel
+        <virtualMassModels::dispersedVirtualMassModel>
         (
-            fi.phase(),
-            popBal_.continuousPhase()
+            dispersedPhaseInterface(fi.phase(), popBal_.continuousPhase())
         )
     )
     {
-        const virtualMassModel& vm =
-            popBal_.fluid().lookupSubModel<virtualMassModel>
+        const virtualMassModels::dispersedVirtualMassModel& vm =
+            popBal_.fluid().lookupInterfacialModel
+            <virtualMassModels::dispersedVirtualMassModel>
             (
-                fi.phase(),
-                popBal_.continuousPhase()
+                dispersedPhaseInterface(fi.phase(), popBal_.continuousPhase())
             );
 
         const dimensionedScalar xi = fi.dSph()/fj.dSph();

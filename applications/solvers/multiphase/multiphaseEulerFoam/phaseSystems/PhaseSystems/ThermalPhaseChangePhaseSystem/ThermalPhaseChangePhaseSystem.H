@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,8 +81,8 @@ class ThermalPhaseChangePhaseSystem
         typedef HashTable
         <
             autoPtr<saturationModel>,
-            phasePairKey,
-            phasePairKey::hash
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > saturationModelTable;
 
         using latentHeatScheme = typename BasePhaseSystem::latentHeatScheme;
@@ -142,10 +142,10 @@ public:
     // Member Functions
 
         //- Return the saturationModel
-        const saturationModel& saturation(const phasePairKey& key) const;
+        const saturationModel& saturation(const phaseInterfaceKey& key) const;
 
         //- Return the mass transfer rate for an interface
-        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
+        virtual tmp<volScalarField> dmdtf(const phaseInterfaceKey& key) const;
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;

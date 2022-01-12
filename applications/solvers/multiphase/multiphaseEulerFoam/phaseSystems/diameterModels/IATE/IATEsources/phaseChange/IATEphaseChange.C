@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,6 @@ License
 
 #include "IATEphaseChange.H"
 #include "phaseSystem.H"
-#include "ThermalPhaseChangePhaseSystem.H"
-#include "MomentumTransferPhaseSystem.H"
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -69,11 +67,11 @@ Foam::diameterModels::IATEsources::phaseChange::R
     volScalarField& kappai
 ) const
 {
-    const phasePair& pair =
-        phase().fluid().phasePairs()
-        [
-            phasePairKey(phase().name(), otherPhaseName_)
-        ];
+    const phaseInterface interface
+    (
+        phase(),
+        phase().fluid().phases()[otherPhaseName_]
+    );
 
     const volScalarField& dmdtf =
         alphai.mesh().lookupObject<volScalarField>
@@ -81,12 +79,11 @@ Foam::diameterModels::IATEsources::phaseChange::R
             IOobject::groupName
             (
                 IOobject::groupName(dmdtfName_, specieName_),
-                pair.name()
+                interface.name()
             )
         );
 
-    const label dmdtfSign =
-        phase().name() == pair.first() ? +1 : -1;
+    const label dmdtfSign = interface.index(phase()) == 0 ? +1 : -1;
 
     return -fvm::SuSp(dmdtfSign*dmdtf/(3*alphai*phase().rho()), kappai);
 }

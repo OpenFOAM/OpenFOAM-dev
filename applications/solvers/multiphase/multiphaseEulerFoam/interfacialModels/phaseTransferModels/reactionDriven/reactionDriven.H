@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,10 +42,6 @@ SourceFiles
 
 namespace Foam
 {
-
-class phasePair;
-class phaseModel;
-
 namespace phaseTransferModels
 {
 
@@ -60,6 +56,9 @@ class reactionDriven
 private:
 
     // Private Data
+
+        //- Interface
+        const phaseInterface interface_;
 
         //- The name of the phase where the reactions occur
         const word reactingName_;
@@ -85,11 +84,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         reactionDriven
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

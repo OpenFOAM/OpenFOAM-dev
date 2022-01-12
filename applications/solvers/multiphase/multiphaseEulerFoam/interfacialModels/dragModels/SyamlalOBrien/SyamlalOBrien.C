@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SyamlalOBrien.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,11 @@ namespace dragModels
 Foam::dragModels::SyamlalOBrien::SyamlalOBrien
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject)
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -64,7 +63,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::SyamlalOBrien::CdRe() const
 {
     const volScalarField alpha2
     (
-        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
     );
 
     const volScalarField A(pow(alpha2, 4.14));
@@ -73,7 +72,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::SyamlalOBrien::CdRe() const
         neg(alpha2 - 0.85)*(0.8*pow(alpha2, 1.28))
       + pos0(alpha2 - 0.85)*(pow(alpha2, 2.65))
     );
-    const volScalarField Re(pair_.Re());
+    const volScalarField Re(interface_.Re());
     const volScalarField Vr
     (
         0.5
@@ -85,7 +84,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::SyamlalOBrien::CdRe() const
 
     return
         CdsRe
-       *max(pair_.continuous(), pair_.continuous().residualAlpha())
+       *max(interface_.continuous(), interface_.continuous().residualAlpha())
        /sqr(Vr);
 }
 

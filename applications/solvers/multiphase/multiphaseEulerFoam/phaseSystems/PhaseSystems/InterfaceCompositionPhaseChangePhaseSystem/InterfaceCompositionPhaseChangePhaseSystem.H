@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,8 +47,8 @@ SourceFiles
 namespace Foam
 {
 
-class interfaceCompositionModel;
-class diffusiveMassTransferModel;
+class sidedInterfaceCompositionModel;
+class sidedBlendedDiffusiveMassTransferModel;
 
 /*---------------------------------------------------------------------------*\
          Class InterfaceCompositionPhaseChangePhaseSystem Declaration
@@ -63,16 +63,16 @@ class InterfaceCompositionPhaseChangePhaseSystem
 
         typedef HashTable
         <
-            Pair<autoPtr<interfaceCompositionModel>>,
-            phasePairKey,
-            phasePairKey::hash
+            autoPtr<sidedInterfaceCompositionModel>,
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > interfaceCompositionModelTable;
 
         typedef HashTable
         <
-            Pair<autoPtr<BlendedInterfacialModel<diffusiveMassTransferModel>>>,
-            phasePairKey,
-            phasePairKey::hash
+            autoPtr<sidedBlendedDiffusiveMassTransferModel>,
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > diffusiveMassTransferModelTable;
 
         using latentHeatScheme = typename BasePhaseSystem::latentHeatScheme;
@@ -130,7 +130,7 @@ public:
     // Member Functions
 
         //- Return the mass transfer rate for an interface
-        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
+        virtual tmp<volScalarField> dmdtf(const phaseInterfaceKey& key) const;
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;

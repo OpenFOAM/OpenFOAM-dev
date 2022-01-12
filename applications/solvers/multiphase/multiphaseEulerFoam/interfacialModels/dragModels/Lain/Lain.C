@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Lain.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,11 @@ namespace dragModels
 Foam::dragModels::Lain::Lain
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject)
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -62,7 +61,7 @@ Foam::dragModels::Lain::~Lain()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::Lain::CdRe() const
 {
-    volScalarField Re(pair_.Re());
+    volScalarField Re(interface_.Re());
 
     return
         neg(Re - 1.5)*16.0

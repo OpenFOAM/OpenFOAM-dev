@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceTensionModel.H"
-#include "phasePair.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
@@ -32,13 +32,19 @@ Foam::autoPtr<Foam::surfaceTensionModel >
 Foam::surfaceTensionModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface,
+    const bool outer
 )
 {
-    word surfaceTensionModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        outer
+      ? interface.fluid().modelSubDict<surfaceTensionModel>(dict)
+      : dict;
+
+    const word surfaceTensionModelType(modelDict.lookup("type"));
 
     Info<< "Selecting surfaceTensionModel for "
-        << pair << ": " << surfaceTensionModelType << endl;
+        << interface.name() << ": " << surfaceTensionModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(surfaceTensionModelType);
@@ -53,7 +59,7 @@ Foam::surfaceTensionModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair, true);
+    return cstrIter()(modelDict, interface);
 }
 
 

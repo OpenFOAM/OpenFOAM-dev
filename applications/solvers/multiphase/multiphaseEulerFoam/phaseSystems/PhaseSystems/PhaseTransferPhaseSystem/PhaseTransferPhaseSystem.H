@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,7 @@ SourceFiles
 namespace Foam
 {
 
-class blendingMethod;
-template<class modelType> class BlendedInterfacialModel;
-class phaseTransferModel;
+class blendedPhaseTransferModel;
 
 /*---------------------------------------------------------------------------*\
                   Class PhaseTransferPhaseSystem Declaration
@@ -62,9 +60,9 @@ private:
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<phaseTransferModel>>,
-            phasePairKey,
-            phasePairKey::hash
+            autoPtr<blendedPhaseTransferModel>,
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > phaseTransferModelTable;
 
 
@@ -122,7 +120,7 @@ public:
     // Member Functions
 
         //- Return the mass transfer rate for an interface
-        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
+        virtual tmp<volScalarField> dmdtf(const phaseInterfaceKey& key) const;
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;

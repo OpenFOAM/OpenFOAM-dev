@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "phaseTransferModel.H"
-#include "phasePair.H"
-#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -47,19 +45,18 @@ const Foam::hashedWordList Foam::phaseTransferModel::noSpecies_ =
 Foam::phaseTransferModel::phaseTransferModel
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
     regIOobject
     (
         IOobject
         (
-            IOobject::groupName(typeName, pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh()
+            IOobject::groupName(typeName, interface.name()),
+            interface.mesh().time().timeName(),
+            interface.mesh()
         )
-    ),
-    pair_(pair)
+    )
 {}
 
 
@@ -99,6 +96,46 @@ Foam::phaseTransferModel::dmidtf() const
 bool Foam::phaseTransferModel::writeData(Ostream& os) const
 {
     return os.good();
+}
+
+
+bool Foam::blendedPhaseTransferModel::mixture() const
+{
+    return evaluate(&phaseTransferModel::mixture);
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::blendedPhaseTransferModel::dmdtf() const
+{
+    return
+        evaluate
+        (
+            &phaseTransferModel::dmdtf,
+            "dmdtf",
+            phaseTransferModel::dimDmdt,
+            true
+        );
+}
+
+
+Foam::hashedWordList Foam::blendedPhaseTransferModel::species() const
+{
+    return evaluate(&phaseTransferModel::species);
+}
+
+
+Foam::HashPtrTable<Foam::volScalarField>
+Foam::blendedPhaseTransferModel::dmidtf() const
+{
+    return
+        evaluate
+        (
+            &phaseTransferModel::dmidtf,
+            "dmidtf",
+            phaseTransferModel::dimDmdt,
+            true
+        );
 }
 
 

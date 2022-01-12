@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ Class
     Foam::liftModel
 
 Description
+    Model for the lift force between two phases
 
 SourceFiles
     liftModel.C
@@ -40,11 +41,10 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "BlendedInterfacialModel.H"
 
 namespace Foam
 {
-
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                           Class liftModel Declaration
@@ -52,14 +52,6 @@ class phasePair;
 
 class liftModel
 {
-protected:
-
-    // Protected data
-
-        //- Phase pair
-        const phasePair& pair_;
-
-
 public:
 
     //- Runtime type information
@@ -75,9 +67,9 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair
+                const phaseInterface& interface
             ),
-            (dict, pair)
+            (dict, interface)
         );
 
 
@@ -86,14 +78,17 @@ public:
         //- Force dimensions
         static const dimensionSet dimF;
 
+        //- Does this model require correcting on fixed flux boundaries?
+        static const bool correctFixedFluxBCs = true;
+
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         liftModel
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -106,24 +101,55 @@ public:
         static autoPtr<liftModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface,
+            const bool outer=true
         );
 
 
     // Member Functions
 
-        //- Return lift coefficient
-        virtual tmp<volScalarField> Cl() const = 0;
-
-        //- Return phase-intensive lift force
-        virtual tmp<volVectorField> Fi() const;
-
         //- Return lift force
-        virtual tmp<volVectorField> F() const;
+        virtual tmp<volVectorField> F() const = 0;
 
         //- Return face lift force
-        virtual tmp<surfaceScalarField> Ff() const;
+        virtual tmp<surfaceScalarField> Ff() const = 0;
 };
+
+
+/*---------------------------------------------------------------------------*\
+                      Class blendedLiftModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class blendedLiftModel
+:
+    public BlendedInterfacialModel<liftModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using BlendedInterfacialModel<liftModel>::BlendedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<blendedLiftModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
+
+
+    // Member Functions
+
+        //- Return lift force
+        tmp<volVectorField> F() const;
+
+        //- Return face lift force
+        tmp<surfaceScalarField> Ff() const;
+};
+
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

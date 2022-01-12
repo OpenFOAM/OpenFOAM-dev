@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "turbulentDispersionModel.H"
-#include "phasePair.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
@@ -32,13 +32,19 @@ Foam::autoPtr<Foam::turbulentDispersionModel>
 Foam::turbulentDispersionModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface,
+    const bool outer
 )
 {
-    word turbulentDispersionModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        outer
+      ? interface.fluid().modelSubDict<turbulentDispersionModel>(dict)
+      : dict;
+
+    const word turbulentDispersionModelType(modelDict.lookup("type"));
 
     Info<< "Selecting turbulentDispersionModel for "
-        << pair << ": " << turbulentDispersionModelType << endl;
+        << interface.name() << ": " << turbulentDispersionModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(turbulentDispersionModelType);
@@ -53,8 +59,24 @@ Foam::turbulentDispersionModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(modelDict, interface);
 }
+
+
+Foam::autoPtr<Foam::blendedTurbulentDispersionModel>
+Foam::blendedTurbulentDispersionModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return
+        autoPtr<blendedTurbulentDispersionModel>
+        (
+            new blendedTurbulentDispersionModel(dict, interface)
+        );
+}
+
 
 
 // ************************************************************************* //

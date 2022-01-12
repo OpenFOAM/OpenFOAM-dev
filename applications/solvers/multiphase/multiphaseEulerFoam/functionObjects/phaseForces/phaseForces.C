@@ -25,7 +25,6 @@ License
 
 #include "phaseForces.H"
 #include "addToRunTimeSelectionTable.H"
-#include "BlendedInterfacialModel.H"
 #include "fvcGrad.H"
 #include "dragModel.H"
 #include "virtualMassModel.H"
@@ -42,26 +41,6 @@ namespace functionObjects
     defineTypeNameAndDebug(phaseForces, 0);
     addToRunTimeSelectionTable(functionObject, phaseForces, dictionary);
 }
-}
-
-
-// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * * //
-
-template<class modelType>
-Foam::tmp<Foam::volVectorField>
-Foam::functionObjects::phaseForces::nonDragForce(const phasePair& pair) const
-{
-    const BlendedInterfacialModel<modelType>& model =
-        fluid_.lookupBlendedSubModel<modelType>(pair);
-
-    if (&pair.phase1() == &phase_)
-    {
-        return -model.template F<vector>();
-    }
-    else
-    {
-        return model.template F<vector>();
-    }
 }
 
 
@@ -86,123 +65,127 @@ Foam::functionObjects::phaseForces::phaseForces
 {
     read(dict);
 
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        fluid_.phasePairs(),
-        pairIter
-    )
+    forAll(fluid_.phases(), phasei)
     {
-        const phasePair& pair = pairIter();
+        const phaseModel& otherPhase = fluid_.phases()[phasei];
 
-        if (pair.contains(phase_) && !pair.ordered())
+        if (&otherPhase == &phase_) continue;
+
+        const phaseInterface interface(phase_, otherPhase);
+
+        if (fluid_.foundInterfacialModel<blendedDragModel>(interface))
         {
-            if (fluid_.foundBlendedSubModel<dragModel>(pair))
-            {
-                forceFields_.insert
+            forceFields_.insert
+            (
+                dragModel::typeName,
+                new volVectorField
                 (
-                    dragModel::typeName,
-                    new volVectorField
+                    IOobject
                     (
-                        IOobject
-                        (
-                            IOobject::groupName("dragForce", phase_.name()),
-                            mesh_.time().timeName(),
-                            mesh_
-                        ),
-                        mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
-                    )
-                );
-            }
+                        IOobject::groupName("dragForce", phase_.name()),
+                        mesh_.time().timeName(),
+                        mesh_
+                    ),
+                    mesh_,
+                    dimensionedVector(dimForce/dimVolume, Zero)
+                )
+            );
+        }
 
-            if (fluid_.foundBlendedSubModel<virtualMassModel>(pair))
-            {
-                forceFields_.insert
+        if (fluid_.foundInterfacialModel<blendedVirtualMassModel>(interface))
+        {
+            forceFields_.insert
+            (
+                virtualMassModel::typeName,
+                new volVectorField
                 (
-                    virtualMassModel::typeName,
-                    new volVectorField
+                    IOobject
                     (
-                        IOobject
+                        IOobject::groupName
                         (
-                            IOobject::groupName
-                            (
-                                "virtualMassForce",
-                                phase_.name()
-                            ),
-                            mesh_.time().timeName(),
-                            mesh_
+                            "virtualMassForce",
+                            phase_.name()
                         ),
-                        mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
-                    )
-                );
-            }
+                        mesh_.time().timeName(),
+                        mesh_
+                    ),
+                    mesh_,
+                    dimensionedVector(dimForce/dimVolume, Zero)
+                )
+            );
+        }
 
-            if (fluid_.foundBlendedSubModel<liftModel>(pair))
-            {
-                forceFields_.insert
+        if (fluid_.foundInterfacialModel<blendedLiftModel>(interface))
+        {
+            forceFields_.insert
+            (
+                liftModel::typeName,
+                new volVectorField
                 (
-                    liftModel::typeName,
-                    new volVectorField
+                    IOobject
                     (
-                        IOobject
-                        (
-                            IOobject::groupName("liftForce", phase_.name()),
-                            mesh_.time().timeName(),
-                            mesh_
-                        ),
-                        mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
-                    )
-                );
-            }
+                        IOobject::groupName("liftForce", phase_.name()),
+                        mesh_.time().timeName(),
+                        mesh_
+                    ),
+                    mesh_,
+                    dimensionedVector(dimForce/dimVolume, Zero)
+                )
+            );
+        }
 
-            if (fluid_.foundBlendedSubModel<wallLubricationModel>(pair))
-            {
-                forceFields_.insert
+        if
+        (
+            fluid_.foundInterfacialModel
+            <blendedWallLubricationModel>(interface)
+        )
+        {
+            forceFields_.insert
+            (
+                wallLubricationModel::typeName,
+                new volVectorField
                 (
-                    wallLubricationModel::typeName,
-                    new volVectorField
+                    IOobject
                     (
-                        IOobject
+                        IOobject::groupName
                         (
-                            IOobject::groupName
-                            (
-                                "wallLubricationForce",
-                                phase_.name()
-                            ),
-                            mesh_.time().timeName(),
-                            mesh_
+                            "wallLubricationForce",
+                            phase_.name()
                         ),
-                        mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
-                    )
-                );
-            }
+                        mesh_.time().timeName(),
+                        mesh_
+                    ),
+                    mesh_,
+                    dimensionedVector(dimForce/dimVolume, Zero)
+                )
+            );
+        }
 
-            if (fluid_.foundBlendedSubModel<turbulentDispersionModel>(pair))
-            {
-                forceFields_.insert
+        if
+        (
+            fluid_.foundInterfacialModel
+            <blendedTurbulentDispersionModel>(interface)
+        )
+        {
+            forceFields_.insert
+            (
+                turbulentDispersionModel::typeName,
+                new volVectorField
                 (
-                    turbulentDispersionModel::typeName,
-                    new volVectorField
+                    IOobject
                     (
-                        IOobject
+                        IOobject::groupName
                         (
-                            IOobject::groupName
-                            (
-                                "turbulentDispersionForce",
-                                phase_.name()
-                            ),
-                            mesh_.time().timeName(),
-                            mesh_
+                            "turbulentDispersionForce",
+                            phase_.name()
                         ),
-                        mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
-                    )
-                );
-            }
+                        mesh_.time().timeName(),
+                        mesh_
+                    ),
+                    mesh_,
+                    dimensionedVector(dimForce/dimVolume, Zero)
+                )
+            );
         }
     }
 }
@@ -238,53 +221,62 @@ bool Foam::functionObjects::phaseForces::execute()
     }
 
     // Add the forces from all the interfaces which contain this phase
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        fluid_.phasePairs(),
-        pairIter
-    )
+    forAll(fluid_.phases(), phasei)
     {
-        const phasePair& pair = pairIter();
+        const phaseModel& otherPhase = fluid_.phases()[phasei];
 
-        if (pair.contains(phase_) && !pair.ordered())
+        if (&otherPhase == &phase_) continue;
+
+        const phaseInterface interface(phase_, otherPhase);
+
+        if (fluid_.foundInterfacialModel<blendedDragModel>(interface))
         {
-            if (fluid_.foundBlendedSubModel<dragModel>(pair))
-            {
-                *forceFields_[dragModel::typeName] +=
-                    fluid_.lookupBlendedSubModel<dragModel>(pair).K()
-                   *(pair.otherPhase(phase_).U() - phase_.U());
-            }
+            *forceFields_[dragModel::typeName] +=
+                fluid_.lookupInterfacialModel<blendedDragModel>(interface).K()
+               *(otherPhase.U() - phase_.U());
+        }
 
-            if (fluid_.foundBlendedSubModel<virtualMassModel>(pair))
-            {
-                *forceFields_[virtualMassModel::typeName] +=
-                    fluid_.lookupBlendedSubModel<virtualMassModel>(pair).K()
-                   *(pair.otherPhase(phase_).DUDt() - phase_.DUDt());
-            }
+        if (fluid_.foundInterfacialModel<blendedVirtualMassModel>(interface))
+        {
+            *forceFields_[virtualMassModel::typeName] +=
+                fluid_.lookupInterfacialModel
+                <blendedVirtualMassModel>(interface).K()
+               *(otherPhase.DUDt() - phase_.DUDt());
+        }
 
-            if (fluid_.foundBlendedSubModel<liftModel>(pair))
-            {
-                *forceFields_[liftModel::typeName] +=
-                    nonDragForce<liftModel>(pair);
-            }
+        if (fluid_.foundInterfacialModel<blendedLiftModel>(interface))
+        {
+            *forceFields_[liftModel::typeName] +=
+                (&interface.phase1() == &phase_ ? -1 : +1)
+               *fluid_.lookupInterfacialModel<blendedLiftModel>(interface).F();
+        }
 
-            if (fluid_.foundBlendedSubModel<wallLubricationModel>(pair))
-            {
-                *forceFields_[wallLubricationModel::typeName] +=
-                    nonDragForce<wallLubricationModel>(pair);
-            }
+        if
+        (
+            fluid_.foundInterfacialModel
+            <blendedWallLubricationModel>(interface)
+        )
+        {
+            *forceFields_[wallLubricationModel::typeName] +=
+                (&interface.phase1() == &phase_ ? -1 : +1)
+               *fluid_.lookupInterfacialModel
+                <blendedWallLubricationModel>(interface).F();
+        }
 
-            if (fluid_.foundBlendedSubModel<turbulentDispersionModel>(pair))
-            {
-                *forceFields_[turbulentDispersionModel::typeName] +=
-                    fluid_.lookupBlendedSubModel<turbulentDispersionModel>
-                    (
-                        pair
-                    ).D()
-                   *(&pair.phase1() == &phase_ ? -1 : +1)
-                   *fvc::grad(pair.phase1()/(pair.phase1() + pair.phase2()));
-            }
+        if
+        (
+            fluid_.foundInterfacialModel
+            <blendedTurbulentDispersionModel>(interface)
+        )
+        {
+            *forceFields_[turbulentDispersionModel::typeName] +=
+                fluid_.lookupInterfacialModel
+                <blendedTurbulentDispersionModel>(interface).D()
+               *fvc::grad
+                (
+                    otherPhase
+                   /max(phase_ + otherPhase, otherPhase.residualAlpha())
+                );
         }
     }
 

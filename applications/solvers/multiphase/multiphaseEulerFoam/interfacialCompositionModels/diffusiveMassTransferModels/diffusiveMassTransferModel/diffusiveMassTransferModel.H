@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ Class
     Foam::diffusiveMassTransferModel
 
 Description
+    Model for diffusive mass transfer coefficients between two phases
 
 SourceFiles
     diffusiveMassTransferModel.C
@@ -39,11 +40,13 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "BlendedInterfacialModel.H"
+#include "SidedInterfacialModel.H"
 
 namespace Foam
 {
 
-class phasePair;
+class phaseSystem;
 
 /*---------------------------------------------------------------------------*\
                  Class diffusiveMassTransferModel Declaration
@@ -51,14 +54,6 @@ class phasePair;
 
 class diffusiveMassTransferModel
 {
-protected:
-
-    // Protected data
-
-        //- Phase pair
-        const phasePair& pair_;
-
-
 public:
 
     //- Runtime type information
@@ -74,9 +69,9 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair
+                const phaseInterface& interface
             ),
-            (dict, pair)
+            (dict, interface)
         );
 
 
@@ -85,14 +80,17 @@ public:
         //- Coefficient dimensions
         static const dimensionSet dimK;
 
+        //- Does this model require correcting on fixed flux boundaries?
+        static const bool correctFixedFluxBCs = false;
+
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         diffusiveMassTransferModel
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -105,7 +103,7 @@ public:
         static autoPtr<diffusiveMassTransferModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -114,6 +112,69 @@ public:
         //- The implicit mass transfer coefficient
         //  Note: this has had the species mass diffusivity factored out
         virtual tmp<volScalarField> K() const = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+               Class blendedDiffusiveMassTransferModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class blendedDiffusiveMassTransferModel
+:
+    public BlendedInterfacialModel<diffusiveMassTransferModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            BlendedInterfacialModel<diffusiveMassTransferModel>::
+            BlendedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<blendedDiffusiveMassTransferModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
+
+
+    // Member Functions
+
+        //- Return the heatTransfer coefficient K
+        tmp<volScalarField> K() const;
+};
+
+
+
+/*---------------------------------------------------------------------------*\
+            Class sidedBlendedDiffusiveMassTransferModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class sidedBlendedDiffusiveMassTransferModel
+:
+    public SidedInterfacialModel<blendedDiffusiveMassTransferModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            SidedInterfacialModel<blendedDiffusiveMassTransferModel>::
+            SidedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<sidedBlendedDiffusiveMassTransferModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
 };
 
 

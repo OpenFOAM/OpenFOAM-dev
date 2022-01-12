@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,213 +23,148 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "BlendedInterfacialModel.H"
+#include "phaseSystem.H"
+#include "sidedPhaseInterface.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class modelType>
-void Foam::phaseSystem::createSubModels
+template<class ModelType>
+void Foam::phaseSystem::validateMassTransfer
 (
-    const dictTable& modelDicts,
-    HashTable
-    <
-        autoPtr<modelType>,
-        phasePairKey,
-        phasePairKey::hash
-    >& models
-)
+    const phaseInterface& interface
+) const
 {
-    forAllConstIter(dictTable, modelDicts, iter)
-    {
-        const phasePairKey& key = iter.key();
-
-        models.insert
-        (
-            key,
-            modelType::New
-            (
-               *iter,
-                phasePairs_[key]
-            )
-        );
-    }
-}
-
-
-template<class modelType>
-void Foam::phaseSystem::generatePairsAndSubModels
-(
-    const word& modelName,
-    HashTable
-    <
-        autoPtr<modelType>,
-        phasePairKey,
-        phasePairKey::hash
-    >& models,
-    const bool correctFixedFluxBCs
-)
-{
-    dictTable modelDicts(lookup(modelName));
-
-    generatePairs(modelDicts);
-
-    createSubModels(modelDicts, models);
-}
-
-
-template<class modelType>
-void Foam::phaseSystem::generatePairsAndSubModels
-(
-    const word& modelName,
-    HashTable
-    <
-        autoPtr<BlendedInterfacialModel<modelType>>,
-        phasePairKey,
-        phasePairKey::hash
-    >& models,
-    const bool correctFixedFluxBCs
-)
-{
-    typedef
-        HashTable<autoPtr<modelType>, phasePairKey, phasePairKey::hash>
-        modelTypeTable;
-
-    modelTypeTable tempModels;
-    generatePairsAndSubModels(modelName, tempModels);
-
-    const blendingMethod& blending
-    (
-        blendingMethods_.found(modelName)
-      ? blendingMethods_[modelName]
-      : blendingMethods_.found(member(modelName))
-      ? blendingMethods_[member(modelName)]
-      : blendingMethods_["default"]
-    );
-
-    autoPtr<modelType> noModel(nullptr);
-
-    forAllConstIter(typename modelTypeTable, tempModels, iter)
-    {
-        if (!iter().valid())
-        {
-            continue;
-        }
-
-        const phasePairKey key(iter.key().first(), iter.key().second());
-
-        if (!phasePairs_.found(key))
-        {
-            phasePairs_.insert
-            (
-                key,
-                autoPtr<phasePair>
-                (
-                    new phasePair
-                    (
-                        phaseModels_[key.first()],
-                        phaseModels_[key.second()]
-                    )
-                )
-            );
-        }
-
-        const phasePair& pair = phasePairs_[key];
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
-        const phasePairKey key1In2(phase1.name(), phase2.name(), true);
-        const phasePairKey key2In1(phase2.name(), phase1.name(), true);
-
-        models.insert
-        (
-            key,
-            autoPtr<BlendedInterfacialModel<modelType>>
-            (
-                new BlendedInterfacialModel<modelType>
-                (
-                    phase1,
-                    phase2,
-                    blending,
-                    tempModels.found(key) ? tempModels[key] : noModel,
-                    tempModels.found(key1In2) ? tempModels[key1In2] : noModel,
-                    tempModels.found(key2In1) ? tempModels[key2In1] : noModel,
-                    correctFixedFluxBCs
-                )
-            )
-        );
-    }
-}
-
-
-template<class modelType>
-void Foam::phaseSystem::generatePairsAndSubModels
-(
-    const word& modelName,
-    HashTable
-    <
-        Pair<autoPtr<modelType>>,
-        phasePairKey,
-        phasePairKey::hash
-    >& models,
-    const bool correctFixedFluxBCs
-)
-{
-    typedef
-        HashTable<autoPtr<modelType>, phasePairKey, phasePairKey::hash>
-        modelTypeTable;
-
-    forAll(phaseModels_, phasei)
-    {
-        const phaseModel& phase = phaseModels_[phasei];
-
-        modelTypeTable tempModels;
-        generatePairsAndSubModels
-        (
-            IOobject::groupName(modelName, phase.name()),
-            tempModels,
-            correctFixedFluxBCs
-        );
-
-        forAllIter(typename modelTypeTable, tempModels, tempModelIter)
-        {
-            const phasePairKey& key(tempModelIter.key());
-
-            if (!models.found(key))
-            {
-                models.insert
-                (
-                    key,
-                    Pair<autoPtr<modelType>>()
-                );
-            }
-
-            const phasePair& pair = phasePairs_[key];
-
-            if (!pair.contains(phase))
-            {
-                FatalErrorInFunction
-                    << "A two-sided " << modelType::typeName << " was "
-                    << "specified for the " << phase.name() << " side of the "
-                    << pair << " pair, but that phase is not part of that pair."
-                    << exit(FatalError);
-            }
-
-            models[key][pair.index(phase)] = tempModelIter().ptr();
-        }
-    }
-}
-
-
-template<class modelType>
-void Foam::phaseSystem::validateMassTransfer(const phasePair& key) const
-{
-    if (key.phase1().stationary() || key.phase2().stationary())
+    if (interface.phase1().stationary() || interface.phase2().stationary())
     {
         FatalErrorInFunction
-            << "A " << modelType::typeName << " was specified for pair "
-            << key.name() << ", but one of these phases is stationary. "
+            << "A " << ModelType::typeName << " was specified for pair "
+            << interface.name() << ", but one of these phases is stationary. "
             << "Mass transfer is not supported on stationary phases"
             << exit(FatalError);
     }
+}
+
+
+namespace Foam
+{
+
+template<class Type>
+class wordListAndType
+{
+    public:
+
+        wordList wl;
+        Type t;
+
+        wordListAndType()
+        {}
+
+        wordListAndType(Istream& is)
+        :
+            wl(is),
+            t(is)
+        {}
+};
+
+template<class Type>
+inline Istream& operator>>(Istream& is, wordListAndType<Type>& wlat)
+{
+    return is >> wlat.wl >> wlat.t;
+}
+
+template<class Type>
+inline Ostream& operator<<(Ostream& os, const wordListAndType<Type>& wlat)
+{
+    return os << wlat.wl << wlat.t;
+}
+
+template<class Type>
+inline bool operator==
+(
+    const wordListAndType<Type>& a,
+    const wordListAndType<Type>& b
+)
+{
+    return a.wl == b.wl && a.t == b.t;
+}
+
+template<class Type>
+inline bool operator!=
+(
+    const wordListAndType<Type>& a,
+    const wordListAndType<Type>& b
+)
+{
+    return !(a == b);
+}
+
+}
+
+
+template<class Type>
+Foam::dictionary Foam::phaseSystem::interfacialDict(const word& name) const
+{
+    bool found = false;
+    dictionary dict;
+
+    // If it is a dictionary then merge it in
+    if (this->isDict(name))
+    {
+        found = true;
+        dict.merge(this->subDict(name));
+    }
+
+    // Function to add old-format list/table entries
+    auto add = [&](const word& sidePhaseName)
+    {
+        const word nameSidePhaseName =
+            IOobject::groupName(name, sidePhaseName);
+
+        if (!this->found(nameSidePhaseName)) return;
+
+        found = true;
+
+        List<wordListAndType<Type>> wlats(this->lookup(nameSidePhaseName));
+
+        forAll(wlats, i)
+        {
+            word keyword =
+                phaseInterface::oldNamePartsToName(*this, wlats[i].wl);
+
+            if (sidePhaseName != word::null)
+            {
+                keyword.append
+                (
+                    "_"
+                  + sidedPhaseInterface::separator()
+                  + "_"
+                  + sidePhaseName
+                );
+            }
+
+            dict.add(keyword, wlats[i].t);
+        }
+    };
+
+    // If a dictionary entry was not found then try a list/table entry
+    if (!found)
+    {
+        add(word::null);
+    }
+
+    // Add sided models
+    forAll(phases(), phasei)
+    {
+        add(phases()[phasei].name());
+    }
+
+    // Barf if nothing was found
+    if (!found)
+    {
+        return this->subDict(name);
+    }
+
+    return dict;
 }
 
 
@@ -307,130 +242,215 @@ void Foam::phaseSystem::fillFields
 }
 
 
-template<class modelType>
-bool Foam::phaseSystem::foundSubModel(const phasePair& key) const
-{
-    const word name(IOobject::groupName(modelType::typeName, key.name()));
-
-    if (key.ordered())
-    {
-        return mesh().foundObject<modelType>(name);
-    }
-    else
-    {
-        return
-            mesh().foundObject<modelType>(name)
-         || mesh().foundObject<modelType>
-            (
-                IOobject::groupName(modelType::typeName, key.otherName())
-            );
-    }
-}
-
-
-template<class modelType>
-const modelType& Foam::phaseSystem::lookupSubModel(const phasePair& key) const
-{
-    const word name(IOobject::groupName(modelType::typeName, key.name()));
-
-    if (key.ordered() || mesh().foundObject<modelType>(name))
-    {
-        return mesh().lookupObject<modelType>(name);
-    }
-    else
-    {
-        return
-            mesh().lookupObject<modelType>
-            (
-                IOobject::groupName(modelType::typeName, key.otherName())
-            );
-    }
-}
-
-
-template<class modelType>
-bool Foam::phaseSystem::foundSubModel
+template<class ModelType, class ... InterfaceTypes>
+void Foam::phaseSystem::generateInterfacialModels
 (
-    const phaseModel& dispersed,
-    const phaseModel& continuous
+    const dictionary& dict,
+    const phaseInterface& interface,
+    PtrList<phaseInterface>& interfaces,
+    PtrList<ModelType>& models
 ) const
 {
-    return foundSubModel<modelType>(orderedPhasePair(dispersed, continuous));
+    // Construct sub-dictionaries and associated interfaces
+    hashedWordList names;
+    PtrList<dictionary> dicts;
+    forAllConstIter(dictionary, dict, iter)
+    {
+        // Get the model sub dictionary and its associated interface
+        const dictionary& modelDict = iter().dict();
+        autoPtr<phaseInterface> modelInterfacePtr =
+            phaseInterface::New(*this, iter().keyword());
+
+        // Cast the interface down to the first specified type possible
+        autoPtr<phaseInterface> interfacePtr;
+        List<bool>
+        ({
+            interfacePtr.empty()
+         && isA<InterfaceTypes>(modelInterfacePtr())
+         && (
+                interfacePtr.set
+                (
+                    new InterfaceTypes
+                    (
+                        refCast<InterfaceTypes>(modelInterfacePtr())
+                    )
+                ),
+                true
+            )
+            ...
+        });
+        if (!interfacePtr.valid())
+        {
+            FatalErrorInFunction
+                << "Interface " << modelInterfacePtr->name()
+                << " is not of suitable type for construction of a "
+                << ModelType::typeName
+                << exit(FatalError);
+        }
+
+        // If constructing for a specific interface then combine with this
+        // interface. This ensures interface information propagates through
+        // hierarchical model generation.
+        if (notNull(interface))
+        {
+            interfacePtr = phaseInterface::New(interface, interfacePtr());
+        }
+
+        // Find an existing dictionary to add to or create a new one
+        const word name = interfacePtr->name();
+        if (!names.found(name))
+        {
+            names.append(name);
+            dicts.append(new dictionary(name));
+            interfaces.append(interfacePtr.ptr());
+            models.append(nullptr);
+        }
+
+        // Add the model dictionary
+        dicts[names[name]].add
+        (
+            modelInterfacePtr->name(),
+            modelDict
+        );
+    }
+
+    // Construct the models
+    forAll(interfaces, i)
+    {
+        models.set(i, ModelType::New(dicts[i], interfaces[i]));
+    }
 }
 
 
-template<class modelType>
-const modelType& Foam::phaseSystem::lookupSubModel
+template<class ModelType>
+void Foam::phaseSystem::generateInterfacialModels
 (
-    const phaseModel& dispersed,
-    const phaseModel& continuous
+    const dictionary& dict,
+    HashTable
+    <
+        autoPtr<ModelType>,
+        phaseInterfaceKey,
+        phaseInterfaceKey::hash
+    >& models
 ) const
 {
-    return lookupSubModel<modelType>(orderedPhasePair(dispersed, continuous));
-}
-
-
-template<class modelType>
-bool Foam::phaseSystem::foundBlendedSubModel(const phasePair& key) const
-{
-    if
+    // Construct lists of interfaces and models
+    PtrList<phaseInterface> listInterfaces;
+    PtrList<ModelType> listModels;
+    generateInterfacialModels<ModelType, phaseInterface>
     (
-        mesh().foundObject<BlendedInterfacialModel<modelType>>
-        (
-            IOobject::groupName
-            (
-                BlendedInterfacialModel<modelType>::typeName,
-                key.name()
-            )
-        )
-     || mesh().foundObject<BlendedInterfacialModel<modelType>>
-        (
-            IOobject::groupName
-            (
-                BlendedInterfacialModel<modelType>::typeName,
-                key.otherName()
-            )
-        )
-    )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-template<class modelType>
-const Foam::BlendedInterfacialModel<modelType>&
-Foam::phaseSystem::lookupBlendedSubModel(const phasePair& key) const
-{
-    const word name
-    (
-        IOobject::groupName
-        (
-            BlendedInterfacialModel<modelType>::typeName,
-            key.name()
-        )
+        dict,
+        NullObjectRef<phaseInterface>(),
+        listInterfaces,
+        listModels
     );
 
-    if (mesh().foundObject<BlendedInterfacialModel<modelType>>(name))
+    // Transfer to a keyed table
+    forAll(listInterfaces, i)
     {
-        return mesh().lookupObject<BlendedInterfacialModel<modelType>>(name);
+        models.insert(listInterfaces[i], listModels.set(i, nullptr));
     }
-    else
+}
+
+
+
+template<class ModelType>
+void Foam::phaseSystem::generateInterfacialModels
+(
+    const word& modelName,
+    HashTable
+    <
+        autoPtr<ModelType>,
+        phaseInterfaceKey,
+        phaseInterfaceKey::hash
+    >& models
+) const
+{
+    generateInterfacialModels(interfacialDict<dictionary>(modelName), models);
+}
+
+
+template<class ValueType>
+void Foam::phaseSystem::generateInterfacialValues
+(
+    const dictionary& dict,
+    HashTable<ValueType, phaseInterfaceKey, phaseInterfaceKey::hash>& values
+) const
+{
+    forAllConstIter(dictionary, dict, iter)
     {
-        return
-            mesh().lookupObject<BlendedInterfacialModel<modelType>>
-            (
-                IOobject::groupName
-                (
-                    BlendedInterfacialModel<modelType>::typeName,
-                    key.otherName()
-                )
-            );
+        autoPtr<phaseInterface> interfacePtr =
+            phaseInterface::New(*this, iter().keyword());
+
+        const ValueType value(pTraits<ValueType>(iter().stream()));
+
+        values.insert(interfacePtr(), value);
     }
+}
+
+
+template<class ValueType>
+void Foam::phaseSystem::generateInterfacialValues
+(
+    const word& valueName,
+    HashTable<ValueType, phaseInterfaceKey, phaseInterfaceKey::hash>& values
+) const
+{
+    generateInterfacialValues(interfacialDict<ValueType>(valueName), values);
+}
+
+
+template<class ModelType>
+const Foam::dictionary& Foam::phaseSystem::modelSubDict
+(
+    const dictionary& dict
+)
+{
+    if (dict.size() != 1)
+    {
+        FatalErrorInFunction
+            << "Too many matching entries for construction of a "
+            << ModelType::typeName << nl << dict.toc()
+            << exit(FatalError);
+    }
+
+    if (!dict.first()->isDict())
+    {
+        FatalErrorInFunction
+            << "Non-sub-dictionary entries found for specification of a "
+            << ModelType::typeName
+            << exit(FatalError);
+    }
+
+    return dict.first()->dict();
+}
+
+
+template<class ModelType>
+bool Foam::phaseSystem::foundInterfacialModel
+(
+    const phaseInterface& interface
+) const
+{
+    return
+        mesh().foundObject<ModelType>
+        (
+            IOobject::groupName(ModelType::typeName, interface.name())
+        );
+}
+
+
+template<class ModelType>
+const ModelType& Foam::phaseSystem::lookupInterfacialModel
+(
+    const phaseInterface& interface
+) const
+{
+    return
+        mesh().lookupObject<ModelType>
+        (
+            IOobject::groupName(ModelType::typeName, interface.name())
+        );
 }
 
 
@@ -521,7 +541,6 @@ inline void addField
 {
     addField(group, name, tmp<GeoField>(field), fieldTable);
 }
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

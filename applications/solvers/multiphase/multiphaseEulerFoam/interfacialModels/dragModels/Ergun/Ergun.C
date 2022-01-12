@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Ergun.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,11 @@ namespace dragModels
 Foam::dragModels::Ergun::Ergun
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject)
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -62,14 +61,17 @@ Foam::dragModels::Ergun::~Ergun()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::Ergun::CdRe() const
 {
+    const phaseModel& dispersed = interface_.dispersed();
+    const phaseModel& continuous = interface_.continuous();
+
     return
         (4.0/3.0)
        *(
             150
-           *max(1 - pair_.continuous(), pair_.dispersed().residualAlpha())
-           /max(pair_.continuous(), pair_.continuous().residualAlpha())
+           *max(1 - continuous, dispersed.residualAlpha())
+           /max(continuous, continuous.residualAlpha())
           + 1.75
-           *pair_.Re()
+           *interface_.Re()
         );
 }
 

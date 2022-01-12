@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "heatTransferModel.H"
-#include "phasePair.H"
-#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -33,6 +31,7 @@ namespace Foam
 {
     defineTypeNameAndDebug(heatTransferModel, 0);
     defineBlendedInterfacialModelTypeNameAndDebug(heatTransferModel, 0);
+    defineSidedInterfacialModelTypeNameAndDebug(blendedHeatTransferModel, 0);
     defineRunTimeSelectionTable(heatTransferModel, dictionary);
 }
 
@@ -44,10 +43,9 @@ const Foam::dimensionSet Foam::heatTransferModel::dimK(1, -1, -3, -1, 0);
 Foam::heatTransferModel::heatTransferModel
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    pair_(pair),
     residualAlpha_
     (
         "residualAlpha",
@@ -55,9 +53,11 @@ Foam::heatTransferModel::heatTransferModel
         dict.lookupOrDefault<scalar>
         (
             "residualAlpha",
-            pair_.ordered()
-          ? pair_.dispersed().residualAlpha().value()
-          : pair_.phase1().residualAlpha().value()
+            sqrt
+            (
+                interface.phase1().residualAlpha().value()
+               *interface.phase2().residualAlpha().value()
+            )
         )
     )
 {}
@@ -75,6 +75,25 @@ Foam::tmp<Foam::volScalarField>
 Foam::heatTransferModel::K() const
 {
     return K(residualAlpha_.value());
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::blendedHeatTransferModel::K() const
+{
+    tmp<volScalarField> (heatTransferModel::*k)() const =
+        &heatTransferModel::K;
+    return evaluate(k, "K", heatTransferModel::dimK, false);
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::blendedHeatTransferModel::K
+(
+    const scalar residualAlpha
+) const
+{
+    tmp<volScalarField> (heatTransferModel::*k)(const scalar) const =
+        &heatTransferModel::K;
+    return evaluate(k, "Kf", heatTransferModel::dimK, false, residualAlpha);
 }
 
 

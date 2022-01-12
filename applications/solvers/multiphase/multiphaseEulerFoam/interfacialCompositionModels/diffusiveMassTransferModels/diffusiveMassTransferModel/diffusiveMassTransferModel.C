@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "diffusiveMassTransferModel.H"
-#include "phasePair.H"
-#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,6 +33,11 @@ namespace Foam
     defineBlendedInterfacialModelTypeNameAndDebug
     (
         diffusiveMassTransferModel,
+        0
+    );
+    defineSidedInterfacialModelTypeNameAndDebug
+    (
+        blendedDiffusiveMassTransferModel,
         0
     );
     defineRunTimeSelectionTable(diffusiveMassTransferModel, dictionary);
@@ -48,10 +51,8 @@ const Foam::dimensionSet Foam::diffusiveMassTransferModel::dimK(0, -2, 0, 0, 0);
 Foam::diffusiveMassTransferModel::diffusiveMassTransferModel
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
-:
-    pair_(pair)
 {}
 
 
@@ -59,6 +60,17 @@ Foam::diffusiveMassTransferModel::diffusiveMassTransferModel
 
 Foam::diffusiveMassTransferModel::~diffusiveMassTransferModel()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::blendedDiffusiveMassTransferModel::K() const
+{
+    tmp<volScalarField> (diffusiveMassTransferModel::*k)() const =
+        &diffusiveMassTransferModel::K;
+    return evaluate(k, "K", diffusiveMassTransferModel::dimK, false);
+}
 
 
 // ************************************************************************* //

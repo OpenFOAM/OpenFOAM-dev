@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,15 +43,12 @@ SourceFiles
 #ifndef Antal_H
 #define Antal_H
 
-#include "wallLubricationModel.H"
+#include "dispersedWallLubricationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace wallLubricationModels
 {
 
@@ -61,7 +58,7 @@ namespace wallLubricationModels
 
 class Antal
 :
-    public wallLubricationModel
+    public dispersedWallLubricationModel
 {
     // Private Data
 
@@ -80,11 +77,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         Antal
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

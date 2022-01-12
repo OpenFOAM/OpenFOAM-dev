@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "aerosolDrag.H"
-#include "phasePair.H"
 #include "swarmCorrection.H"
 #include "addToRunTimeSelectionTable.H"
 #include "constants.H"
@@ -49,11 +48,11 @@ using Foam::constant::mathematical::pi;
 Foam::dragModels::aerosolDrag::aerosolDrag
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dispersedDragModel(dict, interface, registerObject),
     A1_(dict.lookupOrDefault<scalar>("A1", 2.514)),
     A2_(dict.lookupOrDefault<scalar>("A2", 0.8)),
     A3_(dict.lookupOrDefault<scalar>("A3", 0.55)),
@@ -71,9 +70,9 @@ Foam::dragModels::aerosolDrag::~aerosolDrag()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::aerosolDrag::CdRe() const
 {
-    const volScalarField& T = pair_.continuous().thermo().T();
-    const volScalarField& p = pair_.continuous().thermo().p();
-    tmp<volScalarField> td(pair_.dispersed().d());
+    const volScalarField& T = interface_.continuous().thermo().T();
+    const volScalarField& p = interface_.continuous().thermo().p();
+    tmp<volScalarField> td(interface_.dispersed().d());
     const volScalarField& d = td();
 
     const volScalarField lambda(k*T/(sqrt(2.0)*pi*p*sqr(sigma_)));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,12 +44,11 @@ SourceFiles
 #include "hashedWordList.H"
 #include "rhoReactionThermo.H"
 #include "runTimeSelectionTables.H"
+#include "sidedPhaseInterface.H"
+#include "SidedInterfacialModel.H"
 
 namespace Foam
 {
-
-class phaseModel;
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                   Class interfaceCompositionModel Declaration
@@ -59,20 +58,14 @@ class interfaceCompositionModel
 {
     // Private data
 
-        //- Phase pair
-        const phasePair& pair_;
+        //- Interface
+        const sidedPhaseInterface interface_;
 
         //- Names of the transferring species
         const hashedWordList species_;
 
         //- Lewis number
         const dimensionedScalar Le_;
-
-        //- Phase
-        const phaseModel& phase_;
-
-        //- Other phase
-        const phaseModel& otherPhase_;
 
         //- Multi-component thermo model for this side of the interface
         const rhoReactionThermo& thermo_;
@@ -96,19 +89,19 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair
+                const phaseInterface& interface
             ),
-            (dict, pair)
+            (dict, interface)
         );
 
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         interfaceCompositionModel
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -121,7 +114,8 @@ public:
         static autoPtr<interfaceCompositionModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface,
+            const bool outer=true
         );
 
 
@@ -129,8 +123,8 @@ public:
 
         // Access
 
-            //- Return the phase pair
-            inline const phasePair& pair() const;
+            //- Return the interface
+            inline const sidedPhaseInterface& interface() const;
 
             //- Return the transferring species names
             inline const hashedWordList& species() const;
@@ -191,6 +185,34 @@ public:
 
         //- Update the composition
         virtual void update(const volScalarField& Tf) = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                 Class sidedInterfaceCompositionModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class sidedInterfaceCompositionModel
+:
+    public SidedInterfacialModel<interfaceCompositionModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            SidedInterfacialModel<interfaceCompositionModel>::
+            SidedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<sidedInterfaceCompositionModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ SourceFiles
 #ifndef aerosolDrag_H
 #define aerosolDrag_H
 
-#include "dragModel.H"
+#include "dispersedDragModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -85,7 +85,7 @@ namespace dragModels
 
 class aerosolDrag
 :
-    public dragModel
+    public dispersedDragModel
 {
     // Private Data
 
@@ -110,11 +110,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         aerosolDrag
         (
             const dictionary& dict,
-            const phasePair& pair,
+            const phaseInterface& interface,
             const bool registerObject
         );
 

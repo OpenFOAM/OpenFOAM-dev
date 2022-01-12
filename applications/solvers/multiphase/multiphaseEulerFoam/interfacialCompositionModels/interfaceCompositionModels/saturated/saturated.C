@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "saturated.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -65,10 +64,10 @@ Foam::interfaceCompositionModels::saturated::wRatioByP() const
 Foam::interfaceCompositionModels::saturated::saturated
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    interfaceCompositionModel(dict, pair),
+    interfaceCompositionModel(dict, interface),
     saturatedName_(species()[0]),
     saturatedIndex_(composition().species()[saturatedName_]),
     saturationModel_
@@ -76,7 +75,8 @@ Foam::interfaceCompositionModels::saturated::saturated
         saturationModel::New
         (
             dict.subDict("saturationPressure"),
-            pair
+            interface,
+            false
         )
     )
 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,9 @@ SourceFiles
 #ifndef GidaspowErgunWenYu_H
 #define GidaspowErgunWenYu_H
 
-#include "dragModel.H"
+#include "dispersedDragModel.H"
+#include "Ergun.H"
+#include "WenYu.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,24 +54,21 @@ namespace Foam
 namespace dragModels
 {
 
-class Ergun;
-class WenYu;
-
 /*---------------------------------------------------------------------------*\
                      Class GidaspowErgunWenYu Declaration
 \*---------------------------------------------------------------------------*/
 
 class GidaspowErgunWenYu
 :
-    public dragModel
+    public dispersedDragModel
 {
     // Private Data
 
         //- Ergun drag model
-        autoPtr<Ergun> Ergun_;
+        Ergun Ergun_;
 
         //- Wen Yu drag model
-        autoPtr<WenYu> WenYu_;
+        WenYu WenYu_;
 
 
 public:
@@ -80,11 +79,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and an ordered phase pair
+        //- Construct from a dictionary and an interface
         GidaspowErgunWenYu
         (
-            const dictionary& interfaceDict,
-            const phasePair& pair,
+            const dictionary& dict,
+            const phaseInterface& interface,
             const bool registerObject
         );
 

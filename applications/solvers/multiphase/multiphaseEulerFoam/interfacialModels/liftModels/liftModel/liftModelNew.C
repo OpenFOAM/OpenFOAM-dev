@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,20 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "liftModel.H"
-#include "phasePair.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::liftModel> Foam::liftModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface,
+    const bool outer
 )
 {
-    word liftModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        outer ? interface.fluid().modelSubDict<liftModel>(dict) : dict;
+
+    const word liftModelType(modelDict.lookup("type"));
 
     Info<< "Selecting liftModel for "
-        << pair << ": " << liftModelType << endl;
+        << interface.name() << ": " << liftModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(liftModelType);
@@ -52,7 +56,17 @@ Foam::autoPtr<Foam::liftModel> Foam::liftModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(modelDict, interface);
+}
+
+
+Foam::autoPtr<Foam::blendedLiftModel> Foam::blendedLiftModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return autoPtr<blendedLiftModel>(new blendedLiftModel(dict, interface));
 }
 
 

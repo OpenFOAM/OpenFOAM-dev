@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,27 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "phaseInterface.H"
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::phaseModel& Foam::phasePair::phase1() const
+inline const Foam::phaseModel& Foam::phaseInterface::phase1() const
 {
     return phase1_;
 }
 
 
-inline const Foam::phaseModel& Foam::phasePair::phase2() const
+inline const Foam::phaseModel& Foam::phaseInterface::phase2() const
 {
     return phase2_;
 }
 
 
-inline bool Foam::phasePair::contains(const phaseModel& phase) const
+inline bool Foam::phaseInterface::contains(const phaseModel& phase) const
 {
     return &phase1_ == &phase || & phase2_ == &phase;
 }
 
 
-inline const Foam::phaseModel& Foam::phasePair::otherPhase
+inline const Foam::phaseModel& Foam::phaseInterface::otherPhase
 (
     const phaseModel& phase
 ) const
@@ -59,7 +61,7 @@ inline const Foam::phaseModel& Foam::phasePair::otherPhase
     else
     {
         FatalErrorInFunction
-            << "this phasePair does not contain phase " << phase.name()
+            << "this phaseInterface does not contain phase " << phase.name()
             << exit(FatalError);
 
         return phase;
@@ -67,7 +69,7 @@ inline const Foam::phaseModel& Foam::phasePair::otherPhase
 }
 
 
-inline Foam::label Foam::phasePair::index(const phaseModel& phase) const
+inline Foam::label Foam::phaseInterface::index(const phaseModel& phase) const
 {
     if (&phase1_ == &phase)
     {
@@ -80,7 +82,7 @@ inline Foam::label Foam::phasePair::index(const phaseModel& phase) const
     else
     {
         FatalErrorInFunction
-            << "this phasePair does not contain phase " << phase.name()
+            << "this phaseInterface does not contain phase " << phase.name()
             << exit(FatalError);
 
         return -1;
@@ -88,23 +90,30 @@ inline Foam::label Foam::phasePair::index(const phaseModel& phase) const
 }
 
 
-inline const Foam::uniformDimensionedVectorField& Foam::phasePair::g() const
+inline const Foam::phaseSystem& Foam::phaseInterface::fluid() const
+{
+    return phase1().fluid();
+}
+
+
+inline const Foam::fvMesh& Foam::phaseInterface::mesh() const
+{
+    return phase1().mesh();
+}
+
+
+inline const Foam::uniformDimensionedVectorField&
+Foam::phaseInterface::g() const
 {
     return g_;
 }
 
 
-inline const Foam::fvMesh& Foam::phasePair::mesh() const
-{
-    return phase1_.mesh();
-}
-
-
 // * * * * * * * * * * * * * * * * Iterators * * * * * * * * * * * * * * * * //
 
-inline Foam::phasePair::const_iterator::const_iterator
+inline Foam::phaseInterface::const_iterator::const_iterator
 (
-    const phasePair& pair,
+    const phaseInterface& pair,
     const label index
 )
 :
@@ -113,19 +122,22 @@ inline Foam::phasePair::const_iterator::const_iterator
 {}
 
 
-inline Foam::phasePair::const_iterator::const_iterator(const phasePair& pair)
+inline Foam::phaseInterface::const_iterator::const_iterator
+(
+    const phaseInterface& pair
+)
 :
     const_iterator(pair, 0)
 {}
 
 
-inline Foam::label Foam::phasePair::const_iterator::index() const
+inline Foam::label Foam::phaseInterface::const_iterator::index() const
 {
     return index_;
 }
 
 
-inline bool Foam::phasePair::const_iterator::operator==
+inline bool Foam::phaseInterface::const_iterator::operator==
 (
     const const_iterator& iter
 ) const
@@ -134,7 +146,7 @@ inline bool Foam::phasePair::const_iterator::operator==
 }
 
 
-inline bool Foam::phasePair::const_iterator::operator!=
+inline bool Foam::phaseInterface::const_iterator::operator!=
 (
     const const_iterator& iter
 ) const
@@ -144,7 +156,7 @@ inline bool Foam::phasePair::const_iterator::operator!=
 
 
 inline const Foam::phaseModel&
-Foam::phasePair::const_iterator::operator*() const
+Foam::phaseInterface::const_iterator::operator*() const
 {
     if (index_ == 0)
     {
@@ -158,14 +170,14 @@ Foam::phasePair::const_iterator::operator*() const
 
 
 inline const Foam::phaseModel&
-Foam::phasePair::const_iterator::operator()() const
+Foam::phaseInterface::const_iterator::operator()() const
 {
     return operator*();
 }
 
 
 inline const Foam::phaseModel&
-Foam::phasePair::const_iterator::otherPhase() const
+Foam::phaseInterface::const_iterator::otherPhase() const
 {
     if (index_ == 0)
     {
@@ -178,16 +190,16 @@ Foam::phasePair::const_iterator::otherPhase() const
 }
 
 
-inline Foam::phasePair::const_iterator&
-Foam::phasePair::const_iterator::operator++()
+inline Foam::phaseInterface::const_iterator&
+Foam::phaseInterface::const_iterator::operator++()
 {
     index_++;
     return *this;
 }
 
 
-inline Foam::phasePair::const_iterator
-Foam::phasePair::const_iterator::operator++(int)
+inline Foam::phaseInterface::const_iterator
+Foam::phaseInterface::const_iterator::operator++(int)
 {
     const_iterator old = *this;
     this->operator++();
@@ -195,25 +207,25 @@ Foam::phasePair::const_iterator::operator++(int)
 }
 
 
-inline Foam::phasePair::const_iterator Foam::phasePair::cbegin() const
+inline Foam::phaseInterface::const_iterator Foam::phaseInterface::cbegin() const
 {
     return const_iterator(*this);
 }
 
 
-inline Foam::phasePair::const_iterator Foam::phasePair::cend() const
+inline Foam::phaseInterface::const_iterator Foam::phaseInterface::cend() const
 {
     return const_iterator(*this, 2);
 }
 
 
-inline Foam::phasePair::const_iterator Foam::phasePair::begin() const
+inline Foam::phaseInterface::const_iterator Foam::phaseInterface::begin() const
 {
     return const_iterator(*this);
 }
 
 
-inline Foam::phasePair::const_iterator Foam::phasePair::end() const
+inline Foam::phaseInterface::const_iterator Foam::phaseInterface::end() const
 {
     return const_iterator(*this, 2);
 }

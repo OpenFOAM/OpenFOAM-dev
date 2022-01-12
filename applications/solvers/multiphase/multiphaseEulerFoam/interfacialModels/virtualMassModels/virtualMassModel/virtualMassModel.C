@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "virtualMassModel.H"
-#include "phasePair.H"
-#include "surfaceInterpolate.H"
-#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -45,7 +42,7 @@ const Foam::dimensionSet Foam::virtualMassModel::dimK(dimDensity);
 Foam::virtualMassModel::virtualMassModel
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
@@ -53,15 +50,14 @@ Foam::virtualMassModel::virtualMassModel
     (
         IOobject
         (
-            IOobject::groupName(typeName, pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh(),
+            IOobject::groupName(typeName, interface.name()),
+            interface.mesh().time().timeName(),
+            interface.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             registerObject
         )
-    ),
-    pair_(pair)
+    )
 {}
 
 
@@ -73,28 +69,21 @@ Foam::virtualMassModel::~virtualMassModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::virtualMassModel::Ki() const
-{
-    return Cvm()*pair_.continuous().rho();
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::virtualMassModel::K() const
-{
-    return pair_.dispersed()*Ki();
-}
-
-
-Foam::tmp<Foam::surfaceScalarField> Foam::virtualMassModel::Kf() const
-{
-    return
-        fvc::interpolate(pair_.dispersed())*fvc::interpolate(Ki());
-}
-
-
 bool Foam::virtualMassModel::writeData(Ostream& os) const
 {
     return os.good();
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::blendedVirtualMassModel::K() const
+{
+    return evaluate(&virtualMassModel::K, "K", virtualMassModel::dimK, false);
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::blendedVirtualMassModel::Kf() const
+{
+    return evaluate(&virtualMassModel::Kf, "Kf", virtualMassModel::dimK, false);
 }
 
 

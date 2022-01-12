@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,16 +34,13 @@ SourceFiles
 #ifndef wallDampedLift_H
 #define wallDampedLift_H
 
-#include "liftModel.H"
+#include "dispersedLiftModel.H"
 #include "wallDampingModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace liftModels
 {
 
@@ -53,7 +50,7 @@ namespace liftModels
 
 class wallDamped
 :
-    public liftModel
+    public dispersedLiftModel
 {
     // Private Data
 
@@ -72,11 +69,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         wallDamped
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -86,7 +83,7 @@ public:
 
     // Member Functions
 
-        //- Return lift coefficient
+        //- Lift coefficient
         virtual tmp<volScalarField> Cl() const;
 
         //- Return phase-intensive lift force

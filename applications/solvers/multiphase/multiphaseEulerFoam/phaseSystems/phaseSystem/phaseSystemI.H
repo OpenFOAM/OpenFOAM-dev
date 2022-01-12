@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,13 +98,6 @@ inline Foam::phaseSystem::phaseModelPartialList&
 Foam::phaseSystem::multiComponentPhases()
 {
     return multiComponentPhaseModels_;
-}
-
-
-inline const Foam::phaseSystem::phasePairTable&
-Foam::phaseSystem::phasePairs() const
-{
-    return phasePairs_;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -304,10 +304,7 @@ void Foam::phaseSystem::solve
 
                         cAlphaTable::const_iterator cAlpha
                         (
-                            cAlphas_.find
-                            (
-                                phasePairKey(phase.name(), phase2.name())
-                            )
+                            cAlphas_.find(phaseInterface(phase, phase2))
                         );
 
                         if (cAlpha != cAlphas_.end())
@@ -348,10 +345,7 @@ void Foam::phaseSystem::solve
 
                         cAlphaTable::const_iterator cAlpha
                         (
-                            cAlphas_.find
-                            (
-                                phasePairKey(phase.name(), phase2.name())
-                            )
+                            cAlphas_.find(phaseInterface(phase, phase2))
                         );
 
                         if (cAlpha != cAlphas_.end())

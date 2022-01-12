@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,11 +65,10 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "dispersedPhaseInterface.H"
 
 namespace Foam
 {
-
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                       Class wallDampingModel Declaration
@@ -83,8 +82,8 @@ protected:
 
     // Protected data
 
-        //- Phase pair
-        const phasePair& pair_;
+        //- Interface
+        const dispersedPhaseInterface interface_;
 
         //- Diameter coefficient
         const dimensionedScalar Cd_;
@@ -117,25 +116,19 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair
+                const phaseInterface& interface
             ),
-            (dict, pair)
+            (dict, interface)
         );
-
-
-    // Static Data Members
-
-        //- Coefficient dimensions
-        static const dimensionSet dimF;
 
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         wallDampingModel
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -148,7 +141,7 @@ public:
         static autoPtr<wallDampingModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

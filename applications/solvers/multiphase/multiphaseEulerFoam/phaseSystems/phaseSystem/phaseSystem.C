@@ -25,7 +25,6 @@ License
 
 #include "phaseSystem.H"
 #include "surfaceTensionModel.H"
-#include "aspectRatioModel.H"
 #include "surfaceInterpolate.H"
 #include "fvcDdt.H"
 #include "localEulerDdtScheme.H"
@@ -37,7 +36,6 @@ License
 #include "alphaContactAngleFvPatchScalarField.H"
 #include "unitConversion.H"
 #include "dragModel.H"
-#include "BlendedInterfacialModel.H"
 #include "movingWallVelocityFvPatchVectorField.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
@@ -76,56 +74,6 @@ Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::calcPhi
     }
 
     return tmpPhi;
-}
-
-
-void Foam::phaseSystem::generatePairs
-(
-    const dictTable& modelDicts
-)
-{
-    forAllConstIter(dictTable, modelDicts, iter)
-    {
-        const phasePairKey& key = iter.key();
-
-        // pair already exists
-        if (phasePairs_.found(key))
-        {}
-
-        // new ordered pair
-        else if (key.ordered())
-        {
-            phasePairs_.insert
-            (
-                key,
-                autoPtr<phasePair>
-                (
-                    new orderedPhasePair
-                    (
-                        phaseModels_[key.first()],
-                        phaseModels_[key.second()]
-                    )
-                )
-            );
-        }
-
-        // new unordered pair
-        else
-        {
-            phasePairs_.insert
-            (
-                key,
-                autoPtr<phasePair>
-                (
-                    new phasePair
-                    (
-                        phaseModels_[key.first()],
-                        phaseModels_[key.second()]
-                    )
-                )
-            );
-        }
-    }
 }
 
 
@@ -240,56 +188,93 @@ void Foam::phaseSystem::correctContactAngle
 (
     const phaseModel& phase1,
     const phaseModel& phase2,
-    surfaceVectorField::Boundary& nHatb
+    surfaceVectorField::Boundary& nHatbf
 ) const
 {
-    const volScalarField::Boundary& gbf
-        = phase1.boundaryField();
+    const volScalarField& a1 = phase1;
+    const volScalarField& a2 = phase2;
+
+    const volScalarField::Boundary& a1bf = a1.boundaryField();
+    const volScalarField::Boundary& a2bf = a2.boundaryField();
 
     const fvBoundaryMesh& boundary = mesh_.boundary();
 
     forAll(boundary, patchi)
     {
-        if (isA<alphaContactAngleFvPatchScalarField>(gbf[patchi]))
+        const fvPatchScalarField& a1p = a1bf[patchi];
+        const fvPatchScalarField& a2p = a2bf[patchi];
+
+        const bool a1pIsCa = isA<alphaContactAngleFvPatchScalarField>(a1p);
+        const bool a2pIsCa = isA<alphaContactAngleFvPatchScalarField>(a2p);
+
+        if (a1pIsCa || a2pIsCa)
         {
-            const alphaContactAngleFvPatchScalarField& acap =
-                refCast<const alphaContactAngleFvPatchScalarField>(gbf[patchi]);
-
-            vectorField& nHatPatch = nHatb[patchi];
-
-            vectorField AfHatPatch
-            (
-                mesh_.Sf().boundaryField()[patchi]
-               /mesh_.magSf().boundaryField()[patchi]
-            );
-
-            alphaContactAngleFvPatchScalarField::thetaPropsTable::
-                const_iterator tp =
-                    acap.thetaProps()
-                   .find(phasePairKey(phase1.name(), phase2.name()));
-
-            if (tp == acap.thetaProps().end())
+            if (a1pIsCa != a2pIsCa)
             {
                 FatalErrorInFunction
-                    << "Cannot find interface "
-                    << phasePairKey(phase1.name(), phase2.name())
-                    << "\n    in table of theta properties for patch "
-                    << acap.patch().name()
+                    << alphaContactAngleFvPatchScalarField::typeName
+                    << " boundary condition specified on patch "
+                    << boundary[patchi].name() << " for "
+                    << (a1pIsCa ? a1.name() : a2.name()) << " but not for "
+                    << (a2pIsCa ? a1.name() : a2.name())
                     << exit(FatalError);
             }
 
-            bool matched = (tp.key().first() == phase1.name());
+            const alphaContactAngleFvPatchScalarField& a1ca =
+                refCast<const alphaContactAngleFvPatchScalarField>(a1p);
+            const alphaContactAngleFvPatchScalarField& a2ca =
+                refCast<const alphaContactAngleFvPatchScalarField>(a2p);
 
-            scalar theta0 = degToRad(tp().theta0(matched));
-            scalarField theta(boundary[patchi].size(), theta0);
+            const bool a1caHasProps = a1ca.thetaProps().found(phase2.name());
+            const bool a2caHasProps = a2ca.thetaProps().found(phase1.name());
 
-            scalar uTheta = tp().uTheta();
+            if (!a1caHasProps && !a2caHasProps)
+            {
+                FatalErrorInFunction
+                    << "Neither "
+                    << alphaContactAngleFvPatchScalarField::typeName
+                    << " boundary condition specified on patch "
+                    << boundary[patchi].name()
+                    << " for " << a1.name() << " and " << a2.name()
+                    << " contains properties for the other phase"
+                    << exit(FatalError);
+            }
+
+            if
+            (
+                a1caHasProps && a2caHasProps
+             && a1ca.thetaProps()[phase2.name()]
+             != a2ca.thetaProps()[phase1.name()].reversed()
+            )
+            {
+                FatalErrorInFunction
+                    << "The "
+                    << alphaContactAngleFvPatchScalarField::typeName
+                    << " boundary conditions specified on patch "
+                    << boundary[patchi].name()
+                    << " for " << a1.name() << " and " << a2.name()
+                    << " contain inconsistent properties"
+                    << exit(FatalError);
+            }
+
+            const alphaContactAngleFvPatchScalarField::contactAngleProperties
+                tp = a1caHasProps
+              ? a1ca.thetaProps()[phase2.name()]
+              : a2ca.thetaProps()[phase1.name()].reversed();
+
+            const vectorField np(mesh_.boundary()[patchi].nf());
+
+            vectorField& nHatp = nHatbf[patchi];
+
+            // Calculate the contact angle
+            scalarField theta(np.size(), degToRad(tp.theta0()));
 
             // Calculate the dynamic contact angle if required
-            if (uTheta > small)
+            if (tp.dynamic())
             {
-                scalar thetaA = degToRad(tp().thetaA(matched));
-                scalar thetaR = degToRad(tp().thetaR(matched));
+                const scalar uTheta = tp.uTheta();
+                const scalar thetaA = degToRad(tp.thetaA());
+                const scalar thetaR = degToRad(tp.thetaR());
 
                 // Calculated the component of the velocity parallel to the wall
                 vectorField Uwall
@@ -297,46 +282,33 @@ void Foam::phaseSystem::correctContactAngle
                     phase1.U()().boundaryField()[patchi].patchInternalField()
                   - phase1.U()().boundaryField()[patchi]
                 );
-                Uwall -= (AfHatPatch & Uwall)*AfHatPatch;
+                Uwall -= (np & Uwall)*np;
 
                 // Find the direction of the interface parallel to the wall
-                vectorField nWall
-                (
-                    nHatPatch - (AfHatPatch & nHatPatch)*AfHatPatch
-                );
-
-                // Normalise nWall
+                vectorField nWall(nHatp - (np & nHatp)*np);
                 nWall /= (mag(nWall) + small);
 
                 // Calculate Uwall resolved normal to the interface parallel to
                 // the interface
-                scalarField uwall(nWall & Uwall);
+                const scalarField uwall(nWall & Uwall);
 
                 theta += (thetaA - thetaR)*tanh(uwall/uTheta);
             }
 
-
-            // Reset nHatPatch to correspond to the contact angle
-
-            scalarField a12(nHatPatch & AfHatPatch);
-
-            scalarField b1(cos(theta));
-
-            scalarField b2(nHatPatch.size());
-
+            // Reset nHatp to correspond to the contact angle
+            const scalarField a12(nHatp & np);
+            const scalarField b1(cos(theta));
+            scalarField b2(nHatp.size());
             forAll(b2, facei)
             {
                 b2[facei] = cos(acos(a12[facei]) - theta[facei]);
             }
+            const scalarField det(1 - a12*a12);
+            const scalarField a((b1 - a12*b2)/det);
+            const scalarField b((b2 - a12*b1)/det);
 
-            scalarField det(1 - a12*a12);
-
-            scalarField a((b1 - a12*b2)/det);
-            scalarField b((b2 - a12*b1)/det);
-
-            nHatPatch = a*AfHatPatch + b*nHatPatch;
-
-            nHatPatch /= (mag(nHatPatch) + deltaN_.value());
+            nHatp = a*np + b*nHatp;
+            nHatp /= (mag(nHatp) + deltaN_.value());
         }
     }
 }
@@ -402,8 +374,6 @@ Foam::phaseSystem::phaseSystem
 
     MRF_(mesh_),
 
-    cAlphas_(lookupOrDefault("interfaceCompression", cAlphaTable())),
-
     deltaN_
     (
         "deltaN",
@@ -456,23 +426,14 @@ Foam::phaseSystem::phaseSystem
     // Write phi
     phi_.writeOpt() = IOobject::AUTO_WRITE;
 
-    // Blending methods
-    forAllConstIter(dictionary, subDict("blending"), iter)
+    // Interface compression coefficients
+    if (this->found("interfaceCompression"))
     {
-        blendingMethods_.insert
-        (
-            iter().keyword(),
-            blendingMethod::New
-            (
-                iter().keyword(),
-                iter().dict(),
-                phaseModels_.toc()
-            )
-        );
+        generateInterfacialValues("interfaceCompression", cAlphas_);
     }
 
-    // Sub-models
-    generatePairsAndSubModels("surfaceTension", surfaceTensionModels_);
+    // Surface tension models
+    generateInterfacialModels("surfaceTension", surfaceTensionModels_);
 
     // Update motion fields
     correctKinematics();
@@ -565,7 +526,7 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::phaseSystem::sigma(const phasePairKey& key) const
+Foam::phaseSystem::sigma(const phaseInterfaceKey& key) const
 {
     if (surfaceTensionModels_.found(key))
     {
@@ -584,7 +545,7 @@ Foam::phaseSystem::sigma(const phasePairKey& key) const
 
 
 Foam::tmp<Foam::scalarField>
-Foam::phaseSystem::sigma(const phasePairKey& key, label patchi) const
+Foam::phaseSystem::sigma(const phaseInterfaceKey& key, const label patchi) const
 {
     if (surfaceTensionModels_.found(key))
     {
@@ -628,18 +589,12 @@ Foam::phaseSystem::nearInterface() const
 
 Foam::tmp<Foam::volScalarField> Foam::phaseSystem::dmdtf
 (
-    const phasePairKey& key
+    const phaseInterfaceKey& key
 ) const
 {
-    const phasePair pair
-    (
-        phaseModels_[key.first()],
-        phaseModels_[key.second()]
-    );
-
     return volScalarField::New
     (
-        IOobject::groupName("dmdtf", pair.name()),
+        IOobject::groupName("dmdtf", phaseInterface(*this, key).name()),
         mesh(),
         dimensionedScalar(dimDensity/dimTime, 0)
     );
@@ -705,14 +660,12 @@ Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::surfaceTension
 
         if (&phase2 != &phase1)
         {
-            phasePairKey key12(phase1.name(), phase2.name());
+            const phaseInterface interface(phase1, phase2);
 
-            cAlphaTable::const_iterator cAlpha(cAlphas_.find(key12));
-
-            if (cAlpha != cAlphas_.end())
+            if (cAlphas_.found(interface))
             {
                 tSurfaceTension.ref() +=
-                    fvc::interpolate(sigma(key12)*K(phase1, phase2))
+                    fvc::interpolate(sigma(interface)*K(phase1, phase2))
                    *(
                         fvc::interpolate(phase2)*fvc::snGrad(phase1)
                       - fvc::interpolate(phase1)*fvc::snGrad(phase2)

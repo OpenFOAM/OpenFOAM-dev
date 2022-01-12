@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,9 +40,6 @@ SourceFiles
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace liftModels
 {
 
@@ -54,6 +51,14 @@ class noLift
 :
     public liftModel
 {
+protected:
+
+    // Protected data
+
+        //- Interface
+        const phaseInterface interface_;
+
+
 public:
 
     //- Runtime type information
@@ -62,11 +67,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         noLift
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -76,13 +81,10 @@ public:
 
     // Member Functions
 
-        //- Lift coefficient
-        virtual tmp<volScalarField> Cl() const;
-
-        //- Lift force
+        //- Return lift force
         virtual tmp<volVectorField> F() const;
 
-        //- Lift force on faces
+        //- Return face lift force
         virtual tmp<surfaceScalarField> Ff() const;
 };
 

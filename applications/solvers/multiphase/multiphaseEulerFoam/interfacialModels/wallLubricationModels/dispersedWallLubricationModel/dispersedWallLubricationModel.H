@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,68 +22,78 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::orderedPhasePair
+    Foam::dispersedWallLubricationModel
 
 Description
+    Model for the wall lubrication force between two phases where one phase can
+    be considered dispersed in the other
 
 SourceFiles
-    orderedPhasePair.C
+    dispersedWallLubricationModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef orderedPhasePair_H
-#define orderedPhasePair_H
-
-#include "phasePair.H"
+#ifndef dispersedWallLubricationModel_H
+#define dispersedWallLubricationModel_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "wallLubricationModel.H"
+#include "dispersedPhaseInterface.H"
+
 namespace Foam
+{
+namespace wallLubricationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class orderedPhasePair Declaration
+                          Class dispersedWallLubricationModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class orderedPhasePair
+class dispersedWallLubricationModel
 :
-    public phasePair
+    public wallLubricationModel
 {
+protected:
+
+    // Protected data
+
+        //- Interface
+        const dispersedPhaseInterface interface_;
+
 
 public:
 
     // Constructors
 
-        //- Construct from two phases and gravity
-        orderedPhasePair
+        // Construct from a dictionary and an interface
+        dispersedWallLubricationModel
         (
-            const phaseModel& dispersed,
-            const phaseModel& continuous
+            const dictionary& dict,
+            const phaseInterface& interface
         );
 
 
     //- Destructor
-    virtual ~orderedPhasePair();
+    virtual ~dispersedWallLubricationModel();
 
 
     // Member Functions
 
-        //- Dispersed phase
-        virtual const phaseModel& dispersed() const;
+        //- Return phase-intensive wallLubrication force
+        virtual tmp<volVectorField> Fi() const = 0;
 
-        //- Continuous phase
-        virtual const phaseModel& continuous() const;
+        //- Return wallLubrication force
+        virtual tmp<volVectorField> F() const;
 
-        //- Pair name
-        virtual word name() const;
-
-        //- Other pair name
-        virtual word otherName() const;
+        //- Return face wallLubrication force
+        virtual tmp<surfaceScalarField> Ff() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace dragModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

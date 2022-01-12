@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallDampingModel.H"
-#include "phasePair.H"
 #include "surfaceInterpolate.H"
 #include "wallFvPatch.H"
 
@@ -36,19 +35,20 @@ namespace Foam
     defineRunTimeSelectionTable(wallDampingModel, dictionary);
 }
 
-const Foam::dimensionSet Foam::wallDampingModel::dimF(1, -2, -2, 0, 0);
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::wallDampingModel::wallDampingModel
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    wallDependentModel(pair.phase1().mesh()),
-    pair_(pair),
+    wallDependentModel(interface.mesh()),
+    interface_
+    (
+        interface.modelCast<wallDampingModel, dispersedPhaseInterface>()
+    ),
     Cd_("Cd", dimless, dict),
     zeroWallDist_
     (

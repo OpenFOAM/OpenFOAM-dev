@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,8 @@ License
 #include "TwoResistanceHeatTransferPhaseSystem.H"
 #include "PhaseTransferPhaseSystem.H"
 #include "InterfaceCompositionPhaseChangePhaseSystem.H"
-#include "PopulationBalancePhaseSystem.H"
 #include "ThermalPhaseChangePhaseSystem.H"
-
+#include "PopulationBalancePhaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

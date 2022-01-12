@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallDampedLift.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,16 +43,24 @@ namespace liftModels
 Foam::liftModels::wallDamped::wallDamped
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    liftModel(dict, pair),
-    liftModel_(liftModel::New(dict.subDict("lift"), pair)),
+    dispersedLiftModel(dict, interface),
+    liftModel_(liftModel::New(dict.subDict("lift"), interface, false)),
     wallDampingModel_
     (
-        wallDampingModel::New(dict.subDict("wallDamping"), pair)
+        wallDampingModel::New(dict.subDict("wallDamping"), interface)
     )
-{}
+{
+    if (!isA<dispersedLiftModel>(liftModel_()))
+    {
+        FatalErrorInFunction
+            << "The sub-lift-model of a " << type()
+            << " lift model must be for a dispersed configuration"
+            << exit(FatalError);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -66,13 +73,17 @@ Foam::liftModels::wallDamped::~wallDamped()
 
 Foam::tmp<Foam::volScalarField> Foam::liftModels::wallDamped::Cl() const
 {
-    return wallDampingModel_->damping()*liftModel_->Cl();
+    return
+        wallDampingModel_->damping()
+       *refCast<const dispersedLiftModel>(liftModel_()).Cl();
 }
 
 
 Foam::tmp<Foam::volVectorField> Foam::liftModels::wallDamped::Fi() const
 {
-    return wallDampingModel_->damping()*liftModel_->Fi();
+    return
+        wallDampingModel_->damping()
+       *refCast<const dispersedLiftModel>(liftModel_()).Fi();
 }
 
 

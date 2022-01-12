@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LopezDeBertodano.H"
-#include "phasePair.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -50,10 +49,10 @@ namespace turbulentDispersionModels
 Foam::turbulentDispersionModels::LopezDeBertodano::LopezDeBertodano
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    turbulentDispersionModel(dict, pair),
+    dispersedTurbulentDispersionModel(dict, interface),
     Ctd_("Ctd", dimless, dict)
 {}
 
@@ -71,7 +70,7 @@ Foam::turbulentDispersionModels::LopezDeBertodano::D() const
 {
     return
         Ctd_
-       *pair_.continuous().rho()
+       *interface_.continuous().rho()
        *continuousTurbulence().k();
 }
 

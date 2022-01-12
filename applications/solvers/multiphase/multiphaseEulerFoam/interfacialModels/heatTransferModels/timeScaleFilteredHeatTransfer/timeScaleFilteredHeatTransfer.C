@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "timeScaleFilteredHeatTransfer.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,13 +49,22 @@ Foam::heatTransferModels::timeScaleFilteredHeatTransfer::
 timeScaleFilteredHeatTransfer
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    heatTransferModel(dict.subDict("heatTransferModel"), pair),
+    heatTransferModel(dict.subDict("heatTransferModel"), interface),
+    interface_
+    (
+        interface.modelCast<heatTransferModel, dispersedPhaseInterface>()
+    ),
     heatTransferModel_
     (
-        heatTransferModel::New(dict.subDict("heatTransferModel"), pair)
+        heatTransferModel::New
+        (
+            dict.subDict("heatTransferModel"),
+            interface,
+            false
+        )
     ),
     minRelaxTime_("minRelaxTime", dimTime, dict)
 {}
@@ -79,9 +87,9 @@ Foam::heatTransferModels::timeScaleFilteredHeatTransfer::K
 {
     const volScalarField limit
     (
-        max(pair_.dispersed(), residualAlpha)
-       *pair_.dispersed().thermo().Cp()
-       *pair_.dispersed().rho()
+        max(interface_.dispersed(), residualAlpha)
+       *interface_.dispersed().thermo().Cp()
+       *interface_.dispersed().rho()
        /minRelaxTime_
     );
 

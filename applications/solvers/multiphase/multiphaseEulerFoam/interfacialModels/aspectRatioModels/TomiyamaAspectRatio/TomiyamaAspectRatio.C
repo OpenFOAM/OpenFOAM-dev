@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "TomiyamaAspectRatio.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,11 +48,11 @@ namespace aspectRatioModels
 Foam::aspectRatioModels::TomiyamaAspectRatio::TomiyamaAspectRatio
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    VakhrushevEfremov(dict, pair),
-    wallDependentModel(pair.phase1().mesh())
+    VakhrushevEfremov(dict, interface),
+    wallDependentModel(interface_.mesh())
 {}
 
 
@@ -70,7 +69,7 @@ Foam::aspectRatioModels::TomiyamaAspectRatio::E() const
 {
     return
         VakhrushevEfremov::E()
-       *max(1 - 0.35*yWall()/pair_.dispersed().d(), scalar(0.65));
+       *max(1 - 0.35*yWall()/interface_.dispersed().d(), scalar(0.65));
 }
 
 

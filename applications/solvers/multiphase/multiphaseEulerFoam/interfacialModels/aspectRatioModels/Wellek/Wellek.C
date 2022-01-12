@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Wellek.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,10 @@ namespace aspectRatioModels
 Foam::aspectRatioModels::Wellek::Wellek
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    aspectRatioModel(dict, pair)
+    aspectRatioModel(dict, interface)
 {}
 
 
@@ -67,7 +66,7 @@ Foam::aspectRatioModels::Wellek::~Wellek()
 Foam::tmp<Foam::volScalarField>
 Foam::aspectRatioModels::Wellek::E() const
 {
-    return scalar(1)/(1 + 0.163*pow(pair_.Eo(), 0.757));
+    return scalar(1)/(1 + 0.163*pow(interface_.Eo(), 0.757));
 }
 
 

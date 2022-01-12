@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,26 +40,23 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "phaseInterface.H"
 
 namespace Foam
 {
-
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                      Class surfaceTensionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class surfaceTensionModel
-:
-    public regIOobject
 {
 protected:
 
     // Protected data
 
-        //- Phase pair
-        const phasePair& pair_;
+        //- Interface
+        const phaseInterface interface_;
 
 
 public:
@@ -76,10 +73,9 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const phasePair& pair,
-            const bool registerObject
+            const phaseInterface& interface
         ),
-        (dict, pair, registerObject)
+        (dict, interface)
     );
 
 
@@ -91,12 +87,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         surfaceTensionModel
         (
             const dictionary& dict,
-            const phasePair& pair,
-            const bool registerObject
+            const phaseInterface& interface
         );
 
 
@@ -109,7 +104,8 @@ public:
         static autoPtr<surfaceTensionModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface,
+            const bool outer=true
         );
 
 
@@ -119,10 +115,7 @@ public:
         virtual tmp<volScalarField> sigma() const = 0;
 
         //- Surface tension for a patch
-        virtual tmp<scalarField> sigma(label patchi) const = 0;
-
-        //- Dummy write for regIOobject
-        bool writeData(Ostream& os) const;
+        virtual tmp<scalarField> sigma(const label patchi) const = 0;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "TomiyamaSwarm.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,10 @@ namespace swarmCorrections
 Foam::swarmCorrections::TomiyamaSwarm::TomiyamaSwarm
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    swarmCorrection(dict, pair),
+    swarmCorrection(dict, interface),
     residualAlpha_
     (
         "residualAlpha",
@@ -60,7 +59,7 @@ Foam::swarmCorrections::TomiyamaSwarm::TomiyamaSwarm
         dict.lookupOrDefault<scalar>
         (
             "residualAlpha",
-            pair_.dispersed().residualAlpha().value()
+            interface_.dispersed().residualAlpha().value()
         )
     ),
     l_("l", dimless, dict)
@@ -78,7 +77,7 @@ Foam::swarmCorrections::TomiyamaSwarm::~TomiyamaSwarm()
 Foam::tmp<Foam::volScalarField>
 Foam::swarmCorrections::TomiyamaSwarm::Cs() const
 {
-    return pow(max(this->pair_.continuous(), residualAlpha_), 3 - 2*l_);
+    return pow(max(interface_.continuous(), residualAlpha_), 3 - 2*l_);
 }
 
 

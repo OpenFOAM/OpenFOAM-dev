@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ Class
     Foam::dragModel
 
 Description
+    Model for drag between phases
 
 SourceFiles
     dragModel.C
@@ -40,11 +41,11 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "BlendedInterfacialModel.H"
 
 namespace Foam
 {
 
-class phasePair;
 class swarmCorrection;
 
 /*---------------------------------------------------------------------------*\
@@ -55,17 +56,6 @@ class dragModel
 :
     public regIOobject
 {
-protected:
-
-    // Protected data
-
-        //- Phase pair
-        const phasePair& pair_;
-
-        //- Swarm correction
-        autoPtr<swarmCorrection> swarmCorrection_;
-
-
 public:
 
     //- Runtime type information
@@ -81,10 +71,10 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair,
+                const phaseInterface& interface,
                 const bool registerObject
             ),
-            (dict, pair, registerObject)
+            (dict, interface, registerObject)
         );
 
 
@@ -93,14 +83,17 @@ public:
         //- Coefficient dimensions
         static const dimensionSet dimK;
 
+        //- Does this model require correcting on fixed flux boundaries?
+        static const bool correctFixedFluxBCs = true;
+
 
     // Constructors
 
-        // Construct with residual constants
+        // Construct from a dictionary and an interface
         dragModel
         (
             const dictionary& dict,
-            const phasePair& pair,
+            const phaseInterface& interface,
             const bool registerObject
         );
 
@@ -114,33 +107,61 @@ public:
         static autoPtr<dragModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface,
+            const bool outer=true,
+            const bool registerObject=true
         );
 
 
     // Member Functions
 
-        //- Drag coefficient
-        virtual tmp<volScalarField> CdRe() const = 0;
-
-        //- Return the phase-intensive drag coefficient Ki
-        //  used in the momentum equations
-        //    ddt(alpha1*rho1*U1) + ... = ... alphad*K*(U1-U2)
-        //    ddt(alpha2*rho2*U2) + ... = ... alphad*K*(U2-U1)
-        virtual tmp<volScalarField> Ki() const;
-
         //- Return the drag coefficient K
         //  used in the momentum equations
         //    ddt(alpha1*rho1*U1) + ... = ... K*(U1-U2)
         //    ddt(alpha2*rho2*U2) + ... = ... K*(U2-U1)
-        virtual tmp<volScalarField> K() const;
+        virtual tmp<volScalarField> K() const = 0;
 
         //- Return the drag coefficient Kf
         //  used in the face-momentum equations
-        virtual tmp<surfaceScalarField> Kf() const;
+        virtual tmp<surfaceScalarField> Kf() const = 0;
 
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                      Class blendedDragModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class blendedDragModel
+:
+    public BlendedInterfacialModel<dragModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using BlendedInterfacialModel<dragModel>::BlendedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<blendedDragModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
+
+
+    // Member Functions
+
+        //- Return the drag coefficient K
+        tmp<volScalarField> K() const;
+
+        //- Return the drag coefficient Kf
+        tmp<surfaceScalarField> Kf() const;
 };
 
 

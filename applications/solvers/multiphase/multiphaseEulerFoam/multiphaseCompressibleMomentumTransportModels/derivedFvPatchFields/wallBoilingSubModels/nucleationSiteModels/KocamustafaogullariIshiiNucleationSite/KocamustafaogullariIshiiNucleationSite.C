@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ KocamustafaogullariIshiiNucleationSite::N
 
     const scalarField sigmaw
     (
-        liquid.fluid().sigma(phasePairKey(liquid.name(), vapor.name()), patchi)
+        liquid.fluid().sigma(phaseInterface(liquid, vapor), patchi)
     );
 
     //eq. (32)

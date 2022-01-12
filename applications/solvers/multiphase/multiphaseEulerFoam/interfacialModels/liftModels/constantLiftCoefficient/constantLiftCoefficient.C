@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constantLiftCoefficient.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,10 +43,10 @@ namespace liftModels
 Foam::liftModels::constantLiftCoefficient::constantLiftCoefficient
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    liftModel(dict, pair),
+    dispersedLiftModel(dict, interface),
     Cl_("Cl", dimless, dict)
 {}
 
@@ -63,12 +62,10 @@ Foam::liftModels::constantLiftCoefficient::~constantLiftCoefficient()
 Foam::tmp<Foam::volScalarField>
 Foam::liftModels::constantLiftCoefficient::Cl() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return volScalarField::New
     (
         "zero",
-        mesh,
+        interface_.mesh(),
         Cl_
     );
 }

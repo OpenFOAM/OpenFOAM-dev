@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "interfaceCompositionModel.H"
-#include "phasePair.H"
-#include "rhoThermo.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
@@ -33,13 +32,19 @@ Foam::autoPtr<Foam::interfaceCompositionModel>
 Foam::interfaceCompositionModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface,
+    const bool outer
 )
 {
-    const word interfaceCompositionModelType = word(dict.lookup("type"));
+    const dictionary& modelDict =
+        outer
+      ? interface.fluid().modelSubDict<interfaceCompositionModel>(dict)
+      : dict;
+
+    const word interfaceCompositionModelType(modelDict.lookup("type"));
 
     Info<< "Selecting interfaceCompositionModel for "
-        << pair << ": " << interfaceCompositionModelType << endl;
+        << interface.name() << ": " << interfaceCompositionModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(interfaceCompositionModelType);
@@ -54,7 +59,21 @@ Foam::interfaceCompositionModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(modelDict, interface);
+}
+
+
+Foam::autoPtr<Foam::sidedInterfaceCompositionModel>
+Foam::sidedInterfaceCompositionModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return autoPtr<sidedInterfaceCompositionModel>
+    (
+        new sidedInterfaceCompositionModel(dict, interface)
+    );
 }
 
 

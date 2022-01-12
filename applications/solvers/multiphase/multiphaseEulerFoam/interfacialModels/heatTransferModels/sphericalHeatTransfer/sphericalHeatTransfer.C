@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sphericalHeatTransfer.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,14 @@ namespace heatTransferModels
 Foam::heatTransferModels::sphericalHeatTransfer::sphericalHeatTransfer
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    heatTransferModel(dict, pair)
+    heatTransferModel(dict, interface),
+    interface_
+    (
+        interface.modelCast<heatTransferModel, dispersedPhaseInterface>()
+    )
 {}
 
 
@@ -72,9 +75,9 @@ Foam::heatTransferModels::sphericalHeatTransfer::K
 {
     return
         60.0
-       *max(pair_.dispersed(), residualAlpha)
-       *pair_.dispersed().thermo().kappa()
-       /sqr(pair_.dispersed().d());
+       *max(interface_.dispersed(), residualAlpha)
+       *interface_.dispersed().thermo().kappa()
+       /sqr(interface_.dispersed().d());
 }
 
 

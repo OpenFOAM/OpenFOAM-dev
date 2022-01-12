@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,10 +39,11 @@ SourceFiles
 #include "IOdictionary.H"
 
 #include "phaseModel.H"
-#include "phasePair.H"
-#include "orderedPhasePair.H"
+#include "phaseInterface.H"
+#include "phaseInterfaceKey.H"
 #include "HashPtrTable.H"
 #include "PtrListDictionary.H"
+#include "hashedWordList.H"
 
 #include "IOMRFZoneList.H"
 #include "fvModels.H"
@@ -57,8 +58,6 @@ SourceFiles
 namespace Foam
 {
 
-class blendingMethod;
-template<class modelType> class BlendedInterfacialModel;
 class surfaceTensionModel;
 class pressureReference;
 class nonOrthogonalSolutionControl;
@@ -86,19 +85,20 @@ public:
         typedef UPtrList<phaseModel> phaseModelPartialList;
 
         typedef
-            HashTable<autoPtr<phasePair>, phasePairKey, phasePairKey::hash>
-            phasePairTable;
-
-        typedef
-            HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
+            HashPtrTable
+            <
+                volScalarField,
+                phaseInterfaceKey,
+                phaseInterfaceKey::hash
+            >
             dmdtfTable;
 
         typedef
             HashPtrTable
             <
                 HashPtrTable<volScalarField>,
-                phasePairKey,
-                phasePairKey::hash
+                phaseInterfaceKey,
+                phaseInterfaceKey::hash
             >
             dmidtfTable;
 
@@ -109,23 +109,15 @@ protected:
     // Protected typedefs
 
         typedef
-            HashTable<dictionary, phasePairKey, phasePairKey::hash>
-            dictTable;
-
-        typedef
-            HashTable<autoPtr<blendingMethod>, word, word::hash>
-            blendingMethodTable;
-
-        typedef
             HashTable
             <
                 autoPtr<surfaceTensionModel>,
-                phasePairKey,
-                phasePairKey::hash
+                phaseInterfaceKey,
+                phaseInterfaceKey::hash
             >
             surfaceTensionModelTable;
 
-        typedef HashTable<scalar, phasePairKey, phasePairKey::hash>
+        typedef HashTable<scalar, phaseInterfaceKey, phaseInterfaceKey::hash>
             cAlphaTable;
 
 
@@ -153,9 +145,6 @@ protected:
         //- Multi-component phase models
         phaseModelPartialList multiComponentPhaseModels_;
 
-        //- Phase pairs
-        phasePairTable phasePairs_;
-
         //- Total volumetric flux
         surfaceScalarField phi_;
 
@@ -164,9 +153,6 @@ protected:
 
         //- Optional MRF zones
         IOMRFZoneList MRF_;
-
-        //- Blending methods
-        blendingMethodTable blendingMethods_;
 
         //- Interface compression coefficients
         cAlphaTable cAlphas_;
@@ -195,67 +181,9 @@ protected:
             const phaseModelList& phaseModels
         ) const;
 
-        //- Generate pairs
-        void generatePairs(const dictTable& modelDicts);
-
-        //- Generate pairs and sub-model tables
-        template<class modelType>
-        void createSubModels
-        (
-            const dictTable& modelDicts,
-            HashTable
-            <
-                autoPtr<modelType>,
-                phasePairKey,
-                phasePairKey::hash
-            >& models
-        );
-
-        //- Generate pairs and sub-model tables
-        template<class modelType>
-        void generatePairsAndSubModels
-        (
-            const word& modelName,
-            HashTable
-            <
-                autoPtr<modelType>,
-                phasePairKey,
-                phasePairKey::hash
-            >& models,
-            const bool correctFixedFluxBCs = true
-        );
-
-        //- Generate pairs and blended sub-model tables
-        template<class modelType>
-        void generatePairsAndSubModels
-        (
-            const word& modelName,
-            HashTable
-            <
-                autoPtr<BlendedInterfacialModel<modelType>>,
-                phasePairKey,
-                phasePairKey::hash
-            >& models,
-            const bool correctFixedFluxBCs = true
-        );
-
-        //- Generate pairs and two-sided sub-model tables
-        template<class modelType>
-        void generatePairsAndSubModels
-        (
-            const word& modelName,
-            HashTable
-            <
-                Pair<autoPtr<modelType>>,
-                phasePairKey,
-                phasePairKey::hash
-            >& models,
-            const bool correctFixedFluxBCs = true
-        );
-
         //- Check that mass transfer is supported across the given interface
-        template<class modelType>
-        void validateMassTransfer(const phasePair& key) const;
+        template<class ModelType>
+        void validateMassTransfer(const phaseInterface& interface) const;
 
         //- Return the sum of the phase fractions of the moving phases
         tmp<volScalarField> sumAlphaMoving() const;
@@ -305,19 +233,13 @@ protected:
             ) const;
 
 
-        // Functions required by twoPhaseSystem
+        // Sub-model construction
 
-            //- Return the drag coefficient for phase pair
-            virtual tmp<volScalarField> Kd(const phasePairKey& key) const = 0;
-
-            //- Return the virtual mass coefficient for phase pair
-            virtual tmp<volScalarField> Vm(const phasePairKey& key) const = 0;
-
-            //- Return the face drag coefficient for phase pair
-            virtual tmp<surfaceScalarField> Kdf
-            (
-                const phasePairKey& key
-            ) const = 0;
+            //- Return the dictionary containing interfacial model or value
+            //  settings for the given name. Performs backwards compatibility
+            //  conversions.
+            template<class Type>
+            dictionary interfacialDict(const word& name) const;
 
 
 public:
@@ -398,9 +320,6 @@ public:
             //- Access the models for phases that have multiple species
             inline phaseModelPartialList& multiComponentPhases();
 
-            //- Return the phase pairs
-            inline const phasePairTable& phasePairs() const;
-
             //- Return the phase not given as an argument in a two-phase system
             //  An error is generated if the system is not two-phase
             inline const phaseModel& otherPhase(const phaseModel& phase) const;
@@ -433,40 +352,89 @@ public:
             inline const Foam::fvConstraints& fvConstraints() const;
 
 
+        // Sub-model construction
+
+            //- Generate interfacial-model lists
+            template<class ModelType, class ... InterfaceTypes>
+            void generateInterfacialModels
+            (
+                const dictionary& dict,
+                const phaseInterface& interface,
+                PtrList<phaseInterface>& interfaces,
+                PtrList<ModelType>& models
+            ) const;
+
+            //- Generate interfacial-model tables
+            template<class ModelType>
+            void generateInterfacialModels
+            (
+                const dictionary& dict,
+                HashTable
+                <
+                    autoPtr<ModelType>,
+                    phaseInterfaceKey,
+                    phaseInterfaceKey::hash
+                >& models
+            ) const;
+
+            //- Generate interfacial-model tables
+            template<class ModelType>
+            void generateInterfacialModels
+            (
+                const word& modelName,
+                HashTable
+                <
+                    autoPtr<ModelType>,
+                    phaseInterfaceKey,
+                    phaseInterfaceKey::hash
+                >& models
+            ) const;
+
+            //- Generate interfacial-model tables
+            template<class ValueType>
+            void generateInterfacialValues
+            (
+                const dictionary& dict,
+                HashTable
+                <
+                    ValueType,
+                    phaseInterfaceKey,
+                    phaseInterfaceKey::hash
+                >& values
+            ) const;
+
+            //- Generate interfacial-model tables
+            template<class ValueType>
+            void generateInterfacialValues
+            (
+                const word& valueName,
+                HashTable
+                <
+                    ValueType,
+                    phaseInterfaceKey,
+                    phaseInterfaceKey::hash
+                >& values
+            ) const;
+
+            //- Return the dictionary from which to construct a low-level
+            //  sub-model. Checks that there is just one sub-dictionary then
+            //  returns it.
+            template<class ModelType>
+            static const dictionary& modelSubDict(const dictionary& dict);
+
+
         // Sub-model lookup
 
-            //- Check availability of a sub model for a given phase pair
-            template<class modelType>
-            bool foundSubModel(const phasePair& key) const;
+            //- Check availability of a sub model for a given interface
+            template<class ModelType>
+            bool foundInterfacialModel(const phaseInterface& interface) const;
 
-            //- Return a sub model between a phase pair
-            template<class modelType>
-            const modelType& lookupSubModel(const phasePair& key) const;
-
-            //- Check availability of a sub model between two phases
-            template<class modelType>
-            bool foundSubModel
+            //- Return a sub model for an interface
+            template<class ModelType>
+            const ModelType& lookupInterfacialModel
             (
-                const phaseModel& dispersed,
-                const phaseModel& continuous
+                const phaseInterface& interface
             ) const;
-
-            //- Return a sub model between two phases
-            template<class modelType>
-            const modelType& lookupSubModel
-            (
-                const phaseModel& dispersed,
-                const phaseModel& continuous
-            ) const;
-
-            //- Check availability of a blended sub model for a given phase pair
-            template<class modelType>
-            bool foundBlendedSubModel(const phasePair& key) const;
-
-            //- Return a blended sub model between a phase pair
-            template<class modelType>
-            const BlendedInterfacialModel<modelType>&
-            lookupBlendedSubModel(const phasePair& key) const;
 
 
         // Field construction
@@ -509,17 +477,15 @@ public:
             //- Return the mixture velocity
             tmp<volVectorField> U() const;
 
-            //- Return the aspect-ratio for a pair
-            tmp<volScalarField> E(const phasePairKey& key) const;
+            //- Return the surface tension coefficient for an interface
+            tmp<volScalarField> sigma(const phaseInterfaceKey& key) const;
 
-            //- Return the surface tension coefficient for a pair
-            tmp<volScalarField> sigma(const phasePairKey& key) const;
-
-            //- Return the surface tension coefficient for a pair on a patch
+            //- Return the surface tension coefficient for an interface on a
+            //  patch
             tmp<scalarField> sigma
             (
-                const phasePairKey& key,
-                label patchi
+                const phaseInterfaceKey& key,
+                const label patchi
             ) const;
 
             //- Indicator of the proximity of the interface
@@ -527,7 +493,10 @@ public:
             tmp<volScalarField> nearInterface() const;
 
             //- Return the mass transfer rate for an interface
-            virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
+            virtual tmp<volScalarField> dmdtf
+            (
+                const phaseInterfaceKey& key
+            ) const;
 
             //- Return the mass transfer rates for each phase
             virtual PtrList<volScalarField> dmdts() const;

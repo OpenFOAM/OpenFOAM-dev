@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cosineWallDamping.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -58,7 +57,7 @@ Foam::wallDampingModels::cosine::limiter() const
            *min
             (
                 max(yWall() - zeroWallDist_, dimensionedScalar(dimLength, 0))
-               /(Cd_*pair_.dispersed().d()),
+               /(Cd_*interface_.dispersed().d()),
                 scalar(1)
             )
         )
@@ -71,10 +70,10 @@ Foam::wallDampingModels::cosine::limiter() const
 Foam::wallDampingModels::cosine::cosine
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    wallDampingModel(dict, pair)
+    wallDampingModel(dict, interface)
 {}
 
 

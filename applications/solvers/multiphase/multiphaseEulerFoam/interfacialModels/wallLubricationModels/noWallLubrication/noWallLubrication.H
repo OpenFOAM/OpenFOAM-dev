@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,9 +40,6 @@ SourceFiles
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace wallLubricationModels
 {
 
@@ -54,6 +51,14 @@ class noWallLubrication
 :
     public wallLubricationModel
 {
+protected:
+
+    // Protected data
+
+        //- Interface
+        const phaseInterface interface_;
+
+
 public:
 
     //- Runtime type information
@@ -62,11 +67,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         noWallLubrication
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -76,11 +81,11 @@ public:
 
     // Member Functions
 
-        //- Return phase-intensive wall lubrication force
-        tmp<volVectorField> Fi() const;
+        //- Return wall lubrication force
+        virtual tmp<volVectorField> F() const;
 
-        //- Wall lubrication force
-        tmp<volVectorField> F() const;
+        //- Return face wall lubrication force
+        virtual tmp<surfaceScalarField> Ff() const;
 };
 
 

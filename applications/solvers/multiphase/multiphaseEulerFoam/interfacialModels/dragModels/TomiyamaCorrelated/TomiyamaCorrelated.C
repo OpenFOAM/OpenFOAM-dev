@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "TomiyamaCorrelated.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,11 @@ namespace dragModels
 Foam::dragModels::TomiyamaCorrelated::TomiyamaCorrelated
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dispersedDragModel(dict, interface, registerObject),
     A_("A", dimless, dict)
 {}
 
@@ -64,8 +63,8 @@ Foam::dragModels::TomiyamaCorrelated::~TomiyamaCorrelated()
 Foam::tmp<Foam::volScalarField>
 Foam::dragModels::TomiyamaCorrelated::CdRe() const
 {
-    const volScalarField Re(pair_.Re());
-    const volScalarField Eo(pair_.Eo());
+    const volScalarField Re(interface_.Re());
+    const volScalarField Eo(interface_.Eo());
 
     return
         max

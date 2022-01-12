@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "noVirtualMass.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,12 @@ namespace virtualMassModels
 Foam::virtualMassModels::noVirtualMass::noVirtualMass
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    virtualMassModel(dict, pair, registerObject)
+    virtualMassModel(dict, interface, registerObject),
+    interface_(interface)
 {}
 
 
@@ -61,23 +61,26 @@ Foam::virtualMassModels::noVirtualMass::~noVirtualMass()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::virtualMassModels::noVirtualMass::Cvm() const
+Foam::virtualMassModels::noVirtualMass::K() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return volScalarField::New
     (
-        "zero",
-        mesh,
-        dimensionedScalar(dimless, 0)
+        "K",
+        interface_.mesh(),
+        dimensionedScalar(dimK, 0)
     );
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::virtualMassModels::noVirtualMass::K() const
+Foam::tmp<Foam::surfaceScalarField>
+Foam::virtualMassModels::noVirtualMass::Kf() const
 {
-    return Cvm()*dimensionedScalar(dimDensity, 0);
+    return surfaceScalarField::New
+    (
+        "Kf",
+        interface_.mesh(),
+        dimensionedScalar(dimK, 0)
+    );
 }
 
 

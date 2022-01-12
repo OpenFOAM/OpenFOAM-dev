@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,15 +47,12 @@ SourceFiles
 namespace Foam
 {
 
-template<class modelType>
-class BlendedInterfacialModel;
-
 class blendingMethod;
-class dragModel;
-class virtualMassModel;
-class liftModel;
-class wallLubricationModel;
-class turbulentDispersionModel;
+class blendedDragModel;
+class blendedVirtualMassModel;
+class blendedLiftModel;
+class blendedWallLubricationModel;
+class blendedTurbulentDispersionModel;
 
 /*---------------------------------------------------------------------------*\
                  Class MomentumTransferPhaseSystem Declaration
@@ -73,64 +70,64 @@ private:
         typedef HashPtrTable
         <
             volScalarField,
-            phasePairKey,
-            phasePairKey::hash
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > KdTable;
 
         typedef HashPtrTable
         <
             surfaceScalarField,
-            phasePairKey,
-            phasePairKey::hash
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > KdfTable;
 
         typedef HashPtrTable
         <
             volScalarField,
-            phasePairKey,
-            phasePairKey::hash
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > VmTable;
 
         typedef HashPtrTable
         <
             surfaceScalarField,
-            phasePairKey,
-            phasePairKey::hash
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > VmfTable;
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<dragModel>>,
-            phasePairKey,
-            phasePairKey::hash
+            autoPtr<blendedDragModel>,
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > dragModelTable;
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<virtualMassModel>>,
-            phasePairKey,
-            phasePairKey::hash
+            autoPtr<blendedVirtualMassModel>,
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > virtualMassModelTable;
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<liftModel>>,
-            phasePairKey,
-            phasePairKey::hash
+            autoPtr<blendedLiftModel>,
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > liftModelTable;
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<wallLubricationModel>>,
-            phasePairKey,
-            phasePairKey::hash
+            autoPtr<blendedWallLubricationModel>,
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > wallLubricationModelTable;
 
         typedef HashTable
         <
-            autoPtr<BlendedInterfacialModel<turbulentDispersionModel>>,
-            phasePairKey,
-            phasePairKey::hash
+            autoPtr<blendedTurbulentDispersionModel>,
+            phaseInterfaceKey,
+            phaseInterfaceKey::hash
         > turbulentDispersionModelTable;
 
 
@@ -177,15 +174,6 @@ protected:
             const phaseSystem::dmdtfTable& dmdtfs,
             phaseSystem::momentumTransferTable& eqns
         );
-
-        //- Return the drag coefficient for the phase pair
-        virtual tmp<volScalarField> Kd(const phasePairKey& key) const;
-
-        //- Return the face drag coefficient for the phase pair
-        virtual tmp<surfaceScalarField> Kdf(const phasePairKey& key) const;
-
-        //- Return the virtual mass coefficient for the phase pair
-        virtual tmp<volScalarField> Vm(const phasePairKey& key) const;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constantVirtualMassCoefficient.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,11 +49,11 @@ Foam::virtualMassModels::constantVirtualMassCoefficient::
 constantVirtualMassCoefficient
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    virtualMassModel(dict, pair, registerObject),
+    dispersedVirtualMassModel(dict, interface, registerObject),
     Cvm_("Cvm", dimless, dict)
 {}
 
@@ -71,12 +70,10 @@ Foam::virtualMassModels::constantVirtualMassCoefficient::
 Foam::tmp<Foam::volScalarField>
 Foam::virtualMassModels::constantVirtualMassCoefficient::Cvm() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return volScalarField::New
     (
         "Cvm",
-        mesh,
+        interface_.mesh(),
         Cvm_
     );
 }

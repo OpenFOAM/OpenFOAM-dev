@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "AttouFerschneider.H"
-#include "phasePair.H"
 #include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -107,11 +106,12 @@ Foam::dragModels::AttouFerschneider::KLiquidSolid
 Foam::dragModels::AttouFerschneider::AttouFerschneider
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dragModel(dict, interface, registerObject),
+    interface_(interface),
     gasName_(dict.lookup("gas")),
     liquidName_(dict.lookup("liquid")),
     solidName_(dict.lookup("solid")),
@@ -129,47 +129,28 @@ Foam::dragModels::AttouFerschneider::~AttouFerschneider()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::dragModels::AttouFerschneider::CdRe() const
-{
-    FatalErrorInFunction
-        << "Not implemented."
-        << "Drag coefficient is not defined for the AttouFerschneider model."
-        << exit(FatalError);
-
-    return tmp<volScalarField>(nullptr);
-}
-
-
-Foam::tmp<Foam::volScalarField>
 Foam::dragModels::AttouFerschneider::K() const
 {
-    switch (Pair<word>::compare(pair_, phasePairKey(gasName_, liquidName_)))
-    {
-        case 1:
-            return KGasLiquid(pair_.phase1(), pair_.phase2());
-        case -1:
-            return KGasLiquid(pair_.phase2(), pair_.phase1());
-    }
+    const phaseModel& gas = interface_.fluid().phases()[gasName_];
+    const phaseModel& liquid = interface_.fluid().phases()[liquidName_];
+    const phaseModel& solid = interface_.fluid().phases()[solidName_];
 
-    switch (Pair<word>::compare(pair_, phasePairKey(gasName_, solidName_)))
+    if (interface_.contains(gas) && interface_.contains(liquid))
     {
-        case 1:
-            return KGasSolid(pair_.phase1(), pair_.phase2());
-        case -1:
-            return KGasSolid(pair_.phase2(), pair_.phase1());
+        return KGasLiquid(gas, liquid);
     }
-
-    switch (Pair<word>::compare(pair_, phasePairKey(liquidName_, solidName_)))
+    if (interface_.contains(gas) && interface_.contains(solid))
     {
-        case 1:
-            return KLiquidSolid(pair_.phase1(), pair_.phase2());
-        case -1:
-            return KLiquidSolid(pair_.phase2(), pair_.phase1());
+        return KGasSolid(gas, solid);
+    }
+    if (interface_.contains(liquid) && interface_.contains(solid))
+    {
+        return KLiquidSolid(liquid, solid);
     }
 
     FatalErrorInFunction
-        << "The pair does not contain two of out of the gas, liquid and solid "
-        << "phase models."
+        << "The interface " << interface_.name() << " does not contain two "
+        << "out of the gas, liquid and solid phase models."
         << exit(FatalError);
 
     return tmp<volScalarField>(nullptr);

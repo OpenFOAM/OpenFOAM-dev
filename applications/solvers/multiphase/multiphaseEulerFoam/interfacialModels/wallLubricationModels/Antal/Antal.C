@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Antal.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,12 +33,7 @@ namespace Foam
 namespace wallLubricationModels
 {
     defineTypeNameAndDebug(Antal, 0);
-    addToRunTimeSelectionTable
-    (
-        wallLubricationModel,
-        Antal,
-        dictionary
-    );
+    addToRunTimeSelectionTable(wallLubricationModel, Antal, dictionary);
 }
 }
 
@@ -49,10 +43,10 @@ namespace wallLubricationModels
 Foam::wallLubricationModels::Antal::Antal
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    wallLubricationModel(dict, pair),
+    dispersedWallLubricationModel(dict, interface),
     Cw1_("Cw1", dimless, dict),
     Cw2_("Cw2", dimless, dict)
 {}
@@ -68,7 +62,7 @@ Foam::wallLubricationModels::Antal::~Antal()
 
 Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Antal::Fi() const
 {
-    volVectorField Ur(pair_.Ur());
+    const volVectorField Ur(interface_.Ur());
 
     const volVectorField& n(nWall());
 
@@ -77,9 +71,9 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Antal::Fi() const
         max
         (
             dimensionedScalar(dimless/dimLength, 0),
-            Cw1_/pair_.dispersed().d() + Cw2_/yWall()
+            Cw1_/interface_.dispersed().d() + Cw2_/yWall()
         )
-       *pair_.continuous().rho()
+       *interface_.continuous().rho()
        *magSqr(Ur - (Ur & n)*n)
        *n
     );

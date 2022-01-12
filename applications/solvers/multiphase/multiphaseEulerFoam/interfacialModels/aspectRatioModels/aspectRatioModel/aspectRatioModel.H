@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,9 @@ Class
     Foam::aspectRatioModel
 
 Description
+    Model for deviations in the shape of the dispersed phase from spherical.
+    Just a sub-model modifier, typically for the drag model. Not a proper part
+    of the diameter/shape modelling in the phase models.
 
 SourceFiles
     aspectRatioModel.C
@@ -40,11 +43,10 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "dispersedPhaseInterface.H"
 
 namespace Foam
 {
-
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                       Class aspectRatioModel Declaration
@@ -56,8 +58,8 @@ protected:
 
     // Protected data
 
-        //- Phase pair
-        const phasePair& pair_;
+        //- Interface
+        const dispersedPhaseInterface interface_;
 
 
 public:
@@ -74,19 +76,19 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         ),
-        (dict, pair)
+        (dict, interface)
     );
 
 
     // Constructors
 
-        //- Construct from a dictionary and an ordered phase pair
+        //- Construct from a dictionary and an interface
         aspectRatioModel
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -99,7 +101,7 @@ public:
         static autoPtr<aspectRatioModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

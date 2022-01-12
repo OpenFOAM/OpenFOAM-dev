@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nonRandomTwoLiquid.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,30 +48,30 @@ namespace interfaceCompositionModels
 Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    interfaceCompositionModel(dict, pair),
+    interfaceCompositionModel(dict, interface),
     gamma1_
     (
         IOobject
         (
-            IOobject::groupName("gamma1", pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh()
+            IOobject::groupName("gamma1", this->interface().name()),
+            interface.mesh().time().timeName(),
+            interface.mesh()
         ),
-        pair.phase1().mesh(),
+        interface.mesh(),
         dimensionedScalar(dimless, 1)
     ),
     gamma2_
     (
         IOobject
         (
-            IOobject::groupName("gamma2", pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh()
+            IOobject::groupName("gamma2", this->interface().name()),
+            interface.mesh().time().timeName(),
+            interface.mesh()
         ),
-        pair.phase1().mesh(),
+        interface.mesh(),
         dimensionedScalar(dimless, 1)
     ),
     beta12_("", dimless/dimTemperature, 0),
@@ -122,7 +121,8 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         saturationModel::New
         (
             dict.subDict(species1Name_).subDict("interaction"),
-            pair
+            interface,
+            false
         ).ptr()
     );
     saturationModel21_.reset
@@ -130,7 +130,8 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         saturationModel::New
         (
             dict.subDict(species2Name_).subDict("interaction"),
-            pair
+            interface,
+            false
         ).ptr()
     );
 
@@ -139,7 +140,8 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         interfaceCompositionModel::New
         (
             dict.subDict(species1Name_),
-            pair
+            interface,
+            false
         ).ptr()
     );
     speciesModel2_.reset
@@ -147,7 +149,8 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         interfaceCompositionModel::New
         (
             dict.subDict(species2Name_),
-            pair
+            interface,
+            false
         ).ptr()
     );
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sineWallDamping.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -55,7 +54,7 @@ Foam::wallDampingModels::sine::limiter() const
        *min
         (
             max(yWall() - zeroWallDist_, dimensionedScalar(dimLength, 0))
-           /(Cd_*pair_.dispersed().d()),
+           /(Cd_*interface_.dispersed().d()),
             scalar(1)
         )
     );
@@ -67,10 +66,10 @@ Foam::wallDampingModels::sine::limiter() const
 Foam::wallDampingModels::sine::sine
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    wallDampingModel(dict, pair)
+    wallDampingModel(dict, interface)
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ public:
     // Member Functions
 
         //- Return the mass transfer rate for an interface
-        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
+        virtual tmp<volScalarField> dmdtf(const phaseInterfaceKey& key) const;
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;

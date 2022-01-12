@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,9 +51,6 @@ SourceFiles
 
 namespace Foam
 {
-
-class phaseModel;
-
 namespace dragModels
 {
 
@@ -66,6 +63,9 @@ class AttouFerschneider
     public dragModel
 {
     // Private Data
+
+        //- Interface
+        const phaseInterface interface_;
 
         //- Name of the gaseous phase
         const word gasName_;
@@ -115,11 +115,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         AttouFerschneider
         (
             const dictionary& dict,
-            const phasePair& pair,
+            const phaseInterface& interface,
             const bool registerObject
         );
 
@@ -129,9 +129,6 @@ public:
 
 
     // Member Functions
-
-        //- Drag coefficient
-        virtual tmp<volScalarField> CdRe() const;
 
         //- The drag coefficient used in the momentum equation
         virtual tmp<volScalarField> K() const;

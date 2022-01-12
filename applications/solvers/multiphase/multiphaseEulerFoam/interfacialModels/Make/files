@@ -1,5 +1,6 @@
 dragModels/dragModel/dragModel.C
 dragModels/dragModel/dragModelNew.C
+dragModels/dispersedDragModel/dispersedDragModel.C
 dragModels/Beetstra/Beetstra.C
 dragModels/segregated/segregated.C
 dragModels/Ergun/Ergun.C
@@ -26,6 +27,7 @@ swarmCorrections/TomiyamaSwarm/TomiyamaSwarm.C
 
 liftModels/liftModel/liftModel.C
 liftModels/liftModel/liftModelNew.C
+liftModels/dispersedLiftModel/dispersedLiftModel.C
 liftModels/noLift/noLift.C
 liftModels/constantLiftCoefficient/constantLiftCoefficient.C
 liftModels/Moraga/Moraga.C
@@ -43,12 +45,14 @@ heatTransferModels/timeScaleFilteredHeatTransfer/timeScaleFilteredHeatTransfer.C
 
 virtualMassModels/virtualMassModel/virtualMassModel.C
 virtualMassModels/virtualMassModel/virtualMassModelNew.C
+virtualMassModels/dispersedVirtualMassModel/dispersedVirtualMassModel.C
 virtualMassModels/noVirtualMass/noVirtualMass.C
 virtualMassModels/constantVirtualMassCoefficient/constantVirtualMassCoefficient.C
 virtualMassModels/Lamb/Lamb.C
 
 wallLubricationModels/wallLubricationModel/wallLubricationModel.C
 wallLubricationModels/wallLubricationModel/wallLubricationModelNew.C
+wallLubricationModels/dispersedWallLubricationModel/dispersedWallLubricationModel.C
 wallLubricationModels/noWallLubrication/noWallLubrication.C
 wallLubricationModels/Antal/Antal.C
 wallLubricationModels/Frank/Frank.C
@@ -56,6 +60,7 @@ wallLubricationModels/TomiyamaWallLubrication/TomiyamaWallLubrication.C
 
 turbulentDispersionModels/turbulentDispersionModel/turbulentDispersionModel.C
 turbulentDispersionModels/turbulentDispersionModel/turbulentDispersionModelNew.C
+turbulentDispersionModels/dispersedTurbulentDispersionModel/dispersedTurbulentDispersionModel.C
 turbulentDispersionModels/noTurbulentDispersion/noTurbulentDispersion.C
 turbulentDispersionModels/constantTurbulentDispersionCoefficient/constantTurbulentDispersionCoefficient.C
 turbulentDispersionModels/Burns/Burns.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Raoult.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,30 +43,30 @@ namespace interfaceCompositionModels
 Foam::interfaceCompositionModels::Raoult::Raoult
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    interfaceCompositionModel(dict, pair),
+    interfaceCompositionModel(dict, interface),
     YNonVapour_
     (
         IOobject
         (
-            IOobject::groupName("YNonVapour", pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh()
+            IOobject::groupName("YNonVapour", this->interface().name()),
+            interface.mesh().time().timeName(),
+            interface.mesh()
         ),
-        pair.phase1().mesh(),
+        interface.mesh(),
         dimensionedScalar(dimless, 1)
     ),
     YNonVapourPrime_
     (
         IOobject
         (
-            IOobject::groupName("YNonVapourPrime", pair.name()),
-            pair.phase1().mesh().time().timeName(),
-            pair.phase1().mesh()
+            IOobject::groupName("YNonVapourPrime", this->interface().name()),
+            interface.mesh().time().timeName(),
+            interface.mesh()
         ),
-        pair.phase1().mesh(),
+        interface.mesh(),
         dimensionedScalar(dimless/dimTemperature, 0)
     )
 {
@@ -81,7 +80,7 @@ Foam::interfaceCompositionModels::Raoult::Raoult
                 interfaceCompositionModel::New
                 (
                     dict.subDict(*iter),
-                    pair
+                    interface
                 )
             )
         );

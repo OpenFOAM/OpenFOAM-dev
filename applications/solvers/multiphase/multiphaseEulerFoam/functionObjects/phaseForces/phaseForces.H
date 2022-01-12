@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     and in combination with the multiphaseEulerFoam solver.
 
     For a simulation involving more than two phases, the accumulated force is
-    calculated by looping over all phasePairs involving that phase. The fields
+    calculated by looping over all interfaces involving that phase. The fields
     are stored in the database so that they can be processed further, e.g. with
     the fieldAveraging functionObject.
 
@@ -89,6 +89,7 @@ protected:
 
     // Protected data
 
+        //- Force fields
         HashPtrTable<volVectorField> forceFields_;
 
         //- Phase for which forces are evaluated
@@ -96,13 +97,6 @@ protected:
 
         //- Constant access to phaseSystem
         const phaseSystem& fluid_;
-
-
-    // Protected Member Functions
-
-        //- Evaluate and return non-drag force
-        template<class modelType>
-        tmp<volVectorField> nonDragForce(const phasePair& key) const;
 
 
 public:

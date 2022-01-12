@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "GidaspowErgunWenYu.H"
-#include "phasePair.H"
 #include "Ergun.H"
 #include "WenYu.H"
 #include "addToRunTimeSelectionTable.H"
@@ -46,29 +45,13 @@ namespace dragModels
 Foam::dragModels::GidaspowErgunWenYu::GidaspowErgunWenYu
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
-    Ergun_
-    (
-        new Ergun
-        (
-            dict,
-            pair,
-            false
-        )
-    ),
-    WenYu_
-    (
-        new WenYu
-        (
-            dict,
-            pair,
-            false
-        )
-    )
+    dispersedDragModel(dict, interface, registerObject),
+    Ergun_(dict, interface, false),
+    WenYu_(dict, interface, false)
 {}
 
 
@@ -84,8 +67,8 @@ Foam::tmp<Foam::volScalarField>
 Foam::dragModels::GidaspowErgunWenYu::CdRe() const
 {
     return
-        pos0(pair_.continuous() - 0.8)*WenYu_->CdRe()
-      + neg(pair_.continuous() - 0.8)*Ergun_->CdRe();
+        pos0(interface_.continuous() - 0.8)*WenYu_.CdRe()
+      + neg(interface_.continuous() - 0.8)*Ergun_.CdRe();
 }
 
 

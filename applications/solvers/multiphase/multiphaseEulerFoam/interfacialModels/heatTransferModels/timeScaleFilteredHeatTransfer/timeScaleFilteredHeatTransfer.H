@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,6 +57,9 @@ class timeScaleFilteredHeatTransfer
 {
     // Private Data
 
+        //- Interface
+        const dispersedPhaseInterface interface_;
+
         //- Pointer to the underlying heat transfer model
         autoPtr<heatTransferModel> heatTransferModel_;
 
@@ -72,11 +75,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         timeScaleFilteredHeatTransfer
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

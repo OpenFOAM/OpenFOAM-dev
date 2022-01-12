@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,13 +96,6 @@ Foam::diameterModels::populationBalanceModel::sizeGroups() const
 }
 
 
-inline const Foam::diameterModels::populationBalanceModel::phasePairTable&
-Foam::diameterModels::populationBalanceModel::phasePairs() const
-{
-    return phasePairs_;
-}
-
-
 inline const Foam::volScalarField&
 Foam::diameterModels::populationBalanceModel::Sp(const label i) const
 {
@@ -149,31 +142,6 @@ Foam::diameterModels::populationBalanceModel::U() const
     {
         return velocityGroups_.first().phase().U();
     }
-}
-
-
-inline bool Foam::diameterModels::populationBalanceModel::isVelocityGroupPair
-(
-    const phasePair& pair
-) const
-{
-    if
-    (
-        isA<velocityGroup>(pair.phase1().dPtr()())
-        &&
-        isA<velocityGroup>(pair.phase2().dPtr()())
-    )
-    {
-        const velocityGroup& velGroup1 =
-            refCast<const velocityGroup>(pair.phase1().dPtr()());
-
-        const velocityGroup& velGroup2 =
-            refCast<const velocityGroup>(pair.phase2().dPtr()());
-
-        return velGroup1.popBalName() == velGroup2.popBalName();
-    }
-
-    return false;
 }
 
 

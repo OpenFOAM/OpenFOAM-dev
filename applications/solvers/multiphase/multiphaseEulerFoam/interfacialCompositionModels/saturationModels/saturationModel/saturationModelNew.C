@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,19 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "saturationModel.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::saturationModel> Foam::saturationModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface,
+    const bool outer
 )
 {
-    word saturationModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        outer ? interface.fluid().modelSubDict<saturationModel>(dict) : dict;
 
-    Info<< "Selecting saturationModel: "
-        << saturationModelType << endl;
+    const word saturationModelType(modelDict.lookup("type"));
+
+    Info<< "Selecting saturationModel for "
+        << interface.name() << ": " << saturationModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(saturationModelType);
@@ -51,7 +56,7 @@ Foam::autoPtr<Foam::saturationModel> Foam::saturationModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(modelDict, interface);
 }
 
 

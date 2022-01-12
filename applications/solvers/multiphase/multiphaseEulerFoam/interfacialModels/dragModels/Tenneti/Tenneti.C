@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Tenneti.H"
-#include "phasePair.H"
 #include "SchillerNaumann.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -45,11 +44,11 @@ namespace dragModels
 Foam::dragModels::Tenneti::Tenneti
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject),
+    dispersedDragModel(dict, interface, registerObject),
     residualRe_("residualRe", dimless, dict.lookup("residualRe"))
 {}
 
@@ -66,15 +65,15 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Tenneti::CdRe() const
 {
     const volScalarField alpha1
     (
-        max(pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(interface_.dispersed(), interface_.continuous().residualAlpha())
     );
 
     const volScalarField alpha2
     (
-        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
     );
 
-    const volScalarField Res(alpha2*pair_.Re());
+    const volScalarField Res(alpha2*interface_.Re());
 
     const volScalarField CdReIsolated
     (

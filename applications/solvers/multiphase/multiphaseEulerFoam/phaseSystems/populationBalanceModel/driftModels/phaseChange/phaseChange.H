@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,8 @@ class phaseChange
     // Private Data
 
         //- PhasePairs between which phaseChange occurs, e.g.,
-        //  "((gasI and liquid) (gasII and liquid))"
-        List<phasePairKey> pairKeys_;
+        //  "(gasI_liquid (gasII_liquid)"
+        PtrList<phaseInterface> interfaces_;
 
         //- Distribute phase change mass flux between sizeGroups based on the
         //  number concentration, rather than the interfacial area

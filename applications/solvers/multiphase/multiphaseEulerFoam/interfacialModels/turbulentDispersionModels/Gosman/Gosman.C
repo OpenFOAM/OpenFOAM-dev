@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,10 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Gosman.H"
-#include "phasePair.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
-#include "dragModel.H"
+#include "dispersedDragModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -51,10 +50,10 @@ namespace turbulentDispersionModels
 Foam::turbulentDispersionModels::Gosman::Gosman
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    turbulentDispersionModel(dict, pair),
+    dispersedTurbulentDispersionModel(dict, interface),
     sigma_("sigma", dimless, dict)
 {}
 
@@ -70,13 +69,13 @@ Foam::turbulentDispersionModels::Gosman::~Gosman()
 Foam::tmp<Foam::volScalarField>
 Foam::turbulentDispersionModels::Gosman::D() const
 {
-    const fvMesh& mesh(pair_.phase1().mesh());
-    const dragModel&
-        drag
+    const dragModels::dispersedDragModel& drag =
+        interface_.mesh().lookupObject<dragModels::dispersedDragModel>
         (
-            mesh.lookupObject<dragModel>
+            IOobject::groupName
             (
-                IOobject::groupName(dragModel::typeName, pair_.name())
+                dragModel::typeName,
+                interface_.name()
             )
         );
 
@@ -84,7 +83,7 @@ Foam::turbulentDispersionModels::Gosman::D() const
         drag.Ki()
        *continuousTurbulence().nut()
        /sigma_
-       *pair_.dispersed();
+       *interface_.dispersed();
 }
 
 

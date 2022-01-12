@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,10 +78,15 @@ public:
     //- Runtime type information
     TypeName("Antoine");
 
+
     // Constructors
 
-        //- Construct from a dictionary
-        Antoine(const dictionary& dict, const phasePair& pair);
+        //- Construct from a dictionary and an interface
+        Antoine
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
 
 
     //- Destructor

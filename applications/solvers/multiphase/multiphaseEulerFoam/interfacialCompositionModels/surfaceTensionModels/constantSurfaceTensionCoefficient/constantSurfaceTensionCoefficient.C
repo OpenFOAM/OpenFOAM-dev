@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constantSurfaceTensionCoefficient.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,11 +49,10 @@ Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::
 constantSurfaceTensionCoefficient
 (
     const dictionary& dict,
-    const phasePair& pair,
-    const bool registerObject
+    const phaseInterface& interface
 )
 :
-    surfaceTensionModel(dict, pair, registerObject),
+    surfaceTensionModel(dict, interface),
     sigma_("sigma", dimSigma, dict)
 {}
 
@@ -71,27 +69,28 @@ Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::
 Foam::tmp<Foam::volScalarField>
 Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::sigma() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return volScalarField::New
     (
         "sigma",
-        mesh,
+        interface_.mesh(),
         sigma_
     );
 }
 
+
 Foam::tmp<Foam::scalarField>
 Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::sigma
 (
-    label patchi
+    const label patchi
 ) const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return tmp<scalarField>
     (
-        new scalarField(mesh.boundary()[patchi].size(), sigma_.value())
+        new scalarField
+        (
+            interface_.mesh().boundary()[patchi].size(),
+            sigma_.value()
+        )
     );
 }
 

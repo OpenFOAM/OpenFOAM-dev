@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LegendreMagnaudet.H"
-#include "phasePair.H"
 #include "fvcGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -45,10 +44,10 @@ namespace liftModels
 Foam::liftModels::LegendreMagnaudet::LegendreMagnaudet
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    liftModel(dict, pair),
+    dispersedLiftModel(dict, interface),
     residualRe_("residualRe", dimless, dict)
 {}
 
@@ -63,19 +62,19 @@ Foam::liftModels::LegendreMagnaudet::~LegendreMagnaudet()
 
 Foam::tmp<Foam::volScalarField> Foam::liftModels::LegendreMagnaudet::Cl() const
 {
-    volScalarField Re(max(pair_.Re(), residualRe_));
+    const volScalarField Re(max(interface_.Re(), residualRe_));
 
-    volScalarField Sr
+    const volScalarField Sr
     (
-        sqr(pair_.dispersed().d())
+        sqr(interface_.dispersed().d())
        /(
             Re
-           *pair_.continuous().thermo().nu()
+           *interface_.continuous().thermo().nu()
         )
-       *mag(fvc::grad(pair_.continuous().U()))
+       *mag(fvc::grad(interface_.continuous().U()))
     );
 
-    volScalarField ClLowSqr
+    const volScalarField ClLowSqr
     (
         sqr(6*2.255)
        *sqr(Sr)
@@ -86,7 +85,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::LegendreMagnaudet::Cl() const
         )
     );
 
-    volScalarField ClHighSqr
+    const volScalarField ClHighSqr
     (
         sqr(0.5*(Re + 16)/(Re + 29))
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,10 +35,9 @@ SourceFiles
 #define BlendedInterfacialModel_H
 
 #include "blendingMethod.H"
-#include "phasePair.H"
+#include "phaseInterface.H"
 #include "HashPtrTable.H"
 #include "hashedWordList.H"
-#include "geometricZeroField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,26 +55,23 @@ class BlendedInterfacialModel
 {
     // Private Data
 
-        //- Reference to phase 1
-        const phaseModel& phase1_;
+        //- The interface
+        const phaseInterface interface_;
 
-        //- Reference to phase 2
-        const phaseModel& phase2_;
+        //- Blending method
+        autoPtr<blendingMethod> blending_;
 
-        //- Blending model
-        const blendingMethod& blending_;
+        //- Model for general configurations
+        autoPtr<ModelType> modelGeneral_;
 
-        //- Model for region with no obvious dispersed phase
-        autoPtr<ModelType> model_;
+        //- Model for phase 1 dispersed in phase 2
+        autoPtr<ModelType> model1DispersedIn2_;
 
-        //- Model for dispersed phase 1 in continuous phase 2
-        autoPtr<ModelType> model1In2_;
+        //- Model for phase 2 dispersed in phase 1
+        autoPtr<ModelType> model2DispersedIn1_;
 
-        //- Model for dispersed phase 2 in continuous phase 1
-        autoPtr<ModelType> model2In1_;
-
-        //- If true set coefficients and forces to 0 at fixed-flux BCs
-        bool correctFixedFluxBCs_;
+        //- Model for phase 1 segregated with phase 2
+        autoPtr<ModelType> model1SegregatedWith2_;
 
 
     // Private Member Functions
@@ -84,8 +80,19 @@ class BlendedInterfacialModel
         template<template<class> class PatchField, class GeoMesh>
         void calculateBlendingCoeffs
         (
-            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1,
-            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2,
+            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1D2,
+            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2D1,
+            const bool subtract
+        ) const;
+
+        //- Calculate the blending coefficients
+        template<template<class> class PatchField, class GeoMesh>
+        void calculateBlendingCoeffs
+        (
+            tmp<GeometricField<scalar, PatchField, GeoMesh>>& fG,
+            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1D2,
+            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2D1,
+            tmp<GeometricField<scalar, PatchField, GeoMesh>>& fS,
             const bool subtract
         ) const;
 
@@ -96,7 +103,12 @@ class BlendedInterfacialModel
             GeometricField<Type, PatchField, GeoMesh>& field
         ) const;
 
-        //- Return the blended coeff/value
+
+protected:
+
+    // Protected Member Functions
+
+        //- Return a blended field
         template
         <
             class Type,
@@ -114,7 +126,7 @@ class BlendedInterfacialModel
             Args ... args
         ) const;
 
-        //- Return the blended coeff/value
+        //- Return a table of blended fields
         template
         <
             class Type,
@@ -132,6 +144,22 @@ class BlendedInterfacialModel
             Args ... args
         ) const;
 
+        //- Return a bool combined (or) from all models
+        template<class ... Args>
+        bool evaluate
+        (
+            bool (ModelType::*method)(Args ...) const,
+            Args ... args
+        ) const;
+
+        //- Return a hashed word list combined from all models
+        template<class ... Args>
+        hashedWordList evaluate
+        (
+            const hashedWordList& (ModelType::*method)(Args ...) const,
+            Args ... args
+        ) const;
+
 
 public:
 
@@ -141,16 +169,11 @@ public:
 
     // Constructors
 
-        //- Construct from two phases, blending method and three models
+        //- Construct from a dictionary and an interface
         BlendedInterfacialModel
         (
-            const phaseModel& phase1,
-            const phaseModel& phase2,
-            const blendingMethod& blending,
-            autoPtr<ModelType> model,
-            autoPtr<ModelType> model1In2,
-            autoPtr<ModelType> model2In1,
-            const bool correctFixedFluxBCs = true
+            const dictionary& dict,
+            const phaseInterface& interface
         );
 
         //- Disallow default bitwise copy construction
@@ -166,36 +189,8 @@ public:
 
     // Member Functions
 
-        //- Return the blended force coefficient
-        tmp<volScalarField> K() const;
-
-        //- Return the blended force coefficient with a specified residual alpha
-        tmp<volScalarField> K(const scalar residualAlpha) const;
-
-        //- Return the face blended force coefficient
-        tmp<surfaceScalarField> Kf() const;
-
-        //- Return the blended force
-        template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> F() const;
-
-        //- Return the face blended force
-        tmp<surfaceScalarField> Ff() const;
-
-        //- Return the blended diffusivity
-        tmp<volScalarField> D() const;
-
-        //- Return the list of individual species that are transferred
-        bool mixture() const;
-
-        //- Return the blended mass transfer rate
-        tmp<volScalarField> dmdtf() const;
-
-        //- Return the list of individual species that are transferred
-        hashedWordList species() const;
-
-        //- Return the blended mass transfer rates for individual species
-        HashPtrTable<volScalarField> dmidtf() const;
+        //- Access the interface
+        const phaseInterface& interface() const;
 
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;
@@ -217,10 +212,11 @@ public:
         BlendedInterfacialModel<ModelType>,                                    \
         (                                                                      \
             word(BlendedInterfacialModel<ModelType>::typeName_()) + "<"        \
-          + ModelType::typeName_() + ">"                                       \
+          + ModelType::typeName + ">"                                          \
         ).c_str(),                                                             \
         DebugSwitch                                                            \
     );
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,8 @@ License
 #include "fvModels.H"
 #include "bound.H"
 #include "phaseSystem.H"
-#include "dragModel.H"
-#include "virtualMassModel.H"
+#include "dispersedDragModel.H"
+#include "dispersedVirtualMassModel.H"
 #include "fixedValueFvPatchFields.H"
 #include "inletOutletFvPatchFields.H"
 #include "fvmSup.H"
@@ -391,7 +391,9 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::Ct2() const
     const phaseSystem& fluid = gas.fluid();
     const phaseModel& liquid = fluid.otherPhase(gas);
 
-    const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
+    const dragModels::dispersedDragModel& drag =
+        fluid.lookupInterfacialModel<dragModels::dispersedDragModel>
+        (dispersedPhaseInterface(gas, liquid));
 
     const volScalarField& alphag = this->alpha_;
 
@@ -426,8 +428,13 @@ mixtureKEpsilon<BasicMomentumTransportModel>::rhogEff() const
 {
     const phaseModel& gas = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = gas.fluid();
-    const virtualMassModel& virtualMass =
-        fluid.lookupSubModel<virtualMassModel>(gas, fluid.otherPhase(gas));
+    const phaseModel& liquid = fluid.otherPhase(gas);
+
+    const virtualMassModels::dispersedVirtualMassModel& virtualMass =
+        fluid.lookupInterfacialModel
+        <virtualMassModels::dispersedVirtualMassModel>
+        (dispersedPhaseInterface(gas, liquid));
+
     return gas.rho() + virtualMass.Cvm()*fluid.otherPhase(gas).rho();
 }
 
@@ -505,7 +512,9 @@ mixtureKEpsilon<BasicMomentumTransportModel>::bubbleG() const
     const phaseSystem& fluid = gas.fluid();
     const phaseModel& liquid = fluid.otherPhase(gas);
 
-    const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
+    const dragModels::dispersedDragModel& drag =
+        fluid.lookupInterfacialModel<dragModels::dispersedDragModel>
+        (dispersedPhaseInterface(gas, liquid));
 
     volScalarField magUr(mag(liquidTurbulence.U() - this->U()));
 

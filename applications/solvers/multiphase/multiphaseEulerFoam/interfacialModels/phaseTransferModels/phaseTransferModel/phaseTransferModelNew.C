@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,20 +24,22 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "phaseTransferModel.H"
-#include "phasePair.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::phaseTransferModel> Foam::phaseTransferModel::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 {
-    word phaseTransferModelType(dict.lookup("type"));
+    const dictionary& modelDict =
+        interface.fluid().modelSubDict<phaseTransferModel>(dict);
+
+    const word phaseTransferModelType(modelDict.lookup("type"));
 
     Info<< "Selecting phaseTransferModel for "
-        << pair << ": " << phaseTransferModelType << endl;
+        << interface.name() << ": " << phaseTransferModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(phaseTransferModelType);
@@ -52,7 +54,21 @@ Foam::autoPtr<Foam::phaseTransferModel> Foam::phaseTransferModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(modelDict, interface);
+}
+
+
+Foam::autoPtr<Foam::blendedPhaseTransferModel>
+Foam::blendedPhaseTransferModel::New
+(
+    const dictionary& dict,
+    const phaseInterface& interface
+)
+{
+    return autoPtr<blendedPhaseTransferModel>
+    (
+        new blendedPhaseTransferModel(dict, interface)
+    );
 }
 
 

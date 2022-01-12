@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "noLift.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,10 +43,11 @@ namespace liftModels
 Foam::liftModels::noLift::noLift
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    liftModel(dict, pair)
+    liftModel(dict, interface),
+    interface_(interface)
 {}
 
 
@@ -59,27 +59,12 @@ Foam::liftModels::noLift::~noLift()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::liftModels::noLift::Cl() const
-{
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
-    return volScalarField::New
-    (
-        "Cl",
-        mesh,
-        dimensionedScalar(dimless, 0)
-    );
-}
-
-
 Foam::tmp<Foam::volVectorField> Foam::liftModels::noLift::F() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return volVectorField::New
     (
-        "noLift:F",
-        mesh,
+        "F",
+        interface_.mesh(),
         dimensionedVector(dimF, Zero)
     );
 }
@@ -87,12 +72,10 @@ Foam::tmp<Foam::volVectorField> Foam::liftModels::noLift::F() const
 
 Foam::tmp<Foam::surfaceScalarField> Foam::liftModels::noLift::Ff() const
 {
-    const fvMesh& mesh(this->pair_.phase1().mesh());
-
     return surfaceScalarField::New
     (
-        "noLift:Ff",
-        mesh,
+        "Ff",
+        interface_.mesh(),
         dimensionedScalar(dimF*dimArea, 0)
     );
 }

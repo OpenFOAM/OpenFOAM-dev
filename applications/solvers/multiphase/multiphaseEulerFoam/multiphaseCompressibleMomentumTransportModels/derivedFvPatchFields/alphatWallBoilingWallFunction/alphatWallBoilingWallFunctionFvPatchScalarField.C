@@ -314,15 +314,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             const phaseModel& liquid = fluid.phases()[internalField().group()];
             const phaseModel& vapor = fluid.phases()[otherPhaseName_];
 
-            const phasePair pair(vapor, liquid);
+            const phaseInterface interface(vapor, liquid);
 
-            if
-            (
-                db().foundObject<saturationModel>
-                (
-                    IOobject::groupName("saturationModel", pair.name())
-                )
-            )
+            if (fluid.foundInterfacialModel<saturationModel>(interface))
             {
                 // Retrieve turbulence properties from models
                 const phaseCompressible::momentumTransportModel& turbModel
@@ -404,10 +398,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                 // Saturation temperature
                 const saturationModel& satModel =
-                    db().lookupObject<saturationModel>
-                    (
-                        IOobject::groupName("saturationModel", pair.name())
-                    );
+                    fluid.lookupInterfacialModel<saturationModel>(interface);
                 const tmp<volScalarField> tTsat = satModel.Tsat(lThermo.p());
                 const volScalarField& Tsat = tTsat();
                 const fvPatchScalarField& Tsatw(Tsat.boundaryField()[patchi]);
@@ -419,7 +410,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                   ? -refCast<const heatTransferPhaseSystem>(fluid)
                     .Li
                      (
-                         pair,
+                         interface,
                          volatileSpecie,
                          dmdtf_,
                          Tsat,
@@ -429,7 +420,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                   : -refCast<const heatTransferPhaseSystem>(fluid)
                     .L
                      (
-                         pair,
+                         interface,
                          dmdtf_,
                          Tsat,
                          patch().faceCells(),
@@ -647,7 +638,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             }
             else
             {
-                Info<< "Saturation model for phase pair " << pair.name()
+                Info<< "Saturation model for interface " << interface.name()
                     << " not found. Wall boiling disabled." << endl;
 
                 operator== (alphatConv_);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "TomiyamaLift.H"
-#include "phasePair.H"
 #include "aspectRatioModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -45,11 +44,11 @@ namespace liftModels
 Foam::liftModels::TomiyamaLift::TomiyamaLift
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    liftModel(dict, pair),
-    aspectRatio_(aspectRatioModel::New(dict.subDict("aspectRatio"), pair))
+    dispersedLiftModel(dict, interface),
+    aspectRatio_(aspectRatioModel::New(dict.subDict("aspectRatio"), interface))
 {}
 
 
@@ -65,7 +64,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::TomiyamaLift::Cl() const
 {
     const volScalarField EoH
     (
-        pair_.Eo(pair_.dispersed().d()/cbrt(aspectRatio_->E()))
+        interface_.Eo(interface_.dispersed().d()/cbrt(aspectRatio_->E()))
     );
 
     const volScalarField f
@@ -74,7 +73,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::TomiyamaLift::Cl() const
     );
 
     return
-        neg(EoH - 4)*min(0.288*tanh(0.121*pair_.Re()), f)
+        neg(EoH - 4)*min(0.288*tanh(0.121*interface_.Re()), f)
       + pos0(EoH - 4)*neg(EoH - 10.7)*f
       + pos0(EoH - 10.7)*(-0.288);
 }

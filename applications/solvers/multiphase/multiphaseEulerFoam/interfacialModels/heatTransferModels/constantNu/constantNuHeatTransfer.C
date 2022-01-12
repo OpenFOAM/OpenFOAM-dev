@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constantNuHeatTransfer.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,10 +48,14 @@ namespace heatTransferModels
 Foam::heatTransferModels::constantNuHeatTransfer::constantNuHeatTransfer
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    heatTransferModel(dict, pair),
+    heatTransferModel(dict, interface),
+    interface_
+    (
+        interface.modelCast<heatTransferModel, dispersedPhaseInterface>()
+    ),
     Nu_("Nu", dimless, dict)
 {}
 
@@ -73,10 +76,10 @@ Foam::heatTransferModels::constantNuHeatTransfer::K
 {
     return
         6.0
-       *max(pair_.dispersed(), residualAlpha)
-       *pair_.continuous().thermo().kappa()
+       *max(interface_.dispersed(), residualAlpha)
+       *interface_.continuous().thermo().kappa()
        *Nu_
-       /sqr(pair_.dispersed().d());
+       /sqr(interface_.dispersed().d());
 }
 
 

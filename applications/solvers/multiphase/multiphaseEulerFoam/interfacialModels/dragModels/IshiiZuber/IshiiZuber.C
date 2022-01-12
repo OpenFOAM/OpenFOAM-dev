@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "IshiiZuber.H"
-#include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -44,11 +43,11 @@ namespace dragModels
 Foam::dragModels::IshiiZuber::IshiiZuber
 (
     const dictionary& dict,
-    const phasePair& pair,
+    const phaseInterface& interface,
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject)
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -63,17 +62,17 @@ Foam::dragModels::IshiiZuber::~IshiiZuber()
 Foam::tmp<Foam::volScalarField>
 Foam::dragModels::IshiiZuber::CdRe() const
 {
-    const volScalarField Re(pair_.Re());
-    const volScalarField Eo(pair_.Eo());
+    const volScalarField Re(interface_.Re());
+    const volScalarField Eo(interface_.Eo());
 
-    const volScalarField mud(pair_.dispersed().thermo().mu());
-    const volScalarField muc(pair_.continuous().thermo().mu());
+    const volScalarField mud(interface_.dispersed().thermo().mu());
+    const volScalarField muc(interface_.continuous().thermo().mu());
 
     const volScalarField muStar((mud + 0.4*muc)/(mud + muc));
 
     const volScalarField muMix
     (
-        muc*pow(max(1 - pair_.dispersed(), scalar(1e-3)), -2.5*muStar)
+        muc*pow(max(1 - interface_.dispersed(), scalar(1e-3)), -2.5*muStar)
     );
 
     const volScalarField ReM(Re*muc/muMix);
@@ -83,7 +82,7 @@ Foam::dragModels::IshiiZuber::CdRe() const
       + neg(1000 - ReM)*0.44*ReM
     );
 
-    volScalarField F((muc/muMix)*sqrt(1 - pair_.dispersed()));
+    volScalarField F((muc/muMix)*sqrt(1 - interface_.dispersed()));
     F.max(1e-3);
 
     const volScalarField Ealpha((1 + 17.67*pow(F, 0.8571428))/(18.67*F));
@@ -92,7 +91,7 @@ Foam::dragModels::IshiiZuber::CdRe() const
 
     return
         pos0(CdReEllipse - CdRe)
-       *min(CdReEllipse, Re*sqr(1 - pair_.dispersed())*2.66667)
+       *min(CdReEllipse, Re*sqr(1 - interface_.dispersed())*2.66667)
       + neg(CdReEllipse - CdRe)*CdRe;
 }
 

@@ -25,6 +25,7 @@ Class
     Foam::turbulentDispersionModel
 
 Description
+    Model for turbulent dispersion between two phases
 
 SourceFiles
     turbulentDispersionModel.C
@@ -38,14 +39,12 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
-#include "phaseCompressibleMomentumTransportModel.H"
+#include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class phasePair;
 
 /*---------------------------------------------------------------------------*\
                   Class turbulentDispersionModel Declaration
@@ -53,14 +52,6 @@ class phasePair;
 
 class turbulentDispersionModel
 {
-protected:
-
-    // Protected data
-
-        //- Phase pair
-        const phasePair& pair_;
-
-
 public:
 
     //- Runtime type information
@@ -76,9 +67,9 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phasePair& pair
+                const phaseInterface& interface
             ),
-            (dict, pair)
+            (dict, interface)
         );
 
     // Static Data Members
@@ -86,14 +77,17 @@ public:
         //- Diffusivity dimensions
         static const dimensionSet dimD;
 
+        //- Does this model require correcting on fixed flux boundaries?
+        static const bool correctFixedFluxBCs = true;
+
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         turbulentDispersionModel
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
@@ -106,19 +100,51 @@ public:
         static autoPtr<turbulentDispersionModel> New
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface,
+            const bool outer=true
         );
 
 
     // Member Functions
 
-        //- Return a reference to the turbulence model for the continuous phase
-        const phaseCompressible::momentumTransportModel&
-            continuousTurbulence() const;
-
-        //- Turbulent diffusivity
-        //  multiplying the gradient of the phase-fraction
+        //- Return the turbulent diffusivity multiplying the gradient of the
+        //  phase-fraction
         virtual tmp<volScalarField> D() const = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                Class blendedTurbulentDispersionModel Declaration
+\*---------------------------------------------------------------------------*/
+
+class blendedTurbulentDispersionModel
+:
+    public BlendedInterfacialModel<turbulentDispersionModel>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            BlendedInterfacialModel<turbulentDispersionModel>::
+            BlendedInterfacialModel;
+
+
+    // Selectors
+
+        static autoPtr<blendedTurbulentDispersionModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
+
+
+    // Member Functions
+
+        //- Return the turbulent diffusivity multiplying the gradient of the
+        //  phase-fraction
+        tmp<volScalarField> D() const;
 };
 
 

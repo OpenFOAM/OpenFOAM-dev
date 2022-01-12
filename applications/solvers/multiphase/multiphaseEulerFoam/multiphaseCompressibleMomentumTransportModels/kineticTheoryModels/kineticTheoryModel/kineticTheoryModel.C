@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -433,10 +433,11 @@ void Foam::RASModels::kineticTheoryModel::correct()
         );
 
         // Drag
+        const dispersedPhaseInterface interface(phase_, continuousPhase);
         const volScalarField beta
         (
-            fluid.foundSubModel<dragModel>(phase_, continuousPhase)
-          ? fluid.lookupSubModel<dragModel>(phase_, continuousPhase).K()
+            fluid.foundInterfacialModel<dragModel>(interface)
+          ? fluid.lookupInterfacialModel<dragModel>(interface).K()
           : volScalarField::New
             (
                 "beta",

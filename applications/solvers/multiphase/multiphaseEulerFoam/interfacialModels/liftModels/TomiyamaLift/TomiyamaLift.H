@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,14 +46,13 @@ SourceFiles
 #ifndef TomiyamaLift_H
 #define TomiyamaLift_H
 
-#include "liftModel.H"
+#include "dispersedLiftModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class phasePair;
 class aspectRatioModel;
 
 namespace liftModels
@@ -65,7 +64,7 @@ namespace liftModels
 
 class TomiyamaLift
 :
-    public liftModel
+    public dispersedLiftModel
 {
 private:
 
@@ -83,11 +82,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         TomiyamaLift
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

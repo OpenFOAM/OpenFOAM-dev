@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ SourceFiles
 namespace Foam
 {
 
-class phasePair;
+class phaseInterface;
 
 /*---------------------------------------------------------------------------*\
                    Class heatTransferPhaseSystem Declaration
@@ -78,11 +78,11 @@ public:
 
     // Member Functions
 
-        //- Return the latent heat for a given pair, mass transfer rate (used
-        //  only for it's sign), and interface temperature
+        //- Return the latent heat for a given interface, mass transfer rate
+        //  (used only for it's sign), and interface temperature
         virtual tmp<volScalarField> L
         (
-            const phasePair& pair,
+            const phaseInterface& interface,
             const volScalarField& dmdtf,
             const volScalarField& Tf,
             const latentHeatScheme scheme
@@ -91,18 +91,18 @@ public:
         //- As above, but for a cell-set
         virtual tmp<scalarField> L
         (
-            const phasePair& pair,
+            const phaseInterface& interface,
             const scalarField& dmdtf,
             const scalarField& Tf,
             const labelUList& cells,
             const latentHeatScheme scheme
         ) const = 0;
 
-        //- Return the latent heat for a given pair, specie, mass transfer rate
-        //  (used only for it's sign), and interface temperature
+        //- Return the latent heat for a given interface, specie, mass transfer
+        //  rate (used only for it's sign), and interface temperature
         virtual tmp<volScalarField> Li
         (
-            const phasePair& pair,
+            const phaseInterface& interface,
             const word& member,
             const volScalarField& dmidtf,
             const volScalarField& Tf,
@@ -112,7 +112,7 @@ public:
         //- As above, but for a cell-set
         virtual tmp<scalarField> Li
         (
-            const phasePair& pair,
+            const phaseInterface& interface,
             const word& member,
             const scalarField& dmidtf,
             const scalarField& Tf,

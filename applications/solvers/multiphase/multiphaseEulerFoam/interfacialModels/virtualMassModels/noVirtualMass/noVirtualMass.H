@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,9 +40,6 @@ SourceFiles
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace virtualMassModels
 {
 
@@ -54,6 +51,14 @@ class noVirtualMass
 :
     public virtualMassModel
 {
+protected:
+
+    // Protected data
+
+        //- Interface
+        const phaseInterface interface_;
+
+
 public:
 
     //- Runtime type information
@@ -62,11 +67,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         noVirtualMass
         (
             const dictionary& dict,
-            const phasePair& pair,
+            const phaseInterface& interface,
             const bool registerObject
         );
 
@@ -77,11 +82,13 @@ public:
 
     // Member Functions
 
-        //- Virtual mass coefficient
-        virtual tmp<volScalarField> Cvm() const;
-
-        //- The virtual mass function K used in the momentum equation
+        //- Return the virtual mass coefficient K
+        //  used in the momentum equations
         virtual tmp<volScalarField> K() const;
+
+        //- Return the virtual mass coefficient Kf
+        //  used in the face-momentum equations
+        virtual tmp<surfaceScalarField> Kf() const;
 };
 
 

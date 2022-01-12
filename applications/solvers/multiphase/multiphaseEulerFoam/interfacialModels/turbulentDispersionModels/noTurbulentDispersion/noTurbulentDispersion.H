@@ -40,9 +40,6 @@ SourceFiles
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace turbulentDispersionModels
 {
 
@@ -54,6 +51,14 @@ class noTurbulentDispersion
 :
     public turbulentDispersionModel
 {
+private:
+
+    // Private data
+
+        //- Interface
+        const phaseInterface interface_;
+
+
 public:
 
     //- Runtime type information
@@ -62,11 +67,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         noTurbulentDispersion
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,11 +37,13 @@ namespace saturationModels
 }
 }
 
+
 static const Foam::dimensionedScalar zeroC("", Foam::dimTemperature, 273.15);
 static const Foam::dimensionedScalar A("", Foam::dimPressure, 611.21);
 static const Foam::dimensionedScalar B("", Foam::dimless, 18.678);
 static const Foam::dimensionedScalar C("", Foam::dimTemperature, 234.5);
 static const Foam::dimensionedScalar D("", Foam::dimTemperature, 257.14);
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -60,10 +62,10 @@ Foam::saturationModels::ArdenBuck::xByTC
 Foam::saturationModels::ArdenBuck::ArdenBuck
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 :
-    saturationModel(pair)
+    saturationModel(dict, interface)
 {}
 
 

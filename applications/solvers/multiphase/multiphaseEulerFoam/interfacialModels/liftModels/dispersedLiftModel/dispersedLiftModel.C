@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,61 +23,53 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "orderedPhasePair.H"
-#include "phaseSystem.H"
+#include "dispersedLiftModel.H"
+#include "fvcCurl.H"
+#include "fvcFlux.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::orderedPhasePair::orderedPhasePair
+Foam::liftModels::dispersedLiftModel::dispersedLiftModel
 (
-    const phaseModel& dispersed,
-    const phaseModel& continuous
+    const dictionary& dict,
+    const phaseInterface& interface
 )
 :
-    phasePair
-    (
-        dispersed,
-        continuous,
-        true
-    )
+    liftModel(dict, interface),
+    interface_(interface.modelCast<liftModel, dispersedPhaseInterface>())
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::orderedPhasePair::~orderedPhasePair()
+Foam::liftModels::dispersedLiftModel::~dispersedLiftModel()
 {}
 
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::phaseModel& Foam::orderedPhasePair::dispersed() const
+Foam::tmp<Foam::volVectorField> Foam::liftModels::dispersedLiftModel::Fi() const
 {
-    return phase1();
+    return
+        Cl()
+       *interface_.continuous().rho()
+       *(
+            interface_.Ur() ^ fvc::curl(interface_.continuous().U())
+        );
 }
 
 
-const Foam::phaseModel& Foam::orderedPhasePair::continuous() const
+Foam::tmp<Foam::volVectorField> Foam::liftModels::dispersedLiftModel::F() const
 {
-    return phase2();
+    return interface_.dispersed()*Fi();
 }
 
 
-Foam::word Foam::orderedPhasePair::name() const
+Foam::tmp<Foam::surfaceScalarField>
+Foam::liftModels::dispersedLiftModel::Ff() const
 {
-    word namec(second());
-    namec[0] = toupper(namec[0]);
-    return first() + "In" + namec;
-}
-
-
-Foam::word Foam::orderedPhasePair::otherName() const
-{
-    FatalErrorInFunction
-        << "Requested other name phase from an ordered pair."
-        << exit(FatalError);
-
-    return word::null;
+    return fvc::interpolate(interface_.dispersed())*fvc::flux(Fi());
 }
 
 

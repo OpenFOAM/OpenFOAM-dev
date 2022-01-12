@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,6 @@ SourceFiles
 namespace Foam
 {
 
-class phasePair;
-
 namespace diffusiveMassTransferModels
 {
 
@@ -58,6 +56,9 @@ class Frossling
 {
     // Private Data
 
+        //- Interface
+        const dispersedPhaseInterface interface_;
+
         //- Lewis number
         const dimensionedScalar Le_;
 
@@ -70,11 +71,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a dictionary and an interface
         Frossling
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 

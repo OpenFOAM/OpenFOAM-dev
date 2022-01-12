@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "swarmCorrection.H"
-#include "phasePair.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
@@ -32,13 +32,13 @@ Foam::autoPtr<Foam::swarmCorrection>
 Foam::swarmCorrection::New
 (
     const dictionary& dict,
-    const phasePair& pair
+    const phaseInterface& interface
 )
 {
-    word swarmCorrectionType(dict.lookup("type"));
+    const word swarmCorrectionType(dict.lookup("type"));
 
     Info<< "Selecting swarmCorrection for "
-        << pair << ": " << swarmCorrectionType << endl;
+        << interface.name() << ": " << swarmCorrectionType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(swarmCorrectionType);
@@ -53,7 +53,7 @@ Foam::swarmCorrection::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, pair);
+    return cstrIter()(dict, interface);
 }
 
 

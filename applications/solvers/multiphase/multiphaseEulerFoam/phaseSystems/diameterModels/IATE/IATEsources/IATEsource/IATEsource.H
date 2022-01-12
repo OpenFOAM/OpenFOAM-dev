@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,10 +159,7 @@ public:
         //- Return the bubble surface tension coefficient
         tmp<volScalarField> sigma() const
         {
-            return fluid().sigma
-            (
-                phasePairKey(phase().name(), otherPhase().name())
-            );
+            return fluid().sigma(phaseInterface(phase(), otherPhase()));
         }
 
         //- Return the bubble relative velocity

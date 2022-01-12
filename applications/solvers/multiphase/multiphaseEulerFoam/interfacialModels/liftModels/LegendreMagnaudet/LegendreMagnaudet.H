@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,15 +49,12 @@ SourceFiles
 #ifndef LegendreMagnaudet_H
 #define LegendreMagnaudet_H
 
-#include "liftModel.H"
+#include "dispersedLiftModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class phasePair;
-
 namespace liftModels
 {
 
@@ -67,7 +64,7 @@ namespace liftModels
 
 class LegendreMagnaudet
 :
-    public liftModel
+    public dispersedLiftModel
 {
     // Private Data
 
@@ -83,11 +80,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
+        //- Construct from a dictionary and an interface
         LegendreMagnaudet
         (
             const dictionary& dict,
-            const phasePair& pair
+            const phaseInterface& interface
         );
 
 
