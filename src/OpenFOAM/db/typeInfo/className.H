@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,6 +119,11 @@ public:                                                                        \
 #define defineTypeNameAndDebug(Type, DebugSwitch)                              \
     defineTypeName(Type);                                                      \
     defineDebugSwitch(Type, DebugSwitch)
+
+//- Define the typeName and debug information, lookup as \a Name
+#define defineTypeNameAndDebugWithName(Type, Name, DebugSwitch)                \
+    defineTypeNameWithName(Type, Name);                                        \
+    defineDebugSwitchWithName(Type, Name, DebugSwitch)
 
 //- Define the typeName and debug information, lookup as \a Name
 #define defineTemplateTypeNameAndDebugWithName(Type, Name, DebugSwitch)        \
