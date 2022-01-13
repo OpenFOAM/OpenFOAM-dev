@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1253,12 +1253,13 @@ Foam::Time& Foam::Time::operator++()
         // Adjust the precision of the time directory name if necessary
         if (writeTime_)
         {
+            // User-time equivalent of deltaT
+            const scalar userDeltaT =
+                timeToUserTime(value()) - timeToUserTime(value() - deltaT_);
+
             // Tolerance used when testing time equivalence
             const scalar timeTol =
-                max(min(pow(10.0, -precision_), 0.1*deltaT_), small);
-
-            // User-time equivalent of deltaT
-            const scalar userDeltaT = timeToUserTime(deltaT_);
+                max(min(pow(10.0, -precision_), 0.1*userDeltaT), small);
 
             // Time value obtained by reading timeName
             scalar timeNameValue = -vGreat;
