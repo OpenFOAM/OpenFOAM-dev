@@ -82,7 +82,7 @@ Foam::functionObjects::phaseForces::phaseForces
             IOobject::groupName("alpha", dict.lookup("phase"))
         )
     ),
-    fluid_(mesh_.lookupObject<phaseSystem>("phaseProperties"))
+    fluid_(mesh_.lookupObject<phaseSystem>(phaseSystem::propertiesName))
 {
     read(dict);
 

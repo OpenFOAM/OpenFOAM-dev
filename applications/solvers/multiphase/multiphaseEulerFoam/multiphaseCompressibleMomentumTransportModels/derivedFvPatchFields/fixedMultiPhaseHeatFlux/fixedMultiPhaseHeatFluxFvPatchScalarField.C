@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,9 +104,7 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::updateCoeffs()
 
     // Lookup the fluid model
     const phaseSystem& fluid =
-        (
-            db().lookupObject<phaseSystem>("phaseProperties")
-        );
+            db().lookupObject<phaseSystem>(phaseSystem::propertiesName);
 
     const scalarField& Tp = *this;
 

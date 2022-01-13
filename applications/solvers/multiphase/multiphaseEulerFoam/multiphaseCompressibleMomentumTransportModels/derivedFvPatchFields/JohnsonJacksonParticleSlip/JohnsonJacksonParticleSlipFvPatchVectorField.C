@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,7 +143,7 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
 
     // lookup the fluid model and the phase
     const phaseSystem& fluid =
-        db().lookupObject<phaseSystem>("phaseProperties");
+        db().lookupObject<phaseSystem>(phaseSystem::propertiesName);
 
     const phaseModel& phase
     (

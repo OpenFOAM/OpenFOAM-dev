@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,10 @@ Foam::functionObjects::phaseMap::phaseMap
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    phases_(mesh_.lookupObject<phaseSystem>("phaseProperties").phases())
+    phases_
+    (
+        mesh_.lookupObject<phaseSystem>(phaseSystem::propertiesName).phases()
+    )
 {}
 
 

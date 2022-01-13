@@ -283,7 +283,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
     // Lookup the fluid model
     const phaseSystem& fluid =
-        db().lookupObject<phaseSystem>("phaseProperties");
+        db().lookupObject<phaseSystem>(phaseSystem::propertiesName);
 
     const word volatileSpecie(fluid.lookupOrDefault<word>("volatile", "none"));
 
