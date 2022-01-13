@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,8 +112,17 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
         (pair_.phase1().residualAlpha() + pair_.phase2().residualAlpha())/2
     );
 
-    const volScalarField I(alpha1/max(alpha1 + alpha2, residualAlpha));
-    const volScalarField magGradI(max(mag(fvc::grad(I)), 0.5*residualAlpha/L));
+    const volScalarField I1(alpha1/max(alpha1 + alpha2, residualAlpha));
+    const volScalarField I2(alpha2/max(alpha1 + alpha2, residualAlpha));
+    const volScalarField magGradI
+    (
+        max
+        (
+            (rho2*mag(fvc::grad(I1)) + rho1*mag(fvc::grad(I2)))/(rho1 + rho2),
+            residualAlpha/2/L
+        )
+    );
+
     const volScalarField muI(rho1*nu1*rho2*nu2/(rho1*nu1 + rho2*nu2));
 
     const volScalarField limitedAlpha1
