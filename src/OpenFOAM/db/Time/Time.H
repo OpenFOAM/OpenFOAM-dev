@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,6 +160,11 @@ protected:
 
         //- Time directory name precision
         static int precision_;
+
+        //- Current time directory name precision adjusted as necessary
+        //  to ensure time directory names are unique
+        //  particularly if the time-step is reduced during the run
+        static int curPrecision_;
 
         //- Maximum time directory name precision
         static const int maxPrecision_;
@@ -385,7 +390,7 @@ public:
             static word timeName
             (
                 const scalar,
-                const int precision = precision_
+                const int precision = curPrecision_
             );
 
             //- Return current time name
