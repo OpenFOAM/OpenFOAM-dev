@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -299,7 +299,15 @@ Foam::instantList Foam::timeSelector::selectIfPresent
     else
     {
         // No timeSelector option specified. Do not change runTime.
-        return instantList(1, instant(runTime.value(), runTime.timeName()));
+        return instantList
+        (
+            1,
+            instant
+            (
+                runTime.timeToUserTime(runTime.value()),
+                runTime.timeName()
+            )
+        );
     }
 }
 
