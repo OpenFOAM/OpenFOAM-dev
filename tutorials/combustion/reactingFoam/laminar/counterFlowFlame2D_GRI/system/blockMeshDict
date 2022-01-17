@@ -68,6 +68,12 @@ boundary
             (0 3 2 1)
         );
     }
+
+    internal
+    {
+        type internal;
+        faces ();
+    }
 );
 
 

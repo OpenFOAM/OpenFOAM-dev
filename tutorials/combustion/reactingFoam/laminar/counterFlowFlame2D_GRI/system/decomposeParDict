@@ -14,14 +14,22 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-numberOfSubdomains  4;
+numberOfSubdomains  12;
 
-method          hierarchical;
+decomposer      hierarchical;
+distributor     zoltan;
+libs            ("libzoltanDecomp.so");
 
 hierarchicalCoeffs
 {
-    n           (2 2 1);
+    n           (6 2 1);
     order       xyz;
 }
+
+zoltanCoeffs
+{
+    lb_method   rcb;
+}
+
 
 // ************************************************************************* //

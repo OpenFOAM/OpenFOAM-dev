@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,6 @@ Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
     activeSpecies_(chemistry.nSpecie(), true),
     log_(false),
     tolerance_(NaN),
-    clockTime_(clockTime()),
     sumnActiveSpecies_(0),
     sumn_(0),
     reduceMechCpuTime_(0)
@@ -64,7 +63,6 @@ Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
     activeSpecies_(chemistry.nSpecie(), false),
     log_(coeffsDict_.lookupOrDefault<Switch>("log", false)),
     tolerance_(coeffsDict_.lookupOrDefault<scalar>("tolerance", 1e-4)),
-    clockTime_(clockTime()),
     sumnActiveSpecies_(0),
     sumn_(0),
     reduceMechCpuTime_(0)
@@ -91,7 +89,7 @@ void Foam::chemistryReductionMethod<ThermoType>::initReduceMechanism()
 {
     if (log_)
     {
-        clockTime_.timeIncrement();
+        cpuTime_.cpuTimeIncrement();
     }
 }
 
@@ -162,7 +160,7 @@ void Foam::chemistryReductionMethod<ThermoType>::endReduceMechanism
     {
         sumnActiveSpecies_ += nActiveSpecies_;
         sumn_++;
-        reduceMechCpuTime_ += clockTime_.timeIncrement();
+        reduceMechCpuTime_ += cpuTime_.cpuTimeIncrement();
     }
 }
 

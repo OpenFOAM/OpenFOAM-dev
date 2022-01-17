@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ class ISAT
         scalar growCpuTime_;
         scalar searchISATCpuTime_;
 
-        const clockTime clockTime_;
+        cpuTime cpuTime_;
 
         autoPtr<OFstream> nRetrievedFile_;
         autoPtr<OFstream> nGrowthFile_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ SourceFiles
 #include "IOdictionary.H"
 #include "DynamicField.H"
 #include "Switch.H"
-#include "clockTime.H"
+#include "cpuTime.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -101,8 +101,8 @@ private:
         //- Tolerance for the mechanism reduction algorithm
         scalar tolerance_;
 
-        //- Clock time for logging
-        const clockTime clockTime_;
+        //- CPU time for logging
+        cpuTime cpuTime_;
 
         //- ...
         int64_t sumnActiveSpecies_;

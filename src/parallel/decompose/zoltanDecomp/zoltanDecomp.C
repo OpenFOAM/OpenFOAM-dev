@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,13 +92,23 @@ static void get_vertex_list
     const Foam::pointField& points = vertexData.first();
     const Foam::scalarField& weights = vertexData.second();
 
+    if (wgt_dim != weights.size()/points.size())
+    {
+        *ierr = ZOLTAN_FATAL;
+        return;
+    }
+
     Foam::globalIndex globalMap(points.size());
 
     for (Foam::label i=0; i<points.size(); i++)
     {
         localIDs[i] = i;
         globalIDs[i] = globalMap.toGlobal(i);
-        obj_wgts[i] = weights[i];
+
+        for(int j=0; j<wgt_dim; j++)
+        {
+            obj_wgts[wgt_dim*i + j] = weights[wgt_dim*i + j];
+        }
     }
 
     *ierr = ZOLTAN_OK;
@@ -214,7 +224,6 @@ static void get_edge_list
     (
         (nGID != 1)
      || (nLID != 1)
-     || (wgt_dim != 0)
     )
     {
         *ierr = ZOLTAN_FATAL;
@@ -260,9 +269,11 @@ Foam::label Foam::zoltanDecomp::decompose
 
     struct Zoltan_Struct *zz = Zoltan_Create(PstreamGlobals::MPI_COMM_FOAM);
 
+    const int nWeights = pWeights.size()/points.size();
+
     // Set internal parameters
     Zoltan_Set_Param(zz, "return_lists", "export");
-    Zoltan_Set_Param(zz, "obj_weight_dim", "1");
+    Zoltan_Set_Param(zz, "obj_weight_dim", name(nWeights).c_str());
     Zoltan_Set_Param(zz, "edge_weight_dim", "0");
 
     // General default paramaters

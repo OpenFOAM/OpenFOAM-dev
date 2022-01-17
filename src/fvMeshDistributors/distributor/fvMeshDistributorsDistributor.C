@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,15 +60,12 @@ void Foam::fvMeshDistributors::distributor::readDict()
 }
 
 
-void Foam::fvMeshDistributors::distributor::distribute()
+void Foam::fvMeshDistributors::distributor::distribute
+(
+    const labelList& distribution
+)
 {
     fvMesh& mesh = this->mesh();
-
-    // Create new decomposition distribution
-    labelList distribution
-    (
-        distributor_->decompose(mesh, mesh.cellCentres())
-    );
 
     // Mesh distribution engine
     fvMeshDistribute distributor(mesh);
@@ -114,22 +111,26 @@ Foam::fvMeshDistributors::distributor::~distributor()
 
 bool Foam::fvMeshDistributors::distributor::update()
 {
+    const fvMesh& mesh = this->mesh();
+
+    bool redistributed = false;
+
     if
     (
         Pstream::nProcs() > 1
-     && mesh().time().timeIndex() > 1
-     && timeIndex_ != mesh().time().timeIndex()
-     && mesh().time().timeIndex() % redistributionInterval_ == 0
+     && mesh.time().timeIndex() > 1
+     && timeIndex_ != mesh.time().timeIndex()
+     && mesh.time().timeIndex() % redistributionInterval_ == 0
     )
     {
-        timeIndex_ = mesh().time().timeIndex();
+        timeIndex_ = mesh.time().timeIndex();
 
         const scalar idealNCells =
-            mesh().globalData().nTotalCells()/Pstream::nProcs();
+            mesh.globalData().nTotalCells()/Pstream::nProcs();
 
         const scalar imbalance = returnReduce
         (
-            mag(1 - mesh().nCells()/idealNCells),
+            mag(1 - mesh.nCells()/idealNCells),
             maxOp<scalar>()
         );
 
@@ -137,19 +138,19 @@ bool Foam::fvMeshDistributors::distributor::update()
         {
             Info<< "Redistributing mesh with imbalance " << imbalance << endl;
 
-            distribute();
+            // Create new decomposition distribution
+            const labelList distribution
+            (
+                distributor_->decompose(mesh, mesh.cellCentres())
+            );
 
-            return true;
-        }
-        else
-        {
-            return false;
+            distribute(distribution);
+
+            redistributed = true;
         }
     }
-    else
-    {
-        return false;
-    }
+
+    return redistributed;
 }
 
 

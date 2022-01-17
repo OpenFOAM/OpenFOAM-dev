@@ -20,6 +20,8 @@ internalField   uniform 1e5;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     fuel
     {
         type            zeroGradient;

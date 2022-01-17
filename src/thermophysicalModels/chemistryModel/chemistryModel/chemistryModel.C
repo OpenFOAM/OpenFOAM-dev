@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "chemistryModel.H"
 #include "UniformField.H"
 #include "localEulerDdtScheme.H"
-#include "clockTime.H"
+#include "cpuTime.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -39,6 +39,7 @@ Foam::chemistryModel<ThermoType>::chemistryModel
     basicChemistryModel(thermo),
     ODESystem(),
     log_(this->lookupOrDefault("log", false)),
+    loadBalancing_(this->lookupOrDefault("loadBalancing", false)),
     jacobianType_
     (
         this->found("jacobian")
@@ -709,14 +710,43 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
     const DeltaTType& deltaT
 )
 {
+    if (loadBalancing_)
+    {
+        if
+        (
+            !this->mesh().objectRegistry::template
+            foundObject<volScalarField::Internal>("chemistryCpuTime")
+        )
+        {
+            regIOobject::store
+            (
+                volScalarField::Internal::New
+                (
+                    "chemistryCpuTime",
+                    this->mesh(),
+                    dimensionedScalar(dimTime, 0)
+                ).ptr()
+            );
+        }
+    }
+
+    volScalarField::Internal& chemistryCpuTime =
+        loadBalancing_
+      ? this->mesh().objectRegistry::template
+        lookupObjectRef<volScalarField::Internal>
+        (
+            "chemistryCpuTime"
+        )
+    : const_cast<volScalarField::Internal&>(volScalarField::Internal::null());
+
     tabulation_.reset();
 
     const basicSpecieMixture& composition = this->thermo().composition();
 
     // CPU time analysis
-    const clockTime clockTime_ = clockTime();
-    clockTime_.timeIncrement();
-    scalar solveChemistryCpuTime_ = 0;
+    cpuTime cpuTime_;
+    cpuTime solveCpuTime_;
+    scalar totalSolveCpuTime_ = 0;
 
     basicChemistryModel::correct();
 
@@ -810,8 +840,8 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
 
             if (log_)
             {
-                // Reset the time
-                clockTime_.timeIncrement();
+                // Reset the solve time
+                solveCpuTime_.cpuTimeIncrement();
             }
 
             // Calculate the chemical source terms
@@ -845,7 +875,7 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
 
             if (log_)
             {
-                solveChemistryCpuTime_ += clockTime_.timeIncrement();
+                totalSolveCpuTime_ += solveCpuTime_.cpuTimeIncrement();
             }
 
             // If tabulation is used, we add the information computed here to
@@ -880,13 +910,18 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
         {
             RR_[i][celli] = (Y_[i]*rho - Y0[i]*rho0)/deltaT[celli];
         }
+
+        if (loadBalancing_)
+        {
+            chemistryCpuTime[celli] += cpuTime_.cpuTimeIncrement();
+        }
     }
 
     if (log_)
     {
         cpuSolveFile_()
             << this->time().userTimeValue()
-            << "    " << solveChemistryCpuTime_ << endl;
+            << "    " << totalSolveCpuTime_ << endl;
     }
 
     mechRed_.update();

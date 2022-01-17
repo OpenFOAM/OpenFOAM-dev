@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,6 +129,9 @@ class chemistryModel
 
         //- Switch to select performance logging
         Switch log_;
+
+        //- Switch to enable loadBalancing performance logging
+        Switch loadBalancing_;
 
         //- Type of the Jacobian to be calculated
         const jacobianType jacobianType_;

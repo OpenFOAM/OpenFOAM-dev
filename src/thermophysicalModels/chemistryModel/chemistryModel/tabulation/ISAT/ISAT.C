@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,6 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::ISAT
     addNewLeafCpuTime_(0),
     growCpuTime_(0),
     searchISATCpuTime_(0),
-    clockTime_(clockTime()),
     tabulationResults_
     (
         IOobject
@@ -411,7 +410,7 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
 {
     if (log_)
     {
-        clockTime_.timeIncrement();
+        cpuTime_.cpuTimeIncrement();
     }
 
     bool retrieved(false);
@@ -480,7 +479,7 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
 
     if (log_)
     {
-        searchISATCpuTime_ += clockTime_.timeIncrement();
+        searchISATCpuTime_ += cpuTime_.cpuTimeIncrement();
     }
 
     return retrieved;
@@ -499,7 +498,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
 {
     if (log_)
     {
-        clockTime_.timeIncrement();
+        cpuTime_.cpuTimeIncrement();
     }
 
     label growthOrAddFlag = 1;
@@ -518,7 +517,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
 
             if (log_)
             {
-                growCpuTime_ += clockTime_.timeIncrement();
+                growCpuTime_ += cpuTime_.cpuTimeIncrement();
             }
 
             // the structure of the tree is not modified, return false
@@ -607,7 +606,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
 
     if (log_)
     {
-        addNewLeafCpuTime_ += clockTime_.timeIncrement();
+        addNewLeafCpuTime_ += cpuTime_.cpuTimeIncrement();
     }
 
     return growthOrAddFlag;
