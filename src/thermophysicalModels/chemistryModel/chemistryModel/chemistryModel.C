@@ -26,7 +26,7 @@ License
 #include "chemistryModel.H"
 #include "UniformField.H"
 #include "localEulerDdtScheme.H"
-#include "cpuTime.H"
+#include "cpuLoad.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -710,41 +710,16 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
     const DeltaTType& deltaT
 )
 {
-    if (loadBalancing_)
-    {
-        if
-        (
-            !this->mesh().objectRegistry::template
-            foundObject<volScalarField::Internal>("chemistryCpuTime")
-        )
-        {
-            regIOobject::store
-            (
-                volScalarField::Internal::New
-                (
-                    "chemistryCpuTime",
-                    this->mesh(),
-                    dimensionedScalar(dimTime, 0)
-                ).ptr()
-            );
-        }
-    }
-
-    volScalarField::Internal& chemistryCpuTime =
-        loadBalancing_
-      ? this->mesh().objectRegistry::template
-        lookupObjectRef<volScalarField::Internal>
-        (
-            "chemistryCpuTime"
-        )
-    : const_cast<volScalarField::Internal&>(volScalarField::Internal::null());
-
     tabulation_.reset();
 
     const basicSpecieMixture& composition = this->thermo().composition();
 
+    optionalCpuLoad& chemistryCpuTime
+    (
+        optionalCpuLoad::New(this->mesh(), "chemistryCpuTime", loadBalancing_)
+    );
+
     // CPU time analysis
-    cpuTime cpuTime_;
     cpuTime solveCpuTime_;
     scalar totalSolveCpuTime_ = 0;
 
@@ -772,6 +747,8 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
     // Composition vector (Yi, T, p, deltaT)
     scalarField phiq(nEqns() + 1);
     scalarField Rphiq(nEqns() + 1);
+
+    chemistryCpuTime.reset();
 
     forAll(rho0vf, celli)
     {
@@ -913,7 +890,7 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
 
         if (loadBalancing_)
         {
-            chemistryCpuTime[celli] += cpuTime_.cpuTimeIncrement();
+            chemistryCpuTime.cpuTimeIncrement(celli);
         }
     }
 

@@ -25,7 +25,7 @@ License
 
 #include "fvMeshDistributorsLoadBalancer.H"
 #include "decompositionMethod.H"
-#include "volFields.H"
+#include "cpuLoad.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -93,20 +93,26 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
 
         const scalar timeStepCpuTime = cpuTime_.cpuTimeIncrement();
 
-        // Chemistry CPU load per cell
-        volScalarField::Internal& chemistryCpuTimeReg =
-            mesh.lookupObjectRef<volScalarField::Internal>
-            (
-                "chemistryCpuTime"
-            );
+        // CPU loads per cell
+        HashTable<cpuLoad*> cpuLoads(this->mesh().lookupClass<cpuLoad>());
 
-        const scalarField& chemistryCpuTime = chemistryCpuTimeReg.field();
+        if (!cpuLoads.size())
+        {
+            FatalErrorInFunction
+                << "No CPU loads have been allocated"
+                << exit(FatalError);
+        }
 
         if (mesh.time().timeIndex() % redistributionInterval_ == 0)
         {
             timeIndex_ = mesh.time().timeIndex();
 
-            const scalar sumCpuLoad(sum(chemistryCpuTime));
+            scalar sumCpuLoad = 0;
+
+            forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
+            {
+                sumCpuLoad += sum(iter()->field());
+            }
 
             const scalar cellCFDCpuTime = returnReduce
             (
@@ -139,19 +145,36 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
 
             if (multiConstraint_)
             {
-                const int nWeights = 2;
+                const int nWeights = cpuLoads.size() + 1;
 
                 weights.setSize(nWeights*mesh.nCells());
 
-                forAll(chemistryCpuTime, i)
+                for (label i=0; i<mesh.nCells(); i++)
                 {
                     weights[nWeights*i] = cellCFDCpuTime;
-                    weights[nWeights*i + 1] = chemistryCpuTime[i];
+                }
+
+                label loadi = 1;
+                forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
+                {
+                    const scalarField& cpuLoadField = iter()->field();
+
+                    forAll(cpuLoadField, i)
+                    {
+                        weights[nWeights*i + loadi] = cpuLoadField[i];
+                    }
+
+                    loadi++;
                 }
             }
             else
             {
-                weights = chemistryCpuTime + cellCFDCpuTime;
+                weights.setSize(mesh.nCells(), cellCFDCpuTime);
+
+                forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
+                {
+                    weights += iter()->field();
+                }
             }
 
             if (imbalance > maxImbalance_)
@@ -171,7 +194,10 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
             }
         }
 
-        chemistryCpuTimeReg.checkOut();
+        forAllIter(HashTable<cpuLoad*>, cpuLoads, iter)
+        {
+            iter()->checkOut();
+        }
     }
 
     return redistributed;
