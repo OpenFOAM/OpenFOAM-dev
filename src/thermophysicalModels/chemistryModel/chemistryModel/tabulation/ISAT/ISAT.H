@@ -197,7 +197,6 @@ class ISAT
             scalarSquareMatrix& A,
             const scalarField& Rphiq,
             const label li,
-            const scalar rho,
             const scalar dt
         );
 
@@ -273,7 +272,6 @@ public:
             const scalarField& phiq,
             const scalarField& Rphiq,
             const label li,
-            const scalar rho,
             const scalar deltaT
         );
 

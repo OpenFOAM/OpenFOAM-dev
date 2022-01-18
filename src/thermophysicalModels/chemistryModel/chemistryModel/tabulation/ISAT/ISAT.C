@@ -347,7 +347,6 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
     scalarSquareMatrix& A,
     const scalarField& Rphiq,
     const label li,
-    const scalar rhoi,
     const scalar dt
 )
 {
@@ -492,7 +491,6 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
     const scalarField& phiq,
     const scalarField& Rphiq,
     const label li,
-    const scalar rho,
     const scalar deltaT
 )
 {
@@ -584,7 +582,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
     // Compute the A matrix needed to store the chemPoint.
     const label ASize = chemistry_.nEqns() + 1;
     scalarSquareMatrix A(ASize, Zero);
-    computeA(A, Rphiq, li, rho, deltaT);
+    computeA(A, Rphiq, li, deltaT);
 
     chemisTree().insertNewLeaf
     (
