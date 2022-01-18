@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ void Foam::probes::sampleAndWrite
         const unsigned int w = IOstream::defaultPrecision() + 7;
         OFstream& os = *probeFilePtrs_[vField.name()];
 
-        os  << setw(w) << vField.time().timeToUserTime(vField.time().value());
+        os  << setw(w) << vField.time().userTimeValue();
 
         forAll(values, probei)
         {
@@ -102,7 +102,7 @@ void Foam::probes::sampleAndWrite
         const unsigned int w = IOstream::defaultPrecision() + 7;
         OFstream& os = *probeFilePtrs_[sField.name()];
 
-        os  << sField.time().timeToUserTime(sField.time().value());
+        os  << sField.time().userTimeValue();
 
         forAll(values, probei)
         {

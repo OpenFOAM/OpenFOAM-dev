@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ void Foam::patchProbes::sampleAndWrite
 
         probeStream
             << setw(w)
-            << vField.time().timeToUserTime(vField.time().value());
+            << vField.time().userTimeValue();
 
         forAll(values, probei)
         {
@@ -71,7 +71,7 @@ void Foam::patchProbes::sampleAndWrite
 
         probeStream
             << setw(w)
-            << sField.time().timeToUserTime(sField.time().value());
+            << sField.time().userTimeValue();
 
         forAll(values, probei)
         {

@@ -1,4 +1,13 @@
+{
     instantList sourceTimes = runTimeSource.times();
+
+    if (sourceTimes.empty())
+    {
+        FatalErrorInFunction << "No result times in source "
+            << runTimeSource.caseName()
+            << exit(FatalError);
+    }
+
     label sourceTimeIndex = runTimeSource.timeIndex();
     if (args.optionFound("sourceTime"))
     {
@@ -20,12 +29,13 @@
         sourceTimeIndex = Time::findClosestTimeIndex
         (
             sourceTimes,
-            runTimeTarget.time().value()
+            runTimeTarget.time().userTimeValue()
         );
     }
 
     runTimeSource.setTime(sourceTimes[sourceTimeIndex], sourceTimeIndex);
 
-    Info<< "\nSource time: " << runTimeSource.value()
-        << "\nTarget time: " << runTimeTarget.value()
+    Info<< "\nSource time: " << runTimeSource.userTimeName()
+        << "\nTarget time: " << runTimeTarget.userTimeName()
         << endl;
+}

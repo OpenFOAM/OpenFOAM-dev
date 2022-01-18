@@ -70,7 +70,7 @@ functions
         codeExecute
         #{
             const Time& runTime = mesh().time();
-            if (runTime.timeToUserTime(runTime.value()) >= -15.0)
+            if (runTime.userTimeValue() >= -15.0)
             {
                 const_cast<Time&>(runTime).setDeltaT
                 (

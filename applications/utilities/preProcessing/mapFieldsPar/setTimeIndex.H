@@ -29,13 +29,13 @@
         sourceTimeIndex = Time::findClosestTimeIndex
         (
             sourceTimes,
-            runTimeTarget.time().value()
+            runTimeTarget.time().userTimeValue()
         );
     }
 
     runTimeSource.setTime(sourceTimes[sourceTimeIndex], sourceTimeIndex);
 
-    Info<< "\nSource time: " << runTimeSource.value()
-        << "\nTarget time: " << runTimeTarget.value()
+    Info<< "\nSource time: " << runTimeSource.userTimeName()
+        << "\nTarget time: " << runTimeTarget.userTimeName()
         << endl;
 }
