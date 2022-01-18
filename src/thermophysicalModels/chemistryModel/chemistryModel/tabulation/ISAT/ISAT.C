@@ -43,6 +43,7 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::ISAT
     coeffsDict_(chemistryProperties.subDict("tabulation")),
     chemistry_(chemistry),
     log_(coeffsDict_.lookupOrDefault<Switch>("log", false)),
+    reduction_(chemistry_.reduction()),
     chemisTree_(*this, coeffsDict_),
     scaleFactor_(chemistry.nEqns() + 1, 1),
     runTime_(chemistry.time()),
@@ -198,7 +199,6 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
 )
 {
     const label nEqns = chemistry_.nEqns(); // Species, T, p
-    const bool mechRedActive = chemistry_.mechRed().active();
     const List<label>& completeToSimplified = phi0->completeToSimplifiedIndex();
 
     const scalarField dphi(phiq - phi0->phi());
@@ -213,12 +213,12 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
     Rphiq = phi0->Rphi();
     for (label i=0; i<nEqns + 1; i++)
     {
-        if (mechRedActive)
+        if (reduction_)
         {
             const label si =
                 i < nEqns - 2
               ? completeToSimplified[i]
-              : i - (nEqns - 2) + phi0->nActiveSpecies();
+              : i - (nEqns - 2) + phi0->nActive();
 
             if (si != -1)
             {
@@ -229,7 +229,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
                     const label sj =
                         j < nEqns - 2
                       ? completeToSimplified[j]
-                      : j - (nEqns - 2) + phi0->nActiveSpecies();
+                      : j - (nEqns - 2) + phi0->nActive();
 
                     if (sj != -1)
                     {
@@ -490,6 +490,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
 (
     const scalarField& phiq,
     const scalarField& Rphiq,
+    const label nActive,
     const label li,
     const scalar deltaT
 )
@@ -568,6 +569,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
                      scaleFactor(),
                      tolerance_,
                      scaleFactor_.size(),
+                     nActive,
                      nulPhi
                 );
                 deleteDemandDrivenData(tempList[i]);
@@ -592,6 +594,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
         scaleFactor(),
         tolerance_,
         scaleFactor_.size(),
+        nActive,
         lastSearch_ // lastSearch_ may be nullptr (handled by binaryTree)
     );
     if (lastSearch_ != nullptr)

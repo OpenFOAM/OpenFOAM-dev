@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -382,6 +382,7 @@ void Foam::binaryTree<ThermoType>::insertNewLeaf
     const scalarField& scaleFactor,
     const scalar& epsTol,
     const label nCols,
+    const label nActive,
     chP*& phi0
 )
 {
@@ -401,6 +402,7 @@ void Foam::binaryTree<ThermoType>::insertNewLeaf
                 scaleFactor,
                 epsTol,
                 nCols,
+                nActive,
                 coeffsDict_,
                 root_
             );
@@ -428,6 +430,7 @@ void Foam::binaryTree<ThermoType>::insertNewLeaf
                 scaleFactor,
                 epsTol,
                 nCols,
+                nActive,
                 coeffsDict_
             );
         // insert new node on the parent node in the position of the

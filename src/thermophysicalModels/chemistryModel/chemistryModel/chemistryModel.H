@@ -330,9 +330,8 @@ public:
 
         // Mechanism reduction access functions
 
-            //- Return access to the mechanism reduction method
-            //  Needed by ISAT
-            inline const chemistryReductionMethod<ThermoType>& mechRed() const;
+            //- Return true if mechanism reduction is active
+            inline bool reduction() const;
 
             //- Allow the reduction method to reset the number of species
             inline void setNSpecie(const label newNs);

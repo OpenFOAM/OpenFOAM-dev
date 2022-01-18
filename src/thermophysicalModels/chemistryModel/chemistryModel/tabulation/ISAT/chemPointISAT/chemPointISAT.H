@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,7 +184,7 @@ class chemPointISAT
         static scalar tolerance_;
 
         //- Number of active species stored in the chemPoint
-        label nActiveSpecies_;
+        label nActive_;
 
         //- Vectors that store the index conversion between the simplified
         //  and the complete chemical mechanism
@@ -256,8 +256,9 @@ public:
             const scalarField& Rphi,
             const scalarSquareMatrix& A,
             const scalarField& scaleFactor,
-            const scalar& tolerance,
-            const label& completeSpaceSize,
+            const scalar tolerance,
+            const label completeSpaceSize,
+            const label nActive,
             const dictionary& coeffsDict,
             binaryNode<ThermoType>* node = nullptr
         );
@@ -275,13 +276,13 @@ public:
 
     // Member Functions
 
-        //- Access to the chemistryModel
-        inline const chemistryModel<ThermoType>& chemistry()
+        //- Access to the ISAT table
+        inline const chemistryTabulationMethods::ISAT<ThermoType>& table() const
         {
-            return table_.chemistry();
+            return table_;
         }
 
-        inline label nGrowth()
+        inline label nGrowth() const
         {
             return nGrowth_;
         }
@@ -301,12 +302,12 @@ public:
             return Rphi_;
         }
 
-        inline const scalarField& scaleFactor()
+        inline const scalarField& scaleFactor() const
         {
             return scaleFactor_;
         }
 
-        inline const scalar& tolerance()
+        inline const scalar& tolerance() const
         {
             return tolerance_;
         }
@@ -341,9 +342,9 @@ public:
             return LT_;
         }
 
-        inline label nActiveSpecies()
+        inline label nActive()
         {
-            return nActiveSpecies_;
+            return nActive_;
         }
 
         inline List<label>& completeToSimplifiedIndex()

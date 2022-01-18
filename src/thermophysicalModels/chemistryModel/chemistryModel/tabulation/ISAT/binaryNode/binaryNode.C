@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ void Foam::binaryNode<ThermoType>::calcV
 {
     // LT is the transpose of the L matrix
     scalarSquareMatrix& LT = elementLeft->LT();
-    bool mechReductionActive = elementLeft->chemistry().mechRed().active();
+    const bool reduction = elementLeft->table().reduction();
 
     // Difference of composition in the full species domain
     scalarField phiDif(elementRight->phi() - elementLeft->phi());
@@ -82,7 +82,7 @@ void Foam::binaryNode<ThermoType>::calcV
     {
         label si = i;
         bool outOfIndexI = true;
-        if (mechReductionActive)
+        if (reduction)
         {
             if (i<elementLeft->completeSpaceSize() - 3)
             {
@@ -93,17 +93,18 @@ void Foam::binaryNode<ThermoType>::calcV
             {
                 outOfIndexI = false;
                 const label dif = i - (elementLeft->completeSpaceSize() - 3);
-                si = elementLeft->nActiveSpecies() + dif;
+                si = elementLeft->nActive() + dif;
             }
         }
-        if (!mechReductionActive || (mechReductionActive && !(outOfIndexI)))
+        if (!reduction || (reduction && !(outOfIndexI)))
         {
             v[i] = 0;
             for (label j=0; j<elementLeft->completeSpaceSize(); j++)
             {
                 label sj = j;
                 bool outOfIndexJ = true;
-                if (mechReductionActive)
+
+                if (reduction)
                 {
                     if (j < elementLeft->completeSpaceSize() - 3)
                     {
@@ -115,14 +116,11 @@ void Foam::binaryNode<ThermoType>::calcV
                         outOfIndexJ = false;
                         const label dif =
                             j - (elementLeft->completeSpaceSize() - 3);
-                        sj = elementLeft->nActiveSpecies() + dif;
+                        sj = elementLeft->nActive() + dif;
                     }
                 }
-                if
-                (
-                    !mechReductionActive
-                  ||(mechReductionActive && !(outOfIndexJ))
-                )
+
+                if (!reduction ||(reduction && !(outOfIndexJ)))
                 {
                     // Since L is a lower triangular matrix k=0->min(i, j)
                     for (label k=0; k<=min(si, sj); k++)

@@ -68,6 +68,9 @@ class ISAT
         //- Switch to select performance logging
         Switch log_;
 
+        //- Is reduction applied to the state vectors
+        const bool reduction_;
+
         //- List of the stored 'points' organised in a binary tree
         binaryTree<ThermoType> chemisTree_;
 
@@ -232,6 +235,12 @@ public:
             return true;
         }
 
+        //- Return true if reduction is applied to the state variables
+        bool reduction() const
+        {
+            return reduction_;
+        }
+
         const chemistryModel<ThermoType>& chemistry()
         {
             return chemistry_;
@@ -271,6 +280,7 @@ public:
         (
             const scalarField& phiq,
             const scalarField& Rphiq,
+            const label nActive,
             const label li,
             const scalar deltaT
         );

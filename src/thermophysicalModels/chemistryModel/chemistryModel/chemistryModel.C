@@ -867,7 +867,14 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
                 Rphiq[Rphiq.size()-2] = p;
                 Rphiq[Rphiq.size()-1] = deltaT[celli];
 
-                tabulation_.add(phiq, Rphiq, celli, rho0, deltaT[celli]);
+                tabulation_.add
+                (
+                    phiq,
+                    Rphiq,
+                    mechRed_.nActiveSpecies(),
+                    celli,
+                    deltaT[celli]
+                );
             }
 
             // When operations are done and if mechanism reduction is active,

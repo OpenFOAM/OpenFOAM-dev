@@ -56,7 +56,6 @@ class chemistryModel;
 template<class ThermoType>
 class chemistryTabulationMethod
 {
-
 public:
 
     //- Runtime type information
@@ -123,6 +122,7 @@ public:
         (
             const scalarField& phiQ,
             const scalarField& RphiQ,
+            const label nActive,
             const label li,
             const scalar deltaT
         ) = 0;
