@@ -119,7 +119,7 @@ populationBalanceCoeffs
         (
             phaseChange
             {
-                pairs               ((particles and vapor));
+                interfaces          (particles_vapor);
                 dmdtf               phaseTransfer:dmidtf;
                 specie              TiO2_s;
                 surfaceGrowthType   ParkRogak;

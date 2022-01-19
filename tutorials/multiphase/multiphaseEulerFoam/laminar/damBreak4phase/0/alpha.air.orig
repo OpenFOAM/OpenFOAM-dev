@@ -22,17 +22,38 @@ boundaryField
 {
     leftWall
     {
-        type            zeroGradient;
+        type            alphaContactAngle;
+        contactAngleProperties
+        {
+            oil             { theta0 90; }
+            water           { theta0 90; }
+            mercury         { theta0 90; }
+        }
+        value           $internalField;
     }
 
     rightWall
     {
-        type            zeroGradient;
+        type            alphaContactAngle;
+        contactAngleProperties
+        {
+            oil             { theta0 90; }
+            water           { theta0 90; }
+            mercury         { theta0 90; }
+        }
+        value           $internalField;
     }
 
     lowerWall
     {
-        type            zeroGradient;
+        type            alphaContactAngle;
+        contactAngleProperties
+        {
+            oil             { theta0 90; }
+            water           { theta0 90; }
+            mercury         { theta0 90; }
+        }
+        value           $internalField;
     }
 
     atmosphere

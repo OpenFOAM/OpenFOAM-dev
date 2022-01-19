@@ -104,7 +104,7 @@ populationBalanceCoeffs
         (
             phaseChange
             {
-                pairs   ((gas and liquid));
+                interfaces (gas_liquid);
                 dmdtf   thermalPhaseChange:dmdtf;
             }
 

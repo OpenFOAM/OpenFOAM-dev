@@ -25,7 +25,7 @@ fields
     p
     T.gas
     T.liquid
-    interfaceCompositionPhaseChange:Tf.gasAndLiquid
+    interfaceCompositionPhaseChange:Tf.gas_liquid
     dMass.gas
     dMass.liquid
     dMass

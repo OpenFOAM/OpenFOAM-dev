@@ -22,7 +22,7 @@ fields
     p
     T.steam
     T.water
-    thermalPhaseChange:Tf.steamAndWater
+    thermalPhaseChange:Tf.steam_water
     dMass.steam
     dMass.water
     dMass
