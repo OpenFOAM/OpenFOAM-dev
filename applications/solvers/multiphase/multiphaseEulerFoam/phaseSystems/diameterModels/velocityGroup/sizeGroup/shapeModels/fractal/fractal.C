@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,18 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fractal.H"
+#include "addToRunTimeSelectionTable.H"
 #include "sinteringModel.H"
-#include "fvmDdt.H"
-#include "fvmDiv.H"
-#include "fvcDiv.H"
-#include "fvmSup.H"
-#include "fvcSup.H"
+#include "fvm.H"
 #include "fvcDdt.H"
 #include "mixedFvPatchField.H"
-#include "mathematicalConstants.H"
-#include "populationBalanceModel.H"
-#include "addToRunTimeSelectionTable.H"
-#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

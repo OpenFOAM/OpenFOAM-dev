@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "LuoSvendsen.H"
 #include "addToRunTimeSelectionTable.H"
-#include "phaseCompressibleMomentumTransportModel.H"
 #include "linearInterpolationWeights.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
