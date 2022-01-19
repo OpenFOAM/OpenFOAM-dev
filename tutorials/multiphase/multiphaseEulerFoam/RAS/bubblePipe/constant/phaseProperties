@@ -75,12 +75,7 @@ water
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   constant;
-
-    constantCoeffs
-    {
-        d               1e-4;
-    }
+    diameterModel   none;
 
     residualAlpha   1e-6;
 }

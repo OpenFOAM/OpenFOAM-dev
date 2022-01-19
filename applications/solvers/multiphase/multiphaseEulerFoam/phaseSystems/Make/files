@@ -19,6 +19,7 @@ diameterModels/sphericalDiameter/sphericalDiameter.C
 diameterModels/constantDiameter/constantDiameter.C
 diameterModels/isothermalDiameter/isothermalDiameter.C
 diameterModels/linearTsubDiameter/linearTsubDiameter.C
+diameterModels/noDiameter/noDiameter.C
 diameterModels/velocityGroup/velocityGroup.C
 
 diameterModels/IATE/IATE.C

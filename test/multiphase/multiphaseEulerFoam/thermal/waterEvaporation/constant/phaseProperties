@@ -23,8 +23,7 @@ phaseChange on;
 steam
 {
     type            purePhaseModel;
-    diameterModel   constant;
-    d               1e-3;
+    diameterModel   none;
     residualAlpha   1e-6;
     Sct             0.7;
 }

@@ -33,11 +33,8 @@ gas
 liquid
 {
     type            pureIsothermalPhaseModel;
-    diameterModel   constant;
-    constantCoeffs
-    {
-        d               0.00045;
-    }
+    diameterModel   none;
+
     Sc              0.7;
 
     residualAlpha   1e-6;

@@ -21,12 +21,7 @@ phases (air water solid);
 air
 {
     type            pureIsothermalPhaseModel;
-    diameterModel   isothermal;
-    isothermalCoeffs
-    {
-        d0              3e-3;
-        p0              1e5;
-    }
+    diameterModel   none;
 
     residualAlpha   1e-6;
 }
@@ -34,11 +29,7 @@ air
 water
 {
     type            pureIsothermalPhaseModel;
-    diameterModel   constant;
-    constantCoeffs
-    {
-        d               1e-4;
-    }
+    diameterModel   none;
 
     residualAlpha   1e-6;
 }

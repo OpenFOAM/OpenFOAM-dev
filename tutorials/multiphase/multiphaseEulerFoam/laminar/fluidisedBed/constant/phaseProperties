@@ -34,11 +34,7 @@ particles
 air
 {
     type          purePhaseModel;
-    diameterModel constant;
-    constantCoeffs
-    {
-        d               1;
-    }
+    diameterModel none;
 
     residualAlpha   0;
 }

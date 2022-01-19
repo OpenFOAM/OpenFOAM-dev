@@ -29,19 +29,16 @@ solids
         d               462e-6;
     }
 
-    residualAlpha   1e-5;
+    residualAlpha 1e-5;
 }
 
 gas
 {
     type          purePhaseModel;
 
-    diameterModel constant;
-    constantCoeffs
-    {
-        d               1;
-    }
-    residualAlpha   1e-5;
+    diameterModel none;
+
+    residualAlpha 1e-5;
 }
 
 blending
@@ -49,7 +46,6 @@ blending
     default
     {
         type            none;
-        residualAlpha   1e-6;
         continuousPhase gas;
     }
 }
