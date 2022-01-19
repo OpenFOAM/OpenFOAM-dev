@@ -119,72 +119,62 @@ blending
 }
 
 surfaceTension
-(
-    (air1 and water)
+{
+    air1_water
     {
         type            constant;
         sigma           0.083;
     }
 
-    (air2 and water)
+    air2_water
     {
         type            constant;
         sigma           0.083;
     }
-);
+}
 
 interfaceCompression
-();
+{}
 
 drag
-(
-    (air1 in water)
+{
+    air1_dispersedIn_water
     {
         type            IshiiZuber;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (air2 in water)
+    air2_dispersedIn_water
     {
         type            IshiiZuber;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
-);
+}
 
 virtualMass
-(
-    (air1 in water)
+{
+    air1_dispersedIn_water
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (air2 in water)
+    air2_dispersedIn_water
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
-);
+}
 
 heatTransfer
-();
+{}
 
 phaseTransfer
-();
+{}
 
 lift
-(
-    (air1 in water)
+{
+    air1_dispersedIn_water
     {
         type            wallDamped;
 
@@ -205,7 +195,7 @@ lift
         }
     }
 
-    (air2 in water)
+    air2_dispersedIn_water
     {
         type            wallDamped;
 
@@ -225,38 +215,38 @@ lift
             }
         }
     }
-);
+}
 
 wallLubrication
-(
-    (air1 in water)
+{
+    air1_dispersedIn_water
     {
         type            Antal;
         Cw1             -0.01;
         Cw2             0.05;
     }
 
-    (air2 in water)
+    air2_dispersedIn_water
     {
         type            Antal;
         Cw1             -0.01;
         Cw2             0.05;
     }
-);
+}
 
 turbulentDispersion
-(
-    (air1 in water)
+{
+    air1_dispersedIn_water
     {
         type            Burns;
         sigma           0.9;
     }
 
-    (air2 in water)
+    air2_dispersedIn_water
     {
         type            Burns;
         sigma           0.9;
     }
-);
+}
 
 // ************************************************************************* //

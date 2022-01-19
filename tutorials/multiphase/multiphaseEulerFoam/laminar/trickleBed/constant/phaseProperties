@@ -56,29 +56,17 @@ blending
 }
 
 surfaceTension
-(
-    (air and water)
+{
+    air_water
     {
         type            constant;
         sigma           0.07;
     }
-
-    (air and solid)
-    {
-        type            constant;
-        sigma           0;
-    }
-
-    (solid and water)
-    {
-        type            constant;
-        sigma           0;
-    }
-);
+}
 
 drag
-(
-    (air and water)
+{
+    air_water
     {
         type            AttouFerschneider;
         gas             air;
@@ -86,60 +74,38 @@ drag
         solid           solid;
         E1              280;
         E2              4.8;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (air and solid)
+    air_solid
     {
-        type            AttouFerschneider;
-        gas             air;
-        liquid          water;
-        solid           solid;
-        E1              280;
-        E2              4.8;
-        swarmCorrection
-        {
-            type        none;
-        }
+        $air_water;
     }
 
-    (water and solid)
+    water_solid
     {
-        type            AttouFerschneider;
-        gas             air;
-        liquid          water;
-        solid           solid;
-        E1              280;
-        E2              4.8;
-        swarmCorrection
-        {
-            type        none;
-        }
+        $air_water;
     }
-);
+}
 
 virtualMass
-();
+{}
 
 heatTransfer
-();
+{}
 
 phaseTransfer
-();
+{}
 
 lift
-();
+{}
 
 wallLubrication
-();
+{}
 
 turbulentDispersion
-();
+{}
 
 interfaceCompression
-();
+{}
 
 // ************************************************************************* //

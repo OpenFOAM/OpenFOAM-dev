@@ -150,38 +150,31 @@ blending
 }
 
 interfaceCompression
-();
+{}
 
 surfaceTension
-();
+{}
 
 drag
-(
-    (particles in vapor)
+{
+    particles_dispersedIn_vapor
     {
         type            timeScaleFiltered;
         minRelaxTime    1e-4;
-
         dragModel
         {
             type            aerosolDrag;
-
             sigma           340e-12;
-
-            swarmCorrection
-            {
-                type    none;
-            }
         }
     }
-);
+}
 
 virtualMass
-();
+{}
 
 heatTransfer
-(
-    (particles in vapor)
+{
+    particles_dispersedIn_vapor
     {
         type            timeScaleFiltered;
         minRelaxTime    1e-4;
@@ -192,29 +185,29 @@ heatTransfer
             Nu              1;
         }
     }
-);
+}
 
 phaseTransfer
-(
-    (particles in vapor)
+{
+    particles_dispersedIn_vapor
     {
         type reactionDriven;
         reactingPhase vapor;
         targetPhase particles;
         species (TiO2 TiO2_s);
     }
-);
+}
 
 lift
-();
+{}
 
 wallLubrication
-();
+{}
 
 turbulentDispersion
-();
+{}
 
 interfaceCompression
-();
+{}
 
 // ************************************************************************* //

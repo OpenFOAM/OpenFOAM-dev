@@ -70,55 +70,47 @@ blending
 }
 
 surfaceTension
-(
-    (gas and liquid)
+{
+    gas_liquid
     {
         type            constant;
         sigma           0.07;
     }
-);
+}
 
 drag
-(
-    (gas in liquid)
+{
+    gas_dispersedIn_liquid
     {
         type            SchillerNaumann;
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (liquid in gas)
+    liquid_dispersedIn_gas
     {
         type            SchillerNaumann;
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
-);
+}
 
 virtualMass
-(
-    (gas in liquid)
+{
+    gas_dispersedIn_liquid
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (liquid in gas)
+    liquid_dispersedIn_gas
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
-);
+}
 
-interfaceComposition.gas
-(
-    (gas and liquid)
+interfaceComposition
+{
+    gas_liquid_inThe_gas
     {
         type saturated;
         species ( H2O );
@@ -128,84 +120,75 @@ interfaceComposition.gas
             type ArdenBuck;
         }
     }
-);
+}
 
-interfaceComposition.liquid
-();
-
-heatTransfer.gas
-(
-    (gas in liquid)
+heatTransfer
+{
+    gas_dispersedIn_liquid_inThe_gas
     {
         type spherical;
         residualAlpha 1e-4;
     }
 
-    (liquid in gas)
-    {
-        type RanzMarshall;
-        residualAlpha 1e-4;
-    }
-);
-
-heatTransfer.liquid
-(
-    (gas in liquid)
+    gas_dispersedIn_liquid_inThe_liquid
     {
         type RanzMarshall;
         residualAlpha 1e-4;
     }
 
-    (liquid in gas)
+    liquid_dispersedIn_gas_inThe_gas
+    {
+        type RanzMarshall;
+        residualAlpha 1e-4;
+    }
+
+    liquid_dispersedIn_gas_inThe_liquid
     {
         type spherical;
         residualAlpha 1e-4;
     }
-);
+}
 
-diffusiveMassTransfer.gas
-(
-    (gas in liquid)
+diffusiveMassTransfer
+{
+    gas_dispersedIn_liquid_inThe_gas
     {
         type spherical;
         Le 1.0;
     }
 
-    (liquid in gas)
-    {
-        type Frossling;
-        Le 1.0;
-    }
-);
-
-diffusiveMassTransfer.liquid
-(
-    (gas in liquid)
+    gas_dispersedIn_liquid_inThe_liquid
     {
         type Frossling;
         Le 1.0;
     }
 
-    (liquid in gas)
+    liquid_dispersedIn_gas_inThe_gas
+    {
+        type Frossling;
+        Le 1.0;
+    }
+
+    liquid_dispersedIn_gas_inThe_liquid
     {
         type spherical;
         Le 1.0;
     }
-);
+}
 
 phaseTransfer
-();
+{}
 
 lift
-();
+{}
 
 wallLubrication
-();
+{}
 
 turbulentDispersion
-();
+{}
 
 interfaceCompression
-();
+{}
 
 // ************************************************************************* //

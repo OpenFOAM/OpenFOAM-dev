@@ -97,371 +97,277 @@ blending
 }
 
 surfaceTension
-(
-    (air and water)
+{
+    air_water
     {
         type            constant;
         sigma           0.07;
     }
-    (air and oil)
+
+    air_oil
     {
         type            constant;
         sigma           0.07;
     }
-    (air and mercury)
+
+    air_mercury
     {
         type            constant;
         sigma           0.07;
     }
-    (water and oil)
+
+    water_oil
     {
         type            constant;
         sigma           0;
     }
-    (water and mercury)
+
+    water_mercury
     {
         type            constant;
         sigma           0;
     }
-    (oil and mercury)
+
+    oil_mercury
     {
         type            constant;
         sigma           0;
     }
-);
+}
 
 interfaceCompression
-(
-    (air and water)     1
-    (air and oil)       1
-    (air and mercury)   1
-    (water and oil)     1
-    (water and mercury) 1
-    (oil and mercury)   1
-);
+{
+    air_water     1;
+    air_oil       1;
+    air_mercury   1;
+    water_oil     1;
+    water_mercury 1;
+    oil_mercury   1;
+}
 
 drag
-(
-    (air in water)
+{
+    air_dispersedIn_water
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (water in air)
+    water_dispersedIn_air
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (air and water)
+    air_segregatedWith_water
     {
         type            segregated;
-
         m               0.5;
         n               8;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-
-    (air in oil)
+    air_dispersedIn_oil
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (oil in air)
+    oil_dispersedIn_air
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (air and oil)
+    air_segregatedWith_oil
     {
         type            segregated;
-
         m               0.5;
         n               8;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-
-    (air in mercury)
+    air_dispersedIn_mercury
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (mercury in air)
+    mercury_dispersedIn_air
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (air and mercury)
+    air_segregatedWith_mercury
     {
         type            segregated;
-
         m               0.5;
         n               8;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-
-
-    (water in oil)
+    water_dispersedIn_oil
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (oil in water)
+    oil_dispersedIn_water
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (water and oil)
+    water_segregatedWith_oil
     {
         type            segregated;
-
         m               0.5;
         n               8;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-
-    (water in mercury)
+    water_dispersedIn_mercury
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (mercury in water)
+    mercury_dispersedIn_water
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (water and mercury)
+    water_segregatedWith_mercury
     {
         type            segregated;
-
         m               0.5;
         n               8;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-
-
-    (oil in mercury)
+    oil_dispersedIn_mercury
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (mercury in oil)
+    mercury_dispersedIn_oil
     {
         type            SchillerNaumann;
-
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (oil and mercury)
+    oil_segregatedWith_mercury
     {
         type            segregated;
-
         m               0.5;
         n               8;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
-);
+}
 
 virtualMass
-(
-    (air in water)
+{
+    air_dispersedIn_water
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (air in oil)
+    air_dispersedIn_oil
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (air in mercury)
+    air_dispersedIn_mercury
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
-);
+}
 
 heatTransfer
-(
-    (air in water)
+{
+    air_dispersedIn_water
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-    (water in air)
+    water_dispersedIn_air
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-    (air in oil)
+    air_dispersedIn_oil
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-    (oil in air)
+    oil_dispersedIn_air
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-    (air in mercury)
+    air_dispersedIn_mercury
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-    (mercury in air)
+    mercury_dispersedIn_air
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-
-    (water in oil)
+    water_dispersedIn_oil
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-    (oil in water)
+    oil_dispersedIn_water
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-    (water in mercury)
+    water_dispersedIn_mercury
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-    (mercury in water)
+    mercury_dispersedIn_water
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-
-    (oil in mercury)
+    oil_dispersedIn_mercury
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
 
-    (mercury in oil)
+    mercury_dispersedIn_oil
     {
         type            RanzMarshall;
         residualAlpha   1e-3;
     }
-);
+}
 
 phaseTransfer
-();
+{}
 
 lift
-();
+{}
 
 wallLubrication
-();
+{}
 
 turbulentDispersion
-();
+{}
 
 // ************************************************************************* //

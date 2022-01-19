@@ -47,25 +47,23 @@ blending
 }
 
 surfaceTension
-(
-    (gas and liquid)
+{
+    gas_liquid
     {
         type            constant;
         sigma           0.07;
     }
-);
+}
 
 drag
-(
-);
+{}
 
 virtualMass
-(
-);
+{}
 
-interfaceComposition.gas
-(
-    (gas and liquid)
+interfaceComposition
+{
+    gas_liquid_inThe_gas
     {
         type nonRandomTwoLiquid;
         species (H2O C3H8O);
@@ -112,62 +110,42 @@ interfaceComposition.gas
              }
         }
     }
-);
+}
 
-interfaceComposition.liquid
-(
-);
-
-heatTransfer.gas
-(
-    (liquid in gas)
+heatTransfer
+{
+    liquid_dispersedIn_gas_inThe_gas
     {
         type RanzMarshall;
         residualAlpha 1e-4;
     }
-);
 
-heatTransfer.liquid
-(
-    (liquid in gas)
+    liquid_dispersedIn_gas_inThe_liquid
     {
         type spherical;
         residualAlpha 1e-4;
     }
-);
+}
 
-diffusiveMassTransfer.gas
-(
-    (liquid in gas)
+diffusiveMassTransfer
+{
+    liquid_dispersedIn_gas_inThe_gas
     {
         type Frossling;
         Le 1.0;
     }
-);
-
-diffusiveMassTransfer.liquid
-(
-    (liquid in gas)
-    {
-        type spherical;
-        Le 1.0;
-    }
-);
+}
 
 phaseTransfer
-(
-);
+{}
 
 lift
-(
-);
+{}
 
 wallLubrication
-(
-);
+{}
 
 turbulentDispersion
-(
-);
+{}
 
 // ************************************************************************* //

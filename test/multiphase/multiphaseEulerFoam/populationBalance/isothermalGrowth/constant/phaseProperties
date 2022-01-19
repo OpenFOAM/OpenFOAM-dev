@@ -134,60 +134,46 @@ blending
 }
 
 drag
-(
-    (air1 in water)
+{
+    air1_dispersedIn_water
     {
         type            SchillerNaumann;
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (air2 in water)
+    air2_dispersedIn_water
     {
-        type            SchillerNaumann;
-        residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
+        $air1_dispersedIn_water;
     }
 
-    (air3 in water)
+    air3_dispersedIn_water
     {
-        type            SchillerNaumann;
-        residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
+        $air1_dispersedIn_water;
     }
-);
+}
 
 heatTransfer
-();
+{}
 
 interfaceCompression
-();
+{}
 
 lift
-();
+{}
 
 phaseTransfer
-();
+{}
 
 surfaceTension
-();
+{}
 
 turbulentDispersion
-();
+{}
 
 virtualMass
-();
+{}
 
 wallLubrication
-();
+{}
 
 // ************************************************************************* //

@@ -155,30 +155,30 @@ blending
 }
 
 surfaceTension
-();
+{}
 
 interfaceCompression
-();
+{}
 
 drag
-();
+{}
 
 virtualMass
-();
+{}
 
 heatTransfer
-();
+{}
 
 phaseTransfer
-();
+{}
 
 lift
-();
+{}
 
 wallLubrication
-();
+{}
 
 turbulentDispersion
-();
+{}
 
 // ************************************************************************* //

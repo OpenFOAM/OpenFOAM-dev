@@ -46,82 +46,55 @@ blending
 }
 
 surfaceTension
-(
-    (steam and water)
+{
+    steam_water
     {
         type            constant;
         sigma           0.07;
     }
-);
+}
 
 saturation
-(
-    (steam and water)
+{
+    steam_water
     {
         type constant;
         pSat 1e5;
         Tsat 372.76;
     }
-);
+}
 
 drag
-(
-);
+{}
 
 virtualMass
-(
-);
+{}
 
-interfaceComposition.steam
-(
-    (steam and water)
-    {
-        type saturated;
-        species ( H2O );
-        Le 1.0;
-        saturationPressure
-        {
-            type ArdenBuck;
-        }
-    }
-);
-
-interfaceComposition.water
-(
-);
-
-heatTransfer.steam
-(
-    (water in steam)
+heatTransfer
+{
+    water_dispersedIn_steam_inThe_steam
     {
         type RanzMarshall;
         residualAlpha 1e-4;
     }
-);
 
-heatTransfer.water
-(
-    (water in steam)
+    water_dispersedIn_steam_inThe_water
     {
         type spherical;
         residualAlpha 1e-4;
     }
-);
+}
 
 phaseTransfer
-(
-);
+{}
 
 lift
-(
-);
+{}
 
 wallLubrication
-(
-);
+{}
 
 turbulentDispersion
-(
-);
+{}
 
 // ************************************************************************* //

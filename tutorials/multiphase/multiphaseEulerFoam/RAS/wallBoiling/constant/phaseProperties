@@ -41,46 +41,38 @@ liquid
 }
 
 drag
-(
-    (gas in liquid)
+{
+    gas_dispersedIn_liquid
     {
         type            IshiiZuber;
-
-        swarmCorrection
-        {
-            type        none;
-        }
     }
-);
+}
 
 virtualMass
-(
-    (gas in liquid)
+{
+    gas_dispersedIn_liquid
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
-);
+}
 
-heatTransfer.gas
-(
-    (gas in liquid)
+heatTransfer
+{
+    gas_dispersedIn_liquid_inThe_gas
     {
         type spherical;
     }
-);
 
-heatTransfer.liquid
-(
-    (gas in liquid)
+    gas_dispersedIn_liquid_inThe_liquid
     {
         type RanzMarshall;
     }
-);
+}
 
 lift
-(
-    (gas in liquid)
+{
+    gas_dispersedIn_liquid
     {
         type wallDamped;
 
@@ -103,27 +95,27 @@ lift
             zeroWallDist 0.0002;
         }
     }
-);
+}
 
 wallLubrication
-(
-   (gas in liquid)
+{
+    gas_dispersedIn_liquid
     {
         type            Antal;
         Cw1             -0.01;
         Cw2             0.05;
     }
-);
+}
 
 turbulentDispersion
-(
-    (gas in liquid)
+{
+    gas_dispersedIn_liquid
     {
         type                LopezDeBertodano;
         Ctd                 1.0;
         residualAlpha       1e-3;
     }
-);
+}
 
 blending
 {
@@ -135,8 +127,8 @@ blending
 }
 
 saturation
-(
-    (gas and liquid)
+{
+    gas_liquid
     {
         type function1;
 
@@ -157,21 +149,18 @@ saturation
             interpolationScheme linear;
         }
     }
-);
+}
 
 surfaceTension
-(
-    (gas and liquid)
+{
+    gas_liquid
     {
         type            constant;
         sigma           0.00176574;
     }
-);
+}
 
 phaseTransfer
-();
-
-interfaceCompression
-();
+{}
 
 // ************************************************************************* //

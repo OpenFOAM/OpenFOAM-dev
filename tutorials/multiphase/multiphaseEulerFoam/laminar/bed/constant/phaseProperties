@@ -70,100 +70,72 @@ blending
 }
 
 surfaceTension
-(
-    (air and water)
+{
+    air_water
     {
         type            constant;
         sigma           0.07;
     }
-
-    (air and solid)
-    {
-        type            constant;
-        sigma           0;
-    }
-
-    (solid and water)
-    {
-        type            constant;
-        sigma           0;
-    }
-);
+}
 
 drag
-(
-    (air in water)
+{
+    air_dispersedIn_water
     {
         type            SchillerNaumann;
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (water in air)
+    water_dispersedIn_air
     {
         type            SchillerNaumann;
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (solid in air)
+    solid_dispersedIn_air
     {
         type            Ergun;
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
 
-    (solid in water)
+    solid_dispersedIn_water
     {
         type            Ergun;
         residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
-);
+}
 
 virtualMass
-(
-    (air in water)
+{
+    air_dispersedIn_water
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
 
-    (water in air)
+    water_dispersedIn_air
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
-);
+}
 
 heatTransfer
-();
+{}
 
 phaseTransfer
-();
+{}
 
 lift
-();
+{}
 
 wallLubrication
-();
+{}
 
 turbulentDispersion
-();
+{}
 
 interfaceCompression
-();
+{}
 
 // ************************************************************************* //

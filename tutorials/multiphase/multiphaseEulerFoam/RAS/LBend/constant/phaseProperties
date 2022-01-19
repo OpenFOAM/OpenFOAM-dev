@@ -51,59 +51,55 @@ blending
 }
 
 surfaceTension
-(
-    (gas and solids)
+{
+    gas_solids
     {
         type            constant;
         sigma           0;
     }
-);
+}
 
 drag
-(
-    (solids in gas)
+{
+    solids_dispersedIn_gas
     {
         type            GidaspowErgunWenYu;
         residualAlpha   1e-5;
         residualRe      1e-5;
-        swarmCorrection
-        {
-            type        none;
-        }
     }
-);
+}
 
 virtualMass
-(
-    (solids in gas)
+{
+    solids_dispersedIn_gas
     {
         type            constantCoefficient;
         Cvm             0;
     }
-);
+}
 
 heatTransfer
-(
-    (solids in gas)
+{
+    solids_dispersedIn_gas
     {
         type            RanzMarshall;
         residualAlpha   1e-4;
     }
-);
+}
 
 phaseTransfer
-();
+{}
 
 lift
-();
+{}
 
 wallLubrication
-();
+{}
 
 turbulentDispersion
-();
+{}
 
 interfaceCompression
-();
+{}
 
 // ************************************************************************* //
