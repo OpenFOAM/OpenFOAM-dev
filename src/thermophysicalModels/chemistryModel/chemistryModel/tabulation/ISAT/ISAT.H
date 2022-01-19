@@ -41,7 +41,11 @@ Description
 #ifndef ISAT_H
 #define ISAT_H
 
+#include "chemistryTabulationMethod.H"
 #include "binaryTree.H"
+#include "volFields.H"
+#include "OFstream.H"
+#include "cpuTime.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,16 +58,15 @@ namespace chemistryTabulationMethods
                             Class ISAT Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class ISAT
 :
-    public chemistryTabulationMethod<ThermoType>
+    public chemistryTabulationMethod
 {
     // Private Data
 
         const dictionary coeffsDict_;
 
-        const chemistryModel<ThermoType>& chemistry_;
+        const odeChemistryModel& chemistry_;
 
         //- Switch to select performance logging
         Switch log_;
@@ -72,7 +75,7 @@ class ISAT
         const bool reduction_;
 
         //- List of the stored 'points' organised in a binary tree
-        binaryTree<ThermoType> chemisTree_;
+        binaryTree chemisTree_;
 
         //- List of scale factors for species, temperature and pressure
         scalarField scaleFactor_;
@@ -101,13 +104,13 @@ class ISAT
         Switch MRURetrieve_;
 
         //- Most Recently Used (MRU) list of chemPoint
-        SLList<chemPointISAT<ThermoType>*> MRUList_;
+        SLList<chemPointISAT*> MRUList_;
 
         //- Maximum size of the MRU list
         label maxMRUSize_;
 
         //- Store a pointer to the last chemPointISAT found
-        chemPointISAT<ThermoType>* lastSearch_;
+        chemPointISAT* lastSearch_;
 
         //- Switch to allow growth (on by default)
         Switch growPoints_;
@@ -150,7 +153,7 @@ class ISAT
     // Private Member Functions
 
         //- Add a chemPoint to the MRU list
-        void addToMRU(chemPointISAT<ThermoType>* phi0);
+        void addToMRU(chemPointISAT* phi0);
 
         //- Compute and return the mapping of the composition phiq
         //  Input : phi0 the nearest chemPoint used in the linear interpolation
@@ -161,7 +164,7 @@ class ISAT
         //  Rphiq = Rphi0 + A * (phiq-phi0)
         void calcNewC
         (
-            chemPointISAT<ThermoType>* phi0,
+            chemPointISAT* phi0,
             const scalarField& phiq,
             scalarField& Rphiq
         );
@@ -175,7 +178,7 @@ class ISAT
         //  Output: true if phiq is in the EOA, false if not
         bool grow
         (
-            chemPointISAT<ThermoType>* phi0,
+            chemPointISAT* phi0,
             const scalarField& phiq,
             const scalarField& Rphiq
         );
@@ -216,7 +219,7 @@ public:
         ISAT
         (
             const dictionary& chemistryProperties,
-            const chemistryModel<ThermoType>& chemistry
+            const odeChemistryModel& chemistry
         );
 
         //- Disallow default bitwise copy construction
@@ -241,12 +244,12 @@ public:
             return reduction_;
         }
 
-        const chemistryModel<ThermoType>& chemistry()
+        const odeChemistryModel& chemistry()
         {
             return chemistry_;
         }
 
-        inline binaryTree<ThermoType>& chemisTree()
+        inline binaryTree& chemisTree()
         {
             return chemisTree_;
         }
@@ -295,12 +298,6 @@ public:
 
 } // End namespace chemistryTabulationMethods
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "ISAT.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

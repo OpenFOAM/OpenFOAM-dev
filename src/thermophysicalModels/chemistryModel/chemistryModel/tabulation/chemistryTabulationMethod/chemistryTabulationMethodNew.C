@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,12 +29,11 @@ License
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::autoPtr<Foam::chemistryTabulationMethod<ThermoType>>
-Foam::chemistryTabulationMethod<ThermoType>::New
+Foam::autoPtr<Foam::chemistryTabulationMethod>
+Foam::chemistryTabulationMethod::New
 (
     const IOdictionary& dict,
-    const chemistryModel<ThermoType>& chemistry
+    const odeChemistryModel& chemistry
 )
 {
     if (dict.found("tabulation"))
@@ -45,57 +44,28 @@ Foam::chemistryTabulationMethod<ThermoType>::New
 
         Info<< "Selecting chemistry tabulation method " << methodName << endl;
 
-        const word methodTypeName =
-            methodName + '<' + ThermoType::typeName() + '>';
-
         typename dictionaryConstructorTable::iterator cstrIter =
-            dictionaryConstructorTablePtr_->find(methodTypeName);
+            dictionaryConstructorTablePtr_->find(methodName);
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
             FatalErrorInFunction
                 << "Unknown " << typeName_() << " type " << methodName << endl
-                << endl;
-
-            const wordList names(dictionaryConstructorTablePtr_->sortedToc());
-
-            wordList thisCmpts;
-            thisCmpts.append(word::null);
-            thisCmpts.append
-            (
-                basicThermo::splitThermoName(ThermoType::typeName(), 5)
-            );
-
-            wordList validNames;
-            forAll(names, i)
-            {
-                const wordList cmpts(basicThermo::splitThermoName(names[i], 6));
-
-                if
-                (
-                    SubList<word>(cmpts, 5, 1) == SubList<word>(thisCmpts, 5, 1)
-                )
-                {
-                    validNames.append(cmpts[0]);
-                }
-            }
-
-            FatalErrorInFunction
-                << "Valid " << typeName_()
-                << " types are:" << validNames << endl
+                << "Valid " << typeName_() << " types are:"
+                << dictionaryConstructorTablePtr_->sortedToc() << endl
                 << exit(FatalError);
         }
 
-        return autoPtr<chemistryTabulationMethod<ThermoType>>
+        return autoPtr<chemistryTabulationMethod>
         (
             cstrIter()(dict, chemistry)
         );
     }
     else
     {
-        return autoPtr<chemistryTabulationMethod<ThermoType>>
+        return autoPtr<chemistryTabulationMethod>
         (
-            new chemistryTabulationMethods::none<ThermoType>(dict, chemistry)
+            new chemistryTabulationMethods::none(dict, chemistry)
         );
     }
 }

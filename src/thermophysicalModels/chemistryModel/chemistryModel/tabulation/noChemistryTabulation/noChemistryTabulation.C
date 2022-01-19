@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,17 +24,30 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "noChemistryTabulation.H"
+#include "addToRunTimeSelectionTable.H"
+
+
+/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
+
+namespace Foam
+{
+namespace chemistryTabulationMethods
+{
+    defineTypeNameAndDebug(none, 0);
+    addToRunTimeSelectionTable(chemistryTabulationMethod, none, dictionary);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::chemistryTabulationMethods::none<ThermoType>::none
+Foam::chemistryTabulationMethods::none::none
 (
     const dictionary& chemistryProperties,
-    const chemistryModel<ThermoType>& chemistry
+    const odeChemistryModel& chemistry
 )
 :
-    chemistryTabulationMethod<ThermoType>
+    chemistryTabulationMethod
     (
         chemistryProperties,
         chemistry
@@ -44,8 +57,7 @@ Foam::chemistryTabulationMethods::none<ThermoType>::none
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::chemistryTabulationMethods::none<ThermoType>::~none()
+Foam::chemistryTabulationMethods::none::~none()
 {}
 
 

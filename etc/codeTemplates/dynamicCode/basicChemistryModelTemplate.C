@@ -91,12 +91,10 @@ namespace Foam
 #if ${method}CppTest == chemistryModelCppTest
 
 #include "makeChemistryReductionMethod.H"
-#include "makeChemistryTabulationMethod.H"
 
 namespace Foam
 {
     defineChemistryReductionMethod(nullArg, ThermoPhysics);
-    defineChemistryTabulationMethod(nullArg, ThermoPhysics);
 }
 
 #include "noChemistryReduction.H"
@@ -114,14 +112,6 @@ namespace Foam
     makeChemistryReductionMethod(DRGEP, ThermoPhysics);
     makeChemistryReductionMethod(EFA, ThermoPhysics);
     makeChemistryReductionMethod(PFA, ThermoPhysics);
-}
-
-#include "noChemistryTabulation.H"
-#include "ISAT.H"
-namespace Foam
-{
-    makeChemistryTabulationMethod(none, ThermoPhysics);
-    makeChemistryTabulationMethod(ISAT, ThermoPhysics);
 }
 
 #endif

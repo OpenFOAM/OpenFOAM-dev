@@ -25,11 +25,11 @@ License
 
 #include "binaryTree.H"
 #include "SortableList.H"
+#include "demandDrivenData.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::insertNode(chP*& phi0, bn*& newNode)
+void Foam::binaryTree::insertNode(chP*& phi0, bn*& newNode)
 {
     if (phi0 == phi0->node()->leafRight())// phi0 is on the right
     {
@@ -52,8 +52,7 @@ void Foam::binaryTree<ThermoType>::insertNode(chP*& phi0, bn*& newNode)
 }
 
 
-template<class ThermoType>
-bool Foam::binaryTree<ThermoType>::inSubTree
+bool Foam::binaryTree::inSubTree
 (
     const scalarField& phiq,
     bn* y,
@@ -157,8 +156,7 @@ bool Foam::binaryTree<ThermoType>::inSubTree
 }
 
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::deleteSubTree(bn* subTreeRoot)
+void Foam::binaryTree::deleteSubTree(bn* subTreeRoot)
 {
     if (subTreeRoot != nullptr)
     {
@@ -171,8 +169,7 @@ void Foam::binaryTree<ThermoType>::deleteSubTree(bn* subTreeRoot)
 }
 
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::transplant(bn* u, bn* v)
+void Foam::binaryTree::transplant(bn* u, bn* v)
 {
     if (v != nullptr)
     {
@@ -208,9 +205,7 @@ void Foam::binaryTree<ThermoType>::transplant(bn* u, bn* v)
 }
 
 
-template<class ThermoType>
-Foam::chemPointISAT<ThermoType>*
-Foam::binaryTree<ThermoType>::chemPSibling(bn* y)
+Foam::chemPointISAT* Foam::binaryTree::chemPSibling(bn* y)
 {
     if (y->parent() != nullptr)
     {
@@ -237,9 +232,7 @@ Foam::binaryTree<ThermoType>::chemPSibling(bn* y)
 }
 
 
-template<class ThermoType>
-Foam::chemPointISAT<ThermoType>*
-Foam::binaryTree<ThermoType>::chemPSibling(chP* x)
+Foam::chemPointISAT* Foam::binaryTree::chemPSibling(chP* x)
 {
     if (size_>1)
     {
@@ -267,8 +260,7 @@ Foam::binaryTree<ThermoType>::chemPSibling(chP* x)
 }
 
 
-template<class ThermoType>
-Foam::binaryNode<ThermoType>* Foam::binaryTree<ThermoType>::nodeSibling(bn* y)
+Foam::binaryNode* Foam::binaryTree::nodeSibling(bn* y)
 {
     if (y->parent()!=nullptr)
     {
@@ -293,8 +285,7 @@ Foam::binaryNode<ThermoType>* Foam::binaryTree<ThermoType>::nodeSibling(bn* y)
 }
 
 
-template<class ThermoType>
-Foam::binaryNode<ThermoType>* Foam::binaryTree<ThermoType>::nodeSibling(chP* x)
+Foam::binaryNode* Foam::binaryTree::nodeSibling(chP* x)
 {
     if (size_>1)
     {
@@ -320,8 +311,7 @@ Foam::binaryNode<ThermoType>* Foam::binaryTree<ThermoType>::nodeSibling(chP* x)
 }
 
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::deleteAllNode(bn* subTreeRoot)
+void Foam::binaryTree::deleteAllNode(bn* subTreeRoot)
 {
     if (subTreeRoot != nullptr)
     {
@@ -334,10 +324,9 @@ void Foam::binaryTree<ThermoType>::deleteAllNode(bn* subTreeRoot)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::binaryTree<ThermoType>::binaryTree
+Foam::binaryTree::binaryTree
 (
-    chemistryTabulationMethods::ISAT<ThermoType>& table,
+    chemistryTabulationMethods::ISAT& table,
     dictionary coeffsDict
 )
 :
@@ -352,8 +341,7 @@ Foam::binaryTree<ThermoType>::binaryTree
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::label Foam::binaryTree<ThermoType>::depth(bn* subTreeRoot)
+Foam::label Foam::binaryTree::depth(bn* subTreeRoot)
 {
     // when we reach the leaf, we return 0
     if (subTreeRoot == nullptr)
@@ -373,8 +361,7 @@ Foam::label Foam::binaryTree<ThermoType>::depth(bn* subTreeRoot)
 }
 
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::insertNewLeaf
+void Foam::binaryTree::insertNewLeaf
 (
     const scalarField& phiq,
     const scalarField& Rphiq,
@@ -459,8 +446,7 @@ void Foam::binaryTree<ThermoType>::insertNewLeaf
 }
 
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::binaryTreeSearch
+void Foam::binaryTree::binaryTreeSearch
 (
     const scalarField& phiq,
     bn* node,
@@ -513,8 +499,7 @@ void Foam::binaryTree<ThermoType>::binaryTreeSearch
 }
 
 
-template<class ThermoType>
-bool Foam::binaryTree<ThermoType>::secondaryBTSearch
+bool Foam::binaryTree::secondaryBTSearch
 (
     const scalarField& phiq,
     chP*& x
@@ -571,8 +556,7 @@ bool Foam::binaryTree<ThermoType>::secondaryBTSearch
 }
 
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::deleteLeaf(chP*& phi0)
+void Foam::binaryTree::deleteLeaf(chP*& phi0)
 {
     if (size_ == 1) // only one point is stored
     {
@@ -634,8 +618,7 @@ void Foam::binaryTree<ThermoType>::deleteLeaf(chP*& phi0)
 }
 
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::balance()
+void Foam::binaryTree::balance()
 {
     //1) walk through the entire tree by starting with the tree's most left
     // chemPoint
@@ -727,9 +710,7 @@ void Foam::binaryTree<ThermoType>::balance()
 }
 
 
-template<class ThermoType>
-Foam::chemPointISAT<ThermoType>*
-Foam::binaryTree<ThermoType>::treeMin(bn* subTreeRoot)
+Foam::chemPointISAT* Foam::binaryTree::treeMin(bn* subTreeRoot)
 {
     if (subTreeRoot!=nullptr)
     {
@@ -746,9 +727,7 @@ Foam::binaryTree<ThermoType>::treeMin(bn* subTreeRoot)
 }
 
 
-template<class ThermoType>
-Foam::chemPointISAT<ThermoType>*
-Foam::binaryTree<ThermoType>::treeSuccessor(chP* x)
+Foam::chemPointISAT* Foam::binaryTree::treeSuccessor(chP* x)
 {
     if (size_>1)
     {
@@ -799,8 +778,7 @@ Foam::binaryTree<ThermoType>::treeSuccessor(chP* x)
 }
 
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::clear()
+void Foam::binaryTree::clear()
 {
     // Recursively delete the element in the subTree
     deleteSubTree();
@@ -813,15 +791,13 @@ void Foam::binaryTree<ThermoType>::clear()
 }
 
 
-template<class ThermoType>
-bool Foam::binaryTree<ThermoType>::isFull()
+bool Foam::binaryTree::isFull()
 {
     return size_ >= maxNLeafs_;
 }
 
 
-template<class ThermoType>
-void Foam::binaryTree<ThermoType>::resetNumRetrieve()
+void Foam::binaryTree::resetNumRetrieve()
 {
     // Has to go along each chP of the tree
     if (size_ > 0)

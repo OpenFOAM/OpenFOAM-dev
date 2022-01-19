@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,26 +46,25 @@ namespace Foam
                          Class binaryNode Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class binaryNode
 {
 
 public:
 
     //- Element on the left
-    chemPointISAT<ThermoType>* leafLeft_;
+    chemPointISAT* leafLeft_;
 
     //- Element on the right
-    chemPointISAT<ThermoType>* leafRight_;
+    chemPointISAT* leafRight_;
 
     //- Node which follows on the left
-    binaryNode<ThermoType>* nodeLeft_;
+    binaryNode* nodeLeft_;
 
     //- Node which follows on the right
-    binaryNode<ThermoType>* nodeRight_;
+    binaryNode* nodeRight_;
 
     //- Parent node
-    binaryNode<ThermoType>* parent_;
+    binaryNode* parent_;
 
     scalarField v_;
 
@@ -102,8 +101,8 @@ public:
     //  Returnq: void (v is stored in the empty scalarField)
     void calcV
     (
-        chemPointISAT<ThermoType>*& elementLeft,
-        chemPointISAT<ThermoType>*& elementRight,
+        chemPointISAT*& elementLeft,
+        chemPointISAT*& elementRight,
         scalarField& v
     );
 
@@ -115,8 +114,8 @@ public:
     // part (where phi0 is).
     scalar calcA
     (
-        chemPointISAT<ThermoType>* elementLeft,
-        chemPointISAT<ThermoType>* elementRight
+        chemPointISAT* elementLeft,
+        chemPointISAT* elementRight
     );
 
     // Constructors
@@ -127,9 +126,9 @@ public:
         //- Construct from components
         binaryNode
         (
-            chemPointISAT<ThermoType>* elementLeft,
-            chemPointISAT<ThermoType>* elementRight,
-            binaryNode<ThermoType>* parent
+            chemPointISAT* elementLeft,
+            chemPointISAT* elementRight,
+            binaryNode* parent
         );
 
 
@@ -137,27 +136,27 @@ public:
 
         //- Access
 
-            inline chemPointISAT<ThermoType>*& leafLeft()
+            inline chemPointISAT*& leafLeft()
             {
                 return leafLeft_;
             }
 
-            inline chemPointISAT<ThermoType>*& leafRight()
+            inline chemPointISAT*& leafRight()
             {
                 return leafRight_;
             }
 
-            inline binaryNode<ThermoType>*& nodeLeft()
+            inline binaryNode*& nodeLeft()
             {
                 return nodeLeft_;
             }
 
-            inline binaryNode<ThermoType>*& nodeRight()
+            inline binaryNode*& nodeRight()
             {
                 return nodeRight_;
             }
 
-            inline binaryNode<ThermoType>*& parent()
+            inline binaryNode*& parent()
             {
                 return parent_;
             }
@@ -189,12 +188,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "binaryNode.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

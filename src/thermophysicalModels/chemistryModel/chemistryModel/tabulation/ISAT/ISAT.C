@@ -24,18 +24,32 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ISAT.H"
+#include "odeChemistryModel.H"
 #include "LUscalarMatrix.H"
+#include "addToRunTimeSelectionTable.H"
+
+
+/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
+
+namespace Foam
+{
+namespace chemistryTabulationMethods
+{
+    defineTypeNameAndDebug(ISAT, 0);
+    addToRunTimeSelectionTable(chemistryTabulationMethod, ISAT, dictionary);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::chemistryTabulationMethods::ISAT<ThermoType>::ISAT
+Foam::chemistryTabulationMethods::ISAT::ISAT
 (
     const dictionary& chemistryProperties,
-    const chemistryModel<ThermoType>& chemistry
+    const odeChemistryModel& chemistry
 )
 :
-    chemistryTabulationMethod<ThermoType>
+    chemistryTabulationMethod
     (
         chemistryProperties,
         chemistry
@@ -135,24 +149,22 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::ISAT
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::chemistryTabulationMethods::ISAT<ThermoType>::~ISAT()
+Foam::chemistryTabulationMethods::ISAT::~ISAT()
 {}
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::chemistryTabulationMethods::ISAT<ThermoType>::addToMRU
+void Foam::chemistryTabulationMethods::ISAT::addToMRU
 (
-    chemPointISAT<ThermoType>* phi0
+    chemPointISAT* phi0
 )
 {
     if (maxMRUSize_ > 0 && MRURetrieve_)
     {
         // First search if the chemPoint is already in the list
         bool isInList = false;
-        typename SLList <chemPointISAT<ThermoType>*>::iterator iter =
+        typename SLList <chemPointISAT*>::iterator iter =
             MRUList_.begin();
         for ( ; iter != MRUList_.end(); ++iter)
         {
@@ -190,10 +202,9 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::addToMRU
 }
 
 
-template<class ThermoType>
-void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
+void Foam::chemistryTabulationMethods::ISAT::calcNewC
 (
-    chemPointISAT<ThermoType>* phi0,
+    chemPointISAT* phi0,
     const scalarField& phiq,
     scalarField& Rphiq
 )
@@ -258,10 +269,9 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
 }
 
 
-template<class ThermoType>
-bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::grow
+bool Foam::chemistryTabulationMethods::ISAT::grow
 (
-    chemPointISAT<ThermoType>* phi0,
+    chemPointISAT* phi0,
     const scalarField& phiq,
     const scalarField& Rphiq
 )
@@ -296,18 +306,16 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::grow
 }
 
 
-template<class ThermoType>
-bool
-Foam::chemistryTabulationMethods::ISAT<ThermoType>::cleanAndBalance()
+bool Foam::chemistryTabulationMethods::ISAT::cleanAndBalance()
 {
     bool treeModified(false);
 
     // Check all chemPoints to see if we need to delete some of the chemPoints
     // according to the elapsed time and number of growths
-    chemPointISAT<ThermoType>* x = chemisTree_.treeMin();
+    chemPointISAT* x = chemisTree_.treeMin();
     while(x != nullptr)
     {
-        chemPointISAT<ThermoType>* xtmp = chemisTree_.treeSuccessor(x);
+        chemPointISAT* xtmp = chemisTree_.treeSuccessor(x);
 
         const scalar elapsedTimeSteps = timeSteps() - x->timeTag();
 
@@ -341,8 +349,7 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::cleanAndBalance()
 }
 
 
-template<class ThermoType>
-void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
+void Foam::chemistryTabulationMethods::ISAT::computeA
 (
     scalarSquareMatrix& A,
     const scalarField& Rphiq,
@@ -400,8 +407,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ThermoType>
-bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
+bool Foam::chemistryTabulationMethods::ISAT::retrieve
 (
     const Foam::scalarField& phiq,
     scalarField& Rphiq
@@ -413,7 +419,7 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
     }
 
     bool retrieved(false);
-    chemPointISAT<ThermoType>* phi0;
+    chemPointISAT* phi0;
 
     // If the tree is not empty
     if (chemisTree_.size())
@@ -437,7 +443,7 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
         {
             typename SLList
             <
-                chemPointISAT<ThermoType>*
+                chemPointISAT*
             >::iterator iter = MRUList_.begin();
 
             for ( ; iter != MRUList_.end(); ++iter)
@@ -485,8 +491,7 @@ bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::retrieve
 }
 
 
-template<class ThermoType>
-Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
+Foam::label Foam::chemistryTabulationMethods::ISAT::add
 (
     const scalarField& phiq,
     const scalarField& Rphiq,
@@ -534,20 +539,20 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
         // It can be partially rebuild with the MRU list if this is used.
         if (!cleanAndBalance())
         {
-            DynamicList<chemPointISAT<ThermoType>*> tempList;
+            DynamicList<chemPointISAT*> tempList;
             if (maxMRUSize_>0)
             {
                 // Create a copy of each chemPointISAT of the MRUList_ before
                 // they are deleted
                 typename SLList
                 <
-                    chemPointISAT<ThermoType>*
+                    chemPointISAT*
                 >::iterator iter = MRUList_.begin();
                 for ( ; iter != MRUList_.end(); ++iter)
                 {
                     tempList.append
                     (
-                        new chemPointISAT<ThermoType>(*iter())
+                        new chemPointISAT(*iter())
                     );
                 }
             }
@@ -558,7 +563,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
 
             // Construct the tree without giving a reference to attach to it
             // since the structure has been completely discarded
-            chemPointISAT<ThermoType>* nulPhi = 0;
+            chemPointISAT* nulPhi = 0;
             forAll(tempList, i)
             {
                 chemisTree().insertNewLeaf
@@ -614,8 +619,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
 }
 
 
-template<class ThermoType>
-void Foam::chemistryTabulationMethods::ISAT<ThermoType>::writePerformance()
+void Foam::chemistryTabulationMethods::ISAT::writePerformance()
 {
     if (log_)
     {
@@ -653,8 +657,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::writePerformance()
 }
 
 
-template<class ThermoType>
-void Foam::chemistryTabulationMethods::ISAT<ThermoType>::reset()
+void Foam::chemistryTabulationMethods::ISAT::reset()
 {
     // Increment counter of time-step
     timeSteps_++;
@@ -666,8 +669,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::reset()
 }
 
 
-template<class ThermoType>
-bool Foam::chemistryTabulationMethods::ISAT<ThermoType>::update()
+bool Foam::chemistryTabulationMethods::ISAT::update()
 {
     bool updated = cleanAndBalance();
     writePerformance();

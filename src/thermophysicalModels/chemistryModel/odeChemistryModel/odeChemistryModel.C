@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,21 +23,43 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "chemistryTabulationMethod.H"
+#include "odeChemistryModel.H"
 
-#include "ISAT.H"
 
-#include "forGases.H"
-#include "forLiquids.H"
-#include "makeChemistryTabulationMethod.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forCoeffGases(makeChemistryTabulationMethod, ISAT);
-    forCoeffLiquids(makeChemistryTabulationMethod, ISAT);
+    defineTypeNameAndDebug(odeChemistryModel, 0);
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::odeChemistryModel::odeChemistryModel
+(
+    const fluidReactionThermo& thermo
+)
+:
+    basicChemistryModel(thermo),
+    ODESystem(),
+    Yvf_(this->thermo().composition().Y()),
+    nSpecie_(Yvf_.size()),
+    reduction_(false),
+    cTos_(nSpecie_, -1),
+    sToc_(nSpecie_)
+{
+    Info<< "odeChemistryModel: Number of species = " << nSpecie_ << endl;
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::odeChemistryModel::~odeChemistryModel()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

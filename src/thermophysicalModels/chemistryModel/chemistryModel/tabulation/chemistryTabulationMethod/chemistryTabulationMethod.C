@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,23 +24,30 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "chemistryTabulationMethod.H"
-#include "chemistryModel.H"
+#include "odeChemistryModel.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(chemistryTabulationMethod, 0);
+    defineRunTimeSelectionTable(chemistryTabulationMethod, dictionary);
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::chemistryTabulationMethod<ThermoType>::chemistryTabulationMethod
+Foam::chemistryTabulationMethod::chemistryTabulationMethod
 (
     const dictionary& dict,
-    const chemistryModel<ThermoType>& chemistry
+    const odeChemistryModel& chemistry
 )
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::chemistryTabulationMethod<ThermoType>::~chemistryTabulationMethod()
+Foam::chemistryTabulationMethod::~chemistryTabulationMethod()
 {}
 
 

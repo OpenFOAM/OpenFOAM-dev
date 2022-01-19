@@ -49,10 +49,9 @@ namespace chemistryTabulationMethods
                             Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class none
 :
-    public chemistryTabulationMethod<ThermoType>
+    public chemistryTabulationMethod
 {
 public:
 
@@ -65,7 +64,7 @@ public:
         none
         (
             const dictionary& chemistryProperties,
-            const chemistryModel<ThermoType>& chemistry
+            const odeChemistryModel& chemistry
         );
 
         //- Disallow default bitwise copy construction
@@ -125,12 +124,6 @@ public:
 
 } // End namespace chemistryTabulationMethods
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "noChemistryTabulation.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

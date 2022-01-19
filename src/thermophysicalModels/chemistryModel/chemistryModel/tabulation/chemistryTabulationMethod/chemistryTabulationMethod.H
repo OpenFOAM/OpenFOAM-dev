@@ -46,14 +46,12 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-class chemistryModel;
+class odeChemistryModel;
 
 /*---------------------------------------------------------------------------*\
                   Class chemistryTabulationMethod Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class chemistryTabulationMethod
 {
 public:
@@ -70,7 +68,7 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const chemistryModel<ThermoType>& chemistry
+            const odeChemistryModel& chemistry
         ),
         (dict, chemistry)
     );
@@ -82,7 +80,7 @@ public:
         chemistryTabulationMethod
         (
             const dictionary& dict,
-            const chemistryModel<ThermoType>& chemistry
+            const odeChemistryModel& chemistry
         );
 
 
@@ -91,7 +89,7 @@ public:
         static autoPtr<chemistryTabulationMethod> New
         (
             const IOdictionary& dict,
-            const chemistryModel<ThermoType>& chemistry
+            const odeChemistryModel& chemistry
         );
 
 
@@ -139,13 +137,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "chemistryTabulationMethod.C"
-    #include "chemistryTabulationMethodNew.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

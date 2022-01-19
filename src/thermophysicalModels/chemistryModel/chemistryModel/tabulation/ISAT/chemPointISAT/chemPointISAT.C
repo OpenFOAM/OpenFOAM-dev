@@ -24,19 +24,19 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "chemPointISAT.H"
+#include "ISAT.H"
+#include "odeChemistryModel.H"
 #include "SVD.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 // Defined as static to be able to dynamically change it during simulations
 // (all chemPoints refer to the same object)
-template<class ThermoType>
-Foam::scalar Foam::chemPointISAT<ThermoType>::tolerance_;
+Foam::scalar Foam::chemPointISAT::tolerance_;
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::chemPointISAT<ThermoType>::qrDecompose
+void Foam::chemPointISAT::qrDecompose
 (
     const label nCols,
     scalarSquareMatrix& R
@@ -102,8 +102,7 @@ void Foam::chemPointISAT<ThermoType>::qrDecompose
 }
 
 
-template<class ThermoType>
-void Foam::chemPointISAT<ThermoType>::qrUpdate
+void Foam::chemPointISAT::qrUpdate
 (
     scalarSquareMatrix& R,
     const label n,
@@ -156,8 +155,7 @@ void Foam::chemPointISAT<ThermoType>::qrUpdate
 }
 
 
-template<class ThermoType>
-void Foam::chemPointISAT<ThermoType>::rotate
+void Foam::chemPointISAT::rotate
 (
     scalarSquareMatrix& R,
     const label i,
@@ -196,10 +194,9 @@ void Foam::chemPointISAT<ThermoType>::rotate
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::chemPointISAT<ThermoType>::chemPointISAT
+Foam::chemPointISAT::chemPointISAT
 (
-    chemistryTabulationMethods::ISAT<ThermoType>& table,
+    chemistryTabulationMethods::ISAT& table,
     const scalarField& phi,
     const scalarField& Rphi,
     const scalarSquareMatrix& A,
@@ -208,7 +205,7 @@ Foam::chemPointISAT<ThermoType>::chemPointISAT
     const label completeSpaceSize,
     const label nActive,
     const dictionary& coeffsDict,
-    binaryNode<ThermoType>* node
+    binaryNode* node
 )
 :
     table_(table),
@@ -299,10 +296,9 @@ Foam::chemPointISAT<ThermoType>::chemPointISAT
 }
 
 
-template<class ThermoType>
-Foam::chemPointISAT<ThermoType>::chemPointISAT
+Foam::chemPointISAT::chemPointISAT
 (
-    Foam::chemPointISAT<ThermoType>& p
+    Foam::chemPointISAT& p
 )
 :
     table_(p.table_),
@@ -334,8 +330,7 @@ Foam::chemPointISAT<ThermoType>::chemPointISAT
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ThermoType>
-bool Foam::chemPointISAT<ThermoType>::inEOA(const scalarField& phiq)
+bool Foam::chemPointISAT::inEOA(const scalarField& phiq)
 {
     const scalarField dphi(phiq - phi());
 
@@ -474,8 +469,7 @@ bool Foam::chemPointISAT<ThermoType>::inEOA(const scalarField& phiq)
 }
 
 
-template<class ThermoType>
-bool Foam::chemPointISAT<ThermoType>::checkSolution
+bool Foam::chemPointISAT::checkSolution
 (
     const scalarField& phiq,
     const scalarField& Rphiq
@@ -540,8 +534,7 @@ bool Foam::chemPointISAT<ThermoType>::checkSolution
 }
 
 
-template<class ThermoType>
-bool Foam::chemPointISAT<ThermoType>::grow(const scalarField& phiq)
+bool Foam::chemPointISAT::grow(const scalarField& phiq)
 {
     const scalarField dphi(phiq - phi());
     const label initNActiveSpecies(nActive_);
@@ -717,29 +710,25 @@ bool Foam::chemPointISAT<ThermoType>::grow(const scalarField& phiq)
 }
 
 
-template<class ThermoType>
-void Foam::chemPointISAT<ThermoType>::increaseNumRetrieve()
+void Foam::chemPointISAT::increaseNumRetrieve()
 {
     this->numRetrieve_++;
 }
 
 
-template<class ThermoType>
-void Foam::chemPointISAT<ThermoType>::resetNumRetrieve()
+void Foam::chemPointISAT::resetNumRetrieve()
 {
     this->numRetrieve_ = 0;
 }
 
 
-template<class ThermoType>
-void Foam::chemPointISAT<ThermoType>::increaseNLifeTime()
+void Foam::chemPointISAT::increaseNLifeTime()
 {
     this->nLifeTime_++;
 }
 
 
-template<class ThermoType>
-Foam::label Foam::chemPointISAT<ThermoType>::simplifiedToCompleteIndex
+Foam::label Foam::chemPointISAT::simplifiedToCompleteIndex
 (
     const label i
 )

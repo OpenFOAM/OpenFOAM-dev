@@ -6,6 +6,8 @@ chemistrySolver/noChemistrySolver/noChemistrySolvers.C
 chemistrySolver/EulerImplicit/EulerImplicitChemistrySolvers.C
 chemistrySolver/ode/odeChemistrySolvers.C
 
+odeChemistryModel/odeChemistryModel.C
+
 chemistryModel/reduction/chemistryReductionMethod/chemistryReductionMethods.C
 chemistryModel/reduction/noChemistryReduction/noChemistryReductionMethods.C
 chemistryModel/reduction/DAC/DACChemistryReductionMethods.C
@@ -14,9 +16,13 @@ chemistryModel/reduction/DRGEP/DRGEPChemistryReductionMethods.C
 chemistryModel/reduction/EFA/EFAChemistryReductionMethods.C
 chemistryModel/reduction/PFA/PFAChemistryReductionMethods.C
 
-chemistryModel/tabulation/chemistryTabulationMethod/chemistryTabulationMethods.C
-chemistryModel/tabulation/noChemistryTabulation/noChemistryTabulationMethods.C
-chemistryModel/tabulation/ISAT/ISATChemistryTabulationMethods.C
+chemistryModel/tabulation/chemistryTabulationMethod/chemistryTabulationMethod.C
+chemistryModel/tabulation/chemistryTabulationMethod/chemistryTabulationMethodNew.C
+chemistryModel/tabulation/noChemistryTabulation/noChemistryTabulation.C
+chemistryModel/tabulation/ISAT/ISAT.C
+chemistryModel/tabulation/ISAT/chemPointISAT/chemPointISAT.C
+chemistryModel/tabulation/ISAT/binaryNode/binaryNode.C
+chemistryModel/tabulation/ISAT/binaryTree/binaryTree.C
 
 reactions/makeReactions.C
 

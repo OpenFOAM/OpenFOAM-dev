@@ -122,6 +122,10 @@ Description
 #ifndef chemPointISAT_H
 #define chemPointISAT_H
 
+#include "scalarField.H"
+#include "LUscalarMatrix.H"
+#include "Switch.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -129,15 +133,10 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
 class binaryNode;
-
-template<class ThermoType>
-class chemistryModel;
 
 namespace chemistryTabulationMethods
 {
-    template<class ThermoType>
     class ISAT;
 }
 
@@ -146,13 +145,12 @@ namespace chemistryTabulationMethods
                         Class chemPointISAT Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class chemPointISAT
 {
     // Private Data
 
         //- Reference to the ISAT table
-        chemistryTabulationMethods::ISAT<ThermoType>& table_;
+        chemistryTabulationMethods::ISAT& table_;
 
         //- Vector storing the composition, temperature and pressure
         //  and deltaT if a variable time step is set on
@@ -172,7 +170,7 @@ class chemPointISAT
         scalarField scaleFactor_;
 
         //- Reference to the node in the binary tree holding this chemPoint
-        binaryNode<ThermoType>* node_;
+        binaryNode* node_;
 
         //- The size of the composition space (size of the vector phi)
         label completeSpaceSize_;
@@ -251,7 +249,7 @@ public:
         //- Construct from components
         chemPointISAT
         (
-            chemistryTabulationMethods::ISAT<ThermoType>& table,
+            chemistryTabulationMethods::ISAT& table,
             const scalarField& phi,
             const scalarField& Rphi,
             const scalarSquareMatrix& A,
@@ -260,24 +258,24 @@ public:
             const label completeSpaceSize,
             const label nActive,
             const dictionary& coeffsDict,
-            binaryNode<ThermoType>* node = nullptr
+            binaryNode* node = nullptr
         );
 
         //- Construct from another chemPoint and reference to a binary node
         chemPointISAT
         (
-            const chemPointISAT<ThermoType>& p,
-            binaryNode<ThermoType>* node
+            const chemPointISAT& p,
+            binaryNode* node
         );
 
         //- Construct from another chemPoint
-        chemPointISAT(chemPointISAT<ThermoType>& p);
+        chemPointISAT(chemPointISAT& p);
 
 
     // Member Functions
 
         //- Access to the ISAT table
-        inline const chemistryTabulationMethods::ISAT<ThermoType>& table() const
+        inline const chemistryTabulationMethods::ISAT& table() const
         {
             return table_;
         }
@@ -317,7 +315,7 @@ public:
             tolerance_ = newTol;
         }
 
-        inline binaryNode<ThermoType>*& node()
+        inline binaryNode*& node()
         {
             return node_;
         }
@@ -445,12 +443,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "chemPointISAT.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -23,31 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "OSspecific.H"
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class ThermoType>
-inline Foam::autoPtr<Foam::OFstream>
-Foam::chemistryModel<ThermoType>::logFile(const word& name) const
-{
-    mkDir(this->mesh().time().path()/"TDAC"/this->group());
-    return autoPtr<OFstream>
-    (
-        new OFstream
-        (
-            this->mesh().time().path()/"TDAC"/this->group()/name
-        )
-    );
-}
-
-template<class ThermoType>
-inline Foam::label Foam::chemistryModel<ThermoType>::nEqns() const
-{
-    // nEqns = number of species + temperature + pressure
-    return nSpecie_ + 2;
-}
-
 
 template<class ThermoType>
 inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
@@ -82,13 +58,6 @@ Foam::chemistryModel<ThermoType>::specieThermos() const
 
 
 template<class ThermoType>
-inline Foam::label Foam::chemistryModel<ThermoType>::nSpecie() const
-{
-    return nSpecie_;
-}
-
-
-template<class ThermoType>
 inline Foam::label Foam::chemistryModel<ThermoType>::nReaction() const
 {
     return reactions_.size();
@@ -102,26 +71,12 @@ Foam::chemistryModel<ThermoType>::RR(const label i) const
     return RR_[i];
 }
 
+
 template<class ThermoType>
 Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
 Foam::chemistryModel<ThermoType>::RR(const label i)
 {
     return RR_[i];
-}
-
-
-template<class ThermoType>
-inline const Foam::PtrList<Foam::volScalarField>&
-Foam::chemistryModel<ThermoType>::Y() const
-{
-    return this->Yvf_;
-}
-
-
-template<class ThermoType>
-inline bool Foam::chemistryModel<ThermoType>::reduction() const
-{
-    return mechRedActive_;
 }
 
 
@@ -136,47 +91,6 @@ template<class ThermoType>
 inline bool Foam::chemistryModel<ThermoType>::active(const label i) const
 {
     return this->thermo().composition().active(i);
-}
-
-
-template<class ThermoType>
-inline void Foam::chemistryModel<ThermoType>::setNSpecie(const label newNs)
-{
-    this->nSpecie_ = newNs;
-}
-
-
-template<class ThermoType>
-inline Foam::label Foam::chemistryModel<ThermoType>::sToc
-(
-    const label si
-) const
-{
-    if (mechRedActive_)
-    {
-        return sToc_[si];
-    }
-    else
-    {
-        return si;
-    }
-}
-
-
-template<class ThermoType>
-inline Foam::label Foam::chemistryModel<ThermoType>::cTos
-(
-    const label ci
-) const
-{
-    if (mechRedActive_)
-    {
-        return cTos_[ci];
-    }
-    else
-    {
-        return ci;
-    }
 }
 
 

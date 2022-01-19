@@ -55,15 +55,14 @@ namespace Foam
                            Class binaryTree Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class binaryTree
 {
 public:
 
     // Public Typedefs
 
-        typedef binaryNode<ThermoType> bn;
-        typedef chemPointISAT<ThermoType> chP;
+        typedef binaryNode bn;
+        typedef chemPointISAT chP;
 
 
 private:
@@ -71,7 +70,7 @@ private:
     // Private Data
 
         //- Reference to the ISAT table
-        chemistryTabulationMethods::ISAT<ThermoType>& table_;
+        chemistryTabulationMethods::ISAT& table_;
 
         //- Root node of the binary tree
         bn *root_;
@@ -105,7 +104,7 @@ private:
             chP* x
         );
 
-        void deleteSubTree(binaryNode<ThermoType>* subTreeRoot);
+        void deleteSubTree(binaryNode* subTreeRoot);
 
         inline void deleteSubTree()
         {
@@ -135,7 +134,7 @@ public:
         //- Construct from dictionary and chemistryOnLineLibrary
         binaryTree
         (
-            chemistryTabulationMethods::ISAT<ThermoType>& table,
+            chemistryTabulationMethods::ISAT& table,
             dictionary coeffsDict
         );
 
@@ -248,12 +247,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "binaryTree.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

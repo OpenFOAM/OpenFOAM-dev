@@ -24,11 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "binaryNode.H"
+#include "ISAT.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::binaryNode<ThermoType>::binaryNode()
+Foam::binaryNode::binaryNode()
 :
     leafLeft_(nullptr),
     leafRight_(nullptr),
@@ -38,12 +38,11 @@ Foam::binaryNode<ThermoType>::binaryNode()
 {}
 
 
-template<class ThermoType>
-Foam::binaryNode<ThermoType>::binaryNode
+Foam::binaryNode::binaryNode
 (
-    chemPointISAT<ThermoType>* elementLeft,
-    chemPointISAT<ThermoType>* elementRight,
-    binaryNode<ThermoType>* parent
+    chemPointISAT* elementLeft,
+    chemPointISAT* elementRight,
+    binaryNode* parent
 )
 :
     leafLeft_(elementLeft),
@@ -60,11 +59,10 @@ Foam::binaryNode<ThermoType>::binaryNode
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::binaryNode<ThermoType>::calcV
+void Foam::binaryNode::calcV
 (
-    chemPointISAT<ThermoType>*& elementLeft,
-    chemPointISAT<ThermoType>*& elementRight,
+    chemPointISAT*& elementLeft,
+    chemPointISAT*& elementRight,
     scalarField& v
 )
 {
@@ -140,11 +138,10 @@ void Foam::binaryNode<ThermoType>::calcV
 }
 
 
-template<class ThermoType>
-Foam::scalar Foam::binaryNode<ThermoType>::calcA
+Foam::scalar Foam::binaryNode::calcA
 (
-    chemPointISAT<ThermoType>* elementLeft,
-    chemPointISAT<ThermoType>* elementRight
+    chemPointISAT* elementLeft,
+    chemPointISAT* elementRight
 )
 {
     scalarField phih((elementLeft->phi() + elementRight->phi())/2);
