@@ -275,126 +275,62 @@ public:
     // Member Functions
 
         //- Access to the ISAT table
-        inline const chemistryTabulationMethods::ISAT& table() const
-        {
-            return table_;
-        }
+        inline const chemistryTabulationMethods::ISAT& table() const;
 
-        inline label nGrowth() const
-        {
-            return nGrowth_;
-        }
+        inline label nGrowth() const;
 
-        inline label& completeSpaceSize()
-        {
-            return completeSpaceSize_;
-        }
+        inline label& completeSpaceSize();
 
-        inline const scalarField& phi() const
-        {
-            return phi_;
-        }
+        inline const label& completeSpaceSize() const;
 
-        inline const scalarField& Rphi() const
-        {
-            return Rphi_;
-        }
+        inline const scalarField& phi() const;
 
-        inline const scalarField& scaleFactor() const
-        {
-            return scaleFactor_;
-        }
+        inline const scalarField& Rphi() const;
 
-        inline const scalar& tolerance() const
-        {
-            return tolerance_;
-        }
+        inline const scalarField& scaleFactor() const;
 
-        static void changeTolerance(scalar newTol)
-        {
-            tolerance_ = newTol;
-        }
+        inline const scalar& tolerance() const;
 
-        inline binaryNode*& node()
-        {
-            return node_;
-        }
+        inline static void changeTolerance(scalar newTol);
 
-        inline const scalarSquareMatrix& A() const
-        {
-            return A_;
-        }
+        inline binaryNode*& node();
 
-        inline scalarSquareMatrix& A()
-        {
-            return A_;
-        }
+        inline const scalarSquareMatrix& A() const;
 
-        inline const scalarSquareMatrix& LT() const
-        {
-            return LT_;
-        }
+        inline scalarSquareMatrix& A();
 
-        inline scalarSquareMatrix& LT()
-        {
-            return LT_;
-        }
+        inline const scalarSquareMatrix& LT() const;
 
-        inline label nActive()
-        {
-            return nActive_;
-        }
+        inline scalarSquareMatrix& LT();
 
-        inline List<label>& completeToSimplifiedIndex()
-        {
-            return completeToSimplifiedIndex_;
-        }
+        inline label nActive() const;
 
-        inline List<label>& simplifiedToCompleteIndex()
-        {
-            return simplifiedToCompleteIndex_;
-        }
+        inline const List<label>& completeToSimplifiedIndex() const;
+
+        inline const List<label>& simplifiedToCompleteIndex() const;
 
         //- Increases the number of retrieves the chempoint has generated
-        void increaseNumRetrieve();
+        inline void increaseNumRetrieve();
 
         //- Resets the number of retrieves at each time step
-        void resetNumRetrieve();
+        inline void resetNumRetrieve();
 
         //- Increases the "counter" of the chP life
-        void increaseNLifeTime();
+        inline void increaseNLifeTime();
 
-        label simplifiedToCompleteIndex(const label i);
+        inline label simplifiedToCompleteIndex(const label i);
 
-        inline const label& timeTag()
-        {
-            return timeTag_;
-        }
+        inline const label& timeTag();
 
-        inline label& lastTimeUsed()
-        {
-            return lastTimeUsed_;
-        }
+        inline label& lastTimeUsed();
 
-        inline bool& toRemove()
-        {
-            return toRemove_;
-        }
+        inline bool& toRemove();
 
-        inline label& maxNumNewDim()
-        {
-            return maxNumNewDim_;
-        }
+        inline label& maxNumNewDim();
 
-        inline const label& numRetrieve()
-        {
-            return numRetrieve_;
-        }
+        inline const label& numRetrieve();
 
-        inline const label& nLifeTime()
-        {
-            return nLifeTime_;
-        }
+        inline const label& nLifeTime();
 
         // ISAT functions
 
@@ -443,6 +379,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "chemPointISATI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

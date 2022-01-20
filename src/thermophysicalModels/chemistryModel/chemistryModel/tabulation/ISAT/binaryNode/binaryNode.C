@@ -52,8 +52,8 @@ Foam::binaryNode::binaryNode
     parent_(parent),
     v_(elementLeft->completeSpaceSize(), 0)
 {
-    calcV(elementLeft, elementRight, v_);
-    a_ = calcA(elementLeft, elementRight);
+    calcV(*elementLeft, *elementRight, v_);
+    a_ = calcA(*elementLeft, *elementRight);
 }
 
 
@@ -61,60 +61,61 @@ Foam::binaryNode::binaryNode
 
 void Foam::binaryNode::calcV
 (
-    chemPointISAT*& elementLeft,
-    chemPointISAT*& elementRight,
+    const chemPointISAT& elementLeft,
+    const chemPointISAT& elementRight,
     scalarField& v
 )
 {
     // LT is the transpose of the L matrix
-    scalarSquareMatrix& LT = elementLeft->LT();
-    const bool reduction = elementLeft->table().reduction();
+    const scalarSquareMatrix& LT = elementLeft.LT();
+    const bool reduction = elementLeft.table().reduction();
 
     // Difference of composition in the full species domain
-    scalarField phiDif(elementRight->phi() - elementLeft->phi());
-    const scalarField& scaleFactor(elementLeft->scaleFactor());
-    scalar epsTol = elementLeft->tolerance();
+    const scalarField& phil(elementLeft.phi());
+    const scalarField& phir(elementRight.phi());
+    const scalarField& scaleFactor(elementLeft.scaleFactor());
+    const scalar epsTol = elementLeft.tolerance();
 
-    // v = LT.T()*LT*phiDif
-    for (label i=0; i<elementLeft->completeSpaceSize(); i++)
+    // v = LT.T()*LT*(phir - phil)
+    for (label i=0; i<elementLeft.completeSpaceSize(); i++)
     {
         label si = i;
         bool outOfIndexI = true;
         if (reduction)
         {
-            if (i<elementLeft->completeSpaceSize() - 3)
+            if (i<elementLeft.completeSpaceSize() - 3)
             {
-                si = elementLeft->completeToSimplifiedIndex()[i];
+                si = elementLeft.completeToSimplifiedIndex()[i];
                 outOfIndexI = (si == -1);
             }
             else // temperature and pressure
             {
                 outOfIndexI = false;
-                const label dif = i - (elementLeft->completeSpaceSize() - 3);
-                si = elementLeft->nActive() + dif;
+                const label dif = i - (elementLeft.completeSpaceSize() - 3);
+                si = elementLeft.nActive() + dif;
             }
         }
         if (!reduction || (reduction && !(outOfIndexI)))
         {
             v[i] = 0;
-            for (label j=0; j<elementLeft->completeSpaceSize(); j++)
+            for (label j=0; j<elementLeft.completeSpaceSize(); j++)
             {
                 label sj = j;
                 bool outOfIndexJ = true;
 
                 if (reduction)
                 {
-                    if (j < elementLeft->completeSpaceSize() - 3)
+                    if (j < elementLeft.completeSpaceSize() - 3)
                     {
-                        sj = elementLeft->completeToSimplifiedIndex()[j];
+                        sj = elementLeft.completeToSimplifiedIndex()[j];
                         outOfIndexJ = (sj==-1);
                     }
                     else
                     {
                         outOfIndexJ = false;
                         const label dif =
-                            j - (elementLeft->completeSpaceSize() - 3);
-                        sj = elementLeft->nActive() + dif;
+                            j - (elementLeft.completeSpaceSize() - 3);
+                        sj = elementLeft.nActive() + dif;
                     }
                 }
 
@@ -123,7 +124,7 @@ void Foam::binaryNode::calcV
                     // Since L is a lower triangular matrix k=0->min(i, j)
                     for (label k=0; k<=min(si, sj); k++)
                     {
-                        v[i] += LT(k, si)*LT(k, sj)*phiDif[j];
+                        v[i] += LT(k, si)*LT(k, sj)*(phir[j] - phil[j]);
                     }
                 }
             }
@@ -132,26 +133,9 @@ void Foam::binaryNode::calcV
         {
             // When it is an inactive species the diagonal element of LT is
             // 1/(scaleFactor*epsTol)
-            v[i] = phiDif[i]/sqr(scaleFactor[i]*epsTol);
+            v[i] = (phir[i] - phil[i])/sqr(scaleFactor[i]*epsTol);
         }
     }
-}
-
-
-Foam::scalar Foam::binaryNode::calcA
-(
-    chemPointISAT* elementLeft,
-    chemPointISAT* elementRight
-)
-{
-    scalarField phih((elementLeft->phi() + elementRight->phi())/2);
-    scalar a = 0;
-    forAll(phih, i)
-    {
-        a += v_[i]*phih[i];
-    }
-
-    return a;
 }
 
 

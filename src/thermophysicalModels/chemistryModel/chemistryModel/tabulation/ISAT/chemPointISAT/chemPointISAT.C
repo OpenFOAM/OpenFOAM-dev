@@ -106,8 +106,8 @@ void Foam::chemPointISAT::qrUpdate
 (
     scalarSquareMatrix& R,
     const label n,
-    const Foam::scalarField &u,
-    const Foam::scalarField &v
+    const scalarField& u,
+    const scalarField& v
 )
 {
     label k;
@@ -128,7 +128,7 @@ void Foam::chemPointISAT::qrUpdate
 
     for (label i=k-1; i>=0; i--)
     {
-        rotate(R, i, w[i],-w[i+1], n);
+        rotate(R, i, w[i], -w[i+1], n);
         if (w[i] == 0)
         {
             w[i] = mag(w[i+1]);
@@ -165,6 +165,7 @@ void Foam::chemPointISAT::rotate
 )
 {
     scalar c, fact, s, w, y;
+
     if (a == 0)
     {
         c = 0;
@@ -182,6 +183,7 @@ void Foam::chemPointISAT::rotate
         s = sign(b)/sqrt(1.0 + sqr(fact));
         c = fact*s;
     }
+
     for (label j=i;j<n;j++)
     {
         y = R(i, j);
@@ -217,31 +219,33 @@ Foam::chemPointISAT::chemPointISAT
     completeSpaceSize_(completeSpaceSize),
     nGrowth_(0),
     nActive_(nActive),
-    simplifiedToCompleteIndex_(nActive_),
     timeTag_(table.timeSteps()),
     lastTimeUsed_(table.timeSteps()),
     toRemove_(false),
     maxNumNewDim_(coeffsDict.lookupOrDefault("maxNumNewDim",0)),
     printProportion_(coeffsDict.lookupOrDefault("printProportion",false)),
     numRetrieve_(0),
-    nLifeTime_(0),
-    completeToSimplifiedIndex_(completeSpaceSize - 3)
+    nLifeTime_(0)
 {
     tolerance_ = tolerance;
 
     iddeltaT_ = completeSpaceSize - 1;
-    scaleFactor_[iddeltaT_] *= phi_[iddeltaT_] / tolerance_;
+    scaleFactor_[iddeltaT_] *= phi_[iddeltaT_]/tolerance_;
 
     idT_ = completeSpaceSize - 3;
     idp_ = completeSpaceSize - 2;
 
     if (table_.reduction())
     {
-        for (label i=0; i<completeSpaceSize-3; i++)
+        simplifiedToCompleteIndex_.setSize(nActive_);
+        completeToSimplifiedIndex_.setSize(completeSpaceSize - 3);
+
+        forAll(completeToSimplifiedIndex_, i)
         {
             completeToSimplifiedIndex_[i] = table_.chemistry().cTos(i);
         }
-        for (label i=0; i<nActive_; i++)
+
+        forAll(simplifiedToCompleteIndex_, i)
         {
             simplifiedToCompleteIndex_[i] = table_.chemistry().sToc(i);
         }
@@ -707,52 +711,6 @@ bool Foam::chemPointISAT::grow(const scalarField& phiq)
     nGrowth_++;
 
     return true;
-}
-
-
-void Foam::chemPointISAT::increaseNumRetrieve()
-{
-    this->numRetrieve_++;
-}
-
-
-void Foam::chemPointISAT::resetNumRetrieve()
-{
-    this->numRetrieve_ = 0;
-}
-
-
-void Foam::chemPointISAT::increaseNLifeTime()
-{
-    this->nLifeTime_++;
-}
-
-
-Foam::label Foam::chemPointISAT::simplifiedToCompleteIndex
-(
-    const label i
-)
-{
-    if (i < nActive_)
-    {
-        return simplifiedToCompleteIndex_[i];
-    }
-    else if (i == nActive_)
-    {
-        return completeSpaceSize_ - 3;
-    }
-    else if (i == nActive_ + 1)
-    {
-        return completeSpaceSize_ - 2;
-    }
-    else if (i == nActive_ + 2)
-    {
-        return completeSpaceSize_ - 1;
-    }
-    else
-    {
-        return -1;
-    }
 }
 
 

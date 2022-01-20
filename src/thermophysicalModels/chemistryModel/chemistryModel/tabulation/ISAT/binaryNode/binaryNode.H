@@ -101,8 +101,8 @@ public:
     //  Returnq: void (v is stored in the empty scalarField)
     void calcV
     (
-        chemPointISAT*& elementLeft,
-        chemPointISAT*& elementRight,
+        const chemPointISAT& elementLeft,
+        const chemPointISAT& elementRight,
         scalarField& v
     );
 
@@ -112,10 +112,10 @@ public:
     //  belongs to, v^T.phi is performed. If the result is "> a" then it belongs
     //  to the right part (where phiq is), otherwise it belongs to the left
     // part (where phi0 is).
-    scalar calcA
+    inline scalar calcA
     (
-        chemPointISAT* elementLeft,
-        chemPointISAT* elementRight
+        const chemPointISAT& elementLeft,
+        const chemPointISAT& elementRight
     );
 
     // Constructors
@@ -168,17 +168,7 @@ public:
                 return v_;
             }
 
-            inline scalarField& v()
-            {
-                return v_;
-            }
-
             inline const scalar& a() const
-            {
-                return a_;
-            }
-
-            inline scalar& a()
             {
                 return a_;
             }
@@ -188,6 +178,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "binaryNodeI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

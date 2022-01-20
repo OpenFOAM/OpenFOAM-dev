@@ -57,23 +57,13 @@ namespace Foam
 
 class binaryTree
 {
-public:
-
-    // Public Typedefs
-
-        typedef binaryNode bn;
-        typedef chemPointISAT chP;
-
-
-private:
-
     // Private Data
 
         //- Reference to the ISAT table
         chemistryTabulationMethods::ISAT& table_;
 
         //- Root node of the binary tree
-        bn *root_;
+        binaryNode *root_;
 
         //- Maximum number of elements in the binary tree
         label maxNLeafs_;
@@ -87,12 +77,14 @@ private:
         //- Secondary retrieve search variables
         label max2ndSearch_;
 
+        dictionary coeffsDict_;
+
 
     // Private Member Functions
 
         //- Insert new node at the position of phi0. phi0 should be already
         //  attached to another node or the pointer to it will be lost.
-        void insertNode(chP*& phi0, bn*& newNode);
+        inline void insertNode(chemPointISAT*& phi0, binaryNode*& newNode);
 
         //- Perform a search in the subtree starting from the subtree node y.
         //  This search continues to use the hyperplane to walk the tree.
@@ -100,31 +92,26 @@ private:
         bool inSubTree
         (
             const scalarField& phiq,
-            bn* y,
-            chP* x
+            binaryNode* y,
+            chemPointISAT* x
         );
 
-        void deleteSubTree(binaryNode* subTreeRoot);
+        inline void deleteSubTree(binaryNode* subTreeRoot);
 
-        inline void deleteSubTree()
-        {
-            deleteSubTree(root_);
-        }
+        inline void deleteSubTree();
 
         //- Replace the binaryNode u with v
-        void transplant(bn* u, bn* v);
+        inline void transplant(binaryNode* u, binaryNode* v);
 
-        chP* chemPSibling(bn* y);
+        inline chemPointISAT* chemPSibling(binaryNode* y);
 
-        chP* chemPSibling(chP* x);
+        inline chemPointISAT* chemPSibling(chemPointISAT* x);
 
-        bn* nodeSibling(bn* y);
+        inline binaryNode* nodeSibling(binaryNode* y);
 
-        bn* nodeSibling(chP* x);
+        inline binaryNode* nodeSibling(chemPointISAT* x);
 
-        void deleteAllNode(bn* subTreeRoot);
-
-        dictionary coeffsDict_;
+        inline void deleteAllNode(binaryNode* subTreeRoot);
 
 
 public:
@@ -138,30 +125,19 @@ public:
             dictionary coeffsDict
         );
 
+
     //- Member functions
 
-        inline label size()
-        {
-            return size_;
-        }
+        inline label size() const;
 
         //- Computes iteratively the depth of the subTree
-        label depth(bn* subTreeRoot);
+        inline label depth(binaryNode* subTreeRoot) const;
 
-        inline label depth()
-        {
-            return depth(root_);
-        }
+        inline label depth() const;
 
-        inline bn* root()
-        {
-            return root_;
-        }
+        inline binaryNode* root();
 
-        inline label maxNLeafs()
-        {
-            return maxNLeafs_;
-        }
+        inline label maxNLeafs() const;
 
         // Insert a new leaf starting from the parent node of phi0
         // Parameters: phi0 the leaf to replace by a node
@@ -188,7 +164,7 @@ public:
             const scalar& epsTol,
             const label nCols,
             const label nActive,
-            chP*& phi0
+            chemPointISAT*& phi0
         );
 
         // Search the binaryTree until the nearest leaf of a specified
@@ -196,20 +172,20 @@ public:
         void binaryTreeSearch
         (
             const scalarField& phiq,
-            bn* node,
-            chP*& nearest
+            binaryNode* node,
+            chemPointISAT*& nearest
         );
 
         // Perform a secondary binary tree search starting from a failed
         // chemPoint x, with a depth-first search algorithm
         // If another candidate is found return true and x points to the chemP
-        bool secondaryBTSearch(const scalarField& phiq, chP*& x);
+        bool secondaryBTSearch(const scalarField& phiq, chemPointISAT*& x);
 
         //- Delete a leaf from the binary tree and reshape the binary tree for
         //  the following binary tree search
         //  Return the index in the nodeList of the removed node
         //  (-1 when no node)
-        void deleteLeaf(chP*& phi0);
+        void deleteLeaf(chemPointISAT*& phi0);
 
         //- Cheap balance function
         //  This function just roughly separate the space in two parts
@@ -225,28 +201,32 @@ public:
             deleteAllNode(root_);
         }
 
-        chP* treeMin(bn* subTreeRoot);
+        inline chemPointISAT* treeMin(binaryNode* subTreeRoot);
 
-        inline chP* treeMin()
+        inline chemPointISAT* treeMin()
         {
             return treeMin(root_);
         }
 
-        chP* treeSuccessor(chP* x);
+        chemPointISAT* treeSuccessor(chemPointISAT* x);
 
         //- Removes every entries of the tree and delete the associated objects
-        void clear();
+        inline void clear();
 
         //- ListFull
-        bool isFull();
+        inline bool isFull();
 
-        void resetNumRetrieve();
+        inline void resetNumRetrieve();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "binaryTreeI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

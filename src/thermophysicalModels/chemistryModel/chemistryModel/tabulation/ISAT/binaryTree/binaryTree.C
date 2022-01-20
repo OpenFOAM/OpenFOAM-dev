@@ -25,38 +25,14 @@ License
 
 #include "binaryTree.H"
 #include "SortableList.H"
-#include "demandDrivenData.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
-void Foam::binaryTree::insertNode(chP*& phi0, bn*& newNode)
-{
-    if (phi0 == phi0->node()->leafRight())// phi0 is on the right
-    {
-        phi0->node()->leafRight() = nullptr;
-        phi0->node()->nodeRight() = newNode;
-        return;
-    }
-    else if (phi0 == phi0->node()->leafLeft())// phi0 is on the left
-    {
-        phi0->node()->leafLeft() = nullptr;
-        phi0->node()->nodeLeft() = newNode;
-        return;
-
-    }
-
-    // if we reach this point, there is an issue with the addressing
-    FatalErrorInFunction
-        << "trying to insert a node with a wrong pointer to a chemPoint"
-        << exit(FatalError);
-}
-
 
 bool Foam::binaryTree::inSubTree
 (
     const scalarField& phiq,
-    bn* y,
-    chP* x
+    binaryNode* y,
+    chemPointISAT* x
 )
 {
     if ((n2ndSearch_ < max2ndSearch_) && (y!=nullptr))
@@ -156,172 +132,6 @@ bool Foam::binaryTree::inSubTree
 }
 
 
-void Foam::binaryTree::deleteSubTree(bn* subTreeRoot)
-{
-    if (subTreeRoot != nullptr)
-    {
-        deleteDemandDrivenData(subTreeRoot->leafLeft());
-        deleteDemandDrivenData(subTreeRoot->leafRight());
-        deleteSubTree(subTreeRoot->nodeLeft());
-        deleteSubTree(subTreeRoot->nodeRight());
-        deleteDemandDrivenData(subTreeRoot);
-    }
-}
-
-
-void Foam::binaryTree::transplant(bn* u, bn* v)
-{
-    if (v != nullptr)
-    {
-        // u is root_
-        if (u->parent() == nullptr)
-        {
-            root_ = v;
-        }
-        // u is on the left of its parent
-        else if (u == u->parent()->nodeLeft())
-        {
-            u->parent()->nodeLeft() = v;
-        }
-        // u is ont the right of its parent
-        else if (u == u->parent()->nodeRight())
-        {
-            u->parent()->nodeRight() = v;
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "wrong addressing of the initial node"
-                << exit(FatalError);
-        }
-        v->parent() = u->parent();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "trying to transplant a nullptr node"
-            << exit(FatalError);
-    }
-}
-
-
-Foam::chemPointISAT* Foam::binaryTree::chemPSibling(bn* y)
-{
-    if (y->parent() != nullptr)
-    {
-        if (y == y->parent()->nodeLeft())// y is on the left, return right side
-        {
-            // might return nullptr if the right side is a node
-            return y->parent()->leafRight();
-        }
-        else if (y == y->parent()->nodeRight())
-        {
-            return y->parent()->leafLeft();
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "wrong addressing of the initial node"
-                << exit(FatalError);
-            return nullptr;
-        }
-    }
-
-    // the binaryNode is root_ and has no sibling
-    return nullptr;
-}
-
-
-Foam::chemPointISAT* Foam::binaryTree::chemPSibling(chP* x)
-{
-    if (size_>1)
-    {
-        if (x == x->node()->leafLeft())
-        {
-            // x is on the left, return right side
-            // might return nullptr if the right side is a node
-            return x->node()->leafRight();
-        }
-        else if (x == x->node()->leafRight())
-        {
-            // x is on the right, return left side
-            return x->node()->leafLeft();
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "wrong addressing of the initial leaf"
-                << exit(FatalError);
-            return nullptr;
-        }
-    }
-    // there is only one leaf attached to the root_, no sibling
-    return nullptr;
-}
-
-
-Foam::binaryNode* Foam::binaryTree::nodeSibling(bn* y)
-{
-    if (y->parent()!=nullptr)
-    {
-        if (y == y->parent()->nodeLeft())
-        {
-            // y is on the left, return right side
-            return y->parent()->nodeRight();
-        }
-        else if (y == y->parent()->nodeRight())
-        {
-            return y->parent()->nodeLeft();
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "wrong addressing of the initial node"
-                << exit(FatalError);
-        return nullptr;
-        }
-    }
-    return nullptr;
-}
-
-
-Foam::binaryNode* Foam::binaryTree::nodeSibling(chP* x)
-{
-    if (size_>1)
-    {
-        if (x == x->node()->leafLeft())
-        {
-            // x is on the left, return right side
-            return x->node()->nodeRight();
-        }
-        else if (x == x->node()->leafRight())
-        {
-            // x is on the right, return left side
-            return x->node()->nodeLeft();
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "wrong addressing of the initial leaf"
-                << exit(FatalError);
-            return nullptr;
-        }
-    }
-    return nullptr;
-}
-
-
-void Foam::binaryTree::deleteAllNode(bn* subTreeRoot)
-{
-    if (subTreeRoot != nullptr)
-    {
-        deleteAllNode(subTreeRoot->nodeLeft());
-        deleteAllNode(subTreeRoot->nodeRight());
-        deleteDemandDrivenData(subTreeRoot);
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::binaryTree::binaryTree
@@ -341,26 +151,6 @@ Foam::binaryTree::binaryTree
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::binaryTree::depth(bn* subTreeRoot)
-{
-    // when we reach the leaf, we return 0
-    if (subTreeRoot == nullptr)
-    {
-        return 0;
-    }
-    else
-    {
-        return
-            1
-          + max
-            (
-                depth(subTreeRoot->nodeLeft()),
-                depth(subTreeRoot->nodeRight())
-            );
-    }
-}
-
-
 void Foam::binaryTree::insertNewLeaf
 (
     const scalarField& phiq,
@@ -370,17 +160,17 @@ void Foam::binaryTree::insertNewLeaf
     const scalar& epsTol,
     const label nCols,
     const label nActive,
-    chP*& phi0
+    chemPointISAT*& phi0
 )
 {
     if (size_ == 0) // no points are stored
     {
         // create an empty binary node and point root_ to it
-        root_ = new bn();
+        root_ = new binaryNode();
         // create the new chemPoint which holds the composition point
         // phiq and the data to initialise the EOA
-        chP* newChemPoint =
-            new chP
+        chemPointISAT* newChemPoint =
+            new chemPointISAT
             (
                 table_,
                 phiq,
@@ -403,12 +193,12 @@ void Foam::binaryTree::insertNewLeaf
             binaryTreeSearch(phiq, root_,phi0);
         }
         // access to the parent node of the chemPoint
-        bn* parentNode = phi0->node();
+        binaryNode* parentNode = phi0->node();
 
         // create the new chemPoint which holds the composition point
         // phiq and the data to initialise the EOA
-        chP* newChemPoint =
-            new chP
+        chemPointISAT* newChemPoint =
+            new chemPointISAT
             (
                 table_,
                 phiq,
@@ -424,10 +214,10 @@ void Foam::binaryTree::insertNewLeaf
         // previously stored leaf (phi0)
         // the new node contains phi0 on the left and phiq on the right
         // the hyper plane is computed in the binaryNode constructor
-        bn* newNode;
+        binaryNode* newNode;
         if (size_>1)
         {
-            newNode = new bn(phi0, newChemPoint, parentNode);
+            newNode = new binaryNode(phi0, newChemPoint, parentNode);
             // make the parent of phi0 point to the newly created node
             insertNode(phi0, newNode);
         }
@@ -435,7 +225,7 @@ void Foam::binaryTree::insertNewLeaf
         {
             // when size is 1, the binaryNode is without hyperplane
             deleteDemandDrivenData(root_);
-            newNode = new bn(phi0, newChemPoint, nullptr);
+            newNode = new binaryNode(phi0, newChemPoint, nullptr);
             root_ = newNode;
         }
 
@@ -446,70 +236,17 @@ void Foam::binaryTree::insertNewLeaf
 }
 
 
-void Foam::binaryTree::binaryTreeSearch
-(
-    const scalarField& phiq,
-    bn* node,
-    chP*& nearest
-)
-{
-    if (size_ > 1)
-    {
-        scalar vPhi=0.0;
-        const scalarField& v = node->v();
-        const scalar& a = node->a();
-        // compute v*phi
-        for (label i=0; i<phiq.size(); i++) vPhi += phiq[i]*v[i];
-
-
-        if (vPhi > a) // on right side (side of the newly added point)
-        {
-            if (node->nodeRight()!=nullptr)
-            {
-                binaryTreeSearch(phiq, node->nodeRight(), nearest);
-            }
-            else // the terminal node is reached, store leaf on the right
-            {
-                nearest = node->leafRight();
-                return;
-            }
-        }
-        else // on left side (side of the previously stored point)
-        {
-            if (node->nodeLeft()!=nullptr)
-            {
-                binaryTreeSearch(phiq, node->nodeLeft(), nearest);
-            }
-            else // the terminal node is reached, return element on right
-            {
-                nearest = node->leafLeft();
-                return;
-            }
-        }
-    }
-    // only one point stored (left element of the root)
-    else if (size_ == 1)
-    {
-        nearest = root_->leafLeft();
-    }
-    else // no point stored
-    {
-        nearest = nullptr;
-    }
-}
-
-
 bool Foam::binaryTree::secondaryBTSearch
 (
     const scalarField& phiq,
-    chP*& x
+    chemPointISAT*& x
 )
 {
     // initialise n2ndSearch_
     n2ndSearch_ = 0;
     if ((n2ndSearch_ < max2ndSearch_) && (size_ > 1))
     {
-        chP* xS = chemPSibling(x);
+        chemPointISAT* xS = chemPSibling(x);
         if (xS != nullptr)
         {
             n2ndSearch_++;
@@ -525,7 +262,7 @@ bool Foam::binaryTree::secondaryBTSearch
         }
         // if we reach this point, no leafs were found at this depth or lower
         // we move upward in the tree
-        bn* y = x->node();
+        binaryNode* y = x->node();
         while((y->parent()!= nullptr) && (n2ndSearch_ < max2ndSearch_))
         {
             xS = chemPSibling(y);
@@ -556,7 +293,7 @@ bool Foam::binaryTree::secondaryBTSearch
 }
 
 
-void Foam::binaryTree::deleteLeaf(chP*& phi0)
+void Foam::binaryTree::deleteLeaf(chemPointISAT*& phi0)
 {
     if (size_ == 1) // only one point is stored
     {
@@ -565,16 +302,16 @@ void Foam::binaryTree::deleteLeaf(chP*& phi0)
     }
     else if (size_ > 1)
     {
-        bn* z = phi0->node();
-        bn* x;
-        chP* siblingPhi0 = chemPSibling(phi0);
+        binaryNode* z = phi0->node();
+        binaryNode* x;
+        chemPointISAT* siblingPhi0 = chemPSibling(phi0);
 
         if (siblingPhi0 != nullptr)// the sibling of phi0 is a chemPoint
         {
             // z was root (only two chemPoints in the tree)
             if (z->parent() == nullptr)
             {
-                root_ = new bn();
+                root_ = new binaryNode();
                 root_->leafLeft()=siblingPhi0;
                 siblingPhi0->node()=root_;
             }
@@ -622,12 +359,12 @@ void Foam::binaryTree::balance()
 {
     //1) walk through the entire tree by starting with the tree's most left
     // chemPoint
-    chP* x = treeMin();
-    List<chP*> chemPoints(size_);
-    label chPi=0;
+    chemPointISAT* x = treeMin();
+    List<chemPointISAT*> chemPoints(size_);
+    label chemPointISATi=0;
     while (x != nullptr)
     {
-        chemPoints[chPi++] = x;
+        chemPoints[chemPointISATi++] = x;
         x = treeSuccessor(x);
     }
 
@@ -662,6 +399,7 @@ void Foam::binaryTree::balance()
             maxDir = vi;
         }
     }
+
     // maxDir indicates the direction of maximum variance
     // we create the new root node by taking the two extreme points
     // in this direction if these extreme points were not deleted in the
@@ -679,7 +417,7 @@ void Foam::binaryTree::balance()
     root_ = nullptr;
 
     // add the node for the two extremum
-    bn* newNode = new bn
+    binaryNode* newNode = new binaryNode
     (
         chemPoints[phiMaxDir.indices()[0]],
         chemPoints[phiMaxDir.indices()[phiMaxDir.size()-1]],
@@ -692,7 +430,7 @@ void Foam::binaryTree::balance()
 
     for (label cpi=1; cpi<chemPoints.size()-1; cpi++)
     {
-        chP* phi0;
+        chemPointISAT* phi0;
         binaryTreeSearch
         (
             chemPoints[phiMaxDir.indices()[cpi]]->phi(),
@@ -700,8 +438,13 @@ void Foam::binaryTree::balance()
             phi0
         );
         // add the chemPoint
-        bn* nodeToAdd =
-            new bn(phi0,chemPoints[phiMaxDir.indices()[cpi]], phi0->node());
+        binaryNode* nodeToAdd = new binaryNode
+        (
+            phi0,
+            chemPoints[phiMaxDir.indices()[cpi]],
+            phi0->node()
+        );
+
         // make the parent of phi0 point to the newly created node
         insertNode(phi0, nodeToAdd);
         phi0->node() = nodeToAdd;
@@ -710,24 +453,7 @@ void Foam::binaryTree::balance()
 }
 
 
-Foam::chemPointISAT* Foam::binaryTree::treeMin(bn* subTreeRoot)
-{
-    if (subTreeRoot!=nullptr)
-    {
-        while(subTreeRoot->nodeLeft() != nullptr)
-        {
-            subTreeRoot = subTreeRoot->nodeLeft();
-        }
-        return subTreeRoot->leafLeft();
-    }
-    else
-    {
-        return nullptr;
-    }
-}
-
-
-Foam::chemPointISAT* Foam::binaryTree::treeSuccessor(chP* x)
+Foam::chemPointISAT* Foam::binaryTree::treeSuccessor(chemPointISAT* x)
 {
     if (size_>1)
     {
@@ -744,7 +470,7 @@ Foam::chemPointISAT* Foam::binaryTree::treeSuccessor(chP* x)
         }
         else if (x == x->node()->leafRight())
         {
-            bn* y = x->node();
+            binaryNode* y = x->node();
             while((y->parent() !=nullptr))
             {
                 if (y == y->parent()->nodeLeft())
@@ -775,45 +501,6 @@ Foam::chemPointISAT* Foam::binaryTree::treeSuccessor(chP* x)
     }
 
     return nullptr;
-}
-
-
-void Foam::binaryTree::clear()
-{
-    // Recursively delete the element in the subTree
-    deleteSubTree();
-
-    // Reset root node (should already be nullptr)
-    root_ = nullptr;
-
-    // Reset size_
-    size_ = 0;
-}
-
-
-bool Foam::binaryTree::isFull()
-{
-    return size_ >= maxNLeafs_;
-}
-
-
-void Foam::binaryTree::resetNumRetrieve()
-{
-    // Has to go along each chP of the tree
-    if (size_ > 0)
-    {
-        // First finds the first leaf
-        chP* chP0 = treeMin();
-        chP0->resetNumRetrieve();
-
-        // Then go to each successor
-        chP* nextChP = treeSuccessor(chP0);
-        while (nextChP != nullptr)
-        {
-            nextChP->resetNumRetrieve();
-            nextChP = treeSuccessor(nextChP);
-        }
-    }
 }
 
 
