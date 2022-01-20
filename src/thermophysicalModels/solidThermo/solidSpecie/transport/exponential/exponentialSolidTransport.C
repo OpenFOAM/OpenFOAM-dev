@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,56 +23,56 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polynomialSolidTransport.H"
+#include "exponentialSolidTransport.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Thermo, int PolySize>
-Foam::polynomialSolidTransport<Thermo, PolySize>::polynomialSolidTransport
+template<class Thermo>
+Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
 (
     const dictionary& dict
 )
 :
     Thermo(dict),
-    kappaCoeffs_
-    (
-        dict.subDict("transport").lookup
-        (
-            "kappaCoeffs<" + Foam::name(PolySize) + '>'
-        )
-    )
-{}
+    kappa0_(0.0),
+    n0_(0.0),
+    Tref_(0.0)
+{
+    const dictionary& subDict = dict.subDict("transport");
+    kappa0_ = subDict.lookup<scalar>("kappa0");
+    n0_ = subDict.lookup<scalar>("n0");
+    Tref_ = subDict.lookup<scalar>("Tref");
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Thermo, int PolySize>
-void Foam::polynomialSolidTransport<Thermo, PolySize>::write(Ostream& os) const
+template<class Thermo>
+void Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport::write
+(
+    Ostream& os
+) const
 {
     Thermo::write(os);
 
     dictionary dict("transport");
-
-    dict.add
-    (
-        word("kappaCoeffs<" + Foam::name(PolySize) + '>'),
-        kappaCoeffs_
-    );
+    dict.add("kappa0", kappa0_);
+    dict.add("n0", n0_);
+    dict.add("Tref", Tref_);
     os  << indent << dict.dictName() << dict;
 }
 
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-template<class Thermo, int PolySize>
+template<class Thermo>
 Foam::Ostream& Foam::operator<<
 (
-    Ostream& os,
-    const polynomialSolidTransport<Thermo, PolySize>& pt
+    Ostream& os, const exponentialSolidTransport<Thermo>& et
 )
 {
-    pt.write(os);
+    et.write(os);
     return os;
 }
 

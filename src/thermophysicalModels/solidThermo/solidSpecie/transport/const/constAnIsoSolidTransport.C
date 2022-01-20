@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,26 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constIsoSolidTransport.H"
+#include "constAnIsoSolidTransport.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo>
-Foam::constIsoSolidTransport<Thermo>::constIsoSolidTransport
+Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
 (
     const dictionary& dict
 )
 :
     Thermo(dict),
-    kappa_(dict.subDict("transport").lookup<scalar>("kappa"))
+    kappa_(dict.subDict("transport").lookup("kappa"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Thermo>
-void Foam::constIsoSolidTransport<Thermo>::constIsoSolidTransport::write
+void Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport::write
 (
     Ostream& os
 ) const
@@ -61,7 +61,7 @@ template<class Thermo>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const constIsoSolidTransport<Thermo>& ct
+    const constAnIsoSolidTransport<Thermo>& ct
 )
 {
     ct.write(os);

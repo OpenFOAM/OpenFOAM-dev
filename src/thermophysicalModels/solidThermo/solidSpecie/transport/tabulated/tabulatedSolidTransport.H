@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,65 +22,93 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::constIsoSolidTransport
+    Foam::tabulatedSolidTransport
 
 Description
-    Constant properties Transport package.
-    Templated into a given thermodynamics package (needed for thermal
-    conductivity).
+    Transport properties package using non-uniformly-spaced tabulated data for
+    thermal conductivity vs temperature.
+
+Usage
+    \table
+        Property        | Description
+        kappa           | Thermal conductivity vs temperature table
+    \endtable
+
+    Example of the specification of the transport properties:
+    \verbatim
+    transport
+    {
+        kappa
+        {
+            values
+            (
+                (200 380)
+                (350 400)
+                (400 450)
+            );
+        }
+    }
+    \endverbatim
 
 SourceFiles
-    constIsoSolidTransportI.H
-    constIsoSolidTransport.C
+    tabulatedSolidTransportI.H
+    tabulatedSolidTransport.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constIsoSolidTransport_H
-#define constIsoSolidTransport_H
+#ifndef tabulatedSolidTransport_H
+#define tabulatedSolidTransport_H
 
-#include "vector.H"
+#include "NonUniformTable1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-template<class Thermo> class constIsoSolidTransport;
+template<class Thermo> class tabulatedSolidTransport;
 
 template<class Thermo>
-inline constIsoSolidTransport<Thermo> operator*
+inline tabulatedSolidTransport<Thermo> operator*
 (
     const scalar,
-    const constIsoSolidTransport<Thermo>&
+    const tabulatedSolidTransport<Thermo>&
 );
 
 template<class Thermo>
 Ostream& operator<<
 (
     Ostream&,
-    const constIsoSolidTransport<Thermo>&
+    const tabulatedSolidTransport<Thermo>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                   Class constIsoSolidTransport Declaration
+                  Class tabulatedSolidTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo>
-class constIsoSolidTransport
+class tabulatedSolidTransport
 :
     public Thermo
 {
+    typedef Function1s::NonUniformTable<scalar> nonUniformTable;
+
+
     // Private Data
 
-        //- Constant isotropic thermal conductivity
-        scalar kappa_;
+        //- Thermal conductivity table [W/m/K]
+        nonUniformTable kappa_;
 
 
     // Private Member Functions
 
         //- Construct from components
-        inline constIsoSolidTransport(const Thermo& t, const scalar kappa);
+        inline tabulatedSolidTransport
+        (
+            const Thermo& t,
+            const nonUniformTable& kappa
+        );
 
 
 public:
@@ -88,20 +116,20 @@ public:
     // Constructors
 
         //- Construct as named copy
-        inline constIsoSolidTransport
+        inline tabulatedSolidTransport
         (
             const word&,
-            const constIsoSolidTransport&
+            const tabulatedSolidTransport&
         );
 
         //- Construct from dictionary
-        constIsoSolidTransport(const dictionary& dict);
+        tabulatedSolidTransport(const dictionary&);
 
         //- Construct and return a clone
-        inline autoPtr<constIsoSolidTransport> clone() const;
+        inline autoPtr<tabulatedSolidTransport> clone() const;
 
         // Selector from dictionary
-        inline static autoPtr<constIsoSolidTransport> New
+        inline static autoPtr<tabulatedSolidTransport> New
         (
             const dictionary& dict
         );
@@ -112,16 +140,16 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "constIsoSolid<" + Thermo::typeName() + '>';
+            return "tabulatedSolid<" + Thermo::typeName() + '>';
         }
 
         //- Is the thermal conductivity isotropic
         static const bool isotropic = true;
 
-        //- Isotropic thermal conductivity [W/m/K]
+        //- Thermal conductivity [W/m/K]
         inline scalar kappa(const scalar p, const scalar T) const;
 
-        //- Un-isotropic thermal conductivity [W/m/K]
+        //- Thermal conductivity [W/m/K]
         inline vector Kappa(const scalar p, const scalar T) const;
 
          //- Dynamic viscosity [kg/m/s]
@@ -131,26 +159,12 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member Operators
-
-        inline void operator+=(const constIsoSolidTransport&);
-
-
-    // Friend operators
-
-        friend constIsoSolidTransport operator* <Thermo>
-        (
-            const scalar,
-            const constIsoSolidTransport&
-        );
-
-
     // Ostream Operator
 
         friend Ostream& operator<< <Thermo>
         (
             Ostream&,
-            const constIsoSolidTransport&
+            const tabulatedSolidTransport&
         );
 };
 
@@ -161,10 +175,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "constIsoSolidTransportI.H"
+#include "tabulatedSolidTransportI.H"
 
 #ifdef NoRepository
-    #include "constIsoSolidTransport.C"
+    #include "tabulatedSolidTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

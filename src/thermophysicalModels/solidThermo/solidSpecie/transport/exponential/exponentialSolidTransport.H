@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,104 +22,73 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::polynomialSolidTransport
+    Foam::exponentialSolidTransport
 
 Description
-    Transport package using polynomial functions for solid \c kappa.
-
-Usage
-
-    \table
-        Property        | Description
-        kappaCoeffs<8>  | Thermal conductivity polynomial coefficients
-    \endtable
-
-    Example of the specification of the transport properties:
-    \verbatim
-    transport
-    {
-        kappaCoeffs<8>     ( 1000 -0.05 0.003 0 0 0 0 0 );
-    }
-    \endverbatim
-
-    The polynomial expression is evaluated as so:
-
-        \f[
-            \kappa = 1000 - 0.05 T + 0.003 T^2
-        \f]
-
-Note
-    Thermal conductivity polynomial coefficients evaluate to an expression in
-    [W/m/K].
+    Exponential properties for solid heat transport
+    Templated into a given thermodynamics package.
 
 SourceFiles
-    polynomialSolidTransportI.H
-    polynomialSolidTransport.C
-
-See also
-    Foam::Polynomial
+    exponentialSolidTransportI.H
+    exponentialSolidTransport.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef polynomialSolidTransport_H
-#define polynomialSolidTransport_H
-
-#include "Polynomial.H"
+#ifndef exponentialSolidTransport_H
+#define exponentialSolidTransport_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
+template<class Thermo> class exponentialSolidTransport;
 
-template<class Thermo, int PolySize> class polynomialSolidTransport;
-
-template<class Thermo, int PolySize>
-inline polynomialSolidTransport<Thermo, PolySize> operator+
-(
-    const polynomialSolidTransport<Thermo, PolySize>&,
-    const polynomialSolidTransport<Thermo, PolySize>&
-);
-
-template<class Thermo, int PolySize>
-inline polynomialSolidTransport<Thermo, PolySize> operator*
+template<class Thermo>
+inline exponentialSolidTransport<Thermo> operator*
 (
     const scalar,
-    const polynomialSolidTransport<Thermo, PolySize>&
+    const exponentialSolidTransport<Thermo>&
 );
 
-template<class Thermo, int PolySize>
+template<class Thermo>
 Ostream& operator<<
 (
     Ostream&,
-    const polynomialSolidTransport<Thermo, PolySize>&
+    const exponentialSolidTransport<Thermo>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                  Class polynomialSolidTransport Declaration
+                  Class exponentialSolidTransport Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Thermo, int PolySize=8>
-class polynomialSolidTransport
+template<class Thermo>
+class exponentialSolidTransport
 :
     public Thermo
 {
     // Private Data
 
-        //- Thermal conductivity polynomial coefficients
-        //  Note: input in [W/m/K]
-        Polynomial<PolySize> kappaCoeffs_;
+        //- Constant thermal coefficient.
+        scalar kappa0_;
+
+        //- Exponent coefficient
+        scalar n0_;
+
+        //- Reference temperature
+        scalar Tref_;
 
 
     // Private Member Functions
 
         //- Construct from components
-        inline polynomialSolidTransport
+        inline exponentialSolidTransport
         (
             const Thermo& t,
-            const Polynomial<PolySize>& kappaPoly
+            const scalar kappa0,
+            const scalar n0,
+            const scalar Tref
         );
 
 
@@ -128,22 +97,22 @@ public:
     // Constructors
 
         //- Construct as named copy
-        inline polynomialSolidTransport
+        inline exponentialSolidTransport
         (
             const word&,
-            const polynomialSolidTransport&
+            const exponentialSolidTransport&
         );
 
         //- Construct from dictionary
-        polynomialSolidTransport(const dictionary& dict);
+        exponentialSolidTransport(const dictionary&);
 
         //- Construct and return a clone
-        inline autoPtr<polynomialSolidTransport> clone() const;
+        inline autoPtr<exponentialSolidTransport> clone() const;
 
         // Selector from dictionary
-        inline static autoPtr<polynomialSolidTransport> New
+        inline static autoPtr<exponentialSolidTransport> New
         (
-            const dictionary&dict
+            const dictionary& dict
         );
 
 
@@ -152,14 +121,11 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "polynomialSolid<" + Thermo::typeName() + '>';
+            return "exponentialSolid<" + Thermo::typeName() + '>';
         }
 
         //- Is the thermal conductivity isotropic
         static const bool isotropic = true;
-
-        //- Dynamic viscosity [kg/m/s]
-        inline scalar mu(const scalar p, const scalar T) const;
 
         //- Thermal conductivity [W/m/K]
         inline scalar kappa(const scalar p, const scalar T) const;
@@ -167,37 +133,32 @@ public:
         //- Thermal conductivity [W/m/K]
         inline vector Kappa(const scalar p, const scalar T) const;
 
+         //- Dynamic viscosity [kg/m/s]
+        inline scalar mu(const scalar p, const scalar T) const;
+
         //- Write to Ostream
         void write(Ostream& os) const;
 
 
     // Member Operators
 
-        inline void operator+=(const polynomialSolidTransport&);
-        inline void operator*=(const scalar);
+        inline void operator+=(const exponentialSolidTransport&);
 
 
     // Friend operators
 
-        friend polynomialSolidTransport operator+ <Thermo, PolySize>
-        (
-            const polynomialSolidTransport&,
-            const polynomialSolidTransport&
-        );
-
-        friend polynomialSolidTransport operator* <Thermo, PolySize>
+        friend exponentialSolidTransport operator* <Thermo>
         (
             const scalar,
-            const polynomialSolidTransport&
+            const exponentialSolidTransport&
         );
-
 
     // Ostream Operator
 
-        friend Ostream& operator<< <Thermo, PolySize>
+        friend Ostream& operator<< <Thermo>
         (
             Ostream&,
-            const polynomialSolidTransport&
+            const exponentialSolidTransport&
         );
 };
 
@@ -208,10 +169,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "polynomialSolidTransportI.H"
+#include "exponentialSolidTransportI.H"
 
 #ifdef NoRepository
-    #include "polynomialSolidTransport.C"
+    #include "exponentialSolidTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

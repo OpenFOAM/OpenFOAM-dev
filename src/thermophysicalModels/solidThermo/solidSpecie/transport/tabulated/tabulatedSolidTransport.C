@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,26 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constAnIsoSolidTransport.H"
+#include "tabulatedSolidTransport.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo>
-Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
+Foam::tabulatedSolidTransport<Thermo>::tabulatedSolidTransport
 (
     const dictionary& dict
 )
 :
     Thermo(dict),
-    kappa_(dict.subDict("transport").lookup("kappa"))
+    kappa_("kappa", dict.subDict("transport").subDict("kappa"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Thermo>
-void Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport::write
+void Foam::tabulatedSolidTransport<Thermo>::tabulatedSolidTransport::write
 (
     Ostream& os
 ) const
@@ -50,7 +50,7 @@ void Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport::write
     Thermo::write(os);
 
     dictionary dict("transport");
-    dict.add("kappa", kappa_);
+    dict.add("kappa", kappa_.values());
     os  << indent << dict.dictName() << dict;
 }
 
@@ -60,11 +60,10 @@ void Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport::write
 template<class Thermo>
 Foam::Ostream& Foam::operator<<
 (
-    Ostream& os,
-    const constAnIsoSolidTransport<Thermo>& ct
+    Ostream& os, const tabulatedSolidTransport<Thermo>& et
 )
 {
-    ct.write(os);
+    et.write(os);
     return os;
 }
 

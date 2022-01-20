@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,74 +22,65 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::exponentialSolidTransport
+    Foam::constIsoSolidTransport
 
 Description
-    Exponential properties for solid heat transport
-    Templated into a given thermodynamics package.
+    Constant properties Transport package.
+    Templated into a given thermodynamics package (needed for thermal
+    conductivity).
 
 SourceFiles
-    exponentialSolidTransportI.H
-    exponentialSolidTransport.C
+    constIsoSolidTransportI.H
+    constIsoSolidTransport.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef exponentialSolidTransport_H
-#define exponentialSolidTransport_H
+#ifndef constIsoSolidTransport_H
+#define constIsoSolidTransport_H
+
+#include "vector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-template<class Thermo> class exponentialSolidTransport;
+template<class Thermo> class constIsoSolidTransport;
 
 template<class Thermo>
-inline exponentialSolidTransport<Thermo> operator*
+inline constIsoSolidTransport<Thermo> operator*
 (
     const scalar,
-    const exponentialSolidTransport<Thermo>&
+    const constIsoSolidTransport<Thermo>&
 );
 
 template<class Thermo>
 Ostream& operator<<
 (
     Ostream&,
-    const exponentialSolidTransport<Thermo>&
+    const constIsoSolidTransport<Thermo>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                  Class exponentialSolidTransport Declaration
+                   Class constIsoSolidTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo>
-class exponentialSolidTransport
+class constIsoSolidTransport
 :
     public Thermo
 {
     // Private Data
 
-        //- Constant thermal coefficient.
-        scalar kappa0_;
-
-        //- Exponent coefficient
-        scalar n0_;
-
-        //- Reference temperature
-        scalar Tref_;
+        //- Constant isotropic thermal conductivity
+        scalar kappa_;
 
 
     // Private Member Functions
 
         //- Construct from components
-        inline exponentialSolidTransport
-        (
-            const Thermo& t,
-            const scalar kappa0,
-            const scalar n0,
-            const scalar Tref
-        );
+        inline constIsoSolidTransport(const Thermo& t, const scalar kappa);
 
 
 public:
@@ -97,20 +88,20 @@ public:
     // Constructors
 
         //- Construct as named copy
-        inline exponentialSolidTransport
+        inline constIsoSolidTransport
         (
             const word&,
-            const exponentialSolidTransport&
+            const constIsoSolidTransport&
         );
 
         //- Construct from dictionary
-        exponentialSolidTransport(const dictionary&);
+        constIsoSolidTransport(const dictionary& dict);
 
         //- Construct and return a clone
-        inline autoPtr<exponentialSolidTransport> clone() const;
+        inline autoPtr<constIsoSolidTransport> clone() const;
 
         // Selector from dictionary
-        inline static autoPtr<exponentialSolidTransport> New
+        inline static autoPtr<constIsoSolidTransport> New
         (
             const dictionary& dict
         );
@@ -121,16 +112,16 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "exponentialSolid<" + Thermo::typeName() + '>';
+            return "constIsoSolid<" + Thermo::typeName() + '>';
         }
 
         //- Is the thermal conductivity isotropic
         static const bool isotropic = true;
 
-        //- Thermal conductivity [W/m/K]
+        //- Isotropic thermal conductivity [W/m/K]
         inline scalar kappa(const scalar p, const scalar T) const;
 
-        //- Thermal conductivity [W/m/K]
+        //- Un-isotropic thermal conductivity [W/m/K]
         inline vector Kappa(const scalar p, const scalar T) const;
 
          //- Dynamic viscosity [kg/m/s]
@@ -142,23 +133,24 @@ public:
 
     // Member Operators
 
-        inline void operator+=(const exponentialSolidTransport&);
+        inline void operator+=(const constIsoSolidTransport&);
 
 
     // Friend operators
 
-        friend exponentialSolidTransport operator* <Thermo>
+        friend constIsoSolidTransport operator* <Thermo>
         (
             const scalar,
-            const exponentialSolidTransport&
+            const constIsoSolidTransport&
         );
+
 
     // Ostream Operator
 
         friend Ostream& operator<< <Thermo>
         (
             Ostream&,
-            const exponentialSolidTransport&
+            const constIsoSolidTransport&
         );
 };
 
@@ -169,10 +161,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "exponentialSolidTransportI.H"
+#include "constIsoSolidTransportI.H"
 
 #ifdef NoRepository
-    #include "exponentialSolidTransport.C"
+    #include "constIsoSolidTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
