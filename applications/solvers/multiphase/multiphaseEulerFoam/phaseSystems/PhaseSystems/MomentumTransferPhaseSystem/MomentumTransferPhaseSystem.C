@@ -90,15 +90,11 @@ MomentumTransferPhaseSystem
 :
     BasePhaseSystem(mesh)
 {
-    this->generateInterfacialModels("drag", dragModels_);
-    this->generateInterfacialModels("virtualMass", virtualMassModels_);
-    this->generateInterfacialModels("lift", liftModels_);
-    this->generateInterfacialModels("wallLubrication", wallLubricationModels_);
-    this->generateInterfacialModels
-    (
-        "turbulentDispersion",
-        turbulentDispersionModels_
-    );
+    this->generateInterfacialModels(dragModels_);
+    this->generateInterfacialModels(virtualMassModels_);
+    this->generateInterfacialModels(liftModels_);
+    this->generateInterfacialModels(wallLubricationModels_);
+    this->generateInterfacialModels(turbulentDispersionModels_);
 
     forAllConstIter
     (

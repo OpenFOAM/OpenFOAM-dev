@@ -148,7 +148,7 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
 :
     BasePhaseSystem(mesh)
 {
-    this->generateInterfacialModels("phaseTransfer", phaseTransferModels_);
+    this->generateInterfacialModels(phaseTransferModels_);
 
     forAllConstIter
     (

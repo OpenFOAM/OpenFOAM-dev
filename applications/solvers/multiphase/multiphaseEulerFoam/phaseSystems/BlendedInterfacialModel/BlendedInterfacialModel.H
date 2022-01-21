@@ -73,26 +73,41 @@ class BlendedInterfacialModel
         //- Model for phase 1 segregated with phase 2
         autoPtr<ModelType> model1SegregatedWith2_;
 
+        //- Models for general configurations displaced by a third phase
+        PtrList<ModelType> modelsGeneralDisplaced_;
+
+        //- Models for phase 1 dispersed in phase 2 displaced by a third phase
+        PtrList<ModelType> models1DispersedIn2Displaced_;
+
+        //- Models for phase 2 dispersed in phase 1 displaced by a third phase
+        PtrList<ModelType> models2DispersedIn1Displaced_;
+
+        //- Models for phase 1 segregated with phase 2 displaced by a third
+        //  phase
+        PtrList<ModelType> models1SegregatedWith2Displaced_;
+
+        //- Time index of last check
+        mutable label checkTimeIndex_;
+
 
     // Private Member Functions
 
-        //- Calculate the blending coefficients
-        template<template<class> class PatchField, class GeoMesh>
-        void calculateBlendingCoeffs
-        (
-            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1D2,
-            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2D1,
-            const bool subtract
-        ) const;
+        //- Check compatibility of the available models and the blending method
+        void check() const;
 
         //- Calculate the blending coefficients
         template<template<class> class PatchField, class GeoMesh>
         void calculateBlendingCoeffs
         (
+            const UPtrList<const volScalarField>& alphas,
             tmp<GeometricField<scalar, PatchField, GeoMesh>>& fG,
             tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1D2,
             tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2D1,
             tmp<GeometricField<scalar, PatchField, GeoMesh>>& fS,
+            PtrList<GeometricField<scalar, PatchField, GeoMesh>>& fGD,
+            PtrList<GeometricField<scalar, PatchField, GeoMesh>>& f1D2D,
+            PtrList<GeometricField<scalar, PatchField, GeoMesh>>& f2D1D,
+            PtrList<GeometricField<scalar, PatchField, GeoMesh>>& fSD,
             const bool subtract
         ) const;
 
@@ -102,6 +117,10 @@ class BlendedInterfacialModel
         (
             GeometricField<Type, PatchField, GeoMesh>& field
         ) const;
+
+        //- Write out a set or surface that visualises the various models'
+        //  utilisation of the blending space
+        void postProcessBlendingCoefficients(const word& format) const;
 
 
 protected:

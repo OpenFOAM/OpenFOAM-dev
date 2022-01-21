@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,82 +23,63 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sidedPhaseInterface.H"
+#include "segregatedBlendingMethod.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebugWithName
-    (
-        sidedPhaseInterface,
-        separatorsToTypeName
-        ({
-            phaseInterface::separator(),
-            separator()
-        }).c_str(),
-        0
-    );
-    addToRunTimeSelectionTable(phaseInterface, sidedPhaseInterface, word);
+namespace blendingMethods
+{
+    defineTypeNameAndDebug(segregated, 0);
+    addToRunTimeSelectionTable(blendingMethod, segregated, dictionary);
+}
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField> Foam::blendingMethods::segregated::fContinuous
+(
+    const UPtrList<const volScalarField>& alphas,
+    const label phaseSet,
+    const label systemSet
+) const
+{
+    return constant(alphas, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sidedPhaseInterface::sidedPhaseInterface
+Foam::blendingMethods::segregated::segregated
 (
-    const phaseModel& phase,
-    const phaseModel& otherPhase
+    const dictionary& dict,
+    const phaseInterface& interface
 )
 :
-    phaseInterface(phase, otherPhase),
-    phase_(phase)
+    blendingMethod(dict, interface)
 {}
-
-
-Foam::sidedPhaseInterface::sidedPhaseInterface
-(
-    const phaseSystem& fluid,
-    const word& name
-)
-:
-    phaseInterface(fluid, name),
-    phase_(identifyPhases(fluid, name, {separator()}).second())
-{
-    if (!contains(phase_))
-    {
-        FatalErrorInFunction
-            << "Interface " << name << " is not valid. An interface cannot "
-            << "have a side that is not one of its own phases."
-            << exit(FatalError);
-    }
-}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sidedPhaseInterface::~sidedPhaseInterface()
+Foam::blendingMethods::segregated::~segregated()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::word Foam::sidedPhaseInterface::name() const
+bool Foam::blendingMethods::segregated::canBeContinuous(const label index) const
 {
-    return phaseInterface::name() + '_' + separator() + '_' + phase().name();
+    return false;
 }
 
 
-const Foam::phaseModel& Foam::sidedPhaseInterface::phase() const
+bool Foam::blendingMethods::segregated::canSegregate() const
 {
-    return phase_;
-}
-
-
-const Foam::phaseModel& Foam::sidedPhaseInterface::otherPhase() const
-{
-    return phaseInterface::otherPhase(phase_);
+    return true;
 }
 
 

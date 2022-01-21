@@ -433,7 +433,7 @@ Foam::phaseSystem::phaseSystem
     }
 
     // Surface tension models
-    generateInterfacialModels("surfaceTension", surfaceTensionModels_);
+    generateInterfacialModels(surfaceTensionModels_);
 
     // Update motion fields
     correctKinematics();

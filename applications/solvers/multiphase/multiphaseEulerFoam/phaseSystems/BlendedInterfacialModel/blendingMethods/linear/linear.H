@@ -25,6 +25,16 @@ Class
     Foam::blendingMethods::linear
 
 Description
+    Blending method based on piecewise linear functions. Supports the full
+    range of phase fraction space. E.g., from droplets in air, through a
+    segregated regime, to bubbly flow.
+
+    This method requires two volume fractions between which the phase is
+    considered to become continuous to be specified for both phases.
+
+    Alternatively, these volume fractions can be omitted or replaced with the
+    keyword "none" to represent a phase which cannot become continuous. E.g.,
+    a particulate phase.
 
 SourceFiles
     linear.C
@@ -54,12 +64,23 @@ class linear
     // Private Data
 
         //- Minimum fraction of phases which can be considered fully continuous
-        HashTable<dimensionedScalar, word, word::hash>
-            minFullyContinuousAlpha_;
+        Pair<scalar> minFullyContinuousAlpha_;
 
         //- Minimum fraction of phases which can be considered partly continuous
-        HashTable<dimensionedScalar, word, word::hash>
-            minPartlyContinuousAlpha_;
+        Pair<scalar> minPartlyContinuousAlpha_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Evaluate the blending function
+        virtual tmp<volScalarField> fContinuous
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const label phaseSet,
+            const label systemSet
+        ) const;
 
 
 public:
@@ -70,11 +91,11 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and a list of phase names
+        //- Construct from a dictionary and an interface
         linear
         (
             const dictionary& dict,
-            const wordList& phaseNames
+            const phaseInterface& interface
         );
 
 
@@ -84,19 +105,11 @@ public:
 
     // Member Functions
 
-        //- Factor for primary phase
-        virtual tmp<volScalarField> f1
-        (
-            const phaseModel& phase1,
-            const phaseModel& phase2
-        ) const;
+        //- Return whether or not a phase can be considered continuous
+        virtual bool canBeContinuous(const label index) const;
 
-        //- Factor for secondary phase
-        virtual tmp<volScalarField> f2
-        (
-            const phaseModel& phase1,
-            const phaseModel& phase2
-        ) const;
+        //- Return whether or not this interface can segregate
+        virtual bool canSegregate() const;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "linear.H"
+#include "one.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -33,72 +34,115 @@ namespace Foam
 namespace blendingMethods
 {
     defineTypeNameAndDebug(linear, 0);
+    addToRunTimeSelectionTable(blendingMethod, linear, dictionary);
+}
+}
 
-    addToRunTimeSelectionTable
-    (
-        blendingMethod,
-        linear,
-        dictionary
-    );
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField> Foam::blendingMethods::linear::fContinuous
+(
+    const UPtrList<const volScalarField>& alphas,
+    const label phaseSet,
+    const label systemSet
+) const
+{
+    tmp<volScalarField> x = this->x(alphas, phaseSet, systemSet);
+    tmp<volScalarField> f =
+        parameter(alphas, phaseSet, minFullyContinuousAlpha_);
+    tmp<volScalarField> p =
+        parameter(alphas, phaseSet, minPartlyContinuousAlpha_);
+    return min(max((x - p())/max(f - p(), rootVSmall), zero()), one());
 }
-}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::blendingMethods::linear::linear
 (
     const dictionary& dict,
-    const wordList& phaseNames
+    const phaseInterface& interface
 )
 :
-    blendingMethod(dict)
+    blendingMethod(dict, interface),
+    minFullyContinuousAlpha_
+    (
+        readParameters
+        (
+            "minFullyContinuousAlpha",
+            dict,
+            interface,
+            {0, 1},
+            true
+        )
+    ),
+    minPartlyContinuousAlpha_
+    (
+        readParameters
+        (
+            "minPartlyContinuousAlpha",
+            dict,
+            interface,
+            {0, 1},
+            true
+        )
+    )
 {
-    forAllConstIter(wordList, phaseNames, iter)
+    forAllConstIter(phaseInterface, interface, iter)
     {
-        const word nameFull
-        (
-            IOobject::groupName("minFullyContinuousAlpha", *iter)
-        );
-
-        minFullyContinuousAlpha_.insert
-        (
-            *iter,
-            dimensionedScalar
-            (
-                nameFull,
-                dimless,
-                dict.lookup(nameFull)
-            )
-        );
-
-        const word namePart
-        (
-            IOobject::groupName("minPartlyContinuousAlpha", *iter)
-        );
-
-        minPartlyContinuousAlpha_.insert
-        (
-            *iter,
-            dimensionedScalar
-            (
-                namePart,
-                dimless,
-                dict.lookup(namePart)
-            )
-        );
+        const label i = iter.index();
 
         if
         (
-            minFullyContinuousAlpha_[*iter]
-          < minPartlyContinuousAlpha_[*iter]
+            isParameter(minFullyContinuousAlpha_[i])
+         != isParameter(minPartlyContinuousAlpha_[i])
         )
         {
             FatalErrorInFunction
-                << "The supplied fully continuous volume fraction for "
-                << *iter
-                << " is less than the partly continuous value."
-                << endl << exit(FatalError);
+                << "Both minimum fully and partly continuous alpha must be "
+                << "supplied for phases that can become continuous. Only one "
+                << "is supplied for " << iter().name() << exit(FatalError);
         }
+
+        if
+        (
+            (
+                canBeContinuous(i)
+             && minFullyContinuousAlpha_[i] <= minPartlyContinuousAlpha_[i]
+            )
+        )
+        {
+            FatalErrorInFunction
+                << "The fully continuous alpha specified for " << iter().name()
+                << " is not greater than the greater than the partly "
+                << "continuous alpha" << exit(FatalError);
+        }
+    }
+
+    if
+    (
+        canBeContinuous(0)
+     && canBeContinuous(1)
+     && (
+            (
+                minFullyContinuousAlpha_[0] + minPartlyContinuousAlpha_[1]
+              < 1 - rootSmall
+            )
+         || (
+                minFullyContinuousAlpha_[1] + minPartlyContinuousAlpha_[0]
+              < 1 - rootSmall
+            )
+        )
+    )
+    {
+        FatalErrorInFunction
+            << typeName.capitalise() << " blending function for interface "
+            << interface.name() << " is invalid in that it creates negative "
+            << "coefficients for sub-modelled values. A valid function will "
+            << "have fully continuous alphas that are greater than one minus "
+            << "the partly continuous alphas in the opposite phase."
+            << exit(FatalError);
     }
 }
 
@@ -111,52 +155,23 @@ Foam::blendingMethods::linear::~linear()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::blendingMethods::linear::f1
-(
-    const phaseModel& phase1,
-    const phaseModel& phase2
-) const
+bool Foam::blendingMethods::linear::canBeContinuous(const label index) const
 {
-    const dimensionedScalar
-        minFullAlpha(minFullyContinuousAlpha_[phase2.name()]);
-    const dimensionedScalar
-        minPartAlpha(minPartlyContinuousAlpha_[phase2.name()]);
-
-    return
-        min
-        (
-            max
-            (
-                (phase2 - minPartAlpha)
-               /(minFullAlpha - minPartAlpha + small),
-                scalar(0)
-            ),
-            scalar(1)
-        );
+    return isParameter(minFullyContinuousAlpha_[index]);
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::blendingMethods::linear::f2
-(
-    const phaseModel& phase1,
-    const phaseModel& phase2
-) const
+bool Foam::blendingMethods::linear::canSegregate() const
 {
-    const dimensionedScalar
-        minFullAlpha(minFullyContinuousAlpha_[phase1.name()]);
-    const dimensionedScalar
-        minPartAlpha(minPartlyContinuousAlpha_[phase1.name()]);
-
     return
-        min
-        (
-            max
-            (
-                (phase1 - minPartAlpha)
-               /(minFullAlpha - minPartAlpha + small),
-                scalar(0)
-            ),
-            scalar(1)
+        canBeContinuous(0)
+     && canBeContinuous(1)
+     && (
+            minFullyContinuousAlpha_[0] + minPartlyContinuousAlpha_[1]
+          > 1 + rootSmall
+         ||
+            minFullyContinuousAlpha_[1] + minPartlyContinuousAlpha_[0]
+          > 1 + rootSmall
         );
 }
 

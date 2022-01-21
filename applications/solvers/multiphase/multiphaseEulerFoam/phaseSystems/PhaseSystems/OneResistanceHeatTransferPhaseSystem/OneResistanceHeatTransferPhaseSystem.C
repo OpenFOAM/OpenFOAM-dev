@@ -38,7 +38,7 @@ OneResistanceHeatTransferPhaseSystem
 :
     HeatTransferPhaseSystem<BasePhaseSystem>(mesh)
 {
-    this->generateInterfacialModels("heatTransfer", heatTransferModels_);
+    this->generateInterfacialModels(heatTransferModels_);
 }
 
 

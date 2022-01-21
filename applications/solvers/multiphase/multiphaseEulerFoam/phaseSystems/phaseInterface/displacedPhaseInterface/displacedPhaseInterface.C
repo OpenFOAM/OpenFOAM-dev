@@ -66,7 +66,14 @@ Foam::displacedPhaseInterface::displacedPhaseInterface
 :
     phaseInterface(fluid, name),
     displacing_(identifyPhases(fluid, name, {separator()}).second())
-{}
+{
+    if (contains(displacing_))
+    {
+        FatalErrorInFunction
+            << "Interface " << name << " is not valid. An interface cannot "
+            << "be displaced by one of its own phases." << exit(FatalError);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

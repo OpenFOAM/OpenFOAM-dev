@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,46 +33,57 @@ namespace Foam
 namespace blendingMethods
 {
     defineTypeNameAndDebug(hyperbolic, 0);
+    addToRunTimeSelectionTable(blendingMethod, hyperbolic, dictionary);
+}
+}
 
-    addToRunTimeSelectionTable
-    (
-        blendingMethod,
-        hyperbolic,
-        dictionary
-    );
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField> Foam::blendingMethods::hyperbolic::fContinuous
+(
+    const UPtrList<const volScalarField>& alphas,
+    const label phaseSet,
+    const label systemSet
+) const
+{
+    tmp<volScalarField> x = this->x(alphas, phaseSet, systemSet);
+    tmp<volScalarField> a = parameter(alphas, phaseSet, minContinuousAlpha_);
+    return (1 + tanh((4/transitionAlphaScale_)*(x - a)))/2;
 }
-}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::blendingMethods::hyperbolic::hyperbolic
 (
     const dictionary& dict,
-    const wordList& phaseNames
+    const phaseInterface& interface
 )
 :
-    blendingMethod(dict),
+    blendingMethod(dict, interface),
+    minContinuousAlpha_
+    (
+        readParameters("minContinuousAlpha", dict, interface, {0, 1}, true)
+    ),
     transitionAlphaScale_
     (
-        "transitionAlphaScale",
-        dimless,
-        dict.lookup("transitionAlphaScale")
+        readParameter("transitionAlphaScale", dict, {0, NaN}, false)
     )
 {
-    forAllConstIter(wordList, phaseNames, iter)
+    if
+    (
+        canBeContinuous(0)
+     && canBeContinuous(1)
+     && minContinuousAlpha_[0] + minContinuousAlpha_[1] < 1 - rootSmall
+    )
     {
-        const word name(IOobject::groupName("minContinuousAlpha", *iter));
-
-        minContinuousAlpha_.insert
-        (
-            *iter,
-            dimensionedScalar
-            (
-                name,
-                dimless,
-                dict.lookup(name)
-            )
-        );
+        FatalErrorInFunction
+            << typeName.capitalise() << " blending function for interface "
+            << interface.name() << " is invalid in that it creates negative "
+            << "coefficients for sub-modelled values. A valid function will "
+            << "have minimum continuous alphas that sum one or greater."
+            << exit(FatalError);
     }
 }
 
@@ -85,39 +96,18 @@ Foam::blendingMethods::hyperbolic::~hyperbolic()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::blendingMethods::hyperbolic::f1
-(
-    const phaseModel& phase1,
-    const phaseModel& phase2
-) const
+bool Foam::blendingMethods::hyperbolic::canBeContinuous(const label index) const
 {
-    return
-        (
-            1
-          + tanh
-            (
-                (4/transitionAlphaScale_)
-               *(phase2 - minContinuousAlpha_[phase2.name()])
-            )
-        )/2;
+    return isParameter(minContinuousAlpha_[index]);
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::blendingMethods::hyperbolic::f2
-(
-    const phaseModel& phase1,
-    const phaseModel& phase2
-) const
+bool Foam::blendingMethods::hyperbolic::canSegregate() const
 {
     return
-        (
-            1
-          + tanh
-            (
-                (4/transitionAlphaScale_)
-               *(phase1 - minContinuousAlpha_[phase1.name()])
-            )
-        )/2;
+        canBeContinuous(0)
+     && canBeContinuous(1)
+     && minContinuousAlpha_[0] + minContinuousAlpha_[1] > 1 + rootSmall;
 }
 
 

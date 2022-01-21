@@ -22,28 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::hyperbolic
+    Foam::blendingMethods::continuous
 
 Description
-    Blending method based on smooth hyperbolic functions. Supports the full
-    range of phase fraction space. E.g., from droplets in air, through a
-    segregated regime, to bubbly flow.
+    Blending method for the case in which the continuous phase is always the
+    same. E.g., for an air-particles flow, the air phase is always continuous.
 
-    This method requires a volume fraction at which the phase is considered to
-    become continuous, and a range of volume fraction over which this occurs,
-    to be specified for both phases.
-
-    Alternatively, the volume fraction can be omitted or replaced with the
-    keyword "none" to represent a phase which cannot become continuous. E.g.,
-    a particulate phase.
+    This method requires the continuous phase to be specified.
 
 SourceFiles
-    hyperbolic.C
+    continuous.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hyperbolic_H
-#define hyperbolic_H
+#ifndef continuous_H
+#define continuous_H
 
 #include "blendingMethod.H"
 
@@ -55,20 +48,17 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class hyperbolic Declaration
+                         Class continuous Declaration
 \*---------------------------------------------------------------------------*/
 
-class hyperbolic
+class continuous
 :
     public blendingMethod
 {
     // Private Data
 
-        //- Minimum fraction of phases which can be considered continuous
-        Pair<scalar> minContinuousAlpha_;
-
-        //- Width of the transition
-        const scalar transitionAlphaScale_;
+        //- The continuous phase
+        const phaseModel& phase_;
 
 
 protected:
@@ -87,13 +77,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("hyperbolic");
+    TypeName("continuous");
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        hyperbolic
+        continuous
         (
             const dictionary& dict,
             const phaseInterface& interface
@@ -101,7 +91,7 @@ public:
 
 
     //- Destructor
-    ~hyperbolic();
+    ~continuous();
 
 
     // Member Functions

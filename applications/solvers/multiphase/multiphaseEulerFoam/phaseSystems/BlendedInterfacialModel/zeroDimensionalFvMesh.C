@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,37 +23,60 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "blendingMethod.H"
+#include "zeroDimensionalFvMesh.H"
+#include "emptyPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::blendingMethod> Foam::blendingMethod::New
-(
-    const word& modelTypeName,
-    const dictionary& dict,
-    const phaseInterface& interface
-)
+Foam::fvMesh Foam::zeroDimensionalFvMesh(const objectRegistry& db)
 {
-    const word blendingMethodType(dict.lookup("type"));
+    pointField points(8);
+    points[0] = vector(-0.5, -0.5, -0.5);
+    points[1] = vector( 0.5, -0.5, -0.5);
+    points[2] = vector( 0.5,  0.5, -0.5);
+    points[3] = vector(-0.5,  0.5, -0.5);
+    points[4] = vector(-0.5, -0.5,  0.5);
+    points[5] = vector( 0.5, -0.5,  0.5);
+    points[6] = vector( 0.5,  0.5,  0.5);
+    points[7] = vector(-0.5,  0.5,  0.5);
 
-    Info<< "Selecting " << modelTypeName << " blending method for "
-        << interface.name() << ": " << blendingMethodType << endl;
+    faceList faces = cellModeller::lookup("hex")->modelFaces();
 
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(blendingMethodType);
+    labelList owner(6, label(0));
+    labelList neighbour(0);
 
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown blendingMethodType type "
-            << blendingMethodType << endl << endl
-            << "Valid blendingMethod types are : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
+    fvMesh mesh
+    (
+        IOobject
+        (
+            fvMesh::defaultRegion,
+            db.time().timeName(),
+            db,
+            IOobject::READ_IF_PRESENT
+        ),
+        move(points),
+        move(faces),
+        move(owner),
+        move(neighbour)
+    );
 
-    return cstrIter()(dict, interface);
+    List<polyPatch*> patches
+    (
+        1,
+        new emptyPolyPatch
+        (
+            "boundary",
+            6,
+            0,
+            0,
+            mesh.boundaryMesh(),
+            emptyPolyPatch::typeName
+        )
+    );
+
+    mesh.addFvPatches(patches);
+
+    return mesh;
 }
-
 
 // ************************************************************************* //

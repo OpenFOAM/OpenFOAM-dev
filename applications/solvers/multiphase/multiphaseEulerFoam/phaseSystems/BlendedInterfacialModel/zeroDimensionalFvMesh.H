@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,39 +21,28 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::zeroDimensionalFvMesh
+
 \*---------------------------------------------------------------------------*/
 
-#include "blendingMethod.H"
+#ifndef zeroDimensionalFvMesh_H
+#define zeroDimensionalFvMesh_H
+
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::blendingMethod> Foam::blendingMethod::New
-(
-    const word& modelTypeName,
-    const dictionary& dict,
-    const phaseInterface& interface
-)
+namespace Foam
 {
-    const word blendingMethodType(dict.lookup("type"));
 
-    Info<< "Selecting " << modelTypeName << " blending method for "
-        << interface.name() << ": " << blendingMethodType << endl;
+//- Construct a zero-dimensional unit-cube FV mesh
+fvMesh zeroDimensionalFvMesh(const objectRegistry& db);
 
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(blendingMethodType);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown blendingMethodType type "
-            << blendingMethodType << endl << endl
-            << "Valid blendingMethod types are : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
-
-    return cstrIter()(dict, interface);
 }
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

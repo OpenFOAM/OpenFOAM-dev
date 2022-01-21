@@ -354,6 +354,11 @@ public:
 
         // Sub-model construction
 
+            //- Return the model name. This is the same as the model's typename
+            //  but without "Model" on the end.
+            template<class ModelType>
+            word modelName() const;
+
             //- Generate interfacial-model lists
             template<class ModelType, class ... InterfaceTypes>
             void generateInterfacialModels
@@ -381,7 +386,6 @@ public:
             template<class ModelType>
             void generateInterfacialModels
             (
-                const word& modelName,
                 HashTable
                 <
                     autoPtr<ModelType>,

@@ -22,17 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::noBlending
+    Foam::blendingMethods::segregated
 
 Description
+    Blending method for segregated configurations. E.g., a churning flow in
+    which it is never appropriate to consider one phase continuous.
 
 SourceFiles
-    noBlending.C
+    segregatedBlendingMethod.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef noBlending_H
-#define noBlending_H
+#ifndef segregatedBlendingMethod_H
+#define segregatedBlendingMethod_H
 
 #include "blendingMethod.H"
 
@@ -44,54 +46,53 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class noBlending Declaration
+                         Class segregated Declaration
 \*---------------------------------------------------------------------------*/
 
-class noBlending
+class segregated
 :
     public blendingMethod
 {
-    // Private Data
+protected:
 
-        //- Name of the continuous phase
-        const word continuousPhase_;
+    // Protected Member Functions
+
+        //- Evaluate the blending function
+        virtual tmp<volScalarField> fContinuous
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const label phaseSet,
+            const label systemSet
+        ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("none");
+    TypeName("segregated");
 
 
     // Constructors
 
-        //- Construct from a dictionary and a list of phase names
-        noBlending
+        //- Construct from a dictionary and an interface
+        segregated
         (
             const dictionary& dict,
-            const wordList& phaseNames
+            const phaseInterface& interface
         );
 
 
     //- Destructor
-    ~noBlending();
+    ~segregated();
 
 
     // Member Functions
 
-        //- Factor for primary phase
-        virtual tmp<volScalarField> f1
-        (
-            const phaseModel& phase1,
-            const phaseModel& phase2
-        ) const;
+        //- Return whether or not a phase can be considered segregated
+        virtual bool canBeContinuous(const label index) const;
 
-        //- Factor for secondary phase
-        virtual tmp<volScalarField> f2
-        (
-            const phaseModel& phase1,
-            const phaseModel& phase2
-        ) const;
+        //- Return whether or not this interface can segregate
+        virtual bool canSegregate() const;
 };
 
 

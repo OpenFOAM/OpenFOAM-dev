@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "noBlending.H"
+#include "continuous.H"
+#include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,69 +33,63 @@ namespace Foam
 {
 namespace blendingMethods
 {
-    defineTypeNameAndDebug(noBlending, 0);
+    defineTypeNameAndDebug(continuous, 0);
+    addToRunTimeSelectionTable(blendingMethod, continuous, dictionary);
+}
+}
 
-    addToRunTimeSelectionTable
-    (
-        blendingMethod,
-        noBlending,
-        dictionary
-    );
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField> Foam::blendingMethods::continuous::fContinuous
+(
+    const UPtrList<const volScalarField>& alphas,
+    const label phaseSet,
+    const label systemSet
+) const
+{
+    return
+        constant
+        (
+            alphas,
+            interface_.contains(phase_)
+         && (0b01 << interface_.index(phase_) & phaseSet)
+          ? 1
+          : 0
+        );
 }
-}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blendingMethods::noBlending::noBlending
+Foam::blendingMethods::continuous::continuous
 (
     const dictionary& dict,
-    const wordList& phaseNames
+    const phaseInterface& interface
 )
 :
-    blendingMethod(dict),
-    continuousPhase_(dict.lookup("continuousPhase"))
+    blendingMethod(dict, interface),
+    phase_(interface_.fluid().phases()[dict.lookup<word>("phase")])
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::blendingMethods::noBlending::~noBlending()
+Foam::blendingMethods::continuous::~continuous()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::blendingMethods::noBlending::f1
-(
-    const phaseModel& phase1,
-    const phaseModel& phase2
-) const
+bool Foam::blendingMethods::continuous::canBeContinuous(const label index) const
 {
-    const fvMesh& mesh(phase1.mesh());
-
-    return volScalarField::New
-    (
-        "f",
-        mesh,
-        dimensionedScalar(dimless, phase2.name() == continuousPhase_)
-    );
+    return interface_.contains(phase_) && interface_.index(phase_) == index;
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::blendingMethods::noBlending::f2
-(
-    const phaseModel& phase1,
-    const phaseModel& phase2
-) const
+bool Foam::blendingMethods::continuous::canSegregate() const
 {
-    const fvMesh& mesh(phase1.mesh());
-
-    return volScalarField::New
-    (
-        "f",
-        mesh,
-        dimensionedScalar(dimless, phase1.name() == continuousPhase_)
-    );
+    return false;
 }
 
 

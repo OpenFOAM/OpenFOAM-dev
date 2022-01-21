@@ -105,7 +105,7 @@ template<class Type>
 Foam::dictionary Foam::phaseSystem::interfacialDict(const word& name) const
 {
     bool found = false;
-    dictionary dict;
+    dictionary dict(name);
 
     // If it is a dictionary then merge it in
     if (this->isDict(name))
@@ -242,6 +242,32 @@ void Foam::phaseSystem::fillFields
 }
 
 
+template<class ModelType>
+Foam::word Foam::phaseSystem::modelName() const
+{
+    word name = ModelType::typeName;
+
+    // Extract the innermost part of the template
+    const word::size_type i0 = name.find_last_of('<');
+    if (i0 != word::npos)
+    {
+        const word::size_type i1 = name.find_first_of('>', i0 + 1);
+        if (i1 != word::npos)
+        {
+            name = name(i0 + 1, i1 - i0 - 1);
+        }
+    }
+
+    // Strip "Model" off the end of the name
+    if (name(name.size() - 5, 5) == "Model")
+    {
+        name = name(name.size() - 5);
+    }
+
+    return name;
+}
+
+
 template<class ModelType, class ... InterfaceTypes>
 void Foam::phaseSystem::generateInterfacialModels
 (
@@ -357,7 +383,6 @@ void Foam::phaseSystem::generateInterfacialModels
 template<class ModelType>
 void Foam::phaseSystem::generateInterfacialModels
 (
-    const word& modelName,
     HashTable
     <
         autoPtr<ModelType>,
@@ -366,7 +391,11 @@ void Foam::phaseSystem::generateInterfacialModels
     >& models
 ) const
 {
-    generateInterfacialModels(interfacialDict<dictionary>(modelName), models);
+    generateInterfacialModels
+    (
+        interfacialDict<dictionary>(modelName<ModelType>()),
+        models
+    );
 }
 
 

@@ -25,6 +25,9 @@ Class
     Foam::blendingMethod
 
 Description
+    Abstract base class for functions that are used to combine interfacial
+    sub-models according to the volume fractions of the phases that they apply
+    to.
 
 SourceFiles
     blendingMethod.C
@@ -34,9 +37,8 @@ SourceFiles
 #ifndef blendingMethod_H
 #define blendingMethod_H
 
-#include "dictionary.H"
+#include "phaseInterface.H"
 #include "runTimeSelectionTables.H"
-#include "phaseModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,6 +51,91 @@ namespace Foam
 
 class blendingMethod
 {
+protected:
+
+    // Protected Data
+
+        //- Interface
+        const phaseInterface interface_;
+
+
+    // Protected Static Member Functions
+
+        //- Read a parameter and check it lies within specified bounds
+        static scalar readParameter
+        (
+            const word& name,
+            const dictionary& dict,
+            const Pair<scalar>& bounds,
+            const bool allowNone
+        );
+
+        //- Read a parameter for each phase in the interface
+        static Pair<scalar> readParameters
+        (
+            const word& name,
+            const dictionary& dict,
+            const phaseInterface& interface,
+            const Pair<scalar>& bounds,
+            const bool allowNone
+        );
+
+        //- Test if the given scalar is a valid parameter
+        static bool isParameter(const scalar parameter);
+
+
+    // Protected Member Functions
+
+        //- Return a constant field with the given value
+        tmp<volScalarField> constant
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const scalar k
+        ) const;
+
+        //- Get the volume fraction of the given set
+        tmp<volScalarField> alpha
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const label set,
+            const bool protect
+        ) const;
+
+        //- Get a blending parameter averaged for the given set
+        tmp<volScalarField> parameter
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const label set,
+            const Pair<scalar>& parameters
+        ) const;
+
+        //- Return the coordinate of the blending function
+        tmp<volScalarField> x
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const label phaseSet,
+            const label systemSet
+        ) const;
+
+        //- Evaluate the blending function for sets in which all phases can be
+        //  continuous
+        virtual tmp<volScalarField> fContinuous
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const label phaseSet,
+            const label systemSet
+        ) const = 0;
+
+        //- Evaluate the blending function. Filters out phases that cannot
+        //  become continuous from the sets, then calls fContinuous
+        virtual tmp<volScalarField> f
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const label phaseSet,
+            const label systemSet
+        ) const;
+
+
 public:
 
     //- Runtime type information
@@ -63,25 +150,29 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const wordList& phaseNames
+            const phaseInterface& interface
         ),
-        (dict, phaseNames)
+        (dict, interface)
     );
 
 
     // Constructors
 
-        //- Construct from a dictionary
-        blendingMethod(const dictionary& dict);
+        //- Construct from a dictionary and an interface
+        blendingMethod
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        );
 
 
     // Selector
 
         static autoPtr<blendingMethod> New
         (
-            const word& modelName,
+            const word& modelTypeName,
             const dictionary& dict,
-            const wordList& phaseNames
+            const phaseInterface& interface
         );
 
 
@@ -91,19 +182,32 @@ public:
 
     // Member Functions
 
-        //- Factor for first phase
-        virtual tmp<volScalarField> f1
-        (
-            const phaseModel& phase1,
-            const phaseModel& phase2
-        ) const = 0;
+        //- Return whether or not a phase can be considered continuous
+        virtual bool canBeContinuous(const label index) const = 0;
 
-        //- Factor for second phase
-        virtual tmp<volScalarField> f2
+        //- Return whether or not this interface can segregate
+        virtual bool canSegregate() const = 0;
+
+        //- Return the coefficient for models in which phase 1 is dispersed in
+        //  phase 2
+        tmp<volScalarField> f1DispersedIn2
         (
-            const phaseModel& phase1,
-            const phaseModel& phase2
-        ) const = 0;
+            const UPtrList<const volScalarField>& alphas
+        ) const;
+
+        //- Return the coefficient for models in which phase 2 is dispersed in
+        //  phase 1
+        tmp<volScalarField> f2DispersedIn1
+        (
+            const UPtrList<const volScalarField>& alphas
+        ) const;
+
+        //- Return the coefficient for when the interface is displaced by a
+        //  third phase
+        tmp<volScalarField> fDisplaced
+        (
+            const UPtrList<const volScalarField>& alphas
+        ) const;
 };
 
 

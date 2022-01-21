@@ -73,7 +73,7 @@ ThermalPhaseChangePhaseSystem
         this->template lookupOrDefault<Switch>("pressureImplicit", true)
     )
 {
-    this->generateInterfacialModels("saturation", saturationModels_);
+    this->generateInterfacialModels(saturationModels_);
 
     // Check that models have been specified in the correct combinations
     forAllConstIter

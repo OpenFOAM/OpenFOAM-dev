@@ -201,7 +201,7 @@ TwoResistanceHeatTransferPhaseSystem
 :
     HeatTransferPhaseSystem<BasePhaseSystem>(mesh)
 {
-    this->generateInterfacialModels("heatTransfer", heatTransferModels_);
+    this->generateInterfacialModels(heatTransferModels_);
 
     // Check that models have been specified on both sides of the interfaces
     forAllConstIter
