@@ -24,8 +24,9 @@ boundaryField
     inlet
     {
         type            flowRateInletVelocity;
-        massFlowRate    2.173893E-07;
+        massFlowRate    2.173893e-07;
         rho             thermo:rho.vapor;
+        profile         laminarBL;
         value           $internalField;
     }
 

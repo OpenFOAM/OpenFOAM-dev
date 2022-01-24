@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -256,10 +256,20 @@ Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
             const volScalarField::Internal
                 Vdt(this->mesh().V()*this->db().time().deltaT());
 
-            return
-                hsTrans()/Vdt
-              - fvm::SuSp(hsCoeff()/(Cp*Vdt), hs)
-              + hsCoeff()/(Cp*Vdt)*hs;
+            if (hs.dimensions() == dimTemperature)
+            {
+                return
+                    hsTrans()/Vdt
+                  - fvm::SuSp(hsCoeff()/Vdt, hs)
+                  + (hsCoeff()/Vdt)*hs;
+            }
+            else
+            {
+                return
+                    hsTrans()/Vdt
+                  - fvm::SuSp(hsCoeff()/(Cp*Vdt), hs)
+                  + hsCoeff()/(Cp*Vdt)*hs;
+            }
         }
         else
         {

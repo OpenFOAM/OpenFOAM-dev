@@ -34,6 +34,7 @@ boundaryField
     {
         type            flowRateInletVelocity;
         massFlowRate    constant 0.1;
+        profile         turbulentBL;
         rhoInlet        1;          // estimate for initial rho
     }
 

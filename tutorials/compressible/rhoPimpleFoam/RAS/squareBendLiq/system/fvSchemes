@@ -30,7 +30,7 @@ divSchemes
 {
     default             none;
 
-    div(phi,U)          Gauss linearUpwind limited;
+    div(phi,U)          Gauss linearUpwindV limited;
     div(phi,e)          Gauss linearUpwind limited;
     div(phi,epsilon)    Gauss linearUpwind limited;
     div(phi,k)          Gauss linearUpwind limited;

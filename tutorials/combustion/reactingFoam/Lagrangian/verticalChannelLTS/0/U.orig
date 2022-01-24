@@ -33,12 +33,14 @@ boundaryField
         type            flowRateInletVelocity;
         massFlowRate    constant 0.00379;
         rhoInlet        1.0;    // fallback value for e.g. potentialFoam
+        profile         turbulentBL;
     }
     inletSides
     {
         type            flowRateInletVelocity;
         massFlowRate  constant 0.00832;
         rhoInlet        1.0;    // fallback value for e.g. potentialFoam
+        profile         turbulentBL;
     }
     outlet
     {

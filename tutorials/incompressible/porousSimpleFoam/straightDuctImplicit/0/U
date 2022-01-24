@@ -40,7 +40,7 @@ boundaryField
     {
         type            flowRateInletVelocity;
         volumetricFlowRate  constant 0.1;
-//        value           uniform (0.1 0 0);
+        profile         turbulentBL;
     }
     outlet
     {

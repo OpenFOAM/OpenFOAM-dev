@@ -31,13 +31,13 @@ boundaryField
     inletCentral
     {
         type            turbulentIntensityKineticEnergyInlet;
-        intensity       0.15;
+        intensity       0.05;
         value           uniform 3.75e-9;
     }
     inletSides
     {
         type            turbulentIntensityKineticEnergyInlet;
-        intensity       0.16;
+        intensity       0.05;
         value           uniform 3.75e-9;
     }
     outlet

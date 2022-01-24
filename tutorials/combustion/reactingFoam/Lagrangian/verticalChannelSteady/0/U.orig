@@ -33,6 +33,7 @@ boundaryField
         type            flowRateInletVelocity;
         rhoInlet        1.2;
         massFlowRate    constant 0.00379;
+        profile         turbulentBL;
         value           uniform (0 14.68 0);
     }
     inletSides
@@ -40,6 +41,7 @@ boundaryField
         type            flowRateInletVelocity;
         rhoInlet        1.2;
         massFlowRate    constant 0.00832;
+        profile         turbulentBL;
         value           uniform (0 17.79 0);
     }
     outlet

@@ -26,6 +26,7 @@ boundaryField
     {
         type            flowRateInletVelocity;
         massFlowRate    constant 0.05;
+        profile         turbulentBL;
         value           $internalField;
     }
     upper

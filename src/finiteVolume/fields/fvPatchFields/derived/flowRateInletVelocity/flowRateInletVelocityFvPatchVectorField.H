@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,9 @@ Class
     Foam::flowRateInletVelocityFvPatchVectorField
 
 Description
-    Velocity inlet boundary condition either correcting the extrapolated
-    velocity or creating a uniform velocity field normal to the patch adjusted
-    to match the specified flow rate
+    Velocity inlet boundary condition creating a velocity field with
+    optionally specified profile normal to the patch adjusted to match the
+    specified mass flow rate, volumetric flow rate or mean velocity.
 
     For a mass-based flux:
     - the flow rate should be provided in kg/s
@@ -42,12 +42,13 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        massFlowRate | mass flow rate [kg/s]   | no          |
-        volumetricFlowRate | volumetric flow rate [m^3/s]| no |
-        rho          | density field name      | no          | rho
-        rhoInlet     | inlet density           | no          |
-        alpha        | volume fraction field name | no       |
-        extrapolateProfile | Extrapolate velocity profile | no | false
+        massFlowRate | Mass flow rate [kg/s]   | no          |
+        volumetricFlowRate | Volumetric flow rate [m^3/s]| no |
+        meanVelocity | Mean velocity [m/s]| no |
+        profile      | Velocity profile        | no          |
+        rho          | Density field name      | no          | rho
+        rhoInlet     | Inlet density           | no          |
+        alpha        | Volume fraction field name | no       |
     \endtable
 
     Example of the boundary condition specification for a volumetric flow rate:
@@ -56,8 +57,7 @@ Usage
     {
         type                flowRateInletVelocity;
         volumetricFlowRate  0.2;
-        extrapolateProfile  yes;
-        value               uniform (0 0 0);
+        profile             laminarBL;
     }
     \endverbatim
 
@@ -67,14 +67,30 @@ Usage
     {
         type                flowRateInletVelocity;
         massFlowRate        0.2;
-        extrapolateProfile  yes;
+        profile             turbulentBL;
         rho                 rho;
         rhoInlet            1.0;
-        value               uniform (0 0 0);
     }
     \endverbatim
 
-    The \c flowRate entry is a \c Function1 of time, see Foam::Function1s.
+    Example of the boundary condition specification for a volumetric flow rate:
+    \verbatim
+    <patchName>
+    {
+        type                flowRateInletVelocity;
+        meanVelocity        5;
+        profile             turbulentBL;
+    }
+    \endverbatim
+
+    The \c volumetricFlowRate, \c massFlowRate or \c meanVelocity entries are
+    \c Function1 of time, see Foam::Function1s.
+
+    The \c profile entry is a \c Function1 of the normalised distance to the
+    wall.  Any suitable Foam::Function1s can be used including
+    Foam::Function1s::codedFunction1 but Foam::Function1s::laminarBL and
+    Foam::Function1s::turbulentBL have been created specifically for this
+    purpose and are likely to be appropriate for most cases.
 
 Note
     - \c rhoInlet is required for the case of a mass flow rate, where the
@@ -85,6 +101,8 @@ Note
 
 See also
     Foam::fixedValueFvPatchField
+    Foam::Function1s::laminarBL
+    Foam::Function1s::turbulentBL
     Foam::Function1s
     Foam::flowRateOutletVelocityFvPatchVectorField
 
@@ -117,7 +135,13 @@ class flowRateInletVelocityFvPatchVectorField
         //- Inlet integral flow rate
         autoPtr<Function1<scalar>> flowRate_;
 
-        //- Is volumetric?
+        //- Optional velocity profile
+        autoPtr<Function1<scalar>> profile_;
+
+        //- Is the flow-rate mean velocity?
+        bool meanVelocity_;
+
+        //- Is the flow-rate volumetric?
         bool volumetric_;
 
         //- Name of the density field used to normalise the mass flux
@@ -130,16 +154,27 @@ class flowRateInletVelocityFvPatchVectorField
         //  velocity
         word alphaName_;
 
-        //- Set true to extrapolate the velocity profile from the interior
-        Switch extrapolateProfile_;
+        //- Normalised distance to the wall
+        scalarField y_;
+
+        //- Total area of patch
+        scalar area_;
 
 
     // Private Member Functions
 
+        //- Set the wall distance field y_
+        void setWallDist();
+
         //- Update the patch values given the appropriate volume fraction and
         //  density types and values
-        template<class AlphaType, class RhoType>
-        void updateValues(const AlphaType& alpha, const RhoType& rho);
+        template<class ScaleType, class AlphaType, class RhoType>
+        void updateValues
+        (
+            const ScaleType& scale,
+            const AlphaType& alpha,
+            const RhoType& rho
+        );
 
         //- Update the patch values given the appropriate volume fraction type
         //  and values
@@ -208,6 +243,17 @@ public:
 
 
     // Member Functions
+
+        //- Map (and resize as needed) from self given a mapping object
+        //  Used to update fields following mesh topology change
+        virtual void autoMap(const fvPatchFieldMapper&);
+
+        //- Reverse map the given fvPatchField onto this fvPatchField
+        //  Used to reconstruct fields
+        virtual void rmap(const fvPatchVectorField&, const labelList&);
+
+        //- Return the normalised velocity profile
+        virtual tmp<scalarField> profile();
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,24 +22,40 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::quadraticRamp
+    Foam::Function1s::turbulentBL
 
 Description
-    Quadratic ramp function starting from 0 and increasing quadratically
-    to 1 from \c t_0 over the \c duration and remaining at 1 thereafter.
+    Turbulent boundary-layer function pow(yHat, exponent)
+
+    where yHat is the normalised distance to the wall and the optional exponent
+    defaults to 1/7.
+
+    Usage:
+    \verbatim
+        <name> turbulentBL;
+    \endverbatim
+    or
+    \verbatim
+        <name>
+        {
+            type      turbulentBL;
+            exponent  0.143;
+        }
+    \endverbatim
 
 See also
-    Foam::Function1s::Ramp
+    Foam::Function1
+    Foam::Function1s::laminarBL
 
 SourceFiles
-    quadraticRamp.C
+    turbulentBL.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef quadraticRamp_H
-#define quadraticRamp_H
+#ifndef turbulentBL_H
+#define turbulentBL_H
 
-#include "Ramp.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,24 +65,35 @@ namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class quadraticRamp Declaration
+                            Class turbulentBL Declaration
 \*---------------------------------------------------------------------------*/
 
-class quadraticRamp
+class turbulentBL
 :
-    public Ramp<quadraticRamp>
+    public FieldFunction1<scalar, turbulentBL>
 {
+    // Private data
+
+        //- Exponent of the pow function
+        scalar exponent_;
+
+
+    // Private Member Functions
+
+        //- Read the coefficients from the given dictionary
+        void read(const dictionary& dict);
+
 
 public:
 
     // Runtime type information
-    TypeName("quadraticRamp");
+    TypeName("turbulentBL");
 
 
     // Constructors
 
         //- Construct from name and dictionary
-        quadraticRamp
+        turbulentBL
         (
             const word& name,
             const dictionary& dict
@@ -74,7 +101,7 @@ public:
 
 
     //- Destructor
-    virtual ~quadraticRamp();
+    virtual ~turbulentBL();
 
 
     // Member Functions
@@ -89,11 +116,14 @@ public:
             const scalar t2
         ) const;
 
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
+
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const quadraticRamp&) = delete;
+        void operator=(const turbulentBL&) = delete;
 };
 
 
@@ -104,7 +134,9 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "quadraticRampI.H"
+#ifdef NoRepository
+    #include "turbulentBLI.H"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

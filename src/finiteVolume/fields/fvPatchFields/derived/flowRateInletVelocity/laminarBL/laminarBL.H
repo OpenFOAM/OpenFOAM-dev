@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,24 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::quadraticRamp
+    Foam::Function1s::laminarBL
 
 Description
-    Quadratic ramp function starting from 0 and increasing quadratically
-    to 1 from \c t_0 over the \c duration and remaining at 1 thereafter.
+    Laminar boundary-layer function yHat*(2 - yHat)
+
+    where yHat is the normalised distance to the wall.
+
+    Usage:
+    \verbatim
+        <name> laminarBL;
+    \endverbatim
 
 See also
-    Foam::Function1s::Ramp
+    Foam::Function1
+    Foam::Function1s::turbulentBL
 
 SourceFiles
-    quadraticRamp.C
+    laminarBL.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef quadraticRamp_H
-#define quadraticRamp_H
+#ifndef laminarBL_H
+#define laminarBL_H
 
-#include "Ramp.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,24 +56,24 @@ namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class quadraticRamp Declaration
+                            Class laminarBL Declaration
 \*---------------------------------------------------------------------------*/
 
-class quadraticRamp
+class laminarBL
 :
-    public Ramp<quadraticRamp>
+    public FieldFunction1<scalar, laminarBL>
 {
 
 public:
 
     // Runtime type information
-    TypeName("quadraticRamp");
+    TypeName("laminarBL");
 
 
     // Constructors
 
         //- Construct from name and dictionary
-        quadraticRamp
+        laminarBL
         (
             const word& name,
             const dictionary& dict
@@ -74,7 +81,7 @@ public:
 
 
     //- Destructor
-    virtual ~quadraticRamp();
+    virtual ~laminarBL();
 
 
     // Member Functions
@@ -89,11 +96,14 @@ public:
             const scalar t2
         ) const;
 
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
+
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const quadraticRamp&) = delete;
+        void operator=(const laminarBL&) = delete;
 };
 
 
@@ -104,7 +114,9 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "quadraticRampI.H"
+#ifdef NoRepository
+    #include "laminarBLI.H"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

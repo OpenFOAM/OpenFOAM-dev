@@ -29,6 +29,7 @@ boundaryField
         type            flowRateInletVelocity;
         massFlowRate    constant 5;
         rhoInlet        1000;    // Guess for rho
+        profile         turbulentBL;
     }
 
     outlet
