@@ -144,8 +144,8 @@ blending
 {
     default
     {
-        type            none;
-        continuousPhase vapor;
+        type            continuous;
+        phase           vapor;
     }
 }
 

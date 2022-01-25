@@ -54,8 +54,7 @@ blending
 {
     default
     {
-        type                            none;
-        continuousPhase                 none;
+        type            segregated;
     }
 }
 

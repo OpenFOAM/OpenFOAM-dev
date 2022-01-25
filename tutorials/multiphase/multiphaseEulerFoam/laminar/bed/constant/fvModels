@@ -21,7 +21,14 @@ massSource
     selectionMode   points;
     points          ((0.075 0.925 0.05));
 
-    massFlowRate    1;
+    massFlowRate
+    {
+        type square;
+        amplitude 0.5;
+        frequency 0.5;
+        level 0.5;
+        markSpace 0.3333;
+    }
 
     phase           water;
     rho             thermo:rho.water;

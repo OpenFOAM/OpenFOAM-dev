@@ -121,8 +121,8 @@ blending
 {
     default
     {
-        type            none;
-        continuousPhase liquid;
+        type            continuous;
+        phase           liquid;
     }
 }
 

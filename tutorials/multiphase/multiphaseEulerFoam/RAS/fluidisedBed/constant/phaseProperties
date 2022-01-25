@@ -47,8 +47,8 @@ blending
 {
     default
     {
-        type            none;
-        continuousPhase air;
+        type            continuous;
+        phase           air;
     }
 }
 

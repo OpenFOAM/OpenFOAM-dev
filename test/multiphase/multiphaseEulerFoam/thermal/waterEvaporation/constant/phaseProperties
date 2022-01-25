@@ -40,8 +40,8 @@ blending
 {
     default
     {
-        type            none;
-        continuousPhase steam;
+        type            continuous;
+        phase           steam;
     }
 }
 

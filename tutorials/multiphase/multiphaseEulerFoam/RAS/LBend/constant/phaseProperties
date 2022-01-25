@@ -45,8 +45,8 @@ blending
 {
     default
     {
-        type            none;
-        continuousPhase gas;
+        type            continuous;
+        phase           gas;
     }
 }
 
