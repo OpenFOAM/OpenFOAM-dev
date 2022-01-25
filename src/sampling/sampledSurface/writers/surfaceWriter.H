@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -231,11 +231,9 @@ public:
             const Args& ... args
         ) const
         {
-            const label nFields = sizeof...(Args)/2;
-
-            wordList fieldNames(nFields);
+            wordList fieldNames;
             #define DeclareFieldTypeValues(Type, nullArg) \
-                UPtrList<const Field<Type>> field##Type##Values(nFields);
+                UPtrList<const Field<Type>> field##Type##Values;
             FOR_ALL_FIELD_TYPES(DeclareFieldTypeValues);
             #undef DeclareFieldTypeValues
 
