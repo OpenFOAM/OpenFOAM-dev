@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,11 @@ class fixedValueConstraint
 
         //- Set value on a field
         template<class Type>
-        bool constrainType(fvMatrix<Type>& eqn, const word& fieldName) const;
+        inline bool constrainType
+        (
+            fvMatrix<Type>& eqn,
+            const word& fieldName
+        ) const;
 
 
 public:

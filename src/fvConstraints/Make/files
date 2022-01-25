@@ -2,7 +2,7 @@ fixedValueConstraint/fixedValueConstraint.C
 fixedTemperatureConstraint/fixedTemperatureConstraint.C
 limitTemperature/limitTemperature.C
 limitPressure/limitPressure.C
-limitVelocity/limitVelocity.C
+limitMag/limitMag.C
 meanVelocityForce/meanVelocityForce.C
 meanVelocityForce/patchMeanVelocityForce/patchMeanVelocityForce.C
 

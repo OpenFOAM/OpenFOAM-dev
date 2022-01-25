@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "limitVelocity.H"
+#include "limitMag.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,11 +33,11 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(limitVelocity, 0);
+    defineTypeNameAndDebug(limitMag, 0);
     addToRunTimeSelectionTable
     (
         fvConstraint,
-        limitVelocity,
+        limitMag,
         dictionary
     );
 }
@@ -46,45 +46,22 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::limitVelocity::readCoeffs()
+void Foam::fv::limitMag::readCoeffs()
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+    fieldName_ = coeffs().lookup<word>("field");
     max_ = coeffs().lookup<scalar>("max");
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::fv::limitVelocity::limitVelocity
+template<class Type>
+inline bool Foam::fv::limitMag::constrainType
 (
-    const word& name,
-    const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
-)
-:
-    fvConstraint(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
-    UName_(word::null),
-    max_(vGreat)
+    GeometricField<Type, fvPatchField, volMesh>& psi
+) const
 {
-    readCoeffs();
-}
+    const scalar maxSqrPsi = sqr(max_);
 
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::wordList Foam::fv::limitVelocity::constrainedFields() const
-{
-    return wordList(1, UName_);
-}
-
-
-bool Foam::fv::limitVelocity::constrain(volVectorField& U) const
-{
-    const scalar maxSqrU = sqr(max_);
-
-    vectorField& Uif = U.primitiveFieldRef();
+    Field<Type>& psiif = psi.primitiveFieldRef();
 
     const labelList& cells = set_.cells();
 
@@ -92,32 +69,33 @@ bool Foam::fv::limitVelocity::constrain(volVectorField& U) const
     {
         const label celli = cells[i];
 
-        const scalar magSqrUi = magSqr(Uif[celli]);
+        const scalar magSqrPsii = magSqr(psiif[celli]);
 
-        if (magSqrUi > maxSqrU)
+        if (magSqrPsii > maxSqrPsi)
         {
-            Uif[celli] *= sqrt(maxSqrU/magSqrUi);
+            psiif[celli] *= sqrt(maxSqrPsi/magSqrPsii);
         }
     }
 
     // handle boundaries in the case of 'all'
     if (set_.selectionMode() == fvCellSet::selectionModeType::all)
     {
-        volVectorField::Boundary& Ubf = U.boundaryFieldRef();
+        typename GeometricField<Type, fvPatchField, volMesh>::Boundary& psibf =
+            psi.boundaryFieldRef();
 
-        forAll(Ubf, patchi)
+        forAll(psibf, patchi)
         {
-            fvPatchVectorField& Up = Ubf[patchi];
+            fvPatchField<Type>& psip = psibf[patchi];
 
-            if (!Up.fixesValue())
+            if (!psip.fixesValue())
             {
-                forAll(Up, facei)
+                forAll(psip, facei)
                 {
-                    const scalar magSqrUi = magSqr(Up[facei]);
+                    const scalar magSqrPsii = magSqr(psip[facei]);
 
-                    if (magSqrUi > maxSqrU)
+                    if (magSqrPsii > maxSqrPsi)
                     {
-                        Up[facei] *= sqrt(maxSqrU/magSqrUi);
+                        psip[facei] *= sqrt(maxSqrPsi/magSqrPsii);
                     }
                 }
             }
@@ -128,26 +106,60 @@ bool Foam::fv::limitVelocity::constrain(volVectorField& U) const
 }
 
 
-void Foam::fv::limitVelocity::updateMesh(const mapPolyMesh& map)
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::fv::limitMag::limitMag
+(
+    const word& name,
+    const word& modelType,
+    const dictionary& dict,
+    const fvMesh& mesh
+)
+:
+    fvConstraint(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
+    fieldName_(word::null),
+    max_(vGreat)
+{
+    readCoeffs();
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::wordList Foam::fv::limitMag::constrainedFields() const
+{
+    return wordList(1, fieldName_);
+}
+
+
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_CONSTRAINT_CONSTRAIN_FIELD,
+    fv::limitMag
+);
+
+
+void Foam::fv::limitMag::updateMesh(const mapPolyMesh& map)
 {
     set_.updateMesh(map);
 }
 
 
-void Foam::fv::limitVelocity::distribute(const mapDistributePolyMesh& map)
+void Foam::fv::limitMag::distribute(const mapDistributePolyMesh& map)
 {
     set_.distribute(map);
 }
 
 
-bool Foam::fv::limitVelocity::movePoints()
+bool Foam::fv::limitMag::movePoints()
 {
     set_.movePoints();
     return true;
 }
 
 
-bool Foam::fv::limitVelocity::read(const dictionary& dict)
+bool Foam::fv::limitMag::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {

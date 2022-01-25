@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,31 +22,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::limitVelocity
+    Foam::fv::limitMag
 
 Description
-    Limits the velocity magnitude to the specified \c max value.
+    Limits the magnitude of the specified field to the specified \c max value.
 
 Usage
     Example usage:
     \verbatim
     limitU
     {
-        type            limitVelocity;
+        type            limitMag;
 
         selectionMode   all;
+
+        field           U;
 
         max             100;
     }
     \endverbatim
 
 SourceFiles
-    limitVelocity.C
+    limitMag.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef limitVelocity_H
-#define limitVelocity_H
+#ifndef limitMag_H
+#define limitMag_H
 
 #include "fvConstraint.H"
 #include "fvCellSet.H"
@@ -59,10 +61,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class limitVelocity Declaration
+                        Class limitMag Declaration
 \*---------------------------------------------------------------------------*/
 
-class limitVelocity
+class limitMag
 :
     public fvConstraint
 {
@@ -71,8 +73,8 @@ class limitVelocity
         //- The set of cells the fvConstraint applies to
         fvCellSet set_;
 
-        //- Velocity field name, default = U
-        word UName_;
+        //- Field name
+        word fieldName_;
 
         //- Maximum velocity magnitude
         scalar max_;
@@ -83,17 +85,24 @@ class limitVelocity
         //- Non-virtual read
         void readCoeffs();
 
+        //- Limit the field
+        template<class Type>
+        inline bool constrainType
+        (
+            GeometricField<Type, fvPatchField, volMesh>& psi
+        ) const;
+
 
 public:
 
     //- Runtime type information
-    TypeName("limitVelocity");
+    TypeName("limitMag");
 
 
     // Constructors
 
         //- Construct from components
-        limitVelocity
+        limitMag
         (
             const word& name,
             const word& modelType,
@@ -102,11 +111,11 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        limitVelocity(const limitVelocity&) = delete;
+        limitMag(const limitMag&) = delete;
 
 
     //- Destructor
-    virtual ~limitVelocity()
+    virtual ~limitMag()
     {}
 
 
@@ -115,8 +124,8 @@ public:
         //- Return the list of fields constrained by the fvConstraint
         virtual wordList constrainedFields() const;
 
-        //- Constrain the velocity field
-        virtual bool constrain(volVectorField& U) const;
+        //- Add a constraint to an equation
+        FOR_ALL_FIELD_TYPES(DEFINE_FV_CONSTRAINT_CONSTRAIN_FIELD);
 
         //- Update for mesh changes
         virtual void updateMesh(const mapPolyMesh&);
@@ -134,7 +143,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const limitVelocity&) = delete;
+        void operator=(const limitMag&) = delete;
 };
 
 
