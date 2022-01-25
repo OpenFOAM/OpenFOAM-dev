@@ -222,14 +222,11 @@ void Foam::chemistryTabulationMethods::ISAT::calcNewC
     //
 
     Rphiq = phi0->Rphi();
-    for (label i=0; i<nEqns + 1; i++)
+    for (label i=0; i<nEqns - 2; i++)
     {
         if (reduction_)
         {
-            const label si =
-                i < nEqns - 2
-              ? completeToSimplified[i]
-              : i - (nEqns - 2) + phi0->nActive();
+            const label si = completeToSimplified[i];
 
             if (si != -1)
             {
@@ -257,7 +254,7 @@ void Foam::chemistryTabulationMethods::ISAT::calcNewC
         else
         {
             // Extrapolate using the gradients matrix
-            for (label j=0; j<nEqns; j++)
+            for (label j=0; j<nEqns + 1; j++)
             {
                 Rphiq[i] += gradientsMatrix(i, j)*dphi[j];
             }
