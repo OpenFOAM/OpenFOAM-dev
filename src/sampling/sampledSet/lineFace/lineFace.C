@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,7 +204,7 @@ void Foam::sampledSets::lineFace::calcSamples
 
                 // If storing cells we need to store the starting cells between
                 // the tracks
-                if (proci == Pstream::myProcNo() && i == 1 && storeCells)
+                if (proci == Pstream::myProcNo() && i == 0 && storeCells)
                 {
                     particle trackBwd(mesh, p, celli), trackFwd(trackBwd);
                     trackBwd.trackToFace(start - p, 0);
