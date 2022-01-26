@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,9 @@ Class
     Foam::PatchCollisionDensity
 
 Description
-    Function object which generates fields of the number and rate of collisions
-    per unit area on all patches. Can optionally take a minimum speed below
-    which a collision is not counted.
+    Function object which generates fields of the number and mass and rates
+    thereof of collisions per unit area on all patches. Can optionally take a
+    minimum speed below which a collision is not counted.
 
     Example usage:
     \verbatim
@@ -70,11 +70,18 @@ class PatchCollisionDensity
         const scalar minSpeed_;
 
         //- The field of the number of collisions per unit area
-        volScalarField::Boundary collisionDensity_;
+        volScalarField::Boundary numberCollisionDensity_;
 
         //- The field of the number of collisions per unit area at the last
         //  output
-        volScalarField::Boundary collisionDensity0_;
+        volScalarField::Boundary numberCollisionDensity0_;
+
+        //- The field of the mass of collisions per unit area
+        volScalarField::Boundary massCollisionDensity_;
+
+        //- The field of the mass of collisions per unit area at the last
+        //  output
+        volScalarField::Boundary massCollisionDensity0_;
 
         //- The time at the last output
         scalar time0_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,14 +40,14 @@ void Foam::PatchCollisionDensity<CloudType>::write()
     (
         IOobject
         (
-            this->owner().name() + ":collisionDensity",
+            this->owner().name() + ":numberCollisionDensity",
             this->owner().mesh().time().timeName(),
             this->owner().mesh()
         ),
         this->owner().mesh(),
         dimless/dimArea,
         z,
-        collisionDensity_
+        numberCollisionDensity_
     )
    .write();
 
@@ -55,19 +55,51 @@ void Foam::PatchCollisionDensity<CloudType>::write()
     (
         IOobject
         (
-            this->owner().name() + ":collisionDensityRate",
+            this->owner().name() + ":numberCollisionDensityRate",
             this->owner().mesh().time().timeName(),
             this->owner().mesh()
         ),
         this->owner().mesh(),
         dimless/dimArea/dimTime,
         z,
-        (collisionDensity_ - collisionDensity0_)
+        (numberCollisionDensity_ - numberCollisionDensity0_)
        /(this->owner().mesh().time().value() - time0_)
     )
    .write();
 
-    collisionDensity0_ == collisionDensity_;
+    volScalarField
+    (
+        IOobject
+        (
+            this->owner().name() + ":massCollisionDensity",
+            this->owner().mesh().time().timeName(),
+            this->owner().mesh()
+        ),
+        this->owner().mesh(),
+        dimMass/dimArea,
+        z,
+        massCollisionDensity_
+    )
+   .write();
+
+    volScalarField
+    (
+        IOobject
+        (
+            this->owner().name() + ":massCollisionDensityRate",
+            this->owner().mesh().time().timeName(),
+            this->owner().mesh()
+        ),
+        this->owner().mesh(),
+        dimMass/dimArea/dimTime,
+        z,
+        (massCollisionDensity_ - massCollisionDensity0_)
+       /(this->owner().mesh().time().value() - time0_)
+    )
+   .write();
+
+    numberCollisionDensity0_ == numberCollisionDensity_;
+    massCollisionDensity0_ == massCollisionDensity_;
     time0_ = this->owner().mesh().time().value();
 }
 
@@ -84,13 +116,25 @@ Foam::PatchCollisionDensity<CloudType>::PatchCollisionDensity
 :
     CloudFunctionObject<CloudType>(dict, owner, modelName, typeName),
     minSpeed_(dict.lookupOrDefault<scalar>("minSpeed", -1)),
-    collisionDensity_
+    numberCollisionDensity_
     (
         this->owner().mesh().boundary(),
         volScalarField::Internal::null(),
         calculatedFvPatchField<scalar>::typeName
     ),
-    collisionDensity0_
+    numberCollisionDensity0_
+    (
+        this->owner().mesh().boundary(),
+        volScalarField::Internal::null(),
+        calculatedFvPatchField<scalar>::typeName
+    ),
+    massCollisionDensity_
+    (
+        this->owner().mesh().boundary(),
+        volScalarField::Internal::null(),
+        calculatedFvPatchField<scalar>::typeName
+    ),
+    massCollisionDensity0_
     (
         this->owner().mesh().boundary(),
         volScalarField::Internal::null(),
@@ -98,23 +142,49 @@ Foam::PatchCollisionDensity<CloudType>::PatchCollisionDensity
     ),
     time0_(this->owner().mesh().time().value())
 {
-    collisionDensity_ == 0;
-    collisionDensity0_ == 0;
+    numberCollisionDensity_ == 0;
+    numberCollisionDensity0_ == 0;
+    massCollisionDensity_ == 0;
+    massCollisionDensity0_ == 0;
 
-    typeIOobject<volScalarField> io
+    typeIOobject<volScalarField> numberIo
     (
-        this->owner().name() + ":collisionDensity",
+        this->owner().name() + ":numberCollisionDensity",
         this->owner().mesh().time().timeName(),
         this->owner().mesh(),
         IOobject::MUST_READ,
         IOobject::NO_WRITE
     );
 
-    if (io.headerOk())
+    if (numberIo.headerOk())
     {
-        const volScalarField collisionDensity(io, this->owner().mesh());
-        collisionDensity_ == collisionDensity.boundaryField();
-        collisionDensity0_ == collisionDensity.boundaryField();
+        const volScalarField numberCollisionDensity
+        (
+            numberIo,
+            this->owner().mesh()
+        );
+        numberCollisionDensity_ == numberCollisionDensity.boundaryField();
+        numberCollisionDensity0_ == numberCollisionDensity.boundaryField();
+    }
+
+    typeIOobject<volScalarField> massIo
+    (
+        this->owner().name() + ":massCollisionDensity",
+        this->owner().mesh().time().timeName(),
+        this->owner().mesh(),
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE
+    );
+
+    if (massIo.headerOk())
+    {
+        const volScalarField massCollisionDensity
+        (
+            massIo,
+            this->owner().mesh()
+        );
+        massCollisionDensity_ == massCollisionDensity.boundaryField();
+        massCollisionDensity0_ == massCollisionDensity.boundaryField();
     }
 }
 
@@ -127,15 +197,25 @@ Foam::PatchCollisionDensity<CloudType>::PatchCollisionDensity
 :
     CloudFunctionObject<CloudType>(ppm),
     minSpeed_(ppm.minSpeed_),
-    collisionDensity_
+    numberCollisionDensity_
     (
         volScalarField::Internal::null(),
-        ppm.collisionDensity_
+        ppm.numberCollisionDensity_
     ),
-    collisionDensity0_
+    numberCollisionDensity0_
     (
         volScalarField::Internal::null(),
-        ppm.collisionDensity0_
+        ppm.numberCollisionDensity0_
+    ),
+    massCollisionDensity_
+    (
+        volScalarField::Internal::null(),
+        ppm.massCollisionDensity_
+    ),
+    massCollisionDensity0_
+    (
+        volScalarField::Internal::null(),
+        ppm.massCollisionDensity0_
     ),
     time0_(ppm.time0_)
 {}
@@ -167,8 +247,10 @@ void Foam::PatchCollisionDensity<CloudType>::postPatch
     const scalar speed = (p.U() - Up) & nw;
     if (speed > minSpeed_)
     {
-        collisionDensity_[patchi][patchFacei] +=
-            1/this->owner().mesh().magSf().boundaryField()[patchi][patchFacei];
+        const scalar magSf =
+            this->owner().mesh().magSf().boundaryField()[patchi][patchFacei];
+        numberCollisionDensity_[patchi][patchFacei] += 1/magSf;
+        massCollisionDensity_[patchi][patchFacei] += p.mass()/magSf;
     }
 }
 
