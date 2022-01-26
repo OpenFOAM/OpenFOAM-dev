@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,70 +22,83 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mixtureViscosityModels::slurry
+    Foam::mixtureViscosityModels::Quemada
 
 Description
-     Thomas' viscosity correction for slurry.
+     Quemada viscosity model for for colloidal dispersions.
 
      References:
      \verbatim
-         "Transport characteristics of suspension:
-          VIII. A note on the viscosity of Newtonian suspensions
-          of uniform spherical particles".
-          D.G. Thomas,
-          J. Colloid Sci. 20 (3), 1965, p267.
+         Quemada, D. (1998).
+         Rheological modelling of complex fluids. I.
+         The concept of effective volume fraction revisited.
+         The European Physical Journal-Applied Physics, 1(1), 119-127.
+    \endverbatim
+
+Usage
+    Example usage:
+    \verbatim
+    viscosityModel  Quemada;
+
+    alphaMax    0.6; // Maximum dispersed phase-fraction (packing fraction)
+    q           2;   // Exponent, defaults to 2
+
+    rho         1996;
     \endverbatim
 
 SourceFiles
-    slurry.C
+    Quemada.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef slurry_H
-#define slurry_H
+#ifndef Quemada_H
+#define Quemada_H
 
 #include "mixtureViscosityModel.H"
 #include "dimensionedScalar.H"
-#include "volFields.H"
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class incompressibleTwoPhaseInteractingMixture;
-
 namespace mixtureViscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class slurry Declaration
+                           Class Quemada Declaration
 \*---------------------------------------------------------------------------*/
 
-class slurry
+class Quemada
 :
     public mixtureViscosityModel
 {
     // Private data
 
-        //- Slurry phase fraction
+        //- Maximum dispersed phase-fraction (packing fraction)
+        dimensionedScalar alphaMax_;
+
+        //- Exponent (defaults to 2)
+        scalar q_;
+
+        //- Dispersed phase fraction
         const volScalarField& alpha_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("slurry");
+    TypeName("Quemada");
 
 
     // Constructors
 
         //- Construct from components
-        slurry(const fvMesh& mesh, const word& group);
+        Quemada(const fvMesh& mesh, const word& group);
 
 
     //- Destructor
-    virtual ~slurry()
+    virtual ~Quemada()
     {}
 
 

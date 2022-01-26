@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ public:
 
 
     //- Destructor
-    ~BinghamPlastic()
+    virtual ~BinghamPlastic()
     {}
 
 
@@ -87,14 +87,14 @@ public:
 
         //- Return the mixture viscosity
         //  given the viscosity of the continuous phase
-        tmp<volScalarField> mu
+        virtual tmp<volScalarField> mu
         (
             const volScalarField& muc,
             const volVectorField& U
         ) const;
 
         //- Read phaseProperties dictionary
-        bool read();
+        virtual bool read();
 };
 
 
