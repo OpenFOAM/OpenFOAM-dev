@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,6 +134,7 @@ protected:
             const scalar t,
             const vectorField& p,
             tensor& axes,
+            vector& drift,
             vectorField& xyz
         ) const;
 
@@ -143,13 +144,19 @@ protected:
         tmp<scalarField> elevation
         (
             const scalar t,
+            const vector2D& drift,
             const vector2DField& xy
         ) const;
 
         //- Get the wave velocity at a given time and local coordinates. Local
         //  x is aligned with the direction, z with negative gravity, and y is
         //  perpendicular to both.
-        tmp<vectorField> velocity(const scalar t, const vectorField& xyz) const;
+        tmp<vectorField> velocity
+        (
+            const scalar t,
+            const vector& drift,
+            const vectorField& xyz
+        ) const;
 
         //- Get the scaling factor, calculated from the optional scaling
         //  functions. X and y are the same as for the elevation method.
