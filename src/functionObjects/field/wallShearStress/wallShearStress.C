@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,7 +243,7 @@ bool Foam::functionObjects::wallShearStress::write()
 
         if (Pstream::master())
         {
-            file() << mesh_.time().value()
+            file() << mesh_.time().userTimeValue()
                 << tab << pp.name()
                 << tab << minSsp
                 << tab << maxSsp

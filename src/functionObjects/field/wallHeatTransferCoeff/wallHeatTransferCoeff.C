@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,7 +221,7 @@ bool Foam::functionObjects::wallHeatTransferCoeff::write()
         if (Pstream::master())
         {
             file()
-                << mesh_.time().value()
+                << mesh_.time().userTimeValue()
                 << tab << pp.name()
                 << tab << minHtcp
                 << tab << maxHtcp

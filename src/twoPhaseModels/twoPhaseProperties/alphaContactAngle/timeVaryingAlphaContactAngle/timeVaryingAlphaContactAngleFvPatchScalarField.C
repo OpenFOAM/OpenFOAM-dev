@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ Foam::timeVaryingAlphaContactAngleFvPatchScalarField::theta
     const fvsPatchVectorField&
 ) const
 {
-    scalar t = patch().boundaryMesh().mesh().time().value();
+    scalar t = patch().boundaryMesh().mesh().time().userTimeValue();
     scalar theta0 = thetaT0_;
 
     if (t < t0_)

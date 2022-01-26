@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ void Foam::fv::massSource::addGeneralSupType
     const word& fieldName
 ) const
 {
-    const scalar t = mesh().time().value();
+    const scalar t = mesh().time().userTimeValue();
     const scalar massFlowRate = massFlowRate_->value(t);
     const Type value = fieldValues_[fieldName]->value<Type>(t);
 
@@ -127,7 +127,7 @@ void Foam::fv::massSource::addSupType
 
     if (fieldName == rhoName_)
     {
-        const scalar t = mesh().time().value();
+        const scalar t = mesh().time().userTimeValue();
         const scalar massFlowRate = massFlowRate_->value(t);
 
         forAll(cells, i)
@@ -146,7 +146,7 @@ void Foam::fv::massSource::addSupType
                 << endl;
         }
 
-        const scalar t = mesh().time().value();
+        const scalar t = mesh().time().userTimeValue();
         const scalar massFlowRate = massFlowRate_->value(t);
         const scalar T = fieldValues_[TName_]->value<scalar>(t);
         const basicThermo& thermo =

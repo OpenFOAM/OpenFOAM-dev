@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ void constantRadiation::correct()
 
 tmp<volScalarField::Internal> constantRadiation::Shs()
 {
-    const scalar time = film().time().value();
+    const scalar time = film().time().userTimeValue();
 
     if ((time >= timeStart_) && (time <= timeStart_ + duration_))
     {

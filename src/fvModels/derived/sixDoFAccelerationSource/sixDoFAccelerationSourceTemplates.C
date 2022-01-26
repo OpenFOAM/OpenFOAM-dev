@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,10 @@ void Foam::fv::sixDoFAccelerationSource::addSup
     const word& fieldName
 ) const
 {
-    Vector<vector> accelerations(accelerations_->value(mesh().time().value()));
+    const Vector<vector> accelerations
+    (
+        accelerations_->value(mesh().time().userTimeValue())
+    );
 
     // If gravitational force is present combine with the linear acceleration
     if (mesh().foundObject<uniformDimensionedVectorField>("g"))

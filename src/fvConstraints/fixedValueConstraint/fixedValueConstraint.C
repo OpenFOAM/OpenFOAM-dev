@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ bool Foam::fv::fixedValueConstraint::constrainType
     const word& fieldName
 ) const
 {
-    const scalar t = mesh().time().value();
+    const scalar t = mesh().time().userTimeValue();
 
     eqn.setValues
     (

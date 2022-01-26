@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ void Foam::fv::semiImplicitSource::addSupType
             << ">::addSup for source " << name() << endl;
     }
 
-    const scalar t = mesh().time().value();
+    const scalar t = mesh().time().userTimeValue();
 
     const GeometricField<Type, fvPatchField, volMesh>& psi = eqn.psi();
 
