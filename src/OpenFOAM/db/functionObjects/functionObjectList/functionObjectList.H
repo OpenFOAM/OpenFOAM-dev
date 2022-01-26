@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ public:
         //- Find the ID of a given function object by name
         label findObjectID(const word& name) const;
 
-        //- Print a list of functionObject configuration files in
+        //- Return the list of functionObject configuration files in
         //  user/group/shipped directories.
         //  The search scheme allows for version-specific and
         //  version-independent files using the following hierarchy:
@@ -190,7 +190,7 @@ public:
         //    - $WM_PROJECT_INST_DIR/site/etc/caseDicts/postProcessing
         //  - \b other (shipped) settings:
         //    - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
-        static void list();
+        static wordList list();
 
         //- Search for functionObject dictionary file for given region
         //  and if not present also search the case directory as well as the

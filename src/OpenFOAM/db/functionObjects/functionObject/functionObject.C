@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
         FatalErrorInFunction
             << "Unknown function type "
             << functionType << nl << nl
-            << "Table of functionObjects is empty" << endl
+            << "Table of functionObjects is empty"
             << exit(FatalError);
     }
 
@@ -102,7 +102,7 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
             << "Unknown function type "
             << functionType << nl << nl
             << "Valid functions are : " << nl
-            << dictionaryConstructorTablePtr_->sortedToc() << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 

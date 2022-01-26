@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ void Foam::functionObjectList::listDir
 }
 
 
-void Foam::functionObjectList::list()
+Foam::wordList Foam::functionObjectList::list()
 {
     HashSet<word> foMap;
 
@@ -110,10 +110,7 @@ void Foam::functionObjectList::list()
         listDir(etcDirs[ed], foMap);
     }
 
-    Info<< nl
-        << "Available configured functionObjects:"
-        << foMap.sortedToc()
-        << nl;
+    return foMap.sortedToc();
 }
 
 
@@ -250,8 +247,12 @@ bool Foam::functionObjectList::readFunctionObject
 
     if (path == fileName::null)
     {
-        WarningInFunction
-            << "Cannot find functionObject file " << funcType << endl;
+        FatalIOErrorInFunction(functionsDict)
+            << "Cannot find functionObject configuration file "
+            << funcType << nl << nl
+            << "Available configured functionObjects:"
+            << list()
+            << exit(FatalIOError);
         return false;
     }
 
@@ -759,7 +760,7 @@ bool Foam::functionObjectList::read()
             }
 
             const dictionary& dict = iter().dict();
-            bool enabled = dict.lookupOrDefault("enabled", true);
+            const bool enabled = dict.lookupOrDefault("enabled", true);
 
             newDigs[nFunc] = dict.digest();
 
@@ -788,38 +789,21 @@ bool Foam::functionObjectList::read()
             {
                 autoPtr<functionObject> foPtr;
 
-                FatalError.throwExceptions();
-                FatalIOError.throwExceptions();
-                try
+                if
+                (
+                    dict.found("writeControl")
+                 || dict.found("outputControl")
+                )
                 {
-                    if
+                    foPtr.set
                     (
-                        dict.found("writeControl")
-                     || dict.found("outputControl")
-                    )
-                    {
-                        foPtr.set
-                        (
-                            new functionObjects::timeControl(key, time_, dict)
-                        );
-                    }
-                    else
-                    {
-                        foPtr = functionObject::New(key, time_, dict);
-                    }
+                        new functionObjects::timeControl(key, time_, dict)
+                    );
                 }
-                catch (Foam::IOerror& ioErr)
+                else
                 {
-                    Info<< ioErr << nl << endl;
-                    ::exit(1);
+                    foPtr = functionObject::New(key, time_, dict);
                 }
-                catch (Foam::error& err)
-                {
-                    WarningInFunction
-                        << "Caught FatalError " << err << nl << endl;
-                }
-                FatalError.dontThrowExceptions();
-                FatalIOError.dontThrowExceptions();
 
                 if (foPtr.valid())
                 {
