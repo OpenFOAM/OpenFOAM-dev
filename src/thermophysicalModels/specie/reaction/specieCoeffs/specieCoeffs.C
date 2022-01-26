@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Foam::specieCoeffs::specieCoeffs
                 i + 1,
                 specieName.size() - i - 1
             );
-            exponent = atof(exponentStr.c_str());
+            exponent = scalar(atof(exponentStr.c_str()));
             specieName = specieName(0, i);
         }
 
