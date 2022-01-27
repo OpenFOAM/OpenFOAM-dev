@@ -50,9 +50,18 @@ geometry
         type triSurfaceMesh;
         file "sphere.stl"
 
-        // tolerance   1e-5;   // optional:non-default tolerance on intersections
-        // maxTreeDepth 10;    // optional:depth of octree. Decrease only in case
-                              // of memory limitations.
+        // Optional: non-default tolerance on intersections
+        // tolerance 1e-5;
+
+        // Optional: depth of octree. Decrease only in case of memory
+        // limitations.
+        // maxTreeDepth 10;
+
+        // Optional: scaling factor, e.g. unit conversion
+        // scale 1;
+
+        // Optional: discard triangles with low quality when getting normal
+        // minQuality -1;
 
         // Per region the patchname. If not provided will be <surface>_<region>.
         // Note: this name cannot be used to identity this region in any
