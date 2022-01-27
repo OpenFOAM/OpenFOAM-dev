@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -707,7 +707,7 @@ Foam::label Foam::meshRefinement::markInternalDistanceToFeatureRefinement
     const labelList& cellLevel = meshCutter_.cellLevel();
     const pointField& cellCentres = mesh_.cellCentres();
 
-    // Detect if there are any distance shells
+    // Detect if there are any distance features
     if (features_.maxDistance() <= 0.0)
     {
         return 0;
@@ -730,7 +730,7 @@ Foam::label Foam::meshRefinement::markInternalDistanceToFeatureRefinement
         }
     }
 
-    // Do test to see whether cells is inside/outside shell with higher level
+    // Do test to see whether cells are in/near features with higher level
     labelList maxLevel;
     features_.findHigherLevel(testCc, testLevels, maxLevel);
 
@@ -2086,7 +2086,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
 
 
 
-        // Cells pierced by feature lines
+        // Cells pierced by feature edges
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         if (featureRefinement)
@@ -2104,12 +2104,12 @@ Foam::labelList Foam::meshRefinement::refineCandidates
                 << ": " << nFeatures << " cells."  << endl;
         }
 
-        // Inside distance-to-feature shells
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // Inside distance-to-feature
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         if (featureDistanceRefinement)
         {
-            const label nShell = markInternalDistanceToFeatureRefinement
+            const label nCellsFeat = markInternalDistanceToFeatureRefinement
             (
                 nAllowRefine,
 
@@ -2117,7 +2117,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
                 nRefine
             );
             Info<< "Marked for refinement due to distance to explicit features "
-                ": " << nShell << " cells."  << endl;
+                ": " << nCellsFeat << " cells."  << endl;
         }
 
         // Inside refinement shells

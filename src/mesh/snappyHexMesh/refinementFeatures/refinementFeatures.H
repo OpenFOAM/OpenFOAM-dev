@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,10 @@ class refinementFeatures
 {
     // Private Data
 
-        //- Per shell the list of ranges
+        //- Per feature the list of ranges
         List<scalarField> distances_;
 
-        //- Per shell per distance the refinement level
+        //- Per feature per distance the refinement level
         labelListList levels_;
 
         //- Edge
@@ -80,7 +80,7 @@ class refinementFeatures
         //- Build edge tree and feature point tree
         void buildTrees(const label);
 
-        //- Find shell level higher than ptLevel
+        //- Find feature level higher than ptLevel
         void findHigherLevel
         (
             const pointField& pt,
@@ -184,7 +184,7 @@ public:
                 List<pointIndexHit>& nearInfo
             ) const;
 
-            //- Find shell level higher than ptLevel
+            //- Find feature level higher than ptLevel
             void findHigherLevel
             (
                 const pointField& pt,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -295,7 +295,7 @@ void Foam::refinementFeatures::buildTrees(const label feati)
 }
 
 
-// Find maximum level of a shell.
+// Find maximum level of a feature edge.
 void Foam::refinementFeatures::findHigherLevel
 (
     const pointField& pt,
@@ -308,8 +308,8 @@ void Foam::refinementFeatures::findHigherLevel
     const scalarField& distances = distances_[feati];
 
     // Collect all those points that have a current maxLevel less than
-    // (any of) the shell. Also collect the furthest distance allowable
-    // to any shell with a higher level.
+    // (any of) the feature edge. Also collect the furthest distance allowable
+    // to any feature edge with a higher level.
 
     pointField candidates(pt.size());
     labelList candidateMap(pt.size());
@@ -361,7 +361,7 @@ void Foam::refinementFeatures::findHigherLevel
 
             label pointi = candidateMap[candidatei];
 
-            // pt is in between shell[minDistI] and shell[minDistI+1]
+            // pt is in between feature[minDistI] and feature[minDistI+1]
             maxLevel[pointi] = levels[minDistI+1];
         }
     }
@@ -747,7 +747,7 @@ void Foam::refinementFeatures::findHigherLevel
     labelList& maxLevel
 ) const
 {
-    // Maximum level of any shell. Start off with level of point.
+    // Maximum level of any feature edge. Start off with level of point.
     maxLevel = ptLevel;
 
     forAll(*this, feati)
