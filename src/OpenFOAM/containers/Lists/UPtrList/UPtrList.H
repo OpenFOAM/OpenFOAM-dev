@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,6 +148,17 @@ public:
             //  ascending or descending order. Reordering has to be unique.
             //  Note: can create unset elements
             void shuffle(const labelUList& newToOld);
+
+
+        // Conversion
+
+            //- Convert to list of different pointer type
+            template<class T2>
+            UPtrList<T2> convert();
+
+            //- Convert to list of different pointer type
+            template<class T2>
+            UPtrList<const T2> convert() const;
 
 
     // Member Operators
