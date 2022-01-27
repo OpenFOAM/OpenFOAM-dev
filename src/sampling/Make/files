@@ -32,6 +32,7 @@ $(setWriters)/raw/rawSetWriter.C
 $(setWriters)/vtk/vtkSetWriter.C
 $(setWriters)/csv/csvSetWriter.C
 $(setWriters)/gnuplot/gnuplotSetWriter.C
+$(setWriters)/none/noSetWriter.C
 
 cuttingPlane/cuttingPlane.C
 
