@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Contact-angle boundary condition for multi-phase interface-capturing
-    simulations.  Used in conjunction with multiphaseMixture.
+    simulations.
 
 SourceFiles
     alphaContactAngleFvPatchScalarField.C
@@ -37,7 +37,6 @@ SourceFiles
 #define alphaContactAngleFvPatchScalarField_H
 
 #include "zeroGradientFvPatchFields.H"
-#include "multiphaseMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class alphaContactAngleFvPatch Declaration
+                  Class alphaContactAngleFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class alphaContactAngleFvPatchScalarField
@@ -54,79 +53,108 @@ class alphaContactAngleFvPatchScalarField
 {
 public:
 
-    class interfaceThetaProps
+    class contactAngleProperties
     {
-        //- Equilibrium contact angle
-        scalar theta0_;
+        // Private Data
 
-        //- Dynamic contact angle velocity scale
-        scalar uTheta_;
+            //- Equilibrium contact angle
+            scalar theta0_;
 
-        //- Limiting advancing contact angle
-        scalar thetaA_;
+            //- Is this contact angle dynamic?
+            bool dynamic_;
 
-        //- Limiting receding contact angle
-        scalar thetaR_;
+            //- Dynamic contact angle velocity scale
+            scalar uTheta_;
+
+            //- Limiting advancing contact angle
+            scalar thetaA_;
+
+            //- Limiting receding contact angle
+            scalar thetaR_;
 
 
     public:
 
         // Constructors
-            interfaceThetaProps()
-            {}
 
-            interfaceThetaProps(Istream&);
+            //- Construct null
+            contactAngleProperties();
+
+            //- Construct non-dynamic properties from components
+            contactAngleProperties(const scalar theta0);
+
+            //- Construct dynamic properties from components
+            contactAngleProperties
+            (
+                const scalar theta0,
+                const scalar uTheta,
+                const scalar thetaA,
+                const scalar thetaR
+            );
+
+            //- Construct from a dictionary
+            contactAngleProperties(const dictionary& dict);
 
 
         // Member Functions
 
-            //- Return the equilibrium contact angle theta0
-            scalar theta0(bool matched=true) const
-            {
-                if (matched) return theta0_;
-                else return 180.0 - theta0_;
-            }
+            // Access
 
-            //- Return the dynamic contact angle velocity scale
-            scalar uTheta() const
-            {
-                return uTheta_;
-            }
+                //- Return the equilibrium contact angle theta0
+                inline scalar theta0() const
+                {
+                    return theta0_;
+                }
 
-            //- Return the limiting advancing contact angle
-            scalar thetaA(bool matched=true) const
-            {
-                if (matched) return thetaA_;
-                else return 180.0 - thetaA_;
-            }
+                //- Return if this contact angle is dynamic
+                inline bool dynamic() const
+                {
+                    return dynamic_;
+                }
 
-            //- Return the limiting receding contact angle
-            scalar thetaR(bool matched=true) const
-            {
-                if (matched) return thetaR_;
-                else return 180.0 - thetaR_;
-            }
+                //- Return the dynamic contact angle velocity scale
+                inline scalar uTheta() const
+                {
+                    return uTheta_;
+                }
+
+                //- Return the limiting advancing contact angle
+                inline scalar thetaA() const
+                {
+                    return thetaA_;
+                }
+
+                //- Return the limiting receding contact angle
+                inline scalar thetaR() const
+                {
+                    return thetaR_;
+                }
 
 
-        // IO functions
+            //- Return the contact angle properties for the reverse of this
+            //  interface (e.g., convert air_water to water_air).
+            contactAngleProperties reversed() const;
 
-            friend Istream& operator>>(Istream&, interfaceThetaProps&);
-            friend Ostream& operator<<(Ostream&, const interfaceThetaProps&);
+            //- Write to stream
+            void write(Ostream& os) const;
+
+
+        // Member operators
+
+            //- Check equality between two sets of contact angle properties
+            bool operator==(const contactAngleProperties& thetaProps) const;
+
+            //- Check inequality between two sets of contact angle properties
+            bool operator!=(const contactAngleProperties& thetaProps) const;
     };
-
-    typedef HashTable
-    <
-        interfaceThetaProps,
-        multiphaseMixture::interfacePair,
-        multiphaseMixture::interfacePair::hash
-    > thetaPropsTable;
 
 
 private:
 
     // Private Data
 
-        thetaPropsTable thetaProps_;
+        //- Table of contact angle properties
+        HashTable<contactAngleProperties> thetaProps_;
 
 
 public:
@@ -185,7 +213,7 @@ public:
     // Member Functions
 
         //- Return the contact angle properties
-        const thetaPropsTable& thetaProps() const
+        const HashTable<contactAngleProperties>& thetaProps() const
         {
             return thetaProps_;
         }

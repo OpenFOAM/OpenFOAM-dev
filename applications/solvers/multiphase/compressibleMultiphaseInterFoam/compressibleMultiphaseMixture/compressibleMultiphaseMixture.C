@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "compressibleMultiphaseMixture.H"
 #include "alphaContactAngleFvPatchScalarField.H"
-#include "unitConversion.H"
+#include "correctContactAngle.H"
 #include "Time.H"
 #include "subCycle.H"
 #include "MULES.H"
@@ -401,138 +401,6 @@ Foam::tmp<Foam::surfaceScalarField> Foam::compressibleMultiphaseMixture::nHatf
 }
 
 
-// Correction for the boundary condition on the unit normal nHat on
-// walls to produce the correct contact angle.
-
-// The dynamic contact angle is calculated from the component of the
-// velocity on the direction of the interface, parallel to the wall.
-
-void Foam::compressibleMultiphaseMixture::correctContactAngle
-(
-    const phaseModel& alpha1,
-    const phaseModel& alpha2,
-    surfaceVectorField::Boundary& nHatb
-) const
-{
-    const volScalarField::Boundary& a1bf = alpha1.boundaryField();
-    const volScalarField::Boundary& a2bf = alpha2.boundaryField();
-
-    const fvBoundaryMesh& boundary = mesh_.boundary();
-
-    forAll(boundary, patchi)
-    {
-        if
-        (
-            isA<alphaContactAngleFvPatchScalarField>(a1bf[patchi])
-         || isA<alphaContactAngleFvPatchScalarField>(a2bf[patchi])
-        )
-        {
-            if
-            (
-                isA<alphaContactAngleFvPatchScalarField>(a1bf[patchi])
-             && isA<alphaContactAngleFvPatchScalarField>(a2bf[patchi])
-            )
-            {
-                FatalErrorInFunction
-                    << "alphaContactAngle boundary condition "
-                       "specified on patch " << boundary[patchi].name()
-                    << " for both " << alpha1.name() << " and " << alpha2.name()
-                    << nl << "which may be inconsistent."
-                    << exit(FatalError);
-            }
-
-            const alphaContactAngleFvPatchScalarField& acap =
-                isA<alphaContactAngleFvPatchScalarField>(a1bf[patchi])
-              ? refCast<const alphaContactAngleFvPatchScalarField>(a1bf[patchi])
-              : refCast<const alphaContactAngleFvPatchScalarField>(a2bf[patchi])
-              ;
-
-            vectorField& nHatPatch = nHatb[patchi];
-
-            vectorField AfHatPatch
-            (
-                mesh_.Sf().boundaryField()[patchi]
-               /mesh_.magSf().boundaryField()[patchi]
-            );
-
-            alphaContactAngleFvPatchScalarField::thetaPropsTable::
-                const_iterator tp =
-                acap.thetaProps().find(interfacePair(alpha1, alpha2));
-
-            if (tp == acap.thetaProps().end())
-            {
-                FatalErrorInFunction
-                    << "Cannot find interface " << interfacePair(alpha1, alpha2)
-                    << "\n    in table of theta properties for patch "
-                    << acap.patch().name()
-                    << exit(FatalError);
-            }
-
-            const bool matched = (tp.key().first() == alpha1.name());
-
-            const scalar theta0 = degToRad(tp().theta0(matched));
-
-            scalarField theta(boundary[patchi].size(), theta0);
-
-            const scalar uTheta = tp().uTheta();
-
-            // Calculate the dynamic contact angle if required
-            if (uTheta > small)
-            {
-                const scalar thetaA = degToRad(tp().thetaA(matched));
-                const scalar thetaR = degToRad(tp().thetaR(matched));
-
-                // Calculated the component of the velocity parallel to the wall
-                vectorField Uwall
-                (
-                    U_.boundaryField()[patchi].patchInternalField()
-                  - U_.boundaryField()[patchi]
-                );
-                Uwall -= (AfHatPatch & Uwall)*AfHatPatch;
-
-                // Find the direction of the interface parallel to the wall
-                vectorField nWall
-                (
-                    nHatPatch - (AfHatPatch & nHatPatch)*AfHatPatch
-                );
-
-                // Normalise nWall
-                nWall /= (mag(nWall) + small);
-
-                // Calculate Uwall resolved normal to the interface parallel to
-                // the interface
-                const scalarField uwall(nWall & Uwall);
-
-                theta += (thetaA - thetaR)*tanh(uwall/uTheta);
-            }
-
-
-            // Reset nHatPatch to correspond to the contact angle
-
-            const scalarField a12(nHatPatch & AfHatPatch);
-
-            const scalarField b1(cos(theta));
-
-            scalarField b2(nHatPatch.size());
-
-            forAll(b2, facei)
-            {
-                b2[facei] = cos(acos(a12[facei]) - theta[facei]);
-            }
-
-            const scalarField det(1.0 - a12*a12);
-
-            const scalarField a((b1 - a12*b2)/det);
-            const scalarField b((b2 - a12*b1)/det);
-
-            nHatPatch = a*AfHatPatch + b*nHatPatch;
-
-            nHatPatch /= (mag(nHatPatch) + deltaN_.value());
-        }
-    }
-}
-
-
 Foam::tmp<Foam::volScalarField> Foam::compressibleMultiphaseMixture::K
 (
     const phaseModel& alpha1,
@@ -541,7 +409,14 @@ Foam::tmp<Foam::volScalarField> Foam::compressibleMultiphaseMixture::K
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(alpha1, alpha2);
 
-    correctContactAngle(alpha1, alpha2, tnHatfv.ref().boundaryFieldRef());
+    correctContactAngle
+    (
+        alpha1,
+        alpha2,
+        U_.boundaryField(),
+        deltaN_,
+        tnHatfv.ref().boundaryFieldRef()
+    );
 
     // Simple expression for curvature
     return -fvc::div(tnHatfv & mesh_.Sf());

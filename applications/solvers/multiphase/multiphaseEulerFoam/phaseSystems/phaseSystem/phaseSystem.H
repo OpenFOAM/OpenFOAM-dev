@@ -211,19 +211,6 @@ protected:
                 const volScalarField& alpha2
             ) const;
 
-            //- Correction for the boundary condition on the unit normal nHat on
-            //  walls to produce the correct contact angle.
-            //
-            //  The dynamic contact angle is calculated from the component of
-            //  the velocity on the direction of the interface, parallel to the
-            //  wall. Used for interface compression.
-            void correctContactAngle
-            (
-                const phaseModel& alpha1,
-                const phaseModel& alpha2,
-                surfaceVectorField::Boundary& nHatb
-            ) const;
-
             //- Curvature of interface between two phases
             //  Used for interface compression
             tmp<volScalarField> K

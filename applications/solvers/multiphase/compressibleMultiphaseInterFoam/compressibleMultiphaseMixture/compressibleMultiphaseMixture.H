@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,13 +169,6 @@ private:
         (
             const volScalarField& alpha1,
             const volScalarField& alpha2
-        ) const;
-
-        void correctContactAngle
-        (
-            const phaseModel& alpha1,
-            const phaseModel& alpha2,
-            surfaceVectorField::Boundary& nHatb
         ) const;
 
         tmp<volScalarField> K

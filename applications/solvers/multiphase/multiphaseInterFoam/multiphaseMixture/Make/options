@@ -1,6 +1,7 @@
 EXE_INC = \
     -IalphaContactAngle \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/multiphaseModels/multiphaseProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
@@ -8,5 +9,6 @@ EXE_INC = \
 LIB_LIBS = \
     -linterfaceProperties \
     -lphysicalProperties \
+    -lmultiphaseProperties \
     -lfiniteVolume \
     -lmeshTools

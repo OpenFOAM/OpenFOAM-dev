@@ -105,6 +105,4 @@ BlendedInterfacialModel/blendingMethods/hyperbolic/hyperbolic.C
 BlendedInterfacialModel/blendingMethods/continuous/continuous.C
 BlendedInterfacialModel/blendingMethods/segregatedBlendingMethod/segregatedBlendingMethod.C
 
-alphaContactAngle/alphaContactAngleFvPatchScalarField.C
-
 LIB = $(FOAM_LIBBIN)/libphaseSystem

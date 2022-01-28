@@ -34,7 +34,7 @@ License
 #include "CorrectPhi.H"
 #include "fvcMeshPhi.H"
 #include "alphaContactAngleFvPatchScalarField.H"
-#include "unitConversion.H"
+#include "correctContactAngle.H"
 #include "dragModel.H"
 #include "movingWallVelocityFvPatchVectorField.H"
 #include "pimpleControl.H"
@@ -184,136 +184,6 @@ Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::nHatf
 }
 
 
-void Foam::phaseSystem::correctContactAngle
-(
-    const phaseModel& phase1,
-    const phaseModel& phase2,
-    surfaceVectorField::Boundary& nHatbf
-) const
-{
-    const volScalarField& a1 = phase1;
-    const volScalarField& a2 = phase2;
-
-    const volScalarField::Boundary& a1bf = a1.boundaryField();
-    const volScalarField::Boundary& a2bf = a2.boundaryField();
-
-    const fvBoundaryMesh& boundary = mesh_.boundary();
-
-    forAll(boundary, patchi)
-    {
-        const fvPatchScalarField& a1p = a1bf[patchi];
-        const fvPatchScalarField& a2p = a2bf[patchi];
-
-        const bool a1pIsCa = isA<alphaContactAngleFvPatchScalarField>(a1p);
-        const bool a2pIsCa = isA<alphaContactAngleFvPatchScalarField>(a2p);
-
-        if (a1pIsCa || a2pIsCa)
-        {
-            if (a1pIsCa != a2pIsCa)
-            {
-                FatalErrorInFunction
-                    << alphaContactAngleFvPatchScalarField::typeName
-                    << " boundary condition specified on patch "
-                    << boundary[patchi].name() << " for "
-                    << (a1pIsCa ? a1.name() : a2.name()) << " but not for "
-                    << (a2pIsCa ? a1.name() : a2.name())
-                    << exit(FatalError);
-            }
-
-            const alphaContactAngleFvPatchScalarField& a1ca =
-                refCast<const alphaContactAngleFvPatchScalarField>(a1p);
-            const alphaContactAngleFvPatchScalarField& a2ca =
-                refCast<const alphaContactAngleFvPatchScalarField>(a2p);
-
-            const bool a1caHasProps = a1ca.thetaProps().found(phase2.name());
-            const bool a2caHasProps = a2ca.thetaProps().found(phase1.name());
-
-            if (!a1caHasProps && !a2caHasProps)
-            {
-                FatalErrorInFunction
-                    << "Neither "
-                    << alphaContactAngleFvPatchScalarField::typeName
-                    << " boundary condition specified on patch "
-                    << boundary[patchi].name()
-                    << " for " << a1.name() << " and " << a2.name()
-                    << " contains properties for the other phase"
-                    << exit(FatalError);
-            }
-
-            if
-            (
-                a1caHasProps && a2caHasProps
-             && a1ca.thetaProps()[phase2.name()]
-             != a2ca.thetaProps()[phase1.name()].reversed()
-            )
-            {
-                FatalErrorInFunction
-                    << "The "
-                    << alphaContactAngleFvPatchScalarField::typeName
-                    << " boundary conditions specified on patch "
-                    << boundary[patchi].name()
-                    << " for " << a1.name() << " and " << a2.name()
-                    << " contain inconsistent properties"
-                    << exit(FatalError);
-            }
-
-            const alphaContactAngleFvPatchScalarField::contactAngleProperties
-                tp = a1caHasProps
-              ? a1ca.thetaProps()[phase2.name()]
-              : a2ca.thetaProps()[phase1.name()].reversed();
-
-            const vectorField np(mesh_.boundary()[patchi].nf());
-
-            vectorField& nHatp = nHatbf[patchi];
-
-            // Calculate the contact angle
-            scalarField theta(np.size(), degToRad(tp.theta0()));
-
-            // Calculate the dynamic contact angle if required
-            if (tp.dynamic())
-            {
-                const scalar uTheta = tp.uTheta();
-                const scalar thetaA = degToRad(tp.thetaA());
-                const scalar thetaR = degToRad(tp.thetaR());
-
-                // Calculated the component of the velocity parallel to the wall
-                vectorField Uwall
-                (
-                    phase1.U()().boundaryField()[patchi].patchInternalField()
-                  - phase1.U()().boundaryField()[patchi]
-                );
-                Uwall -= (np & Uwall)*np;
-
-                // Find the direction of the interface parallel to the wall
-                vectorField nWall(nHatp - (np & nHatp)*np);
-                nWall /= (mag(nWall) + small);
-
-                // Calculate Uwall resolved normal to the interface parallel to
-                // the interface
-                const scalarField uwall(nWall & Uwall);
-
-                theta += (thetaA - thetaR)*tanh(uwall/uTheta);
-            }
-
-            // Reset nHatp to correspond to the contact angle
-            const scalarField a12(nHatp & np);
-            const scalarField b1(cos(theta));
-            scalarField b2(nHatp.size());
-            forAll(b2, facei)
-            {
-                b2[facei] = cos(acos(a12[facei]) - theta[facei]);
-            }
-            const scalarField det(1 - a12*a12);
-            const scalarField a((b1 - a12*b2)/det);
-            const scalarField b((b2 - a12*b1)/det);
-
-            nHatp = a*np + b*nHatp;
-            nHatp /= (mag(nHatp) + deltaN_.value());
-        }
-    }
-}
-
-
 Foam::tmp<Foam::volScalarField> Foam::phaseSystem::K
 (
     const phaseModel& phase1,
@@ -322,7 +192,14 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::K
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(phase1, phase2);
 
-    correctContactAngle(phase1, phase2, tnHatfv.ref().boundaryFieldRef());
+    correctContactAngle
+    (
+        phase1,
+        phase2,
+        phase1.U()().boundaryField(),
+        deltaN_,
+        tnHatfv.ref().boundaryFieldRef()
+    );
 
     // Simple expression for curvature
     return -fvc::div(tnHatfv & mesh_.Sf());

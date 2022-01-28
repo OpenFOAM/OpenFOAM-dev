@@ -23,43 +23,34 @@ boundaryField
     leftWall
     {
         type            alphaContactAngle;
-        thetaProperties
-        (
-            ( water air ) 90 0 0 0
-            ( oil air ) 90 0 0 0
-            ( mercury air ) 90 0 0 0
-            ( water oil ) 90 0 0 0
-            ( water mercury ) 90 0 0 0
-            ( oil mercury ) 90 0 0 0
-        );
+        contactAngleProperties
+        {
+            oil             { theta0 90; }
+            water           { theta0 90; }
+            mercury         { theta0 90; }
+        }
         value           uniform 0;
     }
     rightWall
     {
         type            alphaContactAngle;
-        thetaProperties
-        (
-            ( water air ) 90 0 0 0
-            ( oil air ) 90 0 0 0
-            ( mercury air ) 90 0 0 0
-            ( water oil ) 90 0 0 0
-            ( water mercury ) 90 0 0 0
-            ( oil mercury ) 90 0 0 0
-        );
+        contactAngleProperties
+        {
+            oil             { theta0 90; }
+            water           { theta0 90; }
+            mercury         { theta0 90; }
+        }
         value           uniform 1;
     }
     lowerWall
     {
         type            alphaContactAngle;
-        thetaProperties
-        (
-            ( water air ) 90 0 0 0
-            ( oil air ) 90 0 0 0
-            ( mercury air ) 90 0 0 0
-            ( water oil ) 90 0 0 0
-            ( water mercury ) 90 0 0 0
-            ( oil mercury ) 90 0 0 0
-        );
+        contactAngleProperties
+        {
+            oil             { theta0 90; }
+            water           { theta0 90; }
+            mercury         { theta0 90; }
+        }
         value           uniform 0;
     }
     atmosphere

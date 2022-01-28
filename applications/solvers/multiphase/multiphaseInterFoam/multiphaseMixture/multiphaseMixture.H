@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,18 +171,6 @@ private:
         (
             const volScalarField& alpha1,
             const volScalarField& alpha2
-        ) const;
-
-        //- Correction for the boundary condition on the unit normal nHat on
-        // walls to produce the correct contact angle.
-        //
-        // The dynamic contact angle is calculated from the component of the
-        // velocity on the direction of the interface, parallel to the wall.
-        void correctContactAngle
-        (
-            const phase& alpha1,
-            const phase& alpha2,
-            surfaceVectorField::Boundary& nHatb
         ) const;
 
         tmp<volScalarField> K(const phase& alpha1, const phase& alpha2) const;

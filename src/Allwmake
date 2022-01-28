@@ -59,6 +59,7 @@ wmake $targetType physicalProperties
 
 thermophysicalModels/Allwmake $targetType $*
 twoPhaseModels/Allwmake $targetType $*
+multiphaseModels/Allwmake $targetType $*
 MomentumTransportModels/Allwmake $targetType $*
 ThermophysicalTransportModels/Allwmake $targetType $*
 wmake $targetType radiationModels
