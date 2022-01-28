@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-
+#include "pressureInletOutletVelocityFvPatchVectorField.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -105,6 +105,18 @@ void Foam::totalPressureFvPatchScalarField::updateCoeffs()
 {
     const fvPatchField<vector>& Up =
         patch().lookupPatchField<volVectorField, vector>(UName_);
+
+    if (isA<pressureInletOutletVelocityFvPatchVectorField>(Up))
+    {
+        const pressureInletOutletVelocityFvPatchVectorField& Upiov =
+            refCast<const pressureInletOutletVelocityFvPatchVectorField>(Up);
+
+        if (Upiov.tangentialVelocity().valid())
+        {
+            const scalar t = this->db().time().userTimeValue();
+            updateCoeffs(p0_, Up - Upiov.tangentialVelocity()->value(t));
+        }
+    }
 
     updateCoeffs(p0_, Up);
 }

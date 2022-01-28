@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,6 +175,12 @@ public:
             word& phiName()
             {
                 return phiName_;
+            }
+
+            //- Return the tangential velocity Function1
+            const autoPtr<Function1<vector>>& tangentialVelocity() const
+            {
+                return tangentialVelocity_;
             }
 
 
