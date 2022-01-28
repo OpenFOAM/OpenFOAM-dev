@@ -97,7 +97,6 @@ $(nucleationModels)/nucleationModel/nucleationModel.C
 $(nucleationModels)/reactionDriven/reactionDriven.C
 $(nucleationModels)/wallBoiling/wallBoiling.C
 
-BlendedInterfacialModel/zeroDimensionalFvMesh.C
 BlendedInterfacialModel/blendingMethods/blendingMethod/blendingMethod.C
 BlendedInterfacialModel/blendingMethods/blendingMethod/blendingMethodNew.C
 BlendedInterfacialModel/blendingMethods/linear/linear.C

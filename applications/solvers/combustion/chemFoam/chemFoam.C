@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,6 +32,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "zeroDimensionalFvMesh.H"
 #include "fluidReactionThermo.H"
 #include "basicChemistryModel.H"
 #include "multiComponentMixture.H"
@@ -47,13 +48,13 @@ int main(int argc, char *argv[])
 {
     argList::noParallel();
 
-    #define CREATE_MESH createSingleCellMesh.H
+    #define CREATE_MESH createZeroDimensionalFvMesh.H
     #define NO_CONTROL
     #include "postProcess.H"
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createSingleCellMesh.H"
+    #include "createZeroDimensionalFvMesh.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
     #include "readInitialConditions.H"
