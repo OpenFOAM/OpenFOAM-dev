@@ -22,7 +22,7 @@ solvers
         nAlphaSubCycles 1;
 
         MULESCorr       yes;
-        nLimiterIter    10;
+        nLimiterIter    5;
         alphaApplyPrevCorr  yes;
 
         solver          smoothSolver;
@@ -88,7 +88,7 @@ PIMPLE
     nNonOrthogonalCorrectors 0;
 
     maxCo               10;
-    maxAlphaCo          5;
+    maxAlphaCo          1;
 
     rDeltaTSmoothingCoeff 0.05;
     rDeltaTDampingCoeff 0.5;
