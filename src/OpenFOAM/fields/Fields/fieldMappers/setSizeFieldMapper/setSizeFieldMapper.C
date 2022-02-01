@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,100 +35,7 @@ Foam::setSizeFieldMapper::setSizeFieldMapper(const label size)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void Foam::setSizeFieldMapper::operator()
-(
-    Field<scalar>& f,
-    const Field<scalar>&
-) const
-{
-    setSize(f);
-}
-
-
-void Foam::setSizeFieldMapper::operator()
-(
-    Field<vector>& f,
-    const Field<vector>&
-) const
-{
-    setSize(f);
-}
-
-
-void Foam::setSizeFieldMapper::operator()
-(
-    Field<sphericalTensor>& f,
-    const Field<sphericalTensor>&
-) const
-{
-    setSize(f);
-}
-
-
-void Foam::setSizeFieldMapper::operator()
-(
-    Field<symmTensor>& f,
-    const Field<symmTensor>&
-) const
-{
-    setSize(f);
-}
-
-
-void Foam::setSizeFieldMapper::operator()
-(
-    Field<tensor>& f,
-    const Field<tensor>&
-) const
-{
-    setSize(f);
-}
-
-
-Foam::tmp<Foam::Field<Foam::scalar>> Foam::setSizeFieldMapper::operator()
-(
-    const Field<scalar>&
-) const
-{
-    return setSize<scalar>();
-}
-
-
-Foam::tmp<Foam::Field<Foam::vector>> Foam::setSizeFieldMapper::operator()
-(
-    const Field<vector>&
-) const
-{
-    return setSize<vector>();
-}
-
-
-Foam::tmp<Foam::Field<Foam::sphericalTensor>>
-Foam::setSizeFieldMapper::operator()
-(
-    const Field<sphericalTensor>&
-) const
-{
-    return setSize<sphericalTensor>();
-}
-
-
-Foam::tmp<Foam::Field<Foam::symmTensor>> Foam::setSizeFieldMapper::operator()
-(
-    const Field<symmTensor>&
-) const
-{
-    return setSize<symmTensor>();
-}
-
-
-Foam::tmp<Foam::Field<Foam::tensor>> Foam::setSizeFieldMapper::operator()
-(
-    const Field<tensor>&
-) const
-{
-    return setSize<tensor>();
-}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, setSizeFieldMapper);
 
 
 // ************************************************************************* //

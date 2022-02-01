@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,61 +87,8 @@ public:
 
     // Member Operators
 
-        virtual void operator()
-        (
-            Field<scalar>& f,
-            const Field<scalar>& mapF
-        ) const;
-
-        virtual void operator()
-        (
-            Field<vector>& f,
-            const Field<vector>& mapF
-        ) const;
-
-        virtual void operator()
-        (
-            Field<sphericalTensor>& f,
-            const Field<sphericalTensor>& mapF
-        ) const;
-
-        virtual void operator()
-        (
-            Field<symmTensor>& f,
-            const Field<symmTensor>& mapF
-        ) const;
-
-        virtual void operator()
-        (
-            Field<tensor>& f,
-            const Field<tensor>& mapF
-        ) const;
-
-
-        virtual tmp<Field<scalar>> operator()
-        (
-            const Field<scalar>& mapF
-        ) const;
-
-        virtual tmp<Field<vector>> operator()
-        (
-            const Field<vector>& mapF
-        ) const;
-
-        virtual tmp<Field<sphericalTensor>> operator()
-        (
-            const Field<sphericalTensor>& mapF
-        ) const;
-
-        virtual tmp<Field<symmTensor>> operator()
-        (
-            const Field<symmTensor>& mapF
-        ) const;
-
-        virtual tmp<Field<tensor>> operator()
-        (
-            const Field<tensor>& mapF
-        ) const;
+        //- Map a field
+        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_OPERATOR, );
 };
 
 

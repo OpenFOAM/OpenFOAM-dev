@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,104 +43,11 @@ Foam::distributedWeightedFvPatchFieldMapper::weights() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::Field<Foam::scalar>>
-Foam::distributedWeightedFvPatchFieldMapper::operator()
+FOR_ALL_FIELD_TYPES
 (
-    const Field<scalar>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::vector>>
-Foam::distributedWeightedFvPatchFieldMapper::operator()
-(
-    const Field<vector>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::sphericalTensor>>
-Foam::distributedWeightedFvPatchFieldMapper::operator()
-(
-    const Field<sphericalTensor>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::symmTensor>>
-Foam::distributedWeightedFvPatchFieldMapper::operator()
-(
-    const Field<symmTensor>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::tensor>>
-Foam::distributedWeightedFvPatchFieldMapper::operator()
-(
-    const Field<tensor>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-void Foam::distributedWeightedFvPatchFieldMapper::operator()
-(
-    Field<scalar>& f,
-    const Field<scalar>& mapF
-) const
-{
-    return map(f, mapF);
-}
-
-
-void Foam::distributedWeightedFvPatchFieldMapper::operator()
-(
-    Field<vector>& f,
-    const Field<vector>& mapF
-) const
-{
-    return map(f, mapF);
-}
-
-
-void Foam::distributedWeightedFvPatchFieldMapper::operator()
-(
-    Field<sphericalTensor>& f,
-    const Field<sphericalTensor>& mapF
-) const
-{
-    return map(f, mapF);
-}
-
-
-void Foam::distributedWeightedFvPatchFieldMapper::operator()
-(
-    Field<symmTensor>& f,
-    const Field<symmTensor>& mapF
-) const
-{
-    return map(f, mapF);
-}
-
-
-void Foam::distributedWeightedFvPatchFieldMapper::operator()
-(
-    Field<tensor>& f,
-    const Field<tensor>& mapF
-) const
-{
-    return map(f, mapF);
-}
+    IMPLEMENT_FIELD_MAPPER_OPERATOR,
+    distributedWeightedFvPatchFieldMapper
+);
 
 
 // ************************************************************************* //

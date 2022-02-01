@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,100 +27,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void Foam::directFieldMapper::operator()
-(
-    Field<scalar>& f,
-    const Field<scalar>& mapF
-) const
-{
-    map(f, mapF);
-}
-
-
-void Foam::directFieldMapper::operator()
-(
-    Field<vector>& f,
-    const Field<vector>& mapF
-) const
-{
-    map(f, mapF);
-}
-
-
-void Foam::directFieldMapper::operator()
-(
-    Field<sphericalTensor>& f,
-    const Field<sphericalTensor>& mapF
-) const
-{
-    map(f, mapF);
-}
-
-
-void Foam::directFieldMapper::operator()
-(
-    Field<symmTensor>& f,
-    const Field<symmTensor>& mapF
-) const
-{
-    map(f, mapF);
-}
-
-
-void Foam::directFieldMapper::operator()
-(
-    Field<tensor>& f,
-    const Field<tensor>& mapF
-) const
-{
-    map(f, mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::scalar>> Foam::directFieldMapper::operator()
-(
-    const Field<scalar>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::vector>> Foam::directFieldMapper::operator()
-(
-    const Field<vector>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::sphericalTensor>>
-Foam::directFieldMapper::operator()
-(
-    const Field<sphericalTensor>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::symmTensor>> Foam::directFieldMapper::operator()
-(
-    const Field<symmTensor>& mapF
-) const
-{
-    return map(mapF);
-}
-
-
-Foam::tmp<Foam::Field<Foam::tensor>> Foam::directFieldMapper::operator()
-(
-    const Field<tensor>& mapF
-) const
-{
-    return map(mapF);
-}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, directFieldMapper);
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,14 +28,17 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::setSizeFieldMapper::setSize(Field<Type>& f) const
+void Foam::setSizeFieldMapper::map(Field<Type>& f, const Field<Type>&) const
 {
     f.setSize(size_);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::setSizeFieldMapper::setSize() const
+Foam::tmp<Foam::Field<Type>> Foam::setSizeFieldMapper::map
+(
+    const Field<Type>&
+) const
 {
     return tmp<Field<Type>>(new Field<Type>(size_));
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,7 @@ Description
 
 #include "Field.H"
 #include "fieldTypes.H"
+#include "fieldMapperM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,7 +47,6 @@ namespace Foam
 
 class fieldMapper
 {
-
 public:
 
     // Constructors
@@ -70,65 +70,14 @@ public:
 
     // Member Operators
 
-        virtual void operator()
-        (
-            Field<scalar>& f,
-            const Field<scalar>& mapF
-        ) const = 0;
+        //- Map a field
+        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_OPERATOR, = 0);
 
-        virtual void operator()
-        (
-            Field<vector>& f,
-            const Field<vector>& mapF
-        ) const = 0;
-
-        virtual void operator()
-        (
-            Field<sphericalTensor>& f,
-            const Field<sphericalTensor>& mapF
-        ) const = 0;
-
-        virtual void operator()
-        (
-            Field<symmTensor>& f,
-            const Field<symmTensor>& mapF
-        ) const = 0;
-
-        virtual void operator()
-        (
-            Field<tensor>& f,
-            const Field<tensor>& mapF
-        ) const = 0;
-
+        //- Map a temporary field
         template<class Type>
         void operator()(Field<Type>& f, const tmp<Field<Type>>& tmapF) const;
 
-
-        virtual tmp<Field<scalar>> operator()
-        (
-            const Field<scalar>& mapF
-        ) const = 0;
-
-        virtual tmp<Field<vector>> operator()
-        (
-            const Field<vector>& mapF
-        ) const = 0;
-
-        virtual tmp<Field<sphericalTensor>> operator()
-        (
-            const Field<sphericalTensor>& mapF
-        ) const = 0;
-
-        virtual tmp<Field<symmTensor>> operator()
-        (
-            const Field<symmTensor>& mapF
-        ) const = 0;
-
-        virtual tmp<Field<tensor>> operator()
-        (
-            const Field<tensor>& mapF
-        ) const = 0;
-
+        //- Map a temporary field
         template<class Type>
         tmp<Field<Type>> operator()(const tmp<Field<Type>>& tmapF) const;
 };
