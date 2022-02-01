@@ -9,9 +9,9 @@ runApplication topoSet
 runApplication subsetMesh -overwrite c0 -patch floatingObject -noFields
 runApplication setFields
 
-runApplication decomposePar
+runApplication decomposePar -cellDist
 runParallel $(getApplication)
-runApplication reconstructParMesh
+runApplication reconstructParMesh -cellDist
 runApplication reconstructPar
 
 #------------------------------------------------------------------------------
