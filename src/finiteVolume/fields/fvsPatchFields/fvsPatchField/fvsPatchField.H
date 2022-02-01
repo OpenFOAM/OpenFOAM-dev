@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -434,19 +434,18 @@ public:
 
 
 #define makeFvsPatchField(fvsPatchTypeField)                                   \
-                                                                               \
-defineNamedTemplateTypeNameAndDebug(fvsPatchTypeField, 0);                     \
-template<>                                                                     \
-int fvsPatchTypeField::disallowGenericFvsPatchField                            \
-(                                                                              \
-    debug::debugSwitch("disallowGenericFvsPatchField", 0)                      \
-);                                                                             \
-defineTemplateRunTimeSelectionTable(fvsPatchTypeField, patch);                 \
-defineTemplateRunTimeSelectionTable(fvsPatchTypeField, patchMapper);           \
-defineTemplateRunTimeSelectionTable(fvsPatchTypeField, dictionary);
+    defineNamedTemplateTypeNameAndDebug(fvsPatchTypeField, 0);                 \
+    template<>                                                                 \
+    int fvsPatchTypeField::disallowGenericFvsPatchField                        \
+    (                                                                          \
+        debug::debugSwitch("disallowGenericFvsPatchField", 0)                  \
+    );                                                                         \
+    defineTemplateRunTimeSelectionTable(fvsPatchTypeField, patch);             \
+    defineTemplateRunTimeSelectionTable(fvsPatchTypeField, patchMapper);       \
+    defineTemplateRunTimeSelectionTable(fvsPatchTypeField, dictionary);
 
 
-#define addToPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField)    \
+#define addToFvsPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField) \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
         PatchTypeField,                                                        \
@@ -470,7 +469,8 @@ defineTemplateRunTimeSelectionTable(fvsPatchTypeField, dictionary);
 // For non-templated patch fields
 #define makeFvsPatchTypeField(PatchTypeField, typePatchTypeField)              \
     defineTypeNameAndDebug(typePatchTypeField, 0);                             \
-    addToPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField)
+    addToFvsPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField)
+
 
 // For templated patch fields
 #define makeTemplateFvsPatchTypeField(fieldType, type)                         \
@@ -479,14 +479,16 @@ defineTemplateRunTimeSelectionTable(fvsPatchTypeField, dictionary);
         CAT4(type, FvsPatch, CAPITALIZE(fieldType), Field),                    \
         0                                                                      \
     );                                                                         \
-    addToPatchFieldRunTimeSelection                                            \
+    addToFvsPatchFieldRunTimeSelection                                         \
     (                                                                          \
         CAT3(fvsPatch, CAPITALIZE(fieldType), Field),                          \
         CAT4(type, FvsPatch, CAPITALIZE(fieldType), Field)                     \
     )
 
+
 #define makeFvsPatchFields(type)                                               \
     FOR_ALL_FIELD_TYPES(makeTemplateFvsPatchTypeField, type)
+
 
 #define makeFvsPatchFieldTypeName(fieldType, type)                             \
     defineNamedTemplateTypeNameAndDebug                                        \
@@ -495,12 +497,15 @@ defineTemplateRunTimeSelectionTable(fvsPatchTypeField, dictionary);
         0                                                                      \
     );
 
+
 #define makeFvsPatchFieldTypeNames(type)                                       \
     FOR_ALL_FIELD_TYPES(makeFvsPatchFieldTypeName, type)
+
 
 #define makeFvsPatchTypeFieldTypedef(fieldType, type)                          \
     typedef type##FvsPatchField<fieldType>                                     \
         CAT4(type, FvsPatch, CAPITALIZE(fieldType), Field);
+
 
 #define makeFvsPatchTypeFieldTypedefs(type)                                    \
     FOR_ALL_FIELD_TYPES(makeFvsPatchTypeFieldTypedef, type)

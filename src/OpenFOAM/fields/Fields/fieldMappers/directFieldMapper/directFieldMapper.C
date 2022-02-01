@@ -27,7 +27,10 @@ License
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, directFieldMapper);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, directFieldMapper)
+
+
+IMPLEMENT_FIELD_MAPPER_OPERATOR(label, directFieldMapper)
 
 
 // ************************************************************************* //

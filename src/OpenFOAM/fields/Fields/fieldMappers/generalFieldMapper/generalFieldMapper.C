@@ -59,7 +59,10 @@ const Foam::scalarListList& Foam::generalFieldMapper::weights() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, generalFieldMapper);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, generalFieldMapper)
+
+
+IMPLEMENT_FIELD_MAPPER_OPERATOR(label, generalFieldMapper)
 
 
 // ************************************************************************* //

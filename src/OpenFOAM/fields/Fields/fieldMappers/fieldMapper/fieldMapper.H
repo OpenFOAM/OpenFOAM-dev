@@ -73,6 +73,9 @@ public:
         //- Map a field
         FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_OPERATOR, = 0);
 
+        //- Map a label field
+        DEFINE_FIELD_MAPPER_OPERATOR(label, = 0);
+
         //- Map a temporary field
         template<class Type>
         void operator()(Field<Type>& f, const tmp<Field<Type>>& tmapF) const;

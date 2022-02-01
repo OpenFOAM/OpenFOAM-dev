@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,30 +35,10 @@ SourceFiles
 #define pointFields_H
 
 #include "GeometricFields.H"
-#include "fieldTypes.H"
-#include "pointPatchFields.H"
 #include "pointMesh.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-typedef GeometricField<scalar, pointPatchField, pointMesh> pointScalarField;
-typedef GeometricField<vector, pointPatchField, pointMesh> pointVectorField;
-typedef GeometricField<sphericalTensor, pointPatchField, pointMesh>
-    pointSphericalTensorField;
-typedef GeometricField<symmTensor, pointPatchField, pointMesh>
-    pointSymmTensorField;
-typedef GeometricField<tensor, pointPatchField, pointMesh> pointTensorField;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "pointPatchFields.H"
+#include "pointFieldsFwd.H"
+#include "calculatedPointPatchFields.H"
 
 #endif
 

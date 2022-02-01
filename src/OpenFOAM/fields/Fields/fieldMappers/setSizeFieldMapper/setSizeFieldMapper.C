@@ -35,7 +35,10 @@ Foam::setSizeFieldMapper::setSizeFieldMapper(const label size)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, setSizeFieldMapper);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, setSizeFieldMapper)
+
+
+IMPLEMENT_FIELD_MAPPER_OPERATOR(label, setSizeFieldMapper)
 
 
 // ************************************************************************* //

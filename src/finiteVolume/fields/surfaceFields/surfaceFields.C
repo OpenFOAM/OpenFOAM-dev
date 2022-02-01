@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,11 @@ namespace Foam
 
 defineTemplate2TypeNameAndDebug
 (
+    surfaceLabelField::Internal,
+    0
+);
+defineTemplate2TypeNameAndDebug
+(
     surfaceScalarField::Internal,
     0
 );
@@ -59,6 +64,7 @@ defineTemplate2TypeNameAndDebug
 );
 
 
+defineTemplateTypeNameAndDebug(surfaceLabelField, 0);
 defineTemplateTypeNameAndDebug(surfaceScalarField, 0);
 defineTemplateTypeNameAndDebug(surfaceVectorField, 0);
 defineTemplateTypeNameAndDebug(surfaceSphericalTensorField, 0);

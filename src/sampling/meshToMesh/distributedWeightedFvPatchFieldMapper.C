@@ -47,7 +47,10 @@ FOR_ALL_FIELD_TYPES
 (
     IMPLEMENT_FIELD_MAPPER_OPERATOR,
     distributedWeightedFvPatchFieldMapper
-);
+)
+
+
+IMPLEMENT_FIELD_MAPPER_OPERATOR(label, distributedWeightedFvPatchFieldMapper)
 
 
 // ************************************************************************* //
