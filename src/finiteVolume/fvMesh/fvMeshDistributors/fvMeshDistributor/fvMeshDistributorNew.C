@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,64 +32,69 @@ Foam::autoPtr<Foam::fvMeshDistributor> Foam::fvMeshDistributor::New
     fvMesh& mesh
 )
 {
-    typeIOobject<IOdictionary> dictHeader
-    (
-        IOobject
-        (
-            "dynamicMeshDict",
-            mesh.time().constant(),
-            mesh.dbDir(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE,
-            false
-        )
-    );
-
-    if (dictHeader.headerOk())
+    // Only construct a real distributor when running in parallel
+    // otherwise return a fvMeshDistributors::none
+    if (Pstream::parRun())
     {
-        IOdictionary dict(dictHeader);
+        typeIOobject<IOdictionary> dictHeader
+        (
+            IOobject
+            (
+                "dynamicMeshDict",
+                mesh.time().constant(),
+                mesh.dbDir(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::NO_WRITE,
+                false
+            )
+        );
 
-        if (dict.found("distributor"))
+        if (dictHeader.headerOk())
         {
-            const dictionary& distributorDict = dict.subDict("distributor");
+            IOdictionary dict(dictHeader);
 
-            const word fvMeshDistributorTypeName
-            (
-                distributorDict.lookup("type")
-            );
-
-            Info<< "Selecting fvMeshDistributor "
-                << fvMeshDistributorTypeName << endl;
-
-            libs.open
-            (
-                distributorDict,
-                "libs",
-                fvMeshConstructorTablePtr_
-            );
-
-            if (!fvMeshConstructorTablePtr_)
+            if (dict.found("distributor"))
             {
-                FatalErrorInFunction
-                    << "fvMeshDistributors table is empty"
-                    << exit(FatalError);
+                const dictionary& distributorDict = dict.subDict("distributor");
+
+                const word fvMeshDistributorTypeName
+                (
+                    distributorDict.lookup("type")
+                );
+
+                Info<< "Selecting fvMeshDistributor "
+                    << fvMeshDistributorTypeName << endl;
+
+                libs.open
+                (
+                    distributorDict,
+                    "libs",
+                    fvMeshConstructorTablePtr_
+                );
+
+                if (!fvMeshConstructorTablePtr_)
+                {
+                    FatalErrorInFunction
+                        << "fvMeshDistributors table is empty"
+                        << exit(FatalError);
+                }
+
+                fvMeshConstructorTable::iterator cstrIter =
+                    fvMeshConstructorTablePtr_->find(fvMeshDistributorTypeName);
+
+                if (cstrIter == fvMeshConstructorTablePtr_->end())
+                {
+                    FatalErrorInFunction
+                        << "Unknown fvMeshDistributor type "
+                        << fvMeshDistributorTypeName << nl << nl
+                        << "Valid fvMeshDistributors are :" << endl
+                        << fvMeshConstructorTablePtr_->sortedToc()
+                        << exit(FatalError);
+                }
+
+                return autoPtr<fvMeshDistributor>(cstrIter()(mesh));
             }
-
-            fvMeshConstructorTable::iterator cstrIter =
-                fvMeshConstructorTablePtr_->find(fvMeshDistributorTypeName);
-
-            if (cstrIter == fvMeshConstructorTablePtr_->end())
-            {
-                FatalErrorInFunction
-                    << "Unknown fvMeshDistributor type "
-                    << fvMeshDistributorTypeName << nl << nl
-                    << "Valid fvMeshDistributors are :" << endl
-                    << fvMeshConstructorTablePtr_->sortedToc()
-                    << exit(FatalError);
-            }
-
-            return autoPtr<fvMeshDistributor>(cstrIter()(mesh));
         }
     }
 
