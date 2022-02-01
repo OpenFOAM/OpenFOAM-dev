@@ -32,6 +32,7 @@ License
 #include "zeroDimensionalFvMesh.H"
 #include "mathematicalConstants.H"
 #include "writeFile.H"
+#include "triFace.H"
 #include "noSetWriter.H"
 #include "noSurfaceWriter.H"
 
@@ -588,7 +589,7 @@ void Foam::BlendedInterfacialModel<ModelType>::postProcessBlendingCoefficients
         // Create triangles within the polygon
         forAll(phaseNodes, phasei)
         {
-            faces.append(face({0, phasei + 1, (phasei + 1) % nPhases + 1}));
+            faces.append(triFace(0, phasei + 1, (phasei + 1) % nPhases + 1));
         }
         for (label divi = 1; divi < nDivisions; ++ divi)
         {
@@ -612,8 +613,8 @@ void Foam::BlendedInterfacialModel<ModelType>::postProcessBlendingCoefficients
                         pointi1
                       + ((phasei*(divi + 1) + i + 1) % (nPhases*(divi + 1)));
 
-                    faces.append(face({pi00, pi10, pi11}));
-                    if (i < divi) faces.append(face({pi00, pi11, pi01}));
+                    faces.append(triFace({pi00, pi10, pi11}));
+                    if (i < divi) faces.append(triFace({pi00, pi11, pi01}));
                 }
             }
         }
