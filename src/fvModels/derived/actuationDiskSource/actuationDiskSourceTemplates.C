@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,38 +28,34 @@ License
 
 // * * * * * * * * * * * * * * *  Member Functions * * * * * * * * * * * * * //
 
-template<class RhoFieldType>
+template<class AlphaFieldType, class RhoFieldType>
 void Foam::fv::actuationDiskSource::addActuationDiskAxialInertialResistance
 (
     vectorField& Usource,
     const labelList& cells,
     const scalarField& Vcells,
+    const AlphaFieldType& alpha,
     const RhoFieldType& rho,
     const vectorField& U
 ) const
 {
-    scalar a = 1.0 - Cp_/Ct_;
-    vector uniDiskDir = diskDir_/mag(diskDir_);
-    tensor E(Zero);
-    E.xx() = uniDiskDir.x();
-    E.yy() = uniDiskDir.y();
-    E.zz() = uniDiskDir.z();
+    const scalar a = 1 - Cp_/Ct_;
+    const diagTensor E(diskDir_/mag(diskDir_));
 
-    vector upU = vector(vGreat, vGreat, vGreat);
-    scalar upRho = vGreat;
+    vector upU(vector::max);
     if (upstreamCellId_ != -1)
     {
         upU =  U[upstreamCellId_];
-        upRho = rho[upstreamCellId_];
     }
     reduce(upU, minOp<vector>());
-    reduce(upRho, minOp<scalar>());
 
-    scalar T = 2.0*upRho*diskArea_*mag(upU)*a*(1 - a);
+    const scalar T = 2*diskArea_*mag(upU)*a*(1 - a);
 
     forAll(cells, i)
     {
-        Usource[cells[i]] += ((Vcells[cells[i]]/set_.V())*T*E) & upU;
+        Usource[cells[i]] +=
+            alpha[cells[i]]*rho[cells[i]]
+           *(((Vcells[cells[i]]/set_.V())*T*E) & upU);
     }
 }
 

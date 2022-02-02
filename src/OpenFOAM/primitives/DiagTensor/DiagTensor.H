@@ -87,6 +87,9 @@ public:
         //- Construct given three components
         inline DiagTensor(const Cmpt& txx, const Cmpt& tyy, const Cmpt& tzz);
 
+        //- Construct from Vector
+        inline explicit DiagTensor(const Vector<Cmpt>& v);
+
         //- Construct from Istream
         inline DiagTensor(Istream&);
 
@@ -103,7 +106,7 @@ public:
             inline Cmpt& yy();
             inline Cmpt& zz();
 
-         //- Explicit conversion to vector
+         //- Explicit conversion to Vector
          explicit inline operator Vector<Cmpt>() const;
 };
 

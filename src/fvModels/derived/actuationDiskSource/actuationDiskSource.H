@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,6 @@ Usage
         selectionMode   cellSet;
         cellSet         actuationDisk1;
 
-        U               U;          // Name of the velocity field
-
         diskDir         (-1 0 0);   // Disk direction
         Cp              0.1;        // Power coefficient
         Ct              0.5;        // Thrust coefficient
@@ -99,6 +97,9 @@ protected:
         //- The set of cells the fvConstraint applies to
         fvCellSet set_;
 
+        //- The name of the phase to which this fvModel applies
+        word phaseName_;
+
         //- Name of the velocity field
         word UName_;
 
@@ -129,12 +130,13 @@ private:
         void readCoeffs();
 
         //- Add resistance to the UEqn
-        template<class RhoFieldType>
+        template<class AlphaFieldType, class RhoFieldType>
         void addActuationDiskAxialInertialResistance
         (
             vectorField& Usource,
             const labelList& cells,
             const scalarField& V,
+            const AlphaFieldType& alpha,
             const RhoFieldType& rho,
             const vectorField& U
         ) const;
@@ -187,6 +189,15 @@ public:
             //- Source term to compressible momentum equation
             virtual void addSup
             (
+                const volScalarField& rho,
+                fvMatrix<vector>& eqn,
+                const word& fieldName
+            ) const;
+
+            //- Explicit and implicit sources for phase equations
+            virtual void addSup
+            (
+                const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
                 const word& fieldName

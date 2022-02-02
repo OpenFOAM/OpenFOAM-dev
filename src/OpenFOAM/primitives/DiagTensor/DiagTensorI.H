@@ -66,6 +66,13 @@ inline Foam::DiagTensor<Cmpt>::DiagTensor
 
 
 template<class Cmpt>
+inline Foam::DiagTensor<Cmpt>::DiagTensor(const Vector<Cmpt>& v)
+:
+    VectorSpace<DiagTensor<Cmpt>, Cmpt, 3>(v)
+{}
+
+
+template<class Cmpt>
 inline Foam::DiagTensor<Cmpt>::DiagTensor(Istream& is)
 :
     VectorSpace<DiagTensor<Cmpt>, Cmpt, 3>(is)

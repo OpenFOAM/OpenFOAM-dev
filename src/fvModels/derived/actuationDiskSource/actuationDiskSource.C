@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,14 @@ namespace fv
 
 void Foam::fv::actuationDiskSource::readCoeffs()
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+
+    UName_ =
+        coeffs().lookupOrDefault<word>
+        (
+            "U",
+            IOobject::groupName("U", phaseName_)
+        );
 
     diskDir_ = coeffs().lookup<vector>("diskDir");
     if (mag(diskDir_) < vSmall)
@@ -100,6 +107,7 @@ Foam::fv::actuationDiskSource::actuationDiskSource
 :
     fvModel(name, modelType, dict, mesh),
     set_(coeffs(), mesh),
+    phaseName_(word::null),
     UName_(word::null),
     diskDir_(vector::uniform(NaN)),
     Cp_(NaN),
@@ -138,6 +146,7 @@ void Foam::fv::actuationDiskSource::addSup
             set_.cells(),
             cellsV,
             geometricOneField(),
+            geometricOneField(),
             U
         );
     }
@@ -162,6 +171,34 @@ void Foam::fv::actuationDiskSource::addSup
             Usource,
             set_.cells(),
             cellsV,
+            geometricOneField(),
+            rho,
+            U
+        );
+    }
+}
+
+
+void Foam::fv::actuationDiskSource::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<vector>& eqn,
+    const word& fieldName
+) const
+{
+    const scalarField& cellsV = mesh().V();
+    vectorField& Usource = eqn.source();
+    const vectorField& U = eqn.psi();
+
+    if (set_.V() > vSmall)
+    {
+        addActuationDiskAxialInertialResistance
+        (
+            Usource,
+            set_.cells(),
+            cellsV,
+            alpha,
             rho,
             U
         );
