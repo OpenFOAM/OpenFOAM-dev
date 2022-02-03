@@ -211,16 +211,19 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethod::f
     {
         return constant(alphas, 0);
     }
-    else
+
+    if (canBeContinuousPhaseSet == canBeContinuousSystemSet)
     {
-        return
-            fContinuous
-            (
-                alphas,
-                canBeContinuousPhaseSet,
-                canBeContinuousSystemSet
-            );
+        return constant(alphas, 1);
     }
+
+    return
+        fContinuous
+        (
+            alphas,
+            canBeContinuousPhaseSet,
+            canBeContinuousSystemSet
+        );
 }
 
 
