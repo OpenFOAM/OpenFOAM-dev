@@ -29,19 +29,17 @@ Description
 
     Constant values for momentum source for actuation disk
     \f[
-        T = 2 \rho A U_{o}^2 a (1-a)
-    \f]
-    and
-    \f[
-        U_1 = (1 - a)U_{o}
+        T = 2 \rho A (\hat{d}\dot U_{o})^2 a (1-a) \hat{d}
     \f]
 
     where:
     \vartable
-        A   | disk area
-        U_o | upstream velocity
-        a   | 1 - Cp/Ct
-        U_1 | velocity at the disk
+        A    | Disk area
+        dHat | Unit disk direction
+        U_o  | Upstream velocity
+        a    | 1 - Cp/Ct
+        Cp   | Power coefficient
+        Ct   | Thrust coefficient
     \endvartable
 
 Usage
