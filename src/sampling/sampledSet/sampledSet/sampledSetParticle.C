@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,8 +144,8 @@ bool Foam::sampledSetParticle::move
 
         while (onInternalFace())
         {
-            if (td.storeFaces_) storeFace(cloud, td);
             if (td.storeCells_) storeCell(cloud, td);
+            if (td.storeFaces_) storeFace(cloud, td);
 
             hitFace(setF_*s, 0, cloud, td);
 
@@ -156,8 +156,8 @@ bool Foam::sampledSetParticle::move
 
         if (onFace())
         {
-            if (td.storeFaces_) storeFace(cloud, td);
             if (td.storeCells_) storeCell(cloud, td);
+            if (td.storeFaces_) storeFace(cloud, td);
 
             hitFace(setF_*s, 0, cloud, td);
         }
