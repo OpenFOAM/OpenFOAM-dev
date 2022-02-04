@@ -116,9 +116,15 @@ void Foam::totalPressureFvPatchScalarField::updateCoeffs()
             const scalar t = this->db().time().userTimeValue();
             updateCoeffs(p0_, Up - Upiov.tangentialVelocity()->value(t));
         }
+        else
+        {
+            updateCoeffs(p0_, Up);
+        }
     }
-
-    updateCoeffs(p0_, Up);
+    else
+    {
+        updateCoeffs(p0_, Up);
+    }
 }
 
 
