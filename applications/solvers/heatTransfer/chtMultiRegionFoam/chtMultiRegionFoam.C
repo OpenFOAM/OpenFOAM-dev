@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         // --- PIMPLE loop
         while (pimples.loop())
         {
-            tmp<fvVectorMatrix> tUEqn;
+            List<tmp<fvVectorMatrix>> UEqns(fluidRegions.size());
 
             for(int Ecorr=0; Ecorr<nEcorr; Ecorr++)
             {

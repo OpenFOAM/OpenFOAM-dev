@@ -46,6 +46,7 @@ else
 
     if (Ecorr == nEcorr - 1)
     {
+        tmp<fvVectorMatrix>& tUEqn = UEqns[i];
         fvVectorMatrix& UEqn = tUEqn.ref();
 
         // --- PISO loop
