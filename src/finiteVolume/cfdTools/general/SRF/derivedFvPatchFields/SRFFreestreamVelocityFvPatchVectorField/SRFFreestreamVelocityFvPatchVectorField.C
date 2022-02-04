@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,7 +137,7 @@ void Foam::SRFFreestreamVelocityFvPatchVectorField::updateCoeffs()
     }
 
     // Set the inlet-outlet choice based on the direction of the freestream
-    valueFraction() = 1.0 - pos0(refValue() & patch().Sf());
+    valueFraction() = neg(refValue() & patch().Sf());
 
     mixedFvPatchField<vector>::updateCoeffs();
 }

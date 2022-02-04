@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,7 +153,7 @@ void Foam::totalTemperatureFvPatchScalarField::updateCoeffs()
 
     operator==
     (
-        T0_/(1.0 + 0.5*psip*gM1ByG*(1.0 - pos0(phip))*magSqr(Up))
+        T0_/(1.0 + 0.5*psip*gM1ByG*neg(phip)*magSqr(Up))
     );
 
     fixedValueFvPatchScalarField::updateCoeffs();

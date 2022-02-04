@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ updateCoeffs()
         patch().lookupPatchField<surfaceScalarField, scalar>(this->phiName_);
 
     this->refValue() = 1.5*sqr(intensity_)*magSqr(Up);
-    this->valueFraction() = 1.0 - pos0(phip);
+    this->valueFraction() = neg(phip);
 
     inletOutletFvPatchScalarField::updateCoeffs();
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,8 +162,8 @@ void Foam::inletOutletTotalTemperatureFvPatchScalarField::updateCoeffs()
     scalar gM1ByG = (gamma_ - 1.0)/gamma_;
 
     this->refValue() =
-        T0_/(1.0 + 0.5*psip*gM1ByG*(1.0 - pos0(phip))*magSqr(Up));
-    this->valueFraction() = 1.0 - pos0(phip);
+        T0_/(1.0 + 0.5*psip*gM1ByG*neg(phip)*magSqr(Up));
+    this->valueFraction() = neg(phip);
 
     inletOutletFvPatchScalarField::updateCoeffs();
 }

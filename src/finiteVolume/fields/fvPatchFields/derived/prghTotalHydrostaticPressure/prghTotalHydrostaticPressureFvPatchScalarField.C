@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,11 +116,7 @@ void Foam::prghTotalHydrostaticPressureFvPatchScalarField::updateCoeffs()
     const vectorField& Up =
         patch().lookupPatchField<volVectorField, vector>(UName_);
 
-    operator==
-    (
-        ph_rghp
-      - 0.5*rhop*(1.0 - pos0(phip))*magSqr(Up)
-    );
+    operator==(ph_rghp - 0.5*rhop*neg(phip)*magSqr(Up));
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }

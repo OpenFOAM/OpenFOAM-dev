@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -261,7 +261,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
     // Limit to prevent outflow
     const scalarField p_new
     (
-        (1.0 - pos0(phi))*t*plenumPressure + pos0(phi)*max(p, plenumPressure)
+        neg(phi)*t*plenumPressure + pos0(phi)*max(p, plenumPressure)
     );
 
     // Relaxation fraction
