@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
         where
         \vartable
             p_p     | incompressible pressure at patch [m^2/s^2]
-            p_0     | incompressible total pressure [m^2/s^2]
+            p_0     | incompressible external pressure [m^2/s^2]
             U       | velocity [m/s]
         \endvartable
 
@@ -46,7 +46,7 @@ Description
         where
         \vartable
             p_p     | pressure at patch [Pa]
-            p_0     | total pressure [Pa]
+            p_0     | external pressure [Pa]
             \rho    | density [kg/m^3]
             U       | velocity [m/s]
         \endvartable
@@ -58,7 +58,7 @@ Description
         where
         \vartable
             p_p     | pressure at patch [Pa]
-            p_0     | total pressure [Pa]
+            p_0     | external pressure [Pa]
             \psi    | compressibility [m^2/s^2]
             U       | velocity [m/s]
         \endvartable
@@ -70,7 +70,7 @@ Description
         where
         \vartable
             p_p     | pressure at patch [Pa]
-            p_0     | total pressure [Pa]
+            p_0     | external pressure [Pa]
             \psi    | compressibility [m^2/s^2]
             G       | coefficient given by \f$\frac{\gamma}{1-\gamma}\f$ []
             \gamma  | ratio of specific heats (Cp/Cv) []
@@ -96,7 +96,7 @@ Usage
         rho          | Density field name         | no       | rho
         psi          | Compressibility field name | no       | none
         gamma        | (Cp/Cv)                    | no       | 1
-        p0           | Total pressure             | yes      |
+        p0           | External pressure          | yes      |
     \endtable
 
     Example of the boundary condition specification:
@@ -208,14 +208,6 @@ public:
     // Member Functions
 
         // Evaluation functions
-
-            //- Update the coefficients associated with the patch field
-            //  using the given patch total pressure and velocity fields
-            void updateCoeffs
-            (
-                const scalarField& p0p,
-                const vectorField& Up
-            );
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,13 +95,20 @@ void Foam::rotatingTotalPressureFvPatchScalarField::updateCoeffs()
     const vector omega = omega_->value(t);
     const vector axis = omega/mag(omega);
 
+    const fvsPatchField<scalar>& phip =
+        patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
+
     const vectorField Up
     (
         patch().lookupPatchField<volVectorField, vector>(UName_)
       + (omega ^ (patch().Cf() - axis*(axis & patch().Cf())))
     );
 
-    totalPressureFvPatchScalarField::updateCoeffs(p0_, Up);
+    dynamicPressureFvPatchScalarField::updateCoeffs
+    (
+        p0_,
+        0.5*neg(phip)*magSqr(Up)
+    );
 }
 
 

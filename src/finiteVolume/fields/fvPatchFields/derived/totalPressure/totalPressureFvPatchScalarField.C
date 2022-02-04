@@ -84,27 +84,15 @@ Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::totalPressureFvPatchScalarField::updateCoeffs
-(
-    const scalarField& p0p,
-    const vectorField& Up
-)
+void Foam::totalPressureFvPatchScalarField::updateCoeffs()
 {
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    dynamicPressureFvPatchScalarField::updateCoeffs
-    (
-        p0_,
-        0.5*neg(phip)*magSqr(Up)
-    );
-}
-
-
-void Foam::totalPressureFvPatchScalarField::updateCoeffs()
-{
     const fvPatchField<vector>& Up =
         patch().lookupPatchField<volVectorField, vector>(UName_);
+
+    scalarField Kp = magSqr(Up);
 
     if (isA<pressureInletOutletVelocityFvPatchVectorField>(Up))
     {
@@ -114,17 +102,15 @@ void Foam::totalPressureFvPatchScalarField::updateCoeffs()
         if (Upiov.tangentialVelocity().valid())
         {
             const scalar t = this->db().time().userTimeValue();
-            updateCoeffs(p0_, Up - Upiov.tangentialVelocity()->value(t));
-        }
-        else
-        {
-            updateCoeffs(p0_, Up);
+            Kp -= magSqr(Upiov.tangentialVelocity()->value(t));
         }
     }
-    else
-    {
-        updateCoeffs(p0_, Up);
-    }
+
+    dynamicPressureFvPatchScalarField::updateCoeffs
+    (
+        p0_,
+        0.5*neg(phip)*Kp
+    );
 }
 
 

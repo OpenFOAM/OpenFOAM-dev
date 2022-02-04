@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,10 +115,11 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
 
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
+
     const fvPatchField<vector>& Up =
         patch().lookupPatchField<volVectorField, vector>(UName_);
 
-    int sign = direction_ ? +1 : -1;
+    const int sign = direction_ ? +1 : -1;
 
     // Get the volumetric flow rate
     scalar volFlowRate = 0;
@@ -149,7 +150,11 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
     // Pressure drop for this flow rate
     const scalar dp0 = fanCurve_->value(max(volFlowRate, scalar(0)));
 
-    totalPressureFvPatchScalarField::updateCoeffs(p0_ - sign*dp0, Up);
+    dynamicPressureFvPatchScalarField::updateCoeffs
+    (
+        p0_ - sign*dp0,
+        0.5*neg(phip)*magSqr(Up)
+    );
 }
 
 
