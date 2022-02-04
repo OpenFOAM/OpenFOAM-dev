@@ -23,37 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CompactListList.H"
-#include "Istream.H"
-
-// * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
-
-template<class T>
-Foam::CompactListList<T>::CompactListList(Istream& is)
-{
-    operator>>(is, *this);
-}
-
+#include "UCompactListList.H"
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class T>
-Foam::Istream& Foam::operator>>(Istream& is, CompactListList<T>& lst)
+Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const UCompactListList<T>& lst
+)
 {
-    is  >> lst.offsets_ >> lst.m_;
-
     // An empty compact list list gets output as two empty lists
-    if (lst.offsets_.empty())
-    {
-        lst.clear();
-    }
+    os << (lst.size() ? lst.offsets_ : labelUList()) << lst.m_;
 
-    lst.UCompactListList<T>::shallowCopy
-    (
-        UCompactListList<T>(lst.offsets_, lst.m_)
-    );
-
-    return is;
+    return os;
 }
 
 

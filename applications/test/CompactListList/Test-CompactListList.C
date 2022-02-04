@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     cll2(2, 3) = 999;
     Info<< "cll2(2, 3) = " << cll2(2, 3) << nl << endl;
 
-    Info<< "cll2 as List<List<label >> " << cll2()
+    Info<< "cll2 as List<List<label >> " << cll2.list()
         << endl;
 
     cll2.setSize(3);
@@ -144,10 +144,10 @@ int main(int argc, char *argv[])
         fcs[0] = face(labelList(1, 111));
         fcs[1] = face(labelList(2, 222));
 
-        CompactListList<label, face> compactFcs(fcs);
+        CompactListList<label> compactFcs(fcs);
         Info<< "compactFcs:" << compactFcs << endl;
 
-        faceList fcs2 = compactFcs();
+        faceList fcs2 = compactFcs.list<face>();
         Info<< "fcs2:" << fcs2 << endl;
     }
 

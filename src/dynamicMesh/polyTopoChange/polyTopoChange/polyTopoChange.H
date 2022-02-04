@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ class dictionary;
 class topoAction;
 class objectMap;
 class IOobject;
-template<class T, class Container> class CompactListList;
+template<class T> class CompactListList;
 
 /*---------------------------------------------------------------------------*\
                        Class polyTopoChange Declaration
@@ -272,13 +272,13 @@ class polyTopoChange
         void makeCellCells
         (
             const label nActiveFaces,
-            CompactListList<label, labelList>& cellCells
+            CompactListList<label>& cellCells
         ) const;
 
         //- Cell ordering (bandCompression). Returns number of remaining cells.
         label getCellOrder
         (
-            const CompactListList<label, labelList>&,
+            const CompactListList<label>&,
             labelList&
         ) const;
 

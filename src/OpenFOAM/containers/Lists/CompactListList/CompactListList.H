@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,9 +36,6 @@ Description
 
     Storage is allocated on free-store during construction.
 
-    As a special case a null-constructed CompactListList has an empty
-    offsets_ (instead of size 1).
-
 SourceFiles
     CompactListList.C
     CompactListListI.H
@@ -49,7 +46,7 @@ SourceFiles
 #ifndef CompactListList_H
 #define CompactListList_H
 
-#include "labelList.H"
+#include "UCompactListList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,30 +55,21 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-template<class T, class Container> class CompactListList;
+template<class T> class CompactListList;
 
-template<class T, class Container> Istream& operator>>
-(
-    Istream&,
-    CompactListList<T, Container>&
-);
-template<class T, class Container> Ostream& operator<<
-(
-    Ostream&,
-    const CompactListList<T, Container>&
-);
+template<class T> Istream& operator>>(Istream&, CompactListList<T>&);
 
 
 /*---------------------------------------------------------------------------*\
                        Class CompactListList Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T, class Container = List<T>>
+template<class T>
 class CompactListList
+:
+    public UCompactListList<T>
 {
     // Private Data
-
-        label size_;
 
         //- Offset table
         List<label> offsets_;
@@ -95,7 +83,7 @@ public:
     // Static Member Functions
 
         //- Return a null CompactListList
-        inline static const CompactListList<T, Container>& null();
+        inline static const CompactListList<T>& null();
 
 
     // Constructors
@@ -103,58 +91,34 @@ public:
         //- Null constructor.
         inline CompactListList();
 
+        //- Construct from components
+        inline CompactListList(const UList<label>& offsets, const UList<T>& m);
+
+        //- Construct as copy or re-use as specified.
+        inline CompactListList(CompactListList<T>&, bool reuse);
+
         //- Move constructor
-        CompactListList(CompactListList<T, Container>&&);
-
-        //- Construct by converting given List<List<T>>
-        explicit CompactListList(const List<Container>&);
-
-        //- Construct given size of offset table (number of rows)
-        //  and number of data.
-        inline CompactListList(const label mRows, const label nData);
+        inline CompactListList(CompactListList<T>&&);
 
         //- Construct given size of offset table (number of rows),
         //  the number of data and a value for all elements.
         inline CompactListList(const label mRows, const label nData, const T&);
 
-        //- Construct given list of row-sizes.
-        explicit CompactListList(const labelUList& rowSizes);
+        //- Construct by converting given List<Container>
+        template<class Container>
+        CompactListList(const List<Container>&);
 
-        //- Construct given list of row-sizes
+        //- Construct given list of row-sizes and a value for all elements
         CompactListList(const labelUList& rowSizes, const T&);
-
-        //- Construct as copy or re-use as specified.
-        CompactListList(CompactListList<T, Container>&, bool reuse);
 
         //- Construct from Istream.
         CompactListList(Istream&);
 
         //- Clone
-        inline autoPtr<CompactListList<T, Container>> clone() const;
+        inline autoPtr<CompactListList<T>> clone() const;
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the primary size, i.e. the number of rows
-            inline label size() const;
-
-            //- Return true if the number of rows is zero
-            inline bool empty() const;
-
-            //- Return the offset table (= size()+1)
-            inline const List<label>& offsets() const;
-
-            //- Return non-const access to the offset table
-            inline List<label>& offsets();
-
-            //- Return the packed matrix of data
-            inline const List<T>& m() const;
-
-            //- Return non-const access to the packed matrix of data
-            inline List<T>& m();
-
 
         // Edit
 
@@ -187,65 +151,23 @@ public:
             //- Clear the CompactListList, i.e. set sizes to zero.
             void clear();
 
-            //- Return sizes (to be used e.g. for construction)
-            labelList sizes() const;
-
             //- Transfer the contents of the argument CompactListList
             //  into this CompactListList and annul the argument list.
-            void transfer(CompactListList<T, Container>&);
+            void transfer(CompactListList<T>&);
 
 
-        // Other
-
-            //- Return index into m
-            inline label index(const label row, const label col) const;
-
-            //- Get row for index into m.
-            inline label whichRow(const label index) const;
-
-            //- Get column index (j) given above row
-            inline label whichColumn(const label row, const label index) const;
-
-
-    // Member Operators
-
-        //- Return subscript-checked row as UList.
-        inline UList<T> operator[](const label i);
-
-        //- Return const subscript-checked row as UList.
-        inline const UList<T> operator[](const label i) const;
-
-        //- Return subscript-checked element.
-        inline T& operator()(const label i, const label j);
-
-        //- Return const subscript-checked element.
-        inline const T& operator()(const label i, const label j) const;
-
-        //- Return as List<Container>
-        List<Container> operator()() const;
-
-        //- Move assignment operator
-        inline void operator=(CompactListList<T, Container>&&);
-
-        //- Assignment of all entries to the given value
-        inline void operator=(const T&);
+        //- Disallow shallowCopy
+        void shallowCopy(const UCompactListList<T>&) = delete;
 
 
     // Istream operator
 
         //- Read CompactListList from Istream, discarding contents
         //  of existing CompactListList.
-        friend Istream& operator>> <T, Container>
+        friend Istream& operator>> <T>
         (
             Istream&,
-            CompactListList<T, Container>&
-        );
-
-        // Write CompactListList to Ostream.
-        friend Ostream& operator<< <T, Container>
-        (
-            Ostream&,
-            const CompactListList<T, Container>&
+            CompactListList<T>&
         );
 };
 
@@ -256,7 +178,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "CompactListListI.H"
+#include "CompactListListI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

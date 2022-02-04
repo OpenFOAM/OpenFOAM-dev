@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ void Foam::ORourkeCollision<CloudType>::collide
     }
 
     // Initialise the sizes of the lists of parcels in each cell
-    CompactListList<parcelType*> pInCell(occupancy);
+    CompactListList<parcelType*> pInCell(occupancy, nullptr);
 
     // Reset the occupancy to use as a counter
     occupancy = 0;

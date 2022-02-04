@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1594,7 +1594,7 @@ void Foam::fvMeshDistribute::sendMesh
     // Send
     toDomain
         << mesh.points()
-        << CompactListList<label, face>(mesh.faces())
+        << CompactListList<label>(mesh.faces())
         << mesh.faceOwner()
         << mesh.faceNeighbour()
         << mesh.boundaryMesh()
@@ -1641,7 +1641,7 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
 )
 {
     pointField domainPoints(fromNbr);
-    faceList domainFaces = CompactListList<label, face>(fromNbr)();
+    faceList domainFaces = CompactListList<label>(fromNbr).list<face>();
     labelList domainAllOwner(fromNbr);
     labelList domainAllNeighbour(fromNbr);
     PtrList<entry> patchEntries(fromNbr);

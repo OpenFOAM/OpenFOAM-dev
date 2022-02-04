@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -224,7 +224,7 @@ Foam::labelList Foam::decompositionMethod::decompose
     (
         decompose
         (
-            coarseCellCells(),
+            coarseCellCells.list(),
             coarsePoints,
             coarseWeights
         )
@@ -382,7 +382,7 @@ void Foam::decompositionMethod::calcCellCells
 
     nFacesPerCell = 0;
 
-    labelList& m = cellCells.m();
+    labelUList& m = cellCells.m();
     const labelList& offsets = cellCells.offsets();
 
     // For internal faces is just offsetted owner and neighbour
@@ -459,7 +459,7 @@ void Foam::decompositionMethod::calcCellCells
         cellCells.offsets()[celli+1] = newIndex;
     }
 
-    cellCells.m().setSize(newIndex);
+    cellCells.setSize(cellCells.size(), newIndex);
 }
 
 
@@ -574,8 +574,8 @@ void Foam::decompositionMethod::calcCellCells
 
     nFacesPerCell = 0;
 
-    labelList& m = cellCells.m();
-    scalarList& w = cellCellWeights.m();
+    labelUList& m = cellCells.m();
+    scalarUList& w = cellCellWeights.m();
     const labelList& offsets = cellCells.offsets();
 
     // For internal faces is just offsetted owner and neighbour
@@ -662,8 +662,8 @@ void Foam::decompositionMethod::calcCellCells
         cellCellWeights.offsets()[cellI+1] = newIndex;
     }
 
-    cellCells.m().setSize(newIndex);
-    cellCellWeights.m().setSize(newIndex);
+    cellCells.setSize(cellCells.size(), newIndex);
+    cellCellWeights.setSize(cellCells.size(), newIndex);
 }
 
 

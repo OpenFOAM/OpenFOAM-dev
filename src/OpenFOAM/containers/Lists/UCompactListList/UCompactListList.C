@@ -23,38 +23,43 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CompactListList.H"
-#include "Istream.H"
+#include "UCompactListList.H"
 
-// * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
-Foam::CompactListList<T>::CompactListList(Istream& is)
+Foam::labelList Foam::UCompactListList<T>::sizes() const
 {
-    operator>>(is, *this);
+    labelList rowSizes(size());
+
+    if (rowSizes.size() > 0)
+    {
+        forAll(rowSizes, i)
+        {
+            rowSizes[i] = offsets_[i+1] - offsets_[i];
+        }
+    }
+    return rowSizes;
 }
 
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
 template<class T>
-Foam::Istream& Foam::operator>>(Istream& is, CompactListList<T>& lst)
+template<class Container>
+Foam::List<Container> Foam::UCompactListList<T>::list() const
 {
-    is  >> lst.offsets_ >> lst.m_;
+    List<Container> ll(size());
 
-    // An empty compact list list gets output as two empty lists
-    if (lst.offsets_.empty())
+    forAll(ll, i)
     {
-        lst.clear();
+        ll[i] = Container(operator[](i));
     }
 
-    lst.UCompactListList<T>::shallowCopy
-    (
-        UCompactListList<T>(lst.offsets_, lst.m_)
-    );
-
-    return is;
+    return ll;
 }
 
+
+// * * * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * //
+
+#include "UCompactListListIO.C"
 
 // ************************************************************************* //
