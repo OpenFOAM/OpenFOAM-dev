@@ -35,7 +35,8 @@ boundaryField
     top
     {
         type            pressureInletOutletVelocity;
-        value           uniform (0 0 0);
+        tangentialVelocity  $internalField;
+        value           $internalField;
     }
     bottom
     {

@@ -27,9 +27,10 @@ boundaryField
         type            fixedFluxPressure;
         value           uniform 0;
     }
+
     top
     {
-        type            totalPressure;
+        type            prghTotalPressure;
         p0              uniform 0;
     }
 }
