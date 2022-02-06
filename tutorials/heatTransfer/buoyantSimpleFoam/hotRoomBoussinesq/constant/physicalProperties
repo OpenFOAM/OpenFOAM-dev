@@ -19,10 +19,10 @@ thermoType
     type            heRhoThermo;
     mixture         pureMixture;
     transport       const;
-    thermo          eConst;
+    thermo          hConst;
     equationOfState Boussinesq;
     specie          specie;
-    energy          sensibleInternalEnergy;
+    energy          sensibleEnthalpy;
 }
 
 mixture
@@ -39,7 +39,7 @@ mixture
     }
     thermodynamics
     {
-        Cv              712;
+        Cp              1000;
         Hf              0;
     }
     transport

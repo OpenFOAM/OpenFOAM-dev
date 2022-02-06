@@ -20,15 +20,15 @@ solvers
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-08;
+        tolerance       1e-6;
         relTol          0.01;
     }
 
-    "(U|e|k|epsilon)"
+    "(U|h|k|epsilon)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-05;
+        tolerance       1e-6;
         relTol          0.1;
     }
 }
@@ -43,8 +43,8 @@ SIMPLE
     residualControl
     {
         p_rgh           1e-2;
-        U               1e-4;
-        e               1e-2;
+        U               1e-3;
+        h               1e-3;
 
         // possibly check turbulence fields
         "(k|epsilon|omega)" 1e-3;
@@ -59,8 +59,8 @@ relaxationFactors
     }
     equations
     {
-        U               0.3;
-        e               0.5;
+        U               0.2;
+        h               0.6;
         "(k|epsilon|R)" 0.7;
     }
 }

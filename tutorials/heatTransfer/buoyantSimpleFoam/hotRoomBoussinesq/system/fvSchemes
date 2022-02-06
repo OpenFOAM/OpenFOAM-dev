@@ -29,12 +29,12 @@ divSchemes
     default         none;
 
     div(phi,U)      bounded Gauss upwind;
-    div(phi,e)      bounded Gauss upwind;
+    div(phi,h)      bounded Gauss upwind;
 
     div(phi,k)      bounded Gauss upwind;
     div(phi,epsilon) bounded Gauss upwind;
 
-    div(phi,Ekp)    bounded Gauss linear;
+    div(phi,K)      bounded Gauss linear;
 
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
