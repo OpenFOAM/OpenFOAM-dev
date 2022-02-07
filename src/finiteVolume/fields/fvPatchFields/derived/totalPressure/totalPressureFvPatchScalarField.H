@@ -56,7 +56,7 @@ Description
 
     2. compressible subsonic:
         \f[
-            p_p = p_0 + 0.5 \rho |U_0|^2 - 0.5 \rho |U|^2
+            p_p = p_0 + \rho (0.5 |U_0|^2 - 0.5 |U|^2)
         \f]
         where
         \vartable
@@ -69,7 +69,7 @@ Description
 
     3. compressible transonic (\f$\gamma = 1\f$):
         \f[
-            p_p = \frac{p_0 + 0.5 \rho |U_0|^2}{1 + 0.5 \psi |U|^2}
+            p_p = \frac{p_0}{1 + \psi (0.5 |U|^2 - 0.5 |U_0|^2)}
         \f]
         where
         \vartable
@@ -83,8 +83,8 @@ Description
 
     4. compressible supersonic (\f$\gamma > 1\f$):
         \f[
-            p_p = \frac{p_0 + 0.5 \rho |U_0|^2}
-                       {(1 + 0.5 \psi G |U|^2)^{\frac{1}{G}}}
+            p_p = \frac{p_0}
+                  {(1 +  G \psi (0.5 |U|^2 - 0.5 |U_0|^2))^{\frac{1}{G}}}
         \f]
         where
         \vartable
