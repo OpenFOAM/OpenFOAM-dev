@@ -153,7 +153,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
     dynamicPressureFvPatchScalarField::updateCoeffs
     (
         p0_ - sign*dp0,
-        0.5*neg(phip)*magSqr(Up)
+        -0.5*neg(phip)*magSqr(Up)
     );
 }
 

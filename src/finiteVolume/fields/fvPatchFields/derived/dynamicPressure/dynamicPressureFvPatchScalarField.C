@@ -37,14 +37,12 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class K0Type>
-inline void Foam::dynamicPressureFvPatchScalarField::UpdateCoeffs
+void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
 (
     const scalarField& p0p,
-    const K0Type& K0,
-    const scalarField& Kp
+    const scalarField& K0mKp
 )
 {
     if (updated())
@@ -61,7 +59,7 @@ inline void Foam::dynamicPressureFvPatchScalarField::UpdateCoeffs
             const fvPatchField<scalar>& rho =
                 patch().lookupPatchField<volScalarField, scalar>(rhoName_);
 
-            operator==(p0p + rho*(K0 - Kp));
+            operator==(p0p + rho*K0mKp);
         }
         else
         {
@@ -76,12 +74,12 @@ inline void Foam::dynamicPressureFvPatchScalarField::UpdateCoeffs
 
                 operator==
                 (
-                    p0p/pow(scalar(1) + psip*gM1ByG*(Kp - K0), 1/gM1ByG)
+                    p0p/pow(scalar(1) - psip*gM1ByG*K0mKp, 1/gM1ByG)
                 );
             }
             else
             {
-                operator==(p0p/(scalar(1) + psip*(Kp - K0)));
+                operator==(p0p/(scalar(1) - psip*K0mKp));
             }
         }
     }
@@ -89,7 +87,7 @@ inline void Foam::dynamicPressureFvPatchScalarField::UpdateCoeffs
     {
         // Incompressible flow
 
-        operator==(p0p + K0 - Kp);
+        operator==(p0p + K0mKp);
     }
     else
     {
@@ -207,27 +205,6 @@ void Foam::dynamicPressureFvPatchScalarField::rmap
         refCast<const dynamicPressureFvPatchScalarField>(psf);
 
     p0_.rmap(dpsf.p0_, addr);
-}
-
-
-void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
-(
-    const scalarField& p0p,
-    const scalarField& Kp
-)
-{
-    UpdateCoeffs(p0p, zero(), Kp);
-}
-
-
-void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
-(
-    const scalarField& p0p,
-    const scalarField& K0,
-    const scalarField& Kp
-)
-{
-    UpdateCoeffs(p0p, K0, Kp);
 }
 
 

@@ -107,7 +107,7 @@ void Foam::rotatingTotalPressureFvPatchScalarField::updateCoeffs()
     dynamicPressureFvPatchScalarField::updateCoeffs
     (
         p0_,
-        0.5*neg(phip)*magSqr(Up)
+        -0.5*neg(phip)*magSqr(Up)
     );
 }
 

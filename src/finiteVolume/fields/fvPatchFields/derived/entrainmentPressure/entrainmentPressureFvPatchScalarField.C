@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ void Foam::entrainmentPressureFvPatchScalarField::updateCoeffs()
     dynamicPressureFvPatchScalarField::updateCoeffs
     (
         p0_,
-        -0.5*negPart(Unp)*mag(Unp)
+        0.5*negPart(Unp)*mag(Unp)
     );
 }
 

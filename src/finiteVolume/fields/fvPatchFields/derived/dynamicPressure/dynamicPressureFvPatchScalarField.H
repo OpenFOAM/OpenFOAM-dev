@@ -74,19 +74,17 @@ protected:
         scalarField p0_;
 
 
-private:
+    // Protected Member Functions
 
-    // Private Member Functions
+        using fixedValueFvPatchScalarField::updateCoeffs;
 
         //- Update the coefficients associated with the patch field
-        //  using the given patch reference pressure and kinetic energy
-        //  fields
-        template<class K0Type>
-        void UpdateCoeffs
+        //  using the given external static pressure, and difference between
+        //  the external kinetic energy and patch kinetic energy fields
+        void updateCoeffs
         (
             const scalarField& p0p,
-            const K0Type& K0,
-            const scalarField& Kp
+            const scalarField& K0mKp
         );
 
 
@@ -148,30 +146,6 @@ public:
             //- Reverse map the given fvPatchField onto this fvPatchField
             //  Used to reconstruct fields
             virtual void rmap(const fvPatchScalarField&, const labelList&);
-
-
-        // Evaluation functions
-
-            using fixedValueFvPatchScalarField::updateCoeffs;
-
-            //- Update the coefficients associated with the patch field
-            //  using the given external static pressure,
-            //  external kinetic energy and patch kinetic energy fields
-            void updateCoeffs
-            (
-                const scalarField& p0p,
-                const scalarField& K0,
-                const scalarField& Kp
-            );
-
-            //- Update the coefficients associated with the patch field
-            //  using the given external static pressure,
-            //  and patch kinetic energy fields
-            void updateCoeffs
-            (
-                const scalarField& p0p,
-                const scalarField& Kp
-            );
 
 
         //- Write

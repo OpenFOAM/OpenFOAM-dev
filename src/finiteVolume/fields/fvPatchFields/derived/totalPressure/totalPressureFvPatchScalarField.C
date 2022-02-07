@@ -105,8 +105,8 @@ void Foam::totalPressureFvPatchScalarField::updateCoeffs()
             dynamicPressureFvPatchScalarField::updateCoeffs
             (
                 p0_,
-                0.5*neg(phip)*magSqr(Upiov.tangentialVelocity()->value(t)),
-                0.5*neg(phip)*magSqr(Up)
+                0.5*neg(phip)*magSqr(Upiov.tangentialVelocity()->value(t))
+              - 0.5*neg(phip)*magSqr(Up)
             );
 
             return;
@@ -116,7 +116,7 @@ void Foam::totalPressureFvPatchScalarField::updateCoeffs()
     dynamicPressureFvPatchScalarField::updateCoeffs
     (
         p0_,
-        0.5*neg(phip)*magSqr(Up)
+        -0.5*neg(phip)*magSqr(Up)
     );
 }
 
