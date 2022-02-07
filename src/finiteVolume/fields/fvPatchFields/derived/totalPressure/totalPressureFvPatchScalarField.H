@@ -25,56 +25,77 @@ Class
     Foam::totalPressureFvPatchScalarField
 
 Description
-    This boundary condition provides a total pressure condition.  Four
-    variants are possible:
+    Inflow, outflow and entrainment pressure boundary condition based on a
+    constant total pressure assumption.
+
+    For outflow the patch pressure is set to the external static pressure.
+
+    For inflow the patch pressure is evaluated from the patch velocity and the
+    external total pressure obtained from the external static pressure \c p_0
+    and external velocity \c U_0 which is looked-up from the the optional \c
+    tangentialVelocity entry in the \c pressureInletOutletVelocity velocity
+    boundary condition for the patch if that boundary condition is used,
+    otherwise \c U_0 is assumed zero and the external total pressure is equal to
+    the external static pressure.
+
+    The patch pressure is evaluated from the external conditions using one of
+    the following expressions depending on the flow conditions and
+    specification of compressibility:
 
     1. incompressible subsonic:
         \f[
-            p_p = p_0 - 0.5 |U|^2
+            p_p = p_0 + 0.5 |U_0|^2 - 0.5 |U|^2
         \f]
         where
         \vartable
-            p_p     | incompressible pressure at patch [m^2/s^2]
-            p_0     | incompressible external pressure [m^2/s^2]
+            p_p     | pressure at patch [m^2/s^2]
+            p_0     | external static pressure [m^2/s^2]
             U       | velocity [m/s]
+            U_0     | external velocity [m/s]
         \endvartable
 
     2. compressible subsonic:
         \f[
-            p_p = p_0 - 0.5 \rho |U|^2
+            p_p = p_0 + 0.5 \rho |U_0|^2 - 0.5 \rho |U|^2
         \f]
         where
         \vartable
             p_p     | pressure at patch [Pa]
-            p_0     | external pressure [Pa]
+            p_0     | external static pressure [Pa]
             \rho    | density [kg/m^3]
             U       | velocity [m/s]
+            U_0     | external velocity [m/s]
         \endvartable
 
     3. compressible transonic (\f$\gamma = 1\f$):
         \f[
-            p_p = \frac{p_0}{1 + 0.5 \psi |U|^2}
+            p_p = \frac{p_0 + 0.5 \rho |U_0|^2}{1 + 0.5 \psi |U|^2}
         \f]
         where
         \vartable
             p_p     | pressure at patch [Pa]
-            p_0     | external pressure [Pa]
+            p_0     | external static pressure [Pa]
             \psi    | compressibility [m^2/s^2]
+            \rho    | density [kg/m^3]
             U       | velocity [m/s]
+            U_0     | external velocity [m/s]
         \endvartable
 
     4. compressible supersonic (\f$\gamma > 1\f$):
         \f[
-            p_p = \frac{p_0}{(1 + 0.5 \psi G |U|^2)^{\frac{1}{G}}}
+            p_p = \frac{p_0 + 0.5 \rho |U_0|^2}
+                       {(1 + 0.5 \psi G |U|^2)^{\frac{1}{G}}}
         \f]
         where
         \vartable
             p_p     | pressure at patch [Pa]
-            p_0     | external pressure [Pa]
+            p_0     | external static pressure [Pa]
             \psi    | compressibility [m^2/s^2]
+            \rho    | density [kg/m^3]
             G       | coefficient given by \f$\frac{\gamma}{1-\gamma}\f$ []
             \gamma  | ratio of specific heats (Cp/Cv) []
             U       | velocity [m/s]
+            U_0     | external velocity [m/s]
         \endvartable
 
     The modes of operation are set by the dimensions of the pressure field
@@ -111,6 +132,7 @@ Usage
 See also
     Foam::dynamicPressureFvPatchScalarField
     Foam::fixedValueFvPatchField
+    Foam::pressureInletOutletVelocityFvPatchVectorField
 
 SourceFiles
     totalPressureFvPatchScalarField.C

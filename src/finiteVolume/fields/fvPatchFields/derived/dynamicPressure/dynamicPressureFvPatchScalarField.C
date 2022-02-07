@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,79 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(dynamicPressureFvPatchScalarField, 0);
+}
+
+
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+template<class K0Type>
+inline void Foam::dynamicPressureFvPatchScalarField::UpdateCoeffs
+(
+    const scalarField& p0p,
+    const K0Type& K0,
+    const scalarField& Kp
+)
+{
+    if (updated())
+    {
+        return;
+    }
+
+    if (internalField().dimensions() == dimPressure)
+    {
+        if (psiName_ == "none")
+        {
+            // Variable density and low-speed compressible flow
+
+            const fvPatchField<scalar>& rho =
+                patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+
+            operator==(p0p + rho*(K0 - Kp));
+        }
+        else
+        {
+            // High-speed compressible flow
+
+            const fvPatchField<scalar>& psip =
+                patch().lookupPatchField<volScalarField, scalar>(psiName_);
+
+            if (gamma_ > 1)
+            {
+                const scalar gM1ByG = (gamma_ - 1)/gamma_;
+
+                operator==
+                (
+                    p0p*(scalar(1) + psip*K0)
+                   /pow(scalar(1) + psip*gM1ByG*Kp, 1/gM1ByG));
+            }
+            else
+            {
+                operator==(p0p*(scalar(1) + psip*K0)/(scalar(1) + psip*Kp));
+            }
+        }
+    }
+    else if (internalField().dimensions() == dimPressure/dimDensity)
+    {
+        // Incompressible flow
+
+        operator==(p0p + K0 - Kp);
+    }
+    else
+    {
+        FatalErrorInFunction
+            << " Incorrect pressure dimensions " << internalField().dimensions()
+            << nl
+            << "    Should be " << dimPressure
+            << " for compressible/variable density flow" << nl
+            << "    or " << dimPressure/dimDensity
+            << " for incompressible flow," << nl
+            << "    on patch " << this->patch().name()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
+            << exit(FatalError);
+    }
+
+    fixedValueFvPatchScalarField::updateCoeffs();
 }
 
 
@@ -143,64 +216,18 @@ void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
     const scalarField& Kp
 )
 {
-    if (updated())
-    {
-        return;
-    }
+    UpdateCoeffs(p0p, zero(), Kp);
+}
 
-    if (internalField().dimensions() == dimPressure)
-    {
-        if (psiName_ == "none")
-        {
-            // Variable density and low-speed compressible flow
 
-            const fvPatchField<scalar>& rho =
-                patch().lookupPatchField<volScalarField, scalar>(rhoName_);
-
-            operator==(p0p - rho*Kp);
-        }
-        else
-        {
-            // High-speed compressible flow
-
-            const fvPatchField<scalar>& psip =
-                patch().lookupPatchField<volScalarField, scalar>(psiName_);
-
-            if (gamma_ > 1)
-            {
-                const scalar gM1ByG = (gamma_ - 1)/gamma_;
-
-                operator==(p0p/pow(scalar(1) + psip*gM1ByG*Kp, 1/gM1ByG));
-            }
-            else
-            {
-                operator==(p0p/(scalar(1) + psip*Kp));
-            }
-        }
-
-    }
-    else if (internalField().dimensions() == dimPressure/dimDensity)
-    {
-        // Incompressible flow
-
-        operator==(p0p - Kp);
-    }
-    else
-    {
-        FatalErrorInFunction
-            << " Incorrect pressure dimensions " << internalField().dimensions()
-            << nl
-            << "    Should be " << dimPressure
-            << " for compressible/variable density flow" << nl
-            << "    or " << dimPressure/dimDensity
-            << " for incompressible flow," << nl
-            << "    on patch " << this->patch().name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
-            << exit(FatalError);
-    }
-
-    fixedValueFvPatchScalarField::updateCoeffs();
+void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
+(
+    const scalarField& p0p,
+    const scalarField& K0,
+    const scalarField& Kp
+)
+{
+    UpdateCoeffs(p0p, K0, Kp);
 }
 
 

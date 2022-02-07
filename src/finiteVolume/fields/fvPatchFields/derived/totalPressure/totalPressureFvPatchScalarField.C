@@ -29,6 +29,7 @@ License
 #include "surfaceFields.H"
 #include "pressureInletOutletVelocityFvPatchVectorField.H"
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
@@ -92,8 +93,6 @@ void Foam::totalPressureFvPatchScalarField::updateCoeffs()
     const fvPatchField<vector>& Up =
         patch().lookupPatchField<volVectorField, vector>(UName_);
 
-    scalarField Kp = magSqr(Up);
-
     if (isA<pressureInletOutletVelocityFvPatchVectorField>(Up))
     {
         const pressureInletOutletVelocityFvPatchVectorField& Upiov =
@@ -102,14 +101,22 @@ void Foam::totalPressureFvPatchScalarField::updateCoeffs()
         if (Upiov.tangentialVelocity().valid())
         {
             const scalar t = this->db().time().userTimeValue();
-            Kp -= magSqr(Upiov.tangentialVelocity()->value(t));
+
+            dynamicPressureFvPatchScalarField::updateCoeffs
+            (
+                p0_,
+                0.5*neg(phip)*magSqr(Upiov.tangentialVelocity()->value(t)),
+                0.5*neg(phip)*magSqr(Up)
+            );
+
+            return;
         }
     }
 
     dynamicPressureFvPatchScalarField::updateCoeffs
     (
         p0_,
-        0.5*neg(phip)*Kp
+        0.5*neg(phip)*magSqr(Up)
     );
 }
 
