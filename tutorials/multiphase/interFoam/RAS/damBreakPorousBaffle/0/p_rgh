@@ -40,7 +40,7 @@ boundaryField
     }
     atmosphere
     {
-        type            totalPressure;
+        type            prghTotalPressure;
         rho             rho;
         psi             none;
         gamma           1;

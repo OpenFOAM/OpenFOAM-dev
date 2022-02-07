@@ -21,7 +21,7 @@ boundaryField
 {
     "(left|right|atmosphere)"
     {
-        type            prghEntrainmentPressure;
+        type            prghTotalPressure;
         p0              uniform 0;
     }
 

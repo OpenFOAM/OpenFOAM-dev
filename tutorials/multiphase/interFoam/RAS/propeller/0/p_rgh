@@ -30,7 +30,7 @@ boundaryField
 
     outlet
     {
-        type            totalPressure;
+        type            prghTotalPressure;
         p0              $internalField;
     }
 

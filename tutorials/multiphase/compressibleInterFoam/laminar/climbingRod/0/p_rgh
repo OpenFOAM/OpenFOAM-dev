@@ -27,7 +27,7 @@ boundaryField
 
     atmosphere
     {
-        type            totalPressure;
+        type            prghTotalPressure;
         p0              $internalField;
         rho             thermo:rho;
     }

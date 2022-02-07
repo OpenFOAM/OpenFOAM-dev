@@ -28,7 +28,6 @@ boundaryField
     {
         type            totalPressure;
         p0              uniform 0;
-        gamma           1.4;
         value           uniform 0;
     }
 

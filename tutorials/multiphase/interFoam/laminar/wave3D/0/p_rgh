@@ -29,7 +29,7 @@ boundaryField
     }
     top
     {
-        type            entrainmentPressure;
+        type            totalPressure;
         p0              uniform 0;
     }
     bottom
