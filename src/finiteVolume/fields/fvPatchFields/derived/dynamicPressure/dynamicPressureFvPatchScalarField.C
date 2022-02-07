@@ -76,12 +76,12 @@ inline void Foam::dynamicPressureFvPatchScalarField::UpdateCoeffs
 
                 operator==
                 (
-                    p0p*(scalar(1) + psip*K0)
-                   /pow(scalar(1) + psip*gM1ByG*Kp, 1/gM1ByG));
+                    p0p/pow(scalar(1) + psip*gM1ByG*(Kp - K0), 1/gM1ByG)
+                );
             }
             else
             {
-                operator==(p0p*(scalar(1) + psip*K0)/(scalar(1) + psip*Kp));
+                operator==(p0p/(scalar(1) + psip*(Kp - K0)));
             }
         }
     }
@@ -136,7 +136,7 @@ Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
     fixedValueFvPatchScalarField(p, iF, dict, false),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "none")),
-    gamma_(psiName_ != "none" ? dict.lookup<scalar>("gamma") : 1),
+    gamma_(dict.lookupOrDefault<scalar>("gamma", 1)),
     p0_("p0", dict, p.size())
 {
     if (dict.found("value"))
