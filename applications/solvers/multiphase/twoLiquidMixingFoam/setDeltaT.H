@@ -37,8 +37,6 @@ if (adjustTimeStep)
         min(maxCo/(CoNum + small), maxAlphaCo/(alphaCoNum + small))
        *runTime.deltaTValue();
 
-    maxDeltaT = min(maxDeltaT, fvModels.maxDeltaT());
-
     const scalar deltaT =
         min(min(maxDeltaT, 1.0 + 0.1*maxDeltaT), 1.2*runTime.deltaTValue());
 

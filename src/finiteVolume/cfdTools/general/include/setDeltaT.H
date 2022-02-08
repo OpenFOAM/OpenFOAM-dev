@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,17 +33,14 @@ Description
 
 if (adjustTimeStep)
 {
-    scalar maxDeltaTFact = maxCo/(CoNum + small);
-    scalar deltaTFact = min(min(maxDeltaTFact, 1.0 + 0.1*maxDeltaTFact), 1.2);
+    scalar maxDeltaT = maxCo*runTime.deltaTValue()/(CoNum + small);
 
-    runTime.setDeltaT
-    (
-        min
-        (
-            deltaTFact*runTime.deltaTValue(),
-            maxDeltaT
-        )
-    );
+    maxDeltaT = min(maxDeltaT, fvModels.maxDeltaT());
+
+    const scalar deltaT =
+        min(min(maxDeltaT, 1.0 + 0.1*maxDeltaT), 1.2*runTime.deltaTValue());
+
+    runTime.setDeltaT(min(deltaT, maxDeltaT));
 
     Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -234,6 +234,21 @@ bool Foam::fvModels::addsSupToField(const word& fieldName) const
     }
 
     return false;
+}
+
+
+Foam::scalar Foam::fvModels::maxDeltaT() const
+{
+    const PtrListDictionary<fvModel>& modelList(*this);
+
+    scalar maxDeltaT = great;
+
+    forAll(modelList, i)
+    {
+        maxDeltaT = min(maxDeltaT, modelList[i].maxDeltaT());
+    }
+
+    return maxDeltaT;
 }
 
 
