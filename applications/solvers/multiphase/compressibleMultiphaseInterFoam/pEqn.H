@@ -41,6 +41,7 @@
             (
                 fvc::ddt(rho) + thermo.psi()*correction(fvm::ddt(p_rgh))
               + fvc::div(phi, rho) - fvc::Sp(fvc::div(phi), rho)
+              - (fvModels.source(phase(), rho)&rho)
             ).ptr()
         );
 
@@ -113,6 +114,7 @@
             U = HbyA
               + rAU*fvc::reconstruct((phig + p_rghEqnIncomp.flux())/rAUf);
             U.correctBoundaryConditions();
+            fvConstraints.constrain(U);
         }
     }
 

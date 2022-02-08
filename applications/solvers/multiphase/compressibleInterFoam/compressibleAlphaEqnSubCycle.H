@@ -61,7 +61,7 @@ volScalarField::Internal contErr
 (
     (
         fvc::ddt(rho) + fvc::div(rhoPhi)
-      - (fvModels.source(alpha1, mixture.thermo1().rho())&rho1)
-      - (fvModels.source(alpha2, mixture.thermo2().rho())&rho2)
+      - (fvModels.source(alpha1, rho1)&rho1)
+      - (fvModels.source(alpha2, rho2)&rho2)
     )()
 );

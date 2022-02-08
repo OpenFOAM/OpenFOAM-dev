@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,8 @@ Description
 #include "compressibleMultiphaseMixture.H"
 #include "compressibleMomentumTransportModels.H"
 #include "pimpleControl.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,7 +82,7 @@ int main(int argc, char *argv[])
         {
             mixture.solve();
 
-            solve(fvm::ddt(rho) + fvc::div(mixture.rhoPhi()));
+            #include "contErr.H"
 
             #include "UEqn.H"
             #include "TEqn.H"
