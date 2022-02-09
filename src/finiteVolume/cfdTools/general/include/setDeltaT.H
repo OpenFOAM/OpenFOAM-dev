@@ -33,13 +33,9 @@ Description
 
 if (adjustTimeStep)
 {
-    scalar maxDeltaT = maxCo*runTime.deltaTValue()/(CoNum + small);
-
-    maxDeltaT = min(maxDeltaT, fvModels.maxDeltaT());
-
-    const scalar deltaT =
-        min(min(maxDeltaT, 1.0 + 0.1*maxDeltaT), 1.2*runTime.deltaTValue());
-
+    scalar deltaT = maxCo*runTime.deltaTValue()/(CoNum + small);
+    deltaT = min(deltaT, fvModels.maxDeltaT());
+    deltaT = min(min(deltaT, 1.0 + 0.1*deltaT), 1.2*runTime.deltaTValue());
     runTime.setDeltaT(min(deltaT, maxDeltaT));
 
     Info<< "deltaT = " <<  runTime.deltaTValue() << endl;

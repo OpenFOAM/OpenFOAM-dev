@@ -33,13 +33,10 @@ Description
 
 if (adjustTimeStep)
 {
-    scalar maxDeltaT =
+    scalar deltaT =
         min(maxCo/(CoNum + small), maxAlphaCo/(alphaCoNum + small))
        *runTime.deltaTValue();
-
-    const scalar deltaT =
-        min(min(maxDeltaT, 1.0 + 0.1*maxDeltaT), 1.2*runTime.deltaTValue());
-
+    deltaT = min(min(deltaT, 1.0 + 0.1*deltaT), 1.2*runTime.deltaTValue());
     runTime.setDeltaT(min(deltaT, maxDeltaT));
 
     Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
