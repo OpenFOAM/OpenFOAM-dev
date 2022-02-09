@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ Foam::diameterModels::shapeModels::sinteringModels::noSintering::R() const
             fi.mesh()
         ),
         fi.mesh(),
-        dimensionedScalar(dimDensity/(dimTime*dimLength), 0)
+        dimensionedScalar(inv(dimTime*dimLength), 0)
     );
 
     return fvm::Su(R, fractal_.fld());
