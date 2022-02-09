@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,6 +103,9 @@ public:
             //- Return the list of fields for which the option adds source term
             //  to the transport equation
             virtual wordList addSupFields() const;
+
+            //- Return the maximum time-step for stable operation
+            virtual scalar maxDeltaT() const;
 
 
         // Correct

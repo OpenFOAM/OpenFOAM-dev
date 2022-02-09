@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,12 @@ Foam::wordList Foam::fv::VoFSurfaceFilm::addSupFields() const
             surfaceFilm_.TPrimary().name()
         }
     );
+}
+
+
+Foam::scalar Foam::fv::VoFSurfaceFilm::maxDeltaT() const
+{
+    return surfaceFilm_.maxDeltaT();
 }
 
 

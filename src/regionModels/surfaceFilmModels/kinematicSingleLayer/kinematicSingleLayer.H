@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,8 +86,8 @@ protected:
             //- Small delta
             const dimensionedScalar deltaSmall_;
 
-            //- Film thickness above which Courant number calculation in valid
-            scalar deltaCoLimit_;
+            //- Optional maximum Courant number for stable film solution
+            scalar maxCo_;
 
 
         // Thermo properties
@@ -95,6 +95,7 @@ protected:
             //- Pressure [Pa]
             volScalarField p_;
 
+            //- Thermo package
             autoPtr<rhoThermo> thermo_;
 
 
@@ -314,8 +315,12 @@ public:
 
         // Solution parameters
 
-            //- Courant number evaluation
+            //- Courant number
             virtual scalar CourantNumber() const;
+
+            //- Return the maximum time-step for stable operation
+            //  based on the Courant number
+            virtual scalar maxDeltaT() const;
 
             //- Return small delta
             inline const dimensionedScalar& deltaSmall() const;

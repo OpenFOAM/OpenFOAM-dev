@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -485,7 +485,7 @@ kinematicSingleLayer::kinematicSingleLayer
     cumulativeContErr_(0),
 
     deltaSmall_("deltaSmall", dimLength, small),
-    deltaCoLimit_(solution().lookupOrDefault("deltaCoLimit", 1e-4)),
+    maxCo_(solution().lookupOrDefault<scalar>("maxCo", 0)),
 
     p_
     (
@@ -973,10 +973,20 @@ scalar kinematicSingleLayer::CourantNumber() const
 {
     const scalarField sumPhi(fvc::surfaceSum(mag(phiU_))().primitiveField());
 
-    const scalar CoNum =
-        0.5*gMax(sumPhi/regionMesh().V().field())*time_.deltaTValue();
+    return 0.5*gMax(sumPhi/regionMesh().V().field())*time_.deltaTValue();
+}
 
-    return CoNum;
+
+scalar kinematicSingleLayer::maxDeltaT() const
+{
+    if (maxCo_ > 0)
+    {
+        return maxCo_*time_.deltaTValue()/(CourantNumber() + small);
+    }
+    else
+    {
+        return great;
+    }
 }
 
 
