@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,12 +174,16 @@ class hexRef8
 
         //- Get index of minimum pointlevel.
         label findMinLevel(const labelList& f) const;
+
         //- Get maximum pointlevel.
         label findMaxLevel(const labelList& f) const;
+
         //- Count number of vertices <= anchorLevel
         label countAnchors(const labelList&, const label) const;
+
         //- Debugging: dump cell as .obj file
         void dumpCell(const label celli) const;
+
         //- Find index of point with wantedLevel, starting from fp.
         label findLevel
         (
@@ -189,9 +193,6 @@ class hexRef8
             const bool searchForward,
             const label wantedLevel
         ) const;
-
-        ////- Print levels of list of points.
-        // void printLevels(Ostream&, const labelList&) const;
 
         //- debug:check orientation of added internal face
         static void checkInternalOrientation

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1679,7 +1679,6 @@ void Foam::fvMeshTopoChangers::refiner::distribute
     const mapDistributePolyMesh& map
 )
 {
-    InfoInFunction << endl;
     // Redistribute the mesh cutting engine
     meshCutter_.distribute(map);
 }
