@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
     - creates new patches (from selected boundary faces). Synchronise faces
       on coupled patches.
     - synchronises points on coupled boundaries
-    - remove patches with 0 faces in them
+    - remove non-constraint patches with 0 faces
 
 \*---------------------------------------------------------------------------*/
 
@@ -115,18 +115,15 @@ void filterPatches(polyMesh& mesh, const HashSet<word>& addedPatchNames)
         // Note: reduce possible since non-proc patches guaranteed in same order
         if (!isA<processorPolyPatch>(pp))
         {
-
             // Add if
-            // - non zero size
-            // - or added from the createPatchDict
-            // - or cyclic (since referred to by other cyclic half or
-            //   proccyclic)
-
+            // - listed in createPatchDict
+            // - or constraint type
+            // - or non zero size
             if
             (
                 addedPatchNames.found(pp.name())
+             || polyPatch::constraintType(pp.type())
              || returnReduce(pp.size(), sumOp<label>()) > 0
-             || isA<coupledPolyPatch>(pp)
             )
             {
                 allPatches.append
@@ -148,6 +145,7 @@ void filterPatches(polyMesh& mesh, const HashSet<word>& addedPatchNames)
             }
         }
     }
+
     // Copy non-empty processor patches
     forAll(patches, patchi)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -565,12 +565,8 @@ scalar getMergeDistance(const polyMesh& mesh, const scalar mergeTol)
 
 void removeZeroSizedPatches(fvMesh& mesh)
 {
-    // Remove any zero-sized ones. Assumes
-    // - processor patches are already only there if needed
-    // - all other patches are available on all processors
-    // - but coupled ones might still be needed, even if zero-size
-    //   (e.g. processorCyclic)
-    // See also logic in createPatch.
+    // Remove non-constraint zero-sized patches
+
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     labelList oldToNew(pbm.size(), -1);
@@ -579,30 +575,15 @@ void removeZeroSizedPatches(fvMesh& mesh)
     {
         const polyPatch& pp = pbm[patchi];
 
-        if (!isA<processorPolyPatch>(pp))
-        {
-            if
-            (
-                isA<coupledPolyPatch>(pp)
-             || returnReduce(pp.size(), sumOp<label>())
-            )
-            {
-                // Coupled (and unknown size) or uncoupled and used
-                oldToNew[patchi] = newPatchi++;
-            }
-        }
-    }
-
-    forAll(pbm, patchi)
-    {
-        const polyPatch& pp = pbm[patchi];
-
-        if (isA<processorPolyPatch>(pp))
+        if
+        (
+            polyPatch::constraintType(pp.type())
+         || returnReduce(pp.size(), sumOp<label>())
+        )
         {
             oldToNew[patchi] = newPatchi++;
         }
     }
-
 
     const label nKeepPatches = newPatchi;
 
