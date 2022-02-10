@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,7 @@ SourceFiles
 #include "fvSolution.H"
 #include "data.H"
 #include "DimensionedField.H"
+#include "SlicedDimensionedField.H"
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
 #include "pointFieldsFwd.H"
@@ -114,7 +115,7 @@ class fvMesh
         mutable label curTimeIndex_;
 
         //- Cell volumes old time level
-        mutable void* VPtr_;
+        mutable SlicedDimensionedField<scalar, volMesh>* VPtr_;
 
         //- Cell volumes old time level
         mutable DimensionedField<scalar, volMesh>* V0Ptr_;

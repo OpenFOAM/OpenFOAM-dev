@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,11 +73,7 @@ void Foam::fvMesh::clearGeomNotOldVol()
         MoveableMeshObject
     >(*this);
 
-    slicedVolScalarField::Internal* VPtr =
-        static_cast<slicedVolScalarField::Internal*>(VPtr_);
-    deleteDemandDrivenData(VPtr);
-    VPtr_ = nullptr;
-
+    deleteDemandDrivenData(VPtr_);
     deleteDemandDrivenData(SfPtr_);
     deleteDemandDrivenData(magSfPtr_);
     deleteDemandDrivenData(CPtr_);
@@ -887,7 +883,7 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& map)
         }
 
         // Few checks
-        if (VPtr_ && (V().size() != map.nOldCells()))
+        if (VPtr_ && (VPtr_->size() != map.nOldCells()))
         {
             FatalErrorInFunction
                 << "V:" << V().size()
@@ -960,7 +956,7 @@ void Foam::fvMesh::distribute(const mapDistributePolyMesh& map)
     //     }
     //
     //     // Few checks
-    //     if (VPtr_ && (V().size() != map.nOldCells()))
+    //     if (VPtr_ && (VPtr_->size() != map.nOldCells()))
     //     {
     //         FatalErrorInFunction
     //             << "V:" << V().size()

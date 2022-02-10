@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,7 @@ SourceFiles
 #define SlicedGeometricField_H
 
 #include "GeometricField.H"
+#include "SlicedDimensionedField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,10 +68,14 @@ class SlicedGeometricField
 {
 public:
 
-    typedef typename GeoMesh::Mesh Mesh;
-    typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
+    // Public Typedefs
 
-    class Internal;
+        //- Type of mesh on which this SlicedGeometricField is instantiated
+        typedef typename GeoMesh::Mesh Mesh;
+
+        //- Type of the internal field from which this SlicedGeometricField is
+        //  derived
+        typedef SlicedDimensionedField<Type, GeoMesh> Internal;
 
 
 private:
@@ -79,7 +84,7 @@ private:
 
         //- Slice the given field and a create a PtrList of SlicedPatchField
         //  from which the boundary field is built
-        tmp<FieldField<PatchField, Type>>  slicedBoundaryField
+        tmp<FieldField<PatchField, Type>> slicedBoundaryField
         (
             const Mesh& mesh,
             const Field<Type>& completeField,
@@ -89,7 +94,7 @@ private:
 
         //- Slice the given field and a create a PtrList of SlicedPatchField
         //  from which the boundary field is built
-        tmp<FieldField<PatchField, Type>>  slicedBoundaryField
+        tmp<FieldField<PatchField, Type>> slicedBoundaryField
         (
             const Mesh& mesh,
             const FieldField<PatchField, Type>& bField,
@@ -181,43 +186,6 @@ public:
         (
             const tmp<GeometricField<Type, PatchField, GeoMesh>>&
         ) = delete;
-};
-
-
-/*---------------------------------------------------------------------------*\
-               Class SlicedGeometricField::Internal Declaration
-\*---------------------------------------------------------------------------*/
-
-//- The internalField of a SlicedGeometricField
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-class SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-Internal
-:
-    public GeometricField<Type, PatchField, GeoMesh>::Internal
-{
-
-public:
-
-    // Constructors
-
-        //- Construct from components and field to slice
-        Internal
-        (
-            const IOobject&,
-            const Mesh&,
-            const dimensionSet&,
-            const Field<Type>& iField
-        );
-
-
-    //- Destructor
-    ~Internal();
 };
 
 

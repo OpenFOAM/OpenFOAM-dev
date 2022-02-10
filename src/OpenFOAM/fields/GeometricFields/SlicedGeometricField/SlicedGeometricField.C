@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -167,38 +167,6 @@ slicedBoundaryField
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-Internal::Internal
-(
-    const IOobject& io,
-    const Mesh& mesh,
-    const dimensionSet& ds,
-    const Field<Type>& iField
-)
-:
-    DimensionedField<Type, GeoMesh>
-    (
-        io,
-        mesh,
-        ds,
-        Field<Type>()
-    )
-{
-    // Set the internalField to the slice of the complete field
-    UList<Type>::shallowCopy
-    (
-        typename Field<Type>::subField(iField, GeoMesh::size(mesh))
-    );
-}
-
 
 template
 <
@@ -376,22 +344,6 @@ template
 >
 Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 ~SlicedGeometricField()
-{
-    // Set the internalField storage pointer to nullptr before its destruction
-    // to protect the field it a slice of.
-    UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
-}
-
-
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-Internal::~Internal()
 {
     // Set the internalField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
