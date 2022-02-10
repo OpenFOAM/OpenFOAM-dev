@@ -3,17 +3,22 @@
 
     const dictionary& pimpleDict = pimple.dict();
 
-    scalar maxCo
+    const scalar maxCo
     (
         pimpleDict.lookupOrDefault<scalar>("maxCo", 0.2)
     );
 
-    scalar maxDeltaT
+    const scalar maxDeltaT
     (
         pimpleDict.lookupOrDefault<scalar>("maxDeltaT", great)
     );
 
-    scalar rDeltaTSmoothingCoeff
+    const scalar minDeltaT
+    (
+        pimpleDict.lookupOrDefault<scalar>("minDeltaT", small)
+    );
+
+    const scalar rDeltaTSmoothingCoeff
     (
         pimpleDict.lookupOrDefault<scalar>("rDeltaTSmoothingCoeff", 0.02)
     );
@@ -26,11 +31,16 @@
     }
 
     // Set the reciprocal time-step from the local Courant number
-    rDeltaT.ref() = max
+    // and maximum and minimum time-steps
+    rDeltaT.ref() = min
     (
-        1/dimensionedScalar(dimTime, maxDeltaT),
-        fvc::surfaceSum(maxPhi)()()
-       /((2*maxCo)*mesh.V())
+        1/dimensionedScalar(dimTime, minDeltaT),
+        max
+        (
+            1/dimensionedScalar(dimTime, maxDeltaT),
+            fvc::surfaceSum(maxPhi)()()
+           /((2*maxCo)*mesh.V())
+        )
     );
 
     // Update the boundary values of the reciprocal time-step

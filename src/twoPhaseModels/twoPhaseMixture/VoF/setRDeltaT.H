@@ -3,64 +3,69 @@
 
     const dictionary& pimpleDict = pimple.dict();
 
-    scalar maxCo
+    const scalar maxCo
     (
         pimpleDict.lookupOrDefault<scalar>("maxCo", 0.9)
     );
 
-    scalar maxAlphaCo
+    const scalar maxAlphaCo
     (
         pimpleDict.lookupOrDefault<scalar>("maxAlphaCo", 0.2)
     );
 
-    scalar rDeltaTSmoothingCoeff
+    const scalar rDeltaTSmoothingCoeff
     (
         pimpleDict.lookupOrDefault<scalar>("rDeltaTSmoothingCoeff", 0.1)
     );
 
-    label nAlphaSpreadIter
+    const label nAlphaSpreadIter
     (
         pimpleDict.lookupOrDefault<label>("nAlphaSpreadIter", 1)
     );
 
-    scalar alphaSpreadDiff
+    const scalar alphaSpreadDiff
     (
         pimpleDict.lookupOrDefault<scalar>("alphaSpreadDiff", 0.2)
     );
 
-    scalar alphaSpreadMax
+    const scalar alphaSpreadMax
     (
         pimpleDict.lookupOrDefault<scalar>("alphaSpreadMax", 0.99)
     );
 
-    scalar alphaSpreadMin
+    const scalar alphaSpreadMin
     (
         pimpleDict.lookupOrDefault<scalar>("alphaSpreadMin", 0.01)
     );
 
-    label nAlphaSweepIter
+    const label nAlphaSweepIter
     (
         pimpleDict.lookupOrDefault<label>("nAlphaSweepIter", 5)
     );
 
-    scalar rDeltaTDampingCoeff
-    (
-        pimpleDict.lookupOrDefault<scalar>("rDeltaTDampingCoeff", 1.0)
-    );
-
-    scalar maxDeltaT
+    const scalar maxDeltaT
     (
         pimpleDict.lookupOrDefault<scalar>("maxDeltaT", great)
     );
 
-    volScalarField rDeltaT0("rDeltaT0", rDeltaT);
+    const scalar minDeltaT
+    (
+        pimpleDict.lookupOrDefault<scalar>("minDeltaT", small)
+    );
+
+    const volScalarField rDeltaT0("rDeltaT0", rDeltaT);
 
     // Set the reciprocal time-step from the local Courant number
-    rDeltaT.ref() = max
+    // and maximum and minimum time-steps
+    rDeltaT.ref() = min
     (
-        1/dimensionedScalar(dimTime, maxDeltaT),
-        fvc::surfaceSum(mag(phi))()()
-       /((2*maxCo)*mesh.V())
+        1/dimensionedScalar(dimTime, minDeltaT),
+        max
+        (
+            1/dimensionedScalar(dimTime, maxDeltaT),
+            fvc::surfaceSum(mag(phi))()()
+           /((2*maxCo)*mesh.V())
+        )
     );
 
     if (maxAlphaCo < maxCo)
@@ -119,10 +124,16 @@
     // - only increase at a fraction of old time scale
     if
     (
-        rDeltaTDampingCoeff < 1.0
+        pimpleDict.found("rDeltaTDampingCoeff")
      && runTime.timeIndex() > runTime.startTimeIndex() + 1
     )
     {
+        // Damping coefficient (1-0)
+        const scalar rDeltaTDampingCoeff
+        (
+            pimpleDict.lookup<scalar>("rDeltaTDampingCoeff")
+        );
+
         rDeltaT = max
         (
             rDeltaT,
