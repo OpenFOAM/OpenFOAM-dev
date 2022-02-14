@@ -178,4 +178,10 @@ inline const Foam::fvConstraints& Foam::phaseSystem::fvConstraints() const
 }
 
 
+inline const Foam::dimensionedScalar& Foam::phaseSystem::deltaN() const
+{
+    return deltaN_;
+}
+
+
 // ************************************************************************* //

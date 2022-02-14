@@ -483,6 +483,9 @@ public:
             //  Field values are 1 near and 0 away for the interface.
             tmp<volScalarField> nearInterface() const;
 
+            //- Stabilisation for normalisation of the interface normal
+            inline const dimensionedScalar& deltaN() const;
+
             //- Return the mass transfer rate for an interface
             virtual tmp<volScalarField> dmdtf
             (
