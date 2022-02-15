@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,7 +212,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::k() const
     (
         IOobject::groupName("k", this->alphaRhoPhi_.group()),
         this->mesh_,
-        dimensionedScalar(sqr(this->U_.dimensions()), 0)
+        dimensionedScalar(sqr(dimVelocity), 0)
     );
 }
 
@@ -225,7 +225,20 @@ Foam::laminarModel<BasicMomentumTransportModel>::epsilon() const
     (
         IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
         this->mesh_,
-        dimensionedScalar(sqr(this->U_.dimensions())/dimTime, 0)
+        dimensionedScalar(sqr(dimVelocity)/dimTime, 0)
+    );
+}
+
+
+template<class BasicMomentumTransportModel>
+Foam::tmp<Foam::volScalarField>
+Foam::laminarModel<BasicMomentumTransportModel>::omega() const
+{
+    return volScalarField::New
+    (
+        IOobject::groupName("omega", this->alphaRhoPhi_.group()),
+        this->mesh_,
+        dimensionedScalar(dimless/dimTime, 0)
     );
 }
 

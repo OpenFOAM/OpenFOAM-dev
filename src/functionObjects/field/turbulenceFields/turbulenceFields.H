@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,10 +160,6 @@ protected:
             const word& fieldName,
             const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvalue
         );
-
-        //- Return omega calculated from k and epsilon
-        template<class Model>
-        tmp<volScalarField> omega(const Model& model) const;
 
 
 public:

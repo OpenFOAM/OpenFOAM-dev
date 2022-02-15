@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,6 +57,16 @@ LESeddyViscosity<BasicMomentumTransportModel>::LESeddyViscosity
         viscosity
     ),
 
+    Ck_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Ck",
+            this->coeffDict_,
+            0.094
+        )
+    ),
+
     Ce_
     (
         dimensioned<scalar>::lookupOrAddToDict
@@ -76,6 +86,7 @@ bool LESeddyViscosity<BasicMomentumTransportModel>::read()
 {
     if (eddyViscosity<LESModel<BasicMomentumTransportModel>>::read())
     {
+        Ck_.readIfPresent(this->coeffDict());
         Ce_.readIfPresent(this->coeffDict());
 
         return true;
@@ -97,6 +108,20 @@ LESeddyViscosity<BasicMomentumTransportModel>::epsilon() const
     (
         IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
         Ce_*tk()*sqrt(tk())/this->delta()
+    );
+}
+
+
+template<class BasicMomentumTransportModel>
+tmp<volScalarField>
+LESeddyViscosity<BasicMomentumTransportModel>::omega() const
+{
+    tmp<volScalarField> tk(this->k());
+
+    return volScalarField::New
+    (
+        IOobject::groupName("omega", this->alphaRhoPhi_.group()),
+        (Ce_/Ck_)*sqrt(tk())/this->delta()
     );
 }
 

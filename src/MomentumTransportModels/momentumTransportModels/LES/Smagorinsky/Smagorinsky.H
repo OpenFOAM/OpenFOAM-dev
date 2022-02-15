@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,11 +90,6 @@ class Smagorinsky
 {
 protected:
 
-    // Protected data
-
-        dimensionedScalar Ck_;
-
-
     // Protected Member Functions
 
         //- Return SGS kinetic energy
@@ -148,9 +143,6 @@ public:
         {
             return k(fvc::grad(this->U_));
         }
-
-        //- Return sub-grid disipation rate
-        virtual tmp<volScalarField> epsilon() const;
 
         //- Correct Eddy-Viscosity and related properties
         virtual void correct();

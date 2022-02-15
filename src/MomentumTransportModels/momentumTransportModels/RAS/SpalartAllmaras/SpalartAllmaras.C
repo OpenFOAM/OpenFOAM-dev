@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -340,6 +340,24 @@ SpalartAllmaras<BasicMomentumTransportModel>::epsilon() const
         "epsilon",
         this->mesh_,
         dimensionedScalar(dimensionSet(0, 2, -3, 0, 0), 0)
+    );
+}
+
+
+template<class BasicMomentumTransportModel>
+tmp<volScalarField>
+SpalartAllmaras<BasicMomentumTransportModel>::omega() const
+{
+    WarningInFunction
+        << "Turbulence specific dissipation rate not defined for "
+        << "Spalart-Allmaras model. Returning zero field"
+        << endl;
+
+    return volScalarField::New
+    (
+        "omega",
+        this->mesh_,
+        dimensionedScalar(dimless/dimTime, 0)
     );
 }
 

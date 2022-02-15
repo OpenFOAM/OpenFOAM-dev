@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ tmp<volScalarField> Smagorinsky<BasicMomentumTransportModel>::k
 
     volScalarField a(this->Ce_/this->delta());
     volScalarField b((2.0/3.0)*tr(D));
-    volScalarField c(2*Ck_*this->delta()*(dev(D) && D));
+    volScalarField c(2*this->Ck_*this->delta()*(dev(D) && D));
 
     return volScalarField::New
     (
@@ -61,7 +61,7 @@ void Smagorinsky<BasicMomentumTransportModel>::correctNut()
 {
     volScalarField k(this->k(fvc::grad(this->U_)));
 
-    this->nut_ = Ck_*this->delta()*sqrt(k);
+    this->nut_ = this->Ck_*this->delta()*sqrt(k);
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -90,16 +90,6 @@ Smagorinsky<BasicMomentumTransportModel>::Smagorinsky
         alphaRhoPhi,
         phi,
         viscosity
-    ),
-
-    Ck_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ck",
-            this->coeffDict_,
-            0.094
-        )
     )
 {
     if (type == typeName)
@@ -114,29 +104,7 @@ Smagorinsky<BasicMomentumTransportModel>::Smagorinsky
 template<class BasicMomentumTransportModel>
 bool Smagorinsky<BasicMomentumTransportModel>::read()
 {
-    if (LESeddyViscosity<BasicMomentumTransportModel>::read())
-    {
-        Ck_.readIfPresent(this->coeffDict());
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<volScalarField> Smagorinsky<BasicMomentumTransportModel>::epsilon() const
-{
-    volScalarField k(this->k(fvc::grad(this->U_)));
-
-    return volScalarField::New
-    (
-        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-        this->Ce_*k*sqrt(k)/this->delta()
-    );
+    return LESeddyViscosity<BasicMomentumTransportModel>::read();
 }
 
 

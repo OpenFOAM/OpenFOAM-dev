@@ -279,6 +279,14 @@ Foam::RASModels::kineticTheoryModel::epsilon() const
 }
 
 
+Foam::tmp<Foam::volScalarField>
+Foam::RASModels::kineticTheoryModel::omega() const
+{
+    NotImplemented;
+    return nut_;
+}
+
+
 Foam::tmp<Foam::volSymmTensorField>
 Foam::RASModels::kineticTheoryModel::sigma() const
 {

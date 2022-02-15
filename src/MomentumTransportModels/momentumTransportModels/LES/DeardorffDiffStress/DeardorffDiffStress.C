@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,12 +140,26 @@ template<class BasicMomentumTransportModel>
 tmp<volScalarField>
 DeardorffDiffStress<BasicMomentumTransportModel>::epsilon() const
 {
-    volScalarField k(this->k());
+    const volScalarField k(this->k());
 
     return volScalarField::New
     (
         IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
         this->Ce_*k*sqrt(k)/this->delta()
+    );
+}
+
+
+template<class BasicMomentumTransportModel>
+tmp<volScalarField>
+DeardorffDiffStress<BasicMomentumTransportModel>::omega() const
+{
+    const volScalarField k(this->k());
+
+    return volScalarField::New
+    (
+        IOobject::groupName("omega", this->alphaRhoPhi_.group()),
+        (this->Ce_/this->Ck_)*sqrt(k)/this->delta()
     );
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,39 +70,6 @@ void Foam::functionObjects::turbulenceFields::processField
             )
         );
     }
-}
-
-
-template<class Model>
-Foam::tmp<Foam::volScalarField>
-Foam::functionObjects::turbulenceFields::omega
-(
-    const Model& model
-) const
-{
-    const scalar Cmu = 0.09;
-
-    // Assume k and epsilon are available
-    const volScalarField k(model.k());
-    const volScalarField epsilon(model.epsilon());
-
-    return tmp<volScalarField>
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("omega", phaseName_),
-                k.mesh().time().timeName(),
-                k.mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            epsilon/(Cmu*k),
-            epsilon.boundaryField().types()
-        )
-    );
 }
 
 
