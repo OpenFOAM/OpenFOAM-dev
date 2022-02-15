@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Description
         patches         (bottom);
         zones           (quarterPlane threeQuartersPlane);
 
-        component       y;
+        axis            y;
 
         symmetric       true;
 
@@ -56,7 +56,7 @@ Usage
         setFormat     | Output plotting format     | yes        |
         patches       | Patches that layers extrude from | no | ()
         zones         | Face zones that the layers extrude from | no | ()
-        component     | Component of position to plot against | yes |
+        axis          | Component of the position to plot against | yes |
         symmetric     | Is the geometry symmetric around the centre layer? \
                                                    | no         | false
         field         | Fields to average and plot | yes        |
