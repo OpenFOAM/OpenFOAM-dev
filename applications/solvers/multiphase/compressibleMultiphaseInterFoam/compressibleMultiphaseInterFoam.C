@@ -80,6 +80,8 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
+            fvModels.correct();
+
             mixture.solve();
 
             #include "contErr.H"
