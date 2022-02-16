@@ -6,6 +6,7 @@ wclean libso interfacialModels
 wclean libso interfacialCompositionModels
 wclean libso multiphaseCompressibleMomentumTransportModels
 multiphaseEulerFoam/Allwclean
+wclean libso fvModels
 wclean libso functionObjects
 
 #------------------------------------------------------------------------------

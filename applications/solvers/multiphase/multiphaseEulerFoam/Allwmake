@@ -10,6 +10,7 @@ wmake $targetType interfacialCompositionModels
 wmake $targetType multiphaseCompressibleMomentumTransportModels
 wmake $targetType multiphaseReactions
 multiphaseEulerFoam/Allwmake $targetType $*
+wmake $targetType fvModels
 wmake $targetType functionObjects
 
 #------------------------------------------------------------------------------
