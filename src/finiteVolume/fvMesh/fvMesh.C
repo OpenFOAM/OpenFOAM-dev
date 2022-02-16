@@ -260,24 +260,9 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
     fvSolution(static_cast<const objectRegistry&>(*this)),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
-    topoChanger_
-    (
-        changers
-      ? fvMeshTopoChanger::New(*this)
-      : autoPtr<fvMeshTopoChanger>(nullptr)
-    ),
-    distributor_
-    (
-        changers
-      ? fvMeshDistributor::New(*this)
-      : autoPtr<fvMeshDistributor>(nullptr)
-    ),
-    mover_
-    (
-        changers
-      ? fvMeshMover::New(*this)
-      : autoPtr<fvMeshMover>(nullptr)
-    ),
+    topoChanger_(nullptr),
+    distributor_(nullptr),
+    mover_(nullptr),
     lduPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
@@ -292,6 +277,14 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
     if (debug)
     {
         Pout<< FUNCTION_NAME << "Constructing fvMesh from IOobject" << endl;
+    }
+
+    // Construct changers
+    if (changers)
+    {
+        topoChanger_.set(fvMeshTopoChanger::New(*this).ptr());
+        distributor_.set(fvMeshDistributor::New(*this).ptr());
+        mover_.set(fvMeshMover::New(*this).ptr());
     }
 
     // Check the existence of the cell volumes and read if present
@@ -365,6 +358,9 @@ Foam::fvMesh::fvMesh
     fvSolution(static_cast<const objectRegistry&>(*this)),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
+    topoChanger_(nullptr),
+    distributor_(nullptr),
+    mover_(nullptr),
     lduPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
@@ -407,6 +403,9 @@ Foam::fvMesh::fvMesh
     fvSolution(static_cast<const objectRegistry&>(*this)),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
+    topoChanger_(nullptr),
+    distributor_(nullptr),
+    mover_(nullptr),
     lduPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
@@ -440,6 +439,9 @@ Foam::fvMesh::fvMesh
     fvSolution(static_cast<const objectRegistry&>(*this)),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this),
+    topoChanger_(nullptr),
+    distributor_(nullptr),
+    mover_(nullptr),
     lduPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
