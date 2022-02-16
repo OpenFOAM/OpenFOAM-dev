@@ -452,7 +452,7 @@ bool Foam::functionObjects::sizeDistribution::write()
                 const diameterModels::sizeGroup& fi = sizeGroups[i];
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))*this->V();
+                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))/this->V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -469,7 +469,7 @@ bool Foam::functionObjects::sizeDistribution::write()
                 const diameterModels::sizeGroup& fi = sizeGroups[i];
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))*this->V();
+                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))/this->V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -491,7 +491,7 @@ bool Foam::functionObjects::sizeDistribution::write()
                 const diameterModels::sizeGroup& fi = sizeGroups[i];
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()))*this->V();
+                    gSum(filterField(mesh_.V()*fi*fi.phase()))/this->V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -508,7 +508,7 @@ bool Foam::functionObjects::sizeDistribution::write()
                 const diameterModels::sizeGroup& fi = sizeGroups[i];
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()))*this->V();
+                    gSum(filterField(mesh_.V()*fi*fi.phase()))/this->V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -534,7 +534,7 @@ bool Foam::functionObjects::sizeDistribution::write()
                     (
                         filterField(mesh_.V()*fi.a().ref()*fi*fi.phase()/fi.x())
                     )
-                   *this->V();
+                   /this->V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -555,7 +555,7 @@ bool Foam::functionObjects::sizeDistribution::write()
                     (
                         filterField(mesh_.V()*fi.a().ref()*fi*fi.phase()/fi.x())
                     )
-                   *this->V();
+                   /this->V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
