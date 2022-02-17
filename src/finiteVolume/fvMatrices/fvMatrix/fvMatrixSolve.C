@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -286,7 +286,8 @@ Foam::fvMatrix<Type>::solver()
         (
             psi_.select
             (
-                psi_.mesh().data::template lookupOrDefault<bool>
+                !psi_.mesh().steady()
+             && psi_.mesh().data::template lookupOrDefault<bool>
                 ("finalIteration", false)
             )
         )
@@ -303,7 +304,8 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::fvSolver::solve()
         (
             fvMat_.psi_.select
             (
-                fvMat_.psi_.mesh().data::template lookupOrDefault<bool>
+                !psi_.mesh().steady()
+             && fvMat_.psi_.mesh().data::template lookupOrDefault<bool>
                 ("finalIteration", false)
             )
         )
@@ -318,7 +320,8 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve(const word& name)
     (
         psi_.mesh().solverDict
         (
-            psi_.mesh().data::template lookupOrDefault<bool>
+            !psi_.mesh().steady()
+         && psi_.mesh().data::template lookupOrDefault<bool>
             ("finalIteration", false)
           ? word(name + "Final")
           : name
@@ -336,7 +339,8 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve()
         (
             psi_.select
             (
-                psi_.mesh().data::template lookupOrDefault<bool>
+                !psi_.mesh().steady()
+             && psi_.mesh().data::template lookupOrDefault<bool>
                 (
                     "finalIteration",
                     false
