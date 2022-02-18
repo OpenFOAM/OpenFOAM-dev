@@ -304,7 +304,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::fvSolver::solve()
         (
             fvMat_.psi_.select
             (
-                !psi_.mesh().steady()
+                !fvMat_.psi_.mesh().steady()
              && fvMat_.psi_.mesh().data::template lookupOrDefault<bool>
                 ("finalIteration", false)
             )
