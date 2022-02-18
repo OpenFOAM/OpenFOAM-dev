@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -27,13 +28,13 @@ deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   50;
+writeInterval   100;
 
 purgeWrite      0;
 
 writeFormat     ascii;
 
-writePrecision   8;
+writePrecision  6;
 
 writeCompression off;
 
@@ -43,12 +44,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-// adjustTimeStep  yes;
-
-// maxCo           1;
-
-functions
-{
-}
 
 // ************************************************************************* //

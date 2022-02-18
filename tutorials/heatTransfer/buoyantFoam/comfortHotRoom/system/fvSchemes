@@ -9,50 +9,42 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 ddtSchemes
 {
-    // For transient, replace steadyState, e.g. with Euler
     default         steadyState;
 }
 
 gradSchemes
 {
     default         Gauss linear;
-
-    limited         cellLimited Gauss linear 1;
-    grad(U)         $limited;
-    grad(k)         $limited;
-    grad(omega)     $limited;
 }
 
 divSchemes
 {
     default             none;
 
-    // For transient, remove "bounded"
-    div(phi,U)          bounded Gauss linearUpwind limited;
+    div(phi,U)          bounded Gauss upwind;
+    div(phi,e)          bounded Gauss upwind;
 
-    // For transient, remove "bounded"
-    turbulence          bounded Gauss limitedLinear 1;
-    div(phi,k)          $turbulence;
-    div(phi,omega)      $turbulence;
-    div(phi,epsilon)    $turbulence;
+    div(phi,K)          Gauss linear;
+    div(phi,(p|rho))    Gauss linear;
 
-    div(phi,e)          $turbulence;
-
-    div(phi,K)          bounded Gauss linear;
-    div(phi,(p|rho))    bounded Gauss linear;
+    div(phi,k)          bounded Gauss upwind;
+    div(phi,epsilon)    bounded Gauss upwind;
 
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+
+    div(phi,age)    bounded Gauss upwind;
 }
 
 laplacianSchemes
 {
-    default         Gauss linear corrected;
+    default         Gauss linear orthogonal;
 }
 
 interpolationSchemes
@@ -62,12 +54,8 @@ interpolationSchemes
 
 snGradSchemes
 {
-    default         corrected;
+    default         orthogonal;
 }
 
-wallDist
-{
-    method meshWave;
-}
 
 // ************************************************************************* //

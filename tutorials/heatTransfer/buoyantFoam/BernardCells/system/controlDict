@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -25,15 +26,15 @@ endTime         1000;
 
 deltaT          1;
 
-writeControl    timeStep;
+writeControl    runTime;
 
 writeInterval   50;
 
 purgeWrite      0;
 
-writeFormat     ascii;
+writeFormat     binary;
 
-writePrecision   8;
+writePrecision  6;
 
 writeCompression off;
 
@@ -43,12 +44,10 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-// adjustTimeStep  yes;
-
-// maxCo           1;
-
 functions
 {
+    #includeFunc residuals(p_rgh)
+    #includeFunc streamlinesLine(funcName=streamlines, start=(0 0.5 0), end=(9 0.5 0), nPoints=24, U)
 }
 
 // ************************************************************************* //

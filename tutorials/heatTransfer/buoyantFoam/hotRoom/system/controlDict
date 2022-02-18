@@ -9,31 +9,32 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 application     buoyantFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         1000;
+endTime         2000;
 
-deltaT          1;
+deltaT          2;
 
 writeControl    timeStep;
 
-writeInterval   50;
+writeInterval   100;
 
 purgeWrite      0;
 
 writeFormat     ascii;
 
-writePrecision   8;
+writePrecision  6;
 
 writeCompression off;
 
@@ -43,12 +44,8 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-// adjustTimeStep  yes;
+adjustTimeStep  no;
 
-// maxCo           1;
-
-functions
-{
-}
+maxCo           0.5;
 
 // ************************************************************************* //

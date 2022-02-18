@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,12 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    buoyantReactingFoam
+    buoyantFoam
 
 Description
-    Transient solver for turbulent flow of compressible reacting fluids with
-    enhanced buoyancy treatment and optional mesh motion and mesh topology
-    changes.
+    Solver for steady or transient buoyant, turbulent flow of compressible
+    fluids for ventilation and heat-transfer, with optional mesh motion and mesh
+    topology changes.
 
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient simulations.
@@ -35,11 +35,9 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "fluidReactionThermo.H"
-#include "combustionModel.H"
+#include "fluidThermo.H"
 #include "compressibleMomentumTransportModels.H"
-#include "fluidReactionThermophysicalTransportModel.H"
-#include "multivariateScheme.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
 #include "hydrostaticInitialisation.H"
@@ -119,7 +117,6 @@ int main(int argc, char *argv[])
 
                 if (pimple.thermophysics())
                 {
-                    #include "YEqn.H"
                     #include "EEqn.H"
                 }
             }
@@ -172,14 +169,13 @@ int main(int argc, char *argv[])
 
                 if (pimple.thermophysics())
                 {
-                    #include "YEqn.H"
                     #include "EEqn.H"
                 }
 
                 // --- Pressure corrector loop
                 while (pimple.correct())
                 {
-                    #include "../../../heatTransfer/buoyantFoam/pEqn.H"
+                    #include "pEqn.H"
                 }
 
                 if (pimple.turbCorr())

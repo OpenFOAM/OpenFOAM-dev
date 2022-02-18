@@ -9,31 +9,32 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 application     buoyantFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         1000;
+endTime         3000;
 
 deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   50;
+writeInterval   100;
 
 purgeWrite      0;
 
-writeFormat     ascii;
+writeFormat     binary;
 
-writePrecision   8;
+writePrecision  6;
 
 writeCompression off;
 
@@ -43,12 +44,32 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-// adjustTimeStep  yes;
-
-// maxCo           1;
-
 functions
 {
+    age
+    {
+        libs            ("libfieldFunctionObjects.so");
+        type            age;
+
+        diffusion       on;
+
+        writeControl    writeTime;
+        executeControl  writeTime;
+    }
+
+    comfort
+    {
+        libs            ("libfieldFunctionObjects.so");
+        type            comfort;
+
+        clothing        0.5;
+        metabolicRate   1.2;
+        extWork         0;
+        relHumidity     60;
+
+        writeControl    writeTime;
+        executeControl  writeTime;
+    }
 }
 
 // ************************************************************************* //

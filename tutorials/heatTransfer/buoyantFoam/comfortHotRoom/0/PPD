@@ -7,48 +7,35 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
-    class       dictionary;
-    object      controlDict;
+    format      binary;
+    class       volScalarField;
+    location    "0";
+    object      PPD;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     buoyantFoam;
+dimensions      [0 0 0 0 0 0 0];
 
-startFrom       latestTime;
+internalField   uniform 46.0115;
 
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1000;
-
-deltaT          1;
-
-writeControl    timeStep;
-
-writeInterval   50;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision   8;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-// adjustTimeStep  yes;
-
-// maxCo           1;
-
-functions
+boundaryField
 {
+    walls
+    {
+        type            calculated;
+        value           uniform 46.0115;
+    }
+    inlet
+    {
+        type            calculated;
+        value           uniform 34.4876;
+    }
+    outlet
+    {
+        type            calculated;
+        value           uniform 46.0115;
+    }
 }
+
 
 // ************************************************************************* //

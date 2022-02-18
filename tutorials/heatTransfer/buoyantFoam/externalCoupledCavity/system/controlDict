@@ -15,25 +15,25 @@ FoamFile
 
 application     buoyantFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         1000;
+endTime         100;
 
 deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   50;
+writeInterval   10;
 
 purgeWrite      0;
 
 writeFormat     ascii;
 
-writePrecision   8;
+writePrecision  6;
 
 writeCompression off;
 
@@ -43,12 +43,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-// adjustTimeStep  yes;
-
-// maxCo           1;
-
-functions
-{
-}
 
 // ************************************************************************* //
