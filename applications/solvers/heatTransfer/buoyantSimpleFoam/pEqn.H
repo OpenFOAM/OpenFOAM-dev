@@ -1,5 +1,10 @@
 rho = thermo.rho();
 
+if (!simple.transonic())
+{
+    rho.relax();
+}
+
 const volScalarField rAU("rAU", 1.0/UEqn.A());
 const surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p_rgh));

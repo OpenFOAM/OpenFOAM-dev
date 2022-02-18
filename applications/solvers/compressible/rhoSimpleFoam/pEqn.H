@@ -1,7 +1,10 @@
-if (simple.consistent())
+rho = thermo.rho();
+
+if (!simple.transonic())
 {
-    rho = thermo.rho();
+    rho.relax();
 }
+
 
 const volScalarField rAU("rAU", 1.0/UEqn.A());
 const surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));

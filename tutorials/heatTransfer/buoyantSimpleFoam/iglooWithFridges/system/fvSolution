@@ -18,8 +18,9 @@ solvers
 {
     p_rgh
     {
-        solver          PCG;
-        preconditioner  DIC;
+        solver          GAMG;
+        smoother        DICGaussSeidel;
+
         tolerance       1e-8;
         relTol          0.01;
     }

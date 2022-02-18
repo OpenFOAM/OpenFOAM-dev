@@ -18,12 +18,11 @@ solvers
 {
     p_rgh
     {
-        solver           GAMG;
-        tolerance        1e-7;
-        relTol           0.01;
+        solver          GAMG;
+        smoother        DICGaussSeidel;
 
-        smoother         DICGaussSeidel;
-
+        tolerance       1e-7;
+        relTol          0.01;
     }
 
     "(U|h|k|epsilon|omega)"

@@ -1,6 +1,8 @@
-if ((!mesh.steady() && !pimple.simpleRho()) || pimple.consistent())
+rho = thermo.rho();
+
+if (!pimple.transonic())
 {
-    rho = thermo.rho();
+    rho.relax();
 }
 
 // Thermodynamic density needs to be updated by psi*d(p) after the
