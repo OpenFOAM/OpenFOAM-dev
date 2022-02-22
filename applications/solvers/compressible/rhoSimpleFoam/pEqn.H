@@ -1,10 +1,5 @@
 rho = thermo.rho();
-
-if (!simple.transonic())
-{
-    rho.relax();
-}
-
+rho.relax();
 
 const volScalarField rAU("rAU", 1.0/UEqn.A());
 const surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
@@ -45,13 +40,14 @@ constrainPressure(p, rho, U, phiHbyA, rhorAAtUf, MRF);
 
 if (simple.transonic())
 {
-    surfaceScalarField phid
+    const surfaceScalarField phid
     (
         "phid",
-        (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
+        fvc::interpolate(psi)*phiHbyA/fvc::interpolate(rho)
     );
 
-    phiHbyA -= fvc::interpolate(psi*p)*phiHbyA/fvc::interpolate(rho);
+    const fvScalarMatrix divPhidp(fvm::div(phid, p));
+    phiHbyA -= divPhidp.flux();
 
     if (simple.consistent())
     {
@@ -63,8 +59,7 @@ if (simple.transonic())
     {
         fvScalarMatrix pEqn
         (
-            fvc::div(phiHbyA)
-          + fvm::div(phid, p)
+            fvc::div(phiHbyA) + divPhidp
           - fvm::laplacian(rhorAAtUf, p)
           ==
             fvModels.source(psi, p, rho.name())
@@ -143,8 +138,4 @@ if (closedVolume && !thermo.incompressible())
 }
 
 rho = thermo.rho();
-
-if (!simple.transonic())
-{
-    rho.relax();
-}
+rho.relax();

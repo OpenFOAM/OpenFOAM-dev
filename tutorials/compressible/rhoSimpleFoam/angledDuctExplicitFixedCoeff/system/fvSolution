@@ -29,22 +29,24 @@ solvers
     {
         solver          smoothSolver;
         smoother        GaussSeidel;
-        nSweeps         2;
-        tolerance       1e-06;
+
+        tolerance       1e-6;
         relTol          0.1;
     }
 
-    e
+    h
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-06;
+
+        tolerance       1e-6;
         relTol          0.1;
     }
 
     "(k|epsilon)"
     {
         $U;
+
         tolerance       1e-07;
         relTol          0.1;
     }
@@ -59,9 +61,7 @@ SIMPLE
         p               1e-2;
         U               1e-4;
         e               1e-3;
-
-        // Possibly check turbulence fields
-        "(k|epsilon|omega)" 1e-3;
+        "(k|epsilon)"   1e-3;
     }
 }
 
@@ -72,10 +72,11 @@ relaxationFactors
         p               0.3;
         rho             0.01;
     }
+
     equations
     {
         U               0.7;
-        e               0.7;
+        h               0.7;
         "(k|epsilon)"   0.7;
     }
 }

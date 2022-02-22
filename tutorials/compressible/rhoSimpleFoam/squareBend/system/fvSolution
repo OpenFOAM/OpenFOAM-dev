@@ -19,19 +19,19 @@ solvers
     p
     {
         solver          GAMG;
+        smoother        DILU;
+
         tolerance       1e-08;
         relTol          0.1;
-        smoother        GaussSeidel;
-        nCellsInCoarsestLevel 20;
     }
 
-    "(U|e|k|epsilon)"
+    "(U|h|k|epsilon)"
     {
-        solver          GAMG;
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
         tolerance       1e-08;
         relTol          0.1;
-        smoother        GaussSeidel;
-        nCellsInCoarsestLevel 20;
     }
 }
 
@@ -46,10 +46,8 @@ SIMPLE
     {
         p               1e-3;
         U               1e-4;
-        e               1e-3;
-
-        // possibly check turbulence fields
-        "(k|epsilon|omega)" 1e-3;
+        h               1e-3;
+        "(k|epsilon)"   1e-3;
     }
 }
 
@@ -59,11 +57,12 @@ relaxationFactors
     {
         p               1;
     }
+
     equations
     {
         p               1;
         U               0.9;
-        e               0.8;
+        h               0.9;
         k               0.9;
         epsilon         0.9;
     }

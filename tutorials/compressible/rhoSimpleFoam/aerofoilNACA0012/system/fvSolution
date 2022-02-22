@@ -18,12 +18,13 @@ solvers
     p
     {
         solver          GAMG;
-        smoother        GaussSeidel;
+        smoother        DIC;
+
         tolerance       1e-8;
         relTol          0.01;
     }
 
-    "(U|k|omega|e)"
+    "(U|k|omega|h)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
@@ -38,7 +39,7 @@ SIMPLE
     {
         p               1e-6;
         U               1e-5;
-        "(k|omega|e)"   1e-5;
+        "(k|omega|h)"   1e-5;
     }
 
     nNonOrthogonalCorrectors 0;
@@ -51,10 +52,11 @@ relaxationFactors
         p               0.3;
         rho             0.01;
     }
+
     equations
     {
         U               0.7;
-        e               0.7;
+        h               0.7;
         "(k|omega)"     0.7;
     }
 }

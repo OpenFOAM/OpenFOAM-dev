@@ -22,7 +22,7 @@ thermoType
     thermo          hConst;
     equationOfState perfectGas;
     specie          specie;
-    energy          sensibleInternalEnergy;
+    energy          sensibleEnthalpy;
 }
 
 mixture // air at room temperature (293 K)
@@ -31,11 +31,13 @@ mixture // air at room temperature (293 K)
     {
         molWeight   28.9;
     }
+
     thermodynamics
     {
         Cp          1005;
         Hf          0;
     }
+
     transport
     {
         mu          1.82e-05;

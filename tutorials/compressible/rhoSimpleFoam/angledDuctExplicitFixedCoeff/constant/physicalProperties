@@ -22,7 +22,7 @@ thermoType
     thermo          hConst;
     equationOfState perfectGas;
     specie          specie;
-    energy          sensibleInternalEnergy;
+    energy          sensibleEnthalpy;
 }
 
 mixture

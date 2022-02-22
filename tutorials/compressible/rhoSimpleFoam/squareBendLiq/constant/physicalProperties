@@ -19,7 +19,7 @@ thermoType
     type            heRhoThermo;
     mixture         pureMixture;
     properties      liquid;
-    energy          sensibleInternalEnergy;
+    energy          sensibleEnthalpy;
 }
 
 mixture

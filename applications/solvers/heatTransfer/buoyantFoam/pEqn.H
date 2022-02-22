@@ -1,9 +1,5 @@
 rho = thermo.rho();
-
-if (!pimple.transonic())
-{
-    rho.relax();
-}
+rho.relax();
 
 // Thermodynamic density needs to be updated by psi*d(p) after the
 // pressure solution
@@ -29,7 +25,7 @@ MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
 bool adjustMass = mesh.steady() && adjustPhi(phiHbyA, U, p_rgh);
 
-surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
+const surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
 
 phiHbyA += phig;
 
@@ -42,18 +38,19 @@ fvScalarMatrix p_rghEqn(p_rgh, dimMass/dimTime);
 
 if (pimple.transonic())
 {
-    surfaceScalarField phid
+    const surfaceScalarField phid
     (
         "phid",
         (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
     );
 
-    phiHbyA -= fvc::interpolate(psi*p_rgh)*phiHbyA/fvc::interpolate(rho);
+    const fvScalarMatrix divPhidp(fvm::div(phid, p));
+    phiHbyA -= divPhidp.flux();
 
     fvScalarMatrix p_rghDDtEqn
     (
         fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
-      + fvc::div(phiHbyA) + fvm::div(phid, p_rgh)
+      + fvc::div(phiHbyA) + divPhidp
      ==
         fvModels.source(psi, p_rgh, rho.name())
     );
@@ -158,7 +155,7 @@ if (mesh.steady() || pimple.simpleRho() || adjustMass)
     rho = thermo.rho();
 }
 
-if ((mesh.steady() || pimple.simpleRho()) && !pimple.transonic())
+if (mesh.steady() || pimple.simpleRho())
 {
     rho.relax();
 }

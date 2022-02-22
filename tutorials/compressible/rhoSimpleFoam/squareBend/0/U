@@ -23,6 +23,7 @@ boundaryField
     {
         type            noSlip;
     }
+
     inlet
     {
         type            flowRateInletVelocity;
@@ -30,11 +31,11 @@ boundaryField
         rhoInlet        0.5;    // Guess for rho
         profile         turbulentBL;
     }
+
     outlet
     {
-        type            inletOutlet;
+        type            pressureInletOutletVelocity;
         value           uniform (0 0 0);
-        inletValue      uniform (0 0 0);
     }
 }
 
