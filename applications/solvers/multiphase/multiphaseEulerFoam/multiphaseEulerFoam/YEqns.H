@@ -26,7 +26,9 @@
             );
 
             YiEqn.relax();
+            fvConstraints.constrain(YiEqn);
             YiEqn.solve("Yi");
+            fvConstraints.constrain(Y[i]);
         }
     }
 
