@@ -240,7 +240,7 @@ Foam::fluxLimitedLangmuirHinshelwoodReactionRate::operator()
     const scalar TaByT0 = Ta_[0]/T;
     const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-TaByT0);
 
-    scalar r = k0/pow(a_ + sumkc, m_[0]);
+    scalar r = k0/max(pow(a_ + sumkc, m_[0]), rootVSmall);
 
     if (limited_)
     {
@@ -293,8 +293,8 @@ inline Foam::scalar Foam::fluxLimitedLangmuirHinshelwoodReactionRate::ddT
     const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-TaByT0);
 
     scalar ddT =
-       ((beta_[0] + TaByT0)*k0 - m_[0]*k0*sumBetaKc/(a_ + sumkc))
-      /(pow(a_ + sumkc, m_[0])*T);
+       ((beta_[0] + TaByT0)*k0*(a_ + sumkc) - m_[0]*k0*sumBetaKc)
+      /(max(pow(a_ + sumkc, m_[0] + 1), rootVSmall)*T);
 
     if (limited_)
     {
