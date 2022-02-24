@@ -700,6 +700,18 @@ int main(int argc, char *argv[])
     Info<< "Read mesh in = "
         << runTime.cpuTimeIncrement() << " s" << endl;
 
+    // Check that the read mesh is fully 3D
+    // as required for mesh relaxation after snapping
+    if (mesh.nSolutionD() != 3)
+    {
+        FatalErrorIn(args.executable())
+            << "Mesh provided is not fully 3D"
+               " as required for mesh relaxation after snapping" << nl
+            << "Convert all empty patches to appropriate types for a 3D mesh,"
+               " current patch types are" << nl << mesh.boundaryMesh().types()
+            << exit(FatalError);
+    }
+
     // Check patches and faceZones are synchronised
     mesh.boundaryMesh().checkParallelSync(true);
     meshRefinement::checkCoupledFaceZones(mesh);
