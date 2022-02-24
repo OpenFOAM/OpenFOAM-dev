@@ -52,6 +52,11 @@ blocks
     simpleGrading (1 1 1)
 );
 
+defaultPatch
+{
+    type patch;
+}
+
 boundary
 (
 );

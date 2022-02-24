@@ -39,7 +39,7 @@ defaultPatch
     type empty;
 }
 
-patches
+boundary
 (
 );
 

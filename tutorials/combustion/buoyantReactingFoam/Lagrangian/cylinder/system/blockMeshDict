@@ -97,7 +97,6 @@ defaultPatch
     type wall;
 }
 
-
 boundary
 (
     filmWalls

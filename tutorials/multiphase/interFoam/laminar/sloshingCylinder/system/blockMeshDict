@@ -87,6 +87,11 @@ edges
     project 14 15 (cylinder)
 );
 
+defaultPatch
+{
+    type patch;
+}
+
 boundary
 (
 );

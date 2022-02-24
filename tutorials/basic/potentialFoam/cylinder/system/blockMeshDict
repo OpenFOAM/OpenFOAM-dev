@@ -93,6 +93,11 @@ edges
     arc 34 28 45.0 (0 0 -1)
 );
 
+defaultPatch
+{
+    type empty;
+}
+
 boundary
 (
     down

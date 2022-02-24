@@ -39,6 +39,11 @@ blocks
     hex (1 2 5 4 7 8 11 10) (80 40 1) simpleGrading (1 1 1)
 );
 
+defaultPatch
+{
+    type empty;
+}
+
 boundary
 (
     inlet

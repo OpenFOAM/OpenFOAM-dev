@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -336,6 +336,36 @@ void Foam::blockMesh::createCellShapes
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+void Foam::blockMesh::defaultPatchError
+(
+    const word& defaultPatchName,
+    const dictionary& meshDescription
+) const
+{
+    // This will be made a fatal error in a future release
+    // to ensure that the defaultPatch is handled explicitly
+    // avoiding common user errors
+    // FatalIOErrorInFunction(meshDescription)
+    IOWarningInFunction(meshDescription)
+        << "The 'defaultPatch' type must be specified"
+           " for the '" << defaultPatchName << "' patch, e.g. for snappyHexMesh"
+        << nl << nl
+        << "    defaultPatch\n"
+           "    {\n"
+           "        name default; // optional\n"
+           "        type patch;\n"
+           "    }\n\n"
+        << "or for 2D meshes" << nl << nl
+        << "    defaultPatch\n"
+           "    {\n"
+           "        name frontAndBack; // optional\n"
+           "        type empty;\n"
+           "    }\n"
+        << endl;
+        // << exit(FatalIOError);
+}
+
+
 Foam::polyMesh* Foam::blockMesh::createTopology
 (
     const IOdictionary& meshDescription,
@@ -352,6 +382,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
 
     word defaultPatchName = "defaultFaces";
     word defaultPatchType = emptyPolyPatch::typeName;
+    bool defaultPatchTypeSet = false;
 
     // Read the names/types for the unassigned patch faces
     // this is a bit heavy handed (and ugly), but there is currently
@@ -359,7 +390,8 @@ Foam::polyMesh* Foam::blockMesh::createTopology
     if (const dictionary* dictPtr = meshDescription.subDictPtr("defaultPatch"))
     {
         dictPtr->readIfPresent("name", defaultPatchName);
-        dictPtr->readIfPresent("type", defaultPatchType);
+        defaultPatchType = dictPtr->lookup<word>("type");
+        defaultPatchTypeSet = true;
     }
 
     // Optional 'convertToMeters' or 'scale' scaling factor
@@ -440,7 +472,11 @@ Foam::polyMesh* Foam::blockMesh::createTopology
 
     if (meshDescription.found("patches"))
     {
-        Info<< nl << "Reading patches section" << endl;
+        IOWarningInFunction(meshDescription)
+            << "Reading patches section" << nl
+            << "    The 'patches' entry is deprecated and has been superseded"
+            << " by the more consistent and general 'boundary' entry."
+            << endl;
 
         faceListList tmpBlocksPatches;
         wordList patchNames;
@@ -461,7 +497,6 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         cellShapeList tmpBlockCells(blocks.size());
         createCellShapes(tmpBlockCells);
 
-
         Info<< nl << "Reading physicalType from existing boundary file" << endl;
 
         PtrList<dictionary> patchDicts(patchNames.size());
@@ -477,7 +512,6 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             defaultPatchName,
             defaultPatchType
         );
-
 
         // Add cyclic info (might not be present from older file)
         forAll(patchDicts, patchi)
@@ -530,6 +564,15 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             defaultPatchName,
             defaultPatchType
         );
+
+        if
+        (
+            !defaultPatchTypeSet
+         && blockMeshPtr->boundaryMesh().findPatchID(defaultPatchName) != -1
+        )
+        {
+            defaultPatchError(defaultPatchName, meshDescription);
+        }
     }
     else if (meshDescription.found("boundary"))
     {
@@ -569,6 +612,15 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             defaultPatchName,
             defaultPatchType
         );
+
+        if
+        (
+            !defaultPatchTypeSet
+         && blockMeshPtr->boundaryMesh().findPatchID(defaultPatchName) != -1
+        )
+        {
+            defaultPatchError(defaultPatchName, meshDescription);
+        }
     }
 
     check(*blockMeshPtr, meshDescription);

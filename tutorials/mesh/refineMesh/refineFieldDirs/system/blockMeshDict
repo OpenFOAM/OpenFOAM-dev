@@ -69,32 +69,56 @@ edges
   arc 5 6 ($Gx $Gy $Z_high)
 );
 
-patches
+boundary
 (
-   patch maxX
-   (
-       (1 2 6 5)
-   )
-   patch minX
-   (
-       (0 4 7 3)
-   )
-   patch maxY
-   (
-       (3 7 6 2)
-   )
-   patch minY
-   (
-       (1 5 4 0)
-   )
-   patch maxZ
-   (
-       (4 5 6 7)
-   )
-   patch minZ
-   (
-       (0 3 2 1)
-   )
+   maxX
+   {
+       type patch;
+       faces
+       (
+           (1 2 6 5)
+       );
+   }
+   minX
+   {
+       type patch;
+       faces
+       (
+           (0 4 7 3)
+       );
+   }
+   maxY
+   {
+       type patch;
+       faces
+       (
+           (3 7 6 2)
+       );
+   }
+   minY
+   {
+       type patch;
+       faces
+       (
+           (1 5 4 0)
+       );
+   }
+   maxZ
+   {
+       type patch;
+       faces
+       (
+           (4 5 6 7)
+       );
+   }
+   minZ
+   {
+       type patch;
+       faces
+       (
+           (0 3 2 1)
+       );
+   }
 );
 
 

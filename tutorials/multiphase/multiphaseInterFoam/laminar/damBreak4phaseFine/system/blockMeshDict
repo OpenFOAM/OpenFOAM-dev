@@ -52,6 +52,11 @@ blocks
     hex (6 7 11 10 18 19 23 22) (76 180 1) simpleGrading (1 1 1)
 );
 
+defaultPatch
+{
+    type empty;
+}
+
 boundary
 (
     leftWall

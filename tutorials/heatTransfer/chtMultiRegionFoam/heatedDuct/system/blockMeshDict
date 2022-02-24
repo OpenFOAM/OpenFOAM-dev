@@ -35,8 +35,7 @@ blocks
 
 defaultPatch
 {
-    type empty;
-    name default;
+    type patch;
 }
 
 boundary

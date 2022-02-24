@@ -33,6 +33,11 @@ blocks
     hex (0 1 3 2 4 5 7 6) (50 24 60) simpleGrading (1 1 1)
 );
 
+defaultPatch
+{
+    type patch;
+}
+
 boundary
 (
 );

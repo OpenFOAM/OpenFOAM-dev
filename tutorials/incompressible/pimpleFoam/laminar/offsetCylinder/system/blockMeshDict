@@ -143,6 +143,11 @@ edges
     arc 60 57 (-0.535757 -1.29343 1)
 );
 
+defaultPatch
+{
+    type empty;
+}
+
 boundary
 (
     left

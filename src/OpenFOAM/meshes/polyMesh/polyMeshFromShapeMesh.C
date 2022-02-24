@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -592,9 +592,12 @@ Foam::polyMesh::polyMesh
 
     if (nDefaultFaces > 0)
     {
-        WarningInFunction
-            << "Found " << nDefaultFaces
-            << " undefined faces in mesh; adding to default patch." << endl;
+        if (debug)
+        {
+            WarningInFunction
+                << "Found " << nDefaultFaces
+                << " undefined faces in mesh; adding to default patch." << endl;
+        }
 
         // Check if there already exists a defaultFaces patch as last patch
         // and reuse it.
@@ -870,9 +873,12 @@ Foam::polyMesh::polyMesh
 
     if (nDefaultFaces > 0)
     {
-        WarningInFunction
-            << "Found " << nDefaultFaces
-            << " undefined faces in mesh; adding to default patch." << endl;
+        if (debug)
+        {
+            WarningInFunction
+                << "Found " << nDefaultFaces
+                << " undefined faces in mesh; adding to default patch." << endl;
+        }
 
         // Check if there already exists a defaultFaces patch as last patch
         // and reuse it.
