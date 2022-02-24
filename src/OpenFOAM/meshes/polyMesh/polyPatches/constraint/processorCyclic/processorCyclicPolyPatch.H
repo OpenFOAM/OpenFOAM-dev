@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,18 +153,6 @@ public:
             const label newStart
         );
 
-        //- Construct as given the original patch and resetting the
-        //  face list, boundary mesh information and referPatch
-        processorCyclicPolyPatch
-        (
-            const processorCyclicPolyPatch& pp,
-            const polyBoundaryMesh& bm,
-            const label index,
-            const label newSize,
-            const label newStart,
-            const word& referPatchName
-        );
-
         //- Construct given the original patch and a map
         processorCyclicPolyPatch
         (
@@ -174,7 +162,6 @@ public:
             const labelUList& mapAddressing,
             const label newStart
         );
-
 
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const
@@ -201,31 +188,6 @@ public:
                     index,
                     newSize,
                     newStart
-                )
-            );
-        }
-
-        //- Construct and return a clone, resetting the face list
-        //  and boundary mesh
-        virtual autoPtr<polyPatch> clone
-        (
-            const polyBoundaryMesh& bm,
-            const label index,
-            const label newSize,
-            const label newStart,
-            const word& referPatchName
-        ) const
-        {
-            return autoPtr<polyPatch>
-            (
-                new processorCyclicPolyPatch
-                (
-                    *this,
-                    bm,
-                    index,
-                    newSize,
-                    newStart,
-                    referPatchName
                 )
             );
         }
