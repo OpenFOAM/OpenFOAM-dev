@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,16 +128,16 @@ public:
 
         // Access
 
-            //- Minimum describing the bounding box
+            //- Minimum point defining the bounding box
             inline const point& min() const;
 
-            //- Maximum describing the bounding box
+            //- Maximum point defining the bounding box
             inline const point& max() const;
 
-            //- Minimum describing the bounding box, non-const access
+            //- Minimum point defining the bounding box, non-const access
             inline point& min();
 
-            //- Maximum describing the bounding box, non-const access
+            //- Maximum point defining the bounding box, non-const access
             inline point& max();
 
             //- The midpoint of the bounding box
