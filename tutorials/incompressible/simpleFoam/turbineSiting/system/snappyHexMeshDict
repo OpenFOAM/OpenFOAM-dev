@@ -324,10 +324,10 @@ meshQualityControls
     //  Set to 180 to disable.
     maxConcave 80;
 
-    //- Minimum pyramid volume. Is absolute volume of cell pyramid.
-    //  Set to a sensible fraction of the smallest cell volume expected.
+    //- Minimum cell pyramid volume relative to min bounding box length^3
+    //  Set to a fraction of the smallest cell volume expected.
     //  Set to very negative number (e.g. -1e30) to disable.
-    minVol 1e-13;
+    minVol 1e-10;
 
     //- Minimum quality of the tet formed by the face-centre
     //  and variable base point minimum decomposition triangles and
@@ -337,9 +337,6 @@ meshQualityControls
     //      0 = flat tet
     //      1 = regular tet
     minTetQuality 1e-30;
-
-    //- Minimum face area. Set to <0 to disable.
-    minArea -1;
 
     //- Minimum face twist. Set to <-1 to disable. dot product of face normal
     //  and face centre triangles normal
@@ -355,24 +352,13 @@ meshQualityControls
     //- minVolRatio (0 -> 1)
     minVolRatio 0.01;
 
-    // must be >0 for Fluent compatibility
-    minTriangleTwist -1;
-
-    //- If >0 : preserve single cells with all points on the surface if the
-    //  resulting volume after snapping (by approximation) is larger than
-    //  minVolCollapseRatio times old volume (i.e. not collapsed to flat cell).
-    //  If <0 : delete always.
-    // minVolCollapseRatio 0.5;
-
-
     // Advanced
 
     //- Number of error distribution iterations
     nSmoothScale 4;
+
     //- Amount to scale back displacement at error points
     errorReduction 0.75;
-
-
 
     // Optional : some meshing phases allow usage of relaxed rules.
     // See e.g. addLayersControls::nRelaxedIter.

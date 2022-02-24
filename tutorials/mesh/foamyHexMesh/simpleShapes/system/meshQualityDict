@@ -35,13 +35,10 @@ maxConcave          80;
 //      1 = regular tet
 minTetQuality       1e-30;
 
-//- Minimum pyramid volume. Is absolute volume of cell pyramid.
-//  Set to a sensible fraction of the smallest cell volume expected.
+//- Minimum cell pyramid volume relative to min bounding box length^3
+//  Set to a fraction of the smallest cell volume expected.
 //  Set to very negative number (e.g. -1e30) to disable.
-minVol              0;
-
-//- Minimum face area. Set to <0 to disable.
-minArea             -1;
+minVol 0;
 
 //- Minimum face twist. Set to <-1 to disable. dot product of face normal
 //  and face centre triangles normal
@@ -56,9 +53,6 @@ minFaceWeight       0.02;
 
 //- minVolRatio (0 -> 1)
 minVolRatio         0.01;
-
-//must be >0 for Fluent compatibility
-minTriangleTwist    -1;
 
 
 // ************************************************************************* //

@@ -249,12 +249,10 @@ meshQualityControls
     maxConcave 80;
     minVol 1e-13;
     minTetQuality -1;
-    minArea -1;
     minTwist 0.01;
     minDeterminant 0.001;
     minFaceWeight 0.05;
     minVolRatio 0.01;
-    minTriangleTwist -1;
     nSmoothScale 4;
     errorReduction 0.75;
     relaxed

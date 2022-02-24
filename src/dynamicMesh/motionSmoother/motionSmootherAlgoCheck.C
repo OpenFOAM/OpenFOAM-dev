@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,10 +76,6 @@ bool Foam::motionSmootherAlgo::checkMesh
     (
         dict.lookup<scalar>("maxConcave", true)
     );
-    const scalar minArea
-    (
-        dict.lookup<scalar>("minArea", true)
-    );
     const scalar maxIntSkew
     (
         dict.lookup<scalar>("maxInternalSkewness", true)
@@ -99,10 +95,6 @@ bool Foam::motionSmootherAlgo::checkMesh
     const scalar minTwist
     (
         dict.lookup<scalar>("minTwist", true)
-    );
-    const scalar minTriangleTwist
-    (
-        dict.lookup<scalar>("minTriangleTwist", true)
     );
     scalar minFaceFlatness = -1.0;
     dict.readIfPresent("minFaceFlatness", minFaceFlatness, true);
@@ -141,10 +133,12 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minVol > -great)
     {
+        const scalar refVol = pow3(mesh.bounds().minDim());
+
         polyMeshCheck::checkFacePyramids
         (
             report,
-            minVol,
+            minVol*refVol,
             mesh,
             mesh.cellCentres(),
             mesh.points(),
@@ -204,28 +198,6 @@ bool Foam::motionSmootherAlgo::checkMesh
         Info<< "    faces with concavity > "
             << setw(3) << maxConcave
             << " degrees                     : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minArea > -small)
-    {
-        polyMeshCheck::checkFaceArea
-        (
-            report,
-            minArea,
-            mesh,
-            mesh.faceAreas(),
-            checkFaces,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with area < "
-            << setw(5) << minArea
-            << " m^2                            : "
             << nNewWrongFaces-nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
@@ -328,32 +300,6 @@ bool Foam::motionSmootherAlgo::checkMesh
         Info<< "    faces with face twist < "
             << setw(5) << minTwist
             << "                          : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minTriangleTwist > -1)
-    {
-        // Pout<< "Checking triangle twist: dot product of consecutive triangle"
-        //    << " normals resulting from face-centre decomposition" << endl;
-        polyMeshCheck::checkTriangleTwist
-        (
-            report,
-            minTriangleTwist,
-            mesh,
-            mesh.faceAreas(),
-            mesh.faceCentres(),
-            mesh.points(),
-            checkFaces,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with triangle twist < "
-            << setw(5) << minTriangleTwist
-            << "                      : "
             << nNewWrongFaces-nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
