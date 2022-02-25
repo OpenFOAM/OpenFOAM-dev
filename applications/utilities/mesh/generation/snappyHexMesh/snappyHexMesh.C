@@ -733,9 +733,6 @@ int main(int argc, char *argv[])
     // snap-to-surface parameters
     const dictionary& snapDict = meshDict.subDict("snapControls");
 
-    // layer addition parameters
-    const dictionary& layerDict = meshDict.subDict("addLayersControls");
-
     // absolute merge distance
     const scalar mergeDist = getMergeDistance
     (
@@ -1223,10 +1220,6 @@ int main(int argc, char *argv[])
     // Snap parameters
     const snapParameters snapParams(snapDict);
 
-    // Layer addition parameters
-    const layerParameters layerParams(layerDict, mesh.boundaryMesh());
-
-
     if (wantRefine)
     {
         cpuTime timer;
@@ -1240,12 +1233,10 @@ int main(int argc, char *argv[])
             globalToSlavePatch
         );
 
-
         if (!overwrite && !debugLevel)
         {
             const_cast<Time&>(mesh.time())++;
         }
-
 
         refineDriver.doRefine
         (
@@ -1255,7 +1246,6 @@ int main(int argc, char *argv[])
             refineParams.handleSnapProblems(),
             motionDict
         );
-
 
         if (!keepPatches && !wantSnap && !wantLayers)
         {
@@ -1324,6 +1314,12 @@ int main(int argc, char *argv[])
     {
         cpuTime timer;
 
+        // Layer addition parameters dictionary
+        const dictionary& layersDict = meshDict.subDict("addLayersControls");
+
+        // Layer addition parameters
+        const layerParameters layerParams(layersDict, mesh.boundaryMesh());
+
         snappyLayerDriver layerDriver
         (
             meshRefiner,
@@ -1346,7 +1342,7 @@ int main(int argc, char *argv[])
 
         layerDriver.doLayers
         (
-            layerDict,
+            layersDict,
             motionDict,
             layerParams,
             preBalance,
