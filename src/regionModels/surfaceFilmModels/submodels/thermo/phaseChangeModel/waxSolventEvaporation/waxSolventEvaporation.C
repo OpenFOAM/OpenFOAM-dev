@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,7 +222,7 @@ void waxSolventEvaporation::correctModel
     );
 
     // Local surface temperature at which evaporation takes place
-    scalarField Tloc(dMass.size());
+    scalarField Tloc(T);
 
     bool filmPresent = false;
 
@@ -320,14 +320,18 @@ void waxSolventEvaporation::correctModel
 
     reduce(filmPresent, orOp<bool>());
 
-    const dimensionedScalar rho0Bydt
+    const volScalarField::Internal rho0Bydt
     (
-        "rho0Bydt",
-        dimDensity/dimTime,
-        rootVSmall/dt
+        rho
+       *max
+        (
+            dimensionedScalar(dimLength, deltaMin_) - delta,
+            dimensionedScalar(dimLength, 0)
+        )
+       /(dimensionedScalar(dimTime, dt)*film.VbyA())
     );
 
-    volScalarField::Internal impingementRate
+    const volScalarField::Internal impingementRate
     (
         max
         (
