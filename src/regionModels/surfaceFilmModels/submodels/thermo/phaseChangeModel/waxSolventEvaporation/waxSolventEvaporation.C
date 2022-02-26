@@ -372,10 +372,7 @@ void waxSolventEvaporation::correctModel
         Ysolvent_.min(1);
         Ysolvent_.max(0);
 
-        scalarField dm
-        (
-            dt*V*rhoInf*(evapRateCoeff*Ysolvent_ + evapRateInf)
-        );
+        const scalarField dm(dt*V*(evapRateCoeff*Ysolvent_ + evapRateInf));
 
         dMass += dm;
 
