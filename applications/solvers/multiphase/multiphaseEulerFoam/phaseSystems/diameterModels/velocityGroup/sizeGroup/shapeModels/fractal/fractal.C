@@ -210,8 +210,16 @@ void Foam::diameterModels::shapeModels::fractal::correct()
       - sinteringModel_->R()
       + Su_
       - fvm::Sp(popBal.Sp(fi.i()())*fi, kappa_)
-      + fvc::ddt(fi.phase().residualAlpha(), kappa_)
-      - fvm::ddt(fi.phase().residualAlpha(), kappa_)
+
+      - correction
+        (
+            fvm::Sp
+            (
+                max(phase.residualAlpha() - alpha, scalar(0))
+               /sizeGroup_.mesh().time().deltaT(),
+                kappa_
+            )
+        )
     );
 
     kappaEqn.relax();

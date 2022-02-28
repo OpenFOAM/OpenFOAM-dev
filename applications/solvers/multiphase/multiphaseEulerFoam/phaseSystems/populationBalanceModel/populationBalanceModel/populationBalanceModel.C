@@ -1066,7 +1066,6 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 sizeGroup& fi = sizeGroups_[i];
                 const phaseModel& phase = fi.phase();
                 const volScalarField& alpha = phase;
-                const dimensionedScalar& residualAlpha = phase.residualAlpha();
                 const volScalarField& rho = phase.thermo().rho();
 
                 fvScalarMatrix sizeGroupEqn
@@ -1077,8 +1076,16 @@ void Foam::diameterModels::populationBalanceModel::solve()
                     Su_[i]
                   - fvm::Sp(Sp_[i], fi)
                   + fluid_.fvModels().source(alpha, rho, fi)/rho
-                  + fvc::ddt(residualAlpha, fi)
-                  - fvm::ddt(residualAlpha, fi)
+
+                  - correction
+                    (
+                        fvm::Sp
+                        (
+                            max(phase.residualAlpha() - alpha, scalar(0))
+                           /this->mesh().time().deltaT(),
+                            fi
+                        )
+                    )
                 );
 
                 sizeGroupEqn.relax();
