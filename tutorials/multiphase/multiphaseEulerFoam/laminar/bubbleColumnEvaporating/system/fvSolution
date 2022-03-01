@@ -61,7 +61,6 @@ solvers
         tolerance       1e-12;
         relTol          0;
         minIter         1;
-        residualAlpha   1e-8;
     }
 }
 
@@ -70,7 +69,6 @@ PIMPLE
     nOuterCorrectors 5;
     nCorrectors      1;
     nNonOrthogonalCorrectors 0;
-
 }
 
 relaxationFactors

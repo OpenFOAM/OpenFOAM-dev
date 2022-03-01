@@ -46,13 +46,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::MultiComponentPhaseModel
     const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, referencePhase, index),
-    residualAlpha_
-    (
-        "residualAlpha",
-        dimless,
-        fluid.mesh().solverDict("Yi")
-    )
+    BasePhaseModel(fluid, phaseName, referencePhase, index)
 {
     PtrList<volScalarField>& Y = this->thermo_->composition().Y();
 
@@ -114,7 +108,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
         (
             fvm::Sp
             (
-                max(residualAlpha_ - alpha, scalar(0))*rho
+                max(this->residualAlpha() - alpha, scalar(0))*rho
                /this->mesh().time().deltaT(),
                 Yi
             )

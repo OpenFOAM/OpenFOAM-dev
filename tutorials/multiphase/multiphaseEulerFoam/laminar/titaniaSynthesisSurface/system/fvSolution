@@ -72,7 +72,6 @@ solvers
         preconditioner  DILU;
         tolerance       1e-7;
         relTol          0;
-        residualAlpha   1e-5;
         minIter         1;
     }
 }
@@ -85,14 +84,13 @@ PIMPLE
     nNonOrthogonalCorrectors 0;
 
     faceMomentum        yes;
-
 }
 
 relaxationFactors
 {
     equations
     {
-        ".*"                          1.0;
+        ".*"                1;
     }
 }
 

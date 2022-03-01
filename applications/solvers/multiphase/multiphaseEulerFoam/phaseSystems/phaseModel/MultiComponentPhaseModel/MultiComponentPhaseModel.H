@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,6 @@ class MultiComponentPhaseModel
 protected:
 
     // Protected data
-
-        //- Residual phase fraction
-        dimensionedScalar residualAlpha_;
 
         //- Pointer list to active species
         UPtrList<volScalarField> YActive_;
