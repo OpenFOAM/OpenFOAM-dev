@@ -215,7 +215,7 @@ void Foam::diameterModels::shapeModels::fractal::correct()
         (
             fvm::Sp
             (
-                max(phase.residualAlpha() - alpha, scalar(0))
+                max(phase.residualAlpha() - alpha*fi, scalar(0))
                /sizeGroup_.mesh().time().deltaT(),
                 kappa_
             )
