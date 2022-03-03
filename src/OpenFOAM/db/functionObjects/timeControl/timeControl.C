@@ -126,6 +126,19 @@ void Foam::timeControl::read(const dictionary& dict)
         case timeControls::adjustableRunTime:
         {
             interval_ = time_.userTimeToTime(dict.lookup<scalar>(intervalName));
+
+            if (timeControl_ == timeControls::adjustableRunTime)
+            {
+                executionIndex_ = label
+                (
+                    (
+                        (time_.value() - time_.beginTime().value())
+                      + 0.5*time_.deltaTValue()
+                    )
+                    /interval_
+                );
+            }
+
             break;
         }
 
