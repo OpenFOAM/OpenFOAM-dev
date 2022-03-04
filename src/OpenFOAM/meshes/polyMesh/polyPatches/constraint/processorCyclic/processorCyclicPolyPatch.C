@@ -169,13 +169,11 @@ int Foam::processorCyclicPolyPatch::tag() const
     if (tag_ == -1)
     {
         // Get unique tag to use for all comms. Make sure that both sides
-        // use the same tag
-        const cyclicPolyPatch& cycPatch = refCast<const cyclicPolyPatch>
-        (
-            referPatch()
-        );
+        // use the same tag.
+        const cyclicPolyPatch& cycPatch =
+            refCast<const cyclicPolyPatch>(referPatch());
 
-        if (owner())
+        if (processorPolyPatch::owner())
         {
             tag_ = Hash<word>()(cycPatch.name()) % 32768u;
         }
@@ -194,6 +192,7 @@ int Foam::processorCyclicPolyPatch::tag() const
                 << " using the 'tag' entry"
                 << exit(FatalError);
         }
+
         if (debug)
         {
             Pout<< "processorCyclicPolyPatch " << name() << " uses tag " << tag_
