@@ -125,6 +125,12 @@ class hexRef8
         ) const;
 
         //- Adds internal face from point. No checks on reversal.
+        //  Adds an internal face from an edge. Assumes orientation correct.
+        //  Problem is that the face is between four new vertices. So what do
+        //  we provide as master? The only existing mesh item we have is the
+        //  edge we have split.  Have to be careful in only using it if it has
+        //  internal faces since otherwise polyMeshMorph will complain (because
+        //  it cannot generate a sensible mapping for the face)
         label addInternalFace
         (
             polyTopoChange& meshMod,
@@ -146,9 +152,12 @@ class hexRef8
             const label nei
         ) const;
 
+        //- Bit complex way to determine the unrefined edge length.
         scalar getLevel0EdgeLength() const;
 
         //- Get cell added to point of celli (if any)
+        //  Check whether pointi is an anchor on celli.  If it is not check
+        //  whether any other point on the face is an anchor cell.
         label getAnchorCell
         (
             const labelListList& cellAnchorPoints,
@@ -227,6 +236,14 @@ class hexRef8
         ) const;
 
         //- Store in maps correspondence from midpoint to anchors and faces.
+        //  Internal faces are one per edge between anchor points. So one per
+        //  midPoint between the anchor points. Here we store the information on
+        //  the midPoint and if we have enough information:
+        //  - two anchors
+        //  - two face mid points
+        //  we add the face. Note that this routine can get called anywhere from
+        //  two times (two unrefined faces) to four times (two refined faces) so
+        //  the first call that adds the information creates the face.
         label storeMidPointInfo
         (
             const labelListList& cellAnchorPoints,
@@ -474,6 +491,9 @@ public:
             );
 
             //- Update local numbering for changed mesh.
+            //  Called after the mesh change. setRefinement will already have
+            //  made sure the pointLevel_ and cellLevel_ are the size of the new
+            //  mesh so we only need to account for reordering.
             void updateMesh(const mapPolyMesh&);
 
 

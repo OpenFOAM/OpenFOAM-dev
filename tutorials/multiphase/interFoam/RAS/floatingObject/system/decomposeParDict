@@ -21,25 +21,21 @@ distributor     hierarchical;
 // distributor     zoltan;
 // libs            ("libzoltanDecomp.so");
 
-simpleCoeffs
-{
-    n               (2 2 1);
-}
-
 hierarchicalCoeffs
 {
     n               (2 2 2);
     order           xyz;
 }
 
-manualCoeffs
+constraints
 {
-    dataFile        "";
+   refinementHistory
+   {
+       //- Decompose cells such that all cell originating from single cell
+       //  end up on same processor
+       type    refinementHistory;
+   }
 }
-
-distributed     no;
-
-roots           ( );
 
 
 // ************************************************************************* //

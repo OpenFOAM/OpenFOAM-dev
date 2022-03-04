@@ -559,7 +559,6 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
         boundary_.readUpdate(boundaryMesh());
 
         clearOut();
-
     }
     else if (state == polyMesh::TOPO_CHANGE)
     {

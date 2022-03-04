@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,6 @@ void Foam::hexRef8::getFaceInfo
 }
 
 
-// Adds a face on top of existing facei.
 Foam::label Foam::hexRef8::addFace
 (
     polyTopoChange& meshMod,
@@ -182,12 +181,6 @@ Foam::label Foam::hexRef8::addFace
 }
 
 
-// Adds an internal face from an edge. Assumes orientation correct.
-// Problem is that the face is between four new vertices. So what do we provide
-// as master? The only existing mesh item we have is the edge we have split.
-// Have to be careful in only using it if it has internal faces since otherwise
-// polyMeshMorph will complain (because it cannot generate a sensible mapping
-// for the face)
 Foam::label Foam::hexRef8::addInternalFace
 (
     polyTopoChange& meshMod,
@@ -283,7 +276,6 @@ Foam::label Foam::hexRef8::addInternalFace
 }
 
 
-// Modifies existing facei for either new owner/neighbour or new face points.
 void Foam::hexRef8::modFace
 (
     polyTopoChange& meshMod,
@@ -347,7 +339,6 @@ void Foam::hexRef8::modFace
 }
 
 
-// Bit complex way to determine the unrefined edge length.
 Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
 {
     if (cellLevel_.size() != mesh_.nCells())
@@ -530,8 +521,6 @@ Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
 }
 
 
-// Check whether pointi is an anchor on celli.
-// If it is not check whether any other point on the face is an anchor cell.
 Foam::label Foam::hexRef8::getAnchorCell
 (
     const labelListList& cellAnchorPoints,
@@ -588,7 +577,6 @@ Foam::label Foam::hexRef8::getAnchorCell
 }
 
 
-// Get new owner and neighbour
 void Foam::hexRef8::getFaceNeighbours
 (
     const labelListList& cellAnchorPoints,
@@ -628,7 +616,6 @@ void Foam::hexRef8::getFaceNeighbours
 }
 
 
-// Get point with the lowest pointLevel
 Foam::label Foam::hexRef8::findMinLevel(const labelList& f) const
 {
     label minLevel = labelMax;
@@ -649,7 +636,6 @@ Foam::label Foam::hexRef8::findMinLevel(const labelList& f) const
 }
 
 
-// Get point with the highest pointLevel
 Foam::label Foam::hexRef8::findMaxLevel(const labelList& f) const
 {
     label maxLevel = labelMin;
@@ -729,7 +715,6 @@ void Foam::hexRef8::dumpCell(const label celli) const
 }
 
 
-// Find point with certain pointLevel. Skip any higher levels.
 Foam::label Foam::hexRef8::findLevel
 (
     const label facei,
@@ -792,7 +777,6 @@ Foam::label Foam::hexRef8::findLevel
 }
 
 
-// Gets cell level such that the face has four points <= level.
 Foam::label Foam::hexRef8::faceLevel(const label facei) const
 {
     const face& f = mesh_.faces()[facei];
@@ -913,8 +897,6 @@ void Foam::hexRef8::checkBoundaryOrientation
 }
 
 
-// If p0 and p1 are existing vertices check if edge is split and insert
-// splitPoint.
 void Foam::hexRef8::insertEdgeSplit
 (
     const labelList& edgeMidPoint,
@@ -935,14 +917,6 @@ void Foam::hexRef8::insertEdgeSplit
 }
 
 
-// Internal faces are one per edge between anchor points. So one per midPoint
-// between the anchor points. Here we store the information on the midPoint
-// and if we have enough information:
-// - two anchors
-// - two face mid points
-// we add the face. Note that this routine can get called anywhere from
-// two times (two unrefined faces) to four times (two refined faces) so
-// the first call that adds the information creates the face.
 Foam::label Foam::hexRef8::storeMidPointInfo
 (
     const labelListList& cellAnchorPoints,
@@ -1172,7 +1146,6 @@ Foam::label Foam::hexRef8::storeMidPointInfo
 }
 
 
-// Creates all the 12 internal faces for celli.
 void Foam::hexRef8::createInternalFaces
 (
     const labelListList& cellAnchorPoints,
@@ -1503,7 +1476,6 @@ void Foam::hexRef8::walkFaceToMid
 }
 
 
-// Same as walkFaceToMid but now walk back.
 void Foam::hexRef8::walkFaceFromMid
 (
     const labelList& edgeMidPoint,
@@ -1557,8 +1529,6 @@ void Foam::hexRef8::walkFaceFromMid
 }
 
 
-// Updates refineCell (cells marked for refinement) so across all faces
-// there will be 2:1 consistency after refinement.
 Foam::label Foam::hexRef8::faceConsistentRefinement
 (
     const bool maxSet,
@@ -1645,7 +1615,6 @@ Foam::label Foam::hexRef8::faceConsistentRefinement
 }
 
 
-// Debug: check if wanted refinement is compatible with 2:1
 void Foam::hexRef8::checkWantedRefinementLevels
 (
     const labelList& cellsToRefine
@@ -1728,7 +1697,6 @@ void Foam::hexRef8::checkWantedRefinementLevels
 }
 
 
-// Set instance for mesh files
 void Foam::hexRef8::setInstance(const fileName& inst)
 {
     if (debug)
@@ -1780,7 +1748,6 @@ void Foam::hexRef8::collectLevelPoints
 }
 
 
-// Return true if we've found 6 quads. faces guaranteed to be outwards pointing.
 bool Foam::hexRef8::matchHexShape
 (
     const label celli,
@@ -1924,7 +1891,6 @@ bool Foam::hexRef8::matchHexShape
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from mesh, read refinement data
 Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
 :
     mesh_(mesh),
@@ -2043,7 +2009,6 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
 }
 
 
-// Construct from components
 Foam::hexRef8::hexRef8
 (
     const polyMesh& mesh,
@@ -2151,7 +2116,6 @@ Foam::hexRef8::hexRef8
 }
 
 
-// Construct from components
 Foam::hexRef8::hexRef8
 (
     const polyMesh& mesh,
@@ -2321,12 +2285,6 @@ Foam::labelList Foam::hexRef8::consistentRefinement
 }
 
 
-// Given a list of cells to refine determine additional cells to refine
-// such that the overall refinement:
-// - satisfies maxFaceDiff (e.g. 2:1) across neighbouring faces
-// - satisfies maxPointDiff (e.g. 4:1) across selected point connected
-//   cells. This is used to ensure that e.g. cells on the surface are not
-//   point connected to cells which are 8 times smaller.
 Foam::labelList Foam::hexRef8::consistentSlowRefinement
 (
     const label maxFaceDiff,
@@ -3143,7 +3101,6 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
 
     forAll(refineCell, celli)
     {
-//        if (refineCell.get(celli))
         if (refineCell[celli])
         {
             nRefined++;
@@ -3155,7 +3112,6 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
 
     forAll(refineCell, celli)
     {
-//        if (refineCell.get(celli))
         if (refineCell[celli])
         {
             newCellsToRefine[nRefined++] = celli;
@@ -3235,7 +3191,6 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
 }
 
 
-// Top level driver to insert topo changes to do all refinement.
 Foam::labelListList Foam::hexRef8::setRefinement
 (
     const labelList& cellLabels,
@@ -4279,9 +4234,6 @@ void Foam::hexRef8::storeData
 }
 
 
-// Gets called after the mesh change. setRefinement will already have made
-// sure the pointLevel_ and cellLevel_ are the size of the new mesh so we
-// only need to account for reordering.
 void Foam::hexRef8::updateMesh(const mapPolyMesh& map)
 {
     Map<label> dummyMap(0);
@@ -4290,9 +4242,6 @@ void Foam::hexRef8::updateMesh(const mapPolyMesh& map)
 }
 
 
-// Gets called after the mesh change. setRefinement will already have made
-// sure the pointLevel_ and cellLevel_ are the size of the new mesh so we
-// only need to account for reordering.
 void Foam::hexRef8::updateMesh
 (
     const mapPolyMesh& map,
@@ -4482,7 +4431,6 @@ void Foam::hexRef8::updateMesh
 }
 
 
-// Gets called after mesh subsetting. Maps are from new back to old.
 void Foam::hexRef8::subset
 (
     const labelList& pointMap,
@@ -4566,7 +4514,6 @@ void Foam::hexRef8::subset
 }
 
 
-// Gets called after the mesh distribution
 void Foam::hexRef8::distribute(const mapDistributePolyMesh& map)
 {
     if (debug)
@@ -4578,6 +4525,7 @@ void Foam::hexRef8::distribute(const mapDistributePolyMesh& map)
 
     // Update celllevel
     map.distributeCellData(cellLevel_);
+
     // Update pointlevel
     map.distributePointData(pointLevel_);
 
@@ -5256,68 +5204,6 @@ Foam::labelList Foam::hexRef8::getSplitPoints() const
 
     return splitPoints;
 }
-
-
-//void Foam::hexRef8::markIndex
-//(
-//    const label maxLevel,
-//    const label level,
-//    const label index,
-//    const label markValue,
-//    labelList& indexValues
-//) const
-//{
-//    if (level < maxLevel && indexValues[index] == -1)
-//    {
-//        // Mark
-//        indexValues[index] = markValue;
-//
-//        // Mark parent
-//        const splitCell8& split = history_.splitCells()[index];
-//
-//        if (split.parent_ >= 0)
-//        {
-//            markIndex
-//            (
-//              maxLevel, level+1, split.parent_, markValue, indexValues);
-//            )
-//        }
-//    }
-//}
-//
-//
-//// Get all cells which (down to level) originate from the same cell.
-//// level=0 returns cell only, level=1 returns the 8 cells this cell
-//// originates from, level=2 returns 64 cells etc.
-//// If the cell does not originate from refinement returns just itself.
-//void Foam::hexRef8::markCellClusters
-//(
-//    const label maxLevel,
-//    labelList& cluster
-//) const
-//{
-//    cluster.setSize(mesh_.nCells());
-//    cluster = -1;
-//
-//    const DynamicList<splitCell8>& splitCells = history_.splitCells();
-//
-//    // Mark all splitCells down to level maxLevel with a cell originating from
-//    // it.
-//
-//    labelList indexLevel(splitCells.size(), -1);
-//
-//    forAll(visibleCells, celli)
-//    {
-//        label index = visibleCells[celli];
-//
-//        if (index >= 0)
-//        {
-//            markIndex(maxLevel, 0, index, celli, indexLevel);
-//        }
-//    }
-//
-//    // Mark cells with splitCell
-//}
 
 
 Foam::labelList Foam::hexRef8::consistentUnrefinement

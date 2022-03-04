@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ void Foam::refinementHistoryConstraint::add
     {
         if (decompositionConstraint::debug)
         {
-            Info<< type() << " : found refinementHistory" << endl;
+            Info<< type() << " add : found refinementHistory" << endl;
         }
         refPtr = &mesh.lookupObject<refinementHistory>("refinementHistory");
     }
@@ -99,7 +99,7 @@ void Foam::refinementHistoryConstraint::add
     {
         if (decompositionConstraint::debug)
         {
-            Info<< type() << " : reading refinementHistory from time "
+            Info<< type() << " add : reading refinementHistory from time "
                 << mesh.facesInstance() << endl;
         }
         storagePtr.reset
@@ -129,6 +129,11 @@ void Foam::refinementHistoryConstraint::add
 
     if (history.active())
     {
+        if (decompositionConstraint::debug)
+        {
+            Info<< type() << " add : adding refinementHistory " << endl;
+        }
+
         // refinementHistory itself implements decompositionConstraint
         history.add
         (
@@ -156,19 +161,19 @@ void Foam::refinementHistoryConstraint::apply
 
     if (mesh.foundObject<refinementHistory>("refinementHistory"))
     {
-        // if (decompositionConstraint::debug)
-        //{
-        //    Info<< type() << " : found refinementHistory" << endl;
-        //}
+        if (decompositionConstraint::debug)
+        {
+           Info<< type() << " apply : found refinementHistory" << endl;
+        }
         refPtr = &mesh.lookupObject<refinementHistory>("refinementHistory");
     }
     else
     {
-        // if (decompositionConstraint::debug)
-        //{
-        //    Info<< type() << " : reading refinementHistory from time "
-        //        << mesh.facesInstance() << endl;
-        //}
+        if (decompositionConstraint::debug)
+        {
+           Info<< type() << " apply : reading refinementHistory from time "
+               << mesh.facesInstance() << endl;
+        }
         storagePtr.reset
         (
             new refinementHistory
@@ -196,6 +201,11 @@ void Foam::refinementHistoryConstraint::apply
 
     if (history.active())
     {
+        if (decompositionConstraint::debug)
+        {
+            Info<< type() << " apply : adding refinementHistory " << endl;
+        }
+
         // refinementHistory itself implements decompositionConstraint
         history.apply
         (

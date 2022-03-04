@@ -141,7 +141,7 @@ bool Foam::fvMeshDistributors::distributor::update()
             // Create new decomposition distribution
             const labelList distribution
             (
-                distributor_->decompose(mesh, mesh.cellCentres())
+                distributor_->decompose(mesh, scalarField())
             );
 
             distribute(distribution);
