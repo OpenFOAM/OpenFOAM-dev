@@ -4,6 +4,6 @@ cd ${0%/*} || exit 1
 
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-cleanCase
+cleanCase && rm -rf 0/uniform 0/gas/Qdot
 
 #------------------------------------------------------------------------------
