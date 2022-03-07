@@ -25,7 +25,6 @@ boundaryField
     external
     {
         type            externalWallHeatFluxTemperature;
-        mode            coefficient;
         h               uniform 1e3;
         Ta              $internalField;
         value           $internalField;

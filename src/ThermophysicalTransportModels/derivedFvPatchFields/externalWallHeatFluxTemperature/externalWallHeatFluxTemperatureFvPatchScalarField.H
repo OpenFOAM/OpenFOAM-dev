@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     This boundary condition applies a heat flux condition to temperature
-    on an external wall in one of three modes:
+    on an external wall. Heat flux can be specified in the following ways:
 
       - fixed power: supply Q
       - fixed heat flux: supply q
@@ -40,8 +40,11 @@ Description
         Ta | Ambient temperature [K]
     \endvartable
 
-    For heat transfer coefficient mode optional thin thermal layer resistances
-    can be specified through thicknessLayers and kappaLayers entries.
+    If more than one parameter is given then the heat fluxes are summed.
+
+    If a heat transfer coefficient is given optional thin thermal layer
+    resistances can be specified through thicknessLayers and kappaLayers
+    entries.
 
     The thermal conductivity \c kappa can either be retrieved from various
     possible sources, as detailed in the class temperatureCoupledBase.
@@ -52,12 +55,11 @@ Description
 Usage
     \table
     Property     | Description                 | Required | Default value
-    mode         | 'power', 'flux' or 'coefficient' | yes |
-    Q            | Power [W]                   | for mode 'power'     |
-    q            | Heat flux [W/m^2]           | for mode 'flux'     |
-    h            | Heat transfer coefficient [W/m^2/K] | for mode 'coefficent' |
-    Ta           | Ambient temperature [K]     | for mode 'coefficient' |
-    thicknessLayers | Layer thicknesses [m] | no |
+    Q            | Power [W]                   | no       | 0
+    q            | Heat flux [W/m^2]           | no       | 0
+    h            | Heat transfer coefficient [W/m^2/K] | no | 0
+    Ta           | Ambient temperature [K]     | if h is given  |
+    thicknessLayers | Layer thicknesses [m]    | no |
     kappaLayers  | Layer thermal conductivities [W/m/K] | no |
     relaxation   | Relaxation for the wall temperature | no | 1
     emissivity   | Surface emissivity for radiative flux to ambient | no | 0
@@ -70,8 +72,6 @@ Usage
     <patchName>
     {
         type            externalWallHeatFluxTemperature;
-
-        mode            coefficient;
 
         Ta              constant 300.0;
         h               uniform 10.0;
@@ -112,60 +112,63 @@ class externalWallHeatFluxTemperatureFvPatchScalarField
     public mixedFvPatchScalarField,
     public temperatureCoupledBase
 {
-public:
-
-    // Public data
-
-        //- Operation mode enumeration
-        enum operationMode
-        {
-            fixedPower,
-            fixedHeatFlux,
-            fixedHeatTransferCoeff
-        };
-
-        static const NamedEnum<operationMode, 3> operationModeNames;
-
-
 private:
 
     // Private Data
 
-        //- Operation mode
-        operationMode mode_;
+        // Heat power
 
-        //- Heat power [W]
-        scalar Q_;
+            //- Do we have a heat power?
+            bool haveQ_;
 
-        //- Heat flux [W/m^2]
-        scalarField q_;
+            //- Heat power [W]
+            scalar Q_;
 
-        //- Heat transfer coefficient [W/m^2K]
-        scalarField h_;
 
-        //- Ambient temperature [K]
-        autoPtr<Function1<scalar>> Ta_;
+        // Heat flux
+
+            //- Do we have a heat flux?
+            bool haveq_;
+
+            //- Heat flux [W/m^2]
+            scalarField q_;
+
+
+        // Heat transfer coefficient
+
+            //- Do we have a heat transfer coefficient?
+            bool haveh_;
+
+            //- Heat transfer coefficient [W/m^2K]
+            scalarField h_;
+
+            //- Ambient temperature [K]
+            autoPtr<Function1<scalar>> Ta_;
+
+            //- Optional surface emissivity for radiative transfer to ambient
+            scalar emissivity_;
+
+            //- Thickness of layers
+            scalarList thicknessLayers_;
+
+            //- Conductivity of layers
+            scalarList kappaLayers_;
+
 
         //- Relaxation for the wall temperature (thermal inertia)
         scalar relaxation_;
 
-        //- Optional surface emissivity for radiative transfer to ambient
-        scalar emissivity_;
 
-        //- Cache qr for relaxation
-        scalarField qrPrevious_;
+        // Radiation
 
-        //- Relaxation for qr
-        scalar qrRelaxation_;
+            //- Name of the radiative heat flux
+            const word qrName_;
 
-        //- Name of the radiative heat flux
-        const word qrName_;
+            //- Relaxation for qr
+            scalar qrRelaxation_;
 
-        //- Thickness of layers
-        scalarList thicknessLayers_;
-
-        //- Conductivity of layers
-        scalarList kappaLayers_;
+            //- Cache qr for relaxation
+            scalarField qrPrevious_;
 
 
 public:

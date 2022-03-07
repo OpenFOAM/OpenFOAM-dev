@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,30 +30,6 @@ License
 
 using Foam::constant::physicoChemical::sigma;
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    template<>
-    const char*
-    NamedEnum
-    <
-        externalWallHeatFluxTemperatureFvPatchScalarField::operationMode,
-        3
-    >::names[] =
-    {
-        "power",
-        "flux",
-        "coefficient"
-    };
-}
-
-const Foam::NamedEnum
-<
-    Foam::externalWallHeatFluxTemperatureFvPatchScalarField::operationMode,
-    3
-> Foam::externalWallHeatFluxTemperatureFvPatchScalarField::operationModeNames;
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -66,15 +42,20 @@ externalWallHeatFluxTemperatureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF),
     temperatureCoupledBase(patch()),
-    mode_(fixedHeatFlux),
-    Q_(0),
+    haveQ_(false),
+    Q_(NaN),
+    haveq_(false),
+    q_(),
+    haveh_(false),
+    h_(),
     Ta_(),
-    relaxation_(1),
     emissivity_(0),
-    qrRelaxation_(1),
-    qrName_("undefined-qr"),
     thicknessLayers_(),
-    kappaLayers_()
+    kappaLayers_(),
+    relaxation_(1),
+    qrName_(word::null),
+    qrRelaxation_(1),
+    qrPrevious_()
 {
     refValue() = 0;
     refGrad() = 0;
@@ -92,57 +73,50 @@ externalWallHeatFluxTemperatureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF),
     temperatureCoupledBase(patch(), dict),
-    mode_(operationModeNames.read(dict.lookup("mode"))),
-    Q_(0),
-    Ta_(),
-    relaxation_(dict.lookupOrDefault<scalar>("relaxation", 1)),
+    haveQ_(dict.found("Q")),
+    Q_(haveQ_ ? dict.lookup<scalar>("Q") : NaN),
+    haveq_(dict.found("q")),
+    q_(haveq_ ? scalarField("q", dict, p.size()) : scalarField()),
+    haveh_(dict.found("h")),
+    h_(haveh_ ? scalarField("h", dict, p.size()) : scalarField()),
+    Ta_(haveh_ ? Function1<scalar>::New("Ta", dict).ptr() : nullptr),
     emissivity_(dict.lookupOrDefault<scalar>("emissivity", 0)),
+    thicknessLayers_
+    (
+        dict.lookupOrDefault<scalarList>("thicknessLayers", scalarList())
+    ),
+    kappaLayers_
+    (
+        dict.lookupOrDefault<scalarList>("kappaLayers", scalarList())
+    ),
+    relaxation_(dict.lookupOrDefault<scalar>("relaxation", 1)),
+    qrName_(dict.lookupOrDefault<word>("qr", word::null)),
     qrRelaxation_(dict.lookupOrDefault<scalar>("qrRelaxation", 1)),
-    qrName_(dict.lookupOrDefault<word>("qr", "none")),
-    thicknessLayers_(),
-    kappaLayers_()
+    qrPrevious_
+    (
+        qrName_ != word::null
+      ? dict.found("qrPrevious")
+      ? scalarField("qrPrevious", dict, p.size())
+      : scalarField(0, p.size())
+      : scalarField()
+    )
 {
-    switch (mode_)
-    {
-        case fixedPower:
-        {
-            dict.lookup("Q") >> Q_;
-
-            break;
-        }
-        case fixedHeatFlux:
-        {
-            q_ = scalarField("q", dict, p.size());
-
-            break;
-        }
-        case fixedHeatTransferCoeff:
-        {
-            h_ = scalarField("h", dict, p.size());
-            Ta_ = Function1<scalar>::New("Ta", dict);
-
-            if (dict.found("thicknessLayers"))
-            {
-                dict.lookup("thicknessLayers") >> thicknessLayers_;
-                dict.lookup("kappaLayers") >> kappaLayers_;
-            }
-
-            break;
-        }
-    }
-
     fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
 
-    if (qrName_ != "none")
+    if (!haveQ_ && !haveq_ && !haveh_)
     {
-        if (dict.found("qrPrevious"))
-        {
-            qrPrevious_ = scalarField("qrPrevious", dict, p.size());
-        }
-        else
-        {
-            qrPrevious_.setSize(p.size(), 0);
-        }
+        FatalIOErrorInFunction(dict)
+            << "One or more of Q (heat power), q (heat flux), and h (heat "
+            << "transfer coefficient) must be specified"
+            << exit(FatalIOError);
+    }
+
+    if (thicknessLayers_.size() != kappaLayers_.size())
+    {
+        FatalIOErrorInFunction(dict)
+            << "If either thicknessLayers or kappaLayers is specified, then "
+            << "both must be specified and be lists of the same length "
+            << exit(FatalIOError);
     }
 
     if (dict.found("refValue"))
@@ -173,39 +147,26 @@ externalWallHeatFluxTemperatureFvPatchScalarField
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper),
     temperatureCoupledBase(patch(), ptf),
-    mode_(ptf.mode_),
+    haveQ_(ptf.haveQ_),
     Q_(ptf.Q_),
+    haveq_(ptf.haveq_),
+    q_(haveq_ ? mapper(ptf.q_)() : scalarField()),
+    haveh_(ptf.haveq_),
+    h_(haveh_ ? mapper(ptf.q_)() : scalarField()),
     Ta_(ptf.Ta_, false),
-    relaxation_(ptf.relaxation_),
     emissivity_(ptf.emissivity_),
-    qrRelaxation_(ptf.qrRelaxation_),
-    qrName_(ptf.qrName_),
     thicknessLayers_(ptf.thicknessLayers_),
-    kappaLayers_(ptf.kappaLayers_)
-{
-    switch (mode_)
-    {
-        case fixedPower:
-        {
-            break;
-        }
-        case fixedHeatFlux:
-        {
-            mapper(q_, ptf.q_);
-            break;
-        }
-        case fixedHeatTransferCoeff:
-        {
-            mapper(h_, ptf.h_);
-            break;
-        }
-    }
-
-    if (qrName_ != "none")
-    {
-        mapper(qrPrevious_, ptf.qrPrevious_);
-    }
-}
+    kappaLayers_(ptf.kappaLayers_),
+    relaxation_(ptf.relaxation_),
+    qrName_(ptf.qrName_),
+    qrRelaxation_(ptf.qrRelaxation_),
+    qrPrevious_
+    (
+        qrName_ != word::null
+      ? mapper(ptf.qrPrevious_)()
+      : scalarField()
+    )
+{}
 
 
 Foam::externalWallHeatFluxTemperatureFvPatchScalarField::
@@ -217,18 +178,20 @@ externalWallHeatFluxTemperatureFvPatchScalarField
 :
     mixedFvPatchScalarField(tppsf, iF),
     temperatureCoupledBase(patch(), tppsf),
-    mode_(tppsf.mode_),
+    haveQ_(tppsf.haveQ_),
     Q_(tppsf.Q_),
+    haveq_(tppsf.haveq_),
     q_(tppsf.q_),
+    haveh_(tppsf.haveh_),
     h_(tppsf.h_),
     Ta_(tppsf.Ta_, false),
-    relaxation_(tppsf.relaxation_),
     emissivity_(tppsf.emissivity_),
-    qrPrevious_(tppsf.qrPrevious_),
-    qrRelaxation_(tppsf.qrRelaxation_),
-    qrName_(tppsf.qrName_),
     thicknessLayers_(tppsf.thicknessLayers_),
-    kappaLayers_(tppsf.kappaLayers_)
+    kappaLayers_(tppsf.kappaLayers_),
+    relaxation_(tppsf.relaxation_),
+    qrName_(tppsf.qrName_),
+    qrRelaxation_(tppsf.qrRelaxation_),
+    qrPrevious_(tppsf.qrPrevious_)
 {}
 
 
@@ -241,27 +204,17 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::autoMap
 {
     mixedFvPatchScalarField::autoMap(m);
 
-    switch (mode_)
+    if (haveq_)
     {
-        case fixedPower:
-        {
-            break;
-        }
-        case fixedHeatFlux:
-        {
-            m(q_, q_);
-
-            break;
-        }
-        case fixedHeatTransferCoeff:
-        {
-            m(h_, h_);
-
-            break;
-        }
+        m(q_, q_);
     }
 
-    if (qrName_ != "none")
+    if (haveh_)
+    {
+        m(h_, h_);
+    }
+
+    if (qrName_ != word::null)
     {
         m(qrPrevious_, qrPrevious_);
     }
@@ -279,27 +232,17 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::rmap
     const externalWallHeatFluxTemperatureFvPatchScalarField& tiptf =
         refCast<const externalWallHeatFluxTemperatureFvPatchScalarField>(ptf);
 
-    switch (mode_)
+    if (haveq_)
     {
-        case fixedPower:
-        {
-            break;
-        }
-        case fixedHeatFlux:
-        {
-            q_.rmap(tiptf.q_, addr);
-
-            break;
-        }
-        case fixedHeatTransferCoeff:
-        {
-            h_.rmap(tiptf.h_, addr);
-
-            break;
-        }
+        q_.rmap(tiptf.q_, addr);
     }
 
-    if (qrName_ != "none")
+    if (haveh_)
+    {
+        h_.rmap(tiptf.h_, addr);
+    }
+
+    if (qrName_ != word::null)
     {
         qrPrevious_.rmap(tiptf.qrPrevious_, addr);
     }
@@ -319,103 +262,98 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
     const scalarField valueFraction0(valueFraction());
     const scalarField refValue0(refValue());
 
+    // Get the radiative heat flux and relax
     scalarField qr(Tp.size(), 0);
-    if (qrName_ != "none")
+    if (qrName_ != word::null)
     {
         qr =
             qrRelaxation_
            *patch().lookupPatchField<volScalarField, scalar>(qrName_)
           + (1 - qrRelaxation_)*qrPrevious_;
-
         qrPrevious_ = qr;
     }
 
-    switch (mode_)
+    // Compute the total non-convective heat flux
+    scalarField qTot(qr);
+    if (haveQ_)
     {
-        case fixedPower:
-        {
-            refGrad() = (Q_/gSum(patch().magSf()) + qr)/kappa(*this);
-            refValue() = Tp;
-            valueFraction() = 0;
+        qTot += Q_;
+    }
+    if (haveq_)
+    {
+        qTot += q_;
+    }
 
-            break;
-        }
-        case fixedHeatFlux:
+    // Evaluate
+    if (!haveh_)
+    {
+        refGrad() = qTot/kappa(*this);
+        refValue() = Tp;
+        valueFraction() = 0;
+    }
+    else
+    {
+        scalar totalSolidRes = 0;
+        if (thicknessLayers_.size())
         {
-            refGrad() = (q_ + qr)/kappa(*this);
-            refValue() = Tp;
-            valueFraction() = 0;
-
-            break;
-        }
-        case fixedHeatTransferCoeff:
-        {
-            scalar totalSolidRes = 0;
-            if (thicknessLayers_.size())
+            forAll(thicknessLayers_, iLayer)
             {
-                forAll(thicknessLayers_, iLayer)
+                const scalar l = thicknessLayers_[iLayer];
+                if (kappaLayers_[iLayer] > 0)
                 {
-                    const scalar l = thicknessLayers_[iLayer];
-                    if (kappaLayers_[iLayer] > 0)
-                    {
-                        totalSolidRes += l/kappaLayers_[iLayer];
-                    }
+                    totalSolidRes += l/kappaLayers_[iLayer];
                 }
             }
+        }
 
-            const scalar Ta = Ta_->value(this->db().time().userTimeValue());
+        const scalar Ta = Ta_->value(this->db().time().userTimeValue());
 
-            const scalarField hp
-            (
+        const scalarField hp
+        (
+            1
+           /(
                 1
                /(
-                    1
-                   /(
-                        (emissivity_ > 0)
-                      ? (
-                            h_
-                          + emissivity_*sigma.value()
-                           *((pow3(Ta) + pow3(Tp)) + Ta*Tp*(Ta + Tp))
-                        )()
-                      : h_
-                    ) + totalSolidRes
-                )
-            );
+                    (emissivity_ > 0)
+                  ? (
+                        h_
+                      + emissivity_*sigma.value()
+                       *((pow3(Ta) + pow3(Tp)) + Ta*Tp*(Ta + Tp))
+                    )()
+                  : h_
+                ) + totalSolidRes
+            )
+        );
 
-            const scalarField hpTa(hp*Ta);
+        const scalarField hpTa(hp*Ta);
 
-            const scalarField kappaDeltaCoeffs
-            (
-                this->kappa(*this)*patch().deltaCoeffs()
-            );
+        const scalarField kappaDeltaCoeffs
+        (
+            this->kappa(*this)*patch().deltaCoeffs()
+        );
 
-            refGrad() = 0;
-
-            forAll(Tp, i)
+        refGrad() = 0;
+        forAll(Tp, i)
+        {
+            if (qTot[i] < 0)
             {
-                if (qr[i] < 0)
-                {
-                    const scalar hpmqr = hp[i] - qr[i]/Tp[i];
-
-                    refValue()[i] = hpTa[i]/hpmqr;
-                    valueFraction()[i] = hpmqr/(hpmqr + kappaDeltaCoeffs[i]);
-                }
-                else
-                {
-                    refValue()[i] = (hpTa[i] + qr[i])/hp[i];
-                    valueFraction()[i] = hp[i]/(hp[i] + kappaDeltaCoeffs[i]);
-                }
+                const scalar hpmqTot = hp[i] - qTot[i]/Tp[i];
+                refValue()[i] = hpTa[i]/hpmqTot;
+                valueFraction()[i] = hpmqTot/(hpmqTot + kappaDeltaCoeffs[i]);
             }
-
-            break;
+            else
+            {
+                refValue()[i] = (hpTa[i] + qTot[i])/hp[i];
+                valueFraction()[i] = hp[i]/(hp[i] + kappaDeltaCoeffs[i]);
+            }
         }
     }
 
+    // Relax
     valueFraction() =
-        relaxation_*valueFraction()
-      + (1 - relaxation_)*valueFraction0;
-
-    refValue() = relaxation_*refValue() + (1 - relaxation_)*refValue0;
+        relaxation_*valueFraction() + (1 - relaxation_)*valueFraction0;
+    refValue() =
+        relaxation_*refValue() + (1 - relaxation_)*refValue0;
 
     mixedFvPatchScalarField::updateCoeffs();
 
@@ -443,54 +381,45 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::write
 {
     fvPatchScalarField::write(os);
 
-    writeEntry(os, "mode", operationModeNames[mode_]);
     temperatureCoupledBase::write(os);
 
-    switch (mode_)
+    if (haveQ_)
     {
-        case fixedPower:
-        {
-            writeEntry(os, "Q", Q_);
-
-            break;
-        }
-        case fixedHeatFlux:
-        {
-            writeEntry(os, "q", q_);
-
-            break;
-        }
-        case fixedHeatTransferCoeff:
-        {
-            writeEntry(os, "h", h_);
-            writeEntry(os, Ta_());
-
-            if (relaxation_ < 1)
-            {
-                writeEntry(os, "relaxation", relaxation_);
-            }
-
-            if (emissivity_ > 0)
-            {
-                writeEntry(os, "emissivity", emissivity_);
-            }
-
-            if (thicknessLayers_.size())
-            {
-                writeEntry(os, "thicknessLayers", thicknessLayers_);
-                writeEntry(os, "kappaLayers", kappaLayers_);
-            }
-
-            break;
-        }
+        writeEntry(os, "Q", Q_);
     }
 
-    writeEntry(os, "qr", qrName_);
-
-    if (qrName_ != "none")
+    if (haveq_)
     {
-        writeEntry(os, "qrRelaxation", qrRelaxation_);
+        writeEntry(os, "q", q_);
+    }
 
+    if (haveh_)
+    {
+        writeEntry(os, "h", h_);
+        writeEntry(os, Ta_());
+        writeEntryIfDifferent(os, "emissivity", scalar(0), emissivity_);
+        writeEntryIfDifferent
+        (
+            os,
+            "thicknessLayers",
+            scalarList(),
+            thicknessLayers_
+        );
+        writeEntryIfDifferent
+        (
+            os,
+            "kappaLayers",
+            scalarList(),
+            kappaLayers_
+        );
+    }
+
+    writeEntryIfDifferent(os, "relaxation", scalar(1), relaxation_);
+
+    if (qrName_ != word::null)
+    {
+        writeEntry(os, "qr", qrName_);
+        writeEntry(os, "qrRelaxation", qrRelaxation_);
         writeEntry(os, "qrPrevious", qrPrevious_);
     }
 
