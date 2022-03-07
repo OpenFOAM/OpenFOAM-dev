@@ -7,4 +7,4 @@ EXE_INC = \
     -I$(ZOLTAN_ARCH_PATH)/include
 
 LIB_LIBS = \
-    -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) -lzoltan
+    -L$(ZOLTAN_ARCH_PATH)/lib -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) -lzoltan

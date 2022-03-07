@@ -15,7 +15,10 @@ then
 
     if [ -n "$ZOLTAN_ARCH_PATH" ] \
     && [ -r "$ZOLTAN_ARCH_PATH/include/zoltan.h" ] \
-    && [ -r "$FOAM_EXT_LIBBIN/$FOAM_MPI/libzoltan.a" ]
+    && { \
+         [ -r "$FOAM_EXT_LIBBIN/$FOAM_MPI/libzoltan.a" ] \
+      || [ -r "$ZOLTAN_ARCH_PATH/lib/libzoltan.a" ]; \
+       }
     then
         wmake $targetType zoltanRenumber
     else
