@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,6 +145,7 @@ quote                      \"
 dash                       "-"
 dotColonDash               [.:-]
 commaPipe                  [,\|]
+squareBracket              [\[\]]
 
 schemeSpecialInitial       [!$%&*/\\:;<=>?~_^#.@']
 schemeSpecialSubsequent    [.+-]
@@ -159,6 +160,7 @@ zeroLabel                  {digit}*
 signedInteger              [-+]?{integer}
 word                       ({alpha}|{digit}|{dotColonDash})*
 wordBraces                 ({word}|{lbrac}|{rbrac})*
+wordSquareBrackets         ({word}|{squareBracket})*
 wordBracesExtras           ({word}|{lbrac}|{rbrac}|{commaPipe})*
 
 exponent_part              [eE][-+]?{digit}+
@@ -180,7 +182,7 @@ scalarList                 ({scalarListElement}+{space})
 schemeSymbolList           ({schemeSymbolListElement}+{space})
 
 starStar                   ("**")
-text                       ({space}({word}*{space})*)
+text                       ({space}({wordSquareBrackets}*{space})*)
 textBraces                 ({space}({wordBraces}*{space})*)
 textExtras                 ({space}({word}*{commaPipe}{space})*)
 textBracesExtras           ({space}({wordBracesExtras}*{space})*)
