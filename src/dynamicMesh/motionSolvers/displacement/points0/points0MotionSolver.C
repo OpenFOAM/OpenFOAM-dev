@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Foam::pointVectorField Foam::points0MotionSolver::readPoints0
     (
         mesh.time().findInstance
         (
-            mesh.meshDir(),
+            ".",
             "points0",
             IOobject::READ_IF_PRESENT
         )
@@ -58,7 +58,6 @@ Foam::pointVectorField Foam::points0MotionSolver::readPoints0
             (
                 "points0",
                 instance,
-                polyMesh::meshSubDir,
                 mesh,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
@@ -91,7 +90,6 @@ Foam::pointVectorField Foam::points0MotionSolver::readPoints0
             (
                 "points0",
                 instance,
-                polyMesh::meshSubDir,
                 mesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
