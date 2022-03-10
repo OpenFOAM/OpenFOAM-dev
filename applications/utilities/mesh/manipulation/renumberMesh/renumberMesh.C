@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -799,18 +799,6 @@ int main(int argc, char *argv[])
         ),
         labelList(0)
     );
-    labelIOList boundaryProcAddressing
-    (
-        IOobject
-        (
-            "boundaryProcAddressing",
-            mesh.pointsInstance(),
-            polyMesh::meshSubDir,
-            mesh,
-            IOobject::READ_IF_PRESENT
-        ),
-        labelList(0)
-    );
 
 
     // Read objects in time directory
@@ -1240,25 +1228,6 @@ int main(int argc, char *argv[])
             if (fName.size())
             {
                 Info<< "Deleting inconsistent processor point decomposition"
-                    << " map " << fName << endl;
-                rm(fName);
-            }
-        }
-    }
-
-    if (boundaryProcAddressing.headerOk())
-    {
-        boundaryProcAddressing.instance() = mesh.facesInstance();
-        if (boundaryProcAddressing.size() == mesh.boundaryMesh().size())
-        {
-            boundaryProcAddressing.write();
-        }
-        else
-        {
-            const fileName fName(boundaryProcAddressing.filePath());
-            if (fName.size())
-            {
-                Info<< "Deleting inconsistent processor patch decomposition"
                     << " map " << fName << endl;
                 rm(fName);
             }

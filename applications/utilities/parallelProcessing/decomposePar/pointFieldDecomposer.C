@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,29 +78,27 @@ Foam::pointFieldDecomposer::pointFieldDecomposer
 (
     const pointMesh& completeMesh,
     const pointMesh& procMesh,
-    const labelList& pointAddressing,
-    const labelList& boundaryAddressing
+    const labelList& pointAddressing
 )
 :
     completeMesh_(completeMesh),
     procMesh_(procMesh),
     pointAddressing_(pointAddressing),
-    boundaryAddressing_(boundaryAddressing),
-    patchFieldDecomposerPtrs_
-    (
-        procMesh_.boundary().size(),
-        static_cast<patchFieldDecomposer*>(nullptr)
-    )
+    patchFieldDecomposers_(procMesh_.boundary().size())
 {
-    forAll(boundaryAddressing_, patchi)
+    forAll(procMesh_.boundary(), patchi)
     {
-        if (boundaryAddressing_[patchi] >= 0)
+        if (patchi < completeMesh_.boundary().size())
         {
-            patchFieldDecomposerPtrs_[patchi] = new patchFieldDecomposer
+            patchFieldDecomposers_.set
             (
-                completeMesh_.boundary()[boundaryAddressing_[patchi]],
-                procMesh_.boundary()[patchi],
-                pointAddressing_
+                patchi,
+                new patchFieldDecomposer
+                (
+                    completeMesh_.boundary()[patchi],
+                    procMesh_.boundary()[patchi],
+                    pointAddressing_
+                )
             );
         }
     }
@@ -110,17 +108,7 @@ Foam::pointFieldDecomposer::pointFieldDecomposer
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::pointFieldDecomposer::~pointFieldDecomposer()
-{
-    forAll(patchFieldDecomposerPtrs_, patchi)
-    {
-        if (patchFieldDecomposerPtrs_[patchi])
-        {
-            delete patchFieldDecomposerPtrs_[patchi];
-        }
-    }
-}
+{}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // ************************************************************************* //

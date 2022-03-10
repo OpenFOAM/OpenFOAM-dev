@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,10 +147,11 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
         );
 
         // Set the boundary patch values in the reconstructed field
-        forAll(boundaryProcAddressing_[proci], patchi)
+        forAll(procField.boundaryField(), patchi)
         {
             // Get patch index of the original patch
-            const label curBPatch = boundaryProcAddressing_[proci][patchi];
+            const label curBPatch =
+                patchi < mesh_.boundary().size() ? patchi : -1;
 
             // Get addressing slice for this patch
             const labelList::subList cp =
@@ -160,7 +161,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
                 );
 
             // check if the boundary patch is not a processor patch
-            if (curBPatch >= 0)
+            if (curBPatch != -1)
             {
                 // Regular patch. Fast looping
 
@@ -406,10 +407,11 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
         }
 
         // Set the boundary patch values in the reconstructed field
-        forAll(boundaryProcAddressing_[proci], patchi)
+        forAll(procField.boundaryField(), patchi)
         {
             // Get patch index of the original patch
-            const label curBPatch = boundaryProcAddressing_[proci][patchi];
+            const label curBPatch =
+                patchi < mesh_.boundary().size() ? patchi : -1;
 
             // Get addressing slice for this patch
             const labelList::subList cp =
@@ -419,7 +421,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                 );
 
             // check if the boundary patch is not a processor patch
-            if (curBPatch >= 0)
+            if (curBPatch != -1)
             {
                 // Regular patch. Fast looping
 

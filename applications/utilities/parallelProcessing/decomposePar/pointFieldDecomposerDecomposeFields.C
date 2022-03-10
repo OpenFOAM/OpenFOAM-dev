@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,22 +39,22 @@ Foam::pointFieldDecomposer::decomposeField
     Field<Type> internalField(field.primitiveField(), pointAddressing_);
 
     // Create a list of pointers for the patchFields
-    PtrList<pointPatchField<Type>> patchFields(boundaryAddressing_.size());
+    PtrList<pointPatchField<Type>> patchFields(procMesh_.boundary().size());
 
     // Create and map the patch field values
-    forAll(boundaryAddressing_, patchi)
+    forAll(procMesh_.boundary(), patchi)
     {
-        if (patchFieldDecomposerPtrs_[patchi])
+        if (patchi < completeMesh_.boundary().size())
         {
             patchFields.set
             (
                 patchi,
                 pointPatchField<Type>::New
                 (
-                    field.boundaryField()[boundaryAddressing_[patchi]],
+                    field.boundaryField()[patchi],
                     procMesh_.boundary()[patchi],
                     DimensionedField<Type, pointMesh>::null(),
-                    *patchFieldDecomposerPtrs_[patchi]
+                    patchFieldDecomposers_[patchi]
                 )
             );
         }

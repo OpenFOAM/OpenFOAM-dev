@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -306,16 +306,27 @@ int main(int argc, char *argv[])
 
             // Check if any new meshes need to be read.
             fvMesh::readUpdateState meshStat = mesh.readUpdate();
-
             fvMesh::readUpdateState procStat = procMeshes.readUpdate();
+            if
+            (
+                meshStat != procStat
 
-            if (procStat == fvMesh::POINTS_MOVED)
-            {
-                // Reconstruct the points for moving mesh cases and write
-                // them out
-                procMeshes.reconstructPoints(mesh);
-            }
-            else if (meshStat != procStat)
+                // Allowed status difference. Mesh has moved in parallel, but
+                // the change has not yet been reconstructed.
+             && !(
+                    meshStat == fvMesh::UNCHANGED
+                 && procStat == fvMesh::POINTS_MOVED
+                )
+
+                // Allowed status difference. Mesh has changed topology in both
+                // cases, and this has lead to new processor interfaces
+                // (probably). These interfaces are compatible with a
+                // reconstructed mesh in which patches have not changed.
+             && !(
+                    meshStat == fvMesh::TOPO_CHANGE
+                 && procStat == fvMesh::TOPO_PATCH_CHANGE
+                )
+            )
             {
                 WarningInFunction
                     << "readUpdate for the reconstructed mesh:"
@@ -328,6 +339,11 @@ int main(int argc, char *argv[])
                     << "mesh directories." << endl;
             }
 
+            // Reconstruct and write the points for moving mesh cases
+            if (procStat == fvMesh::POINTS_MOVED)
+            {
+                procMeshes.reconstructPoints(mesh);
+            }
 
             // Get list of objects from processor0 database
             IOobjectList objects
@@ -346,8 +362,7 @@ int main(int argc, char *argv[])
                     mesh,
                     procMeshes.meshes(),
                     procMeshes.faceProcAddressing(),
-                    procMeshes.cellProcAddressing(),
-                    procMeshes.boundaryProcAddressing()
+                    procMeshes.cellProcAddressing()
                 );
 
                 fvReconstructor.reconstructFvVolumeInternalFields<scalar>
@@ -455,8 +470,7 @@ int main(int argc, char *argv[])
                 (
                     pMesh,
                     pMeshes,
-                    procMeshes.pointProcAddressing(),
-                    procMeshes.boundaryProcAddressing()
+                    procMeshes.pointProcAddressing()
                 );
 
                 pointReconstructor.reconstructFields<scalar>

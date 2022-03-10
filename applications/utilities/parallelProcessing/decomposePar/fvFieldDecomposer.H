@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,9 @@ class IOobjectList;
 
 class fvFieldDecomposer
 {
-
 public:
+
+    // Public Classes
 
         //- Patch field decomposer class
         class patchFieldDecomposer
@@ -82,7 +83,6 @@ public:
                     const label addressingOffset
                 );
         };
-
 
         //- Processor patch field decomposer class. Maps either owner or
         //  neighbour data (no interpolate anymore - processorFvPatchField
@@ -128,14 +128,12 @@ private:
         //- Reference to cell addressing
         const labelList& cellAddressing_;
 
-        //- Reference to boundary addressing
-        const labelList& boundaryAddressing_;
-
         //- List of patch field decomposers
-        List<patchFieldDecomposer*> patchFieldDecomposerPtrs_;
+        PtrList<patchFieldDecomposer> patchFieldDecomposers_;
 
-        List<processorVolPatchFieldDecomposer*>
-            processorVolPatchFieldDecomposerPtrs_;
+        //- ...
+        PtrList<processorVolPatchFieldDecomposer>
+            processorVolPatchFieldDecomposers_;
 
 
     // Private Member Functions
@@ -160,8 +158,7 @@ public:
             const fvMesh& completeMesh,
             const fvMesh& procMesh,
             const labelList& faceAddressing,
-            const labelList& cellAddressing,
-            const labelList& boundaryAddressing
+            const labelList& cellAddressing
         );
 
         //- Disallow default bitwise copy construction
@@ -191,6 +188,7 @@ public:
             const GeometricField<Type, fvsPatchField, surfaceMesh>& field
         ) const;
 
+        //- Decompose a list of fields
         template<class GeoField>
         void decomposeFields(const PtrList<GeoField>& fields) const;
 

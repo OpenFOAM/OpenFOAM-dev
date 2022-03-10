@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,9 +63,6 @@ class pointFieldReconstructor
         //- List of processor point addressing lists
         const PtrList<labelIOList>& pointProcAddressing_;
 
-        //- List of processor boundary addressing lists
-        const PtrList<labelIOList>& boundaryProcAddressing_;
-
         //- Point patch addressing
         labelListListList patchPointAddressing_;
 
@@ -100,8 +97,7 @@ public:
         (
             const pointMesh& mesh,
             const PtrList<pointMesh>& procMeshes,
-            const PtrList<labelIOList>& pointProcAddressing,
-            const PtrList<labelIOList>& boundaryProcAddressing
+            const PtrList<labelIOList>& pointProcAddressing
         );
 
         //- Disallow default bitwise copy construction

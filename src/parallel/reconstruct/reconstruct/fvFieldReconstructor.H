@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,9 +69,6 @@ class fvFieldReconstructor
         //- List of processor cell addressing lists
         const PtrList<labelIOList>& cellProcAddressing_;
 
-        //- List of processor boundary addressing lists
-        const PtrList<labelIOList>& boundaryProcAddressing_;
-
         //- Number of fields reconstructed
         label nReconstructed_;
 
@@ -104,8 +101,7 @@ public:
             fvMesh& mesh,
             const PtrList<fvMesh>& procMeshes,
             const PtrList<labelIOList>& faceProcAddressing,
-            const PtrList<labelIOList>& cellProcAddressing,
-            const PtrList<labelIOList>& boundaryProcAddressing
+            const PtrList<labelIOList>& cellProcAddressing
         );
 
         //- Disallow default bitwise copy construction

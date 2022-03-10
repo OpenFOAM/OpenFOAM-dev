@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,56 +123,59 @@ Foam::fvFieldDecomposer::fvFieldDecomposer
     const fvMesh& completeMesh,
     const fvMesh& procMesh,
     const labelList& faceAddressing,
-    const labelList& cellAddressing,
-    const labelList& boundaryAddressing
+    const labelList& cellAddressing
 )
 :
     completeMesh_(completeMesh),
     procMesh_(procMesh),
     faceAddressing_(faceAddressing),
     cellAddressing_(cellAddressing),
-    boundaryAddressing_(boundaryAddressing),
-    patchFieldDecomposerPtrs_
-    (
-        procMesh_.boundary().size(),
-        static_cast<patchFieldDecomposer*>(nullptr)
-    ),
-    processorVolPatchFieldDecomposerPtrs_
-    (
-        procMesh_.boundary().size(),
-        static_cast<processorVolPatchFieldDecomposer*>(nullptr)
-    )
+    patchFieldDecomposers_(procMesh_.boundary().size()),
+    processorVolPatchFieldDecomposers_(procMesh_.boundary().size())
 {
-    forAll(boundaryAddressing_, patchi)
+    forAll(procMesh_.boundary(), procPatchi)
     {
-        const fvPatch& procPatch = procMesh.boundary()[patchi];
+        const fvPatch& procPatch = procMesh.boundary()[procPatchi];
 
-        label fromPatchi = boundaryAddressing_[patchi];
-        if (fromPatchi < 0 && isA<processorCyclicFvPatch>(procPatch))
+        // Determine the index of the corresponding complete patch
+        label completePatchi = -1;
+        if (procPatchi < completeMesh_.boundary().size())
         {
-            const label referPatchi =
+            completePatchi = procPatchi;
+        }
+        else if (isA<processorCyclicFvPatch>(procPatch))
+        {
+            completePatchi =
                 refCast<const processorCyclicPolyPatch>
                 (procPatch.patch()).referPatchID();
-            fromPatchi = boundaryAddressing_[referPatchi];
         }
 
-        if (fromPatchi >= 0)
+        // If there is a corresponding complete patch, then create a mapper
+        if (completePatchi >= 0)
         {
-            patchFieldDecomposerPtrs_[patchi] = new patchFieldDecomposer
+            patchFieldDecomposers_.set
             (
-                procMesh_.boundary()[patchi].patchSlice(faceAddressing_),
-                completeMesh_.boundaryMesh()[fromPatchi].start()
+                procPatchi,
+                new patchFieldDecomposer
+                (
+                    procPatch.patchSlice(faceAddressing_),
+                    completeMesh_.boundaryMesh()[completePatchi].start()
+                )
             );
         }
 
-        if (boundaryAddressing_[patchi] < 0)
+        // If this is a processor patch then create a processor mapper
+        if (procPatchi >= completeMesh_.boundary().size())
         {
-            processorVolPatchFieldDecomposerPtrs_[patchi] =
+            processorVolPatchFieldDecomposers_.set
+            (
+                procPatchi,
                 new processorVolPatchFieldDecomposer
                 (
                     completeMesh_,
-                    procMesh_.boundary()[patchi].patchSlice(faceAddressing_)
-                );
+                    procPatch.patchSlice(faceAddressing_)
+                )
+            );
         }
     }
 }
@@ -181,22 +184,7 @@ Foam::fvFieldDecomposer::fvFieldDecomposer
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::fvFieldDecomposer::~fvFieldDecomposer()
-{
-    forAll(patchFieldDecomposerPtrs_, patchi)
-    {
-        if (patchFieldDecomposerPtrs_[patchi])
-        {
-            delete patchFieldDecomposerPtrs_[patchi];
-        }
-    }
+{}
 
-    forAll(processorVolPatchFieldDecomposerPtrs_, patchi)
-    {
-        if (processorVolPatchFieldDecomposerPtrs_[patchi])
-        {
-            delete processorVolPatchFieldDecomposerPtrs_[patchi];
-        }
-    }
-}
 
 // ************************************************************************* //

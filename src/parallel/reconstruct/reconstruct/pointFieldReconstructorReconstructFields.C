@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,13 +81,14 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
         );
 
         // Set the boundary patch values in the reconstructed field
-        forAll(boundaryProcAddressing_[proci], patchi)
+        forAll(procField.boundaryField(), patchi)
         {
             // Get patch index of the original patch
-            const label curBPatch = boundaryProcAddressing_[proci][patchi];
+            const label curBPatch =
+                patchi < mesh_.boundary().size() ? patchi : -1;
 
             // check if the boundary patch is not a processor patch
-            if (curBPatch >= 0)
+            if (curBPatch != -1)
             {
                 if (!patchFields(curBPatch))
                 {

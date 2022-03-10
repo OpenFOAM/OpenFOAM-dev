@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,9 +71,6 @@ class processorMeshes
         //- List of processor cell addressing lists
         PtrList<labelIOList> cellProcAddressing_;
 
-        //- List of processor boundary addressing lists
-        PtrList<labelIOList> boundaryProcAddressing_;
-
 
     // Private Member Functions
 
@@ -118,11 +115,6 @@ public:
         const PtrList<labelIOList>& cellProcAddressing() const
         {
             return cellProcAddressing_;
-        }
-
-        const PtrList<labelIOList>& boundaryProcAddressing() const
-        {
-            return boundaryProcAddressing_;
         }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,15 +32,13 @@ Foam::fvFieldReconstructor::fvFieldReconstructor
     fvMesh& mesh,
     const PtrList<fvMesh>& procMeshes,
     const PtrList<labelIOList>& faceProcAddressing,
-    const PtrList<labelIOList>& cellProcAddressing,
-    const PtrList<labelIOList>& boundaryProcAddressing
+    const PtrList<labelIOList>& cellProcAddressing
 )
 :
     mesh_(mesh),
     procMeshes_(procMeshes),
     faceProcAddressing_(faceProcAddressing),
     cellProcAddressing_(cellProcAddressing),
-    boundaryProcAddressing_(boundaryProcAddressing),
     nReconstructed_(0)
 {
     forAll(procMeshes_, proci)
@@ -50,7 +48,6 @@ Foam::fvFieldReconstructor::fvFieldReconstructor
         (
             faceProcAddressing[proci].size() != procMesh.nFaces()
          || cellProcAddressing[proci].size() != procMesh.nCells()
-         || boundaryProcAddressing[proci].size() != procMesh.boundary().size()
         )
         {
             FatalErrorInFunction
@@ -60,8 +57,6 @@ Foam::fvFieldReconstructor::fvFieldReconstructor
                 << " nFaces : " << procMesh.nFaces() << endl
                 << "cellProcAddressing : " << cellProcAddressing[proci].size()
                 << " nCell : " << procMesh.nCells() << endl
-                << "boundaryProcAddressing : "
-                << boundaryProcAddressing[proci].size()
                 << " nFaces : " << procMesh.boundary().size()
                 << exit(FatalError);
         }

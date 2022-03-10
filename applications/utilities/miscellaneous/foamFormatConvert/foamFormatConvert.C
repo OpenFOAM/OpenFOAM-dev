@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -293,12 +293,6 @@ int main(int argc, char *argv[])
         writeMeshObject<labelIOList>("pointProcAddressing", meshDir, runTime);
         writeMeshObject<labelIOList>("faceProcAddressing", meshDir, runTime);
         writeMeshObject<labelIOList>("cellProcAddressing", meshDir, runTime);
-        writeMeshObject<labelIOList>
-        (
-            "boundaryProcAddressing",
-            meshDir,
-            runTime
-        );
 
         // foamyHexMesh vertices
         writeMeshObject<pointIOField>

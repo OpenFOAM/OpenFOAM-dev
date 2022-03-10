@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,6 @@ void Foam::processorMeshes::read()
     // and fields
     forAll(databases_, proci)
     {
-        boundaryProcAddressing_.set(proci, nullptr);
         cellProcAddressing_.set(proci, nullptr);
         faceProcAddressing_.set(proci, nullptr);
         pointProcAddressing_.set(proci, nullptr);
@@ -109,23 +108,6 @@ void Foam::processorMeshes::read()
                 )
             )
         );
-
-        boundaryProcAddressing_.set
-        (
-            proci,
-            new labelIOList
-            (
-                IOobject
-                (
-                    "boundaryProcAddressing",
-                    meshes_[proci].facesInstance(),
-                    meshes_[proci].meshSubDir,
-                    meshes_[proci],
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE
-                )
-            )
-        );
     }
 }
 
@@ -143,8 +125,7 @@ Foam::processorMeshes::processorMeshes
     meshes_(databases.size()),
     pointProcAddressing_(databases.size()),
     faceProcAddressing_(databases.size()),
-    cellProcAddressing_(databases.size()),
-    boundaryProcAddressing_(databases.size())
+    cellProcAddressing_(databases.size())
 {
     read();
 }

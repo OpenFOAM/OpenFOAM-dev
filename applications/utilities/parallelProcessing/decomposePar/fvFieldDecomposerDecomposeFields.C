@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,17 +75,17 @@ Foam::fvFieldDecomposer::decomposeField
 ) const
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type>> patchFields(boundaryAddressing_.size());
+    PtrList<fvPatchField<Type>> patchFields(procMesh_.boundary().size());
 
-    forAll(boundaryAddressing_, patchi)
+    forAll(procMesh_.boundary(), procPatchi)
     {
         patchFields.set
         (
-            patchi,
+            procPatchi,
             fvPatchField<Type>::New
             (
                 calculatedFvPatchField<Type>::typeName,
-                procMesh_.boundary()[patchi],
+                procMesh_.boundary()[procPatchi],
                 DimensionedField<Type, volMesh>::null()
             )
         );
@@ -120,33 +120,38 @@ Foam::fvFieldDecomposer::decomposeField
     typename GeometricField<Type, fvPatchField, volMesh>::
         Boundary& bf = resF.boundaryFieldRef();
 
-    forAll(bf, patchi)
+    forAll(bf, procPatchi)
     {
-        const fvPatch& procPatch = procMesh_.boundary()[patchi];
+        const fvPatch& procPatch = procMesh_.boundary()[procPatchi];
 
-        label fromPatchi = boundaryAddressing_[patchi];
-        if (fromPatchi < 0 && isA<processorCyclicFvPatch>(procPatch))
+        // Determine the index of the corresponding complete patch
+        label completePatchi = -1;
+        if (procPatchi < completeMesh_.boundary().size())
+        {
+            completePatchi = procPatchi;
+        }
+        else if (isA<processorCyclicFvPatch>(procPatch))
         {
             const label referPatchi =
                 refCast<const processorCyclicPolyPatch>
                 (procPatch.patch()).referPatchID();
             if (field.boundaryField()[referPatchi].overridesConstraint())
             {
-                fromPatchi = boundaryAddressing_[referPatchi];
+                completePatchi = referPatchi;
             }
         }
 
-        if (fromPatchi >= 0)
+        if (completePatchi != -1)
         {
             bf.set
             (
-                patchi,
+                procPatchi,
                 fvPatchField<Type>::New
                 (
-                    field.boundaryField()[fromPatchi],
+                    field.boundaryField()[completePatchi],
                     procPatch,
                     resF(),
-                    *patchFieldDecomposerPtrs_[patchi]
+                    patchFieldDecomposers_[procPatchi]
                 )
             );
         }
@@ -154,12 +159,12 @@ Foam::fvFieldDecomposer::decomposeField
         {
             bf.set
             (
-                patchi,
+                procPatchi,
                 new processorCyclicFvPatchField<Type>
                 (
                     procPatch,
                     resF(),
-                    (*processorVolPatchFieldDecomposerPtrs_[patchi])
+                    processorVolPatchFieldDecomposers_[procPatchi]
                     (
                         field.primitiveField()
                     )
@@ -170,12 +175,12 @@ Foam::fvFieldDecomposer::decomposeField
         {
             bf.set
             (
-                patchi,
+                procPatchi,
                 new processorFvPatchField<Type>
                 (
                     procPatch,
                     resF(),
-                    (*processorVolPatchFieldDecomposerPtrs_[patchi])
+                    processorVolPatchFieldDecomposers_[procPatchi]
                     (
                         field.primitiveField()
                     )
@@ -186,7 +191,7 @@ Foam::fvFieldDecomposer::decomposeField
         {
             bf.set
             (
-                patchi,
+                procPatchi,
                 new emptyFvPatchField<Type>
                 (
                     procPatch,
@@ -213,10 +218,6 @@ Foam::fvFieldDecomposer::decomposeField
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field
 ) const
 {
-    // Apply flipping to surfaceScalarFields only
-    const bool doFlip = (pTraits<Type>::nComponents == 1);
-
-
     // Problem with addressing when a processor patch picks up both internal
     // faces and faces from cyclic boundaries. This is a bit of a hack, but
     // I cannot find a better solution without making the internal storage
@@ -243,17 +244,17 @@ Foam::fvFieldDecomposer::decomposeField
 
 
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvsPatchField<Type>> patchFields(boundaryAddressing_.size());
+    PtrList<fvsPatchField<Type>> patchFields(procMesh_.boundary().size());
 
-    forAll(boundaryAddressing_, patchi)
+    forAll(procMesh_.boundary(), procPatchi)
     {
         patchFields.set
         (
-            patchi,
+            procPatchi,
             fvsPatchField<Type>::New
             (
                 calculatedFvsPatchField<Type>::typeName,
-                procMesh_.boundary()[patchi],
+                procMesh_.boundary()[procPatchi],
                 DimensionedField<Type, surfaceMesh>::null()
             )
         );
@@ -282,7 +283,7 @@ Foam::fvFieldDecomposer::decomposeField
                     faceAddressing_,
                     procMesh_.nInternalFaces()
                 ),
-                doFlip
+                isFlux(field)
             ),
             patchFields
         )
@@ -296,21 +297,21 @@ Foam::fvFieldDecomposer::decomposeField
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
         Boundary& bf = resF.boundaryFieldRef();
 
-    forAll(boundaryAddressing_, patchi)
+    forAll(procMesh_.boundary(), procPatchi)
     {
-        const fvPatch& procPatch = procMesh_.boundary()[patchi];
+        const fvPatch& procPatch = procMesh_.boundary()[procPatchi];
 
-        if (boundaryAddressing_[patchi] >= 0)
+        if (procPatchi < completeMesh_.boundary().size())
         {
             bf.set
             (
-                patchi,
+                procPatchi,
                 fvsPatchField<Type>::New
                 (
-                    field.boundaryField()[boundaryAddressing_[patchi]],
+                    field.boundaryField()[procPatchi],
                     procPatch,
                     resF(),
-                    *patchFieldDecomposerPtrs_[patchi]
+                    patchFieldDecomposers_[procPatchi]
                 )
             );
         }
@@ -319,7 +320,7 @@ Foam::fvFieldDecomposer::decomposeField
             // Do our own mapping. Avoids a lot of mapping complexity.
             bf.set
             (
-                patchi,
+                procPatchi,
                 new processorCyclicFvsPatchField<Type>
                 (
                     procPatch,
@@ -328,7 +329,7 @@ Foam::fvFieldDecomposer::decomposeField
                     (
                         allFaceField,
                         procPatch.patchSlice(faceAddressing_),
-                        doFlip
+                        isFlux(field)
                     )
                 )
             );
@@ -338,7 +339,7 @@ Foam::fvFieldDecomposer::decomposeField
             // Do our own mapping. Avoids a lot of mapping complexity.
             bf.set
             (
-                patchi,
+                procPatchi,
                 new processorFvsPatchField<Type>
                 (
                     procPatch,
@@ -347,7 +348,7 @@ Foam::fvFieldDecomposer::decomposeField
                     (
                         allFaceField,
                         procPatch.patchSlice(faceAddressing_),
-                        doFlip
+                        isFlux(field)
                     )
                 )
             );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1004,36 +1004,6 @@ void createAndWriteRegion
         << " from region" << regioni
         << " cells back to base mesh." << endl;
     cellProcAddressing.write();
-
-    labelIOList boundaryProcAddressing
-    (
-        IOobject
-        (
-            "boundaryRegionAddressing",
-            newMesh().facesInstance(),
-            newMesh().meshSubDir,
-            newMesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        labelList(nNewPatches, -1)
-    );
-    forAll(oldToNew, i)
-    {
-        if (!addedPatches.found(i))
-        {
-            label newI = oldToNew[i];
-            if (newI >= 0 && newI < nNewPatches)
-            {
-                boundaryProcAddressing[oldToNew[i]] = i;
-            }
-        }
-    }
-    Info<< "Writing map " << boundaryProcAddressing.name()
-        << " from region" << regioni
-        << " boundary back to base mesh." << endl;
-    boundaryProcAddressing.write();
 }
 
 

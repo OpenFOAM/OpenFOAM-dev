@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,14 +31,12 @@ Foam::pointFieldReconstructor::pointFieldReconstructor
 (
     const pointMesh& mesh,
     const PtrList<pointMesh>& procMeshes,
-    const PtrList<labelIOList>& pointProcAddressing,
-    const PtrList<labelIOList>& boundaryProcAddressing
+    const PtrList<labelIOList>& pointProcAddressing
 )
 :
     mesh_(mesh),
     procMeshes_(procMeshes),
     pointProcAddressing_(pointProcAddressing),
-    boundaryProcAddressing_(boundaryProcAddressing),
     patchPointAddressing_(procMeshes.size()),
     nReconstructed_(0)
 {
@@ -54,14 +52,13 @@ Foam::pointFieldReconstructor::pointFieldReconstructor
 
         forAll(procMesh.boundary(), patchi)
         {
-            if (boundaryProcAddressing_[proci][patchi] >= 0)
+            if (patchi < mesh_.boundary().size())
             {
                 labelList& procPatchAddr = patchPointAddressing_[proci][patchi];
                 procPatchAddr.setSize(procMesh.boundary()[patchi].size(), -1);
 
                 const labelList& patchPointLabels =
-                    mesh_.boundary()[boundaryProcAddressing_[proci][patchi]]
-                    .meshPoints();
+                    mesh_.boundary()[patchi].meshPoints();
 
                 // Create the inverse-addressing of the patch point labels.
                 forAll(patchPointLabels, pointi)
