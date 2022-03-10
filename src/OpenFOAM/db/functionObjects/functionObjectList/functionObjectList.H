@@ -168,6 +168,9 @@ public:
         //- Access to the functionObjects
         using PtrList<functionObject>::operator[];
 
+        //- Allow addition of functionObjects to list
+        using PtrList<functionObject>::append;
+
         //- Clear the list of function objects
         void clear();
 
