@@ -25,7 +25,9 @@ Class
     Foam::PopulationBalancePhaseSystem
 
 Description
-    Class which provides population balance functionality.
+    Class which provides population balance functionality. Stores the mass
+    transfer rates resulting from coalescence, breakup or drift across
+    representative phases that collectively define a dispersed phase.
 
 See also
     Foam::diameterModels::populationBalanceModel

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,14 @@ Class
     Foam::diameterModels::SecondaryPropertyModel
 
 Description
-    Base class for modeling the transport of an additional secondary property in
-    between size groups by means of coalescence, breakup, drift and nucleation.
-    The default behavior is conserved transport of the property, which can be
-    overwritten in a derived class.
+    Base class for modeling evolution of secondary representative properties of
+    a size class. By default, transport between size classes due to
+    coalescence, breakup and drift conserve the property. This behaviour can be
+    overridden in a derived class.
+
+See also
+    Foam::diameterModels::sizeGroup
+    Foam::diameterModels::populationBalanceModel
 
 SourceFiles
     SecondaryPropertyModel.C

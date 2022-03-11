@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,34 +25,36 @@ Class
     Foam::diameterModels::shapeModels::fractal
 
 Description
-    Class for modeling fractal shapes (e.g. of aerosol agglomerates) based on a
-    constant fractal dimension and an average but field-dependent surface area
-    to volume ratio kappa.
-
-    The effect of sintering (coalescence of primary particles) on the surface
-    area is taken into account by a separate source term.
-
-    Kappa is transported between the size groups as a secondary property by
-    means of coalescence (coagulation), breakup as well as drift.
-
-    By assuming a monodisperse size distribution of the primary particles in the
-    aggregate, the collisional diameter of a size group can then be computed by
+    Class for modelling the shape of particle aggregates using the concept of
+    fractal geometry. Returns a collisional diameter
 
     \f[
-        d_{Coll_i} =
+        d_{c_i} =
             \frac{6}{\kappa_i}
             \left(
                 \frac{v_i \kappa_i^3}{36 \pi \alpha_c}
-            \right)^{1/D_f}\;.
+            \right)^{1/D_{f_i}}\,,
     \f]
+
+    computed from a constant fractal dimension \f$D_{f_i}\f$ and a
+    field-dependent surface area to volume ratio \f$\kappa_i\f$, assuming that
+    the primary particles in an aggregate have the same size.
+
+    The effect of sintering, i.e. the coalescence of primary particles
+    resulting in a loss of surface area, is taken into account by a separate
+    source term in the transport equation for \f$\kappa_i\f$.
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        kappa        | Field and BC value      | yes         |
+        kappa        | Initial and boundary condition value\\
+                                               | yes         |
         Df           | Fractal dimension       | yes         |
-        alphaC       | Constant                | yes         |
+        alphaC       | Scaling prefactor       | yes         |
     \endtable
+
+See also
+    Foam::diameterModels::shapeModel
 
 SourceFiles
     fractal.C

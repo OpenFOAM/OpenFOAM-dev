@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,12 +22,16 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::shapeModel
+    Foam::diameterModels::shapeModel
 
 Description
-    Base class for modeling shape, i.e. a physical diameter of a sizeGroup.
-    This diameter may then be utilised for calculation of breakup, coalescence
-    or drift rates, depending on the model implementation.
+    Base class for modelling the shape of the particles belonging to a size
+    class through alternative diameters, e.g. a collisional diameter, which can
+    then be utilised in population balance submodels, e.g. for modelling
+    fractal aggregation.
+
+See also
+    Foam::diameterModels::sizeGroup
 
 SourceFiles
     shapeModel.C

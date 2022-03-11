@@ -25,37 +25,29 @@ Class
     Foam::diameterModels::velocityGroup
 
 Description
-    This diameterModel is intended for use with a populationBalanceModel in
-    order to simulate polydispersed bubbly or particulate flows. It can hold any
-    number of sizeGroups from which the Sauter mean diameter is calculated. It
-    can also be used as a diameterModel without a populationBalance and would
-    then behave like a constantDiameter model. In this case, some arbitrary name
-    must be entered for the populationBalance keyword.
+    Computes the Sauter mean diameter based on a user specified size
+    distribution, defined in terms of size class fractions. Intended for use
+    with a population balance model to account for the evolution of a size
+    distribution by means of coalescence, breakup, drift and nucleation.
 
 Usage
-    \table
-        Property          | Description
-        populationBalance | Name of the corresponding populationBalance
-        sizeGroups        | List of sizeGroups
-    \endtable
-
-    Example
+    Excerpt from an examplary phaseProperties dictionary:
     \verbatim
     diameterModel   velocityGroup;
+
     velocityGroupCoeffs
     {
         populationBalance    bubbles;
 
-        shapeModel           constant;
+        shapeModel           spherical;
 
         sizeGroups
         (
-            f0{dSph  1.00e-3; value 0;}
-            f1{dSph  1.08e-3; value 0;}
-            f2{dSph  1.16e-3; value 0.25;}
-            f3{dSph  1.25e-3; value 0.5;}
-            f4{dSph  1.36e-3; value 0.25;}
-            f5{dSph  1.46e-3; value 0;}
+            f1 {dSph  1e-3; value 1.0;}
+            f2 {dSph  2e-3; value 0.0;}
+            f3 {dSph  3e-3; value 0.0;}
+            f4 {dSph  4e-3; value 0.0;}
+            f5 {dSph  5e-3; value 0.0;}
             ...
         );
     }

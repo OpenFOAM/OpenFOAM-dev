@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,39 +25,35 @@ Class
     Foam::diameterModels::sizeGroup
 
 Description
-    This class represents a single sizeGroup belonging to a velocityGroup.
-    The main property of a sizeGroup is its representative volume. The
-    corresponding volScalarField f'number'.'phaseName'.'populationBalanceName'
-    gives the volume fraction of the sizeGroup such that all sizeGroup fractions
-    over a velocityGroup must sum to unity. The field is either read from the
-    startTime directory if present or constructed from a reference field called
-    f.'phaseName'.'populationBalanceName' where the boundary condition types
-    must be specified. All field and boundary condition values are reset to
-    match the 'value' given in the sizeGroup subdictionary.
+    Single size class fraction field representing a fixed particle volume as
+    defined by the user through the corresponding sphere equivalent diameter.
 
-    The corresponding physical diameter that is representative for the class is
-    computed by a separate shapeModel, specified in the velocityGroupCoeffs
-    dictionary.
+    If present, the field is read from the start time directory, e.g. during
+    restart. Otherwise, it is constructed as a uniform field using the size
+    class fraction value provided by the user. In the latter case, the boundary
+    condition types are taken from the 'f.<phaseName>' field, which represents
+    the sum of all size group fractions of a phase. The user specified value is
+    also applied at fixed value boundary conditions and used as inlet value for
+    mixed boundary conditions.
+
+    An alternative diameter field is provided by the selected shape model, e.g.
+    a collisional diameter, which is then utilised in selected population
+    balance submodels, e.g. for modelling fractal aggregation.
 
 Usage
     \table
         Property     | Description                | Required    | Default value
         dSph         | Sphere equivalent diameter | yes         | none
-        value        | Field and BC value         | yes         | none
+        value        | Initial and boundary condition value of\\
+                       size class fraction        | yes         | none
+        shapeModel   | Shape model providing an alternative diameter field\\
+                                                  | yes         | none
     \endtable
 
-    Example
-    \verbatim
-    f1
-    {
-        ds      3e-3;
-        value   1.0;
-    }
-    \endverbatim
-
 See also
-    Foam::diameterModels::velocityGroup
     Foam::diameterModels::populationBalanceModel
+    Foam::diameterModels::velocityGroup
+    Foam::diameterModels::shapeModel
 
 SourceFiles
     sizeGroup.C

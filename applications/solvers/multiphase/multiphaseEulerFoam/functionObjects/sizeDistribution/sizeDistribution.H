@@ -25,8 +25,9 @@ Class
     Foam::functionObjects::sizeDistribution
 
 Description
-    Writes out the size distribution computed with multiphaseEulerFoam for the
-    entire domain or a volume region. Requires solver post-processing.
+    Writes out the size distribution determined by a population balance model,
+    either for the entire domain or a cell zone. Requires solver post-
+    processing.
 
     The following function object specification for example returns the volume-
     based number density function:
@@ -62,6 +63,12 @@ Usage
         name              | name of cellZone if required   | no        |
         setFormat         | output format                  | yes       |
     \endtable
+
+See also
+    Foam::diameterModels::populationBalanceModel
+    Foam::functionObjects::fvMeshFunctionObject
+    Foam::functionObjects::volRegion
+    Foam::functionObject
 
 SourceFiles
     sizeDistribution.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,12 @@ Class
     Foam::diameterModels::daughterSizeDistributionModel
 
 Description
-    Base class for daughter size distribution models. Calculates and stores
-    the contribution to a sizeGroup i due to breakup in a larger sizeGroup k.
+    Base class for daughter size distribution models. Currently only supports
+    field-independent formulations.
+
+See also
+    Foam::diameterModels::breakupModel
+    Foam::diameterModels::populationBalanceModel
 
 SourceFiles
     daughterSizeDistributionModel.C

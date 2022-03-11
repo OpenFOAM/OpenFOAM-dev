@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,12 @@ Class
     Foam::diameterModels::binaryBreakupModel
 
 Description
-    Base class for binary breakup models which give the breakup rate between a
-    sizeGroup pair directly, without an explicit expression for the daughter
-    size distribution.
+    Base class for binary breakup models that provide a breakup rate between a
+    size class pair directly, i.e. without explicitly stating the daughter size
+    distribution function.
+
+See also
+    Foam::diameterModels::populationBalanceModel
 
 SourceFiles
     binaryBreakupModel.C

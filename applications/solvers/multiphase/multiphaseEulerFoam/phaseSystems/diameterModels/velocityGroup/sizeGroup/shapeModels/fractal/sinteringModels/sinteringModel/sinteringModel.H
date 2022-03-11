@@ -22,11 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sinteringModel
+    Foam::diameterModels::shapeModels::sinteringModel
 
 Description
-    Abstract base class for modeling sintering of primary particles in fractal
-    agglomerates.
+    Abstract base class for modelling sintering of primary particles in fractal
+    aggregates.
+
+See also
+    Foam::diameterModels::shapeModels::fractal
 
 SourceFiles
     sinteringModel.C

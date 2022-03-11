@@ -26,8 +26,8 @@ Class
 
 Description
     Calculates and writes out integral (integer moments) or mean properties
-    (mean, variance, standard deviation) of a size distribution computed with
-    multiphaseEulerFoam. Requires solver post-processing.
+    (mean, variance, standard deviation) of a size distribution determined by a
+    population balance model. Requires solver post-processing.
 
     The following function object specification for example returns the first
     moment of the volume-based number density function which is equivalent to

@@ -25,31 +25,81 @@ Class
     Foam::diameterModels::populationBalanceModel
 
 Description
-    Class that solves the univariate population balance equation by means of
-    a class method (also called sectional or discrete method). The internal
-    coordinate is set to the particle volume, so the equation is based on
-    a transport equation of the volume-based number density function. The
-    discretisation is done using the fixed pivot technique of Kumar and
-    Ramkrishna (1996). The source terms are written in a way that particle
-    number and mass are preserved. Coalescence (coagulation), breakup, drift
-    (growth and surface loss) as well as nucleation are supported.
-    For the discrete breakup term two recipes are available, depending on the
-    model choice. For models which state a total breakup rate and a separate
-    daughter size distribution function, the formulation of Kumar and Ramkrishna
-    (1996) is applied which is applicable for binary and multiple breakup
-    events. The second formulation is given by Liao et al. (2018). It is useful
-    for binary breakup models which give the breakup rate between a sizeGroup
-    pair directly, without an explicit expression for the daughter size
-    distribution. The drift term is implemented using a finite difference upwind
-    scheme. Although it is diffusive, it ensures a stable and
-    number-conservative solution.
+    Model for tracking the evolution of a dispersed phase size distribution due
+    to coalescence (synonymous with coagulation, aggregation, agglomeration)
+    and breakup events as well as density or phase changes. Provides an
+    approximate solution of the population balance equation by means of a class
+    method. The underlying theory is described in the article of Lehnigk et al.
+    (2021).
 
-    The implementation allows to split the population balance over multiple
-    velocity fields using the capability of multiphaseEulerFoam to solve
-    for n momentum equations. It is also possible to define multiple population
-    balances, e.g. bubbles and droplets simultaneously.
+    The size distribution, expressed through a volume-based number density
+    function, is discretised using the fixot pivot technique of Kumar and
+    Ramkrishna (1996). Thereby, the population balance equation is transformed
+    into a series of transport equations for the particle (bubble, droplet)
+    number concentrations in separate size classes that are coupled through
+    their source terms. The discretisation is based on representative particle
+    volumes, which are provided by the user through the corresponding sphere
+    equivalent diameters.
+
+    Since the representative volumes are fixed a priori and the total dispersed
+    phase volume already available from solving the phase continuity equation,
+    the model only determines the evolution of the individual size class
+    fractions
+
+    \f[
+        f_{i,\varphi} = \frac{\alpha_{i,\varphi}}{\alpha_{\varphi}}\,,
+    \f]
+
+    where \f$\alpha_{i,\varphi}\f$ is the volume fraction of the size class and
+    \f$\alpha_{\varphi}\f$ the total phase fraction of phase \f$\varphi\f$.
+
+    The source terms are formulated such that the first and second moment of
+    the distribution, i.e. the total particle number and volume, are conserved
+    irrespective of the discretisation of the size domain. The treatment of
+    particle breakup depends on the selected breakup submodels. For models
+    which provide a total breakup frequency and a separate daughter size
+    distribution function, the formulation provided Kumar and Ramkrishna (1996)
+    is utilised, which is applicable both for binary and multiple breakup
+    events. Currently, only field-independent daughter size distribution models
+    are allowed. In case of binary breakup models that provide the breakup
+    frequency between a size class pair directly, the formulation of Liao et
+    al. (2018) is adopted, which is computationally more efficient compared to
+    first extracting the field-dependent daughter size distribution and then
+    consuming it in the formulation of Kumar and Ramkrishna. The source terms
+    describing a drift of the size distribution through particle growth or
+    shrinkage are derived using upwind differencing, thus ensuring conservation
+    of the total particle number and volume. Note that due to the volume-based
+    implementation, both density as well as phase change lead to a drift of the
+    size distribution function. Further, users can specify multiple submodels
+    for each mechanism, whose contributions are added up.
+
+    The model also allows to distribute the size classes over multiple
+    representative phases with identical physical properties that collectively
+    define the dispersed phase. Thereby, size class fields can be transported
+    with different velocity fields in order to account for the size dependency
+    of the particle motion. A possible mass transfer between representative
+    phases by means of coalescence, breakup and drift is taken into account.
+    Similarly, the spatial evolution of secondary particle properties such as
+    the particle surface area can be tracked.
+
+    The key variable during a simulation is the Sauter diameter, which is
+    computed from the size class fractions of the corresponding phase. The
+    underlying size distribution can be extracted from the simulation using the
+    functionObject 'sizeDistribution'. Integral and mean properties of a size
+    distribution can be computed with the functionObject 'moments'.
+
+    Verification cases for the population balance modeling functionality are
+    provided in test/multiphase/multiphaseEulerFoam/populationBalance.
 
     References:
+    \verbatim
+        Lehnigk, R., Bainbridge, W., Liao, Y., Lucas, D., Niemi, T.,
+        Peltola, J., & Schlegel, F. (2021).
+        An open‐source population balance modeling framework for the simulation
+        of polydisperse multiphase flows.
+        AIChE Journal, 68(3), e17539.
+    \endverbatim
+
     \verbatim
         Coalescence and breakup term formulation:
         Kumar, S., & Ramkrishna, D. (1996).
@@ -66,38 +116,41 @@ Description
     \endverbatim
 
 Usage
-    Example excerpt from a phaseProperties dictionary.
+    Excerpt from an examplary phaseProperties dictionary:
     \verbatim
-    type populationBalanceTwoPhaseSystem;
+    type populationBalanceMultiphaseSystem;
 
-    phases (air water);
+    ...
 
     populationBalances (bubbles);
 
     air
     {
-        type            purePhaseModel;
+        type            pureIsothermalPhaseModel;
+
         diameterModel   velocityGroup;
+
         velocityGroupCoeffs
         {
             populationBalance    bubbles;
 
-            shapeModel           constant;
+            shapeModel           spherical;
 
             sizeGroups
             (
-                f0{dSph  1.00e-3; value 0;}
-                f1{dSph  1.08e-3; value 0;}
-                f2{dSph  1.16e-3; value 0.25;}
-                f3{dSph  1.25e-3; value 0.5;}
-                f4{dSph  1.36e-3; value 0.25;}
-                f5{dSph  1.46e-3; value 0;}
+                f1 {dSph  1e-3; value 1.0;}
+                f2 {dSph  2e-3; value 0.0;}
+                f3 {dSph  3e-3; value 0.0;}
+                f4 {dSph  4e-3; value 0.0;}
+                f5 {dSph  5e-3; value 0.0;}
                 ...
             );
         }
 
         residualAlpha   1e-6;
     }
+
+    ...
 
     populationBalanceCoeffs
     {
@@ -107,24 +160,16 @@ Usage
 
             coalescenceModels
             (
-                hydrodynamic
-                {
-                    C 0.25;
-                }
+                LehrMilliesMewes{}
             );
 
             binaryBreakupModels
-            ();
+            (
+                LehrMilliesMewes{}
+            );
 
             breakupModels
-            (
-                exponential
-                {
-                    C 0.5;
-                    exponent 0.01;
-                    daughterSizeDistributionModel uniform;
-                }
-            );
+            ();
 
             driftModels
             (
@@ -138,8 +183,18 @@ Usage
     \endverbatim
 
 See also
+    Foam::PopulationBalancePhaseSystem
     Foam::diameterModels::sizeGroup
     Foam::diameterModels::velocityGroup
+    Foam::diameterModels::SecondaryPropertyModel
+    Foam::diameterModels::coalescenceModel
+    Foam::diameterModels::breakupModel
+    Foam::diameterModels::daughterSizeDistributionModel
+    Foam::diameterModels::binaryBreakupModel
+    Foam::diameterModels::driftModel
+    Foam::diameterModels::nucleationModel
+    Foam::functionObjects::sizeDistribution
+    Foam::functionObjects::moments
 
 SourceFiles
     populationBalanceModel.C
