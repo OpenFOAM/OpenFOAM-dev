@@ -44,14 +44,14 @@ setCavityHighRe()
 {
     echo "Setting cavityHighRe to generate a secondary vortex"
     controlDict="$caseName/system/controlDict"
-    transportProperties="$caseName/constant/transportProperties"
+    physicalProperties="$caseName/constant/physicalProperties"
     sed \
     -e s/"\(startFrom[ \t]*\) startTime;"/"\1 latestTime;"/g \
     -e s/"\(endTime[ \t]*\) 0.5;"/"\1 2.0;"/g \
     $controlDict > temp.$$
     mv temp.$$ $controlDict
-    sed s/"0.01"/"0.001"/g $transportProperties > temp.$$
-    mv temp.$$ $transportProperties
+    sed s/"0.01"/"0.001"/g $physicalProperties > temp.$$
+    mv temp.$$ $physicalProperties
 }
 
 
