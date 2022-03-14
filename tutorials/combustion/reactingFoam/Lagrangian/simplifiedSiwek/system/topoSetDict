@@ -17,13 +17,13 @@ FoamFile
 actions
 (
     {
-        name ignitionCells;
-        type cellSet;
-        action new;
+        name    ignitionCells;
+        type    cellSet;
+        action  new;
 
-        source sphereToCell;
-        centre          (0.125 0.375 0.05);
-        radius          0.005;
+        source  sphereToCell;
+        centre  (0.125 0.375 0.05);
+        radius  0.005;
     }
 );
 

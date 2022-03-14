@@ -21,7 +21,7 @@ actions
         type    faceSet;
         action  new;
         source  boxToFace;
-        box (0.3015 0.0493 -1) (0.3069 0.2077 1);
+        box     (0.3015 0.0493 -1) (0.3069 0.2077 1);
     }
 
     {
@@ -29,7 +29,7 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        box (-1 0 -1) (0.305 0.31 1);
+        box     (-1 0 -1) (0.305 0.31 1);
     }
 
     {

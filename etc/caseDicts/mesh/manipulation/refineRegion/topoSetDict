@@ -20,7 +20,7 @@ actions
         type    cellSet;
         name    c0;
         source  boxToCell;
-        box (-1 -1 -1) (1 1 1); // Edit box bounds as required
+        box     (-1 -1 -1) (1 1 1); // Edit box bounds as required
     }
 );
 

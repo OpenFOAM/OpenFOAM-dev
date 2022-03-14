@@ -20,14 +20,14 @@ actions
         type    faceSet;
         action  new;
         source  boxToFace;
-        box   (-0.001 0.25 1.1)(0.001 0.75 1.3);
+        box     (-0.001 0.25 1.1)(0.001 0.75 1.3);
     }
     {
         name    outlet;
         type    faceSet;
         action  new;
         source  boxToFace;
-        box   (1.75 2.999 0.3)(2.25 3.001 0.5);
+        box     (1.75 2.999 0.3)(2.25 3.001 0.5);
     }
 );
 

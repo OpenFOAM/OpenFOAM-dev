@@ -21,7 +21,7 @@ actions
         type    faceSet;
         action  new;
         source  boxToFace;
-        box (-0.1 -0.001 -0.1)(0.1 0.005 0.1);
+        box     (-0.1 -0.001 -0.1)(0.1 0.005 0.1);
     }
 );
 

@@ -21,7 +21,7 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        box (-100 -100 0)(100 100 100);
+        box     (-100 -100 0)(100 100 100);
     }
 
     {
@@ -29,8 +29,8 @@ actions
         type    faceSet;
         action  new;
         source  cellToFace;
-        set    z;
-        option all;
+        set     z;
+        option  all;
     }
 
     {
@@ -44,8 +44,8 @@ actions
         type    faceSet;
         action  subset;
         source  cellToFace;
-        set    z;
-        option all;
+        set     z;
+        option  all;
     }
 
     // ~~~~~~~~~~~~~~~~ //
@@ -55,7 +55,7 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        box (-100 0.1 -100)(100 100 100);
+        box     (-100 0.1 -100)(100 100 100);
     }
 
     {
@@ -78,8 +78,8 @@ actions
         type    faceSet;
         action  subset;
         source  cellToFace;
-        set    y;
-        option all;
+        set     y;
+        option  all;
     }
 
     // ~~~~~~~~~~~~~~~~ //
@@ -89,7 +89,7 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        box (0.3 -100 -100)(100 100 100);
+        box     (0.3 -100 -100)(100 100 100);
     }
 
     {
@@ -97,8 +97,8 @@ actions
         type    faceSet;
         action  new;
         source  cellToFace;
-        set    x;
-        option all;
+        set     x;
+        option  all;
     }
 
     {
@@ -112,8 +112,8 @@ actions
         type    faceSet;
         action  subset;
         source  cellToFace;
-        set    x;
-        option all;
+        set     x;
+        option  all;
     }
 );
 

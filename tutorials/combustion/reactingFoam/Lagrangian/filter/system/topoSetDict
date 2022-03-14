@@ -22,14 +22,14 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        box (1.5 -10 -10) (2 10 10);
+        box     (1.5 -10 -10) (2 10 10);
     }
     {
         name    filter;
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        set filterCellSet;
+        set     filterCellSet;
     }
 
 
@@ -38,28 +38,28 @@ actions
         type    cellSet;
         action  new;
         source  boxToCell;
-        box (-10 -10 -10) (1.5 10 10);
+        box     (-10 -10 -10) (1.5 10 10);
     }
     {
         name    leftFluid;
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        set leftFluidCellSet;
+        set     leftFluidCellSet;
     }
     {
         name    rightFluidCellSet;
         type    cellSet;
         action  new;
         source  boxToCell;
-        box (2 -1 -1) (10 10 10);
+        box     (2 -1 -1) (10 10 10);
     }
     {
         name    rightFluid;
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        set rightFluidCellSet;
+        set     rightFluidCellSet;
     }
 
 

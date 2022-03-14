@@ -20,9 +20,9 @@ actions
         type    cellSet;
         action  new;
         source  cylinderToCell;
-        point1       (0.435 0 0);
-        point2       (0.44 0 0);
-        radius       0.015875;
+        point1  (0.435 0 0);
+        point2  (0.44 0 0);
+        radius  0.015875;
     }
 
     {
@@ -30,7 +30,7 @@ actions
         type    cellZoneSet;
         action  new;
         source  setToCellZone;
-        set  outlet;
+        set     outlet;
     }
 );
 

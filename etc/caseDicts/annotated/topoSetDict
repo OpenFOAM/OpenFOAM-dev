@@ -24,7 +24,7 @@ actions
         type    cellSet;
         name    c0;
         source  labelToCell;
-        value (12 13 56);
+        value   (12 13 56);
     }
 
     // Get all faces in cellSet
@@ -43,7 +43,7 @@ actions
         type    cellSet;
         name    c1;
         source  cellToCell;
-        set c0;
+        set     c0;
     }
     {
         name    c1;
@@ -68,7 +68,7 @@ actions
         type    cellZoneSet;
         name    c0;
         source  boxToCell;
-        box   (0.04 0 0)(0.06 100 100);
+        box     (0.04 0 0)(0.06 100 100);
     }
 );
 
