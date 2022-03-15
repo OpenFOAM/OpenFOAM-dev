@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,21 +23,16 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MapMeshes_H
-#define MapMeshes_H
-
-#include "MapVolFields.H"
-#include "mapLagrangian.H"
-#include "UnMapped.H"
+#include "mapMeshes.H"
+#include "surfaceMesh.H"
 #include "pointMesh.H"
+#include "mapLagrangian.H"
+#include "MapVolFields.H"
+#include "UnMapped.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-template<template<class> class CombineOp>
-void MapMesh
+void Foam::mapMesh
 (
     const meshToMesh& interp,
     const HashSet<word>& selectedFields,
@@ -56,37 +51,32 @@ void MapMesh
         (
             objects,
             selectedFields,
-            interp,
-            CombineOp<scalar>()
+            interp
         );
 
         MapVolFields<vector>
         (
             objects,
             selectedFields,
-            interp,
-            CombineOp<vector>()
+            interp
         );
         MapVolFields<sphericalTensor>
         (
             objects,
             selectedFields,
-            interp,
-            CombineOp<sphericalTensor>()
+            interp
         );
         MapVolFields<symmTensor>
         (
             objects,
             selectedFields,
-            interp,
-            CombineOp<symmTensor>()
+            interp
         );
         MapVolFields<tensor>
         (
             objects,
             selectedFields,
-            interp,
-            CombineOp<tensor>()
+            interp
         );
     }
 
@@ -120,12 +110,87 @@ void MapMesh
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+void Foam::mapConsistentMesh
+(
+    const fvMesh& meshSource,
+    const fvMesh& meshTarget,
+    const word& mapMethod,
+    const HashSet<word>& selectedFields,
+    const bool noLagrangian
+)
+{
+    Info<< nl << "Consistently creating and mapping fields for time "
+        << meshSource.time().timeName() << nl << endl;
 
-} // End namespace Foam
+    meshToMesh interp(meshSource, meshTarget, mapMethod);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    mapMesh
+    (
+        interp,
+        selectedFields,
+        noLagrangian
+    );
+}
 
-#endif
+
+void Foam::mapSubMesh
+(
+    const fvMesh& meshSource,
+    const fvMesh& meshTarget,
+    const HashTable<word>& patchMap,
+    const wordList& cuttingPatches,
+    const word& mapMethod,
+    const HashSet<word>& selectedFields,
+    const bool noLagrangian
+)
+{
+    Info<< nl << "Creating and mapping fields for time "
+        << meshSource.time().timeName() << nl << endl;
+
+    meshToMesh interp
+    (
+        meshSource,
+        meshTarget,
+        mapMethod,
+        patchMap,
+        cuttingPatches
+    );
+
+    mapMesh
+    (
+        interp,
+        selectedFields,
+        noLagrangian
+    );
+}
+
+
+Foam::wordList Foam::addProcessorPatches
+(
+    const fvMesh& meshTarget,
+    const wordList& cuttingPatches
+)
+{
+    // Add the processor patches to the cutting list
+    HashSet<word> cuttingPatchTable;
+    forAll(cuttingPatches, i)
+    {
+        cuttingPatchTable.insert(cuttingPatches[i]);
+    }
+
+    const polyBoundaryMesh& pbm = meshTarget.boundaryMesh();
+
+    forAll(pbm, patchi)
+    {
+        if (isA<processorPolyPatch>(pbm[patchi]))
+        {
+            const word& patchName = pbm[patchi].name();
+            cuttingPatchTable.insert(patchName);
+        }
+    }
+
+    return cuttingPatchTable.toc();
+}
+
 
 // ************************************************************************* //

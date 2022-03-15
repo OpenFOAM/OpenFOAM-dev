@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,71 +23,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MapVolFields_H
-#define MapVolFields_H
+#ifndef mapMeshes_H
+#define mapMeshes_H
 
-#include "GeometricField.H"
 #include "meshToMesh0.H"
-#include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-template<class Type>
-void MapVolFields
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+void mapConsistentMesh
 (
-    const IOobjectList& objects,
-    const meshToMesh0& meshToMesh0Interp,
+    const fvMesh& meshSource,
+    const fvMesh& meshTarget,
     const meshToMesh0::order& mapOrder
-)
-{
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
+);
 
-    const fvMesh& meshSource = meshToMesh0Interp.fromMesh();
-    const fvMesh& meshTarget = meshToMesh0Interp.toMesh();
+void mapSubMesh
+(
+    const fvMesh& meshSource,
+    const fvMesh& meshTarget,
+    const HashTable<word>& patchMap,
+    const wordList& cuttingPatches,
+    const meshToMesh0::order& mapOrder
+);
 
-    IOobjectList fields = objects.lookupClass(fieldType::typeName);
 
-    forAllIter(IOobjectList, fields, fieldIter)
-    {
-        typeIOobject<fieldType> fieldTargetIOobject
-        (
-            fieldIter()->name(),
-            meshTarget.time().timeName(),
-            meshTarget,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        );
+void mapConsistentSubMesh
+(
+    const fvMesh& meshSource,
+    const fvMesh& meshTarget,
+    const meshToMesh0::order& mapOrder
+);
 
-        if (fieldTargetIOobject.headerOk())
-        {
-            Info<< "    interpolating " << fieldIter()->name() << endl;
 
-            // Read field fieldSource
-            fieldType fieldSource(*fieldIter(), meshSource);
-
-            // Read fieldTarget
-            fieldType fieldTarget
-            (
-                fieldTargetIOobject,
-                meshTarget
-            );
-
-            // Interpolate field
-            meshToMesh0Interp.interpolate
-            (
-                fieldTarget,
-                fieldSource,
-                mapOrder
-            );
-
-            // Write field
-            fieldTarget.write();
-        }
-    }
-}
+wordList addProcessorPatches
+(
+    const fvMesh& meshTarget,
+    const wordList& cuttingPatches
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

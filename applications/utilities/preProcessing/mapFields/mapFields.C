@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,147 +33,10 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "fvMesh.H"
-#include "surfaceMesh.H"
+#include "mapMeshes.H"
 #include "decompositionMethod.H"
-#include "meshToMesh0.H"
-#include "processorFvPatch.H"
-#include "MapMeshes.H"
 
 using namespace Foam;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-void mapConsistentMesh
-(
-    const fvMesh& meshSource,
-    const fvMesh& meshTarget,
-    const meshToMesh0::order& mapOrder,
-    const bool subtract
-)
-{
-    if (subtract)
-    {
-        MapConsistentMesh<minusEqOp>
-        (
-            meshSource,
-            meshTarget,
-            mapOrder
-        );
-    }
-    else
-    {
-        MapConsistentMesh<eqOp>
-        (
-            meshSource,
-            meshTarget,
-            mapOrder
-        );
-    }
-}
-
-
-void mapSubMesh
-(
-    const fvMesh& meshSource,
-    const fvMesh& meshTarget,
-    const HashTable<word>& patchMap,
-    const wordList& cuttingPatches,
-    const meshToMesh0::order& mapOrder,
-    const bool subtract
-)
-{
-    if (subtract)
-    {
-        MapSubMesh<minusEqOp>
-        (
-            meshSource,
-            meshTarget,
-            patchMap,
-            cuttingPatches,
-            mapOrder
-        );
-    }
-    else
-    {
-        MapSubMesh<eqOp>
-        (
-            meshSource,
-            meshTarget,
-            patchMap,
-            cuttingPatches,
-            mapOrder
-        );
-    }
-}
-
-
-void mapConsistentSubMesh
-(
-    const fvMesh& meshSource,
-    const fvMesh& meshTarget,
-    const meshToMesh0::order& mapOrder,
-    const bool subtract
-)
-{
-    if (subtract)
-    {
-        MapConsistentSubMesh<minusEqOp>
-        (
-            meshSource,
-            meshTarget,
-            mapOrder
-        );
-    }
-    else
-    {
-        MapConsistentSubMesh<eqOp>
-        (
-            meshSource,
-            meshTarget,
-            mapOrder
-        );
-    }
-}
-
-
-wordList addProcessorPatches
-(
-    const fvMesh& meshTarget,
-    const wordList& cuttingPatches
-)
-{
-    // Add the processor patches to the cutting list
-    HashTable<label> cuttingPatchTable;
-    forAll(cuttingPatches, i)
-    {
-        cuttingPatchTable.insert(cuttingPatches[i], i);
-    }
-
-    forAll(meshTarget.boundary(), patchi)
-    {
-        if (isA<processorFvPatch>(meshTarget.boundary()[patchi]))
-        {
-            if
-            (
-               !cuttingPatchTable.found
-                (
-                    meshTarget.boundaryMesh()[patchi].name()
-                )
-            )
-            {
-                cuttingPatchTable.insert
-                (
-                    meshTarget.boundaryMesh()[patchi].name(),
-                    -1
-                );
-            }
-        }
-    }
-
-    return cuttingPatchTable.toc();
-}
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -224,11 +87,6 @@ int main(int argc, char *argv[])
         "mapMethod",
         "word",
         "specify the mapping method"
-    );
-    argList::addBoolOption
-    (
-        "subtract",
-        "subtract mapped source from target"
     );
 
     argList args(argc, argv);
@@ -290,12 +148,6 @@ int main(int argc, char *argv[])
         }
 
         Info<< "Mapping method: " << mapMethod << endl;
-    }
-
-    const bool subtract = args.optionFound("subtract");
-    if (subtract)
-    {
-        Info<< "Subtracting mapped source field from target" << endl;
     }
 
 
@@ -380,8 +232,7 @@ int main(int argc, char *argv[])
                 (
                     meshSource,
                     meshTarget,
-                    mapOrder,
-                    subtract
+                    mapOrder
                 );
             }
             else
@@ -392,8 +243,7 @@ int main(int argc, char *argv[])
                     meshTarget,
                     patchMap,
                     cuttingPatches,
-                    mapOrder,
-                    subtract
+                    mapOrder
                 );
             }
         }
@@ -455,8 +305,7 @@ int main(int argc, char *argv[])
                 (
                     meshSource,
                     meshTarget,
-                    mapOrder,
-                    subtract
+                    mapOrder
                 );
             }
             else
@@ -467,8 +316,7 @@ int main(int argc, char *argv[])
                     meshTarget,
                     patchMap,
                     addProcessorPatches(meshTarget, cuttingPatches),
-                    mapOrder,
-                    subtract
+                    mapOrder
                 );
             }
         }
@@ -567,8 +415,7 @@ int main(int argc, char *argv[])
                             (
                                 meshSource,
                                 meshTarget,
-                                mapOrder,
-                                subtract
+                                mapOrder
                             );
                         }
                         else
@@ -579,8 +426,7 @@ int main(int argc, char *argv[])
                                 meshTarget,
                                 patchMap,
                                 addProcessorPatches(meshTarget, cuttingPatches),
-                                mapOrder,
-                                subtract
+                                mapOrder
                             );
                         }
                     }
@@ -621,7 +467,7 @@ int main(int argc, char *argv[])
 
         if (consistent)
         {
-            mapConsistentMesh(meshSource, meshTarget, mapOrder, subtract);
+            mapConsistentMesh(meshSource, meshTarget, mapOrder);
         }
         else
         {
@@ -631,8 +477,7 @@ int main(int argc, char *argv[])
                 meshTarget,
                 patchMap,
                 cuttingPatches,
-                mapOrder,
-                subtract
+                mapOrder
             );
         }
     }

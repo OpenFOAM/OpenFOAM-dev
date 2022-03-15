@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,12 +81,7 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 
     const fvMesh& nbrMesh = mesh.time().lookupObject<fvMesh>(nbrRegionName());
 
-    meshInterp().mapTgtToSrc
-    (
-        scalarField(nbrMesh.nCells(), 1),
-        plusEqOp<scalar>(),
-        filter_
-    );
+    meshInterp().mapTgtToSrc(scalarField(nbrMesh.nCells(), 1), filter_);
 
     const word zoneName(name + ":porous");
 

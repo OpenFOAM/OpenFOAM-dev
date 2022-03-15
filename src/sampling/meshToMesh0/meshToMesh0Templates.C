@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,12 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type, class CombineOp>
+template<class Type>
 void Foam::meshToMesh0::mapField
 (
     Field<Type>& toF,
     const Field<Type>& fromVf,
-    const labelList& adr,
-    const CombineOp& cop
+    const labelList& adr
 ) const
 {
     // Direct mapping of nearest-cell values
@@ -46,7 +45,7 @@ void Foam::meshToMesh0::mapField
     {
         if (adr[celli] != -1)
         {
-            cop(toF[celli], fromVf[adr[celli]]);
+            toF[celli] = fromVf[adr[celli]];
         }
     }
 
@@ -54,14 +53,13 @@ void Foam::meshToMesh0::mapField
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 void Foam::meshToMesh0::interpolateField
 (
     Field<Type>& toF,
     const GeometricField<Type, fvPatchField, volMesh>& fromVf,
     const labelListList& adr,
-    const scalarListList& weights,
-    const CombineOp& cop
+    const scalarListList& weights
 ) const
 {
     // Inverse volume weighted interpolation
@@ -75,20 +73,19 @@ void Foam::meshToMesh0::interpolateField
         {
             label fromCelli = overlapCells[i];
             f += fromVf[fromCelli]*w[i];
-            cop(toF[celli], f);
+            toF[celli] = f;
         }
     }
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 void Foam::meshToMesh0::interpolateField
 (
     Field<Type>& toF,
     const GeometricField<Type, fvPatchField, volMesh>& fromVf,
     const labelList& adr,
-    const scalarListList& weights,
-    const CombineOp& cop
+    const scalarListList& weights
 ) const
 {
     // Inverse distance weighted interpolation
@@ -110,20 +107,19 @@ void Foam::meshToMesh0::interpolateField
                 f += fromVf[neighbours[ni - 1]]*w[ni];
             }
 
-            cop(toF[celli], f);
+            toF[celli] = f;
         }
     }
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 void Foam::meshToMesh0::interpolateField
 (
     Field<Type>& toF,
     const GeometricField<Type, fvPatchField, volMesh>& fromVf,
     const labelList& adr,
-    const vectorField& centres,
-    const CombineOp& cop
+    const vectorField& centres
 ) const
 {
     // Cell-Point interpolation
@@ -133,27 +129,18 @@ void Foam::meshToMesh0::interpolateField
     {
         if (adr[celli] != -1)
         {
-            cop
-            (
-                toF[celli],
-                interpolator.interpolate
-                (
-                    centres[celli],
-                    adr[celli]
-                )
-            );
+            toF[celli] = interpolator.interpolate(centres[celli], adr[celli]);
         }
     }
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 void Foam::meshToMesh0::interpolateInternalField
 (
     Field<Type>& toF,
     const GeometricField<Type, fvPatchField, volMesh>& fromVf,
-    meshToMesh0::order ord,
-    const CombineOp& cop
+    meshToMesh0::order ord
 ) const
 {
     if (fromVf.mesh() != fromMesh_)
@@ -177,7 +164,7 @@ void Foam::meshToMesh0::interpolateInternalField
     switch(ord)
     {
         case MAP:
-            mapField(toF, fromVf, cellAddressing_, cop);
+            mapField(toF, fromVf, cellAddressing_);
         break;
 
         case INTERPOLATE:
@@ -187,8 +174,7 @@ void Foam::meshToMesh0::interpolateInternalField
                 toF,
                 fromVf,
                 cellAddressing_,
-                inverseDistanceWeights(),
-                cop
+                inverseDistanceWeights()
             );
             break;
         }
@@ -199,8 +185,7 @@ void Foam::meshToMesh0::interpolateInternalField
                 toF,
                 fromVf,
                 cellAddressing_,
-                toMesh_.cellCentres(),
-                cop
+                toMesh_.cellCentres()
             );
 
             break;
@@ -215,8 +200,7 @@ void Foam::meshToMesh0::interpolateInternalField
                 toF,
                 fromVf,
                 cellToCell,
-                invVolWeights,
-                cop
+                invVolWeights
             );
             break;
         }
@@ -228,30 +212,28 @@ void Foam::meshToMesh0::interpolateInternalField
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 void Foam::meshToMesh0::interpolateInternalField
 (
     Field<Type>& toF,
     const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfromVf,
-    meshToMesh0::order ord,
-    const CombineOp& cop
+    meshToMesh0::order ord
 ) const
 {
-    interpolateInternalField(toF, tfromVf(), ord, cop);
+    interpolateInternalField(toF, tfromVf(), ord);
     tfromVf.clear();
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 void Foam::meshToMesh0::interpolate
 (
     GeometricField<Type, fvPatchField, volMesh>& toVf,
     const GeometricField<Type, fvPatchField, volMesh>& fromVf,
-    meshToMesh0::order ord,
-    const CombineOp& cop
+    meshToMesh0::order ord
 ) const
 {
-    interpolateInternalField(toVf, fromVf, ord, cop);
+    interpolateInternalField(toVf, fromVf, ord);
 
     typename GeometricField<Type, fvPatchField, volMesh>::
         Boundary& toVfBf = toVf.boundaryFieldRef();
@@ -270,8 +252,7 @@ void Foam::meshToMesh0::interpolate
                     (
                         toVfBf[patchi],
                         fromVf,
-                        boundaryAddressing_[patchi],
-                        cop
+                        boundaryAddressing_[patchi]
                     );
                     break;
                 }
@@ -283,8 +264,7 @@ void Foam::meshToMesh0::interpolate
                         toVfBf[patchi],
                         fromVf,
                         boundaryAddressing_[patchi],
-                        toPatch.Cf(),
-                        cop
+                        toPatch.Cf()
                     );
                     break;
                 }
@@ -296,8 +276,7 @@ void Foam::meshToMesh0::interpolate
                         toVfBf[patchi],
                         fromVf,
                         boundaryAddressing_[patchi],
-                        toPatch.Cf(),
-                        cop
+                        toPatch.Cf()
                     );
                     break;
                 }
@@ -333,40 +312,37 @@ void Foam::meshToMesh0::interpolate
                 [
                     fromMeshPatches_.find(patchMap_.find(toPatch.name())())()
                 ],
-                boundaryAddressing_[patchi],
-                cop
+                boundaryAddressing_[patchi]
             );
         }
     }
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 void Foam::meshToMesh0::interpolate
 (
     GeometricField<Type, fvPatchField, volMesh>& toVf,
     const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfromVf,
-    meshToMesh0::order ord,
-    const CombineOp& cop
+    meshToMesh0::order ord
 ) const
 {
-    interpolate(toVf, tfromVf(), ord, cop);
+    interpolate(toVf, tfromVf(), ord);
     tfromVf.clear();
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::meshToMesh0::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& fromVf,
-    meshToMesh0::order ord,
-    const CombineOp& cop
+    meshToMesh0::order ord
 ) const
 {
     // Create and map the internal-field values
     Field<Type> internalField(toMesh_.nCells());
-    interpolateInternalField(internalField, fromVf, ord, cop);
+    interpolateInternalField(internalField, fromVf, ord);
 
     // check whether both meshes have got the same number
     // of boundary patches
@@ -428,17 +404,16 @@ Foam::meshToMesh0::interpolate
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::meshToMesh0::interpolate
 (
     const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfromVf,
-    meshToMesh0::order ord,
-    const CombineOp& cop
+    meshToMesh0::order ord
 ) const
 {
     tmp<GeometricField<Type, fvPatchField, volMesh>> tint =
-        interpolate(tfromVf(), ord, cop);
+        interpolate(tfromVf(), ord);
     tfromVf.clear();
 
     return tint;

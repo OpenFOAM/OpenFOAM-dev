@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,11 +67,11 @@ void Foam::fv::interRegionModel::interpolate
 {
     if (master())
     {
-        meshInterp().mapTgtToSrc(field, plusEqOp<scalar>(), result);
+        meshInterp().mapTgtToSrc(field, result);
     }
     else
     {
-        nbrModel.meshInterp().mapSrcToTgt(field, plusEqOp<scalar>(), result);
+        nbrModel.meshInterp().mapSrcToTgt(field, result);
     }
 }
 

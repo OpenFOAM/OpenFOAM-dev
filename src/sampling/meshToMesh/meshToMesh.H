@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,24 +114,22 @@ class meshToMesh
 
         //- Helper function to interpolate patch field. Template
         //  specialisations  below
-        template<class Type, class CombineOp>
+        template<class Type>
         void mapAndOpSrcToTgt
         (
             const AMIInterpolation& AMI,
             const Field<Type>& srcField,
-            Field<Type>& tgtField,
-            const CombineOp& cop
+            Field<Type>& tgtField
         ) const;
 
         //- Helper function to interpolate patch field. Template
         //  specialisations  below
-        template<class Type, class CombineOp>
+        template<class Type>
         void mapAndOpTgtToSrc
         (
             const AMIInterpolation& AMI,
             Field<Type>& srcField,
-            const Field<Type>& tgtField,
-            const CombineOp& cop
+            const Field<Type>& tgtField
         ) const;
 
         //- Return src cell IDs for the overlap region
@@ -302,34 +300,15 @@ public:
                 //- Map field from src to tgt mesh with defined operation
                 //  Values passed in via 'result' are used to initialise the
                 //  return value
-                template<class Type, class CombineOp>
+                template<class Type>
                 void mapSrcToTgt
                 (
                     const UList<Type>& srcFld,
-                    const CombineOp& cop,
                     List<Type>& result
                 ) const;
 
                 //- Return the src field mapped to the tgt mesh with a defined
                 //  operation.  Initial values of the result are set to zero
-                template<class Type, class CombineOp>
-                tmp<Field<Type>> mapSrcToTgt
-                (
-                    const Field<Type>& srcFld,
-                    const CombineOp& cop
-                ) const;
-
-                //- Convenience function to map a tmp field to the tgt mesh
-                //  with a defined operation
-                template<class Type, class CombineOp>
-                tmp<Field<Type>> mapSrcToTgt
-                (
-                    const tmp<Field<Type>>& tsrcFld,
-                    const CombineOp& cop
-                ) const;
-
-                //- Convenience function to map a field to the tgt mesh with a
-                //  default operation (plusEqOp)
                 template<class Type>
                 tmp<Field<Type>> mapSrcToTgt
                 (
@@ -337,7 +316,7 @@ public:
                 ) const;
 
                 //- Convenience function to map a tmp field to the tgt mesh
-                //  with a default operation (plusEqOp)
+                //  with a defined operation
                 template<class Type>
                 tmp<Field<Type>> mapSrcToTgt
                 (
@@ -350,34 +329,15 @@ public:
                 //- Map field from tgt to src mesh with defined operation
                 //  Values passed in via 'result' are used to initialise the
                 //  return value
-                template<class Type, class CombineOp>
+                template<class Type>
                 void mapTgtToSrc
                 (
                     const UList<Type>& tgtFld,
-                    const CombineOp& cop,
                     List<Type>& result
                 ) const;
 
                 //- Return the tgt field mapped to the src mesh with a defined
                 //  operation.  Initial values of the result are set to zero
-                template<class Type, class CombineOp>
-                tmp<Field<Type>> mapTgtToSrc
-                (
-                    const Field<Type>& tgtFld,
-                    const CombineOp& cop
-                ) const;
-
-                //- Convenience function to map a tmp field to the src mesh
-                //  with a defined operation
-                template<class Type, class CombineOp>
-                tmp<Field<Type>> mapTgtToSrc
-                (
-                    const tmp<Field<Type>>& ttgtFld,
-                    const CombineOp& cop
-                ) const;
-
-                //- Convenience function to map a field to the src mesh with a
-                //  default operation (plusEqOp)
                 template<class Type>
                 tmp<Field<Type>> mapTgtToSrc
                 (
@@ -385,7 +345,7 @@ public:
                 ) const;
 
                 //- Convenience function to map a tmp field to the src mesh
-                //  with a default operation (plusEqOp)
+                //  with a defined operation
                 template<class Type>
                 tmp<Field<Type>> mapTgtToSrc
                 (
@@ -398,43 +358,23 @@ public:
                 //- Interpolate a field with a defined operation.  Values
                 //  passed in via 'result' are used to initialise the return
                 //  value
-                template<class Type, class CombineOp>
+                template<class Type>
                 void mapSrcToTgt
                 (
                     const GeometricField<Type, fvPatchField, volMesh>& field,
-                    const CombineOp& cop,
                     GeometricField<Type, fvPatchField, volMesh>& result
                 ) const;
 
                 //- Interpolate a field with a defined operation.  The initial
                 //  values of the result are set to zero
-                template<class Type, class CombineOp>
-                tmp<GeometricField<Type, fvPatchField, volMesh>> mapSrcToTgt
-                (
-                    const GeometricField<Type, fvPatchField, volMesh>& field,
-                    const CombineOp& cop
-                ) const;
-
-                //- Interpolate a tmp field with a defined operation.  The
-                //  initial values of the result are set to zero
-                template<class Type, class CombineOp>
-                tmp<GeometricField<Type, fvPatchField, volMesh>> mapSrcToTgt
-                (
-                    const tmp<GeometricField<Type, fvPatchField, volMesh>>&
-                        tfield,
-                    const CombineOp& cop
-                ) const;
-
-                //- Convenience function to map a field with a default
-                //  operation (plusEqOp)
                 template<class Type>
                 tmp<GeometricField<Type, fvPatchField, volMesh>> mapSrcToTgt
                 (
                     const GeometricField<Type, fvPatchField, volMesh>& field
                 ) const;
 
-                //- Convenience function to map a tmp field with a default
-                //  operation (plusEqOp)
+                //- Interpolate a tmp field with a defined operation.  The
+                //  initial values of the result are set to zero
                 template<class Type>
                 tmp<GeometricField<Type, fvPatchField, volMesh>> mapSrcToTgt
                 (
@@ -448,43 +388,23 @@ public:
                 //- Interpolate a field with a defined operation.  Values
                 //  passed in via 'result' are used to initialise the return
                 //  value
-                template<class Type, class CombineOp>
+                template<class Type>
                 void mapTgtToSrc
                 (
                     const GeometricField<Type, fvPatchField, volMesh>& field,
-                    const CombineOp& cop,
                     GeometricField<Type, fvPatchField, volMesh>& result
                 ) const;
 
                 //- Interpolate a field with a defined operation.  The initial
                 //  values of the result are set to zero
-                template<class Type, class CombineOp>
-                tmp<GeometricField<Type, fvPatchField, volMesh>> mapTgtToSrc
-                (
-                    const GeometricField<Type, fvPatchField, volMesh>& field,
-                    const CombineOp& cop
-                ) const;
-
-                //- Interpolate a tmp field with a defined operation.  The
-                //  initial values of the result are set to zero
-                template<class Type, class CombineOp>
-                tmp<GeometricField<Type, fvPatchField, volMesh>> mapTgtToSrc
-                (
-                    const tmp<GeometricField<Type, fvPatchField, volMesh>>&
-                        tfield,
-                    const CombineOp& cop
-                ) const;
-
-                //- Convenience function to map a field with a default
-                //  operation (plusEqOp)
                 template<class Type>
                 tmp<GeometricField<Type, fvPatchField, volMesh>> mapTgtToSrc
                 (
                     const GeometricField<Type, fvPatchField, volMesh>& field
                 ) const;
 
-                //- Convenience function to map a tmp field with a default
-                //  operation (plusEqOp)
+                //- Interpolate a tmp field with a defined operation.  The
+                //  initial values of the result are set to zero
                 template<class Type>
                 tmp<GeometricField<Type, fvPatchField, volMesh>> mapTgtToSrc
                 (
@@ -509,40 +429,35 @@ void meshToMesh::mapAndOpSrcToTgt
 (
     const AMIInterpolation& AMI,
     const Field<scalar>& srcField,
-    Field<scalar>& tgtField,
-    const plusEqOp<scalar>& cop
+    Field<scalar>& tgtField
 ) const;
 template<>
 void meshToMesh::mapAndOpSrcToTgt
 (
     const AMIInterpolation& AMI,
     const Field<vector>& srcField,
-    Field<vector>& tgtField,
-    const plusEqOp<vector>& cop
+    Field<vector>& tgtField
 ) const;
 template<>
 void meshToMesh::mapAndOpSrcToTgt
 (
     const AMIInterpolation& AMI,
     const Field<sphericalTensor>& srcField,
-    Field<sphericalTensor>& tgtField,
-    const plusEqOp<sphericalTensor>& cop
+    Field<sphericalTensor>& tgtField
 ) const;
 template<>
 void meshToMesh::mapAndOpSrcToTgt
 (
     const AMIInterpolation& AMI,
     const Field<symmTensor>& srcField,
-    Field<symmTensor>& tgtField,
-    const plusEqOp<symmTensor>& cop
+    Field<symmTensor>& tgtField
 ) const;
 template<>
 void meshToMesh::mapAndOpSrcToTgt
 (
     const AMIInterpolation& AMI,
     const Field<tensor>& srcField,
-    Field<tensor>& tgtField,
-    const plusEqOp<tensor>& cop
+    Field<tensor>& tgtField
 ) const;
 
 
@@ -551,40 +466,35 @@ void meshToMesh::mapAndOpTgtToSrc
 (
     const AMIInterpolation& AMI,
     Field<scalar>& srcField,
-    const Field<scalar>& tgtField,
-    const plusEqOp<scalar>& cop
+    const Field<scalar>& tgtField
 ) const;
 template<>
 void meshToMesh::mapAndOpTgtToSrc
 (
     const AMIInterpolation& AMI,
     Field<vector>& srcField,
-    const Field<vector>& tgtField,
-    const plusEqOp<vector>& cop
+    const Field<vector>& tgtField
 ) const;
 template<>
 void meshToMesh::mapAndOpTgtToSrc
 (
     const AMIInterpolation& AMI,
     Field<sphericalTensor>& srcField,
-    const Field<sphericalTensor>& tgtField,
-    const plusEqOp<sphericalTensor>& cop
+    const Field<sphericalTensor>& tgtField
 ) const;
 template<>
 void meshToMesh::mapAndOpTgtToSrc
 (
     const AMIInterpolation& AMI,
     Field<symmTensor>& srcField,
-    const Field<symmTensor>& tgtField,
-    const plusEqOp<symmTensor>& cop
+    const Field<symmTensor>& tgtField
 ) const;
 template<>
 void meshToMesh::mapAndOpTgtToSrc
 (
     const AMIInterpolation& AMI,
     Field<tensor>& srcField,
-    const Field<tensor>& tgtField,
-    const plusEqOp<tensor>& cop
+    const Field<tensor>& tgtField
 ) const;
 
 } // End namespace Foam

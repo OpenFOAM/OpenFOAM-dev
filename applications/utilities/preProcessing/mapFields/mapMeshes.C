@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,21 +23,17 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MapMeshes_H
-#define MapMeshes_H
-
+#include "mapMeshes.H"
+#include "surfaceMesh.H"
+#include "processorFvPatch.H"
+#include "mapLagrangian.H"
 #include "MapVolFields.H"
 #include "MapConsistentVolFields.H"
-#include "mapLagrangian.H"
 #include "UnMapped.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-template<template<class> class CombineOp>
-void MapConsistentMesh
+void Foam::mapConsistentMesh
 (
     const fvMesh& meshSource,
     const fvMesh& meshTarget,
@@ -61,36 +57,31 @@ void MapConsistentMesh
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<scalar>()
+            mapOrder
         );
         MapConsistentVolFields<vector>
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<vector>()
+            mapOrder
         );
         MapConsistentVolFields<sphericalTensor>
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<sphericalTensor>()
+            mapOrder
         );
         MapConsistentVolFields<symmTensor>
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<symmTensor>()
+            mapOrder
         );
         MapConsistentVolFields<tensor>
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<tensor>()
+            mapOrder
         );
     }
 
@@ -119,8 +110,7 @@ void MapConsistentMesh
 }
 
 
-template<template<class> class CombineOp>
-void MapSubMesh
+void Foam::mapSubMesh
 (
     const fvMesh& meshSource,
     const fvMesh& meshTarget,
@@ -152,36 +142,31 @@ void MapSubMesh
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<scalar>()
+            mapOrder
         );
         MapVolFields<vector>
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<vector>()
+            mapOrder
         );
         MapVolFields<sphericalTensor>
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<sphericalTensor>()
+            mapOrder
         );
         MapVolFields<symmTensor>
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<symmTensor>()
+            mapOrder
         );
         MapVolFields<tensor>
         (
             objects,
             meshToMesh0Interp,
-            mapOrder,
-            CombineOp<tensor>()
+            mapOrder
         );
     }
 
@@ -210,8 +195,7 @@ void MapSubMesh
 }
 
 
-template<template<class> class CombineOp>
-void MapConsistentSubMesh
+void Foam::mapConsistentSubMesh
 (
     const fvMesh& meshSource,
     const fvMesh& meshTarget,
@@ -241,7 +225,7 @@ void MapConsistentSubMesh
         }
     }
 
-    MapSubMesh<CombineOp>
+    mapSubMesh
     (
         meshSource,
         meshTarget,
@@ -252,12 +236,42 @@ void MapConsistentSubMesh
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Foam::wordList Foam::addProcessorPatches
+(
+    const fvMesh& meshTarget,
+    const wordList& cuttingPatches
+)
+{
+    // Add the processor patches to the cutting list
+    HashTable<label> cuttingPatchTable;
+    forAll(cuttingPatches, i)
+    {
+        cuttingPatchTable.insert(cuttingPatches[i], i);
+    }
 
-} // End namespace Foam
+    forAll(meshTarget.boundary(), patchi)
+    {
+        if (isA<processorFvPatch>(meshTarget.boundary()[patchi]))
+        {
+            if
+            (
+               !cuttingPatchTable.found
+                (
+                    meshTarget.boundaryMesh()[patchi].name()
+                )
+            )
+            {
+                cuttingPatchTable.insert
+                (
+                    meshTarget.boundaryMesh()[patchi].name(),
+                    -1
+                );
+            }
+        }
+    }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    return cuttingPatchTable.toc();
+}
 
-#endif
 
 // ************************************************************************* //

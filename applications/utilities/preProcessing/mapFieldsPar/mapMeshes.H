@@ -23,71 +23,53 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MapVolFields_H
-#define MapVolFields_H
+#ifndef mapMeshes_H
+#define mapMeshes_H
 
-#include "GeometricField.H"
-#include "meshToMesh0.H"
-#include "IOobjectList.H"
+#include "meshToMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-template<class Type>
-void MapVolFields
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+void mapMesh
 (
-    const IOobjectList& objects,
-    const meshToMesh0& meshToMesh0Interp,
-    const meshToMesh0::order& mapOrder
-)
-{
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
+    const meshToMesh& interp,
+    const HashSet<word>& selectedFields,
+    const bool noLagrangian
+);
 
-    const fvMesh& meshSource = meshToMesh0Interp.fromMesh();
-    const fvMesh& meshTarget = meshToMesh0Interp.toMesh();
 
-    IOobjectList fields = objects.lookupClass(fieldType::typeName);
+void mapConsistentMesh
+(
+    const fvMesh& meshSource,
+    const fvMesh& meshTarget,
+    const word& mapMethod,
+    const HashSet<word>& selectedFields,
+    const bool noLagrangian
+);
 
-    forAllIter(IOobjectList, fields, fieldIter)
-    {
-        typeIOobject<fieldType> fieldTargetIOobject
-        (
-            fieldIter()->name(),
-            meshTarget.time().timeName(),
-            meshTarget,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        );
 
-        if (fieldTargetIOobject.headerOk())
-        {
-            Info<< "    interpolating " << fieldIter()->name() << endl;
+void mapSubMesh
+(
+    const fvMesh& meshSource,
+    const fvMesh& meshTarget,
+    const HashTable<word>& patchMap,
+    const wordList& cuttingPatches,
+    const word& mapMethod,
+    const HashSet<word>& selectedFields,
+    const bool noLagrangian
+);
 
-            // Read field fieldSource
-            fieldType fieldSource(*fieldIter(), meshSource);
 
-            // Read fieldTarget
-            fieldType fieldTarget
-            (
-                fieldTargetIOobject,
-                meshTarget
-            );
-
-            // Interpolate field
-            meshToMesh0Interp.interpolate
-            (
-                fieldTarget,
-                fieldSource,
-                mapOrder
-            );
-
-            // Write field
-            fieldTarget.write();
-        }
-    }
-}
+wordList addProcessorPatches
+(
+    const fvMesh& meshTarget,
+    const wordList& cuttingPatches
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,122 +30,11 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
-#include "meshToMesh.H"
+#include "argList.H"
+#include "mapMeshes.H"
 #include "cellVolumeWeightMethod.H"
-#include "processorPolyPatch.H"
-#include "MapMeshes.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-void mapConsistentMesh
-(
-    const fvMesh& meshSource,
-    const fvMesh& meshTarget,
-    const word& mapMethod,
-    const bool subtract,
-    const HashSet<word>& selectedFields,
-    const bool noLagrangian
-)
-{
-    Info<< nl << "Consistently creating and mapping fields for time "
-        << meshSource.time().timeName() << nl << endl;
-
-    meshToMesh interp(meshSource, meshTarget, mapMethod);
-
-    if (subtract)
-    {
-        MapMesh<minusEqOp>
-        (
-            interp,
-            selectedFields,
-            noLagrangian
-        );
-    }
-    else
-    {
-        MapMesh<plusEqOp>
-        (
-            interp,
-            selectedFields,
-            noLagrangian
-        );
-    }
-}
-
-
-void mapSubMesh
-(
-    const fvMesh& meshSource,
-    const fvMesh& meshTarget,
-    const HashTable<word>& patchMap,
-    const wordList& cuttingPatches,
-    const word& mapMethod,
-    const bool subtract,
-    const HashSet<word>& selectedFields,
-    const bool noLagrangian
-)
-{
-    Info<< nl << "Creating and mapping fields for time "
-        << meshSource.time().timeName() << nl << endl;
-
-    meshToMesh interp
-    (
-        meshSource,
-        meshTarget,
-        mapMethod,
-        patchMap,
-        cuttingPatches
-    );
-
-    if (subtract)
-    {
-        MapMesh<minusEqOp>
-        (
-            interp,
-            selectedFields,
-            noLagrangian
-        );
-    }
-    else
-    {
-        MapMesh<plusEqOp>
-        (
-            interp,
-            selectedFields,
-            noLagrangian
-        );
-    }
-}
-
-
-wordList addProcessorPatches
-(
-    const fvMesh& meshTarget,
-    const wordList& cuttingPatches
-)
-{
-    // Add the processor patches to the cutting list
-    HashSet<word> cuttingPatchTable;
-    forAll(cuttingPatches, i)
-    {
-        cuttingPatchTable.insert(cuttingPatches[i]);
-    }
-
-    const polyBoundaryMesh& pbm = meshTarget.boundaryMesh();
-
-    forAll(pbm, patchi)
-    {
-        if (isA<processorPolyPatch>(pbm[patchi]))
-        {
-            const word& patchName = pbm[patchi].name();
-            cuttingPatchTable.insert(patchName);
-        }
-    }
-
-    return cuttingPatchTable.toc();
-}
-
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -186,11 +75,6 @@ int main(int argc, char *argv[])
         "mapMethod",
         "word",
         "specify the mapping method"
-    );
-    argList::addBoolOption
-    (
-        "subtract",
-        "subtract mapped source from target"
     );
     argList::addOption
     (
@@ -241,12 +125,6 @@ int main(int argc, char *argv[])
         )
     );
     Info<< "Mapping method: " << mapMethod << endl;
-
-    const bool subtract = args.optionFound("subtract");
-    if (subtract)
-    {
-        Info<< "Subtracting mapped source field from target" << endl;
-    }
 
     HashSet<word> selectedFields;
     if (args.optionFound("fields"))
@@ -316,7 +194,6 @@ int main(int argc, char *argv[])
             meshSource,
             meshTarget,
             mapMethod,
-            subtract,
             selectedFields,
             noLagrangian
         );
@@ -330,7 +207,6 @@ int main(int argc, char *argv[])
             patchMap,
             cuttingPatches,
             mapMethod,
-            subtract,
             selectedFields,
             noLagrangian
         );

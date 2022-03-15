@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,13 +117,12 @@ void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
 }
 
 
-template<class Type, class CombineOp>
+template<class Type>
 void MapVolFields
 (
     const IOobjectList& objects,
     const HashSet<word>& selectedFields,
-    const meshToMesh& interp,
-    const CombineOp& cop
+    const meshToMesh& interp
 )
 {
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
@@ -155,7 +154,7 @@ void MapVolFields
                     << fieldName << endl;
                 fieldType fieldTarget(targetIO, meshTarget);
 
-                interp.mapSrcToTgt(fieldSource, cop, fieldTarget);
+                interp.mapSrcToTgt(fieldSource, fieldTarget);
 
                 evaluateConstraintTypes(fieldTarget);
 
@@ -168,8 +167,7 @@ void MapVolFields
 
                 targetIO.readOpt() = IOobject::NO_READ;
 
-                tmp<fieldType>
-                    tfieldTarget(interp.mapSrcToTgt(fieldSource, cop));
+                tmp<fieldType> tfieldTarget(interp.mapSrcToTgt(fieldSource));
 
                 fieldType fieldTarget(targetIO, tfieldTarget);
 
