@@ -516,7 +516,7 @@ meshQualityControls
     //- Minimum cell pyramid volume relative to min bounding box length^3
     //  Set to a fraction of the smallest cell volume expected.
     //  Set to very negative number (e.g. -1e30) to disable.
-    minVol 1e-10;
+    minVol -1e30;
 
     // Minimum quality of the tet formed by the face-centre
     // and variable base point minimum decomposition triangles and

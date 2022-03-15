@@ -247,7 +247,7 @@ meshQualityControls
     maxInternalSkewness 4;
 
     maxConcave 80;
-    minVol 1e-13;
+    minVol -1e30;
     minTetQuality -1;
     minTwist 0.01;
     minDeterminant 0.001;

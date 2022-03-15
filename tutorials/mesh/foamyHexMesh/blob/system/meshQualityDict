@@ -38,7 +38,7 @@ minTetQuality       1e-30;
 //- Minimum cell pyramid volume relative to min bounding box length^3
 //  Set to a fraction of the smallest cell volume expected.
 //  Set to very negative number (e.g. -1e30) to disable.
-minVol 1e-10;
+minVol -1e30;
 
 //- Minimum face twist. Set to <-1 to disable. dot product of face normal
 //  and face centre triangles normal
