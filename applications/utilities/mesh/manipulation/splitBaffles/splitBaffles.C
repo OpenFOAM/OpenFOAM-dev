@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ Description
 #include "polyTopoChange.H"
 #include "localPointRegion.H"
 #include "duplicatePoints.H"
+#include "hexRef8Data.H"
 #include "ReadFields.H"
 #include "volFields.H"
 #include "surfaceFields.H"
@@ -91,6 +92,20 @@ int main(int argc, char *argv[])
     // Insert topo changes
     pointDuplicator.setRefinement(regionSide, meshMod);
 
+    hexRef8Data refData
+    (
+        IOobject
+        (
+            "dummy",
+            mesh.facesInstance(),
+            polyMesh::meshSubDir,
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
     if (!overwrite)
     {
         runTime++;
@@ -115,6 +130,9 @@ int main(int argc, char *argv[])
 
     Info<< "Writing mesh to time " << runTime.timeName() << endl;
     mesh.write();
+
+    refData.updateMesh(map);
+    refData.write();
 
     Info<< "End\n" << endl;
 
