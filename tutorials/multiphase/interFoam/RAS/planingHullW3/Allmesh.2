@@ -21,6 +21,8 @@ do
     runApplication -a refineMesh -dict system/refineMeshDict -overwrite
 done
 
+rm -rf constant/polyMesh/sets
+
 runApplication snappyHexMesh -dict system/snappyHexMeshDict.2 -overwrite
 
 runApplication renumberMesh -noFields -overwrite
