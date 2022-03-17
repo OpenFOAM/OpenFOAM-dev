@@ -501,12 +501,12 @@ polyBoundaryMesh = $(polyMesh)/polyBoundaryMesh
 $(polyBoundaryMesh)/polyBoundaryMesh.C
 $(polyBoundaryMesh)/polyBoundaryMeshEntries.C
 
-meshes/ProcessorTopology/commSchedule.C
-
 globalMeshData = $(polyMesh)/globalMeshData
 $(globalMeshData)/globalMeshData.C
 $(globalMeshData)/globalPoints.C
 $(globalMeshData)/globalIndex.C
+$(globalMeshData)/commSchedule.C
+$(globalMeshData)/processorTopology.C
 
 $(polyMesh)/syncTools/syncTools.C
 $(polyMesh)/polyMeshTetDecomposition/polyMeshTetDecomposition.C

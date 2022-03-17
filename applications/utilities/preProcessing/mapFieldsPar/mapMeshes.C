@@ -25,6 +25,7 @@ License
 
 #include "mapMeshes.H"
 #include "surfaceMesh.H"
+#include "processorFvPatch.H"
 #include "pointMesh.H"
 #include "mapLagrangian.H"
 #include "MapVolFields.H"

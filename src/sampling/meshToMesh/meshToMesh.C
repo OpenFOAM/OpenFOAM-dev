@@ -27,6 +27,7 @@ License
 #include "Time.H"
 #include "globalIndex.H"
 #include "meshToMeshMethod.H"
+#include "processorPolyPatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

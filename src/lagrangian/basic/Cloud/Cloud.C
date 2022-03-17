@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,7 +156,7 @@ void Foam::Cloud<ParticleType>::move
     const labelList& procPatchNeighbours = pData.processorPatchNeighbours();
 
     // Which processors this processor is connected to
-    const labelList& neighbourProcs = pData[Pstream::myProcNo()];
+    const labelList& neighbourProcs = pData.procNbrProcs()[Pstream::myProcNo()];
 
     // Indexing from the processor number into the neighbourProcs list
     labelList neighbourProcIndices(Pstream::nProcs(), -1);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -597,12 +597,12 @@ void Foam::motionSmootherAlgo::correctBoundaryConditions
             if (patchSchedule[patchEvalI].init)
             {
                 displacementBf[patchi]
-                    .initEvaluate(Pstream::commsTypes::blocking);
+                    .initEvaluate(Pstream::commsTypes::scheduled);
             }
             else
             {
                 displacementBf[patchi]
-                    .evaluate(Pstream::commsTypes::blocking);
+                    .evaluate(Pstream::commsTypes::scheduled);
             }
         }
     }
@@ -618,12 +618,12 @@ void Foam::motionSmootherAlgo::correctBoundaryConditions
             if (patchSchedule[patchEvalI].init)
             {
                 displacementBf[patchi]
-                    .initEvaluate(Pstream::commsTypes::blocking);
+                    .initEvaluate(Pstream::commsTypes::scheduled);
             }
             else
             {
                 displacementBf[patchi]
-                    .evaluate(Pstream::commsTypes::blocking);
+                    .evaluate(Pstream::commsTypes::scheduled);
             }
         }
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,8 +104,6 @@ class PackedBoolList;
 \*---------------------------------------------------------------------------*/
 
 class globalMeshData
-:
-    public processorTopology
 {
 
     // Private Data
@@ -127,6 +125,9 @@ class globalMeshData
 
 
         // Processor patch addressing (be careful if not running in parallel!)
+
+            //- Processor topology class
+            processorTopology processorTopology_;
 
             //- List of processor patch labels
             //  (size of list = number of processor patches)
@@ -251,8 +252,9 @@ class globalMeshData
         //- Calculate shared edge addressing
         void calcSharedEdges() const;
 
-       //- Calculate global point addressing.
+        //- Calculate global point addressing.
         void calcGlobalPointSlaves() const;
+
 
         // Global edge addressing
 
@@ -292,6 +294,7 @@ class globalMeshData
 
             //- Calculate global point to global boundary cell addressing.
             void calcGlobalPointBoundaryCells() const;
+
 
         // Other
 
@@ -394,6 +397,19 @@ public:
 
 
         // Processor patch addressing (be careful when not running in parallel)
+
+            //- Return the processor-processor connection table
+            const labelListList& procNbrProcs() const
+            {
+                return processorTopology_.procNbrProcs();
+            }
+
+            //- Order in which the patches should be initialised/evaluated
+            //  corresponding to the schedule
+            const lduSchedule& patchSchedule() const
+            {
+                return processorTopology_.patchSchedule();
+            }
 
             //- Return list of processor patch labels
             //  (size of list = number of processor patches)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,17 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ProcessorTopology.H"
-#include "ListOps.H"
-#include "Pstream.H"
+#include "processorTopology.H"
+#include "polyBoundaryMesh.H"
+#include "processorPolyPatch.H"
 #include "commSchedule.H"
-#include "boolList.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class Container, class ProcPatch>
-Foam::labelList Foam::ProcessorTopology<Container, ProcPatch>::procNeighbours
+Foam::labelList Foam::processorTopology::procNeighbours
 (
     const label nProcs,
-    const Container& patches
+    const polyBoundaryMesh& patches
 )
 {
     // Determine number of processor neighbours and max neighbour id.
@@ -48,12 +46,12 @@ Foam::labelList Foam::ProcessorTopology<Container, ProcPatch>::procNeighbours
 
     forAll(patches, patchi)
     {
-        const typename Container::const_reference patch = patches[patchi];
+        const polyPatch& patch = patches[patchi];
 
-        if (isA<ProcPatch>(patch))
+        if (isA<processorPolyPatch>(patch))
         {
-            const ProcPatch& procPatch =
-                refCast<const ProcPatch>(patch);
+            const processorPolyPatch& procPatch =
+                refCast<const processorPolyPatch>(patch);
 
             label pNeighbProcNo = procPatch.neighbProcNo();
 
@@ -85,12 +83,12 @@ Foam::labelList Foam::ProcessorTopology<Container, ProcPatch>::procNeighbours
 
     forAll(patches, patchi)
     {
-        const typename Container::const_reference patch = patches[patchi];
+        const polyPatch& patch = patches[patchi];
 
-        if (isA<ProcPatch>(patch))
+        if (isA<processorPolyPatch>(patch))
         {
-            const ProcPatch& procPatch =
-                refCast<const ProcPatch>(patch);
+            const processorPolyPatch& procPatch =
+                refCast<const processorPolyPatch>(patch);
 
             // Construct reverse map
             procPatchMap_[procPatch.neighbProcNo()] = patchi;
@@ -101,27 +99,82 @@ Foam::labelList Foam::ProcessorTopology<Container, ProcPatch>::procNeighbours
 }
 
 
+Foam::lduSchedule Foam::processorTopology::nonBlockingSchedule
+(
+    const polyBoundaryMesh& patches
+)
+{
+    lduSchedule patchSchedule(2*patches.size());
+
+    label patchEvali = 0;
+
+    // 1. All non-processor patches
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // Have evaluate directly after initEvaluate. Could have them separated
+    // as long as they're not intermingled with processor patches since
+    // then e.g. any reduce parallel traffic would interfere with the
+    // processor swaps.
+
+    forAll(patches, patchi)
+    {
+        if (!isA<processorPolyPatch>(patches[patchi]))
+        {
+            patchSchedule[patchEvali].patch = patchi;
+            patchSchedule[patchEvali++].init = true;
+            patchSchedule[patchEvali].patch = patchi;
+            patchSchedule[patchEvali++].init = false;
+        }
+    }
+
+    // 2. All processor patches
+    // ~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // 2a. initEvaluate
+    forAll(patches, patchi)
+    {
+        if (isA<processorPolyPatch>(patches[patchi]))
+        {
+            patchSchedule[patchEvali].patch = patchi;
+            patchSchedule[patchEvali++].init = true;
+        }
+    }
+
+    // 2b. evaluate
+    forAll(patches, patchi)
+    {
+        if (isA<processorPolyPatch>(patches[patchi]))
+        {
+            patchSchedule[patchEvali].patch = patchi;
+            patchSchedule[patchEvali++].init = false;
+        }
+    }
+
+    return patchSchedule;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Container, class ProcPatch>
-Foam::ProcessorTopology<Container, ProcPatch>::ProcessorTopology
+Foam::processorTopology::processorTopology
 (
-    const Container& patches,
+    const polyBoundaryMesh& patches,
     const label comm
 )
 :
-    labelListList(Pstream::nProcs(comm)),
+    procNbrProcs_(Pstream::nProcs(comm)),
+    procPatchMap_(),
     patchSchedule_(2*patches.size())
 {
     if (Pstream::parRun())
     {
         // Fill my 'slot' with my neighbours
-        operator[](Pstream::myProcNo(comm)) =
-            procNeighbours(this->size(), patches);
+        procNbrProcs_[Pstream::myProcNo(comm)] =
+            procNeighbours(procNbrProcs_.size(), patches);
 
         // Distribute to all processors
-        Pstream::gatherList(*this, Pstream::msgType(), comm);
-        Pstream::scatterList(*this, Pstream::msgType(), comm);
+        Pstream::gatherList(procNbrProcs_, Pstream::msgType(), comm);
+        Pstream::scatterList(procNbrProcs_, Pstream::msgType(), comm);
     }
 
     if
@@ -137,7 +190,7 @@ Foam::ProcessorTopology<Container, ProcPatch>::ProcessorTopology
 
         forAll(patches, patchi)
         {
-            if (!isA<ProcPatch>(patches[patchi]))
+            if (!isA<processorPolyPatch>(patches[patchi]))
             {
                 patchSchedule_[patchEvali].patch = patchi;
                 patchSchedule_[patchEvali++].init = true;
@@ -153,15 +206,15 @@ Foam::ProcessorTopology<Container, ProcPatch>::ProcessorTopology
         // to determine the schedule. Each processor pair stands for both
         // send and receive.
         label nComms = 0;
-        forAll(*this, proci)
+        forAll(procNbrProcs_, proci)
         {
-            nComms += operator[](proci).size();
+            nComms += procNbrProcs_[proci].size();
         }
         DynamicList<labelPair> comms(nComms);
 
-        forAll(*this, proci)
+        forAll(procNbrProcs_, proci)
         {
-            const labelList& nbrs = operator[](proci);
+            const labelList& nbrs = procNbrProcs_[proci];
 
             forAll(nbrs, i)
             {
@@ -215,65 +268,6 @@ Foam::ProcessorTopology<Container, ProcPatch>::ProcessorTopology
     {
         patchSchedule_ = nonBlockingSchedule(patches);
     }
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Container, class ProcPatch>
-Foam::lduSchedule
-Foam::ProcessorTopology<Container, ProcPatch>::nonBlockingSchedule
-(
-    const Container& patches
-)
-{
-    lduSchedule patchSchedule(2*patches.size());
-
-    label patchEvali = 0;
-
-    // 1. All non-processor patches
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    // Have evaluate directly after initEvaluate. Could have them separated
-    // as long as they're not intermingled with processor patches since
-    // then e.g. any reduce parallel traffic would interfere with the
-    // processor swaps.
-
-    forAll(patches, patchi)
-    {
-        if (!isA<ProcPatch>(patches[patchi]))
-        {
-            patchSchedule[patchEvali].patch = patchi;
-            patchSchedule[patchEvali++].init = true;
-            patchSchedule[patchEvali].patch = patchi;
-            patchSchedule[patchEvali++].init = false;
-        }
-    }
-
-    // 2. All processor patches
-    // ~~~~~~~~~~~~~~~~~~~~~~~~
-
-    // 2a. initEvaluate
-    forAll(patches, patchi)
-    {
-        if (isA<ProcPatch>(patches[patchi]))
-        {
-            patchSchedule[patchEvali].patch = patchi;
-            patchSchedule[patchEvali++].init = true;
-        }
-    }
-
-    // 2b. evaluate
-    forAll(patches, patchi)
-    {
-        if (isA<ProcPatch>(patches[patchi]))
-        {
-            patchSchedule[patchEvali].patch = patchi;
-            patchSchedule[patchEvali++].init = false;
-        }
-    }
-
-    return patchSchedule;
 }
 
 

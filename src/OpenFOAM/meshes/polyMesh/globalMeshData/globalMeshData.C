@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1768,11 +1768,11 @@ void Foam::globalMeshData::calcGlobalCoPointSlaves() const
 
 Foam::globalMeshData::globalMeshData(const polyMesh& mesh)
 :
-    processorTopology(mesh.boundaryMesh(), UPstream::worldComm),
     mesh_(mesh),
     nTotalPoints_(-1),
     nTotalFaces_(-1),
     nTotalCells_(-1),
+    processorTopology_(mesh.boundaryMesh(), UPstream::worldComm),
     processorPatches_(0),
     processorPatchIndices_(0),
     processorPatchNeighbours_(0),
