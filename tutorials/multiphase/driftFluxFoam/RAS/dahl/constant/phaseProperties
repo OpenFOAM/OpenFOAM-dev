@@ -20,7 +20,7 @@ relativeVelocityModel simple;
 
 "(simple|general)Coeffs"
 {
-    V0              (0 -0.002198 0);
+    Vc              2.241e-4;
     a               285.84;
     a1              0.1;
     residualAlpha   0;

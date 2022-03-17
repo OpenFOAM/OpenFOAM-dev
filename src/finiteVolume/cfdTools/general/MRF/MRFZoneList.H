@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,41 +81,41 @@ public:
 
     // Member Functions
 
-        //- Return active status
-        bool active(const bool warn = false) const;
-
         //- Reset the source list
         void reset(const dictionary& dict);
 
-        //- Add the frame acceleration
-        void addAcceleration
+        //- Add the Coriolis acceleration
+        void addCoriolis
         (
             const volVectorField& U,
             volVectorField& ddtU
         ) const;
 
-        //- Add the frame acceleration contribution to the momentum equation
-        void addAcceleration(fvVectorMatrix& UEqn) const;
+        //- Add the Coriolis acceleration to the momentum equation
+        void addCoriolis(fvVectorMatrix& UEqn) const;
 
-        //- Add the frame acceleration contribution to the momentum equation
-        void addAcceleration
+        //- Add the Coriolis acceleration to the momentum equation
+        void addCoriolis
         (
             const volScalarField& rho,
             fvVectorMatrix& UEqn
         ) const;
 
-        //- Return the frame acceleration
+        //- Return the Coriolis acceleration
         tmp<volVectorField> DDt
         (
             const volVectorField& U
         ) const;
 
-        //- Return the frame acceleration
+        //- Return the Coriolis acceleration
         tmp<volVectorField> DDt
         (
             const volScalarField& rho,
             const volVectorField& U
         ) const;
+
+        //- Return the centrifugal acceleration
+        tmp<volVectorField> centrifugalAcceleration() const;
 
         //- Make the given absolute velocity relative within the MRF region
         void makeRelative(volVectorField& U) const;

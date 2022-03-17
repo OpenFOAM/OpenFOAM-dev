@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ class general
         //- a1 coefficient
         dimensionedScalar a1_;
 
-        //- Drift velocity
-        dimensionedVector V0_;
+        //- Drift velocity coefficient
+        dimensionedScalar Vc_;
 
         //- Residual phase fraction
         dimensionedScalar residualAlpha_;
@@ -79,7 +79,9 @@ public:
         general
         (
             const dictionary& dict,
-            const incompressibleTwoPhaseInteractingMixture& mixture
+            const incompressibleTwoPhaseInteractingMixture& mixture,
+            const uniformDimensionedVectorField& g,
+            const MRFZoneList& MRF
         );
 
 

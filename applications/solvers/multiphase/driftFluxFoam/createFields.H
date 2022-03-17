@@ -63,15 +63,9 @@ surfaceScalarField rhoPhi
 );
 
 
-// Relative Velocity
-autoPtr<relativeVelocityModel> UdmModelPtr
-(
-    relativeVelocityModel::New
-    (
-        mixture,
-        mixture
-    )
-);
+#include "readGravitationalAcceleration.H"
+#include "readhRef.H"
+#include "gh.H"
 
 
 // Construct compressible turbulence model
@@ -80,10 +74,6 @@ autoPtr<compressible::momentumTransportModel> turbulence
     compressible::momentumTransportModel::New(rho, U, rhoPhi, mixture)
 );
 
-
-#include "readGravitationalAcceleration.H"
-#include "readhRef.H"
-#include "gh.H"
 
 
 volScalarField p
@@ -120,5 +110,18 @@ mesh.setFluxRequired(alpha1.name());
 tmp<surfaceScalarField> talphaPhiCorr0;
 
 #include "createMRF.H"
+
+// Relative Velocity
+autoPtr<relativeVelocityModel> UdmModelPtr
+(
+    relativeVelocityModel::New
+    (
+        mixture,
+        mixture,
+        g,
+        MRF
+    )
+);
+
 #include "createFvModels.H"
 #include "createFvConstraints.H"

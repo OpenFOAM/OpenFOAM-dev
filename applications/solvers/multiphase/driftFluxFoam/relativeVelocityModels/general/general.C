@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,13 +43,15 @@ namespace relativeVelocityModels
 Foam::relativeVelocityModels::general::general
 (
     const dictionary& dict,
-    const incompressibleTwoPhaseInteractingMixture& mixture
+    const incompressibleTwoPhaseInteractingMixture& mixture,
+    const uniformDimensionedVectorField& g,
+    const MRFZoneList& MRF
 )
 :
-    relativeVelocityModel(dict, mixture),
+    relativeVelocityModel(dict, mixture, g, MRF),
     a_("a", dimless, dict),
     a1_("a1", dimless, dict),
-    V0_("V0", dimVelocity, dict),
+    Vc_("Vc", dimTime, dict),
     residualAlpha_("residualAlpha", dimless, dict)
 {}
 
@@ -66,7 +68,8 @@ void Foam::relativeVelocityModels::general::correct()
 {
     Udm_ =
         (rhoc_/rho())
-       *V0_
+       *Vc_
+       *(g_ + MRF_.centrifugalAcceleration())
        *(
             exp(-a_*max(alphad_ - residualAlpha_, scalar(0)))
           - exp(-a1_*max(alphad_ - residualAlpha_, scalar(0)))

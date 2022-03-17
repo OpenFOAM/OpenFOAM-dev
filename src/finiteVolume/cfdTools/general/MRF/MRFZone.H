@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -209,6 +209,12 @@ public:
             const volScalarField& rho,
             fvVectorMatrix& UEqn,
             const bool rhs = false
+        ) const;
+
+        //- Add the centrifugal acceleration
+        void addCentrifugalAcceleration
+        (
+            volVectorField& centrifugalAcceleration
         ) const;
 
         //- Make the given absolute velocity relative within the MRF region

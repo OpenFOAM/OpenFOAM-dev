@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,9 +34,9 @@ SourceFiles
 #ifndef relativeVelocityModel_H
 #define relativeVelocityModel_H
 
-#include "fvCFD.H"
-#include "dictionary.H"
 #include "incompressibleTwoPhaseInteractingMixture.H"
+#include "uniformDimensionedFields.H"
+#include "MRFZoneList.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -78,9 +78,14 @@ protected:
         //- Dispersed density
         const dimensionedScalar& rhod_;
 
+        //- Acceleration due to gravity
+        const uniformDimensionedVectorField& g_;
+
+        //- MRF zones
+        const MRFZoneList& MRF_;
+
         //- Dispersed diffusion velocity
         mutable volVectorField Udm_;
-
 
 public:
 
@@ -93,9 +98,13 @@ public:
         autoPtr,
         relativeVelocityModel,
         dictionary,
-        (const dictionary& dict,
-         const incompressibleTwoPhaseInteractingMixture& mixture),
-        (dict, mixture)
+        (
+            const dictionary& dict,
+            const incompressibleTwoPhaseInteractingMixture& mixture,
+            const uniformDimensionedVectorField& g,
+            const MRFZoneList& MRF
+        ),
+        (dict, mixture, g, MRF)
     );
 
 
@@ -105,7 +114,9 @@ public:
         relativeVelocityModel
         (
             const dictionary& dict,
-            const incompressibleTwoPhaseInteractingMixture& mixture
+            const incompressibleTwoPhaseInteractingMixture& mixture,
+            const uniformDimensionedVectorField& g,
+            const MRFZoneList& MRF
         );
 
         //- Disallow default bitwise copy construction
@@ -116,7 +127,9 @@ public:
     static autoPtr<relativeVelocityModel> New
     (
         const dictionary& dict,
-        const incompressibleTwoPhaseInteractingMixture& mixture
+        const incompressibleTwoPhaseInteractingMixture& mixture,
+        const uniformDimensionedVectorField& g,
+        const MRFZoneList& MRF
     );
 
 

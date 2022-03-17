@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,20 +107,20 @@ bool Foam::MRFZoneList::writeData(Ostream& os) const
 }
 
 
-void Foam::MRFZoneList::addAcceleration
+void Foam::MRFZoneList::addCoriolis
 (
     const volVectorField& U,
     volVectorField& ddtU
 ) const
 {
     forAll(*this, i)
-     {
+    {
         operator[](i).addCoriolis(U, ddtU);
     }
 }
 
 
-void Foam::MRFZoneList::addAcceleration(fvVectorMatrix& UEqn) const
+void Foam::MRFZoneList::addCoriolis(fvVectorMatrix& UEqn) const
 {
     forAll(*this, i)
     {
@@ -129,7 +129,7 @@ void Foam::MRFZoneList::addAcceleration(fvVectorMatrix& UEqn) const
 }
 
 
-void Foam::MRFZoneList::addAcceleration
+void Foam::MRFZoneList::addCoriolis
 (
     const volScalarField& rho,
     fvVectorMatrix& UEqn
@@ -147,23 +147,23 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
     const volVectorField& U
 ) const
 {
-    tmp<volVectorField> tacceleration
+    tmp<volVectorField> tDDt
     (
         volVectorField::New
         (
-            "MRFZoneList:acceleration",
+            "MRFZoneList:DDt",
             U.mesh(),
             dimensionedVector(U.dimensions()/dimTime, Zero)
         )
     );
-    volVectorField& acceleration = tacceleration.ref();
+    volVectorField& DDt = tDDt.ref();
 
     forAll(*this, i)
     {
-        operator[](i).addCoriolis(U, acceleration);
+        operator[](i).addCoriolis(U, DDt);
     }
 
-    return tacceleration;
+    return tDDt;
 }
 
 
@@ -175,6 +175,30 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
 {
     return rho*DDt(U);
 }
+
+
+Foam::tmp<Foam::volVectorField>
+Foam::MRFZoneList::centrifugalAcceleration() const
+{
+    tmp<volVectorField> tcentrifugalAcceleration
+    (
+        volVectorField::New
+        (
+            "MRFZoneList:centrifugalAcceleration",
+            mesh_,
+            dimensionedVector(dimAcceleration, Zero)
+        )
+    );
+    volVectorField& centrifugalAcceleration = tcentrifugalAcceleration.ref();
+
+    forAll(*this, i)
+    {
+        operator[](i).addCentrifugalAcceleration(centrifugalAcceleration);
+    }
+
+    return tcentrifugalAcceleration;
+}
+
 
 
 void Foam::MRFZoneList::makeRelative(volVectorField& U) const

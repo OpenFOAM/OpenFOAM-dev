@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,9 @@ Foam::wordList Foam::relativeVelocityModel::UdmPatchFieldTypes() const
 Foam::relativeVelocityModel::relativeVelocityModel
 (
     const dictionary& dict,
-    const incompressibleTwoPhaseInteractingMixture& mixture
+    const incompressibleTwoPhaseInteractingMixture& mixture,
+    const uniformDimensionedVectorField& g,
+    const MRFZoneList& MRF
 )
 :
     mixture_(mixture),
@@ -78,6 +80,8 @@ Foam::relativeVelocityModel::relativeVelocityModel
     alphad_(mixture.alpha1()),
     rhoc_(mixture.rhoc()),
     rhod_(mixture.rhod()),
+    g_(g),
+    MRF_(MRF),
 
     Udm_
     (
@@ -101,7 +105,9 @@ Foam::relativeVelocityModel::relativeVelocityModel
 Foam::autoPtr<Foam::relativeVelocityModel> Foam::relativeVelocityModel::New
 (
     const dictionary& dict,
-    const incompressibleTwoPhaseInteractingMixture& mixture
+    const incompressibleTwoPhaseInteractingMixture& mixture,
+    const uniformDimensionedVectorField& g,
+    const MRFZoneList& MRF
 )
 {
     word modelType(dict.lookup(typeName));
@@ -127,7 +133,9 @@ Foam::autoPtr<Foam::relativeVelocityModel> Foam::relativeVelocityModel::New
             cstrIter()
             (
                 dict.optionalSubDict(modelType + "Coeffs"),
-                mixture
+                mixture,
+                g,
+                MRF
             )
         );
 }
@@ -141,19 +149,19 @@ Foam::relativeVelocityModel::~relativeVelocityModel()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-tmp<volScalarField> Foam::relativeVelocityModel::rho() const
+Foam::tmp<Foam::volScalarField> Foam::relativeVelocityModel::rho() const
 {
     return alphac_*rhoc_ + alphad_*rhod_;
 }
 
 
-tmp<volSymmTensorField> Foam::relativeVelocityModel::tauDm() const
+Foam::tmp<Foam::volSymmTensorField> Foam::relativeVelocityModel::tauDm() const
 {
-    volScalarField betac(alphac_*rhoc_);
-    volScalarField betad(alphad_*rhod_);
+    const volScalarField betac(alphac_*rhoc_);
+    const volScalarField betad(alphad_*rhod_);
 
     // Calculate the relative velocity of the continuous phase w.r.t the mean
-    volVectorField Ucm(betad*Udm_/betac);
+    const volVectorField Ucm(betad*Udm_/betac);
 
     return volSymmTensorField::New
     (
