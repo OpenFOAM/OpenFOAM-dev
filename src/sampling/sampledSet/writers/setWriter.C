@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,27 @@ void Foam::setWriter::writeSegmentSeparator(Ostream& os) const
 }
 
 
+const Foam::List<Foam::string>& Foam::setWriter::delimiters() const
+{
+    if (!delimiters_.valid())
+    {
+        delimiters_.set(new List<string>(3));
+        OStringStream oss;
+        writeValueSeparator(oss);
+        delimiters_()[0] = oss.str();
+        oss.rewind();
+        writeCoordSeparator(oss);
+        delimiters_()[1] = oss.str();
+        oss.rewind();
+        writeSegmentSeparator(oss);
+        delimiters_()[2] = oss.str();
+        oss.rewind();
+    }
+
+    return delimiters_;
+}
+
+
 inline Foam::Ostream& Foam::setWriter::writeWord
 (
     const word& w,
@@ -66,17 +87,28 @@ inline Foam::Ostream& Foam::setWriter::writeWord
     const unsigned long alignPad
 ) const
 {
+    string s = w;
+    forAll(delimiters(), i)
+    {
+        if (w.find(delimiters()[i]) != string::npos)
+        {
+            s = "\"" + w + "\"";
+            break;
+        }
+    }
+
     if (!align)
     {
-        os << w;
+        os  << s.c_str();
     }
-    else if (w.size() < columnWidth(os) - alignPad)
+    else if (s.size() < columnWidth(os) - alignPad)
     {
-        os << string(columnWidth(os) - alignPad - w.size(), ' ').c_str() << w;
+        os  << string(columnWidth(os) - alignPad - s.size(), ' ').c_str()
+            << s.c_str();
     }
     else
     {
-        os << w(columnWidth(os) - alignPad - 3).c_str() << "...";
+        os  << s(columnWidth(os) - alignPad - 3).c_str() << "...";
     }
 
     return os;

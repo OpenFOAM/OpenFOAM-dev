@@ -206,6 +206,10 @@ protected:
         //- Write compression
         IOstream::compressionType writeCompression_;
 
+        //- Possible delimiters that need quoting. Constructed on demand from
+        //  the write.*Separator functions.
+        mutable autoPtr<List<string>> delimiters_;
+
 
     // Protected Member Functions
 
@@ -217,6 +221,9 @@ protected:
 
         //- Write a segment separator
         virtual void writeSegmentSeparator(Ostream& os) const;
+
+        //- Possible delimiters that need quoting
+        const List<string>& delimiters() const;
 
         //- Width of columns in tabulated output
         static inline unsigned long columnWidth(Ostream& os)

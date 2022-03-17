@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,11 +44,31 @@ namespace Foam
 
 void Foam::csvSetWriter::writeValueSeparator(Ostream& os) const
 {
-    os << ',';
+    os << separator_;
 }
 
 
 void Foam::csvSetWriter::writeSegmentSeparator(Ostream& os) const
+{}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::csvSetWriter::csvSetWriter
+(
+    const IOstream::streamFormat writeFormat,
+    const IOstream::compressionType writeCompression
+)
+:
+    setWriter(writeFormat, writeCompression),
+    separator_(',')
+{}
+
+
+Foam::csvSetWriter::csvSetWriter(const dictionary& dict)
+:
+    setWriter(dict),
+    separator_(dict.lookupOrDefault<string>("separator", string(","))[0])
 {}
 
 
