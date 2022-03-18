@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 #include "extrapolatedCalculatedFvPatchFields.H"
 #include "coupledFvPatchFields.H"
 #include "UIndirectList.H"
+#include "fvmDdt.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -173,11 +174,10 @@ void Foam::fvMatrix<Type>::addBoundarySource
 
 
 template<class Type>
-template<template<class> class ListType>
-void Foam::fvMatrix<Type>::setValuesFromList
+void Foam::fvMatrix<Type>::setValue
 (
-    const labelUList& cellLabels,
-    const ListType<Type>& values
+    const label celli,
+    const Type& value
 )
 {
     const fvMesh& mesh = psi_.mesh();
@@ -187,77 +187,94 @@ void Foam::fvMatrix<Type>::setValuesFromList
     const labelUList& nei = mesh.neighbour();
 
     scalarField& Diag = diag();
+
     Field<Type>& psi =
-        const_cast
-        <
-            GeometricField<Type, fvPatchField, volMesh>&
-        >(psi_).primitiveFieldRef();
+        const_cast<GeometricField<Type, fvPatchField, volMesh>&>(psi_)
+       .primitiveFieldRef();
 
-    forAll(cellLabels, i)
+    psi[celli] = value;
+    source_[celli] = value*Diag[celli];
+
+    if (symmetric() || asymmetric())
     {
-        const label celli = cellLabels[i];
-        const Type& value = values[i];
+        const cell& c = cells[celli];
 
-        psi[celli] = value;
-        source_[celli] = value*Diag[celli];
-
-        if (symmetric() || asymmetric())
+        forAll(c, j)
         {
-            const cell& c = cells[celli];
+            const label facei = c[j];
 
-            forAll(c, j)
+            if (mesh.isInternalFace(facei))
             {
-                const label facei = c[j];
-
-                if (mesh.isInternalFace(facei))
+                if (symmetric())
                 {
-                    if (symmetric())
+                    if (celli == own[facei])
                     {
-                        if (celli == own[facei])
-                        {
-                            source_[nei[facei]] -= upper()[facei]*value;
-                        }
-                        else
-                        {
-                            source_[own[facei]] -= upper()[facei]*value;
-                        }
-
-                        upper()[facei] = 0.0;
+                        source_[nei[facei]] -= upper()[facei]*value;
                     }
                     else
                     {
-                        if (celli == own[facei])
-                        {
-                            source_[nei[facei]] -= lower()[facei]*value;
-                        }
-                        else
-                        {
-                            source_[own[facei]] -= upper()[facei]*value;
-                        }
-
-                        upper()[facei] = 0.0;
-                        lower()[facei] = 0.0;
+                        source_[own[facei]] -= upper()[facei]*value;
                     }
+
+                    upper()[facei] = 0.0;
                 }
                 else
                 {
-                    label patchi = mesh.boundaryMesh().whichPatch(facei);
-
-                    if (internalCoeffs_[patchi].size())
+                    if (celli == own[facei])
                     {
-                        label patchFacei =
-                            mesh.boundaryMesh()[patchi].whichFace(facei);
-
-                        internalCoeffs_[patchi][patchFacei] =
-                            Zero;
-
-                        boundaryCoeffs_[patchi][patchFacei] =
-                            Zero;
+                        source_[nei[facei]] -= lower()[facei]*value;
                     }
+                    else
+                    {
+                        source_[own[facei]] -= upper()[facei]*value;
+                    }
+
+                    upper()[facei] = 0.0;
+                    lower()[facei] = 0.0;
+                }
+            }
+            else
+            {
+                label patchi = mesh.boundaryMesh().whichPatch(facei);
+
+                if (internalCoeffs_[patchi].size())
+                {
+                    label patchFacei =
+                        mesh.boundaryMesh()[patchi].whichFace(facei);
+
+                    internalCoeffs_[patchi][patchFacei] =
+                        Zero;
+
+                    boundaryCoeffs_[patchi][patchFacei] =
+                        Zero;
                 }
             }
         }
     }
+}
+
+
+template<class Type>
+void Foam::fvMatrix<Type>::setValue
+(
+    const label celli,
+    const Type& value,
+    const scalar fraction,
+    const scalarField& ddtDiag
+)
+{
+    Field<Type>& psi =
+        const_cast<GeometricField<Type, fvPatchField, volMesh>&>(psi_)
+       .primitiveFieldRef();
+
+    psi[celli] = (1 - fraction)*psi[celli] + fraction*value;
+
+    const scalar coeff =
+        fraction/(1 - fraction)
+       *(diag()[celli] - ddtDiag[celli]);
+
+    diag()[celli] += coeff;
+    source()[celli] += coeff*value;
 }
 
 
@@ -480,24 +497,64 @@ Foam::fvMatrix<Type>::~fvMatrix()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
+template<template<class> class ListType>
 void Foam::fvMatrix<Type>::setValues
 (
     const labelUList& cellLabels,
-    const UList<Type>& values
+    const ListType<Type>& values
 )
 {
-    this->setValuesFromList(cellLabels, values);
+    // Fix the values
+    forAll(cellLabels, i)
+    {
+        setValue(cellLabels[i], values[i]);
+    }
 }
 
 
 template<class Type>
+template<template<class> class ListType>
 void Foam::fvMatrix<Type>::setValues
 (
     const labelUList& cellLabels,
-    const UIndirectList<Type>& values
+    const ListType<Type>& values,
+    const scalarList& fractions,
+    const bool hasDdt
 )
 {
-    this->setValuesFromList(cellLabels, values);
+    // Get the proportion of the diagonal associated with iterative update
+    scalarField ddtDiag(diag().size(), 0);
+    const scalar alpha = relaxationFactor();
+    if (alpha > 0)
+    {
+        ddtDiag += (1 - alpha)*diag();
+    }
+    if (hasDdt)
+    {
+        const fvMatrix<Type> ddtEqn(fvm::ddt(psi_));
+        if (ddtEqn.hasDiag())
+        {
+            ddtDiag += ddtEqn.diag();
+        }
+    }
+
+    forAll(cellLabels, i)
+    {
+        if (- rootSmall < fractions[i] && fractions[i] < rootSmall)
+        {
+            // Do nothing
+        }
+        else if (1 - rootSmall < fractions[i] && fractions[i] < 1 + rootSmall)
+        {
+            // Fix the values
+            setValue(cellLabels[i], values[i]);
+        }
+        else
+        {
+            // Fractionally fix the values
+            setValue(cellLabels[i], values[i], fractions[i], ddtDiag);
+        }
+    }
 }
 
 
@@ -513,6 +570,29 @@ void Foam::fvMatrix<Type>::setReference
     {
         source()[celli] += diag()[celli]*value;
         diag()[celli] += diag()[celli];
+    }
+}
+
+
+template<class Type>
+Foam::scalar Foam::fvMatrix<Type>::relaxationFactor() const
+{
+    if
+    (
+        psi_.mesh().data::template lookupOrDefault<bool>
+        ("finalIteration", false)
+     && psi_.mesh().relaxEquation(psi_.name() + "Final")
+    )
+    {
+        return psi_.mesh().equationRelaxationFactor(psi_.name() + "Final");
+    }
+    else if (psi_.mesh().relaxEquation(psi_.name()))
+    {
+        return psi_.mesh().equationRelaxationFactor(psi_.name());
+    }
+    else
+    {
+        return 0;
     }
 }
 
@@ -671,19 +751,7 @@ void Foam::fvMatrix<Type>::relax(const scalar alpha)
 template<class Type>
 void Foam::fvMatrix<Type>::relax()
 {
-    if
-    (
-        psi_.mesh().data::template lookupOrDefault<bool>
-        ("finalIteration", false)
-     && psi_.mesh().relaxEquation(psi_.name() + "Final")
-    )
-    {
-        relax(psi_.mesh().equationRelaxationFactor(psi_.name() + "Final"));
-    }
-    else if (psi_.mesh().relaxEquation(psi_.name()))
-    {
-        relax(psi_.mesh().equationRelaxationFactor(psi_.name()));
-    }
+    relax(relaxationFactor());
 }
 
 

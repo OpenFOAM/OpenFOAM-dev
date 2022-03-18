@@ -81,6 +81,11 @@ class fixedValueConstraint
         //- Field values
         HashPtrTable<unknownTypeFunction1> fieldValues_;
 
+        //- Fraction of the constraint to apply. Facilitates ramping, or
+        //  pulsing, or deactivation after a time. Should take a value between
+        //  0 and 1. Defaults to 1 (i.e., apply all of the constraint).
+        autoPtr<Function1<scalar>> fraction_;
+
 
     // Private Member Functions
 

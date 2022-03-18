@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,12 +203,20 @@ protected:
 
         // Matrix manipulation functionality
 
-            //- Set solution in given cells to the specified values
-            template<template<class> class ListType>
-            void setValuesFromList
+            //- Set solution in the given cell to the specified value
+            void setValue
             (
-                const labelUList& cells,
-                const ListType<Type>& values
+                const label celli,
+                const Type& value
+            );
+
+            //- Set solution in the given cell to the specified value
+            void setValue
+            (
+                const label celli,
+                const Type& value,
+                const scalar fraction,
+                const scalarField& ddtDiag
             );
 
 
@@ -330,18 +338,22 @@ public:
 
             //- Set solution in given cells to the specified values
             //  and eliminate the corresponding equations from the matrix.
+            template<template<class> class ListType>
             void setValues
             (
                 const labelUList& cells,
-                const UList<Type>& values
+                const ListType<Type>& values
             );
 
             //- Set solution in given cells to the specified values
             //  and eliminate the corresponding equations from the matrix.
+            template<template<class> class ListType>
             void setValues
             (
                 const labelUList& cells,
-                const UIndirectList<Type>& values
+                const ListType<Type>& values,
+                const scalarList& fractions,
+                const bool hasDdt = true
             );
 
             //- Set reference level for solution
@@ -361,6 +373,9 @@ public:
                 const direction cmpt,
                 const scalar value
             );
+
+            //- Return the relaxation factor for this equation
+            scalar relaxationFactor() const;
 
             //- Relax matrix (for steady-state solution).
             //  alpha = 1 : diagonally equal
