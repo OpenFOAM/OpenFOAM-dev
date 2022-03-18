@@ -65,7 +65,7 @@ findFilesInDirs () {
     _out=""
     for _d in $_dirs
     do
-        [ -d "$_d" ] && _out="$(find "$_d" -name "$_str" -type f | sort) $_out"
+        [ -d "$_d" ] && _out="$(find -L "$_d" -name "$_str" -type f | sort) $_out"
     done
 
     # Remove whitespace and blank lines
