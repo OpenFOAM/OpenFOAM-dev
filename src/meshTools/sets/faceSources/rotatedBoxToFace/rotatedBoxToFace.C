@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rotatedBoxToCell.H"
+#include "rotatedBoxToFace.H"
 #include "polyMesh.H"
 #include "cellModeller.H"
 #include "transform.H"
@@ -33,14 +33,14 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(rotatedBoxToCell, 0);
-    addToRunTimeSelectionTable(topoSetSource, rotatedBoxToCell, word);
+    defineTypeNameAndDebug(rotatedBoxToFace, 0);
+    addToRunTimeSelectionTable(topoSetSource, rotatedBoxToFace, word);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
+void Foam::rotatedBoxToFace::combine(topoSet& set, const bool add) const
 {
     // Define a cell for the box
     const pointField boxPoints
@@ -71,11 +71,11 @@ void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
         boxFaceNormals[i] = boxFaces[i].area(boxPoints);
     }
 
-    // Check whether cell centre is inside all faces of box.
+    // Check whether face centre is inside all faces of box.
 
-    const pointField& ctrs = mesh_.cellCentres();
+    const pointField& ctrs = mesh_.faceCentres();
 
-    forAll(ctrs, celli)
+    forAll(ctrs, facei)
     {
         bool inside = true;
 
@@ -83,7 +83,7 @@ void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
         {
             if
             (
-                ((ctrs[celli] - boxPoints[boxFaces[i][0]]) & boxFaceNormals[i])
+                ((ctrs[facei] - boxPoints[boxFaces[i][0]]) & boxFaceNormals[i])
               > 0
             )
             {
@@ -94,7 +94,7 @@ void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
 
         if (inside)
         {
-            addOrDelete(set, celli, add);
+            addOrDelete(set, facei, add);
         }
     }
 }
@@ -102,7 +102,7 @@ void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::rotatedBoxToCell::rotatedBoxToCell
+Foam::rotatedBoxToFace::rotatedBoxToFace
 (
     const polyMesh& mesh,
     const vector& origin,
@@ -119,7 +119,7 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
 {}
 
 
-Foam::rotatedBoxToCell::rotatedBoxToCell
+Foam::rotatedBoxToFace::rotatedBoxToFace
 (
     const polyMesh& mesh,
     const dictionary& dict
@@ -158,13 +158,13 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::rotatedBoxToCell::~rotatedBoxToCell()
+Foam::rotatedBoxToFace::~rotatedBoxToFace()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::rotatedBoxToCell::applyToSet
+void Foam::rotatedBoxToFace::applyToSet
 (
     const topoSetSource::setAction action,
     topoSet& set
@@ -172,13 +172,13 @@ void Foam::rotatedBoxToCell::applyToSet
 {
     if ((action == topoSetSource::NEW) || (action == topoSetSource::ADD))
     {
-        Info<< "    Adding cells with center within rotated box " << endl;
+        Info<< "    Adding faces with center within rotated box " << endl;
 
         combine(set, true);
     }
     else if (action == topoSetSource::DELETE)
     {
-        Info<< "    Removing cells with center within rotated box " << endl;
+        Info<< "    Removing faces with center within rotated box " << endl;
 
         combine(set, false);
     }
