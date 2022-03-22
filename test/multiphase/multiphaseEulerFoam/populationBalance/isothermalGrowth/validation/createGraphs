@@ -7,7 +7,7 @@ then
 fi
 
 gnuplot<<EOF
-    set terminal postscript eps monochrome
+    set terminal postscript eps color enhanced "Helvetica,20"
     set output '../d.air_y.eps'
 
     set xlabel 'd (mm)'
@@ -19,17 +19,17 @@ gnuplot<<EOF
     p0 = $(tail -n1 ../postProcessing/cellZoneAverage/0/volFieldValue.dat | awk '{print $2}')
     file = '../postProcessing/graph/'.latestTime.'/line.xy'
 
-    plot ''.file.'' u (\$2*1000):1 w l lc rgb 'black' t 'prediction',\
-    ''.file.'' u (0.003*(p0/\$3)**(1./3.)*1000):1 w l dt 2 lc rgb 'black' t 'exact result'
+    plot file u (\$2*1000):1 w l lc rgb 'black' t 'prediction',\
+    file u (0.003*(p0/\$3)**(1./3.)*1000):1 w l dt 2 lc rgb 'black' t 'exact result'
 
     set output '../alpha.air_y.eps'
 
     set xlabel '{/Symbol a} (-)'
 
-    plot ''.file.'' u 4:1 w l dt 2 lc rgb 'black' t 'air1',\
-    ''.file.'' u 5:1 w l dt 3 lc rgb 'black' t 'air2',\
-    ''.file.'' u 6:1 w l dt 4 lc rgb 'black' t 'air3',\
-    ''.file.'' u 7:1 w l lc rgb 'black' t 'air total'
+    plot file u 4:1 w l dt 2 lc rgb 'black' t 'air1',\
+    file u 5:1 w l dt 3 lc rgb 'black' t 'air2',\
+    file u 6:1 w l dt 4 lc rgb 'black' t 'air3',\
+    file u 7:1 w l lc rgb 'black' t 'air total'
 EOF
 
 #------------------------------------------------------------------------------

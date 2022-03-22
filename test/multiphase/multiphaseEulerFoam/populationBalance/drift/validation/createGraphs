@@ -7,7 +7,7 @@ then
 fi
 
 gnuplot<<EOF
-    set terminal postscript eps monochrome
+    set terminal postscript eps color enhanced "Helvetica,20"
     set output '../numberDensity.eps'
     set decimalsign '.'
 
