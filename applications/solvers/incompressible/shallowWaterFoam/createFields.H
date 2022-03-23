@@ -76,4 +76,4 @@ hTotal.write();
 Info<< "Creating Coriolis Force" << endl;
 const dimensionedVector F("F", ((2.0*Omega) & gHat)*gHat);
 
-mesh.setFluxRequired(h.name());
+mesh.schemes().setFluxRequired(h.name());

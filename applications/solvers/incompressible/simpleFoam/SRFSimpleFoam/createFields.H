@@ -42,7 +42,7 @@ surfaceScalarField phi
 
 pressureReference pressureReference(p, simple.dict());
 
-mesh.setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(p.name());
 
 Info<< "Creating SRF model\n" << endl;
 autoPtr<SRF::SRFModel> SRF(SRF::SRFModel::New(Urel));

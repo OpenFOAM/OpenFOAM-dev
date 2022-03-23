@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,7 +182,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacian
 
     fvm.source() -= mesh.V()*fvc::div(tfaceFluxCorrection())().primitiveField();
 
-    if (mesh.fluxRequired(vf.name()))
+    if (mesh.schemes().fluxRequired(vf.name()))
     {
         fvm.faceFluxCorrectionPtr() = tfaceFluxCorrection.ptr();
     }

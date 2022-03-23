@@ -31,7 +31,7 @@ volVectorField U
 
 pressureReference pressureReference(p, simple.dict());
 
-mesh.setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(p.name());
 
 
 Info<< "Reading field pa\n" << endl;
@@ -74,7 +74,7 @@ setRefCell
     paRefCell,
     paRefValue
 );
-mesh.setFluxRequired(pa.name());
+mesh.schemes().setFluxRequired(pa.name());
 
 
 autoPtr<viscosityModel> viscosity(viscosityModel::New(mesh));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -518,6 +518,25 @@ dimensioned<Type> DimensionedField<Type, GeoMesh>::weightedAverage
     dimensioned<Type> wa = weightedAverage(tweightField());
     tweightField.clear();
     return wa;
+}
+
+
+template<class Type, class GeoMesh>
+void DimensionedField<Type, GeoMesh>::reset
+(
+    const DimensionedField<Type, GeoMesh>& df
+)
+{
+    // Check for assignment to self
+    if (this == &df)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    dimensions_ = df.dimensions();
+    Field<Type>::operator=(df);
 }
 
 

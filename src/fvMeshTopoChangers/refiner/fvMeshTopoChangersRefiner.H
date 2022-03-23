@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,9 +207,8 @@ class refiner
         //  refinement of protectedCells_ (since 2:1 refinement cascade)
         void calculateProtectedCells(PackedBoolList& unrefineableCells) const;
 
-        //- Read the projection parameters from dictionary
+        //- Read the parameters from dictionary
         void readDict();
-
 
         //- Refine cells. Update mesh and fields.
         autoPtr<mapPolyMesh> refine(const labelList&);
@@ -217,6 +216,7 @@ class refiner
         //- Unrefine cells. Gets passed in centre points of cells to combine.
         autoPtr<mapPolyMesh> unrefine(const labelList&);
 
+        //- Find the U field name corresponding to Uf
         word Uname(const surfaceVectorField& Uf) const;
 
         void refineFluxes

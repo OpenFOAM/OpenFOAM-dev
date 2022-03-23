@@ -33,6 +33,7 @@ License
 #include "surfaceTensionModel.H"
 #include "fvm.H"
 #include "fvcDdt.H"
+#include "fvcDiv.H"
 #include "shapeModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -1036,7 +1037,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
     {
         const label nCorr = this->nCorr();
         const scalar tolerance =
-            mesh_.solverDict(name_).lookup<scalar>("tolerance");
+            mesh_.solution().solverDict(name_).lookup<scalar>("tolerance");
 
         if (nCorr > 0)
         {
@@ -1070,8 +1071,8 @@ void Foam::diameterModels::populationBalanceModel::solve()
 
                 fvScalarMatrix sizeGroupEqn
                 (
-                    fvm::ddt(alpha, fi)
-                  + fvm::div(phase.alphaPhi(), fi)
+                    fvm::ddt(alpha, fi) + fvm::div(phase.alphaPhi(), fi)
+                  - fvm::Sp(fvc::ddt(alpha) + fvc::div(phase.alphaPhi()), fi)
                 ==
                     Su_[i]
                   - fvm::Sp(Sp_[i], fi)

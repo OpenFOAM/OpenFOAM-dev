@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::fv::correctedSnGrad<Type>::fullGradCorrection
             gradScheme<Type>::New
             (
                 mesh,
-                mesh.gradScheme("grad(" + vf.name() + ')')
+                mesh.schemes().grad("grad(" + vf.name() + ')')
             )().grad(vf, "grad(" + vf.name() + ')')
         );
     tssf.ref().rename("snGradCorr(" + vf.name() + ')');

@@ -35,7 +35,7 @@ const volScalarField& rho = mixture.rho();
 
 dimensionedScalar pMin("pMin", dimPressure, mixture);
 
-mesh.setFluxRequired(p_rgh.name());
+mesh.schemes().setFluxRequired(p_rgh.name());
 
 
 #include "readGravitationalAcceleration.H"

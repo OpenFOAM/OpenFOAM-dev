@@ -30,6 +30,6 @@ volVectorField U
 
 #include "createPhi.H"
 
-mesh.setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(p.name());
 
 #include "readTurbulenceProperties.H"

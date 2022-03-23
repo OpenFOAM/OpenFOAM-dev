@@ -414,7 +414,7 @@ void kinematicSingleLayer::solveAlpha
         alphaf*rhof*alpharAUf*rhogf
     );
 
-    regionMesh().setFluxRequired(alpha_.name());
+    regionMesh().schemes().setFluxRequired(alpha_.name());
 
     while (pimple_.correctNonOrthogonal())
     {

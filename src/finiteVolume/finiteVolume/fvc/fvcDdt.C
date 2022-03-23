@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         mesh,
-        mesh.ddtScheme("ddt(" + dt.name() + ')')
+        mesh.schemes().ddt("ddt(" + dt.name() + ')')
     ).ref().fvcDdt(dt);
 }
 
@@ -65,7 +65,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().ddtScheme("ddt(" + vf.name() + ')')
+        vf.mesh().schemes().ddt("ddt(" + vf.name() + ')')
     ).ref().fvcDdt(vf);
 }
 
@@ -81,7 +81,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().ddt("ddt(" + rho.name() + ',' + vf.name() + ')')
     ).ref().fvcDdt(rho, vf);
 }
 
@@ -97,7 +97,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().ddt("ddt(" + rho.name() + ',' + vf.name() + ')')
     ).ref().fvcDdt(rho, vf);
 }
 
@@ -114,7 +114,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().ddtScheme
+        vf.mesh().schemes().ddt
         (
             "ddt("
           + alpha.name() + ','
@@ -135,7 +135,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         sf.mesh(),
-        sf.mesh().ddtScheme("ddt(" + sf.name() + ')')
+        sf.mesh().schemes().ddt("ddt(" + sf.name() + ')')
     ).ref().fvcDdt(sf);
 }
 
@@ -175,7 +175,7 @@ ddtCorr
     return fv::ddtScheme<Type>::New
     (
         U.mesh(),
-        U.mesh().ddtScheme("ddt(" + U.name() + ')')
+        U.mesh().schemes().ddt("ddt(" + U.name() + ')')
     ).ref().fvcDdtUfCorr(U, Uf);
 }
 
@@ -196,7 +196,7 @@ ddtCorr
     return fv::ddtScheme<Type>::New
     (
         U.mesh(),
-        U.mesh().ddtScheme("ddt(" + U.name() + ')')
+        U.mesh().schemes().ddt("ddt(" + U.name() + ')')
     ).ref().fvcDdtPhiCorr(U, phi);
 }
 
@@ -238,7 +238,7 @@ ddtCorr
     return fv::ddtScheme<Type>::New
     (
         U.mesh(),
-        U.mesh().ddtScheme("ddt(" + U.name() + ')')
+        U.mesh().schemes().ddt("ddt(" + U.name() + ')')
     ).ref().fvcDdtUfCorr(rho, U, Uf);
 }
 
@@ -260,7 +260,7 @@ ddtCorr
     return fv::ddtScheme<Type>::New
     (
         U.mesh(),
-        U.mesh().ddtScheme("ddt(" + rho.name() + ',' + U.name() + ')')
+        U.mesh().schemes().ddt("ddt(" + rho.name() + ',' + U.name() + ')')
     ).ref().fvcDdtPhiCorr(rho, U, phi);
 }
 

@@ -73,7 +73,7 @@ p_gh =  p - (g & mesh.C());
 
 pressureReference pressureReference(p_gh, pimple.dict());
 
-mesh.setFluxRequired(p_gh.name());
+mesh.schemes().setFluxRequired(p_gh.name());
 
 #include "createMRF.H"
 #include "createFvModels.H"

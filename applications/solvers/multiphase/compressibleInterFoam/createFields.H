@@ -48,8 +48,8 @@ dimensionedScalar pMin
     mixture
 );
 
-mesh.setFluxRequired(p_rgh.name());
-mesh.setFluxRequired(alpha1.name());
+mesh.schemes().setFluxRequired(p_rgh.name());
+mesh.schemes().setFluxRequired(alpha1.name());
 
 
 #include "readGravitationalAcceleration.H"

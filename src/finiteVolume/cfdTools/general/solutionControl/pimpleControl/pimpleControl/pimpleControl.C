@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,14 +50,16 @@ Foam::pimpleControl::pimpleControl(fvMesh& mesh, const word& algorithmName)
     }
 
     Info<< nl << algorithmName << ": Operating solver in "
-        << (mesh.steady() ? "steady-state" : mesh.transient() ? "transient" :
+        << (mesh.schemes().steady()
+        ? "steady-state"
+        : mesh.schemes().transient() ? "transient" :
             "mixed steady-state/transient") << " mode with " << nCorrPimple_
         << " outer corrector" << (nCorrPimple_ == 1 ? "" : "s") << nl;
 
     if (nCorrPimple_ == 1)
     {
         Info<< algorithmName << ": Operating solver in "
-            << (mesh.steady() ? "SIMPLE" : "PISO") << " mode" << nl;
+            << (mesh.schemes().steady() ? "SIMPLE" : "PISO") << " mode" << nl;
     }
 
     Info<< nl << endl;

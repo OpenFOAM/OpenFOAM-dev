@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Foam::word Foam::fv::localEulerDdt::rSubDeltaTName("rSubDeltaT");
 bool Foam::fv::localEulerDdt::enabled(const fvMesh& mesh)
 {
     return
-        word(mesh.ddtScheme("default"))
+        word(mesh.schemes().ddt("default"))
      == fv::localEulerDdtScheme<scalar>::typeName;
 }
 

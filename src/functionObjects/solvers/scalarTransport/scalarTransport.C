@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
 {
     read(dict);
 
-    const dictionary& controls = mesh_.solverDict(s_.name());
+    const dictionary& controls = mesh_.solution().solverDict(s_.name());
 
     if (controls.found("nSubCycles"))
     {
@@ -238,9 +238,9 @@ bool Foam::functionObjects::scalarTransport::execute()
 
     // Set under-relaxation coeff
     scalar relaxCoeff = 0.0;
-    if (mesh_.relaxEquation(schemesField_))
+    if (mesh_.solution().relaxEquation(schemesField_))
     {
-        relaxCoeff = mesh_.equationRelaxationFactor(schemesField_);
+        relaxCoeff = mesh_.solution().equationRelaxationFactor(schemesField_);
     }
 
     const Foam::fvModels& fvModels(Foam::fvModels::New(mesh_));
@@ -329,7 +329,7 @@ bool Foam::functionObjects::scalarTransport::execute()
 
 void Foam::functionObjects::scalarTransport::subCycleMULES()
 {
-    const dictionary& controls = mesh_.solverDict(s_.name());
+    const dictionary& controls = mesh_.solution().solverDict(s_.name());
     const label nSubCycles(controls.lookup<label>("nSubCycles"));
     const bool LTS = fv::localEulerDdt::enabled(mesh_);
 
@@ -381,7 +381,7 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
 
 void Foam::functionObjects::scalarTransport::solveMULES()
 {
-    const dictionary& controls = mesh_.solverDict(s_.name());
+    const dictionary& controls = mesh_.solution().solverDict(s_.name());
     const label nCorr(controls.lookup<label>("nCorr"));
     const label nSubCycles(controls.lookup<label>("nSubCycles"));
     const bool MULESCorr(controls.lookupOrDefault<Switch>("MULESCorr", false));
@@ -403,7 +403,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
     surfaceScalarField& sPhi_ = tsPhi_.ref();
 
-    const word sScheme(mesh_.divScheme(divScheme)[1].wordToken());
+    const word sScheme(mesh_.schemes().div(divScheme)[1].wordToken());
 
     // If a compressive convection scheme is used
     // the interface normal must be cached
@@ -433,7 +433,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
             fv::ddtScheme<scalar>::New
             (
                 mesh_,
-                mesh_.ddtScheme("ddt(s)")
+                mesh_.schemes().ddt("ddt(s)")
             )
         );
         const fv::ddtScheme<scalar>& ddtS = tddtS();
@@ -547,7 +547,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
             (
                 phiCN(),
                 (cnCoeff*s_ + (1.0 - cnCoeff)*s_.oldTime())(),
-                mesh_.divScheme(divScheme)
+                mesh_.schemes().div(divScheme)
             )
         );
 
@@ -605,7 +605,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
     if
     (
-        word(mesh_.ddtScheme("ddt(s)"))
+        word(mesh_.schemes().ddt("ddt(s)"))
      == fv::CrankNicolsonDdtScheme<scalar>::typeName
     )
     {

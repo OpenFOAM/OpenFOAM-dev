@@ -1,6 +1,6 @@
 const dictionary& potentialFlow
 (
-    mesh.solutionDict().subDict("potentialFlow")
+    mesh.solution().dict().subDict("potentialFlow")
 );
 
 const int nNonOrthCorr

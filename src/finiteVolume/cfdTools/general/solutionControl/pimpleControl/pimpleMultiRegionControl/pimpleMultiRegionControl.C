@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,8 @@ Foam::pimpleMultiRegionControl::pimpleMultiRegionControl
             new pimpleNoLoopControl(pimpleMeshes[i], algorithmName, *this)
         );
 
-        allSteady = allSteady && pimpleMeshes[i].steady();
-        allTransient = allTransient && pimpleMeshes[i].transient();
+        allSteady = allSteady && pimpleMeshes[i].schemes().steady();
+        allTransient = allTransient && pimpleMeshes[i].schemes().transient();
     }
 
     forAll(solidMeshes, i)
@@ -98,8 +98,8 @@ Foam::pimpleMultiRegionControl::pimpleMultiRegionControl
             new solidNoLoopControl(solidMeshes[i], algorithmName, *this)
         );
 
-        allSteady = allSteady && solidMeshes[i].steady();
-        allTransient = allTransient && solidMeshes[i].transient();
+        allSteady = allSteady && solidMeshes[i].schemes().steady();
+        allTransient = allTransient && solidMeshes[i].schemes().transient();
     }
 
     read();

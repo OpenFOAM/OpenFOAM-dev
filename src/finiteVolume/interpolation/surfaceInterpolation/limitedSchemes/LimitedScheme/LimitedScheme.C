@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ Foam::LimitedScheme<Type, Limiter, LimitFunc>::limiter
 
     const word limiterFieldName(type() + "Limiter(" + phi.name() + ')');
 
-    if (this->mesh().cache("limiter"))
+    if (this->mesh().solution().cache("limiter"))
     {
         if (!mesh.foundObject<surfaceScalarField>(limiterFieldName))
         {

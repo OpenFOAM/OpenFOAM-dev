@@ -51,7 +51,7 @@ else
     divSigmaExp -= fvc::div((2*mu + lambda)*fvc::grad(D), "div(sigmaD)");
 }
 
-mesh.setFluxRequired(D.name());
+mesh.schemes().setFluxRequired(D.name());
 
 #include "createFvModels.H"
 #include "createFvConstraints.H"

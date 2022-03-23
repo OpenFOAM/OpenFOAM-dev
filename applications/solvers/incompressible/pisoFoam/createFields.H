@@ -31,7 +31,7 @@ volVectorField U
 
 pressureReference pressureReference(p, piso.dict());
 
-mesh.setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(p.name());
 
 
 autoPtr<viscosityModel> viscosity(viscosityModel::New(mesh));

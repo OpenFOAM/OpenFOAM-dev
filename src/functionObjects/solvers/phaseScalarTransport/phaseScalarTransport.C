@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ Foam::volScalarField& Foam::functionObjects::phaseScalarTransport::Phi()
             )
         );
 
-        mesh_.setFluxRequired(PhiPtr_->name());
+        mesh_.schemes().setFluxRequired(PhiPtr_->name());
     }
 
     return PhiPtr_();
@@ -392,8 +392,8 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
 
     // Get the relaxation coefficient
     const scalar relaxCoeff =
-        mesh_.relaxEquation(schemesField_)
-      ? mesh_.equationRelaxationFactor(schemesField_)
+        mesh_.solution().relaxEquation(schemesField_)
+      ? mesh_.solution().equationRelaxationFactor(schemesField_)
       : 0;
 
     const Foam::fvModels& fvModels(Foam::fvModels::New(mesh_));

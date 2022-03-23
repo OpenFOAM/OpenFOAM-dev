@@ -836,7 +836,7 @@ bool Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::
 implicitPhasePressure(const phaseModel& phase) const
 {
     return
-        this->mesh_.solverDict(phase.volScalarField::name()).
+        this->mesh_.solution().solverDict(phase.volScalarField::name()).
         template lookupOrDefault<Switch>
         (
             "implicitPhasePressure",

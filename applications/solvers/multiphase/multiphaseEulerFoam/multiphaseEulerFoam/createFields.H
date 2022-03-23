@@ -62,7 +62,7 @@ if (p_rgh.needReference() && fluid.incompressible())
 
 p_rgh = p - fluid.rho()*gh;
 
-mesh.setFluxRequired(p_rgh.name());
+mesh.schemes().setFluxRequired(p_rgh.name());
 
 PtrList<volScalarField> rAUs;
 PtrList<surfaceScalarField> rAUfs;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -322,7 +322,7 @@ Foam::fvSchemes::fvSchemes(const objectRegistry& obr)
      || (readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
-        read(schemesDict());
+        read(dict());
     }
 }
 
@@ -336,7 +336,7 @@ bool Foam::fvSchemes::read()
         // Clear current settings except fluxRequired
         clear();
 
-        read(schemesDict());
+        read(dict());
 
         return true;
     }
@@ -347,7 +347,7 @@ bool Foam::fvSchemes::read()
 }
 
 
-const Foam::dictionary& Foam::fvSchemes::schemesDict() const
+const Foam::dictionary& Foam::fvSchemes::dict() const
 {
     if (found("select"))
     {
@@ -360,7 +360,7 @@ const Foam::dictionary& Foam::fvSchemes::schemesDict() const
 }
 
 
-Foam::ITstream& Foam::fvSchemes::ddtScheme(const word& name) const
+Foam::ITstream& Foam::fvSchemes::ddt(const word& name) const
 {
     if (debug)
     {
@@ -379,7 +379,7 @@ Foam::ITstream& Foam::fvSchemes::ddtScheme(const word& name) const
 }
 
 
-Foam::ITstream& Foam::fvSchemes::d2dt2Scheme(const word& name) const
+Foam::ITstream& Foam::fvSchemes::d2dt2(const word& name) const
 {
     if (debug)
     {
@@ -398,7 +398,7 @@ Foam::ITstream& Foam::fvSchemes::d2dt2Scheme(const word& name) const
 }
 
 
-Foam::ITstream& Foam::fvSchemes::interpolationScheme(const word& name) const
+Foam::ITstream& Foam::fvSchemes::interpolation(const word& name) const
 {
     if (debug)
     {
@@ -421,7 +421,7 @@ Foam::ITstream& Foam::fvSchemes::interpolationScheme(const word& name) const
 }
 
 
-Foam::ITstream& Foam::fvSchemes::divScheme(const word& name) const
+Foam::ITstream& Foam::fvSchemes::div(const word& name) const
 {
     if (debug)
     {
@@ -440,7 +440,7 @@ Foam::ITstream& Foam::fvSchemes::divScheme(const word& name) const
 }
 
 
-Foam::ITstream& Foam::fvSchemes::gradScheme(const word& name) const
+Foam::ITstream& Foam::fvSchemes::grad(const word& name) const
 {
     if (debug)
     {
@@ -459,7 +459,7 @@ Foam::ITstream& Foam::fvSchemes::gradScheme(const word& name) const
 }
 
 
-Foam::ITstream& Foam::fvSchemes::snGradScheme(const word& name) const
+Foam::ITstream& Foam::fvSchemes::snGrad(const word& name) const
 {
     if (debug)
     {
@@ -478,7 +478,7 @@ Foam::ITstream& Foam::fvSchemes::snGradScheme(const word& name) const
 }
 
 
-Foam::ITstream& Foam::fvSchemes::laplacianScheme(const word& name) const
+Foam::ITstream& Foam::fvSchemes::laplacian(const word& name) const
 {
     if (debug)
     {

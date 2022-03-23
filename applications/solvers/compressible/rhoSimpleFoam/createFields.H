@@ -45,7 +45,7 @@ pressureReference pressureReference
     thermo.incompressible()
 );
 
-mesh.setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(p.name());
 
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::momentumTransportModel> turbulence

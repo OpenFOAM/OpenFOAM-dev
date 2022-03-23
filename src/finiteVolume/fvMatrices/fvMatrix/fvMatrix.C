@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -675,14 +675,20 @@ void Foam::fvMatrix<Type>::relax()
     (
         psi_.mesh().data::template lookupOrDefault<bool>
         ("finalIteration", false)
-     && psi_.mesh().relaxEquation(psi_.name() + "Final")
+     && psi_.mesh().solution().relaxEquation(psi_.name() + "Final")
     )
     {
-        relax(psi_.mesh().equationRelaxationFactor(psi_.name() + "Final"));
+        relax
+        (
+            psi_.mesh().solution().equationRelaxationFactor
+            (
+                psi_.name() + "Final"
+            )
+        );
     }
-    else if (psi_.mesh().relaxEquation(psi_.name()))
+    else if (psi_.mesh().solution().relaxEquation(psi_.name()))
     {
-        relax(psi_.mesh().equationRelaxationFactor(psi_.name()));
+        relax(psi_.mesh().solution().equationRelaxationFactor(psi_.name()));
     }
 }
 
@@ -855,7 +861,7 @@ Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvMatrix<Type>::
 flux() const
 {
-    if (!psi_.mesh().fluxRequired(psi_.name()))
+    if (!psi_.mesh().schemes().fluxRequired(psi_.name()))
     {
         FatalErrorInFunction
             << "flux requested but " << psi_.name()

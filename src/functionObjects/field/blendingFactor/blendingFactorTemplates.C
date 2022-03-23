@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ bool Foam::functionObjects::blendingFactor::calcBF()
     const FieldType& field = lookupObject<FieldType>(fieldName_);
 
     const word divScheme("div(" + phiName_ + ',' + fieldName_ + ')');
-    ITstream& its = mesh_.divScheme(divScheme);
+    ITstream& its = mesh_.schemes().div(divScheme);
 
     const surfaceScalarField& phi = lookupObject<surfaceScalarField>(phiName_);
 

@@ -224,7 +224,8 @@ void Foam::diameterModels::velocityGroup::correct()
 
         if
         (
-            phase().mesh().solverDict(popBalName_).lookupOrDefault<Switch>
+            phase().mesh().solution().solverDict(popBalName_)
+           .lookupOrDefault<Switch>
             (
                 "scale",
                 true

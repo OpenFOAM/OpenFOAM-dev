@@ -1,5 +1,5 @@
 const scalar accFac
 (
-    mesh.solutionDict().subDict("stressAnalysis")
+    mesh.solution().dict().subDict("stressAnalysis")
    .lookup<scalar>("accelerationFactor")
 );

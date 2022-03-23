@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ void Foam::CorrectPhi
         fvc::makeAbsolute(phi, U);
     }
 
-    mesh.setFluxRequired(pcorr.name());
+    mesh.schemes().setFluxRequired(pcorr.name());
 
     while (pcorrControl.correctNonOrthogonal())
     {
@@ -157,7 +157,7 @@ void Foam::CorrectPhi
         pcorrTypes
     );
 
-    mesh.setFluxRequired(pcorr.name());
+    mesh.schemes().setFluxRequired(pcorr.name());
 
     while (pcorrControl.correctNonOrthogonal())
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,7 @@ laplacian
     return fv::laplacianScheme<Type, GType>::New
     (
         vf.mesh(),
-        vf.mesh().laplacianScheme(name)
+        vf.mesh().schemes().laplacian(name)
     ).ref().fvmLaplacian(gamma, vf);
 }
 
@@ -280,7 +280,7 @@ laplacian
     return fv::laplacianScheme<Type, GType>::New
     (
         vf.mesh(),
-        vf.mesh().laplacianScheme(name)
+        vf.mesh().schemes().laplacian(name)
     ).ref().fvmLaplacian(gamma, vf);
 }
 

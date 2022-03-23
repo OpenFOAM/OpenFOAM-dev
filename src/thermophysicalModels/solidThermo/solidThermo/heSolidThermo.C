@@ -332,7 +332,7 @@ Foam::tmp<Foam::surfaceScalarField>
 Foam::heSolidThermo<BasicSolidThermo, MixtureType>::q() const
 {
     const fvMesh& mesh = this->T_.mesh();
-    mesh.setFluxRequired(this->T_.name());
+    mesh.schemes().setFluxRequired(this->T_.name());
 
     return
       - (

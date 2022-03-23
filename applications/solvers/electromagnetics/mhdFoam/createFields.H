@@ -111,5 +111,5 @@ DBU.name() = "DBU";
 
 pressureReference pressureReference(p, piso.dict());
 
-mesh.setFluxRequired(p.name());
-mesh.setFluxRequired(pB.name());
+mesh.schemes().setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(pB.name());

@@ -332,7 +332,7 @@ void Foam::compressibleMultiphaseMixture::solve()
 {
     const Time& runTime = mesh_.time();
 
-    const dictionary& alphaControls = mesh_.solverDict("alpha");
+    const dictionary& alphaControls = mesh_.solution().solverDict("alpha");
     label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
     scalar cAlpha(alphaControls.lookup<scalar>("cAlpha"));
 

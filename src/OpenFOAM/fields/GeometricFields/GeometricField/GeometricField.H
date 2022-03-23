@@ -420,8 +420,15 @@ public:
         //- Return previous iteration field
         const GeometricField<Type, PatchField, GeoMesh>& prevIter() const;
 
+        //- Delete old time and previous iteration fields
+        void clearOldTimes();
+
         //- Correct boundary field
         void correctBoundaryConditions();
+
+        //- Reset the field contents to the given field
+        //  Used for mesh to mesh mapping
+        void reset(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
 
         //- Does the field need a reference level for solution
         bool needReference() const;

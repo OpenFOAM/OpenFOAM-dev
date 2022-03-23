@@ -39,7 +39,7 @@ volScalarField& p = thermo.p();
 
 #include "compressibleCreatePhi.H"
 
-mesh.setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(p.name());
 
 Info << "Creating turbulence model.\n" << nl;
 autoPtr<compressible::momentumTransportModel> turbulence
@@ -94,7 +94,7 @@ pressureReference pressureReference
     thermo.incompressible()
 );
 
-mesh.setFluxRequired(p_rgh.name());
+mesh.schemes().setFluxRequired(p_rgh.name());
 
 hydrostaticInitialisation
 (

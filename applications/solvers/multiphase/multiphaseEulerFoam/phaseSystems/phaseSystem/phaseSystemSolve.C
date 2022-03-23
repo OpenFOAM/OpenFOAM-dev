@@ -47,7 +47,7 @@ void Foam::phaseSystem::solve
     const PtrList<surfaceScalarField>& rAUfs
 )
 {
-    const dictionary& alphaControls = mesh_.solverDict("alpha");
+    const dictionary& alphaControls = mesh_.solution().solverDict("alpha");
 
     const label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
     const label nAlphaCorr(alphaControls.lookup<label>("nAlphaCorr"));

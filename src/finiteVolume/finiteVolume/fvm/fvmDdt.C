@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().ddtScheme("ddt(" + vf.name() + ')')
+        vf.mesh().schemes().ddt("ddt(" + vf.name() + ')')
     ).ref().fvmDdt(vf);
 }
 
@@ -78,7 +78,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().ddt("ddt(" + rho.name() + ',' + vf.name() + ')')
     ).ref().fvmDdt(rho, vf);
 }
 
@@ -94,7 +94,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().ddt("ddt(" + rho.name() + ',' + vf.name() + ')')
     ).ref().fvmDdt(rho, vf);
 }
 
@@ -111,7 +111,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().ddtScheme
+        vf.mesh().schemes().ddt
         (
             "ddt("
           + alpha.name() + ','

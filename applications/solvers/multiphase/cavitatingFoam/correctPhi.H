@@ -22,7 +22,7 @@ correctUphiBCs(U, phi, true);
     surfaceScalarField rhof(fvc::interpolate(rho, "div(phi,rho)"));
     dimensionedScalar rAUf("rAUf", dimTime, 1.0);
 
-    mesh.setFluxRequired(pcorr.name());
+    mesh.schemes().setFluxRequired(pcorr.name());
 
     while (pimple.correctNonOrthogonal())
     {

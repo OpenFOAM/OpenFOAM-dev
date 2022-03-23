@@ -87,10 +87,10 @@ if (p_rgh.needReference())
     p_rgh = p - rho*gh;
 }
 
-mesh.setFluxRequired(p_rgh.name());
+mesh.schemes().setFluxRequired(p_rgh.name());
 
 volScalarField& alpha1(mixture.alpha1());
-mesh.setFluxRequired(alpha1.name());
+mesh.schemes().setFluxRequired(alpha1.name());
 
 
 #include "createAlphaFluxes.H"

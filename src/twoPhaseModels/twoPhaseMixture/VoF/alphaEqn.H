@@ -9,7 +9,7 @@
             fv::ddtScheme<scalar>::New
             (
                 mesh,
-                mesh.ddtScheme("ddt(alpha)")
+                mesh.schemes().ddt("ddt(alpha)")
             )
         );
         const fv::ddtScheme<scalar>& ddtAlpha = tddtAlpha();
@@ -232,9 +232,9 @@
 
     if
     (
-        word(mesh.ddtScheme("ddt(rho,U)"))
+        word(mesh.schemes().ddt("ddt(rho,U)"))
      == fv::EulerDdtScheme<vector>::typeName
-     || word(mesh.ddtScheme("ddt(rho,U)"))
+     || word(mesh.schemes().ddt("ddt(rho,U)"))
      == fv::localEulerDdtScheme<vector>::typeName
     )
     {

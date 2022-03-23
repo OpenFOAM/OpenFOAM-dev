@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ public:
 
             //- Return the selected sub-dictionary of solvers if the "select"
             //  keyword is given, otherwise return the complete dictionary
-            const dictionary& solutionDict() const;
+            const dictionary& dict() const;
 
             //- Return the solver controls dictionary for the given field
             const dictionary& solverDict(const word& name) const;

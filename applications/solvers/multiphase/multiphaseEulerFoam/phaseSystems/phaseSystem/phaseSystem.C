@@ -335,7 +335,7 @@ Foam::phaseSystem::phaseSystem
     forAll(phases(), phasei)
     {
         const volScalarField& alphai = phases()[phasei];
-        mesh_.setFluxRequired(alphai.name());
+        mesh_.schemes().setFluxRequired(alphai.name());
     }
 }
 

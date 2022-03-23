@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,21 +111,21 @@ public:
 
         // Access
 
-            const dictionary& schemesDict() const;
+            const dictionary& dict() const;
 
-            ITstream& ddtScheme(const word& name) const;
+            ITstream& ddt(const word& name) const;
 
-            ITstream& d2dt2Scheme(const word& name) const;
+            ITstream& d2dt2(const word& name) const;
 
-            ITstream& interpolationScheme(const word& name) const;
+            ITstream& interpolation(const word& name) const;
 
-            ITstream& divScheme(const word& name) const;
+            ITstream& div(const word& name) const;
 
-            ITstream& gradScheme(const word& name) const;
+            ITstream& grad(const word& name) const;
 
-            ITstream& snGradScheme(const word& name) const;
+            ITstream& snGrad(const word& name) const;
 
-            ITstream& laplacianScheme(const word& name) const;
+            ITstream& laplacian(const word& name) const;
 
             void setFluxRequired(const word& name) const;
 

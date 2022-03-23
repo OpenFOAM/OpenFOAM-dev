@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,18 +112,6 @@ int main(int argc, char *argv[])
             mesh
         )
     );
-    // For convenience create any fv* files
-    if (!exists(scMesh().fvSolution::objectPath()))
-    {
-        mkDir(scMesh().fvSolution::path());
-        ln("../fvSolution", scMesh().fvSolution::objectPath());
-    }
-    if (!exists(scMesh().fvSchemes::objectPath()))
-    {
-        mkDir(scMesh().fvSolution::path());
-        ln("../fvSchemes", scMesh().fvSchemes::objectPath());
-    }
-
 
     forAll(timeDirs, timeI)
     {

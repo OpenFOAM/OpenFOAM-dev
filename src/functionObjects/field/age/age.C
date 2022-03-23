@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,9 +156,9 @@ bool Foam::functionObjects::age::execute()
 
     // Set under-relaxation coeff
     scalar relaxCoeff = 0.0;
-    if (mesh_.relaxEquation(schemesField_))
+    if (mesh_.solution().relaxEquation(schemesField_))
     {
-        relaxCoeff = mesh_.equationRelaxationFactor(schemesField_);
+        relaxCoeff = mesh_.solution().equationRelaxationFactor(schemesField_);
     }
 
     const Foam::fvModels& fvModels(Foam::fvModels::New(mesh_));

@@ -609,7 +609,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                 << endl;
 
             const scalar dmdtfRelax =
-                this->mesh().fieldRelaxationFactor(dmdtf.member());
+                this->mesh().solution().fieldRelaxationFactor(dmdtf.member());
 
             dmdtf = (1 - dmdtfRelax)*dmdtf + dmdtfRelax*dmdtfNew;
 

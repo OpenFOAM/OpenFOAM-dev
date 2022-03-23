@@ -43,7 +43,7 @@ volVectorField U
 
 #include "compressibleCreatePhi.H"
 
-mesh.setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(p.name());
 
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::RASModel> turbulence

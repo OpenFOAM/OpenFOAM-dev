@@ -85,8 +85,6 @@ class fvMesh
     public polyMesh,
     public lduMesh,
     public surfaceInterpolation,
-    public fvSchemes,
-    public fvSolution,
     public data
 {
     // Private Data
@@ -137,6 +135,12 @@ class fvMesh
 
         //- Face motion fluxes
         mutable surfaceScalarField* phiPtr_;
+
+        //- fvSchemes created on demand
+        mutable autoPtr<fvSchemes> fvSchemes_;
+
+        //- fvSolution created on demand
+        mutable autoPtr<fvSolution> fvSolution_;
 
 
     // Private Member Functions
@@ -358,6 +362,12 @@ public:
             template<class Type>
             typename pTraits<Type>::labelType validComponents() const;
 
+            //- Return the fvSchemes
+            const fvSchemes& schemes() const;
+
+            //- Return the fvSchemes
+            const fvSolution& solution() const;
+
 
         // Edit
 
@@ -404,6 +414,10 @@ public:
             //- Remove boundary patches. Warning: fvPatchFields hold ref to
             //  these fvPatches.
             void removeFvBoundary();
+
+            //- Reset mesh
+            //  For run-time mesh replacement and mesh to mesh mapping
+            void reset(const fvMesh&);
 
 
         // Write

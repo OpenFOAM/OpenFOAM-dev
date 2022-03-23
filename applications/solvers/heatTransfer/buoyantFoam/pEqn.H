@@ -23,7 +23,7 @@ surfaceScalarField phiHbyA
 
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
-bool adjustMass = mesh.steady() && adjustPhi(phiHbyA, U, p_rgh);
+bool adjustMass = mesh.schemes().steady() && adjustPhi(phiHbyA, U, p_rgh);
 
 const surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
 
@@ -97,7 +97,7 @@ else
 
 phi = phiHbyA + p_rghEqn.flux();
 
-if (mesh.steady())
+if (mesh.schemes().steady())
 {
     #include "incompressible/continuityErrs.H"
 }
@@ -131,7 +131,7 @@ U.correctBoundaryConditions();
 fvConstraints.constrain(U);
 K = 0.5*magSqr(U);
 
-if (mesh.steady())
+if (mesh.schemes().steady())
 {
     if (fvConstraints.constrain(p))
     {
@@ -150,12 +150,12 @@ if (adjustMass && !thermo.incompressible())
     p_rgh.correctBoundaryConditions();
 }
 
-if (mesh.steady() || pimple.simpleRho() || adjustMass)
+if (mesh.schemes().steady() || pimple.simpleRho() || adjustMass)
 {
     rho = thermo.rho();
 }
 
-if (mesh.steady() || pimple.simpleRho())
+if (mesh.schemes().steady() || pimple.simpleRho())
 {
     rho.relax();
 }

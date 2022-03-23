@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Foam::linearUpwind<Type>::correction
         fv::gradScheme<scalar>::New
         (
             mesh,
-            mesh.gradScheme(gradSchemeName_)
+            mesh.schemes().grad(gradSchemeName_)
         )
     );
 
@@ -165,7 +165,7 @@ Foam::linearUpwind<Foam::vector>::correction
         fv::gradScheme<vector>::New
         (
             mesh,
-            mesh.gradScheme(gradSchemeName_)
+            mesh.schemes().grad(gradSchemeName_)
         )
     );
 

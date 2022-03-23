@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,7 +155,7 @@ Foam::solution::solution
      || (readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
-        read(solutionDict());
+        read(dict());
     }
 }
 
@@ -326,7 +326,7 @@ Foam::scalar Foam::solution::equationRelaxationFactor(const word& name) const
 }
 
 
-const Foam::dictionary& Foam::solution::solutionDict() const
+const Foam::dictionary& Foam::solution::dict() const
 {
     if (found("select"))
     {
@@ -354,7 +354,7 @@ bool Foam::solution::read()
 {
     if (regIOobject::read())
     {
-        read(solutionDict());
+        read(dict());
 
         return true;
     }

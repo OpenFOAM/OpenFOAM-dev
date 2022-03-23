@@ -29,7 +29,7 @@ inline Foam::label
 Foam::diameterModels::populationBalanceModel::sourceUpdateInterval() const
 {
     return
-        mesh_.solverDict(name_)
+        mesh_.solution().solverDict(name_)
        .lookupOrDefault<label>("sourceUpdateInterval", 1);
 }
 
@@ -59,7 +59,7 @@ Foam::diameterModels::populationBalanceModel::dict() const
 
 inline Foam::label Foam::diameterModels::populationBalanceModel::nCorr() const
 {
-    return mesh_.solverDict(name_).lookup<label>("nCorr");
+    return mesh_.solution().solverDict(name_).lookup<label>("nCorr");
 }
 
 
@@ -67,7 +67,7 @@ inline Foam::Switch
 Foam::diameterModels::populationBalanceModel::solveOnFinalIterOnly() const
 {
     return
-        mesh_.solverDict(name_).lookupOrDefault<bool>
+        mesh_.solution().solverDict(name_).lookupOrDefault<bool>
         (
             "solveOnFinalIterOnly",
             false

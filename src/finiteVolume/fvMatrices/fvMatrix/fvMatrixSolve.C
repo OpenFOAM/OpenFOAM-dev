@@ -282,11 +282,11 @@ Foam::fvMatrix<Type>::solver()
 {
     return solver
     (
-        psi_.mesh().solverDict
+        psi_.mesh().solution().solverDict
         (
             psi_.select
             (
-                !psi_.mesh().steady()
+                !psi_.mesh().schemes().steady()
              && psi_.mesh().data::template lookupOrDefault<bool>
                 ("finalIteration", false)
             )
@@ -300,11 +300,11 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::fvSolver::solve()
 {
     return solve
     (
-        fvMat_.psi_.mesh().solverDict
+        fvMat_.psi_.mesh().solution().solverDict
         (
             fvMat_.psi_.select
             (
-                !fvMat_.psi_.mesh().steady()
+                !fvMat_.psi_.mesh().schemes().steady()
              && fvMat_.psi_.mesh().data::template lookupOrDefault<bool>
                 ("finalIteration", false)
             )
@@ -318,9 +318,9 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve(const word& name)
 {
     return solve
     (
-        psi_.mesh().solverDict
+        psi_.mesh().solution().solverDict
         (
-            !psi_.mesh().steady()
+            !psi_.mesh().schemes().steady()
          && psi_.mesh().data::template lookupOrDefault<bool>
             ("finalIteration", false)
           ? word(name + "Final")
@@ -335,11 +335,11 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve()
 {
     return solve
     (
-        psi_.mesh().solverDict
+        psi_.mesh().solution().solverDict
         (
             psi_.select
             (
-                !psi_.mesh().steady()
+                !psi_.mesh().schemes().steady()
              && psi_.mesh().data::template lookupOrDefault<bool>
                 (
                     "finalIteration",

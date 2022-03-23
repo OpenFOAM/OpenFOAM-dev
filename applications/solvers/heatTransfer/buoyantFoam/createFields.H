@@ -84,7 +84,7 @@ pressureReference pressureReference
     thermo.incompressible()
 );
 
-mesh.setFluxRequired(p_rgh.name());
+mesh.schemes().setFluxRequired(p_rgh.name());
 
 hydrostaticInitialisation
 (

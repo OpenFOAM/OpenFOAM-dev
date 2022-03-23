@@ -95,7 +95,7 @@ if (pimple.transonic())
 }
 else
 {
-    if (mesh.steady())
+    if (mesh.schemes().steady())
     {
         adjustMass = adjustPhi(phiHbyA, U, p);
     }
@@ -133,7 +133,7 @@ else
     }
 }
 
-if (mesh.steady())
+if (mesh.schemes().steady())
 {
     #include "incompressible/continuityErrs.H"
 }
@@ -161,7 +161,7 @@ U.correctBoundaryConditions();
 fvConstraints.constrain(U);
 K = 0.5*magSqr(U);
 
-if (mesh.steady())
+if (mesh.schemes().steady())
 {
     fvConstraints.constrain(p);
 }
@@ -175,7 +175,7 @@ if (adjustMass && !thermo.incompressible())
     p.correctBoundaryConditions();
 }
 
-if (mesh.steady() || pimple.simpleRho() || adjustMass)
+if (mesh.schemes().steady() || pimple.simpleRho() || adjustMass)
 {
     rho = thermo.rho();
 }
@@ -183,7 +183,7 @@ if (mesh.steady() || pimple.simpleRho() || adjustMass)
 // Correct rhoUf if the mesh is moving
 fvc::correctRhoUf(rhoUf, rho, U, phi);
 
-if (mesh.steady() || pimple.simpleRho())
+if (mesh.schemes().steady() || pimple.simpleRho())
 {
     rho.relax();
 }

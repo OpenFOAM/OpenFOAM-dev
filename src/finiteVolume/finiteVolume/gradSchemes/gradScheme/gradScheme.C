@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ Foam::fv::gradScheme<Type>::grad
     typedef typename outerProduct<vector, Type>::type GradType;
     typedef GeometricField<GradType, fvPatchField, volMesh> GradFieldType;
 
-    if (!this->mesh().changing() && this->mesh().cache(name))
+    if (!this->mesh().changing() && this->mesh().solution().cache(name))
     {
         if (!mesh().objectRegistry::template foundObject<GradFieldType>(name))
         {

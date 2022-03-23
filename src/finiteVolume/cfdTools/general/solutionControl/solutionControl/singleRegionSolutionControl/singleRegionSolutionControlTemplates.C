@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ void Foam::singleRegionSolutionControl::storePrevIterTypeFields() const
 
         size_t prevIterField = fName.find("PrevIter");
 
-        if (prevIterField == word::npos && mesh_.relaxField(fName))
+        if (prevIterField == word::npos && mesh_.solution().relaxField(fName))
         {
             fld.storePrevIter();
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
 
             if
             (
-                !mesh.steady()
+                !mesh.schemes().steady()
              && !pimple.simpleRho()
              && pimple.firstPimpleIter()
             )
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        if (!mesh.steady())
+        if (!mesh.schemes().steady())
         {
             rho = thermo.rho();
         }

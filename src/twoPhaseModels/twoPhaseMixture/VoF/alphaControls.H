@@ -1,4 +1,4 @@
-const dictionary& alphaControls = mesh.solverDict(alpha1.name());
+const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
 
 const label nAlphaCorr(alphaControls.lookup<label>("nAlphaCorr"));
 

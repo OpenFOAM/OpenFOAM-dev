@@ -61,7 +61,7 @@ surfaceScalarField phic
 
 pressureReference pressureReference(p, pimple.dict());
 
-mesh.setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(p.name());
 
 Info<< "Creating turbulence model\n" << endl;
 
@@ -127,7 +127,7 @@ parcelCloudList clouds(rhoc, Uc, muc, g);
 // Particle fraction upper limit
 scalar alphacMin
 (
-    1 - mesh.solverDict(alphac.name()).lookup<scalar>("max")
+    1 - mesh.solution().solverDict(alphac.name()).lookup<scalar>("max")
 );
 
 // Update alphac from the particle locations

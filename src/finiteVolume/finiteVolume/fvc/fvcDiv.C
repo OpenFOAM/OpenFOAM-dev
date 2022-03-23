@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ div
 {
     return fv::divScheme<Type>::New
     (
-        vf.mesh(), vf.mesh().divScheme(name)
+        vf.mesh(), vf.mesh().schemes().div(name)
     ).ref().fvcDiv(vf);
 }
 
@@ -163,7 +163,7 @@ div
     (
         vf.mesh(),
         flux,
-        vf.mesh().divScheme(name)
+        vf.mesh().schemes().div(name)
     ).ref().fvcDiv(flux, vf);
 }
 

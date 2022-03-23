@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
                                                                                \
     if (this->tsnGradScheme_().corrected())                                    \
     {                                                                          \
-        if (mesh.fluxRequired(vf.name()))                                      \
+        if (mesh.schemes().fluxRequired(vf.name()))                            \
         {                                                                      \
             fvm.faceFluxCorrectionPtr() = new                                  \
             GeometricField<Type, fvsPatchField, surfaceMesh>                   \

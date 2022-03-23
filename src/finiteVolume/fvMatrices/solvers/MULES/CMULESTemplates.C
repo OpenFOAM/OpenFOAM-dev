@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,7 @@ void Foam::MULES::limiterCorr
 
     const fvMesh& mesh = psi.mesh();
 
-    const dictionary& MULEScontrols = mesh.solverDict(psi.name());
+    const dictionary& MULEScontrols = mesh.solution().solverDict(psi.name());
 
     const label nLimiterIter
     (

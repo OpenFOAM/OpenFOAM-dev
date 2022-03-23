@@ -43,7 +43,7 @@ volVectorField U
 
 #include "createPhi.H"
 
-mesh.setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(p.name());
 
 // Mass flux (corrected by rhoEqn.H)
 surfaceScalarField rhoPhi
@@ -86,8 +86,8 @@ rho == max
     rhoMin
 );
 
-mesh.setFluxRequired(p.name());
-mesh.setFluxRequired(rho.name());
+mesh.schemes().setFluxRequired(p.name());
+mesh.schemes().setFluxRequired(rho.name());
 
 // Create incompressible turbulence model
 autoPtr<incompressible::momentumTransportModel> turbulence

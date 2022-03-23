@@ -977,8 +977,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::~GeometricField()
 {
     this->db().cacheTemporaryObject(*this);
 
-    deleteDemandDrivenData(field0Ptr_);
-    deleteDemandDrivenData(fieldPrevIterPtr_);
+    clearOldTimes();
 }
 
 
@@ -1160,12 +1159,35 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::prevIter() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::clearOldTimes()
+{
+    deleteDemandDrivenData(field0Ptr_);
+    deleteDemandDrivenData(fieldPrevIterPtr_);
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::
 correctBoundaryConditions()
 {
     this->setUpToDate();
     storeOldTimes();
     boundaryField_.evaluate();
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::reset
+(
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
+)
+{
+    const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
+
+    Internal::reset(gf);
+    boundaryField_ == gf.boundaryField();
+
+    tgf.clear();
 }
 
 
@@ -1215,14 +1237,20 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::relax()
             "finalIteration",
             false
         )
-     && this->mesh().relaxField(this->name() + "Final")
+     && this->mesh().solution().relaxField(this->name() + "Final")
     )
     {
-        relax(this->mesh().fieldRelaxationFactor(this->name() + "Final"));
+        relax
+        (
+            this->mesh().solution().fieldRelaxationFactor
+            (
+                this->name() + "Final"
+            )
+        );
     }
-    else if (this->mesh().relaxField(this->name()))
+    else if (this->mesh().solution().relaxField(this->name()))
     {
-        relax(this->mesh().fieldRelaxationFactor(this->name()));
+        relax(this->mesh().solution().fieldRelaxationFactor(this->name()));
     }
 }
 
