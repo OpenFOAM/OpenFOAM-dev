@@ -5631,6 +5631,22 @@ void Foam::hexRef8::setUnrefinement
 
 bool Foam::hexRef8::write(const bool write) const
 {
+    if (cellLevel_.size() != mesh_.nCells())
+    {
+        FatalErrorInFunction
+            << "Size of cellLevel:" << cellLevel_.size()
+            << " does not equal number of cells in mesh:" << mesh_.nCells()
+            << abort(FatalError);
+    }
+
+    if (pointLevel_.size() != mesh_.nPoints())
+    {
+        FatalErrorInFunction
+            << "Size of pointLevel:" << pointLevel_.size()
+            << " does not equal number of points in mesh:" << mesh_.nPoints()
+            << abort(FatalError);
+    }
+
     bool writeOk =
         cellLevel_.write(write)
      && pointLevel_.write(write)
