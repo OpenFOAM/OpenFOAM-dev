@@ -158,6 +158,7 @@ $(faceSources)/pointToFace/pointToFace.C
 $(faceSources)/boundaryToFace/boundaryToFace.C
 $(faceSources)/zoneToFace/zoneToFace.C
 $(faceSources)/boxToFace/boxToFace.C
+$(faceSources)/rotatedBoxToFace/rotatedBoxToFace.C
 $(faceSources)/regionToFace/regionToFace.C
 $(faceSources)/cylinderToFace/cylinderToFace.C
 $(faceSources)/cylinderAnnulusToFace/cylinderAnnulusToFace.C
