@@ -112,8 +112,6 @@ class externalWallHeatFluxTemperatureFvPatchScalarField
     public mixedFvPatchScalarField,
     public temperatureCoupledBase
 {
-private:
-
     // Private Data
 
         // Heat power
