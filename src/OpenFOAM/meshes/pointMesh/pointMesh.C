@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,21 +48,14 @@ void Foam::pointMesh::mapFields(const mapPolyMesh& map)
             << "Mapping all registered pointFields."
             << endl;
     }
-    // Create a mapper
-    const pointMeshMapper m(*this, map);
 
-    MapGeometricFields<scalar, pointPatchField, pointMeshMapper, pointMesh>(m);
-    MapGeometricFields<vector, pointPatchField, pointMeshMapper, pointMesh>(m);
-    MapGeometricFields
-    <
-        sphericalTensor,
-        pointPatchField,
-        pointMeshMapper,
-        pointMesh
-    >(m);
-    MapGeometricFields<symmTensor, pointPatchField, pointMeshMapper, pointMesh>
-    (m);
-    MapGeometricFields<tensor, pointPatchField, pointMeshMapper, pointMesh>(m);
+    // Create the pointMesh mapper
+    const pointMeshMapper mapper(*this, map);
+
+    #define mapPointFieldType(Type, nullArg)                                   \
+        MapGeometricFields<Type, pointPatchField, pointMeshMapper, pointMesh>  \
+        (mapper);
+    FOR_ALL_FIELD_TYPES(mapPointFieldType);
 }
 
 

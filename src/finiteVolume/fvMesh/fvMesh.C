@@ -688,40 +688,20 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
     const fvMeshMapper mapper(*this, meshMap);
 
     // Map all the volFields in the objectRegistry
-    MapGeometricFields<scalar, fvPatchField, fvMeshMapper, volMesh>
-    (mapper);
-    MapGeometricFields<vector, fvPatchField, fvMeshMapper, volMesh>
-    (mapper);
-    MapGeometricFields<sphericalTensor, fvPatchField, fvMeshMapper, volMesh>
-    (mapper);
-    MapGeometricFields<symmTensor, fvPatchField, fvMeshMapper, volMesh>
-    (mapper);
-    MapGeometricFields<tensor, fvPatchField, fvMeshMapper, volMesh>
-    (mapper);
+    #define mapVolFieldType(Type, nullArg)                                     \
+        MapGeometricFields<Type, fvPatchField, fvMeshMapper, volMesh>(mapper);
+    FOR_ALL_FIELD_TYPES(mapVolFieldType);
 
     // Map all the surfaceFields in the objectRegistry
-    MapGeometricFields<scalar, fvsPatchField, fvMeshMapper, surfaceMesh>
-    (mapper);
-    MapGeometricFields<vector, fvsPatchField, fvMeshMapper, surfaceMesh>
-    (mapper);
-    MapGeometricFields
-    <
-        sphericalTensor,
-        fvsPatchField,
-        fvMeshMapper,
-        surfaceMesh
-    >(mapper);
-    MapGeometricFields<symmTensor, fvsPatchField, fvMeshMapper, surfaceMesh>
-    (mapper);
-    MapGeometricFields<tensor, fvsPatchField, fvMeshMapper, surfaceMesh>
-    (mapper);
+    #define mapSurfaceFieldType(Type, nullArg)                                 \
+        MapGeometricFields<Type, fvsPatchField, fvMeshMapper, surfaceMesh>     \
+        (mapper);
+    FOR_ALL_FIELD_TYPES(mapSurfaceFieldType);
 
     // Map all the dimensionedFields in the objectRegistry
-    MapDimensionedFields<scalar, fvMeshMapper, volMesh>(mapper);
-    MapDimensionedFields<vector, fvMeshMapper, volMesh>(mapper);
-    MapDimensionedFields<sphericalTensor, fvMeshMapper, volMesh>(mapper);
-    MapDimensionedFields<symmTensor, fvMeshMapper, volMesh>(mapper);
-    MapDimensionedFields<tensor, fvMeshMapper, volMesh>(mapper);
+    #define mapVolInternalFieldType(Type, nullArg)                             \
+        MapDimensionedFields<Type, fvMeshMapper, volMesh>(mapper);
+    FOR_ALL_FIELD_TYPES(mapVolInternalFieldType);
 
     // Map all the clouds in the objectRegistry
     mapClouds(*this, meshMap);
