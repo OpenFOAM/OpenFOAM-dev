@@ -81,6 +81,11 @@ void Foam::fv::fixedTemperatureConstraint::readCoeffs()
     }
 
     phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+
+    fraction_ =
+        coeffs().found("fraction")
+      ? Function1<scalar>::New("fraction", coeffs())
+      : autoPtr<Function1<scalar>>();
 }
 
 
@@ -133,21 +138,52 @@ bool Foam::fv::fixedTemperatureConstraint::constrain
             IOobject::groupName(physicalProperties::typeName, phaseName_)
         );
 
+    const scalar t = mesh().time().userTimeValue();
+
     switch (mode_)
     {
         case temperatureMode::uniform:
         {
-            const scalar t = mesh().time().userTimeValue();
-            scalarField Tuni(cells.size(), TValue_->value(t));
-            eqn.setValues(cells, thermo.he(Tuni, cells));
+            const scalarField Tuni(cells.size(), TValue_->value(t));
+            const scalarField heuni(thermo.he(Tuni, cells));
+
+            if (fraction_.valid())
+            {
+                eqn.setValues
+                (
+                    cells,
+                    heuni,
+                    scalarList(cells.size(), fraction_->value(t))
+                );
+            }
+            else
+            {
+                eqn.setValues(cells, heuni);
+            }
+
             break;
         }
         case temperatureMode::lookup:
         {
             const volScalarField& T =
                 mesh().lookupObject<volScalarField>(TName_);
-            scalarField Tlkp(T, cells);
-            eqn.setValues(cells, thermo.he(Tlkp, cells));
+            const scalarField Tlkp(T, cells);
+            const scalarField helkp(thermo.he(Tlkp, cells));
+
+            if (fraction_.valid())
+            {
+                eqn.setValues
+                (
+                    cells,
+                    helkp,
+                    scalarList(cells.size(), fraction_->value(t))
+                );
+            }
+            else
+            {
+                eqn.setValues(cells, helkp);
+            }
+
             break;
         }
     }

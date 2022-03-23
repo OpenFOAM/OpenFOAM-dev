@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ void Foam::fixedInternalValueFvPatchField<Type>::manipulateMatrix
 )
 {
     // Apply the patch internal field as a constraint in the matrix
-    matrix.setValues(this->patch().faceCells(), this->patchInternalField());
+    matrix.setValues(this->patch().faceCells(), this->patchInternalField()());
 }
 
 

@@ -26,6 +26,7 @@ License
 #include "fixedValueConstraint.H"
 #include "fvMesh.H"
 #include "fvMatrices.H"
+#include "fvcSurfaceIntegrate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -63,6 +64,11 @@ void Foam::fv::fixedValueConstraint::readCoeffs()
             )
         );
     }
+
+    fraction_ =
+        coeffs().found("fraction")
+      ? Function1<scalar>::New("fraction", coeffs())
+      : autoPtr<Function1<scalar>>();
 }
 
 
@@ -75,11 +81,25 @@ bool Foam::fv::fixedValueConstraint::constrainType
 {
     const scalar t = mesh().time().userTimeValue();
 
-    eqn.setValues
+    const List<Type> values
     (
-        set_.cells(),
-        List<Type>(set_.cells().size(), fieldValues_[fieldName]->value<Type>(t))
+        set_.cells().size(),
+        fieldValues_[fieldName]->value<Type>(t)
     );
+
+    if (fraction_.valid())
+    {
+        eqn.setValues
+        (
+            set_.cells(),
+            values,
+            scalarList(set_.cells().size(), fraction_->value(t))
+        );
+    }
+    else
+    {
+        eqn.setValues(set_.cells(), values);
+    }
 
     return set_.cells().size();
 }
