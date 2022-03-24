@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,12 +59,6 @@ class nearWallDist
         const fvMesh& mesh_;
 
 
-    // Private Member Functions
-
-        //- Do all calculations
-        void calculate();
-
-
 public:
 
     // Constructors
@@ -82,6 +76,7 @@ public:
 
     // Member Functions
 
+        //- Access the wall distances
         const volScalarField::Boundary& y() const
         {
             return *this;

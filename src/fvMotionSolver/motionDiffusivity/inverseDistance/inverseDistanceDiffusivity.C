@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,8 @@ License
 
 #include "inverseDistanceDiffusivity.H"
 #include "addToRunTimeSelectionTable.H"
-#include "patchWave.H"
+#include "patchDistWave.H"
+#include "wallPoint.H"
 #include "HashSet.H"
 #include "surfaceInterpolate.H"
 #include "zeroGradientFvPatchFields.H"
@@ -72,14 +73,13 @@ Foam::tmp<Foam::scalarField> Foam::inverseDistanceDiffusivity::y() const
 
     if (patchSet.size())
     {
-        return tmp<scalarField>
-        (
-            new scalarField(patchWave(mesh(), patchSet, false).distance())
-        );
+        tmp<scalarField> tY(new scalarField(mesh().nCells()));
+        patchDistWave::wave<wallPoint>(mesh(), patchSet, tY.ref(), false);
+        return tY;
     }
     else
     {
-        return tmp<scalarField>(new scalarField(mesh().nCells(), 1.0));
+        return tmp<scalarField>(new scalarField(mesh().nCells(), 1));
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,12 @@ public:
         // Access
 
             inline const Type& data() const;
+
             inline Type& data();
+
+            template<class TrackingData>
+            inline const Type& data(TrackingData& td) const;
+
 
         // Needed by meshWave
 

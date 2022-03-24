@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,18 +23,42 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "wallPoint.H"
+#include "wallPointData.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Foam::Ostream& os, const Foam::wallPoint& wDist)
+template<class Type>
+Ostream& operator<<
+(
+    Ostream& os,
+    const wallPointData<Type>& wDist
+)
 {
-    return os << wDist.origin() << token::SPACE << wDist.distSqr();
+    return os
+        << static_cast<const wallPoint&>(wDist)
+        << token::SPACE
+        << wDist.data();
 }
 
-Foam::Istream& Foam::operator>>(Foam::Istream& is, Foam::wallPoint& wDist)
+
+template<class Type>
+Istream& operator>>
+(
+    Istream& is,
+    wallPointData<Type>& wDist
+)
 {
-    return is >> wDist.origin() >> wDist.distSqr();
+    return is >> static_cast<wallPoint&>(wDist) >> wDist.data_;
 }
+
+
+// ************************************************************************* //
+
+} // End namespace Foam
 
 // ************************************************************************* //

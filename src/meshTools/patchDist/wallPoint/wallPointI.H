@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,6 +119,13 @@ inline Foam::scalar Foam::wallPoint::distSqr() const
 inline Foam::scalar& Foam::wallPoint::distSqr()
 {
     return distSqr_;
+}
+
+
+template<class TrackingData>
+inline Foam::scalar Foam::wallPoint::dist(TrackingData& td) const
+{
+    return valid(td) ? sqrt(distSqr_) : great;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,29 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellDistFuncs.H"
-#include "polyMesh.H"
-#include "polyBoundaryMesh.H"
+#include "wallPoint.H"
 
+// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::labelHashSet Foam::cellDistFuncs::getPatchIDs() const
+Foam::Ostream& Foam::operator<<(Foam::Ostream& os, const Foam::wallPoint& wDist)
 {
-    const polyBoundaryMesh& bMesh = mesh().boundaryMesh();
-
-    labelHashSet patchIDs(bMesh.size());
-
-    forAll(bMesh, patchi)
-    {
-        if (isA<Type>(bMesh[patchi]))
-        {
-            patchIDs.insert(patchi);
-        }
-    }
-    return patchIDs;
+    return os << wDist.origin() << token::SPACE << wDist.distSqr();
 }
 
+Foam::Istream& Foam::operator>>(Foam::Istream& is, Foam::wallPoint& wDist)
+{
+    return is >> wDist.origin() >> wDist.distSqr();
+}
 
 // ************************************************************************* //

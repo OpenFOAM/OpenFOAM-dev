@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,9 +80,6 @@ class meshWave
         //- Do accurate distance calculation for near-wall cells.
         const bool correctWalls_;
 
-        //- Number of unset cells and faces.
-        mutable label nUnset_;
-
 
 public:
 
@@ -117,11 +114,6 @@ public:
 
 
     // Member Functions
-
-        label nUnset() const
-        {
-            return nUnset_;
-        }
 
         //- Correct the given distance-to-patch field
         virtual bool correct(volScalarField& y);

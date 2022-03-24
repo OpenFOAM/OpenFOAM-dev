@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "patchDistanceToCell.H"
-#include "patchWave.H"
+#include "patchDistWave.H"
+#include "wallPoint.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -40,15 +41,19 @@ namespace Foam
 
 void Foam::patchDistanceToCell::combine(topoSet& set, const bool add) const
 {
-    const patchWave pw
+    // Mesh wave to determine wall distance
+    scalarField distance(mesh_.nCells());
+    patchDistWave::wave<wallPoint>
     (
         mesh_,
-        mesh_.boundaryMesh().patchSet(patches_)
+        mesh_.boundaryMesh().patchSet(patches_),
+        distance
     );
 
-    forAll(pw.distance(), celli)
+    // Add cells below the distance threshold to the set
+    forAll(distance, celli)
     {
-        if (pw.distance()[celli] < distance_)
+        if (distance[celli] < distance_)
         {
             addOrDelete(set, celli, add);
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,6 +108,14 @@ inline const Type& wallPointData<Type>::data() const
 
 template<class Type>
 inline Type& wallPointData<Type>::data()
+{
+    return data_;
+}
+
+
+template<class Type>
+template<class TrackingData>
+inline const Type& wallPointData<Type>::data(TrackingData& td) const
 {
     return data_;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,7 @@ License
 #include "meshWavePatchDistMethod.H"
 #include "fvMesh.H"
 #include "volFields.H"
-#include "patchWave.H"
-#include "patchDataWave.H"
+#include "patchDistWave.H"
 #include "wallPointData.H"
 #include "emptyFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -53,8 +52,7 @@ Foam::patchDistMethods::meshWave::meshWave
 )
 :
     patchDistMethod(mesh, patchIDs),
-    correctWalls_(dict.lookupOrDefault<Switch>("correctWalls", true)),
-    nUnset_(0)
+    correctWalls_(dict.lookupOrDefault<Switch>("correctWalls", true))
 {}
 
 
@@ -66,8 +64,7 @@ Foam::patchDistMethods::meshWave::meshWave
 )
 :
     patchDistMethod(mesh, patchIDs),
-    correctWalls_(correctWalls),
-    nUnset_(0)
+    correctWalls_(correctWalls)
 {}
 
 
@@ -77,32 +74,18 @@ bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
 {
     y = dimensionedScalar(dimLength, great);
 
-    // Calculate distance starting from patch faces
-    patchWave wave(mesh_, patchIDs_, correctWalls_);
+    const label nUnset =
+        patchDistWave::wave<wallPoint>
+        (
+            mesh_,
+            patchIDs_,
+            y.primitiveFieldRef(),
+            correctWalls_
+        );
 
-    // Transfer cell values from wave into y
-    y.transfer(wave.distance());
-
-    // Transfer values on patches into boundaryField of y
-    volScalarField::Boundary& ybf = y.boundaryFieldRef();
-
-    forAll(ybf, patchi)
-    {
-        if (!isA<emptyFvPatchScalarField>(ybf[patchi]))
-        {
-            scalarField& waveFld = wave.patchDistance()[patchi];
-
-            ybf[patchi].transfer(waveFld);
-        }
-    }
-
-    // Update coupled and transform BCs
     y.correctBoundaryConditions();
 
-    // Transfer number of unset values
-    nUnset_ = wave.nUnset();
-
-    return nUnset_ > 0;
+    return nUnset > 0;
 }
 
 
@@ -114,55 +97,24 @@ bool Foam::patchDistMethods::meshWave::correct
 {
     y = dimensionedScalar(dimLength, great);
 
-    // Collect pointers to data on patches
-    UPtrList<vectorField> patchData(mesh_.boundaryMesh().size());
-
-    volVectorField::Boundary& nbf = n.boundaryFieldRef();
-
-    forAll(nbf, patchi)
-    {
-        patchData.set(patchi, &nbf[patchi]);
-    }
-
-    // Do mesh wave
-    patchDataWave<wallPointData<vector>> wave
-    (
-        mesh_,
-        patchIDs_,
-        patchData,
-        correctWalls_
-    );
-
-    // Transfer cell values from wave into y and n
-    y.transfer(wave.distance());
-
-    n.transfer(wave.cellData());
-
-    // Transfer values on patches into boundaryField of y and n
-    volScalarField::Boundary& ybf = y.boundaryFieldRef();
-
-    forAll(ybf, patchi)
-    {
-        scalarField& waveFld = wave.patchDistance()[patchi];
-
-        if (!isA<emptyFvPatchScalarField>(ybf[patchi]))
-        {
-            ybf[patchi].transfer(waveFld);
-
-            vectorField& wavePatchData = wave.patchData()[patchi];
-
-            nbf[patchi].transfer(wavePatchData);
-        }
-    }
+    const label nUnset =
+        patchDistWave::wave<wallPointData<vector>, fvPatchField>
+        (
+            mesh_,
+            patchIDs_,
+            n.boundaryField(),
+            y.primitiveFieldRef(),
+            y.boundaryFieldRef(),
+            n.primitiveFieldRef(),
+            n.boundaryFieldRef(),
+            correctWalls_
+        );
 
     // Update coupled and transform BCs
     y.correctBoundaryConditions();
     n.correctBoundaryConditions();
 
-    // Transfer number of unset values
-    nUnset_ = wave.nUnset();
-
-    return nUnset_ > 0;
+    return nUnset > 0;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,69 +25,9 @@ License
 
 #include "nearWallDist.H"
 #include "fvMesh.H"
-#include "cellDistFuncs.H"
+#include "patchDistFuncs.H"
 #include "wallFvPatch.H"
 #include "surfaceFields.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::nearWallDist::calculate()
-{
-    cellDistFuncs wallUtils(mesh_);
-
-    // Get patch ids of walls
-    labelHashSet wallPatchIDs(wallUtils.getPatchIDs<wallPolyPatch>());
-
-    // Size neighbours array for maximum possible
-
-    labelList neighbours(wallUtils.maxPatchSize(wallPatchIDs));
-
-
-    // Correct all cells with face on wall
-
-    const volVectorField& cellCentres = mesh_.C();
-
-    forAll(mesh_.boundary(), patchi)
-    {
-        fvPatchScalarField& ypatch = operator[](patchi);
-
-        const fvPatch& patch = mesh_.boundary()[patchi];
-
-        if (isA<wallFvPatch>(patch))
-        {
-            const polyPatch& pPatch = patch.patch();
-
-            const labelUList& faceCells = patch.faceCells();
-
-            // Check cells with face on wall
-            forAll(patch, patchFacei)
-            {
-                label nNeighbours = wallUtils.getPointNeighbours
-                (
-                    pPatch,
-                    patchFacei,
-                    neighbours
-                );
-
-                label minFacei = -1;
-
-                ypatch[patchFacei] = wallUtils.smallestDist
-                (
-                    cellCentres[faceCells[patchFacei]],
-                    pPatch,
-                    nNeighbours,
-                    neighbours,
-                    minFacei
-                );
-            }
-        }
-        else
-        {
-            ypatch = 0.0;
-        }
-    }
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -96,12 +36,17 @@ Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
     volScalarField::Boundary
     (
         mesh.boundary(),
-        mesh.V(),           // Dummy internal field,
+        volScalarField::Internal::null(),
         calculatedFvPatchScalarField::typeName
     ),
     mesh_(mesh)
 {
-    calculate();
+    patchDistFuncs::correctBoundaryFaceFaceCells
+    (
+        mesh_,
+        mesh_.boundaryMesh().findPatchIDs<wallPolyPatch>(),
+        *this
+    );
 }
 
 
@@ -117,10 +62,8 @@ void Foam::nearWallDist::correct()
 {
     if (mesh_.topoChanging())
     {
-        const DimensionedField<scalar, volMesh>& V = mesh_.V();
-        const fvBoundaryMesh& bnd = mesh_.boundary();
+        this->setSize(mesh_.boundary().size());
 
-        this->setSize(bnd.size());
         forAll(*this, patchi)
         {
             this->set
@@ -129,14 +72,19 @@ void Foam::nearWallDist::correct()
                 fvPatchField<scalar>::New
                 (
                     calculatedFvPatchScalarField::typeName,
-                    bnd[patchi],
-                    V
+                    mesh_.boundary()[patchi],
+                    volScalarField::Internal::null()
                 )
             );
         }
     }
 
-    calculate();
+    patchDistFuncs::correctBoundaryFaceFaceCells
+    (
+        mesh_,
+        mesh_.boundaryMesh().findPatchIDs<wallPolyPatch>(),
+        *this
+    );
 }
 
 
