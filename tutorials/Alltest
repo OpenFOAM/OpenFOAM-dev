@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -39,7 +39,8 @@ usage()
 usage: ${0##*/} [OPTION]
 
 options:
-  -root <dir>       specify root directory to run tests from
+  -from <dir>       specify directory to run tests from
+  -to <dir>         specify directory to run tests in
   -help             print the usage
 
 * quickly tests the tutorials
@@ -50,17 +51,23 @@ USAGE
 
 #------------------------------------------------------------------------------
 
-rootDir="./"
-testDir=../tutorialsTest
+currentDir="$(pwd)"
+fromDir="./"
+toDir=../tutorialsTest
 
 
 # Parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
-    -r | -root)
+    -f | -from)
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        rootDir="$2"
+        fromDir="$2"
+        shift
+        ;;
+    -t | -to)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        toDir="$2"
         shift
         ;;
     -h | -help)
@@ -76,19 +83,20 @@ do
     shift
 done
 
-
-# Create a copy of the tutorials in which to run the test loop
-echo "Copying the tutorials"
-if [ -d "$testDir" ]
+if [ $(readlink -f $fromDir) != $(readlink -f $toDir) ]
 then
-    rm -rf "$testDir" || exit 1
+    # Create a copy of the cases for which to run the test loop
+    echo "Copying cases"
+    if [ -d "$toDir" ]
+    then
+        rm -rf "$toDir" || exit 1
+    fi
+    cp -a "${fromDir}" "${toDir}" || exit 1
 fi
-cp -a "${rootDir}" "${testDir}" || exit 1
-
 
 # Change the control dict to make the tests quick
 echo "Modifying the controlDicts to run only one time step"
-cd ${testDir} || exit 1
+cd ${toDir} || exit 1
 find . -name "controlDict*" | while read -r controlDict
 do
     (
@@ -101,10 +109,16 @@ do
     ) > /dev/null
 done
 
-
 # Copy the Allrun script into the test directory
-cp -f "$FOAM_TUTORIALS"/Allrun . || exit 1
-
+if [ ! -x "$toDir"/Allrun ]
+then
+    if [ -x "$currentDir"/Allrun ]
+    then
+        cp -f "$currentDir"/Allrun . || exit 1
+    else
+        cp -f "$FOAM_TUTORIALS"/Allrun . || exit 1
+    fi
+fi
 
 # Run everything
 ./Allrun && exit 0 || exit 1
