@@ -490,25 +490,6 @@ void Foam::FaceCellWave<Type, TrackingData>::transform
 
 
 template<class Type, class TrackingData>
-void Foam::FaceCellWave<Type, TrackingData>::offset
-(
-    const polyPatch&,
-    const label cycOffset,
-    const label nFaces,
-    labelList& faces
-)
-{
-    // Offset mesh face. Used for transferring from one cyclic half to the
-    // other.
-
-    for (label facei = 0; facei < nFaces; facei++)
-    {
-        faces[facei] += cycOffset;
-    }
-}
-
-
-template<class Type, class TrackingData>
 void Foam::FaceCellWave<Type, TrackingData>::handleProcPatches()
 {
     // Transfer all the information to/from neighbouring processors

@@ -219,15 +219,6 @@ protected:
                 List<Type>& faceInfo
             ) const;
 
-            //- Offset face labels by constant value
-            static void offset
-            (
-                const polyPatch& patch,
-                const label off,
-                const label nFaces,
-                labelList& faces
-            );
-
             //- Apply transformation to Type
             void transform
             (
