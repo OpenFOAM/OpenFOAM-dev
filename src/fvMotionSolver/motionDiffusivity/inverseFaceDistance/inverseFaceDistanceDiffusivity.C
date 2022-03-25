@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "surfaceFields.H"
 #include "HashSet.H"
 #include "wallPoint.H"
-#include "MeshWave.H"
+#include "FaceCellWave.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -128,16 +128,16 @@ Foam::inverseFaceDistanceDiffusivity::operator()() const
     faceDist.setSize(nPatchFaces);
     changedFaces.setSize(nPatchFaces);
 
-    MeshWave<wallPoint> waveInfo
+    List<wallPoint> faceInfo(mesh().nFaces()), cellInfo(mesh().nCells());
+    FaceCellWave<wallPoint> waveInfo
     (
         mesh(),
         changedFaces,
         faceDist,
-        mesh().globalData().nTotalCells()+1   // max iterations
+        faceInfo,
+        cellInfo,
+        mesh().globalData().nTotalCells() + 1   // max iterations
     );
-
-    const List<wallPoint>& faceInfo = waveInfo.allFaceInfo();
-    const List<wallPoint>& cellInfo = waveInfo.allCellInfo();
 
     for (label facei=0; facei<mesh().nInternalFaces(); facei++)
     {

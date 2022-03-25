@@ -80,6 +80,19 @@ class FaceCellWave
 {
 protected:
 
+    // Protected static data
+
+        //- ...
+        static const scalar geomTol_;
+
+        //- ...
+        static scalar propagationTol_;
+
+        //- Used as default trackdata value to satisfy default template
+        //  argument.
+        static int dummyTrackData_;
+
+
     // Protected data
 
         //- Reference to mesh
@@ -109,7 +122,6 @@ protected:
         // Cells that have changed
         DynamicList<label> changedCells_;
 
-
         //- Contains cyclics
         const bool hasCyclicPatches_;
 
@@ -119,10 +131,14 @@ protected:
         //- Number of evaluations
         label nEvals_;
 
-        //- Number of unvisited cells/faces
+        //- Number of unvisited cells
         label nUnvisitedCells_;
+
+        //- Number of unvisited faces
         label nUnvisitedFaces_;
 
+
+    // Protected member functions
 
         //- Updates cellInfo with information from neighbour. Updates all
         //  statistics.
@@ -240,16 +256,6 @@ protected:
             //- Merge data across explicitly provided local connections (usually
             //  baffles)
             void handleExplicitConnections();
-
-
-      // Protected static data
-
-            static const scalar geomTol_;
-            static scalar propagationTol_;
-
-            //- Used as default trackdata value to satisfy default template
-            //  argument.
-            static int dummyTrackData_;
 
 
 public:

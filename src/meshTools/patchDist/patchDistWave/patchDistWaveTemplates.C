@@ -34,7 +34,7 @@ void Foam::patchDistWave::setChangedFaces
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
     labelList& changedFaces,
-    List<PatchPointType>& faceDist,
+    List<PatchPointType>& changedFacesInfo,
     const InitialPatchData& ... initialPatchData
 )
 {
@@ -45,7 +45,7 @@ void Foam::patchDistWave::setChangedFaces
     }
 
     changedFaces.resize(nChangedFaces);
-    faceDist.resize(nChangedFaces);
+    changedFacesInfo.resize(nChangedFaces);
 
     label changedFacei = 0;
 
@@ -61,7 +61,7 @@ void Foam::patchDistWave::setChangedFaces
 
             changedFaces[changedFacei] = meshFacei;
 
-            faceDist[changedFacei] =
+            changedFacesInfo[changedFacei] =
                 PatchPointType
                 (
                     patch.faceCentres()[patchFacei],
@@ -79,7 +79,7 @@ template<class PatchPointType, class DataType, class DataMethod>
 Foam::label Foam::patchDistWave::getCellValues
 (
     const polyMesh& mesh,
-    MeshWave<PatchPointType>& waveInfo,
+    FaceCellWave<PatchPointType>& waveInfo,
     Field<DataType>& cellValues,
     DataMethod method,
     const DataType& stabiliseValue
@@ -112,7 +112,7 @@ template
 Foam::label Foam::patchDistWave::getPatchValues
 (
     const polyMesh& mesh,
-    MeshWave<PatchPointType>& waveInfo,
+    FaceCellWave<PatchPointType>& waveInfo,
     FieldField<PatchField, DataType>& patchValues,
     DataMethod method,
     const DataType& stabiliseValue
@@ -151,17 +151,26 @@ Foam::label Foam::patchDistWave::wave
     const bool correct
 )
 {
-    // Initialise to faceDist information to face centre on patches
-    List<PatchPointType> faceDist;
+    // Initialise to changedFacesInfo information to face centre on patches
+    List<PatchPointType> changedFacesInfo;
     labelList changedFaces;
-    setChangedFaces(mesh, patchIDs, changedFaces, faceDist);
+    setChangedFaces
+    (
+        mesh,
+        patchIDs,
+        changedFaces,
+        changedFacesInfo
+    );
 
     // Do calculate patch distance by 'growing' from faces.
-    MeshWave<PatchPointType> wave
+    List<PatchPointType> faceInfo(mesh.nFaces()), cellInfo(mesh.nCells());
+    FaceCellWave<PatchPointType> wave
     (
         mesh,
         changedFaces,
-        faceDist,
+        changedFacesInfo,
+        faceInfo,
+        cellInfo,
         mesh.globalData().nTotalCells() + 1 // max iterations
     );
 
@@ -174,7 +183,7 @@ Foam::label Foam::patchDistWave::wave
     // Correct patch cells for true distance
     if (correct)
     {
-        Map<label> nearestFace(2*faceDist.size());
+        Map<label> nearestFace(2*changedFacesInfo.size());
         patchDistFuncs::correctBoundaryFaceCells
         (
             mesh,
@@ -209,17 +218,27 @@ Foam::label Foam::patchDistWave::wave
     const bool correct
 )
 {
-    // Initialise to faceDist information to face centre on patches
-    List<PatchPointType> faceDist;
+    // Initialise to changedFacesInfo information to face centre on patches
+    List<PatchPointType> changedFacesInfo;
     labelList changedFaces;
-    setChangedFaces(mesh, patchIDs, changedFaces, faceDist, initialPatchData);
+    setChangedFaces
+    (
+        mesh,
+        patchIDs,
+        changedFaces,
+        changedFacesInfo,
+        initialPatchData
+    );
 
     // Do calculate patch distance by 'growing' from faces.
-    MeshWave<PatchPointType> wave
+    List<PatchPointType> faceInfo(mesh.nFaces()), cellInfo(mesh.nCells());
+    FaceCellWave<PatchPointType> wave
     (
         mesh,
         changedFaces,
-        faceDist,
+        changedFacesInfo,
+        faceInfo,
+        cellInfo,
         mesh.globalData().nTotalCells() + 1 // max iterations
     );
 
@@ -240,7 +259,7 @@ Foam::label Foam::patchDistWave::wave
     // Correct patch cells for true distance
     if (correct)
     {
-        Map<label> nearestFace(2*faceDist.size());
+        Map<label> nearestFace(2*changedFacesInfo.size());
         patchDistFuncs::correctBoundaryFaceCells
         (
             mesh,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ Description
 #include "cellClassification.H"
 #include "cellSet.H"
 #include "cellInfo.H"
-#include "MeshWave.H"
+#include "FaceCellWave.H"
 #include "edgeStats.H"
 #include "treeDataTriSurface.H"
 #include "indexedOctree.H"
@@ -297,27 +297,27 @@ label selectOutsideCells
     }
 
     // Floodfill starting from outsideFaces (of type meshInfo)
-    MeshWave<cellInfo> regionCalc
+    List<cellInfo> faceInfoList(mesh.nFaces()), cellInfoList(mesh.nCells());
+    FaceCellWave<cellInfo> regionCalc
     (
         mesh,
         outsideFaces.shrink(),
         outsideFacesInfo.shrink(),
-        mesh.globalData().nTotalCells()+1   // max iterations
+        faceInfoList,
+        cellInfoList,
+        mesh.globalData().nTotalCells() + 1 // max iterations
     );
 
-    // Now regionCalc should hold info on cells that are reachable from
+    // Now cellInfoList should hold info on cells that are reachable from
     // changedFaces. Use these to subset cellType
-    const List<cellInfo>& allCellInfo = regionCalc.allCellInfo();
-
     label nChanged = 0;
-
-    forAll(allCellInfo, celli)
+    forAll(cellInfoList, celli)
     {
         if (cellType[celli] == MESH)
         {
             // Original cell was selected for meshing. Check if cell was
             // reached from outsidePoints
-            if (allCellInfo[celli].type() != MESH)
+            if (cellInfoList[celli].type() != MESH)
             {
                 cellType[celli] = NONMESH;
                 nChanged++;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,7 @@ private:
         //- Mark all faces intersected by or intersecting surface
         boolList markFaces(const triSurfaceSearch&) const;
 
-        //- Divide cells into cut/inside/outside by using MeshWave from cut
+        //- Divide cells into cut/inside/outside by using FaceCellWave from cut
         //  faces. No check is done on whether outsidePts are in different
         //  domains.
         void markCells

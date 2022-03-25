@@ -85,11 +85,8 @@ $(patchWave)/patchPatchDist.C
 $(patchWave)/patchEdgeFaceRegion.C
 $(patchWave)/patchEdgeFaceRegions.C
 
-
-meshWave = $(algorithms)/MeshWave
-$(meshWave)/MeshWaveName.C
+meshWave = $(algorithms)/FaceCellWave
 $(meshWave)/FaceCellWaveName.C
-
 
 regionSplit/regionSplit.C
 regionSplit/localPointRegion.C

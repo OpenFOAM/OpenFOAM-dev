@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "polyMesh.H"
 #include "twoDPointCorrector.H"
 #include "directionInfo.H"
-#include "MeshWave.H"
+#include "FaceCellWave.H"
 #include "OFstream.H"
 #include "meshTools.H"
 #include "hexMatcher.H"
@@ -203,15 +203,16 @@ Foam::vectorField Foam::directions::propagateDirection
         }
     }
 
-    MeshWave<directionInfo> directionCalc
+    List<directionInfo> faceInfo(mesh.nFaces()), cellInfo(mesh.nCells());
+    FaceCellWave<directionInfo> directionCalc
     (
         mesh,
         changedFaces,
         changedFacesInfo,
-        mesh.globalData().nTotalCells()+1
+        faceInfo,
+        cellInfo,
+        mesh.globalData().nTotalCells() + 1
     );
-
-    const List<directionInfo>& cellInfo = directionCalc.allCellInfo();
 
     vectorField dirField(cellInfo.size());
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "wallLayerCells.H"
 #include "DynamicList.H"
-#include "MeshWave.H"
+#include "FaceCellWave.H"
 #include "wallNormalInfo.H"
 #include "OFstream.H"
 
@@ -137,22 +137,23 @@ Foam::wallLayerCells::wallLayerCells
     // (cannot use local patchIDs since we might get info from neighbouring
     //  processor)
 
-    MeshWave<wallNormalInfo> regionCalc
+    List<wallNormalInfo> faceInfo(mesh.nFaces()), cellInfo(mesh.nCells());
+    FaceCellWave<wallNormalInfo> regionCalc
     (
         mesh,
         changedFaces,
         changedFacesInfo,
+        faceInfo,
+        cellInfo,
         0
     );
 
     regionCalc.iterate(nLayers);
 
 
-    // Now regionCalc should hold info on faces that are reachable from
+    // Now faceInfo should hold info on faces that are reachable from
     // changedFaces within nLayers iterations. We use face info since that is
     // guaranteed to be consistent across processor boundaries.
-
-    const List<wallNormalInfo>& faceInfo = regionCalc.allFaceInfo();
 
     if (debug)
     {
@@ -203,8 +204,6 @@ Foam::wallLayerCells::wallLayerCells
     // Estimate size
 
     DynamicList<refineCell> refineCells(3*nWalls);
-
-    const List<wallNormalInfo>& cellInfo = regionCalc.allCellInfo();
 
     forAll(cellInfo, celli)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 #include "meshSearch.H"
 #include "cellInfo.H"
 #include "polyMesh.H"
-#include "MeshWave.H"
+#include "FaceCellWave.H"
 #include "ListOps.H"
 #include "meshTools.H"
 #include "cpuTime.H"
@@ -320,21 +320,20 @@ void Foam::cellClassification::markCells
         cellInfo(cellClassification::OUTSIDE)
     );
 
-    MeshWave<cellInfo> cellInfoCalc
+    List<cellInfo> faceInfoList(mesh().nFaces());
+    FaceCellWave<cellInfo> cellInfoCalc
     (
         mesh_,
-        changedFaces,                       // Labels of changed faces
-        changedFacesInfo,                   // Information on changed faces
-        cellInfoList,                       // Information on all cells
-        mesh_.globalData().nTotalCells()+1  // max iterations
+        changedFaces,                           // Labels of changed faces
+        changedFacesInfo,                       // Information on changed faces
+        faceInfoList,
+        cellInfoList,                           // Information on all cells
+        mesh_.globalData().nTotalCells() + 1    // max iterations
     );
 
-    // Get information out of cellInfoList
-    const List<cellInfo>& allInfo = cellInfoCalc.allCellInfo();
-
-    forAll(allInfo, celli)
+    forAll(cellInfoList, celli)
     {
-        label t = allInfo[celli].type();
+        label t = cellInfoList[celli].type();
 
         if (t == cellClassification::NOTSET)
         {

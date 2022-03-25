@@ -25,8 +25,8 @@ Class
     Foam::patchDistWave
 
 Description
-    Takes a set of patches to start MeshWave from and computed the distance at
-    patches and possibly additional transported data.
+    Takes a set of patches to start FaceCellWave from and computed the distance
+    at patches and possibly additional transported data.
 
 SourceFiles
     patchDistWave.C
@@ -39,7 +39,7 @@ SourceFiles
 #include "Field.H"
 #include "FieldField.H"
 #include "UPtrList.H"
-#include "MeshWave.H"
+#include "FaceCellWave.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,18 +66,18 @@ void setChangedFaces
     const InitialPatchData& ... initialPatchData
 );
 
-//- Copy MeshWave values into the cell fields
+//- Copy FaceCellWave values into the cell fields
 template<class PatchPointType, class DataType, class DataMethod>
 label getCellValues
 (
     const polyMesh& mesh,
-    MeshWave<PatchPointType>& waveInfo,
+    FaceCellWave<PatchPointType>& waveInfo,
     Field<DataType>& cellValues,
     DataMethod method,
     const DataType& stabiliseValue = pTraits<DataType>::zero
 );
 
-//- Copy MeshWave values into the patch field-fields
+//- Copy FaceCellWave values into the patch field-fields
 template
 <
     class PatchPointType,
@@ -88,7 +88,7 @@ template
 label getPatchValues
 (
     const polyMesh& mesh,
-    MeshWave<PatchPointType>& wave,
+    FaceCellWave<PatchPointType>& wave,
     FieldField<PatchField, DataType>& patchValues,
     DataMethod method,
     const DataType& stabiliseValue = pTraits<DataType>::zero
