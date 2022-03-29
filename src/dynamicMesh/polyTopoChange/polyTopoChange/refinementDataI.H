@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,42 +70,16 @@ inline bool Foam::refinementData::sameGeometry
 
 // No geometric data.
 template<class TrackingData>
-inline void Foam::refinementData::leaveDomain
-(
-    const polyMesh&,
-    const polyPatch& patch,
-    const label patchFacei,
-    const point& faceCentre,
-    TrackingData& td
-)
-{}
-
-
-// No geometric data.
-template<class TrackingData>
 inline void Foam::refinementData::transform
 (
-    const polyMesh&,
-    const tensor& rotTensor,
-    TrackingData& td
-)
-{}
-
-
-// No geometric data.
-template<class TrackingData>
-inline void Foam::refinementData::enterDomain
-(
-    const polyMesh&,
     const polyPatch& patch,
     const label patchFacei,
-    const point& faceCentre,
+    const transformer& transform,
     TrackingData& td
 )
 {}
 
 
-// Update cell with neighbouring face information
 template<class TrackingData>
 inline bool Foam::refinementData::updateCell
 (

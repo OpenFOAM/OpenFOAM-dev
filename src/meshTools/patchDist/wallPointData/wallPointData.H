@@ -117,6 +117,16 @@ public:
 
         // Needed by meshWave
 
+            //- Transform across an interface
+            template<class TrackingData>
+            inline void transform
+            (
+                const polyPatch& patch,
+                const label patchFacei,
+                const transformer& transform,
+                TrackingData& td
+            );
+
             //- Influence of neighbouring face.
             //  Calls update(...) with cellCentre of celli
             template<class TrackingData>

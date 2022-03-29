@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "transform.H"
+#include "transformer.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -108,43 +108,15 @@ inline bool Foam::sweepData::sameGeometry
 
 
 template<class TrackingData>
-inline void Foam::sweepData::leaveDomain
-(
-    const polyMesh&,
-    const polyPatch&,
-    const label,
-    const point& faceCentre,
-    TrackingData& td
-)
-{
-    origin_ -= faceCentre;
-}
-
-
-template<class TrackingData>
 inline void Foam::sweepData::transform
 (
-    const polyMesh&,
-    const tensor& rotTensor,
+    const polyPatch& patch,
+    const label patchFacei,
+    const transformer& transform,
     TrackingData& td
 )
 {
-    origin_ = Foam::transform(rotTensor, origin_);
-}
-
-
-template<class TrackingData>
-inline void Foam::sweepData::enterDomain
-(
-    const polyMesh&,
-    const polyPatch&,
-    const label,
-    const point& faceCentre,
-    TrackingData& td
-)
-{
-    // back to absolute form
-    origin_ += faceCentre;
+    origin_ = transform.transformPosition(origin_);
 }
 
 

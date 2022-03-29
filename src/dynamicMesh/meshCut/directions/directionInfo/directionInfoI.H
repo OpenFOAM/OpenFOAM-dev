@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,44 +71,20 @@ inline bool Foam::directionInfo::sameGeometry
 
 
 template<class TrackingData>
-inline void Foam::directionInfo::leaveDomain
+inline void Foam::directionInfo::transform
 (
-    const polyMesh&,
     const polyPatch& patch,
     const label patchFacei,
-    const point& faceCentre,
-    TrackingData& td
-)
-{}
-
-
-template<class TrackingData>
-inline void Foam::directionInfo::enterDomain
-(
-    const polyMesh&,
-    const polyPatch& patch,
-    const label patchFacei,
-    const point& faceCentre,
+    const transformer& transform,
     TrackingData& td
 )
 {
     if (index_ >= 0)
     {
         const face& f = patch[patchFacei];
-
         index_ = (f.size() - index_) % f.size();
     }
 }
-
-
-template<class TrackingData>
-inline void Foam::directionInfo::transform
-(
-    const polyMesh&,
-    const tensor& rotTensor,
-    TrackingData& td
-)
-{}
 
 
 template<class TrackingData>

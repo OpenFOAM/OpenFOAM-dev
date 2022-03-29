@@ -27,8 +27,6 @@ Class
 Description
     Variant of pointEdgePoint with some transported additional data.
     WIP - should be templated on data like wallPointData.
-    Passive vector v_ is not a coordinate (so no enterDomain/leaveDomain
-    transformation needed)
 
 SourceFiles
     pointDataI.H
@@ -50,6 +48,7 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 class pointData;
+class transformer;
 
 Istream& operator>>(Istream&, pointData&);
 Ostream& operator<<(Ostream&, const pointData&);
@@ -99,11 +98,13 @@ public:
 
         // Needed by meshWave
 
-            //- Apply rotation matrix to origin
+            //- Transform across an interface
             template<class TrackingData>
             inline void transform
             (
-                const tensor& rotTensor,
+                const polyPatch& patch,
+                const label patchFacei,
+                const transformer& transform,
                 TrackingData& td
             );
 

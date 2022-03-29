@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,6 +70,7 @@ namespace Foam
 // Forward declaration of classes
 class polyMesh;
 class polyPatch;
+class transformer;
 
 /*---------------------------------------------------------------------------*\
                       Class PointEdgeWaveName Declaration
@@ -140,27 +141,12 @@ class PointEdgeWave
 
     // Private Member Functions
 
-        //- Adapt pointInfo for leaving domain
-        void leaveDomain
-        (
-            const polyPatch&,
-            const List<label>& patchPointLabels,
-            List<Type>& pointInfo
-        ) const;
-
-        //- Adapt pointInfo for entering domain
-        void enterDomain
-        (
-            const polyPatch&,
-            const List<label>& patchPointLabels,
-            List<Type>& pointInfo
-        ) const;
-
-        //- Transform. Implementation referred to Type
+        //- Transform across an interface. Implementation referred to Type
         void transform
         (
             const polyPatch& patch,
-            const tensor& rotTensor,
+            const List<label>& patchPointLabels,
+            const transformer& transform,
             List<Type>& pointInfo
         ) const;
 

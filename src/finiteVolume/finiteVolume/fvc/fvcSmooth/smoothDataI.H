@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,34 +96,11 @@ inline bool Foam::smoothData::sameGeometry
 
 
 template<class TrackingData>
-inline void Foam::smoothData::leaveDomain
-(
-    const polyMesh&,
-    const polyPatch&,
-    const label,
-    const point&,
-    TrackingData& td
-)
-{}
-
-
-template<class TrackingData>
 inline void Foam::smoothData::transform
 (
-    const polyMesh&,
-    const tensor&,
-    TrackingData& td
-)
-{}
-
-
-template<class TrackingData>
-inline void Foam::smoothData::enterDomain
-(
-    const polyMesh&,
-    const polyPatch&,
-    const label,
-    const point&,
+    const polyPatch& patch,
+    const label patchFacei,
+    const transformer& transform,
     TrackingData& td
 )
 {}

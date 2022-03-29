@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,62 +70,19 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Handle leaving domain. Implementation referred to Type
-template<class Type, class TrackingData>
-void Foam::PointEdgeWave<Type, TrackingData>::leaveDomain
-(
-    const polyPatch& patch,
-    const labelList& patchPointLabels,
-    List<Type>& pointInfo
-) const
-{
-    const labelList& meshPoints = patch.meshPoints();
-
-    forAll(patchPointLabels, i)
-    {
-        label patchPointi = patchPointLabels[i];
-
-        const point& pt = patch.points()[meshPoints[patchPointi]];
-
-        pointInfo[i].leaveDomain(patch, patchPointi, pt, td_);
-    }
-}
-
-
-// Handle entering domain. Implementation referred to Type
-template<class Type, class TrackingData>
-void Foam::PointEdgeWave<Type, TrackingData>::enterDomain
-(
-    const polyPatch& patch,
-    const labelList& patchPointLabels,
-    List<Type>& pointInfo
-) const
-{
-    const labelList& meshPoints = patch.meshPoints();
-
-    forAll(patchPointLabels, i)
-    {
-        label patchPointi = patchPointLabels[i];
-
-        const point& pt = patch.points()[meshPoints[patchPointi]];
-
-        pointInfo[i].enterDomain(patch, patchPointi, pt, td_);
-    }
-}
-
-
-// Transform. Implementation referred to Type
+// Transform across an interface. Implementation referred to Type
 template<class Type, class TrackingData>
 void Foam::PointEdgeWave<Type, TrackingData>::transform
 (
     const polyPatch& patch,
-    const tensor& rotTensor,
+    const labelList& patchPointLabels,
+    const transformer& transform,
     List<Type>& pointInfo
 ) const
 {
     forAll(pointInfo, i)
     {
-        pointInfo[i].transform(rotTensor, td_);
+        pointInfo[i].transform(patch, patchPointLabels[i], transform, td_);
     }
 }
 
@@ -325,9 +282,6 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
             }
         }
 
-        // Adapt for leaving domain
-        leaveDomain(procPatch, thisPoints, patchInfo);
-
         // if (debug)
         //{
         //    Pout<< "Processor patch " << patchi << ' ' << procPatch.name()
@@ -367,14 +321,8 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
         //        << "  Received:" << patchInfo.size() << endl;
         //}
 
-        // Apply transform to received data for non-parallel planes
-        if (procPatch.transform().transforms())
-        {
-            transform(procPatch, procPatch.transform().T(), patchInfo);
-        }
-
-        // Adapt for entering domain
-        enterDomain(procPatch, patchPoints, patchInfo);
+        // Transform info across the interface
+        transform(procPatch, patchPoints, procPatch.transform(), patchInfo);
 
         // Merge received info
         const labelList& meshPoints = procPatch.meshPoints();
@@ -445,18 +393,6 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
                         thisPoints.append(thisPointi);
                     }
                 }
-
-                // nbr : adapt for leaving domain
-                leaveDomain(nbrPatch, nbrPoints, nbrInfo);
-            }
-
-
-            // Apply rotation for non-parallel planes
-
-            if (cycPatch.transform().transforms())
-            {
-                // received data from half1
-                transform(cycPatch, cycPatch.transform().T(), nbrInfo);
             }
 
             // if (debug)
@@ -466,8 +402,8 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
             //        << endl;
             //}
 
-            // Adapt for entering domain
-            enterDomain(cycPatch, thisPoints, nbrInfo);
+            // Transform info across the interface
+            transform(cycPatch, thisPoints, cycPatch.transform(), nbrInfo);
 
             // Merge received info
             const labelList& meshPoints = cycPatch.meshPoints();

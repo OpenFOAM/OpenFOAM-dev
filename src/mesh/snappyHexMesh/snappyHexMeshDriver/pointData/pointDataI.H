@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,12 +67,14 @@ inline const Foam::vector& Foam::pointData::v() const
 template<class TrackingData>
 inline void Foam::pointData::transform
 (
-    const tensor& rotTensor,
+    const polyPatch& patch,
+    const label patchFacei,
+    const transformer& transform,
     TrackingData& td
 )
 {
-    pointEdgePoint::transform(rotTensor, td);
-    v_ = Foam::transform(rotTensor, v_);
+    pointEdgePoint::transform(patch, patchFacei, transform, td);
+    v_ = transform.transform(v_);
 }
 
 

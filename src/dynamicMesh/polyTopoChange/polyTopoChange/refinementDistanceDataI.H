@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "transform.H"
+#include "transformer.H"
 #include "polyMesh.H"
+#include "SubField.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -166,48 +167,18 @@ inline bool Foam::refinementDistanceData::sameGeometry
 
 
 template<class TrackingData>
-inline void Foam::refinementDistanceData::leaveDomain
-(
-    const polyMesh&,
-    const polyPatch& patch,
-    const label patchFacei,
-    const point& faceCentre,
-    TrackingData& td
-)
-{
-    origin_ -= faceCentre;
-}
-
-
-template<class TrackingData>
 inline void Foam::refinementDistanceData::transform
 (
-    const polyMesh&,
-    const tensor& rotTensor,
-    TrackingData& td
-)
-{
-    origin_ = Foam::transform(rotTensor, origin_);
-}
-
-
-// Update absolute geometric quantities.
-template<class TrackingData>
-inline void Foam::refinementDistanceData::enterDomain
-(
-    const polyMesh&,
     const polyPatch& patch,
     const label patchFacei,
-    const point& faceCentre,
+    const transformer& transform,
     TrackingData& td
 )
 {
-    // back to absolute form
-    origin_ += faceCentre;
+    origin_ = transform.transformPosition(origin_);
 }
 
 
-// Update cell with neighbouring face information
 template<class TrackingData>
 inline bool Foam::refinementDistanceData::updateCell
 (

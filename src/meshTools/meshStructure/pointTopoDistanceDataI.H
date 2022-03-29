@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,33 +74,11 @@ inline bool Foam::pointTopoDistanceData::sameGeometry
 
 // No geometric data.
 template<class TrackingData>
-inline void Foam::pointTopoDistanceData::leaveDomain
-(
-    const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
-    TrackingData& td
-)
-{}
-
-
-// No geometric data.
-template<class TrackingData>
 inline void Foam::pointTopoDistanceData::transform
 (
-    const tensor& rotTensor,
-    TrackingData& td
-)
-{}
-
-
-// No geometric data.
-template<class TrackingData>
-inline void Foam::pointTopoDistanceData::enterDomain
-(
     const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
+    const label patchFacei,
+    const transformer& transform,
     TrackingData& td
 )
 {}

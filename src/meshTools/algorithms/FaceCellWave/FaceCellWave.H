@@ -201,37 +201,13 @@ protected:
                 List<Type>& changedPatchFacesInfo
             ) const;
 
-            //- Handle leaving domain. Implementation referred to Type
-            void leaveDomain
+            //- Transform across an interface. Implementation referred to Type
+            void transform
             (
                 const polyPatch& patch,
                 const label nFaces,
                 const labelList& faceLabels,
-                List<Type>& faceInfo
-            ) const;
-
-            //- Handle leaving domain. Implementation referred to Type
-            void enterDomain
-            (
-                const polyPatch& patch,
-                const label nFaces,
-                const labelList& faceLabels,
-                List<Type>& faceInfo
-            ) const;
-
-            //- Apply transformation to Type
-            void transform
-            (
-                const tensor& rotTensor,
-                const label nFaces,
-                List<Type>& faceInfo
-            );
-
-            //- Apply transformation to Type
-            void transform
-            (
-                const transformer& trans,
-                const label nFaces,
+                const transformer& transform,
                 List<Type>& faceInfo
             );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "polyMesh.H"
-#include "transform.H"
+#include "transformer.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -167,42 +167,15 @@ inline bool Foam::pointEdgeCollapse::valid(TrackingData& td) const
 
 
 template<class TrackingData>
-inline void Foam::pointEdgeCollapse::leaveDomain
-(
-    const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
-    TrackingData& td
-)
-{
-    collapsePoint_ -= coord;
-}
-
-
-template<class TrackingData>
 inline void Foam::pointEdgeCollapse::transform
 (
-    const tensor& rotTensor,
-    TrackingData& td
-)
-{
-    collapsePoint_ = Foam::transform(rotTensor, collapsePoint_);
-}
-
-
-// Update absolute geometric quantities. Note that distance (dist_)
-// is not affected by leaving/entering domain.
-template<class TrackingData>
-inline void Foam::pointEdgeCollapse::enterDomain
-(
     const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
+    const label patchFacei,
+    const transformer& transform,
     TrackingData& td
 )
 {
-    // back to absolute form
-    collapsePoint_ += coord;
+    collapsePoint_ = transform.transformPosition(collapsePoint_);
 }
 
 

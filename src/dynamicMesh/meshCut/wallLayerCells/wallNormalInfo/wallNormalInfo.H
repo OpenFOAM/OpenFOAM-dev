@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,7 @@ namespace Foam
 // Forward declaration of classes
 class polyPatch;
 class polyMesh;
+class transformer;
 
 
 // Forward declaration of friend functions and operators
@@ -112,35 +113,13 @@ public:
                 TrackingData& td
             ) const;
 
-            //- Convert any absolute coordinates into relative to (patch)face
-            //  centre
-            template<class TrackingData>
-            inline void leaveDomain
-            (
-                const polyMesh&,
-                const polyPatch&,
-                const label patchFacei,
-                const point& faceCentre,
-                TrackingData& td
-            );
-
-            //- Reverse of leaveDomain
-            template<class TrackingData>
-            inline void enterDomain
-            (
-                const polyMesh&,
-                const polyPatch&,
-                const label patchFacei,
-                const point& faceCentre,
-                TrackingData& td
-            );
-
-            //- Apply rotation matrix to any coordinates
+            //- Transform across an interface
             template<class TrackingData>
             inline void transform
             (
-                const polyMesh&,
-                const tensor&,
+                const polyPatch& patch,
+                const label patchFacei,
+                const transformer& transform,
                 TrackingData& td
             );
 

@@ -121,6 +121,21 @@ inline const Type& wallPointData<Type>::data(TrackingData& td) const
 }
 
 
+template<class Type>
+template<class TrackingData>
+inline void Foam::wallPointData<Type>::transform
+(
+    const polyPatch& patch,
+    const label patchFacei,
+    const transformer& transform,
+    TrackingData& td
+)
+{
+    wallPoint::transform(patch, patchFacei, transform, td);
+    data_ = transform.transform(data_);
+}
+
+
 // Update this with w2 if w2 nearer to pt.
 template<class Type>
 template<class TrackingData>

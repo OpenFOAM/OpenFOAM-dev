@@ -50,9 +50,13 @@ namespace Foam
 // Forward declaration of classes
 class polyPatch;
 class polyMesh;
-class wallPoint;
+class transformer;
+
 
 // Forward declaration of friend functions and operators
+
+class wallPoint;
+
 Ostream& operator<<(Ostream&, const wallPoint&);
 Istream& operator>>(Istream&, wallPoint&);
 
@@ -131,35 +135,13 @@ public:
                 TrackingData& td
             ) const;
 
-            //- Convert any absolute coordinates into relative to (patch)face
-            //  centre
-            template<class TrackingData>
-            inline void leaveDomain
-            (
-                const polyMesh&,
-                const polyPatch&,
-                const label patchFacei,
-                const point& faceCentre,
-                TrackingData& td
-            );
-
-            //- Reverse of leaveDomain
-            template<class TrackingData>
-            inline void enterDomain
-            (
-                const polyMesh&,
-                const polyPatch&,
-                const label patchFacei,
-                const point& faceCentre,
-                TrackingData& td
-            );
-
-            //- Apply rotation matrix to any coordinates
+            //- Transform across an interface
             template<class TrackingData>
             inline void transform
             (
-                const polyMesh&,
-                const tensor&,
+                const polyPatch& patch,
+                const label patchFacei,
+                const transformer& transform,
                 TrackingData& td
             );
 

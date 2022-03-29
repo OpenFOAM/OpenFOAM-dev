@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "polyMesh.H"
-#include "transform.H"
+#include "transformer.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -184,40 +184,15 @@ inline bool Foam::externalPointEdgePoint::sameGeometry
 
 
 template<class TrackingData>
-inline void Foam::externalPointEdgePoint::leaveDomain
-(
-    const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
-    TrackingData& td
-)
-{
-    origin_ -= coord;
-}
-
-
-template<class TrackingData>
 inline void Foam::externalPointEdgePoint::transform
 (
-    const tensor& rotTensor,
-    TrackingData& td
-)
-{
-    origin_ = Foam::transform(rotTensor, origin_);
-}
-
-
-template<class TrackingData>
-inline void Foam::externalPointEdgePoint::enterDomain
-(
     const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
+    const label patchFacei,
+    const transformer& transform,
     TrackingData& td
 )
 {
-    // back to absolute form
-    origin_ += coord;
+    origin_ = transform.transformPosition(origin_);
 }
 
 

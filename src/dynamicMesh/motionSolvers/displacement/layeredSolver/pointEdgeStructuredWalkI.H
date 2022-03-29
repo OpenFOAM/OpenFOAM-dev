@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "polyMesh.H"
-#include "transform.H"
+#include "transformer.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -144,42 +144,16 @@ inline bool Foam::pointEdgeStructuredWalk::sameGeometry
 
 
 template<class TrackingData>
-inline void Foam::pointEdgeStructuredWalk::leaveDomain
-(
-    const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
-    TrackingData& td
-)
-{
-    previousPoint_ -= coord;
-}
-
-
-template<class TrackingData>
 inline void Foam::pointEdgeStructuredWalk::transform
 (
-    const tensor& rotTensor,
-    TrackingData& td
-)
-{
-    previousPoint_ = Foam::transform(rotTensor, previousPoint_);
-}
-
-
-// Update absolute geometric quantities. Note that distance (dist_)
-// is not affected by leaving/entering domain.
-template<class TrackingData>
-inline void Foam::pointEdgeStructuredWalk::enterDomain
-(
     const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
+    const label patchFacei,
+    const transformer& transform,
     TrackingData& td
 )
 {
-    // back to absolute form
-    previousPoint_ += coord;
+    // Note that dist_ is not affected by crossing an interface
+    previousPoint_ = transform.transformPosition(previousPoint_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "polyMesh.H"
-#include "transform.H"
+#include "transformer.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -186,42 +186,16 @@ inline bool Foam::pointEdgePoint::sameGeometry
 
 
 template<class TrackingData>
-inline void Foam::pointEdgePoint::leaveDomain
-(
-    const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
-    TrackingData& td
-)
-{
-    origin_ -= coord;
-}
-
-
-template<class TrackingData>
 inline void Foam::pointEdgePoint::transform
 (
-    const tensor& rotTensor,
-    TrackingData& td
-)
-{
-    origin_ = Foam::transform(rotTensor, origin_);
-}
-
-
-// Update absolute geometric quantities. Note that distance (distSqr_)
-// is not affected by leaving/entering domain.
-template<class TrackingData>
-inline void Foam::pointEdgePoint::enterDomain
-(
     const polyPatch& patch,
-    const label patchPointi,
-    const point& coord,
+    const label patchFacei,
+    const transformer& transform,
     TrackingData& td
 )
 {
-    // back to absolute form
-    origin_ += coord;
+    // Note that distSqr_ is not affected by crossing an interface
+    origin_ = transform.transformPosition(origin_);
 }
 
 

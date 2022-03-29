@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "polyMesh.H"
-#include "transform.H"
+#include "transformer.H"
+#include "SubField.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -167,45 +168,16 @@ inline bool Foam::wallPoint::sameGeometry
 
 
 template<class TrackingData>
-inline void Foam::wallPoint::leaveDomain
-(
-    const polyMesh&,
-    const polyPatch&,
-    const label,
-    const point& faceCentre,
-    TrackingData& td
-)
-{
-    origin_ -= faceCentre;
-}
-
-
-template<class TrackingData>
 inline void Foam::wallPoint::transform
 (
-    const polyMesh&,
-    const tensor& rotTensor,
+    const polyPatch& patch,
+    const label patchFacei,
+    const transformer& transform,
     TrackingData& td
 )
 {
-    origin_ = Foam::transform(rotTensor, origin_);
-}
-
-
-// Update absolute geometric quantities. Note that distance (distSqr_)
-// is not affected by leaving/entering domain.
-template<class TrackingData>
-inline void Foam::wallPoint::enterDomain
-(
-    const polyMesh&,
-    const polyPatch&,
-    const label,
-    const point& faceCentre,
-    TrackingData& td
-)
-{
-    // back to absolute form
-    origin_ += faceCentre;
+    // Note that distSqr_ is not affected by crossing an interface
+    origin_ = transform.transformPosition(origin_);
 }
 
 
