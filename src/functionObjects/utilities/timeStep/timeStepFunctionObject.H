@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,12 @@ Description
     \verbatim
     timeStep
     {
-        type           timeStep;
-        writeControl   timeStep;
-        writeInterval  1;
+        type            timeStep;
+
+        libs            ("libutilityFunctionObjects.so");
+
+        writeControl    timeStep;
+        writeInterval   1;
     }
     \endverbatim
 

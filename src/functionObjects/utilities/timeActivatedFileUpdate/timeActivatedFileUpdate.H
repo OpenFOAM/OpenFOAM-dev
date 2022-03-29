@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,11 +33,13 @@ Description
     \verbatim
     fileUpdate1
     {
-        type              timeActivatedFileUpdate;
-        libs              ("libutilityFunctionObjects.so");
-        writeControl      timeStep;
-        writeInterval     1;
-        fileToUpdate      "$FOAM_CASE/system/fvSolution";
+        type            timeActivatedFileUpdate;
+
+        libs            ("libutilityFunctionObjects.so");
+
+        writeControl    timeStep;
+        writeInterval   1;
+        fileToUpdate    "$FOAM_CASE/system/fvSolution";
         timeVsFile
         (
             (-1 "$FOAM_CASE/system/fvSolution.0")

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,10 +37,12 @@ Description
     \verbatim
     stop
     {
-        type        stopAtClockTime;
-        libs        ("libutilityFunctionObjects.so");
-        stopTime    10;
-        action      writeNow;
+        type            stopAtClockTime;
+
+        libs            ("libutilityFunctionObjects.so");
+
+        stopTime        10;
+        action          writeNow;
     }
     \endverbatim
     will write the fields and stop the run once the clock time has exceeded 10

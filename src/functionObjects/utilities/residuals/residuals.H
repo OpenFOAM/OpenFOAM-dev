@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,11 @@ Description
     residuals
     {
         type            residuals;
-        writeControl   timeStep;
-        writeInterval  1;
+
+        libs            ("libutilityFunctionObjects.so");
+
+        writeControl    timeStep;
+        writeInterval   1;
         fields
         (
             U
