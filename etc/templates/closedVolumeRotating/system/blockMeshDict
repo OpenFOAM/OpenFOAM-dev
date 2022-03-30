@@ -185,6 +185,11 @@ edges
     project 23 20  (fixed)
 );
 
+defaultPatch
+{
+    type wall;
+}
+
 boundary
 (
 );
