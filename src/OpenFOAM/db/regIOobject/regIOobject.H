@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,6 +178,9 @@ public:
 
             //- Add file watch on object (if registered and READ_IF_MODIFIED)
             void addWatch();
+
+            //- Is this object registered with the registry?
+            inline bool registered() const;
 
             //- Is this object owned by the registry?
             inline bool ownedByRegistry() const;
