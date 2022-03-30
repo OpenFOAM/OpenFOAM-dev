@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,131 +22,106 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallPointYPlus
+    Foam::fvWallPoint
 
 Description
-    Holds information (coordinate and yStar) regarding nearest wall point.
-
-    Used in VanDriest wall damping where the interest is in y+ but only
-    needs to be calculated up to e.g. y+ < 200. In all other cells/faces
-    the damping function becomes 1, since y gets initialised to great and
-    yStar to 1.
-
-    Note: should feed the additional argument (yPlusCutoff) through as a
-    template argument into FaceCellWave
+    Holds information regarding nearest wall point. Used in wall distance
+    calculation.
 
 SourceFiles
-    wallPointYPlusI.H
-    wallPointYPlus.C
+    fvWallPointI.H
+    fvWallPoint.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef wallPointYPlus_H
-#define wallPointYPlus_H
+#ifndef fvWallPoint_H
+#define fvWallPoint_H
 
-#include "wallPointData.H"
+#include "wallPoint.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// Forward declaration of classes
+class fvPatch;
+class fvMesh;
+class transformer;
+
 
 /*---------------------------------------------------------------------------*\
-                       Class wallPointYPlus Declaration
+                          Class fvWallPoint Declaration
 \*---------------------------------------------------------------------------*/
 
-class wallPointYPlus
+class fvWallPoint
 :
-    public wallPointData<scalar>
+    public wallPoint
 {
-    // Private Member Functions
-
-        //- Evaluate distance to point. Update distSqr, origin from whomever
-        //  is nearer pt. Return true if w2 is closer to point,
-        //  false otherwise.
-        template<class TrackingData>
-        inline bool update
-        (
-            const point&,
-            const wallPointYPlus& w2,
-            const scalar tol,
-            TrackingData& td
-        );
-
-
 public:
-
-    // Static Data Members
-
-        //- cut-off value for y+
-        static scalar yPlusCutOff;
-
 
     // Constructors
 
-        //- Construct null
-        inline wallPointYPlus();
-
-        //- Construct from origin, yStar, distance
-        inline wallPointYPlus
-        (
-            const point& origin,
-            const scalar yStar,
-            const scalar distSqr
-        );
+        //- Inherit constructors
+        using wallPoint::wallPoint;
 
 
     // Member Functions
 
-        // Needed by FaceCellWave
+        // Needed by FvFaceCellWave
+
+            //- Transform across an interface
+            template<class TrackingData>
+            inline void transform
+            (
+                const fvPatch& patch,
+                const label patchFacei,
+                const transformer& transform,
+                TrackingData& td
+            );
 
             //- Influence of neighbouring face.
-            //  Calls update(...) with cellCentre of celli
             template<class TrackingData>
             inline bool updateCell
             (
-                const polyMesh& mesh,
+                const fvMesh&,
                 const label thisCelli,
-                const label neighbourFacei,
-                const wallPointYPlus& neighbourWallInfo,
+                const labelPair& neighbourPatchAndFacei,
+                const fvWallPoint& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
             //- Influence of neighbouring cell.
-            //  Calls update(...) with faceCentre of facei
             template<class TrackingData>
             inline bool updateFace
             (
-                const polyMesh& mesh,
-                const label thisFacei,
+                const fvMesh&,
+                const labelPair& thisPatchAndFacei,
                 const label neighbourCelli,
-                const wallPointYPlus& neighbourWallInfo,
+                const fvWallPoint& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
             //- Influence of different value on same face.
-            //  Merge new and old info.
-            //  Calls update(...) with faceCentre of facei
             template<class TrackingData>
             inline bool updateFace
             (
-                const polyMesh& mesh,
-                const label thisFacei,
-                const wallPointYPlus& neighbourWallInfo,
+                const fvMesh&,
+                const labelPair& thisPatchAndFacei,
+                const fvWallPoint& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
 };
 
 
-//- Data associated with pointEdgePoint type as contiguous as underlying type
+//- Data associated with fvWallPoint type are contiguous
 template<>
-inline bool contiguous<wallPointYPlus>()
+inline bool contiguous<fvWallPoint>()
 {
-    return contiguous<wallPointData<scalar>>();
+    return true;
 }
 
 
@@ -156,7 +131,7 @@ inline bool contiguous<wallPointYPlus>()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "wallPointYPlusI.H"
+#include "fvWallPointI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

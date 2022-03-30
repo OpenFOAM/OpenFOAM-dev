@@ -31,9 +31,9 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-Foam::patchDistFuncs::NoMap<Foam::label>
-Foam::patchDistFuncs::NoMap<Foam::label>::null =
-Foam::patchDistFuncs::NoMap<Foam::label>();
+Foam::patchDistFuncs::NoMap<Foam::labelPair>
+Foam::patchDistFuncs::NoMap<Foam::labelPair>::null =
+Foam::patchDistFuncs::NoMap<Foam::labelPair>();
 
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
@@ -43,24 +43,24 @@ Foam::scalar Foam::patchDistFuncs::smallestDist
     const point& p,
     const polyPatch& patch,
     const labelUList& wallFaces,
-    label& minFacei
+    label& minPatchFacei
 )
 {
     const pointField& points = patch.points();
 
     scalar minDist = great;
-    minFacei = -1;
+    minPatchFacei = -1;
 
     forAll(wallFaces, wallFacei)
     {
-        label patchFacei = wallFaces[wallFacei];
+        const label patchFacei = wallFaces[wallFacei];
 
         pointHit curHit = patch[patchFacei].nearestPoint(p, points);
 
         if (curHit.distance() < minDist)
         {
             minDist = curHit.distance();
-            minFacei = patch.start() + patchFacei;
+            minPatchFacei = patchFacei;
         }
     }
 
@@ -88,7 +88,7 @@ void Foam::patchDistFuncs::getPointNeighbours
     }
 
     // Remember part of neighbours that contains edge-connected faces.
-    label nEdgeNbs = neighbours.size();
+    const label nEdgeNbs = neighbours.size();
 
     // Add all point-only neighbours by linear searching in edge neighbours.
     // Assumes that point-only neighbours are not using multiple points on
@@ -96,13 +96,13 @@ void Foam::patchDistFuncs::getPointNeighbours
     const face& f = patch.localFaces()[patchFacei];
     forAll(f, fp)
     {
-        label pointi = f[fp];
+        const label pointi = f[fp];
 
         const labelList& pointNbs = patch.pointFaces()[pointi];
 
         forAll(pointNbs, nbI)
         {
-            label facei = pointNbs[nbI];
+            const label facei = pointNbs[nbI];
 
             // Check for facei in edge-neighbours part of neighbours
             if (findIndex(SubList<label>(neighbours, nEdgeNbs), facei) == -1)
@@ -128,58 +128,6 @@ Foam::label Foam::patchDistFuncs::maxPatchSize
     }
 
     return maxSize;
-}
-
-
-void Foam::patchDistFuncs::correctBoundaryPointCells
-(
-    const polyMesh& mesh,
-    const labelHashSet& patchIDs,
-    scalarField& wallDistCorrected,
-    Map<label>& nearestFace
-)
-{
-    // Correct all (non-visited) cells with point on wall
-    const vectorField& cellCentres = mesh.cellCentres();
-
-    forAllConstIter(labelHashSet, patchIDs, iter)
-    {
-        const label patchi = iter.key();
-        const polyPatch& patch = mesh.boundaryMesh()[patchi];
-
-        const labelList& meshPoints = patch.meshPoints();
-        const labelListList& pointFaces = patch.pointFaces();
-
-        forAll(meshPoints, meshPointi)
-        {
-            const labelList& neighbours =
-                mesh.pointCells(meshPoints[meshPointi]);
-
-            forAll(neighbours, neighbourI)
-            {
-                const label celli = neighbours[neighbourI];
-
-                if (!nearestFace.found(celli))
-                {
-                    const labelList& wallFaces = pointFaces[meshPointi];
-
-                    label minFacei = -1;
-
-                    wallDistCorrected[celli] =
-                        smallestDist
-                        (
-                            cellCentres[celli],
-                            patch,
-                            wallFaces,
-                            minFacei
-                        );
-
-                    // Store wallCell and its nearest neighbour
-                    nearestFace.insert(celli, minFacei);
-                }
-            }
-        }
-    }
 }
 
 

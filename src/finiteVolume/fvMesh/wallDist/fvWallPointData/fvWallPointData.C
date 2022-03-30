@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "wallPointData.H"
+#include "fvWallPointData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,11 +36,11 @@ template<class Type>
 Ostream& operator<<
 (
     Ostream& os,
-    const wallPointData<Type>& wDist
+    const fvWallPointData<Type>& wDist
 )
 {
     return os
-        << static_cast<const wallPoint&>(wDist)
+        << static_cast<const fvWallPoint&>(wDist)
         << token::SPACE
         << wDist.data();
 }
@@ -50,10 +50,10 @@ template<class Type>
 Istream& operator>>
 (
     Istream& is,
-    wallPointData<Type>& wDist
+    fvWallPointData<Type>& wDist
 )
 {
-    return is >> static_cast<wallPoint&>(wDist) >> wDist.data_;
+    return is >> static_cast<fvWallPoint&>(wDist) >> wDist.data_;
 }
 
 

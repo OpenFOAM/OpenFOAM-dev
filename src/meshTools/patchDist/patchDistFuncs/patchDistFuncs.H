@@ -43,6 +43,7 @@ SourceFiles
 #include "scalarField.H"
 #include "FieldField.H"
 #include "point.H"
+#include "labelPair.H"
 #include "primitivePatch.H"
 #include "className.H"
 
@@ -64,7 +65,7 @@ namespace patchDistFuncs
 template<class Type>
 struct NoMap
 {
-    inline bool insert(const label, const label)
+    inline bool insert(const label, const Type&)
     {
         return false;
     }
@@ -87,7 +88,7 @@ scalar smallestDist
     const point& p,
     const polyPatch& patch,
     const labelUList& wallFaces,
-    label& meshFacei
+    label& patchFacei
 );
 
 // Get point neighbours of patchFacei (including patchFacei). Note: Uses a
@@ -104,35 +105,36 @@ void getPointNeighbours
 label maxPatchSize(const polyMesh& mesh, const labelHashSet& patchIDs);
 
 //- Correct all cells connected to boundary (via face). Sets values in
-//  wallDistCorrected. Sets nearest wallface in nearestFace.
+//  wallDistCorrected. Sets nearest wallFace in nearestPatchAndFace.
 template<template<class> class MapType=NoMap>
 void correctBoundaryFaceCells
 (
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
     scalarField& wallDistCorrected,
-    MapType<label>& nearestFace = NoMap<label>::null
+    MapType<labelPair>& nearestPatchAndFace = NoMap<labelPair>::null
 );
 
 //- Correct all face-cells connected to boundary. Sets values in
-//  wallDistCorrected. Sets nearest wallface in nearestFace.
+//  wallDistCorrected. Sets nearest wallFace in nearestPatchAndFace.
 template<template<class> class PatchField, template<class> class MapType=NoMap>
 void correctBoundaryFaceFaceCells
 (
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
     FieldField<PatchField, scalar>& wallDistCorrected,
-    MapType<label>& nearestFace = NoMap<label>::null
+    MapType<labelPair>& nearestPatchAndFace = NoMap<labelPair>::null
 );
 
 //- Correct all cells connected to wall (via point). Sets values in
-//  wallDistCorrected. Uses/sets nearest wallFace in nearestFace.
+//  wallDistCorrected. Uses/sets nearest wallFace in nearestPatchAndFace.
+template<template<class> class MapType=NoMap>
 void correctBoundaryPointCells
 (
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
     scalarField& wallDistCorrected,
-    Map<label>& nearestFace
+    MapType<labelPair>& nearestPatchAndFace = NoMap<labelPair>::null
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

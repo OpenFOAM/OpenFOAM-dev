@@ -22,31 +22,28 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchDistWave
+    Foam::fvPatchDistWave
 
 Description
-    Takes a set of patches to start FaceCellWave from and computed the distance
-    at patches and possibly additional transported data.
+    Takes a set of patches to start FvFaceCellWave from and computed the
+    distance at patches and possibly additional transported data.
 
 SourceFiles
-    patchDistWave.C
+    fvPatchDistWave.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchDistWave_H
-#define patchDistWave_H
+#ifndef fvPatchDistWave_H
+#define fvPatchDistWave_H
 
-#include "polyMesh.H"
-#include "FaceCellWave.H"
-#include "Field.H"
-#include "FieldField.H"
-#include "UPtrList.H"
+#include "FvFaceCellWave.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace patchDistWave
+namespace fvPatchDistWave
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -55,42 +52,67 @@ namespace patchDistWave
 template<class PatchPointType, class ... InitialPatchData>
 void setChangedFaces
 (
-    const polyMesh& mesh,
+    const fvMesh& mesh,
     const labelHashSet& patchIDs,
-    labelList& changedFaces,
+    List<labelPair>& changedPatchAndFaces,
     List<PatchPointType>& faceDist,
     const InitialPatchData& ... initialPatchData
 );
 
-//- Copy FaceCellWave values into the cell fields
+//- Copy FvFaceCellWave values into the cell fields
 template<class PatchPointType, class DataType, class DataMethod>
 label getCellValues
 (
-    FaceCellWave<PatchPointType>& waveInfo,
+    FvFaceCellWave<PatchPointType>& waveInfo,
     Field<DataType>& cellValues,
     DataMethod method,
     const DataType& stabiliseValue = pTraits<DataType>::zero
 );
 
-//- Wave distance data from the patches to the cells
+//- Copy FvFaceCellWave values into the patch field-fields
+template<class PatchPointType, class DataType, class DataMethod>
+label getPatchValues
+(
+    FvFaceCellWave<PatchPointType>& wave,
+    GeometricBoundaryField<DataType, fvPatchField, volMesh>& valuesBf,
+    DataMethod method,
+    const DataType& stabiliseValue = pTraits<DataType>::zero
+);
+
+//- Wave distance data from the patches to the cells and other patch faces
 template<class PatchPointType>
 label wave
 (
-    const polyMesh& mesh,
+    const fvMesh& mesh,
     const labelHashSet& patchIDs,
-    scalarField& cellDistance,
+    volScalarField& distance,
+    bool correct = true
+);
+
+//- Wave distance and auxiliary data from the patches to the cells and other
+//  patch faces
+template<class PatchPointType>
+label wave
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const GeometricBoundaryField
+        <typename PatchPointType::dataType, fvPatchField, volMesh>&
+        initialPatchData,
+    volScalarField& distance,
+    VolField<typename PatchPointType::dataType>& data,
     bool correct = true
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace patchDistWave
+} // End namespace fvPatchDistWave
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "patchDistWaveTemplates.C"
+    #include "fvPatchDistWaveTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

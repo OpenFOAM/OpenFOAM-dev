@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "smoothDelta.H"
 #include "addToRunTimeSelectionTable.H"
-#include "FaceCellWave.H"
+#include "FvFaceCellWave.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -43,47 +43,43 @@ namespace LESModels
 
 void Foam::LESModels::smoothDelta::setChangedFaces
 (
-    const polyMesh& mesh,
+    const fvMesh& mesh,
     const volScalarField& delta,
-    DynamicList<label>& changedFaces,
+    DynamicList<labelPair>& changedFaces,
     DynamicList<deltaData>& changedFacesInfo
 )
 {
-    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
+    forAll(mesh.owner(), facei)
     {
-        scalar ownDelta = delta[mesh.faceOwner()[facei]];
-
-        scalar neiDelta = delta[mesh.faceNeighbour()[facei]];
+        const scalar ownDelta = delta[mesh.owner()[facei]];
+        const scalar neiDelta = delta[mesh.neighbour()[facei]];
 
         // Check if owner delta much larger than neighbour delta or vice versa
-
-        if (ownDelta > maxDeltaRatio_ * neiDelta)
+        if (ownDelta > maxDeltaRatio_*neiDelta)
         {
-            changedFaces.append(facei);
+            changedFaces.append(labelPair(-1, facei));
             changedFacesInfo.append(deltaData(ownDelta));
         }
-        else if (neiDelta > maxDeltaRatio_ * ownDelta)
+        else if (neiDelta > maxDeltaRatio_*ownDelta)
         {
-            changedFaces.append(facei);
+            changedFaces.append(labelPair(-1, facei));
             changedFacesInfo.append(deltaData(neiDelta));
         }
     }
 
-    // Insert all faces of coupled patches no matter what. Let FaceCellWave
+    // Insert all faces of coupled patches no matter what. Let FvFaceCellWave
     // sort it out.
-    forAll(mesh.boundaryMesh(), patchi)
+    forAll(mesh.boundary(), patchi)
     {
-        const polyPatch& patch = mesh.boundaryMesh()[patchi];
+        const fvPatch& patch = mesh.boundary()[patchi];
 
         if (patch.coupled())
         {
             forAll(patch, patchFacei)
             {
-                label meshFacei = patch.start() + patchFacei;
+                const scalar ownDelta = delta[patch.faceCells()[patchFacei]];
 
-                scalar ownDelta = delta[mesh.faceOwner()[meshFacei]];
-
-                changedFaces.append(meshFacei);
+                changedFaces.append(labelPair(patchi, patchFacei));
                 changedFacesInfo.append(deltaData(ownDelta));
             }
         }
@@ -101,32 +97,40 @@ void Foam::LESModels::smoothDelta::calcDelta()
     const volScalarField& geometricDelta = geometricDelta_();
 
     // Fill changed faces with info
-    DynamicList<label> changedFaces(mesh.nFaces()/100 + 100);
+    DynamicList<labelPair> changedFaces(mesh.nFaces()/100 + 100);
     DynamicList<deltaData> changedFacesInfo(changedFaces.size());
-
     setChangedFaces(mesh, geometricDelta, changedFaces, changedFacesInfo);
 
     // Set initial field on cells.
     List<deltaData> cellDeltaData(mesh.nCells());
-
     forAll(geometricDelta, celli)
     {
         cellDeltaData[celli] = geometricDelta[celli];
     }
 
     // Set initial field on faces.
-    List<deltaData> faceDeltaData(mesh.nFaces());
-
+    List<deltaData> internalFaceDeltaData(mesh.nInternalFaces());
+    List<List<deltaData>> patchFaceDeltaData
+    (
+        FvFaceCellWave<deltaData>::template
+        sizesListList<List<List<deltaData>>>
+        (
+            FvFaceCellWave<deltaData>::template
+            listListSizes(mesh.boundary()),
+            deltaData()
+        )
+    );
 
     // Propagate information over whole domain.
-    FaceCellWave<deltaData, scalar> deltaCalc
+    FvFaceCellWave<deltaData, scalar> deltaCalc
     (
         mesh,
         changedFaces,
         changedFacesInfo,
-        faceDeltaData,
+        internalFaceDeltaData,
+        patchFaceDeltaData,
         cellDeltaData,
-        mesh.globalData().nTotalCells()+1,  // max iterations
+        mesh.globalData().nTotalCells() + 1,  // max iterations
         maxDeltaRatio_
     );
 

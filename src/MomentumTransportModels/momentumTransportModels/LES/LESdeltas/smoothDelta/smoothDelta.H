@@ -59,7 +59,11 @@ public:
     //- Public member class used by mesh-wave to propagate the delta-ratio
     class deltaData
     {
-        scalar delta_;
+        // Private Member Data
+
+            //-
+            scalar delta_;
+
 
         // Private Member Functions
 
@@ -90,13 +94,14 @@ public:
 
             // Access
 
-            scalar delta() const
-            {
-                return delta_;
-            }
+                //-
+                scalar delta() const
+                {
+                    return delta_;
+                }
 
 
-            // Needed by FaceCellWave
+            // Needed by FvFaceCellWave
 
                 //- Check whether origin has been changed at all or
                 //  still contains original (invalid) value.
@@ -108,7 +113,7 @@ public:
                 template<class TrackingData>
                 inline bool sameGeometry
                 (
-                    const polyMesh&,
+                    const fvMesh&,
                     const deltaData&,
                     const scalar,
                     TrackingData& td
@@ -118,7 +123,7 @@ public:
                 template<class TrackingData>
                 inline void transform
                 (
-                    const polyPatch& patch,
+                    const fvPatch& patch,
                     const label patchFacei,
                     const transformer& transform,
                     TrackingData& td
@@ -128,9 +133,9 @@ public:
                 template<class TrackingData>
                 inline bool updateCell
                 (
-                    const polyMesh&,
+                    const fvMesh&,
                     const label thisCelli,
-                    const label neighbourFacei,
+                    const labelPair& neighbourPatchAndFacei,
                     const deltaData& neighbourInfo,
                     const scalar tol,
                     TrackingData& td
@@ -140,8 +145,8 @@ public:
                 template<class TrackingData>
                 inline bool updateFace
                 (
-                    const polyMesh&,
-                    const label thisFacei,
+                    const fvMesh&,
+                    const labelPair& thisPatchAndFacei,
                     const label neighbourCelli,
                     const deltaData& neighbourInfo,
                     const scalar tol,
@@ -152,8 +157,8 @@ public:
                 template<class TrackingData>
                 inline bool updateFace
                 (
-                    const polyMesh&,
-                    const label thisFacei,
+                    const fvMesh&,
+                    const labelPair& thisPatchAndFacei,
                     const deltaData& neighbourInfo,
                     const scalar tol,
                     TrackingData& td
@@ -165,18 +170,14 @@ public:
 
             // Member Operators
 
-                // Needed for List IO
                 inline bool operator==(const deltaData&) const;
 
                 inline bool operator!=(const deltaData&) const;
 
+
             // IOstream Operators
 
-                friend Ostream& operator<<
-                (
-                    Ostream& os,
-                    const deltaData& wDist
-                )
+                friend Ostream& operator<<(Ostream& os, const deltaData& wDist)
                 {
                     return os << wDist.delta_;
                 }
@@ -201,24 +202,24 @@ private:
         // Calculate the delta values
         void calcDelta();
 
-        //- Fill changedFaces (with face labels) and changedFacesInfo
-        //  (with delta).
+        //- Fill changedPatchAndFaces (with patch and face labels) and
+        //  changedFacesInfo (with delta).
         //  This is the initial set of faces from which to start the waves.
         //  Since there might be lots of places with delta jumps we can follow
         //  various strategies for this initial 'seed'.
-        //  - start from single cell/face and let FaceCellWave pick up all
+        //  - start from single cell/face and let FvFaceCellWave pick up all
         //    others from there. might be quite a few waves before everything
         //    settles.
         //  - start from all faces. Lots of initial transfers.
         //  We do something in between:
         //  - start from all faces where there is a jump. Since we cannot easily
         //    determine this across coupled patches (cyclic, processor)
-        //    introduce all faces of these and let FaceCellWave sort it out.
+        //    introduce all faces of these and let FvFaceCellWave sort it out.
         void setChangedFaces
         (
-            const polyMesh& mesh,
+            const fvMesh& mesh,
             const volScalarField& delta,
-            DynamicList<label>& changedFaces,
+            DynamicList<labelPair>& changedPatchAndFaces,
             DynamicList<deltaData>& changedFacesInfo
         );
 

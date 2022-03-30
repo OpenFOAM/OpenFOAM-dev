@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "fvWallPointData.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -30,12 +32,12 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Update this with w2 if w2 nearer to pt.
+template<class Type>
 template<class TrackingData>
-inline bool wallPointYPlus::update
+inline bool fvWallPointData<Type>::update
 (
     const point& pt,
-    const wallPointYPlus& w2,
+    const fvWallPointData<Type>& w2,
     const scalar tol,
     TrackingData& td
 )
@@ -59,72 +61,95 @@ inline bool wallPointYPlus::update
         }
     }
 
-
     // Either *this is not yet valid or w2 is closer
     {
-        // only propagate if interesting (i.e. y+ < 100)
-        scalar yPlus = Foam::sqrt(dist2)/w2.data();
+        // current not yet set so use any value
+        distSqr() = dist2;
+        origin() = w2.origin();
+        data_ = w2.data();
 
-        if (yPlus < yPlusCutOff)
-        {
-            // update with new values
-            distSqr() = dist2;
-            origin() = w2.origin();
-            data() = w2.data();
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
-inline wallPointYPlus::wallPointYPlus()
+template<class Type>
+inline fvWallPointData<Type>::fvWallPointData()
 :
-    wallPointData<scalar>()
-{
-    // Important: value of yStar where meshWave does not come.
-    data() = 1.0;
-}
+    fvWallPoint(),
+    data_()
+{}
 
 
-// Construct from components
-inline wallPointYPlus::wallPointYPlus
+template<class Type>
+inline fvWallPointData<Type>::fvWallPointData
 (
     const point& origin,
-    const scalar yStar,
+    const Type& data,
     const scalar distSqr
 )
 :
-    wallPointData<scalar>(origin, yStar, distSqr)
+    fvWallPoint(origin, distSqr),
+    data_(data)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Update this with w2 if w2 nearer to pt.
+template<class Type>
+inline const Type& fvWallPointData<Type>::data() const
+{
+    return data_;
+}
+
+
+template<class Type>
+inline Type& fvWallPointData<Type>::data()
+{
+    return data_;
+}
+
+
+template<class Type>
 template<class TrackingData>
-inline bool wallPointYPlus::updateCell
+inline const Type& fvWallPointData<Type>::data(TrackingData& td) const
+{
+    return data_;
+}
+
+
+template<class Type>
+template<class TrackingData>
+inline void Foam::fvWallPointData<Type>::transform
 (
-    const polyMesh& mesh,
+    const fvPatch& patch,
+    const label patchFacei,
+    const transformer& transform,
+    TrackingData& td
+)
+{
+    fvWallPoint::transform(patch, patchFacei, transform, td);
+    data_ = transform.transform(data_);
+}
+
+
+template<class Type>
+template<class TrackingData>
+inline bool fvWallPointData<Type>::updateCell
+(
+    const fvMesh& mesh,
     const label thisCelli,
-    const label neighbourFacei,
-    const wallPointYPlus& neighbourWallInfo,
+    const labelPair& neighbourPatchAndFacei,
+    const fvWallPointData<Type>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const vectorField& cellCentres = mesh.primitiveMesh::cellCentres();
-
     return update
     (
-        cellCentres[thisCelli],
+        mesh.C()[thisCelli],
         neighbourWallInfo,
         tol,
         td
@@ -132,23 +157,26 @@ inline bool wallPointYPlus::updateCell
 }
 
 
-// Update this with w2 if w2 nearer to pt.
+template<class Type>
 template<class TrackingData>
-inline bool wallPointYPlus::updateFace
+inline bool fvWallPointData<Type>::updateFace
 (
-    const polyMesh& mesh,
-    const label thisFacei,
+    const fvMesh& mesh,
+    const labelPair& thisPatchAndFacei,
     const label neighbourCelli,
-    const wallPointYPlus& neighbourWallInfo,
+    const fvWallPointData<Type>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const vectorField& faceCentres = mesh.faceCentres();
+    const label thisPatchi = thisPatchAndFacei.first();
+    const label thisFacei = thisPatchAndFacei.second();
 
     return update
     (
-        faceCentres[thisFacei],
+        thisPatchi == -1
+      ? mesh.Cf()[thisFacei]
+      : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
         neighbourWallInfo,
         tol,
         td
@@ -156,22 +184,25 @@ inline bool wallPointYPlus::updateFace
 }
 
 
-// Update this with w2 if w2 nearer to pt.
+template<class Type>
 template<class TrackingData>
-inline bool wallPointYPlus::updateFace
+inline bool fvWallPointData<Type>::updateFace
 (
-    const polyMesh& mesh,
-    const label thisFacei,
-    const wallPointYPlus& neighbourWallInfo,
+    const fvMesh& mesh,
+    const labelPair& thisPatchAndFacei,
+    const fvWallPointData<Type>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const vectorField& faceCentres = mesh.faceCentres();
+    const label thisPatchi = thisPatchAndFacei.first();
+    const label thisFacei = thisPatchAndFacei.second();
 
     return update
     (
-        faceCentres[thisFacei],
+        thisPatchi == -1
+      ? mesh.Cf()[thisFacei]
+      : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
         neighbourWallInfo,
         tol,
         td

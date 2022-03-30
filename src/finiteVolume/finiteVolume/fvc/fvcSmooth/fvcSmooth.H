@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ InNamespace
     Foam::fvc
 
 Description
-    Provides functions smooth spread and sweep which use the FaceCellWave
+    Provides functions smooth spread and sweep which use the FvFaceCellWave
     algorithm to smooth and redistribute the first field argument.
 
     smooth: smooths the field by ensuring the values in neighbouring cells are

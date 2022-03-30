@@ -23,95 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sweepData.H"
-#include "transformer.H"
+#include "fvWallPoint.H"
+#include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class TrackingData>
-inline bool Foam::sweepData::update
-(
-    const sweepData& svf,
-    const point& position,
-    const scalar tol,
-    TrackingData& td
-)
-{
-    if (!valid(td))
-    {
-        operator=(svf);
-        return true;
-    }
-
-    scalar myDist2 = magSqr(position - origin());
-
-    if (myDist2 < small)
-    {
-        if (svf.value() > value())
-        {
-            operator=(svf);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    scalar dist2 = magSqr(position - svf.origin());
-
-    if (dist2 < myDist2)
-    {
-        operator=(svf);
-        return true;
-    }
-
-    return false;
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-inline Foam::sweepData::sweepData()
-:
-    value_(-great),
-    origin_(vector::max)
-{}
-
-
-inline Foam::sweepData::sweepData(const scalar value, const point& origin)
-:
-    value_(value),
-    origin_(origin)
-{}
-
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class TrackingData>
-inline bool Foam::sweepData::valid(TrackingData& td) const
-{
-    return value_ > -small;
-}
-
-
-template<class TrackingData>
-inline bool Foam::sweepData::sameGeometry
-(
-    const fvMesh&,
-    const sweepData&,
-    const scalar,
-    TrackingData& td
-) const
-{
-    return true;
-}
-
-
-template<class TrackingData>
-inline void Foam::sweepData::transform
+inline void Foam::fvWallPoint::transform
 (
     const fvPatch& patch,
     const label patchFacei,
@@ -119,32 +39,39 @@ inline void Foam::sweepData::transform
     TrackingData& td
 )
 {
-    origin_ = transform.transformPosition(origin_);
+    wallPoint::transform(patch.patch(), patchFacei, transform, td);
 }
 
 
 template<class TrackingData>
-inline bool Foam::sweepData::updateCell
+inline bool Foam::fvWallPoint::updateCell
 (
     const fvMesh& mesh,
     const label thisCelli,
-    const labelPair&,
-    const sweepData& svf,
+    const labelPair& neighbourPatchAndFacei,
+    const fvWallPoint& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(svf, mesh.C()[thisCelli], tol, td);
+    return
+        this->update
+        (
+            mesh.C()[thisCelli],
+            neighbourWallInfo,
+            tol,
+            td
+        );
 }
 
 
 template<class TrackingData>
-inline bool Foam::sweepData::updateFace
+inline bool Foam::fvWallPoint::updateFace
 (
     const fvMesh& mesh,
     const labelPair& thisPatchAndFacei,
-    const label,
-    const sweepData& svf,
+    const label neighbourCelli,
+    const fvWallPoint& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
@@ -153,25 +80,24 @@ inline bool Foam::sweepData::updateFace
     const label thisFacei = thisPatchAndFacei.second();
 
     return
-        update
+        this->update
         (
-            svf,
             thisPatchi == -1
           ? mesh.Cf()[thisFacei]
           : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
+            neighbourWallInfo,
             tol,
             td
         );
 }
 
 
-// Update this (face) with coupled face information.
 template<class TrackingData>
-inline bool Foam::sweepData::updateFace
+inline bool Foam::fvWallPoint::updateFace
 (
     const fvMesh& mesh,
     const labelPair& thisPatchAndFacei,
-    const sweepData& svf,
+    const fvWallPoint& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
@@ -180,55 +106,15 @@ inline bool Foam::sweepData::updateFace
     const label thisFacei = thisPatchAndFacei.second();
 
     return
-        update
+        this->update
         (
-            svf,
             thisPatchi == -1
           ? mesh.Cf()[thisFacei]
           : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
+            neighbourWallInfo,
             tol,
             td
         );
-}
-
-
-template<class TrackingData>
-inline bool Foam::sweepData::equal
-(
-    const sweepData& rhs,
-    TrackingData& td
-) const
-{
-    return operator==(rhs);
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-inline void Foam::sweepData::operator=
-(
-    const scalar value
-)
-{
-    value_ = value;
-}
-
-
-inline bool Foam::sweepData::operator==
-(
-    const sweepData& rhs
-) const
-{
-    return origin() == rhs.origin();
-}
-
-
-inline bool Foam::sweepData::operator!=
-(
-    const sweepData& rhs
-) const
-{
-    return !(*this == rhs);
 }
 
 

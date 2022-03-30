@@ -25,8 +25,8 @@ License
 
 #include "inverseDistanceDiffusivity.H"
 #include "addToRunTimeSelectionTable.H"
-#include "patchDistWave.H"
-#include "wallPoint.H"
+#include "fvPatchDistWave.H"
+#include "fvWallPoint.H"
 #include "HashSet.H"
 #include "surfaceInterpolate.H"
 #include "zeroGradientFvPatchFields.H"
@@ -65,31 +65,12 @@ Foam::inverseDistanceDiffusivity::~inverseDistanceDiffusivity()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::scalarField> Foam::inverseDistanceDiffusivity::y() const
-{
-    const labelHashSet patchSet(mesh().boundaryMesh().patchSet(patchNames_));
-
-    if (patchSet.size())
-    {
-        tmp<scalarField> tY(new scalarField(mesh().nCells()));
-        patchDistWave::wave<wallPoint>(mesh(), patchSet, tY.ref(), false);
-        return tY;
-    }
-    else
-    {
-        return tmp<scalarField>(new scalarField(mesh().nCells(), 1));
-    }
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::surfaceScalarField>
 Foam::inverseDistanceDiffusivity::operator()() const
 {
-    volScalarField y_
+    volScalarField y
     (
         IOobject
         (
@@ -98,16 +79,27 @@ Foam::inverseDistanceDiffusivity::operator()() const
             mesh()
         ),
         mesh(),
-        dimless,
+        dimensionedScalar(dimless, 1),
         zeroGradientFvPatchScalarField::typeName
     );
-    y_.primitiveFieldRef() = y();
-    y_.correctBoundaryConditions();
+
+    if (patchNames_.size())
+    {
+        fvPatchDistWave::wave<fvWallPoint>
+        (
+            mesh(),
+            mesh().boundaryMesh().patchSet(patchNames_),
+            y,
+            false
+        );
+    }
+
+    y.correctBoundaryConditions();
 
     return surfaceScalarField::New
     (
         "faceDiffusivity",
-        1.0/fvc::interpolate(y_)
+        1.0/fvc::interpolate(y)
     );
 }
 

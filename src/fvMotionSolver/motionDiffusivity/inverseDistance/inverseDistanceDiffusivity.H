@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,12 +56,6 @@ class inverseDistanceDiffusivity
         //- Patches selected to base the distance on
         //  These can contain patch names or regular expressions to search for.
         wordReList patchNames_;
-
-
-    // Private Member Functions
-
-        //- Return patch-cell-centre distance field
-        tmp<scalarField> y() const;
 
 
 public:

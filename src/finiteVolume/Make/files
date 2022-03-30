@@ -41,8 +41,12 @@ $(derivedFvPatches)/regionCoupled/regionCoupledFvPatch.C
 $(derivedFvPatches)/regionCoupled/regionCoupledWallFvPatch.C
 
 
+meshWave = algorithms/FvFaceCellWave
+$(meshWave)/FvFaceCellWaveName.C
+
+
 wallDist = fvMesh/wallDist
-$(wallDist)/wallPointYPlus/wallPointYPlus.C
+$(wallDist)/fvWallPointYPlus/fvWallPointYPlus.C
 $(wallDist)/nearWallDist/nearWallDist.C
 $(wallDist)/wallDist/wallDist.C
 $(wallDist)/patchDistMethods/patchDistMethod/patchDistMethod.C
