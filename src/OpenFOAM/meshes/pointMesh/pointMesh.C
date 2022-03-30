@@ -25,37 +25,15 @@ License
 
 #include "pointMesh.H"
 #include "globalMeshData.H"
-#include "pointMeshMapper.H"
 #include "pointFields.H"
-#include "MapGeometricFields.H"
-#include "MapPointField.H"
 #include "facePointPatch.H"
+#include "MapGeometricFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(pointMesh, 0);
-}
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::pointMesh::mapFields(const mapPolyMesh& map)
-{
-    if (debug)
-    {
-        Pout<< "void pointMesh::mapFields(const mapPolyMesh&): "
-            << "Mapping all registered pointFields."
-            << endl;
-    }
-
-    // Create the pointMesh mapper
-    const pointMeshMapper mapper(*this, map);
-
-    #define mapPointFieldType(Type, nullArg)                                   \
-        MapGeometricFields<Type, pointPatchField, pointMeshMapper, pointMesh>  \
-        (mapper);
-    FOR_ALL_FIELD_TYPES(mapPointFieldType);
 }
 
 
@@ -121,9 +99,6 @@ void Foam::pointMesh::updateMesh(const mapPolyMesh& map)
         Pout<< endl;
     }
     boundary_.updateMesh();
-
-    // Map all registered point fields
-    mapFields(map);
 }
 
 
@@ -136,9 +111,6 @@ void Foam::pointMesh::distribute(const mapDistributePolyMesh& map)
         Pout<< endl;
     }
     boundary_.updateMesh();
-
-    // All registered pointFields are currently distributed by fvMeshDistribute
-    // mapFields(map);
 }
 
 

@@ -1267,9 +1267,6 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
     );
 
 
-    //// Generate test field
-    // tmp<surfaceScalarField> sfld(generateTestField(mesh_));
-
     // Save internal fields (note: not as DimensionedFields since would
     // get mapped)
     PtrList<Field<scalar>> sFlds;
@@ -1298,11 +1295,6 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
     mapExposedFaces(map(), sptFlds);
     mapExposedFaces(map(), sytFlds);
     mapExposedFaces(map(), tFlds);
-
-
-    //// Test test field
-    // testField(sfld);
-
 
     // Move mesh (since morphing does not do this)
     if (map().hasMotionPoints())
@@ -1785,6 +1777,8 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     const labelList& distribution
 )
 {
+    const bool topoChanging = mesh_.topoChanging();
+
     // Some checks on distribution
     if (distribution.size() != mesh_.nCells())
     {
@@ -1916,10 +1910,7 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     );
 
 
-    // Remove meshPhi. Since this would otherwise disappear anyway
-    // during topo changes and we have to guarantee that all the fields
-    // can be sent.
-    //mesh_.clearOut();
+    // Remove old-time geometry to avoid the need to distribute it
     mesh_.resetMotion();
 
     label nFields = 0;
@@ -3043,6 +3034,10 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     correctProcessorPatchFields<volTensorField>();
 
     mesh_.setInstance(mesh_.time().timeName());
+
+    // Reset the topoChanging state of the mesh
+    // Distribution is not a topology change
+    mesh_.topoChanging(topoChanging);
 
     // Print a bit
     if (debug)

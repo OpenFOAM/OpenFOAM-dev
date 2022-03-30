@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,12 +55,6 @@ class pointMesh
 
         //- Boundary mesh
         pointBoundaryMesh boundary_;
-
-
-    // Private Member Functions
-
-        //- Map all fields
-        void mapFields(const mapPolyMesh&);
 
 
 public:

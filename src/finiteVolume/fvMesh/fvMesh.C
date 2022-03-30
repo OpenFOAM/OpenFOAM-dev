@@ -26,6 +26,7 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "pointFields.H"
 #include "slicedVolFields.H"
 #include "slicedSurfaceFields.H"
 #include "SubField.H"
@@ -37,6 +38,9 @@ License
 #include "mapPolyMesh.H"
 #include "MapFvFields.H"
 #include "fvMeshMapper.H"
+#include "pointMesh.H"
+#include "pointMeshMapper.H"
+#include "MapPointField.H"
 #include "mapClouds.H"
 #include "MeshObject.H"
 
@@ -183,7 +187,6 @@ void Foam::fvMesh::storeOldVol(const scalarField& V)
                 << " V:" << V.size()
                 << endl;
         }
-
 
         if (V00Ptr_ && V0Ptr_)
         {
@@ -474,18 +477,34 @@ bool Foam::fvMesh::update()
 
     if (curTimeIndex_ < time().timeIndex())
     {
-        const bool hasV0 = V0Ptr_;
-
-        deleteDemandDrivenData(V0Ptr_);
+        const bool hasV00 = V00Ptr_;
         deleteDemandDrivenData(V00Ptr_);
 
+        if (!hasV00)
+        {
+            deleteDemandDrivenData(V0Ptr_);
+        }
+
         updated = topoChanger_->update() || updated;
+
+        // Register V0 for distribution
+        if (V0Ptr_)
+        {
+            V0Ptr_->checkIn();
+        }
+
         updated = distributor_->update() || updated;
 
-        // Reset the old-time cell volumes prior to mesh-motion
-        if (hasV0)
+        // De-register V0 after distribution
+        if (V0Ptr_)
         {
-            storeOldVol(V());
+            V0Ptr_->checkOut();
+        }
+
+        if (hasV00)
+        {
+            // If V00 had been set reset to the mapped V0 prior to mesh-motion
+            V00();
         }
     }
 
@@ -653,14 +672,14 @@ const Foam::fvMeshMover& Foam::fvMesh::mover() const
 }
 
 
-void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
+void Foam::fvMesh::mapFields(const mapPolyMesh& map)
 {
     if (debug)
     {
         Pout<< FUNCTION_NAME
-            << " nOldCells:" << meshMap.nOldCells()
+            << " nOldCells:" << map.nOldCells()
             << " nCells:" << nCells()
-            << " nOldFaces:" << meshMap.nOldFaces()
+            << " nOldFaces:" << map.nOldFaces()
             << " nFaces:" << nFaces()
             << endl;
     }
@@ -669,132 +688,59 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
     // We require geometric properties valid for the old mesh
     if
     (
-        meshMap.cellMap().size() != nCells()
-     || meshMap.faceMap().size() != nFaces()
+        map.cellMap().size() != nCells()
+     || map.faceMap().size() != nFaces()
     )
     {
         FatalErrorInFunction
             << "mapPolyMesh does not correspond to the old mesh."
             << " nCells:" << nCells()
-            << " cellMap:" << meshMap.cellMap().size()
-            << " nOldCells:" << meshMap.nOldCells()
+            << " cellMap:" << map.cellMap().size()
+            << " nOldCells:" << map.nOldCells()
             << " nFaces:" << nFaces()
-            << " faceMap:" << meshMap.faceMap().size()
-            << " nOldFaces:" << meshMap.nOldFaces()
+            << " faceMap:" << map.faceMap().size()
+            << " nOldFaces:" << map.nOldFaces()
             << exit(FatalError);
     }
 
-    // Create a mapper
-    const fvMeshMapper mapper(*this, meshMap);
+    // Create a fv mapper
+    const fvMeshMapper fvMap(*this, map);
 
     // Map all the volFields in the objectRegistry
     #define mapVolFieldType(Type, nullArg)                                     \
-        MapGeometricFields<Type, fvPatchField, fvMeshMapper, volMesh>(mapper);
+        MapGeometricFields<Type, fvPatchField, fvMeshMapper, volMesh>(fvMap);
     FOR_ALL_FIELD_TYPES(mapVolFieldType);
 
     // Map all the surfaceFields in the objectRegistry
     #define mapSurfaceFieldType(Type, nullArg)                                 \
         MapGeometricFields<Type, fvsPatchField, fvMeshMapper, surfaceMesh>     \
-        (mapper);
+        (fvMap);
     FOR_ALL_FIELD_TYPES(mapSurfaceFieldType);
 
     // Map all the dimensionedFields in the objectRegistry
     #define mapVolInternalFieldType(Type, nullArg)                             \
-        MapDimensionedFields<Type, fvMeshMapper, volMesh>(mapper);
+        MapDimensionedFields<Type, fvMeshMapper, volMesh>(fvMap);
     FOR_ALL_FIELD_TYPES(mapVolInternalFieldType);
 
+    if (pointMesh::found(*this))
+    {
+        // Create the pointMesh mapper
+        const pointMeshMapper mapper(pointMesh::New(*this), map);
+
+        #define mapPointFieldType(Type, nullArg)                               \
+            MapGeometricFields                                                 \
+            <                                                                  \
+                Type,                                                          \
+                pointPatchField,                                               \
+                pointMeshMapper,                                               \
+                pointMesh                                                      \
+            >                                                                  \
+            (mapper);
+        FOR_ALL_FIELD_TYPES(mapPointFieldType);
+    }
+
     // Map all the clouds in the objectRegistry
-    mapClouds(*this, meshMap);
-
-/*
-    const labelList& cellMap = meshMap.cellMap();
-
-    // Map the old volume. Just map to new cell labels.
-    if (V0Ptr_)
-    {
-        scalarField& V0 = *V0Ptr_;
-
-        scalarField savedV0(V0);
-        V0.setSize(nCells());
-
-        forAll(V0, i)
-        {
-            if (cellMap[i] > -1)
-            {
-                V0[i] = savedV0[cellMap[i]];
-            }
-            else
-            {
-                V0[i] = 0.0;
-            }
-        }
-
-        // Inject volume of merged cells
-        label nMerged = 0;
-        forAll(meshMap.reverseCellMap(), oldCelli)
-        {
-            label index = meshMap.reverseCellMap()[oldCelli];
-
-            if (index < -1)
-            {
-                label celli = -index-2;
-
-                V0[celli] += savedV0[oldCelli];
-
-                nMerged++;
-            }
-        }
-
-        if (debug)
-        {
-            Info<< "Mapping old time volume V0. Merged "
-                << nMerged << " out of " << nCells() << " cells" << endl;
-        }
-    }
-
-
-    // Map the old-old volume. Just map to new cell labels.
-    if (V00Ptr_)
-    {
-        scalarField& V00 = *V00Ptr_;
-
-        scalarField savedV00(V00);
-        V00.setSize(nCells());
-
-        forAll(V00, i)
-        {
-            if (cellMap[i] > -1)
-            {
-                V00[i] = savedV00[cellMap[i]];
-            }
-            else
-            {
-                V00[i] = 0.0;
-            }
-        }
-
-        // Inject volume of merged cells
-        label nMerged = 0;
-        forAll(meshMap.reverseCellMap(), oldCelli)
-        {
-            label index = meshMap.reverseCellMap()[oldCelli];
-
-            if (index < -1)
-            {
-                label celli = -index-2;
-
-                V00[celli] += savedV00[oldCelli];
-                nMerged++;
-            }
-        }
-
-        if (debug)
-        {
-            Info<< "Mapping old time volume V00. Merged "
-                << nMerged << " out of " << nCells() << " cells" << endl;
-        }
-    }
-*/
+    mapClouds(*this, map);
 }
 
 
@@ -885,8 +831,8 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& map)
     if (VPtr_)
     {
         // Cache old time volumes if they exist and the time has been
-        // incremented.  This will update V0, V00
-        if (V0Ptr_)
+        // incremented
+        if (V0Ptr_ && !V0Ptr_->registered())
         {
             storeOldVol(map.oldCellVolumes());
         }
@@ -900,6 +846,7 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& map)
                 << map.nOldCells()
                 << exit(FatalError);
         }
+
         if (V0Ptr_ && (V0Ptr_->size() != map.nOldCells()))
         {
             FatalErrorInFunction
@@ -908,18 +855,55 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& map)
                 << map.nOldCells()
                 << exit(FatalError);
         }
-        if (V00Ptr_ && (V00Ptr_->size() != map.nOldCells()))
-        {
-            FatalErrorInFunction
-                << "V0:" << V00Ptr_->size()
-                << " not equal to the number of old cells "
-                << map.nOldCells()
-                << exit(FatalError);
-        }
     }
 
     // Clear the sliced fields
     clearGeomNotOldVol();
+
+    // Map the old volume. Just map to new cell labels.
+    if (V0Ptr_ && !V0Ptr_->registered())
+    {
+        const labelList& cellMap = map.cellMap();
+
+        scalarField& V0 = *V0Ptr_;
+
+        scalarField savedV0(V0);
+        V0.setSize(nCells());
+
+        forAll(V0, i)
+        {
+            if (cellMap[i] > -1)
+            {
+                V0[i] = savedV0[cellMap[i]];
+            }
+            else
+            {
+                V0[i] = 0.0;
+            }
+        }
+
+        // Inject volume of merged cells
+        label nMerged = 0;
+        forAll(map.reverseCellMap(), oldCelli)
+        {
+            label index = map.reverseCellMap()[oldCelli];
+
+            if (index < -1)
+            {
+                label celli = -index-2;
+
+                V0[celli] += savedV0[oldCelli];
+
+                nMerged++;
+            }
+        }
+
+        if (debug)
+        {
+            Info<< "Mapping old time volume V0. Merged "
+                << nMerged << " out of " << nCells() << " cells" << endl;
+        }
+    }
 
     // Map all fields
     mapFields(map);
@@ -955,48 +939,8 @@ void Foam::fvMesh::distribute(const mapDistributePolyMesh& map)
     // Distribute polyMesh data
     polyMesh::distribute(map);
 
-    // if (VPtr_)
-    // {
-    //     // Cache old time volumes if they exist and the time has been
-    //     // incremented.  This will update V0, V00
-    //     if (V0Ptr_)
-    //     {
-    //         storeOldVol(map.oldCellVolumes());
-    //     }
-    //
-    //     // Few checks
-    //     if (VPtr_ && (VPtr_->size() != map.nOldCells()))
-    //     {
-    //         FatalErrorInFunction
-    //             << "V:" << V().size()
-    //             << " not equal to the number of old cells "
-    //             << map.nOldCells()
-    //             << exit(FatalError);
-    //     }
-    //     if (V0Ptr_ && (V0Ptr_->size() != map.nOldCells()))
-    //     {
-    //         FatalErrorInFunction
-    //             << "V0:" << V0Ptr_->size()
-    //             << " not equal to the number of old cells "
-    //             << map.nOldCells()
-    //             << exit(FatalError);
-    //     }
-    //     if (V00Ptr_ && (V00Ptr_->size() != map.nOldCells()))
-    //     {
-    //         FatalErrorInFunction
-    //             << "V0:" << V00Ptr_->size()
-    //             << " not equal to the number of old cells "
-    //             << map.nOldCells()
-    //             << exit(FatalError);
-    //     }
-    // }
-
     // Clear the sliced fields
     clearGeomNotOldVol();
-    // clearGeom();
-
-    // Map all fields
-    // mapFields(map);
 
     // Clear the current volume and other geometry factors
     surfaceInterpolation::clearOut();
@@ -1004,8 +948,8 @@ void Foam::fvMesh::distribute(const mapDistributePolyMesh& map)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    // meshObject::distribute<fvMesh>(*this, map);
-    // meshObject::distribute<lduMesh>(*this, map);
+    meshObject::distribute<fvMesh>(*this, map);
+    meshObject::distribute<lduMesh>(*this, map);
 
     topoChanger_->distribute(map);
     distributor_->distribute(map);

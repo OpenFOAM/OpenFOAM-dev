@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,13 +55,7 @@ Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     Mesh& mesh
 )
 {
-    if
-    (
-        mesh.thisDb().objectRegistry::template foundObject<Type>
-        (
-            Type::typeName
-        )
-    )
+    if (found(mesh))
     {
         return mesh.thisDb().objectRegistry::template lookupObjectRef<Type>
         (
@@ -92,13 +86,7 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     const Mesh& mesh
 )
 {
-    if
-    (
-        mesh.thisDb().objectRegistry::template foundObject<Type>
-        (
-            Type::typeName
-        )
-    )
+    if (found(mesh))
     {
         return mesh.thisDb().objectRegistry::template lookupObjectRef<Type>
         (
@@ -131,13 +119,7 @@ Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     const Args&... args
 )
 {
-    if
-    (
-        mesh.thisDb().objectRegistry::template foundObject<Type>
-        (
-            Type::typeName
-        )
-    )
+    if (found(mesh))
     {
         return mesh.thisDb().objectRegistry::template lookupObject<Type>
         (
@@ -170,13 +152,7 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     const Args&... args
 )
 {
-    if
-    (
-        mesh.thisDb().objectRegistry::template foundObject<Type>
-        (
-            Type::typeName
-        )
-    )
+    if (found(mesh))
     {
         return mesh.thisDb().objectRegistry::template lookupObject<Type>
         (
@@ -206,13 +182,7 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
 template<class Mesh, template<class> class MeshObjectType, class Type>
 bool Foam::MeshObject<Mesh, MeshObjectType, Type>::Delete(const Mesh& mesh)
 {
-    if
-    (
-        mesh.thisDb().objectRegistry::template foundObject<Type>
-        (
-            Type::typeName
-        )
-    )
+    if (found(mesh))
     {
         if (meshObject::debug)
         {
@@ -242,6 +212,21 @@ template<class Mesh, template<class> class MeshObjectType, class Type>
 Foam::MeshObject<Mesh, MeshObjectType, Type>::~MeshObject()
 {
     MeshObjectType<Mesh>::release();
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Mesh, template<class> class MeshObjectType, class Type>
+bool Foam::MeshObject<Mesh, MeshObjectType, Type>::found
+(
+    const Mesh& mesh
+)
+{
+    return mesh.thisDb().objectRegistry::template foundObject<Type>
+    (
+        Type::typeName
+    );
 }
 
 
