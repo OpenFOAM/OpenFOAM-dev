@@ -32,6 +32,7 @@ liftModels/noLift/noLift.C
 liftModels/constantLiftCoefficient/constantLiftCoefficient.C
 liftModels/Moraga/Moraga.C
 liftModels/LegendreMagnaudet/LegendreMagnaudet.C
+liftModels/SaffmanMei/SaffmanMei.C
 liftModels/TomiyamaLift/TomiyamaLift.C
 liftModels/wallDampedLift/wallDampedLift.C
 
