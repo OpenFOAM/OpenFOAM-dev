@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "wallFvPatch.H"
+#include "nearWallDist.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -102,8 +103,7 @@ Foam::momentumTransportModel::momentumTransportModel
     U_(U),
     alphaRhoPhi_(alphaRhoPhi),
     phi_(phi),
-    viscosity_(viscosity),
-    y_(mesh_)
+    viscosity_(viscosity)
 {
     // Ensure name of IOdictionary is typeName
     rename(IOobject::groupName(typeName, alphaRhoPhi.group()));
@@ -118,6 +118,12 @@ Foam::tmp<Foam::surfaceScalarField> Foam::momentumTransportModel::phi() const
 }
 
 
+const Foam::volScalarField::Boundary& Foam::momentumTransportModel::y() const
+{
+    return nearWallDist::New(mesh_).y();
+}
+
+
 bool Foam::momentumTransportModel::read()
 {
     return regIOobject::read();
@@ -129,12 +135,7 @@ void Foam::momentumTransportModel::validate()
 
 
 void Foam::momentumTransportModel::correct()
-{
-    if (mesh_.changing())
-    {
-        y_.correct();
-    }
-}
+{}
 
 
 // ************************************************************************* //

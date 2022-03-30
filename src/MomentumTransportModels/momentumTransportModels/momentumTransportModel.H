@@ -37,10 +37,9 @@ SourceFiles
 
 #include "IOdictionary.H"
 #include "primitiveFieldsFwd.H"
-#include "volFieldsFwd.H"
+#include "volFields.H"
 #include "surfaceFieldsFwd.H"
 #include "fvMatricesFwd.H"
-#include "nearWallDist.H"
 #include "geometricOneField.H"
 #include "viscosity.H"
 
@@ -72,9 +71,6 @@ protected:
         const surfaceScalarField& phi_;
 
         const viscosity& viscosity_;
-
-        //- Near wall distance boundary field
-        nearWallDist y_;
 
 
     // Protected member functions
@@ -170,11 +166,8 @@ public:
             return viscosity_;
         }
 
-        //- Return the near wall distances
-        const nearWallDist& y() const
-        {
-            return y_;
-        }
+        //- Return the near wall distance
+        const volScalarField::Boundary& y() const;
 
         //- Return the laminar viscosity
         virtual tmp<volScalarField> nu() const

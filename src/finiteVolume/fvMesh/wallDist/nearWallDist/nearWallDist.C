@@ -29,24 +29,45 @@ License
 #include "wallFvPatch.H"
 #include "surfaceFields.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(nearWallDist, 0);
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::nearWallDist::correct()
+{
+    if (mesh().topoChanging())
+    {
+
+    }
+
+    patchDistFuncs::correctBoundaryFaceFaceCells
+    (
+        mesh(),
+        mesh().boundaryMesh().findPatchIDs<wallPolyPatch>(),
+        y_
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
 :
-    volScalarField::Boundary
+    MeshObject<fvMesh, Foam::UpdateableMeshObject, nearWallDist>(mesh),
+    y_
     (
         mesh.boundary(),
         volScalarField::Internal::null(),
         calculatedFvPatchScalarField::typeName
-    ),
-    mesh_(mesh)
+    )
 {
-    patchDistFuncs::correctBoundaryFaceFaceCells
-    (
-        mesh_,
-        mesh_.boundaryMesh().findPatchIDs<wallPolyPatch>(),
-        *this
-    );
+    correct();
 }
 
 
@@ -58,33 +79,39 @@ Foam::nearWallDist::~nearWallDist()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::nearWallDist::correct()
+void Foam::nearWallDist::updateMesh(const mapPolyMesh& map)
 {
-    if (mesh_.topoChanging())
-    {
-        this->setSize(mesh_.boundary().size());
+    y_.setSize(mesh().boundary().size());
 
-        forAll(*this, patchi)
-        {
-            this->set
+    forAll(y_, patchi)
+    {
+        y_.set
+        (
+            patchi,
+            fvPatchField<scalar>::New
             (
-                patchi,
-                fvPatchField<scalar>::New
-                (
-                    calculatedFvPatchScalarField::typeName,
-                    mesh_.boundary()[patchi],
-                    volScalarField::Internal::null()
-                )
-            );
-        }
+                calculatedFvPatchScalarField::typeName,
+                mesh().boundary()[patchi],
+                volScalarField::Internal::null()
+            )
+        );
     }
 
-    patchDistFuncs::correctBoundaryFaceFaceCells
-    (
-        mesh_,
-        mesh_.boundaryMesh().findPatchIDs<wallPolyPatch>(),
-        *this
-    );
+    correct();
+}
+
+
+void Foam::nearWallDist::distribute(const mapDistributePolyMesh& map)
+{
+    correct();
+}
+
+
+bool Foam::nearWallDist::movePoints()
+{
+    correct();
+
+    return true;
 }
 
 

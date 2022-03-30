@@ -36,6 +36,7 @@ SourceFiles
 #ifndef nearWallDist_H
 #define nearWallDist_H
 
+#include "MeshObject.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -51,15 +52,25 @@ class fvMesh;
 
 class nearWallDist
 :
-    public volScalarField::Boundary
+    public MeshObject<fvMesh, UpdateableMeshObject, nearWallDist>
 {
     // Private Data
 
-        //- Reference to mesh
-        const fvMesh& mesh_;
+        //- Near-well distance-to-wall boundary field
+        volScalarField::Boundary y_;
+
+
+    // Private Member Functions
+
+        //- Re-calculate y_
+        void correct();
 
 
 public:
+
+    // Declare name of the class and its debug switch
+    ClassName("nearWallDist");
+
 
     // Constructors
 
@@ -76,14 +87,20 @@ public:
 
     // Member Functions
 
-        //- Access the wall distances
+        //- Access to the near-wall distances
         const volScalarField::Boundary& y() const
         {
-            return *this;
+            return y_;
         }
 
-        //- Correct for mesh geom/topo changes
-        virtual void correct();
+        //- Update the y-field when the mesh changes
+        virtual void updateMesh(const mapPolyMesh&);
+
+        //- Update mesh corresponding to the given distribution map
+        virtual void distribute(const mapDistributePolyMesh&);
+
+        //- Update the y-field when the mesh moves
+        virtual bool movePoints();
 
 
     // Member Operators

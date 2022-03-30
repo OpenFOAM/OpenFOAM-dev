@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "momentumTransportModel.H"
 #include "nutWallFunctionFvPatchScalarField.H"
 #include "wallFvPatch.H"
+#include "nearWallDist.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -79,8 +80,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::yPlus::calcYPlus
 
     volScalarField::Boundary& yPlusBf = tyPlus.ref().boundaryFieldRef();
 
-    const nearWallDist nwd(mesh_);
-    const volScalarField::Boundary& d = nwd.y();
+    const volScalarField::Boundary& d = nearWallDist::New(mesh_).y();
 
     const tmp<volScalarField> tnut = turbModel.nut();
     const volScalarField::Boundary& nutBf = tnut().boundaryField();
