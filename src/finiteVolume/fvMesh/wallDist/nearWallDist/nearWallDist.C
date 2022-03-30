@@ -24,10 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nearWallDist.H"
-#include "fvMesh.H"
 #include "patchDistFuncs.H"
-#include "wallFvPatch.H"
-#include "surfaceFields.H"
+#include "wallPolyPatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -41,11 +39,6 @@ namespace Foam
 
 void Foam::nearWallDist::correct()
 {
-    if (mesh().topoChanging())
-    {
-
-    }
-
     patchDistFuncs::correctBoundaryFaceFaceCells
     (
         mesh(),
