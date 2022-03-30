@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -441,7 +441,7 @@ public:
                 inline bool set(unsigned int);
 
 
-            // Constructors
+            // Protected Constructors
 
                 //- Construct null
                 inline iteratorBase();
@@ -449,11 +449,14 @@ public:
                 //- Construct from base list and position index
                 inline iteratorBase(const PackedList*, const label);
 
+
+        public:
+
+            // Constructors
+
                 //- Default copy constructor
                 iteratorBase(const iteratorBase&) = default;
 
-
-        public:
 
             // Member Functions
 
