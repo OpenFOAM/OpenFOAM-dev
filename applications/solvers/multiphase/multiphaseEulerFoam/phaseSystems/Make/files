@@ -55,6 +55,7 @@ populationBalanceModel/populationBalanceModel/populationBalanceModel.C
 
 coalescenceModels = populationBalanceModel/coalescenceModels
 $(coalescenceModels)/coalescenceModel/coalescenceModel.C
+$(coalescenceModels)/AdachiStuartFokkink/AdachiStuartFokkink.C
 $(coalescenceModels)/ballisticCollisions/ballisticCollisions.C
 $(coalescenceModels)/BrownianCollisions/BrownianCollisions.C
 $(coalescenceModels)/constantCoalescence/constantCoalescence.C
@@ -78,6 +79,7 @@ $(binaryBreakupModels)/powerLawUniformBinary/powerLawUniformBinary.C
 breakupModels = populationBalanceModel/breakupModels
 $(breakupModels)/breakupModel/breakupModel.C
 $(breakupModels)/exponential/exponential.C
+$(breakupModels)/Kusters/Kusters.C
 $(breakupModels)/Laakkonen/Laakkonen.C
 $(breakupModels)/powerLaw/powerLaw.C
 
