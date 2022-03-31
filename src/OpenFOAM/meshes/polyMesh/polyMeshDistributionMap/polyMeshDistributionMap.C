@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mapDistributePolyMesh.H"
+#include "polyMeshDistributionMap.H"
 #include "polyMesh.H"
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::mapDistributePolyMesh::calcPatchSizes()
+void Foam::polyMeshDistributionMap::calcPatchSizes()
 {
     oldPatchSizes_.setSize(oldPatchStarts_.size());
 
@@ -59,7 +59,7 @@ void Foam::mapDistributePolyMesh::calcPatchSizes()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::mapDistributePolyMesh::mapDistributePolyMesh()
+Foam::polyMeshDistributionMap::polyMeshDistributionMap()
 :
     nOldPoints_(0),
     nOldFaces_(0),
@@ -74,7 +74,7 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh()
 {}
 
 
-Foam::mapDistributePolyMesh::mapDistributePolyMesh
+Foam::polyMeshDistributionMap::polyMeshDistributionMap
 (
     const polyMesh& mesh,
 
@@ -128,7 +128,7 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
 }
 
 
-Foam::mapDistributePolyMesh::mapDistributePolyMesh
+Foam::polyMeshDistributionMap::polyMeshDistributionMap
 (
     // mesh before changes
     const label nOldPoints,
@@ -138,10 +138,10 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
     labelList&& oldPatchNMeshPoints,
 
     // how to transfer pieces of mesh
-    mapDistribute&& pointMap,
-    mapDistribute&& faceMap,
-    mapDistribute&& cellMap,
-    mapDistribute&& patchMap
+    distributionMap&& pointMap,
+    distributionMap&& faceMap,
+    distributionMap&& cellMap,
+    distributionMap&& patchMap
 )
 :
     nOldPoints_(nOldPoints),
@@ -159,9 +159,9 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
 }
 
 
-Foam::mapDistributePolyMesh::mapDistributePolyMesh
+Foam::polyMeshDistributionMap::polyMeshDistributionMap
 (
-    mapDistributePolyMesh&& map
+    polyMeshDistributionMap&& map
 )
 :
     nOldPoints_(map.nOldPoints_),
@@ -177,7 +177,7 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
 {}
 
 
-Foam::mapDistributePolyMesh::mapDistributePolyMesh(Istream& is)
+Foam::polyMeshDistributionMap::polyMeshDistributionMap(Istream& is)
 {
     is  >> *this;
 }
@@ -185,7 +185,7 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::mapDistributePolyMesh::transfer(mapDistributePolyMesh& rhs)
+void Foam::polyMeshDistributionMap::transfer(polyMeshDistributionMap& rhs)
 {
     nOldPoints_ = rhs.nOldPoints_;
     nOldFaces_ = rhs.nOldFaces_;
@@ -200,7 +200,7 @@ void Foam::mapDistributePolyMesh::transfer(mapDistributePolyMesh& rhs)
 }
 
 
-void Foam::mapDistributePolyMesh::distributePointIndices(labelList& lst) const
+void Foam::polyMeshDistributionMap::distributePointIndices(labelList& lst) const
 {
     // Construct boolList from selected elements
     boolList isSelected
@@ -222,7 +222,7 @@ void Foam::mapDistributePolyMesh::distributePointIndices(labelList& lst) const
 }
 
 
-void Foam::mapDistributePolyMesh::distributeFaceIndices(labelList& lst) const
+void Foam::polyMeshDistributionMap::distributeFaceIndices(labelList& lst) const
 {
     // Construct boolList from selected elements
     boolList isSelected
@@ -244,7 +244,7 @@ void Foam::mapDistributePolyMesh::distributeFaceIndices(labelList& lst) const
 }
 
 
-void Foam::mapDistributePolyMesh::distributeCellIndices(labelList& lst) const
+void Foam::polyMeshDistributionMap::distributeCellIndices(labelList& lst) const
 {
     // Construct boolList from selected elements
     boolList isSelected
@@ -266,7 +266,7 @@ void Foam::mapDistributePolyMesh::distributeCellIndices(labelList& lst) const
 }
 
 
-void Foam::mapDistributePolyMesh::distributePatchIndices(labelList& lst) const
+void Foam::polyMeshDistributionMap::distributePatchIndices(labelList& lst) const
 {
     // Construct boolList from selected elements
     boolList isSelected
@@ -290,7 +290,10 @@ void Foam::mapDistributePolyMesh::distributePatchIndices(labelList& lst) const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void Foam::mapDistributePolyMesh::operator=(const mapDistributePolyMesh& rhs)
+void Foam::polyMeshDistributionMap::operator=
+(
+    const polyMeshDistributionMap& rhs
+)
 {
     nOldPoints_ = rhs.nOldPoints_;
     nOldFaces_ = rhs.nOldFaces_;
@@ -305,7 +308,7 @@ void Foam::mapDistributePolyMesh::operator=(const mapDistributePolyMesh& rhs)
 }
 
 
-void Foam::mapDistributePolyMesh::operator=(mapDistributePolyMesh&& rhs)
+void Foam::polyMeshDistributionMap::operator=(polyMeshDistributionMap&& rhs)
 {
     nOldPoints_ = rhs.nOldPoints_;
     nOldFaces_ = rhs.nOldFaces_;
@@ -322,9 +325,9 @@ void Foam::mapDistributePolyMesh::operator=(mapDistributePolyMesh&& rhs)
 
 // * * * * * * * * * * * * * * Istream Operator  * * * * * * * * * * * * * * //
 
-Foam::Istream& Foam::operator>>(Istream& is, mapDistributePolyMesh& map)
+Foam::Istream& Foam::operator>>(Istream& is, polyMeshDistributionMap& map)
 {
-    is.fatalCheck("operator>>(Istream&, mapDistributePolyMesh&)");
+    is.fatalCheck("operator>>(Istream&, polyMeshDistributionMap&)");
 
     is  >> map.nOldPoints_
         >> map.nOldFaces_
@@ -343,7 +346,7 @@ Foam::Istream& Foam::operator>>(Istream& is, mapDistributePolyMesh& map)
 
 // * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const mapDistributePolyMesh& map)
+Foam::Ostream& Foam::operator<<(Ostream& os, const polyMeshDistributionMap& map)
 {
     os  << map.nOldPoints_
         << token::SPACE << map.nOldFaces_

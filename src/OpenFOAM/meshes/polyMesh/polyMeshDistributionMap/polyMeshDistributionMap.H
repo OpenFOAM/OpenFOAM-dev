@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mapDistributePolyMesh
+    Foam::polyMeshDistributionMap
 
 Description
     Class containing mesh-to-mesh mapping information after a mesh distribution
@@ -34,14 +34,14 @@ Description
     mesh (constructXXXMap).
 
 SourceFiles
-    mapDistributePolyMesh.C
+    polyMeshDistributionMap.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mapDistributePolyMesh_H
-#define mapDistributePolyMesh_H
+#ifndef polyMeshDistributionMap_H
+#define polyMeshDistributionMap_H
 
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,17 +54,17 @@ class polyMesh;
 
 // Forward declaration of friend functions and operators
 
-class mapDistributePolyMesh;
+class polyMeshDistributionMap;
 
-Istream& operator>>(Istream&, mapDistributePolyMesh&);
-Ostream& operator<<(Ostream&, const mapDistributePolyMesh&);
+Istream& operator>>(Istream&, polyMeshDistributionMap&);
+Ostream& operator<<(Ostream&, const polyMeshDistributionMap&);
 
 
 /*---------------------------------------------------------------------------*\
-                    Class mapDistributePolyMesh Declaration
+                    Class polyMeshDistributionMap Declaration
 \*---------------------------------------------------------------------------*/
 
-class mapDistributePolyMesh
+class polyMeshDistributionMap
 {
     // Private Data
 
@@ -88,16 +88,16 @@ class mapDistributePolyMesh
 
 
         //- Point distribute map
-        mapDistribute pointMap_;
+        distributionMap pointMap_;
 
         //- Face distribute map
-        mapDistribute faceMap_;
+        distributionMap faceMap_;
 
         //- Cell distribute map
-        mapDistribute cellMap_;
+        distributionMap cellMap_;
 
         //- Patch distribute map
-        mapDistribute patchMap_;
+        distributionMap patchMap_;
 
 
     // Private Member Functions
@@ -110,12 +110,12 @@ public:
     // Constructors
 
         //- Construct null
-        mapDistributePolyMesh();
+        polyMeshDistributionMap();
 
         //- Move constructor from components.
         //  Note that mesh has to be changed already
         //  since uses mesh.nPoints etc as the new size.
-        mapDistributePolyMesh
+        polyMeshDistributionMap
         (
             const polyMesh& mesh,
 
@@ -143,7 +143,7 @@ public:
         );
 
         //- Move constructor from components
-        mapDistributePolyMesh
+        polyMeshDistributionMap
         (
             // mesh before changes
             const label nOldPoints,
@@ -153,20 +153,20 @@ public:
             labelList&& oldPatchNMeshPoints,
 
             // how to subset pieces of mesh to send across
-            mapDistribute&& pointMap,
-            mapDistribute&& faceMap,
-            mapDistribute&& cellMap,
-            mapDistribute&& patchMap
+            distributionMap&& pointMap,
+            distributionMap&& faceMap,
+            distributionMap&& cellMap,
+            distributionMap&& patchMap
         );
 
         //- Move constructor
-        mapDistributePolyMesh(mapDistributePolyMesh&&);
+        polyMeshDistributionMap(polyMeshDistributionMap&&);
 
         //- Construct from Istream
-        mapDistributePolyMesh(Istream&);
+        polyMeshDistributionMap(Istream&);
 
         //- Disallow default bitwise copy construction
-        mapDistributePolyMesh(const mapDistributePolyMesh&) = delete;
+        polyMeshDistributionMap(const polyMeshDistributionMap&) = delete;
 
 
     // Member Functions
@@ -210,25 +210,25 @@ public:
             }
 
             //- Point distribute map
-            const mapDistribute& pointMap() const
+            const distributionMap& pointMap() const
             {
                 return pointMap_;
             }
 
             //- Face distribute map
-            const mapDistribute& faceMap() const
+            const distributionMap& faceMap() const
             {
                 return faceMap_;
             }
 
             //- Cell distribute map
-            const mapDistribute& cellMap() const
+            const distributionMap& cellMap() const
             {
                 return cellMap_;
             }
 
             //- Patch distribute map
-            const mapDistribute& patchMap() const
+            const distributionMap& patchMap() const
             {
                 return patchMap_;
             }
@@ -237,7 +237,7 @@ public:
         // Other
 
             //- Transfer the contents of the argument and annul the argument.
-            void transfer(mapDistributePolyMesh&);
+            void transfer(polyMeshDistributionMap&);
 
             //- Distribute list of point data
             template<class T>
@@ -286,18 +286,18 @@ public:
 
     // Member Operators
 
-        void operator=(const mapDistributePolyMesh&);
+        void operator=(const polyMeshDistributionMap&);
 
-        void operator=(mapDistributePolyMesh&&);
+        void operator=(polyMeshDistributionMap&&);
 
 
     // IOstream Operators
 
         //- Read dictionary from Istream
-        friend Istream& operator>>(Istream&, mapDistributePolyMesh&);
+        friend Istream& operator>>(Istream&, polyMeshDistributionMap&);
 
         //- Write dictionary to Ostream
-        friend Ostream& operator<<(Ostream&, const mapDistributePolyMesh&);
+        friend Ostream& operator<<(Ostream&, const polyMeshDistributionMap&);
 };
 
 

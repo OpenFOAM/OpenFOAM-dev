@@ -274,7 +274,7 @@ void Foam::fvModels::updateMesh(const mapPolyMesh& map)
 }
 
 
-void Foam::fvModels::distribute(const mapDistributePolyMesh& map)
+void Foam::fvModels::distribute(const polyMeshDistributionMap& map)
 {
     PtrListDictionary<fvModel>& modelList(*this);
 

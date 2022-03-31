@@ -35,7 +35,7 @@ License
 #include "removeCells.H"
 #include "polyModifyFace.H"
 #include "polyRemovePoint.H"
-#include "mapDistributePolyMesh.H"
+#include "polyMeshDistributionMap.H"
 #include "surfaceFields.H"
 #include "pointFields.H"
 #include "syncTools.H"
@@ -976,7 +976,7 @@ void Foam::fvMeshDistribute::getCouplingData
         const globalMeshData& gmd = mesh_.globalData();
         const indirectPrimitivePatch& cpp = gmd.coupledPatch();
         const labelList& meshPoints = cpp.meshPoints();
-        const mapDistribute& slavesMap = gmd.globalCoPointSlavesMap();
+        const distributionMap& slavesMap = gmd.globalCoPointSlavesMap();
         const labelListList& slaves = gmd.globalCoPointSlaves();
 
         labelList elems(slavesMap.constructSize(), -1);
@@ -1772,7 +1772,7 @@ Foam::labelList Foam::fvMeshDistribute::countCells
 }
 
 
-Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
+Foam::autoPtr<Foam::polyMeshDistributionMap> Foam::fvMeshDistribute::distribute
 (
     const labelList& distribution
 )
@@ -1820,9 +1820,9 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     if (!Pstream::parRun())
     {
         // Collect all maps and return
-        return autoPtr<mapDistributePolyMesh>
+        return autoPtr<polyMeshDistributionMap>
         (
-            new mapDistributePolyMesh
+            new polyMeshDistributionMap
             (
                 mesh_,
 
@@ -3063,9 +3063,9 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     }
 
     // Collect all maps and return
-    return autoPtr<mapDistributePolyMesh>
+    return autoPtr<polyMeshDistributionMap>
     (
-        new mapDistributePolyMesh
+        new polyMeshDistributionMap
         (
             mesh_,
 

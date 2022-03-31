@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ void Foam::fvMeshMovers::interpolator::updateMesh(const mapPolyMesh&)
 
 void Foam::fvMeshMovers::interpolator::distribute
 (
-    const mapDistributePolyMesh&
+    const polyMeshDistributionMap&
 )
 {
     NotImplemented;

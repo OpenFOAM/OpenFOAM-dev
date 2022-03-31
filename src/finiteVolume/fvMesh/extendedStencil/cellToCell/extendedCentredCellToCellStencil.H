@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class extendedCentredCellToCellStencil
     // Private Data
 
         //- Swap map for getting neighbouring data
-        autoPtr<mapDistribute> mapPtr_;
+        autoPtr<distributionMap> mapPtr_;
 
         //- Per cell the stencil.
         labelListList stencil_;
@@ -78,7 +78,7 @@ public:
     // Member Functions
 
         //- Return reference to the parallel distribution map
-        const mapDistribute& map() const
+        const distributionMap& map() const
         {
             return mapPtr_();
         }

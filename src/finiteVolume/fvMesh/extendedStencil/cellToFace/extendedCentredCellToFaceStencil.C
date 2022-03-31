@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "extendedCentredCellToFaceStencil.H"
 #include "cellToFaceStencil.H"
 
@@ -41,7 +41,7 @@ Foam::extendedCentredCellToFaceStencil::extendedCentredCellToFaceStencil
     List<Map<label>> compactMap(Pstream::nProcs());
     mapPtr_.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             stencil.globalNumbering(),
             stencil_,

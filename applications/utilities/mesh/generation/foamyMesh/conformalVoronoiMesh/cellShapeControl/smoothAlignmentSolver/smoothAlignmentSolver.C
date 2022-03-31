@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,8 @@ Foam::tmp<Foam::Field<Type>> Foam::smoothAlignmentSolver::filterFarPoints
 
 
 template<class Triangulation>
-Foam::autoPtr<Foam::mapDistribute> Foam::smoothAlignmentSolver::buildReferredMap
+Foam::autoPtr<Foam::distributionMap>
+Foam::smoothAlignmentSolver::buildReferredMap
 (
     const Triangulation& mesh,
     labelList& indices
@@ -93,9 +94,9 @@ Foam::autoPtr<Foam::mapDistribute> Foam::smoothAlignmentSolver::buildReferredMap
     indices.transfer(dynIndices);
 
     List<Map<label>> compactMap;
-    return autoPtr<mapDistribute>
+    return autoPtr<distributionMap>
     (
-        new mapDistribute
+        new distributionMap
         (
             globalIndexing,
             indices,
@@ -106,7 +107,7 @@ Foam::autoPtr<Foam::mapDistribute> Foam::smoothAlignmentSolver::buildReferredMap
 
 
 template<class Triangulation>
-Foam::autoPtr<Foam::mapDistribute> Foam::smoothAlignmentSolver::buildMap
+Foam::autoPtr<Foam::distributionMap> Foam::smoothAlignmentSolver::buildMap
 (
     const Triangulation& mesh,
     labelListList& pointPoints
@@ -157,9 +158,9 @@ Foam::autoPtr<Foam::mapDistribute> Foam::smoothAlignmentSolver::buildMap
     }
 
     List<Map<label>> compactMap;
-    return autoPtr<mapDistribute>
+    return autoPtr<distributionMap>
     (
-        new mapDistribute
+        new distributionMap
         (
             globalIndexing,
             pointPoints,
@@ -312,7 +313,7 @@ void Foam::smoothAlignmentSolver::smoothAlignments
     scalar minResidual = 0;
 
     labelListList pointPoints;
-    autoPtr<mapDistribute> meshDistributor = buildMap
+    autoPtr<distributionMap> meshDistributor = buildMap
     (
         mesh_,
         pointPoints
@@ -451,7 +452,7 @@ void Foam::smoothAlignmentSolver::smoothAlignments
     }
 
     labelList referredPoints;
-    autoPtr<mapDistribute> referredDistributor = buildReferredMap
+    autoPtr<distributionMap> referredDistributor = buildReferredMap
     (
         mesh_,
         referredPoints

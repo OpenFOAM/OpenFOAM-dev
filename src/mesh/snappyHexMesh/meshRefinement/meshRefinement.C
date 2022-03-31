@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ License
 #include "indirectPrimitivePatch.H"
 #include "polyTopoChange.H"
 #include "removeCells.H"
-#include "mapDistributePolyMesh.H"
+#include "polyMeshDistributionMap.H"
 #include "localPointRegion.H"
 #include "pointMesh.H"
 #include "pointFields.H"
@@ -1372,7 +1372,7 @@ Foam::label Foam::meshRefinement::countHits() const
 //}
 
 
-Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::meshRefinement::balance
+Foam::autoPtr<Foam::polyMeshDistributionMap> Foam::meshRefinement::balance
 (
     const bool keepZoneFaces,
     const bool keepBaffles,
@@ -1381,7 +1381,7 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::meshRefinement::balance
     fvMeshDistribute& distributor
 )
 {
-    autoPtr<mapDistributePolyMesh> map;
+    autoPtr<polyMeshDistributionMap> map;
 
     if (Pstream::parRun())
     {
@@ -2303,7 +2303,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMeshRegions
 }
 
 
-void Foam::meshRefinement::distribute(const mapDistributePolyMesh& map)
+void Foam::meshRefinement::distribute(const polyMeshDistributionMap& map)
 {
     // mesh_ already distributed; distribute my member data
 
@@ -2334,8 +2334,8 @@ void Foam::meshRefinement::distribute(const mapDistributePolyMesh& map)
 
         forAll(geometry, i)
         {
-            autoPtr<mapDistribute> faceMap;
-            autoPtr<mapDistribute> pointMap;
+            autoPtr<distributionMap> faceMap;
+            autoPtr<distributionMap> pointMap;
             geometry[i].distribute
             (
                 meshBb,

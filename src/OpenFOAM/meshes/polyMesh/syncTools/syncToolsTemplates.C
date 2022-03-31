@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1130,7 +1130,7 @@ void Foam::syncTools::syncPointList
 //        gd.globalTransforms(),
 //        cop,
 //        true,   // position?
-//        mapDistribute::transform()  // not used
+//        distributionMap::transform()  // not used
 //    );
 //
 //    forAll(meshPoints, i)
@@ -1166,7 +1166,7 @@ void Foam::syncTools::syncEdgeList
     const globalMeshData& gd = mesh.globalData();
     const labelList& meshEdges = gd.coupledPatchMeshEdges();
     const globalIndexAndTransform& git = gd.globalTransforms();
-    const mapDistribute& edgeMap = gd.globalEdgeSlavesMap();
+    const distributionMap& edgeMap = gd.globalEdgeSlavesMap();
 
     List<T> cppFld(UIndirectList<T>(edgeValues, meshEdges));
 
@@ -1209,7 +1209,7 @@ void Foam::syncTools::syncEdgeList
 //    const globalMeshData& gd = mesh.globalData();
 //    const labelList& meshEdges = gd.coupledPatchMeshEdges();
 //    const globalIndexAndTransform& git = gd.globalTransforms();
-//    const mapDistribute& map = gd.globalEdgeSlavesMap();
+//    const distributionMap& map = gd.globalEdgeSlavesMap();
 //
 //    List<point> cppFld(UIndirectList<point>(edgeValues, meshEdges));
 //
@@ -1222,7 +1222,7 @@ void Foam::syncTools::syncEdgeList
 //        git,
 //        cop,
 //        true,       // position?
-//        mapDistribute::transform()  // not used
+//        distributionMap::transform()  // not used
 //    );
 //
 //    // Extract back onto mesh

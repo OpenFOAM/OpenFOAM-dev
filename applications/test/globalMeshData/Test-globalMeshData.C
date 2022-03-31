@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
 #include "argList.H"
 #include "polyMesh.H"
 #include "Time.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 using namespace Foam;
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
     // Test:print shared points
     {
-        const mapDistribute& globalPointSlavesMap =
+        const distributionMap& globalPointSlavesMap =
             globalData.globalPointSlavesMap();
         const labelListList& slaves =
             globalData.globalPointSlaves();
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
         (
             transforms,
             coords,
-            mapDistribute::transformPosition()
+            distributionMap::transformPosition()
         );
 
         // Print
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
     // Test:print shared edges
     {
-        const mapDistribute& globalEdgeSlavesMap =
+        const distributionMap& globalEdgeSlavesMap =
             globalData.globalEdgeSlavesMap();
         const labelListList& slaves =
             globalData.globalEdgeSlaves();
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
         (
             transforms,
             ec,
-            mapDistribute::transformPosition()
+            distributionMap::transformPosition()
         );
 
         // Print
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
 
     // Test: point to faces addressing
     {
-        const mapDistribute& globalPointBoundaryFacesMap =
+        const distributionMap& globalPointBoundaryFacesMap =
             globalData.globalPointBoundaryFacesMap();
         const labelListList& slaves =
             globalData.globalPointBoundaryFaces();
@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
         (
             transforms,
             fc,
-            mapDistribute::transformPosition()
+            distributionMap::transformPosition()
         );
 
         // Print
@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
     // Test: point to cells addressing
     {
         const labelList& boundaryCells = globalData.boundaryCells();
-        const mapDistribute& globalPointBoundaryCellsMap =
+        const distributionMap& globalPointBoundaryCellsMap =
             globalData.globalPointBoundaryCellsMap();
         const labelListList& slaves = globalData.globalPointBoundaryCells();
         const labelListList& transformedSlaves =
@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
         (
             transforms,
             cc,
-            mapDistribute::transformPosition()
+            distributionMap::transformPosition()
         );
 
         // Print

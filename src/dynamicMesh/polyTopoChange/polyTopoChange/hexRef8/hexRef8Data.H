@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ namespace Foam
 
 // Forward declaration of classes
 class mapPolyMesh;
-class mapDistributePolyMesh;
+class polyMeshDistributionMap;
 class refinementHistory;
 class fvMesh;
 
@@ -115,7 +115,7 @@ public:
         void updateMesh(const mapPolyMesh&);
 
         //- In-place distribute
-        void distribute(const mapDistributePolyMesh&);
+        void distribute(const polyMeshDistributionMap&);
 
         //- Write
         bool write() const;

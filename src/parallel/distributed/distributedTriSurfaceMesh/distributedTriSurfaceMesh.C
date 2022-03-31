@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "distributedTriSurfaceMesh.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "Random.H"
 #include "addToRunTimeSelectionTable.H"
 #include "triangleFuncs.H"
@@ -252,7 +252,7 @@ void Foam::distributedTriSurfaceMesh::distributeSegment
 }
 
 
-Foam::autoPtr<Foam::mapDistribute>
+Foam::autoPtr<Foam::distributionMap>
 Foam::distributedTriSurfaceMesh::distributeSegments
 (
     const pointField& start,
@@ -342,9 +342,9 @@ Foam::distributedTriSurfaceMesh::distributeSegments
         }
     }
 
-    return autoPtr<mapDistribute>
+    return autoPtr<distributionMap>
     (
-        new mapDistribute
+        new distributionMap
         (
             segmentI,       // size after construction
             move(sendMap),
@@ -436,7 +436,7 @@ void Foam::distributedTriSurfaceMesh::findLine
             // Original index of segment
             labelList allSegmentMap(start.size());
 
-            const autoPtr<mapDistribute> mapPtr
+            const autoPtr<distributionMap> mapPtr
             (
                 distributeSegments
                 (
@@ -446,7 +446,7 @@ void Foam::distributedTriSurfaceMesh::findLine
                     allSegmentMap
                 )
             );
-            const mapDistribute& map = mapPtr();
+            const distributionMap& map = mapPtr();
 
             label nOldAllSegments = allSegments.size();
 
@@ -537,7 +537,7 @@ void Foam::distributedTriSurfaceMesh::findLine
 // Exchanges indices to the processor they come from.
 // - calculates exchange map
 // - uses map to calculate local triangle index
-Foam::autoPtr<Foam::mapDistribute>
+Foam::autoPtr<Foam::distributionMap>
 Foam::distributedTriSurfaceMesh::calcLocalQueries
 (
     const List<pointIndexHit>& info,
@@ -635,16 +635,16 @@ Foam::distributedTriSurfaceMesh::calcLocalQueries
     // Pack into distribution map
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    autoPtr<mapDistribute> mapPtr
+    autoPtr<distributionMap> mapPtr
     (
-        new mapDistribute
+        new distributionMap
         (
             segmentI,       // size after construction
             move(sendMap),
             move(constructMap)
         )
     );
-    const mapDistribute& map = mapPtr();
+    const distributionMap& map = mapPtr();
 
 
     // Send over queries
@@ -688,7 +688,7 @@ Foam::label Foam::distributedTriSurfaceMesh::calcOverlappingProcs
 // Generate queries for parallel distance calculation
 // - calculates exchange map
 // - uses map to exchange points and radius
-Foam::autoPtr<Foam::mapDistribute>
+Foam::autoPtr<Foam::distributionMap>
 Foam::distributedTriSurfaceMesh::calcLocalQueries
 (
     const pointField& centres,
@@ -788,9 +788,9 @@ Foam::distributedTriSurfaceMesh::calcLocalQueries
         }
     }
 
-    autoPtr<mapDistribute> mapPtr
+    autoPtr<distributionMap> mapPtr
     (
-        new mapDistribute
+        new distributionMap
         (
             segmentI,       // size after construction
             move(sendMap),
@@ -1583,7 +1583,7 @@ void Foam::distributedTriSurfaceMesh::findNearest
         pointField allCentres;
         scalarField allRadiusSqr;
         labelList allSegmentMap;
-        autoPtr<mapDistribute> mapPtr
+        autoPtr<distributionMap> mapPtr
         (
             calcLocalQueries
             (
@@ -1595,7 +1595,7 @@ void Foam::distributedTriSurfaceMesh::findNearest
                 allSegmentMap
             )
         );
-        const mapDistribute& map = mapPtr();
+        const distributionMap& map = mapPtr();
 
 
         // swap samples to local processor
@@ -1837,7 +1837,7 @@ void Foam::distributedTriSurfaceMesh::getRegion
     // ~~~~~~~~~~~~~~
 
     labelList triangleIndex(info.size());
-    autoPtr<mapDistribute> mapPtr
+    autoPtr<distributionMap> mapPtr
     (
         calcLocalQueries
         (
@@ -1845,7 +1845,7 @@ void Foam::distributedTriSurfaceMesh::getRegion
             triangleIndex
         )
     );
-    const mapDistribute& map = mapPtr();
+    const distributionMap& map = mapPtr();
 
 
     // Do my tests
@@ -1886,7 +1886,7 @@ void Foam::distributedTriSurfaceMesh::getNormal
     // ~~~~~~~~~~~~~~
 
     labelList triangleIndex(info.size());
-    autoPtr<mapDistribute> mapPtr
+    autoPtr<distributionMap> mapPtr
     (
         calcLocalQueries
         (
@@ -1894,7 +1894,7 @@ void Foam::distributedTriSurfaceMesh::getNormal
             triangleIndex
         )
     );
-    const mapDistribute& map = mapPtr();
+    const distributionMap& map = mapPtr();
 
 
     // Do my tests
@@ -1942,7 +1942,7 @@ void Foam::distributedTriSurfaceMesh::getField
         // ~~~~~~~~~~~~~~
 
         labelList triangleIndex(info.size());
-        autoPtr<mapDistribute> mapPtr
+        autoPtr<distributionMap> mapPtr
         (
             calcLocalQueries
             (
@@ -1950,7 +1950,7 @@ void Foam::distributedTriSurfaceMesh::getField
                 triangleIndex
             )
         );
-        const mapDistribute& map = mapPtr();
+        const distributionMap& map = mapPtr();
 
 
         // Do my tests
@@ -2031,8 +2031,8 @@ void Foam::distributedTriSurfaceMesh::distribute
 (
     const List<treeBoundBox>& bbs,
     const bool keepNonLocal,
-    autoPtr<mapDistribute>& faceMap,
-    autoPtr<mapDistribute>& pointMap
+    autoPtr<distributionMap>& faceMap,
+    autoPtr<distributionMap>& pointMap
 )
 {
     // Get bbs of all domains
@@ -2298,7 +2298,7 @@ void Foam::distributedTriSurfaceMesh::distribute
 
     faceMap.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             allTris.size(),
             move(faceSendMap),
@@ -2307,7 +2307,7 @@ void Foam::distributedTriSurfaceMesh::distribute
     );
     pointMap.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             allPoints.size(),
             move(pointSendMap),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,10 +125,10 @@ class AMIInterpolation
         const faceAreaIntersect::triangulationMode triMode_;
 
         //- Source map pointer - parallel running only
-        autoPtr<mapDistribute> srcMapPtr_;
+        autoPtr<distributionMap> srcMapPtr_;
 
         //- Target map pointer - parallel running only
-        autoPtr<mapDistribute> tgtMapPtr_;
+        autoPtr<distributionMap> tgtMapPtr_;
 
 
         // Parallel functionality
@@ -149,7 +149,7 @@ class AMIInterpolation
 
             void distributePatches
             (
-                const mapDistribute& map,
+                const distributionMap& map,
                 const primitivePatch& pp,
                 const globalIndex& gi,
                 List<faceList>& faces,
@@ -159,7 +159,7 @@ class AMIInterpolation
 
             void distributeAndMergePatches
             (
-                const mapDistribute& map,
+                const distributionMap& map,
                 const primitivePatch& tgtPatch,
                 const globalIndex& gi,
                 faceList& tgtFaces,
@@ -167,7 +167,7 @@ class AMIInterpolation
                 labelList& tgtFaceIDs
             ) const;
 
-            autoPtr<mapDistribute> calcProcMap
+            autoPtr<distributionMap> calcProcMap
             (
                 const primitivePatch& srcPatch,
                 const primitivePatch& tgtPatch
@@ -231,7 +231,7 @@ class AMIInterpolation
 
             static void agglomerate
             (
-                const autoPtr<mapDistribute>& targetMap,
+                const autoPtr<distributionMap>& targetMap,
                 const scalarField& fineSrcMagSf,
                 const labelListList& fineSrcAddress,
                 const scalarListList& fineSrcWeights,
@@ -243,7 +243,7 @@ class AMIInterpolation
                 labelListList& srcAddress,
                 scalarListList& srcWeights,
                 scalarField& srcWeightsSum,
-                autoPtr<mapDistribute>& tgtMap
+                autoPtr<distributionMap>& tgtMap
             );
 
             void constructFromSurface
@@ -348,7 +348,7 @@ public:
                 //- Source map pointer - valid only if singlePatchProc = -1
                 //  This gets source data into a form to be consumed by
                 //  tgtAddress, tgtWeights
-                inline const mapDistribute& srcMap() const;
+                inline const distributionMap& srcMap() const;
 
 
             // Target patch
@@ -376,7 +376,7 @@ public:
                 //- Target map pointer -  valid only if singlePatchProc=-1.
                 //  This gets target data into a form to be consumed by
                 //  srcAddress, srcWeights
-                inline const mapDistribute& tgtMap() const;
+                inline const distributionMap& tgtMap() const;
 
 
         // Manipulation

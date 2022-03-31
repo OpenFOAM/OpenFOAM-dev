@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ namespace Foam
 
 // Forward declaration of classes
 class mapPolyMesh;
-class mapDistributePolyMesh;
+class polyMeshDistributionMap;
 
 
 // Forward declaration of friend functions and operators
@@ -355,7 +355,7 @@ public:
         //- Update local numbering for mesh redistribution.
         //  Can only distribute clusters sent across in one go; cannot
         //  handle parts recombined in multiple passes.
-        void distribute(const mapDistributePolyMesh&);
+        void distribute(const polyMeshDistributionMap&);
 
 
         //- Compact splitCells_. Removes all freeSplitCells_ elements.

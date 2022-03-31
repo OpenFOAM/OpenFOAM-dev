@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,10 @@ void Foam::fv::phaseLimitStabilisation::updateMesh(const mapPolyMesh&)
 {}
 
 
-void Foam::fv::phaseLimitStabilisation::distribute(const mapDistributePolyMesh&)
+void Foam::fv::phaseLimitStabilisation::distribute
+(
+    const polyMeshDistributionMap&
+)
 {}
 
 

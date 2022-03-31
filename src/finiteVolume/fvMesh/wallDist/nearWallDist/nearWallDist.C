@@ -94,7 +94,7 @@ void Foam::nearWallDist::updateMesh(const mapPolyMesh& map)
 }
 
 
-void Foam::nearWallDist::distribute(const mapDistributePolyMesh& map)
+void Foam::nearWallDist::distribute(const polyMeshDistributionMap& map)
 {
     correct();
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "AMIInterpolation.H"
 #include "AMIMethod.H"
 #include "meshTools.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "flipOp.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -69,7 +69,7 @@ void Foam::AMIInterpolation::interpolateToTarget
 
     if (singlePatchProc_ == -1)
     {
-        const mapDistribute& map = srcMapPtr_();
+        const distributionMap& map = srcMapPtr_();
 
         List<Type> work(fld);
         map.distribute(work);
@@ -153,7 +153,7 @@ void Foam::AMIInterpolation::interpolateToSource
 
     if (singlePatchProc_ == -1)
     {
-        const mapDistribute& map = tgtMapPtr_();
+        const distributionMap& map = tgtMapPtr_();
 
         List<Type> work(fld);
         map.distribute(work);

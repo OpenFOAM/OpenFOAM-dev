@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "DistributedDelaunayMesh.H"
 #include "meshSearch.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "zeroGradientFvPatchFields.H"
 #include "pointConversion.H"
 #include "indexedVertexEnum.H"
@@ -37,7 +37,7 @@ License
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
 
 template<class Triangulation>
-Foam::autoPtr<Foam::mapDistribute>
+Foam::autoPtr<Foam::distributionMap>
 Foam::DistributedDelaunayMesh<Triangulation>::buildMap
 (
     const List<label>& toProc
@@ -108,9 +108,9 @@ Foam::DistributedDelaunayMesh<Triangulation>::buildMap
         }
     }
 
-    return autoPtr<mapDistribute>
+    return autoPtr<distributionMap>
     (
-        new mapDistribute
+        new distributionMap
         (
             constructSize,
             move(sendMap),
@@ -494,7 +494,7 @@ Foam::label Foam::DistributedDelaunayMesh<Triangulation>::referVertices
 
     const label preDistributionSize = parallelVertices.size();
 
-    mapDistribute pointMap = buildMap(targetProcessor);
+    distributionMap pointMap = buildMap(targetProcessor);
 
     // Make a copy of the original list.
     DynamicList<Vb> originalParallelVertices(parallelVertices);
@@ -803,7 +803,7 @@ bool Foam::DistributedDelaunayMesh<Triangulation>::distribute
 
 
 template<class Triangulation>
-Foam::autoPtr<Foam::mapDistribute>
+Foam::autoPtr<Foam::distributionMap>
 Foam::DistributedDelaunayMesh<Triangulation>::distribute
 (
     const backgroundMeshDecomposition& decomposition,
@@ -812,12 +812,12 @@ Foam::DistributedDelaunayMesh<Triangulation>::distribute
 {
     if (!Pstream::parRun())
     {
-        return autoPtr<mapDistribute>();
+        return autoPtr<distributionMap>();
     }
 
     distributeBoundBoxes(decomposition.procBounds());
 
-    autoPtr<mapDistribute> mapDist = decomposition.distributePoints(points);
+    autoPtr<distributionMap> mapDist = decomposition.distributePoints(points);
 
     return mapDist;
 }

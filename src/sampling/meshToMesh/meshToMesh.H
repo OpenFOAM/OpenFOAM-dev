@@ -44,7 +44,7 @@ SourceFiles
 
 #include "polyMesh.H"
 #include "boundBox.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "volFieldsFwd.H"
 #include "NamedEnum.H"
 #include "AMIInterpolation.H"
@@ -100,10 +100,10 @@ class meshToMesh
         label singleMeshProc_;
 
         //- Source map pointer - parallel running only
-        autoPtr<mapDistribute> srcMapPtr_;
+        autoPtr<distributionMap> srcMapPtr_;
 
         //- Target map pointer - parallel running only
-        autoPtr<mapDistribute> tgtMapPtr_;
+        autoPtr<distributionMap> tgtMapPtr_;
 
 
     // Private Member Functions
@@ -197,7 +197,7 @@ class meshToMesh
             ) const;
 
             //- Calculate the mapping between processors
-            autoPtr<mapDistribute> calcProcMap
+            autoPtr<distributionMap> calcProcMap
             (
                 const polyMesh& src,
                 const polyMesh& tgt
@@ -206,7 +206,7 @@ class meshToMesh
             //- Distribute mesh info from 'my' processor to others
             void distributeCells
             (
-                const mapDistribute& map,
+                const distributionMap& map,
                 const polyMesh& tgtMesh,
                 const globalIndex& globalI,
                 List<pointField>& points,
@@ -222,7 +222,7 @@ class meshToMesh
             //- Collect pieces of tgt mesh from other processors and restructure
             void distributeAndMergeCells
             (
-                const mapDistribute& map,
+                const distributionMap& map,
                 const polyMesh& tgt,
                 const globalIndex& globalI,
                 pointField& tgtPoints,

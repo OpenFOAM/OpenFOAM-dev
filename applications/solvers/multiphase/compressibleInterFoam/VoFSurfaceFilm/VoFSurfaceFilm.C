@@ -159,7 +159,7 @@ void Foam::fv::VoFSurfaceFilm::updateMesh(const mapPolyMesh&)
 }
 
 
-void Foam::fv::VoFSurfaceFilm::distribute(const mapDistributePolyMesh&)
+void Foam::fv::VoFSurfaceFilm::distribute(const polyMeshDistributionMap&)
 {
     NotImplemented;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ void Foam::distributedWeightedFvPatchFieldMapper::map
     if (singlePatchProc_ == -1)
     {
         // Fetch remote parts of mapF
-        const mapDistributeBase& distMap = *distMapPtr_;
+        const distributionMapBase& distMap = *distMapPtr_;
         Field<Type> newMapF(mapF);
 
         // Moved flux "flip" functionality to higher level

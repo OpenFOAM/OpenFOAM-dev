@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,14 +65,14 @@ class smoothAlignmentSolver
         );
 
         template<class Triangulation>
-        autoPtr<mapDistribute> buildMap
+        autoPtr<distributionMap> buildMap
         (
             const Triangulation& mesh,
             labelListList& pointPoints
         );
 
         template<class Triangulation>
-        autoPtr<mapDistribute> buildReferredMap
+        autoPtr<distributionMap> buildReferredMap
         (
             const Triangulation& mesh,
             labelList& indices

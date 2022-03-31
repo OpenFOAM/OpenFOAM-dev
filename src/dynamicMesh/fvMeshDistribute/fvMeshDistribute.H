@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ namespace Foam
 
 // Forward declaration of classes
 class mapAddedPolyMesh;
-class mapDistributePolyMesh;
+class polyMeshDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                       Class fvMeshDistribute Declaration
@@ -366,7 +366,7 @@ public:
 
         //- Send cells to neighbours according to distribution
         //  (for every cell the new proc)
-        autoPtr<mapDistributePolyMesh> distribute(const labelList& dist);
+        autoPtr<polyMeshDistributionMap> distribute(const labelList& dist);
 
         // Debugging
 

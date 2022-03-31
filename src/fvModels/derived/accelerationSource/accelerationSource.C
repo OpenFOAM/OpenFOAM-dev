@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,10 @@ void Foam::fv::accelerationSource::updateMesh(const mapPolyMesh& map)
 }
 
 
-void Foam::fv::accelerationSource::distribute(const mapDistributePolyMesh& map)
+void Foam::fv::accelerationSource::distribute
+(
+    const polyMeshDistributionMap& map
+)
 {
     set_.distribute(map);
 }

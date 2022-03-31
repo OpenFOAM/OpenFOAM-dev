@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,7 +141,7 @@ public:
             void updateMesh(const mapPolyMesh&);
 
             //- Update mesh corresponding to the given distribution map
-            virtual void distribute(const mapDistributePolyMesh&);
+            virtual void distribute(const polyMeshDistributionMap&);
 
             //- Correct weighting factors for moving mesh.
             bool movePoints();

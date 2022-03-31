@@ -39,7 +39,8 @@ Description
     do not allow any transformations and require a global reduction on the
     master processor.
 
-    The alternative is to have an exchange schedule (through a 'mapDistribute')
+    The alternative is to have an exchange schedule
+    (through a 'distributionMap')
     which sends all point/edge data (no distinction is made between
     those on two and those on more than two coupled patches) to the local
     'master'.  This master then does any calculation and sends
@@ -50,7 +51,7 @@ Description
 
     The exchange needs
     - a field of data
-    - a mapDistribute which does all parallel exchange and transformations
+    - a distributionMap which does all parallel exchange and transformations
       This appends remote data to the end of the field.
     - a set of indices which indicate where to get untransformed data in the
       field
@@ -69,7 +70,7 @@ Note
       would be too complicated
 
 See also
-    mapDistribute
+    distributionMap
     globalIndexAndTransform
 
 SourceFiles
@@ -93,7 +94,7 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 class polyMesh;
-class mapDistribute;
+class distributionMap;
 template<class T> class EdgeMap;
 class globalIndex;
 class globalIndexAndTransform;
@@ -165,7 +166,7 @@ class globalMeshData
 
             mutable autoPtr<labelListList> globalPointSlavesPtr_;
             mutable autoPtr<labelListList> globalPointTransformedSlavesPtr_;
-            mutable autoPtr<mapDistribute> globalPointSlavesMapPtr_;
+            mutable autoPtr<distributionMap> globalPointSlavesMapPtr_;
 
             // Coupled edge to coupled edges
 
@@ -173,7 +174,7 @@ class globalMeshData
             mutable autoPtr<labelListList> globalEdgeSlavesPtr_;
             mutable autoPtr<labelListList> globalEdgeTransformedSlavesPtr_;
             mutable autoPtr<PackedBoolList> globalEdgeOrientationPtr_;
-            mutable autoPtr<mapDistribute> globalEdgeSlavesMapPtr_;
+            mutable autoPtr<distributionMap> globalEdgeSlavesMapPtr_;
 
 
             // Coupled point to boundary faces
@@ -182,7 +183,7 @@ class globalMeshData
             mutable autoPtr<labelListList> globalPointBoundaryFacesPtr_;
             mutable autoPtr<labelListList>
                 globalPointTransformedBoundaryFacesPtr_;
-            mutable autoPtr<mapDistribute> globalPointBoundaryFacesMapPtr_;
+            mutable autoPtr<distributionMap> globalPointBoundaryFacesMapPtr_;
 
             // Coupled point to boundary cells
 
@@ -191,12 +192,12 @@ class globalMeshData
             mutable autoPtr<labelListList> globalPointBoundaryCellsPtr_;
             mutable autoPtr<labelListList>
                 globalPointTransformedBoundaryCellsPtr_;
-            mutable autoPtr<mapDistribute> globalPointBoundaryCellsMapPtr_;
+            mutable autoPtr<distributionMap> globalPointBoundaryCellsMapPtr_;
 
 
             // Other: coupled point to coupled COLLOCATED points
             mutable autoPtr<labelListList> globalCoPointSlavesPtr_;
-            mutable autoPtr<mapDistribute> globalCoPointSlavesMapPtr_;
+            mutable autoPtr<distributionMap> globalCoPointSlavesMapPtr_;
 
 
 
@@ -515,7 +516,7 @@ public:
                 List<Type>& pointData,
                 const labelListList& slaves,
                 const labelListList& transformedSlaves,
-                const mapDistribute& slavesMap,
+                const distributionMap& slavesMap,
                 const globalIndexAndTransform&,
                 const CombineOp& cop,
                 const TransformOp& top
@@ -528,7 +529,7 @@ public:
                 List<Type>& pointData,
                 const labelListList& slaves,
                 const labelListList& transformedSlaves,
-                const mapDistribute& slavesMap,
+                const distributionMap& slavesMap,
                 const CombineOp& cop
             );
 
@@ -540,7 +541,7 @@ public:
                 const globalIndex& globalPointNumbering() const;
                 const labelListList& globalPointSlaves() const;
                 const labelListList& globalPointTransformedSlaves() const;
-                const mapDistribute& globalPointSlavesMap() const;
+                const distributionMap& globalPointSlavesMap() const;
                 //- Helper to synchronise coupled patch point data
                 template<class Type, class CombineOp, class TransformOp>
                 void syncPointData
@@ -555,14 +556,14 @@ public:
                 const globalIndex& globalEdgeNumbering() const;
                 const labelListList& globalEdgeSlaves() const;
                 const labelListList& globalEdgeTransformedSlaves() const;
-                const mapDistribute& globalEdgeSlavesMap() const;
+                const distributionMap& globalEdgeSlavesMap() const;
                 //- Is my edge same orientation as master edge
                 const PackedBoolList& globalEdgeOrientation() const;
 
             // Collocated point to collocated point
 
                 const labelListList& globalCoPointSlaves() const;
-                const mapDistribute& globalCoPointSlavesMap() const;
+                const distributionMap& globalCoPointSlavesMap() const;
 
             // Coupled point to boundary faces. These are uncoupled boundary
             // faces only but include empty patches.
@@ -572,7 +573,7 @@ public:
                 const labelListList& globalPointBoundaryFaces() const;
                 const labelListList& globalPointTransformedBoundaryFaces()
                 const;
-                const mapDistribute& globalPointBoundaryFacesMap() const;
+                const distributionMap& globalPointBoundaryFacesMap() const;
 
             // Coupled point to boundary cell
 
@@ -584,7 +585,7 @@ public:
                 const labelListList& globalPointBoundaryCells() const;
                 const labelListList& globalPointTransformedBoundaryCells()
                 const;
-                const mapDistribute& globalPointBoundaryCellsMap() const;
+                const distributionMap& globalPointBoundaryCellsMap() const;
 
 
             // Other

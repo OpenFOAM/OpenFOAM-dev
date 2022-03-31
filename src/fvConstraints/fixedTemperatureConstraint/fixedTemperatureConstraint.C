@@ -200,7 +200,7 @@ void Foam::fv::fixedTemperatureConstraint::updateMesh(const mapPolyMesh& map)
 
 void Foam::fv::fixedTemperatureConstraint::distribute
 (
-    const mapDistributePolyMesh& map
+    const polyMeshDistributionMap& map
 )
 {
     set_.distribute(map);

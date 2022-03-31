@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -581,7 +581,7 @@ void calcEdgeMinMaxZone
     const primitiveFacePatch& extrudePatch,
     const labelList& extrudeMeshEdges,
     const labelList& zoneID,
-    const mapDistribute& extrudeEdgeFacesMap,
+    const distributionMap& extrudeEdgeFacesMap,
     const labelListList& extrudeEdgeGlobalFaces,
 
     labelList& minZoneID,
@@ -838,7 +838,7 @@ void addCoupledPatches
     const primitiveFacePatch& extrudePatch,
     const labelList& extrudeMeshFaces,
     const labelList& extrudeMeshEdges,
-    const mapDistribute& extrudeEdgeFacesMap,
+    const distributionMap& extrudeEdgeFacesMap,
     const labelListList& extrudeEdgeGlobalFaces,
 
     labelList& sidePatchID,
@@ -1786,7 +1786,7 @@ int main(int argc, char *argv[])
         )
     );
     List<Map<label>> compactMap;
-    const mapDistribute extrudeEdgeFacesMap
+    const distributionMap extrudeEdgeFacesMap
     (
         globalExtrudeFaces,
         extrudeEdgeGlobalFaces,

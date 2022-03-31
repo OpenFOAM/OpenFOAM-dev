@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "globalIndexAndTransform.H"
 #include "transformField.H"
 
@@ -31,13 +31,13 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(mapDistribute, 0);
+    defineTypeNameAndDebug(distributionMap, 0);
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const transformer&,
     const bool,
@@ -45,21 +45,21 @@ void Foam::mapDistribute::transform::operator()
 ) const
 {}
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     UList<label>&
 ) const
 {}
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     Map<label>&
 ) const
 {}
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     EdgeMap<label>&
@@ -68,7 +68,7 @@ void Foam::mapDistribute::transform::operator()
 
 
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const transformer&,
     const bool,
@@ -76,21 +76,21 @@ void Foam::mapDistribute::transform::operator()
 ) const
 {}
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     UList<scalar>&
 ) const
 {}
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     Map<scalar>&
 ) const
 {}
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     EdgeMap<scalar>&
@@ -99,7 +99,7 @@ void Foam::mapDistribute::transform::operator()
 
 
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const transformer&,
     const bool,
@@ -107,21 +107,21 @@ void Foam::mapDistribute::transform::operator()
 ) const
 {}
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     UList<bool>&
 ) const
 {}
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     Map<bool>&
 ) const
 {}
 template<>
-void Foam::mapDistribute::transform::operator()
+void Foam::distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     EdgeMap<bool>&
@@ -129,9 +129,9 @@ void Foam::mapDistribute::transform::operator()
 {}
 
 
-void Foam::mapDistribute::printLayout(Ostream& os) const
+void Foam::distributionMap::printLayout(Ostream& os) const
 {
-    mapDistributeBase::printLayout(os);
+    distributionMapBase::printLayout(os);
 
     forAll(transformElements_, trafoI)
     {
@@ -147,13 +147,13 @@ void Foam::mapDistribute::printLayout(Ostream& os) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::mapDistribute::mapDistribute()
+Foam::distributionMap::distributionMap()
 :
-    mapDistributeBase()
+    distributionMapBase()
 {}
 
 
-Foam::mapDistribute::mapDistribute
+Foam::distributionMap::distributionMap
 (
     const label constructSize,
     labelListList&& subMap,
@@ -162,7 +162,7 @@ Foam::mapDistribute::mapDistribute
     const bool constructHasFlip
 )
 :
-    mapDistributeBase
+    distributionMapBase
     (
         constructSize,
         move(subMap),
@@ -173,7 +173,7 @@ Foam::mapDistribute::mapDistribute
 {}
 
 
-Foam::mapDistribute::mapDistribute
+Foam::distributionMap::distributionMap
 (
     const label constructSize,
     labelListList&& subMap,
@@ -184,7 +184,7 @@ Foam::mapDistribute::mapDistribute
     const bool constructHasFlip
 )
 :
-    mapDistributeBase
+    distributionMapBase
     (
         constructSize,
         move(subMap),
@@ -197,17 +197,17 @@ Foam::mapDistribute::mapDistribute
 {}
 
 
-Foam::mapDistribute::mapDistribute
+Foam::distributionMap::distributionMap
 (
     const labelList& sendProcs,
     const labelList& recvProcs
 )
 :
-    mapDistributeBase(sendProcs, recvProcs)
+    distributionMapBase(sendProcs, recvProcs)
 {}
 
 
-Foam::mapDistribute::mapDistribute
+Foam::distributionMap::distributionMap
 (
     const globalIndex& globalNumbering,
     labelList& elements,
@@ -215,7 +215,7 @@ Foam::mapDistribute::mapDistribute
     const int tag
 )
 :
-    mapDistributeBase
+    distributionMapBase
     (
         globalNumbering,
         elements,
@@ -225,7 +225,7 @@ Foam::mapDistribute::mapDistribute
 {}
 
 
-Foam::mapDistribute::mapDistribute
+Foam::distributionMap::distributionMap
 (
     const globalIndex& globalNumbering,
     labelListList& cellCells,
@@ -233,7 +233,7 @@ Foam::mapDistribute::mapDistribute
     const int tag
 )
 :
-    mapDistributeBase
+    distributionMapBase
     (
         globalNumbering,
         cellCells,
@@ -243,7 +243,7 @@ Foam::mapDistribute::mapDistribute
 {}
 
 
-Foam::mapDistribute::mapDistribute
+Foam::distributionMap::distributionMap
 (
     const globalIndex& globalNumbering,
     labelList& elements,
@@ -254,7 +254,7 @@ Foam::mapDistribute::mapDistribute
     const int tag
 )
 :
-    mapDistributeBase()
+    distributionMapBase()
 {
     // Construct per processor compact addressing of the global elements
     // needed. The ones from the local processor are not included since
@@ -348,7 +348,7 @@ Foam::mapDistribute::mapDistribute
 }
 
 
-Foam::mapDistribute::mapDistribute
+Foam::distributionMap::distributionMap
 (
     const globalIndex& globalNumbering,
     labelListList& cellCells,
@@ -359,7 +359,7 @@ Foam::mapDistribute::mapDistribute
     const int tag
 )
 :
-    mapDistributeBase()
+    distributionMapBase()
 {
     // Construct per processor compact addressing of the global elements
     // needed. The ones from the local processor are not included since
@@ -466,46 +466,46 @@ Foam::mapDistribute::mapDistribute
 }
 
 
-Foam::mapDistribute::mapDistribute(const mapDistribute& map)
+Foam::distributionMap::distributionMap(const distributionMap& map)
 :
-    mapDistributeBase(map),
+    distributionMapBase(map),
     transformElements_(map.transformElements_),
     transformStart_(map.transformStart_)
 {}
 
 
-Foam::mapDistribute::mapDistribute(mapDistribute&& map)
+Foam::distributionMap::distributionMap(distributionMap&& map)
 :
-    mapDistributeBase(move(map)),
+    distributionMapBase(move(map)),
     transformElements_(move(map.transformElements_)),
     transformStart_(move(map.transformStart_))
 {}
 
 
-Foam::mapDistribute::mapDistribute(Istream& is)
+Foam::distributionMap::distributionMap(Istream& is)
 {
     is  >> *this;
 }
 
 
-Foam::autoPtr<Foam::mapDistribute> Foam::mapDistribute::clone() const
+Foam::autoPtr<Foam::distributionMap> Foam::distributionMap::clone() const
 {
-    return autoPtr<mapDistribute>(new mapDistribute(*this));
+    return autoPtr<distributionMap>(new distributionMap(*this));
 }
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::label Foam::mapDistribute::whichTransform(const label index)
+Foam::label Foam::distributionMap::whichTransform(const label index)
 const
 {
     return findLower(transformStart_, index+1);
 }
 
 
-void Foam::mapDistribute::transfer(mapDistribute& rhs)
+void Foam::distributionMap::transfer(distributionMap& rhs)
 {
-    mapDistributeBase::transfer(rhs);
+    distributionMapBase::transfer(rhs);
     transformElements_.transfer(rhs.transformElements_);
     transformStart_.transfer(rhs.transformStart_);
 }
@@ -513,7 +513,7 @@ void Foam::mapDistribute::transfer(mapDistribute& rhs)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void Foam::mapDistribute::operator=(const mapDistribute& rhs)
+void Foam::distributionMap::operator=(const distributionMap& rhs)
 {
     // Check for assignment to self
     if (this == &rhs)
@@ -522,7 +522,7 @@ void Foam::mapDistribute::operator=(const mapDistribute& rhs)
             << "Attempted assignment to self"
             << abort(FatalError);
     }
-    mapDistributeBase::operator=(rhs);
+    distributionMapBase::operator=(rhs);
     transformElements_ = rhs.transformElements_;
     transformStart_ = rhs.transformStart_;
 }
@@ -530,11 +530,11 @@ void Foam::mapDistribute::operator=(const mapDistribute& rhs)
 
 // * * * * * * * * * * * * * * Istream Operator  * * * * * * * * * * * * * * //
 
-Foam::Istream& Foam::operator>>(Istream& is, mapDistribute& map)
+Foam::Istream& Foam::operator>>(Istream& is, distributionMap& map)
 {
-    is.fatalCheck("operator>>(Istream&, mapDistribute&)");
+    is.fatalCheck("operator>>(Istream&, distributionMap&)");
 
-    is  >> static_cast<mapDistributeBase&>(map)
+    is  >> static_cast<distributionMapBase&>(map)
         >> map.transformElements_ >> map.transformStart_;
 
     return is;
@@ -543,9 +543,9 @@ Foam::Istream& Foam::operator>>(Istream& is, mapDistribute& map)
 
 // * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const mapDistribute& map)
+Foam::Ostream& Foam::operator<<(Ostream& os, const distributionMap& map)
 {
-    os  << static_cast<const mapDistributeBase&>(map) << token::NL
+    os  << static_cast<const distributionMapBase&>(map) << token::NL
         << map.transformElements_ << token::NL
         << map.transformStart_;
 

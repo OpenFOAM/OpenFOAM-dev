@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "IOmapDistribute.H"
+#include "IOdistributionMap.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
 namespace Foam
 {
-    defineTypeNameAndDebug(IOmapDistribute, 0);
+    defineTypeNameAndDebug(IOdistributionMap, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::IOmapDistribute::IOmapDistribute(const IOobject& io)
+Foam::IOdistributionMap::IOdistributionMap(const IOobject& io)
 :
     regIOobject(io)
 {
@@ -43,9 +43,9 @@ Foam::IOmapDistribute::IOmapDistribute(const IOobject& io)
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
         WarningInFunction
-            << "IOmapDistribute " << name()
+            << "IOdistributionMap " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
-            " but IOmapDistribute does not support automatic rereading."
+            " but IOdistributionMap does not support automatic rereading."
             << endl;
     }
 
@@ -64,10 +64,10 @@ Foam::IOmapDistribute::IOmapDistribute(const IOobject& io)
 }
 
 
-Foam::IOmapDistribute::IOmapDistribute
+Foam::IOdistributionMap::IOdistributionMap
 (
     const IOobject& io,
-    const mapDistribute& map
+    const distributionMap& map
 )
 :
     regIOobject(io)
@@ -76,9 +76,9 @@ Foam::IOmapDistribute::IOmapDistribute
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
         WarningInFunction
-            << "IOmapDistribute " << name()
+            << "IOdistributionMap " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
-            " but IOmapDistribute does not support automatic rereading."
+            " but IOdistributionMap does not support automatic rereading."
             << endl;
     }
 
@@ -96,27 +96,27 @@ Foam::IOmapDistribute::IOmapDistribute
     }
     else
     {
-        mapDistribute::operator=(map);
+        distributionMap::operator=(map);
     }
 }
 
 
-Foam::IOmapDistribute::IOmapDistribute
+Foam::IOdistributionMap::IOdistributionMap
 (
     const IOobject& io,
-    mapDistribute&& map
+    distributionMap&& map
 )
 :
     regIOobject(io),
-    mapDistribute(move(map))
+    distributionMap(move(map))
 {
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
         WarningInFunction
-            << "IOmapDistribute " << name()
+            << "IOdistributionMap " << name()
             << " constructed with IOobject::MUST_READ_IF_MODIFIED"
-            " but IOmapDistribute does not support automatic rereading."
+            " but IOdistributionMap does not support automatic rereading."
             << endl;
     }
 
@@ -137,19 +137,19 @@ Foam::IOmapDistribute::IOmapDistribute
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
-Foam::IOmapDistribute::~IOmapDistribute()
+Foam::IOdistributionMap::~IOdistributionMap()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::IOmapDistribute::readData(Istream& is)
+bool Foam::IOdistributionMap::readData(Istream& is)
 {
     return (is >> *this).good();
 }
 
 
-bool Foam::IOmapDistribute::writeData(Ostream& os) const
+bool Foam::IOdistributionMap::writeData(Ostream& os) const
 {
     return (os << *this).good();
 }

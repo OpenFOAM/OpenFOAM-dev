@@ -145,7 +145,7 @@ void Foam::fv::fixedValueConstraint::updateMesh(const mapPolyMesh& map)
 
 void Foam::fv::fixedValueConstraint::distribute
 (
-    const mapDistributePolyMesh& map
+    const polyMeshDistributionMap& map
 )
 {
     set_.distribute(map);

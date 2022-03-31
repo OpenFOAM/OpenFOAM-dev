@@ -34,7 +34,7 @@ License
 #include "decompositionMethod.H"
 #include "fvMeshDistribute.H"
 #include "polyTopoChange.H"
-#include "mapDistributePolyMesh.H"
+#include "polyMeshDistributionMap.H"
 #include "Cloud.H"
 #include "OBJstream.H"
 #include "cellSet.H"
@@ -2264,7 +2264,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::refine
 }
 
 
-Foam::autoPtr<Foam::mapDistributePolyMesh>
+Foam::autoPtr<Foam::polyMeshDistributionMap>
 Foam::meshRefinement::refineAndBalance
 (
     const string& msg,
@@ -2302,7 +2302,7 @@ Foam::meshRefinement::refineAndBalance
     // Load balancing
     // ~~~~~~~~~~~~~~
 
-    autoPtr<mapDistributePolyMesh> distMap;
+    autoPtr<polyMeshDistributionMap> distMap;
 
     if (Pstream::nProcs() > 1)
     {
@@ -2365,7 +2365,7 @@ Foam::meshRefinement::refineAndBalance
 
 
 // Do load balancing followed by refinement of consistent set of cells.
-Foam::autoPtr<Foam::mapDistributePolyMesh>
+Foam::autoPtr<Foam::polyMeshDistributionMap>
 Foam::meshRefinement::balanceAndRefine
 (
     const string& msg,
@@ -2404,7 +2404,7 @@ Foam::meshRefinement::balanceAndRefine
     // Load balancing
     // ~~~~~~~~~~~~~~
 
-    autoPtr<mapDistributePolyMesh> distMap;
+    autoPtr<polyMeshDistributionMap> distMap;
 
     if (Pstream::nProcs() > 1)
     {

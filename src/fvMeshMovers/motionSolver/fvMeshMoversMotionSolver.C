@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ void Foam::fvMeshMovers::motionSolver::updateMesh(const mapPolyMesh& mpm)
 
 void Foam::fvMeshMovers::motionSolver::distribute
 (
-    const mapDistributePolyMesh& map
+    const polyMeshDistributionMap& map
 )
 {
     motionPtr_->distribute(map);

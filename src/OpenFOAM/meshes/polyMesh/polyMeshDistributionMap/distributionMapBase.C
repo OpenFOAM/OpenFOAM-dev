@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mapDistributeBase.H"
+#include "distributionMapBase.H"
 #include "commSchedule.H"
 #include "HashSet.H"
 #include "globalIndex.H"
@@ -33,13 +33,13 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(mapDistributeBase, 0);
+    defineTypeNameAndDebug(distributionMapBase, 0);
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::List<Foam::labelPair> Foam::mapDistributeBase::schedule
+Foam::List<Foam::labelPair> Foam::distributionMapBase::schedule
 (
     const labelListList& subMap,
     const labelListList& constructMap,
@@ -171,7 +171,7 @@ Foam::List<Foam::labelPair> Foam::mapDistributeBase::schedule
 }
 
 
-const Foam::List<Foam::labelPair>& Foam::mapDistributeBase::schedule() const
+const Foam::List<Foam::labelPair>& Foam::distributionMapBase::schedule() const
 {
     if (schedulePtr_.empty())
     {
@@ -187,7 +187,7 @@ const Foam::List<Foam::labelPair>& Foam::mapDistributeBase::schedule() const
 }
 
 
-void Foam::mapDistributeBase::checkReceivedSize
+void Foam::distributionMapBase::checkReceivedSize
 (
     const label proci,
     const label expectedSize,
@@ -205,7 +205,7 @@ void Foam::mapDistributeBase::checkReceivedSize
 }
 
 
-void Foam::mapDistributeBase::printLayout(Ostream& os) const
+void Foam::distributionMapBase::printLayout(Ostream& os) const
 {
     // Determine offsets of remote data.
     labelList minIndex(Pstream::nProcs(), labelMax);
@@ -279,7 +279,7 @@ void Foam::mapDistributeBase::printLayout(Ostream& os) const
 }
 
 
-void Foam::mapDistributeBase::calcCompactAddressing
+void Foam::distributionMapBase::calcCompactAddressing
 (
     const globalIndex& globalNumbering,
     const labelList& elements,
@@ -328,7 +328,7 @@ void Foam::mapDistributeBase::calcCompactAddressing
 }
 
 
-void Foam::mapDistributeBase::calcCompactAddressing
+void Foam::distributionMapBase::calcCompactAddressing
 (
     const globalIndex& globalNumbering,
     const labelListList& cellCells,
@@ -387,7 +387,7 @@ void Foam::mapDistributeBase::calcCompactAddressing
 }
 
 
-void Foam::mapDistributeBase::exchangeAddressing
+void Foam::distributionMapBase::exchangeAddressing
 (
     const int tag,
     const globalIndex& globalNumbering,
@@ -465,7 +465,7 @@ void Foam::mapDistributeBase::exchangeAddressing
 }
 
 
-void Foam::mapDistributeBase::exchangeAddressing
+void Foam::distributionMapBase::exchangeAddressing
 (
     const int tag,
     const globalIndex& globalNumbering,
@@ -550,7 +550,7 @@ void Foam::mapDistributeBase::exchangeAddressing
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::mapDistributeBase::mapDistributeBase()
+Foam::distributionMapBase::distributionMapBase()
 :
     constructSize_(0),
     subHasFlip_(false),
@@ -559,7 +559,7 @@ Foam::mapDistributeBase::mapDistributeBase()
 {}
 
 
-Foam::mapDistributeBase::mapDistributeBase
+Foam::distributionMapBase::distributionMapBase
 (
     const label constructSize,
     const labelListList&& subMap,
@@ -577,7 +577,7 @@ Foam::mapDistributeBase::mapDistributeBase
 {}
 
 
-Foam::mapDistributeBase::mapDistributeBase
+Foam::distributionMapBase::distributionMapBase
 (
     const labelList& sendProcs,
     const labelList& recvProcs
@@ -651,7 +651,7 @@ Foam::mapDistributeBase::mapDistributeBase
 }
 
 
-Foam::mapDistributeBase::mapDistributeBase
+Foam::distributionMapBase::distributionMapBase
 (
     const globalIndex& globalNumbering,
     labelList& elements,
@@ -711,7 +711,7 @@ Foam::mapDistributeBase::mapDistributeBase
 }
 
 
-Foam::mapDistributeBase::mapDistributeBase
+Foam::distributionMapBase::distributionMapBase
 (
     const globalIndex& globalNumbering,
     labelListList& cellCells,
@@ -771,7 +771,7 @@ Foam::mapDistributeBase::mapDistributeBase
 }
 
 
-Foam::mapDistributeBase::mapDistributeBase(const mapDistributeBase& map)
+Foam::distributionMapBase::distributionMapBase(const distributionMapBase& map)
 :
     constructSize_(map.constructSize_),
     subMap_(map.subMap_),
@@ -782,7 +782,7 @@ Foam::mapDistributeBase::mapDistributeBase(const mapDistributeBase& map)
 {}
 
 
-Foam::mapDistributeBase::mapDistributeBase(mapDistributeBase&& map)
+Foam::distributionMapBase::distributionMapBase(distributionMapBase&& map)
 :
     constructSize_(map.constructSize_),
     subMap_(move(map.subMap_)),
@@ -793,7 +793,7 @@ Foam::mapDistributeBase::mapDistributeBase(mapDistributeBase&& map)
 {}
 
 
-Foam::mapDistributeBase::mapDistributeBase(Istream& is)
+Foam::distributionMapBase::distributionMapBase(Istream& is)
 {
     is >> *this;
 }
@@ -801,7 +801,7 @@ Foam::mapDistributeBase::mapDistributeBase(Istream& is)
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::mapDistributeBase::transfer(mapDistributeBase& rhs)
+void Foam::distributionMapBase::transfer(distributionMapBase& rhs)
 {
     constructSize_ = rhs.constructSize_;
     subMap_.transfer(rhs.subMap_);
@@ -812,7 +812,7 @@ void Foam::mapDistributeBase::transfer(mapDistributeBase& rhs)
 }
 
 
-Foam::label Foam::mapDistributeBase::renumber
+Foam::label Foam::distributionMapBase::renumber
 (
     const globalIndex& globalNumbering,
     const List<Map<label>>& compactMap,
@@ -836,14 +836,18 @@ Foam::label Foam::mapDistributeBase::renumber
 }
 
 
-void Foam::mapDistributeBase::compact(const boolList& elemIsUsed, const int tag)
+void Foam::distributionMapBase::compact
+(
+    const boolList& elemIsUsed,
+    const int tag
+)
 {
     // 1. send back to sender. Have sender delete the corresponding element
     //    from the submap and do the same to the constructMap locally
     //    (and in same order).
 
     // Send elemIsUsed field to neighbour. Use nonblocking code from
-    // mapDistributeBase but in reverse order.
+    // distributionMapBase but in reverse order.
     if (Pstream::parRun())
     {
         label startOfRequests = Pstream::nRequests();
@@ -996,7 +1000,7 @@ void Foam::mapDistributeBase::compact(const boolList& elemIsUsed, const int tag)
 }
 
 
-void Foam::mapDistributeBase::compact
+void Foam::distributionMapBase::compact
 (
     const boolList& elemIsUsed,
     const label localSize,            // max index for subMap
@@ -1010,7 +1014,7 @@ void Foam::mapDistributeBase::compact
     //    (and in same order).
 
     // Send elemIsUsed field to neighbour. Use nonblocking code from
-    // mapDistributeBase but in reverse order.
+    // distributionMapBase but in reverse order.
     if (Pstream::parRun())
     {
         label startOfRequests = Pstream::nRequests();
@@ -1220,7 +1224,7 @@ void Foam::mapDistributeBase::compact
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void Foam::mapDistributeBase::operator=(const mapDistributeBase& rhs)
+void Foam::distributionMapBase::operator=(const distributionMapBase& rhs)
 {
     // Check for assignment to self
     if (this == &rhs)
@@ -1240,9 +1244,9 @@ void Foam::mapDistributeBase::operator=(const mapDistributeBase& rhs)
 
 // * * * * * * * * * * * * * * Istream Operator  * * * * * * * * * * * * * * //
 
-Foam::Istream& Foam::operator>>(Istream& is, mapDistributeBase& map)
+Foam::Istream& Foam::operator>>(Istream& is, distributionMapBase& map)
 {
-    is.fatalCheck("operator>>(Istream&, mapDistributeBase&)");
+    is.fatalCheck("operator>>(Istream&, distributionMapBase&)");
 
     is  >> map.constructSize_ >> map.subMap_ >> map.constructMap_
         >> map.subHasFlip_ >> map.constructHasFlip_;
@@ -1253,7 +1257,7 @@ Foam::Istream& Foam::operator>>(Istream& is, mapDistributeBase& map)
 
 // * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const mapDistributeBase& map)
+Foam::Ostream& Foam::operator<<(Ostream& os, const distributionMapBase& map)
 {
     os  << map.constructSize_ << token::NL
         << map.subMap_ << token::NL

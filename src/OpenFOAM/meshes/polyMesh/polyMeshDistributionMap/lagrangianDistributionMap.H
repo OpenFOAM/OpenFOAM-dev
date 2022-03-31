@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mapDistributeLagrangian
+    Foam::lagrangianDistributionMap
 
 Description
     Class containing mesh-to-mesh mapping information for particles
 
 SourceFiles
-    mapDistributeLagrangian.C
+    lagrangianDistributionMap.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mapDistributeLagrangian_H
-#define mapDistributeLagrangian_H
+#ifndef lagrangianDistributionMap_H
+#define lagrangianDistributionMap_H
 
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,15 +45,15 @@ namespace Foam
 class mapPolyMesh;
 
 /*---------------------------------------------------------------------------*\
-                   Class mapDistributeLagrangian Declaration
+                   Class lagrangianDistributionMap Declaration
 \*---------------------------------------------------------------------------*/
 
-class mapDistributeLagrangian
+class lagrangianDistributionMap
 {
     // Private Data
 
         //- Map to distribute particles
-        const mapDistribute particleMap_;
+        const distributionMap particleMap_;
 
         //- Per element in subsetted mesh the cell label
         const labelListList constructCellLabels_;
@@ -64,7 +64,7 @@ public:
     // Constructors
 
         //- Construct from components
-        mapDistributeLagrangian
+        lagrangianDistributionMap
         (
             const label nNewParticles,
             labelListList&& subParticleMap,
@@ -82,7 +82,7 @@ public:
         // Access
 
             //- Distribution map
-            const mapDistribute& particleMap() const
+            const distributionMap& particleMap() const
             {
                 return particleMap_;
             }

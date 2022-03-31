@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mapDistributeBase
+    Foam::distributionMapBase
 
 Description
     Class containing processor-to-processor mapping information.
@@ -47,7 +47,7 @@ Note:
     So e.g 4 procs and on proc 1 the compact
     table will first have all globalIndex.localSize() elements from proc1
     followed by used-only elements of proc0, proc2, proc3.
-    The constructed mapDistributeBase sends the local elements from and
+    The constructed distributionMapBase sends the local elements from and
     receives the remote elements into their compact position.
     compactMap[proci] is the position of elements from proci in the compact
     map. compactMap[myProcNo()] is empty since trivial addressing.
@@ -62,13 +62,13 @@ Note:
 
 
 SourceFiles
-    mapDistributeBase.C
-    mapDistributeBaseTemplates.C
+    distributionMapBase.C
+    distributionMapBaseTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mapDistributeBase_H
-#define mapDistributeBase_H
+#ifndef distributionMapBase_H
+#define distributionMapBase_H
 
 #include "labelList.H"
 #include "labelPair.H"
@@ -88,17 +88,17 @@ class PstreamBuffers;
 
 // Forward declaration of friend functions and operators
 
-class mapDistributeBase;
+class distributionMapBase;
 
-Istream& operator>>(Istream&, mapDistributeBase&);
-Ostream& operator<<(Ostream&, const mapDistributeBase&);
+Istream& operator>>(Istream&, distributionMapBase&);
+Ostream& operator<<(Ostream&, const distributionMapBase&);
 
 
 /*---------------------------------------------------------------------------*\
-                      Class mapDistributeBase Declaration
+                      Class distributionMapBase Declaration
 \*---------------------------------------------------------------------------*/
 
-class mapDistributeBase
+class distributionMapBase
 {
 protected:
 
@@ -190,16 +190,16 @@ protected:
 public:
 
     // Declare name of the class and its debug switch
-    ClassName("mapDistributeBase");
+    ClassName("distributionMapBase");
 
 
     // Constructors
 
         //- Construct null
-        mapDistributeBase();
+        distributionMapBase();
 
         //- Move construct from components
-        mapDistributeBase
+        distributionMapBase
         (
             const label constructSize,
             const labelListList&& subMap,
@@ -211,7 +211,7 @@ public:
         //- Construct from reverse addressing: per data item the send
         //  processor and the receive processor. (note: data is not stored
         //  sorted per processor so cannot use printLayout).
-        mapDistributeBase
+        distributionMapBase
         (
             const labelList& sendProcs,
             const labelList& recvProcs
@@ -221,7 +221,7 @@ public:
         //  numbering (or -1). Determines compact numbering (see above) and
         //  distribute map to get data into this ordering and renumbers the
         //  elements to be in compact numbering.
-        mapDistributeBase
+        distributionMapBase
         (
             const globalIndex&,
             labelList& elements,
@@ -232,7 +232,7 @@ public:
         //- Special variant that works with the info sorted into bins
         //  according to local indices. E.g. think cellCells where
         //  cellCells[localCellI] is a list of global cells
-        mapDistributeBase
+        distributionMapBase
         (
             const globalIndex&,
             labelListList& cellCells,
@@ -241,13 +241,13 @@ public:
         );
 
         //- Construct copy
-        mapDistributeBase(const mapDistributeBase&);
+        distributionMapBase(const distributionMapBase&);
 
         //- Move constructor
-        mapDistributeBase(mapDistributeBase&&);
+        distributionMapBase(distributionMapBase&&);
 
         //- Construct from Istream
-        mapDistributeBase(Istream&);
+        distributionMapBase(Istream&);
 
 
     // Member Functions
@@ -329,7 +329,7 @@ public:
         // Other
 
             //- Transfer the contents of the argument and annul the argument.
-            void transfer(mapDistributeBase&);
+            void transfer(distributionMapBase&);
 
             //- Helper for construct from globalIndex. Renumbers element
             //  (in globalIndex numbering) into compact indices.
@@ -464,17 +464,17 @@ public:
 
     // Member Operators
 
-        void operator=(const mapDistributeBase&);
-        void operator=(mapDistributeBase&&);
+        void operator=(const distributionMapBase&);
+        void operator=(distributionMapBase&&);
 
 
     // IOstream Operators
 
         //- Read dictionary from Istream
-        friend Istream& operator>>(Istream&, mapDistributeBase&);
+        friend Istream& operator>>(Istream&, distributionMapBase&);
 
         //- Write dictionary to Ostream
-        friend Ostream& operator<<(Ostream&, const mapDistributeBase&);
+        friend Ostream& operator<<(Ostream&, const distributionMapBase&);
 };
 
 
@@ -485,7 +485,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "mapDistributeBaseTemplates.C"
+    #include "distributionMapBaseTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

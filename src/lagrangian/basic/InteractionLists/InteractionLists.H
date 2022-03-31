@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ SourceFiles
 
 #include "polyMesh.H"
 #include "referredWallFace.H"
-//#include "mapDistribute.H"
+//#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,7 +70,7 @@ namespace Foam
 {
 
 class globalIndexAndTransform;
-class mapDistribute;
+class distributionMap;
 
 /*---------------------------------------------------------------------------*\
                       Class InteractionLists Declaration
@@ -91,11 +91,11 @@ class InteractionLists
         //  with the referred particles, hence gets written out
         const Switch writeCloud_;
 
-        //- mapDistribute to exchange referred particles into referred cells
-        autoPtr<mapDistribute> cellMapPtr_;
+        //- distributionMap to exchange referred particles into referred cells
+        autoPtr<distributionMap> cellMapPtr_;
 
-        //- mapDistribute to exchange wall face data
-        autoPtr<mapDistribute> wallFaceMapPtr_;
+        //- distributionMap to exchange wall face data
+        autoPtr<distributionMap> wallFaceMapPtr_;
 
         //- Maximum distance over which interactions will be detected
         scalar maxDistance_;
@@ -166,11 +166,11 @@ class InteractionLists
             List<label>& extendedProcBbsOrigProc
         );
 
-        //- Build the mapDistribute from information about which entry
+        //- Build the distributionMap from information about which entry
         //  is to be sent to which processor
         void buildMap
         (
-            autoPtr<mapDistribute>& mapPtr,
+            autoPtr<distributionMap>& mapPtr,
             const List<label>& toProc
         );
 
@@ -249,10 +249,10 @@ public:
             inline const polyMesh& mesh() const;
 
             //- Return access to the cellMap
-            inline const mapDistribute& cellMap() const;
+            inline const distributionMap& cellMap() const;
 
             //- Return access to the wallFaceMap
-            inline const mapDistribute& wallFaceMap() const;
+            inline const distributionMap& wallFaceMap() const;
 
             //- Return access to the direct interaction list
             inline const labelListList& dil() const;

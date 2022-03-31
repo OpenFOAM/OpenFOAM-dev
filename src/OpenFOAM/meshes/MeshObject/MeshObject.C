@@ -276,7 +276,7 @@ template<class Mesh>
 void Foam::meshObject::distribute
 (
     objectRegistry& obr,
-    const mapDistributePolyMesh& map
+    const polyMeshDistributionMap& map
 )
 {
     HashTable<GeometricMeshObject<Mesh>*> meshObjects
@@ -287,7 +287,8 @@ void Foam::meshObject::distribute
     if (meshObject::debug)
     {
         Pout<< "meshObject::distribute(objectRegistry&, "
-               "const mapDistributePolyMesh& map) : updating " << Mesh::typeName
+               "const polyMeshDistributionMap& map) : updating "
+            << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
 

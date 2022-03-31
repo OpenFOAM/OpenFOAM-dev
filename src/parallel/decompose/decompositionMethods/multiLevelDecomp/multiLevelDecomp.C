@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "IFstream.H"
 #include "globalIndex.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,7 +77,7 @@ void Foam::multiLevelDecomp::subsetGlobalCellCells
 
     // Get new indices for neighbouring processors
     List<Map<label>> compactMap;
-    mapDistribute map(globalCells, subCellCells, compactMap);
+    distributionMap map(globalCells, subCellCells, compactMap);
     map.distribute(oldToNew);
     labelList allDist(dist);
     map.distribute(allDist);

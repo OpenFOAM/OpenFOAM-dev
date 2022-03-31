@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mapDistribute
+    Foam::distributionMap
 
 Description
     Class containing processor-to-processor mapping information.
@@ -48,7 +48,7 @@ Note:
     So e.g 4 procs and on proc 1 the compact
     table will first have all globalIndex.localSize() elements from proc1
     followed by used-only elements of proc0, proc2, proc3.
-    The constructed mapDistribute sends the local elements from and
+    The constructed distributionMap sends the local elements from and
     receives the remote elements into their compact position.
     compactMap[proci] is the position of elements from proci in the compact
     map. compactMap[myProcNo()] is empty since trivial addressing.
@@ -125,15 +125,15 @@ Note:
 
 
 SourceFiles
-    mapDistribute.C
-    mapDistributeTemplates.C
+    distributionMap.C
+    distributionMapTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mapDistribute_H
-#define mapDistribute_H
+#ifndef distributionMap_H
+#define distributionMap_H
 
-#include "mapDistributeBase.H"
+#include "distributionMapBase.H"
 #include "transformer.H"
 #include "coupledPolyPatch.H"
 #include "EdgeMap.H"
@@ -148,19 +148,19 @@ class globalIndexAndTransform;
 
 // Forward declaration of friend functions and operators
 
-class mapDistribute;
+class distributionMap;
 
-Istream& operator>>(Istream&, mapDistribute&);
-Ostream& operator<<(Ostream&, const mapDistribute&);
+Istream& operator>>(Istream&, distributionMap&);
+Ostream& operator<<(Ostream&, const distributionMap&);
 
 
 /*---------------------------------------------------------------------------*\
-                        Class mapDistribute Declaration
+                        Class distributionMap Declaration
 \*---------------------------------------------------------------------------*/
 
-class mapDistribute
+class distributionMap
 :
-    public mapDistributeBase
+    public distributionMapBase
 {
     // Private Data
 
@@ -328,16 +328,16 @@ public:
 
 
     // Declare name of the class and its debug switch
-    ClassName("mapDistribute");
+    ClassName("distributionMap");
 
 
     // Constructors
 
         //- Construct null
-        mapDistribute();
+        distributionMap();
 
         //- Construct from components
-        mapDistribute
+        distributionMap
         (
             const label constructSize,
             labelListList&& subMap,
@@ -347,7 +347,7 @@ public:
         );
 
         //- Construct from components
-        mapDistribute
+        distributionMap
         (
             const label constructSize,
             labelListList&& subMap,
@@ -361,7 +361,7 @@ public:
         //- Construct from reverse addressing: per data item the send
         //  processor and the receive processor. (note: data is not stored
         //  sorted per processor so cannot use printLayout).
-        mapDistribute
+        distributionMap
         (
             const labelList& sendProcs,
             const labelList& recvProcs
@@ -371,7 +371,7 @@ public:
         //  numbering (or -1). Determines compact numbering (see above) and
         //  distribute map to get data into this ordering and renumbers the
         //  elements to be in compact numbering.
-        mapDistribute
+        distributionMap
         (
             const globalIndex&,
             labelList& elements,
@@ -382,7 +382,7 @@ public:
         //- Special variant that works with the info sorted into bins
         //  according to local indices. E.g. think cellCells where
         //  cellCells[localCelli] is a list of global cells
-        mapDistribute
+        distributionMap
         (
             const globalIndex&,
             labelListList& cellCells,
@@ -396,7 +396,7 @@ public:
         //  Determines compact numbering (see above) and
         //  distribute map to get data into this ordering and renumbers the
         //  elements to be in compact numbering.
-        mapDistribute
+        distributionMap
         (
             const globalIndex&,
             labelList& untransformedElements,
@@ -408,7 +408,7 @@ public:
         );
 
         //- As above but with ListLists.
-        mapDistribute
+        distributionMap
         (
             const globalIndex&,
             labelListList& cellCells,
@@ -420,20 +420,20 @@ public:
         );
 
         //- Copy constructor
-        mapDistribute(const mapDistribute&);
+        distributionMap(const distributionMap&);
 
         //- Move constructor
-        mapDistribute(mapDistribute&&);
+        distributionMap(distributionMap&&);
 
         //- Construct from Istream
-        mapDistribute(Istream&);
+        distributionMap(Istream&);
 
         //- Clone
-        autoPtr<mapDistribute> clone() const;
+        autoPtr<distributionMap> clone() const;
 
 
     //- Destructor
-    virtual ~mapDistribute()
+    virtual ~distributionMap()
     {}
 
 
@@ -461,7 +461,7 @@ public:
         // Other
 
             //- Transfer the contents of the argument and annul the argument.
-            void transfer(mapDistribute&);
+            void transfer(distributionMap&);
 
             //- Distribute data using default commsType.
             template<class T>
@@ -556,99 +556,99 @@ public:
             {
                 notImplemented
                 (
-                    "mapDistribute::updateMesh(const mapPolyMesh&)"
+                    "distributionMap::updateMesh(const mapPolyMesh&)"
                 );
             }
 
     // Member Operators
 
-        void operator=(const mapDistribute&);
+        void operator=(const distributionMap&);
 
     // IOstream Operators
 
         //- Read dictionary from Istream
-        friend Istream& operator>>(Istream&, mapDistribute&);
+        friend Istream& operator>>(Istream&, distributionMap&);
 
         //- Write dictionary to Ostream
-        friend Ostream& operator<<(Ostream&, const mapDistribute&);
+        friend Ostream& operator<<(Ostream&, const distributionMap&);
 
 };
 
 
 // Template specialisation for primitives that do not need transform
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const transformer&,
     const bool,
     List<label>&
 ) const;
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     UList<label>&
 ) const;
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     Map<label>&
 ) const;
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     EdgeMap<label>&
 ) const;
 
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     UList<scalar>&
 ) const;
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const transformer&,
     const bool,
     List<scalar>&
 ) const;
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     Map<scalar>&
 ) const;
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     EdgeMap<scalar>&
 ) const;
 
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const coupledPolyPatch& cpp,
     UList<bool>& fld
 ) const;
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const transformer&,
     const bool,
     List<bool>&
 ) const;
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     Map<bool>&
 ) const;
 template<>
-void mapDistribute::transform::operator()
+void distributionMap::transform::operator()
 (
     const coupledPolyPatch&,
     EdgeMap<bool>&
@@ -662,7 +662,7 @@ void mapDistribute::transform::operator()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "mapDistributeTemplates.C"
+    #include "distributionMapTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

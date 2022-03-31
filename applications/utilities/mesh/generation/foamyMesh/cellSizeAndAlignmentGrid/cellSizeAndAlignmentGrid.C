@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ Foam::tmp<Foam::Field<Type>> filterFarPoints
 
 
 template<class T>
-autoPtr<mapDistribute> buildMap
+autoPtr<distributionMap> buildMap
 (
     const T& mesh,
     labelListList& pointPoints
@@ -141,9 +141,9 @@ autoPtr<mapDistribute> buildMap
 
     List<Map<label>> compactMap;
 
-    return autoPtr<mapDistribute>
+    return autoPtr<distributionMap>
     (
-        new mapDistribute
+        new distributionMap
         (
             globalIndexing,
             pointPoints,
@@ -483,7 +483,7 @@ int main(int argc, char *argv[])
 
 
     labelListList pointPoints;
-    autoPtr<mapDistribute> meshDistributor = buildMap(mesh, pointPoints);
+    autoPtr<distributionMap> meshDistributor = buildMap(mesh, pointPoints);
 
 
     triadField alignments(buildAlignmentField(mesh));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -708,8 +708,8 @@ void Foam::searchableSurfaceCollection::distribute
 (
     const List<treeBoundBox>& bbs,
     const bool keepNonLocal,
-    autoPtr<mapDistribute>& faceMap,
-    autoPtr<mapDistribute>& pointMap
+    autoPtr<distributionMap>& faceMap,
+    autoPtr<distributionMap>& pointMap
 )
 {
     forAll(subGeom_, surfI)

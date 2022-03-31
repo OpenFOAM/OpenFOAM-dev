@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "thermophysicalTransportModel.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -224,7 +224,7 @@ baffleThickness() const
     }
     else
     {
-        const mapDistribute& mapDist = this->mappedPatchBase::map();
+        const distributionMap& mapDist = this->mappedPatchBase::map();
 
         const fvPatch& nbrPatch =
             patch().boundaryMesh()[samplePolyPatch().index()];
@@ -254,7 +254,7 @@ tmp<scalarField> thermalBaffle1DFvPatchScalarField<solidType>::qs() const
     }
     else
     {
-        const mapDistribute& mapDist = this->mappedPatchBase::map();
+        const distributionMap& mapDist = this->mappedPatchBase::map();
 
         const fvPatch& nbrPatch =
             patch().boundaryMesh()[samplePolyPatch().index()];
@@ -323,7 +323,7 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag+1;
 
-    const mapDistribute& mapDist = this->mappedPatchBase::map();
+    const distributionMap& mapDist = this->mappedPatchBase::map();
 
     const label patchi = patch().index();
 

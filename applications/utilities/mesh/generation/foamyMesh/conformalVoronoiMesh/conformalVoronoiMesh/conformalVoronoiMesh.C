@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,7 @@ void Foam::conformalVoronoiMesh::insertInternalPoints
 
         // Send the points that are not on this processor to the appropriate
         // place
-        Foam::autoPtr<Foam::mapDistribute> map
+        Foam::autoPtr<Foam::distributionMap> map
         (
             decomposition_().distributePoints(transferPoints)
         );
@@ -188,7 +188,7 @@ Foam::Map<Foam::label> Foam::conformalVoronoiMesh::insertPointPairs
 {
     if (Pstream::parRun() && distribute)
     {
-        autoPtr<mapDistribute> mapDist =
+        autoPtr<distributionMap> mapDist =
             decomposition_().distributePoints(vertices);
 
         // Re-index the point pairs if one or both have been distributed.
@@ -443,7 +443,7 @@ void Foam::conformalVoronoiMesh::distribute()
         }
     }
 
-    autoPtr<mapDistribute> mapDist =
+    autoPtr<distributionMap> mapDist =
         DistributedDelaunayMesh<Delaunay>::distribute(decomposition_(), points);
 
     mapDist().distribute(types);

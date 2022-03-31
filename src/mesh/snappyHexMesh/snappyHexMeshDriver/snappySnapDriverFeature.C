@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,7 +188,7 @@ void Foam::snappySnapDriver::smoothAndConstrain
             dispSum,
             plusEqOp<point>(),
             vector::zero,
-            mapDistribute::transform()
+            distributionMap::transform()
         );
         syncTools::syncPointList
         (
@@ -197,7 +197,7 @@ void Foam::snappySnapDriver::smoothAndConstrain
             dispCount,
             plusEqOp<label>(),
             label(0),
-            mapDistribute::transform()
+            distributionMap::transform()
         );
 
         // Constraints
@@ -584,7 +584,7 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
         pointFaceSurfNormals,
         listPlusEqOp<point>(),
         List<point>(),
-        mapDistribute::transform()
+        distributionMap::transform()
     );
     syncTools::syncPointList
     (
@@ -593,7 +593,7 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
         pointFaceDisp,
         listPlusEqOp<point>(),
         List<point>(),
-        mapDistribute::transform()
+        distributionMap::transform()
     );
     syncTools::syncPointList
     (
@@ -602,7 +602,7 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
         pointFaceCentres,
         listPlusEqOp<point>(),
         List<point>(),
-        mapDistribute::transformPosition()
+        distributionMap::transformPosition()
     );
     syncTools::syncPointList
     (
@@ -2228,7 +2228,7 @@ void Foam::snappySnapDriver::determineBaffleFeatures
             edgeFaceNormals,
             listPlusEqOp<point>(),
             List<point>(),
-            mapDistribute::transform()
+            distributionMap::transform()
         );
     }
 

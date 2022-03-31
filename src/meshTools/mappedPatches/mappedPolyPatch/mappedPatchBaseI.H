@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,7 +141,7 @@ inline bool Foam::mappedPatchBase::sameRegion() const
 }
 
 
-inline const Foam::mapDistribute& Foam::mappedPatchBase::map() const
+inline const Foam::distributionMap& Foam::mappedPatchBase::map() const
 {
     if (mapPtr_.empty())
     {

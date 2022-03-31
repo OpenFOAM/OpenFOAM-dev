@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -364,7 +364,7 @@ void Foam::fv::solidificationMeltingSource::updateMesh(const mapPolyMesh& map)
 
 void Foam::fv::solidificationMeltingSource::distribute
 (
-    const mapDistributePolyMesh& map
+    const polyMeshDistributionMap& map
 )
 {
     set_.distribute(map);

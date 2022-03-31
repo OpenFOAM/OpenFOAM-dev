@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class PointType>
-Foam::autoPtr<Foam::mapDistribute>
+Foam::autoPtr<Foam::distributionMap>
 Foam::backgroundMeshDecomposition::distributePoints
 (
     List<PointType>& points
@@ -37,7 +37,7 @@ Foam::backgroundMeshDecomposition::distributePoints
 {
     labelList toProc(processorPosition(points));
 
-    autoPtr<mapDistribute> map(buildMap(toProc));
+    autoPtr<distributionMap> map(buildMap(toProc));
 
     map().distribute(points);
 
@@ -84,7 +84,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorPosition
     // Needed for reverseDistribute
     label preDistributionToCandidateProcSize = toCandidateProc.size();
 
-    autoPtr<mapDistribute> map(buildMap(toCandidateProc));
+    autoPtr<distributionMap> map(buildMap(toCandidateProc));
 
     map().distribute(testPoints);
 

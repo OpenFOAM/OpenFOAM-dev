@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ Foam::label Foam::meshToMesh::calcOverlappingProcs
 }
 
 
-Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
+Foam::autoPtr<Foam::distributionMap> Foam::meshToMesh::calcProcMap
 (
     const polyMesh& src,
     const polyMesh& tgt
@@ -242,9 +242,9 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
         }
     }
 
-    autoPtr<mapDistribute> mapPtr
+    autoPtr<distributionMap> mapPtr
     (
-        new mapDistribute
+        new distributionMap
         (
             segmentI,       // size after construction
             move(sendMap),
@@ -258,7 +258,7 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
 
 void Foam::meshToMesh::distributeCells
 (
-    const mapDistribute& map,
+    const distributionMap& map,
     const polyMesh& tgtMesh,
     const globalIndex& globalI,
     List<pointField>& points,
@@ -498,7 +498,7 @@ void Foam::meshToMesh::distributeCells
 
 void Foam::meshToMesh::distributeAndMergeCells
 (
-    const mapDistribute& map,
+    const distributionMap& map,
     const polyMesh& tgt,
     const globalIndex& globalI,
     pointField& tgtPoints,

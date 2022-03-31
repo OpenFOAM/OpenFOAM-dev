@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "AMIInterpolation.H"
 #include "mergePoints.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -112,7 +112,7 @@ Foam::label Foam::AMIInterpolation::calcOverlappingProcs
 
 void Foam::AMIInterpolation::distributePatches
 (
-    const mapDistribute& map,
+    const distributionMap& map,
     const primitivePatch& pp,
     const globalIndex& gi,
     List<faceList>& faces,
@@ -207,7 +207,7 @@ void Foam::AMIInterpolation::distributePatches
 
 void Foam::AMIInterpolation::distributeAndMergePatches
 (
-    const mapDistribute& map,
+    const distributionMap& map,
     const primitivePatch& tgtPatch,
     const globalIndex& gi,
     faceList& tgtFaces,
@@ -319,7 +319,7 @@ void Foam::AMIInterpolation::distributeAndMergePatches
 }
 
 
-Foam::autoPtr<Foam::mapDistribute>
+Foam::autoPtr<Foam::distributionMap>
 Foam::AMIInterpolation::calcProcMap
 (
     const primitivePatch& srcPatch,
@@ -457,9 +457,9 @@ Foam::AMIInterpolation::calcProcMap
         }
     }
 
-    autoPtr<mapDistribute> mapPtr
+    autoPtr<distributionMap> mapPtr
     (
-        new mapDistribute
+        new distributionMap
         (
             segmentI,       // size after construction
             move(sendMap),

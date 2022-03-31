@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ License
 #include "zeroGradientFvPatchFields.H"
 #include "mixedFvPatchFields.H"
 #include "mappedFieldFvPatchField.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "constants.H"
 
 #include "heatTransferModel.H"

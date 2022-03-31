@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ namespace Foam
 {
 
 class fvMesh;
-class mapDistributePolyMesh;
+class polyMeshDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                         Class fvCellSet Declaration
@@ -170,7 +170,7 @@ public:
             void updateMesh(const mapPolyMesh&);
 
             //- Update mesh corresponding to the given distribution map
-            void distribute(const mapDistributePolyMesh&);
+            void distribute(const polyMeshDistributionMap&);
 
             //- Update for mesh motion
             void movePoints();

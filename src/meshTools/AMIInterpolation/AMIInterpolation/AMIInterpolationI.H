@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ inline Foam::scalarField& Foam::AMIInterpolation::srcWeightsSum()
 }
 
 
-inline const Foam::mapDistribute& Foam::AMIInterpolation::srcMap() const
+inline const Foam::distributionMap& Foam::AMIInterpolation::srcMap() const
 {
     return srcMapPtr_();
 }
@@ -119,7 +119,7 @@ inline Foam::scalarField& Foam::AMIInterpolation::tgtWeightsSum()
 }
 
 
-inline const Foam::mapDistribute& Foam::AMIInterpolation::tgtMap() const
+inline const Foam::distributionMap& Foam::AMIInterpolation::tgtMap() const
 {
     return tgtMapPtr_();
 }

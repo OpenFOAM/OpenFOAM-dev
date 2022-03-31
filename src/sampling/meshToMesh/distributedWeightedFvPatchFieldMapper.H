@@ -33,7 +33,7 @@ Description
 #define distributedWeightedFvPatchFieldMapper_H
 
 #include "fvPatchFieldMapper.H"
-#include "mapDistributeBase.H"
+#include "distributionMapBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,7 +52,7 @@ class distributedWeightedFvPatchFieldMapper
 
         const label singlePatchProc_;
 
-        const mapDistributeBase* distMapPtr_;
+        const distributionMapBase* distMapPtr_;
 
         const labelListList& addressing_;
 
@@ -90,7 +90,7 @@ public:
         distributedWeightedFvPatchFieldMapper
         (
             const label singlePatchProc,
-            const mapDistributeBase* distMapPtr,
+            const distributionMapBase* distMapPtr,
             const labelListList& addressing,
             const scalarListList& weights
         )
@@ -115,7 +115,7 @@ public:
                 (
                     "distributedWeightedFvPatchFieldMapper::"
                     "distributedWeightedFvPatchFieldMapper(..)"
-                )   << "Supply a mapDistributeBase if and only if "
+                )   << "Supply a distributionMapBase if and only if "
                     << "singlePatchProc is -1"
                     << " singlePatchProc_:" << singlePatchProc_
                     << " distMapPtr_:" << (distMapPtr_ != nullptr)

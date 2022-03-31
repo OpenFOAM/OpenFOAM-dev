@@ -29,7 +29,7 @@ License
 #include "processorPolyPatch.H"
 #include "globalPoints.H"
 #include "polyMesh.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "labelIOList.H"
 #include "mergePoints.H"
 #include "globalIndexAndTransform.H"
@@ -556,7 +556,7 @@ void Foam::globalMeshData::calcGlobalPointSlaves() const
 
     globalPointSlavesMapPtr_.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             move(globalData.map())
         )
@@ -1083,7 +1083,7 @@ void Foam::globalMeshData::calcGlobalEdgeSlaves() const
     List<Map<label>> compactMap(Pstream::nProcs());
     globalEdgeSlavesMapPtr_.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             globalEdgeNumbers,
             globalEdgeSlaves,
@@ -1121,7 +1121,7 @@ void Foam::globalMeshData::calcGlobalEdgeOrientation() const
     // 1. Determine master point
     labelList masterPoint;
     {
-        const mapDistribute& map = globalPointSlavesMap();
+        const distributionMap& map = globalPointSlavesMap();
 
         masterPoint.setSize(map.constructSize());
         masterPoint = labelMax;
@@ -1145,7 +1145,7 @@ void Foam::globalMeshData::calcGlobalEdgeOrientation() const
     // to find the orientation of the master edge.
 
     {
-        const mapDistribute& map = globalEdgeSlavesMap();
+        const distributionMap& map = globalEdgeSlavesMap();
         const labelListList& slaves = globalEdgeSlaves();
         const labelListList& transformedSlaves = globalEdgeTransformedSlaves();
 
@@ -1472,7 +1472,7 @@ void Foam::globalMeshData::calcGlobalPointBoundaryFaces() const
 
     globalPointBoundaryFacesMapPtr_.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             globalIndices,
             globalPointBoundaryFaces,
@@ -1700,7 +1700,7 @@ void Foam::globalMeshData::calcGlobalPointBoundaryCells() const
 
     globalPointBoundaryCellsMapPtr_.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             globalIndices,
             globalPointBoundaryCells,
@@ -1749,7 +1749,7 @@ void Foam::globalMeshData::calcGlobalCoPointSlaves() const
     );
     globalCoPointSlavesMapPtr_.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             move(globalData.map())
         )
@@ -2220,7 +2220,7 @@ const
 }
 
 
-const Foam::mapDistribute& Foam::globalMeshData::globalPointSlavesMap() const
+const Foam::distributionMap& Foam::globalMeshData::globalPointSlavesMap() const
 {
     if (!globalPointSlavesMapPtr_.valid())
     {
@@ -2274,7 +2274,7 @@ const Foam::PackedBoolList& Foam::globalMeshData::globalEdgeOrientation() const
 }
 
 
-const Foam::mapDistribute& Foam::globalMeshData::globalEdgeSlavesMap() const
+const Foam::distributionMap& Foam::globalMeshData::globalEdgeSlavesMap() const
 {
     if (!globalEdgeSlavesMapPtr_.valid())
     {
@@ -2317,7 +2317,7 @@ Foam::globalMeshData::globalPointTransformedBoundaryFaces() const
 }
 
 
-const Foam::mapDistribute& Foam::globalMeshData::globalPointBoundaryFacesMap()
+const Foam::distributionMap& Foam::globalMeshData::globalPointBoundaryFacesMap()
 const
 {
     if (!globalPointBoundaryFacesMapPtr_.valid())
@@ -2371,7 +2371,7 @@ Foam::globalMeshData::globalPointTransformedBoundaryCells() const
 }
 
 
-const Foam::mapDistribute& Foam::globalMeshData::globalPointBoundaryCellsMap()
+const Foam::distributionMap& Foam::globalMeshData::globalPointBoundaryCellsMap()
 const
 {
     if (!globalPointBoundaryCellsMapPtr_.valid())
@@ -2392,7 +2392,8 @@ const Foam::labelListList& Foam::globalMeshData::globalCoPointSlaves() const
 }
 
 
-const Foam::mapDistribute& Foam::globalMeshData::globalCoPointSlavesMap() const
+const Foam::distributionMap&
+Foam::globalMeshData::globalCoPointSlavesMap() const
 {
     if (!globalCoPointSlavesMapPtr_.valid())
     {
@@ -2412,7 +2413,7 @@ Foam::autoPtr<Foam::globalIndex> Foam::globalMeshData::mergePoints
     const globalIndex& globalCoupledPoints = globalPointNumbering();
     // Use collocated only
     const labelListList& pointSlaves = globalCoPointSlaves();
-    const mapDistribute& pointSlavesMap = globalCoPointSlavesMap();
+    const distributionMap& pointSlavesMap = globalCoPointSlavesMap();
 
 
     // Points are either
@@ -2546,7 +2547,7 @@ Foam::autoPtr<Foam::globalIndex> Foam::globalMeshData::mergePoints
 {
     const indirectPrimitivePatch& cpp = coupledPatch();
     const labelListList& pointSlaves = globalCoPointSlaves();
-    const mapDistribute& pointSlavesMap = globalCoPointSlavesMap();
+    const distributionMap& pointSlavesMap = globalCoPointSlavesMap();
 
 
     // The patch points come in two variants:

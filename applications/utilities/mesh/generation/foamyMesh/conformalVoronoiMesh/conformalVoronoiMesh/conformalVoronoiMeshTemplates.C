@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ bool Foam::conformalVoronoiMesh::distributeBackground(const Triangulation& mesh)
             cwi[cI] = max(cellVertices[cI], 1e-2);
         }
 
-        autoPtr<mapDistributePolyMesh> mapDist = decomposition_().distribute
+        autoPtr<polyMeshDistributionMap> mapDist = decomposition_().distribute
         (
             cellWeights
         );

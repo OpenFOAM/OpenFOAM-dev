@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,7 +146,7 @@ void Foam::pointConstraints::makePatchPatchAddressing()
     {
         const globalMeshData& gd = mesh.globalData();
         const labelListList& globalPointSlaves = gd.globalPointSlaves();
-        const mapDistribute& globalPointSlavesMap = gd.globalPointSlavesMap();
+        const distributionMap& globalPointSlavesMap = gd.globalPointSlavesMap();
         const Map<label>& cpPointMap = gd.coupledPatch().meshPointMap();
         const labelList& cpMeshPoints = gd.coupledPatch().meshPoints();
 
@@ -371,7 +371,7 @@ void Foam::pointConstraints::updateMesh(const mapPolyMesh&)
 }
 
 
-void Foam::pointConstraints::distribute(const mapDistributePolyMesh& map)
+void Foam::pointConstraints::distribute(const polyMeshDistributionMap& map)
 {
     FatalErrorInFunction << abort(FatalError);
     makePatchPatchAddressing();

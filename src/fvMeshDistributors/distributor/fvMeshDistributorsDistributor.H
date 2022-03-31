@@ -128,7 +128,7 @@ public:
         virtual void updateMesh(const mapPolyMesh&);
 
         //- Update corresponding to the given distribution map
-        virtual void distribute(const mapDistributePolyMesh&);
+        virtual void distribute(const polyMeshDistributionMap&);
 
 
     // Writing

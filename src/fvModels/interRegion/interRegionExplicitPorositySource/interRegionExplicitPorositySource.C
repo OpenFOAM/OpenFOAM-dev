@@ -169,7 +169,7 @@ void Foam::fv::interRegionExplicitPorositySource::updateMesh(const mapPolyMesh&)
 
 void Foam::fv::interRegionExplicitPorositySource::distribute
 (
-    const mapDistributePolyMesh&
+    const polyMeshDistributionMap&
 )
 {}
 

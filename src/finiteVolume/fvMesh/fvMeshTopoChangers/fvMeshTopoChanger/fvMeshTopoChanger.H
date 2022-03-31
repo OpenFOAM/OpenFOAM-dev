@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,7 +161,7 @@ public:
         virtual void updateMesh(const mapPolyMesh&) = 0;
 
         //- Update corresponding to the given distribution map
-        virtual void distribute(const mapDistributePolyMesh&) = 0;
+        virtual void distribute(const polyMeshDistributionMap&) = 0;
 
         //- Write the mover state
         virtual bool write(const bool write = true) const

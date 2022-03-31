@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 #include "refinementSurfaces.H"
 #include "refinementFeatures.H"
 #include "refinementRegions.H"
-#include "mapDistributePolyMesh.H"
+#include "polyMeshDistributionMap.H"
 #include "unitConversion.H"
 #include "snapParameters.H"
 #include "localPointRegion.H"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::IOmapDistribute
+    Foam::IOdistributionMap
 
 Description
-    IOmapDistribute is derived from mapDistribute and
-    IOobject to give the mapDistribute
+    IOdistributionMap is derived from distributionMap and
+    IOobject to give the distributionMap
     automatic IO functionality via the objectRegistry.
 
 SourceFiles
-    IOmapDistribute.C
+    IOdistributionMap.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IOmapDistribute_H
-#define IOmapDistribute_H
+#ifndef IOdistributionMap_H
+#define IOdistributionMap_H
 
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "regIOobject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,34 +46,34 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class IOmapDistribute Declaration
+                       Class IOdistributionMap Declaration
 \*---------------------------------------------------------------------------*/
 
-class IOmapDistribute
+class IOdistributionMap
 :
     public regIOobject,
-    public mapDistribute
+    public distributionMap
 {
 
 public:
 
     //- Runtime type information
-    TypeName("mapDistribute");
+    TypeName("distributionMap");
 
     // Constructors
 
         //- Construct given an IOobject
-        IOmapDistribute(const IOobject&);
+        IOdistributionMap(const IOobject&);
 
-        //- Construct given an IOobject and mapDistribute
-        IOmapDistribute(const IOobject&, const mapDistribute&);
+        //- Construct given an IOobject and distributionMap
+        IOdistributionMap(const IOobject&, const distributionMap&);
 
-        //- Move constructor transferring the mapDistribute contents
-        IOmapDistribute(const IOobject&, mapDistribute&&);
+        //- Move constructor transferring the distributionMap contents
+        IOdistributionMap(const IOobject&, distributionMap&&);
 
 
     //- Destructor
-    virtual ~IOmapDistribute();
+    virtual ~IOdistributionMap();
 
 
     // Member Functions

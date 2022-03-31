@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "List.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "argList.H"
 #include "Time.H"
 #include "IPstream.H"
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     #include "createTime.H"
 
 
-    // Test mapDistribute
+    // Test distributionMap
     // ~~~~~~~~~~~~~~~~~~
 
     if (true)
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 
 
         // Construct distribute map (destructively)
-        mapDistribute map(constructSize, move(sendMap), move(recvMap));
+        distributionMap map(constructSize, move(sendMap), move(recvMap));
 
         // Distribute complexData
         map.distribute(complexData);

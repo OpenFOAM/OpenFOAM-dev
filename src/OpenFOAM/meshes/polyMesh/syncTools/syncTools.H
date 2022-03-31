@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ SourceFiles
 #include "PackedBoolList.H"
 #include "polyMesh.H"
 #include "coupledPolyPatch.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -187,7 +187,7 @@ public:
                     l,
                     cop,
                     nullValue,
-                    mapDistribute::transform()
+                    distributionMap::transform()
                 );
             }
 
@@ -207,7 +207,7 @@ public:
                     l,
                     cop,
                     nullValue,
-                    mapDistribute::transformPosition()
+                    distributionMap::transformPosition()
                 );
             }
 
@@ -229,7 +229,7 @@ public:
                     l,
                     cop,
                     nullValue,
-                    mapDistribute::transform()
+                    distributionMap::transform()
                 );
             }
 
@@ -251,7 +251,7 @@ public:
                     l,
                     cop,
                     nullValue,
-                    mapDistribute::transformPosition()
+                    distributionMap::transformPosition()
                 );
             }
 
@@ -274,7 +274,7 @@ public:
                     l,
                     cop,
                     nullValue,
-                    mapDistribute::transform()
+                    distributionMap::transform()
                 );
             }
 
@@ -294,7 +294,7 @@ public:
                     l,
                     cop,
                     nullValue,
-                    mapDistribute::transformPosition()
+                    distributionMap::transformPosition()
                 );
             }
 
@@ -316,7 +316,7 @@ public:
                     l,
                     cop,
                     nullValue,
-                    mapDistribute::transform()
+                    distributionMap::transform()
                 );
             }
 
@@ -338,7 +338,7 @@ public:
                     l,
                     cop,
                     nullValue,
-                    mapDistribute::transformPosition()
+                    distributionMap::transformPosition()
                 );
             }
 
@@ -355,7 +355,13 @@ public:
                 const CombineOp& cop
             )
             {
-                syncBoundaryFaceList(mesh, l, cop, mapDistribute::transform());
+                syncBoundaryFaceList
+                (
+                    mesh,
+                    l,
+                    cop,
+                    distributionMap::transform()
+                );
             }
 
             //- Synchronise locations on boundary faces only.
@@ -372,7 +378,7 @@ public:
                     mesh,
                     l,
                     cop,
-                    mapDistribute::transformPosition()
+                    distributionMap::transformPosition()
                 );
             }
 
@@ -397,7 +403,7 @@ public:
                     mesh,
                     bndValues,
                     cop,
-                    mapDistribute::transform()
+                    distributionMap::transform()
                 );
             }
 
@@ -421,7 +427,7 @@ public:
                     mesh,
                     bndValues,
                     cop,
-                    mapDistribute::transformPosition()
+                    distributionMap::transformPosition()
                 );
             }
 
@@ -438,7 +444,7 @@ public:
                     mesh,
                     l,
                     eqOp<T>(),
-                    mapDistribute::transform()
+                    distributionMap::transform()
                 );
             }
 
@@ -454,7 +460,7 @@ public:
                     mesh,
                     l,
                     eqOp<point>(),
-                    mapDistribute::transformPosition()
+                    distributionMap::transformPosition()
                 );
             }
 
@@ -477,7 +483,7 @@ public:
                     mesh,
                     bndValues,
                     eqOp<T>(),
-                    mapDistribute::transform()
+                    distributionMap::transform()
                 );
             }
 
@@ -509,7 +515,7 @@ public:
                 const CombineOp& cop
             )
             {
-                syncPointMap(mesh, l, cop, mapDistribute::transform());
+                syncPointMap(mesh, l, cop, distributionMap::transform());
             }
 
             //- Synchronise locations on selected points.
@@ -521,7 +527,13 @@ public:
                 const CombineOp& cop
             )
             {
-                syncPointMap(mesh, l, cop, mapDistribute::transformPosition());
+                syncPointMap
+                (
+                    mesh,
+                    l,
+                    cop,
+                    distributionMap::transformPosition()
+                );
             }
 
             //- Synchronise values on selected edges. Edges are represented
@@ -535,7 +547,7 @@ public:
                 const CombineOp& cop
             )
             {
-                syncEdgeMap(mesh, l, cop, mapDistribute::transform());
+                syncEdgeMap(mesh, l, cop, distributionMap::transform());
             }
 
             //- Synchronise locations on selected edges.
@@ -547,7 +559,7 @@ public:
                 const CombineOp& cop
             )
             {
-                syncEdgeMap(mesh, l, cop, mapDistribute::transformPosition());
+                syncEdgeMap(mesh, l, cop, distributionMap::transformPosition());
             }
 
         // PackedList versions

@@ -96,7 +96,7 @@ void Foam::meshToMesh::mapSrcToTgt
 
     if (singleMeshProc_ == -1)
     {
-        const mapDistribute& map = srcMapPtr_();
+        const distributionMap& map = srcMapPtr_();
 
         List<Type> work(srcField);
         map.distribute(work);
@@ -186,7 +186,7 @@ void Foam::meshToMesh::mapTgtToSrc
 
     if (singleMeshProc_ == -1)
     {
-        const mapDistribute& map = tgtMapPtr_();
+        const distributionMap& map = tgtMapPtr_();
 
         List<Type> work(tgtField);
         map.distribute(work);

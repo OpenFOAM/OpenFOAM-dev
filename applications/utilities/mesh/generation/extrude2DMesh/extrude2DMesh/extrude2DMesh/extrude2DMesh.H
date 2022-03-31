@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace Foam
 class polyMesh;
 class polyTopoChange;
 class mapPolyMesh;
-class mapDistributePolyMesh;
+class polyMeshDistributionMap;
 class polyBoundaryMesh;
 
 /*---------------------------------------------------------------------------*\
@@ -123,7 +123,7 @@ public:
         {}
 
         //- Force recalculation of locally stored data for mesh distribution
-        void distribute(const mapDistributePolyMesh&)
+        void distribute(const polyMeshDistributionMap&)
         {}
 
         label frontPatchi() const

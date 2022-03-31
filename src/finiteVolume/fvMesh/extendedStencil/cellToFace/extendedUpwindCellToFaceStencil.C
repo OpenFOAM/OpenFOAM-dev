@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -427,7 +427,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
         List<Map<label>> compactMap(Pstream::nProcs());
         ownMapPtr_.reset
         (
-            new mapDistribute
+            new distributionMap
             (
                 stencil.globalNumbering(),
                 ownStencil_,
@@ -441,7 +441,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
         List<Map<label>> compactMap(Pstream::nProcs());
         neiMapPtr_.reset
         (
-            new mapDistribute
+            new distributionMap
             (
                 stencil.globalNumbering(),
                 neiStencil_,
@@ -536,7 +536,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
         List<Map<label>> compactMap(Pstream::nProcs());
         ownMapPtr_.reset
         (
-            new mapDistribute
+            new distributionMap
             (
                 stencil.globalNumbering(),
                 ownStencil_,
@@ -582,7 +582,7 @@ Foam::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
     }
 
     // Should compact schedule. Or have both return the same schedule.
-    neiMapPtr_.reset(new mapDistribute(ownMapPtr_()));
+    neiMapPtr_.reset(new distributionMap(ownMapPtr_()));
 }
 
 

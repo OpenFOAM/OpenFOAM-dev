@@ -436,7 +436,7 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::handleCollocatedPoints()
     const indirectPrimitivePatch& cpp = gmd.coupledPatch();
     const labelList& meshPoints = cpp.meshPoints();
 
-    const mapDistribute& slavesMap = gmd.globalPointSlavesMap();
+    const distributionMap& slavesMap = gmd.globalPointSlavesMap();
     const labelListList& slaves = gmd.globalPointSlaves();
 
     List<Type> elems(slavesMap.constructSize());

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ const Foam::polyMesh& Foam::InteractionLists<ParticleType>::mesh() const
 
 
 template<class ParticleType>
-const Foam::mapDistribute&
+const Foam::distributionMap&
 Foam::InteractionLists<ParticleType>::cellMap() const
 {
     return cellMapPtr_();
@@ -43,7 +43,7 @@ Foam::InteractionLists<ParticleType>::cellMap() const
 
 
 template<class ParticleType>
-const Foam::mapDistribute&
+const Foam::distributionMap&
 Foam::InteractionLists<ParticleType>::wallFaceMap() const
 {
     return wallFaceMapPtr_();

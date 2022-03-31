@@ -97,7 +97,7 @@ public:
         virtual void updateMesh(const mapPolyMesh&);
 
         //- Update mesh corresponding to the given distribution map
-        virtual void distribute(const mapDistributePolyMesh&);
+        virtual void distribute(const polyMeshDistributionMap&);
 
         //- Update the y-field when the mesh moves
         virtual bool movePoints();

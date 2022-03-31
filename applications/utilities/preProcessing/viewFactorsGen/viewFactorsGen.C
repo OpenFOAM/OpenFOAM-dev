@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -543,7 +543,7 @@ int main(int argc, char *argv[])
 
     List<Map<label>> compactMap(Pstream::nProcs());
 
-    mapDistribute map(globalNumbering, rayEndFace, compactMap);
+    distributionMap map(globalNumbering, rayEndFace, compactMap);
 
     labelListIOList IOsubMap
     (

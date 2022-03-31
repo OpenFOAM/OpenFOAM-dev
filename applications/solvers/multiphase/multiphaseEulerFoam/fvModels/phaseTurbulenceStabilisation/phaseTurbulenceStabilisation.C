@@ -241,7 +241,7 @@ void Foam::fv::phaseTurbulenceStabilisation::updateMesh(const mapPolyMesh&)
 
 void Foam::fv::phaseTurbulenceStabilisation::distribute
 (
-    const mapDistributePolyMesh&
+    const polyMeshDistributionMap&
 )
 {}
 

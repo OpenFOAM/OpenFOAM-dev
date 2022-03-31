@@ -156,7 +156,7 @@ void Foam::fv::heatSource::updateMesh(const mapPolyMesh& map)
 }
 
 
-void Foam::fv::heatSource::distribute(const mapDistributePolyMesh& map)
+void Foam::fv::heatSource::distribute(const polyMeshDistributionMap& map)
 {
     set_.distribute(map);
 }

@@ -30,7 +30,7 @@ License
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mappedWallPolyPatch.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

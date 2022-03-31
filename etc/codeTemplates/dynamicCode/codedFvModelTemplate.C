@@ -187,7 +187,7 @@ void ${typeName}FvModel${SourceType}::updateMesh(const mapPolyMesh& map)
 
 void ${typeName}FvModel${SourceType}::distribute
 (
-    const mapDistributePolyMesh& map
+    const polyMeshDistributionMap& map
 )
 {
     set_.distribute(map);

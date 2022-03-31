@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "processorPolyPatch.H"
 #include "cyclicPolyPatch.H"
 #include "polyMesh.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -1066,7 +1066,7 @@ void Foam::globalPoints::calculateSharedPoints
     List<Map<label>> compactMap;
     map_.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             globalIndices_,
             pointPoints_,

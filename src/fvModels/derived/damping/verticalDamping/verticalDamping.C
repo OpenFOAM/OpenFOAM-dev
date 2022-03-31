@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ void Foam::fv::verticalDamping::updateMesh(const mapPolyMesh&)
 {}
 
 
-void Foam::fv::verticalDamping::distribute(const mapDistributePolyMesh&)
+void Foam::fv::verticalDamping::distribute(const polyMeshDistributionMap&)
 {}
 
 

@@ -240,7 +240,10 @@ void Foam::fv::semiImplicitSource::updateMesh(const mapPolyMesh& map)
 }
 
 
-void Foam::fv::semiImplicitSource::distribute(const mapDistributePolyMesh& map)
+void Foam::fv::semiImplicitSource::distribute
+(
+    const polyMeshDistributionMap& map
+)
 {
     set_.distribute(map);
 }

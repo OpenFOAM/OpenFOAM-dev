@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "globalMeshData.H"
 #include "polyMesh.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -35,7 +35,7 @@ void Foam::globalMeshData::syncData
     List<Type>& elems,
     const labelListList& slaves,
     const labelListList& transformedSlaves,
-    const mapDistribute& slavesMap,
+    const distributionMap& slavesMap,
     const globalIndexAndTransform& transforms,
     const CombineOp& cop,
     const TransformOp& top
@@ -108,7 +108,7 @@ void Foam::globalMeshData::syncData
     List<Type>& elems,
     const labelListList& slaves,
     const labelListList& transformedSlaves,
-    const mapDistribute& slavesMap,
+    const distributionMap& slavesMap,
     const CombineOp& cop
 )
 {

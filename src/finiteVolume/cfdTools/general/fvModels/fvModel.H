@@ -48,7 +48,7 @@ namespace Foam
 
 class fvMesh;
 class mapPolyMesh;
-class mapDistributePolyMesh;
+class polyMeshDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                            Class fvModel Declaration
@@ -334,7 +334,7 @@ public:
             virtual void updateMesh(const mapPolyMesh&) = 0;
 
             //- Update mesh corresponding to the given distribution map
-            virtual void distribute(const mapDistributePolyMesh&) = 0;
+            virtual void distribute(const polyMeshDistributionMap&) = 0;
 
             //- Update for mesh motion
             virtual bool movePoints() = 0;

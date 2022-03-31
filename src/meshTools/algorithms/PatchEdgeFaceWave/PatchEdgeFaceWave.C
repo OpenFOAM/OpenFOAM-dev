@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,7 +170,7 @@ void Foam::PatchEdgeFaceWave<PrimitivePatchType, Type, TrackingData>::
 syncEdges()
 {
     const globalMeshData& globalData = mesh_.globalData();
-    const mapDistribute& map = globalData.globalEdgeSlavesMap();
+    const distributionMap& map = globalData.globalEdgeSlavesMap();
     const PackedBoolList& cppOrientation = globalData.globalEdgeOrientation();
 
     // Convert patch-edge data into cpp-edge data

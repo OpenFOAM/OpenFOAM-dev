@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ namespace Foam
 
 class polyPatch;
 class polyMesh;
-class mapDistribute;
+class distributionMap;
 
 /*---------------------------------------------------------------------------*\
                        Class mappedPatchBase Declaration
@@ -224,7 +224,7 @@ protected:
             //    - Cells/faces to sample per processor
             //    - Patch faces to receive per processor
             //    - schedule
-            mutable autoPtr<mapDistribute> mapPtr_;
+            mutable autoPtr<distributionMap> mapPtr_;
 
 
         // AMI interpolator (only for NEARESTPATCHFACEAMI)
@@ -382,7 +382,7 @@ public:
             inline bool sameRegion() const;
 
             //- Return reference to the parallel distribution map
-            inline const mapDistribute& map() const;
+            inline const distributionMap& map() const;
 
             //- Return reference to the AMI interpolator
             inline const AMIInterpolation& AMI

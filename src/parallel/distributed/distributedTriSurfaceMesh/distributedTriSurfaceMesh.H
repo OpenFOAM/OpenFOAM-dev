@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ SourceFiles
 namespace Foam
 {
 
-class mapDistribute;
+class distributionMap;
 class decompositionMethod;
 
 // Typedefs
@@ -158,7 +158,7 @@ private:
 
             //- Divide edges into local and remote segments. Construct map to
             //  distribute and collect data.
-            autoPtr<mapDistribute> distributeSegments
+            autoPtr<distributionMap> distributeSegments
             (
                 const pointField& start,
                 const pointField& end,
@@ -182,7 +182,7 @@ private:
             //- Obtains global indices from pointIndexHit and swaps them back
             //  to their original processor. Used to calculate local region
             //  and normal.
-            autoPtr<mapDistribute> calcLocalQueries
+            autoPtr<distributionMap> calcLocalQueries
             (
                 const List<pointIndexHit>&,
                 labelList& triangleIndex
@@ -198,7 +198,7 @@ private:
                 boolList& overlaps
             ) const;
 
-            autoPtr<mapDistribute> calcLocalQueries
+            autoPtr<distributionMap> calcLocalQueries
             (
                 const pointField& centres,
                 const scalarField& radiusSqr,
@@ -287,7 +287,7 @@ private:
 
             //- Distribute stored fields
             template<class Type>
-            void distributeFields(const mapDistribute& map);
+            void distributeFields(const distributionMap& map);
 
 
 public:
@@ -415,8 +415,8 @@ public:
             (
                 const List<treeBoundBox>&,
                 const bool keepNonLocal,
-                autoPtr<mapDistribute>& faceMap,
-                autoPtr<mapDistribute>& pointMap
+                autoPtr<distributionMap>& faceMap,
+                autoPtr<distributionMap>& pointMap
             );
 
 

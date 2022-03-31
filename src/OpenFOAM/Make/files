@@ -580,11 +580,13 @@ mapPolyMesh = $(polyMesh)/mapPolyMesh
 $(mapPolyMesh)/mapPolyMesh.C
 $(mapPolyMesh)/faceMapper/faceMapper.C
 $(mapPolyMesh)/cellMapper/cellMapper.C
-$(mapPolyMesh)/mapDistribute/mapDistribute.C
-$(mapPolyMesh)/mapDistribute/mapDistributeBase.C
-$(mapPolyMesh)/mapDistribute/mapDistributePolyMesh.C
-$(mapPolyMesh)/mapDistribute/IOmapDistribute.C
 $(mapPolyMesh)/mapAddedPolyMesh.C
+
+polyMeshDistributionMap = $(polyMesh)/polyMeshDistributionMap
+$(polyMeshDistributionMap)/distributionMap.C
+$(polyMeshDistributionMap)/distributionMapBase.C
+$(polyMeshDistributionMap)/polyMeshDistributionMap.C
+$(polyMeshDistributionMap)/IOdistributionMap.C
 
 PrimitivePatch = $(primitiveMesh)/PrimitivePatch
 $(PrimitivePatch)/PrimitivePatchName.C

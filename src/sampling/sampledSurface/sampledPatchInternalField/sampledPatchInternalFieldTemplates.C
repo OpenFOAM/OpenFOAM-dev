@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ Foam::sampledSurfaces::patchInternalField::interpolateField
     forAll(patchIDs(), i)
     {
         // See mappedFixedValueFvPatchField
-        const mapDistribute& distMap = mappers_[i].map();
+        const distributionMap& distMap = mappers_[i].map();
 
         // Send back sample points to processor that holds the cell.
         // Mark cells with point::max so we know which ones we need

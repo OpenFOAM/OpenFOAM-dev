@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "distributedTriSurfaceMesh.H"
 #include "triSurfaceFields.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -44,7 +44,7 @@ License
 //    // ~~~~~~~~~~~~~~
 //
 //    labelList triangleIndex(info.size());
-//    autoPtr<mapDistribute> mapPtr
+//    autoPtr<distributionMap> mapPtr
 //    (
 //        calcLocalQueries
 //        (
@@ -52,7 +52,7 @@ License
 //            triangleIndex
 //        )
 //    );
-//    const mapDistribute& map = mapPtr();
+//    const distributionMap& map = mapPtr();
 //
 //
 //    // Do my tests
@@ -83,7 +83,7 @@ License
 template<class Type>
 void Foam::distributedTriSurfaceMesh::distributeFields
 (
-    const mapDistribute& map
+    const distributionMap& map
 )
 {
     typedef DimensionedField<Type, triSurfaceGeoMesh> DimensionedSurfField;

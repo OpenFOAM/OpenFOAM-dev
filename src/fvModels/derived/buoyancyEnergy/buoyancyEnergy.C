@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ void Foam::fv::buoyancyEnergy::updateMesh(const mapPolyMesh&)
 {}
 
 
-void Foam::fv::buoyancyEnergy::distribute(const mapDistributePolyMesh&)
+void Foam::fv::buoyancyEnergy::distribute(const polyMeshDistributionMap&)
 {}
 
 

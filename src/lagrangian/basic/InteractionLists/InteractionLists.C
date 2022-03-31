@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -274,7 +274,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
     preDistributionCellMapSize = procToDistributeCellTo.size();
 
-    // Rebuild mapDistribute with only required referred cells
+    // Rebuild distributionMap with only required referred cells
     buildMap(cellMapPtr_, procToDistributeCellTo);
 
     // Store cellIndexAndTransformToDistribute
@@ -494,7 +494,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
     preDistributionWallFaceMapSize = procToDistributeWallFaceTo.size();
 
-    // Rebuild mapDistribute with only required referred wallFaces
+    // Rebuild distributionMap with only required referred wallFaces
     buildMap(wallFaceMapPtr_, procToDistributeWallFaceTo);
 
     // Store wallFaceIndexAndTransformToDistribute
@@ -828,7 +828,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
 template<class ParticleType>
 void Foam::InteractionLists<ParticleType>::buildMap
 (
-    autoPtr<mapDistribute>& mapPtr,
+    autoPtr<distributionMap>& mapPtr,
     const List<label>& toProc
 )
 {
@@ -898,7 +898,7 @@ void Foam::InteractionLists<ParticleType>::buildMap
 
     mapPtr.reset
     (
-        new mapDistribute
+        new distributionMap
         (
             constructSize,
             move(sendMap),
@@ -1187,7 +1187,7 @@ void Foam::InteractionLists<ParticleType>::sendReferredData
         }
     }
 
-    // Using the mapDistribute to start sending and receiving the
+    // Using the distributionMap to start sending and receiving the
     // buffer but not block, i.e. it is calling
     //     pBufs.finishedSends(false);
     wallFaceMap().send(pBufs, referredWallData_);

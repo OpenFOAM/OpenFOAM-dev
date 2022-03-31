@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "refinementHistory.H"
 #include "mapPolyMesh.H"
-#include "mapDistributePolyMesh.H"
+#include "polyMeshDistributionMap.H"
 #include "polyMesh.H"
 #include "syncTools.H"
 
@@ -1257,7 +1257,7 @@ void Foam::refinementHistory::countProc
 }
 
 
-void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
+void Foam::refinementHistory::distribute(const polyMeshDistributionMap& map)
 {
     if (!active())
     {

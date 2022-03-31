@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Description
 #include "PstreamReduceOps.H"
 #include "fvCFD.H"
 #include "fvMeshDistribute.H"
-#include "mapDistributePolyMesh.H"
+#include "polyMeshDistributionMap.H"
 #include "IOobjectList.H"
 #include "globalIndex.H"
 #include "loadOrCreateMesh.H"
@@ -642,7 +642,7 @@ int main(int argc, char *argv[])
     //    << distributor.countCells(finalDecomp) << nl << endl;
 
     // Do actual sending/receiving of mesh
-    autoPtr<mapDistributePolyMesh> map = distributor.distribute(finalDecomp);
+    autoPtr<polyMeshDistributionMap> map = distributor.distribute(finalDecomp);
 
     //// Distribute any non-registered data accordingly
     // map().distributeFaceData(faceCc);

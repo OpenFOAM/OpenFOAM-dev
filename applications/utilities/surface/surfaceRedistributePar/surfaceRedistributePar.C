@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Note
 #include "Time.H"
 #include "polyMesh.H"
 #include "distributedTriSurfaceMesh.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "localIOdictionary.H"
 
 using namespace Foam;
@@ -257,8 +257,8 @@ int main(int argc, char *argv[])
 
     // Do redistribution
     Info<< "Redistributing surface" << nl << endl;
-    autoPtr<mapDistribute> faceMap;
-    autoPtr<mapDistribute> pointMap;
+    autoPtr<distributionMap> faceMap;
+    autoPtr<distributionMap> pointMap;
     surfMesh.distribute
     (
         meshBb[Pstream::myProcNo()],

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,7 +194,7 @@ void Foam::fv::solidEquilibriumEnergySource::updateMesh(const mapPolyMesh&)
 
 void Foam::fv::solidEquilibriumEnergySource::distribute
 (
-    const mapDistributePolyMesh&
+    const polyMeshDistributionMap&
 )
 {}
 

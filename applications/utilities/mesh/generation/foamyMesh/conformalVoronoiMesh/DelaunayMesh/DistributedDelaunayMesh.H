@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ SourceFiles
 namespace Foam
 {
 
-class mapDistribute;
+class distributionMap;
 
 /*---------------------------------------------------------------------------*\
                    Class DistributedDelaunayMesh Declaration
@@ -158,13 +158,13 @@ public:
 
     // Member Functions
 
-        //- Build a mapDistribute for the supplied destination processor data
-        static autoPtr<mapDistribute> buildMap(const List<label>& toProc);
+        //- Build a distributionMap for the supplied destination processor data
+        static autoPtr<distributionMap> buildMap(const List<label>& toProc);
 
         //-
         bool distribute(const boundBox& bb);
 
-        autoPtr<mapDistribute> distribute
+        autoPtr<distributionMap> distribute
         (
             const backgroundMeshDecomposition& decomposition,
             List<Foam::point>& points

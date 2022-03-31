@@ -212,7 +212,10 @@ void Foam::fv::actuationDiskSource::updateMesh(const mapPolyMesh& map)
 }
 
 
-void Foam::fv::actuationDiskSource::distribute(const mapDistributePolyMesh& map)
+void Foam::fv::actuationDiskSource::distribute
+(
+    const polyMeshDistributionMap& map
+)
 {
     set_.distribute(map);
 }

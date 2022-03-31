@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class T, class CombineOp, class negateOp>
-void Foam::mapDistributeBase::flipAndCombine
+void Foam::distributionMapBase::flipAndCombine
 (
     const UList<label>& map,
     const bool hasFlip,
@@ -76,7 +76,7 @@ void Foam::mapDistributeBase::flipAndCombine
 
 
 template<class T, class negateOp>
-T Foam::mapDistributeBase::accessAndFlip
+T Foam::distributionMapBase::accessAndFlip
 (
     const UList<T>& fld,
     const label index,
@@ -115,7 +115,7 @@ T Foam::mapDistributeBase::accessAndFlip
 
 // Distribute list.
 template<class T, class negateOp>
-void Foam::mapDistributeBase::distribute
+void Foam::distributionMapBase::distribute
 (
     const Pstream::commsTypes commsType,
     const List<labelPair>& schedule,
@@ -623,7 +623,7 @@ void Foam::mapDistributeBase::distribute
 
 // Distribute list.
 template<class T, class CombineOp, class negateOp>
-void Foam::mapDistributeBase::distribute
+void Foam::distributionMapBase::distribute
 (
     const Pstream::commsTypes commsType,
     const List<labelPair>& schedule,
@@ -1122,7 +1122,11 @@ void Foam::mapDistributeBase::distribute
 
 
 template<class T>
-void Foam::mapDistributeBase::send(PstreamBuffers& pBufs, const List<T>& field)
+void Foam::distributionMapBase::send
+(
+    PstreamBuffers& pBufs,
+    const List<T>& field
+)
 const
 {
     // Stream data into buffer
@@ -1156,7 +1160,7 @@ const
 
 
 template<class T>
-void Foam::mapDistributeBase::receive(PstreamBuffers& pBufs, List<T>& field)
+void Foam::distributionMapBase::receive(PstreamBuffers& pBufs, List<T>& field)
 const
 {
     // Consume
@@ -1196,7 +1200,7 @@ const
 
 //- Distribute data using default commsType.
 template<class T, class negateOp>
-void Foam::mapDistributeBase::distribute
+void Foam::distributionMapBase::distribute
 (
     List<T>& fld,
     const negateOp& negOp,
@@ -1256,7 +1260,7 @@ void Foam::mapDistributeBase::distribute
 
 //- Distribute data using default commsType.
 template<class T>
-void Foam::mapDistributeBase::distribute
+void Foam::distributionMapBase::distribute
 (
     List<T>& fld,
     const int tag
@@ -1268,7 +1272,7 @@ void Foam::mapDistributeBase::distribute
 
 //- Distribute data using default commsType.
 template<class T>
-void Foam::mapDistributeBase::distribute
+void Foam::distributionMapBase::distribute
 (
     DynamicList<T>& fld,
     const int tag
@@ -1286,7 +1290,7 @@ void Foam::mapDistributeBase::distribute
 
 //- Reverse distribute data using default commsType.
 template<class T>
-void Foam::mapDistributeBase::reverseDistribute
+void Foam::distributionMapBase::reverseDistribute
 (
     const label constructSize,
     List<T>& fld,
@@ -1348,7 +1352,7 @@ void Foam::mapDistributeBase::reverseDistribute
 //  Since constructSize might be larger than supplied size supply
 //  a nullValue
 template<class T>
-void Foam::mapDistributeBase::reverseDistribute
+void Foam::distributionMapBase::reverseDistribute
 (
     const label constructSize,
     const T& nullValue,

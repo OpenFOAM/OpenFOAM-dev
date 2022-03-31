@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ namespace Foam
 
 // Class forward declarations
 class fvMesh;
-class mapDistributePolyMesh;
+class polyMeshDistributionMap;
 class decompositionMethod;
 class refinementSurfaces;
 class refinementFeatures;
@@ -694,7 +694,7 @@ public:
             //  keepZoneFaces : find all faceZones from zoned surfaces and keep
             //                  owner and neighbour together
             //  keepBaffles   : find all baffles and keep them together
-            autoPtr<mapDistributePolyMesh> balance
+            autoPtr<polyMeshDistributionMap> balance
             (
                 const bool keepZoneFaces,
                 const bool keepBaffles,
@@ -800,7 +800,7 @@ public:
             autoPtr<mapPolyMesh> refine(const labelList& cellsToRefine);
 
             //- Refine some cells and rebalance
-            autoPtr<mapDistributePolyMesh> refineAndBalance
+            autoPtr<polyMeshDistributionMap> refineAndBalance
             (
                 const string& msg,
                 decompositionMethod& decomposer,
@@ -810,7 +810,7 @@ public:
             );
 
             //- Balance before refining some cells
-            autoPtr<mapDistributePolyMesh> balanceAndRefine
+            autoPtr<polyMeshDistributionMap> balanceAndRefine
             (
                 const string& msg,
                 decompositionMethod& decomposer,
@@ -942,7 +942,7 @@ public:
             );
 
             //- Update local numbering for mesh redistribution
-            void distribute(const mapDistributePolyMesh&);
+            void distribute(const polyMeshDistributionMap&);
 
             //- Update for external change to mesh. changedFaces are in new mesh
             //  face labels.

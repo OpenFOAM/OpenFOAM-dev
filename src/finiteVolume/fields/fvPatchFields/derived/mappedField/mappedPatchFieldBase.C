@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,7 +186,7 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
     {
         case mappedPatchBase::NEARESTCELL:
         {
-            const mapDistribute& distMap = mapper_.map();
+            const distributionMap& distMap = mapper_.map();
 
             if (interpolationScheme_ != interpolationCell<Type>::typeName)
             {

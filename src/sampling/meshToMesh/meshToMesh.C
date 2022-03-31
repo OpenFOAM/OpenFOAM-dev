@@ -258,8 +258,8 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
         // Create processor map of overlapping cells. This map gets
         // (possibly remote) cells from the tgt mesh such that they (together)
         // cover all of the src mesh
-        autoPtr<mapDistribute> mapPtr = calcProcMap(srcRegion_, tgtRegion_);
-        const mapDistribute& map = mapPtr();
+        autoPtr<distributionMap> mapPtr = calcProcMap(srcRegion_, tgtRegion_);
+        const distributionMap& map = mapPtr();
 
         pointField newTgtPoints;
         faceList newTgtFaces;
@@ -355,7 +355,7 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
         }
 
         // set up as a reverse distribute
-        mapDistributeBase::distribute
+        distributionMapBase::distribute
         (
             Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
@@ -371,7 +371,7 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
         );
 
         // set up as a reverse distribute
-        mapDistributeBase::distribute
+        distributionMapBase::distribute
         (
             Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
@@ -405,11 +405,11 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
         List<Map<label>> cMap;
         srcMapPtr_.reset
         (
-            new mapDistribute(globalSrcCells, tgtToSrcCellAddr_, cMap)
+            new distributionMap(globalSrcCells, tgtToSrcCellAddr_, cMap)
         );
         tgtMapPtr_.reset
         (
-            new mapDistribute(globalTgtCells, srcToTgtCellAddr_, cMap)
+            new distributionMap(globalTgtCells, srcToTgtCellAddr_, cMap)
         );
 
         // collect volume intersection contributions

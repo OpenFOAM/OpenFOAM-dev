@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ License
 #include "polyMesh.H"
 #include "polyPatch.H"
 #include "Time.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "SubField.H"
 #include "triPointRef.H"
 #include "syncTools.H"
@@ -699,7 +699,7 @@ void Foam::mappedPatchBase::calcMapping() const
     }
 
     // Determine schedule.
-    mapPtr_.reset(new mapDistribute(sampleProcs, patchFaceProcs));
+    mapPtr_.reset(new distributionMap(sampleProcs, patchFaceProcs));
 
     // Rework the schedule from indices into samples to cell data to send,
     // face data to receive.

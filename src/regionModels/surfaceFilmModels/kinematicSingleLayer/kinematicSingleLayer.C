@@ -40,7 +40,7 @@ License
 #include "constrainHbyA.H"
 
 #include "mappedWallPolyPatch.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "filmViscosityModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

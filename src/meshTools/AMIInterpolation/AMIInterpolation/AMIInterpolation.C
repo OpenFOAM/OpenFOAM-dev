@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "AMIInterpolation.H"
 #include "AMIMethod.H"
 #include "meshTools.H"
-#include "mapDistribute.H"
+#include "distributionMap.H"
 #include "flipOp.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -232,7 +232,7 @@ void Foam::AMIInterpolation::normaliseWeights
 
 void Foam::AMIInterpolation::agglomerate
 (
-    const autoPtr<mapDistribute>& targetMapPtr,
+    const autoPtr<distributionMap>& targetMapPtr,
     const scalarField& fineSrcMagSf,
     const labelListList& fineSrcAddress,
     const scalarListList& fineSrcWeights,
@@ -244,7 +244,7 @@ void Foam::AMIInterpolation::agglomerate
     labelListList& srcAddress,
     scalarListList& srcWeights,
     scalarField& srcWeightsSum,
-    autoPtr<mapDistribute>& tgtMap
+    autoPtr<distributionMap>& tgtMap
 )
 {
     label sourceCoarseSize =
@@ -275,7 +275,7 @@ void Foam::AMIInterpolation::agglomerate
     // Agglomerate weights and indices
     if (targetMapPtr.valid())
     {
-        const mapDistribute& map = targetMapPtr();
+        const distributionMap& map = targetMapPtr();
 
         // Get all restriction addressing.
         labelList allRestrict(targetRestrictAddressing);
@@ -403,7 +403,7 @@ void Foam::AMIInterpolation::agglomerate
         forAll(fineSrcAddress, facei)
         {
             // All the elements contributing to facei. Are slots in
-            // mapDistribute'd data.
+            // distributionMap'd data.
             const labelList& elems = fineSrcAddress[facei];
             const scalarList& weights = fineSrcWeights[facei];
             const scalar fineArea = fineSrcMagSf[facei];
@@ -435,7 +435,7 @@ void Foam::AMIInterpolation::agglomerate
 
         tgtMap.reset
         (
-            new mapDistribute
+            new distributionMap
             (
                 compactI,
                 move(tgtSubMap),
@@ -451,7 +451,7 @@ void Foam::AMIInterpolation::agglomerate
         forAll(fineSrcAddress, facei)
         {
             // All the elements contributing to facei. Are slots in
-            // mapDistribute'd data.
+            // distributionMap'd data.
             const labelList& elems = fineSrcAddress[facei];
             const scalarList& weights = fineSrcWeights[facei];
             const scalar fineArea = fineSrcMagSf[facei];
@@ -784,8 +784,8 @@ void Foam::AMIInterpolation::update
         // Create processor map of overlapping faces. This map gets
         // (possibly remote) faces from the tgtPatch such that they (together)
         // cover all of the srcPatch
-        autoPtr<mapDistribute> mapPtr = calcProcMap(srcPatch, tgtPatch);
-        const mapDistribute& map = mapPtr();
+        autoPtr<distributionMap> mapPtr = calcProcMap(srcPatch, tgtPatch);
+        const distributionMap& map = mapPtr();
 
         // Create new target patch that fully encompasses source patch
 
@@ -875,7 +875,7 @@ void Foam::AMIInterpolation::update
         // Send data back to originating procs. Note that contributions
         // from different processors get added (ListAppendEqOp)
 
-        mapDistributeBase::distribute
+        distributionMapBase::distribute
         (
             Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
@@ -890,7 +890,7 @@ void Foam::AMIInterpolation::update
             labelList()
         );
 
-        mapDistributeBase::distribute
+        distributionMapBase::distribute
         (
             Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
@@ -907,8 +907,14 @@ void Foam::AMIInterpolation::update
 
         // Cache maps and reset addresses
         List<Map<label>> cMap;
-        srcMapPtr_.reset(new mapDistribute(globalSrcFaces, tgtAddress_, cMap));
-        tgtMapPtr_.reset(new mapDistribute(globalTgtFaces, srcAddress_, cMap));
+        srcMapPtr_.reset
+        (
+            new distributionMap(globalSrcFaces, tgtAddress_, cMap)
+        );
+        tgtMapPtr_.reset
+        (
+            new distributionMap(globalTgtFaces, srcAddress_, cMap)
+        );
 
         if (debug)
         {

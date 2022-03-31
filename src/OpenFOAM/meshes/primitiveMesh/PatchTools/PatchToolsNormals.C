@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Foam::tmp<Foam::pointField> Foam::PatchTools::pointNormals
     const globalMeshData& globalData = mesh.globalData();
     const indirectPrimitivePatch& coupledPatch = globalData.coupledPatch();
     const Map<label>& coupledPatchMP = coupledPatch.meshPointMap();
-    const mapDistribute& map = globalData.globalPointSlavesMap();
+    const distributionMap& map = globalData.globalPointSlavesMap();
     const globalIndexAndTransform& transforms =
         globalData.globalTransforms();
 
@@ -80,7 +80,7 @@ Foam::tmp<Foam::pointField> Foam::PatchTools::pointNormals
         (
             transforms,
             pointFaceNormals,
-            mapDistribute::transform()
+            distributionMap::transform()
         );
 
 
@@ -142,7 +142,7 @@ Foam::tmp<Foam::pointField> Foam::PatchTools::pointNormals
             transforms,
             coupledPointNormals.size(),
             coupledPointNormals,
-            mapDistribute::transform()
+            distributionMap::transform()
         );
     }
 
@@ -216,7 +216,7 @@ Foam::tmp<Foam::pointField> Foam::PatchTools::edgeNormals
 
 
     const globalMeshData& globalData = mesh.globalData();
-    const mapDistribute& map = globalData.globalEdgeSlavesMap();
+    const distributionMap& map = globalData.globalEdgeSlavesMap();
 
 
     // Convert patch-edge data into cpp-edge data
@@ -244,7 +244,7 @@ Foam::tmp<Foam::pointField> Foam::PatchTools::edgeNormals
         map,
         globalData.globalTransforms(),
         plusEqOp<point>(),              // add since normalised later on
-        mapDistribute::transform()
+        distributionMap::transform()
     );
     cppEdgeData /= mag(cppEdgeData)+vSmall;
 

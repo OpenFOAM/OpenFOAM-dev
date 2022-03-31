@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::mapDistribute> Foam::backgroundMeshDecomposition::buildMap
+Foam::autoPtr<Foam::distributionMap>
+Foam::backgroundMeshDecomposition::buildMap
 (
     const List<label>& toProc
 )
@@ -112,9 +113,9 @@ Foam::autoPtr<Foam::mapDistribute> Foam::backgroundMeshDecomposition::buildMap
         }
     }
 
-    return autoPtr<mapDistribute>
+    return autoPtr<distributionMap>
     (
-        new mapDistribute
+        new distributionMap
         (
             constructSize,
             move(sendMap),
@@ -408,7 +409,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
 
             fvMeshDistribute distributor(mesh_);
 
-            autoPtr<mapDistributePolyMesh> mapDist = distributor.distribute
+            autoPtr<polyMeshDistributionMap> mapDist = distributor.distribute
             (
                 newDecomp
             );
@@ -840,7 +841,7 @@ Foam::backgroundMeshDecomposition::~backgroundMeshDecomposition()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::mapDistributePolyMesh>
+Foam::autoPtr<Foam::polyMeshDistributionMap>
 Foam::backgroundMeshDecomposition::distribute
 (
     volScalarField& cellWeights
@@ -987,7 +988,8 @@ Foam::backgroundMeshDecomposition::distribute
 
     fvMeshDistribute distributor(mesh_);
 
-    autoPtr<mapDistributePolyMesh> mapDist = distributor.distribute(newDecomp);
+    autoPtr<polyMeshDistributionMap> mapDist =
+        distributor.distribute(newDecomp);
 
     meshCutter_.distribute(mapDist);
 
@@ -1122,7 +1124,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorNearestPosition
     // Needed for reverseDistribute
     label preDistributionToCandidateProcSize = toCandidateProc.size();
 
-    autoPtr<mapDistribute> map(buildMap(toCandidateProc));
+    autoPtr<distributionMap> map(buildMap(toCandidateProc));
 
     map().distribute(testPoints);
 
@@ -1250,7 +1252,7 @@ Foam::backgroundMeshDecomposition::intersectsProcessors
     // Needed for reverseDistribute
     label preDistributionToCandidateProcSize = toCandidateProc.size();
 
-    autoPtr<mapDistribute> map(buildMap(toCandidateProc));
+    autoPtr<distributionMap> map(buildMap(toCandidateProc));
 
     map().distribute(testStarts);
     map().distribute(testEnds);
@@ -1411,7 +1413,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
 //    // Needed for reverseDistribute
 ////    label preDistributionToCandidateProcSize = toCandidateProc.size();
 ////
-////    autoPtr<mapDistribute> map(buildMap(toCandidateProc));
+////    autoPtr<distributionMap> map(buildMap(toCandidateProc));
 ////
 ////    map().distribute(testCentres);
 ////    map().distribute(testRadiusSqrs);
@@ -1528,7 +1530,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
 //    // Needed for reverseDistribute
 //    label preDistributionToCandidateProcSize = toCandidateProc.size();
 //
-//    autoPtr<mapDistribute> map(buildMap(toCandidateProc));
+//    autoPtr<distributionMap> map(buildMap(toCandidateProc));
 //
 //    map().distribute(testCentres);
 //    map().distribute(testRadiusSqrs);

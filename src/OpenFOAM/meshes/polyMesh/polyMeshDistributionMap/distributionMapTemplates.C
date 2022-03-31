@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class T>
-void Foam::mapDistribute::applyDummyTransforms(List<T>& field) const
+void Foam::distributionMap::applyDummyTransforms(List<T>& field) const
 {
     forAll(transformElements_, trafoI)
     {
@@ -50,7 +50,7 @@ void Foam::mapDistribute::applyDummyTransforms(List<T>& field) const
 
 
 template<class T>
-void Foam::mapDistribute::applyDummyInverseTransforms(List<T>& field) const
+void Foam::distributionMap::applyDummyInverseTransforms(List<T>& field) const
 {
     forAll(transformElements_, trafoI)
     {
@@ -66,7 +66,7 @@ void Foam::mapDistribute::applyDummyInverseTransforms(List<T>& field) const
 
 
 template<class T, class TransformOp>   //, class CombineOp>
-void Foam::mapDistribute::applyTransforms
+void Foam::distributionMap::applyTransforms
 (
     const globalIndexAndTransform& globalTransforms,
     List<T>& field,
@@ -96,7 +96,7 @@ void Foam::mapDistribute::applyTransforms
 
 
 template<class T, class TransformOp>   //, class CombineOp>
-void Foam::mapDistribute::applyInverseTransforms
+void Foam::distributionMap::applyInverseTransforms
 (
     const globalIndexAndTransform& globalTransforms,
     List<T>& field,
@@ -126,7 +126,7 @@ void Foam::mapDistribute::applyInverseTransforms
 
 
 template<class T, class negateOp>
-void Foam::mapDistribute::distribute
+void Foam::distributionMap::distribute
 (
     List<T>& fld,
     const negateOp& negOp,
@@ -134,7 +134,7 @@ void Foam::mapDistribute::distribute
     const int tag
 ) const
 {
-    mapDistributeBase::distribute(fld, negOp, tag);
+    distributionMapBase::distribute(fld, negOp, tag);
 
     //- Fill in transformed slots with copies
     if (dummyTransform)
@@ -145,7 +145,7 @@ void Foam::mapDistribute::distribute
 
 
 template<class T>
-void Foam::mapDistribute::distribute
+void Foam::distributionMap::distribute
 (
     List<T>& fld,
     const bool dummyTransform,
@@ -157,7 +157,7 @@ void Foam::mapDistribute::distribute
 
 
 template<class T>
-void Foam::mapDistribute::distribute
+void Foam::distributionMap::distribute
 (
     DynamicList<T>& fld,
     const bool dummyTransform,
@@ -175,7 +175,7 @@ void Foam::mapDistribute::distribute
 
 
 template<class T>
-void Foam::mapDistribute::reverseDistribute
+void Foam::distributionMap::reverseDistribute
 (
     const label constructSize,
     List<T>& fld,
@@ -188,12 +188,12 @@ void Foam::mapDistribute::reverseDistribute
         applyDummyInverseTransforms(fld);
     }
 
-    mapDistributeBase::reverseDistribute(constructSize, fld, tag);
+    distributionMapBase::reverseDistribute(constructSize, fld, tag);
 }
 
 
 template<class T>
-void Foam::mapDistribute::reverseDistribute
+void Foam::distributionMap::reverseDistribute
 (
     const label constructSize,
     const T& nullValue,
@@ -207,12 +207,12 @@ void Foam::mapDistribute::reverseDistribute
         applyDummyInverseTransforms(fld);
     }
 
-    mapDistributeBase::reverseDistribute(constructSize, nullValue, fld, tag);
+    distributionMapBase::reverseDistribute(constructSize, nullValue, fld, tag);
 }
 
 
 template<class T, class TransformOp>
-void Foam::mapDistribute::distribute
+void Foam::distributionMap::distribute
 (
     const globalIndexAndTransform& git,
     List<T>& fld,
@@ -228,7 +228,7 @@ void Foam::mapDistribute::distribute
 
 
 template<class T, class TransformOp>
-void Foam::mapDistribute::reverseDistribute
+void Foam::distributionMap::reverseDistribute
 (
     const globalIndexAndTransform& git,
     const label constructSize,
@@ -248,7 +248,7 @@ void Foam::mapDistribute::reverseDistribute
 
 
 template<class T, class TransformOp>
-void Foam::mapDistribute::reverseDistribute
+void Foam::distributionMap::reverseDistribute
 (
     const globalIndexAndTransform& git,
     const label constructSize,

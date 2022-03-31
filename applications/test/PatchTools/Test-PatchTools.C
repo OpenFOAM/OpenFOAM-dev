@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ using namespace Foam;
 //    const globalMeshData& globalData = mesh.globalData();
 //    const indirectPrimitivePatch& coupledPatch = globalData.coupledPatch();
 //    const Map<label>& coupledPatchMP = coupledPatch.meshPointMap();
-//    const mapDistribute& map = globalData.globalPointSlavesMap();
+//    const distributionMap& map = globalData.globalPointSlavesMap();
 //    const globalIndexAndTransform& transforms =
 //        globalData.globalTransforms();
 //
@@ -171,7 +171,7 @@ using namespace Foam;
 //        transforms,
 //        coupledPointNormals.size(),
 //        coupledPointNormals,
-//        mapDistribute::transform()
+//        distributionMap::transform()
 //    );
 //
 //

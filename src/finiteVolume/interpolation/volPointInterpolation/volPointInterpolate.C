@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ void Foam::volPointInterpolation::pushUntransformedData
     const indirectPrimitivePatch& cpp = gmd.coupledPatch();
     const labelList& meshPoints = cpp.meshPoints();
 
-    const mapDistribute& slavesMap = gmd.globalCoPointSlavesMap();
+    const distributionMap& slavesMap = gmd.globalCoPointSlavesMap();
     const labelListList& slaves = gmd.globalCoPointSlaves();
 
     List<Type> elems(slavesMap.constructSize());

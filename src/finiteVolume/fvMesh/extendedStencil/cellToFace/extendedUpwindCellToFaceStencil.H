@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,8 +67,8 @@ class extendedUpwindCellToFaceStencil
         const bool pureUpwind_;
 
         //- Swap map for getting neighbouring data
-        autoPtr<mapDistribute> ownMapPtr_;
-        autoPtr<mapDistribute> neiMapPtr_;
+        autoPtr<distributionMap> ownMapPtr_;
+        autoPtr<distributionMap> neiMapPtr_;
 
         //- Per face the stencil.
         labelListList ownStencil_;
@@ -149,13 +149,13 @@ public:
         }
 
         //- Return reference to the parallel distribution map
-        const mapDistribute& ownMap() const
+        const distributionMap& ownMap() const
         {
             return ownMapPtr_();
         }
 
         //- Return reference to the parallel distribution map
-        const mapDistribute& neiMap() const
+        const distributionMap& neiMap() const
         {
             return neiMapPtr_();
         }
