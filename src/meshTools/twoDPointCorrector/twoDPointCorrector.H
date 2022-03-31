@@ -148,7 +148,7 @@ public:
         virtual void updateMesh(const polyTopoChangeMap&);
 
         //- Update mesh corresponding to the given distribution map
-        virtual void distribute(const polyMeshDistributionMap&);
+        virtual void distribute(const polyDistributionMap&);
 
         //- Correct weighting factors for moving mesh.
         virtual bool movePoints();

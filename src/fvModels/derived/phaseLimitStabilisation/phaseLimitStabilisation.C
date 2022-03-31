@@ -115,7 +115,7 @@ void Foam::fv::phaseLimitStabilisation::updateMesh(const polyTopoChangeMap&)
 
 void Foam::fv::phaseLimitStabilisation::distribute
 (
-    const polyMeshDistributionMap&
+    const polyDistributionMap&
 )
 {}
 

@@ -103,7 +103,7 @@ void Foam::fvMeshMovers::layeredEngine::updateMesh(const polyTopoChangeMap&)
 
 void Foam::fvMeshMovers::layeredEngine::distribute
 (
-    const polyMeshDistributionMap&
+    const polyDistributionMap&
 )
 {
     NotImplemented;

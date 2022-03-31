@@ -32,14 +32,14 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::setUpdater::updateSets(const polyTopoChangeMap& morphMap) const
+void Foam::setUpdater::updateSets(const polyTopoChangeMap& map) const
 {
     //
     // Update all sets in memory.
     //
 
     HashTable<const Type*> memSets =
-        morphMap.mesh().objectRegistry::lookupClass<Type>();
+        map.mesh().objectRegistry::lookupClass<Type>();
 
     forAllIter(typename HashTable<const Type*>, memSets, iter)
     {
@@ -51,7 +51,7 @@ void Foam::setUpdater::updateSets(const polyTopoChangeMap& morphMap) const
                 << " updated in memory" << endl;
         }
 
-        set.updateMesh(morphMap);
+        set.updateMesh(map);
 
         // Write or not? Debatable.
         set.write();
@@ -65,8 +65,8 @@ void Foam::setUpdater::updateSets(const polyTopoChangeMap& morphMap) const
     // Get last valid mesh (discard points-only change)
     IOobjectList Objects
     (
-        morphMap.mesh().time(),
-        morphMap.mesh().facesInstance(),
+        map.mesh().time(),
+        map.mesh().facesInstance(),
         "polyMesh/sets"
     );
 
@@ -85,7 +85,7 @@ void Foam::setUpdater::updateSets(const polyTopoChangeMap& morphMap) const
                     << " updated on disk" << endl;
             }
 
-            set.updateMesh(morphMap);
+            set.updateMesh(map);
 
             set.write();
         }

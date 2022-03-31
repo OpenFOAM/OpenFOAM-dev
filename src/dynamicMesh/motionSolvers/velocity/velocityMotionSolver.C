@@ -79,7 +79,7 @@ void Foam::velocityMotionSolver::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::velocityMotionSolver::distribute(const polyMeshDistributionMap&)
+void Foam::velocityMotionSolver::distribute(const polyDistributionMap&)
 {}
 
 

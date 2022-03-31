@@ -409,7 +409,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
 
             fvMeshDistribute distributor(mesh_);
 
-            autoPtr<polyMeshDistributionMap> mapDist = distributor.distribute
+            autoPtr<polyDistributionMap> mapDist = distributor.distribute
             (
                 newDecomp
             );
@@ -841,7 +841,7 @@ Foam::backgroundMeshDecomposition::~backgroundMeshDecomposition()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::polyMeshDistributionMap>
+Foam::autoPtr<Foam::polyDistributionMap>
 Foam::backgroundMeshDecomposition::distribute
 (
     volScalarField& cellWeights
@@ -988,7 +988,7 @@ Foam::backgroundMeshDecomposition::distribute
 
     fvMeshDistribute distributor(mesh_);
 
-    autoPtr<polyMeshDistributionMap> mapDist =
+    autoPtr<polyDistributionMap> mapDist =
         distributor.distribute(newDecomp);
 
     meshCutter_.distribute(mapDist);

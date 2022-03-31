@@ -102,11 +102,11 @@ void Foam::pointMesh::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::pointMesh::distribute(const polyMeshDistributionMap& map)
+void Foam::pointMesh::distribute(const polyDistributionMap& map)
 {
     if (debug)
     {
-        Pout<< "pointMesh::distribute(const polyMeshDistributionMap&): "
+        Pout<< "pointMesh::distribute(const polyDistributionMap&): "
             << "Distribute." << endl;
         Pout<< endl;
     }

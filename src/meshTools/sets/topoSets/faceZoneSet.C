@@ -505,7 +505,7 @@ bool faceZoneSet::writeObject
 }
 
 
-void faceZoneSet::updateMesh(const polyTopoChangeMap& morphMap)
+void faceZoneSet::updateMesh(const polyTopoChangeMap& map)
 {
     // faceZone
     labelList newAddressing(addressing_.size());
@@ -515,7 +515,7 @@ void faceZoneSet::updateMesh(const polyTopoChangeMap& morphMap)
     forAll(addressing_, i)
     {
         label facei = addressing_[i];
-        label newFacei = morphMap.reverseFaceMap()[facei];
+        label newFacei = map.reverseFaceMap()[facei];
         if (newFacei >= 0)
         {
             newAddressing[n] = newFacei;

@@ -52,7 +52,7 @@ namespace Foam
 class polyMesh;
 class polyTopoChange;
 class polyTopoChangeMap;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 class polyBoundaryMesh;
 
 /*---------------------------------------------------------------------------*\
@@ -123,7 +123,7 @@ public:
         {}
 
         //- Force recalculation of locally stored data for mesh distribution
-        void distribute(const polyMeshDistributionMap&)
+        void distribute(const polyDistributionMap&)
         {}
 
         label frontPatchi() const

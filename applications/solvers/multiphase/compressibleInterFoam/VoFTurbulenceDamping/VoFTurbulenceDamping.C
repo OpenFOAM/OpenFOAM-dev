@@ -211,7 +211,7 @@ void Foam::fv::VoFTurbulenceDamping::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::VoFTurbulenceDamping::distribute(const polyMeshDistributionMap&)
+void Foam::fv::VoFTurbulenceDamping::distribute(const polyDistributionMap&)
 {}
 
 

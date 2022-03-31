@@ -368,7 +368,7 @@ void Foam::volPointInterpolation::updateMesh(const polyTopoChangeMap&)
 }
 
 
-void Foam::volPointInterpolation::distribute(const polyMeshDistributionMap&)
+void Foam::volPointInterpolation::distribute(const polyDistributionMap&)
 {
     makeWeights();
 }

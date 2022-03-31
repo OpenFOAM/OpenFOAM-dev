@@ -122,7 +122,7 @@ void Foam::fvMeshMovers::inkJet::updateMesh(const polyTopoChangeMap&)
 
 void Foam::fvMeshMovers::inkJet::distribute
 (
-    const polyMeshDistributionMap&
+    const polyDistributionMap&
 )
 {
     NotImplemented;

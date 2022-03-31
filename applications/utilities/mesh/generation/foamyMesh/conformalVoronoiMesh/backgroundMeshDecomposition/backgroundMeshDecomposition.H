@@ -62,7 +62,7 @@ SourceFiles
 #include "decompositionMethod.H"
 #include "fvMeshDistribute.H"
 #include "removeCells.H"
-#include "polyMeshDistributionMap.H"
+#include "polyDistributionMap.H"
 #include "globalIndex.H"
 #include "treeBoundBox.H"
 #include "primitivePatch.H"
@@ -210,7 +210,7 @@ public:
 
         //- Redistribute the background mesh based on a supplied weight field,
         //  returning a map to use to redistribute vertices.
-        autoPtr<polyMeshDistributionMap> distribute
+        autoPtr<polyDistributionMap> distribute
         (
             volScalarField& cellWeights
         );

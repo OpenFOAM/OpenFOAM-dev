@@ -130,7 +130,7 @@ void Foam::fv::buoyancyEnergy::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::buoyancyEnergy::distribute(const polyMeshDistributionMap&)
+void Foam::fv::buoyancyEnergy::distribute(const polyDistributionMap&)
 {}
 
 

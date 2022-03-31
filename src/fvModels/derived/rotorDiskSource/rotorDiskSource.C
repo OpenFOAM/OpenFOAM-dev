@@ -636,7 +636,7 @@ void Foam::fv::rotorDiskSource::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::fv::rotorDiskSource::distribute(const polyMeshDistributionMap& map)
+void Foam::fv::rotorDiskSource::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
 }

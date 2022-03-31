@@ -322,7 +322,7 @@ void Foam::fv::volumeFractionSource::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::volumeFractionSource::distribute(const polyMeshDistributionMap&)
+void Foam::fv::volumeFractionSource::distribute(const polyDistributionMap&)
 {}
 
 

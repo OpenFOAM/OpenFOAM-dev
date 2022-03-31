@@ -172,7 +172,7 @@ void Foam::fvMeshTopoChangers::raw::updateMesh(const polyTopoChangeMap& map)
 
 void Foam::fvMeshTopoChangers::raw::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {}
 

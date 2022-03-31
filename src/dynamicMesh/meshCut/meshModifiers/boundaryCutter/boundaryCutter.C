@@ -829,7 +829,7 @@ void Foam::boundaryCutter::setRefinement
 }
 
 
-void Foam::boundaryCutter::updateMesh(const polyTopoChangeMap& morphMap)
+void Foam::boundaryCutter::updateMesh(const polyTopoChangeMap& map)
 {
     // Update stored labels for mesh change.
 
@@ -845,11 +845,11 @@ void Foam::boundaryCutter::updateMesh(const polyTopoChangeMap& morphMap)
         {
             label oldFacei = iter.key();
 
-            label newFacei = morphMap.reverseFaceMap()[oldFacei];
+            label newFacei = map.reverseFaceMap()[oldFacei];
 
             label oldPointi = iter();
 
-            label newPointi = morphMap.reversePointMap()[oldPointi];
+            label newPointi = map.reversePointMap()[oldPointi];
 
             if (newFacei >= 0 && newPointi >= 0)
             {
@@ -882,9 +882,9 @@ void Foam::boundaryCutter::updateMesh(const polyTopoChangeMap& morphMap)
         {
             const edge& e = iter.key();
 
-            label newStart = morphMap.reversePointMap()[e.start()];
+            label newStart = map.reversePointMap()[e.start()];
 
-            label newEnd = morphMap.reversePointMap()[e.end()];
+            label newEnd = map.reversePointMap()[e.end()];
 
             if (newStart >= 0 && newEnd >= 0)
             {
@@ -896,7 +896,7 @@ void Foam::boundaryCutter::updateMesh(const polyTopoChangeMap& morphMap)
                 forAll(addedPoints, i)
                 {
                     label newAddedPointi =
-                        morphMap.reversePointMap()[addedPoints[i]];
+                        map.reversePointMap()[addedPoints[i]];
 
                     if (newAddedPointi >= 0)
                     {

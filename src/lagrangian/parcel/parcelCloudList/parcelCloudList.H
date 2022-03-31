@@ -177,7 +177,7 @@ public:
         void storeGlobalPositions();
 
         //- Update mesh corresponding to the given distribution map
-        void distribute(const polyMeshDistributionMap&);
+        void distribute(const polyDistributionMap&);
 
 
     // Member Operators

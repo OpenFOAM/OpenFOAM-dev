@@ -110,7 +110,7 @@ void Foam::fv::verticalDamping::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::verticalDamping::distribute(const polyMeshDistributionMap&)
+void Foam::fv::verticalDamping::distribute(const polyDistributionMap&)
 {}
 
 

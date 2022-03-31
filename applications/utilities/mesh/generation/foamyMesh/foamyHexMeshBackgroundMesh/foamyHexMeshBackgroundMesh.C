@@ -550,7 +550,7 @@ int main(int argc, char *argv[])
             << distributor.countCells(decomp) << nl << endl;
 
         // Do actual sending/receiving of mesh
-        autoPtr<polyMeshDistributionMap> map = distributor.distribute(decomp);
+        autoPtr<polyDistributionMap> map = distributor.distribute(decomp);
 
         // Print some statistics
         // Info<< "After distribution:" << endl;

@@ -48,7 +48,7 @@ namespace Foam
 // Forward class declarations
 class polyMesh;
 class polyTopoChangeMap;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                         Class motionSolver Declaration
@@ -151,7 +151,7 @@ public:
         virtual void updateMesh(const polyTopoChangeMap&) = 0;
 
         //- Update corresponding to the given distribution map
-        virtual void distribute(const polyMeshDistributionMap&) = 0;
+        virtual void distribute(const polyDistributionMap&) = 0;
 
         //- Optionally write motion state information for restart
         virtual bool write() const;

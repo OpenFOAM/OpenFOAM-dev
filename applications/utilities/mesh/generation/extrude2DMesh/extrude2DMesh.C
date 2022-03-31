@@ -251,9 +251,9 @@ int main(int argc, char *argv[])
     extruder.setRefinement(meshMod());
 
     // Create a mesh from topo changes.
-    autoPtr<polyTopoChangeMap> morphMap = meshMod().changeMesh(mesh(), false);
+    autoPtr<polyTopoChangeMap> map = meshMod().changeMesh(mesh(), false);
 
-    mesh().updateMesh(morphMap);
+    mesh().updateMesh(map);
 
     {
         edgeCollapser collapser(mesh());
@@ -301,10 +301,10 @@ int main(int argc, char *argv[])
         collapser.setRefinement(allPointInfo, meshModCollapse);
 
         // Create a mesh from topo changes.
-        autoPtr<polyTopoChangeMap> morphMap
+        autoPtr<polyTopoChangeMap> map
             = meshModCollapse.changeMesh(mesh(), false);
 
-        mesh().updateMesh(morphMap);
+        mesh().updateMesh(map);
     }
 
     if (!overwrite)

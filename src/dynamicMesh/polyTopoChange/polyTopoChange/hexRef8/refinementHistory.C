@@ -25,7 +25,7 @@ License
 
 #include "refinementHistory.H"
 #include "polyTopoChangeMap.H"
-#include "polyMeshDistributionMap.H"
+#include "polyDistributionMap.H"
 #include "polyMesh.H"
 #include "syncTools.H"
 
@@ -1257,7 +1257,7 @@ void Foam::refinementHistory::countProc
 }
 
 
-void Foam::refinementHistory::distribute(const polyMeshDistributionMap& map)
+void Foam::refinementHistory::distribute(const polyDistributionMap& map)
 {
     if (!active())
     {

@@ -39,7 +39,7 @@ License
 #include "OFstream.H"
 #include "Time.H"
 #include "FaceCellWave.H"
-#include "polyMeshDistributionMap.H"
+#include "polyDistributionMap.H"
 #include "refinementData.H"
 #include "refinementDistanceData.H"
 #include "degenerateMatcher.H"
@@ -4514,7 +4514,7 @@ void Foam::hexRef8::subset
 }
 
 
-void Foam::hexRef8::distribute(const polyMeshDistributionMap& map)
+void Foam::hexRef8::distribute(const polyDistributionMap& map)
 {
     if (debug)
     {

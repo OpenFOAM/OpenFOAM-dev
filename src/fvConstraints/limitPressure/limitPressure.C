@@ -223,7 +223,7 @@ void Foam::fv::limitPressure::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::limitPressure::distribute(const polyMeshDistributionMap&)
+void Foam::fv::limitPressure::distribute(const polyDistributionMap&)
 {}
 
 

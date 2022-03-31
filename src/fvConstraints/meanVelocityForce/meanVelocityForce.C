@@ -254,7 +254,7 @@ void Foam::fv::meanVelocityForce::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::fv::meanVelocityForce::distribute(const polyMeshDistributionMap& map)
+void Foam::fv::meanVelocityForce::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
 }

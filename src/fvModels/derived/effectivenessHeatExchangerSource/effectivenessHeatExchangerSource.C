@@ -322,7 +322,7 @@ void Foam::fv::effectivenessHeatExchangerSource::updateMesh
 
 void Foam::fv::effectivenessHeatExchangerSource::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {
     set_.distribute(map);

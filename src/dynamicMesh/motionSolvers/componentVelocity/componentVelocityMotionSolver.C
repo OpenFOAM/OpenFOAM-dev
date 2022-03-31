@@ -116,7 +116,7 @@ void Foam::componentVelocityMotionSolver::updateMesh
 
 void Foam::componentVelocityMotionSolver::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {}
 

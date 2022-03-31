@@ -64,7 +64,7 @@ namespace Foam
 // Forward declaration of classes
 class globalMeshData;
 class polyTopoChangeMap;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 class polyMeshTetDecomposition;
 class treeDataCell;
 template<class Type> class indexedOctree;
@@ -610,7 +610,7 @@ public:
             virtual void updateMesh(const polyTopoChangeMap&);
 
             //- Update mesh corresponding to the given distribution map
-            virtual void distribute(const polyMeshDistributionMap& map);
+            virtual void distribute(const polyDistributionMap& map);
 
             //- Remove boundary patches
             void removeBoundary();

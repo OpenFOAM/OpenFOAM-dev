@@ -38,7 +38,7 @@ License
 #include "indirectPrimitivePatch.H"
 #include "polyTopoChange.H"
 #include "removeCells.H"
-#include "polyMeshDistributionMap.H"
+#include "polyDistributionMap.H"
 #include "localPointRegion.H"
 #include "pointMesh.H"
 #include "pointFields.H"
@@ -1372,7 +1372,7 @@ Foam::label Foam::meshRefinement::countHits() const
 //}
 
 
-Foam::autoPtr<Foam::polyMeshDistributionMap> Foam::meshRefinement::balance
+Foam::autoPtr<Foam::polyDistributionMap> Foam::meshRefinement::balance
 (
     const bool keepZoneFaces,
     const bool keepBaffles,
@@ -1381,7 +1381,7 @@ Foam::autoPtr<Foam::polyMeshDistributionMap> Foam::meshRefinement::balance
     fvMeshDistribute& distributor
 )
 {
-    autoPtr<polyMeshDistributionMap> map;
+    autoPtr<polyDistributionMap> map;
 
     if (Pstream::parRun())
     {
@@ -2303,7 +2303,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMeshRegions
 }
 
 
-void Foam::meshRefinement::distribute(const polyMeshDistributionMap& map)
+void Foam::meshRefinement::distribute(const polyDistributionMap& map)
 {
     // mesh_ already distributed; distribute my member data
 

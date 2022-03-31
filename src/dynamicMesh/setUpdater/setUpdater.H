@@ -56,7 +56,7 @@ class setUpdater
 
         //- Updates all sets
         template<class Type>
-        void updateSets(const polyTopoChangeMap& morphMap) const;
+        void updateSets(const polyTopoChangeMap& map) const;
 
 
 public:

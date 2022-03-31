@@ -182,7 +182,7 @@ void Foam::fv::sixDoFAccelerationSource::updateMesh(const polyTopoChangeMap&)
 
 void Foam::fv::sixDoFAccelerationSource::distribute
 (
-    const polyMeshDistributionMap&
+    const polyDistributionMap&
 )
 {}
 

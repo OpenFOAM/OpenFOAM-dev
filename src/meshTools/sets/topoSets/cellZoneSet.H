@@ -147,7 +147,7 @@ public:
         ) const;
 
         //- Update any stored data for new labels
-        virtual void updateMesh(const polyTopoChangeMap& morphMap);
+        virtual void updateMesh(const polyTopoChangeMap& map);
 
         //- Return max index+1.
         virtual label maxSize(const polyMesh& mesh) const;

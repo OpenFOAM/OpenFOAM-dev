@@ -197,20 +197,20 @@ int main(int argc, char *argv[])
 
         // Change mesh and inflate
         Info<< "Actually changing mesh" << nl << endl;
-        autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh(mesh, inflate);
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, inflate);
 
         Info<< "Mapping fields" << nl << endl;
-        mesh.updateMesh(morphMap);
+        mesh.updateMesh(map);
 
         // Move mesh (since morphing does not do this)
-        if (morphMap().hasMotionPoints())
+        if (map().hasMotionPoints())
         {
             Info<< "Moving mesh" << nl << endl;
-            mesh.movePoints(morphMap().preMotionPoints());
+            mesh.movePoints(map().preMotionPoints());
         }
 
         // Update numbering of cells/vertices.
-        faceRemover.updateMesh(morphMap);
+        faceRemover.updateMesh(map);
 
 
         Info<< "Writing fields" << nl << endl;

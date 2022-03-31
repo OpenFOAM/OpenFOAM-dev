@@ -214,7 +214,7 @@ void Foam::fv::actuationDiskSource::updateMesh(const polyTopoChangeMap& map)
 
 void Foam::fv::actuationDiskSource::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {
     set_.distribute(map);

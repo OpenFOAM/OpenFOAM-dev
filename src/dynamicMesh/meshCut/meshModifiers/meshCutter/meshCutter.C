@@ -995,7 +995,7 @@ void Foam::meshCutter::setRefinement
 }
 
 
-void Foam::meshCutter::updateMesh(const polyTopoChangeMap& morphMap)
+void Foam::meshCutter::updateMesh(const polyTopoChangeMap& map)
 {
     // Update stored labels for mesh change.
 
@@ -1007,11 +1007,11 @@ void Foam::meshCutter::updateMesh(const polyTopoChangeMap& morphMap)
         forAllConstIter(Map<label>, addedCells_, iter)
         {
             label celli = iter.key();
-            label newCelli = morphMap.reverseCellMap()[celli];
+            label newCelli = map.reverseCellMap()[celli];
 
             label addedCelli = iter();
 
-            label newAddedCelli = morphMap.reverseCellMap()[addedCelli];
+            label newAddedCelli = map.reverseCellMap()[addedCelli];
 
             if (newCelli >= 0 && newAddedCelli >= 0)
             {
@@ -1040,11 +1040,11 @@ void Foam::meshCutter::updateMesh(const polyTopoChangeMap& morphMap)
         forAllConstIter(Map<label>, addedFaces_, iter)
         {
             label celli = iter.key();
-            label newCelli = morphMap.reverseCellMap()[celli];
+            label newCelli = map.reverseCellMap()[celli];
 
             label addedFacei = iter();
 
-            label newAddedFacei = morphMap.reverseFaceMap()[addedFacei];
+            label newAddedFacei = map.reverseFaceMap()[addedFacei];
 
             if ((newCelli >= 0) && (newAddedFacei >= 0))
             {
@@ -1081,13 +1081,13 @@ void Foam::meshCutter::updateMesh(const polyTopoChangeMap& morphMap)
         {
             const edge& e = iter.key();
 
-            label newStart = morphMap.reversePointMap()[e.start()];
+            label newStart = map.reversePointMap()[e.start()];
 
-            label newEnd = morphMap.reversePointMap()[e.end()];
+            label newEnd = map.reversePointMap()[e.end()];
 
             label addedPointi = iter();
 
-            label newAddedPointi = morphMap.reversePointMap()[addedPointi];
+            label newAddedPointi = map.reversePointMap()[addedPointi];
 
             if ((newStart >= 0) && (newEnd >= 0) && (newAddedPointi >= 0))
             {

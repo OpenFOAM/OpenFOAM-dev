@@ -233,7 +233,7 @@ void Foam::fv::VoFSolidificationMeltingSource::updateMesh
 
 void Foam::fv::VoFSolidificationMeltingSource::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {
     set_.distribute(map);

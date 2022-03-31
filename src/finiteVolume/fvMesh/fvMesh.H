@@ -74,7 +74,7 @@ class fvMeshTopoChanger;
 class fvMeshDistributor;
 class fvMeshMover;
 class volMesh;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                            Class fvMesh Declaration
@@ -384,7 +384,7 @@ public:
             virtual void updateMesh(const polyTopoChangeMap& map);
 
             //- Update mesh corresponding to the given distribution map
-            virtual void distribute(const polyMeshDistributionMap& map);
+            virtual void distribute(const polyDistributionMap& map);
 
             //- Move points, returns volumes swept by faces in motion
             virtual tmp<scalarField> movePoints(const pointField&);

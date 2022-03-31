@@ -685,18 +685,18 @@ int main(int argc, char *argv[])
             runTime++;
         }
 
-        autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh(mesh, false);
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
-        if (morphMap().hasMotionPoints())
+        if (map().hasMotionPoints())
         {
-            mesh.movePoints(morphMap().preMotionPoints());
+            mesh.movePoints(map().preMotionPoints());
         }
 
         // Update stored labels on meshCutter
-        cutter.updateMesh(morphMap());
+        cutter.updateMesh(map());
 
         // Update cellSet
-        cellsToCut.updateMesh(morphMap());
+        cellsToCut.updateMesh(map());
 
         Info<< "Remaining:" << cellsToCut.size() << endl;
 

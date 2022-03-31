@@ -60,7 +60,7 @@ namespace Foam
 
 // Class forward declarations
 class fvMesh;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 class decompositionMethod;
 class refinementSurfaces;
 class refinementFeatures;
@@ -694,7 +694,7 @@ public:
             //  keepZoneFaces : find all faceZones from zoned surfaces and keep
             //                  owner and neighbour together
             //  keepBaffles   : find all baffles and keep them together
-            autoPtr<polyMeshDistributionMap> balance
+            autoPtr<polyDistributionMap> balance
             (
                 const bool keepZoneFaces,
                 const bool keepBaffles,
@@ -800,7 +800,7 @@ public:
             autoPtr<polyTopoChangeMap> refine(const labelList& cellsToRefine);
 
             //- Refine some cells and rebalance
-            autoPtr<polyMeshDistributionMap> refineAndBalance
+            autoPtr<polyDistributionMap> refineAndBalance
             (
                 const string& msg,
                 decompositionMethod& decomposer,
@@ -810,7 +810,7 @@ public:
             );
 
             //- Balance before refining some cells
-            autoPtr<polyMeshDistributionMap> balanceAndRefine
+            autoPtr<polyDistributionMap> balanceAndRefine
             (
                 const string& msg,
                 decompositionMethod& decomposer,
@@ -945,7 +945,7 @@ public:
             );
 
             //- Update local numbering for mesh redistribution
-            void distribute(const polyMeshDistributionMap&);
+            void distribute(const polyDistributionMap&);
 
             //- Update for external change to mesh. changedFaces are in new mesh
             //  face labels.

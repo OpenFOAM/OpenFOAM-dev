@@ -35,7 +35,7 @@ License
 #include "removeCells.H"
 #include "polyModifyFace.H"
 #include "polyRemovePoint.H"
-#include "polyMeshDistributionMap.H"
+#include "polyDistributionMap.H"
 #include "surfaceFields.H"
 #include "pointFields.H"
 #include "syncTools.H"
@@ -1772,7 +1772,7 @@ Foam::labelList Foam::fvMeshDistribute::countCells
 }
 
 
-Foam::autoPtr<Foam::polyMeshDistributionMap> Foam::fvMeshDistribute::distribute
+Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
 (
     const labelList& distribution
 )
@@ -1820,9 +1820,9 @@ Foam::autoPtr<Foam::polyMeshDistributionMap> Foam::fvMeshDistribute::distribute
     if (!Pstream::parRun())
     {
         // Collect all maps and return
-        return autoPtr<polyMeshDistributionMap>
+        return autoPtr<polyDistributionMap>
         (
-            new polyMeshDistributionMap
+            new polyDistributionMap
             (
                 mesh_,
 
@@ -3064,9 +3064,9 @@ Foam::autoPtr<Foam::polyMeshDistributionMap> Foam::fvMeshDistribute::distribute
     }
 
     // Collect all maps and return
-    return autoPtr<polyMeshDistributionMap>
+    return autoPtr<polyDistributionMap>
     (
-        new polyMeshDistributionMap
+        new polyDistributionMap
         (
             mesh_,
 

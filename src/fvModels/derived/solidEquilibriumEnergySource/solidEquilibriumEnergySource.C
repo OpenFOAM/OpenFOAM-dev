@@ -197,7 +197,7 @@ void Foam::fv::solidEquilibriumEnergySource::updateMesh
 
 void Foam::fv::solidEquilibriumEnergySource::distribute
 (
-    const polyMeshDistributionMap&
+    const polyDistributionMap&
 )
 {}
 

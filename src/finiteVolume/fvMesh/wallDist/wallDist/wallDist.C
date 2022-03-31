@@ -184,7 +184,7 @@ void Foam::wallDist::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::wallDist::distribute(const polyMeshDistributionMap& map)
+void Foam::wallDist::distribute(const polyDistributionMap& map)
 {
     pdm_->distribute(map);
     movePoints();

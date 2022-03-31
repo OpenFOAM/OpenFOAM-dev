@@ -115,7 +115,7 @@ void Foam::motionSolverList::updateMesh(const polyTopoChangeMap& map)
 
 void Foam::motionSolverList::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {
     forAll(motionSolvers_, i)

@@ -138,7 +138,7 @@ public:
         virtual void storeGlobalPositions() = 0;
 
         //- Update mesh corresponding to the given distribution map
-        virtual void distribute(const polyMeshDistributionMap& map)
+        virtual void distribute(const polyDistributionMap& map)
         {
             NotImplemented;
         }

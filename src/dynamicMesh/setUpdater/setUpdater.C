@@ -88,18 +88,18 @@ void Foam::setUpdater::modifyMotionPoints(pointField&) const
 {}
 
 
-void Foam::setUpdater::updateMesh(const polyTopoChangeMap& morphMap)
+void Foam::setUpdater::updateMesh(const polyTopoChangeMap& map)
 {
     // Mesh has changed topologically. Update all sets.
     if (debug)
     {
-        Pout<< "setUpdater::updateMesh(const polyTopoChangeMap& morphMap)"
+        Pout<< "setUpdater::updateMesh(const polyTopoChangeMap& map)"
             << endl;
     }
 
-    updateSets<cellSet>(morphMap);
-    updateSets<faceSet>(morphMap);
-    updateSets<pointSet>(morphMap);
+    updateSets<cellSet>(map);
+    updateSets<faceSet>(map);
+    updateSets<pointSet>(map);
 }
 
 

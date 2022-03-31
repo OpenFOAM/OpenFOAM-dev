@@ -483,7 +483,7 @@ void Foam::perfectInterface::modifyMotionPoints(pointField& motionPoints) const
 }
 
 
-void Foam::perfectInterface::updateMesh(const polyTopoChangeMap& morphMap)
+void Foam::perfectInterface::updateMesh(const polyTopoChangeMap& map)
 {
     // Mesh has changed topologically.  Update local topological data
     const polyMesh& mesh = topoChanger().mesh();

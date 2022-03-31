@@ -47,7 +47,7 @@ namespace Foam
 
 // Forward declaration of classes
 class polyTopoChangeMap;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 class refinementHistory;
 class fvMesh;
 
@@ -115,7 +115,7 @@ public:
         void updateMesh(const polyTopoChangeMap&);
 
         //- In-place distribute
-        void distribute(const polyMeshDistributionMap&);
+        void distribute(const polyDistributionMap&);
 
         //- Write
         bool write() const;

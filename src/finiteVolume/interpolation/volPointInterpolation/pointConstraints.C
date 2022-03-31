@@ -371,7 +371,7 @@ void Foam::pointConstraints::updateMesh(const polyTopoChangeMap&)
 }
 
 
-void Foam::pointConstraints::distribute(const polyMeshDistributionMap& map)
+void Foam::pointConstraints::distribute(const polyDistributionMap& map)
 {
     FatalErrorInFunction << abort(FatalError);
     makePatchPatchAddressing();

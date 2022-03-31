@@ -448,9 +448,9 @@ int main(int argc, char *argv[])
     }
 
     // Execute all polyMeshModifiers
-    autoPtr<polyTopoChangeMap> morphMap = stitcher.changeMesh(true);
+    autoPtr<polyTopoChangeMap> map = stitcher.changeMesh(true);
 
-    mesh.movePoints(morphMap->preMotionPoints());
+    mesh.movePoints(map->preMotionPoints());
 
     // Write mesh
     if (overwrite)

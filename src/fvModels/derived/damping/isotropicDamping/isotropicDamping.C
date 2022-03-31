@@ -121,7 +121,7 @@ void Foam::fv::isotropicDamping::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::isotropicDamping::distribute(const polyMeshDistributionMap&)
+void Foam::fv::isotropicDamping::distribute(const polyDistributionMap&)
 {}
 
 

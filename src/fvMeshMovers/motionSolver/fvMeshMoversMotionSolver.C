@@ -80,7 +80,7 @@ void Foam::fvMeshMovers::motionSolver::updateMesh(const polyTopoChangeMap& map)
 
 void Foam::fvMeshMovers::motionSolver::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {
     motionPtr_->distribute(map);

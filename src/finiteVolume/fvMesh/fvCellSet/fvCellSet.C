@@ -174,7 +174,7 @@ void Foam::fvCellSet::updateMesh(const polyTopoChangeMap&)
 }
 
 
-void Foam::fvCellSet::distribute(const polyMeshDistributionMap&)
+void Foam::fvCellSet::distribute(const polyDistributionMap&)
 {
     setCells();
     setV();

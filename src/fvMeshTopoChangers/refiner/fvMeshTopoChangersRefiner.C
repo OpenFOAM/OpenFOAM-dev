@@ -1676,7 +1676,7 @@ void Foam::fvMeshTopoChangers::refiner::updateMesh(const polyTopoChangeMap& map)
 
 void Foam::fvMeshTopoChangers::refiner::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {
     // Redistribute the mesh cutting engine

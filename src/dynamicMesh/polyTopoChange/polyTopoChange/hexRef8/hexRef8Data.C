@@ -28,7 +28,7 @@ License
 
 #include "hexRef8Data.H"
 #include "polyTopoChangeMap.H"
-#include "polyMeshDistributionMap.H"
+#include "polyDistributionMap.H"
 #include "polyMesh.H"
 #include "syncTools.H"
 #include "refinementHistory.H"
@@ -349,7 +349,7 @@ void Foam::hexRef8Data::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::hexRef8Data::distribute(const polyMeshDistributionMap& map)
+void Foam::hexRef8Data::distribute(const polyDistributionMap& map)
 {
     if (cellLevelPtr_.valid())
     {

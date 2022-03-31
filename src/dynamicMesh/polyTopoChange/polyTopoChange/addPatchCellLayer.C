@@ -1721,7 +1721,7 @@ void Foam::addPatchCellLayer::setRefinement
 
 void Foam::addPatchCellLayer::updateMesh
 (
-    const polyTopoChangeMap& morphMap,
+    const polyTopoChangeMap& map,
     const labelList& faceMap,   // new to old patch faces
     const labelList& pointMap   // new to old patch points
 )
@@ -1741,7 +1741,7 @@ void Foam::addPatchCellLayer::updateMesh
 
             forAll(added, i)
             {
-                label newPointi = morphMap.reversePointMap()[added[i]];
+                label newPointi = map.reversePointMap()[added[i]];
 
                 if (newPointi >= 0)
                 {
@@ -1768,7 +1768,7 @@ void Foam::addPatchCellLayer::updateMesh
 
             forAll(added, i)
             {
-                label newFacei = morphMap.reverseFaceMap()[added[i]];
+                label newFacei = map.reverseFaceMap()[added[i]];
 
                 if (newFacei >= 0)
                 {

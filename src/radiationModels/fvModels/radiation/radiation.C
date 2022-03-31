@@ -98,7 +98,7 @@ void Foam::fv::radiation::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::radiation::distribute(const polyMeshDistributionMap&)
+void Foam::fv::radiation::distribute(const polyDistributionMap&)
 {}
 
 

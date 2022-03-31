@@ -201,10 +201,10 @@ int main(int argc, char *argv[])
 
             extruder.setRefinement(meshMod);
 
-            autoPtr<polyTopoChangeMap> morphMap =
+            autoPtr<polyTopoChangeMap> map =
                 meshMod.changeMesh(pMesh, false);
 
-            pMesh.updateMesh(morphMap);
+            pMesh.updateMesh(map);
         }
     }
 

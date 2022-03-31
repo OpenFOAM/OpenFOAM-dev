@@ -175,7 +175,7 @@ public:
 
             //- Update stored refinement pattern for changes to mesh. Only
             //  call if undoable set.
-            void updateMesh(const polyTopoChangeMap& morphMap);
+            void updateMesh(const polyTopoChangeMap& map);
 
             //- Calculate split faces from current liveCells. Only
             //  call if undoable set.

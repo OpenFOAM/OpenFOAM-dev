@@ -159,7 +159,7 @@ void Foam::points0MotionSolver::updateMesh(const polyTopoChangeMap& map)
 
 void Foam::points0MotionSolver::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {}
 

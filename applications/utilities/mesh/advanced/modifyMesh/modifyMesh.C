@@ -530,14 +530,14 @@ int main(int argc, char *argv[])
         cutter.setRefinement(cellToPyrCentre, meshMod);
 
         // Do changes
-        autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh(mesh, false);
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
-        if (morphMap().hasMotionPoints())
+        if (map().hasMotionPoints())
         {
-            mesh.movePoints(morphMap().preMotionPoints());
+            mesh.movePoints(map().preMotionPoints());
         }
 
-        cutter.updateMesh(morphMap());
+        cutter.updateMesh(map());
 
         if (!overwrite)
         {
@@ -602,15 +602,15 @@ int main(int argc, char *argv[])
         cutter.setRefinement(allPointInfo, meshMod);
 
         // Do changes
-        autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh(mesh, false);
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
-        if (morphMap().hasMotionPoints())
+        if (map().hasMotionPoints())
         {
-            mesh.movePoints(morphMap().preMotionPoints());
+            mesh.movePoints(map().preMotionPoints());
         }
 
         // Not implemented yet:
-        // cutter.updateMesh(morphMap());
+        // cutter.updateMesh(map());
 
 
         if (!overwrite)
@@ -647,14 +647,14 @@ int main(int argc, char *argv[])
         );
 
         // Do changes
-        autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh(mesh, false);
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
-        if (morphMap().hasMotionPoints())
+        if (map().hasMotionPoints())
         {
-            mesh.movePoints(morphMap().preMotionPoints());
+            mesh.movePoints(map().preMotionPoints());
         }
 
-        cutter.updateMesh(morphMap());
+        cutter.updateMesh(map());
 
         if (!overwrite)
         {

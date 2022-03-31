@@ -164,20 +164,20 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
         // Do all changes
         //
 
-        autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh
         (
             mesh_,
             false
         );
 
         // Move mesh (since morphing does not do this)
-        if (morphMap().hasMotionPoints())
+        if (map().hasMotionPoints())
         {
-            mesh_.movePoints(morphMap().preMotionPoints());
+            mesh_.movePoints(map().preMotionPoints());
         }
 
         // Update stored refinement pattern
-        meshRefiner_.updateMesh(morphMap());
+        meshRefiner_.updateMesh(map());
 
         // Write resulting mesh
         if (writeMesh_)
@@ -195,14 +195,14 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
         // in meshCutter class.
         updateLabels
         (
-            morphMap->reverseCellMap(),
+            map->reverseCellMap(),
             currentRefCells
         );
 
         // Update addedCells for new cell numbers
         updateLabels
         (
-            morphMap->reverseCellMap(),
+            map->reverseCellMap(),
             addedCells
         );
 
@@ -229,7 +229,7 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
         // Update refCells for new cell numbers.
         updateLabels
         (
-            morphMap->reverseCellMap(),
+            map->reverseCellMap(),
             currentRefCells
         );
 

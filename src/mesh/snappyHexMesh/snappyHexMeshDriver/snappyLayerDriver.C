@@ -40,7 +40,7 @@ Description
 #include "polyTopoChange.H"
 #include "polyTopoChangeMap.H"
 #include "addPatchCellLayer.H"
-#include "polyMeshDistributionMap.H"
+#include "polyDistributionMap.H"
 #include "OBJstream.H"
 #include "layerParameters.H"
 #include "combineFaces.H"
@@ -3587,7 +3587,7 @@ void Foam::snappyLayerDriver::addLayers
         mesh.clearOut();
 
         // Balance. No restriction on face zones and baffles.
-        autoPtr<polyMeshDistributionMap> map = meshRefiner_.balance
+        autoPtr<polyDistributionMap> map = meshRefiner_.balance
         (
             false,
             false,
@@ -3714,7 +3714,7 @@ void Foam::snappyLayerDriver::doLayers
             // Balance mesh (and meshRefinement). Restrict faceZones to
             // be on internal faces only since they will be converted into
             // baffles.
-            autoPtr<polyMeshDistributionMap> map = meshRefiner_.balance
+            autoPtr<polyDistributionMap> map = meshRefiner_.balance
             (
                 true,   // false,    // keepZoneFaces
                 false,

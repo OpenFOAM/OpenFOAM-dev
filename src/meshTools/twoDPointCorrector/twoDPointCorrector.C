@@ -363,7 +363,7 @@ void Foam::twoDPointCorrector::updateMesh(const polyTopoChangeMap&)
 }
 
 
-void Foam::twoDPointCorrector::distribute(const polyMeshDistributionMap&)
+void Foam::twoDPointCorrector::distribute(const polyDistributionMap&)
 {
     clearAddressing();
 }

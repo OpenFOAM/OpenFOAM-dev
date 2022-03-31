@@ -146,7 +146,7 @@ void Foam::fv::limitMag::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::fv::limitMag::distribute(const polyMeshDistributionMap& map)
+void Foam::fv::limitMag::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
 }

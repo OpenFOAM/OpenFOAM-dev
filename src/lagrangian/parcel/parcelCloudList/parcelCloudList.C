@@ -385,7 +385,7 @@ void Foam::parcelCloudList::storeGlobalPositions()
 }
 
 
-void Foam::parcelCloudList::distribute(const polyMeshDistributionMap& map)
+void Foam::parcelCloudList::distribute(const polyDistributionMap& map)
 {
     forAll(*this, i)
     {

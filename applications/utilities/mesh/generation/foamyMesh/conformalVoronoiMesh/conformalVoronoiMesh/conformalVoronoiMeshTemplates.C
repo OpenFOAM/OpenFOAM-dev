@@ -127,7 +127,7 @@ bool Foam::conformalVoronoiMesh::distributeBackground(const Triangulation& mesh)
             cwi[cI] = max(cellVertices[cI], 1e-2);
         }
 
-        autoPtr<polyMeshDistributionMap> mapDist = decomposition_().distribute
+        autoPtr<polyDistributionMap> mapDist = decomposition_().distribute
         (
             cellWeights
         );

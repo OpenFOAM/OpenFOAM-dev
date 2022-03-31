@@ -33,7 +33,7 @@ License
 #include "refinementSurfaces.H"
 #include "refinementFeatures.H"
 #include "refinementRegions.H"
-#include "polyMeshDistributionMap.H"
+#include "polyDistributionMap.H"
 #include "unitConversion.H"
 #include "snapParameters.H"
 #include "localPointRegion.H"

@@ -934,7 +934,7 @@ void Foam::fvMesh::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::fvMesh::distribute(const polyMeshDistributionMap& map)
+void Foam::fvMesh::distribute(const polyDistributionMap& map)
 {
     // Distribute polyMesh data
     polyMesh::distribute(map);

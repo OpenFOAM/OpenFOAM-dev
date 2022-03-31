@@ -161,7 +161,7 @@ public:
         virtual void updateMesh(const polyTopoChangeMap&) = 0;
 
         //- Update corresponding to the given distribution map
-        virtual void distribute(const polyMeshDistributionMap&) = 0;
+        virtual void distribute(const polyDistributionMap&) = 0;
 
         //- Write the mover state
         virtual bool write(const bool write = true) const

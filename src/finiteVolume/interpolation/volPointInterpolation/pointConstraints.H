@@ -54,7 +54,7 @@ namespace Foam
 {
 
 class polyMesh;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                       Class pointConstraints Declaration
@@ -133,7 +133,7 @@ public:
             virtual void updateMesh(const polyTopoChangeMap&);
 
             //- Update corresponding to the given distribution map
-            virtual void distribute(const polyMeshDistributionMap&);
+            virtual void distribute(const polyDistributionMap&);
 
 
         // Interpolation functions

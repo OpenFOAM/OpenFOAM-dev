@@ -273,7 +273,7 @@ void Foam::fv::massSource::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::fv::massSource::distribute(const polyMeshDistributionMap& map)
+void Foam::fv::massSource::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
 }

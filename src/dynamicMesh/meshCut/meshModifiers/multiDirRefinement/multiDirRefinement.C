@@ -318,13 +318,13 @@ void Foam::multiDirRefinement::refineHex8
     hexRefiner.setRefinement(consistentCells, meshMod);
 
     // Change mesh, no inflation
-    autoPtr<polyTopoChangeMap> morphMapPtr =
+    autoPtr<polyTopoChangeMap> mapPtr =
         meshMod.changeMesh(mesh, false, true);
-    const polyTopoChangeMap& morphMap = morphMapPtr();
+    const polyTopoChangeMap& map = mapPtr();
 
-    if (morphMap.hasMotionPoints())
+    if (map.hasMotionPoints())
     {
-        mesh.movePoints(morphMap.preMotionPoints());
+        mesh.movePoints(map.preMotionPoints());
     }
 
     if (writeMesh)
@@ -338,7 +338,7 @@ void Foam::multiDirRefinement::refineHex8
             << mesh.time().timeName() << endl;
     }
 
-    hexRefiner.updateMesh(morphMap);
+    hexRefiner.updateMesh(map);
 
     // Collect all cells originating from same old cell (original + 7 extra)
 
@@ -348,7 +348,7 @@ void Foam::multiDirRefinement::refineHex8
     }
     labelList nAddedCells(addedCells_.size(), 0);
 
-    const labelList& cellMap = morphMap.cellMap();
+    const labelList& cellMap = map.cellMap();
 
     forAll(cellMap, celli)
     {

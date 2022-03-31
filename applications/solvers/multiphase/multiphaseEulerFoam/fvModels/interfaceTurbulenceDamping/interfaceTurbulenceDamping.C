@@ -310,7 +310,7 @@ void Foam::fv::interfaceTurbulenceDamping::updateMesh(const polyTopoChangeMap&)
 
 void Foam::fv::interfaceTurbulenceDamping::distribute
 (
-    const polyMeshDistributionMap&
+    const polyDistributionMap&
 )
 {}
 

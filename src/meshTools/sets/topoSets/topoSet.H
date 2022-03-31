@@ -294,7 +294,7 @@ public:
         virtual bool writeData(Ostream&) const;
 
         //- Update any stored data for new labels. Not implemented.
-        virtual void updateMesh(const polyTopoChangeMap& morphMap);
+        virtual void updateMesh(const polyTopoChangeMap& map);
 
         //- Return max allowable index (+1). Not implemented.
         virtual label maxSize(const polyMesh& mesh) const = 0;

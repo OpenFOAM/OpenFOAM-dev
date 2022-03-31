@@ -513,18 +513,18 @@ void subsetMesh
 
     const Time& runTime = mesh.time();
 
-    autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
-    if (morphMap().hasMotionPoints())
+    if (map().hasMotionPoints())
     {
-        mesh.movePoints(morphMap().preMotionPoints());
+        mesh.movePoints(map().preMotionPoints());
     }
 
     // Update topology on cellRemover
-    cellRemover.updateMesh(morphMap());
+    cellRemover.updateMesh(map());
 
     // Update refLevel for removed cells.
-    const labelList& cellMap = morphMap().cellMap();
+    const labelList& cellMap = map().cellMap();
 
     labelList newRefLevel(cellMap.size());
 
@@ -547,7 +547,7 @@ void subsetMesh
     }
 
     // Update cutCells for removed cells.
-    cutCells.updateMesh(morphMap());
+    cutCells.updateMesh(map());
 }
 
 

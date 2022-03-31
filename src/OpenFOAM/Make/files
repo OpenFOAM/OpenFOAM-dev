@@ -582,11 +582,11 @@ $(polyTopoChangeMap)/faceMapper/faceMapper.C
 $(polyTopoChangeMap)/cellMapper/cellMapper.C
 $(polyTopoChangeMap)/mapAddedPolyMesh.C
 
-polyMeshDistributionMap = $(polyMesh)/polyMeshDistributionMap
-$(polyMeshDistributionMap)/distributionMap.C
-$(polyMeshDistributionMap)/distributionMapBase.C
-$(polyMeshDistributionMap)/polyMeshDistributionMap.C
-$(polyMeshDistributionMap)/IOdistributionMap.C
+polyDistributionMap = $(polyMesh)/polyDistributionMap
+$(polyDistributionMap)/distributionMap.C
+$(polyDistributionMap)/distributionMapBase.C
+$(polyDistributionMap)/polyDistributionMap.C
+$(polyDistributionMap)/IOdistributionMap.C
 
 PrimitivePatch = $(primitiveMesh)/PrimitivePatch
 $(PrimitivePatch)/PrimitivePatchName.C

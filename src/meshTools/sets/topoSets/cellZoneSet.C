@@ -289,7 +289,7 @@ bool cellZoneSet::writeObject
 }
 
 
-void cellZoneSet::updateMesh(const polyTopoChangeMap& morphMap)
+void cellZoneSet::updateMesh(const polyTopoChangeMap& map)
 {
     // cellZone
     labelList newAddressing(addressing_.size());
@@ -298,7 +298,7 @@ void cellZoneSet::updateMesh(const polyTopoChangeMap& morphMap)
     forAll(addressing_, i)
     {
         label celli = addressing_[i];
-        label newCelli = morphMap.reverseCellMap()[celli];
+        label newCelli = map.reverseCellMap()[celli];
         if (newCelli >= 0)
         {
             newAddressing[n] = newCelli;

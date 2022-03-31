@@ -56,7 +56,7 @@ class polyMesh;
 class polyPatch;
 class polyTopoChange;
 class polyTopoChangeMap;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                            Class hexRef8 Declaration
@@ -532,7 +532,7 @@ public:
             );
 
             //- Update local numbering for mesh redistribution
-            void distribute(const polyMeshDistributionMap&);
+            void distribute(const polyDistributionMap&);
 
             //- Debug: Check coupled mesh for correctness
             void checkMesh() const;

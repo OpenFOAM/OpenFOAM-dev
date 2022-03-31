@@ -165,7 +165,7 @@ void Foam::fv::heatTransfer::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::fv::heatTransfer::distribute(const polyMeshDistributionMap& map)
+void Foam::fv::heatTransfer::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
 }

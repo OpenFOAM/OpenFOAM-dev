@@ -136,18 +136,18 @@ int main(int argc, char *argv[])
         meshMod
     );
 
-    autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
-    mesh.updateMesh(morphMap);
+    mesh.updateMesh(map);
 
     // Move mesh (since morphing does not do this)
-    if (morphMap().hasMotionPoints())
+    if (map().hasMotionPoints())
     {
-        mesh.movePoints(morphMap().preMotionPoints());
+        mesh.movePoints(map().preMotionPoints());
     }
 
     // Update numbering of cells/vertices.
-    faceRemover.updateMesh(morphMap);
+    faceRemover.updateMesh(map);
 
     if (!overwrite)
     {

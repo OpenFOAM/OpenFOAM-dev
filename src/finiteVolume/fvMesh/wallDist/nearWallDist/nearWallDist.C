@@ -94,7 +94,7 @@ void Foam::nearWallDist::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::nearWallDist::distribute(const polyMeshDistributionMap& map)
+void Foam::nearWallDist::distribute(const polyDistributionMap& map)
 {
     correct();
 }

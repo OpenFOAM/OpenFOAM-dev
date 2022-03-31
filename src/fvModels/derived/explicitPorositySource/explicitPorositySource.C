@@ -147,7 +147,7 @@ void Foam::fv::explicitPorositySource::updateMesh(const polyTopoChangeMap& map)
 
 void Foam::fv::explicitPorositySource::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {
     set_.distribute(map);

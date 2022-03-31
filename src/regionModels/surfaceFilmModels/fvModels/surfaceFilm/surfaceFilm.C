@@ -222,7 +222,7 @@ void Foam::fv::surfaceFilm::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::surfaceFilm::distribute(const polyMeshDistributionMap&)
+void Foam::fv::surfaceFilm::distribute(const polyDistributionMap&)
 {}
 
 

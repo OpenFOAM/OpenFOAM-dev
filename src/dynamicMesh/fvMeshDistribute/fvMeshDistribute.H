@@ -62,7 +62,7 @@ namespace Foam
 
 // Forward declaration of classes
 class mapAddedPolyMesh;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                       Class fvMeshDistribute Declaration
@@ -366,7 +366,7 @@ public:
 
         //- Send cells to neighbours according to distribution
         //  (for every cell the new proc)
-        autoPtr<polyMeshDistributionMap> distribute(const labelList& dist);
+        autoPtr<polyDistributionMap> distribute(const labelList& dist);
 
         // Debugging
 

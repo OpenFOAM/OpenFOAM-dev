@@ -51,7 +51,7 @@ Description
 #include "PstreamReduceOps.H"
 #include "fvCFD.H"
 #include "fvMeshDistribute.H"
-#include "polyMeshDistributionMap.H"
+#include "polyDistributionMap.H"
 #include "IOobjectList.H"
 #include "globalIndex.H"
 #include "loadOrCreateMesh.H"
@@ -642,7 +642,7 @@ int main(int argc, char *argv[])
     //    << distributor.countCells(finalDecomp) << nl << endl;
 
     // Do actual sending/receiving of mesh
-    autoPtr<polyMeshDistributionMap> map = distributor.distribute(finalDecomp);
+    autoPtr<polyDistributionMap> map = distributor.distribute(finalDecomp);
 
     //// Distribute any non-registered data accordingly
     // map().distributeFaceData(faceCc);

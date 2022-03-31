@@ -127,7 +127,7 @@ void Foam::polyMesh::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::polyMesh::distribute(const polyMeshDistributionMap& map)
+void Foam::polyMesh::distribute(const polyDistributionMap& map)
 {
     meshObject::distribute<polyMesh>(*this, map);
     meshObject::distribute<pointMesh>(*this, map);

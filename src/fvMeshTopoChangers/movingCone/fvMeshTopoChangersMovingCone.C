@@ -393,7 +393,7 @@ void Foam::fvMeshTopoChangers::movingCone::updateMesh
 
 void Foam::fvMeshTopoChangers::movingCone::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {}
 

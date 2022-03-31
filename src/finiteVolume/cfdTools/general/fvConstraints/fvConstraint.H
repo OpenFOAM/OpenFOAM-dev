@@ -47,7 +47,7 @@ namespace Foam
 
 class fvMesh;
 class polyTopoChangeMap;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                            Class option Declaration
@@ -216,7 +216,7 @@ public:
             virtual void updateMesh(const polyTopoChangeMap&) = 0;
 
             //- Update mesh corresponding to the given distribution map
-            virtual void distribute(const polyMeshDistributionMap&) = 0;
+            virtual void distribute(const polyDistributionMap&) = 0;
 
             //- Update for mesh motion
             virtual bool movePoints() = 0;

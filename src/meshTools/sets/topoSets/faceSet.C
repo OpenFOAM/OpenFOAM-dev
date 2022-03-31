@@ -155,9 +155,9 @@ label faceSet::maxSize(const polyMesh& mesh) const
 }
 
 
-void faceSet::updateMesh(const polyTopoChangeMap& morphMap)
+void faceSet::updateMesh(const polyTopoChangeMap& map)
 {
-    updateLabels(morphMap.reverseFaceMap());
+    updateLabels(map.reverseFaceMap());
 }
 
 

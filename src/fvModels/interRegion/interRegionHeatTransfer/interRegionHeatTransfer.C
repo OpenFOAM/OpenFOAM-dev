@@ -218,7 +218,7 @@ void Foam::fv::interRegionHeatTransfer::updateMesh(const polyTopoChangeMap&)
 
 void Foam::fv::interRegionHeatTransfer::distribute
 (
-    const polyMeshDistributionMap&
+    const polyDistributionMap&
 )
 {}
 

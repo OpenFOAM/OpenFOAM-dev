@@ -189,7 +189,7 @@ void Foam::fv::limitTemperature::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::fv::limitTemperature::distribute(const polyMeshDistributionMap& map)
+void Foam::fv::limitTemperature::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
 }

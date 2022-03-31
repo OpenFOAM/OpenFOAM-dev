@@ -334,7 +334,7 @@ void Foam::fv::clouds::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::clouds::distribute(const polyMeshDistributionMap& map)
+void Foam::fv::clouds::distribute(const polyDistributionMap& map)
 {
     cloudsPtr_().distribute(map);
 }

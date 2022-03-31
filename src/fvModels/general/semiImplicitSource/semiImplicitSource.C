@@ -242,7 +242,7 @@ void Foam::fv::semiImplicitSource::updateMesh(const polyTopoChangeMap& map)
 
 void Foam::fv::semiImplicitSource::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {
     set_.distribute(map);

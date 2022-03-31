@@ -54,7 +54,7 @@ class polyMesh;
 class polyTopoChange;
 class face;
 class polyTopoChangeMap;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                          Class removeFaces Declaration
@@ -205,7 +205,7 @@ public:
         {}
 
         //- Force recalculation of locally stored data for mesh distribution
-        void distribute(const polyMeshDistributionMap&)
+        void distribute(const polyDistributionMap&)
         {}
 
 

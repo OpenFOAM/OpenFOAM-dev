@@ -262,7 +262,7 @@ void Foam::fv::codedFvModel::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::fv::codedFvModel::distribute(const polyMeshDistributionMap& map)
+void Foam::fv::codedFvModel::distribute(const polyDistributionMap& map)
 {
     redirectFvModel().distribute(map);
 }

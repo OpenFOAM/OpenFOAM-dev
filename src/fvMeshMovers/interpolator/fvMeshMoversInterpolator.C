@@ -93,7 +93,7 @@ void Foam::fvMeshMovers::interpolator::updateMesh(const polyTopoChangeMap&)
 
 void Foam::fvMeshMovers::interpolator::distribute
 (
-    const polyMeshDistributionMap&
+    const polyDistributionMap&
 )
 {
     NotImplemented;

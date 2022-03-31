@@ -119,7 +119,7 @@ void Foam::fv::accelerationSource::updateMesh(const polyTopoChangeMap& map)
 
 void Foam::fv::accelerationSource::distribute
 (
-    const polyMeshDistributionMap& map
+    const polyDistributionMap& map
 )
 {
     set_.distribute(map);

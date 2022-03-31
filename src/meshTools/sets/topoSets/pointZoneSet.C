@@ -290,7 +290,7 @@ bool pointZoneSet::writeObject
 }
 
 
-void pointZoneSet::updateMesh(const polyTopoChangeMap& morphMap)
+void pointZoneSet::updateMesh(const polyTopoChangeMap& map)
 {
     // pointZone
     labelList newAddressing(addressing_.size());
@@ -299,7 +299,7 @@ void pointZoneSet::updateMesh(const polyTopoChangeMap& morphMap)
     forAll(addressing_, i)
     {
         label pointi = addressing_[i];
-        label newPointi = morphMap.reversePointMap()[pointi];
+        label newPointi = map.reversePointMap()[pointi];
         if (newPointi >= 0)
         {
             newAddressing[n] = newPointi;

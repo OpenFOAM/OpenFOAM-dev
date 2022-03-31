@@ -248,7 +248,7 @@ void Foam::fvConstraints::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::fvConstraints::distribute(const polyMeshDistributionMap& map)
+void Foam::fvConstraints::distribute(const polyDistributionMap& map)
 {
     PtrListDictionary<fvConstraint>& constraintList(*this);
 

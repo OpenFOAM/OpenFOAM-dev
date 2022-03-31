@@ -160,7 +160,7 @@ public:
         virtual void updateMesh(const polyTopoChangeMap&);
 
         //- Update corresponding to the given distribution map
-        virtual void distribute(const polyMeshDistributionMap&);
+        virtual void distribute(const polyDistributionMap&);
 
         //- Write motion state information for restart
         virtual bool write() const;

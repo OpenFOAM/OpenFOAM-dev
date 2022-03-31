@@ -142,7 +142,7 @@ public:
         {}
 
         //- Update mesh corresponding to the given distribution map
-        virtual void distribute(const polyMeshDistributionMap&)
+        virtual void distribute(const polyDistributionMap&)
         {}
 
         //- Update cached geometry when the mesh moves

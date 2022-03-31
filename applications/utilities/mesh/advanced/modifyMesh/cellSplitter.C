@@ -461,7 +461,7 @@ void Foam::cellSplitter::setRefinement
 }
 
 
-void Foam::cellSplitter::updateMesh(const polyTopoChangeMap& morphMap)
+void Foam::cellSplitter::updateMesh(const polyTopoChangeMap& map)
 {
     // Create copy since we're deleting entries. Only if both cell and added
     // point get mapped do they get inserted.
@@ -471,11 +471,11 @@ void Foam::cellSplitter::updateMesh(const polyTopoChangeMap& morphMap)
     {
         label oldCelli = iter.key();
 
-        label newCelli = morphMap.reverseCellMap()[oldCelli];
+        label newCelli = map.reverseCellMap()[oldCelli];
 
         label oldPointi = iter();
 
-        label newPointi = morphMap.reversePointMap()[oldPointi];
+        label newPointi = map.reversePointMap()[oldPointi];
 
         if (newCelli >= 0 && newPointi >= 0)
         {

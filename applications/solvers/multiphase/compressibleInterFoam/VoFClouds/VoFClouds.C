@@ -166,7 +166,7 @@ void Foam::fv::VoFClouds::updateMesh(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::VoFClouds::distribute(const polyMeshDistributionMap& map)
+void Foam::fv::VoFClouds::distribute(const polyDistributionMap& map)
 {
     clouds_.distribute(map);
 }

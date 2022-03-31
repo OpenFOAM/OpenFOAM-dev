@@ -86,7 +86,7 @@ namespace Foam
 
 // Forward declaration of classes
 class polyTopoChangeMap;
-class polyMeshDistributionMap;
+class polyDistributionMap;
 
 
 // Forward declaration of friend functions and operators
@@ -355,7 +355,7 @@ public:
         //- Update local numbering for mesh redistribution.
         //  Can only distribute clusters sent across in one go; cannot
         //  handle parts recombined in multiple passes.
-        void distribute(const polyMeshDistributionMap&);
+        void distribute(const polyDistributionMap&);
 
 
         //- Compact splitCells_. Removes all freeSplitCells_ elements.
