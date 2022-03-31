@@ -211,10 +211,10 @@ class refiner
         void readDict();
 
         //- Refine cells. Update mesh and fields.
-        autoPtr<mapPolyMesh> refine(const labelList&);
+        autoPtr<polyTopoChangeMap> refine(const labelList&);
 
         //- Unrefine cells. Gets passed in centre points of cells to combine.
-        autoPtr<mapPolyMesh> unrefine(const labelList&);
+        autoPtr<polyTopoChangeMap> unrefine(const labelList&);
 
         //- Find the U field name corresponding to Uf
         word Uname(const surfaceVectorField& Uf) const;
@@ -222,25 +222,25 @@ class refiner
         void refineFluxes
         (
             const labelHashSet& masterFaces,
-            const mapPolyMesh& map
+            const polyTopoChangeMap& map
         );
 
         void refineUfs
         (
             const labelHashSet& masterFaces,
-            const mapPolyMesh& map
+            const polyTopoChangeMap& map
         );
 
         void unrefineFluxes
         (
             const Map<label>& faceToSplitPoint,
-            const mapPolyMesh& map
+            const polyTopoChangeMap& map
         );
 
         void unrefineUfs
         (
             const Map<label>& faceToSplitPoint,
-            const mapPolyMesh& map
+            const polyTopoChangeMap& map
         );
 
 
@@ -364,7 +364,7 @@ public:
         virtual bool update();
 
         //- Update corresponding to the given map
-        virtual void updateMesh(const mapPolyMesh&);
+        virtual void updateMesh(const polyTopoChangeMap&);
 
         //- Update corresponding to the given distribution map
         virtual void distribute(const polyMeshDistributionMap&);

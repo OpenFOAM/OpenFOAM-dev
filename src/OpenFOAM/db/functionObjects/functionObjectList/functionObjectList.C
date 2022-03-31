@@ -844,13 +844,13 @@ bool Foam::functionObjectList::read()
 }
 
 
-void Foam::functionObjectList::updateMesh(const mapPolyMesh& mpm)
+void Foam::functionObjectList::updateMesh(const polyTopoChangeMap& map)
 {
     if (execution_)
     {
         forAll(*this, oi)
         {
-            operator[](oi).updateMesh(mpm);
+            operator[](oi).updateMesh(map);
         }
     }
 }

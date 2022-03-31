@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
 #include "OFstream.H"
 #include "meshTools.H"
 #include "removeFaces.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyTopoChange.H"
 #include "fvcDiv.H"
 #include "zeroGradientFvPatchFields.H"
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
 
         // Change mesh and inflate
         Info<< "Actually changing mesh" << nl << endl;
-        autoPtr<mapPolyMesh> morphMap = meshMod.changeMesh(mesh, inflate);
+        autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh(mesh, inflate);
 
         Info<< "Mapping fields" << nl << endl;
         mesh.updateMesh(morphMap);

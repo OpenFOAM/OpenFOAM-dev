@@ -126,7 +126,7 @@ void Foam::fv::buoyancyEnergy::addSup
 }
 
 
-void Foam::fv::buoyancyEnergy::updateMesh(const mapPolyMesh&)
+void Foam::fv::buoyancyEnergy::updateMesh(const polyTopoChangeMap&)
 {}
 
 

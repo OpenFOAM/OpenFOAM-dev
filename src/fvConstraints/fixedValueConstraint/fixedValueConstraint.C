@@ -137,7 +137,7 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::fixedValueConstraint::updateMesh(const mapPolyMesh& map)
+void Foam::fv::fixedValueConstraint::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

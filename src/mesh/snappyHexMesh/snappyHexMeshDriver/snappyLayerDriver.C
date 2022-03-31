@@ -38,7 +38,7 @@ Description
 #include "faceSet.H"
 #include "cellSet.H"
 #include "polyTopoChange.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "addPatchCellLayer.H"
 #include "polyMeshDistributionMap.H"
 #include "OBJstream.H"
@@ -3347,7 +3347,7 @@ void Foam::snappyLayerDriver::addLayers
             // undo if necessary.
 
             autoPtr<fvMesh> newMeshPtr;
-            autoPtr<mapPolyMesh> map = meshMod.makeMesh
+            autoPtr<polyTopoChangeMap> map = meshMod.makeMesh
             (
                 newMeshPtr,
                 IOobject
@@ -3512,7 +3512,7 @@ void Foam::snappyLayerDriver::addLayers
     // current mesh.
 
     // Apply the stored topo changes to the current mesh.
-    autoPtr<mapPolyMesh> map = savedMeshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = savedMeshMod.changeMesh(mesh, false);
 
     // Hack to remove meshPhi/V0 - mapped incorrectly. TBD.
     mesh.clearOut();
@@ -3556,7 +3556,7 @@ void Foam::snappyLayerDriver::addLayers
             << " baffles back into zoned faces ..."
             << endl;
 
-        autoPtr<mapPolyMesh> map = meshRefiner_.mergeBaffles(baffles);
+        autoPtr<polyTopoChangeMap> map = meshRefiner_.mergeBaffles(baffles);
 
         inplaceReorder(map().reverseCellMap(), cellNLayers);
         inplaceReorder(map().reverseFaceMap(), faceWantedThickness);

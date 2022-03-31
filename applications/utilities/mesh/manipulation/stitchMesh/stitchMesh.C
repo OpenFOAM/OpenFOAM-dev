@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Description
 
 #include "argList.H"
 #include "polyTopoChanger.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "slidingInterface.H"
 #include "perfectInterface.H"
 #include "ReadFields.H"
@@ -448,7 +448,7 @@ int main(int argc, char *argv[])
     }
 
     // Execute all polyMeshModifiers
-    autoPtr<mapPolyMesh> morphMap = stitcher.changeMesh(true);
+    autoPtr<polyTopoChangeMap> morphMap = stitcher.changeMesh(true);
 
     mesh.movePoints(morphMap->preMotionPoints());
 

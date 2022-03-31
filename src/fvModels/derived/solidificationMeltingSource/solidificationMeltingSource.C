@@ -356,7 +356,10 @@ void Foam::fv::solidificationMeltingSource::addSup
 }
 
 
-void Foam::fv::solidificationMeltingSource::updateMesh(const mapPolyMesh& map)
+void Foam::fv::solidificationMeltingSource::updateMesh
+(
+    const polyTopoChangeMap& map
+)
 {
     set_.updateMesh(map);
 }

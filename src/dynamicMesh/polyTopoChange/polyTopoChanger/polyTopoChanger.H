@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 class polyMesh;
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyBoundaryMesh;
 
 
@@ -125,7 +125,7 @@ public:
         //- Modify point motion
         void modifyMotionPoints(pointField&) const;
 
-        autoPtr<mapPolyMesh> changeMesh
+        autoPtr<polyTopoChangeMap> changeMesh
         (
             const bool inflate,
             const bool syncParallel = true,
@@ -134,7 +134,7 @@ public:
         );
 
         //- Force recalculation of locally stored data on topological change
-        void update(const mapPolyMesh& m);
+        void update(const polyTopoChangeMap& m);
 
         //- Add given set of topology modifiers to the topoChanger
         void addTopologyModifiers(const List<polyMeshModifier*>& tm);

@@ -357,7 +357,7 @@ void Foam::twoDPointCorrector::correctDisplacement
 }
 
 
-void Foam::twoDPointCorrector::updateMesh(const mapPolyMesh&)
+void Foam::twoDPointCorrector::updateMesh(const polyTopoChangeMap&)
 {
     clearAddressing();
 }

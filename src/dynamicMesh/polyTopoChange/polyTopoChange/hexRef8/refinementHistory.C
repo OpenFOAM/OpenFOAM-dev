@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "refinementHistory.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyMeshDistributionMap.H"
 #include "polyMesh.H"
 #include "syncTools.H"
@@ -1130,7 +1130,7 @@ void Foam::refinementHistory::resize(const label size)
 }
 
 
-void Foam::refinementHistory::updateMesh(const mapPolyMesh& map)
+void Foam::refinementHistory::updateMesh(const polyTopoChangeMap& map)
 {
     if (active())
     {

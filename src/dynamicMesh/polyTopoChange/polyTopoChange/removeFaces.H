@@ -53,7 +53,7 @@ namespace Foam
 class polyMesh;
 class polyTopoChange;
 class face;
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMeshDistributionMap;
 
 /*---------------------------------------------------------------------------*\
@@ -201,7 +201,7 @@ public:
         ) const;
 
         //- Force recalculation of locally stored data on topological change
-        void updateMesh(const mapPolyMesh&)
+        void updateMesh(const polyTopoChangeMap&)
         {}
 
         //- Force recalculation of locally stored data for mesh distribution

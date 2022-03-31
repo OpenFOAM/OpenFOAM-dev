@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ public:
         (
             const pointMesh& mesh,
             const pointMapper& pointMap,
-            const mapPolyMesh& mpm
+            const polyTopoChangeMap& map
         )
         :
             PtrList<pointPatchMapper>(mesh.boundary().size())
@@ -74,7 +74,7 @@ public:
                     (
                         patches[patchi],
                         pointMap,
-                        mpm
+                        map
                     )
                 );
             }

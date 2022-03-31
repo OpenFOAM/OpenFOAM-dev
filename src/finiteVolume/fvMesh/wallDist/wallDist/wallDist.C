@@ -177,7 +177,7 @@ const Foam::volVectorField& Foam::wallDist::n() const
 }
 
 
-void Foam::wallDist::updateMesh(const mapPolyMesh& map)
+void Foam::wallDist::updateMesh(const polyTopoChangeMap& map)
 {
     pdm_->updateMesh(map);
     movePoints();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "pointPatchMapper.H"
 #include "pointPatch.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "faceMapper.H"
 #include "demandDrivenData.H"
 
@@ -50,7 +50,7 @@ void Foam::pointPatchMapper::calcAddressing() const
     if (direct())
     {
         // Direct mapping.
-        directAddrPtr_ = new labelList(mpm_.patchPointMap()[patch_.index()]);
+        directAddrPtr_ = new labelList(map_.patchPointMap()[patch_.index()]);
         labelList& addr = *directAddrPtr_;
 
         forAll(addr, i)
@@ -76,7 +76,7 @@ void Foam::pointPatchMapper::calcAddressing() const
         weightsPtr_ = new scalarListList(addr.size());
         scalarListList& w = *weightsPtr_;
 
-        const labelList& ppm = mpm_.patchPointMap()[patch_.index()];
+        const labelList& ppm = map_.patchPointMap()[patch_.index()];
 
         forAll(ppm, i)
         {
@@ -113,17 +113,17 @@ Foam::pointPatchMapper::pointPatchMapper
 (
     const pointPatch& patch,
     const pointMapper& pointMap,
-    const mapPolyMesh& mpm
+    const polyTopoChangeMap& map
 )
 :
     generalPointPatchFieldMapper(),
     patch_(patch),
     pointMapper_(pointMap),
-    mpm_(mpm),
+    map_(map),
     sizeBeforeMapping_
     (
-        patch_.index() < mpm_.oldPatchNMeshPoints().size()
-      ? mpm_.oldPatchNMeshPoints()[patch_.index()]
+        patch_.index() < map_.oldPatchNMeshPoints().size()
+      ? map_.oldPatchNMeshPoints()[patch_.index()]
       : 0
     ),
     hasUnmapped_(false),

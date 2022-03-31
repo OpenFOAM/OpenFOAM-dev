@@ -179,7 +179,7 @@ void ${typeName}FvModel${SourceType}::addSup
 }
 
 
-void ${typeName}FvModel${SourceType}::updateMesh(const mapPolyMesh& map)
+void ${typeName}FvModel${SourceType}::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

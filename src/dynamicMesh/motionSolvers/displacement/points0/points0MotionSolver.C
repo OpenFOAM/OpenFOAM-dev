@@ -151,7 +151,7 @@ void Foam::points0MotionSolver::movePoints(const pointField&)
 {}
 
 
-void Foam::points0MotionSolver::updateMesh(const mapPolyMesh& mpm)
+void Foam::points0MotionSolver::updateMesh(const polyTopoChangeMap& map)
 {
     NotImplemented;
 }

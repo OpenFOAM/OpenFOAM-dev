@@ -552,11 +552,11 @@ public:
             void printLayout(Ostream& os) const;
 
             //- Correct for topo change.
-            void updateMesh(const mapPolyMesh&)
+            void updateMesh(const polyTopoChangeMap&)
             {
                 notImplemented
                 (
-                    "distributionMap::updateMesh(const mapPolyMesh&)"
+                    "distributionMap::updateMesh(const polyTopoChangeMap&)"
                 );
             }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     This object provides mapping and fill-in information for point data
     between the two meshes after the topological change.  It is
-    constructed from mapPolyMesh.
+    constructed from polyTopoChangeMap.
 
 SourceFiles
     pointMapper.C
@@ -46,7 +46,7 @@ namespace Foam
 
 // Forward declaration of classes
 class pointMesh;
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMesh;
 
 /*---------------------------------------------------------------------------*\
@@ -62,8 +62,8 @@ class pointMapper
         //- Reference to pointMesh
         const pointMesh& pMesh_;
 
-        //- Reference to mapPolyMesh
-        const mapPolyMesh& mpm_;
+        //- Reference to polyTopoChangeMap
+        const polyTopoChangeMap& map_;
 
         //- Are there any inserted (unmapped) points
         bool insertedPoints_;
@@ -100,8 +100,8 @@ public:
 
     // Constructors
 
-        //- Construct from mapPolyMesh
-        pointMapper(const pointMesh&, const mapPolyMesh& mpm);
+        //- Construct from polyTopoChangeMap
+        pointMapper(const pointMesh&, const polyTopoChangeMap& map);
 
         //- Disallow default bitwise copy construction
         pointMapper(const pointMapper&) = delete;

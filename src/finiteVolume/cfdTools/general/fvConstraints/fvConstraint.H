@@ -46,7 +46,7 @@ namespace Foam
 {
 
 class fvMesh;
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMeshDistributionMap;
 
 /*---------------------------------------------------------------------------*\
@@ -213,7 +213,7 @@ public:
         // Mesh changes
 
             //- Update for mesh changes
-            virtual void updateMesh(const mapPolyMesh&) = 0;
+            virtual void updateMesh(const polyTopoChangeMap&) = 0;
 
             //- Update mesh corresponding to the given distribution map
             virtual void distribute(const polyMeshDistributionMap&) = 0;

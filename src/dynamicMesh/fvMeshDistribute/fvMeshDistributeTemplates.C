@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "processorFvPatchField.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -88,7 +88,7 @@ void Foam::fvMeshDistribute::saveBoundaryFields
 template<class T, class Mesh>
 void Foam::fvMeshDistribute::mapBoundaryFields
 (
-    const mapPolyMesh& map,
+    const polyTopoChangeMap& map,
     const PtrList<FieldField<fvsPatchField, T>>& oldBflds
 )
 {
@@ -178,7 +178,7 @@ void Foam::fvMeshDistribute::saveInternalFields
 template<class T>
 void Foam::fvMeshDistribute::mapExposedFaces
 (
-    const mapPolyMesh& map,
+    const polyTopoChangeMap& map,
     const PtrList<Field<T>>& oldFlds
 )
 {

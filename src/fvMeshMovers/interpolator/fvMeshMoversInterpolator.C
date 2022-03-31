@@ -85,7 +85,7 @@ bool Foam::fvMeshMovers::interpolator::update()
 }
 
 
-void Foam::fvMeshMovers::interpolator::updateMesh(const mapPolyMesh&)
+void Foam::fvMeshMovers::interpolator::updateMesh(const polyTopoChangeMap&)
 {
     NotImplemented;
 }

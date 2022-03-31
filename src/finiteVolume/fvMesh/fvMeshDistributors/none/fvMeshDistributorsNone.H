@@ -83,7 +83,7 @@ public:
         virtual bool update();
 
         //- Update corresponding to the given map
-        virtual void updateMesh(const mapPolyMesh&)
+        virtual void updateMesh(const polyTopoChangeMap&)
         {}
 
         //- Update corresponding to the given distribution map

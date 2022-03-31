@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
 #include "polyMesh.H"
 #include "polyTopoChange.H"
 #include "addToRunTimeSelectionTable.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "matchPoints.H"
 #include "polyModifyFace.H"
 #include "polyRemovePoint.H"
@@ -483,7 +483,7 @@ void Foam::perfectInterface::modifyMotionPoints(pointField& motionPoints) const
 }
 
 
-void Foam::perfectInterface::updateMesh(const mapPolyMesh& morphMap)
+void Foam::perfectInterface::updateMesh(const polyTopoChangeMap& morphMap)
 {
     // Mesh has changed topologically.  Update local topological data
     const polyMesh& mesh = topoChanger().mesh();

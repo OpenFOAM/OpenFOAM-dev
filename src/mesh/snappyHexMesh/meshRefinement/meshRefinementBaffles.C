@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -303,7 +303,7 @@ Foam::Map<Foam::labelPair> Foam::meshRefinement::getZoneBafflePatches
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createBaffles
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createBaffles
 (
     const labelList& ownPatch,
     const labelList& nbrPatch
@@ -376,7 +376,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createBaffles
     mesh_.clearOut();
 
     // Change the mesh (no inflation, parallel sync)
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
     mesh_.updateMesh(map);
@@ -471,7 +471,7 @@ void Foam::meshRefinement::checkZoneFaces() const
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createZoneBaffles
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createZoneBaffles
 (
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
@@ -483,7 +483,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createZoneBaffles
         surfaceZonesInfo::getNamedSurfaces(surfaces_.surfZones())
     );
 
-    autoPtr<mapPolyMesh> map;
+    autoPtr<polyTopoChangeMap> map;
 
     // No need to sync; all processors will have all same zonedSurfaces.
     if (zonedSurfaces.size())
@@ -824,7 +824,7 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::mergeBaffles
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
 (
     const List<labelPair>& couples
 )
@@ -911,7 +911,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::mergeBaffles
     mesh_.clearOut();
 
     // Change the mesh (no inflation)
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
     mesh_.updateMesh(map);
@@ -2408,7 +2408,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMesh
 (
     const label nBufferLayers,
     const labelList& globalToMasterPatch,
@@ -2677,7 +2677,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::dupNonManifoldPoints
+Foam::autoPtr<Foam::polyTopoChangeMap>
+Foam::meshRefinement::dupNonManifoldPoints
 (
     const localPointRegion& regionSide
 )
@@ -2705,7 +2706,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::dupNonManifoldPoints
     mesh_.clearOut();
 
     // Change the mesh (no inflation, parallel sync)
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
     mesh_.updateMesh(map);
@@ -2732,7 +2733,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::dupNonManifoldPoints
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::dupNonManifoldPoints()
+Foam::autoPtr<Foam::polyTopoChangeMap>
+Foam::meshRefinement::dupNonManifoldPoints()
 {
     // Analyse which points need to be duplicated
     localPointRegion regionSide(mesh_);
@@ -2741,7 +2743,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::dupNonManifoldPoints()
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
 (
     const List<point>& insidePoints,
     const bool allowFreeStandingZoneFaces
@@ -3342,7 +3344,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
     mesh_.clearOut();
 
     // Change the mesh (no inflation, parallel sync)
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
     mesh_.updateMesh(map);

@@ -192,7 +192,10 @@ bool Foam::fv::fixedTemperatureConstraint::constrain
 }
 
 
-void Foam::fv::fixedTemperatureConstraint::updateMesh(const mapPolyMesh& map)
+void Foam::fv::fixedTemperatureConstraint::updateMesh
+(
+    const polyTopoChangeMap& map
+)
 {
     set_.updateMesh(map);
 }

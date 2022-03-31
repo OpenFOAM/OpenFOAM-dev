@@ -606,7 +606,7 @@ void Foam::meshRefinement::setInstance(const fileName& inst)
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemoveCells
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemoveCells
 (
     const labelList& cellsToRemove,
     const labelList& exposedFaces,
@@ -626,7 +626,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemoveCells
     );
 
     // Change the mesh (no inflation)
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
     mesh_.updateMesh(map);
@@ -665,7 +665,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemoveCells
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
 (
     const labelList& splitFaces,
     const labelPairList& splits
@@ -768,7 +768,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
 
 
     // Change the mesh (no inflation)
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
     mesh_.updateMesh(map);
@@ -2203,7 +2203,7 @@ void Foam::meshRefinement::findRegions
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMeshRegions
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMeshRegions
 (
     const labelList& globalToMasterPatch,
     const labelList& globalToSlavePatch,
@@ -2298,7 +2298,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMeshRegions
     }
     else
     {
-        return autoPtr<mapPolyMesh>();
+        return autoPtr<polyTopoChangeMap>();
     }
 }
 
@@ -2359,7 +2359,7 @@ void Foam::meshRefinement::distribute(const polyMeshDistributionMap& map)
 
 void Foam::meshRefinement::updateMesh
 (
-    const mapPolyMesh& map,
+    const polyTopoChangeMap& map,
     const labelList& changedFaces
 )
 {
@@ -2388,7 +2388,7 @@ void Foam::meshRefinement::storeData
 
 void Foam::meshRefinement::updateMesh
 (
-    const mapPolyMesh& map,
+    const polyTopoChangeMap& map,
     const labelList& changedFaces,
     const Map<label>& pointsToRestore,
     const Map<label>& facesToRestore,

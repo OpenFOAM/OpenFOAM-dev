@@ -448,7 +448,7 @@ Foam::label Foam::fvMeshDistribute::findNonEmptyPatch() const
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::deleteProcPatches
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::deleteProcPatches
 (
     const label destinationPatch
 )
@@ -487,7 +487,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::deleteProcPatches
     // destinationPatch is at the end and we have visited the patches in
     // incremental order.
     labelListList dummyFaceMaps;
-    autoPtr<mapPolyMesh> map = repatch(newPatchID, dummyFaceMaps);
+    autoPtr<polyTopoChangeMap> map = repatch(newPatchID, dummyFaceMaps);
 
 
     // Delete (now empty) processor patches.
@@ -519,7 +519,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::deleteProcPatches
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::repatch
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
 (
     const labelList& newPatchID,         // per boundary face -1 or new patchID
     labelListList& constructFaceMap
@@ -583,7 +583,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::repatch
     // shared points (see mergeSharedPoints below). So temporarily points
     // and edges do not match!
 
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields. No inflation, parallel sync.
     mapFields(map);
@@ -635,7 +635,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::repatch
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::mergeSharedPoints
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::mergeSharedPoints
 (
     const labelList& pointToGlobalMaster,
     labelListList& constructPointMap
@@ -681,7 +681,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::mergeSharedPoints
 
     if (returnReduce(pointToMaster.size(), sumOp<label>()) == 0)
     {
-        return autoPtr<mapPolyMesh>(nullptr);
+        return autoPtr<polyTopoChangeMap>(nullptr);
     }
 
     // Create the mesh change engine to merge the points
@@ -775,7 +775,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::mergeSharedPoints
     }
 
     // Change the mesh (no inflation). Note: parallel comms allowed.
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields. No inflation, parallel sync.
     mapFields(map);
@@ -1240,7 +1240,7 @@ Foam::labelList Foam::fvMeshDistribute::mapPointData
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
 (
     const labelList& cellsToRemove,
     const label oldInternalPatchi
@@ -1281,7 +1281,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
     saveInternalFields(tFlds);
 
     // Change the mesh. No inflation. Note: no parallel comms allowed.
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, false);
 
     // Update fields
     mapFields(map);
@@ -1306,7 +1306,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
 }
 
 
-void Foam::fvMeshDistribute::mapFields(const mapPolyMesh& map)
+void Foam::fvMeshDistribute::mapFields(const polyTopoChangeMap& map)
 {
     meshObject::updateMesh<polyMesh>(mesh_, map);
     meshObject::updateMesh<pointMesh>(mesh_, map);
@@ -2013,7 +2013,8 @@ Foam::autoPtr<Foam::polyMeshDistributionMap> Foam::fvMeshDistribute::distribute
     // oldInternalPatchi.
     labelList repatchFaceMap;
     {
-        autoPtr<mapPolyMesh> repatchMap = deleteProcPatches(oldInternalPatchi);
+        autoPtr<polyTopoChangeMap> repatchMap =
+            deleteProcPatches(oldInternalPatchi);
 
         // Store face map (only face ordering that changed)
         repatchFaceMap = repatchMap().faceMap();
@@ -2351,7 +2352,7 @@ Foam::autoPtr<Foam::polyMeshDistributionMap> Foam::fvMeshDistribute::distribute
         const label oldInternalFaces = mesh_.nInternalFaces();
 
         // Remove cells.
-        autoPtr<mapPolyMesh> subMap
+        autoPtr<polyTopoChangeMap> subMap
         (
             doRemoveCells
             (

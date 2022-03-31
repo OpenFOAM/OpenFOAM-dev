@@ -304,7 +304,7 @@ void Foam::fv::interfaceTurbulenceDamping::addSup
 }
 
 
-void Foam::fv::interfaceTurbulenceDamping::updateMesh(const mapPolyMesh&)
+void Foam::fv::interfaceTurbulenceDamping::updateMesh(const polyTopoChangeMap&)
 {}
 
 

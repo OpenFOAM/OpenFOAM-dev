@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Description
 #include "Time.H"
 #include "OFstream.H"
 #include "OBJstream.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "pointEdgePoint.H"
 #include "PointEdgeWave.H"
 #include "mergePoints.H"
@@ -580,7 +580,7 @@ Foam::snappySnapDriver::snappySnapDriver
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::snappySnapDriver::mergeZoneBaffles
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::snappySnapDriver::mergeZoneBaffles
 (
     const List<labelPair>& baffles
 )
@@ -588,7 +588,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::snappySnapDriver::mergeZoneBaffles
     labelList zonedSurfaces =
         surfaceZonesInfo::getNamedSurfaces(meshRefiner_.surfaces().surfZones());
 
-    autoPtr<mapPolyMesh> map;
+    autoPtr<polyTopoChangeMap> map;
 
     // No need to sync; all processors will have all same zonedSurfaces.
     label nBaffles = returnReduce(baffles.size(), sumOp<label>());
@@ -1830,7 +1830,7 @@ bool Foam::snappySnapDriver::scaleMesh
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::snappySnapDriver::repatchToSurface
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::snappySnapDriver::repatchToSurface
 (
     const snapParameters& snapParams,
     const labelList& adaptPatchIDs,
@@ -2281,10 +2281,8 @@ void Foam::snappySnapDriver::doSnap
 
 
             localPointRegion regionSide(mesh, candidatePoints);
-            autoPtr<mapPolyMesh> mapPtr = meshRefiner_.dupNonManifoldPoints
-            (
-                regionSide
-            );
+            autoPtr<polyTopoChangeMap> mapPtr =
+                meshRefiner_.dupNonManifoldPoints(regionSide);
             meshRefinement::updateList
             (
                 mapPtr().faceMap(),
@@ -2533,7 +2531,7 @@ void Foam::snappySnapDriver::doSnap
             //        << returnReduce(splitFaces.size(), sumOp<label>())
             //        << " faces along diagonal attractions" << endl;
             //
-            //    autoPtr<mapPolyMesh> mapPtr = meshRefiner_.splitFaces
+            //    autoPtr<polyTopoChangeMap> mapPtr = meshRefiner_.splitFaces
             //    (
             //        splitFaces,
             //        splits
@@ -2612,7 +2610,7 @@ void Foam::snappySnapDriver::doSnap
             //        << returnReduce(splitFaces.size(), sumOp<label>())
             //        << " faces along diagonal to avoid warpage" << endl;
             //
-            //    autoPtr<mapPolyMesh> mapPtr = meshRefiner_.splitFaces
+            //    autoPtr<polyTopoChangeMap> mapPtr = meshRefiner_.splitFaces
             //    (
             //        splitFaces,
             //        splits
@@ -2804,7 +2802,7 @@ void Foam::snappySnapDriver::doSnap
 
     // Merge any introduced baffles (from faceZones of faceType 'internal')
     {
-        autoPtr<mapPolyMesh> mapPtr = mergeZoneBaffles(baffles);
+        autoPtr<polyTopoChangeMap> mapPtr = mergeZoneBaffles(baffles);
 
         if (mapPtr.valid())
         {
@@ -2820,7 +2818,7 @@ void Foam::snappySnapDriver::doSnap
 
     // Repatch faces according to nearest. Do not repatch baffle faces.
     {
-        autoPtr<mapPolyMesh> mapPtr = repatchToSurface
+        autoPtr<polyTopoChangeMap> mapPtr = repatchToSurface
         (
             snapParams,
             adaptPatchIDs,

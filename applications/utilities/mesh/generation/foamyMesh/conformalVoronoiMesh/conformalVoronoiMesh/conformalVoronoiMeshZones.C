@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -698,7 +698,7 @@ void Foam::conformalVoronoiMesh::addZones
     }
 
     // Change the mesh (no inflation, parallel sync)
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false, true);
 }
 
 

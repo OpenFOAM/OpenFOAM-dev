@@ -559,7 +559,7 @@ void getInterfaceSizes
 
 
 // Create mesh for region.
-autoPtr<mapPolyMesh> createRegionMesh
+autoPtr<polyTopoChangeMap> createRegionMesh
 (
     const fvMesh& mesh,
     // Region info
@@ -711,7 +711,7 @@ autoPtr<mapPolyMesh> createRegionMesh
         meshMod
     );
 
-    autoPtr<mapPolyMesh> map = meshMod.makeMesh
+    autoPtr<polyTopoChangeMap> map = meshMod.makeMesh
     (
         newMesh,
         IOobject
@@ -745,7 +745,7 @@ void createAndWriteRegion
         << ' ' << regionNames[regioni] << endl;
 
     autoPtr<fvMesh> newMesh;
-    autoPtr<mapPolyMesh> map = createRegionMesh
+    autoPtr<polyTopoChangeMap> map = createRegionMesh
     (
         mesh,
         cellRegion,

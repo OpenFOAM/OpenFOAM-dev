@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 #include "ListListOps.H"
 #include "SortableList.H"
 #include "volPointInterpolation.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "writeFile.H"
 #include "OFstream.H"
 #include "OSspecific.H"
@@ -283,9 +283,12 @@ void Foam::functionObjects::sampledSets::correct()
 }
 
 
-void Foam::functionObjects::sampledSets::updateMesh(const mapPolyMesh& mpm)
+void Foam::functionObjects::sampledSets::updateMesh
+(
+    const polyTopoChangeMap& map
+)
 {
-    if (&mpm.mesh() == &mesh_)
+    if (&map.mesh() == &mesh_)
     {
         correct();
     }

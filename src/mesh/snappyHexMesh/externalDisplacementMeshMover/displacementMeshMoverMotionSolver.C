@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ void Foam::displacementMeshMoverMotionSolver::movePoints(const pointField& p)
 
 void Foam::displacementMeshMoverMotionSolver::updateMesh
 (
-    const mapPolyMesh& map
+    const polyTopoChangeMap& map
 )
 {
     displacementMotionSolver::updateMesh(map);

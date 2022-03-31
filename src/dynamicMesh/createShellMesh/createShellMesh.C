@@ -26,7 +26,7 @@ License
 #include "createShellMesh.H"
 #include "polyTopoChange.H"
 #include "meshTools.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyAddPoint.H"
 #include "polyAddFace.H"
 #include "polyModifyFace.H"
@@ -903,7 +903,7 @@ void Foam::createShellMesh::setRefinement
 }
 
 
-void Foam::createShellMesh::updateMesh(const mapPolyMesh& map)
+void Foam::createShellMesh::updateMesh(const polyTopoChangeMap& map)
 {
     inplaceReorder(map.reverseCellMap(), cellToFaceMap_);
     inplaceReorder(map.reverseFaceMap(), faceToFaceMap_);

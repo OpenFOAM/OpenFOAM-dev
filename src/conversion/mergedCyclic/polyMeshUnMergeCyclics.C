@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -279,7 +279,7 @@ void Foam::polyMeshUnMergeCyclics(polyMesh& mesh, const scalar includedAngle)
             }
         }
     }
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
     // Remove the (now) empty merged cyclic patches. Copy everything except the
     // merged cyclics into a patch list and use this then re-patch the mesh.

@@ -219,7 +219,7 @@ bool Foam::fv::limitPressure::constrain(volScalarField& p) const
 }
 
 
-void Foam::fv::limitPressure::updateMesh(const mapPolyMesh&)
+void Foam::fv::limitPressure::updateMesh(const polyTopoChangeMap&)
 {}
 
 

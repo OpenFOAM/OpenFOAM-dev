@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,13 @@ License
 
 #include "polyMeshFilter.H"
 #include "polyMesh.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "IOobjectList.H"
 
 // * * * * * * * * * * * * * Public Member Functions * * * * * * * * * * * * //
 
 template<class SetType>
-void Foam::polyMeshFilter::updateSets(const mapPolyMesh& map)
+void Foam::polyMeshFilter::updateSets(const polyTopoChangeMap& map)
 {
     HashTable<const SetType*> sets =
         map.mesh().objectRegistry::lookupClass<const SetType>();

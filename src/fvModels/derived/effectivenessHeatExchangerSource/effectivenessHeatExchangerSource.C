@@ -313,7 +313,7 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
 
 void Foam::fv::effectivenessHeatExchangerSource::updateMesh
 (
-    const mapPolyMesh& map
+    const polyTopoChangeMap& map
 )
 {
     set_.updateMesh(map);

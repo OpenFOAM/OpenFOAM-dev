@@ -248,7 +248,7 @@ bool Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
 }
 
 
-void Foam::fv::meanVelocityForce::updateMesh(const mapPolyMesh& map)
+void Foam::fv::meanVelocityForce::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

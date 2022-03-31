@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 #include "fvcGrad.H"
 #include "surfaceInterpolate.H"
 #include "fvcLaplacian.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "volPointInterpolation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -180,10 +180,10 @@ void Foam::displacementSBRStressFvMotionSolver::solve()
 
 void Foam::displacementSBRStressFvMotionSolver::updateMesh
 (
-    const mapPolyMesh& mpm
+    const polyTopoChangeMap& map
 )
 {
-    displacementMotionSolver::updateMesh(mpm);
+    displacementMotionSolver::updateMesh(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.

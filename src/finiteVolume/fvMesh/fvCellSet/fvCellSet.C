@@ -167,7 +167,7 @@ Foam::fvCellSet::~fvCellSet()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fvCellSet::updateMesh(const mapPolyMesh&)
+void Foam::fvCellSet::updateMesh(const polyTopoChangeMap&)
 {
     setCells();
     setV();

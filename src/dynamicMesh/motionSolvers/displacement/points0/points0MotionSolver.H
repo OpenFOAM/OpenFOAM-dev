@@ -43,7 +43,7 @@ SourceFiles
 namespace Foam
 {
 
-class mapPolyMesh;
+class polyTopoChangeMap;
 
 /*---------------------------------------------------------------------------*\
                      Class points0MotionSolver Declaration
@@ -106,7 +106,7 @@ public:
         virtual void movePoints(const pointField&);
 
         //-  Update local data for topology changes
-        virtual void updateMesh(const mapPolyMesh&);
+        virtual void updateMesh(const polyTopoChangeMap&);
 
         //- Update corresponding to the given distribution map
         virtual void distribute(const polyMeshDistributionMap&);

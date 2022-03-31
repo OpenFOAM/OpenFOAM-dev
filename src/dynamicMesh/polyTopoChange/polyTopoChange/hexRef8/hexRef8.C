@@ -4234,7 +4234,7 @@ void Foam::hexRef8::storeData
 }
 
 
-void Foam::hexRef8::updateMesh(const mapPolyMesh& map)
+void Foam::hexRef8::updateMesh(const polyTopoChangeMap& map)
 {
     Map<label> dummyMap(0);
 
@@ -4244,7 +4244,7 @@ void Foam::hexRef8::updateMesh(const mapPolyMesh& map)
 
 void Foam::hexRef8::updateMesh
 (
-    const mapPolyMesh& map,
+    const polyTopoChangeMap& map,
     const Map<label>& pointsToRestore,
     const Map<label>& facesToRestore,
     const Map<label>& cellsToRestore

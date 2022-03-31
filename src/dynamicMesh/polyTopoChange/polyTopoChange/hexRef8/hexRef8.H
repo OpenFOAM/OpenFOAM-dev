@@ -55,7 +55,7 @@ namespace Foam
 class polyMesh;
 class polyPatch;
 class polyTopoChange;
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMeshDistributionMap;
 
 /*---------------------------------------------------------------------------*\
@@ -494,7 +494,7 @@ public:
             //  Called after the mesh change. setRefinement will already have
             //  made sure the pointLevel_ and cellLevel_ are the size of the new
             //  mesh so we only need to account for reordering.
-            void updateMesh(const mapPolyMesh&);
+            void updateMesh(const polyTopoChangeMap&);
 
 
             // Restoring : is where other processes delete and reinsert data.
@@ -515,7 +515,7 @@ public:
                 //  (i.e. what was in pointsToStore)
                 void updateMesh
                 (
-                    const mapPolyMesh&,
+                    const polyTopoChangeMap&,
                     const Map<label>& pointsToRestore,
                     const Map<label>& facesToRestore,
                     const Map<label>& cellsToRestore

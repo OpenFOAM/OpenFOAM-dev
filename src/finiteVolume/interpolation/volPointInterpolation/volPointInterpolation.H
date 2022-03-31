@@ -138,7 +138,7 @@ public:
         // Edit
 
             //- Update mesh topology using the morph engine
-            void updateMesh(const mapPolyMesh&);
+            void updateMesh(const polyTopoChangeMap&);
 
             //- Update mesh corresponding to the given distribution map
             virtual void distribute(const polyMeshDistributionMap&);

@@ -90,11 +90,11 @@ void Foam::pointMesh::reset(const bool validBoundary)
 }
 
 
-void Foam::pointMesh::updateMesh(const mapPolyMesh& map)
+void Foam::pointMesh::updateMesh(const polyTopoChangeMap& map)
 {
     if (debug)
     {
-        Pout<< "pointMesh::updateMesh(const mapPolyMesh&): "
+        Pout<< "pointMesh::updateMesh(const polyTopoChangeMap&): "
             << "Updating for topology changes." << endl;
         Pout<< endl;
     }

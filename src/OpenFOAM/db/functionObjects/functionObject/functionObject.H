@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,7 +132,7 @@ namespace Foam
 // Forward declaration of classes
 class Time;
 class polyMesh;
-class mapPolyMesh;
+class polyTopoChangeMap;
 
 /*---------------------------------------------------------------------------*\
                        Class functionObject Declaration
@@ -239,7 +239,7 @@ public:
         virtual scalar timeToNextWrite();
 
         //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh& mpm);
+        virtual void updateMesh(const polyTopoChangeMap& map);
 
         //- Update for changes of mesh
         virtual void movePoints(const polyMesh& mesh);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,10 +132,10 @@ void Foam::velocityComponentLaplacianFvMotionSolver::solve()
 
 void Foam::velocityComponentLaplacianFvMotionSolver::updateMesh
 (
-    const mapPolyMesh& mpm
+    const polyTopoChangeMap& map
 )
 {
-    componentVelocityMotionSolver::updateMesh(mpm);
+    componentVelocityMotionSolver::updateMesh(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.

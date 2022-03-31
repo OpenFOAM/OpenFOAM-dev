@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "polyTopoChanger.H"
 #include "polyTopoChange.H"
 #include "addToRunTimeSelectionTable.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "cellSet.H"
 #include "faceSet.H"
 #include "pointSet.H"
@@ -88,12 +88,12 @@ void Foam::setUpdater::modifyMotionPoints(pointField&) const
 {}
 
 
-void Foam::setUpdater::updateMesh(const mapPolyMesh& morphMap)
+void Foam::setUpdater::updateMesh(const polyTopoChangeMap& morphMap)
 {
     // Mesh has changed topologically. Update all sets.
     if (debug)
     {
-        Pout<< "setUpdater::updateMesh(const mapPolyMesh& morphMap)"
+        Pout<< "setUpdater::updateMesh(const polyTopoChangeMap& morphMap)"
             << endl;
     }
 

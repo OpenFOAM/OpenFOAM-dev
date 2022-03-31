@@ -723,7 +723,7 @@ int main(int argc, char *argv[])
     // Change mesh, use inflation to reforce calculation of transformation
     // tensors.
     Info<< "Doing topology modification to order faces." << nl << endl;
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, true);
     mesh.movePoints(map().preMotionPoints());
 
     if (writeCyclicMatch)

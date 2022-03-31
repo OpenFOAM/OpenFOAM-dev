@@ -267,7 +267,7 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::massSource);
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::massSource);
 
 
-void Foam::fv::massSource::updateMesh(const mapPolyMesh& map)
+void Foam::fv::massSource::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -3103,7 +3103,7 @@ void Foam::polyTopoChange::removeCell(const label celli, const label mergeCelli)
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
 (
     polyMesh& mesh,
     const bool inflate,
@@ -3327,9 +3327,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
 
     labelHashSet flipFaceFluxSet(getSetIndices(flipFaceFlux_));
 
-    return autoPtr<mapPolyMesh>
+    return autoPtr<polyTopoChangeMap>
     (
-        new mapPolyMesh
+        new polyTopoChangeMap
         (
             mesh,
             nOldPoints,
@@ -3379,7 +3379,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
 (
     autoPtr<fvMesh>& newMeshPtr,
     const IOobject& io,
@@ -3626,9 +3626,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
 
     labelHashSet flipFaceFluxSet(getSetIndices(flipFaceFlux_));
 
-    return autoPtr<mapPolyMesh>
+    return autoPtr<polyTopoChangeMap>
     (
-        new mapPolyMesh
+        new polyTopoChangeMap
         (
             newMesh,
             nOldPoints,

@@ -212,7 +212,7 @@ void Foam::fv::interRegionHeatTransfer::correct()
 }
 
 
-void Foam::fv::interRegionHeatTransfer::updateMesh(const mapPolyMesh&)
+void Foam::fv::interRegionHeatTransfer::updateMesh(const polyTopoChangeMap&)
 {}
 
 

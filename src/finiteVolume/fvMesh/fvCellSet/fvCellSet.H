@@ -167,7 +167,7 @@ public:
         // Mesh changes
 
             //- Update for mesh changes
-            void updateMesh(const mapPolyMesh&);
+            void updateMesh(const polyTopoChangeMap&);
 
             //- Update mesh corresponding to the given distribution map
             void distribute(const polyMeshDistributionMap&);

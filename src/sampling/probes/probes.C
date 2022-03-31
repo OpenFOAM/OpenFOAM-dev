@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "probes.H"
 #include "volFields.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "OSspecific.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -354,11 +354,11 @@ bool Foam::probes::write()
 }
 
 
-void Foam::probes::updateMesh(const mapPolyMesh& mpm)
+void Foam::probes::updateMesh(const polyTopoChangeMap& map)
 {
     DebugInfo<< "probes: updateMesh" << endl;
 
-    if (&mpm.mesh() != &mesh_)
+    if (&map.mesh() != &mesh_)
     {
         return;
     }
@@ -378,7 +378,7 @@ void Foam::probes::updateMesh(const mapPolyMesh& mpm)
         {
             DynamicList<label> elems(elementList_.size());
 
-            const labelList& reverseMap = mpm.reverseCellMap();
+            const labelList& reverseMap = map.reverseCellMap();
             forAll(elementList_, i)
             {
                 label celli = elementList_[i];
@@ -406,7 +406,7 @@ void Foam::probes::updateMesh(const mapPolyMesh& mpm)
         {
             DynamicList<label> elems(faceList_.size());
 
-            const labelList& reverseMap = mpm.reverseFaceMap();
+            const labelList& reverseMap = map.reverseFaceMap();
             forAll(faceList_, i)
             {
                 label facei = faceList_[i];

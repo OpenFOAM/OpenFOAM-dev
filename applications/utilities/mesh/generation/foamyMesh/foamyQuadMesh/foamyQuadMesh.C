@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,7 +201,8 @@ int main(int argc, char *argv[])
 
             extruder.setRefinement(meshMod);
 
-            autoPtr<mapPolyMesh> morphMap = meshMod.changeMesh(pMesh, false);
+            autoPtr<polyTopoChangeMap> morphMap =
+                meshMod.changeMesh(pMesh, false);
 
             pMesh.updateMesh(morphMap);
         }

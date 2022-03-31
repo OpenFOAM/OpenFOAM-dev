@@ -95,7 +95,7 @@ bool Foam::fvMeshMovers::layeredEngine::update()
 }
 
 
-void Foam::fvMeshMovers::layeredEngine::updateMesh(const mapPolyMesh&)
+void Foam::fvMeshMovers::layeredEngine::updateMesh(const polyTopoChangeMap&)
 {
     NotImplemented;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -521,7 +521,7 @@ public:
         // Snapping
 
             //- Merge baffles.
-            autoPtr<mapPolyMesh> mergeZoneBaffles(const List<labelPair>&);
+            autoPtr<polyTopoChangeMap> mergeZoneBaffles(const List<labelPair>&);
 
             //- Calculate edge length per patch point.
             static scalarField calcSnapDistance
@@ -601,7 +601,7 @@ public:
             //  - calculate face-wise snap distance as max of point-wise
             //  - calculate face-wise nearest surface point
             //  - repatch face according to patch for surface point.
-            autoPtr<mapPolyMesh> repatchToSurface
+            autoPtr<polyTopoChangeMap> repatchToSurface
             (
                 const snapParameters& snapParams,
                 const labelList& adaptPatchIDs,

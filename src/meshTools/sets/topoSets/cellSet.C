@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellSet.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyMesh.H"
 #include "Time.H"
 #include "addToRunTimeSelectionTable.H"
@@ -222,7 +222,7 @@ label cellSet::maxSize(const polyMesh& mesh) const
 }
 
 
-void cellSet::updateMesh(const mapPolyMesh& morphMap)
+void cellSet::updateMesh(const polyTopoChangeMap& morphMap)
 {
     updateLabels(morphMap.reverseCellMap());
 }

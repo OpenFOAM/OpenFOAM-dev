@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
 #include "argList.H"
 #include "Time.H"
 #include "mirrorFvMesh.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "hexRef8Data.H"
 #include "systemDict.H"
 
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     mMesh.write();
 
     // Map the hexRef8 data
-    mapPolyMesh map
+    polyTopoChangeMap map
     (
         mesh,
         mesh.nPoints(),         // nOldPoints,

@@ -176,7 +176,7 @@ void Foam::fv::sixDoFAccelerationSource::addSup
 }
 
 
-void Foam::fv::sixDoFAccelerationSource::updateMesh(const mapPolyMesh&)
+void Foam::fv::sixDoFAccelerationSource::updateMesh(const polyTopoChangeMap&)
 {}
 
 

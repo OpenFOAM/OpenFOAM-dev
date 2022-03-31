@@ -85,7 +85,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMeshDistributionMap;
 
 
@@ -342,7 +342,7 @@ public:
         ) const;
 
         //- Update numbering for mesh changes
-        void updateMesh(const mapPolyMesh&);
+        void updateMesh(const polyTopoChangeMap&);
 
         //- Update numbering for subsetting
         void subset

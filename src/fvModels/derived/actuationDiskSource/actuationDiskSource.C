@@ -206,7 +206,7 @@ void Foam::fv::actuationDiskSource::addSup
 }
 
 
-void Foam::fv::actuationDiskSource::updateMesh(const mapPolyMesh& map)
+void Foam::fv::actuationDiskSource::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

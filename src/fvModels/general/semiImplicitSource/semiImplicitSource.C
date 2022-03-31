@@ -234,7 +234,7 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::semiImplicitSource::updateMesh(const mapPolyMesh& map)
+void Foam::fv::semiImplicitSource::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ class polyMeshFilter
     // Private Member Functions
 
         template<class T>
-        static void updateSets(const mapPolyMesh& map);
+        static void updateSets(const polyTopoChangeMap& map);
 
         template<class T>
         static void copySets(const polyMesh& oldMesh, const polyMesh& newMesh);
@@ -242,7 +242,7 @@ public:
             );
 
             //- Update the loaded topoSets
-            static void updateSets(const mapPolyMesh& map);
+            static void updateSets(const polyTopoChangeMap& map);
 
             //- Filter edges and faces
             label filter(const label nOriginalBadFaces);

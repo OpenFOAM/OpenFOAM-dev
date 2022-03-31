@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class Time;
 class objectRegistry;
 class dictionary;
 class fvMesh;
-class mapPolyMesh;
+class polyTopoChangeMap;
 
 /*---------------------------------------------------------------------------*\
                            Class probes Declaration
@@ -235,7 +235,7 @@ public:
         virtual bool write();
 
         //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&);
+        virtual void updateMesh(const polyTopoChangeMap&);
 
         //- Update for changes of mesh
         virtual void movePoints(const polyMesh&);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class setUpdater
 
         //- Updates all sets
         template<class Type>
-        void updateSets(const mapPolyMesh& morphMap) const;
+        void updateSets(const polyTopoChangeMap& morphMap) const;
 
 
 public:
@@ -97,7 +97,7 @@ public:
         virtual void modifyMotionPoints(pointField& motionPoints) const;
 
         //- Force recalculation of locally stored data on topological change
-        virtual void updateMesh(const mapPolyMesh&);
+        virtual void updateMesh(const polyTopoChangeMap&);
 
         //- Write
         virtual void write(Ostream&) const;

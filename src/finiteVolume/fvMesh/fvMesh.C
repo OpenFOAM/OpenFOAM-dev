@@ -35,7 +35,7 @@ License
 #include "fvMeshTopoChanger.H"
 #include "fvMeshDistributor.H"
 #include "fvMeshMover.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "MapFvFields.H"
 #include "fvMeshMapper.H"
 #include "pointMesh.H"
@@ -672,7 +672,7 @@ const Foam::fvMeshMover& Foam::fvMesh::mover() const
 }
 
 
-void Foam::fvMesh::mapFields(const mapPolyMesh& map)
+void Foam::fvMesh::mapFields(const polyTopoChangeMap& map)
 {
     if (debug)
     {
@@ -693,7 +693,7 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& map)
     )
     {
         FatalErrorInFunction
-            << "mapPolyMesh does not correspond to the old mesh."
+            << "polyTopoChangeMap does not correspond to the old mesh."
             << " nCells:" << nCells()
             << " cellMap:" << map.cellMap().size()
             << " nOldCells:" << map.nOldCells()
@@ -823,7 +823,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 }
 
 
-void Foam::fvMesh::updateMesh(const mapPolyMesh& map)
+void Foam::fvMesh::updateMesh(const polyTopoChangeMap& map)
 {
     // Update polyMesh. This needs to keep volume existent!
     polyMesh::updateMesh(map);

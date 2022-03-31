@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 #include "polyRemoveFace.H"
 #include "polyModifyFace.H"
 #include "cellCuts.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "meshTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -1264,7 +1264,7 @@ void Foam::meshCutAndRemove::setRefinement
 }
 
 
-void Foam::meshCutAndRemove::updateMesh(const mapPolyMesh& map)
+void Foam::meshCutAndRemove::updateMesh(const polyTopoChangeMap& map)
 {
     // Update stored labels for mesh change.
     {

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "velocityMotionSolver.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -73,7 +73,7 @@ void Foam::velocityMotionSolver::movePoints(const pointField& p)
 }
 
 
-void Foam::velocityMotionSolver::updateMesh(const mapPolyMesh& mpm)
+void Foam::velocityMotionSolver::updateMesh(const polyTopoChangeMap& map)
 {
     // pointMesh updates pointFields.
 }

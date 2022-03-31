@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -220,7 +220,7 @@ private:
         void calcAttachedAddressing() const;
 
         //- Calculate decoupled zone face-cell addressing
-        void renumberAttachedAddressing(const mapPolyMesh&) const;
+        void renumberAttachedAddressing(const polyTopoChangeMap&) const;
 
         //- Clear attached addressing
         void clearAttachedAddressing() const;
@@ -365,7 +365,7 @@ public:
         virtual void modifyMotionPoints(pointField& motionPoints) const;
 
         //- Force recalculation of locally stored data on topological change
-        virtual void updateMesh(const mapPolyMesh&);
+        virtual void updateMesh(const polyTopoChangeMap&);
 
         //- Return projected points for a slave patch
         const pointField& pointProjection() const;

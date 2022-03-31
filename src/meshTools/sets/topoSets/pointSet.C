@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointSet.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyMesh.H"
 #include "syncTools.H"
 
@@ -150,7 +150,7 @@ label pointSet::maxSize(const polyMesh& mesh) const
 }
 
 
-void pointSet::updateMesh(const mapPolyMesh& morphMap)
+void pointSet::updateMesh(const polyTopoChangeMap& morphMap)
 {
     updateLabels(morphMap.reversePointMap());
 }

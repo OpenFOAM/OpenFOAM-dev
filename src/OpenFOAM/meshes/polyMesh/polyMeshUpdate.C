@@ -27,7 +27,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "polyMesh.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "Time.H"
 #include "globalMeshData.H"
 #include "pointMesh.H"
@@ -36,7 +36,7 @@ Description
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::polyMesh::updateMesh(const mapPolyMesh& mpm)
+void Foam::polyMesh::updateMesh(const polyTopoChangeMap& map)
 {
     if (debug)
     {
@@ -79,13 +79,13 @@ void Foam::polyMesh::updateMesh(const mapPolyMesh& mpm)
         newMotionPoints.setSize(points_.size());
 
         // Map the list
-        newMotionPoints.map(oldMotionPoints, mpm.pointMap());
+        newMotionPoints.map(oldMotionPoints, map.pointMap());
 
         // Any points created out-of-nothing get set to the current coordinate
         // for lack of anything better.
-        forAll(mpm.pointMap(), newPointi)
+        forAll(map.pointMap(), newPointi)
         {
-            if (mpm.pointMap()[newPointi] == -1)
+            if (map.pointMap()[newPointi] == -1)
             {
                 newMotionPoints[newPointi] = points_[newPointi];
             }
@@ -103,27 +103,27 @@ void Foam::polyMesh::updateMesh(const mapPolyMesh& mpm)
         newMotionCellCentres.setSize(cellCentres().size());
 
         // Map the list
-        newMotionCellCentres.map(oldMotionCellCentres, mpm.cellMap());
+        newMotionCellCentres.map(oldMotionCellCentres, map.cellMap());
 
         // Any points created out-of-nothing get set to the current coordinate
         // for lack of anything better.
-        forAll(mpm.cellMap(), newCelli)
+        forAll(map.cellMap(), newCelli)
         {
-            if (mpm.cellMap()[newCelli] == -1)
+            if (map.cellMap()[newCelli] == -1)
             {
                 newMotionCellCentres[newCelli] = cellCentres()[newCelli];
             }
         }
     }
 
-    meshObject::updateMesh<polyMesh>(*this, mpm);
-    meshObject::updateMesh<pointMesh>(*this, mpm);
+    meshObject::updateMesh<polyMesh>(*this, map);
+    meshObject::updateMesh<pointMesh>(*this, map);
 
     // Reset valid directions (could change by faces put into empty patches)
     geometricD_ = Zero;
     solutionD_ = Zero;
 
-    const_cast<Time&>(time()).functionObjects().updateMesh(mpm);
+    const_cast<Time&>(time()).functionObjects().updateMesh(map);
 }
 
 

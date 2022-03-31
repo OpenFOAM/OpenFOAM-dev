@@ -140,7 +140,7 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::limitMag::updateMesh(const mapPolyMesh& map)
+void Foam::fv::limitMag::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

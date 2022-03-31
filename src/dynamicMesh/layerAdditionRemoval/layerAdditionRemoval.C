@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -431,11 +431,11 @@ void Foam::layerAdditionRemoval::setRefinement(polyTopoChange& ref) const
 }
 
 
-void Foam::layerAdditionRemoval::updateMesh(const mapPolyMesh&)
+void Foam::layerAdditionRemoval::updateMesh(const polyTopoChangeMap&)
 {
     if (debug)
     {
-        Pout<< "layerAdditionRemoval::updateMesh(const mapPolyMesh&) "
+        Pout<< "layerAdditionRemoval::updateMesh(const polyTopoChangeMap&) "
             << "for object " << name() << " : "
             << "Clearing addressing on external request";
 

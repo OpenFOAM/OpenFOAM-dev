@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "meshTools.H"
 #include "polyMesh.H"
 #include "polyTopoChange.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "OFstream.H"
 #include "EdgeMap.H"
 
@@ -694,7 +694,7 @@ void Foam::tetDecomposer::setRefinement
 }
 
 
-void Foam::tetDecomposer::updateMesh(const mapPolyMesh& map)
+void Foam::tetDecomposer::updateMesh(const polyTopoChangeMap& map)
 {
     inplaceRenumber(map.reversePointMap(), cellToPoint_);
     inplaceRenumber(map.reversePointMap(), faceToPoint_);

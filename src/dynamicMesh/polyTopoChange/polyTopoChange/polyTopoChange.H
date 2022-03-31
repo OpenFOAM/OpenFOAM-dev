@@ -68,7 +68,7 @@ SourceFiles
 #include "pointField.H"
 #include "Map.H"
 #include "HashSet.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "PackedBoolList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -607,7 +607,7 @@ public:
             //  followed by boundary points. This is not fully consistent
             //  with upper-triangular ordering of points and edges so
             //  is only done when explicitly asked for.
-            autoPtr<mapPolyMesh> changeMesh
+            autoPtr<polyTopoChangeMap> changeMesh
             (
                 polyMesh& mesh,
                 const bool inflate,
@@ -617,7 +617,7 @@ public:
             );
 
             //- Create new mesh with old mesh patches
-            autoPtr<mapPolyMesh> makeMesh
+            autoPtr<polyTopoChangeMap> makeMesh
             (
                 autoPtr<fvMesh>& newMesh,
                 const IOobject& io,

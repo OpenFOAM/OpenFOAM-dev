@@ -38,7 +38,7 @@ SourceFiles
 #include "dictionary.H"
 #include "HashSet.H"
 #include "volFieldsFwd.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "fixedValueFvPatchFields.H"
 #include "zeroGradientFvPatchFields.H"
 #include "runTimeSelectionTables.H"
@@ -138,7 +138,7 @@ public:
         }
 
         //- Update cached topology and geometry when the mesh changes
-        virtual void updateMesh(const mapPolyMesh&)
+        virtual void updateMesh(const polyTopoChangeMap&)
         {}
 
         //- Update mesh corresponding to the given distribution map

@@ -48,7 +48,7 @@ SourceFiles
 namespace Foam
 {
 
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMesh;
 
 
@@ -278,7 +278,7 @@ public:
 
 
             //- Correct for topo change.
-            void updateMesh(const mapPolyMesh&)
+            void updateMesh(const polyTopoChangeMap&)
             {
                 NotImplemented;
             }

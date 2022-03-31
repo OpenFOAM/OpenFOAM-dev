@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -992,7 +992,7 @@ void Foam::conformalVoronoiMesh::writeMesh
 
             polyTopoChange meshMod(newMesh());
 
-            autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh, false);
+            autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
             polyMeshFilter::copySets(newMesh(), mesh);
         }
@@ -1029,7 +1029,7 @@ void Foam::conformalVoronoiMesh::writeMesh
 
             polyTopoChange meshMod(newMesh());
 
-            autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh, false);
+            autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
             polyMeshFilter::copySets(newMesh(), mesh);
         }

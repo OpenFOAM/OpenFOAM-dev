@@ -72,7 +72,7 @@ Foam::nearWallDist::~nearWallDist()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::nearWallDist::updateMesh(const mapPolyMesh& map)
+void Foam::nearWallDist::updateMesh(const polyTopoChangeMap& map)
 {
     y_.setSize(mesh().boundary().size());
 

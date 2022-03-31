@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,13 +26,13 @@ License
 #include "setUpdater.H"
 #include "polyMesh.H"
 #include "Time.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::setUpdater::updateSets(const mapPolyMesh& morphMap) const
+void Foam::setUpdater::updateSets(const polyTopoChangeMap& morphMap) const
 {
     //
     // Update all sets in memory.

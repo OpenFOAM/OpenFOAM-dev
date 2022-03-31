@@ -117,7 +117,7 @@ void Foam::fv::isotropicDamping::addSup
 }
 
 
-void Foam::fv::isotropicDamping::updateMesh(const mapPolyMesh&)
+void Foam::fv::isotropicDamping::updateMesh(const polyTopoChangeMap&)
 {}
 
 

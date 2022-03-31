@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
 #include "processorPolyPatch.H"
 #include "removeCells.H"
 #include "polyTopoChange.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -1523,7 +1523,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
     );
 
     // Create mesh, return map from old to new mesh.
-    autoPtr<mapPolyMesh> map = meshMod.makeMesh
+    autoPtr<polyTopoChangeMap> map = meshMod.makeMesh
     (
         fvMeshSubsetPtr_,
         IOobject

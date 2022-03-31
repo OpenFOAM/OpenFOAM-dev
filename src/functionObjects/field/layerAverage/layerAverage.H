@@ -202,7 +202,7 @@ public:
         virtual bool write();
 
         //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&);
+        virtual void updateMesh(const polyTopoChangeMap&);
 
         //- Update for mesh point-motion
         virtual void movePoints(const polyMesh&);

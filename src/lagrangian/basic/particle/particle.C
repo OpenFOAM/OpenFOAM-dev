@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "particle.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "transform.H"
 #include "treeDataCell.H"
 #include "cubicEqn.H"
@@ -1197,7 +1197,7 @@ Foam::label Foam::particle::procTetPt
 void Foam::particle::autoMap
 (
     const vector& position,
-    const mapPolyMesh& mapper
+    const polyTopoChangeMap& mapper
 )
 {
     locate

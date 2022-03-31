@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "rigidBodyMeshMotion.H"
 #include "polyMesh.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "pointPatchDist.H"
 #include "pointConstraints.H"
 #include "timeIOdictionary.H"
@@ -411,15 +411,15 @@ void Foam::rigidBodyMeshMotion::solve()
 }
 
 
-void Foam::rigidBodyMeshMotion::updateMesh(const mapPolyMesh& mpm)
+void Foam::rigidBodyMeshMotion::updateMesh(const polyTopoChangeMap& map)
 {
     // pointMesh already updates pointFields
 
     // Get the new points either from the map or the mesh
     const pointField& points =
     (
-        mpm.hasMotionPoints()
-      ? mpm.preMotionPoints()
+        map.hasMotionPoints()
+      ? map.preMotionPoints()
       : mesh().points()
     );
 
@@ -445,11 +445,11 @@ void Foam::rigidBodyMeshMotion::updateMesh(const mapPolyMesh& mpm)
 
             forAll(points0, pointi)
             {
-                const label oldPointi = mpm.pointMap()[pointi];
+                const label oldPointi = map.pointMap()[pointi];
 
                 if (oldPointi >= 0)
                 {
-                    if (mpm.reversePointMap()[oldPointi] != pointi)
+                    if (map.reversePointMap()[oldPointi] != pointi)
                     {
                         weight[pointi] = bodyMeshes_[bi].weight(pDist[pointi]);
                     }
@@ -469,11 +469,11 @@ void Foam::rigidBodyMeshMotion::updateMesh(const mapPolyMesh& mpm)
 
         forAll(points0, pointi)
         {
-            const label oldPointi = mpm.pointMap()[pointi];
+            const label oldPointi = map.pointMap()[pointi];
 
             if (oldPointi >= 0)
             {
-                if (mpm.reversePointMap()[oldPointi] == pointi)
+                if (map.reversePointMap()[oldPointi] == pointi)
                 {
                     // points0[pointi] = points0_[oldPointi];
                     points0[pointi] = points0_[pointi];

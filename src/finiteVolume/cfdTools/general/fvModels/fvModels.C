@@ -263,7 +263,7 @@ void Foam::fvModels::preUpdateMesh()
 }
 
 
-void Foam::fvModels::updateMesh(const mapPolyMesh& map)
+void Foam::fvModels::updateMesh(const polyTopoChangeMap& map)
 {
     PtrListDictionary<fvModel>& modelList(*this);
 

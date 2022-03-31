@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellZoneSet.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyMesh.H"
 
 #include "addToRunTimeSelectionTable.H"
@@ -289,7 +289,7 @@ bool cellZoneSet::writeObject
 }
 
 
-void cellZoneSet::updateMesh(const mapPolyMesh& morphMap)
+void cellZoneSet::updateMesh(const polyTopoChangeMap& morphMap)
 {
     // cellZone
     labelList newAddressing(addressing_.size());

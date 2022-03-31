@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,8 @@ License
 //        faceCombiner.setRefinement(mergeSets, meshMod);
 //
 //        // Change the mesh (no inflation)
-//        autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+//        autoPtr<polyTopoChangeMap> map =
+//            meshMod.changeMesh(mesh_, false, true);
 //
 //        // Update fields
 //        mesh_.updateMesh(map);
@@ -142,7 +143,7 @@ License
 //
 //// Remove points not used by any face or points used by only two faces where
 //// the edges are in line
-//Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::mergeEdges
+//Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeEdges
 //(
 //    const scalar minCos
 //)
@@ -157,7 +158,7 @@ License
 //    Info<< "Removing " << nRemove
 //        << " straight edge points." << endl;
 //
-//    autoPtr<mapPolyMesh> map;
+//    autoPtr<polyTopoChangeMap> map;
 //
 //    if (nRemove > 0)
 //    {
@@ -334,7 +335,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
         );
 
         // Change the mesh (no inflation)
-        autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
         // Update fields
         mesh_.updateMesh(map);
@@ -523,7 +524,8 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             );
 
             // Change the mesh (no inflation)
-            autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+            autoPtr<polyTopoChangeMap> map =
+                meshMod.changeMesh(mesh_, false, true);
 
             // Update fields
             mesh_.updateMesh(map);
@@ -596,7 +598,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
 
 
 // Remove points. pointCanBeDeleted is parallel synchronised.
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemovePoints
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemovePoints
 (
     removePoints& pointRemover,
     const boolList& pointCanBeDeleted
@@ -608,7 +610,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemovePoints
     pointRemover.setRefinement(pointCanBeDeleted, meshMod);
 
     // Change the mesh (no inflation)
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
     mesh_.updateMesh(map);
@@ -653,7 +655,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemovePoints
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRestorePoints
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRestorePoints
 (
     removePoints& pointRemover,
     const labelList& facesToRestore
@@ -680,7 +682,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRestorePoints
     );
 
     // Change the mesh (no inflation)
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
     mesh_.updateMesh(map);

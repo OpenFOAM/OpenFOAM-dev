@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -478,7 +478,7 @@ void Foam::ThermoCloud<CloudType>::evolve()
 
 
 template<class CloudType>
-void Foam::ThermoCloud<CloudType>::autoMap(const mapPolyMesh& mapper)
+void Foam::ThermoCloud<CloudType>::autoMap(const polyTopoChangeMap& mapper)
 {
     Cloud<parcelType>::autoMap(mapper);
 

@@ -630,7 +630,7 @@ void Foam::fv::rotorDiskSource::addSup
 }
 
 
-void Foam::fv::rotorDiskSource::updateMesh(const mapPolyMesh& map)
+void Foam::fv::rotorDiskSource::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

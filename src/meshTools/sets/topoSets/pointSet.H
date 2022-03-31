@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ public:
         virtual label maxSize(const polyMesh& mesh) const;
 
         //- Update any stored data for new labels
-        virtual void updateMesh(const mapPolyMesh& morphMap);
+        virtual void updateMesh(const polyTopoChangeMap& morphMap);
 
         //- Update any stored data for new labels
         // virtual void updateMesh(const polyTopoChange& meshMod);

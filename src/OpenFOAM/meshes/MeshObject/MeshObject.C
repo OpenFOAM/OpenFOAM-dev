@@ -321,7 +321,11 @@ void Foam::meshObject::distribute
 
 
 template<class Mesh>
-void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& map)
+void Foam::meshObject::updateMesh
+(
+    objectRegistry& obr,
+    const polyTopoChangeMap& map
+)
 {
     HashTable<GeometricMeshObject<Mesh>*> meshObjects
     (
@@ -331,7 +335,7 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& map)
     if (meshObject::debug)
     {
         Pout<< "meshObject::updateMesh(objectRegistry&, "
-               "const mapPolyMesh& map) : updating " << Mesh::typeName
+               "const polyTopoChangeMap& map) : updating " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
 

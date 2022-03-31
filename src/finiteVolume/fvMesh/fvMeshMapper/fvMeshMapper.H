@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ namespace Foam
 
 // Forward declaration of classes
 class fvMesh;
-class mapPolyMesh;
+class polyTopoChangeMap;
 
 /*---------------------------------------------------------------------------*\
                         Class fvMeshMapper Declaration
@@ -78,11 +78,11 @@ public:
     // Constructors
 
         //- Construct from fvMesh
-        fvMeshMapper(const fvMesh& mesh, const mapPolyMesh& mpm)
+        fvMeshMapper(const fvMesh& mesh, const polyTopoChangeMap& map)
         :
             mesh_(mesh),
-            faceMap_(mpm),
-            cellMap_(mpm),
+            faceMap_(map),
+            cellMap_(map),
             surfaceMap_(mesh, faceMap_),
             boundaryMap_(mesh, faceMap_)
         {}

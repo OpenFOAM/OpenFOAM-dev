@@ -163,7 +163,10 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 }
 
 
-void Foam::fv::interRegionExplicitPorositySource::updateMesh(const mapPolyMesh&)
+void Foam::fv::interRegionExplicitPorositySource::updateMesh
+(
+    const polyTopoChangeMap&
+)
 {}
 
 

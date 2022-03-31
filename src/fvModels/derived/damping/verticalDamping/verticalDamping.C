@@ -106,7 +106,7 @@ void Foam::fv::verticalDamping::addSup
 }
 
 
-void Foam::fv::verticalDamping::updateMesh(const mapPolyMesh&)
+void Foam::fv::verticalDamping::updateMesh(const polyTopoChangeMap&)
 {}
 
 

@@ -188,7 +188,10 @@ void Foam::fv::solidEquilibriumEnergySource::addSup
 }
 
 
-void Foam::fv::solidEquilibriumEnergySource::updateMesh(const mapPolyMesh&)
+void Foam::fv::solidEquilibriumEnergySource::updateMesh
+(
+    const polyTopoChangeMap&
+)
 {}
 
 

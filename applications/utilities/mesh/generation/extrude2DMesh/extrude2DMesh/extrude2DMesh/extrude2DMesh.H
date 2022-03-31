@@ -51,7 +51,7 @@ namespace Foam
 // Forward declaration of classes
 class polyMesh;
 class polyTopoChange;
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMeshDistributionMap;
 class polyBoundaryMesh;
 
@@ -119,7 +119,7 @@ public:
         void setRefinement(polyTopoChange&);
 
         //- Force recalculation of locally stored data on topological change
-        void updateMesh(const mapPolyMesh&)
+        void updateMesh(const polyTopoChangeMap&)
         {}
 
         //- Force recalculation of locally stored data for mesh distribution

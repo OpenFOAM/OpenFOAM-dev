@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "localPointRegion.H"
 #include "syncTools.H"
 #include "polyMesh.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "globalIndex.H"
 #include "indirectPrimitivePatch.H"
 #include "dummyTransform.H"
@@ -636,7 +636,7 @@ Foam::List<Foam::labelPair> Foam::localPointRegion::findDuplicateFacePairs
 }
 
 
-void Foam::localPointRegion::updateMesh(const mapPolyMesh& map)
+void Foam::localPointRegion::updateMesh(const polyTopoChangeMap& map)
 {
     {
         Map<label> newMap(meshFaceMap_.size());

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "externalDisplacementMeshMover.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -96,14 +96,17 @@ void Foam::externalDisplacementMeshMover::movePoints(const pointField&)
 }
 
 
-void Foam::externalDisplacementMeshMover::updateMesh(const mapPolyMesh& mpm)
+void Foam::externalDisplacementMeshMover::updateMesh
+(
+    const polyTopoChangeMap& map
+)
 {
     // Renumber baffles
     DynamicList<labelPair> newBaffles(baffles_.size());
     forAll(baffles_, i)
     {
-        label f0 = mpm.reverseFaceMap()[baffles_[i].first()];
-        label f1 = mpm.reverseFaceMap()[baffles_[i].second()];
+        label f0 = map.reverseFaceMap()[baffles_[i].first()];
+        label f1 = map.reverseFaceMap()[baffles_[i].second()];
 
         if (f0 >= 0 && f1 >= 0)
         {

@@ -47,7 +47,7 @@ SourceFiles
 #include "volFieldsFwd.H"
 #include "surfaceFields.H"
 #include "fvMatricesFwd.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "Function1.H"
 #include "autoPtr.H"
 
@@ -181,7 +181,7 @@ public:
         vector Omega() const;
 
         //- Update the mesh corresponding to given map
-        void updateMesh(const mapPolyMesh& mpm)
+        void updateMesh(const polyTopoChangeMap& map)
         {
             // Only updates face addressing
             setMRFFaces();

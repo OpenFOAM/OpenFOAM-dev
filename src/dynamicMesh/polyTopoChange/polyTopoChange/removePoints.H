@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ namespace Foam
 // Forward declaration of classes
 class polyMesh;
 class polyTopoChange;
-class mapPolyMesh;
+class polyTopoChangeMap;
 class face;
 
 /*---------------------------------------------------------------------------*\
@@ -143,7 +143,7 @@ public:
             void setRefinement(const boolList&, polyTopoChange&);
 
             //- Force recalculation of locally stored data on topological change
-            void updateMesh(const mapPolyMesh&);
+            void updateMesh(const polyTopoChangeMap&);
 
             //- Given set of faces to restore calculates a consistent set of
             //  saved faces (indices into savedFaces_) and saved vertices

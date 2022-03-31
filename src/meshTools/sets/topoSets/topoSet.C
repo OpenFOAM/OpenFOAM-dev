@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "topoSet.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyMesh.H"
 #include "boundBox.H"
 #include "Time.H"
@@ -544,7 +544,7 @@ bool Foam::topoSet::writeData(Ostream& os) const
 }
 
 
-void Foam::topoSet::updateMesh(const mapPolyMesh&)
+void Foam::topoSet::updateMesh(const polyTopoChangeMap&)
 {
     NotImplemented;
 }

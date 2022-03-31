@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -643,11 +643,11 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
 }
 
 
-void Foam::slidingInterface::updateMesh(const mapPolyMesh& m)
+void Foam::slidingInterface::updateMesh(const polyTopoChangeMap& m)
 {
     if (debug)
     {
-        Pout<< "void slidingInterface::updateMesh(const mapPolyMesh& m)"
+        Pout<< "void slidingInterface::updateMesh(const polyTopoChangeMap& m)"
             << " const for object " << name() << " : "
             << "Updating topology." << endl;
     }

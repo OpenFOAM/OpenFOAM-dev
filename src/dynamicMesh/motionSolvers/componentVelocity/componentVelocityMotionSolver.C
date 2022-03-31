@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "componentVelocityMotionSolver.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -105,7 +105,10 @@ void Foam::componentVelocityMotionSolver::movePoints(const pointField& p)
 }
 
 
-void Foam::componentVelocityMotionSolver::updateMesh(const mapPolyMesh& mpm)
+void Foam::componentVelocityMotionSolver::updateMesh
+(
+    const polyTopoChangeMap& map
+)
 {
     // pointMesh already updates pointFields.
 }

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "componentDisplacementMotionSolver.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -140,7 +140,10 @@ void Foam::componentDisplacementMotionSolver::movePoints(const pointField& p)
 }
 
 
-void Foam::componentDisplacementMotionSolver::updateMesh(const mapPolyMesh& mpm)
+void Foam::componentDisplacementMotionSolver::updateMesh
+(
+    const polyTopoChangeMap& map
+)
 {
     // pointMesh already updates pointFields.
 
@@ -151,8 +154,8 @@ void Foam::componentDisplacementMotionSolver::updateMesh(const mapPolyMesh& mpm)
     // Get the new points either from the map or the mesh
     const scalarField points
     (
-        mpm.hasMotionPoints()
-      ? mpm.preMotionPoints().component(cmpt_)
+        map.hasMotionPoints()
+      ? map.preMotionPoints().component(cmpt_)
       : mesh().points().component(cmpt_)
     );
 
@@ -161,15 +164,15 @@ void Foam::componentDisplacementMotionSolver::updateMesh(const mapPolyMesh& mpm)
         (gMax(points0_)-gMin(points0_))
        /(gMax(points)-gMin(points));
 
-    scalarField newPoints0(mpm.pointMap().size());
+    scalarField newPoints0(map.pointMap().size());
 
     forAll(newPoints0, pointi)
     {
-        label oldPointi = mpm.pointMap()[pointi];
+        label oldPointi = map.pointMap()[pointi];
 
         if (oldPointi >= 0)
         {
-            label masterPointi = mpm.reversePointMap()[oldPointi];
+            label masterPointi = map.reversePointMap()[oldPointi];
 
             if (masterPointi == pointi)
             {

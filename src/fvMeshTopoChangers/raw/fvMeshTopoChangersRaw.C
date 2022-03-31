@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvMeshTopoChangersRaw.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -68,7 +68,7 @@ bool Foam::fvMeshTopoChangers::raw::update()
     mesh().topoChanging(false);
 
     // Do any topology changes. Sets topoChanging (through polyTopoChange)
-    autoPtr<mapPolyMesh> topoChangeMap = topoChanger_.changeMesh(true);
+    autoPtr<polyTopoChangeMap> topoChangeMap = topoChanger_.changeMesh(true);
 
     bool hasChanged = topoChangeMap.valid();
 
@@ -166,7 +166,7 @@ bool Foam::fvMeshTopoChangers::raw::update()
 }
 
 
-void Foam::fvMeshTopoChangers::raw::updateMesh(const mapPolyMesh& map)
+void Foam::fvMeshTopoChangers::raw::updateMesh(const polyTopoChangeMap& map)
 {}
 
 

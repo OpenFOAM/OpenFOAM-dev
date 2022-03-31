@@ -221,7 +221,7 @@ public:
         // Mesh motion
 
             //- Update for mesh changes
-            virtual void updateMesh(const mapPolyMesh&);
+            virtual void updateMesh(const polyTopoChangeMap&);
 
             //- Update mesh corresponding to the given distribution map
             virtual void distribute(const polyMeshDistributionMap&);

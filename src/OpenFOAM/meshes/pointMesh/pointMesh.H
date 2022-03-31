@@ -119,7 +119,7 @@ public:
         // Mesh callbacks
 
             //- Update the mesh corresponding to given map
-            virtual void updateMesh(const mapPolyMesh&);
+            virtual void updateMesh(const polyTopoChangeMap&);
 
             //- Update mesh corresponding to the given distribution map
             virtual void distribute(const polyMeshDistributionMap&);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Description
 #include "meshTools.H"
 #include "IFstream.H"
 #include "polyTopoChange.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "volMesh.H"
 #include "surfaceMesh.H"
 #include "volFields.H"
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     }
 
     // Create mesh, return map from old to new mesh.
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
     // Update fields
     mesh.updateMesh(map);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 #include "topoSet.H"
 #include "directions.H"
 #include "hexRef8.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyTopoChange.H"
 #include "ListOps.H"
 #include "cellModeller.H"
@@ -318,8 +318,9 @@ void Foam::multiDirRefinement::refineHex8
     hexRefiner.setRefinement(consistentCells, meshMod);
 
     // Change mesh, no inflation
-    autoPtr<mapPolyMesh> morphMapPtr = meshMod.changeMesh(mesh, false, true);
-    const mapPolyMesh& morphMap = morphMapPtr();
+    autoPtr<polyTopoChangeMap> morphMapPtr =
+        meshMod.changeMesh(mesh, false, true);
+    const polyTopoChangeMap& morphMap = morphMapPtr();
 
     if (morphMap.hasMotionPoints())
     {

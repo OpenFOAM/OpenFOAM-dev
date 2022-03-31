@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 #include "polyAddFace.H"
 #include "polyAddPoint.H"
 #include "polyModifyFace.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "meshTools.H"
 
 
@@ -461,7 +461,7 @@ void Foam::cellSplitter::setRefinement
 }
 
 
-void Foam::cellSplitter::updateMesh(const mapPolyMesh& morphMap)
+void Foam::cellSplitter::updateMesh(const polyTopoChangeMap& morphMap)
 {
     // Create copy since we're deleting entries. Only if both cell and added
     // point get mapped do they get inserted.

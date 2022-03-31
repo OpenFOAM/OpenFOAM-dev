@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ public:
 
             //- Update stored refinement pattern for changes to mesh. Only
             //  call if undoable set.
-            void updateMesh(const mapPolyMesh& morphMap);
+            void updateMesh(const polyTopoChangeMap& morphMap);
 
             //- Calculate split faces from current liveCells. Only
             //  call if undoable set.

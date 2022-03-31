@@ -318,7 +318,7 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::volumeFractionSource::updateMesh(const mapPolyMesh&)
+void Foam::fv::volumeFractionSource::updateMesh(const polyTopoChangeMap&)
 {}
 
 

@@ -150,7 +150,7 @@ void Foam::fv::heatSource::addSup
 }
 
 
-void Foam::fv::heatSource::updateMesh(const mapPolyMesh& map)
+void Foam::fv::heatSource::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

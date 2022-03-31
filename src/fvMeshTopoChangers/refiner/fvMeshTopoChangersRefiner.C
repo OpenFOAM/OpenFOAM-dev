@@ -218,7 +218,7 @@ void Foam::fvMeshTopoChangers::refiner::readDict()
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh>
+Foam::autoPtr<Foam::polyTopoChangeMap>
 Foam::fvMeshTopoChangers::refiner::refine
 (
     const labelList& cellsToRefine
@@ -231,8 +231,8 @@ Foam::fvMeshTopoChangers::refiner::refine
     meshCutter_.setRefinement(cellsToRefine, meshMod);
 
     // Create mesh (with inflation), return map from old to new mesh.
-    // autoPtr<mapPolyMesh> map = meshMod.changeMesh(*this, true);
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh(), false);
+    // autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(*this, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh(), false);
 
     Info<< "Refined from "
         << returnReduce(map().nOldCells(), sumOp<label>())
@@ -320,7 +320,7 @@ Foam::fvMeshTopoChangers::refiner::refine
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh>
+Foam::autoPtr<Foam::polyTopoChangeMap>
 Foam::fvMeshTopoChangers::refiner::unrefine
 (
     const labelList& splitPoints
@@ -363,8 +363,8 @@ Foam::fvMeshTopoChangers::refiner::unrefine
 
 
     // Change mesh and generate map.
-    // autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh(), true);
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh(), false);
+    // autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh(), true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh(), false);
 
     Info<< "Unrefined from "
         << returnReduce(map().nOldCells(), sumOp<label>())
@@ -426,7 +426,7 @@ Foam::word Foam::fvMeshTopoChangers::refiner::Uname
 void Foam::fvMeshTopoChangers::refiner::refineFluxes
 (
     const labelHashSet& masterFaces,
-    const mapPolyMesh& map
+    const polyTopoChangeMap& map
 )
 {
     // Correct the flux for modified/added faces. All the faces which only
@@ -562,7 +562,7 @@ void Foam::fvMeshTopoChangers::refiner::refineFluxes
 void Foam::fvMeshTopoChangers::refiner::refineUfs
 (
     const labelHashSet& masterFaces,
-    const mapPolyMesh& map
+    const polyTopoChangeMap& map
 )
 {
     const labelList& faceMap = map.faceMap();
@@ -667,7 +667,7 @@ void Foam::fvMeshTopoChangers::refiner::refineUfs
 void Foam::fvMeshTopoChangers::refiner::unrefineFluxes
 (
     const Map<label>& faceToSplitPoint,
-    const mapPolyMesh& map
+    const polyTopoChangeMap& map
 )
 {
     const labelList& reversePointMap = map.reversePointMap();
@@ -752,7 +752,7 @@ void Foam::fvMeshTopoChangers::refiner::unrefineFluxes
 void Foam::fvMeshTopoChangers::refiner::unrefineUfs
 (
     const Map<label>& faceToSplitPoint,
-    const mapPolyMesh& map
+    const polyTopoChangeMap& map
 )
 {
     const labelList& reversePointMap = map.reversePointMap();
@@ -1587,7 +1587,7 @@ bool Foam::fvMeshTopoChangers::refiner::update()
             if (nCellsToRefine > 0)
             {
                 // Refine/update mesh and map fields
-                autoPtr<mapPolyMesh> map = refine(cellsToRefine);
+                autoPtr<polyTopoChangeMap> map = refine(cellsToRefine);
 
                 // Update refinableCells. Note that some of the marked ones have
                 // not been refined due to constraints.
@@ -1667,7 +1667,7 @@ bool Foam::fvMeshTopoChangers::refiner::update()
 }
 
 
-void Foam::fvMeshTopoChangers::refiner::updateMesh(const mapPolyMesh& map)
+void Foam::fvMeshTopoChangers::refiner::updateMesh(const polyTopoChangeMap& map)
 {
     // Update numbering of cells/vertices.
     meshCutter_.updateMesh(map);

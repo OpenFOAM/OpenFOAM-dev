@@ -130,7 +130,7 @@ public:
             virtual bool movePoints();
 
             //- Update mesh topology using the morph engine
-            virtual void updateMesh(const mapPolyMesh&);
+            virtual void updateMesh(const polyTopoChangeMap&);
 
             //- Update corresponding to the given distribution map
             virtual void distribute(const polyMeshDistributionMap&);

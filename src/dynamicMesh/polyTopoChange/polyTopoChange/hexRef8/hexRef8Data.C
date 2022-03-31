@@ -27,7 +27,7 @@ License
 #include "UList.H"
 
 #include "hexRef8Data.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyMeshDistributionMap.H"
 #include "polyMesh.H"
 #include "syncTools.H"
@@ -326,7 +326,7 @@ void Foam::hexRef8Data::sync(const IOobject& io)
 }
 
 
-void Foam::hexRef8Data::updateMesh(const mapPolyMesh& map)
+void Foam::hexRef8Data::updateMesh(const polyTopoChangeMap& map)
 {
     if (cellLevelPtr_.valid())
     {

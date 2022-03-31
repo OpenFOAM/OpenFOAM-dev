@@ -1456,7 +1456,7 @@ int main(int argc, char *argv[])
     // Modify mesh
     // ~~~~~~~~~~~
 
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
     // Zip-up the mesh if it contained hanging nodes
     if (hangingNodes)

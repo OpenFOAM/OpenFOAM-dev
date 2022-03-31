@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
     }
 
     // Change the mesh. No inflation.
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
     // Update fields
     mesh.updateMesh(map);

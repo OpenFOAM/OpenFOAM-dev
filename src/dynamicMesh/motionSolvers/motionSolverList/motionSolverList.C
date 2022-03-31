@@ -104,11 +104,11 @@ void Foam::motionSolverList::movePoints(const pointField& points)
 }
 
 
-void Foam::motionSolverList::updateMesh(const mapPolyMesh& mpm)
+void Foam::motionSolverList::updateMesh(const polyTopoChangeMap& map)
 {
     forAll(motionSolvers_, i)
     {
-        motionSolvers_[i].updateMesh(mpm);
+        motionSolvers_[i].updateMesh(map);
     }
 }
 

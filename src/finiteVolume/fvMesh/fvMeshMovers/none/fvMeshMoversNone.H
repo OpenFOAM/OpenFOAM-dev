@@ -83,7 +83,7 @@ public:
         virtual bool update();
 
         //-  Update local data for topology changes
-        virtual void updateMesh(const mapPolyMesh&)
+        virtual void updateMesh(const polyTopoChangeMap&)
         {}
 
         //- Update corresponding to the given distribution map

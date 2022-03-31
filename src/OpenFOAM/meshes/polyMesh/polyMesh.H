@@ -63,7 +63,7 @@ namespace Foam
 
 // Forward declaration of classes
 class globalMeshData;
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMeshDistributionMap;
 class polyMeshTetDecomposition;
 class treeDataCell;
@@ -606,8 +606,8 @@ public:
             //  time directories
             virtual readUpdateState readUpdate();
 
-            //- Update the mesh corresponding to given map
-            virtual void updateMesh(const mapPolyMesh&);
+            //- Update the mesh topology from the given map
+            virtual void updateMesh(const polyTopoChangeMap&);
 
             //- Update mesh corresponding to the given distribution map
             virtual void distribute(const polyMeshDistributionMap& map);

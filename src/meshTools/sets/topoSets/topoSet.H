@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ namespace Foam
 {
 
 
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMesh;
 class primitiveMesh;
 
@@ -294,7 +294,7 @@ public:
         virtual bool writeData(Ostream&) const;
 
         //- Update any stored data for new labels. Not implemented.
-        virtual void updateMesh(const mapPolyMesh& morphMap);
+        virtual void updateMesh(const polyTopoChangeMap& morphMap);
 
         //- Return max allowable index (+1). Not implemented.
         virtual label maxSize(const polyMesh& mesh) const = 0;

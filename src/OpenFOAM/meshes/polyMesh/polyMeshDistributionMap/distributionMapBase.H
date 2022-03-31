@@ -81,7 +81,7 @@ SourceFiles
 namespace Foam
 {
 
-class mapPolyMesh;
+class polyTopoChangeMap;
 class globalIndex;
 class PstreamBuffers;
 
@@ -456,7 +456,7 @@ public:
             void printLayout(Ostream& os) const;
 
             //- Correct for topo change.
-            void updateMesh(const mapPolyMesh&)
+            void updateMesh(const polyTopoChangeMap&)
             {
                 NotImplemented;
             }

@@ -58,7 +58,7 @@ SourceFiles
 #include "cellSet.H"
 #include "meshTools.H"
 #include "polyTopoChange.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "decompositionMethod.H"
 #include "fvMeshDistribute.H"
 #include "removeCells.H"

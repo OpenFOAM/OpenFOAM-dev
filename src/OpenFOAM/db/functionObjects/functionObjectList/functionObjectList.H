@@ -52,7 +52,7 @@ SourceFiles
 namespace Foam
 {
 
-class mapPolyMesh;
+class polyTopoChangeMap;
 class argList;
 
 /*---------------------------------------------------------------------------*\
@@ -273,7 +273,7 @@ public:
         scalar timeToNextWrite();
 
         //- Update for changes of mesh
-        void updateMesh(const mapPolyMesh& mpm);
+        void updateMesh(const polyTopoChangeMap& map);
 
         //- Update for changes of mesh
         void movePoints(const polyMesh& mesh);

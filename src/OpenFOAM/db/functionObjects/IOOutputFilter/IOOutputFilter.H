@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class mapPolyMesh;
+class polyTopoChangeMap;
 
 /*---------------------------------------------------------------------------*\
                        Class IOOutputFilter Declaration
@@ -126,7 +126,7 @@ public:
         virtual bool write(const bool write = true);
 
         //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh& mpm);
+        virtual void updateMesh(const polyTopoChangeMap& map);
 
         //- Update for changes of mesh
         virtual void movePoints(const polyMesh& mesh);

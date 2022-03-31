@@ -162,7 +162,7 @@ void Foam::fv::VoFClouds::preUpdateMesh()
 }
 
 
-void Foam::fv::VoFClouds::updateMesh(const mapPolyMesh&)
+void Foam::fv::VoFClouds::updateMesh(const polyTopoChangeMap&)
 {}
 
 

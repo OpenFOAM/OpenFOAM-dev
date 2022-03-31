@@ -114,7 +114,7 @@ namespace Foam
 // split but that does not change any face centre or cell centre.
 Foam::labelList Foam::meshRefinement::getChangedFaces
 (
-    const mapPolyMesh& map,
+    const polyTopoChangeMap& map,
     const labelList& oldCellsToRefine
 )
 {
@@ -2226,7 +2226,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
 }
 
 
-Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::refine
+Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::refine
 (
     const labelList& cellsToRefine
 )
@@ -2238,7 +2238,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::refine
     meshCutter_.setRefinement(cellsToRefine, meshMod);
 
     // Create mesh (no inflation), return map from old to new mesh.
-    autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false);
 
     // Update fields
     mesh_.updateMesh(map);

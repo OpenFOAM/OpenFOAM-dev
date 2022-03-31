@@ -2235,7 +2235,7 @@ int main(int argc, char *argv[])
     );
 
 
-    autoPtr<mapPolyMesh> shellMap;
+    autoPtr<polyTopoChangeMap> shellMap;
     fvMesh regionMesh
     (
         IOobject
@@ -2524,7 +2524,7 @@ int main(int argc, char *argv[])
     // Insert baffles into original mesh
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    autoPtr<mapPolyMesh> addBafflesMap;
+    autoPtr<polyTopoChangeMap> addBafflesMap;
 
     if (adaptMesh)
     {

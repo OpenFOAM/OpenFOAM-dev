@@ -159,7 +159,7 @@ void Foam::fv::heatTransfer::correct()
 }
 
 
-void Foam::fv::heatTransfer::updateMesh(const mapPolyMesh& map)
+void Foam::fv::heatTransfer::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

@@ -109,7 +109,7 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::phaseLimitStabilisation::updateMesh(const mapPolyMesh&)
+void Foam::fv::phaseLimitStabilisation::updateMesh(const polyTopoChangeMap&)
 {}
 
 

@@ -365,7 +365,7 @@ bool Foam::pointConstraints::movePoints()
 }
 
 
-void Foam::pointConstraints::updateMesh(const mapPolyMesh&)
+void Foam::pointConstraints::updateMesh(const polyTopoChangeMap&)
 {
     makePatchPatchAddressing();
 }

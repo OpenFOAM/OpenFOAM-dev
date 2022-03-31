@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,10 +129,13 @@ bool Foam::IOOutputFilter<OutputFilter>::write(const bool write)
 
 
 template<class OutputFilter>
-void Foam::IOOutputFilter<OutputFilter>::updateMesh(const mapPolyMesh& mpm)
+void Foam::IOOutputFilter<OutputFilter>::updateMesh
+(
+    const polyTopoChangeMap& map
+)
 {
     read();
-    OutputFilter::updateMesh(mpm);
+    OutputFilter::updateMesh(map);
 }
 
 

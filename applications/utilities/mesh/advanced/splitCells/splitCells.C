@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ Description
 #include "Time.H"
 #include "polyTopoChange.H"
 #include "polyTopoChanger.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "polyMesh.H"
 #include "cellCuts.H"
 #include "cellSet.H"
@@ -685,7 +685,7 @@ int main(int argc, char *argv[])
             runTime++;
         }
 
-        autoPtr<mapPolyMesh> morphMap = meshMod.changeMesh(mesh, false);
+        autoPtr<polyTopoChangeMap> morphMap = meshMod.changeMesh(mesh, false);
 
         if (morphMap().hasMotionPoints())
         {

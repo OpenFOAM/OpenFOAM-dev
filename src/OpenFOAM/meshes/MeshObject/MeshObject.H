@@ -76,7 +76,7 @@ namespace Foam
 {
 
 // Forward declarations
-class mapPolyMesh;
+class polyTopoChangeMap;
 class polyMeshDistributionMap;
 
 /*---------------------------------------------------------------------------*\
@@ -173,7 +173,7 @@ public:
         static void movePoints(objectRegistry&);
 
         template<class Mesh>
-        static void updateMesh(objectRegistry&, const mapPolyMesh&);
+        static void updateMesh(objectRegistry&, const polyTopoChangeMap&);
 
         template<class Mesh>
         static void distribute(objectRegistry&, const polyMeshDistributionMap&);
@@ -321,7 +321,7 @@ public:
         DistributeableMeshObject<Mesh>(typeName, io)
     {}
 
-    virtual void updateMesh(const mapPolyMesh& map) = 0;
+    virtual void updateMesh(const polyTopoChangeMap& map) = 0;
 };
 
 

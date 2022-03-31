@@ -236,7 +236,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
                 meshCutter_.setRefinement(newCellsToRefine, meshMod);
 
                 // Create mesh, return map from old to new mesh.
-                autoPtr<mapPolyMesh> map = meshMod.changeMesh
+                autoPtr<polyTopoChangeMap> map = meshMod.changeMesh
                 (
                     mesh_,
                     false,  // inflate
@@ -345,7 +345,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
                 );
 
                 // Create mesh, return map from old to new mesh.
-                autoPtr<mapPolyMesh> map = meshMod.changeMesh
+                autoPtr<polyTopoChangeMap> map = meshMod.changeMesh
                 (
                     mesh_,
                     false,  // inflate
@@ -937,7 +937,7 @@ Foam::backgroundMeshDecomposition::distribute
         meshCutter_.setRefinement(newCellsToRefine, meshMod);
 
         // Create mesh, return map from old to new mesh.
-        autoPtr<mapPolyMesh> map = meshMod.changeMesh
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh
         (
             mesh_,
             false,  // inflate

@@ -390,7 +390,7 @@ labelList getRegionFaceOrder
 // cellOrder: old cell for every new cell
 // faceOrder: old face for every new face. Ordering of boundary faces not
 //     changed.
-autoPtr<mapPolyMesh> reorderMesh
+autoPtr<polyTopoChangeMap> reorderMesh
 (
     polyMesh& mesh,
     const labelList& cellOrder,
@@ -506,9 +506,9 @@ autoPtr<mapPolyMesh> reorderMesh
     }
 
 
-    return autoPtr<mapPolyMesh>
+    return autoPtr<polyTopoChangeMap>
     (
-        new mapPolyMesh
+        new polyTopoChangeMap
         (
             mesh,                       // const polyMesh& mesh,
             mesh.nPoints(),             // nOldPoints,
@@ -972,13 +972,13 @@ int main(int argc, char *argv[])
 
 
     // Change the mesh.
-    autoPtr<mapPolyMesh> map = reorderMesh(mesh, cellOrder, faceOrder);
+    autoPtr<polyTopoChangeMap> map = reorderMesh(mesh, cellOrder, faceOrder);
 
 
     if (orderPoints)
     {
         polyTopoChange meshMod(mesh);
-        autoPtr<mapPolyMesh> pointOrderMap = meshMod.changeMesh
+        autoPtr<polyTopoChangeMap> pointOrderMap = meshMod.changeMesh
         (
             mesh,
             false,      // inflate

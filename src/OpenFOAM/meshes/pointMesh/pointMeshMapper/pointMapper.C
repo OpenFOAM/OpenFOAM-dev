@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "pointMapper.H"
 #include "demandDrivenData.H"
 #include "pointMesh.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -49,7 +49,7 @@ void Foam::pointMapper::calcAddressing() const
     {
         // Direct addressing, no weights
 
-        directAddrPtr_ = new labelList(mpm_.pointMap());
+        directAddrPtr_ = new labelList(map_.pointMap());
         labelList& directAddr = *directAddrPtr_;
 
         // Not necessary to resize the list as there are no retired points
@@ -84,7 +84,7 @@ void Foam::pointMapper::calcAddressing() const
         scalarListList& w = *weightsPtr_;
 
         // Points created from other points (i.e. points merged into it).
-        const List<objectMap>& cfc = mpm_.pointsFromPointsMap();
+        const List<objectMap>& cfc = map_.pointsFromPointsMap();
 
         forAll(cfc, cfcI)
         {
@@ -110,7 +110,7 @@ void Foam::pointMapper::calcAddressing() const
         // Do mapped points. Note that can already be set from pointsFromPoints
         // so check if addressing size still zero.
 
-        const labelList& cm = mpm_.pointMap();
+        const labelList& cm = map_.pointMap();
 
         forAll(cm, pointi)
         {
@@ -158,10 +158,14 @@ void Foam::pointMapper::clearOut()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::pointMapper::pointMapper(const pointMesh& pMesh, const mapPolyMesh& mpm)
+Foam::pointMapper::pointMapper
+(
+    const pointMesh& pMesh,
+    const polyTopoChangeMap& map
+)
 :
     pMesh_(pMesh),
-    mpm_(mpm),
+    map_(map),
     insertedPoints_(true),
     direct_(false),
     directAddrPtr_(nullptr),
@@ -170,7 +174,7 @@ Foam::pointMapper::pointMapper(const pointMesh& pMesh, const mapPolyMesh& mpm)
     insertedPointLabelsPtr_(nullptr)
 {
     // Check for possibility of direct mapping
-    if (mpm_.pointsFromPointsMap().empty())
+    if (map_.pointsFromPointsMap().empty())
     {
         direct_ = true;
     }
@@ -180,7 +184,7 @@ Foam::pointMapper::pointMapper(const pointMesh& pMesh, const mapPolyMesh& mpm)
     }
 
     // Check for inserted points
-    if (direct_ && (mpm_.pointMap().empty() || min(mpm_.pointMap()) > -1))
+    if (direct_ && (map_.pointMap().empty() || min(map_.pointMap()) > -1))
     {
         insertedPoints_ = false;
     }
@@ -192,7 +196,7 @@ Foam::pointMapper::pointMapper(const pointMesh& pMesh, const mapPolyMesh& mpm)
         // and check for left-overs
         labelList cm(pMesh_.size(), -1);
 
-        const List<objectMap>& cfc = mpm_.pointsFromPointsMap();
+        const List<objectMap>& cfc = map_.pointsFromPointsMap();
 
         forAll(cfc, cfcI)
         {
@@ -219,7 +223,7 @@ Foam::pointMapper::~pointMapper()
 
 Foam::label Foam::pointMapper::sizeBeforeMapping() const
 {
-    return mpm_.nOldPoints();
+    return map_.nOldPoints();
 }
 
 
@@ -235,7 +239,7 @@ const Foam::labelUList& Foam::pointMapper::directAddressing() const
     if (!insertedObjects())
     {
         // No inserted points.  Re-use pointMap
-        return mpm_.pointMap();
+        return map_.pointMap();
     }
     else
     {

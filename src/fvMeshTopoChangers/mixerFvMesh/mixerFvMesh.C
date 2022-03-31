@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 #include "regionSplit.H"
 #include "slidingInterface.H"
 #include "addToRunTimeSelectionTable.H"
-#include "mapPolyMesh.H"
+#include "polyTopoChangeMap.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -336,7 +336,7 @@ bool Foam::mixerFvMesh::update()
     );
 
     // Make changes. Use inflation (so put new points in topoChangeMap)
-    autoPtr<mapPolyMesh> topoChangeMap = topoChanger_.changeMesh(true);
+    autoPtr<polyTopoChangeMap> topoChangeMap = topoChanger_.changeMesh(true);
 
     if (topoChangeMap.valid())
     {

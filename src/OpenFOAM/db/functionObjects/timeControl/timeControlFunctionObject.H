@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,7 +163,7 @@ public:
             virtual bool read(const dictionary&);
 
             //- Update for changes of mesh
-            virtual void updateMesh(const mapPolyMesh& mpm);
+            virtual void updateMesh(const polyTopoChangeMap& map);
 
             //- Update for changes of mesh
             virtual void movePoints(const polyMesh& mesh);

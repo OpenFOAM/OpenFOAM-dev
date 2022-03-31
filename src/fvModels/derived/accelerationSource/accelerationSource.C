@@ -111,7 +111,7 @@ void Foam::fv::accelerationSource::addSup
 }
 
 
-void Foam::fv::accelerationSource::updateMesh(const mapPolyMesh& map)
+void Foam::fv::accelerationSource::updateMesh(const polyTopoChangeMap& map)
 {
     set_.updateMesh(map);
 }

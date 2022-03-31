@@ -576,11 +576,11 @@ $(cellMatcher)/tetWedgeMatcher.C
 $(cellMatcher)/tetMatcher.C
 $(cellMatcher)/degenerateMatcher.C
 
-mapPolyMesh = $(polyMesh)/mapPolyMesh
-$(mapPolyMesh)/mapPolyMesh.C
-$(mapPolyMesh)/faceMapper/faceMapper.C
-$(mapPolyMesh)/cellMapper/cellMapper.C
-$(mapPolyMesh)/mapAddedPolyMesh.C
+polyTopoChangeMap = $(polyMesh)/polyTopoChangeMap
+$(polyTopoChangeMap)/polyTopoChangeMap.C
+$(polyTopoChangeMap)/faceMapper/faceMapper.C
+$(polyTopoChangeMap)/cellMapper/cellMapper.C
+$(polyTopoChangeMap)/mapAddedPolyMesh.C
 
 polyMeshDistributionMap = $(polyMesh)/polyMeshDistributionMap
 $(polyMeshDistributionMap)/distributionMap.C

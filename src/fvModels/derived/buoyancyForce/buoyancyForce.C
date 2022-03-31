@@ -130,7 +130,7 @@ void Foam::fv::buoyancyForce::addSup
 }
 
 
-void Foam::fv::buoyancyForce::updateMesh(const mapPolyMesh&)
+void Foam::fv::buoyancyForce::updateMesh(const polyTopoChangeMap&)
 {}
 
 

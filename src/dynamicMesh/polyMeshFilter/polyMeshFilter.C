@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ defineTypeNameAndDebug(polyMeshFilter, 0);
 }
 
 
-void Foam::polyMeshFilter::updateSets(const mapPolyMesh& map)
+void Foam::polyMeshFilter::updateSets(const polyTopoChangeMap& map)
 {
     updateSets<pointSet>(map);
     updateSets<faceSet>(map);
@@ -69,7 +69,7 @@ Foam::autoPtr<Foam::fvMesh> Foam::polyMeshFilter::copyMesh(const fvMesh& mesh)
     polyTopoChange originalMeshToNewMesh(mesh);
 
     autoPtr<fvMesh> meshCopy;
-    autoPtr<mapPolyMesh> mapPtr = originalMeshToNewMesh.makeMesh
+    autoPtr<polyTopoChangeMap> mapPtr = originalMeshToNewMesh.makeMesh
     (
         meshCopy,
         IOobject
@@ -85,7 +85,7 @@ Foam::autoPtr<Foam::fvMesh> Foam::polyMeshFilter::copyMesh(const fvMesh& mesh)
         true // parallel sync
     );
 
-    const mapPolyMesh& map = mapPtr();
+    const polyTopoChangeMap& map = mapPtr();
 
     // Update fields
     meshCopy().updateMesh(map);
@@ -374,12 +374,12 @@ Foam::label Foam::polyMeshFilter::filterFaces
         Info<< indent << "Apply changes to the current mesh" << endl;
 
         // Apply changes to current mesh
-        autoPtr<mapPolyMesh> newMapPtr = newMeshMod.changeMesh
+        autoPtr<polyTopoChangeMap> newMapPtr = newMeshMod.changeMesh
         (
             newMesh,
             false
         );
-        const mapPolyMesh& newMap = newMapPtr();
+        const polyTopoChangeMap& newMap = newMapPtr();
 
         // Update fields
         newMesh.updateMesh(newMap);
@@ -491,12 +491,12 @@ Foam::label Foam::polyMeshFilter::filterEdges
     Info<< indent << "Apply changes to the current mesh" << endl;
 
     // Apply changes to current mesh
-    autoPtr<mapPolyMesh> newMapPtr = newMeshMod.changeMesh
+    autoPtr<polyTopoChangeMap> newMapPtr = newMeshMod.changeMesh
     (
         newMesh,
         false
     );
-    const mapPolyMesh& newMap = newMapPtr();
+    const polyTopoChangeMap& newMap = newMapPtr();
 
     // Update fields
     newMesh.updateMesh(newMap);

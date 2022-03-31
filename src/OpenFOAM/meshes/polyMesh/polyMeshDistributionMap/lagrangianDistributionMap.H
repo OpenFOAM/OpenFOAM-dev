@@ -42,7 +42,7 @@ SourceFiles
 namespace Foam
 {
 
-class mapPolyMesh;
+class polyTopoChangeMap;
 
 /*---------------------------------------------------------------------------*\
                    Class lagrangianDistributionMap Declaration
@@ -104,7 +104,7 @@ public:
             }
 
             //- Correct for topo change.
-            void updateMesh(const mapPolyMesh&)
+            void updateMesh(const polyTopoChangeMap&)
             {
                 NotImplemented;
             }

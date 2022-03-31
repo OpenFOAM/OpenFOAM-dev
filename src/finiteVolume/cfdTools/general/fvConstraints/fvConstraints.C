@@ -237,7 +237,7 @@ bool Foam::fvConstraints::constrainsField(const word& fieldName) const
 }
 
 
-void Foam::fvConstraints::updateMesh(const mapPolyMesh& map)
+void Foam::fvConstraints::updateMesh(const polyTopoChangeMap& map)
 {
     PtrListDictionary<fvConstraint>& constraintList(*this);
 
