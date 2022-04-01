@@ -121,7 +121,7 @@ public:
             //- Update the mesh corresponding to given map
             virtual void updateMesh(const polyTopoChangeMap&);
 
-            //- Update mesh corresponding to the given distribution map
+            //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap&);
 
             //- Move points

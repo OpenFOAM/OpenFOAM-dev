@@ -96,7 +96,7 @@ public:
         //- Update the y-field when the mesh changes
         virtual void updateMesh(const polyTopoChangeMap&);
 
-        //- Update mesh corresponding to the given distribution map
+        //- Redistribute or update using the given distribution map
         virtual void distribute(const polyDistributionMap&);
 
         //- Update the y-field when the mesh moves

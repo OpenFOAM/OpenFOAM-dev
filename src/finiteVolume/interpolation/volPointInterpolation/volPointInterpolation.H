@@ -140,7 +140,7 @@ public:
             //- Update mesh topology using the morph engine
             void updateMesh(const polyTopoChangeMap&);
 
-            //- Update mesh corresponding to the given distribution map
+            //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap&);
 
             //- Correct weighting factors for moving mesh.

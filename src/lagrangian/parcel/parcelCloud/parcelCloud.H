@@ -137,7 +137,7 @@ public:
         //  positions in the database for use during mapping.
         virtual void storeGlobalPositions() = 0;
 
-        //- Update mesh corresponding to the given distribution map
+        //- Redistribute or update using the given distribution map
         virtual void distribute(const polyDistributionMap& map)
         {
             NotImplemented;

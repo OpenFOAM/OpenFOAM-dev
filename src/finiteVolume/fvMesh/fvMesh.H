@@ -383,7 +383,7 @@ public:
             //- Update mesh corresponding to the given map
             virtual void updateMesh(const polyTopoChangeMap& map);
 
-            //- Update mesh corresponding to the given distribution map
+            //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap& map);
 
             //- Move points, returns volumes swept by faces in motion

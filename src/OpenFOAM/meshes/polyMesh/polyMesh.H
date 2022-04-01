@@ -609,7 +609,7 @@ public:
             //- Update the mesh topology from the given map
             virtual void updateMesh(const polyTopoChangeMap&);
 
-            //- Update mesh corresponding to the given distribution map
+            //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap& map);
 
             //- Remove boundary patches
