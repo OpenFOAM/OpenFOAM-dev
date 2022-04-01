@@ -40,7 +40,7 @@ template<class Type, class TrackingData>
 Foam::scalar Foam::FvFaceCellWave<Type, TrackingData>::propagationTol_ = 1e-2;
 
 template<class Type, class TrackingData>
-int Foam::FvFaceCellWave<Type, TrackingData>::dummyTrackData_ = 12345;
+int Foam::FvFaceCellWave<Type, TrackingData>::defaultTrackingData_ = -1;
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //

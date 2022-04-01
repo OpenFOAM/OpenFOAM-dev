@@ -60,38 +60,51 @@ void setChangedFaces
 );
 
 //- Copy FvFaceCellWave values into the cell fields
-template<class PatchPointType, class DataType, class DataMethod>
+template
+<
+    class PatchPointType,
+    class TrackingData,
+    class DataType,
+    class DataMethod
+>
 label getCellValues
 (
-    FvFaceCellWave<PatchPointType>& waveInfo,
+    FvFaceCellWave<PatchPointType, TrackingData>& waveInfo,
     Field<DataType>& cellValues,
     DataMethod method,
     const DataType& stabiliseValue = pTraits<DataType>::zero
 );
 
 //- Copy FvFaceCellWave values into the patch field-fields
-template<class PatchPointType, class DataType, class DataMethod>
+template
+<
+    class PatchPointType,
+    class TrackingData,
+    class DataType,
+    class DataMethod
+>
 label getPatchValues
 (
-    FvFaceCellWave<PatchPointType>& wave,
+    FvFaceCellWave<PatchPointType, TrackingData>& wave,
     GeometricBoundaryField<DataType, fvPatchField, volMesh>& valuesBf,
     DataMethod method,
     const DataType& stabiliseValue = pTraits<DataType>::zero
 );
 
 //- Wave distance data from the patches to the cells and other patch faces
-template<class PatchPointType>
+template<class PatchPointType, class TrackingData = int>
 label wave
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     volScalarField& distance,
-    bool correct = true
+    bool correct = true,
+    TrackingData& td = FvFaceCellWave<PatchPointType>::defaultTrackingData_
 );
 
 //- Wave distance and auxiliary data from the patches to the cells and other
 //  patch faces
-template<class PatchPointType>
+template<class PatchPointType, class TrackingData = int>
 label wave
 (
     const fvMesh& mesh,
@@ -101,7 +114,8 @@ label wave
         initialPatchData,
     volScalarField& distance,
     VolField<typename PatchPointType::dataType>& data,
-    bool correct = true
+    bool correct = true,
+    TrackingData& td = FvFaceCellWave<PatchPointType>::defaultTrackingData_
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

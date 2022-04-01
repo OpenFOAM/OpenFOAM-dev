@@ -67,7 +67,7 @@ inline bool fvWallPointYPlus::update
         // only propagate if interesting (i.e. y+ < 100)
         scalar yPlus = Foam::sqrt(dist2)/w2.data();
 
-        if (yPlus < yPlusCutOff)
+        if (yPlus < td.yPlusCutOff)
         {
             // update with new values
             distSqr() = dist2;

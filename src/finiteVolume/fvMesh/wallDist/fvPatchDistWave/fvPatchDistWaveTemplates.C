@@ -73,10 +73,16 @@ void Foam::fvPatchDistWave::setChangedFaces
 }
 
 
-template<class PatchPointType, class DataType, class DataMethod>
+template
+<
+    class PatchPointType,
+    class TrackingData,
+    class DataType,
+    class DataMethod
+>
 Foam::label Foam::fvPatchDistWave::getCellValues
 (
-    FvFaceCellWave<PatchPointType>& waveInfo,
+    FvFaceCellWave<PatchPointType, TrackingData>& waveInfo,
     Field<DataType>& cellValues,
     DataMethod method,
     const DataType& stabiliseValue
@@ -99,10 +105,16 @@ Foam::label Foam::fvPatchDistWave::getCellValues
 }
 
 
-template<class PatchPointType, class DataType, class DataMethod>
+template
+<
+    class PatchPointType,
+    class TrackingData,
+    class DataType,
+    class DataMethod
+>
 Foam::label Foam::fvPatchDistWave::getPatchValues
 (
-    FvFaceCellWave<PatchPointType>& waveInfo,
+    FvFaceCellWave<PatchPointType, TrackingData>& waveInfo,
     GeometricBoundaryField<DataType, fvPatchField, volMesh>& valuesBf,
     DataMethod method,
     const DataType& stabiliseValue
@@ -129,13 +141,14 @@ Foam::label Foam::fvPatchDistWave::getPatchValues
 }
 
 
-template<class PatchPointType>
+template<class PatchPointType, class TrackingData>
 Foam::label Foam::fvPatchDistWave::wave
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     volScalarField& distance,
-    const bool correct
+    const bool correct,
+    TrackingData& td
 )
 {
     // Initialise changedFacesInfo to face centres on patches
@@ -153,16 +166,16 @@ Foam::label Foam::fvPatchDistWave::wave
     List<PatchPointType> internalFaceInfo(mesh.nInternalFaces());
     List<List<PatchPointType>> patchFaceInfo
     (
-        FvFaceCellWave<PatchPointType>::template
+        FvFaceCellWave<PatchPointType, TrackingData>::template
         sizesListList<List<List<PatchPointType>>>
         (
-            FvFaceCellWave<PatchPointType>::template
+            FvFaceCellWave<PatchPointType, TrackingData>::template
             listListSizes(mesh.boundary()),
             PatchPointType()
         )
     );
     List<PatchPointType> cellInfo(mesh.nCells());
-    FvFaceCellWave<PatchPointType> wave
+    FvFaceCellWave<PatchPointType, TrackingData> wave
     (
         mesh,
         changedPatchAndFaces,
@@ -170,7 +183,8 @@ Foam::label Foam::fvPatchDistWave::wave
         internalFaceInfo,
         patchFaceInfo,
         cellInfo,
-        mesh.globalData().nTotalCells() + 1 // max iterations
+        mesh.globalData().nTotalCells() + 1, // max iterations
+        td
     );
 
     // Copy distance into return field
@@ -213,7 +227,7 @@ Foam::label Foam::fvPatchDistWave::wave
 }
 
 
-template<class PatchPointType>
+template<class PatchPointType, class TrackingData>
 Foam::label Foam::fvPatchDistWave::wave
 (
     const fvMesh& mesh,
@@ -223,7 +237,8 @@ Foam::label Foam::fvPatchDistWave::wave
         initialPatchData,
     volScalarField& distance,
     VolField<typename PatchPointType::dataType>& data,
-    const bool correct
+    const bool correct,
+    TrackingData& td
 )
 {
     // Initialise changedFacesInfo to face centres on patches
@@ -242,16 +257,16 @@ Foam::label Foam::fvPatchDistWave::wave
     List<PatchPointType> internalFaceInfo(mesh.nInternalFaces());
     List<List<PatchPointType>> patchFaceInfo
     (
-        FvFaceCellWave<PatchPointType>::template
+        FvFaceCellWave<PatchPointType, TrackingData>::template
         sizesListList<List<List<PatchPointType>>>
         (
-            FvFaceCellWave<PatchPointType>::template
+            FvFaceCellWave<PatchPointType, TrackingData>::template
             listListSizes(mesh.boundary()),
             PatchPointType()
         )
     );
     List<PatchPointType> cellInfo(mesh.nCells());
-    FvFaceCellWave<PatchPointType> wave
+    FvFaceCellWave<PatchPointType, TrackingData> wave
     (
         mesh,
         changedPatchAndFaces,
@@ -259,7 +274,8 @@ Foam::label Foam::fvPatchDistWave::wave
         internalFaceInfo,
         patchFaceInfo,
         cellInfo,
-        mesh.globalData().nTotalCells() + 1 // max iterations
+        mesh.globalData().nTotalCells() + 1, // max iterations
+        td
     );
 
     // Copy distance into return field
@@ -268,13 +284,13 @@ Foam::label Foam::fvPatchDistWave::wave
         (
             wave,
             distance.primitiveFieldRef(),
-            &PatchPointType::template dist<int>
+            &PatchPointType::template dist<TrackingData>
         )
       + getPatchValues
         (
             wave,
             distance.boundaryFieldRef(),
-            &PatchPointType::template dist<int>,
+            &PatchPointType::template dist<TrackingData>,
             small
         );
 
@@ -283,13 +299,13 @@ Foam::label Foam::fvPatchDistWave::wave
     (
         wave,
         data.primitiveFieldRef(),
-        &PatchPointType::template data<int>
+        &PatchPointType::template data<TrackingData>
     );
     getPatchValues
     (
         wave,
         data.boundaryFieldRef(),
-        &PatchPointType::template data<int>
+        &PatchPointType::template data<TrackingData>
     );
 
     // Correct patch cells for true distance

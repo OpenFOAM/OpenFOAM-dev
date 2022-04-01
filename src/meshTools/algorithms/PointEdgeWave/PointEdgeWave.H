@@ -95,10 +95,6 @@ class PointEdgeWave
         //  up to Type implementation)
         static scalar propagationTol_;
 
-        //- Used as default trackdata value to satisfy default template
-        //  argument.
-        static int dummyTrackData_;
-
 
     // Private Data
 
@@ -197,6 +193,12 @@ class PointEdgeWave
 
 public:
 
+    // Static Data
+
+        //- Default tracking data to go with default template argument
+        static int defaultTrackingData_;
+
+
     // Static Functions
 
         //- Access to tolerance
@@ -227,7 +229,7 @@ public:
             UList<Type>& allPointInfo,
             UList<Type>& allEdgeInfo,
             const label maxIter,
-            TrackingData& td = dummyTrackData_
+            TrackingData& td = defaultTrackingData_
         );
 
         //- Construct from mesh. Use setPointInfo and iterate() to do
@@ -237,7 +239,7 @@ public:
             const polyMesh& mesh,
             UList<Type>& allPointInfo,
             UList<Type>& allEdgeInfo,
-            TrackingData& td = dummyTrackData_
+            TrackingData& td = defaultTrackingData_
         );
 
         //- Disallow default bitwise copy construction

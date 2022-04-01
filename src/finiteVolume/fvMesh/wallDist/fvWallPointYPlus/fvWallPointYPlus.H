@@ -60,6 +60,20 @@ class fvWallPointYPlus
 :
     public fvWallPointData<scalar>
 {
+public:
+
+    //- Class used to pass additional data in
+    class trackData
+    {
+    public:
+
+        //- Cut off distance
+        scalar yPlusCutOff;
+    };
+
+
+private:
+
     // Private Member Functions
 
         //- Evaluate distance to point. Update distSqr, origin from whomever
@@ -76,12 +90,6 @@ class fvWallPointYPlus
 
 
 public:
-
-    // Static Data Members
-
-        //- cut-off value for y+
-        static scalar yPlusCutOff;
-
 
     // Constructors
 

@@ -63,23 +63,30 @@ void setChangedFaces
 );
 
 //- Copy FaceCellWave values into the cell fields
-template<class PatchPointType, class DataType, class DataMethod>
+template
+<
+    class PatchPointType,
+    class TrackingData,
+    class DataType,
+    class DataMethod
+>
 label getCellValues
 (
-    FaceCellWave<PatchPointType>& waveInfo,
+    FaceCellWave<PatchPointType, TrackingData>& waveInfo,
     Field<DataType>& cellValues,
     DataMethod method,
     const DataType& stabiliseValue = pTraits<DataType>::zero
 );
 
 //- Wave distance data from the patches to the cells
-template<class PatchPointType>
+template<class PatchPointType, class TrackingData = int>
 label wave
 (
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
     scalarField& cellDistance,
-    bool correct = true
+    bool correct = true,
+    TrackingData& td = FaceCellWave<PatchPointType>::defaultTrackingData_
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

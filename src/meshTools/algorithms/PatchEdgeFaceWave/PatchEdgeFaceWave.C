@@ -45,9 +45,8 @@ template
     class Type,
     class TrackingData
 >
-Foam::label
-Foam::PatchEdgeFaceWave<PrimitivePatchType, Type, TrackingData>::
-dummyTrackData_ = 12345;
+int Foam::PatchEdgeFaceWave<PrimitivePatchType, Type, TrackingData>::
+defaultTrackingData_ = -1;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

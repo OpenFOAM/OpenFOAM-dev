@@ -79,21 +79,22 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
         }
     }
 
-    scalar cutOff = fvWallPointYPlus::yPlusCutOff;
-    fvWallPointYPlus::yPlusCutOff = 500;
+    fvWallPointYPlus::trackData td;
+    td.yPlusCutOff = yPlusCutOff_;
     volScalarField y
     (
         volScalarField::New("y", mesh, dimensionedScalar(dimLength, great))
     );
-    fvPatchDistWave::wave<fvWallPointYPlus>
+    fvPatchDistWave::wave<fvWallPointYPlus, fvWallPointYPlus::trackData>
     (
         mesh,
         mesh.boundaryMesh().findPatchIDs<wallPolyPatch>(),
         ystar.boundaryField(),
         y,
-        ystar
+        ystar,
+        true,
+        td
     );
-    fvWallPointYPlus::yPlusCutOff = cutOff;
 
     delta_ = min
     (
@@ -145,6 +146,14 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
         (
             "calcInterval",
             1
+        )
+    ),
+    yPlusCutOff_
+    (
+        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        (
+            "yPlusCutOff",
+            500
         )
     )
 {

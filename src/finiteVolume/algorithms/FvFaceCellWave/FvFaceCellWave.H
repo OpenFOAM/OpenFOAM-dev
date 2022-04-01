@@ -86,10 +86,6 @@ protected:
         //- ...
         static scalar propagationTol_;
 
-        //- Used as default trackdata value to satisfy default template
-        //  argument.
-        static int dummyTrackData_;
-
 
     // Protected data
 
@@ -225,6 +221,12 @@ protected:
 
 public:
 
+    // Static Data
+
+        //- Default tracking data to go with default template argument
+        static int defaultTrackingData_;
+
+
     // Static Functions
 
         //- Access to tolerance
@@ -258,7 +260,7 @@ public:
             List<Type>& internalFaceInfo,
             List<List<Type>>& patchFaceInfo,
             List<Type>& cellInfo,
-            TrackingData& td = dummyTrackData_
+            TrackingData& td = defaultTrackingData_
         );
 
         //- Construct from mesh and list of changed faces with the Type
@@ -273,7 +275,7 @@ public:
             List<List<Type>>& patchFaceInfo,
             List<Type>& cellInfo,
             const label maxIter,
-            TrackingData& td = dummyTrackData_
+            TrackingData& td = defaultTrackingData_
         );
 
         //- Disallow default bitwise copy construction

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,8 @@ public:
             UList<Type>& allFaceInfo,
             UList<Type>& allCellInfo,
             const label maxIter,
-            TrackingData& td = FaceCellWave<Type, TrackingData>::dummyTrackData_
+            TrackingData& td =
+                FaceCellWave<Type, TrackingData>::defaultTrackingData_
         );
 
 

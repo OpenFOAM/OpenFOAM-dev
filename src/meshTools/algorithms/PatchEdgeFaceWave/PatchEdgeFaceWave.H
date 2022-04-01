@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,22 +65,18 @@ template
 <
     class PrimitivePatchType,
     class Type,
-    class TrackingData = label
+    class TrackingData = int
 >
 class PatchEdgeFaceWave
 :
     public PatchEdgeFaceWaveName
 {
-  // Private static data
+    // Private static data
 
         //- Relative tolerance. Stop propagation if relative changes
         //  less than this tolerance (responsibility for checking this is
         //  up to Type implementation)
         static scalar propagationTol_;
-
-        //- Used as default trackdata value to satisfy default template
-        //  argument.
-        static label dummyTrackData_;
 
 
     // Private Data
@@ -154,6 +150,12 @@ class PatchEdgeFaceWave
 
 public:
 
+    // Static Data
+
+        //- Default tracking data to go with default template argument
+        static int defaultTrackingData_;
+
+
     // Static Functions
 
         //- Access to tolerance
@@ -185,7 +187,7 @@ public:
             UList<Type>& allEdgeInfo,
             UList<Type>& allFaceInfo,
             const label maxIter,
-            TrackingData& td = dummyTrackData_
+            TrackingData& td = defaultTrackingData_
         );
 
         //- Construct from patch. Use setEdgeInfo and iterate() to do
@@ -196,7 +198,7 @@ public:
             const PrimitivePatchType& patch,
             UList<Type>& allEdgeInfo,
             UList<Type>& allFaceInfo,
-            TrackingData& td = dummyTrackData_
+            TrackingData& td = defaultTrackingData_
         );
 
         //- Disallow default bitwise copy construction
