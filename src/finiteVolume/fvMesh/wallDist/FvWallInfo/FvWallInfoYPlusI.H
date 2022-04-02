@@ -23,18 +23,50 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "wallPoint.H"
+#include "FvWallInfoYPlus.H"
 
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Foam::Ostream& os, const Foam::wallPoint& wDist)
+template<class WallInfo, class Derived>
+template<class TrackingData>
+inline bool Foam::FvWallInfoYPlusBase<WallInfo, Derived>::update
+(
+    const point& pt,
+    const FvWallInfoYPlusBase<WallInfo, Derived>& w2,
+    const scalar tol,
+    TrackingData& td
+)
 {
-    return os << wDist.origin() << token::SPACE << wDist.distSqr();
+    FvWallInfoYPlusBase<WallInfo, Derived> copy(*this);
+
+    bool result =
+        FvWallInfoDataBase<WallInfo, scalar, Derived>::update(pt, w2, tol, td);
+
+    if (result)
+    {
+        const scalar yPlus = sqrt(this->distSqr())/w2.data();
+
+        if (yPlus >= td.yPlusCutOff)
+        {
+            *this = copy;
+            result = false;
+        }
+    }
+
+    return result;
 }
 
-Foam::Istream& Foam::operator>>(Foam::Istream& is, Foam::wallPoint& wDist)
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class WallInfo, class Derived>
+inline Foam::FvWallInfoYPlusBase<WallInfo, Derived>::FvWallInfoYPlusBase()
+:
+    FvWallInfoDataBase<WallInfo, scalar, Derived>()
 {
-    return is >> wDist.origin() >> wDist.distSqr();
+    // Important: The value of yStar where the meshWave does not come.
+    this->data() = 1.0;
 }
+
 
 // ************************************************************************* //

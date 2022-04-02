@@ -23,15 +23,16 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvWallPoint.H"
+#include "FvWallInfo.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+template<class WallInfo, class Derived>
 template<class TrackingData>
-inline void Foam::fvWallPoint::transform
+inline void Foam::FvWallInfoBase<WallInfo, Derived>::transform
 (
     const fvPatch& patch,
     const label patchFacei,
@@ -39,39 +40,47 @@ inline void Foam::fvWallPoint::transform
     TrackingData& td
 )
 {
-    wallPoint::transform(patch.patch(), patchFacei, transform, td);
+    WallInfo::template type<Derived>::transform
+    (
+        patch.patch(),
+        patchFacei,
+        transform,
+        td
+    );
 }
 
 
+template<class WallInfo, class Derived>
 template<class TrackingData>
-inline bool Foam::fvWallPoint::updateCell
+inline bool Foam::FvWallInfoBase<WallInfo, Derived>::updateCell
 (
     const fvMesh& mesh,
     const label thisCelli,
     const labelPair& neighbourPatchAndFacei,
-    const fvWallPoint& neighbourWallInfo,
+    const FvWallInfoBase<WallInfo, Derived>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
 {
     return
-        this->update
+        static_cast<Derived&>(*this).update
         (
             mesh.C()[thisCelli],
-            neighbourWallInfo,
+            static_cast<const Derived&>(neighbourWallInfo),
             tol,
             td
         );
 }
 
 
+template<class WallInfo, class Derived>
 template<class TrackingData>
-inline bool Foam::fvWallPoint::updateFace
+inline bool Foam::FvWallInfoBase<WallInfo, Derived>::updateFace
 (
     const fvMesh& mesh,
     const labelPair& thisPatchAndFacei,
     const label neighbourCelli,
-    const fvWallPoint& neighbourWallInfo,
+    const FvWallInfoBase<WallInfo, Derived>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
@@ -80,24 +89,25 @@ inline bool Foam::fvWallPoint::updateFace
     const label thisFacei = thisPatchAndFacei.second();
 
     return
-        this->update
+        static_cast<Derived&>(*this).update
         (
             thisPatchi == -1
           ? mesh.Cf()[thisFacei]
           : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
-            neighbourWallInfo,
+            static_cast<const Derived&>(neighbourWallInfo),
             tol,
             td
         );
 }
 
 
+template<class WallInfo, class Derived>
 template<class TrackingData>
-inline bool Foam::fvWallPoint::updateFace
+inline bool Foam::FvWallInfoBase<WallInfo, Derived>::updateFace
 (
     const fvMesh& mesh,
     const labelPair& thisPatchAndFacei,
-    const fvWallPoint& neighbourWallInfo,
+    const FvWallInfoBase<WallInfo, Derived>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
@@ -106,12 +116,12 @@ inline bool Foam::fvWallPoint::updateFace
     const label thisFacei = thisPatchAndFacei.second();
 
     return
-        this->update
+        static_cast<Derived&>(*this).update
         (
             thisPatchi == -1
           ? mesh.Cf()[thisFacei]
           : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
-            neighbourWallInfo,
+            static_cast<const Derived&>(neighbourWallInfo),
             tol,
             td
         );

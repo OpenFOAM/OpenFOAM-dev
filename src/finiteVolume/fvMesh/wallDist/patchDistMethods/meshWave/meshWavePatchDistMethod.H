@@ -31,14 +31,17 @@ Description
     For regular/un-distorted meshes this method is accurate but for skewed,
     non-orthogonal meshes it is approximate with the error increasing with the
     degree of mesh distortion.  The distance from the near-wall cells to the
-    boundary may optionally be corrected for mesh distortion by setting
-    correctWalls = true.
+    boundary may optionally be corrected for mesh distortion by setting a
+    number of correction iterations.
 
     Example of the wallDist specification in fvSchemes:
     \verbatim
         wallDist
         {
             method meshWave;
+
+            // Number of corrections
+            nCorrectors 3;
 
             // Optional entry enabling the calculation
             // of the normal-to-wall field
@@ -78,7 +81,7 @@ class meshWave
     // Private Member Data
 
         //- Do accurate distance calculation for near-wall cells.
-        const bool correctWalls_;
+        const label nCorrectors_;
 
 
 public:
@@ -98,15 +101,13 @@ public:
             const labelHashSet& patchIDs
         );
 
-        //- Construct from mesh, fixed-value patch set and flag specifying
-        //  whether or not to correct wall.
-        //  Calculate for all cells. correctWalls : correct wall (face&point)
-        //  cells for correct distance, searching neighbours.
+        //- Construct from mesh, fixed-value patch set, and number of wall
+        //  correction iterations
         meshWave
         (
             const fvMesh& mesh,
             const labelHashSet& patchIDs,
-            const bool correctWalls = true
+            const label nCorrectors = 2
         );
 
         //- Disallow default bitwise copy construction

@@ -26,7 +26,7 @@ License
 #include "vanDriestDelta.H"
 #include "wallFvPatch.H"
 #include "fvPatchDistWave.H"
-#include "fvWallPointYPlus.H"
+#include "FvWallInfoYPlus.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -51,11 +51,11 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
     const volScalarField& nu = tnu();
     tmp<volScalarField> nuSgs = momentumTransportModel_.nut();
 
-    volScalarField ystar
+    volScalarField yStar
     (
         IOobject
         (
-            "ystar",
+            "yStar",
             mesh.time().constant(),
             mesh
         ),
@@ -64,7 +64,7 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
     );
 
     const fvPatchList& patches = mesh.boundary();
-    volScalarField::Boundary& ystarBf = ystar.boundaryFieldRef();
+    volScalarField::Boundary& yStarBf = yStar.boundaryFieldRef();
 
     forAll(patches, patchi)
     {
@@ -74,32 +74,33 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
             const scalarField& nuw = nu.boundaryField()[patchi];
             const scalarField& nuSgsw = nuSgs().boundaryField()[patchi];
 
-            ystarBf[patchi] =
+            yStarBf[patchi] =
                 nuw/sqrt((nuw + nuSgsw)*mag(Uw.snGrad()) + vSmall);
         }
     }
 
-    fvWallPointYPlus::trackData td;
-    td.yPlusCutOff = yPlusCutOff_;
     volScalarField y
     (
         volScalarField::New("y", mesh, dimensionedScalar(dimLength, great))
     );
-    fvPatchDistWave::wave<fvWallPointYPlus, fvWallPointYPlus::trackData>
+
+    FvWallInfoYPlus<wallPoint>::trackData td;
+    td.yPlusCutOff = yPlusCutOff_;
+
+    fvPatchDistWave::calculateAndCorrect<FvWallInfoYPlus>
     (
         mesh,
         mesh.boundaryMesh().findPatchIDs<wallPolyPatch>(),
-        ystar.boundaryField(),
+        2, // <-- roughly equivalent to old point-cell corrections
         y,
-        ystar,
-        true,
+        yStar,
         td
     );
 
     delta_ = min
     (
         static_cast<const volScalarField&>(geometricDelta_()),
-        (kappa_/Cdelta_)*((scalar(1) + small) - exp(-y/ystar/Aplus_))*y
+        (kappa_/Cdelta_)*((scalar(1) + small) - exp(-y/yStar/Aplus_))*y
     );
 }
 

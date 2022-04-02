@@ -27,7 +27,7 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "fvPatchDistWave.H"
-#include "fvWallPointData.H"
+#include "FvWallInfoData.H"
 #include "emptyFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -52,7 +52,7 @@ Foam::patchDistMethods::meshWave::meshWave
 )
 :
     patchDistMethod(mesh, patchIDs),
-    correctWalls_(dict.lookupOrDefault<Switch>("correctWalls", true))
+    nCorrectors_(dict.lookupOrDefault<label>("nCorrectors", 2))
 {}
 
 
@@ -60,11 +60,11 @@ Foam::patchDistMethods::meshWave::meshWave
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
-    const bool correctWalls
+    const label nCorrectors
 )
 :
     patchDistMethod(mesh, patchIDs),
-    correctWalls_(correctWalls)
+    nCorrectors_(nCorrectors)
 {}
 
 
@@ -75,12 +75,12 @@ bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
     y = dimensionedScalar(dimLength, great);
 
     const label nUnset =
-        fvPatchDistWave::wave<fvWallPoint>
+        fvPatchDistWave::calculateAndCorrect
         (
             mesh_,
             patchIDs_,
-            y,
-            correctWalls_
+            nCorrectors_,
+            y
         );
 
     // Update coupled and transform BCs
@@ -99,14 +99,13 @@ bool Foam::patchDistMethods::meshWave::correct
     y = dimensionedScalar(dimLength, great);
 
     const label nUnset =
-        fvPatchDistWave::wave<fvWallPointData<vector>>
+        fvPatchDistWave::calculateAndCorrect<FvWallInfoVector>
         (
             mesh_,
             patchIDs_,
-            n.boundaryField(),
+            nCorrectors_,
             y,
-            n,
-            correctWalls_
+            n
         );
 
     // Update coupled and transform BCs

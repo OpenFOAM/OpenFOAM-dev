@@ -43,7 +43,7 @@ void Foam::patchDistanceToCell::combine(topoSet& set, const bool add) const
 {
     // Mesh wave to determine wall distance
     scalarField distance(mesh_.nCells());
-    patchDistWave::wave<wallPoint>
+    patchDistWave::calculate
     (
         mesh_,
         mesh_.boundaryMesh().patchSet(patches_),

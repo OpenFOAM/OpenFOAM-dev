@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvWallPointYPlus
+    Foam::FvWallInfoYPlus
 
 Description
     Holds information (coordinate and yStar) regarding nearest wall point.
@@ -32,33 +32,29 @@ Description
     the damping function becomes 1, since y gets initialised to great and
     yStar to 1.
 
-    Note: should feed the additional argument (yPlusCutoff) through as a
-    template argument into FvFaceCellWave
-
 SourceFiles
-    fvWallPointYPlusI.H
-    fvWallPointYPlus.C
+    FvWallInfoYPlusI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvWallPointYPlus_H
-#define fvWallPointYPlus_H
+#ifndef FvWallInfoYPlus_H
+#define FvWallInfoYPlus_H
 
-#include "fvWallPointData.H"
+#include "FvWallInfoData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-
 /*---------------------------------------------------------------------------*\
-                       Class fvWallPointYPlus Declaration
+                       Class FvWallInfoYPlusBase Declaration
 \*---------------------------------------------------------------------------*/
 
-class fvWallPointYPlus
+template<class WallInfo, class Derived>
+class FvWallInfoYPlusBase
 :
-    public fvWallPointData<scalar>
+    public FvWallInfoDataBase<WallInfo, scalar, Derived>
 {
 public:
 
@@ -72,9 +68,12 @@ public:
     };
 
 
-private:
+protected:
 
-    // Private Member Functions
+    friend class FvWallInfoBase<WallInfo, Derived>;
+
+
+    // Protected Member Functions
 
         //- Evaluate distance to point. Update distSqr, origin from whomever
         //  is nearer pt. Return true if w2 is closer to point,
@@ -83,7 +82,7 @@ private:
         inline bool update
         (
             const point& pt,
-            const fvWallPointYPlus& w2,
+            const FvWallInfoYPlusBase<WallInfo, Derived>& w2,
             const scalar tol,
             TrackingData& td
         );
@@ -94,68 +93,28 @@ public:
     // Constructors
 
         //- Construct null
-        inline fvWallPointYPlus();
+        inline FvWallInfoYPlusBase();
 
-        //- Construct from origin, yStar, distance
-        inline fvWallPointYPlus
-        (
-            const point& origin,
-            const scalar yStar,
-            const scalar distSqr
-        );
-
-
-    // Member Functions
-
-        // Needed by FvFaceCellWave
-
-            //- Influence of neighbouring face.
-            //  Calls update(...) with cellCentre of celli
-            template<class TrackingData>
-            inline bool updateCell
-            (
-                const fvMesh& mesh,
-                const label thisCelli,
-                const labelPair& neighbourPatchAndFacei,
-                const fvWallPointYPlus& neighbourWallInfo,
-                const scalar tol,
-                TrackingData& td
-            );
-
-            //- Influence of neighbouring cell.
-            //  Calls update(...) with faceCentre of facei
-            template<class TrackingData>
-            inline bool updateFace
-            (
-                const fvMesh& mesh,
-                const labelPair& thisPatchAndFacei,
-                const label neighbourCelli,
-                const fvWallPointYPlus& neighbourWallInfo,
-                const scalar tol,
-                TrackingData& td
-            );
-
-            //- Influence of different value on same face.
-            //  Merge new and old info.
-            //  Calls update(...) with faceCentre of facei
-            template<class TrackingData>
-            inline bool updateFace
-            (
-                const fvMesh& mesh,
-                const labelPair& thisPatchAndFacei,
-                const fvWallPointYPlus& neighbourWallInfo,
-                const scalar tol,
-                TrackingData& td
-            );
+        //- Inherit constructors
+        using FvWallInfoDataBase<WallInfo, scalar, Derived>::FvWallInfoDataBase;
 };
 
 
-//- Data associated with pointEdgePoint type as contiguous as underlying type
-template<>
-inline bool contiguous<fvWallPointYPlus>()
+/*---------------------------------------------------------------------------*\
+                       Class FvWallInfoYPlus Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class WallInfo>
+class FvWallInfoYPlus
+:
+    public FvWallInfoYPlusBase<WallInfo, FvWallInfoYPlus<WallInfo>>
 {
-    return contiguous<fvWallPointData<scalar>>();
-}
+    public:
+
+        using
+            FvWallInfoYPlusBase<WallInfo, FvWallInfoYPlus<WallInfo>>::
+            FvWallInfoYPlusBase;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -164,7 +123,7 @@ inline bool contiguous<fvWallPointYPlus>()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "fvWallPointYPlusI.H"
+#include "FvWallInfoYPlusI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

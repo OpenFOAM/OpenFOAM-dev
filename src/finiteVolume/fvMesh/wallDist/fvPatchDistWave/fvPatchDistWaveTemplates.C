@@ -24,319 +24,353 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvPatchDistWave.H"
-#include "patchDistFuncs.H"
+#include "FvWallInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class PatchPointType, class ... InitialPatchData>
-void Foam::fvPatchDistWave::setChangedFaces
+namespace Foam
+{
+namespace fvPatchDistWave
+{
+
+template<class WallInfo, class TrackingData>
+const List<WallInfo>& getInternalInfo
 (
-    const fvMesh& mesh,
-    const labelHashSet& patchIDs,
-    List<labelPair>& changedPatchAndFaces,
-    List<PatchPointType>& changedFacesInfo,
-    const InitialPatchData& ... initialPatchData
+    const volScalarField& distance,
+    FvFaceCellWave<WallInfo, TrackingData>& wave
 )
 {
-    label nChangedFaces = 0;
-    forAllConstIter(labelHashSet, patchIDs, iter)
-    {
-        nChangedFaces += mesh.boundary()[iter.key()].size();
-    }
-
-    changedPatchAndFaces.resize(nChangedFaces);
-    changedFacesInfo.resize(nChangedFaces);
-
-    label changedFacei = 0;
-
-    forAllConstIter(labelHashSet, patchIDs, iter)
-    {
-        const label patchi = iter.key();
-
-        const fvPatch& patch = mesh.boundary()[patchi];
-
-        forAll(patch.Cf(), patchFacei)
-        {
-            changedPatchAndFaces[changedFacei] = {patchi, patchFacei};
-
-            changedFacesInfo[changedFacei] =
-                PatchPointType
-                (
-                    patch.Cf()[patchFacei],
-                    initialPatchData[patchi][patchFacei] ...,
-                    scalar(0)
-                );
-
-            changedFacei++;
-        }
-    }
+    return wave.cellInfo();
 }
 
+template<class WallInfo, class TrackingData>
+const List<WallInfo>& getInternalInfo
+(
+    const surfaceScalarField& distance,
+    FvFaceCellWave<WallInfo, TrackingData>& wave
+)
+{
+    return wave.internalFaceInfo();
+}
+
+}
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template
 <
-    class PatchPointType,
+    class WallInfo,
     class TrackingData,
-    class DataType,
-    class DataMethod
+    template<class> class PatchField,
+    class GeoMesh,
+    class ... DataType
 >
-Foam::label Foam::fvPatchDistWave::getCellValues
-(
-    FvFaceCellWave<PatchPointType, TrackingData>& waveInfo,
-    Field<DataType>& cellValues,
-    DataMethod method,
-    const DataType& stabiliseValue
-)
-{
-    const List<PatchPointType>& cellInfo = waveInfo.cellInfo();
-
-    label nInvalid = 0;
-
-    forAll(cellInfo, celli)
-    {
-        cellValues[celli] =
-            (cellInfo[celli].*method)(waveInfo.data())
-          + stabiliseValue;
-
-        nInvalid += !cellInfo[celli].valid(waveInfo.data());
-    }
-
-    return nInvalid;
-}
-
-
-template
-<
-    class PatchPointType,
-    class TrackingData,
-    class DataType,
-    class DataMethod
->
-Foam::label Foam::fvPatchDistWave::getPatchValues
-(
-    FvFaceCellWave<PatchPointType, TrackingData>& waveInfo,
-    GeometricBoundaryField<DataType, fvPatchField, volMesh>& valuesBf,
-    DataMethod method,
-    const DataType& stabiliseValue
-)
-{
-    const List<List<PatchPointType>>& patchFaceInfo = waveInfo.patchFaceInfo();
-
-    label nInvalid = 0;
-
-    forAll(valuesBf, patchi)
-    {
-        forAll(valuesBf[patchi], patchFacei)
-        {
-            valuesBf[patchi][patchFacei] =
-                (patchFaceInfo[patchi][patchFacei].*method)(waveInfo.data())
-              + stabiliseValue;
-
-            nInvalid +=
-                !patchFaceInfo[patchi][patchFacei].valid(waveInfo.data());
-        }
-    }
-
-    return nInvalid;
-}
-
-
-template<class PatchPointType, class TrackingData>
 Foam::label Foam::fvPatchDistWave::wave
 (
     const fvMesh& mesh,
-    const labelHashSet& patchIDs,
-    volScalarField& distance,
-    const bool correct,
-    TrackingData& td
+    const List<labelPair>& changedPatchAndFaces,
+    const label nCorrections,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    TrackingData& td,
+    GeometricField<DataType, PatchField, GeoMesh>& ... data
 )
 {
+    // If the number of corrections is less than 0 (i.e., -1) then this is a
+    // calculation across the entire mesh. Otherwise it is a correction for the
+    // cells/faces near the changed faces.
+    const bool calculate = nCorrections < 0;
+
+    // Quick return if no corrections
+    if (!calculate && nCorrections == 0) return 0;
+
     // Initialise changedFacesInfo to face centres on patches
-    List<labelPair> changedPatchAndFaces;
-    List<PatchPointType> changedFacesInfo;
-    setChangedFaces
-    (
-        mesh,
-        patchIDs,
-        changedPatchAndFaces,
-        changedFacesInfo
-    );
+    List<WallInfo> changedFacesInfo(changedPatchAndFaces.size());
+    forAll(changedPatchAndFaces, changedFacei)
+    {
+        const label patchi =
+            changedPatchAndFaces[changedFacei].first();
+        const label patchFacei =
+            changedPatchAndFaces[changedFacei].second();
+
+        changedFacesInfo[changedFacei] =
+            WallInfo
+            (
+                data.boundaryField()[patchi][patchFacei] ...,
+                mesh.boundaryMesh()[patchi][patchFacei],
+                mesh.points(),
+                mesh.Cf().boundaryField()[patchi][patchFacei],
+                scalar(0)
+            );
+    }
 
     // Do calculate patch distance by 'growing' from faces.
-    List<PatchPointType> internalFaceInfo(mesh.nInternalFaces());
-    List<List<PatchPointType>> patchFaceInfo
+    List<WallInfo> internalFaceInfo(mesh.nInternalFaces());
+    List<List<WallInfo>> patchFaceInfo
     (
-        FvFaceCellWave<PatchPointType, TrackingData>::template
-        sizesListList<List<List<PatchPointType>>>
+        FvFaceCellWave<WallInfo, TrackingData>::template
+        sizesListList<List<List<WallInfo>>>
         (
-            FvFaceCellWave<PatchPointType, TrackingData>::template
+            FvFaceCellWave<WallInfo, TrackingData>::template
             listListSizes(mesh.boundary()),
-            PatchPointType()
+            WallInfo()
         )
     );
-    List<PatchPointType> cellInfo(mesh.nCells());
-    FvFaceCellWave<PatchPointType, TrackingData> wave
+    List<WallInfo> cellInfo(mesh.nCells());
+
+    // Do the wave
+    FvFaceCellWave<WallInfo, TrackingData> wave
     (
         mesh,
-        changedPatchAndFaces,
-        changedFacesInfo,
         internalFaceInfo,
         patchFaceInfo,
         cellInfo,
-        mesh.globalData().nTotalCells() + 1, // max iterations
         td
     );
-
-    // Copy distance into return field
-    const label nUnset =
-        getCellValues
-        (
-            wave,
-            distance.primitiveFieldRef(),
-            &PatchPointType::template dist<int>
-        )
-      + getPatchValues
-        (
-            wave,
-            distance.boundaryFieldRef(),
-            &PatchPointType::template dist<int>,
-            small
-        );
-
-    // Correct patch cells for true distance
-    if (correct)
+    wave.setFaceInfo(changedPatchAndFaces, changedFacesInfo);
+    if (calculate)
     {
-        Map<labelPair> nearestFace(2*changedFacesInfo.size());
-        patchDistFuncs::correctBoundaryFaceCells
-        (
-            mesh,
-            patchIDs,
-            distance.primitiveFieldRef(),
-            nearestFace
-        );
-        patchDistFuncs::correctBoundaryPointCells
-        (
-            mesh,
-            patchIDs,
-            distance.primitiveFieldRef(),
-            nearestFace
-        );
+        // Calculation. Wave to completion.
+        wave.iterate(mesh.globalData().nTotalCells() + 1);
+    }
+    else
+    {
+        // Correction. Wave the specified number of times then stop. We care
+        // about cell values, so avoid the final cellToFace by doing n - 1
+        // iterations than a final faceToCell.
+        wave.iterate(nCorrections - 1);
+        wave.faceToCell();
+    }
+
+    // Copy distances into field
+    const List<WallInfo>& internalInfo = getInternalInfo(distance, wave);
+    label nUnset = 0;
+    forAll(internalInfo, internali)
+    {
+        const bool valid = internalInfo[internali].valid(td);
+
+        if (calculate || valid)
+        {
+            nUnset += !valid;
+
+            distance.primitiveFieldRef()[internali] =
+                internalInfo[internali].dist(td);
+
+            std::initializer_list<nil>
+            {(
+                data.primitiveFieldRef()[internali] =
+                    internalInfo[internali].data(td),
+                nil()
+            ) ... };
+        }
+    }
+    forAll(patchFaceInfo, patchi)
+    {
+        forAll(patchFaceInfo[patchi], patchFacei)
+        {
+            const bool valid = patchFaceInfo[patchi][patchFacei].valid(td);
+
+            if (calculate || valid)
+            {
+                nUnset += !valid;
+
+                distance.boundaryFieldRef()[patchi][patchFacei] =
+                    patchFaceInfo[patchi][patchFacei].dist(td) + small;
+
+                std::initializer_list<nil>
+                {(
+                    data.boundaryFieldRef()[patchi][patchFacei] =
+                        patchFaceInfo[patchi][patchFacei].data(td),
+                    nil()
+                ) ... };
+            }
+        }
     }
 
     return nUnset;
 }
 
 
-template<class PatchPointType, class TrackingData>
-Foam::label Foam::fvPatchDistWave::wave
+template<template<class> class PatchField, class GeoMesh>
+Foam::label Foam::fvPatchDistWave::calculate
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
-    const GeometricBoundaryField
-        <typename PatchPointType::dataType, fvPatchField, volMesh>&
-        initialPatchData,
-    volScalarField& distance,
-    VolField<typename PatchPointType::dataType>& data,
-    const bool correct,
+    GeometricField<scalar, PatchField, GeoMesh>& distance
+)
+{
+    return
+        wave<FvWallInfo<wallPoint>>
+        (
+            mesh,
+            getChangedPatchAndFaces(mesh, patchIDs),
+            -1,
+            distance,
+            FvFaceCellWave<FvWallInfo<wallPoint>>::defaultTrackingData_
+        );
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+void Foam::fvPatchDistWave::correct
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const label nCorrections,
+    GeometricField<scalar, PatchField, GeoMesh>& distance
+)
+{
+    wave<FvWallInfo<wallFace>>
+    (
+        mesh,
+        getChangedPatchAndFaces(mesh, patchIDs),
+        nCorrections,
+        distance,
+        FvFaceCellWave<FvWallInfo<wallFace>>::defaultTrackingData_
+    );
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+Foam::label Foam::fvPatchDistWave::calculateAndCorrect
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const label nCorrections,
+    GeometricField<scalar, PatchField, GeoMesh>& distance
+)
+{
+    const List<labelPair> changedPatchAndFaces =
+        getChangedPatchAndFaces(mesh, patchIDs);
+
+    const label nUnset =
+        wave<FvWallInfo<wallPoint>>
+        (
+            mesh,
+            changedPatchAndFaces,
+            -1,
+            distance,
+            FvFaceCellWave<FvWallInfo<wallPoint>>::defaultTrackingData_
+        );
+
+    wave<FvWallInfo<wallFace>>
+    (
+        mesh,
+        changedPatchAndFaces,
+        nCorrections,
+        distance,
+        FvFaceCellWave<FvWallInfo<wallFace>>::defaultTrackingData_
+    );
+
+    return nUnset;
+}
+
+
+template
+<
+    template<class> class WallInfoData,
+    template<class> class PatchField,
+    class GeoMesh,
+    class TrackingData
+>
+Foam::label Foam::fvPatchDistWave::calculate
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField
+        <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
+        data,
     TrackingData& td
 )
 {
-    // Initialise changedFacesInfo to face centres on patches
-    List<labelPair> changedPatchAndFaces;
-    List<PatchPointType> changedFacesInfo;
-    setChangedFaces
-    (
-        mesh,
-        patchIDs,
-        changedPatchAndFaces,
-        changedFacesInfo,
-        initialPatchData
-    );
-
-    // Do calculate patch distance by 'growing' from faces.
-    List<PatchPointType> internalFaceInfo(mesh.nInternalFaces());
-    List<List<PatchPointType>> patchFaceInfo
-    (
-        FvFaceCellWave<PatchPointType, TrackingData>::template
-        sizesListList<List<List<PatchPointType>>>
+    return
+        wave<WallInfoData<wallPoint>, TrackingData>
         (
-            FvFaceCellWave<PatchPointType, TrackingData>::template
-            listListSizes(mesh.boundary()),
-            PatchPointType()
-        )
-    );
-    List<PatchPointType> cellInfo(mesh.nCells());
-    FvFaceCellWave<PatchPointType, TrackingData> wave
+            mesh,
+            getChangedPatchAndFaces(mesh, patchIDs),
+            -1,
+            distance,
+            td,
+            data
+        );
+}
+
+
+template
+<
+    template<class> class WallInfoData,
+    template<class> class PatchField,
+    class GeoMesh,
+    class TrackingData
+>
+void Foam::fvPatchDistWave::correct
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const label nCorrections,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField
+        <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
+        data,
+    TrackingData& td
+)
+{
+    wave<WallInfoData<wallFace>, TrackingData>
     (
         mesh,
-        changedPatchAndFaces,
-        changedFacesInfo,
-        internalFaceInfo,
-        patchFaceInfo,
-        cellInfo,
-        mesh.globalData().nTotalCells() + 1, // max iterations
-        td
+        getChangedPatchAndFaces(mesh, patchIDs),
+        nCorrections,
+        distance,
+        td,
+        data
     );
+}
 
-    // Copy distance into return field
+
+template
+<
+    template<class> class WallInfoData,
+    template<class> class PatchField,
+    class GeoMesh,
+    class TrackingData
+>
+Foam::label Foam::fvPatchDistWave::calculateAndCorrect
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const label nCorrections,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField
+        <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
+        data,
+    TrackingData& td
+)
+{
+    const List<labelPair> changedPatchAndFaces =
+        getChangedPatchAndFaces(mesh, patchIDs);
+
     const label nUnset =
-        getCellValues
-        (
-            wave,
-            distance.primitiveFieldRef(),
-            &PatchPointType::template dist<TrackingData>
-        )
-      + getPatchValues
-        (
-            wave,
-            distance.boundaryFieldRef(),
-            &PatchPointType::template dist<TrackingData>,
-            small
-        );
-
-    // Copy data into the return field
-    getCellValues
-    (
-        wave,
-        data.primitiveFieldRef(),
-        &PatchPointType::template data<TrackingData>
-    );
-    getPatchValues
-    (
-        wave,
-        data.boundaryFieldRef(),
-        &PatchPointType::template data<TrackingData>
-    );
-
-    // Correct patch cells for true distance
-    if (correct)
-    {
-        Map<labelPair> nearestPatchAndFace(2*changedFacesInfo.size());
-        patchDistFuncs::correctBoundaryFaceCells
+        wave<WallInfoData<wallPoint>, TrackingData>
         (
             mesh,
-            patchIDs,
-            distance.primitiveFieldRef(),
-            nearestPatchAndFace
-        );
-        patchDistFuncs::correctBoundaryPointCells
-        (
-            mesh,
-            patchIDs,
-            distance.primitiveFieldRef(),
-            nearestPatchAndFace
+            getChangedPatchAndFaces(mesh, patchIDs),
+            -1,
+            distance,
+            td,
+            data
         );
 
-        // Transfer data from nearest face to cell
-        forAllConstIter(Map<labelPair>, nearestPatchAndFace, iter)
-        {
-            const label celli = iter.key();
-            const label patchi = iter().first();
-            const label patchFacei = iter().second();
-            data.primitiveFieldRef()[celli] =
-                wave.patchFaceInfo()[patchi][patchFacei].data();
-        }
-    }
+    wave<WallInfoData<wallFace>, TrackingData>
+    (
+        mesh,
+        changedPatchAndFaces,
+        nCorrections,
+        distance,
+        td,
+        data
+    );
 
     return nUnset;
 }

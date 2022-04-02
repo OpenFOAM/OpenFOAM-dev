@@ -26,7 +26,6 @@ License
 #include "inverseDistanceDiffusivity.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchDistWave.H"
-#include "fvWallPoint.H"
 #include "HashSet.H"
 #include "surfaceInterpolate.H"
 #include "zeroGradientFvPatchFields.H"
@@ -85,12 +84,11 @@ Foam::inverseDistanceDiffusivity::operator()() const
 
     if (patchNames_.size())
     {
-        fvPatchDistWave::wave<fvWallPoint>
+        fvPatchDistWave::calculate
         (
             mesh(),
             mesh().boundaryMesh().patchSet(patchNames_),
-            y,
-            false
+            y
         );
     }
 

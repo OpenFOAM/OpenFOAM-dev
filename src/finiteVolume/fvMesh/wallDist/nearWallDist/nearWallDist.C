@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nearWallDist.H"
-#include "patchDistFuncs.H"
+#include "fvPatchDistWave.H"
 #include "wallPolyPatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -39,12 +39,24 @@ namespace Foam
 
 void Foam::nearWallDist::correct()
 {
-    patchDistFuncs::correctBoundaryFaceFaceCells
+    volScalarField yVf(volScalarField::New("y", mesh(), dimLength));
+
+    fvPatchDistWave::correct
     (
         mesh(),
         mesh().boundaryMesh().findPatchIDs<wallPolyPatch>(),
-        y_
+        2,
+        yVf
     );
+
+    forAll(y_, patchi)
+    {
+        const labelUList& faceCells = mesh().boundary()[patchi].faceCells();
+        forAll(y_[patchi], patchFacei)
+        {
+            y_[patchi][patchFacei] = yVf[faceCells[patchFacei]];
+        }
+    }
 }
 
 

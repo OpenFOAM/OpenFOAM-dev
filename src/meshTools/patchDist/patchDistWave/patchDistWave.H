@@ -37,10 +37,6 @@ SourceFiles
 #define patchDistWave_H
 
 #include "polyMesh.H"
-#include "FaceCellWave.H"
-#include "Field.H"
-#include "FieldField.H"
-#include "UPtrList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,54 +47,33 @@ namespace patchDistWave
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Set initial set of changed faces
-template<class PatchPointType, class ... InitialPatchData>
-void setChangedFaces
+//- Get initial set of changed faces
+labelList getChangedFaces
 (
     const polyMesh& mesh,
-    const labelHashSet& patchIDs,
-    labelList& changedFaces,
-    List<PatchPointType>& faceDist,
-    const InitialPatchData& ... initialPatchData
+    const labelHashSet& patchIDs
 );
 
-//- Copy FaceCellWave values into the cell fields
-template
-<
-    class PatchPointType,
-    class TrackingData,
-    class DataType,
-    class DataMethod
->
-label getCellValues
-(
-    FaceCellWave<PatchPointType, TrackingData>& waveInfo,
-    Field<DataType>& cellValues,
-    DataMethod method,
-    const DataType& stabiliseValue = pTraits<DataType>::zero
-);
-
-//- Wave distance data from the patches to the cells
-template<class PatchPointType, class TrackingData = int>
+//- Wave distance data from faces
 label wave
 (
     const polyMesh& mesh,
+    const labelList& changedFaces,
+    scalarField& cellDistance
+);
+
+//- Calculate distance data from patches
+label calculate
+(
+    const polyMesh& mesh,
     const labelHashSet& patchIDs,
-    scalarField& cellDistance,
-    bool correct = true,
-    TrackingData& td = FaceCellWave<PatchPointType>::defaultTrackingData_
+    scalarField& cellDistance
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace patchDistWave
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "patchDistWaveTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

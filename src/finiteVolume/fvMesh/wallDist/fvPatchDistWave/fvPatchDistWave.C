@@ -23,42 +23,39 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvWallPointData.H"
+#include "fvPatchDistWave.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
-
-template<class Type>
-Ostream& operator<<
+Foam::List<Foam::labelPair> Foam::fvPatchDistWave::getChangedPatchAndFaces
 (
-    Ostream& os,
-    const fvWallPointData<Type>& wDist
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs
 )
 {
-    return os
-        << static_cast<const fvWallPoint&>(wDist)
-        << token::SPACE
-        << wDist.data();
+    label nChangedFaces = 0;
+    forAllConstIter(labelHashSet, patchIDs, iter)
+    {
+        nChangedFaces += mesh.boundary()[iter.key()].size();
+    }
+
+    List<labelPair> changedPatchAndFaces(nChangedFaces);
+    label changedFacei = 0;
+
+    forAllConstIter(labelHashSet, patchIDs, iter)
+    {
+        const label patchi = iter.key();
+        const fvPatch& patch = mesh.boundary()[patchi];
+
+        forAll(patch, patchFacei)
+        {
+            changedPatchAndFaces[changedFacei] = labelPair(patchi, patchFacei);
+            changedFacei++;
+        }
+    }
+
+    return changedPatchAndFaces;
 }
 
-
-template<class Type>
-Istream& operator>>
-(
-    Istream& is,
-    fvWallPointData<Type>& wDist
-)
-{
-    return is >> static_cast<fvWallPoint&>(wDist) >> wDist.data_;
-}
-
-
-// ************************************************************************* //
-
-} // End namespace Foam
 
 // ************************************************************************* //

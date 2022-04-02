@@ -46,6 +46,7 @@ $(meshWave)/FvFaceCellWaveName.C
 
 
 wallDist = fvMesh/wallDist
+$(wallDist)/fvPatchDistWave/fvPatchDistWave.C
 $(wallDist)/nearWallDist/nearWallDist.C
 $(wallDist)/wallDist/wallDist.C
 $(wallDist)/patchDistMethods/patchDistMethod/patchDistMethod.C

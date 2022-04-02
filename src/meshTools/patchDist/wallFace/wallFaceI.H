@@ -23,28 +23,33 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "wallPoint.H"
+#include "wallFace.H"
 #include "polyMesh.H"
 #include "transformer.H"
-#include "SubField.H"
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
 template<class Derived>
 template<class TrackingData>
-inline bool Foam::WallPointBase<Derived>::update
+inline bool Foam::WallFaceBase<Derived>::update
 (
     const point& pt,
-    const WallPointBase<Derived>& w2,
+    const WallFaceBase<Derived>& w2,
     const scalar tol,
     TrackingData& td
 )
 {
-    const scalar dist2 = magSqr(pt - w2.origin());
+    const scalar dist2 =
+        sqr
+        (
+            face(identity(w2.points().size()))
+           .nearestPoint(pt, w2.points())
+           .distance()
+        );
 
     if (valid(td))
     {
-        const scalar diff = distSqr() - dist2;
+        scalar diff = distSqr() - dist2;
 
         if (diff < 0)
         {
@@ -61,7 +66,7 @@ inline bool Foam::WallPointBase<Derived>::update
 
     // Either *this is not yet valid or w2 is closer
     distSqr() = dist2;
-    origin() = w2.origin();
+    points() = w2.points();
 
     return true;
 }
@@ -70,27 +75,28 @@ inline bool Foam::WallPointBase<Derived>::update
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Derived>
-inline Foam::WallPointBase<Derived>::WallPointBase()
+inline Foam::WallFaceBase<Derived>::WallFaceBase()
 :
-    origin_(point::max),
+    points_(0),
     distSqr_(-great)
 {}
 
 
 template<class Derived>
-inline Foam::WallPointBase<Derived>::WallPointBase
+inline Foam::WallFaceBase<Derived>::WallFaceBase
 (
-    const point& origin,
+    const face& f,
+    const pointField& points,
     const scalar distSqr
 )
 :
-    origin_(origin),
+    points_(f.points(points)),
     distSqr_(distSqr)
 {}
 
 
 template<class Derived>
-inline Foam::WallPointBase<Derived>::WallPointBase
+inline Foam::WallFaceBase<Derived>::WallFaceBase
 (
     const face& f,
     const pointField& points,
@@ -98,7 +104,7 @@ inline Foam::WallPointBase<Derived>::WallPointBase
     const scalar distSqr
 )
 :
-    origin_(centre),
+    points_(f.points(points)),
     distSqr_(distSqr)
 {}
 
@@ -106,28 +112,28 @@ inline Foam::WallPointBase<Derived>::WallPointBase
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Derived>
-inline const Foam::point& Foam::WallPointBase<Derived>::origin() const
+inline const Foam::pointField& Foam::WallFaceBase<Derived>::points() const
 {
-    return origin_;
+    return points_;
 }
 
 
 template<class Derived>
-inline Foam::point& Foam::WallPointBase<Derived>::origin()
+inline Foam::pointField& Foam::WallFaceBase<Derived>::points()
 {
-    return origin_;
+    return points_;
 }
 
 
 template<class Derived>
-inline Foam::scalar Foam::WallPointBase<Derived>::distSqr() const
+inline Foam::scalar Foam::WallFaceBase<Derived>::distSqr() const
 {
     return distSqr_;
 }
 
 
 template<class Derived>
-inline Foam::scalar& Foam::WallPointBase<Derived>::distSqr()
+inline Foam::scalar& Foam::WallFaceBase<Derived>::distSqr()
 {
     return distSqr_;
 }
@@ -135,7 +141,7 @@ inline Foam::scalar& Foam::WallPointBase<Derived>::distSqr()
 
 template<class Derived>
 template<class TrackingData>
-inline Foam::scalar Foam::WallPointBase<Derived>::dist(TrackingData& td) const
+inline Foam::scalar Foam::WallFaceBase<Derived>::dist(TrackingData& td) const
 {
     return valid(td) ? sqrt(distSqr_) : great;
 }
@@ -143,7 +149,7 @@ inline Foam::scalar Foam::WallPointBase<Derived>::dist(TrackingData& td) const
 
 template<class Derived>
 template<class TrackingData>
-inline bool Foam::WallPointBase<Derived>::valid(TrackingData& td) const
+inline bool Foam::WallFaceBase<Derived>::valid(TrackingData& td) const
 {
     return distSqr_ > -small;
 }
@@ -151,10 +157,10 @@ inline bool Foam::WallPointBase<Derived>::valid(TrackingData& td) const
 
 template<class Derived>
 template<class TrackingData>
-inline bool Foam::WallPointBase<Derived>::sameGeometry
+inline bool Foam::WallFaceBase<Derived>::sameGeometry
 (
     const polyMesh&,
-    const WallPointBase<Derived>& w2,
+    const WallFaceBase<Derived>& w2,
     const scalar tol,
     TrackingData& td
 ) const
@@ -181,7 +187,7 @@ inline bool Foam::WallPointBase<Derived>::sameGeometry
 
 template<class Derived>
 template<class TrackingData>
-inline void Foam::WallPointBase<Derived>::transform
+inline void Foam::WallFaceBase<Derived>::transform
 (
     const polyPatch& patch,
     const label patchFacei,
@@ -189,19 +195,18 @@ inline void Foam::WallPointBase<Derived>::transform
     TrackingData& td
 )
 {
-    // Note that distSqr_ is not affected by crossing an interface
-    origin_ = transform.transformPosition(origin_);
+    transform.transformPosition(points_, points_);
 }
 
 
 template<class Derived>
 template<class TrackingData>
-inline bool Foam::WallPointBase<Derived>::updateCell
+inline bool Foam::WallFaceBase<Derived>::updateCell
 (
     const polyMesh& mesh,
     const label thisCelli,
     const label neighbourFacei,
-    const WallPointBase<Derived>& neighbourWallInfo,
+    const WallFaceBase<Derived>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
@@ -219,12 +224,12 @@ inline bool Foam::WallPointBase<Derived>::updateCell
 
 template<class Derived>
 template<class TrackingData>
-inline bool Foam::WallPointBase<Derived>::updateFace
+inline bool Foam::WallFaceBase<Derived>::updateFace
 (
     const polyMesh& mesh,
     const label thisFacei,
     const label neighbourCelli,
-    const WallPointBase<Derived>& neighbourWallInfo,
+    const WallFaceBase<Derived>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
@@ -242,11 +247,11 @@ inline bool Foam::WallPointBase<Derived>::updateFace
 
 template<class Derived>
 template<class TrackingData>
-inline bool Foam::WallPointBase<Derived>::updateFace
+inline bool Foam::WallFaceBase<Derived>::updateFace
 (
     const polyMesh& mesh,
     const label thisFacei,
-    const WallPointBase<Derived>& neighbourWallInfo,
+    const WallFaceBase<Derived>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
@@ -264,9 +269,9 @@ inline bool Foam::WallPointBase<Derived>::updateFace
 
 template<class Derived>
 template<class TrackingData>
-inline bool Foam::WallPointBase<Derived>::equal
+inline bool Foam::WallFaceBase<Derived>::equal
 (
-    const WallPointBase<Derived>& rhs,
+    const WallFaceBase<Derived>& rhs,
     TrackingData& td
 ) const
 {
@@ -277,19 +282,19 @@ inline bool Foam::WallPointBase<Derived>::equal
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Derived>
-inline bool Foam::WallPointBase<Derived>::operator==
+inline bool Foam::WallFaceBase<Derived>::operator==
 (
-    const Foam::WallPointBase<Derived>& rhs
+    const Foam::WallFaceBase<Derived>& rhs
 ) const
 {
-    return origin() == rhs.origin();
+    return points() == rhs.points();
 }
 
 
 template<class Derived>
-inline bool Foam::WallPointBase<Derived>::operator!=
+inline bool Foam::WallFaceBase<Derived>::operator!=
 (
-    const Foam::WallPointBase<Derived>& rhs
+    const Foam::WallFaceBase<Derived>& rhs
 ) const
 {
     return !(*this == rhs);
@@ -299,16 +304,16 @@ inline bool Foam::WallPointBase<Derived>::operator!=
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 template<class Derived>
-Foam::Ostream& Foam::operator<<(Ostream& os, const WallPointBase<Derived>& w)
+Foam::Ostream& Foam::operator<<(Ostream& os, const WallFaceBase<Derived>& w)
 {
-    return os << w.origin() << token::SPACE << w.distSqr();
+    return os << w.points() << token::SPACE << w.distSqr();
 }
 
 
 template<class Derived>
-Foam::Istream& Foam::operator>>(Istream& is, WallPointBase<Derived>& w)
+Foam::Istream& Foam::operator>>(Istream& is, WallFaceBase<Derived>& w)
 {
-    return is >> w.origin() >> w.distSqr();
+    return is >> w.points() >> w.distSqr();
 }
 
 

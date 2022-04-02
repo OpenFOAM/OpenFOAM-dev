@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvWallPoint
+    Foam::FvWallInfo
 
 Description
     Holds information regarding nearest wall point. Used in wall distance
     calculation.
 
 SourceFiles
-    fvWallPointI.H
-    fvWallPoint.C
+    FvWallInfoI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvWallPoint_H
-#define fvWallPoint_H
+#ifndef FvWallInfo_H
+#define FvWallInfo_H
 
 #include "wallPoint.H"
+#include "wallFace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,21 +49,21 @@ class fvPatch;
 class fvMesh;
 class transformer;
 
-
 /*---------------------------------------------------------------------------*\
-                          Class fvWallPoint Declaration
+                          Class FvWallInfoBase Declaration
 \*---------------------------------------------------------------------------*/
 
-class fvWallPoint
+template<class WallInfo, class Derived>
+class FvWallInfoBase
 :
-    public wallPoint
+    public WallInfo::template type<Derived>
 {
 public:
 
     // Constructors
 
         //- Inherit constructors
-        using wallPoint::wallPoint;
+        using WallInfo::template type<Derived>::type;
 
 
     // Member Functions
@@ -87,7 +87,7 @@ public:
                 const fvMesh&,
                 const label thisCelli,
                 const labelPair& neighbourPatchAndFacei,
-                const fvWallPoint& neighbourInfo,
+                const FvWallInfoBase<WallInfo, Derived>& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
@@ -99,7 +99,7 @@ public:
                 const fvMesh&,
                 const labelPair& thisPatchAndFacei,
                 const label neighbourCelli,
-                const fvWallPoint& neighbourInfo,
+                const FvWallInfoBase<WallInfo, Derived>& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
@@ -110,19 +110,27 @@ public:
             (
                 const fvMesh&,
                 const labelPair& thisPatchAndFacei,
-                const fvWallPoint& neighbourInfo,
+                const FvWallInfoBase<WallInfo, Derived>& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
 };
 
+/*---------------------------------------------------------------------------*\
+                          Class FvWallInfo Declaration
+\*---------------------------------------------------------------------------*/
 
-//- Data associated with fvWallPoint type are contiguous
-template<>
-inline bool contiguous<fvWallPoint>()
+template<class WallInfo>
+class FvWallInfo
+:
+    public FvWallInfoBase<WallInfo, FvWallInfo<WallInfo>>
 {
-    return true;
-}
+    public:
+
+        using
+            FvWallInfoBase<WallInfo, FvWallInfo<WallInfo>>::
+            FvWallInfoBase;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -131,7 +139,7 @@ inline bool contiguous<fvWallPoint>()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "fvWallPointI.H"
+#include "FvWallInfoI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

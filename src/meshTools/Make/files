@@ -44,8 +44,7 @@ cellClassification/cellInfo.C
 
 cellQuality/cellQuality.C
 
-patchDist/patchDistFuncs/patchDistFuncs.C
-patchDist/wallPoint/wallPoint.C
+patchDist/patchDistWave/patchDistWave.C
 
 cellFeatures/cellFeatures.C
 
