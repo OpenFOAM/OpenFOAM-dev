@@ -161,7 +161,7 @@ void Foam::CompactListList<T>::setSize(const labelUList& rowSizes)
 template<class T>
 void Foam::CompactListList<T>::clear()
 {
-    offsets_ = List<label>(1, 0);
+    offsets_ = List<label>(label(1), label(0));
     m_.clear();
 
     UCompactListList<T>::shallowCopy(UCompactListList<T>(offsets_, m_));

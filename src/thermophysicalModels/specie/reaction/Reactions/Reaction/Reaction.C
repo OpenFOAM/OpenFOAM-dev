@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -431,7 +431,7 @@ void Foam::Reaction<ReactionThermo>::ddNdtByVdcTp
                 {
                     dCfdcj *=
                         c[si] >= small || el >= 1
-                      ? el*pow(max(c[si], 0), el - specieExponent(1))
+                      ? el*pow(max(c[si], 0), el - specieExponent(label(1)))
                       : 0;
                 }
                 else
@@ -470,7 +470,7 @@ void Foam::Reaction<ReactionThermo>::ddNdtByVdcTp
                 {
                     dCrcj *=
                         c[si] >= small || er >= 1
-                      ? er*pow(max(c[si], 0), er - specieExponent(1))
+                      ? er*pow(max(c[si], 0), er - specieExponent(label(1)))
                       : 0;
                 }
                 else

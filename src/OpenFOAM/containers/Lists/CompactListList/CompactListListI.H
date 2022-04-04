@@ -32,7 +32,7 @@ template<class T>
 inline Foam::CompactListList<T>::CompactListList()
 :
     UCompactListList<T>(),
-    offsets_(1, 0),
+    offsets_(label(1), label(0)),
     m_()
 {
     UCompactListList<T>::shallowCopy(UCompactListList<T>(offsets_, m_));
