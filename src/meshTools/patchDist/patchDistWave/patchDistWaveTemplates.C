@@ -78,7 +78,6 @@ void Foam::patchDistWave::setChangedFaces
 template<class PatchPointType, class DataType, class DataMethod>
 Foam::label Foam::patchDistWave::getCellValues
 (
-    const polyMesh& mesh,
     FaceCellWave<PatchPointType>& waveInfo,
     Field<DataType>& cellValues,
     DataMethod method,
@@ -102,46 +101,6 @@ Foam::label Foam::patchDistWave::getCellValues
 }
 
 
-template
-<
-    class PatchPointType,
-    template<class> class PatchField,
-    class DataType,
-    class DataMethod
->
-Foam::label Foam::patchDistWave::getPatchValues
-(
-    const polyMesh& mesh,
-    FaceCellWave<PatchPointType>& waveInfo,
-    FieldField<PatchField, DataType>& patchValues,
-    DataMethod method,
-    const DataType& stabiliseValue
-)
-{
-    const List<PatchPointType>& faceInfo = waveInfo.allFaceInfo();
-
-    label nInvalid = 0;
-
-    forAll(patchValues, patchi)
-    {
-        const polyPatch& patch = mesh.boundaryMesh()[patchi];
-
-        forAll(patchValues[patchi], patchFacei)
-        {
-            const label facei = patch.start() + patchFacei;
-
-            patchValues[patchi][patchFacei] =
-                (faceInfo[facei].*method)(waveInfo.data())
-              + stabiliseValue;
-
-            nInvalid += !faceInfo[facei].valid(waveInfo.data());
-        }
-    }
-
-    return nInvalid;
-}
-
-
 template<class PatchPointType>
 Foam::label Foam::patchDistWave::wave
 (
@@ -151,7 +110,7 @@ Foam::label Foam::patchDistWave::wave
     const bool correct
 )
 {
-    // Initialise to changedFacesInfo information to face centre on patches
+    // Initialise changedFacesInfo to face centres on patches
     List<PatchPointType> changedFacesInfo;
     labelList changedFaces;
     setChangedFaces
@@ -175,15 +134,18 @@ Foam::label Foam::patchDistWave::wave
     );
 
     // Copy distance into return field
-    label nUnset = 0;
-    scalar (PatchPointType::*dist)(int&) const =
-        &PatchPointType::template dist<int>;
-    nUnset += getCellValues(mesh, wave, cellDistance, dist);
+    const label nUnset =
+        getCellValues
+        (
+            wave,
+            cellDistance,
+            &PatchPointType::template dist<int>
+        );
 
     // Correct patch cells for true distance
     if (correct)
     {
-        Map<label> nearestFace(2*changedFacesInfo.size());
+        Map<labelPair> nearestFace(2*changedFacesInfo.size());
         patchDistFuncs::correctBoundaryFaceCells
         (
             mesh,
@@ -198,92 +160,6 @@ Foam::label Foam::patchDistWave::wave
             cellDistance,
             nearestFace
         );
-    }
-
-    return nUnset;
-}
-
-
-template<class PatchPointType, template<class> class PatchField>
-Foam::label Foam::patchDistWave::wave
-(
-    const polyMesh& mesh,
-    const labelHashSet& patchIDs,
-    const FieldField<PatchField, typename PatchPointType::dataType>&
-        initialPatchData,
-    scalarField& cellDistance,
-    FieldField<PatchField, scalar>& patchDistance,
-    Field<typename PatchPointType::dataType>& cellData,
-    FieldField<PatchField, typename PatchPointType::dataType>& patchData,
-    const bool correct
-)
-{
-    // Initialise to changedFacesInfo information to face centre on patches
-    List<PatchPointType> changedFacesInfo;
-    labelList changedFaces;
-    setChangedFaces
-    (
-        mesh,
-        patchIDs,
-        changedFaces,
-        changedFacesInfo,
-        initialPatchData
-    );
-
-    // Do calculate patch distance by 'growing' from faces.
-    List<PatchPointType> faceInfo(mesh.nFaces()), cellInfo(mesh.nCells());
-    FaceCellWave<PatchPointType> wave
-    (
-        mesh,
-        changedFaces,
-        changedFacesInfo,
-        faceInfo,
-        cellInfo,
-        mesh.globalData().nTotalCells() + 1 // max iterations
-    );
-
-    // Copy distance into return field
-    label nUnset = 0;
-    scalar (PatchPointType::*dist)(int&) const =
-        &PatchPointType::template dist<int>;
-    nUnset += getCellValues(mesh, wave, cellDistance, dist);
-    nUnset += getPatchValues(mesh, wave, patchDistance, dist, small);
-
-    // Copy data into the return field
-    const typename PatchPointType::dataType&
-        (PatchPointType::*data)(int&) const =
-        &PatchPointType::template data<int>;
-    getCellValues(mesh, wave, cellData, data);
-    getPatchValues(mesh, wave, patchData, data);
-
-    // Correct patch cells for true distance
-    if (correct)
-    {
-        Map<label> nearestFace(2*changedFacesInfo.size());
-        patchDistFuncs::correctBoundaryFaceCells
-        (
-            mesh,
-            patchIDs,
-            cellDistance,
-            nearestFace
-        );
-        patchDistFuncs::correctBoundaryPointCells
-        (
-            mesh,
-            patchIDs,
-            cellDistance,
-            nearestFace
-        );
-
-        // Transfer data from nearest face to cell
-        const List<PatchPointType>& faceInfo = wave.allFaceInfo();
-        const labelList patchCells(nearestFace.toc());
-        forAll(patchCells, patchCelli)
-        {
-            const label celli = patchCells[patchCelli];
-            const label facei = nearestFace[celli];
-            cellData[celli] = faceInfo[facei].data();
-        }
     }
 
     return nUnset;

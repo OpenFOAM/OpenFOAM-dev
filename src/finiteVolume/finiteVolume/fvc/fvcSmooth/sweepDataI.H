@@ -23,7 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "sweepData.H"
 #include "transformer.H"
+#include "volFields.H"
+#include "surfaceFields.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -97,7 +100,7 @@ inline bool Foam::sweepData::valid(TrackingData& td) const
 template<class TrackingData>
 inline bool Foam::sweepData::sameGeometry
 (
-    const polyMesh&,
+    const fvMesh&,
     const sweepData&,
     const scalar,
     TrackingData& td
@@ -110,7 +113,7 @@ inline bool Foam::sweepData::sameGeometry
 template<class TrackingData>
 inline void Foam::sweepData::transform
 (
-    const polyPatch& patch,
+    const fvPatch& patch,
     const label patchFacei,
     const transformer& transform,
     TrackingData& td
@@ -123,30 +126,42 @@ inline void Foam::sweepData::transform
 template<class TrackingData>
 inline bool Foam::sweepData::updateCell
 (
-    const polyMesh& mesh,
+    const fvMesh& mesh,
     const label thisCelli,
-    const label,
+    const labelPair&,
     const sweepData& svf,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(svf, mesh.cellCentres()[thisCelli], tol, td);
+    return update(svf, mesh.C()[thisCelli], tol, td);
 }
 
 
 template<class TrackingData>
 inline bool Foam::sweepData::updateFace
 (
-    const polyMesh& mesh,
-    const label thisFacei,
+    const fvMesh& mesh,
+    const labelPair& thisPatchAndFacei,
     const label,
     const sweepData& svf,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(svf, mesh.faceCentres()[thisFacei], tol, td);
+    const label thisPatchi = thisPatchAndFacei.first();
+    const label thisFacei = thisPatchAndFacei.second();
+
+    return
+        update
+        (
+            svf,
+            thisPatchi == -1
+          ? mesh.Cf()[thisFacei]
+          : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
+            tol,
+            td
+        );
 }
 
 
@@ -154,14 +169,26 @@ inline bool Foam::sweepData::updateFace
 template<class TrackingData>
 inline bool Foam::sweepData::updateFace
 (
-    const polyMesh& mesh,
-    const label thisFacei,
+    const fvMesh& mesh,
+    const labelPair& thisPatchAndFacei,
     const sweepData& svf,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(svf, mesh.faceCentres()[thisFacei], tol, td);
+    const label thisPatchi = thisPatchAndFacei.first();
+    const label thisFacei = thisPatchAndFacei.second();
+
+    return
+        update
+        (
+            svf,
+            thisPatchi == -1
+          ? mesh.Cf()[thisFacei]
+          : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
+            tol,
+            td
+        );
 }
 
 

@@ -234,9 +234,22 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::semiImplicitSource::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::semiImplicitSource::movePoints()
 {
-    set_.updateMesh(map);
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::semiImplicitSource::topoChange(const polyTopoChangeMap& map)
+{
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::semiImplicitSource::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
@@ -246,13 +259,6 @@ void Foam::fv::semiImplicitSource::distribute
 )
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::semiImplicitSource::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

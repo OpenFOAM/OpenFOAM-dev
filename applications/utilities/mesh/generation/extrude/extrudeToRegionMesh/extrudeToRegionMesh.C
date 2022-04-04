@@ -2312,7 +2312,7 @@ int main(int argc, char *argv[])
 
 
     // Update numbering on extruder.
-    extruder.updateMesh(shellMap);
+    extruder.topoChange(shellMap);
 
 
     // Calculate offsets from shell mesh back to original mesh
@@ -2659,7 +2659,7 @@ int main(int argc, char *argv[])
         addBafflesMap = meshMod.changeMesh(mesh, false);
 
         // Update fields
-        mesh.updateMesh(addBafflesMap);
+        mesh.topoChange(addBafflesMap);
 
 
 //XXXXXX

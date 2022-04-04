@@ -118,7 +118,7 @@ public:
         virtual void solve();
 
         //- Update topology
-        virtual void updateMesh(const polyTopoChangeMap&);
+        virtual void topoChange(const polyTopoChangeMap&);
 
 
     // Member Operators

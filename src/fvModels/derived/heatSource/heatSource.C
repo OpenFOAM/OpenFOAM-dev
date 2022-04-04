@@ -150,22 +150,28 @@ void Foam::fv::heatSource::addSup
 }
 
 
-void Foam::fv::heatSource::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::heatSource::movePoints()
 {
-    set_.updateMesh(map);
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::heatSource::topoChange(const polyTopoChangeMap& map)
+{
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::heatSource::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
 void Foam::fv::heatSource::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::heatSource::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

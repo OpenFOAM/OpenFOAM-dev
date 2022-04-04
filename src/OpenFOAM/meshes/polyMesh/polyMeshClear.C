@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
 
     if (isMeshUpdate)
     {
-        // Part of a mesh update. Keep meshObjects that have an updateMesh
+        // Part of a mesh update. Keep meshObjects that have an topoChange
         // callback
         meshObject::clearUpto
         <

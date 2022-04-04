@@ -22,46 +22,49 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallPointData
+    Foam::fvWallPointData
 
 Description
     Holds information (coordinate and normal) regarding nearest wall point.
 
-    Is like wallPoint but transfer extra (passive) data.
+    Is like fvWallPoint but transfer extra (passive) data.
     Used e.g. in wall distance calculation with wall reflection vectors.
 
 SourceFiles
-    wallPointDataI.H
-    wallPointData.C
+    fvWallPointDataI.H
+    fvWallPointData.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef wallPointData_H
-#define wallPointData_H
+#ifndef fvWallPointData_H
+#define fvWallPointData_H
 
-#include "wallPoint.H"
+#include "fvWallPoint.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-template<class Type> class wallPointData;
+template<class Type> class fvWallPointData;
 
 // Forward declaration of friend functions and operators
 
-template<class Type> Istream& operator>>(Istream&, wallPointData<Type>&);
-template<class Type> Ostream& operator<<(Ostream&, const wallPointData<Type>&);
+template<class Type>
+Istream& operator>>(Istream&, fvWallPointData<Type>&);
+
+template<class Type>
+Ostream& operator<<(Ostream&, const fvWallPointData<Type>&);
 
 
 /*---------------------------------------------------------------------------*\
-                        Class wallPointData Declaration
+                        Class fvWallPointData Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class wallPointData
+class fvWallPointData
 :
-    public wallPoint
+    public fvWallPoint
 {
     // Private Data
 
@@ -78,7 +81,7 @@ class wallPointData
         inline bool update
         (
             const point&,
-            const wallPointData<Type>& w2,
+            const fvWallPointData<Type>& w2,
             const scalar tol,
             TrackingData& td
         );
@@ -92,10 +95,10 @@ public:
     // Constructors
 
         //- Construct null
-        inline wallPointData();
+        inline fvWallPointData();
 
         //- Construct from origin, normal, distance
-        inline wallPointData
+        inline fvWallPointData
         (
             const point& origin,
             const Type& data,
@@ -121,7 +124,7 @@ public:
             template<class TrackingData>
             inline void transform
             (
-                const polyPatch& patch,
+                const fvPatch& patch,
                 const label patchFacei,
                 const transformer& transform,
                 TrackingData& td
@@ -132,10 +135,10 @@ public:
             template<class TrackingData>
             inline bool updateCell
             (
-                const polyMesh& mesh,
+                const fvMesh& mesh,
                 const label thisCelli,
-                const label neighbourFacei,
-                const wallPointData<Type>& neighbourWallInfo,
+                const labelPair& neighbourPatchAndFacei,
+                const fvWallPointData<Type>& neighbourWallInfo,
                 const scalar tol,
                 TrackingData& td
             );
@@ -145,10 +148,10 @@ public:
             template<class TrackingData>
             inline bool updateFace
             (
-                const polyMesh& mesh,
-                const label thisFacei,
+                const fvMesh& mesh,
+                const labelPair& thisPatchAndFacei,
                 const label neighbourCelli,
-                const wallPointData<Type>& neighbourWallInfo,
+                const fvWallPointData<Type>& neighbourWallInfo,
                 const scalar tol,
                 TrackingData& td
             );
@@ -159,59 +162,67 @@ public:
             template<class TrackingData>
             inline bool updateFace
             (
-                const polyMesh& mesh,
-                const label thisFacei,
-                const wallPointData<Type>& neighbourWallInfo,
+                const fvMesh& mesh,
+                const labelPair& thisPatchAndFacei,
+                const fvWallPointData<Type>& neighbourWallInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
-    // Member Operators
 
     // IOstream Operators
 
-        friend Ostream& operator<< <Type>(Ostream&, const wallPointData<Type>&);
-        friend Istream& operator>> <Type>(Istream&, wallPointData<Type>&);
+        friend Ostream& operator<< <Type>
+        (
+            Ostream&,
+            const fvWallPointData<Type>&
+        );
+
+        friend Istream& operator>> <Type>
+        (
+            Istream&,
+            fvWallPointData<Type>&
+        );
 };
 
 
-//- Data associated with wallPointData type are contiguous. List the usual
+//- Data associated with fvWallPointData type are contiguous. List the usual
 //  ones.
 
 template<>
-inline bool contiguous<wallPointData<bool>>()
+inline bool contiguous<fvWallPointData<bool>>()
 {
-    return contiguous<wallPoint>();
+    return contiguous<fvWallPoint>();
 }
 template<>
-inline bool contiguous<wallPointData<label>>()
+inline bool contiguous<fvWallPointData<label>>()
 {
-    return contiguous<wallPoint>();
+    return contiguous<fvWallPoint>();
 }
 template<>
-inline bool contiguous<wallPointData<scalar>>()
+inline bool contiguous<fvWallPointData<scalar>>()
 {
-    return contiguous<wallPoint>();
+    return contiguous<fvWallPoint>();
 }
 template<>
-inline bool contiguous<wallPointData<vector>>()
+inline bool contiguous<fvWallPointData<vector>>()
 {
-    return contiguous<wallPoint>();
+    return contiguous<fvWallPoint>();
 }
 template<>
-inline bool contiguous<wallPointData<sphericalTensor>>()
+inline bool contiguous<fvWallPointData<sphericalTensor>>()
 {
-    return contiguous<wallPoint>();
+    return contiguous<fvWallPoint>();
 }
 template<>
-inline bool contiguous<wallPointData<symmTensor>>()
+inline bool contiguous<fvWallPointData<symmTensor>>()
 {
-    return contiguous<wallPoint>();
+    return contiguous<fvWallPoint>();
 }
 template<>
-inline bool contiguous<wallPointData<tensor>>()
+inline bool contiguous<fvWallPointData<tensor>>()
 {
-    return contiguous<wallPoint>();
+    return contiguous<fvWallPoint>();
 }
 
 
@@ -223,12 +234,12 @@ inline bool contiguous<wallPointData<tensor>>()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "wallPointData.C"
+    #include "fvWallPointData.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "wallPointDataI.H"
+#include "fvWallPointDataI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

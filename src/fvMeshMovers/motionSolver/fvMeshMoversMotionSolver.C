@@ -72,9 +72,15 @@ bool Foam::fvMeshMovers::motionSolver::update()
 }
 
 
-void Foam::fvMeshMovers::motionSolver::updateMesh(const polyTopoChangeMap& map)
+void Foam::fvMeshMovers::motionSolver::topoChange(const polyTopoChangeMap& map)
 {
-    motionPtr_->updateMesh(map);
+    motionPtr_->topoChange(map);
+}
+
+
+void Foam::fvMeshMovers::motionSolver::mapMesh(const polyMeshMap& map)
+{
+    motionPtr_->mapMesh(map);
 }
 
 

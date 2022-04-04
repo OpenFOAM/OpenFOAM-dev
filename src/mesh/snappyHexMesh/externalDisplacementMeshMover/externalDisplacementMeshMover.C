@@ -96,7 +96,7 @@ void Foam::externalDisplacementMeshMover::movePoints(const pointField&)
 }
 
 
-void Foam::externalDisplacementMeshMover::updateMesh
+void Foam::externalDisplacementMeshMover::topoChange
 (
     const polyTopoChangeMap& map
 )

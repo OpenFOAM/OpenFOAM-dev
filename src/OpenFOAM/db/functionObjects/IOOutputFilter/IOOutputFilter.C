@@ -129,21 +129,32 @@ bool Foam::IOOutputFilter<OutputFilter>::write(const bool write)
 
 
 template<class OutputFilter>
-void Foam::IOOutputFilter<OutputFilter>::updateMesh
+void Foam::IOOutputFilter<OutputFilter>::movePoints(const polyMesh& mesh)
+{
+    read();
+    OutputFilter::movePoints(mesh);
+}
+
+
+template<class OutputFilter>
+void Foam::IOOutputFilter<OutputFilter>::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
     read();
-    OutputFilter::updateMesh(map);
+    OutputFilter::topoChange(map);
 }
 
 
 template<class OutputFilter>
-void Foam::IOOutputFilter<OutputFilter>::movePoints(const polyMesh& mesh)
+void Foam::IOOutputFilter<OutputFilter>::mapMesh
+(
+    const polyMeshMap& map
+)
 {
     read();
-    OutputFilter::movePoints(mesh);
+    OutputFilter::mapMesh(map);
 }
 
 

@@ -482,7 +482,7 @@ void Foam::ThermoCloud<CloudType>::autoMap(const polyTopoChangeMap& mapper)
 {
     Cloud<parcelType>::autoMap(mapper);
 
-    this->updateMesh();
+    this->topoChange();
 }
 
 

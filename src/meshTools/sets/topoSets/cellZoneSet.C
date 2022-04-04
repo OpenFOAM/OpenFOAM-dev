@@ -289,7 +289,7 @@ bool cellZoneSet::writeObject
 }
 
 
-void cellZoneSet::updateMesh(const polyTopoChangeMap& map)
+void cellZoneSet::topoChange(const polyTopoChangeMap& map)
 {
     // cellZone
     labelList newAddressing(addressing_.size());

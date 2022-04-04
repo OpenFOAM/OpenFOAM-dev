@@ -30,6 +30,7 @@ License
 #include "primitiveMesh.H"
 #include "demandDrivenData.H"
 #include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
 #include "syncTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -386,7 +387,7 @@ void Foam::faceZone::resetAddressing
 }
 
 
-void Foam::faceZone::updateMesh(const polyTopoChangeMap& map)
+void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
 {
     clearAddressing();
 
@@ -413,6 +414,12 @@ void Foam::faceZone::updateMesh(const polyTopoChangeMap& map)
 
     transfer(newAddressing);
     flipMap_.transfer(newFlipMap);
+}
+
+
+void Foam::faceZone::mapMesh(const polyMeshMap&)
+{
+    NotImplemented;
 }
 
 

@@ -112,7 +112,7 @@ public:
         void sync(const IOobject& io);
 
         //- In-place update for topology changes
-        void updateMesh(const polyTopoChangeMap&);
+        void topoChange(const polyTopoChangeMap&);
 
         //- In-place distribute
         void distribute(const polyDistributionMap&);

@@ -381,7 +381,10 @@ public:
             void clearOut();
 
             //- Update mesh corresponding to the given map
-            virtual void updateMesh(const polyTopoChangeMap& map);
+            virtual void topoChange(const polyTopoChangeMap& map);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
 
             //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap& map);

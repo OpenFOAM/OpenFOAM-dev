@@ -1075,7 +1075,7 @@ int main(int argc, char *argv[])
         meshMod.changeMesh(subsetter.subMesh(), false);
 
     // Update fields
-    subsetter.subMesh().updateMesh(map);
+    subsetter.subMesh().topoChange(map);
 
     // Fix faces that get mapped to zero-sized patches (these don't get any
     // value)

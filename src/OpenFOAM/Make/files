@@ -582,6 +582,9 @@ $(polyTopoChangeMap)/faceMapper/faceMapper.C
 $(polyTopoChangeMap)/cellMapper/cellMapper.C
 $(polyTopoChangeMap)/mapAddedPolyMesh.C
 
+polyMeshMap = $(polyMesh)/polyMeshMap
+$(polyMeshMap)/polyMeshMap.C
+
 polyDistributionMap = $(polyMesh)/polyDistributionMap
 $(polyDistributionMap)/distributionMap.C
 $(polyDistributionMap)/distributionMapBase.C

@@ -271,7 +271,7 @@ Foam::wordList Foam::functionObjects::sampledSurfaces::fields() const
 }
 
 
-void Foam::functionObjects::sampledSurfaces::updateMesh
+void Foam::functionObjects::sampledSurfaces::topoChange
 (
     const polyTopoChangeMap& map
 )

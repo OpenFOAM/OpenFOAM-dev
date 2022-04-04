@@ -949,7 +949,7 @@ public:
 
             //- Update for external change to mesh. changedFaces are in new mesh
             //  face labels.
-            void updateMesh
+            void topoChange
             (
                 const polyTopoChangeMap&,
                 const labelList& changedFaces
@@ -978,7 +978,7 @@ public:
                 //- Update local numbering + undo
                 //  Data to restore given as new pointlabel + stored pointlabel
                 //  (i.e. what was in pointsToStore)
-                void updateMesh
+                void topoChange
                 (
                     const polyTopoChangeMap&,
                     const labelList& changedFaces,

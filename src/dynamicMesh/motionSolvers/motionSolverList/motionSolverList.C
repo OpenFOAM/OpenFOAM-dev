@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "motionSolverList.H"
+#include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -95,20 +96,20 @@ void Foam::motionSolverList::solve()
 }
 
 
-void Foam::motionSolverList::movePoints(const pointField& points)
+void Foam::motionSolverList::topoChange(const polyTopoChangeMap& map)
 {
     forAll(motionSolvers_, i)
     {
-        motionSolvers_[i].movePoints(points);
+        motionSolvers_[i].topoChange(map);
     }
 }
 
 
-void Foam::motionSolverList::updateMesh(const polyTopoChangeMap& map)
+void Foam::motionSolverList::mapMesh(const polyMeshMap& map)
 {
     forAll(motionSolvers_, i)
     {
-        motionSolvers_[i].updateMesh(map);
+        motionSolvers_[i].mapMesh(map);
     }
 }
 
@@ -121,6 +122,15 @@ void Foam::motionSolverList::distribute
     forAll(motionSolvers_, i)
     {
         motionSolvers_[i].distribute(map);
+    }
+}
+
+
+void Foam::motionSolverList::movePoints(const pointField& points)
+{
+    forAll(motionSolvers_, i)
+    {
+        motionSolvers_[i].movePoints(points);
     }
 }
 

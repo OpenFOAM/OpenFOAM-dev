@@ -356,12 +356,25 @@ void Foam::fv::solidificationMeltingSource::addSup
 }
 
 
-void Foam::fv::solidificationMeltingSource::updateMesh
+bool Foam::fv::solidificationMeltingSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::solidificationMeltingSource::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
-    set_.updateMesh(map);
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::solidificationMeltingSource::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
@@ -371,13 +384,6 @@ void Foam::fv::solidificationMeltingSource::distribute
 )
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::solidificationMeltingSource::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

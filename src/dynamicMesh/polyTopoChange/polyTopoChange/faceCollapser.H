@@ -142,7 +142,7 @@ public:
             ) const;
 
             //- Update stored quantities for new mesh labels.
-            void updateMesh(const polyTopoChangeMap&)
+            void topoChange(const polyTopoChangeMap&)
             {}
 
 

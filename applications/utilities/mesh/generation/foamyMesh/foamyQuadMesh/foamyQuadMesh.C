@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
             autoPtr<polyTopoChangeMap> map =
                 meshMod.changeMesh(pMesh, false);
 
-            pMesh.updateMesh(map);
+            pMesh.topoChange(map);
         }
     }
 

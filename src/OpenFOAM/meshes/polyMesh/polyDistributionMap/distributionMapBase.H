@@ -81,10 +81,8 @@ SourceFiles
 namespace Foam
 {
 
-class polyTopoChangeMap;
 class globalIndex;
 class PstreamBuffers;
-
 
 // Forward declaration of friend functions and operators
 
@@ -454,12 +452,6 @@ public:
             //- Debug: print layout. Can only be used on maps with sorted
             //  storage (local data first, then non-local data)
             void printLayout(Ostream& os) const;
-
-            //- Correct for topo change.
-            void updateMesh(const polyTopoChangeMap&)
-            {
-                NotImplemented;
-            }
 
 
     // Member Operators

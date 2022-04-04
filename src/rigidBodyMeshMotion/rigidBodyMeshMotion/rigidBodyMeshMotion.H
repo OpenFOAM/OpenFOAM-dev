@@ -173,7 +173,7 @@ public:
         virtual void solve();
 
         //-  Update local data for topology changes
-        virtual void updateMesh(const polyTopoChangeMap&);
+        virtual void topoChange(const polyTopoChangeMap&);
 
         //- Write motion state information for restart
         virtual bool write() const;

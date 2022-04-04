@@ -206,7 +206,7 @@ void Foam::duplicatePoints::setRefinement
 }
 
 
-void Foam::duplicatePoints::updateMesh(const polyTopoChangeMap& map)
+void Foam::duplicatePoints::topoChange(const polyTopoChangeMap& map)
 {
     forAll(duplicates_, masterI)
     {

@@ -176,7 +176,17 @@ void Foam::fv::sixDoFAccelerationSource::addSup
 }
 
 
-void Foam::fv::sixDoFAccelerationSource::updateMesh(const polyTopoChangeMap&)
+bool Foam::fv::sixDoFAccelerationSource::movePoints()
+{
+    return true;
+}
+
+
+void Foam::fv::sixDoFAccelerationSource::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::sixDoFAccelerationSource::mapMesh(const polyMeshMap& map)
 {}
 
 
@@ -185,12 +195,6 @@ void Foam::fv::sixDoFAccelerationSource::distribute
     const polyDistributionMap&
 )
 {}
-
-
-bool Foam::fv::sixDoFAccelerationSource::movePoints()
-{
-    return true;
-}
 
 
 bool Foam::fv::sixDoFAccelerationSource::read(const dictionary& dict)

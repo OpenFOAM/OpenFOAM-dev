@@ -521,7 +521,7 @@ void subsetMesh
     }
 
     // Update topology on cellRemover
-    cellRemover.updateMesh(map());
+    cellRemover.topoChange(map());
 
     // Update refLevel for removed cells.
     const labelList& cellMap = map().cellMap();
@@ -547,7 +547,7 @@ void subsetMesh
     }
 
     // Update cutCells for removed cells.
-    cutCells.updateMesh(map());
+    cutCells.topoChange(map());
 }
 
 

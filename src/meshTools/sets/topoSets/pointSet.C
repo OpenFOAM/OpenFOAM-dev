@@ -150,7 +150,7 @@ label pointSet::maxSize(const polyMesh& mesh) const
 }
 
 
-void pointSet::updateMesh(const polyTopoChangeMap& map)
+void pointSet::topoChange(const polyTopoChangeMap& map)
 {
     updateLabels(map.reversePointMap());
 }

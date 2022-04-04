@@ -321,15 +321,15 @@ void Foam::undoableMeshCutter::setRefinement
 }
 
 
-void Foam::undoableMeshCutter::updateMesh(const polyTopoChangeMap& map)
+void Foam::undoableMeshCutter::topoChange(const polyTopoChangeMap& map)
 {
     // Update mesh cutter for new labels.
-    meshCutter::updateMesh(map);
+    meshCutter::topoChange(map);
 
     // No need to update cell walker for new labels since does not store any.
 
     // Update faceRemover for new labels
-    faceRemover_.updateMesh(map);
+    faceRemover_.topoChange(map);
 
     if (undoable_)
     {

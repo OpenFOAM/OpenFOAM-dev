@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,16 +65,16 @@ void Foam::cyclicAMIPointPatch::movePoints(PstreamBuffers&, const pointField&)
 {}
 
 
-void Foam::cyclicAMIPointPatch::initUpdateMesh(PstreamBuffers& pBufs)
+void Foam::cyclicAMIPointPatch::initTopoChange(PstreamBuffers& pBufs)
 {
-    facePointPatch::initUpdateMesh(pBufs);
+    facePointPatch::initTopoChange(pBufs);
 //    cyclicAMIPointPatch::initCalcGeometry(pBufs);
 }
 
 
-void Foam::cyclicAMIPointPatch::updateMesh(PstreamBuffers& pBufs)
+void Foam::cyclicAMIPointPatch::topoChange(PstreamBuffers& pBufs)
 {
-    facePointPatch::updateMesh(pBufs);
+    facePointPatch::topoChange(pBufs);
 //    cyclicAMIPointPatch::calcGeometry(pBufs);
 }
 

@@ -744,10 +744,10 @@ void Foam::MomentumCloud<CloudType>::patchData
 
 
 template<class CloudType>
-void Foam::MomentumCloud<CloudType>::updateMesh()
+void Foam::MomentumCloud<CloudType>::topoChange()
 {
     updateCellOccupancy();
-    injectors_.updateMesh();
+    injectors_.topoChange();
     cellLengthScale_ = mag(cbrt(this->mesh().V()));
 }
 
@@ -757,7 +757,7 @@ void Foam::MomentumCloud<CloudType>::autoMap(const polyTopoChangeMap& mapper)
 {
     Cloud<parcelType>::autoMap(mapper);
 
-    updateMesh();
+    topoChange();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ Foam::PatchInjection<CloudType>::PatchInjection
 {
     duration_ = owner.db().time().userTimeToTime(duration_);
 
-    patchInjectionBase::updateMesh(owner.mesh());
+    patchInjectionBase::topoChange(owner.mesh());
 
     // Set total volume/mass to inject
     this->volumeTotal_ = flowRateProfile_.integral(0.0, duration_);
@@ -98,9 +98,9 @@ Foam::PatchInjection<CloudType>::~PatchInjection()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::PatchInjection<CloudType>::updateMesh()
+void Foam::PatchInjection<CloudType>::topoChange()
 {
-    patchInjectionBase::updateMesh(this->owner().mesh());
+    patchInjectionBase::topoChange(this->owner().mesh());
 }
 
 

@@ -254,7 +254,7 @@ void Foam::ReactingMultiphaseCloud<CloudType>::autoMap
 {
     Cloud<parcelType>::autoMap(mapper);
 
-    this->updateMesh();
+    this->topoChange();
 }
 
 

@@ -234,13 +234,13 @@ public:
         //- Sample and write
         virtual bool write();
 
-        //- Update for changes of mesh
-        virtual void updateMesh(const polyTopoChangeMap&);
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap&);
 
-        //- Update for changes of mesh
+        //- Update topology using the given map
         virtual void movePoints(const polyMesh&);
 
-        //- Update for changes of mesh due to readUpdate
+        //- Update topology using the given map due to readUpdate
         virtual void readUpdate(const polyMesh::readUpdateState state)
         {}
 

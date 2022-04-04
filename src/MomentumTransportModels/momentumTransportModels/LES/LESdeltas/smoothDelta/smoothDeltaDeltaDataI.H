@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "smoothDelta.H"
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class TrackingData>
@@ -53,7 +55,9 @@ inline bool Foam::LESModels::smoothDelta::deltaData::update
     else
     {
         // Neighbour is not too big for me or change is too small
-        // Nothing changed.
+        // ...
+
+        // Nothing changed
         return false;
     }
 }
@@ -88,7 +92,7 @@ inline bool Foam::LESModels::smoothDelta::deltaData::valid
 template<class TrackingData>
 inline bool Foam::LESModels::smoothDelta::deltaData::sameGeometry
 (
-    const polyMesh&,
+    const fvMesh&,
     const deltaData&,
     const scalar,
     TrackingData& td
@@ -101,7 +105,7 @@ inline bool Foam::LESModels::smoothDelta::deltaData::sameGeometry
 template<class TrackingData>
 inline void Foam::LESModels::smoothDelta::deltaData::transform
 (
-    const polyPatch& patch,
+    const fvPatch& patch,
     const label patchFacei,
     const transformer& transform,
     TrackingData& td
@@ -112,9 +116,9 @@ inline void Foam::LESModels::smoothDelta::deltaData::transform
 template<class TrackingData>
 inline bool Foam::LESModels::smoothDelta::deltaData::updateCell
 (
-    const polyMesh&,
+    const fvMesh&,
     const label,
-    const label,
+    const labelPair&,
     const deltaData& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
@@ -128,8 +132,8 @@ inline bool Foam::LESModels::smoothDelta::deltaData::updateCell
 template<class TrackingData>
 inline bool Foam::LESModels::smoothDelta::deltaData::updateFace
 (
-    const polyMesh&,
-    const label,
+    const fvMesh&,
+    const labelPair&,
     const label,
     const deltaData& neighbourWallInfo,
     const scalar tol,
@@ -144,8 +148,8 @@ inline bool Foam::LESModels::smoothDelta::deltaData::updateFace
 template<class TrackingData>
 inline bool Foam::LESModels::smoothDelta::deltaData::updateFace
 (
-    const polyMesh&,
-    const label,
+    const fvMesh&,
+    const labelPair&,
     const deltaData& neighbourWallInfo,
     const scalar tol,
     TrackingData& td

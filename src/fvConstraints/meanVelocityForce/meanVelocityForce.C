@@ -248,22 +248,28 @@ bool Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
 }
 
 
-void Foam::fv::meanVelocityForce::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::meanVelocityForce::movePoints()
 {
-    set_.updateMesh(map);
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::meanVelocityForce::topoChange(const polyTopoChangeMap& map)
+{
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::meanVelocityForce::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
 void Foam::fv::meanVelocityForce::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::meanVelocityForce::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

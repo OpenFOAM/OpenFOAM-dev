@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Foam::ThermoLookupTableInjection<CloudType>::ThermoLookupTableInjection
     injectorTetFaces_.setSize(injectors_.size());
     injectorTetPts_.setSize(injectors_.size());
 
-    updateMesh();
+    topoChange();
 
     // Determine volume of particles to inject
     this->volumeTotal_ = 0.0;
@@ -106,7 +106,7 @@ Foam::ThermoLookupTableInjection<CloudType>::~ThermoLookupTableInjection()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::ThermoLookupTableInjection<CloudType>::updateMesh()
+void Foam::ThermoLookupTableInjection<CloudType>::topoChange()
 {
     // Set/cache the injector cells
     forAll(injectors_, i)

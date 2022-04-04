@@ -56,9 +56,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of classes
-class fvMesh;
-
 /*---------------------------------------------------------------------------*\
                            Class MRFZone Declaration
 \*---------------------------------------------------------------------------*/
@@ -179,13 +176,6 @@ public:
 
         //- Return the current Omega vector
         vector Omega() const;
-
-        //- Update the mesh corresponding to given map
-        void updateMesh(const polyTopoChangeMap& map)
-        {
-            // Only updates face addressing
-            setMRFFaces();
-        }
 
         //- Add the Coriolis force contribution to the acceleration field
         void addCoriolis

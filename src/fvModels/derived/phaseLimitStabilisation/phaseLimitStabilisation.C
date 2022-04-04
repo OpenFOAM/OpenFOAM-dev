@@ -109,7 +109,17 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::phaseLimitStabilisation::updateMesh(const polyTopoChangeMap&)
+bool Foam::fv::phaseLimitStabilisation::movePoints()
+{
+    return true;
+}
+
+
+void Foam::fv::phaseLimitStabilisation::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::phaseLimitStabilisation::mapMesh(const polyMeshMap& map)
 {}
 
 
@@ -118,12 +128,6 @@ void Foam::fv::phaseLimitStabilisation::distribute
     const polyDistributionMap&
 )
 {}
-
-
-bool Foam::fv::phaseLimitStabilisation::movePoints()
-{
-    return true;
-}
 
 
 bool Foam::fv::phaseLimitStabilisation::read(const dictionary& dict)

@@ -360,7 +360,7 @@ void Foam::linearValveLayersFvMesh::update()
         // Changing topology
         resetMorph();
         setMorphTimeIndex(3*time().timeIndex());
-        updateMesh();
+        topoChange();
     }
     else
     {
@@ -373,7 +373,7 @@ void Foam::linearValveLayersFvMesh::update()
     // Changing topology
     resetMorph();
     setMorphTimeIndex(3*time().timeIndex() + 1);
-    updateMesh();
+    topoChange();
 
     if (topoChangeMap.valid())
     {
@@ -394,7 +394,7 @@ void Foam::linearValveLayersFvMesh::update()
     // Changing topology
     resetMorph();
     setMorphTimeIndex(3*time().timeIndex() + 2);
-    updateMesh();
+    topoChange();
 
     // Info<< "Moving points post slider attach" << endl;
     // const pointField p = allPoints();

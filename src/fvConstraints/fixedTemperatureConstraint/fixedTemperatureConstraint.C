@@ -192,12 +192,25 @@ bool Foam::fv::fixedTemperatureConstraint::constrain
 }
 
 
-void Foam::fv::fixedTemperatureConstraint::updateMesh
+bool Foam::fv::fixedTemperatureConstraint::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::fixedTemperatureConstraint::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
-    set_.updateMesh(map);
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::fixedTemperatureConstraint::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
@@ -207,13 +220,6 @@ void Foam::fv::fixedTemperatureConstraint::distribute
 )
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::fixedTemperatureConstraint::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

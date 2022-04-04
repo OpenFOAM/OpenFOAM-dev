@@ -302,9 +302,15 @@ void Foam::rigidBodyMeshMotionSolver::movePoints(const pointField& points)
 }
 
 
-void Foam::rigidBodyMeshMotionSolver::updateMesh(const polyTopoChangeMap& map)
+void Foam::rigidBodyMeshMotionSolver::topoChange(const polyTopoChangeMap& map)
 {
-    meshSolverPtr_->updateMesh(map);
+    meshSolverPtr_->topoChange(map);
+}
+
+
+void Foam::rigidBodyMeshMotionSolver::mapMesh(const polyMeshMap& map)
+{
+    meshSolverPtr_->mapMesh(map);
 }
 
 

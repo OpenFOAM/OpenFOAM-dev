@@ -48,6 +48,7 @@ namespace Foam
 
 class fvMesh;
 class polyTopoChangeMap;
+class polyMeshMap;
 class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
@@ -330,14 +331,17 @@ public:
             //- Prepare for mesh update
             virtual void preUpdateMesh();
 
-            //- Update for mesh changes
-            virtual void updateMesh(const polyTopoChangeMap&) = 0;
+            //- Update for mesh motion
+            virtual bool movePoints() = 0;
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&) = 0;
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&) = 0;
 
             //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap&) = 0;
-
-            //- Update for mesh motion
-            virtual bool movePoints() = 0;
 
 
         //- Correct the fvModel

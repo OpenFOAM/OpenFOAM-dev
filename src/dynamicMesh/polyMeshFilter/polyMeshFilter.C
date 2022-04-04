@@ -88,7 +88,7 @@ Foam::autoPtr<Foam::fvMesh> Foam::polyMeshFilter::copyMesh(const fvMesh& mesh)
     const polyTopoChangeMap& map = mapPtr();
 
     // Update fields
-    meshCopy().updateMesh(map);
+    meshCopy().topoChange(map);
     if (map.hasMotionPoints())
     {
         meshCopy().movePoints(map.preMotionPoints());
@@ -382,7 +382,7 @@ Foam::label Foam::polyMeshFilter::filterFaces
         const polyTopoChangeMap& newMap = newMapPtr();
 
         // Update fields
-        newMesh.updateMesh(newMap);
+        newMesh.topoChange(newMap);
         if (newMap.hasMotionPoints())
         {
             newMesh.movePoints(newMap.preMotionPoints());
@@ -499,7 +499,7 @@ Foam::label Foam::polyMeshFilter::filterEdges
     const polyTopoChangeMap& newMap = newMapPtr();
 
     // Update fields
-    newMesh.updateMesh(newMap);
+    newMesh.topoChange(newMap);
     if (newMap.hasMotionPoints())
     {
         newMesh.movePoints(newMap.preMotionPoints());

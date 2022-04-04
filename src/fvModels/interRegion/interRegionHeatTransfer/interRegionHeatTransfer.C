@@ -212,7 +212,17 @@ void Foam::fv::interRegionHeatTransfer::correct()
 }
 
 
-void Foam::fv::interRegionHeatTransfer::updateMesh(const polyTopoChangeMap&)
+bool Foam::fv::interRegionHeatTransfer::movePoints()
+{
+    return true;
+}
+
+
+void Foam::fv::interRegionHeatTransfer::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::interRegionHeatTransfer::mapMesh(const polyMeshMap& map)
 {}
 
 
@@ -221,12 +231,6 @@ void Foam::fv::interRegionHeatTransfer::distribute
     const polyDistributionMap&
 )
 {}
-
-
-bool Foam::fv::interRegionHeatTransfer::movePoints()
-{
-    return true;
-}
 
 
 bool Foam::fv::interRegionHeatTransfer::read(const dictionary& dict)

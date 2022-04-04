@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ Foam::ManualInjection<CloudType>::ManualInjection
         this->coeffDict().lookupOrDefault("ignoreOutOfBounds", false)
     )
 {
-    updateMesh();
+    topoChange();
 
     // Construct parcel diameters
     forAll(diameters_, i)
@@ -112,7 +112,7 @@ Foam::ManualInjection<CloudType>::~ManualInjection()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::ManualInjection<CloudType>::updateMesh()
+void Foam::ManualInjection<CloudType>::topoChange()
 {
     label nRejected = 0;
 

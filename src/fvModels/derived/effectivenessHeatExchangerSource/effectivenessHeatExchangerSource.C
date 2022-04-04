@@ -311,12 +311,25 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
 }
 
 
-void Foam::fv::effectivenessHeatExchangerSource::updateMesh
+bool Foam::fv::effectivenessHeatExchangerSource::movePoints()
+{
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::effectivenessHeatExchangerSource::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
-    set_.updateMesh(map);
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::effectivenessHeatExchangerSource::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
@@ -326,13 +339,6 @@ void Foam::fv::effectivenessHeatExchangerSource::distribute
 )
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::effectivenessHeatExchangerSource::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

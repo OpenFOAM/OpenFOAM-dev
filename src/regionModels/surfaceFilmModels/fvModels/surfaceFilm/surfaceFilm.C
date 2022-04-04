@@ -218,7 +218,11 @@ void Foam::fv::surfaceFilm::addSup
 }
 
 
-void Foam::fv::surfaceFilm::updateMesh(const polyTopoChangeMap&)
+void Foam::fv::surfaceFilm::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::surfaceFilm::mapMesh(const polyMeshMap& map)
 {}
 
 

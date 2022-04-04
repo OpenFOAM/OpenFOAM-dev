@@ -90,30 +90,6 @@ void Foam::pointMesh::reset(const bool validBoundary)
 }
 
 
-void Foam::pointMesh::updateMesh(const polyTopoChangeMap& map)
-{
-    if (debug)
-    {
-        Pout<< "pointMesh::updateMesh(const polyTopoChangeMap&): "
-            << "Updating for topology changes." << endl;
-        Pout<< endl;
-    }
-    boundary_.updateMesh();
-}
-
-
-void Foam::pointMesh::distribute(const polyDistributionMap& map)
-{
-    if (debug)
-    {
-        Pout<< "pointMesh::distribute(const polyDistributionMap&): "
-            << "Distribute." << endl;
-        Pout<< endl;
-    }
-    boundary_.updateMesh();
-}
-
-
 bool Foam::pointMesh::movePoints()
 {
     if (debug)
@@ -125,6 +101,42 @@ bool Foam::pointMesh::movePoints()
     boundary_.movePoints(GeoMesh<polyMesh>::mesh_.points());
 
     return true;
+}
+
+
+void Foam::pointMesh::topoChange(const polyTopoChangeMap& map)
+{
+    if (debug)
+    {
+        Pout<< "pointMesh::topoChange(const polyTopoChangeMap&): "
+            << "Topology change." << endl;
+        Pout<< endl;
+    }
+    boundary_.topoChange();
+}
+
+
+void Foam::pointMesh::mapMesh(const polyMeshMap& map)
+{
+    if (debug)
+    {
+        Pout<< "pointMesh::mapMesh(const polyMeshMap&): "
+            << "Mesh mapping." << endl;
+        Pout<< endl;
+    }
+    boundary_.topoChange();
+}
+
+
+void Foam::pointMesh::distribute(const polyDistributionMap& map)
+{
+    if (debug)
+    {
+        Pout<< "pointMesh::distribute(const polyDistributionMap&): "
+            << "Distribute." << endl;
+        Pout<< endl;
+    }
+    boundary_.topoChange();
 }
 
 

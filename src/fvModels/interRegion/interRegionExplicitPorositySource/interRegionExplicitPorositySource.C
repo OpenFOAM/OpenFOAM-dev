@@ -163,9 +163,22 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 }
 
 
-void Foam::fv::interRegionExplicitPorositySource::updateMesh
+bool Foam::fv::interRegionExplicitPorositySource::movePoints()
+{
+    return true;
+}
+
+
+void Foam::fv::interRegionExplicitPorositySource::topoChange
 (
     const polyTopoChangeMap&
+)
+{}
+
+
+void Foam::fv::interRegionExplicitPorositySource::mapMesh
+(
+    const polyMeshMap& map
 )
 {}
 
@@ -175,12 +188,6 @@ void Foam::fv::interRegionExplicitPorositySource::distribute
     const polyDistributionMap&
 )
 {}
-
-
-bool Foam::fv::interRegionExplicitPorositySource::movePoints()
-{
-    return true;
-}
 
 
 bool Foam::fv::interRegionExplicitPorositySource::read(const dictionary& dict)

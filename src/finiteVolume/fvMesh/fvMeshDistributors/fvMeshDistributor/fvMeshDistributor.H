@@ -158,7 +158,10 @@ public:
         virtual bool update() = 0;
 
         //- Update corresponding to the given map
-        virtual void updateMesh(const polyTopoChangeMap&) = 0;
+        virtual void topoChange(const polyTopoChangeMap&) = 0;
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&) = 0;
 
         //- Update corresponding to the given distribution map
         virtual void distribute(const polyDistributionMap&) = 0;

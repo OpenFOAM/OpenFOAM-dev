@@ -2241,7 +2241,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::refine
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false);
 
     // Update fields
-    mesh_.updateMesh(map);
+    mesh_.topoChange(map);
 
     // Optionally inflate mesh
     if (map().hasMotionPoints())
@@ -2258,7 +2258,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::refine
     mesh_.setInstance(timeName());
 
     // Update intersection info
-    updateMesh(map, getChangedFaces(map, cellsToRefine));
+    topoChange(map, getChangedFaces(map, cellsToRefine));
 
     return map;
 }

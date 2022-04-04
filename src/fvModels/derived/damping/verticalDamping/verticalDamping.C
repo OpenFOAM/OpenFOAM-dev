@@ -106,18 +106,22 @@ void Foam::fv::verticalDamping::addSup
 }
 
 
-void Foam::fv::verticalDamping::updateMesh(const polyTopoChangeMap&)
+bool Foam::fv::verticalDamping::movePoints()
+{
+    return true;
+}
+
+
+void Foam::fv::verticalDamping::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::verticalDamping::mapMesh(const polyMeshMap& map)
 {}
 
 
 void Foam::fv::verticalDamping::distribute(const polyDistributionMap&)
 {}
-
-
-bool Foam::fv::verticalDamping::movePoints()
-{
-    return true;
-}
 
 
 // ************************************************************************* //

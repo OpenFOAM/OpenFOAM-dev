@@ -995,7 +995,7 @@ void Foam::meshCutter::setRefinement
 }
 
 
-void Foam::meshCutter::updateMesh(const polyTopoChangeMap& map)
+void Foam::meshCutter::topoChange(const polyTopoChangeMap& map)
 {
     // Update stored labels for mesh change.
 
@@ -1021,7 +1021,7 @@ void Foam::meshCutter::updateMesh(const polyTopoChangeMap& map)
                  && (newCelli != celli || newAddedCelli != addedCelli)
                 )
                 {
-                    Pout<< "meshCutter::updateMesh :"
+                    Pout<< "meshCutter::topoChange :"
                         << " updating addedCell for cell " << celli
                         << " from " << addedCelli
                         << " to " << newAddedCelli << endl;
@@ -1054,7 +1054,7 @@ void Foam::meshCutter::updateMesh(const polyTopoChangeMap& map)
                  && (newCelli != celli || newAddedFacei != addedFacei)
                 )
                 {
-                    Pout<< "meshCutter::updateMesh :"
+                    Pout<< "meshCutter::topoChange :"
                         << " updating addedFace for cell " << celli
                         << " from " << addedFacei
                         << " to " << newAddedFacei
@@ -1099,7 +1099,7 @@ void Foam::meshCutter::updateMesh(const polyTopoChangeMap& map)
                  && (e != newE || newAddedPointi != addedPointi)
                 )
                 {
-                    Pout<< "meshCutter::updateMesh :"
+                    Pout<< "meshCutter::topoChange :"
                         << " updating addedPoints for edge " << e
                         << " from " << addedPointi
                         << " to " << newAddedPointi

@@ -140,7 +140,7 @@ void Foam::componentDisplacementMotionSolver::movePoints(const pointField& p)
 }
 
 
-void Foam::componentDisplacementMotionSolver::updateMesh
+void Foam::componentDisplacementMotionSolver::topoChange
 (
     const polyTopoChangeMap& map
 )
@@ -195,6 +195,13 @@ void Foam::componentDisplacementMotionSolver::updateMesh
         }
     }
     points0_.transfer(newPoints0);
+}
+
+
+void Foam::componentDisplacementMotionSolver::mapMesh(const polyMeshMap& map)
+{
+    points0_ == mesh().points().component(cmpt_);
+    pointDisplacement_ == Zero;
 }
 
 

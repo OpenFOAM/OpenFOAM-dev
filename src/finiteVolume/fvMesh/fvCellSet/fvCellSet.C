@@ -167,7 +167,24 @@ Foam::fvCellSet::~fvCellSet()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fvCellSet::updateMesh(const polyTopoChangeMap&)
+void Foam::fvCellSet::movePoints()
+{
+    if (selectionMode_ == selectionModeType::points)
+    {
+        setCells();
+    }
+    setV();
+}
+
+
+void Foam::fvCellSet::topoChange(const polyTopoChangeMap&)
+{
+    setCells();
+    setV();
+}
+
+
+void Foam::fvCellSet::mapMesh(const polyMeshMap&)
 {
     setCells();
     setV();
@@ -177,16 +194,6 @@ void Foam::fvCellSet::updateMesh(const polyTopoChangeMap&)
 void Foam::fvCellSet::distribute(const polyDistributionMap&)
 {
     setCells();
-    setV();
-}
-
-
-void Foam::fvCellSet::movePoints()
-{
-    if (selectionMode_ == selectionModeType::points)
-    {
-        setCells();
-    }
     setV();
 }
 

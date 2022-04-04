@@ -246,10 +246,10 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
                 );
 
                 // Update fields
-                mesh_.updateMesh(map);
+                mesh_.topoChange(map);
 
                 // Update numbering of cells/vertices.
-                meshCutter_.updateMesh(map);
+                meshCutter_.topoChange(map);
 
                 {
                     // Map volumeStatus
@@ -355,11 +355,11 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
                 );
 
                 // Update fields
-                mesh_.updateMesh(map);
+                mesh_.topoChange(map);
 
                 // Update numbering of cells/vertices.
-                meshCutter_.updateMesh(map);
-                cellRemover.updateMesh(map);
+                meshCutter_.topoChange(map);
+                cellRemover.topoChange(map);
 
                 {
                     // Map volumeStatus
@@ -947,10 +947,10 @@ Foam::backgroundMeshDecomposition::distribute
         );
 
         // Update fields
-        mesh_.updateMesh(map);
+        mesh_.topoChange(map);
 
         // Update numbering of cells/vertices.
-        meshCutter_.updateMesh(map);
+        meshCutter_.topoChange(map);
 
         Info<< "    Background mesh refined from "
             << returnReduce(map().nOldCells(), sumOp<label>())

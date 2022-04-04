@@ -318,18 +318,22 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::volumeFractionSource::updateMesh(const polyTopoChangeMap&)
+bool Foam::fv::volumeFractionSource::movePoints()
+{
+    return true;
+}
+
+
+void Foam::fv::volumeFractionSource::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::volumeFractionSource::mapMesh(const polyMeshMap& map)
 {}
 
 
 void Foam::fv::volumeFractionSource::distribute(const polyDistributionMap&)
 {}
-
-
-bool Foam::fv::volumeFractionSource::movePoints()
-{
-    return true;
-}
 
 
 bool Foam::fv::volumeFractionSource::read(const dictionary& dict)

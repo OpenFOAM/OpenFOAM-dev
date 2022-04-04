@@ -188,10 +188,20 @@ void Foam::fv::solidEquilibriumEnergySource::addSup
 }
 
 
-void Foam::fv::solidEquilibriumEnergySource::updateMesh
+bool Foam::fv::solidEquilibriumEnergySource::movePoints()
+{
+    return true;
+}
+
+
+void Foam::fv::solidEquilibriumEnergySource::topoChange
 (
     const polyTopoChangeMap&
 )
+{}
+
+
+void Foam::fv::solidEquilibriumEnergySource::mapMesh(const polyMeshMap& map)
 {}
 
 
@@ -200,12 +210,6 @@ void Foam::fv::solidEquilibriumEnergySource::distribute
     const polyDistributionMap&
 )
 {}
-
-
-bool Foam::fv::solidEquilibriumEnergySource::movePoints()
-{
-    return true;
-}
 
 
 bool Foam::fv::solidEquilibriumEnergySource::read(const dictionary& dict)

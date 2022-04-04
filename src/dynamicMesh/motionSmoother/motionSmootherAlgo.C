@@ -368,7 +368,7 @@ Foam::motionSmootherAlgo::motionSmootherAlgo
     paramDict_(paramDict),
     isInternalPoint_(mesh_.nPoints(), 1)
 {
-    updateMesh();
+    topoChange();
 }
 
 
@@ -1032,7 +1032,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
 }
 
 
-void Foam::motionSmootherAlgo::updateMesh()
+void Foam::motionSmootherAlgo::topoChange()
 {
     const pointBoundaryMesh& patches = pMesh_.boundary();
 

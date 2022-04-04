@@ -126,12 +126,12 @@ void Foam::displacementMeshMoverMotionSolver::movePoints(const pointField& p)
 }
 
 
-void Foam::displacementMeshMoverMotionSolver::updateMesh
+void Foam::displacementMeshMoverMotionSolver::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
-    displacementMotionSolver::updateMesh(map);
+    displacementMotionSolver::topoChange(map);
 
     // Update meshMover for new topology
     meshMoverPtr_.clear();

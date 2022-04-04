@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,10 +148,10 @@ protected:
         virtual void movePoints(PstreamBuffers&, const pointField&) = 0;
 
         //- Initialise the update of the patch topology
-        virtual void initUpdateMesh(PstreamBuffers&) = 0;
+        virtual void initTopoChange(PstreamBuffers&) = 0;
 
         //- Update of the patch topology
-        virtual void updateMesh(PstreamBuffers&) = 0;
+        virtual void topoChange(PstreamBuffers&) = 0;
 
         //- Write a patch in OBJ format
         static void writeOBJ

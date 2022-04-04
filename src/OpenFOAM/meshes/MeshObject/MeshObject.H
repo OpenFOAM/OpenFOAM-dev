@@ -51,13 +51,13 @@ Description
     - TopologicalMeshObject: mesh object to be deleted on topology change
     - GeometricMeshObject: mesh object to be deleted on geometry change
     - MoveableMeshObject: mesh object to be updated in movePoints
-    - UpdateableMeshObject: mesh object to be updated in updateMesh or
+    - UpdateableMeshObject: mesh object to be updated in topoChange or
         movePoints
     - PatchMeshObject: mesh object to be additionally updated patch changes
 
 Note
     movePoints must be provided for MeshObjects of type MoveableMeshObject
-    and both movePoints and updateMesh functions must exist, provided for
+    and both movePoints and topoChange functions must exist, provided for
     MeshObjects of type UpdateableMeshObject.
 
 SourceFiles
@@ -77,6 +77,7 @@ namespace Foam
 
 // Forward declarations
 class polyTopoChangeMap;
+class polyMeshMap;
 class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
@@ -173,7 +174,10 @@ public:
         static void movePoints(objectRegistry&);
 
         template<class Mesh>
-        static void updateMesh(objectRegistry&, const polyTopoChangeMap&);
+        static void topoChange(objectRegistry&, const polyTopoChangeMap&);
+
+        template<class Mesh>
+        static void mapMesh(objectRegistry&, const polyMeshMap&);
 
         template<class Mesh>
         static void distribute(objectRegistry&, const polyDistributionMap&);
@@ -321,7 +325,9 @@ public:
         DistributeableMeshObject<Mesh>(typeName, io)
     {}
 
-    virtual void updateMesh(const polyTopoChangeMap& map) = 0;
+    virtual void topoChange(const polyTopoChangeMap& map) = 0;
+
+    virtual void mapMesh(const polyMeshMap& map) = 0;
 };
 
 

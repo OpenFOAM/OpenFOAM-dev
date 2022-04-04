@@ -384,9 +384,16 @@ bool Foam::fvMeshTopoChangers::movingCone::update()
 }
 
 
-void Foam::fvMeshTopoChangers::movingCone::updateMesh
+void Foam::fvMeshTopoChangers::movingCone::topoChange
 (
     const polyTopoChangeMap& map
+)
+{}
+
+
+void Foam::fvMeshTopoChangers::movingCone::mapMesh
+(
+    const polyMeshMap& map
 )
 {}
 

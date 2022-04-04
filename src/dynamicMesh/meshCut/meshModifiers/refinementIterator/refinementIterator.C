@@ -177,7 +177,7 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
         }
 
         // Update stored refinement pattern
-        meshRefiner_.updateMesh(map());
+        meshRefiner_.topoChange(map());
 
         // Write resulting mesh
         if (writeMesh_)
@@ -207,7 +207,7 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
         );
 
         // Get all added cells from cellCutter (already in new numbering
-        // from meshRefiner.updateMesh call) and add to global list of added
+        // from meshRefiner.topoChange call) and add to global list of added
         const Map<label>& addedNow = meshRefiner_.addedCells();
 
         forAllConstIter(Map<label>, addedNow, iter)

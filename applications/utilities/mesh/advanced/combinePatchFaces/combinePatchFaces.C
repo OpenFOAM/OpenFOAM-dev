@@ -108,7 +108,7 @@ label mergePatchFaces
             map = meshMod.changeMesh(mesh, false, true);
 
             // Update fields
-            mesh.updateMesh(map);
+            mesh.topoChange(map);
 
             // Move mesh (since morphing does not do this)
             if (map().hasMotionPoints())
@@ -264,7 +264,7 @@ label mergePatchFaces
             map = meshMod.changeMesh(mesh, false, true);
 
             // Update fields
-            mesh.updateMesh(map);
+            mesh.topoChange(map);
 
             // Move mesh (since morphing does not do this)
             if (map().hasMotionPoints())
@@ -317,7 +317,7 @@ label mergeEdges(const scalar minCos, polyMesh& mesh)
         autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false, true);
 
         // Update fields
-        mesh.updateMesh(map);
+        mesh.topoChange(map);
 
         // Move mesh (since morphing does not do this)
         if (map().hasMotionPoints())

@@ -105,13 +105,20 @@ void Foam::componentVelocityMotionSolver::movePoints(const pointField& p)
 }
 
 
-void Foam::componentVelocityMotionSolver::updateMesh
+void Foam::componentVelocityMotionSolver::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
-    // pointMesh already updates pointFields.
+    // fvMesh updates pointFields.
 }
+
+
+void Foam::componentVelocityMotionSolver::mapMesh
+(
+    const polyMeshMap& map
+)
+{}
 
 
 void Foam::componentVelocityMotionSolver::distribute

@@ -903,7 +903,7 @@ void Foam::createShellMesh::setRefinement
 }
 
 
-void Foam::createShellMesh::updateMesh(const polyTopoChangeMap& map)
+void Foam::createShellMesh::topoChange(const polyTopoChangeMap& map)
 {
     inplaceReorder(map.reverseCellMap(), cellToFaceMap_);
     inplaceReorder(map.reverseFaceMap(), faceToFaceMap_);

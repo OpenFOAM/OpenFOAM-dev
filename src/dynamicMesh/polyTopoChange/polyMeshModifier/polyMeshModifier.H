@@ -167,7 +167,7 @@ public:
         virtual void modifyMotionPoints(pointField& motionPoints) const = 0;
 
         //- Force recalculation of locally stored data on topological change
-        virtual void updateMesh(const polyTopoChangeMap&) = 0;
+        virtual void topoChange(const polyTopoChangeMap&) = 0;
 
 
         // Activation and deactivation

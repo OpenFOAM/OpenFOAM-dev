@@ -126,18 +126,22 @@ void Foam::fv::buoyancyEnergy::addSup
 }
 
 
-void Foam::fv::buoyancyEnergy::updateMesh(const polyTopoChangeMap&)
+bool Foam::fv::buoyancyEnergy::movePoints()
+{
+    return true;
+}
+
+
+void Foam::fv::buoyancyEnergy::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::buoyancyEnergy::mapMesh(const polyMeshMap& map)
 {}
 
 
 void Foam::fv::buoyancyEnergy::distribute(const polyDistributionMap&)
 {}
-
-
-bool Foam::fv::buoyancyEnergy::movePoints()
-{
-    return true;
-}
 
 
 bool Foam::fv::buoyancyEnergy::read(const dictionary& dict)

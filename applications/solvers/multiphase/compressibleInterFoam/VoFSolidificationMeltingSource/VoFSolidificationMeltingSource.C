@@ -222,12 +222,18 @@ void Foam::fv::VoFSolidificationMeltingSource::correct()
 }
 
 
-void Foam::fv::VoFSolidificationMeltingSource::updateMesh
+void Foam::fv::VoFSolidificationMeltingSource::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
-    set_.updateMesh(map);
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::VoFSolidificationMeltingSource::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 

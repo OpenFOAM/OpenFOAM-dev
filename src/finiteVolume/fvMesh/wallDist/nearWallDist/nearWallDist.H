@@ -93,14 +93,17 @@ public:
             return y_;
         }
 
+        //- Update the y-field when the mesh moves
+        virtual bool movePoints();
+
         //- Update the y-field when the mesh changes
-        virtual void updateMesh(const polyTopoChangeMap&);
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
         //- Redistribute or update using the given distribution map
         virtual void distribute(const polyDistributionMap&);
-
-        //- Update the y-field when the mesh moves
-        virtual bool movePoints();
 
 
     // Member Operators

@@ -85,9 +85,18 @@ bool Foam::fvMeshMovers::interpolator::update()
 }
 
 
-void Foam::fvMeshMovers::interpolator::updateMesh(const polyTopoChangeMap&)
+void Foam::fvMeshMovers::interpolator::topoChange(const polyTopoChangeMap&)
 {
     NotImplemented;
+}
+
+
+void Foam::fvMeshMovers::interpolator::mapMesh(const polyMeshMap& map)
+{
+    if (displacement_)
+    {
+        points0_() == mesh().points();
+    }
 }
 
 

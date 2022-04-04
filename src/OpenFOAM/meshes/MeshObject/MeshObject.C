@@ -321,7 +321,7 @@ void Foam::meshObject::distribute
 
 
 template<class Mesh>
-void Foam::meshObject::updateMesh
+void Foam::meshObject::topoChange
 (
     objectRegistry& obr,
     const polyTopoChangeMap& map
@@ -334,7 +334,7 @@ void Foam::meshObject::updateMesh
 
     if (meshObject::debug)
     {
-        Pout<< "meshObject::updateMesh(objectRegistry&, "
+        Pout<< "meshObject::topoChange(objectRegistry&, "
                "const polyTopoChangeMap& map) : updating " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
@@ -352,7 +352,53 @@ void Foam::meshObject::updateMesh
             {
                 Pout<< "    Updating " << iter()->name() << endl;
             }
-            dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->updateMesh(map);
+            dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->topoChange(map);
+        }
+        else
+        {
+            if (meshObject::debug)
+            {
+                Pout<< "    Destroying " << iter()->name() << endl;
+            }
+            obr.checkOut(*iter());
+        }
+    }
+}
+
+
+template<class Mesh>
+void Foam::meshObject::mapMesh
+(
+    objectRegistry& obr,
+    const polyMeshMap& map
+)
+{
+    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    (
+        obr.lookupClass<GeometricMeshObject<Mesh>>()
+    );
+
+    if (meshObject::debug)
+    {
+        Pout<< "meshObject::mapMesh(objectRegistry&, "
+               "const polyMeshMap& map) : updating " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
+    forAllIter
+    (
+        typename HashTable<GeometricMeshObject<Mesh>*>,
+        meshObjects,
+        iter
+    )
+    {
+        if (isA<UpdateableMeshObject<Mesh>>(*iter()))
+        {
+            if (meshObject::debug)
+            {
+                Pout<< "    Updating " << iter()->name() << endl;
+            }
+            dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->mapMesh(map);
         }
         else
         {

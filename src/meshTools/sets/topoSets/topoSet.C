@@ -544,7 +544,7 @@ bool Foam::topoSet::writeData(Ostream& os) const
 }
 
 
-void Foam::topoSet::updateMesh(const polyTopoChangeMap&)
+void Foam::topoSet::topoChange(const polyTopoChangeMap&)
 {
     NotImplemented;
 }

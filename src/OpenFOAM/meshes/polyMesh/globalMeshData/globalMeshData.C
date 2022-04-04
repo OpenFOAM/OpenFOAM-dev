@@ -1784,7 +1784,7 @@ Foam::globalMeshData::globalMeshData(const polyMesh& mesh)
     sharedEdgeLabelsPtr_(nullptr),
     sharedEdgeAddrPtr_(nullptr)
 {
-    updateMesh();
+    topoChange();
 }
 
 
@@ -2761,7 +2761,7 @@ void Foam::globalMeshData::movePoints(const pointField& newPoints)
 }
 
 
-void Foam::globalMeshData::updateMesh()
+void Foam::globalMeshData::topoChange()
 {
     // Clear out old data
     clearOut();

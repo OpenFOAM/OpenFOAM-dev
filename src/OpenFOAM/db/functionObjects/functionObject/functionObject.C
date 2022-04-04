@@ -156,11 +156,15 @@ Foam::scalar Foam::functionObject::timeToNextWrite()
 }
 
 
-void Foam::functionObject::updateMesh(const polyTopoChangeMap&)
+void Foam::functionObject::movePoints(const polyMesh&)
 {}
 
 
-void Foam::functionObject::movePoints(const polyMesh&)
+void Foam::functionObject::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::functionObject::mapMesh(const polyMeshMap&)
 {}
 
 

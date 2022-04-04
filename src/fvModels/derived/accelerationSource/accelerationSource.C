@@ -111,9 +111,22 @@ void Foam::fv::accelerationSource::addSup
 }
 
 
-void Foam::fv::accelerationSource::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::accelerationSource::movePoints()
 {
-    set_.updateMesh(map);
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::accelerationSource::topoChange(const polyTopoChangeMap& map)
+{
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::accelerationSource::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
@@ -123,13 +136,6 @@ void Foam::fv::accelerationSource::distribute
 )
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::accelerationSource::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

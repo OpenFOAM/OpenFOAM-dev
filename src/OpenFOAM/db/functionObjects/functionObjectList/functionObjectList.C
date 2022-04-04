@@ -844,18 +844,6 @@ bool Foam::functionObjectList::read()
 }
 
 
-void Foam::functionObjectList::updateMesh(const polyTopoChangeMap& map)
-{
-    if (execution_)
-    {
-        forAll(*this, oi)
-        {
-            operator[](oi).updateMesh(map);
-        }
-    }
-}
-
-
 void Foam::functionObjectList::movePoints(const polyMesh& mesh)
 {
     if (execution_)
@@ -863,6 +851,30 @@ void Foam::functionObjectList::movePoints(const polyMesh& mesh)
         forAll(*this, oi)
         {
             operator[](oi).movePoints(mesh);
+        }
+    }
+}
+
+
+void Foam::functionObjectList::topoChange(const polyTopoChangeMap& map)
+{
+    if (execution_)
+    {
+        forAll(*this, oi)
+        {
+            operator[](oi).topoChange(map);
+        }
+    }
+}
+
+
+void Foam::functionObjectList::mapMesh(const polyMeshMap& map)
+{
+    if (execution_)
+    {
+        forAll(*this, oi)
+        {
+            operator[](oi).mapMesh(map);
         }
     }
 }

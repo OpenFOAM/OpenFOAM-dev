@@ -76,7 +76,9 @@ class wallPoint
         scalar distSqr_;
 
 
-    // Private Member Functions
+protected:
+
+    // Protected Member Functions
 
         //- Evaluate distance to point. Update distSqr, origin from whomever
         //  is nearer pt. Return true if w2 is closer to point,

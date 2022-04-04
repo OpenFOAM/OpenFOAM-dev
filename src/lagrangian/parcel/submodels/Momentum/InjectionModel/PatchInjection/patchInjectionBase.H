@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ public:
     // Member Functions
 
         //- Update patch geometry and derived info for injection locations
-        virtual void updateMesh(const polyMesh& mesh);
+        virtual void topoChange(const polyMesh& mesh);
 
         //- Set the injection position and owner cell, tetFace and tetPt
         virtual void setPositionAndCell

@@ -461,7 +461,7 @@ void Foam::cellSplitter::setRefinement
 }
 
 
-void Foam::cellSplitter::updateMesh(const polyTopoChangeMap& map)
+void Foam::cellSplitter::topoChange(const polyTopoChangeMap& map)
 {
     // Create copy since we're deleting entries. Only if both cell and added
     // point get mapped do they get inserted.

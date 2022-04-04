@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,44 +21,57 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::polyMeshMap
+
+Description
+    Class containing mesh-to-mesh mapping information.
+
+SourceFiles
+    polyMeshMap.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "wallPointData.H"
+#ifndef polyMeshMap_H
+#define polyMeshMap_H
+
+#include "polyMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
+class polyMesh;
 
-template<class Type>
-Ostream& operator<<
-(
-    Ostream& os,
-    const wallPointData<Type>& wDist
-)
+/*---------------------------------------------------------------------------*\
+                       Class polyMeshMap Declaration
+\*---------------------------------------------------------------------------*/
+
+class polyMeshMap
 {
-    return os
-        << static_cast<const wallPoint&>(wDist)
-        << token::SPACE
-        << wDist.data();
-}
+
+public:
+
+    // Constructors
+
+        //- Construct null
+        polyMeshMap();
+
+        //- Disallow default bitwise copy construction
+        polyMeshMap(const polyMeshMap&) = delete;
 
 
-template<class Type>
-Istream& operator>>
-(
-    Istream& is,
-    wallPointData<Type>& wDist
-)
-{
-    return is >> static_cast<wallPoint&>(wDist) >> wDist.data_;
-}
+    // Member Functions
+};
 
 
-// ************************************************************************* //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

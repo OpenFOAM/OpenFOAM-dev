@@ -537,7 +537,7 @@ int main(int argc, char *argv[])
             mesh.movePoints(map().preMotionPoints());
         }
 
-        cutter.updateMesh(map());
+        cutter.topoChange(map());
 
         if (!overwrite)
         {
@@ -610,7 +610,7 @@ int main(int argc, char *argv[])
         }
 
         // Not implemented yet:
-        // cutter.updateMesh(map());
+        // cutter.topoChange(map());
 
 
         if (!overwrite)
@@ -654,7 +654,7 @@ int main(int argc, char *argv[])
             mesh.movePoints(map().preMotionPoints());
         }
 
-        cutter.updateMesh(map());
+        cutter.topoChange(map());
 
         if (!overwrite)
         {

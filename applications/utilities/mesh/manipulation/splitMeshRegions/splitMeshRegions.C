@@ -769,7 +769,7 @@ void createAndWriteRegion
     Info<< "Mapping fields" << endl;
 
     // Map existing fields
-    newMesh().updateMesh(map());
+    newMesh().topoChange(map());
 
     // Add subsetted fields
     subsetVolFields<volScalarField>

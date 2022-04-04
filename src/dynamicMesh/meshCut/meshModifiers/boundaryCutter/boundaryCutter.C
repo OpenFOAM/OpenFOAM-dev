@@ -829,7 +829,7 @@ void Foam::boundaryCutter::setRefinement
 }
 
 
-void Foam::boundaryCutter::updateMesh(const polyTopoChangeMap& map)
+void Foam::boundaryCutter::topoChange(const polyTopoChangeMap& map)
 {
     // Update stored labels for mesh change.
 

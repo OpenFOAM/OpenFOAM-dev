@@ -145,7 +145,7 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
 
     if (isMeshUpdate)
     {
-        // Part of a mesh update. Keep meshObjects that have an updateMesh
+        // Part of a mesh update. Keep meshObjects that have an topoChange
         // callback
         meshObject::clearUpto
         <
@@ -823,10 +823,10 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 }
 
 
-void Foam::fvMesh::updateMesh(const polyTopoChangeMap& map)
+void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
 {
     // Update polyMesh. This needs to keep volume existent!
-    polyMesh::updateMesh(map);
+    polyMesh::topoChange(map);
 
     if (VPtr_)
     {
@@ -914,23 +914,46 @@ void Foam::fvMesh::updateMesh(const polyTopoChangeMap& map)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    meshObject::updateMesh<fvMesh>(*this, map);
-    meshObject::updateMesh<lduMesh>(*this, map);
+    meshObject::topoChange<fvMesh>(*this, map);
+    meshObject::topoChange<lduMesh>(*this, map);
 
     if (topoChanger_.valid())
     {
-        topoChanger_->updateMesh(map);
+        topoChanger_->topoChange(map);
     }
 
     if (distributor_.valid())
     {
-        distributor_->updateMesh(map);
+        distributor_->topoChange(map);
     }
 
     if (mover_.valid())
     {
-        mover_->updateMesh(map);
+        mover_->topoChange(map);
     }
+}
+
+
+void Foam::fvMesh::mapMesh(const polyMeshMap& map)
+{
+    // Distribute polyMesh data
+    polyMesh::mapMesh(map);
+
+    // Clear the sliced fields
+    clearGeomNotOldVol();
+
+    // Clear the current volume and other geometry factors
+    surfaceInterpolation::clearOut();
+
+    // Clear any non-updateable addressing
+    clearAddressing(true);
+
+    meshObject::mapMesh<fvMesh>(*this, map);
+    meshObject::mapMesh<lduMesh>(*this, map);
+
+    topoChanger_->mapMesh(map);
+    distributor_->mapMesh(map);
+    mover_->mapMesh(map);
 }
 
 
@@ -966,7 +989,7 @@ void Foam::fvMesh::addPatch
     const bool validBoundary
 )
 {
-    // Remove my local data (see updateMesh)
+    // Remove my local data (see topoChange)
     // Clear mesh motion flux
     deleteDemandDrivenData(phiPtr_);
 

@@ -25,8 +25,8 @@ License
 
 #include "vanDriestDelta.H"
 #include "wallFvPatch.H"
-#include "patchDistWave.H"
-#include "wallPointYPlus.H"
+#include "fvPatchDistWave.H"
+#include "fvWallPointYPlus.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -79,23 +79,21 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
         }
     }
 
-    scalar cutOff = wallPointYPlus::yPlusCutOff;
-    wallPointYPlus::yPlusCutOff = 500;
+    scalar cutOff = fvWallPointYPlus::yPlusCutOff;
+    fvWallPointYPlus::yPlusCutOff = 500;
     volScalarField y
     (
         volScalarField::New("y", mesh, dimensionedScalar(dimLength, great))
     );
-    patchDistWave::wave<wallPointYPlus, fvPatchField>
+    fvPatchDistWave::wave<fvWallPointYPlus>
     (
         mesh,
         mesh.boundaryMesh().findPatchIDs<wallPolyPatch>(),
         ystar.boundaryField(),
-        y.primitiveFieldRef(),
-        y.boundaryFieldRef(),
-        ystar.primitiveFieldRef(),
-        ystar.boundaryFieldRef()
+        y,
+        ystar
     );
-    wallPointYPlus::yPlusCutOff = cutOff;
+    fvWallPointYPlus::yPlusCutOff = cutOff;
 
     delta_ = min
     (

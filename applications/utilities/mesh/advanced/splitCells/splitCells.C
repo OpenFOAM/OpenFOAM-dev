@@ -693,10 +693,10 @@ int main(int argc, char *argv[])
         }
 
         // Update stored labels on meshCutter
-        cutter.updateMesh(map());
+        cutter.topoChange(map());
 
         // Update cellSet
-        cellsToCut.updateMesh(map());
+        cellsToCut.topoChange(map());
 
         Info<< "Remaining:" << cellsToCut.size() << endl;
 

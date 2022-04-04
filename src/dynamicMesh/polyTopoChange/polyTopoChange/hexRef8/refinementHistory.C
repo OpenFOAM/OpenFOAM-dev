@@ -1130,7 +1130,7 @@ void Foam::refinementHistory::resize(const label size)
 }
 
 
-void Foam::refinementHistory::updateMesh(const polyTopoChangeMap& map)
+void Foam::refinementHistory::topoChange(const polyTopoChangeMap& map)
 {
     if (active())
     {
@@ -1164,7 +1164,7 @@ void Foam::refinementHistory::updateMesh(const polyTopoChangeMap& map)
 
         if (debug)
         {
-            Pout<< "refinementHistory::updateMesh : from "
+            Pout<< "refinementHistory::topoChange : from "
                 << visibleCells_.size()
                 << " to " << newVisibleCells.size()
                 << " cells" << endl;
@@ -1204,7 +1204,7 @@ void Foam::refinementHistory::subset
 
         if (debug)
         {
-            Pout<< "refinementHistory::updateMesh : from "
+            Pout<< "refinementHistory::topoChange : from "
                 << visibleCells_.size()
                 << " to " << newVisibleCells.size()
                 << " cells" << endl;

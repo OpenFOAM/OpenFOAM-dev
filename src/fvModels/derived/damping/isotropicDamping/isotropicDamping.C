@@ -117,18 +117,22 @@ void Foam::fv::isotropicDamping::addSup
 }
 
 
-void Foam::fv::isotropicDamping::updateMesh(const polyTopoChangeMap&)
+bool Foam::fv::isotropicDamping::movePoints()
+{
+    return true;
+}
+
+
+void Foam::fv::isotropicDamping::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::isotropicDamping::mapMesh(const polyMeshMap& map)
 {}
 
 
 void Foam::fv::isotropicDamping::distribute(const polyDistributionMap&)
 {}
-
-
-bool Foam::fv::isotropicDamping::movePoints()
-{
-    return true;
-}
 
 
 bool Foam::fv::isotropicDamping::read(const dictionary& dict)

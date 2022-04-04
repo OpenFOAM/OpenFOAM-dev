@@ -63,7 +63,7 @@ class solidBodyMotionSolver
         //- Flag to indicate whether all cells should move
         bool moveAllCells_;
 
-        //- Cache the current transform for updateMesh
+        //- Cache the current transform for topoChange
         mutable septernion transform_;
 
 
@@ -100,7 +100,7 @@ public:
         {}
 
         //-  Update local data for topology changes
-        virtual void updateMesh(const polyTopoChangeMap&);
+        virtual void topoChange(const polyTopoChangeMap&);
 
 
     // Member Operators

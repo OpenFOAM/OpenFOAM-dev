@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
         autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, inflate);
 
         Info<< "Mapping fields" << nl << endl;
-        mesh.updateMesh(map);
+        mesh.topoChange(map);
 
         // Move mesh (since morphing does not do this)
         if (map().hasMotionPoints())
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
         }
 
         // Update numbering of cells/vertices.
-        faceRemover.updateMesh(map);
+        faceRemover.topoChange(map);
 
 
         Info<< "Writing fields" << nl << endl;

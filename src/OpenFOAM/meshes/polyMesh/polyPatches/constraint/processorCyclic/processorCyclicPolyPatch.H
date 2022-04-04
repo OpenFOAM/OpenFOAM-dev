@@ -98,10 +98,10 @@ protected:
         void movePoints(PstreamBuffers&, const pointField&);
 
         //- Initialise the update of the patch topology
-        virtual void initUpdateMesh(PstreamBuffers&);
+        virtual void initTopoChange(PstreamBuffers&);
 
         //- Update of the patch topology
-        virtual void updateMesh(PstreamBuffers&);
+        virtual void topoChange(PstreamBuffers&);
 
 
 public:

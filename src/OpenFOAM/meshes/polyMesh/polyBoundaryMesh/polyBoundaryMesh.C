@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1056,7 +1056,7 @@ void Foam::polyBoundaryMesh::movePoints(const pointField& p)
 }
 
 
-void Foam::polyBoundaryMesh::updateMesh()
+void Foam::polyBoundaryMesh::topoChange()
 {
     nbrEdgesPtr_.clear();
     patchIDPtr_.clear();
@@ -1072,14 +1072,14 @@ void Foam::polyBoundaryMesh::updateMesh()
     {
         forAll(*this, patchi)
         {
-            operator[](patchi).initUpdateMesh(pBufs);
+            operator[](patchi).initTopoChange(pBufs);
         }
 
         pBufs.finishedSends();
 
         forAll(*this, patchi)
         {
-            operator[](patchi).updateMesh(pBufs);
+            operator[](patchi).topoChange(pBufs);
         }
     }
     else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
@@ -1095,11 +1095,11 @@ void Foam::polyBoundaryMesh::updateMesh()
 
             if (patchSchedule[patchEvali].init)
             {
-                operator[](patchi).initUpdateMesh(pBufs);
+                operator[](patchi).initTopoChange(pBufs);
             }
             else
             {
-                operator[](patchi).updateMesh(pBufs);
+                operator[](patchi).topoChange(pBufs);
             }
         }
     }
@@ -1123,7 +1123,7 @@ void Foam::polyBoundaryMesh::renamePatches
 
     if (validBoundary)
     {
-        updateMesh();
+        topoChange();
     }
 }
 
@@ -1149,7 +1149,7 @@ void Foam::polyBoundaryMesh::reorderPatches
 
     if (validBoundary)
     {
-        updateMesh();
+        topoChange();
     }
 }
 

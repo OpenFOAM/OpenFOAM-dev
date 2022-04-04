@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,19 +191,19 @@ void Foam::cyclicAMIPolyPatch::movePoints
 }
 
 
-void Foam::cyclicAMIPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
+void Foam::cyclicAMIPolyPatch::initTopoChange(PstreamBuffers& pBufs)
 {
     // Clear the invalid AMIs and transforms
     AMIs_.clear();
     AMITransforms_.clear();
 
-    polyPatch::initUpdateMesh(pBufs);
+    polyPatch::initTopoChange(pBufs);
 }
 
 
-void Foam::cyclicAMIPolyPatch::updateMesh(PstreamBuffers& pBufs)
+void Foam::cyclicAMIPolyPatch::topoChange(PstreamBuffers& pBufs)
 {
-    polyPatch::updateMesh(pBufs);
+    polyPatch::topoChange(pBufs);
 }
 
 

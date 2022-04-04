@@ -342,7 +342,7 @@ public:
         ) const;
 
         //- Update numbering for mesh changes
-        void updateMesh(const polyTopoChangeMap&);
+        void topoChange(const polyTopoChangeMap&);
 
         //- Update numbering for subsetting
         void subset

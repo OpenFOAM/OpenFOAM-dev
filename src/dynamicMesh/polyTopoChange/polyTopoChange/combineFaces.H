@@ -192,7 +192,7 @@ public:
             );
 
             //- Force recalculation of locally stored data on topological change
-            void updateMesh(const polyTopoChangeMap&);
+            void topoChange(const polyTopoChangeMap&);
 
             //- Play commands into polyTopoChange to reinsert original faces.
             //  No other topo changes can be done in between setRefinement and

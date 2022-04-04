@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ void Foam::ConeInjection<CloudType>::setInjectionMethod()
     {
         injectionMethod_ = imPoint;
 
-        updateMesh();
+        topoChange();
     }
     else if (injectionMethod == "disc")
     {
@@ -195,7 +195,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
     // Set total volume to inject
     this->volumeTotal_ = flowRateProfile_.integral(0, duration_);
 
-    updateMesh();
+    topoChange();
 }
 
 
@@ -238,7 +238,7 @@ Foam::ConeInjection<CloudType>::~ConeInjection()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::ConeInjection<CloudType>::updateMesh()
+void Foam::ConeInjection<CloudType>::topoChange()
 {
     if (injectionMethod_ == imPoint && positionIsConstant_)
     {

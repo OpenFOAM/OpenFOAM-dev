@@ -440,7 +440,7 @@ bool Foam::functionObjects::layerAverage::write()
 }
 
 
-void Foam::functionObjects::layerAverage::updateMesh(const polyTopoChangeMap&)
+void Foam::functionObjects::layerAverage::topoChange(const polyTopoChangeMap&)
 {
     Info<< type() << " " << name() << ":" << nl;
     calcLayers();

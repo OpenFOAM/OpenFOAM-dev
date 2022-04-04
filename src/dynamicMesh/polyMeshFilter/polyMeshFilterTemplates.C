@@ -39,7 +39,7 @@ void Foam::polyMeshFilter::updateSets(const polyTopoChangeMap& map)
     forAllIter(typename HashTable<const SetType*>, sets, iter)
     {
         SetType& set = const_cast<SetType&>(*iter());
-        set.updateMesh(map);
+        set.topoChange(map);
         set.sync(map.mesh());
     }
 
@@ -58,7 +58,7 @@ void Foam::polyMeshFilter::updateSets(const polyTopoChangeMap& map)
         {
             // Not in memory. Load it.
             SetType set(*iter());
-            set.updateMesh(map);
+            set.topoChange(map);
 
             set.write();
         }

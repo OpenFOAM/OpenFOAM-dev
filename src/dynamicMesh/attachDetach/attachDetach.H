@@ -214,7 +214,7 @@ public:
         virtual void modifyMotionPoints(pointField& motionPoints) const;
 
         //- Force recalculation of locally stored data on topological change
-        virtual void updateMesh(const polyTopoChangeMap&);
+        virtual void topoChange(const polyTopoChangeMap&);
 
         //- Get reference to trigger times
         const scalarField& triggerTimes() const

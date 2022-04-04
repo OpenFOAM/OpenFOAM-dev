@@ -362,7 +362,21 @@ Foam::volPointInterpolation::~volPointInterpolation()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::volPointInterpolation::updateMesh(const polyTopoChangeMap&)
+bool Foam::volPointInterpolation::movePoints()
+{
+    makeWeights();
+
+    return true;
+}
+
+
+void Foam::volPointInterpolation::topoChange(const polyTopoChangeMap&)
+{
+    makeWeights();
+}
+
+
+void Foam::volPointInterpolation::mapMesh(const polyMeshMap&)
 {
     makeWeights();
 }
@@ -371,14 +385,6 @@ void Foam::volPointInterpolation::updateMesh(const polyTopoChangeMap&)
 void Foam::volPointInterpolation::distribute(const polyDistributionMap&)
 {
     makeWeights();
-}
-
-
-bool Foam::volPointInterpolation::movePoints()
-{
-    makeWeights();
-
-    return true;
 }
 
 

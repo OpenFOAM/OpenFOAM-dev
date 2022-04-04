@@ -178,12 +178,12 @@ void Foam::displacementSBRStressFvMotionSolver::solve()
 }
 
 
-void Foam::displacementSBRStressFvMotionSolver::updateMesh
+void Foam::displacementSBRStressFvMotionSolver::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
-    displacementMotionSolver::updateMesh(map);
+    displacementMotionSolver::topoChange(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.

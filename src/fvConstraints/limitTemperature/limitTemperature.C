@@ -183,22 +183,28 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
 }
 
 
-void Foam::fv::limitTemperature::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::limitTemperature::movePoints()
 {
-    set_.updateMesh(map);
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::limitTemperature::topoChange(const polyTopoChangeMap& map)
+{
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::limitTemperature::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
 void Foam::fv::limitTemperature::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::limitTemperature::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

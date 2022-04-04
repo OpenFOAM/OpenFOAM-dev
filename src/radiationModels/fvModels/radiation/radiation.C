@@ -94,7 +94,11 @@ void Foam::fv::radiation::addSup
 }
 
 
-void Foam::fv::radiation::updateMesh(const polyTopoChangeMap&)
+void Foam::fv::radiation::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::radiation::mapMesh(const polyMeshMap& map)
 {}
 
 

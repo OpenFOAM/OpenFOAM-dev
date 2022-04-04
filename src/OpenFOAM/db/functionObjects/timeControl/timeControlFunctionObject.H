@@ -162,11 +162,14 @@ public:
             //- Read and set the function object if its data have changed
             virtual bool read(const dictionary&);
 
-            //- Update for changes of mesh
-            virtual void updateMesh(const polyTopoChangeMap& map);
-
-            //- Update for changes of mesh
+            //- Update topology using the given map
             virtual void movePoints(const polyMesh& mesh);
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap& map);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
 
 
     // Member Operators

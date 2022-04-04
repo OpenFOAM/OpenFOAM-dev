@@ -51,6 +51,7 @@ namespace Foam
 {
 
 class polyTopoChangeMap;
+class polyMeshMap;
 
 // Forward declaration of friend functions and operators
 
@@ -290,8 +291,11 @@ public:
         //- Correct patch after moving points
         virtual void movePoints(const pointField&);
 
-        //- Update for changes in topology
-        virtual void updateMesh(const polyTopoChangeMap&);
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
         //- Write
         virtual void write(Ostream&) const;

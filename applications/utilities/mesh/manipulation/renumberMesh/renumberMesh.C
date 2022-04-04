@@ -1003,7 +1003,7 @@ int main(int argc, char *argv[])
 
 
     // Update fields
-    mesh.updateMesh(map);
+    mesh.topoChange(map);
 
     // Update proc maps
     if
@@ -1319,7 +1319,7 @@ int main(int argc, char *argv[])
                 {
                     cellSet cs(*iter());
                     Info<< "    " << cs.name() << endl;
-                    cs.updateMesh(map());
+                    cs.topoChange(map());
                     cs.instance() = mesh.facesInstance();
                     cs.write();
                 }
@@ -1335,7 +1335,7 @@ int main(int argc, char *argv[])
                 {
                     faceSet fs(*iter());
                     Info<< "    " << fs.name() << endl;
-                    fs.updateMesh(map());
+                    fs.topoChange(map());
                     fs.instance() = mesh.facesInstance();
                     fs.write();
                 }
@@ -1351,7 +1351,7 @@ int main(int argc, char *argv[])
                 {
                     pointSet ps(*iter());
                     Info<< "    " << ps.name() << endl;
-                    ps.updateMesh(map());
+                    ps.topoChange(map());
                     ps.instance() = mesh.facesInstance();
                     ps.write();
                 }

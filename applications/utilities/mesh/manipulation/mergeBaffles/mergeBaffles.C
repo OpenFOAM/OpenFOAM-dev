@@ -219,7 +219,7 @@ int main(int argc, char *argv[])
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
     // Update fields
-    mesh.updateMesh(map);
+    mesh.topoChange(map);
 
     // Move mesh (since morphing does not do this)
     if (map().hasMotionPoints())

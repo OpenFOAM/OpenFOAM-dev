@@ -143,7 +143,7 @@ public:
             void setRefinement(const boolList&, polyTopoChange&);
 
             //- Force recalculation of locally stored data on topological change
-            void updateMesh(const polyTopoChangeMap&);
+            void topoChange(const polyTopoChangeMap&);
 
             //- Given set of faces to restore calculates a consistent set of
             //  saved faces (indices into savedFaces_) and saved vertices

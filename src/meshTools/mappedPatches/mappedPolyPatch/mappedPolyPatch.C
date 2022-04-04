@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,15 +213,15 @@ void Foam::mappedPolyPatch::movePoints
 }
 
 
-void Foam::mappedPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
+void Foam::mappedPolyPatch::initTopoChange(PstreamBuffers& pBufs)
 {
-    polyPatch::initUpdateMesh(pBufs);
+    polyPatch::initTopoChange(pBufs);
 }
 
 
-void Foam::mappedPolyPatch::updateMesh(PstreamBuffers& pBufs)
+void Foam::mappedPolyPatch::topoChange(PstreamBuffers& pBufs)
 {
-    polyPatch::updateMesh(pBufs);
+    polyPatch::topoChange(pBufs);
     mappedPatchBase::clearOut();
 }
 

@@ -201,8 +201,8 @@ public:
         //- Calculate and write the graphs
         virtual bool write();
 
-        //- Update for changes of mesh
-        virtual void updateMesh(const polyTopoChangeMap&);
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap&);
 
         //- Update for mesh point-motion
         virtual void movePoints(const polyMesh&);

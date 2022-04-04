@@ -694,7 +694,7 @@ void Foam::tetDecomposer::setRefinement
 }
 
 
-void Foam::tetDecomposer::updateMesh(const polyTopoChangeMap& map)
+void Foam::tetDecomposer::topoChange(const polyTopoChangeMap& map)
 {
     inplaceRenumber(map.reversePointMap(), cellToPoint_);
     inplaceRenumber(map.reversePointMap(), faceToPoint_);

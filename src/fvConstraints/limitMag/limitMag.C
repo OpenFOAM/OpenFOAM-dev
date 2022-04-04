@@ -140,22 +140,28 @@ FOR_ALL_FIELD_TYPES
 );
 
 
-void Foam::fv::limitMag::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::limitMag::movePoints()
 {
-    set_.updateMesh(map);
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::limitMag::topoChange(const polyTopoChangeMap& map)
+{
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::limitMag::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
 void Foam::fv::limitMag::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::limitMag::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

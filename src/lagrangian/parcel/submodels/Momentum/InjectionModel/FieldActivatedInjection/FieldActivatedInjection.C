@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ Foam::FieldActivatedInjection<CloudType>::FieldActivatedInjection
     this->volumeTotal_ =
         nParcelsPerInjector_*sum(pow3(diameters_))*pi/6.0;
 
-    updateMesh();
+    topoChange();
 }
 
 
@@ -133,7 +133,7 @@ Foam::FieldActivatedInjection<CloudType>::~FieldActivatedInjection()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::FieldActivatedInjection<CloudType>::updateMesh()
+void Foam::FieldActivatedInjection<CloudType>::topoChange()
 {
     // Set/cache the injector cells
     forAll(positions_, i)

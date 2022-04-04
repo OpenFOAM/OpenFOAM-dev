@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ Foam::patchInjectionBase::patchInjectionBase
             << exit(FatalError);
     }
 
-    updateMesh(mesh);
+    topoChange(mesh);
 }
 
 
@@ -84,7 +84,7 @@ Foam::patchInjectionBase::~patchInjectionBase()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::patchInjectionBase::updateMesh(const polyMesh& mesh)
+void Foam::patchInjectionBase::topoChange(const polyMesh& mesh)
 {
     // Set/cache the injector cells
     const polyPatch& patch = mesh.boundaryMesh()[patchId_];

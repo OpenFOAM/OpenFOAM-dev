@@ -127,14 +127,17 @@ public:
         //- Add a constraint to an equation
         FOR_ALL_FIELD_TYPES(DEFINE_FV_CONSTRAINT_CONSTRAIN);
 
-        //- Update for mesh changes
-        virtual void updateMesh(const polyTopoChangeMap&);
+        //- Update for mesh motion
+        virtual bool movePoints();
+
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
         //- Redistribute or update using the given distribution map
         virtual void distribute(const polyDistributionMap&);
-
-        //- Update for mesh motion
-        virtual bool movePoints();
 
         //- Read source dictionary
         virtual bool read(const dictionary& dict);

@@ -379,7 +379,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createBaffles
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
-    mesh_.updateMesh(map);
+    mesh_.topoChange(map);
 
     // Move mesh if in inflation mode
     if (map().hasMotionPoints())
@@ -435,7 +435,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createBaffles
     }
     baffledFacesSet.sync(mesh_);
 
-    updateMesh(map, baffledFacesSet.toc());
+    topoChange(map, baffledFacesSet.toc());
 
     return map;
 }
@@ -914,7 +914,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
-    mesh_.updateMesh(map);
+    mesh_.topoChange(map);
 
     // Move mesh (since morphing does not do this)
     if (map().hasMotionPoints())
@@ -951,7 +951,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
         }
     }
     newExposedFaces.setSize(newI);
-    updateMesh(map, newExposedFaces);
+    topoChange(map, newExposedFaces);
 
     return map;
 }
@@ -2709,7 +2709,7 @@ Foam::meshRefinement::dupNonManifoldPoints
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
-    mesh_.updateMesh(map);
+    mesh_.topoChange(map);
 
     // Move mesh if in inflation mode
     if (map().hasMotionPoints())
@@ -2727,7 +2727,7 @@ Foam::meshRefinement::dupNonManifoldPoints
 
     // Update intersections. Is mapping only (no faces created, positions stay
     // same) so no need to recalculate intersections.
-    updateMesh(map, labelList(0));
+    topoChange(map, labelList(0));
 
     return map;
 }
@@ -3347,7 +3347,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
-    mesh_.updateMesh(map);
+    mesh_.topoChange(map);
 
     // Move mesh if in inflation mode
     if (map().hasMotionPoints())
@@ -3390,7 +3390,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
     }
 
     // None of the faces has changed, only the zones. Still...
-    updateMesh(map, labelList());
+    topoChange(map, labelList());
 
     return map;
 }

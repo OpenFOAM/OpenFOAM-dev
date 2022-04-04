@@ -411,7 +411,7 @@ void Foam::rigidBodyMeshMotion::solve()
 }
 
 
-void Foam::rigidBodyMeshMotion::updateMesh(const polyTopoChangeMap& map)
+void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
 {
     // pointMesh already updates pointFields
 

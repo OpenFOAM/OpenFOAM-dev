@@ -145,7 +145,10 @@ public:
         void correctDisplacement(const pointField& p, vectorField& disp) const;
 
         //- Update topology
-        virtual void updateMesh(const polyTopoChangeMap&);
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
         //- Redistribute or update using the given distribution map
         virtual void distribute(const polyDistributionMap&);

@@ -133,6 +133,7 @@ namespace Foam
 class Time;
 class polyMesh;
 class polyTopoChangeMap;
+class polyMeshMap;
 
 /*---------------------------------------------------------------------------*\
                        Class functionObject Declaration
@@ -238,11 +239,14 @@ public:
         //  time. Returns the write time, or vGreat.
         virtual scalar timeToNextWrite();
 
-        //- Update for changes of mesh
-        virtual void updateMesh(const polyTopoChangeMap& map);
-
-        //- Update for changes of mesh
+        //- Update topology using the given map
         virtual void movePoints(const polyMesh& mesh);
+
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap& map);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
 
     // Member Operators

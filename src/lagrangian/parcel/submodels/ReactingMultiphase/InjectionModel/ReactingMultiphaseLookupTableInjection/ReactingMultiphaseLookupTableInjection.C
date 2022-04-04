@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ ReactingMultiphaseLookupTableInjection
     injectorTetFaces_.setSize(injectors_.size());
     injectorTetPts_.setSize(injectors_.size());
 
-    updateMesh();
+    topoChange();
 
     // Determine volume of particles to inject
     this->volumeTotal_ = 0.0;
@@ -108,7 +108,7 @@ Foam::ReactingMultiphaseLookupTableInjection<CloudType>::
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::ReactingMultiphaseLookupTableInjection<CloudType>::updateMesh()
+void Foam::ReactingMultiphaseLookupTableInjection<CloudType>::topoChange()
 {
     // Set/cache the injector cells
     forAll(injectors_, i)

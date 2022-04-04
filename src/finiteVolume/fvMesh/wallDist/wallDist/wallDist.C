@@ -177,20 +177,6 @@ const Foam::volVectorField& Foam::wallDist::n() const
 }
 
 
-void Foam::wallDist::updateMesh(const polyTopoChangeMap& map)
-{
-    pdm_->updateMesh(map);
-    movePoints();
-}
-
-
-void Foam::wallDist::distribute(const polyDistributionMap& map)
-{
-    pdm_->distribute(map);
-    movePoints();
-}
-
-
 bool Foam::wallDist::movePoints()
 {
     if (pdm_->movePoints())
@@ -208,6 +194,27 @@ bool Foam::wallDist::movePoints()
     {
         return false;
     }
+}
+
+
+void Foam::wallDist::topoChange(const polyTopoChangeMap& map)
+{
+    pdm_->topoChange(map);
+    movePoints();
+}
+
+
+void Foam::wallDist::mapMesh(const polyMeshMap& map)
+{
+    pdm_->mapMesh(map);
+    movePoints();
+}
+
+
+void Foam::wallDist::distribute(const polyDistributionMap& map)
+{
+    pdm_->distribute(map);
+    movePoints();
 }
 
 

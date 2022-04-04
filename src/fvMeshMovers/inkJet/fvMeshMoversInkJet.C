@@ -114,7 +114,13 @@ bool Foam::fvMeshMovers::inkJet::update()
 }
 
 
-void Foam::fvMeshMovers::inkJet::updateMesh(const polyTopoChangeMap&)
+void Foam::fvMeshMovers::inkJet::topoChange(const polyTopoChangeMap&)
+{
+    NotImplemented;
+}
+
+
+void Foam::fvMeshMovers::inkJet::mapMesh(const polyMeshMap&)
 {
     NotImplemented;
 }

@@ -195,7 +195,7 @@ public:
     // Member Operators
 
             //- Update any locally stored mesh information.
-            void updateMesh(const polyTopoChangeMap&);
+            void topoChange(const polyTopoChangeMap&);
 };
 
 

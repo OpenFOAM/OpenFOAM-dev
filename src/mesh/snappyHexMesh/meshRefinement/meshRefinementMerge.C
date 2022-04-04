@@ -95,7 +95,7 @@ License
 //            meshMod.changeMesh(mesh_, false, true);
 //
 //        // Update fields
-//        mesh_.updateMesh(map);
+//        mesh_.topoChange(map);
 //
 //        // Move mesh (since morphing does not do this)
 //        if (map().hasMotionPoints())
@@ -112,7 +112,7 @@ License
 //        // Reset the instance for if in overwrite mode
 //        mesh_.setInstance(timeName());
 //
-//        faceCombiner.updateMesh(map);
+//        faceCombiner.topoChange(map);
 //
 //        // Get the kept faces that need to be recalculated.
 //        // Merging two boundary faces might shift the cell centre
@@ -133,7 +133,7 @@ License
 //                retestFaces.insert(cFaces[i]);
 //            }
 //        }
-//        updateMesh(map, retestFaces.toc());
+//        topoChange(map, retestFaces.toc());
 //    }
 //
 //
@@ -194,7 +194,7 @@ License
 //        map = meshMod.changeMesh(mesh_, false, true);
 //
 //        // Update fields
-//        mesh_.updateMesh(map);
+//        mesh_.topoChange(map);
 //
 //        // Move mesh (since morphing does not do this)
 //        if (map().hasMotionPoints())
@@ -210,7 +210,7 @@ License
 //        // Reset the instance for if in overwrite mode
 //        mesh_.setInstance(timeName());
 //
-//        pointRemover.updateMesh(map);
+//        pointRemover.topoChange(map);
 //
 //        // Get the kept faces that need to be recalculated.
 //        labelHashSet retestFaces(6*retestOldFaces.size());
@@ -238,7 +238,7 @@ License
 //                }
 //            }
 //        }
-//        updateMesh(map, retestFaces.toc());
+//        topoChange(map, retestFaces.toc());
 //    }
 //
 //    return map;
@@ -338,7 +338,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
         autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
         // Update fields
-        mesh_.updateMesh(map);
+        mesh_.topoChange(map);
 
         // Move mesh (since morphing does not do this)
         if (map().hasMotionPoints())
@@ -354,7 +354,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
         // Reset the instance for if in overwrite mode
         mesh_.setInstance(timeName());
 
-        faceCombiner.updateMesh(map);
+        faceCombiner.topoChange(map);
 
         // Get the kept faces that need to be recalculated.
         // Merging two boundary faces might shift the cell centre
@@ -366,7 +366,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             const label oldMasterI = allFaceSets[seti][0];
             retestFaces.insert(map().reverseFaceMap()[oldMasterI]);
         }
-        updateMesh(map, growFaceCellFace(retestFaces));
+        topoChange(map, growFaceCellFace(retestFaces));
 
         if (debug&meshRefinement::MESH)
         {
@@ -528,7 +528,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
                 meshMod.changeMesh(mesh_, false, true);
 
             // Update fields
-            mesh_.updateMesh(map);
+            mesh_.topoChange(map);
 
             // Move mesh (since morphing does not do this)
             if (map().hasMotionPoints())
@@ -545,7 +545,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             // Reset the instance for if in overwrite mode
             mesh_.setInstance(timeName());
 
-            faceCombiner.updateMesh(map);
+            faceCombiner.topoChange(map);
 
             // Renumber restore maps
             inplaceMapKey(map().reversePointMap(), restoredPoints);
@@ -564,7 +564,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             }
 
             // Experimental:restore all points/face/cells in maps
-            updateMesh
+            topoChange
             (
                 map,
                 growFaceCellFace(retestFaces),
@@ -613,7 +613,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemovePoints
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
-    mesh_.updateMesh(map);
+    mesh_.topoChange(map);
 
     // Move mesh (since morphing does not do this)
     if (map().hasMotionPoints())
@@ -629,7 +629,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemovePoints
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(timeName());
 
-    pointRemover.updateMesh(map);
+    pointRemover.topoChange(map);
 
 
     // Retest all affected faces and all the cells using them
@@ -642,7 +642,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemovePoints
             retestFaces.insert(facei);
         }
     }
-    updateMesh(map, growFaceCellFace(retestFaces));
+    topoChange(map, growFaceCellFace(retestFaces));
 
     if (debug)
     {
@@ -685,7 +685,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRestorePoints
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
-    mesh_.updateMesh(map);
+    mesh_.topoChange(map);
 
     // Move mesh (since morphing does not do this)
     if (map().hasMotionPoints())
@@ -701,7 +701,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRestorePoints
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(timeName());
 
-    pointRemover.updateMesh(map);
+    pointRemover.topoChange(map);
 
     labelHashSet retestFaces(2*facesToRestore.size());
     forAll(facesToRestore, i)
@@ -712,7 +712,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRestorePoints
             retestFaces.insert(facei);
         }
     }
-    updateMesh(map, growFaceCellFace(retestFaces));
+    topoChange(map, growFaceCellFace(retestFaces));
 
     if (debug)
     {

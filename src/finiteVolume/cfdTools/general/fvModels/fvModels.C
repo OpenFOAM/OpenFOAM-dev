@@ -263,28 +263,6 @@ void Foam::fvModels::preUpdateMesh()
 }
 
 
-void Foam::fvModels::updateMesh(const polyTopoChangeMap& map)
-{
-    PtrListDictionary<fvModel>& modelList(*this);
-
-    forAll(modelList, i)
-    {
-        modelList[i].updateMesh(map);
-    }
-}
-
-
-void Foam::fvModels::distribute(const polyDistributionMap& map)
-{
-    PtrListDictionary<fvModel>& modelList(*this);
-
-    forAll(modelList, i)
-    {
-        modelList[i].distribute(map);
-    }
-}
-
-
 bool Foam::fvModels::movePoints()
 {
     bool allOk = true;
@@ -297,6 +275,39 @@ bool Foam::fvModels::movePoints()
     }
 
     return allOk;
+}
+
+
+void Foam::fvModels::topoChange(const polyTopoChangeMap& map)
+{
+    PtrListDictionary<fvModel>& modelList(*this);
+
+    forAll(modelList, i)
+    {
+        modelList[i].topoChange(map);
+    }
+}
+
+
+void Foam::fvModels::mapMesh(const polyMeshMap& map)
+{
+    PtrListDictionary<fvModel>& modelList(*this);
+
+    forAll(modelList, i)
+    {
+        modelList[i].mapMesh(map);
+    }
+}
+
+
+void Foam::fvModels::distribute(const polyDistributionMap& map)
+{
+    PtrListDictionary<fvModel>& modelList(*this);
+
+    forAll(modelList, i)
+    {
+        modelList[i].distribute(map);
+    }
 }
 
 

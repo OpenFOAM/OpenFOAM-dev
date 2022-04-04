@@ -338,7 +338,7 @@ void Foam::multiDirRefinement::refineHex8
             << mesh.time().timeName() << endl;
     }
 
-    hexRefiner.updateMesh(map);
+    hexRefiner.topoChange(map);
 
     // Collect all cells originating from same old cell (original + 7 extra)
 

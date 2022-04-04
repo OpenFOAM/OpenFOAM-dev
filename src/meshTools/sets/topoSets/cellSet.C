@@ -222,7 +222,7 @@ label cellSet::maxSize(const polyMesh& mesh) const
 }
 
 
-void cellSet::updateMesh(const polyTopoChangeMap& map)
+void cellSet::topoChange(const polyTopoChangeMap& map)
 {
     updateLabels(map.reverseCellMap());
 }

@@ -238,16 +238,16 @@ void Foam::processorCyclicPolyPatch::movePoints
 }
 
 
-void Foam::processorCyclicPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
+void Foam::processorCyclicPolyPatch::initTopoChange(PstreamBuffers& pBufs)
 {
-    processorPolyPatch::initUpdateMesh(pBufs);
+    processorPolyPatch::initTopoChange(pBufs);
 }
 
 
-void Foam::processorCyclicPolyPatch::updateMesh(PstreamBuffers& pBufs)
+void Foam::processorCyclicPolyPatch::topoChange(PstreamBuffers& pBufs)
 {
      referPatchID_ = -1;
-     processorPolyPatch::updateMesh(pBufs);
+     processorPolyPatch::topoChange(pBufs);
 }
 
 

@@ -227,7 +227,7 @@ public:
 
         // Edit
 
-            void updateMesh(const polyTopoChangeMap&)
+            void topoChange(const polyTopoChangeMap&)
             {
                 NotImplemented;
             }

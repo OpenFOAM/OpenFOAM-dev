@@ -660,7 +660,7 @@ Foam::polyMesh::polyMesh
     if (syncPar)
     {
         // Calculate topology for the patches (processor-processor comms etc.)
-        boundary_.updateMesh();
+        boundary_.topoChange();
 
         // Calculate the geometry for the patches (transformation tensors etc.)
         boundary_.calcGeometry();
@@ -941,7 +941,7 @@ Foam::polyMesh::polyMesh
     if (syncPar)
     {
         // Calculate topology for the patches (processor-processor comms etc.)
-        boundary_.updateMesh();
+        boundary_.topoChange();
 
         // Calculate the geometry for the patches (transformation tensors etc.)
         boundary_.calcGeometry();

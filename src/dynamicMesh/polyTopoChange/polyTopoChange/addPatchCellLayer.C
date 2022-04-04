@@ -1719,7 +1719,7 @@ void Foam::addPatchCellLayer::setRefinement
 }
 
 
-void Foam::addPatchCellLayer::updateMesh
+void Foam::addPatchCellLayer::topoChange
 (
     const polyTopoChangeMap& map,
     const labelList& faceMap,   // new to old patch faces

@@ -47,9 +47,6 @@ SourceFiles
 namespace Foam
 {
 
-class fvMesh;
-class pointMesh;
-
 /*---------------------------------------------------------------------------*\
                     Class volPointInterpolation Declaration
 \*---------------------------------------------------------------------------*/
@@ -135,16 +132,17 @@ public:
 
     // Member Functions
 
-        // Edit
+        //- Correct weighting factors for moving mesh.
+        virtual bool movePoints();
 
-            //- Update mesh topology using the morph engine
-            void updateMesh(const polyTopoChangeMap&);
+        //- Update mesh topology using the morph engine
+        virtual void topoChange(const polyTopoChangeMap&);
 
-            //- Redistribute or update using the given distribution map
-            virtual void distribute(const polyDistributionMap&);
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
-            //- Correct weighting factors for moving mesh.
-            bool movePoints();
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap&);
 
 
     // Interpolation functions

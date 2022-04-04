@@ -51,7 +51,7 @@ void Foam::setUpdater::updateSets(const polyTopoChangeMap& map) const
                 << " updated in memory" << endl;
         }
 
-        set.updateMesh(map);
+        set.topoChange(map);
 
         // Write or not? Debatable.
         set.write();
@@ -85,7 +85,7 @@ void Foam::setUpdater::updateSets(const polyTopoChangeMap& map) const
                     << " updated on disk" << endl;
             }
 
-            set.updateMesh(map);
+            set.topoChange(map);
 
             set.write();
         }

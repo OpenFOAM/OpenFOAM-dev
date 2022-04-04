@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,7 +168,7 @@ int Foam::vtkPVFoam::setTime(int nRequest, const double requestTimes[])
 }
 
 
-void Foam::vtkPVFoam::updateMeshPartsStatus()
+void Foam::vtkPVFoam::topoChangePartsStatus()
 {
     if (debug)
     {
@@ -509,7 +509,7 @@ void Foam::vtkPVFoam::Update
     reader_->UpdateProgress(0.1);
 
     // Set up mesh parts selection(s)
-    updateMeshPartsStatus();
+    topoChangePartsStatus();
 
     reader_->UpdateProgress(0.15);
 

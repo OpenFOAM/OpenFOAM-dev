@@ -114,7 +114,7 @@ public:
         virtual label maxSize(const polyMesh& mesh) const;
 
         //- Update any stored data for new labels
-        virtual void updateMesh(const polyTopoChangeMap& map);
+        virtual void topoChange(const polyTopoChangeMap& map);
 
         //- Write maxLen items with label and coordinates.
         virtual void writeDebug

@@ -267,22 +267,28 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::massSource);
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::massSource);
 
 
-void Foam::fv::massSource::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::massSource::movePoints()
 {
-    set_.updateMesh(map);
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::massSource::topoChange(const polyTopoChangeMap& map)
+{
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::massSource::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
 void Foam::fv::massSource::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::massSource::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

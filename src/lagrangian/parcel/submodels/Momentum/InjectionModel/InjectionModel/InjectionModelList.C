@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,11 +169,11 @@ Foam::scalar Foam::InjectionModelList<CloudType>::averageParcelMass()
 
 
 template<class CloudType>
-void Foam::InjectionModelList<CloudType>::updateMesh()
+void Foam::InjectionModelList<CloudType>::topoChange()
 {
     forAll(*this, i)
     {
-        this->operator[](i).updateMesh();
+        this->operator[](i).topoChange();
     }
 }
 

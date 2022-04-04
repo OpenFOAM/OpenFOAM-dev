@@ -145,10 +145,10 @@ int main(int argc, char *argv[])
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
     // Update fields
-    mesh.updateMesh(map);
+    mesh.topoChange(map);
 
     // Update numbering of cells/vertices.
-    meshCutter.updateMesh(map);
+    meshCutter.topoChange(map);
 
     // Optionally inflate mesh
     if (map().hasMotionPoints())

@@ -643,11 +643,11 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
 }
 
 
-void Foam::slidingInterface::updateMesh(const polyTopoChangeMap& m)
+void Foam::slidingInterface::topoChange(const polyTopoChangeMap& m)
 {
     if (debug)
     {
-        Pout<< "void slidingInterface::updateMesh(const polyTopoChangeMap& m)"
+        Pout<< "void slidingInterface::topoChange(const polyTopoChangeMap& m)"
             << " const for object " << name() << " : "
             << "Updating topology." << endl;
     }

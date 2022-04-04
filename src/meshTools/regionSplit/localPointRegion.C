@@ -636,7 +636,7 @@ Foam::List<Foam::labelPair> Foam::localPointRegion::findDuplicateFacePairs
 }
 
 
-void Foam::localPointRegion::updateMesh(const polyTopoChangeMap& map)
+void Foam::localPointRegion::topoChange(const polyTopoChangeMap& map)
 {
     {
         Map<label> newMap(meshFaceMap_.size());

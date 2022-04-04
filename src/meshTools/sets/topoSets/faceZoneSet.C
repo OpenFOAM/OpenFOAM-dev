@@ -505,7 +505,7 @@ bool faceZoneSet::writeObject
 }
 
 
-void faceZoneSet::updateMesh(const polyTopoChangeMap& map)
+void faceZoneSet::topoChange(const polyTopoChangeMap& map)
 {
     // faceZone
     labelList newAddressing(addressing_.size());

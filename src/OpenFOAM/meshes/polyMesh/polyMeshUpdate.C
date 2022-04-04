@@ -36,7 +36,7 @@ Description
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::polyMesh::updateMesh(const polyTopoChangeMap& map)
+void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
 {
     if (debug)
     {
@@ -46,7 +46,7 @@ void Foam::polyMesh::updateMesh(const polyTopoChangeMap& map)
     }
 
     // Update boundaryMesh (note that patches themselves already ok)
-    boundary_.updateMesh();
+    boundary_.topoChange();
 
     // Update zones
     pointZones_.clearAddressing();
@@ -62,7 +62,7 @@ void Foam::polyMesh::updateMesh(const polyTopoChangeMap& map)
     // Update parallel data
     if (globalMeshDataPtr_.valid())
     {
-        globalMeshDataPtr_->updateMesh();
+        globalMeshDataPtr_->topoChange();
     }
 
     setInstance(time().timeName());
@@ -116,14 +116,21 @@ void Foam::polyMesh::updateMesh(const polyTopoChangeMap& map)
         }
     }
 
-    meshObject::updateMesh<polyMesh>(*this, map);
-    meshObject::updateMesh<pointMesh>(*this, map);
+    meshObject::topoChange<polyMesh>(*this, map);
+    meshObject::topoChange<pointMesh>(*this, map);
 
     // Reset valid directions (could change by faces put into empty patches)
     geometricD_ = Zero;
     solutionD_ = Zero;
 
-    const_cast<Time&>(time()).functionObjects().updateMesh(map);
+    const_cast<Time&>(time()).functionObjects().topoChange(map);
+}
+
+
+void Foam::polyMesh::mapMesh(const polyMeshMap& map)
+{
+    meshObject::mapMesh<polyMesh>(*this, map);
+    meshObject::mapMesh<pointMesh>(*this, map);
 }
 
 

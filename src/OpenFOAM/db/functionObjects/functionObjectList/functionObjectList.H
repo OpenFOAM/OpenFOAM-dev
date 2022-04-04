@@ -53,6 +53,7 @@ namespace Foam
 {
 
 class polyTopoChangeMap;
+class polyMeshMap;
 class argList;
 
 /*---------------------------------------------------------------------------*\
@@ -154,7 +155,7 @@ public:
 
 
     //- Destructor
-    ~functionObjectList();
+    virtual ~functionObjectList();
 
 
     // Member Functions
@@ -272,11 +273,14 @@ public:
         //- Return the time to the next write
         scalar timeToNextWrite();
 
-        //- Update for changes of mesh
-        void updateMesh(const polyTopoChangeMap& map);
+        //- Update topology using the given map
+        virtual void movePoints(const polyMesh& mesh);
 
-        //- Update for changes of mesh
-        void movePoints(const polyMesh& mesh);
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap& map);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
 
     // Member Operators

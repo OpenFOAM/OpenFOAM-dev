@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -340,7 +340,7 @@ class vtkPVFoam
         // Update information helper functions
 
             //- Update the mesh parts selected in the GUI
-            void updateMeshPartsStatus();
+            void topoChangePartsStatus();
 
             //- Internal mesh info
             void updateInfoInternalMesh(vtkDataArraySelection*);

@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
         labelList(0),           // oldPatchNMeshPoints,
         autoPtr<scalarField>()  // oldCellVolumesPtr
     );
-    refData.updateMesh(map);
+    refData.topoChange(map);
     refData.write();
 
     Info<< "End" << endl;

@@ -118,14 +118,17 @@ public:
 
         // Mesh callbacks
 
+            //- Move points
+            virtual bool movePoints();
+
             //- Update the mesh corresponding to given map
-            virtual void updateMesh(const polyTopoChangeMap&);
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
 
             //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap&);
-
-            //- Move points
-            virtual bool movePoints();
 
             //- Reordered/removed trailing patches. If validBoundary call is
             //  parallel synced and all add the same patch with same settings

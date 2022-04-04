@@ -239,12 +239,12 @@ void Foam::displacementComponentLaplacianFvMotionSolver::solve()
 }
 
 
-void Foam::displacementComponentLaplacianFvMotionSolver::updateMesh
+void Foam::displacementComponentLaplacianFvMotionSolver::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
-    componentDisplacementMotionSolver::updateMesh(map);
+    componentDisplacementMotionSolver::topoChange(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.

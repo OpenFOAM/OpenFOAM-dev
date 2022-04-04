@@ -256,21 +256,27 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::codedFvModel);
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::codedFvModel);
 
 
-void Foam::fv::codedFvModel::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::codedFvModel::movePoints()
 {
-    redirectFvModel().updateMesh(map);
+    return redirectFvModel().movePoints();
+}
+
+
+void Foam::fv::codedFvModel::topoChange(const polyTopoChangeMap& map)
+{
+    redirectFvModel().topoChange(map);
+}
+
+
+void Foam::fv::codedFvModel::mapMesh(const polyMeshMap& map)
+{
+    redirectFvModel().mapMesh(map);
 }
 
 
 void Foam::fv::codedFvModel::distribute(const polyDistributionMap& map)
 {
     redirectFvModel().distribute(map);
-}
-
-
-bool Foam::fv::codedFvModel::movePoints()
-{
-    return redirectFvModel().movePoints();
 }
 
 

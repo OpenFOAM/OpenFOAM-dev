@@ -313,7 +313,7 @@ void Foam::ReactingCloud<CloudType>::autoMap(const polyTopoChangeMap& mapper)
 {
     Cloud<parcelType>::autoMap(mapper);
 
-    this->updateMesh();
+    this->topoChange();
 }
 
 

@@ -48,9 +48,7 @@ SourceFiles
 namespace Foam
 {
 
-class polyTopoChangeMap;
 class polyMesh;
-
 
 // Forward declaration of friend functions and operators
 
@@ -275,13 +273,6 @@ public:
             void distributeFaceIndices(labelList& faceIDs) const;
             void distributeCellIndices(labelList& cellIDs) const;
             void distributePatchIndices(labelList& patchIDs) const;
-
-
-            //- Correct for topo change.
-            void updateMesh(const polyTopoChangeMap&)
-            {
-                NotImplemented;
-            }
 
 
     // Member Operators

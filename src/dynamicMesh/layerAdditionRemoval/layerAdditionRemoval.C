@@ -431,11 +431,11 @@ void Foam::layerAdditionRemoval::setRefinement(polyTopoChange& ref) const
 }
 
 
-void Foam::layerAdditionRemoval::updateMesh(const polyTopoChangeMap&)
+void Foam::layerAdditionRemoval::topoChange(const polyTopoChangeMap&)
 {
     if (debug)
     {
-        Pout<< "layerAdditionRemoval::updateMesh(const polyTopoChangeMap&) "
+        Pout<< "layerAdditionRemoval::topoChange(const polyTopoChangeMap&) "
             << "for object " << name() << " : "
             << "Clearing addressing on external request";
 

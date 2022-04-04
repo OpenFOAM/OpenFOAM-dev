@@ -139,9 +139,22 @@ void Foam::fv::explicitPorositySource::addSup
 }
 
 
-void Foam::fv::explicitPorositySource::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::explicitPorositySource::movePoints()
 {
-    set_.updateMesh(map);
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::explicitPorositySource::topoChange(const polyTopoChangeMap& map)
+{
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::explicitPorositySource::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
@@ -151,13 +164,6 @@ void Foam::fv::explicitPorositySource::distribute
 )
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::explicitPorositySource::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

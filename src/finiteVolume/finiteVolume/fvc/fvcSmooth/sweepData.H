@@ -36,10 +36,19 @@ SourceFiles
 #ifndef sweepData_H
 #define sweepData_H
 
+#include "scalar.H"
+#include "point.H"
+#include "labelPair.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Forward declaration of classes
+class fvPatch;
+class fvMesh;
+class transformer;
 
 /*---------------------------------------------------------------------------*\
                           Class sweepData Declaration
@@ -47,8 +56,14 @@ namespace Foam
 
 class sweepData
 {
-    scalar value_;
-    point origin_;
+    // Private Member Data
+
+        //-
+        scalar value_;
+
+        //-
+        point origin_;
+
 
     // Private Member Functions
 
@@ -92,7 +107,7 @@ public:
             }
 
 
-        // Needed by FaceCellWave
+        // Needed by FvFaceCellWave
 
             //- Check whether origin has been changed at all or
             //  still contains original (invalid) value
@@ -104,7 +119,7 @@ public:
             template<class TrackingData>
             inline bool sameGeometry
             (
-                const polyMesh&,
+                const fvMesh&,
                 const sweepData&,
                 const scalar,
                 TrackingData& td
@@ -114,7 +129,7 @@ public:
             template<class TrackingData>
             inline void transform
             (
-                const polyPatch& patch,
+                const fvPatch& patch,
                 const label patchFacei,
                 const transformer& transform,
                 TrackingData& td
@@ -124,9 +139,9 @@ public:
             template<class TrackingData>
             inline bool updateCell
             (
-                const polyMesh&,
+                const fvMesh&,
                 const label thisCelli,
-                const label neighbourFacei,
+                const labelPair& neighbourPatchAndFacei,
                 const sweepData& svf,
                 const scalar tol,
                 TrackingData& td
@@ -136,8 +151,8 @@ public:
             template<class TrackingData>
             inline bool updateFace
             (
-                const polyMesh&,
-                const label thisFacei,
+                const fvMesh&,
+                const labelPair& thisPatchAndFacei,
                 const label neighbourCelli,
                 const sweepData& svf,
                 const scalar tol,
@@ -148,8 +163,8 @@ public:
             template<class TrackingData>
             inline bool updateFace
             (
-                const polyMesh&,
-                const label thisFacei,
+                const fvMesh&,
+                const labelPair& thisPatchAndFacei,
                 const sweepData& svf,
                 const scalar tol,
                 TrackingData& td
@@ -164,7 +179,6 @@ public:
 
             inline void operator=(const scalar value);
 
-            // Needed for List IO
             inline bool operator==(const sweepData&) const;
 
             inline bool operator!=(const sweepData&) const;
@@ -172,11 +186,7 @@ public:
 
         // IOstream Operators
 
-            friend Ostream& operator<<
-            (
-                Ostream& os,
-                const sweepData& svf
-            )
+            friend Ostream& operator<<(Ostream& os, const sweepData& svf)
             {
                 return os << svf.value_ << svf.origin_;
             }
@@ -194,7 +204,6 @@ inline bool contiguous<sweepData>()
 {
     return true;
 }
-
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

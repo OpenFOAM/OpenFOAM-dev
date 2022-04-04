@@ -326,7 +326,7 @@ void Foam::hexRef8Data::sync(const IOobject& io)
 }
 
 
-void Foam::hexRef8Data::updateMesh(const polyTopoChangeMap& map)
+void Foam::hexRef8Data::topoChange(const polyTopoChangeMap& map)
 {
     if (cellLevelPtr_.valid())
     {
@@ -343,7 +343,7 @@ void Foam::hexRef8Data::updateMesh(const polyTopoChangeMap& map)
 
     if (refHistoryPtr_.valid() && refHistoryPtr_().active())
     {
-        refHistoryPtr_().updateMesh(map);
+        refHistoryPtr_().topoChange(map);
         refHistoryPtr_().instance() = map.mesh().facesInstance();
     }
 }

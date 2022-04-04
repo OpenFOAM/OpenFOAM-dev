@@ -26,6 +26,7 @@ License
 #include "timeControlFunctionObject.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -197,23 +198,35 @@ bool Foam::functionObjects::timeControl::read(const dictionary& dict)
 }
 
 
-void Foam::functionObjects::timeControl::updateMesh
+void Foam::functionObjects::timeControl::movePoints(const polyMesh& mesh)
+{
+    if (active())
+    {
+        foPtr_->movePoints(mesh);
+    }
+}
+
+
+void Foam::functionObjects::timeControl::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
     if (active())
     {
-        foPtr_->updateMesh(map);
+        foPtr_->topoChange(map);
     }
 }
 
 
-void Foam::functionObjects::timeControl::movePoints(const polyMesh& mesh)
+void Foam::functionObjects::timeControl::mapMesh
+(
+    const polyMeshMap& map
+)
 {
     if (active())
     {
-        foPtr_->movePoints(mesh);
+        foPtr_->mapMesh(map);
     }
 }
 

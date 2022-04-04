@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
     }
 
     // Update stored labels on meshCutter.
-    cutter.updateMesh(map());
+    cutter.topoChange(map());
 
     Info<< "Finished refining" << endl;
 

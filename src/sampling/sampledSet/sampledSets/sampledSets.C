@@ -283,7 +283,7 @@ void Foam::functionObjects::sampledSets::correct()
 }
 
 
-void Foam::functionObjects::sampledSets::updateMesh
+void Foam::functionObjects::sampledSets::topoChange
 (
     const polyTopoChangeMap& map
 )

@@ -155,14 +155,17 @@ public:
 
         // Mesh changes
 
-            //- Update for mesh changes
-            virtual void updateMesh(const polyTopoChangeMap&);
+            //- Update for mesh motion
+            virtual bool movePoints();
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
 
             //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap&);
-
-            //- Update for mesh motion
-            virtual bool movePoints();
 
 
         // IO

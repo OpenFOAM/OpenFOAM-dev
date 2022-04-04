@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
 
             // Update fields
             Info<< nl << "-- mapping mesh data" << endl;
-            mesh.updateMesh(map);
+            mesh.topoChange(map);
 
             // Inflate mesh
             if (map().hasMotionPoints())
@@ -288,7 +288,7 @@ int main(int argc, char *argv[])
 
             // Update numbering of cells/vertices.
             Info<< nl << "-- mapping hexRef8 data" << endl;
-            meshCutter.updateMesh(map);
+            meshCutter.topoChange(map);
         }
 
 

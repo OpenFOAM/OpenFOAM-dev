@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "fvcSmooth.H"
 #include "volFields.H"
-#include "FaceCellWave.H"
+#include "FvFaceCellWave.H"
 #include "smoothData.H"
 #include "sweepData.H"
 
@@ -40,8 +40,8 @@ void Foam::fvc::smooth
     const fvMesh& mesh = field.mesh();
     scalar maxRatio = 1 + coeff;
 
-    DynamicList<label> changedFaces(mesh.nFaces()/100 + 100);
-    DynamicList<smoothData> changedFacesInfo(changedFaces.size());
+    DynamicList<labelPair> changedPatchAndFaces(mesh.nFaces()/100 + 100);
+    DynamicList<smoothData> changedFacesInfo(changedPatchAndFaces.size());
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -54,60 +54,70 @@ void Foam::fvc::smooth
         // Check if owner value much larger than neighbour value or vice versa
         if (field[own] > maxRatio*field[nbr])
         {
-            changedFaces.append(facei);
+            changedPatchAndFaces.append(labelPair(-1, facei));
             changedFacesInfo.append(smoothData(field[own]));
         }
         else if (field[nbr] > maxRatio*field[own])
         {
-            changedFaces.append(facei);
+            changedPatchAndFaces.append(labelPair(-1, facei));
             changedFacesInfo.append(smoothData(field[nbr]));
         }
     }
 
-    // Insert all faces of coupled patches - FaceCellWave will correct them
-    forAll(mesh.boundaryMesh(), patchi)
+    // Insert all faces of coupled patches - FvFaceCellWave will correct them
+    forAll(mesh.boundary(), patchi)
     {
-        const polyPatch& patch = mesh.boundaryMesh()[patchi];
+        const fvPatch& patch = mesh.boundary()[patchi];
 
         if (patch.coupled())
         {
             forAll(patch, patchFacei)
             {
-                label facei = patch.start() + patchFacei;
-                label own = mesh.faceOwner()[facei];
+                const label own = patch.faceCells()[patchFacei];
 
-                changedFaces.append(facei);
+                changedPatchAndFaces.append(labelPair(patchi, patchFacei));
                 changedFacesInfo.append(smoothData(field[own]));
             }
         }
     }
 
-    changedFaces.shrink();
+    changedPatchAndFaces.shrink();
     changedFacesInfo.shrink();
 
     // Set initial field on cells
     List<smoothData> cellData(mesh.nCells());
-
     forAll(field, celli)
     {
         cellData[celli] = field[celli];
     }
 
     // Set initial field on faces
-    List<smoothData> faceData(mesh.nFaces());
+    List<smoothData> internalFaceData(mesh.nInternalFaces());
+    List<List<smoothData>> patchFaceData
+    (
+        FvFaceCellWave<smoothData, smoothData::trackData>::template
+        sizesListList<List<List<smoothData>>>
+        (
+            FvFaceCellWave<smoothData, smoothData::trackData>::template
+            listListSizes(mesh.boundary()),
+            smoothData()
+        )
+    );
 
+    // Create track data
     smoothData::trackData td;
     td.maxRatio = maxRatio;
 
     // Propagate information over whole domain
-    FaceCellWave<smoothData, smoothData::trackData> smoothData
+    FvFaceCellWave<smoothData, smoothData::trackData> smoothData
     (
         mesh,
-        changedFaces,
+        changedPatchAndFaces,
         changedFacesInfo,
-        faceData,
+        internalFaceData,
+        patchFaceData,
         cellData,
-        mesh.globalData().nTotalCells(),   // max iterations
+        mesh.globalData().nTotalCells() + 1, // max iterations
         td
     );
 
@@ -132,19 +142,8 @@ void Foam::fvc::spread
 {
     const fvMesh& mesh = field.mesh();
 
-    DynamicList<label> changedFaces(mesh.nFaces()/100 + 100);
-    DynamicList<smoothData> changedFacesInfo(changedFaces.size());
-
-    // Set initial field on cells
-    List<smoothData> cellData(mesh.nCells());
-
-    forAll(field, celli)
-    {
-        cellData[celli] = field[celli];
-    }
-
-    // Set initial field on faces
-    List<smoothData> faceData(mesh.nFaces());
+    DynamicList<labelPair> changedPatchAndFaces(mesh.nFaces()/100 + 100);
+    DynamicList<smoothData> changedFacesInfo(changedPatchAndFaces.size());
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -154,27 +153,24 @@ void Foam::fvc::spread
         const label own = owner[facei];
         const label nbr = neighbour[facei];
 
+        // Check if owner value much larger than neighbour value or vice versa
         if (mag(alpha[own] - alpha[nbr]) > alphaDiff)
         {
-            changedFaces.append(facei);
-            changedFacesInfo.append
-            (
-                smoothData(max(field[own], field[nbr]))
-            );
+            changedPatchAndFaces.append(labelPair(-1, facei));
+            changedFacesInfo.append(smoothData(max(field[own], field[nbr])));
         }
     }
 
-    // Insert all faces of coupled patches - FaceCellWave will correct them
-    forAll(mesh.boundaryMesh(), patchi)
+    // Insert all faces of coupled patches - FvFaceCellWave will correct them
+    forAll(mesh.boundary(), patchi)
     {
-        const polyPatch& patch = mesh.boundaryMesh()[patchi];
+        const fvPatch& patch = mesh.boundary()[patchi];
 
         if (patch.coupled())
         {
             forAll(patch, patchFacei)
             {
-                label facei = patch.start() + patchFacei;
-                label own = mesh.faceOwner()[facei];
+                const label own = patch.faceCells()[patchFacei];
 
                 const scalarField alphapn
                 (
@@ -183,29 +179,51 @@ void Foam::fvc::spread
 
                 if (mag(alpha[own] - alphapn[patchFacei]) > alphaDiff)
                 {
-                    changedFaces.append(facei);
+                    changedPatchAndFaces.append(labelPair(patchi, patchFacei));
                     changedFacesInfo.append(smoothData(field[own]));
                 }
             }
         }
     }
 
-    changedFaces.shrink();
+    changedPatchAndFaces.shrink();
     changedFacesInfo.shrink();
 
+    // Set initial field on cells
+    List<smoothData> cellData(mesh.nCells());
+    forAll(field, celli)
+    {
+        cellData[celli] = field[celli];
+    }
+
+    // Set initial field on faces
+    List<smoothData> internalFaceData(mesh.nInternalFaces());
+    List<List<smoothData>> patchFaceData
+    (
+        FvFaceCellWave<smoothData, smoothData::trackData>::template
+        sizesListList<List<List<smoothData>>>
+        (
+            FvFaceCellWave<smoothData, smoothData::trackData>::template
+            listListSizes(mesh.boundary()),
+            smoothData()
+        )
+    );
+
+    // Create track data
     smoothData::trackData td;
     td.maxRatio = 1.0;
 
     // Propagate information over whole domain
-    FaceCellWave<smoothData, smoothData::trackData> smoothData
+    FvFaceCellWave<smoothData, smoothData::trackData> smoothData
     (
         mesh,
-        faceData,
+        internalFaceData,
+        patchFaceData,
         cellData,
         td
     );
 
-    smoothData.setFaceInfo(changedFaces, changedFacesInfo);
+    smoothData.setFaceInfo(changedPatchAndFaces, changedFacesInfo);
 
     smoothData.iterate(nLayers);
 
@@ -228,27 +246,23 @@ void Foam::fvc::sweep
 {
     const fvMesh& mesh = field.mesh();
 
-    DynamicList<label> changedFaces(mesh.nFaces()/100 + 100);
-    DynamicList<sweepData> changedFacesInfo(changedFaces.size());
-
-    // Set initial field on cells
-    List<sweepData> cellData(mesh.nCells());
-
-    // Set initial field on faces
-    List<sweepData> faceData(mesh.nFaces());
+    DynamicList<labelPair> changedPatchAndFaces(mesh.nFaces()/100 + 100);
+    DynamicList<sweepData> changedFacesInfo(changedPatchAndFaces.size());
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
-    const vectorField& Cf = mesh.faceCentres();
+    const surfaceVectorField& Cf = mesh.Cf();
+    const surfaceVectorField::Boundary& CfBf = mesh.Cf().boundaryField();
 
     forAll(owner, facei)
     {
         const label own = owner[facei];
         const label nbr = neighbour[facei];
 
+        // Check if owner value much larger than neighbour value or vice versa
         if (mag(alpha[own] - alpha[nbr]) > alphaDiff)
         {
-            changedFaces.append(facei);
+            changedPatchAndFaces.append(labelPair(-1, facei));
             changedFacesInfo.append
             (
                 sweepData(max(field[own], field[nbr]), Cf[facei])
@@ -256,17 +270,16 @@ void Foam::fvc::sweep
         }
     }
 
-    // Insert all faces of coupled patches - FaceCellWave will correct them
-    forAll(mesh.boundaryMesh(), patchi)
+    // Insert all faces of coupled patches - FvFaceCellWave will correct them
+    forAll(mesh.boundary(), patchi)
     {
-        const polyPatch& patch = mesh.boundaryMesh()[patchi];
+        const fvPatch& patch = mesh.boundary()[patchi];
 
         if (patch.coupled())
         {
             forAll(patch, patchFacei)
             {
-                label facei = patch.start() + patchFacei;
-                label own = mesh.faceOwner()[facei];
+                const label own = patch.faceCells()[patchFacei];
 
                 const scalarField alphapn
                 (
@@ -275,28 +288,45 @@ void Foam::fvc::sweep
 
                 if (mag(alpha[own] - alphapn[patchFacei]) > alphaDiff)
                 {
-                    changedFaces.append(facei);
+                    changedPatchAndFaces.append(labelPair(patchi, patchFacei));
                     changedFacesInfo.append
                     (
-                        sweepData(field[own], Cf[facei])
+                        sweepData(field[own], CfBf[patchi][patchFacei])
                     );
                 }
             }
         }
     }
 
-    changedFaces.shrink();
+    changedPatchAndFaces.shrink();
     changedFacesInfo.shrink();
 
+    // Set initial field on cells
+    List<sweepData> cellData(mesh.nCells());
+
+    // Set initial field on faces
+    List<sweepData> internalFaceData(mesh.nInternalFaces());
+    List<List<sweepData>> patchFaceData
+    (
+        FvFaceCellWave<sweepData>::template
+        sizesListList<List<List<sweepData>>>
+        (
+            FvFaceCellWave<sweepData>::template
+            listListSizes(mesh.boundary()),
+            sweepData()
+        )
+    );
+
     // Propagate information over whole domain
-    FaceCellWave<sweepData> sweepData
+    FvFaceCellWave<sweepData> sweepData
     (
         mesh,
-        faceData,
+        internalFaceData,
+        patchFaceData,
         cellData
     );
 
-    sweepData.setFaceInfo(changedFaces, changedFacesInfo);
+    sweepData.setFaceInfo(changedPatchAndFaces, changedFacesInfo);
 
     sweepData.iterate(nLayers);
 

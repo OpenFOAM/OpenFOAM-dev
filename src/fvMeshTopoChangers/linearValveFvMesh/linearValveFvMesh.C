@@ -289,9 +289,9 @@ void Foam::linearValveFvMesh::update()
         // Changing topology by hand
         resetMorph();
         setMorphTimeIndex(3*time().timeIndex());
-        updateMesh();
+        topoChange();
 
-        msPtr_->updateMesh();
+        msPtr_->topoChange();
     }
     else
     {
@@ -304,9 +304,9 @@ void Foam::linearValveFvMesh::update()
     // Changing topology by hand
     resetMorph();
     setMorphTimeIndex(3*time().timeIndex() + 1);
-    updateMesh();
+    topoChange();
 
-    msPtr_->updateMesh();
+    msPtr_->topoChange();
 
     if (topoChangeMap.valid())
     {
@@ -327,11 +327,11 @@ void Foam::linearValveFvMesh::update()
     makeSlidersLive();
     resetMorph();
     setMorphTimeIndex(3*time().timeIndex() + 2);
-    updateMesh();
+    topoChange();
 
     Info<< "Moving points post slider attach" << endl;
 
-    msPtr_->updateMesh();
+    msPtr_->topoChange();
 
     Info<< "Sliding interfaces coupled: " << attached() << endl;
 }

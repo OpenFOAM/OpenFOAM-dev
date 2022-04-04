@@ -629,7 +629,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemoveCells
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
-    mesh_.updateMesh(map);
+    mesh_.topoChange(map);
 
     // Move mesh (since morphing might not do this)
     if (map().hasMotionPoints())
@@ -647,7 +647,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemoveCells
     setInstance(mesh_.facesInstance());
 
     // Update local mesh data
-    cellRemover.updateMesh(map);
+    cellRemover.topoChange(map);
 
     // Update intersections. Recalculate intersections for exposed faces.
     labelList newExposedFaces = renumber
@@ -659,7 +659,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemoveCells
     // Pout<< "removeCells : updating intersections for "
     //    << newExposedFaces.size() << " newly exposed faces." << endl;
 
-    updateMesh(map, newExposedFaces);
+    topoChange(map, newExposedFaces);
 
     return map;
 }
@@ -771,7 +771,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
     // Update fields
-    mesh_.updateMesh(map);
+    mesh_.topoChange(map);
 
     // Move mesh (since morphing might not do this)
     if (map().hasMotionPoints())
@@ -804,7 +804,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
         }
     }
 
-    updateMesh(map, newSplitFaces);
+    topoChange(map, newSplitFaces);
 
     return map;
 }
@@ -2357,7 +2357,7 @@ void Foam::meshRefinement::distribute(const polyDistributionMap& map)
 }
 
 
-void Foam::meshRefinement::updateMesh
+void Foam::meshRefinement::topoChange
 (
     const polyTopoChangeMap& map,
     const labelList& changedFaces
@@ -2365,7 +2365,7 @@ void Foam::meshRefinement::updateMesh
 {
     Map<label> dummyMap(0);
 
-    updateMesh(map, changedFaces, dummyMap, dummyMap, dummyMap);
+    topoChange(map, changedFaces, dummyMap, dummyMap, dummyMap);
 }
 
 
@@ -2386,7 +2386,7 @@ void Foam::meshRefinement::storeData
 }
 
 
-void Foam::meshRefinement::updateMesh
+void Foam::meshRefinement::topoChange
 (
     const polyTopoChangeMap& map,
     const labelList& changedFaces,
@@ -2398,7 +2398,7 @@ void Foam::meshRefinement::updateMesh
     // For now only meshCutter has storable/retrievable data.
 
     // Update numbering of cells/vertices.
-    meshCutter_.updateMesh
+    meshCutter_.topoChange
     (
         map,
         pointsToRestore,

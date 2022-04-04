@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ void Foam::polyPatch::movePoints(PstreamBuffers&, const pointField& p)
 }
 
 
-void Foam::polyPatch::updateMesh(PstreamBuffers&)
+void Foam::polyPatch::topoChange(PstreamBuffers&)
 {
     primitivePatch::clearGeom();
     clearAddressing();

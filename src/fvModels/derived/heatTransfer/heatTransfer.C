@@ -159,22 +159,28 @@ void Foam::fv::heatTransfer::correct()
 }
 
 
-void Foam::fv::heatTransfer::updateMesh(const polyTopoChangeMap& map)
+bool Foam::fv::heatTransfer::movePoints()
 {
-    set_.updateMesh(map);
+    set_.movePoints();
+    return true;
+}
+
+
+void Foam::fv::heatTransfer::topoChange(const polyTopoChangeMap& map)
+{
+    set_.topoChange(map);
+}
+
+
+void Foam::fv::heatTransfer::mapMesh(const polyMeshMap& map)
+{
+    set_.mapMesh(map);
 }
 
 
 void Foam::fv::heatTransfer::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
-}
-
-
-bool Foam::fv::heatTransfer::movePoints()
-{
-    set_.movePoints();
-    return true;
 }
 
 

@@ -551,18 +551,11 @@ public:
             //  storage (local data first, then non-local data)
             void printLayout(Ostream& os) const;
 
-            //- Correct for topo change.
-            void updateMesh(const polyTopoChangeMap&)
-            {
-                notImplemented
-                (
-                    "distributionMap::updateMesh(const polyTopoChangeMap&)"
-                );
-            }
 
     // Member Operators
 
         void operator=(const distributionMap&);
+
 
     // IOstream Operators
 
@@ -571,7 +564,6 @@ public:
 
         //- Write dictionary to Ostream
         friend Ostream& operator<<(Ostream&, const distributionMap&);
-
 };
 
 

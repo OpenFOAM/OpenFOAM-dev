@@ -167,7 +167,7 @@ public:
             virtual void movePoints(const pointField&);
 
             //-  Update local data for topology changes
-            virtual void updateMesh(const polyTopoChangeMap&);
+            virtual void topoChange(const polyTopoChangeMap&);
 
 
     // Member Operators

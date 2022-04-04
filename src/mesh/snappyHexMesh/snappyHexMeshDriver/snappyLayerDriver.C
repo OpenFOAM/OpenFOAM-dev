@@ -1042,7 +1042,7 @@ void Foam::snappyLayerDriver::determineSidePatches
         }
 
         mesh.clearOut();
-        const_cast<polyBoundaryMesh&>(mesh.boundaryMesh()).updateMesh();
+        const_cast<polyBoundaryMesh&>(mesh.boundaryMesh()).topoChange();
     }
 }
 
@@ -3365,14 +3365,14 @@ void Foam::snappyLayerDriver::addLayers
             fvMesh& newMesh = newMeshPtr();
 
             //?necessary? Update fields
-            newMesh.updateMesh(map);
+            newMesh.topoChange(map);
 
             newMesh.setInstance(meshRefiner_.timeName());
 
             // Update numbering on addLayer:
             // - cell/point labels to be newMesh.
             // - patchFaces to remain in oldMesh order.
-            addLayer.updateMesh
+            addLayer.topoChange
             (
                 map,
                 identity(pp().size()),
@@ -3518,7 +3518,7 @@ void Foam::snappyLayerDriver::addLayers
     mesh.clearOut();
 
     // Update fields
-    mesh.updateMesh(map);
+    mesh.topoChange(map);
 
     // Move mesh (since morphing does not do this)
     if (map().hasMotionPoints())
@@ -3534,7 +3534,7 @@ void Foam::snappyLayerDriver::addLayers
     // Reset the instance for if in overwrite mode
     mesh.setInstance(meshRefiner_.timeName());
 
-    meshRefiner_.updateMesh(map, labelList(0));
+    meshRefiner_.topoChange(map, labelList(0));
 
     // Update numbering of faceWantedThickness
     meshRefinement::updateList(map().faceMap(), scalar(0), faceWantedThickness);

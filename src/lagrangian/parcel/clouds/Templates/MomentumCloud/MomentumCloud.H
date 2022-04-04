@@ -612,7 +612,7 @@ public:
         // Mapping
 
             //- Update mesh
-            void updateMesh();
+            void topoChange();
 
             //- Remap the cells of particles corresponding to the
             //  mesh topology change with a default tracking data object

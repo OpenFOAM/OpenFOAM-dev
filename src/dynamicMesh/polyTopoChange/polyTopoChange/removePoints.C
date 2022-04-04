@@ -453,7 +453,7 @@ void Foam::removePoints::setRefinement
 }
 
 
-void Foam::removePoints::updateMesh(const polyTopoChangeMap& map)
+void Foam::removePoints::topoChange(const polyTopoChangeMap& map)
 {
     if (undoable_)
     {

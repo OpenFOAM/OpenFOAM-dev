@@ -257,7 +257,7 @@ Foam::fvMeshTopoChangers::refiner::refine
     }
 
     // Update fields
-    mesh().updateMesh(map);
+    mesh().topoChange(map);
 
     {
         // Correct the flux for modified/added faces. All the faces which only
@@ -372,7 +372,7 @@ Foam::fvMeshTopoChangers::refiner::unrefine
         << endl;
 
     // Update fields
-    mesh().updateMesh(map);
+    mesh().topoChange(map);
 
     // Correct the fluxes for modified faces
     unrefineFluxes(faceToSplitPoint, map());
@@ -1667,10 +1667,19 @@ bool Foam::fvMeshTopoChangers::refiner::update()
 }
 
 
-void Foam::fvMeshTopoChangers::refiner::updateMesh(const polyTopoChangeMap& map)
+void Foam::fvMeshTopoChangers::refiner::topoChange(const polyTopoChangeMap& map)
 {
     // Update numbering of cells/vertices.
-    meshCutter_.updateMesh(map);
+    meshCutter_.topoChange(map);
+}
+
+
+void Foam::fvMeshTopoChangers::refiner::mapMesh(const polyMeshMap& map)
+{
+    // meshCutter_ will need to be re-constructed from the new mesh
+    // and protectedCells_ updated.
+    // The constructor should be refactored for the protectedCells_ update.
+    NotImplemented;
 }
 
 

@@ -154,7 +154,11 @@ bool Foam::fvMeshDistributors::distributor::update()
 }
 
 
-void Foam::fvMeshDistributors::distributor::updateMesh(const polyTopoChangeMap&)
+void Foam::fvMeshDistributors::distributor::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fvMeshDistributors::distributor::mapMesh(const polyMeshMap&)
 {}
 
 

@@ -384,7 +384,7 @@ public:
             //- Update any locally stored mesh information. Gets additional
             //  map from new to old patch (since patch needs to be
             //  recreated since has to be on outside).
-            void updateMesh
+            void topoChange
             (
                 const polyTopoChangeMap&,
                 const labelList& faceMap,   // new to old patch faces

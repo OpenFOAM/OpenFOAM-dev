@@ -330,7 +330,11 @@ void Foam::fv::clouds::preUpdateMesh()
 }
 
 
-void Foam::fv::clouds::updateMesh(const polyTopoChangeMap&)
+void Foam::fv::clouds::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fv::clouds::mapMesh(const polyMeshMap& map)
 {}
 
 

@@ -207,7 +207,7 @@ public:
             );
 
             //- Force recalculation of locally stored data on topological change
-            void updateMesh(const polyTopoChangeMap&);
+            void topoChange(const polyTopoChangeMap&);
 
 
         // Access

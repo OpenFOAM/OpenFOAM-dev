@@ -290,7 +290,7 @@ bool pointZoneSet::writeObject
 }
 
 
-void pointZoneSet::updateMesh(const polyTopoChangeMap& map)
+void pointZoneSet::topoChange(const polyTopoChangeMap& map)
 {
     // pointZone
     labelList newAddressing(addressing_.size());

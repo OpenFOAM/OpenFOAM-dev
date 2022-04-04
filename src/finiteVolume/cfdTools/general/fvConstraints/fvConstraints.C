@@ -237,28 +237,6 @@ bool Foam::fvConstraints::constrainsField(const word& fieldName) const
 }
 
 
-void Foam::fvConstraints::updateMesh(const polyTopoChangeMap& map)
-{
-    PtrListDictionary<fvConstraint>& constraintList(*this);
-
-    forAll(constraintList, i)
-    {
-        constraintList[i].updateMesh(map);
-    }
-}
-
-
-void Foam::fvConstraints::distribute(const polyDistributionMap& map)
-{
-    PtrListDictionary<fvConstraint>& constraintList(*this);
-
-    forAll(constraintList, i)
-    {
-        constraintList[i].distribute(map);
-    }
-}
-
-
 bool Foam::fvConstraints::movePoints()
 {
     bool allOk = true;
@@ -271,6 +249,39 @@ bool Foam::fvConstraints::movePoints()
     }
 
     return allOk;
+}
+
+
+void Foam::fvConstraints::topoChange(const polyTopoChangeMap& map)
+{
+    PtrListDictionary<fvConstraint>& constraintList(*this);
+
+    forAll(constraintList, i)
+    {
+        constraintList[i].topoChange(map);
+    }
+}
+
+
+void Foam::fvConstraints::mapMesh(const polyMeshMap& map)
+{
+    PtrListDictionary<fvConstraint>& constraintList(*this);
+
+    forAll(constraintList, i)
+    {
+        constraintList[i].mapMesh(map);
+    }
+}
+
+
+void Foam::fvConstraints::distribute(const polyDistributionMap& map)
+{
+    PtrListDictionary<fvConstraint>& constraintList(*this);
+
+    forAll(constraintList, i)
+    {
+        constraintList[i].distribute(map);
+    }
 }
 
 

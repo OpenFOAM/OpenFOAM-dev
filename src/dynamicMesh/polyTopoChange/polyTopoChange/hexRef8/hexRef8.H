@@ -494,7 +494,7 @@ public:
             //  Called after the mesh change. setRefinement will already have
             //  made sure the pointLevel_ and cellLevel_ are the size of the new
             //  mesh so we only need to account for reordering.
-            void updateMesh(const polyTopoChangeMap&);
+            void topoChange(const polyTopoChangeMap&);
 
 
             // Restoring : is where other processes delete and reinsert data.
@@ -513,7 +513,7 @@ public:
                 //- Update local numbering + undo
                 //  Data to restore given as new pointlabel + stored pointlabel
                 //  (i.e. what was in pointsToStore)
-                void updateMesh
+                void topoChange
                 (
                     const polyTopoChangeMap&,
                     const Map<label>& pointsToRestore,

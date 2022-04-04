@@ -153,7 +153,13 @@ void Foam::fv::VoFSurfaceFilm::addSup
 }
 
 
-void Foam::fv::VoFSurfaceFilm::updateMesh(const polyTopoChangeMap&)
+void Foam::fv::VoFSurfaceFilm::topoChange(const polyTopoChangeMap&)
+{
+    NotImplemented;
+}
+
+
+void Foam::fv::VoFSurfaceFilm::mapMesh(const polyMeshMap& map)
 {
     NotImplemented;
 }

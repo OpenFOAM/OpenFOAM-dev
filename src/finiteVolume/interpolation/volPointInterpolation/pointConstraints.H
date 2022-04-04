@@ -54,7 +54,6 @@ namespace Foam
 {
 
 class polyMesh;
-class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                       Class pointConstraints Declaration
@@ -130,7 +129,10 @@ public:
             virtual bool movePoints();
 
             //- Update mesh topology using the morph engine
-            virtual void updateMesh(const polyTopoChangeMap&);
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
 
             //- Update corresponding to the given distribution map
             virtual void distribute(const polyDistributionMap&);

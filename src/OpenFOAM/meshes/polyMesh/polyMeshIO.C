@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -264,7 +264,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         // data.
 
         // Calculate topology for the patches (processor-processor comms etc.)
-        boundary_.updateMesh();
+        boundary_.topoChange();
 
         // Calculate the geometry for the patches (transformation tensors etc.)
         boundary_.calcGeometry();

@@ -585,7 +585,7 @@ bool Foam::functionObjects::streamlines::write()
 }
 
 
-void Foam::functionObjects::streamlines::updateMesh
+void Foam::functionObjects::streamlines::topoChange
 (
     const polyTopoChangeMap& map
 )

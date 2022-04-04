@@ -166,7 +166,11 @@ bool Foam::fvMeshTopoChangers::raw::update()
 }
 
 
-void Foam::fvMeshTopoChangers::raw::updateMesh(const polyTopoChangeMap& map)
+void Foam::fvMeshTopoChangers::raw::topoChange(const polyTopoChangeMap& map)
+{}
+
+
+void Foam::fvMeshTopoChangers::raw::mapMesh(const polyMeshMap& map)
 {}
 
 

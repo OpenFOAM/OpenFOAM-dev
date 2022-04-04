@@ -72,7 +72,15 @@ Foam::nearWallDist::~nearWallDist()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::nearWallDist::updateMesh(const polyTopoChangeMap& map)
+bool Foam::nearWallDist::movePoints()
+{
+    correct();
+
+    return true;
+}
+
+
+void Foam::nearWallDist::topoChange(const polyTopoChangeMap& map)
 {
     y_.setSize(mesh().boundary().size());
 
@@ -94,17 +102,29 @@ void Foam::nearWallDist::updateMesh(const polyTopoChangeMap& map)
 }
 
 
-void Foam::nearWallDist::distribute(const polyDistributionMap& map)
+void Foam::nearWallDist::mapMesh(const polyMeshMap& map)
 {
+    forAll(y_, patchi)
+    {
+        y_.set
+        (
+            patchi,
+            fvPatchField<scalar>::New
+            (
+                calculatedFvPatchScalarField::typeName,
+                mesh().boundary()[patchi],
+                volScalarField::Internal::null()
+            )
+        );
+    }
+
     correct();
 }
 
 
-bool Foam::nearWallDist::movePoints()
+void Foam::nearWallDist::distribute(const polyDistributionMap& map)
 {
     correct();
-
-    return true;
 }
 
 

@@ -180,7 +180,7 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
 }
 
 
-void Foam::solidBodyMotionSolver::updateMesh(const polyTopoChangeMap& map)
+void Foam::solidBodyMotionSolver::topoChange(const polyTopoChangeMap& map)
 {
     // pointMesh already updates pointFields
 

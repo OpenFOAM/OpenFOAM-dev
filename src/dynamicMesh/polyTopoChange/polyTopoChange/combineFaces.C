@@ -785,7 +785,7 @@ void Foam::combineFaces::setRefinement
 }
 
 
-void Foam::combineFaces::updateMesh(const polyTopoChangeMap& map)
+void Foam::combineFaces::topoChange(const polyTopoChangeMap& map)
 {
     if (undoable_)
     {

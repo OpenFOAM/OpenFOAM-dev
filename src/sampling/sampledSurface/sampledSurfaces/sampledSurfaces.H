@@ -235,13 +235,14 @@ public:
         //- Sample and write
         virtual bool write();
 
-        //- Update for changes of mesh - expires the surfaces
-        virtual void updateMesh(const polyTopoChangeMap&);
+        //- Update topology using the given map - expires the surfaces
+        virtual void topoChange(const polyTopoChangeMap&);
 
         //- Update for mesh point-motion - expires the surfaces
         virtual void movePoints(const polyMesh&);
 
-        //- Update for changes of mesh due to readUpdate - expires the surfaces
+        //- Update topology using the given map due to readUpdate
+        //  - expires the surfaces
         virtual void readUpdate(const polyMesh::readUpdateState state);
 
 

@@ -1264,7 +1264,7 @@ void Foam::meshCutAndRemove::setRefinement
 }
 
 
-void Foam::meshCutAndRemove::updateMesh(const polyTopoChangeMap& map)
+void Foam::meshCutAndRemove::topoChange(const polyTopoChangeMap& map)
 {
     // Update stored labels for mesh change.
     {
@@ -1287,7 +1287,7 @@ void Foam::meshCutAndRemove::updateMesh(const polyTopoChangeMap& map)
                  && (newCelli != celli || newAddedFacei != addedFacei)
                 )
                 {
-                    Pout<< "meshCutAndRemove::updateMesh :"
+                    Pout<< "meshCutAndRemove::topoChange :"
                         << " updating addedFace for cell " << celli
                         << " from " << addedFacei
                         << " to " << newAddedFacei
@@ -1332,7 +1332,7 @@ void Foam::meshCutAndRemove::updateMesh(const polyTopoChangeMap& map)
                  && (e != newE || newAddedPointi != addedPointi)
                 )
                 {
-                    Pout<< "meshCutAndRemove::updateMesh :"
+                    Pout<< "meshCutAndRemove::topoChange :"
                         << " updating addedPoints for edge " << e
                         << " from " << addedPointi
                         << " to " << newAddedPointi

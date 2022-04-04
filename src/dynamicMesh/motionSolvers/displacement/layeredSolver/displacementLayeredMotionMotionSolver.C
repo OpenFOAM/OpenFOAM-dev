@@ -556,7 +556,7 @@ void Foam::displacementLayeredMotionMotionSolver::solve()
 }
 
 
-void Foam::displacementLayeredMotionMotionSolver::updateMesh
+void Foam::displacementLayeredMotionMotionSolver::topoChange
 (
     const polyTopoChangeMap& map
 )
@@ -566,7 +566,7 @@ void Foam::displacementLayeredMotionMotionSolver::updateMesh
         << "    Needs to be updated and tested."
         << exit(FatalError);
 
-    displacementMotionSolver::updateMesh(map);
+    displacementMotionSolver::topoChange(map);
 
     const vectorField displacement(this->newPoints() - points0_);
 

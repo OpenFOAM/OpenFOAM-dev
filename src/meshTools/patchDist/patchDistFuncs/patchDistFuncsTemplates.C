@@ -34,7 +34,7 @@ void Foam::patchDistFuncs::correctBoundaryFaceCells
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
     scalarField& wallDistCorrected,
-    MapType<label>& nearestFace
+    MapType<labelPair>& nearestPatchAndFace
 )
 {
     // Size neighbours array for maximum possible (= size of largest patch)
@@ -60,7 +60,7 @@ void Foam::patchDistFuncs::correctBoundaryFaceCells
                 neighbours
             );
 
-            label minFacei = -1;
+            label minPatchFacei = -1;
 
             wallDistCorrected[celli] =
                 smallestDist
@@ -68,11 +68,15 @@ void Foam::patchDistFuncs::correctBoundaryFaceCells
                     cellCentres[celli],
                     patch,
                     neighbours,
-                    minFacei
+                    minPatchFacei
                 );
 
             // Store wallCell and its nearest neighbour
-            nearestFace.insert(celli, minFacei);
+            nearestPatchAndFace.insert
+            (
+                celli,
+                labelPair(patchi, minPatchFacei)
+            );
         }
     }
 }
@@ -84,7 +88,7 @@ void Foam::patchDistFuncs::correctBoundaryFaceFaceCells
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
     FieldField<PatchField, scalar>& wallDistCorrected,
-    MapType<label>& nearestFace
+    MapType<labelPair>& nearestPatchAndFace
 )
 {
     // Size neighbours array for maximum possible (= size of largest patch)
@@ -110,7 +114,7 @@ void Foam::patchDistFuncs::correctBoundaryFaceFaceCells
                 neighbours
             );
 
-            label minFacei = -1;
+            label minPatchFacei = -1;
 
             wallDistCorrected[patchi][patchFacei] =
                 smallestDist
@@ -118,11 +122,72 @@ void Foam::patchDistFuncs::correctBoundaryFaceFaceCells
                     cellCentres[celli],
                     patch,
                     neighbours,
-                    minFacei
+                    minPatchFacei
                 );
 
             // Store wallCell and its nearest neighbour
-            nearestFace.insert(celli, minFacei);
+            nearestPatchAndFace.insert
+            (
+                celli,
+                labelPair(patchi, minPatchFacei)
+            );
+        }
+    }
+}
+
+
+template<template<class> class MapType>
+void Foam::patchDistFuncs::correctBoundaryPointCells
+(
+    const polyMesh& mesh,
+    const labelHashSet& patchIDs,
+    scalarField& wallDistCorrected,
+    MapType<labelPair>& nearestPatchAndFace
+)
+{
+    // Correct all (non-visited) cells with point on wall
+    const vectorField& cellCentres = mesh.cellCentres();
+
+    forAllConstIter(labelHashSet, patchIDs, iter)
+    {
+        const label patchi = iter.key();
+        const polyPatch& patch = mesh.boundaryMesh()[patchi];
+
+        const labelList& meshPoints = patch.meshPoints();
+        const labelListList& pointFaces = patch.pointFaces();
+
+        forAll(meshPoints, meshPointi)
+        {
+            const labelList& neighbours =
+                mesh.pointCells(meshPoints[meshPointi]);
+
+            forAll(neighbours, neighbourI)
+            {
+                const label celli = neighbours[neighbourI];
+
+                if (!nearestPatchAndFace.found(celli))
+                {
+                    const labelList& wallFaces = pointFaces[meshPointi];
+
+                    label minPatchFacei = -1;
+
+                    wallDistCorrected[celli] =
+                        smallestDist
+                        (
+                            cellCentres[celli],
+                            patch,
+                            wallFaces,
+                            minPatchFacei
+                        );
+
+                    // Store wallCell and its nearest neighbour
+                    nearestPatchAndFace.insert
+                    (
+                        celli,
+                        labelPair(patchi, minPatchFacei)
+                    );
+                }
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ License
 #include "transformer.H"
 #include "SubField.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
 // Update this with w2 if w2 nearer to pt.
 template<class TrackingData>

@@ -36,20 +36,16 @@ SourceFiles
 #ifndef patchDistWave_H
 #define patchDistWave_H
 
+#include "polyMesh.H"
+#include "FaceCellWave.H"
 #include "Field.H"
 #include "FieldField.H"
 #include "UPtrList.H"
-#include "FaceCellWave.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class polyMesh;
-class wallPoint;
-
 namespace patchDistWave
 {
 
@@ -70,26 +66,8 @@ void setChangedFaces
 template<class PatchPointType, class DataType, class DataMethod>
 label getCellValues
 (
-    const polyMesh& mesh,
     FaceCellWave<PatchPointType>& waveInfo,
     Field<DataType>& cellValues,
-    DataMethod method,
-    const DataType& stabiliseValue = pTraits<DataType>::zero
-);
-
-//- Copy FaceCellWave values into the patch field-fields
-template
-<
-    class PatchPointType,
-    template<class> class PatchField,
-    class DataType,
-    class DataMethod
->
-label getPatchValues
-(
-    const polyMesh& mesh,
-    FaceCellWave<PatchPointType>& wave,
-    FieldField<PatchField, DataType>& patchValues,
     DataMethod method,
     const DataType& stabiliseValue = pTraits<DataType>::zero
 );
@@ -101,22 +79,6 @@ label wave
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
     scalarField& cellDistance,
-    bool correct = true
-);
-
-//- Wave distance and auxiliary data from the patches to the cells and other
-//  patch faces
-template<class PatchPointType, template<class> class PatchField>
-label wave
-(
-    const polyMesh& mesh,
-    const labelHashSet& patchIDs,
-    const FieldField<PatchField, typename PatchPointType::dataType>&
-        initialPatchData,
-    scalarField& cellDistance,
-    FieldField<PatchField, scalar>& patchDistance,
-    Field<typename PatchPointType::dataType>& cellData,
-    FieldField<PatchField, typename PatchPointType::dataType>& patchData,
     bool correct = true
 );
 

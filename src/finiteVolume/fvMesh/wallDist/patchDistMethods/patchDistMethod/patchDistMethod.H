@@ -137,19 +137,23 @@ public:
             return patchIDs_;
         }
 
-        //- Update cached topology and geometry when the mesh changes
-        virtual void updateMesh(const polyTopoChangeMap&)
-        {}
-
-        //- Redistribute or update using the given distribution map
-        virtual void distribute(const polyDistributionMap&)
-        {}
-
         //- Update cached geometry when the mesh moves
         virtual bool movePoints()
         {
             return true;
         }
+
+        //- Update cached topology and geometry when the mesh changes
+        virtual void topoChange(const polyTopoChangeMap&)
+        {}
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&)
+        {}
+
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap&)
+        {}
 
         //- Correct the given distance-to-patch field
         virtual bool correct(volScalarField& y) = 0;

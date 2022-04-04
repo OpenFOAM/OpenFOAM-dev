@@ -51,6 +51,7 @@ namespace Foam
 
 // Forward declaration of classes
 class polyTopoChangeMap;
+class polyMeshMap;
 
 /*---------------------------------------------------------------------------*\
                        Class IOOutputFilter Declaration
@@ -125,11 +126,14 @@ public:
         //- Sample and write
         virtual bool write(const bool write = true);
 
-        //- Update for changes of mesh
-        virtual void updateMesh(const polyTopoChangeMap& map);
-
-        //- Update for changes of mesh
+        //- Update topology using the given map
         virtual void movePoints(const polyMesh& mesh);
+
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap& map);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
 
     // Member Operators

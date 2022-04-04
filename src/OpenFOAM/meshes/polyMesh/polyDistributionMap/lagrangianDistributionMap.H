@@ -42,8 +42,6 @@ SourceFiles
 namespace Foam
 {
 
-class polyTopoChangeMap;
-
 /*---------------------------------------------------------------------------*\
                    Class lagrangianDistributionMap Declaration
 \*---------------------------------------------------------------------------*/
@@ -101,12 +99,6 @@ public:
             void distributeLagrangianData(List<T>& lst) const
             {
                 particleMap_.distribute(lst);
-            }
-
-            //- Correct for topo change.
-            void updateMesh(const polyTopoChangeMap&)
-            {
-                NotImplemented;
             }
 };
 

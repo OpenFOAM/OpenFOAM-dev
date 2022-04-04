@@ -37,8 +37,7 @@ SourceFiles
 
 #include "pointField.H"
 #include "Time.H"
-#include "polyMesh.H"
-#include "dictionaryEntry.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,6 +47,7 @@ namespace Foam
 // Forward class declarations
 class polyMesh;
 class polyTopoChangeMap;
+class polyMeshMap;
 class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
@@ -148,10 +148,13 @@ public:
         virtual void movePoints(const pointField&) = 0;
 
         //-  Update local data for topology changes
-        virtual void updateMesh(const polyTopoChangeMap&) = 0;
+        virtual void topoChange(const polyTopoChangeMap&) = 0;
 
         //- Update corresponding to the given distribution map
         virtual void distribute(const polyDistributionMap&) = 0;
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&) = 0;
 
         //- Optionally write motion state information for restart
         virtual bool write() const;

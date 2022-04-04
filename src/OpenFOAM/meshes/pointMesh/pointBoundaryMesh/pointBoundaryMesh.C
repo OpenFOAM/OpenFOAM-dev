@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,7 +156,7 @@ void Foam::pointBoundaryMesh::movePoints(const pointField& p)
 }
 
 
-void Foam::pointBoundaryMesh::updateMesh()
+void Foam::pointBoundaryMesh::topoChange()
 {
     PstreamBuffers pBufs(Pstream::defaultCommsType);
 
@@ -168,14 +168,14 @@ void Foam::pointBoundaryMesh::updateMesh()
     {
         forAll(*this, patchi)
         {
-            operator[](patchi).initUpdateMesh(pBufs);
+            operator[](patchi).initTopoChange(pBufs);
         }
 
         pBufs.finishedSends();
 
         forAll(*this, patchi)
         {
-            operator[](patchi).updateMesh(pBufs);
+            operator[](patchi).topoChange(pBufs);
         }
     }
     else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
@@ -191,11 +191,11 @@ void Foam::pointBoundaryMesh::updateMesh()
 
             if (patchSchedule[patchEvali].init)
             {
-                operator[](patchi).initUpdateMesh(pBufs);
+                operator[](patchi).initTopoChange(pBufs);
             }
             else
             {
-                operator[](patchi).updateMesh(pBufs);
+                operator[](patchi).topoChange(pBufs);
             }
         }
     }
@@ -227,7 +227,7 @@ void Foam::pointBoundaryMesh::shuffle
     pointPatchList::shuffle(newToOld);
     if (validBoundary)
     {
-        updateMesh();
+        topoChange();
     }
 }
 

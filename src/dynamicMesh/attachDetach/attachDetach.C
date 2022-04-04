@@ -435,7 +435,7 @@ void Foam::attachDetach::setRefinement(polyTopoChange& ref) const
 }
 
 
-void Foam::attachDetach::updateMesh(const polyTopoChangeMap&)
+void Foam::attachDetach::topoChange(const polyTopoChangeMap&)
 {
     // Mesh has changed topologically.  Update local topological data
     const polyMesh& mesh = topoChanger().mesh();

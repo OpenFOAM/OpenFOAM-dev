@@ -354,9 +354,9 @@ bool Foam::probes::write()
 }
 
 
-void Foam::probes::updateMesh(const polyTopoChangeMap& map)
+void Foam::probes::topoChange(const polyTopoChangeMap& map)
 {
-    DebugInfo<< "probes: updateMesh" << endl;
+    DebugInfo<< "probes: topoChange" << endl;
 
     if (&map.mesh() != &mesh_)
     {

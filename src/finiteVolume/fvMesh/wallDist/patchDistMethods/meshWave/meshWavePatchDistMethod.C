@@ -26,8 +26,8 @@ License
 #include "meshWavePatchDistMethod.H"
 #include "fvMesh.H"
 #include "volFields.H"
-#include "patchDistWave.H"
-#include "wallPointData.H"
+#include "fvPatchDistWave.H"
+#include "fvWallPointData.H"
 #include "emptyFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -75,14 +75,15 @@ bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
     y = dimensionedScalar(dimLength, great);
 
     const label nUnset =
-        patchDistWave::wave<wallPoint>
+        fvPatchDistWave::wave<fvWallPoint>
         (
             mesh_,
             patchIDs_,
-            y.primitiveFieldRef(),
+            y,
             correctWalls_
         );
 
+    // Update coupled and transform BCs
     y.correctBoundaryConditions();
 
     return nUnset > 0;
@@ -98,15 +99,13 @@ bool Foam::patchDistMethods::meshWave::correct
     y = dimensionedScalar(dimLength, great);
 
     const label nUnset =
-        patchDistWave::wave<wallPointData<vector>, fvPatchField>
+        fvPatchDistWave::wave<fvWallPointData<vector>>
         (
             mesh_,
             patchIDs_,
             n.boundaryField(),
-            y.primitiveFieldRef(),
-            y.boundaryFieldRef(),
-            n.primitiveFieldRef(),
-            n.boundaryFieldRef(),
+            y,
+            n,
             correctWalls_
         );
 

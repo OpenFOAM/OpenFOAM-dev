@@ -244,7 +244,7 @@ void Foam::polyTopoChanger::update(const polyTopoChangeMap& m)
 
     forAll(topoChanges, morphI)
     {
-        topoChanges[morphI].updateMesh(m);
+        topoChanges[morphI].topoChange(m);
     }
 
     // Force the mesh modifiers to auto-write.  This allows us to
@@ -277,7 +277,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChanger::changeMesh
         );
 
         update(topoChangeMap());
-        mesh_.updateMesh(topoChangeMap());
+        mesh_.topoChange(topoChangeMap());
         return topoChangeMap;
     }
     else

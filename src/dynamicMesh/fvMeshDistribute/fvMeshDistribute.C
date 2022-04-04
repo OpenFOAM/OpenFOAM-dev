@@ -562,7 +562,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
 
 
     // Do mapping of fields from one patchField to the other ourselves since
-    // is currently not supported by updateMesh.
+    // is currently not supported by topoChange.
 
     // Store boundary fields (we only do this for surfaceFields)
     PtrList<FieldField<fvsPatchField, scalar>> sFlds;
@@ -1308,11 +1308,11 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
 
 void Foam::fvMeshDistribute::mapFields(const polyTopoChangeMap& map)
 {
-    meshObject::updateMesh<polyMesh>(mesh_, map);
-    meshObject::updateMesh<pointMesh>(mesh_, map);
+    meshObject::topoChange<polyMesh>(mesh_, map);
+    meshObject::topoChange<pointMesh>(mesh_, map);
     mesh_.mapFields(map);
-    meshObject::updateMesh<fvMesh>(mesh_, map);
-    meshObject::updateMesh<lduMesh>(mesh_, map);
+    meshObject::topoChange<fvMesh>(mesh_, map);
+    meshObject::topoChange<lduMesh>(mesh_, map);
 }
 
 
