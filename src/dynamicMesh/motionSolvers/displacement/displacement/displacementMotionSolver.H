@@ -72,6 +72,7 @@ public:
         //- Construct from mesh and dictionary
         displacementMotionSolver
         (
+            const word& name,
             const polyMesh&,
             const dictionary&,
             const word& type

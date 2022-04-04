@@ -49,11 +49,12 @@ namespace Foam
 Foam::velocityComponentLaplacianFvMotionSolver::
 velocityComponentLaplacianFvMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    componentVelocityMotionSolver(mesh, dict, typeName),
+    componentVelocityMotionSolver(name, mesh, dict, typeName),
     fvMotionSolver(mesh),
     cellMotionU_
     (

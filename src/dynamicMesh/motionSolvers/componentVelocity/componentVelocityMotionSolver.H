@@ -89,6 +89,7 @@ public:
         //- Construct from mesh and dictionary
         componentVelocityMotionSolver
         (
+            const word& name,
             const polyMesh&,
             const dictionary&,
             const word& type

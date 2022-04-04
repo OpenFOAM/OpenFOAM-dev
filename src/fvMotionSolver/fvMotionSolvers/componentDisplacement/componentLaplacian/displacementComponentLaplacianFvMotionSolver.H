@@ -90,6 +90,7 @@ public:
         //- Construct from polyMesh and dictionary
         displacementComponentLaplacianFvMotionSolver
         (
+            const word& name,
             const polyMesh&,
             const dictionary&
         );

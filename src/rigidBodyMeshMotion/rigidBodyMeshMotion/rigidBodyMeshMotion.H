@@ -149,6 +149,7 @@ public:
         //- Construct from polyMesh and dictionary
         rigidBodyMeshMotion
         (
+            const word& name,
             const polyMesh&,
             const dictionary& dict
         );
@@ -157,7 +158,7 @@ public:
         rigidBodyMeshMotion
         (
             const rigidBodyMeshMotion&
-        );
+        ) = delete;
 
 
     //- Destructor

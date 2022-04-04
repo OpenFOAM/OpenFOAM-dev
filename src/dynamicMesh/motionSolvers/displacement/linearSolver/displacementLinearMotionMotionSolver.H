@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,6 +101,7 @@ public:
         //- Construct from polyMesh and dictionary
         displacementLinearMotionMotionSolver
         (
+            const word& name,
             const polyMesh&,
             const dictionary&
         );

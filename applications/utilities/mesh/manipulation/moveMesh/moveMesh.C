@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,8 @@ int main(int argc, char *argv[])
         )
     );
 
-    autoPtr<motionSolver> motionPtr = motionSolver::New(mesh, dynamicMeshDict);
+    autoPtr<motionSolver> motionPtr =
+        motionSolver::New("motionSolver", mesh, dynamicMeshDict);
 
     while (runTime.loop())
     {

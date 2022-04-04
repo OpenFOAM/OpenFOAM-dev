@@ -46,11 +46,12 @@ namespace Foam
 
 Foam::displacementMeshMoverMotionSolver::displacementMeshMoverMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    displacementMotionSolver(mesh, dict, typeName) // read pointDisplacement
+    displacementMotionSolver(name, mesh, dict, typeName)
 {}
 
 

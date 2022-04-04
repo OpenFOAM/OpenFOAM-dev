@@ -78,6 +78,7 @@ public:
         //- Construct from mesh and dictionary
         solidBodyMotionSolver
         (
+            const word& name,
             const polyMesh&,
             const dictionary&
         );

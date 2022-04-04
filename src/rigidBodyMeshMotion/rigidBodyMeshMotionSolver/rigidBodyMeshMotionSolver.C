@@ -69,11 +69,12 @@ Foam::rigidBodyMeshMotionSolver::bodyMesh::bodyMesh
 
 Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    motionSolver(mesh, dict, typeName),
+    motionSolver(name, mesh, dict, typeName),
     RBD::rigidBodyMotion
     (
         coeffDict(),
@@ -108,6 +109,7 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
     (
         motionSolver::New
         (
+            name,
             mesh,
             IOdictionary
             (

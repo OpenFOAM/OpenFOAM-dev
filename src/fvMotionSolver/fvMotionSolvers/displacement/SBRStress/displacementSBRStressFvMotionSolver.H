@@ -76,6 +76,7 @@ public:
         //- Construct from polyMesh and dictionary
         displacementSBRStressFvMotionSolver
         (
+            const word& name,
             const polyMesh&,
             const dictionary&
         );

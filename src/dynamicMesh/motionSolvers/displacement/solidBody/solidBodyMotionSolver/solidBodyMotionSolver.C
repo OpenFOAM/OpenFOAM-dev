@@ -50,11 +50,12 @@ namespace Foam
 
 Foam::solidBodyMotionSolver::solidBodyMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    points0MotionSolver(mesh, dict, typeName),
+    points0MotionSolver(name, mesh, dict, typeName),
     SBMFPtr_(solidBodyMotionFunction::New(coeffDict(), mesh.time())),
     pointIDs_(),
     moveAllCells_(false),

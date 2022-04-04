@@ -490,11 +490,12 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
 Foam::displacementLayeredMotionMotionSolver::
 displacementLayeredMotionMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    displacementMotionSolver(mesh, dict, typeName)
+    displacementMotionSolver(name, mesh, dict, typeName)
 {}
 
 

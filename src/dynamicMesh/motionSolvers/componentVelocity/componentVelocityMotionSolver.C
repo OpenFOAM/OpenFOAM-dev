@@ -68,12 +68,13 @@ Foam::direction Foam::componentVelocityMotionSolver::cmpt
 
 Foam::componentVelocityMotionSolver::componentVelocityMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict,
     const word& type
 )
 :
-    motionSolver(mesh, dict, type),
+    motionSolver(name, mesh, dict, type),
     cmptName_(coeffDict().lookup("component")),
     cmpt_(cmpt(cmptName_)),
     pointMotionU_

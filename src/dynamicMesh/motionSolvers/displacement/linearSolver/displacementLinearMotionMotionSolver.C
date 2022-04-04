@@ -46,11 +46,12 @@ namespace Foam
 Foam::displacementLinearMotionMotionSolver::
 displacementLinearMotionMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    points0MotionSolver(mesh, dict, typeName),
+    points0MotionSolver(name, mesh, dict, typeName),
     axis_(normalised(vector(coeffDict().lookup("axis")))),
     xFixed_(coeffDict().lookup<scalar>("xFixed")),
     xMoving_(coeffDict().lookup<scalar>("xMoving")),

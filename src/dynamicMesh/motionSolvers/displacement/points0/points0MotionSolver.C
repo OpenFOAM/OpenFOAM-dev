@@ -110,12 +110,13 @@ Foam::pointVectorField Foam::points0MotionSolver::readPoints0
 
 Foam::points0MotionSolver::points0MotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict,
     const word& type
 )
 :
-    motionSolver(mesh, dict, type),
+    motionSolver(name, mesh, dict, type),
     points0_(readPoints0(mesh))
 {
     if (points0_.size() != mesh.nPoints())

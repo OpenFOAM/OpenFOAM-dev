@@ -58,6 +58,9 @@ class motionSolver
 {
     // Private Data
 
+        //- Name of coordinate system
+        word name_;
+
         //- Reference to mesh
         const polyMesh& mesh_;
 
@@ -78,27 +81,24 @@ public:
             autoPtr,
             motionSolver,
             dictionary,
-            (const polyMesh& mesh, const dictionary& dict),
-            (mesh, dict)
+            (
+                const word& name,
+                const polyMesh& mesh,
+                const dictionary& dict
+            ),
+            (name, mesh, dict)
         );
 
 
     // Selectors
 
         //- Select constructed from polyMesh and dictionary
-        static autoPtr<motionSolver> New(const polyMesh&, const dictionary&);
-
-        //- Class used for the construction of PtrLists of motionSolvers
-        class iNew
-        {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh);
-
-            autoPtr<motionSolver> operator()(Istream& is) const;
-        };
+        static autoPtr<motionSolver> New
+        (
+            const word& name,
+            const polyMesh&,
+            const dictionary&
+        );
 
 
     // Constructors
@@ -106,6 +106,7 @@ public:
         //- Construct from polyMesh and dictionary and type.
         motionSolver
         (
+            const word& name,
             const polyMesh& mesh,
             const dictionary&,
             const word& type
@@ -120,6 +121,18 @@ public:
 
 
     // Member Functions
+
+        //- Return name
+        const word& name() const
+        {
+            return name_;
+        }
+
+        //- Return keyword
+        const word& keyword() const
+        {
+            return name();
+        }
 
         //- Return reference to mesh
         const polyMesh& mesh() const

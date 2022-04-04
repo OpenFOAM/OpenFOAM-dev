@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,11 +48,12 @@ namespace Foam
 
 Foam::multiSolidBodyMotionSolver::multiSolidBodyMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    points0MotionSolver(mesh, dict, typeName)
+    points0MotionSolver(name, mesh, dict, typeName)
 {
     zoneIDs_.setSize(coeffDict().size());
     SBMFs_.setSize(coeffDict().size());

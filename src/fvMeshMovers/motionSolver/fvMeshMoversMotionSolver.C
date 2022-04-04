@@ -44,7 +44,7 @@ namespace fvMeshMovers
 Foam::fvMeshMovers::motionSolver::motionSolver(fvMesh& mesh)
 :
     fvMeshMover(mesh),
-    motionPtr_(Foam::motionSolver::New(mesh, dict())),
+    motionPtr_(Foam::motionSolver::New("motionSolver", mesh, dict())),
     velocityMotionCorrection_(mesh, dict())
 {}
 

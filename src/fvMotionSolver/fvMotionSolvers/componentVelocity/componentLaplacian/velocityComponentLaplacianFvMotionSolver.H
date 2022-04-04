@@ -76,6 +76,7 @@ public:
         //- Construct from polyMesh and dictionary
         velocityComponentLaplacianFvMotionSolver
         (
+            const word& name,
             const polyMesh&,
             const dictionary&
         );

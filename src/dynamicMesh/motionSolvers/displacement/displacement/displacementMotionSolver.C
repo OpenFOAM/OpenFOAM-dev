@@ -37,12 +37,13 @@ namespace Foam
 
 Foam::displacementMotionSolver::displacementMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict,
     const word& type
 )
 :
-    points0MotionSolver(mesh, dict, type),
+    points0MotionSolver(name, mesh, dict, type),
     pointDisplacement_
     (
         IOobject

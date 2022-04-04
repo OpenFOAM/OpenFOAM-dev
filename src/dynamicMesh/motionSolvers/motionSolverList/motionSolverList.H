@@ -40,6 +40,7 @@ SourceFiles
 #define motionSolverList_H
 
 #include "motionSolver.H"
+#include "PtrDictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,7 +57,7 @@ class motionSolverList
 {
     // Private Data
 
-        PtrList<motionSolver> motionSolvers_;
+        PtrDictionary<motionSolver> motionSolvers_;
 
 
 public:
@@ -68,7 +69,12 @@ public:
     // Constructors
 
         //- Construct from mesh and dictionary
-        motionSolverList(const polyMesh&, const dictionary&);
+        motionSolverList
+        (
+            const word& name,
+            const polyMesh&,
+            const dictionary&
+        );
 
         //- Disallow default bitwise copy construction
         motionSolverList(const motionSolverList&) = delete;

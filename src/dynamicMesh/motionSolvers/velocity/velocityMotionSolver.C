@@ -38,12 +38,13 @@ namespace Foam
 
 Foam::velocityMotionSolver::velocityMotionSolver
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict,
     const word& type
 )
 :
-    motionSolver(mesh, dict, type),
+    motionSolver(name, mesh, dict, type),
     pointMotionU_
     (
         IOobject

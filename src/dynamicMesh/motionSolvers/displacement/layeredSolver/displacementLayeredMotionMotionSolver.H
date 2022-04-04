@@ -122,6 +122,7 @@ public:
         //- Construct from polyMesh and dictionary
         displacementLayeredMotionMotionSolver
         (
+            const word& name,
             const polyMesh&,
             const dictionary&
         );

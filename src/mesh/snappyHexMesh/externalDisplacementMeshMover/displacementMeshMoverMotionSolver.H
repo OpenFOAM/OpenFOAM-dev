@@ -66,13 +66,18 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        displacementMeshMoverMotionSolver(const polyMesh&, const dictionary&);
+        displacementMeshMoverMotionSolver
+        (
+            const word& name,
+            const polyMesh&,
+            const dictionary&
+        );
 
         //- Disallow default bitwise copy construction
         displacementMeshMoverMotionSolver
         (
             const displacementMeshMoverMotionSolver&
-        );
+        ) = delete;
 
 
     //- Destructor

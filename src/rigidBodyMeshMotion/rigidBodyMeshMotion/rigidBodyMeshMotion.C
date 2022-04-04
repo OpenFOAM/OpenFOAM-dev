@@ -135,11 +135,12 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
 
 Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 (
+    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    displacementMotionSolver(mesh, dict, typeName),
+    displacementMotionSolver(name, mesh, dict, typeName),
     RBD::rigidBodyMotion
     (
         coeffDict(),
