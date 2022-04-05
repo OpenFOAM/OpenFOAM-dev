@@ -62,6 +62,9 @@ class nearWallDist
 
     // Private Member Functions
 
+        //- Re-size y_ following a change to the boundary mesh
+        void resize();
+
         //- Re-calculate y_
         void correct();
 

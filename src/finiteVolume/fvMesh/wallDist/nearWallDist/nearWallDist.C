@@ -37,6 +37,24 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+void Foam::nearWallDist::resize()
+{
+    forAll(y_, patchi)
+    {
+        y_.set
+        (
+            patchi,
+            fvPatchField<scalar>::New
+            (
+                calculatedFvPatchScalarField::typeName,
+                mesh().boundary()[patchi],
+                volScalarField::Internal::null()
+            )
+        );
+    }
+}
+
+
 void Foam::nearWallDist::correct()
 {
     volScalarField yVf(volScalarField::New("y", mesh(), dimLength));
@@ -96,19 +114,7 @@ void Foam::nearWallDist::topoChange(const polyTopoChangeMap& map)
 {
     y_.setSize(mesh().boundary().size());
 
-    forAll(y_, patchi)
-    {
-        y_.set
-        (
-            patchi,
-            fvPatchField<scalar>::New
-            (
-                calculatedFvPatchScalarField::typeName,
-                mesh().boundary()[patchi],
-                volScalarField::Internal::null()
-            )
-        );
-    }
+    resize();
 
     correct();
 }
@@ -116,19 +122,7 @@ void Foam::nearWallDist::topoChange(const polyTopoChangeMap& map)
 
 void Foam::nearWallDist::mapMesh(const polyMeshMap& map)
 {
-    forAll(y_, patchi)
-    {
-        y_.set
-        (
-            patchi,
-            fvPatchField<scalar>::New
-            (
-                calculatedFvPatchScalarField::typeName,
-                mesh().boundary()[patchi],
-                volScalarField::Internal::null()
-            )
-        );
-    }
+    resize();
 
     correct();
 }
