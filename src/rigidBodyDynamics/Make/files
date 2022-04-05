@@ -27,6 +27,7 @@ joints/Pa/Pa.C
 joints/Pxyz/Pxyz.C
 
 joints/rigid/rigid.C
+joints/rotating/rotating.C
 joints/function/function.C
 joints/functionDot/functionDot.C
 

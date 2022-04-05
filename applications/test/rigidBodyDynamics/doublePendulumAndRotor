@@ -1,0 +1,59 @@
+solver
+{
+    type symplectic;
+}
+
+bodies
+{
+    bar1
+    {
+        type            rigidBody;
+        mass            3;
+        centreOfMass    (0 -0.5 0);
+        inertia         (0.2575 0 0 0.015 0 0.2575);
+        parent          root;
+        transform       (1 0 0 0 1 0 0 0 1) (0 0 0);
+        joint
+        {
+            type            Rz;
+        }
+        outline         ((0 0 0) (0 -1 0));
+    }
+    bar2
+    {
+        type            rigidBody;
+        mass            3;
+        centreOfMass    (0 -0.5 0);
+        inertia         (0.2575 0 0 0.015 0 0.2575);
+        parent          bar1;
+        transform       (1 0 0 0 1 0 0 0 1) (0 -1 0);
+        joint
+        {
+            type            Rz;
+        }
+        outline         ((0 0 0) (0 -1 0));
+    }
+    rotor
+    {
+        type            rigidBody;
+        mass            3;
+        centreOfMass    (0 -0.5 0);
+        inertia         (0.2575 0 0 0.015 0 0.2575);
+        parent          bar2;
+        transform       (1 0 0 0 1 0 0 0 1) (0 -1 0);
+        joint
+        {
+            type            rotating;
+            omega           (0 0 1);
+        }
+        outline         ((0 0 0) (0 -1 0));
+    }
+}
+
+g (0 -9.81 0);
+
+q (1.5707963267948966 0 0);
+
+deltaT 0.01;
+
+endTime 20;
