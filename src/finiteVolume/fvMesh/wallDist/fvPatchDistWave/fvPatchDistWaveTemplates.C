@@ -355,7 +355,7 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
         wave<WallInfoData<wallPoint>, TrackingData>
         (
             mesh,
-            getChangedPatchAndFaces(mesh, patchIDs),
+            changedPatchAndFaces,
             -1,
             distance,
             td,
