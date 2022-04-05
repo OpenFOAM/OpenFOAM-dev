@@ -578,9 +578,9 @@ Foam::FvFaceCellWave<Type, TrackingData>::handleCyclicAMIPatches()
 
     forAll(mesh_.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh_.boundaryMesh()[patchi];
+        const fvPatch& patch = mesh_.boundary()[patchi];
 
-        if (isA<cyclicAMIPolyPatch>(patch))
+        if (isA<cyclicAMIFvPatch>(patch))
         {
             const cyclicAMIFvPatch& cycPatch =
                 refCast<const cyclicAMIFvPatch>(patch);
@@ -680,7 +680,11 @@ Foam::FvFaceCellWave<Type, TrackingData>::handleCyclicAMIPatches()
             {
                 if (receiveInfo[patchFacei].valid(td_))
                 {
-                    receiveInfo[receiveFaces.size()] = receiveInfo[patchFacei];
+                    if (receiveFaces.size() != patchFacei)
+                    {
+                        receiveInfo[receiveFaces.size()] =
+                            receiveInfo[patchFacei];
+                    }
                     receiveFaces.append(patchFacei);
                 }
             }

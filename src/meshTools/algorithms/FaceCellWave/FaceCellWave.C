@@ -697,7 +697,11 @@ void Foam::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
             {
                 if (receiveInfo[patchFacei].valid(td_))
                 {
-                    receiveInfo[receiveFaces.size()] = receiveInfo[patchFacei];
+                    if (receiveFaces.size() != patchFacei)
+                    {
+                        receiveInfo[receiveFaces.size()] =
+                            receiveInfo[patchFacei];
+                    }
                     receiveFaces.append(patchFacei);
                 }
             }
