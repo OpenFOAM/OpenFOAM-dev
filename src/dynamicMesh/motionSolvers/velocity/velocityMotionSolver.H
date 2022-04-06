@@ -109,7 +109,7 @@ public:
         //- Update local data for geometry changes
         virtual void movePoints(const pointField&);
 
-        //-  Update local data for topology changes
+        //- Update corresponding to the given map
         virtual void topoChange(const polyTopoChangeMap&);
 
         //- Update from another mesh using the given map

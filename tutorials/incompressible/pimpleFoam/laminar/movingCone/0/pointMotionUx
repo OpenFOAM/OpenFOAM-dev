@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       pointScalarField;
-    object      pointMotionU;
+    object      pointMotionUx;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -19,36 +19,34 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     movingWall
     {
         type            uniformFixedValue;
         uniformValue    constant 1;
     }
+
     farFieldMoving
     {
         type            slip;
     }
+
     fixedWall
     {
         type            uniformFixedValue;
         uniformValue    constant 0;
     }
+
     left
     {
         type            uniformFixedValue;
         uniformValue    constant 0;
     }
+
     farField
     {
         type            slip;
-    }
-    back
-    {
-        type            wedge;
-    }
-    front
-    {
-        type            wedge;
     }
 }
 

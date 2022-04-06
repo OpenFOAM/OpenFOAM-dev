@@ -258,4 +258,22 @@ void Foam::displacementComponentLaplacianFvMotionSolver::topoChange
 }
 
 
+void Foam::displacementComponentLaplacianFvMotionSolver::mapMesh
+(
+    const polyMeshMap& map
+)
+{
+    componentDisplacementMotionSolver::mapMesh(map);
+
+    // Update diffusivity. Note two stage to make sure old one is de-registered
+    // before creating/registering new one.
+    diffusivityPtr_.reset(nullptr);
+    diffusivityPtr_ = motionDiffusivity::New
+    (
+        fvMesh_,
+        coeffDict().lookup("diffusivity")
+    );
+}
+
+
 // ************************************************************************* //

@@ -46,11 +46,12 @@ wmake $targetType dynamicMesh
 # Compile scotchDecomp, metisDecomp etc.
 parallel/Allwmake $targetType $*
 
-wmake $targetType fvMeshMovers
-wmake $targetType fvMeshTopoChangers
-wmake $targetType fvMeshDistributors
 wmake $targetType conversion
 wmake $targetType sampling
+
+wmake $targetType fvMeshMovers
+fvMeshTopoChangers/Allwmake $targetType $*
+wmake $targetType fvMeshDistributors
 
 wmake $targetType ODE
 wmake $targetType randomProcesses

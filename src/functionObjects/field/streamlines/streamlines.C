@@ -585,6 +585,16 @@ bool Foam::functionObjects::streamlines::write()
 }
 
 
+void Foam::functionObjects::streamlines::movePoints(const polyMesh& mesh)
+{
+    if (&mesh == &mesh_)
+    {
+        // Moving mesh affects the search tree
+        read(dict_);
+    }
+}
+
+
 void Foam::functionObjects::streamlines::topoChange
 (
     const polyTopoChangeMap& map
@@ -597,13 +607,12 @@ void Foam::functionObjects::streamlines::topoChange
 }
 
 
-void Foam::functionObjects::streamlines::movePoints(const polyMesh& mesh)
+void Foam::functionObjects::streamlines::mapMesh
+(
+    const polyMeshMap& map
+)
 {
-    if (&mesh == &mesh_)
-    {
-        // Moving mesh affects the search tree
-        read(dict_);
-    }
+    read(dict_);
 }
 
 

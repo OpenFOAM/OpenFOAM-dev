@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,101 +22,96 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::displacementSBRStressFvMotionSolver
+    Foam::fvMeshTopoChangers::meshToMesh
 
 Description
-    Mesh motion solver for an fvMesh.  Based on solving the cell-centre
-    solid-body rotation stress equations for the motion displacement.
+    fvMeshTopoChanger which maps to new mesh
 
 SourceFiles
-    displacementSBRStressFvMotionSolver.C
+    fvMeshTopoChangersMeshToMesh.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef displacementSBRStressFvMotionSolver_H
-#define displacementSBRStressFvMotionSolver_H
+#ifndef fvMeshTopoChangersMeshToMesh_H
+#define fvMeshTopoChangersMeshToMesh_H
 
-#include "displacementMotionSolver.H"
-#include "fvMotionSolver.H"
+#include "fvMeshTopoChanger.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward class declarations
-class motionDiffusivity;
+namespace fvMeshTopoChangers
+{
 
 /*---------------------------------------------------------------------------*\
-             Class displacementSBRStressFvMotionSolver Declaration
+                Class fvMeshTopoChangers::meshToMesh Declaration
 \*---------------------------------------------------------------------------*/
 
-class displacementSBRStressFvMotionSolver
+class meshToMesh
 :
-    public displacementMotionSolver,
-    public fvMotionSolver
+    public fvMeshTopoChanger
 {
     // Private Data
 
-        //- Cell-centre motion field
-        mutable volVectorField cellDisplacement_;
+        //- List of mesh mapping times
+        scalarList times_;
 
-        //- Diffusivity used to control the motion
-        autoPtr<motionDiffusivity> diffusivityPtr_;
+        //- Time delta used for time -> index
+        scalar timeDelta_;
+
+        //- Hash set of mesh mapping time indices
+        labelHashSet timeIndices_;
+
+        //- The time index used for updating
+        label timeIndex_;
+
+
+    // Private Member Functions
+
+        //- Read the parameters from dictionary
+        void readDict();
+
+        //- Find the U field name corresponding to Uf
+        word Uname(const surfaceVectorField& Uf) const;
+
+        //- Interpolate U's to Uf's
+        void interpolateUfs();
 
 
 public:
 
     //- Runtime type information
-    TypeName("displacementSBRStress");
+    TypeName("meshToMesh");
 
 
     // Constructors
 
-        //- Construct from polyMesh and dictionary
-        displacementSBRStressFvMotionSolver
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        //- Construct from fvMesh
+        explicit meshToMesh(fvMesh& io);
 
         //- Disallow default bitwise copy construction
-        displacementSBRStressFvMotionSolver
-        (
-            const displacementSBRStressFvMotionSolver&
-        );
+        meshToMesh(const meshToMesh&) = delete;
 
 
     //- Destructor
-    ~displacementSBRStressFvMotionSolver();
+    virtual ~meshToMesh();
 
 
     // Member Functions
 
-        //- Return reference to the cell motion displacement field
-        volVectorField& cellDisplacement()
+        const scalarList& times() const
         {
-            return cellDisplacement_;
+            return times_;
         }
 
-        //- Return const reference to the cell motion displacement field
-        const volVectorField& cellDisplacement() const
+        scalar timeDelta() const
         {
-            return cellDisplacement_;
+            return timeDelta_;
         }
 
-        //- Return diffusivity
-        motionDiffusivity& diffusivity()
-        {
-            return diffusivityPtr_();
-        }
-
-        //- Return point location obtained from the current motion field
-        virtual tmp<pointField> curPoints() const;
-
-        //- Solve for motion
-        virtual void solve();
+        //- Update the mesh for both mesh motion and topology change
+        virtual bool update();
 
         //- Update corresponding to the given map
         virtual void topoChange(const polyTopoChangeMap&);
@@ -124,16 +119,20 @@ public:
         //- Update from another mesh using the given map
         virtual void mapMesh(const polyMeshMap&);
 
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const polyDistributionMap&);
+
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementSBRStressFvMotionSolver&) = delete;
+        void operator=(const meshToMesh&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace fvMeshTopoChangers
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

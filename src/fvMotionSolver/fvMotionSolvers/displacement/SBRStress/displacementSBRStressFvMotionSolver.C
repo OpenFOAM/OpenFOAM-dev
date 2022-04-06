@@ -197,4 +197,22 @@ void Foam::displacementSBRStressFvMotionSolver::topoChange
 }
 
 
+void Foam::displacementSBRStressFvMotionSolver::mapMesh
+(
+    const polyMeshMap& map
+)
+{
+    displacementMotionSolver::mapMesh(map);
+
+    // Update diffusivity. Note two stage to make sure old one is de-registered
+    // before creating/registering new one.
+    diffusivityPtr_.reset(nullptr);
+    diffusivityPtr_ = motionDiffusivity::New
+    (
+        fvMesh_,
+        coeffDict().lookup("diffusivity")
+    );
+}
+
+
 // ************************************************************************* //

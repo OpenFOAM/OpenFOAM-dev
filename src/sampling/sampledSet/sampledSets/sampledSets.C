@@ -283,6 +283,16 @@ void Foam::functionObjects::sampledSets::correct()
 }
 
 
+void Foam::functionObjects::sampledSets::movePoints(const polyMesh& mesh)
+{
+    if (&mesh == &mesh_)
+    {
+        correct();
+    }
+}
+
+
+
 void Foam::functionObjects::sampledSets::topoChange
 (
     const polyTopoChangeMap& map
@@ -295,12 +305,9 @@ void Foam::functionObjects::sampledSets::topoChange
 }
 
 
-void Foam::functionObjects::sampledSets::movePoints(const polyMesh& mesh)
+void Foam::functionObjects::sampledSets::mapMesh(const polyMeshMap& map)
 {
-    if (&mesh == &mesh_)
-    {
-        correct();
-    }
+    correct();
 }
 
 

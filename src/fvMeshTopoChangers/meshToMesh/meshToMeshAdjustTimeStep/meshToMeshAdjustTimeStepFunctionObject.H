@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,112 +22,101 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::velocityLaplacianFvMotionSolver
+    Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject
 
 Description
-    Mesh motion solver for an fvMesh.  Based on solving the cell-centre
-    Laplacian for the motion velocity.
+    Adjusts time-step for meshToMesh mapping.
 
 SourceFiles
-    velocityLaplacianFvMotionSolver.C
+    meshToMeshAdjustTimeStepFunctionObject.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef velocityLaplacianFvMotionSolver_H
-#define velocityLaplacianFvMotionSolver_H
+#ifndef functionObjects_meshToMeshAdjustTimeStepFunctionObject_H
+#define functionObjects_meshToMeshAdjustTimeStepFunctionObject_H
 
-#include "velocityMotionSolver.H"
-#include "fvMotionSolver.H"
+#include "fvMeshFunctionObject.H"
+#include "fvMeshTopoChangersMeshToMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward class declarations
-class motionDiffusivity;
+namespace functionObjects
+{
 
 /*---------------------------------------------------------------------------*\
-               Class velocityLaplacianFvMotionSolver Declaration
+                  Class meshToMeshAdjustTimeStepFunctionObject Declaration
 \*---------------------------------------------------------------------------*/
 
-class velocityLaplacianFvMotionSolver
+class meshToMeshAdjustTimeStepFunctionObject
 :
-    public velocityMotionSolver,
-    public fvMotionSolver
+    public fvMeshFunctionObject
 {
     // Private Data
 
-        //- Cell-centre motion field
-        mutable volVectorField cellMotionU_;
-
-        //- Diffusivity used to control the motion
-        autoPtr<motionDiffusivity> diffusivityPtr_;
+        //- Reference to the meshToMesh fvMeshTopoChanger
+        const fvMeshTopoChangers::meshToMesh& meshToMesh_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("velocityLaplacian");
+    TypeName("meshToMeshAdjustTimeStep");
 
 
     // Constructors
 
-        //- Construct from polyMesh and dictionary
-        velocityLaplacianFvMotionSolver
+        //- Construct from components
+        meshToMeshAdjustTimeStepFunctionObject
         (
             const word& name,
-            const polyMesh&,
-            const dictionary&
+            const Time& runTime,
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        velocityLaplacianFvMotionSolver
+        meshToMeshAdjustTimeStepFunctionObject
         (
-            const velocityLaplacianFvMotionSolver&
-        );
+            const meshToMeshAdjustTimeStepFunctionObject&
+        ) = delete;
 
 
-    //- Destructor
-    ~velocityLaplacianFvMotionSolver();
+    // Destructor
+    virtual ~meshToMeshAdjustTimeStepFunctionObject();
 
 
     // Member Functions
 
-        //- Return reference to the cell motion velocity field
-        volVectorField& cellMotionU()
+        //-  Read and reset the timeStep Function1
+        virtual bool read(const dictionary&);
+
+        //- Return the list of fields required
+        virtual wordList fields() const
         {
-            return cellMotionU_;
+            return wordList::null();
         }
 
-        //- Return const reference to the cell motion velocity field
-        const volVectorField& cellMotionU() const
-        {
-            return cellMotionU_;
-        }
+        //- Return the time to the next write
+        virtual scalar timeToNextWrite();
 
-        //- Return point location obtained from the current motion field
-        virtual tmp<pointField> curPoints() const;
+        //- Do nothing
+        virtual bool execute();
 
-        //- Solve for motion
-        virtual void solve();
-
-        //- Update corresponding to the given map
-        virtual void topoChange(const polyTopoChangeMap&);
-
-        //- Update from another mesh using the given map
-        virtual void mapMesh(const polyMeshMap&);
+        //- Do nothing
+        virtual bool write();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const velocityLaplacianFvMotionSolver&) = delete;
+        void operator=(const meshToMeshAdjustTimeStepFunctionObject&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

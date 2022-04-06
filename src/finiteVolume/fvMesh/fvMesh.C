@@ -286,45 +286,45 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
         topoChanger_.set(fvMeshTopoChanger::New(*this).ptr());
         distributor_.set(fvMeshDistributor::New(*this).ptr());
         mover_.set(fvMeshMover::New(*this).ptr());
-    }
 
-    // Check the existence of the cell volumes and read if present
-    // and set the storage of V00
-    if (fileHandler().isFile(time().timePath()/"V0"))
-    {
-        V0Ptr_ = new DimensionedField<scalar, volMesh>
-        (
-            IOobject
+        // Check the existence of the cell volumes and read if present
+        // and set the storage of V00
+        if (fileHandler().isFile(time().timePath()/"V0"))
+        {
+            V0Ptr_ = new DimensionedField<scalar, volMesh>
             (
-                "V0",
-                time().timeName(),
-                *this,
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            *this
-        );
+                IOobject
+                (
+                    "V0",
+                    time().timeName(),
+                    *this,
+                    IOobject::MUST_READ,
+                    IOobject::NO_WRITE,
+                    false
+                ),
+                *this
+            );
 
-        V00();
-    }
+            V00();
+        }
 
-    // Check the existence of the mesh fluxes and read if present
-    if (fileHandler().isFile(time().timePath()/"meshPhi"))
-    {
-        phiPtr_ = new surfaceScalarField
-        (
-            IOobject
+        // Check the existence of the mesh fluxes and read if present
+        if (fileHandler().isFile(time().timePath()/"meshPhi"))
+        {
+            phiPtr_ = new surfaceScalarField
             (
-                "meshPhi",
-                time().timeName(),
-                *this,
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE,
-                true
-            ),
-            *this
-        );
+                IOobject
+                (
+                    "meshPhi",
+                    time().timeName(),
+                    *this,
+                    IOobject::MUST_READ,
+                    IOobject::NO_WRITE,
+                    true
+                ),
+                *this
+            );
+        }
     }
 }
 

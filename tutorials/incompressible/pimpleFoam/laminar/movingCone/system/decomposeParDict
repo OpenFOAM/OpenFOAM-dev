@@ -10,47 +10,33 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     pimpleFoam;
+numberOfSubdomains 4;
 
-startFrom       startTime;
+method          hierarchical;
 
-startTime       0;
-
-stopAt          endTime;
-
-endTime         0.0034;
-
-deltaT          5e-06;
-
-writeControl    adjustableRunTime;
-
-writeInterval   1e-4;
-
-purgeWrite      0;
-
-writeFormat     binary;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  yes;
-
-maxCo           0.5;
-
-functions
+simpleCoeffs
 {
-    #include "cuttingPlane"
+    n               (2 1 1);
 }
+
+hierarchicalCoeffs
+{
+    n               (4 1 1);
+    order           xyz;
+}
+
+manualCoeffs
+{
+    dataFile        "";
+}
+
+distributed     no;
+
+roots           ( );
+
 
 // ************************************************************************* //

@@ -19,10 +19,11 @@ solvers
     p
     {
         solver          GAMG;
+        smoother        DIC;
+        cacheAgglomeration no;
+
         tolerance       0;
         relTol          0.01;
-        smoother        GaussSeidel;
-        cacheAgglomeration no;
     }
 
     pFinal
@@ -41,16 +42,16 @@ solvers
 
     U
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-05;
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
+        tolerance       1e-6;
         relTol          0.1;
     }
 
     UFinal
     {
         $U;
-        tolerance       1e-05;
         relTol          0;
     }
 

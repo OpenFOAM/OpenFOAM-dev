@@ -271,6 +271,15 @@ Foam::wordList Foam::functionObjects::sampledSurfaces::fields() const
 }
 
 
+void Foam::functionObjects::sampledSurfaces::movePoints(const polyMesh& mesh)
+{
+    if (&mesh == &mesh_)
+    {
+        expire();
+    }
+}
+
+
 void Foam::functionObjects::sampledSurfaces::topoChange
 (
     const polyTopoChangeMap& map
@@ -285,12 +294,12 @@ void Foam::functionObjects::sampledSurfaces::topoChange
 }
 
 
-void Foam::functionObjects::sampledSurfaces::movePoints(const polyMesh& mesh)
+void Foam::functionObjects::sampledSurfaces::mapMesh
+(
+    const polyMeshMap& map
+)
 {
-    if (&mesh == &mesh_)
-    {
-        expire();
-    }
+    expire();
 }
 
 

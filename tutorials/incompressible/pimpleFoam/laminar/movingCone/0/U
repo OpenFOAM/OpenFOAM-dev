@@ -19,6 +19,8 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     movingWall
     {
         type            movingWallVelocity;
@@ -44,16 +46,6 @@ boundaryField
     farField
     {
         type            noSlip;
-    }
-
-    back
-    {
-        type            wedge;
-    }
-
-    front
-    {
-        type            wedge;
     }
 }
 

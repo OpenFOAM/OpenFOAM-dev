@@ -440,6 +440,13 @@ bool Foam::functionObjects::layerAverage::write()
 }
 
 
+void Foam::functionObjects::layerAverage::movePoints(const polyMesh&)
+{
+    Info<< type() << " " << name() << ":" << nl;
+    calcLayers();
+}
+
+
 void Foam::functionObjects::layerAverage::topoChange(const polyTopoChangeMap&)
 {
     Info<< type() << " " << name() << ":" << nl;
@@ -447,7 +454,7 @@ void Foam::functionObjects::layerAverage::topoChange(const polyTopoChangeMap&)
 }
 
 
-void Foam::functionObjects::layerAverage::movePoints(const polyMesh&)
+void Foam::functionObjects::layerAverage::mapMesh(const polyMeshMap&)
 {
     Info<< type() << " " << name() << ":" << nl;
     calcLayers();

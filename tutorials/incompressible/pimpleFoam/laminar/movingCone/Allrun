@@ -1,0 +1,23 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+application=$(getApplication)
+
+runApplication -a blockMesh -dict blockMeshDict.2
+rm -rf constant/meshToMesh_0.0015
+mkdir constant/meshToMesh_0.0015
+mv constant/polyMesh constant/meshToMesh_0.0015
+
+runApplication -a blockMesh -dict blockMeshDict.3
+rm -rf constant/meshToMesh_0.003
+mkdir constant/meshToMesh_0.003
+mv constant/polyMesh constant/meshToMesh_0.003
+
+runApplication -a blockMesh -dict blockMeshDict.1
+
+runApplication $application
+
+#------------------------------------------------------------------------------

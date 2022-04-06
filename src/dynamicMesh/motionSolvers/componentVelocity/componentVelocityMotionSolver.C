@@ -119,7 +119,10 @@ void Foam::componentVelocityMotionSolver::mapMesh
 (
     const polyMeshMap& map
 )
-{}
+{
+    pointMotionU_ == Zero;
+    pointMotionU_.correctBoundaryConditions();
+}
 
 
 void Foam::componentVelocityMotionSolver::distribute

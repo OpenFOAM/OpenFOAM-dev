@@ -866,7 +866,7 @@ const Foam::labelIOList& Foam::polyMesh::tetBasePtIs() const
                     instance(),
                     meshSubDir,
                     *this,
-                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
                 polyMeshTetDecomposition::findFaceBasePts(*this)

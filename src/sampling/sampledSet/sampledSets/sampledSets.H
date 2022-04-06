@@ -181,11 +181,14 @@ public:
         //- Correct for mesh changes
         void correct();
 
+        //- Update for mesh point-motion
+        virtual void movePoints(const polyMesh&);
+
         //- Update topology using the given map
         virtual void topoChange(const polyTopoChangeMap&);
 
-        //- Update for mesh point-motion
-        virtual void movePoints(const polyMesh&);
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
         //- Update topology using the given map due to readUpdate
         virtual void readUpdate(const polyMesh::readUpdateState state);

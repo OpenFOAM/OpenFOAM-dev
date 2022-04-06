@@ -235,10 +235,13 @@ public:
         virtual bool write();
 
         //- Update topology using the given map
-        virtual void topoChange(const polyTopoChangeMap&);
+        virtual void movePoints(const polyMesh&);
 
         //- Update topology using the given map
-        virtual void movePoints(const polyMesh&);
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
         //- Update topology using the given map due to readUpdate
         virtual void readUpdate(const polyMesh::readUpdateState state)

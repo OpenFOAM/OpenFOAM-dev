@@ -81,7 +81,10 @@ void Foam::velocityMotionSolver::topoChange(const polyTopoChangeMap& map)
 
 
 void Foam::velocityMotionSolver::mapMesh(const polyMeshMap& map)
-{}
+{
+    pointMotionU_ == Zero;
+    pointMotionU_.correctBoundaryConditions();
+}
 
 
 void Foam::velocityMotionSolver::distribute(const polyDistributionMap&)

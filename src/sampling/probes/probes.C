@@ -354,6 +354,17 @@ bool Foam::probes::write()
 }
 
 
+void Foam::probes::movePoints(const polyMesh& mesh)
+{
+    DebugInfo<< "probes: movePoints" << endl;
+
+    if (fixedLocations_ && &mesh == &mesh_)
+    {
+        findElements(mesh_);
+    }
+}
+
+
 void Foam::probes::topoChange(const polyTopoChangeMap& map)
 {
     DebugInfo<< "probes: topoChange" << endl;
@@ -433,14 +444,11 @@ void Foam::probes::topoChange(const polyTopoChangeMap& map)
 }
 
 
-void Foam::probes::movePoints(const polyMesh& mesh)
+void Foam::probes::mapMesh(const polyMeshMap& map)
 {
-    DebugInfo<< "probes: movePoints" << endl;
+    DebugInfo<< "probes: mapMesh" << endl;
 
-    if (fixedLocations_ && &mesh == &mesh_)
-    {
-        findElements(mesh_);
-    }
+    findElements(mesh_);
 }
 
 

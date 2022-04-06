@@ -19,6 +19,8 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     movingWall
     {
         type            zeroGradient;
@@ -43,16 +45,6 @@ boundaryField
     farField
     {
         type            zeroGradient;
-    }
-
-    back
-    {
-        type            wedge;
-    }
-
-    front
-    {
-        type            wedge;
     }
 }
 

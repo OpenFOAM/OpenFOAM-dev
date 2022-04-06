@@ -27,4 +27,16 @@ mover
 }
 
 
+topoChanger
+{
+    type    meshToMesh;
+
+    libs    ("libmeshToMeshTopoChanger.so");
+
+    times   (0.0015 0.003);
+
+    timeDelta 1e-6;
+}
+
+
 // ************************************************************************* //
