@@ -155,10 +155,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     ownToNbrOrderDataPtr_(nullptr),
     ownToNbrCyclicOrderDataPtr_(nullptr),
     ownToNbrDebugOrderDataPtr_(nullptr)
-{
-    // Neighbour patch might not be valid yet so no transformation
-    // calculation possible.
-}
+{}
 
 
 Foam::cyclicPolyPatch::cyclicPolyPatch
@@ -169,11 +166,12 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const word& nbrPatchName
+    const word& nbrPatchName,
+    const cyclicTransform& transform
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType),
-    cyclicTransform(false),
+    cyclicTransform(transform),
     nbrPatchName_(nbrPatchName),
     nbrPatchID_(-1),
     coupledPointsPtr_(nullptr),
@@ -181,10 +179,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     ownToNbrOrderDataPtr_(nullptr),
     ownToNbrCyclicOrderDataPtr_(nullptr),
     ownToNbrDebugOrderDataPtr_(nullptr)
-{
-    // Neighbour patch might not be valid yet so no transformation
-    // calculation possible.
-}
+{}
 
 
 Foam::cyclicPolyPatch::cyclicPolyPatch

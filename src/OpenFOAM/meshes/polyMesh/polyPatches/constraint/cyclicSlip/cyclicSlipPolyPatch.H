@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,6 @@ public:
             cyclicPolyPatch(pp, bm, index, newSize, newStart, nbrPatchName)
         {}
 
-
         //- Construct given the original patch and a map
         cyclicSlipPolyPatch
         (
@@ -125,7 +124,6 @@ public:
         :
             cyclicPolyPatch(pp, bm, index, mapAddressing, newStart)
         {}
-
 
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const
@@ -181,12 +179,9 @@ public:
         }
 
 
-    // Destructor
-
-        virtual ~cyclicSlipPolyPatch()
-        {}
-
-
+    //- Destructor
+    virtual ~cyclicSlipPolyPatch()
+    {}
 };
 
 

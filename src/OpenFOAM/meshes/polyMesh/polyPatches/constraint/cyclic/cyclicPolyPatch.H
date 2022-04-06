@@ -176,7 +176,8 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const word& nbrPatchName
+            const word& nbrPatchName,
+            const cyclicTransform& transform=cyclicTransform(false)
         );
 
         //- Construct from dictionary
