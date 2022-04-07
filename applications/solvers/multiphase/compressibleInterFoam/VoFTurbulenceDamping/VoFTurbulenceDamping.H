@@ -43,7 +43,7 @@ Description
     but with an improved formulation for the coefficient \c A appropriate for
     unstructured meshes including those with split-cell refinement patterns.
     However the dimensioned length-scale coefficient \c delta remains and must
-    be set appropriatly for the case by performing test runs and comparing with
+    be set appropriately for the case by performing test runs and comparing with
     known results.  Clearly this model is far from general and more research is
     needed in order that \c delta can be obtained directly from the interface
     flow and turbulence conditions.

@@ -237,7 +237,7 @@ class starMesh
         void collectBoundaryFaces();
 
         //- Specialist version of face comparison to deal with
-        // PROSTAR boundary format idiosyncracies
+        // PROSTAR boundary format idiosyncrasies
         bool starEqualFace
         (
             const face& boundaryFace,

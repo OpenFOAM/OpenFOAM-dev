@@ -187,7 +187,7 @@ class sammMesh
         void createBoundaryFaces();
 
         //- Specialist version of face comparison to deal with
-        // PROSTAR boundary format idiosyncracies
+        // PROSTAR boundary format idiosyncrasies
         bool sammEqualFace
         (
             const face& boundaryFace,
