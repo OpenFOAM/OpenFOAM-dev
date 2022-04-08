@@ -345,7 +345,7 @@ Foam::fvMesh::fvMesh
     polyMesh
     (
         io,
-        move(points),
+        std::move(points),
         shapes,
         boundaryFaces,
         boundaryPatchNames,
@@ -391,10 +391,10 @@ Foam::fvMesh::fvMesh
     polyMesh
     (
         io,
-        move(points),
-        move(faces),
-        move(allOwner),
-        move(allNeighbour),
+        std::move(points),
+        std::move(faces),
+        std::move(allOwner),
+        std::move(allNeighbour),
         syncPar
     ),
     surfaceInterpolation(*this),
@@ -430,7 +430,14 @@ Foam::fvMesh::fvMesh
     const bool syncPar
 )
 :
-    polyMesh(io, move(points), move(faces), move(cells), syncPar),
+    polyMesh
+    (
+        io,
+        std::move(points),
+        std::move(faces),
+        std::move(cells),
+        syncPar
+    ),
     surfaceInterpolation(*this),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this),
@@ -475,44 +482,47 @@ bool Foam::fvMesh::update()
 {
     bool updated = false;
 
-    if (curTimeIndex_ < time().timeIndex())
+    const bool hasV00 = V00Ptr_;
+    deleteDemandDrivenData(V00Ptr_);
+
+    if (!hasV00)
     {
-        const bool hasV00 = V00Ptr_;
-        deleteDemandDrivenData(V00Ptr_);
-
-        if (!hasV00)
-        {
-            deleteDemandDrivenData(V0Ptr_);
-        }
-
-        updated = topoChanger_->update() || updated;
-
-        // Register V0 for distribution
-        if (V0Ptr_)
-        {
-            V0Ptr_->checkIn();
-        }
-
-        updated = distributor_->update() || updated;
-
-        // De-register V0 after distribution
-        if (V0Ptr_)
-        {
-            V0Ptr_->checkOut();
-        }
-
-        if (hasV00)
-        {
-            // If V00 had been set reset to the mapped V0 prior to mesh-motion
-            V00();
-        }
+        deleteDemandDrivenData(V0Ptr_);
     }
 
-    updated = mover_->update() || updated;
+    updated = topoChanger_->update() || updated;
+
+    // Register V0 for distribution
+    if (V0Ptr_)
+    {
+        V0Ptr_->checkIn();
+    }
+
+    updated = distributor_->update() || updated;
+
+    // De-register V0 after distribution
+    if (V0Ptr_)
+    {
+        V0Ptr_->checkOut();
+    }
+
+    if (hasV00)
+    {
+        // If V00 had been set reset to the mapped V0 prior to mesh-motion
+        V00();
+    }
+
+    return updated;
+}
+
+
+bool Foam::fvMesh::move()
+{
+    const bool moved = mover_->update();
 
     curTimeIndex_ = time().timeIndex();
 
-    return updated;
+    return moved;
 }
 
 

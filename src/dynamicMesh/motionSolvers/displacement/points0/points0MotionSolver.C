@@ -171,4 +171,16 @@ void Foam::points0MotionSolver::distribute
 {}
 
 
+bool Foam::points0MotionSolver::write() const
+{
+    if (mesh().topoChanging())
+    {
+        points0_.instance() = mesh().time().timeName();
+        points0_.write();
+    }
+
+    return motionSolver::write();
+}
+
+
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -276,10 +276,10 @@ void Foam::singleCellFvMesh::agglomerateMesh
     // actually change the mesh
     resetPrimitives
     (
-        move(boundaryPoints),
-        move(patchFaces),
-        move(owner),
-        move(neighbour),
+        std::move(boundaryPoints),
+        std::move(patchFaces),
+        std::move(owner),
+        std::move(neighbour),
         patchSizes,
         patchStarts,
         true                // syncPar

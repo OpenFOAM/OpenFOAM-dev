@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,14 @@ int main(int argc, char *argv[])
         if (!LTS)
         {
             #include "setDeltaT.H"
+
+            // Update the mesh for topology change, mesh to mesh mapping
+            mesh.update();
+
             runTime++;
 
-            // Do any mesh changes
-            mesh.update();
+            // Move the mesh
+            mesh.move();
         }
 
         // --- Directed interpolation of primitive fields onto faces

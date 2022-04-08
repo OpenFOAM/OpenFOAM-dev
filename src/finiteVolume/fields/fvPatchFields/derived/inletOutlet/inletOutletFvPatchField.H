@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,6 +155,18 @@ public:
             virtual bool assignable() const
             {
                 return true;
+            }
+
+            //- Return the flux-field name
+            const word& phiName() const
+            {
+                return phiName_;
+            }
+
+            //- Return access to the flux-field name
+            word& phiName()
+            {
+                return phiName_;
             }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,6 +89,38 @@ int main(int argc, char *argv[])
             #include "setDeltaT.H"
         }
 
+        fvModels.preUpdateMesh();
+
+        // Store divU from the previous mesh so that it can be mapped
+        // and used in correctPhi to ensure the corrected phi has the
+        // same divergence
+        tmp<volScalarField> divU;
+
+        if
+        (
+            correctPhi
+         && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
+         && mesh.topoChanging()
+        )
+        {
+            // Construct and register divU for correctPhi
+            divU = new volScalarField
+            (
+                "divU0",
+                fvc::div(fvc::absolute(phi, U))
+            );
+        }
+
+        // Update the mesh for topology change, mesh to mesh mapping
+        bool topoChanged = mesh.update();
+
+        // Do not apply previous time-step mesh compression flux
+        // if the mesh topology changed
+        if (topoChanged)
+        {
+            talphaPhi1Corr0.clear();
+        }
+
         runTime++;
 
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
@@ -98,18 +130,14 @@ int main(int argc, char *argv[])
         {
             if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
             {
-                // Store divU from the previous mesh so that it can be mapped
-                // and used in correctPhi to ensure the corrected phi has the
-                // same divergence
-                tmp<volScalarField> divU;
-
                 if
                 (
                     correctPhi
                  && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
+                 && !divU.valid()
                 )
                 {
-                    // Construct and register divU for mapping
+                    // Construct and register divU for correctPhi
                     divU = new volScalarField
                     (
                         "divU0",
@@ -117,19 +145,11 @@ int main(int argc, char *argv[])
                     );
                 }
 
-                fvModels.preUpdateMesh();
-
-                mesh.update();
+                // Move the mesh
+                mesh.move();
 
                 if (mesh.changing())
                 {
-                    // Do not apply previous time-step mesh compression flux
-                    // if the mesh topology changed
-                    if (mesh.topoChanging())
-                    {
-                        talphaPhi1Corr0.clear();
-                    }
-
                     gh = (g & mesh.C()) - ghRef;
                     ghf = (g & mesh.Cf()) - ghRef;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,30 @@ int main(int argc, char *argv[])
             #include "setDeltaT.H"
         }
 
+        fvModels.preUpdateMesh();
+
+        // Store divU from the previous mesh so that it can be
+        // mapped and used in correctPhi to ensure the corrected phi
+        // has the same divergence
+        tmp<volScalarField> divU;
+
+        if (correctPhi && mesh.topoChanging())
+        {
+            // Construct and register divU for mapping
+            divU = new volScalarField
+            (
+                "divU0",
+                fvc::div
+                (
+                    fvc::absolute(phi, fluid.movingPhases()[0].U())
+                )
+            );
+        }
+
+        mesh.update();
+
         runTime++;
+
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         // --- Pressure-velocity PIMPLE corrector loop
@@ -131,15 +154,7 @@ int main(int argc, char *argv[])
             {
                 if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
                 {
-                    // Store divU from the previous mesh so that it can be
-                    // mapped and used in correctPhi to ensure the corrected phi
-                    // has the same divergence
-                    tmp<volScalarField> divU;
-
-                    if
-                    (
-                        correctPhi
-                    )
+                    if (correctPhi && !divU.valid())
                     {
                         // Construct and register divU for mapping
                         divU = new volScalarField
@@ -152,9 +167,8 @@ int main(int argc, char *argv[])
                         );
                     }
 
-                    fvModels.preUpdateMesh();
-
-                    mesh.update();
+                    // Move the mesh
+                    mesh.move();
 
                     if (mesh.changing())
                     {
@@ -179,6 +193,8 @@ int main(int argc, char *argv[])
                             #include "meshCourantNo.H"
                         }
                     }
+
+                    divU.clear();
                 }
 
                 if (pimple.models())

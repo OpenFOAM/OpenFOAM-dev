@@ -235,7 +235,7 @@ Foam::phaseSystem::phaseSystem
         phaseModel::iNew(*this, referencePhaseName_)
     ),
 
-    phi_(calcPhi(phaseModels_)),
+    phi_("phi", calcPhi(phaseModels_)),
 
     dpdt_
     (

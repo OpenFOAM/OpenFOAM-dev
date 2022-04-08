@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,6 +107,9 @@ int main(int argc, char *argv[])
         #include "CourantNo.H"
         #include "setDeltaT.H"
 
+        // Update the mesh for topology change, mesh to mesh mapping
+        mesh.update();
+
         runTime++;
 
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
@@ -114,7 +117,8 @@ int main(int argc, char *argv[])
         // Store the particle positions
         clouds.storeGlobalPositions();
 
-        mesh.update();
+        // Move the mesh
+        mesh.move();
 
         if (mesh.changing())
         {

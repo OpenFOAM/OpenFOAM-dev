@@ -159,13 +159,11 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
 
     bool hasChanged = false;
 
-    const scalar userTime0 =
-        mesh().time().userTimeValue()
-      - mesh().time().timeToUserTime(mesh().time().deltaTValue());
+    const scalar userTime = mesh().time().userTimeValue();
 
-    if (timeIndices_.found((userTime0 + timeDelta_/2)/timeDelta_))
+    if (timeIndices_.found((userTime + timeDelta_/2)/timeDelta_))
     {
-        const word meshDir = "meshToMesh_" + mesh().time().timeName(userTime0);
+        const word meshDir = "meshToMesh_" + mesh().time().timeName(userTime);
 
         Info << "Mapping to mesh " << meshDir << endl;
 

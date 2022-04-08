@@ -225,12 +225,6 @@ void Foam::solidBodyMotionSolver::topoChange(const polyTopoChangeMap& map)
     twoDCorrectPoints(newPoints0);
 
     points0_.transfer(newPoints0);
-
-    // points0 changed - set to write and check-in to database
-    points0_.rename("points0");
-    points0_.writeOpt() = IOobject::AUTO_WRITE;
-    points0_.instance() = mesh().time().timeName();
-    points0_.checkIn();
 }
 
 

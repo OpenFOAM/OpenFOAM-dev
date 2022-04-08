@@ -374,8 +374,12 @@ public:
             //- Is mesh dynamic
             virtual bool dynamic() const;
 
-            //- Update the mesh for both mesh motion and topology change
+            //- Update the mesh for topology change, mesh to mesh mapping
+            //  or redistribution
             virtual bool update();
+
+            //- Move the mesh
+            virtual bool move();
 
             //- Clear all geometry and addressing
             void clearOut();

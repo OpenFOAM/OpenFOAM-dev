@@ -115,6 +115,9 @@ public:
         //- Update corresponding to the given distribution map
         virtual void distribute(const polyDistributionMap&);
 
+        //- Write points0 if the mesh topology changed
+        virtual bool write() const;
+
 
     // Member Operators
 

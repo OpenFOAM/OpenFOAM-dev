@@ -220,6 +220,9 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correctInletOutlet
             (bf[patchi]).refValue() =
             refCast<const inletOutletFvPatchScalarField>
             (refBf[patchi]).refValue();
+
+            refCast<inletOutletFvPatchScalarField>
+            (bf[patchi]).phiName() = "phim";
         }
     }
 }
@@ -311,6 +314,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::initMixtureFields()
             epsilonBoundaryTypes(epsilonl)
         )
     );
+
     correctInletOutlet(epsilonm_(), epsilonl);
 }
 
@@ -702,7 +706,6 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     solve(epsEqn);
     fvConstraints.constrain(epsilonm);
     bound(epsilonm, this->epsilonMin_);
-
 
     // Turbulent kinetic energy equation
     tmp<fvScalarMatrix> kmEqn

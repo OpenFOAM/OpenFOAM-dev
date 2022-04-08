@@ -31,6 +31,7 @@ boundaryField
     {
         type            prghTotalPressure;
         U               U.vapor;
+        phi             phi.vapor;
         rho             thermo:rho.vapor;
         p0              uniform 1e5;
         value           $internalField;

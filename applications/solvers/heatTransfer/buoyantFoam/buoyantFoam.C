@@ -101,6 +101,18 @@ int main(int argc, char *argv[])
             #include "setDeltaT.H"
         }
 
+        fvModels.preUpdateMesh();
+
+        // Store momentum to set rhoUf for introduced faces.
+        autoPtr<volVectorField> rhoU;
+        if (rhoUf.valid())
+        {
+            rhoU = new volVectorField("rhoU", rho*U);
+        }
+
+        // Update the mesh for topology change, mesh to mesh mapping
+        mesh.update();
+
         runTime++;
 
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
@@ -124,17 +136,8 @@ int main(int argc, char *argv[])
             {
                 if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
                 {
-                    // Store momentum to set rhoUf for introduced faces.
-                    autoPtr<volVectorField> rhoU;
-                    if (rhoUf.valid())
-                    {
-                        rhoU = new volVectorField("rhoU", rho*U);
-                    }
-
-                    fvModels.preUpdateMesh();
-
-                    // Do any mesh changes
-                    mesh.update();
+                    // Move the mesh
+                    mesh.move();
 
                     if (mesh.changing())
                     {
