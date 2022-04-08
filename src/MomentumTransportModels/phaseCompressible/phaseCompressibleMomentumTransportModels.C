@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,9 @@ makeLaminarModel(PTT);
 
 #include "kEpsilon.H"
 makeRASModel(kEpsilon);
+
+#include "RNGkEpsilon.H"
+makeRASModel(RNGkEpsilon);
 
 #include "kOmegaSST.H"
 makeRASModel(kOmegaSST);
