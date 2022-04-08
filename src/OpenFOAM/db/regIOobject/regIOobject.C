@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,22 @@ Foam::regIOobject::regIOobject(const regIOobject& rio)
     eventNo_(db().getEvent())
 {
     // Do not register copy with objectRegistry
+}
+
+
+Foam::regIOobject::regIOobject(const regIOobject&& rio)
+:
+    IOobject(rio),
+    registered_(false),
+    ownedByRegistry_(false),
+    watchIndices_(),
+    eventNo_(db().getEvent())
+{
+    if (rio.registered_)
+    {
+        const_cast<regIOobject&>(rio).checkOut();
+        checkIn();
+    }
 }
 
 

@@ -111,6 +111,10 @@ public:
         //- Copy constructor
         regIOobject(const regIOobject&);
 
+        //- Move constructor
+        //  Registers copy if the object is registered
+        regIOobject(const regIOobject&&);
+
         //- Copy constructor, transferring registry registration to copy
         //  if registerCopy is true
         regIOobject(const regIOobject&, bool registerCopy);

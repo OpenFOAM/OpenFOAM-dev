@@ -135,7 +135,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
     bool reuse
 )
 :
-    regIOobject(df, reuse),
+    regIOobject(df, reuse && df.registered()),
     Field<Type>(df, reuse),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
@@ -148,7 +148,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
     DimensionedField<Type, GeoMesh>&& df
 )
 :
-    regIOobject(move(df), true),
+    regIOobject(move(df)),
     Field<Type>(move(df)),
     mesh_(df.mesh_),
     dimensions_(move(df.dimensions_))

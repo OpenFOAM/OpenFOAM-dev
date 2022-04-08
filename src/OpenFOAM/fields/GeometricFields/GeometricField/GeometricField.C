@@ -720,6 +720,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     boundaryField_ == tgf().boundaryField_;
 
     tgf.clear();
+
+    readIfPresent();
 }
 
 
