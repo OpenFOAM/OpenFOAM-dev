@@ -80,5 +80,5 @@
     Info<< "max(U) " << max(mag(U)).value() << endl;
 
     // Correct Uf if the mesh is moving
-    fvc::correctUf(Uf, U, phi);
+    fvc::correctUf(Uf, U, fvc::absolute(phi, U));
 }
