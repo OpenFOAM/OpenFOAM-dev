@@ -206,7 +206,6 @@ void Foam::diameterModels::shapeModels::fractal::correct()
     fvScalarMatrix kappaEqn
     (
         fvm::ddt(alpha, fi, kappa_) + fvm::div(fAlphaPhi, kappa_)
-      - fvm::Sp(fvc::ddt(alpha, fi) + fvc::div(fAlphaPhi), kappa_)
       ==
       - sinteringModel_->R()
       + Su_

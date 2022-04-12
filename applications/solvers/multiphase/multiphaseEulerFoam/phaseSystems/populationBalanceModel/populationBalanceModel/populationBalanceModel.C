@@ -1072,7 +1072,6 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 fvScalarMatrix sizeGroupEqn
                 (
                     fvm::ddt(alpha, fi) + fvm::div(phase.alphaPhi(), fi)
-                  - fvm::Sp(fvc::ddt(alpha) + fvc::div(phase.alphaPhi()), fi)
                 ==
                     Su_[i]
                   - fvm::Sp(Sp_[i], fi)
