@@ -256,6 +256,12 @@ $(AMIOverlapPatches)/cyclicRepeatAMIPolyPatch/cyclicRepeatAMIPolyPatch.C
 $(AMIOverlapPatches)/cyclicRepeatAMIPointPatch/cyclicRepeatAMIPointPatch.C
 $(AMIOverlapPatches)/cyclicRepeatAMIPointPatchField/cyclicRepeatAMIPointPatchFields.C
 
+patchToPatch/patchToPatch/patchToPatch.C
+patchToPatch/patchToPatch/patchToPatchParallelOps.C
+patchToPatch/nearest/nearestPatchToPatch.C
+patchToPatch/inverseDistance/inverseDistancePatchToPatch.C
+patchToPatch/intersection/intersectionPatchToPatch.C
+
 mappedPatches/mappedPolyPatch/mappedPatchBase.C
 mappedPatches/mappedPolyPatch/mappedPolyPatch.C
 mappedPatches/mappedPolyPatch/mappedWallPolyPatch.C
