@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "adjustPhi.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "processorFvPatchFields.H"
 #include "inletOutletFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
@@ -51,7 +52,7 @@ bool Foam::adjustPhi
             const fvPatchVectorField& Up = U.boundaryField()[patchi];
             const fvsPatchScalarField& phip = bphi[patchi];
 
-            if (!phip.coupled())
+            if (!isA<processorFvPatchVectorField>(Up))
             {
                 if (Up.fixesValue() && !isA<inletOutletFvPatchVectorField>(Up))
                 {
