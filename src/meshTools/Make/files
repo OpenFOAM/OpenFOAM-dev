@@ -270,4 +270,7 @@ meshStructure/pointTopoDistanceData.C
 
 tetOverlapVolume/tetOverlapVolume.C
 
+triIntersect/triIntersect.C
+triIntersect/triIntersectLocationIO.C
+
 LIB = $(FOAM_LIBBIN)/libmeshTools
