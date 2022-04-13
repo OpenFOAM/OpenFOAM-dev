@@ -44,11 +44,10 @@ Foam::relativeVelocityModels::simple::simple
 (
     const dictionary& dict,
     const incompressibleTwoPhaseInteractingMixture& mixture,
-    const uniformDimensionedVectorField& g,
-    const MRFZoneList& MRF
+    const uniformDimensionedVectorField& g
 )
 :
-    relativeVelocityModel(dict, mixture, g, MRF),
+    relativeVelocityModel(dict, mixture, g),
     a_("a", dimless, dict),
     Vc_("Vc", dimTime, dict),
     residualAlpha_("residualAlpha", dimless, dict)
@@ -66,8 +65,7 @@ Foam::relativeVelocityModels::simple::~simple()
 void Foam::relativeVelocityModels::simple::correct()
 {
     Udm_ =
-        (rhoc_/rho())
-       *Vc_*(g_ + MRF_.centrifugalAcceleration())
+        (rhoc_/rho())*Vc_*acceleration()
        *pow(scalar(10), -a_*max(alphad_, scalar(0)));
 }
 

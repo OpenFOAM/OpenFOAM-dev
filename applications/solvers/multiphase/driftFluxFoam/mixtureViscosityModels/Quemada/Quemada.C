@@ -61,6 +61,12 @@ Foam::mixtureViscosityModels::Quemada::Quemada
         optionalSubDict(typeName + "Coeffs").lookup("alphaMax")
     ),
     q_(optionalSubDict(typeName + "Coeffs").lookupOrDefault("q", scalar(2))),
+    muMax_
+    (
+        "muMax",
+        dimDynamicViscosity,
+        optionalSubDict(typeName + "Coeffs").lookup("muMax")
+    ),
     alpha_
     (
         mesh.lookupObject<volScalarField>
@@ -84,7 +90,7 @@ Foam::mixtureViscosityModels::Quemada::mu
     const volVectorField& U
 ) const
 {
-    return muc*pow(1.0 - alpha_/alphaMax_, -q_);
+    return min(muc*pow(1.0 - alpha_/alphaMax_, -q_), muMax_);
 }
 
 

@@ -77,8 +77,7 @@ public:
         (
             const dictionary& dict,
             const incompressibleTwoPhaseInteractingMixture& mixture,
-            const uniformDimensionedVectorField& g,
-            const MRFZoneList& MRF
+            const uniformDimensionedVectorField& g
         );
 
 

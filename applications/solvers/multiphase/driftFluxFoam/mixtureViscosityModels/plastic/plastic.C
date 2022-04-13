@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::mixtureViscosityModels::plastic::plastic
     plasticViscosityCoeff_
     (
         "coeff",
-        dimensionSet(1, -1, -1, 0, 0),
+        dimDynamicViscosity,
         plasticCoeffs_.lookup("coeff")
     ),
     plasticViscosityExponent_
@@ -66,12 +66,7 @@ Foam::mixtureViscosityModels::plastic::plastic
         dimless,
         plasticCoeffs_.lookup("exponent")
     ),
-    muMax_
-    (
-        "muMax",
-        dimensionSet(1, -1, -1, 0, 0),
-        plasticCoeffs_.lookup("muMax")
-    ),
+    muMax_("muMax", dimDynamicViscosity, plasticCoeffs_.lookup("muMax")),
     alpha_
     (
         mesh.lookupObject<volScalarField>

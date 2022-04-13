@@ -38,12 +38,12 @@ Description
 Usage
     Example usage:
     \verbatim
-    viscosityModel  Quemada;
+        viscosityModel  Quemada;
 
-    alphaMax    0.6; // Maximum dispersed phase-fraction (packing fraction)
-    q           2;   // Exponent, defaults to 2
+        alphaMax    0.6; // Maximum dispersed phase-fraction (packing fraction)
+        q           2;   // Exponent, defaults to 2
 
-    rho         1996;
+        rho         1996;
     \endverbatim
 
 SourceFiles
@@ -80,6 +80,9 @@ class Quemada
 
         //- Exponent (defaults to 2)
         scalar q_;
+
+        //- Maximum viscosity
+        dimensionedScalar muMax_;
 
         //- Dispersed phase fraction
         const volScalarField& alpha_;

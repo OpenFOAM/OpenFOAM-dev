@@ -29,8 +29,13 @@ volVectorField U
 #include "createPhi.H"
 
 
+#include "readGravitationalAcceleration.H"
+#include "readhRef.H"
+#include "gh.H"
+
+
 Info<< "Reading incompressibleTwoPhaseInteractingMixture\n" << endl;
-incompressibleTwoPhaseInteractingMixture mixture(U, phi);
+incompressibleTwoPhaseInteractingMixture mixture(U, phi, g);
 
 volScalarField& alpha1(mixture.alpha1());
 
@@ -63,17 +68,11 @@ surfaceScalarField rhoPhi
 );
 
 
-#include "readGravitationalAcceleration.H"
-#include "readhRef.H"
-#include "gh.H"
-
-
 // Construct compressible turbulence model
 autoPtr<compressible::momentumTransportModel> turbulence
 (
     compressible::momentumTransportModel::New(rho, U, rhoPhi, mixture)
 );
-
 
 
 volScalarField p
@@ -108,20 +107,6 @@ mesh.schemes().setFluxRequired(alpha1.name());
 
 // MULES Correction
 tmp<surfaceScalarField> talphaPhiCorr0;
-
-#include "createMRF.H"
-
-// Relative Velocity
-autoPtr<relativeVelocityModel> UdmModelPtr
-(
-    relativeVelocityModel::New
-    (
-        mixture,
-        mixture,
-        g,
-        MRF
-    )
-);
 
 #include "createFvModels.H"
 #include "createFvConstraints.H"

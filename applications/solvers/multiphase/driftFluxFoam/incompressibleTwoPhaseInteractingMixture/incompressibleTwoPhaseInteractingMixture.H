@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,15 +37,18 @@ SourceFiles
 #ifndef incompressibleTwoPhaseInteractingMixture_H
 #define incompressibleTwoPhaseInteractingMixture_H
 
+#include "twoPhaseMixture.H"
 #include "viscosityModel.H"
 #include "mixtureViscosityModel.H"
-#include "twoPhaseMixture.H"
-#include "viscosity.H"
+#include "uniformDimensionedFields.H"
+#include "IOMRFZoneList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class relativeVelocityModel;
 
 /*---------------------------------------------------------------------------*\
           Class incompressibleTwoPhaseInteractingMixture Declaration
@@ -70,9 +73,18 @@ class incompressibleTwoPhaseInteractingMixture
         //- Optional maximum dispersed phase-fraction (e.g. packing limit)
         scalar alphaMax_;
 
-        const volVectorField& U_;
+        volVectorField& U_;
+
+        //- Acceleration due to gravity
+        const uniformDimensionedVectorField& g_;
+
+        //- Optional MRF zones
+        IOMRFZoneList MRF_;
 
         volScalarField mu_;
+
+        //- Dispersed phase relative velocity model
+        autoPtr<relativeVelocityModel> UdmModel_;
 
 
 public:
@@ -85,104 +97,69 @@ public:
         //- Construct from components
         incompressibleTwoPhaseInteractingMixture
         (
-            const volVectorField& U,
-            const surfaceScalarField& phi
+            volVectorField& U,
+            const surfaceScalarField& phi,
+            const uniformDimensionedVectorField& g
         );
 
 
     //- Destructor
-    virtual ~incompressibleTwoPhaseInteractingMixture()
-    {}
+    virtual ~incompressibleTwoPhaseInteractingMixture();
 
 
     // Member Functions
 
         //- Return const-access to the mixture viscosityModel
-        const mixtureViscosityModel& muModel() const
-        {
-            return muModel_();
-        }
+        const mixtureViscosityModel& muModel() const;
 
         //- Return const-access to the continuous-phase viscosityModel
-        const viscosityModel& nucModel() const
-        {
-            return nucModel_();
-        }
+        const viscosityModel& nucModel() const;
 
         //- Return const-access to the dispersed-phase density
-        const dimensionedScalar& rhod() const
-        {
-            return rhod_;
-        }
+        const dimensionedScalar& rhod() const;
 
         //- Return const-access to continuous-phase density
-        const dimensionedScalar& rhoc() const
-        {
-            return rhoc_;
-        };
+        const dimensionedScalar& rhoc() const;
 
         //- Return the diameter of the dispersed-phase particles
-        const dimensionedScalar& dd() const
-        {
-            return dd_;
-        }
+        const dimensionedScalar& dd() const;
 
         //- Optional maximum phase-fraction (e.g. packing limit)
         //  Defaults to 1
-        scalar alphaMax() const
-        {
-            return alphaMax_;
-        }
+        scalar alphaMax() const;
 
         //- Return const-access to the mixture velocity
-        const volVectorField& U() const
-        {
-            return U_;
-        }
+        const volVectorField& U() const;
+
+        //- Return MRF zones
+        const IOMRFZoneList& MRF() const;
 
         //- Return the dynamic mixture viscosity
-        tmp<volScalarField> mu() const
-        {
-            return mu_;
-        }
+        tmp<volScalarField> mu() const;
 
         //- Return the dynamic mixture viscosity for patch
-        virtual tmp<scalarField> mu(const label patchi) const
-        {
-            return mu_.boundaryField()[patchi];
-        }
+        virtual tmp<scalarField> mu(const label patchi) const;
 
         //- Return the mixture density
-        virtual tmp<volScalarField> rho() const
-        {
-            return alpha1()*rhod_ + alpha2()*rhoc_;
-        }
+        virtual tmp<volScalarField> rho() const;
 
         //- Return the mixture density for patch
-        virtual tmp<scalarField> rho(const label patchi) const
-        {
-            return
-                alpha1().boundaryField()[patchi]*rhod_.value()
-              + alpha2().boundaryField()[patchi]*rhoc_.value();
-        }
+        virtual tmp<scalarField> rho(const label patchi) const;
 
         //- Return the mixture viscosity
-        virtual tmp<volScalarField> nu() const
-        {
-            return mu_/rho();
-        }
+        virtual tmp<volScalarField> nu() const;
 
         //- Return the mixture viscosity for patch
-        virtual tmp<scalarField> nu(const label patchi) const
-        {
-            return mu_.boundaryField()[patchi]/rho(patchi);
-        }
+        virtual tmp<scalarField> nu(const label patchi) const;
+
+        //- Return the diffusion velocity of the dispersed phase
+        const volVectorField& Udm() const;
+
+        //- Return the div stress tensor due to the phase transport
+        tmp<volVectorField> divTauDm() const;
 
         //- Correct the laminar viscosity
-        virtual void correct()
-        {
-            mu_ = muModel_->mu(rhoc_*nucModel_->nu(), U_);
-        }
+        virtual void correct();
 
         //- Read base phaseProperties dictionary
         virtual bool read();

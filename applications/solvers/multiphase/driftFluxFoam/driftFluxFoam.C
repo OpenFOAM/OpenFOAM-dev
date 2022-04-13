@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,15 +37,12 @@ Description
 #include "CMULES.H"
 #include "subCycle.H"
 #include "incompressibleTwoPhaseInteractingMixture.H"
-#include "relativeVelocityModel.H"
 #include "momentumTransportModel.H"
 #include "compressibleMomentumTransportModels.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
-#include "gaussLaplacianScheme.H"
-#include "uncorrectedSnGrad.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,7 +61,6 @@ int main(int argc, char *argv[])
     volScalarField& alpha2(mixture.alpha2());
     const dimensionedScalar& rho1 = mixture.rhod();
     const dimensionedScalar& rho2 = mixture.rhoc();
-    relativeVelocityModel& UdmModel(UdmModelPtr());
 
     turbulence->validate();
 
@@ -85,9 +81,9 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            fvModels.correct();
+            mixture.correct();
 
-            UdmModel.correct();
+            fvModels.correct();
 
             #include "alphaEqnSubCycle.H"
 

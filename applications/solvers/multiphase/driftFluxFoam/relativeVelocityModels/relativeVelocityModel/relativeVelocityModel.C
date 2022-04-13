@@ -27,6 +27,7 @@ License
 #include "fixedValueFvPatchFields.H"
 #include "slipFvPatchFields.H"
 #include "partialSlipFvPatchFields.H"
+#include "fvcGrad.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -71,8 +72,7 @@ Foam::relativeVelocityModel::relativeVelocityModel
 (
     const dictionary& dict,
     const incompressibleTwoPhaseInteractingMixture& mixture,
-    const uniformDimensionedVectorField& g,
-    const MRFZoneList& MRF
+    const uniformDimensionedVectorField& g
 )
 :
     mixture_(mixture),
@@ -81,8 +81,6 @@ Foam::relativeVelocityModel::relativeVelocityModel
     rhoc_(mixture.rhoc()),
     rhod_(mixture.rhod()),
     g_(g),
-    MRF_(MRF),
-
     Udm_
     (
         IOobject
@@ -106,8 +104,7 @@ Foam::autoPtr<Foam::relativeVelocityModel> Foam::relativeVelocityModel::New
 (
     const dictionary& dict,
     const incompressibleTwoPhaseInteractingMixture& mixture,
-    const uniformDimensionedVectorField& g,
-    const MRFZoneList& MRF
+    const uniformDimensionedVectorField& g
 )
 {
     word modelType(dict.lookup(typeName));
@@ -134,8 +131,7 @@ Foam::autoPtr<Foam::relativeVelocityModel> Foam::relativeVelocityModel::New
             (
                 dict.optionalSubDict(modelType + "Coeffs"),
                 mixture,
-                g,
-                MRF
+                g
             )
         );
 }
@@ -152,6 +148,15 @@ Foam::relativeVelocityModel::~relativeVelocityModel()
 Foam::tmp<Foam::volScalarField> Foam::relativeVelocityModel::rho() const
 {
     return alphac_*rhoc_ + alphad_*rhod_;
+}
+
+
+Foam::tmp<Foam::volVectorField>
+Foam::relativeVelocityModel::acceleration() const
+{
+    const volVectorField Ud(mixture_.U() + Udm_);
+
+    return g_ - (Ud & fvc::grad(Ud));
 }
 
 

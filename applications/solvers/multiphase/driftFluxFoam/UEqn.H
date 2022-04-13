@@ -1,12 +1,10 @@
     // Solve the Momentum equation
 
-    MRF.correctBoundaryVelocity(U);
-
     fvVectorMatrix UEqn
     (
         fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
-      + MRF.DDt(rho, U)
-      + fvc::div(UdmModel.tauDm())
+      + mixture.MRF().DDt(rho, U)
+      + mixture.divTauDm()
       + turbulence->divDevTau(U)
      ==
         fvModels.source(rho, U)

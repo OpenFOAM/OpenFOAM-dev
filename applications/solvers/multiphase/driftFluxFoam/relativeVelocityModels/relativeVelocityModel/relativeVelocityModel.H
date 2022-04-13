@@ -36,7 +36,6 @@ SourceFiles
 
 #include "incompressibleTwoPhaseInteractingMixture.H"
 #include "uniformDimensionedFields.H"
-#include "MRFZoneList.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -81,9 +80,6 @@ protected:
         //- Acceleration due to gravity
         const uniformDimensionedVectorField& g_;
 
-        //- MRF zones
-        const MRFZoneList& MRF_;
-
         //- Dispersed diffusion velocity
         mutable volVectorField Udm_;
 
@@ -101,10 +97,9 @@ public:
         (
             const dictionary& dict,
             const incompressibleTwoPhaseInteractingMixture& mixture,
-            const uniformDimensionedVectorField& g,
-            const MRFZoneList& MRF
+            const uniformDimensionedVectorField& g
         ),
-        (dict, mixture, g, MRF)
+        (dict, mixture, g)
     );
 
 
@@ -115,8 +110,7 @@ public:
         (
             const dictionary& dict,
             const incompressibleTwoPhaseInteractingMixture& mixture,
-            const uniformDimensionedVectorField& g,
-            const MRFZoneList& MRF
+            const uniformDimensionedVectorField& g
         );
 
         //- Disallow default bitwise copy construction
@@ -128,8 +122,7 @@ public:
     (
         const dictionary& dict,
         const incompressibleTwoPhaseInteractingMixture& mixture,
-        const uniformDimensionedVectorField& g,
-        const MRFZoneList& MRF
+        const uniformDimensionedVectorField& g
     );
 
 
@@ -153,6 +146,10 @@ public:
         {
             return Udm_;
         }
+
+        //- Return the dispersed phase acceleration
+        //  Including buoyancy and flow curvature
+        tmp<volVectorField> acceleration() const;
 
         //- Return the stress tensor due to the phase transport
         tmp<volSymmTensorField> tauDm() const;

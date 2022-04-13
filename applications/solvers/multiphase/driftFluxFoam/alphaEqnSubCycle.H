@@ -13,7 +13,7 @@
         dimensionedScalar(phi.dimensions(), 0)
     );
 
-    surfaceScalarField phir(fvc::flux(UdmModel.Udm()));
+    surfaceScalarField phir(fvc::flux(mixture.Udm()));
 
     if (nAlphaSubCycles > 1)
     {
