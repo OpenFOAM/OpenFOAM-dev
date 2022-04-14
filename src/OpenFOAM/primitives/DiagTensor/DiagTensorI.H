@@ -184,6 +184,58 @@ operator-(const Tensor<Cmpt>& t1, const DiagTensor<Cmpt>& dt2)
 }
 
 
+template<class Cmpt>
+inline SymmTensor<Cmpt>
+operator+(const DiagTensor<Cmpt>& dt1, const SymmTensor<Cmpt>& t2)
+{
+    return SymmTensor<Cmpt>
+    (
+        dt1.xx() + t2.xx(), t2.xy(),            t2.xz(),
+                            dt1.yy() + t2.yy(), t2.yz(),
+                                                dt1.zz() + t2.zz()
+    );
+}
+
+
+template<class Cmpt>
+inline SymmTensor<Cmpt>
+operator+(const SymmTensor<Cmpt>& t1, const DiagTensor<Cmpt>& dt2)
+{
+    return SymmTensor<Cmpt>
+    (
+        t1.xx() + dt2.xx(), t1.xy(),            t1.xz(),
+                            t1.yy() + dt2.yy(), t1.yz(),
+                                                t1.zz() + dt2.zz()
+    );
+}
+
+
+template<class Cmpt>
+inline SymmTensor<Cmpt>
+operator-(const DiagTensor<Cmpt>& dt1, const SymmTensor<Cmpt>& t2)
+{
+    return SymmTensor<Cmpt>
+    (
+        dt1.xx() - t2.xx(), -t2.xy(),            -t2.xz(),
+                             dt1.yy() - t2.yy(), -t2.yz(),
+                                                  dt1.zz() - t2.zz()
+    );
+}
+
+
+template<class Cmpt>
+inline SymmTensor<Cmpt>
+operator-(const SymmTensor<Cmpt>& t1, const DiagTensor<Cmpt>& dt2)
+{
+    return SymmTensor<Cmpt>
+    (
+        t1.xx() - dt2.xx(), t1.xy(),            t1.xz(),
+                            t1.yy() - dt2.yy(), t1.yz(),
+                                                t1.zz() - dt2.zz()
+    );
+}
+
+
 //- Inner-product between two diagonal tensors
 template<class Cmpt>
 inline DiagTensor<Cmpt>
