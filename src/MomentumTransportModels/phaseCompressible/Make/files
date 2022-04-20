@@ -1,4 +1,6 @@
 phaseCompressibleMomentumTransportModel.C
 phaseCompressibleMomentumTransportModels.C
 
+derivedFvPatchFields/wallFunctions/epsilonWallFunctions/epsilonmWallFunction/epsilonmWallFunctionFvPatchScalarField.C
+
 LIB = $(FOAM_LIBBIN)/libphaseCompressibleMomentumTransportModels

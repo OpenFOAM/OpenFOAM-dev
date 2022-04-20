@@ -31,6 +31,8 @@ License
 #include "dispersedVirtualMassModel.H"
 #include "fixedValueFvPatchFields.H"
 #include "inletOutletFvPatchFields.H"
+#include "epsilonWallFunctionFvPatchScalarField.H"
+#include "epsilonmWallFunctionFvPatchScalarField.H"
 #include "fvmSup.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -187,7 +189,11 @@ wordList mixtureKEpsilon<BasicMomentumTransportModel>::epsilonBoundaryTypes
 
     forAll(ebf, patchi)
     {
-        if (isA<fixedValueFvPatchScalarField>(ebf[patchi]))
+        if (isType<epsilonWallFunctionFvPatchScalarField>(ebf[patchi]))
+        {
+            ebt[patchi] = epsilonmWallFunctionFvPatchScalarField::typeName;
+        }
+        else if (isA<fixedValueFvPatchScalarField>(ebf[patchi]))
         {
             ebt[patchi] = fixedValueFvPatchScalarField::typeName;
         }
