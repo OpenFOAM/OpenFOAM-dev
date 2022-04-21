@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,15 +192,23 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValues
     switch (operation_)
     {
         case operationType::min:
+        {
+            compareScalars(values, result, lessOp<scalar>());
+            return true;
+        }
         case operationType::minMag:
         {
-            opMag(values, result, lessOp<scalar>());
+            compareScalars(mag(values), result, lessOp<scalar>());
             return true;
         }
         case operationType::max:
+        {
+            compareScalars(values, result, greaterOp<scalar>());
+            return true;
+        }
         case operationType::maxMag:
         {
-            opMag(values, result, greaterOp<scalar>());
+            compareScalars(mag(values), result, greaterOp<scalar>());
             return true;
         }
         default:

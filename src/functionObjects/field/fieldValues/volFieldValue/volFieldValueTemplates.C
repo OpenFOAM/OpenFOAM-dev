@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,26 +67,24 @@ Foam::functionObjects::fieldValues::volFieldValue::getFieldValues
 }
 
 
-template<class Type, class Op>
-void Foam::functionObjects::fieldValues::volFieldValue::opMag
+template<class Op>
+void Foam::functionObjects::fieldValues::volFieldValue::compareScalars
 (
-    const Field<Type>& values,
+    const scalarField& values,
     Result<scalar>& result,
     const Op& op
 ) const
 {
-    const scalarField magValues(mag(values));
-
     label i = 0;
-    forAll(magValues, j)
+    forAll(values, j)
     {
-        if (op(magValues[j], magValues[i]))
+        if (op(values[j], values[i]))
         {
             i = j;
         }
     }
 
-    result.value = magValues[i];
+    result.value = values[i];
     result.celli = isNull(cellIDs()) ? i : cellIDs()[i];
     result.proci = Pstream::parRun() ? Pstream::myProcNo() : -1;
     result.cc = fieldValue::mesh_.C()[result.celli];
@@ -141,12 +139,12 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValues
     {
         case operationType::minMag:
         {
-            opMag(values, result, lessOp<scalar>());
+            compareScalars(mag(values), result, lessOp<scalar>());
             return true;
         }
         case operationType::maxMag:
         {
-            opMag(values, result, greaterOp<scalar>());
+            compareScalars(mag(values), result, greaterOp<scalar>());
             return true;
         }
         default:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,12 +187,12 @@ protected:
         template<class Type>
         tmp<Field<Type>> getFieldValues(const word& fieldName) const;
 
-        //- Apply a comparison operation (min/max) to the field magnitude,
-        //  returning the limiting value, its index and processor index
-        template<class Type, class Op>
-        void opMag
+        //- Apply a comparison operation to the values, returning the limiting
+        //  value, its index and processor index
+        template<class Op>
+        void compareScalars
         (
-            const Field<Type>& values,
+            const scalarField& values,
             Result<scalar>& result,
             const Op& op
         ) const;
