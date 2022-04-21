@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,12 +41,6 @@ SourceFiles
 #define outletStabilised_H
 
 #include "surfaceInterpolationScheme.H"
-#include "skewCorrectionVectors.H"
-#include "linear.H"
-#include "gaussGrad.H"
-#include "zeroGradientFvPatchField.H"
-#include "mixedFvPatchField.H"
-#include "directionMixedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -124,48 +118,7 @@ public:
         tmp<surfaceScalarField> weights
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
-        ) const
-        {
-            tmp<surfaceScalarField> tw = tScheme_().weights(vf);
-            surfaceScalarField& w = tw.ref();
-
-            const fvMesh& mesh_ = this->mesh();
-            const cellList& cells = mesh_.cells();
-
-            forAll(vf.boundaryField(), patchi)
-            {
-                if
-                (
-                    isA<zeroGradientFvPatchField<Type>>
-                        (vf.boundaryField()[patchi])
-                 || isA<mixedFvPatchField<Type>>(vf.boundaryField()[patchi])
-                 || isA<directionMixedFvPatchField<Type>>
-                    (vf.boundaryField()[patchi])
-                )
-                {
-                    const labelList& pFaceCells =
-                        mesh_.boundary()[patchi].faceCells();
-
-                    forAll(pFaceCells, pFacei)
-                    {
-                        const cell& pFaceCell = cells[pFaceCells[pFacei]];
-
-                        forAll(pFaceCell, fi)
-                        {
-                            label facei = pFaceCell[fi];
-
-                            if (mesh_.isInternalFace(facei))
-                            {
-                                // Apply upwind differencing
-                                w[facei] = pos0(faceFlux_[facei]);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return tw;
-        }
+        ) const;
 
         //- Return true if this scheme uses an explicit correction
         virtual bool corrected() const
@@ -179,60 +132,7 @@ public:
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
-        ) const
-        {
-            if (tScheme_().corrected())
-            {
-                tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tcorr =
-                    tScheme_().correction(vf);
-
-                GeometricField<Type, fvsPatchField, surfaceMesh>& corr =
-                    tcorr.ref();
-
-                const fvMesh& mesh_ = this->mesh();
-                const cellList& cells = mesh_.cells();
-
-                forAll(vf.boundaryField(), patchi)
-                {
-                    if
-                    (
-                        isA<zeroGradientFvPatchField<Type>>
-                            (vf.boundaryField()[patchi])
-                     || isA<mixedFvPatchField<Type>>
-                            (vf.boundaryField()[patchi])
-                    )
-                    {
-                        const labelList& pFaceCells =
-                            mesh_.boundary()[patchi].faceCells();
-
-                        forAll(pFaceCells, pFacei)
-                        {
-                            const cell& pFaceCell = cells[pFaceCells[pFacei]];
-
-                            forAll(pFaceCell, fi)
-                            {
-                                label facei = pFaceCell[fi];
-
-                                if (mesh_.isInternalFace(facei))
-                                {
-                                    // Remove correction
-                                    corr[facei] = Zero;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return tcorr;
-            }
-            else
-            {
-                return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
-                (
-                    nullptr
-                );
-            }
-        }
+        ) const;
 
 
     // Member Operators
