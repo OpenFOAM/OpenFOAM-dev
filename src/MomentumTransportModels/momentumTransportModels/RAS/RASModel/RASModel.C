@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,11 +183,8 @@ Foam::RASModel<BasicMomentumTransportModel>::New
 template<class BasicMomentumTransportModel>
 bool Foam::RASModel<BasicMomentumTransportModel>::read()
 {
-    InfoInFunction << "Hmm" << endl;
-
     if (BasicMomentumTransportModel::read())
     {
-        InfoInFunction << "Hmm1" << endl;
         RASDict_ <<= this->subDict("RAS");
         RASDict_.lookup("turbulence") >> turbulence_;
 

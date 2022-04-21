@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,12 +196,8 @@ kEpsilon<BasicMomentumTransportModel>::kEpsilon
 template<class BasicMomentumTransportModel>
 bool kEpsilon<BasicMomentumTransportModel>::read()
 {
-    InfoInFunction << "Hmm" << endl;
-
     if (eddyViscosity<RASModel<BasicMomentumTransportModel>>::read())
     {
-        InfoInFunction << "Hmm1" << endl;
-
         Cmu_.readIfPresent(this->coeffDict());
         C1_.readIfPresent(this->coeffDict());
         C2_.readIfPresent(this->coeffDict());
