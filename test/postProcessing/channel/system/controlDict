@@ -118,6 +118,8 @@ fieldsFunctions
 
     #includeFunc randomise(U, magPerturbation=0.1)
 
+    #includeFunc reconstruct(phi)
+
     #includeFunc scale(age, scale=0.1)
 
     #includeFunc shearStress

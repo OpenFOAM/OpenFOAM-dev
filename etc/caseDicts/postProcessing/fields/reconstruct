@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the reconstruction of a field; e.g., to construct a cell-centred
+    velocity, U, from the face-centred flux, phi.
+
+\*---------------------------------------------------------------------------*/
+
+type            reconstruct;
+libs            ("libfieldFunctionObjects.so");
+
+field           <fieldName>;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //

@@ -47,6 +47,7 @@ pressure/pressure.C
 MachNo/MachNo.C
 shearStress/shearStress.C
 totalEnthalpy/totalEnthalpy.C
+reconstruct/reconstruct.C
 
 turbulenceFields/turbulenceFields.C
 yPlus/yPlus.C
