@@ -31,7 +31,8 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::surfaceScalarField> Foam::outletStabilised<Type>::weights
+inline Foam::tmp<Foam::surfaceScalarField>
+Foam::outletStabilised<Type>::weights
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
@@ -80,7 +81,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::outletStabilised<Type>::weights
 
 template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
-Foam::outletStabilised<Type>::correction
+inline Foam::outletStabilised<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
@@ -138,6 +139,8 @@ Foam::outletStabilised<Type>::correction
     }
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {

@@ -115,7 +115,7 @@ public:
     // Member Functions
 
         //- Return the interpolation weighting factors
-        tmp<surfaceScalarField> weights
+        inline tmp<surfaceScalarField> weights
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
         ) const;
@@ -128,7 +128,7 @@ public:
 
         //- Return the explicit correction to the face-interpolate
         //  set to zero on the near-boundary faces where upwind is applied
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        inline virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
