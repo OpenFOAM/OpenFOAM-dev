@@ -14,8 +14,10 @@ patches         (<patchNames>);  // Patches from which layers extrude
 
 zones           ();              // Zones from which layers extrude
 
-axis            <axisName>;      // The independent variable of the graph. Can
-                                 // be "x", "y" or "z".
+axis            distance;        // The independent variable of the graph. Can
+                                 // be "x", "y", "z", "xyz" (all coordinates
+                                 // written out), or "distance" (from the start
+                                 // point).
 
 symmetric       false;           // Are the layers symmetric about the centre?
 

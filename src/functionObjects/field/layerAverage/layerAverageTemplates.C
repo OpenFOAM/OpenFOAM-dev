@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,8 +63,8 @@ Foam::Field<T> Foam::functionObjects::layerAverage::average
     const Field<T>& cellField
 ) const
 {
-    // Sum, average and sort
-    Field<T> layerField(sum(cellField)/layerCount_, sortMap_);
+    // Sum and average
+    Field<T> layerField(sum(cellField)/layerCount_);
 
     // Handle symmetry
     if (symmetric_)

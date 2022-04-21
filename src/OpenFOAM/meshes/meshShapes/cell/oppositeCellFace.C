@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,11 +42,13 @@ Foam::label Foam::cell::opposingFaceLabel
     const faceUList& meshFaces
 ) const
 {
-    // Algorithm:
     // Go through all the faces of the cell and find the one which
-    // does not share a single vertex with the master face.  If there
-    // are two or more such faces, return the first one and issue a
-    // warning; if there is no opposite face, return -1;
+    // does not share a single vertex with the master face
+    //
+    // If there are no such faces (e.g., a tetrahedron), return -1
+    //
+    // If there are more than one such faces (e.g., a hex with split faces),
+    // return -2
 
     const face& masterFace = meshFaces[masterFaceLabel];
 
@@ -96,12 +98,9 @@ Foam::label Foam::cell::opposingFaceLabel
                 }
                 else
                 {
-                    // There has already been an opposite face.
-                    // Non-prismatic cell
-                    Info<< "Multiple faces not sharing vertex: "
-                        << oppositeFaceLabel << " and "
-                        << curFaceLabels[facei] << endl;
-                    return -1;
+                    // There has already been a face with no shared points.
+                    // This cell is not prismatic.
+                    return -2;
                 }
             }
         }

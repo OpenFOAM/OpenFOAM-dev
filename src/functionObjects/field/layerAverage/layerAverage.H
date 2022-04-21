@@ -90,12 +90,6 @@ class layerAverage
 :
     public fvMeshFunctionObject
 {
-    // Private Static Data
-
-        //- Names of vector components
-        static const NamedEnum<vector::components, 3> axisNames_;
-
-
     // Private Data
 
         //- Patches which form the start of the layers
@@ -111,7 +105,7 @@ class layerAverage
         bool symmetric_;
 
         //- The direction over which to plot the results
-        vector::components axis_;
+        coordSet::axisType axis_;
 
         //- Per cell the global layer
         label nLayers_;
@@ -122,11 +116,8 @@ class layerAverage
         //- Per global layer the number of cells
         scalarField layerCount_;
 
-        //- From sorted layer back to unsorted global layer
-        labelList sortMap_;
-
-        //- Sorted component of cell centres
-        scalarField x_;
+        //- The average centre of each layer
+        pointField layerCentre_;
 
         //- Fields to sample
         wordList fields_;
@@ -136,16 +127,6 @@ class layerAverage
 
 
     // Private Member Functions
-
-        //- Walk through layers marking faces that separate layers and cells
-        //  that are within layers
-        void walkOppositeFaces
-        (
-            const labelList& startFaces,
-            const boolList& startFaceIntoOwners,
-            boolList& blockedFace,
-            boolList& cellIsLayer
-        );
 
         //- Create the layer information, the sort map, and the scalar axis
         void calcLayers();

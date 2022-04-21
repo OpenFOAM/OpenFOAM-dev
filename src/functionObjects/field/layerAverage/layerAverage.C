@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "layerAverage.H"
+#include "FaceCellWave.H"
+#include "layerInfo.H"
 #include "regionSplit.H"
 #include "syncTools.H"
 #include "volFields.H"
@@ -39,204 +41,61 @@ namespace Foam
         defineTypeNameAndDebug(layerAverage, 0);
         addToRunTimeSelectionTable(functionObject, layerAverage, dictionary);
     }
-
-    template<>
-    const char*
-        Foam::NamedEnum<Foam::vector::components, 3>::names[] =
-        {"x", "y", "z"};
 }
-
-const Foam::NamedEnum<Foam::vector::components, 3>
-    Foam::functionObjects::layerAverage::axisNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::layerAverage::walkOppositeFaces
-(
-    const labelList& startFaces,
-    const boolList& startFaceIntoOwners,
-    boolList& blockedFace,
-    boolList& cellIsLayer
-)
-{
-    // Initialise the front
-    DynamicList<label> frontFaces(startFaces);
-    DynamicList<bool> frontFaceIntoOwners(startFaceIntoOwners);
-    DynamicList<label> newFrontFaces(frontFaces.size());
-    DynamicList<bool> newFrontFaceIntoOwners(frontFaceIntoOwners.size());
-
-    // Set the start and end faces as blocked
-    UIndirectList<bool>(blockedFace, startFaces) = true;
-
-    // Iterate until the front is empty
-    while (returnReduce(frontFaces.size(), sumOp<label>()) > 0)
-    {
-        // Transfer front faces across couplings
-        boolList bndFaceIsFront(mesh_.nFaces() - mesh_.nInternalFaces(), false);
-        forAll(frontFaces, i)
-        {
-            const label facei = frontFaces[i];
-            const label intoOwner = frontFaceIntoOwners[i];
-
-            if (!mesh_.isInternalFace(facei) && !intoOwner)
-            {
-                bndFaceIsFront[facei - mesh_.nInternalFaces()] = true;
-            }
-        }
-        syncTools::swapBoundaryFaceList(mesh_, bndFaceIsFront);
-
-        // Set new front faces
-        forAll(bndFaceIsFront, bndFacei)
-        {
-            const label facei = mesh_.nInternalFaces() + bndFacei;
-
-            if (bndFaceIsFront[bndFacei] && !blockedFace[facei])
-            {
-                blockedFace[facei] = true;
-                frontFaces.append(facei);
-                frontFaceIntoOwners.append(true);
-            }
-        }
-
-        // Transfer across cells
-        newFrontFaces.clear();
-        newFrontFaceIntoOwners.clear();
-
-        forAll(frontFaces, i)
-        {
-            const label facei = frontFaces[i];
-            const label intoOwner = frontFaceIntoOwners[i];
-
-            const label celli =
-                intoOwner
-              ? mesh_.faceOwner()[facei]
-              : mesh_.isInternalFace(facei) ? mesh_.faceNeighbour()[facei] : -1;
-
-            if (celli != -1)
-            {
-                cellIsLayer[celli] = true;
-
-                const label oppositeFacei =
-                    mesh_.cells()[celli]
-                   .opposingFaceLabel(facei, mesh_.faces());
-                const bool oppositeIntoOwner =
-                    mesh_.faceOwner()[oppositeFacei] != celli;
-
-                if (oppositeFacei == -1)
-                {
-                    FatalErrorInFunction
-                        << "Cannot find face on cell " << mesh_.cells()[celli]
-                        << " opposing face " << mesh_.faces()[facei]
-                        << ". Mesh is not layered." << exit(FatalError);
-                }
-                else if (!blockedFace[oppositeFacei])
-                {
-                    blockedFace[oppositeFacei] = true;
-                    newFrontFaces.append(oppositeFacei);
-                    newFrontFaceIntoOwners.append(oppositeIntoOwner);
-                }
-            }
-        }
-
-        frontFaces.transfer(newFrontFaces);
-        frontFaceIntoOwners.transfer(newFrontFaceIntoOwners);
-    }
-
-    // Determine whether cells on the other sides of couplings are in layers
-    boolList bndCellIsLayer(mesh_.nFaces() - mesh_.nInternalFaces(), false);
-    forAll(bndCellIsLayer, bndFacei)
-    {
-        const label facei = mesh_.nInternalFaces() + bndFacei;
-        const label owni = mesh_.faceOwner()[facei];
-
-        bndCellIsLayer[bndFacei] = cellIsLayer[owni];
-    }
-    syncTools::swapBoundaryFaceList(mesh_, bndCellIsLayer);
-
-    // Block faces where one adjacent cell is in a layer and the other is not
-    forAll(mesh_.faces(), facei)
-    {
-        const label owni = mesh_.faceOwner()[facei];
-        if (mesh_.isInternalFace(facei))
-        {
-            const label nbri = mesh_.faceNeighbour()[facei];
-            if (cellIsLayer[owni] != cellIsLayer[nbri])
-            {
-                blockedFace[facei] = true;
-            }
-        }
-        else
-        {
-            const label bndFacei = facei - mesh_.nInternalFaces();
-            if (cellIsLayer[owni] != bndCellIsLayer[bndFacei])
-            {
-                blockedFace[facei] = true;
-            }
-        }
-    }
-}
-
-
 void Foam::functionObjects::layerAverage::calcLayers()
 {
+    // Initialise the faces from which the layers extrude
     DynamicList<label> startFaces;
-    DynamicList<bool> startFaceIntoOwners;
-
+    DynamicList<layerInfo> startFacesInfo;
     forAll(patchIDs_, i)
     {
         const polyPatch& pp = mesh_.boundaryMesh()[patchIDs_[i]];
-        startFaces.append(identity(pp.size()) + pp.start());
-        startFaceIntoOwners.append(boolList(pp.size(), true));
+        forAll(pp, j)
+        {
+            startFaces.append(pp.start() + j);
+            startFacesInfo.append(layerInfo(0, -1));
+        }
     }
-
     forAll(zoneIDs_, i)
     {
         const faceZone& fz = mesh_.faceZones()[zoneIDs_[i]];
-        startFaces.append(fz);
-        startFaceIntoOwners.append(fz.flipMap());
+        forAll(fz, j)
+        {
+            startFaces.append(fz[j]);
+            startFacesInfo.append(layerInfo(0, fz.flipMap()[j] ? -1 : +1));
+        }
     }
 
-    // Identify faces that separate the layers
-    boolList blockedFace(mesh_.nFaces(), false);
-    boolList cellIsLayer(mesh_.nCells(), false);
-    walkOppositeFaces
+    // Wave to generate layer indices
+    List<layerInfo> allFaceLayerInfo(mesh_.nFaces());
+    List<layerInfo> allCellLayerInfo(mesh_.nCells());
+    FaceCellWave<layerInfo> wave
     (
+        mesh_,
         startFaces,
-        startFaceIntoOwners,
-        blockedFace,
-        cellIsLayer
+        startFacesInfo,
+        allFaceLayerInfo,
+        allCellLayerInfo,
+        mesh_.globalData().nTotalCells() + 1
     );
 
-    // Do analysis for connected layers
-    regionSplit rs(mesh_, blockedFace);
-    nLayers_ = rs.nRegions();
-    cellLayer_.transfer(rs);
-
-    // Get rid of regions that are not layers
-    label layeri0 = labelMax, layeri1 = -labelMax;
+    // Copy indices out of the wave and determine the total number of layers
+    nLayers_ = 0;
+    cellLayer_ = labelList(mesh_.nCells(), -1);
     forAll(cellLayer_, celli)
     {
-        if (cellIsLayer[celli])
+        if (allCellLayerInfo[celli].valid(wave.data()))
         {
-            layeri0 = min(layeri0, cellLayer_[celli]);
-            layeri1 = max(layeri1, cellLayer_[celli]);
-        }
-        else
-        {
-            cellLayer_[celli] = -1;
+            const label layeri = allCellLayerInfo[celli].cellLayer();
+            nLayers_ = max(nLayers_, layeri + 1);
+            cellLayer_[celli] = layeri;
         }
     }
-    reduce(layeri0, minOp<label>());
-    reduce(layeri1, maxOp<label>());
-    nLayers_ = layeri0 != labelMax ? 1 + layeri1 - layeri0 : 0;
-    forAll(cellLayer_, celli)
-    {
-        if (cellLayer_[celli] != -1)
-        {
-            cellLayer_[celli] -= layeri0;
-        }
-    }
+    reduce(nLayers_, maxOp<label>());
 
     // Report
     if (nLayers_ != 0)
@@ -245,26 +104,33 @@ void Foam::functionObjects::layerAverage::calcLayers()
     }
     else
     {
-        WarningInFunction
-            << "No layers detected" << endl;
+        WarningInFunction<< "No layers detected" << endl;
+    }
+
+    // Write the indices for debugging
+    if (debug)
+    {
+        tmp<volScalarField> cellLayer =
+            volScalarField::New
+            (
+                "cellLayer",
+                mesh_,
+                dimensionedScalar(dimless, 0)
+            );
+        cellLayer.ref().primitiveFieldRef() = List<scalar>(cellLayer_);
+        cellLayer.ref().write();
     }
 
     // Sum number of entries per layer
     layerCount_ = sum(scalarField(mesh_.nCells(), 1));
 
     // Average the cell centres
-    const pointField layerCentres(sum(mesh_.cellCentres())/layerCount_);
-
-    // Sort by the direction component
-    x_ = layerCentres.component(axis_);
-    sortMap_ = identity(layerCentres.size());
-    stableSort(sortMap_, UList<scalar>::less(x_));
-    x_.map(x_, sortMap_);
+    layerCentre_ = sum(mesh_.cellCentres())/layerCount_;
 
     // If symmetric, keep only half of the coordinates
     if (symmetric_)
     {
-        x_.setSize(nLayers_/2);
+        layerCentre_.setSize(nLayers_/2);
     }
 }
 
@@ -273,8 +139,28 @@ template<>
 Foam::vector
 Foam::functionObjects::layerAverage::symmetricCoeff<Foam::vector>() const
 {
+    direction i = -1;
+
+    switch (axis_)
+    {
+        case coordSet::axisType::X:
+        case coordSet::axisType::Y:
+        case coordSet::axisType::Z:
+            i = label(axis_) - label(coordSet::axisType::X);
+            break;
+        case coordSet::axisType::XYZ:
+        case coordSet::axisType::DISTANCE:
+        case coordSet::axisType::DEFAULT:
+            FatalErrorInFunction
+                << "Symmetric layer average requested with "
+                << coordSet::axisTypeNames_[axis_] << " axis. Symmetric "
+                << "averaging is only possible along coordinate axes."
+                << exit(FatalError);
+            break;
+    }
+
     vector result = vector::one;
-    result[axis_] = -1;
+    result[i] = -1;
     return result;
 }
 
@@ -343,7 +229,15 @@ bool Foam::functionObjects::layerAverage::read(const dictionary& dict)
 
     symmetric_ = dict.lookupOrDefault<bool>("symmetric", false);
 
-    axis_ = axisNames_.read(dict.lookup("axis"));
+    axis_ =
+        coordSet::axisTypeNames_
+        [
+            dict.lookupOrDefault<word>
+            (
+                "axis",
+                coordSet::axisTypeNames_[coordSet::axisType::DEFAULT]
+            )
+        ];
 
     fields_ = dict.lookup<wordList>("fields");
 
@@ -422,13 +316,28 @@ bool Foam::functionObjects::layerAverage::write()
     }
 
     // Write
-    if (Pstream::master() && x_.size())
+    if (Pstream::master() && layerCentre_.size())
     {
+        scalarField layerDistance(layerCentre_.size(), 0);
+        for (label i = 1; i < layerCentre_.size(); ++ i)
+        {
+            layerDistance[i] =
+                layerDistance[i-1] + mag(layerCentre_[i] - layerCentre_[i-1]);
+        }
+
         formatter_->write
         (
             outputPath/mesh_.time().timeName(),
             typeName,
-            coordSet(true, axisNames_[axis_], x_),
+            coordSet
+            (
+                identity(layerCentre_.size()),
+                word::null,
+                layerCentre_,
+                coordSet::axisTypeNames_[coordSet::axisType::DISTANCE],
+                layerDistance,
+                coordSet::axisTypeNames_[axis_]
+            ),
             fieldNames
             #define TypeValueSetsParameter(Type, nullArg) , Type##ValueSets
             FOR_ALL_FIELD_TYPES(TypeValueSetsParameter)
