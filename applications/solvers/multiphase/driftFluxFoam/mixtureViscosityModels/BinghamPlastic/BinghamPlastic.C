@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,11 +49,10 @@ namespace mixtureViscosityModels
 
 Foam::mixtureViscosityModels::BinghamPlastic::BinghamPlastic
 (
-    const fvMesh& mesh,
-    const word& group
+    const incompressibleTwoPhaseInteractingMixture& mixture
 )
 :
-    plastic(mesh, group),
+    plastic(mixture),
     yieldStressCoeff_
     (
         "BinghamCoeff",
@@ -95,7 +94,7 @@ Foam::mixtureViscosityModels::BinghamPlastic::mu
                 (
                     log10(vGreat),
                     yieldStressExponent_
-                   *(max(alpha_, scalar(0)) + yieldStressOffset_)
+                   *(max(mixture_.alphad(), scalar(0)) + yieldStressOffset_)
                 )
             )
           - pow

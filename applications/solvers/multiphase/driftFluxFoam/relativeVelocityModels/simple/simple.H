@@ -60,9 +60,6 @@ class simple
         //- Drift velocity coefficient
         dimensionedScalar Vc_;
 
-        //- Residual phase fraction
-        dimensionedScalar residualAlpha_;
-
 
 public:
 

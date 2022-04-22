@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,93 +22,105 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mixtureViscosityModels::plastic
+    Foam::relativeVelocityModels::MichaelsBolger
 
 Description
-     Viscosity correction model for a generic power-law plastic.
+    Michaels & Bolger relative velocity model
+
+    Reference:
+    \verbatim
+        Michaels, A. S., & Bolger, J. C. (1962).
+        Settling rates and sediment volumes
+        of flocculated kaolin suspensions.
+        Industrial & Engineering Chemistry Fundamentals, 1(1), 24-33.
+    \endverbatim
+
+Usage
+    Example usage:
+    \verbatim
+        relativeVelocityModel MichaelsBolger;
+
+        MichaelsBolgerCoeffs
+        {
+            a0          0;    // Extended Michaels & Bolger coefficient,
+            a1          4.65; // Exponent
+
+            alphaMax    0.6;  // Maximum dispersed phase-fraction
+                              // (packing fraction)
+        }
+    \endverbatim
 
 SourceFiles
-    plastic.C
+    MichaelsBolger.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef plastic_H
-#define plastic_H
+#ifndef MichaelsBolger_H
+#define MichaelsBolger_H
 
-#include "mixtureViscosityModel.H"
-#include "dimensionedScalar.H"
-#include "volFields.H"
+#include "relativeVelocityModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class incompressibleTwoPhaseInteractingMixture;
-
-namespace mixtureViscosityModels
+namespace relativeVelocityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class plastic Declaration
+                           Class MichaelsBolger Declaration
 \*---------------------------------------------------------------------------*/
 
-class plastic
+class MichaelsBolger
 :
-    public mixtureViscosityModel
+    public relativeVelocityModel
 {
-protected:
+    // Private Data
 
-    // Protected data
+        //- Extended Michaels & Bolger coefficient, defaults to 0
+        dimensionedScalar a0_;
 
-        //- Dictionary
-        dictionary plasticCoeffs_;
+        //- Exponent, defaults to 4.65
+        dimensionedScalar a1_;
 
-        //- Plastic viscosity coefficient
-        dimensionedScalar plasticViscosityCoeff_;
+        //- alphaMax coefficient
+        dimensionedScalar alphaMax_;
 
-        //- Plastic viscosity exponent
-        dimensionedScalar plasticViscosityExponent_;
-
-        //- Maximum viscosity
-        dimensionedScalar muMax_;
+        //- Drift velocity coefficient
+        dimensionedScalar Vc_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("plastic");
+    TypeName("MichaelsBolger");
 
 
     // Constructors
 
-        //- Construct from mixture
-        plastic(const incompressibleTwoPhaseInteractingMixture& mixture);
+        //- Construct from components
+        MichaelsBolger
+        (
+            const dictionary& dict,
+            const incompressibleTwoPhaseInteractingMixture& mixture,
+            const uniformDimensionedVectorField& g
+        );
 
 
     //- Destructor
-    virtual ~plastic()
-    {}
+    ~MichaelsBolger();
 
 
     // Member Functions
 
-        //- Return the mixture viscosity
-        //  given the viscosity of the continuous phase
-        virtual tmp<volScalarField> mu
-        (
-            const volScalarField& muc,
-            const volVectorField& U
-        ) const;
-
-        //- Read phaseProperties dictionary
-        virtual bool read();
+        //- Update the diffusion velocity
+        virtual void correct();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace mixtureViscosityModels
+} // End namespace relativeVelocityModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

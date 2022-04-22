@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,21 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "slurry.H"
+#include "MichaelsBolger.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace mixtureViscosityModels
+namespace relativeVelocityModels
 {
-    defineTypeNameAndDebug(slurry, 0);
-
+    defineTypeNameAndDebug(MichaelsBolger, 0);
     addToRunTimeSelectionTable
     (
-        mixtureViscosityModel,
-        slurry,
+        relativeVelocityModel,
+        MichaelsBolger,
         dictionary
     );
 }
@@ -46,36 +45,35 @@ namespace mixtureViscosityModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::mixtureViscosityModels::slurry::slurry
+Foam::relativeVelocityModels::MichaelsBolger::MichaelsBolger
 (
-    const incompressibleTwoPhaseInteractingMixture& mixture
+    const dictionary& dict,
+    const incompressibleTwoPhaseInteractingMixture& mixture,
+    const uniformDimensionedVectorField& g
 )
 :
-    mixtureViscosityModel(mixture)
+    relativeVelocityModel(dict, mixture, g),
+    a0_("a0", dimless, dict),
+    a1_("a1", dimless, dict),
+    alphaMax_("alphaMax", dimless, dict),
+    Vc_("Vc", dimTime, dict)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::relativeVelocityModels::MichaelsBolger::~MichaelsBolger()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::mixtureViscosityModels::slurry::mu
-(
-    const volScalarField& muc,
-    const volVectorField& U
-) const
+void Foam::relativeVelocityModels::MichaelsBolger::correct()
 {
-    const volScalarField& alphad = mixture_.alphad();
-
-    return
-    (
-        muc*(1.0 + 2.5*alphad + 10.05*sqr(alphad) + 0.00273*exp(16.6*alphad))
-    );
-}
-
-
-bool Foam::mixtureViscosityModels::slurry::read()
-{
-    return mixtureViscosityModel::read();
+    Udm_ =
+        (mixture_.rhoc()/mixture_.rho())*Vc_
+       *(a0_ + pow(max(1 - mixture_.alphad()/mixture().alphaMax(), 0.0), a1_))
+       *acceleration();
 }
 
 

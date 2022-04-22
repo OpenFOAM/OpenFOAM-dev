@@ -49,8 +49,7 @@ Foam::relativeVelocityModels::simple::simple
 :
     relativeVelocityModel(dict, mixture, g),
     a_("a", dimless, dict),
-    Vc_("Vc", dimTime, dict),
-    residualAlpha_("residualAlpha", dimless, dict)
+    Vc_("Vc", dimTime, dict)
 {}
 
 
@@ -65,8 +64,8 @@ Foam::relativeVelocityModels::simple::~simple()
 void Foam::relativeVelocityModels::simple::correct()
 {
     Udm_ =
-        (rhoc_/rho())*Vc_*acceleration()
-       *pow(scalar(10), -a_*max(alphad_, scalar(0)));
+        (mixture_.rhoc()/mixture_.rho())*Vc_*acceleration()
+       *pow(scalar(10), -a_*max(mixture_.alphad(), scalar(0)));
 }
 
 

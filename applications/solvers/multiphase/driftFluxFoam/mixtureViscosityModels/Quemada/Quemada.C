@@ -49,34 +49,16 @@ namespace mixtureViscosityModels
 
 Foam::mixtureViscosityModels::Quemada::Quemada
 (
-    const fvMesh& mesh,
-    const word& group
+    const incompressibleTwoPhaseInteractingMixture& mixture
 )
 :
-    mixtureViscosityModel(mesh, group),
-    alphaMax_
-    (
-        "alphaMax",
-        dimless,
-        optionalSubDict(typeName + "Coeffs").lookup("alphaMax")
-    ),
+    mixtureViscosityModel(mixture),
     q_(optionalSubDict(typeName + "Coeffs").lookupOrDefault("q", scalar(2))),
     muMax_
     (
         "muMax",
         dimDynamicViscosity,
         optionalSubDict(typeName + "Coeffs").lookup("muMax")
-    ),
-    alpha_
-    (
-        mesh.lookupObject<volScalarField>
-        (
-            IOobject::groupName
-            (
-                lookupOrDefault<word>("alpha", "alpha"),
-                group
-            )
-        )
     )
 {}
 
@@ -90,7 +72,11 @@ Foam::mixtureViscosityModels::Quemada::mu
     const volVectorField& U
 ) const
 {
-    return min(muc*pow(1.0 - alpha_/alphaMax_, -q_), muMax_);
+    return min
+    (
+        muc*pow(max(1 - mixture_.alphad()/mixture_.alphaMax(), 0.0), -q_),
+        muMax_
+    );
 }
 
 
@@ -100,8 +86,8 @@ bool Foam::mixtureViscosityModels::Quemada::read()
     {
         const dictionary& dict = optionalSubDict(typeName + "Coeffs");
 
-        dict.lookup("alphaMax") >> alphaMax_;
         dict.lookup("q") >> q_;
+        dict.lookup("muMax") >> muMax_;
 
         return true;
     }

@@ -74,8 +74,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        BinghamPlastic(const fvMesh& mesh, const word& group);
+        //- Construct from mixture
+        BinghamPlastic
+        (
+            const incompressibleTwoPhaseInteractingMixture& mixture
+        );
 
 
     //- Destructor

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ SourceFiles
 #ifndef mixtureViscosityModel_H
 #define mixtureViscosityModel_H
 
-#include "dictionary.H"
+#include "incompressibleTwoPhaseInteractingMixture.H"
 #include "viscosityModel.H"
 #include "runTimeSelectionTables.H"
 
@@ -60,6 +60,14 @@ class mixtureViscosityModel
     public viscosityModel
 {
 
+protected:
+
+    // Protected data
+
+        //- Mixture properties
+        const incompressibleTwoPhaseInteractingMixture& mixture_;
+
+
 public:
 
     //- Runtime type information
@@ -74,20 +82,22 @@ public:
             mixtureViscosityModel,
             dictionary,
             (
-                const fvMesh& mesh,
-                const word& group
+                const incompressibleTwoPhaseInteractingMixture& mixture
             ),
-            (mesh, group)
+            (mixture)
         );
 
 
     // Constructors
 
-        //- Construct from components
-        mixtureViscosityModel(const fvMesh& U, const word& group);
+        //- Construct from mixture
+        mixtureViscosityModel
+        (
+            const incompressibleTwoPhaseInteractingMixture& mixture
+        );
 
         //- Disallow default bitwise copy construction
-        mixtureViscosityModel(const mixtureViscosityModel&);
+        mixtureViscosityModel(const mixtureViscosityModel&) = delete;
 
 
     // Selectors
@@ -95,8 +105,7 @@ public:
         //- Return a reference to the selected viscosity model
         static autoPtr<mixtureViscosityModel> New
         (
-            const fvMesh& mesh,
-            const word& group
+            const incompressibleTwoPhaseInteractingMixture& mixture
         );
 
 

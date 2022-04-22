@@ -76,22 +76,18 @@ Foam::relativeVelocityModel::relativeVelocityModel
 )
 :
     mixture_(mixture),
-    alphac_(mixture.alpha2()),
-    alphad_(mixture.alpha1()),
-    rhoc_(mixture.rhoc()),
-    rhod_(mixture.rhod()),
     g_(g),
     Udm_
     (
         IOobject
         (
             "Udm",
-            alphac_.time().timeName(),
-            alphac_.mesh(),
+            mixture.U().time().timeName(),
+            mixture.U().mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        alphac_.mesh(),
+        mixture_.U().mesh(),
         dimensionedVector(dimVelocity, Zero),
         UdmPatchFieldTypes()
     )
@@ -145,12 +141,6 @@ Foam::relativeVelocityModel::~relativeVelocityModel()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::relativeVelocityModel::rho() const
-{
-    return alphac_*rhoc_ + alphad_*rhod_;
-}
-
-
 Foam::tmp<Foam::volVectorField>
 Foam::relativeVelocityModel::acceleration() const
 {
@@ -162,8 +152,8 @@ Foam::relativeVelocityModel::acceleration() const
 
 Foam::tmp<Foam::volSymmTensorField> Foam::relativeVelocityModel::tauDm() const
 {
-    const volScalarField betac(alphac_*rhoc_);
-    const volScalarField betad(alphad_*rhod_);
+    const volScalarField betac(mixture_.alphac()*mixture_.rhoc());
+    const volScalarField betad(mixture_.alphad()*mixture_.rhod());
 
     // Calculate the relative velocity of the continuous phase w.r.t the mean
     const volVectorField Ucm(betad*Udm_/betac);

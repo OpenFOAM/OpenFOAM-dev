@@ -62,26 +62,12 @@ protected:
         //- Mixture properties
         const incompressibleTwoPhaseInteractingMixture& mixture_;
 
-        //- Name of the continuous phase
-        const word continuousPhaseName_;
-
-        //- Continuous phase fraction
-        const volScalarField& alphac_;
-
-        //- Dispersed phase fraction
-        const volScalarField& alphad_;
-
-        //- Continuous density
-        const dimensionedScalar& rhoc_;
-
-        //- Dispersed density
-        const dimensionedScalar& rhod_;
-
         //- Acceleration due to gravity
         const uniformDimensionedVectorField& g_;
 
         //- Dispersed diffusion velocity
         mutable volVectorField Udm_;
+
 
 public:
 
@@ -137,9 +123,6 @@ public:
         {
             return mixture_;
         }
-
-        //- Return the mixture mean density
-        tmp<volScalarField> rho() const;
 
         //- Return the diffusion velocity of the dispersed phase
         const volVectorField& Udm() const

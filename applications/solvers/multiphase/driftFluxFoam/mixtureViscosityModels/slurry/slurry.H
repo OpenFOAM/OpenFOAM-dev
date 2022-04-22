@@ -66,11 +66,6 @@ class slurry
 :
     public mixtureViscosityModel
 {
-    // Private data
-
-        //- Slurry phase fraction
-        const volScalarField& alpha_;
-
 
 public:
 
@@ -80,8 +75,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        slurry(const fvMesh& mesh, const word& group);
+        //- Construct from mixture
+        slurry(const incompressibleTwoPhaseInteractingMixture& mixture);
 
 
     //- Destructor

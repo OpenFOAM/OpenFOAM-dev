@@ -39,7 +39,6 @@ SourceFiles
 
 #include "twoPhaseMixture.H"
 #include "viscosityModel.H"
-#include "mixtureViscosityModel.H"
 #include "uniformDimensionedFields.H"
 #include "IOMRFZoneList.H"
 
@@ -48,6 +47,7 @@ SourceFiles
 namespace Foam
 {
 
+class mixtureViscosityModel;
 class relativeVelocityModel;
 
 /*---------------------------------------------------------------------------*\
@@ -61,6 +61,8 @@ class incompressibleTwoPhaseInteractingMixture
 {
     // Private data
 
+        volVectorField& U_;
+
         autoPtr<mixtureViscosityModel> muModel_;
         autoPtr<viscosityModel> nucModel_;
 
@@ -72,8 +74,6 @@ class incompressibleTwoPhaseInteractingMixture
 
         //- Optional maximum dispersed phase-fraction (e.g. packing limit)
         scalar alphaMax_;
-
-        volVectorField& U_;
 
         //- Acceleration due to gravity
         const uniformDimensionedVectorField& g_;
@@ -108,6 +108,12 @@ public:
 
 
     // Member Functions
+
+        //- Return const-access to the continuous phase-fraction
+        const volScalarField& alphac() const;
+
+        //- Return const-access to the dispersed phase-fraction
+        const volScalarField& alphad() const;
 
         //- Return const-access to the mixture viscosityModel
         const mixtureViscosityModel& muModel() const;

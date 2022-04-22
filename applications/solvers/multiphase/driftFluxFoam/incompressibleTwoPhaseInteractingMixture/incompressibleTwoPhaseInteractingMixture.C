@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleTwoPhaseInteractingMixture.H"
+#include "mixtureViscosityModel.H"
 #include "relativeVelocityModel.H"
 #include "fvcDiv.H"
 #include "addToRunTimeSelectionTable.H"
@@ -48,7 +49,9 @@ incompressibleTwoPhaseInteractingMixture
 :
     twoPhaseMixture(U.mesh()),
 
-    muModel_(mixtureViscosityModel::New(U.mesh(), phase1Name())),
+    U_(U),
+
+    muModel_(mixtureViscosityModel::New(*this)),
     nucModel_(viscosityModel::New(U.mesh(), phase2Name())),
 
     rhod_("rho", dimDensity, muModel_()),
@@ -59,9 +62,7 @@ incompressibleTwoPhaseInteractingMixture
         dimLength,
         muModel_->lookupOrDefault("d", 0.0)
     ),
-    alphaMax_(muModel_->lookupOrDefault("alphaMax", 1.0)),
-
-    U_(U),
+    alphaMax_(lookupOrDefault("alphaMax", 1.0)),
 
     g_(g),
 
@@ -94,6 +95,20 @@ Foam::incompressibleTwoPhaseInteractingMixture::
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+const Foam::volScalarField&
+Foam::incompressibleTwoPhaseInteractingMixture::alphad() const
+{
+    return alpha1();
+}
+
+
+const Foam::volScalarField&
+Foam::incompressibleTwoPhaseInteractingMixture::alphac() const
+{
+    return alpha2();
+}
+
 
 const Foam::mixtureViscosityModel&
 Foam::incompressibleTwoPhaseInteractingMixture::muModel() const

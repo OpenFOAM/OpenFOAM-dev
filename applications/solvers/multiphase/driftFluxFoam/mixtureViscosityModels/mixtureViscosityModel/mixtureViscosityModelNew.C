@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,15 +31,18 @@ License
 
 Foam::autoPtr<Foam::mixtureViscosityModel> Foam::mixtureViscosityModel::New
 (
-    const fvMesh& mesh,
-    const word& group
+    const incompressibleTwoPhaseInteractingMixture& mixture
 )
 {
     const word modelType
     (
         IOdictionary
         (
-            viscosityModel::findModelDict(mesh, group)
+            viscosityModel::findModelDict
+            (
+                mixture.U().mesh(),
+                mixture.phase1Name()
+            )
         ).lookup("viscosityModel")
     );
 
@@ -58,7 +61,7 @@ Foam::autoPtr<Foam::mixtureViscosityModel> Foam::mixtureViscosityModel::New
             << exit(FatalError);
     }
 
-    return autoPtr<mixtureViscosityModel>(cstrIter()(mesh, group));
+    return autoPtr<mixtureViscosityModel>(cstrIter()(mixture));
 }
 
 
