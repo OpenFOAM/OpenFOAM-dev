@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -540,7 +540,6 @@ Foam::triSurface::triSurface()
 {}
 
 
-
 Foam::triSurface::triSurface
 (
     const List<labelledTri>& triangles,
@@ -574,7 +573,7 @@ Foam::triSurface::triSurface
 (
     List<labelledTri>&& triangles,
     const geometricSurfacePatchList& patches,
-    List<point>&& points
+    pointField&& points
 )
 :
     ParentType(move(triangles), move(points)),
@@ -740,7 +739,7 @@ void Foam::triSurface::movePoints(const pointField& newPoints)
     deleteDemandDrivenData(sortedEdgeFacesPtr_);
 
     // Adapt for new point position
-    ParentType::movePoints(newPoints);
+    ParentType::clearGeom();
 
     // Copy new points
     storedPoints() = newPoints;
@@ -756,7 +755,7 @@ void Foam::triSurface::scalePoints(const scalar scaleFactor)
         clearTopology();
 
         // Adapt for new point position
-        ParentType::movePoints(pointField());
+        ParentType::clearGeom();
 
         storedPoints() *= scaleFactor;
     }

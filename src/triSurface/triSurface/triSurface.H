@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -280,7 +280,7 @@ public:
         (
             List<labelledTri>&&,
             const geometricSurfacePatchList&,
-            List<point>&&
+            pointField&&
         );
 
         //- Construct from triangles, points. Set patchnames to default.
@@ -307,7 +307,7 @@ public:
 
 
     //- Destructor
-    ~triSurface();
+    virtual ~triSurface();
 
         void clearOut();
 

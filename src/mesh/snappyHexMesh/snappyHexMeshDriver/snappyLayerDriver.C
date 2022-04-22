@@ -3224,7 +3224,7 @@ void Foam::snappyLayerDriver::addLayers
                     checkFaces
                 );
 
-                pp().movePoints(mesh.points());
+                pp().clearGeom();
 
                 // Update patchDisp (since not all might have been honoured)
                 patchDisp = oldPatchPos - pp().localPoints();
@@ -3489,7 +3489,7 @@ void Foam::snappyLayerDriver::addLayers
 
             // Reset mesh points and start again
             mesh.movePoints(oldPoints);
-            pp().movePoints(mesh.points());
+            pp().clearGeom();
 
             // Grow out region of non-extrusion
             for (label i = 0; i < layerParams.nGrow(); i++)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -461,7 +461,7 @@ template<class Face>
 void Foam::MeshedSurface<Face>::movePoints(const pointField& newPoints)
 {
     // Adapt for new point position
-    ParentType::movePoints(newPoints);
+    ParentType::clearGeom();
 
     // Copy new points
     storedPoints() = newPoints;
@@ -477,7 +477,7 @@ void Foam::MeshedSurface<Face>::scalePoints(const scalar scaleFactor)
         pointField newPoints(scaleFactor*this->points());
 
         // Adapt for new point position
-        ParentType::movePoints(newPoints);
+        ParentType::clearGeom();
 
         storedPoints() = newPoints;
     }

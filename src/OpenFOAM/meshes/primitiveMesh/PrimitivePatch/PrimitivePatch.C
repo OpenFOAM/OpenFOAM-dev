@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "PrimitivePatch.H"
 #include "Map.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -62,36 +63,6 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
 (
     FaceList&& faces,
     Field<PointType>&& points
-)
-:
-    FaceList(move(faces)),
-    points_(move(points)),
-    edgesPtr_(nullptr),
-    nInternalEdges_(-1),
-    boundaryPointsPtr_(nullptr),
-    faceFacesPtr_(nullptr),
-    edgeFacesPtr_(nullptr),
-    faceEdgesPtr_(nullptr),
-    pointEdgesPtr_(nullptr),
-    pointFacesPtr_(nullptr),
-    localFacesPtr_(nullptr),
-    meshPointsPtr_(nullptr),
-    meshPointMapPtr_(nullptr),
-    edgeLoopsPtr_(nullptr),
-    localPointsPtr_(nullptr),
-    localPointOrderPtr_(nullptr),
-    faceCentresPtr_(nullptr),
-    faceAreasPtr_(nullptr),
-    faceNormalsPtr_(nullptr),
-    pointNormalsPtr_(nullptr)
-{}
-
-
-template<class FaceList, class PointField>
-Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
-(
-    FaceList&& faces,
-    List<PointType>&& points
 )
 :
     FaceList(move(faces)),
@@ -208,36 +179,6 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
 {}
 
 
-template<class FaceList, class PointField>
-Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
-(
-    Istream& is,
-    const Field<PointType>& points
-)
-:
-    FaceList(is),
-    points_(points),
-    edgesPtr_(nullptr),
-    nInternalEdges_(-1),
-    boundaryPointsPtr_(nullptr),
-    faceFacesPtr_(nullptr),
-    edgeFacesPtr_(nullptr),
-    faceEdgesPtr_(nullptr),
-    pointEdgesPtr_(nullptr),
-    pointFacesPtr_(nullptr),
-    localFacesPtr_(nullptr),
-    meshPointsPtr_(nullptr),
-    meshPointMapPtr_(nullptr),
-    edgeLoopsPtr_(nullptr),
-    localPointsPtr_(nullptr),
-    localPointOrderPtr_(nullptr),
-    faceCentresPtr_(nullptr),
-    faceAreasPtr_(nullptr),
-    faceNormalsPtr_(nullptr),
-    pointNormalsPtr_(nullptr)
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class FaceList, class PointField>
@@ -248,24 +189,6 @@ Foam::PrimitivePatch<FaceList, PointField>::~PrimitivePatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class FaceList, class PointField>
-void Foam::PrimitivePatch<FaceList, PointField>::movePoints
-(
-    const Field<PointType>&
-)
-{
-    if (debug)
-    {
-        Pout<< "PrimitivePatch<FaceList, PointField>::"
-            << "movePoints() : "
-            << "recalculating PrimitivePatch geometry following mesh motion"
-            << endl;
-    }
-
-    clearGeom();
-}
-
 
 template<class FaceList, class PointField>
 const Foam::edgeList& Foam::PrimitivePatch<FaceList, PointField>::edges() const

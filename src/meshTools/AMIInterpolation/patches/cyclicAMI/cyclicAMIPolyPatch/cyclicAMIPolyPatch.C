@@ -175,9 +175,6 @@ void Foam::cyclicAMIPolyPatch::initMovePoints
     AMITransforms_.clear();
 
     polyPatch::initMovePoints(pBufs, p);
-
-    // See below. Clear out any local geometry
-    primitivePatch::movePoints(p);
 }
 
 

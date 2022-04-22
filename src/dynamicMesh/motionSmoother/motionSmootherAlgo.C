@@ -698,7 +698,7 @@ void Foam::motionSmootherAlgo::movePoints()
     // Make sure to clear out tetPtIs since used in checks (sometimes, should
     // really check)
     mesh_.clearTetBasePtIs();
-    pp_.movePoints(mesh_.points());
+    pp_.clearGeom();
 }
 
 

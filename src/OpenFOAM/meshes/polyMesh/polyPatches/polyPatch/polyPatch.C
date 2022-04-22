@@ -54,9 +54,15 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+void Foam::polyPatch::movePoints(const pointField& p)
+{
+    primitivePatch::clearGeom();
+}
+
+
 void Foam::polyPatch::movePoints(PstreamBuffers&, const pointField& p)
 {
-    primitivePatch::movePoints(p);
+    primitivePatch::clearGeom();
 }
 
 

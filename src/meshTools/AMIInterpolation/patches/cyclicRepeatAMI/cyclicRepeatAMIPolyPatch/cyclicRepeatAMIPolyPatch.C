@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,7 +206,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
 
     // Do the three bounding AMI interpolations
     thisPoints = TLeft.transformPosition(localPoints());
-    thisPatch.movePoints(thisPoints);
+    thisPatch.clearGeom();
     autoPtr<AMIInterpolation> AMILeftPtr
     (
         new AMIInterpolation
@@ -226,7 +226,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
        /gSum(AMILeftPtr->srcMagSf());
 
     thisPoints = T.transformPosition(localPoints());
-    thisPatch.movePoints(thisPoints);
+    thisPatch.clearGeom();
     autoPtr<AMIInterpolation> AMIPtr
     (
         new AMIInterpolation
@@ -246,7 +246,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
        /gSum(AMIPtr->srcMagSf());
 
     thisPoints = TRight.transformPosition(localPoints());
-    thisPatch.movePoints(thisPoints);
+    thisPatch.clearGeom();
     autoPtr<AMIInterpolation> AMIRightPtr
     (
         new AMIInterpolation

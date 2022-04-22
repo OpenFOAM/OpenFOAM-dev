@@ -522,7 +522,7 @@ void Foam::faceZone::movePoints(const pointField& p)
 {
     if (patchPtr_)
     {
-        patchPtr_->movePoints(p);
+        patchPtr_->clearGeom();
     }
 }
 

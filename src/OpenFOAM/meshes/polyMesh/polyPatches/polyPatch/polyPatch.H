@@ -91,9 +91,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Inherit movePoints from primitivePatch
-        using primitivePatch::movePoints;
-
         // The polyPatch geometry initialisation is called by polyBoundaryMesh
         friend class polyBoundaryMesh;
 
@@ -104,6 +101,9 @@ protected:
         //- Calculate the patch geometry
         virtual void calcGeometry(PstreamBuffers&)
         {}
+
+        //- Correct patches after moving points
+        virtual void movePoints(const pointField& p);
 
         //- Initialise the patches for moving points
         virtual void initMovePoints(PstreamBuffers&, const pointField&)
@@ -221,9 +221,6 @@ public:
 
         //- Copy constructor
         polyPatch(const polyPatch&);
-
-        // To avoid irritating warnings from clang
-        using primitivePatch::clone;
 
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const

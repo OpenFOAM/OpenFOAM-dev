@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2172,7 +2172,7 @@ void Foam::medialAxisMeshMover::movePoints(const pointField& p)
     externalDisplacementMeshMover::movePoints(p);
 
     // Update local data for new geometry
-    adaptPatchPtr_().movePoints(p);
+    adaptPatchPtr_().clearGeom();
 
     // Update motionSmoother for new geometry
     meshMover_.movePoints();

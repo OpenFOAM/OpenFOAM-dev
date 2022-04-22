@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -256,13 +256,6 @@ public:
             Field<PointType>&& points
         );
 
-        //- Move constructor from components
-        PrimitivePatch
-        (
-            FaceList&& faces,
-            List<PointType>&& points
-        );
-
         //- Construct from components, reuse storage
         PrimitivePatch
         (
@@ -284,7 +277,7 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<PrimitivePatch<FaceList, PointField>> clone() const
+        autoPtr<PrimitivePatch<FaceList, PointField>> clone() const
         {
             return autoPtr<PrimitivePatch<FaceList, PointField>>
             (
@@ -292,39 +285,9 @@ public:
             );
         }
 
-        //- Construct from Istream
-        PrimitivePatch
-        (
-            Istream&,
-            const Field<PointType>& points
-        );
-
-        class iNew
-        {
-            const Field<PointType>& points_;
-
-        public:
-
-            iNew(const Field<PointType>& points)
-            :
-                points_(points)
-            {}
-
-            autoPtr<PrimitivePatch<FaceList, PointField>> operator()
-            (
-                Istream& is
-            ) const
-            {
-                return autoPtr<PrimitivePatch<FaceList, PointField>>
-                (
-                    new PrimitivePatch<FaceList, PointField>(is, points_)
-                );
-            }
-        };
-
 
     //- Destructor
-    virtual ~PrimitivePatch();
+    ~PrimitivePatch();
 
 
     // Member Functions
@@ -514,9 +477,6 @@ public:
             void clearTopology();
 
             void clearPatchMeshAddr();
-
-            //- Correct patch after moving points
-            virtual void movePoints(const Field<PointType>&);
 
 
     // Member Operators
