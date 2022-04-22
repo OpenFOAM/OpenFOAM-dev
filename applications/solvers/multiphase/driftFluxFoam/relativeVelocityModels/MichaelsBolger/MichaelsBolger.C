@@ -55,7 +55,6 @@ Foam::relativeVelocityModels::MichaelsBolger::MichaelsBolger
     relativeVelocityModel(dict, mixture, g),
     a0_("a0", dimless, dict),
     a1_("a1", dimless, dict),
-    alphaMax_("alphaMax", dimless, dict),
     Vc_("Vc", dimTime, dict)
 {}
 

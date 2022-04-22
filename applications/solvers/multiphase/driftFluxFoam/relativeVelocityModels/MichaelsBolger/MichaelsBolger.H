@@ -44,9 +44,6 @@ Usage
         {
             a0          0;    // Extended Michaels & Bolger coefficient,
             a1          4.65; // Exponent
-
-            alphaMax    0.6;  // Maximum dispersed phase-fraction
-                              // (packing fraction)
         }
     \endverbatim
 
@@ -82,9 +79,6 @@ class MichaelsBolger
 
         //- Exponent, defaults to 4.65
         dimensionedScalar a1_;
-
-        //- alphaMax coefficient
-        dimensionedScalar alphaMax_;
 
         //- Drift velocity coefficient
         dimensionedScalar Vc_;
