@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::cellCoBlended
 
 Description
-    Two-scheme cell-based Courant number based blending differencing scheme.
+    Two-scheme cell-based Courant number based blending interpolation scheme.
 
     This scheme is equivalent to the CoBlended scheme except that the Courant
     number is evaluated for cells using the same approach as use in the

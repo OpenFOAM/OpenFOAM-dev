@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,8 @@ Class
     Foam::localMin
 
 Description
-    LocalMin-mean differencing scheme class.
-
-    This scheme interpolates 1/field using a scheme specified at run-time
-    and return the reciprocal of the interpolate.
+    Local minimum interpolation scheme in which the face value is set to
+    the minimum of the two neighbouring cell values.
 
 SourceFiles
     localMin.C

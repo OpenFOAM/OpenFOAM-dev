@@ -25,11 +25,11 @@ Class
     Foam::outletStabilised
 
 Description
-    Outlet-stabilised interpolation scheme which applies upwind differencing
+    Outlet-stabilised interpolation scheme which applies upwind interpolation
     to the faces of the cells adjacent to outlets.
 
     This is particularly useful to stabilise the velocity at entrainment
-    boundaries for LES cases using linear or other centred differencing
+    boundaries for LES cases using linear or other centred interpolation
     schemes.
 
 SourceFiles

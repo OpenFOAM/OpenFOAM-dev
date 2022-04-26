@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Class with limiter function which returns the limiter for the
-    OSPRE differencing scheme based on r obtained from the LimiterFunc
+    OSPRE interpolation scheme based on r obtained from the LimiterFunc
     class.
 
     Used in conjunction with the template class LimitedScheme.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::CoBlended
 
 Description
-    Two-scheme Courant number based blending differencing scheme.
+    Two-scheme Courant number based blending interpolation scheme.
 
     Similar to localBlended but uses a blending factor computed from the
     face-based Courant number and the lower and upper Courant number limits

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -218,7 +218,7 @@ void Foam::surfaceInterpolation::makeDeltaCoeffs() const
     if (debug)
     {
         Pout<< "surfaceInterpolation::makeDeltaCoeffs() : "
-            << "Constructing differencing factors array for face gradient"
+            << "Constructing interpolation factors array for face gradient"
             << endl;
     }
 
@@ -268,7 +268,7 @@ void Foam::surfaceInterpolation::makeNonOrthDeltaCoeffs() const
     if (debug)
     {
         Pout<< "surfaceInterpolation::makeNonOrthDeltaCoeffs() : "
-            << "Constructing differencing factors array for face gradient"
+            << "Constructing interpolation factors array for face gradient"
             << endl;
     }
 

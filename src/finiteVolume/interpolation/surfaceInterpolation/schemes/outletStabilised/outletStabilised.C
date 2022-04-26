@@ -67,7 +67,7 @@ Foam::outletStabilised<Type>::weights
 
                     if (mesh_.isInternalFace(facei))
                     {
-                        // Apply upwind differencing
+                        // Apply upwind interpolation
                         w[facei] = pos0(faceFlux_[facei]);
                     }
                 }

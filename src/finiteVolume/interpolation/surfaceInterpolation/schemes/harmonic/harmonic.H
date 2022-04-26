@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::harmonic
 
 Description
-    Harmonic-mean differencing scheme class.
+    Harmonic-mean interpolation scheme class.
 
     This scheme interpolates 1/field using a scheme specified at run-time
     and return the reciprocal of the interpolate.
