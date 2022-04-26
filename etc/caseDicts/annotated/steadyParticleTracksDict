@@ -9,12 +9,14 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      particleTrackDict;
+    object      steadyParticleTracksDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-cloudName       reactingCloud1Tracks;
+// Name of the cloud for which to create tracks
+cloudName       cloud;
 
-fields ( d U T );
+// Fields to write out with the tracks
+fields          (d U T);
 
 // ************************************************************************* //

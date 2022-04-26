@@ -16,12 +16,7 @@ FoamFile
 
 cloudName       cloudTracks;
 
-fields
-(
-    d
-    U
-    T
-);
+fields          (d U T);
 
 
 // ************************************************************************* //

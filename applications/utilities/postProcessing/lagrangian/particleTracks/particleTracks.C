@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,6 +71,8 @@ int main(int argc, char *argv[])
         runTime.setTime(timeDirs[timeI], timeI);
         Info<< "Time = " << runTime.userTimeName() << endl;
 
+        mesh.readUpdate();
+
         Info<< "    Reading particle positions" << endl;
         passiveParticleCloud myCloud(mesh, cloudName);
 
@@ -134,6 +136,8 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(timeDirs[timeI], timeI);
         Info<< "Time = " << runTime.userTimeName() << endl;
+
+        mesh.readUpdate();
 
         List<pointField> allPositions(Pstream::nProcs());
         List<labelField> allOrigIds(Pstream::nProcs());
