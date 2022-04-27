@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,8 @@ Description
             Cmu             0.09;
             C1              1.44;
             C2              1.92;
-            C3              -0.33;
+            C3              0;
+            C4              1.92;
             sigmak          1.0;
             sigmaEps        1.3;
             Cp              0.25;
@@ -96,7 +97,7 @@ protected:
 
             dimensionedScalar alphaInversion_;
             dimensionedScalar Cp_;
-            dimensionedScalar C3_;
+            dimensionedScalar C4_;
             dimensionedScalar Cmub_;
 
 

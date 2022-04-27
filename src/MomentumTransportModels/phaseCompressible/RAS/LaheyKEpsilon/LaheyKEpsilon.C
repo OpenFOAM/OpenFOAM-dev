@@ -83,11 +83,11 @@ LaheyKEpsilon<BasicMomentumTransportModel>::LaheyKEpsilon
         )
     ),
 
-    C3_
+    C4_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C3",
+            "C4",
             this->coeffDict_,
             this->C2_.value()
         )
@@ -264,7 +264,7 @@ LaheyKEpsilon<BasicMomentumTransportModel>::epsilonSource() const
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 
     return
-        alpha*rho*this->C3_*this->epsilon_*bubbleG()/this->k_
+        alpha*rho*this->C4_*this->epsilon_*bubbleG()/this->k_
       + phaseTransferCoeff*gasTurbulence.epsilon()
       - fvm::Sp(phaseTransferCoeff, this->epsilon_);
 }

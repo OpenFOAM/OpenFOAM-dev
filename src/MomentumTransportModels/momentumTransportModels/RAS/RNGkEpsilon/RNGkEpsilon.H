@@ -49,7 +49,7 @@ Description
             Cmu         0.0845;
             C1          1.42;
             C2          1.68;
-            C3          -0.33;
+            C3          0;
             sigmak      0.71942;
             sigmaEps    0.71942;
             eta0        4.38;

@@ -696,7 +696,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     (
         fvm::ddt(epsilonm)
       + fvm::div(phim, epsilonm)
-      - fvm::Sp(fvc::div(phim), epsilonm)
+      + fvm::SuSp(-fvc::div(phim), epsilonm)
       - fvm::laplacian(DepsilonEff(nutm), epsilonm)
      ==
         C1_*Gm*epsilonm/km
@@ -718,7 +718,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     (
         fvm::ddt(km)
       + fvm::div(phim, km)
-      - fvm::Sp(fvc::div(phim), km)
+      + fvm::SuSp(-fvc::div(phim), km)
       - fvm::laplacian(DkEff(nutm), km)
      ==
         Gm
