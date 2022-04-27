@@ -15,37 +15,32 @@ FoamFile
 
 convertToMeters 1;
 
-//- Half angle of wedge in degrees
-halfAngle 45.0;
+//- Half angle of wedge in degrees [deg]
+halfAngle 45;
 
 //- Radius of pipe [m]
 radius 0.5;
 
-
-radHalfAngle    #calc "degToRad($halfAngle)";
-y               #calc "$radius*sin($radHalfAngle)";
-minY            #calc "-1.0*$y";
-z               #calc "$radius*cos($radHalfAngle)";
-minZ            #calc "-1.0*$z";
+//- Derived quantities
+radHalfAngle #calc "degToRad($halfAngle)";
+y #calc "$radius*sin($radHalfAngle)";
+z #calc "$radius*cos($radHalfAngle)";
 
 vertices
 (
-    (0.0    0.0 0)      //0
-    (10     0.0 0)
-    (10     0.0 0)      //2
-    (0.0    0.0 0)
-
-    (0.0    $minY $z)   //4
-    (10     $minY $z)
-    (10     $y $z)      //6
-    (0.0    $y $z)
-
+    (0 0 0)
+    (10 0 0)
+    (10 0 0)
+    (0 0 0)
+    (0 #neg $y $z)
+    (10 #neg $y $z)
+    (10 $y $z)
+    (0 $y $z)
 );
 
 blocks
 (
-    // inlet block
-    hex (0 1 2 3  4 5 6 7) (50 5 5) simpleGrading (1 1 1)
+    hex (0 1 2 3 4 5 6 7) (50 5 5) simpleGrading (1 1 1)
 );
 
 edges
@@ -76,30 +71,22 @@ boundary
 
     side1
     {
-        type cyclicAMI;
+        type cyclic;
         neighbourPatch side2;
         faces
         (
             (0 1 5 4)
         );
-
-        transformType rotational;
-        rotationAxis (1 0 0);
-        rotationCentre (0 0 0);
     }
 
     side2
     {
-        type cyclicAMI;
+        type cyclic;
         neighbourPatch side1;
         faces
         (
             (7 6 2 3)
         );
-
-        transformType rotational;
-        rotationAxis (1 0 0);
-        rotationCentre (0 0 0);
     }
 
     walls

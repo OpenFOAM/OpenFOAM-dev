@@ -30,9 +30,6 @@ divSchemes
     div(phi,U)      bounded Gauss limitedLinearV 1;
     div(phi,k)      bounded Gauss limitedLinear 1;
     div(phi,epsilon) bounded Gauss limitedLinear 1;
-    div(phi,R)      bounded Gauss limitedLinear 1;
-    div(R)          Gauss linear;
-    div(phi,nuTilda) bounded Gauss limitedLinear 1;
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 

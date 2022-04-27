@@ -20,27 +20,19 @@ internalField   uniform 1;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         type            turbulentIntensityKineticEnergyInlet;
         intensity       0.05;
-        value           uniform 1;
+        value           $internalField;
     }
     outlet
     {
         type            inletOutlet;
-        inletValue      uniform 1;
-        value           uniform 1;
-    }
-    side1
-    {
-        type            cyclicAMI;
-        value           uniform 1;
-    }
-    side2
-    {
-        type            cyclicAMI;
-        value           uniform 1;
+        inletValue      $internalField;
+        value           $internalField;
     }
     walls
     {

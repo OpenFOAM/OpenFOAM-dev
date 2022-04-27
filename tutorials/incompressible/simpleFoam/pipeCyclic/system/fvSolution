@@ -20,7 +20,6 @@ solvers
     {
         solver          GAMG;
         smoother        GaussSeidel;
-
         tolerance       1e-06;
         relTol          0.05;
     }
@@ -28,7 +27,6 @@ solvers
     pFinal
     {
         $p;
-        tolerance       1e-06;
         relTol          0;
     }
 
@@ -43,23 +41,14 @@ solvers
     "(U|k|epsilon)Final"
     {
         $U;
-        tolerance       1e-05;
         relTol          0;
     }
-}
-
-PIMPLE
-{
-    nOuterCorrectors 4;
-    nCorrectors     1;
-    nNonOrthogonalCorrectors 0;
-    pRefCell        0;
-    pRefValue       0;
 }
 
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
+
     residualControl
     {
         p               1e-2;
