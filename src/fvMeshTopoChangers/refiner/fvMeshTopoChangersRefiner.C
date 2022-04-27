@@ -1695,39 +1695,46 @@ void Foam::fvMeshTopoChangers::refiner::distribute
 
 bool Foam::fvMeshTopoChangers::refiner::write(const bool write) const
 {
-    // Force refinement data to go to the current time directory.
-    const_cast<hexRef8&>(meshCutter_).setInstance(mesh().time().timeName());
-
-    bool writeOk = meshCutter_.write(write);
-
-    if (dumpLevel_)
+    if (mesh().topoChanging())
     {
-        volScalarField scalarCellLevel
-        (
-            IOobject
-            (
-                "cellLevel",
-                mesh().time().timeName(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE,
-                false
-            ),
-            mesh(),
-            dimensionedScalar(dimless, 0)
-        );
+        // Force refinement data to go to the current time directory.
+        const_cast<hexRef8&>(meshCutter_).setInstance(mesh().time().timeName());
 
-        const labelList& cellLevel = meshCutter_.cellLevel();
+        bool writeOk = meshCutter_.write(write);
 
-        forAll(cellLevel, celli)
+        if (dumpLevel_)
         {
-            scalarCellLevel[celli] = cellLevel[celli];
+            volScalarField scalarCellLevel
+            (
+                IOobject
+                (
+                    "cellLevel",
+                    mesh().time().timeName(),
+                    mesh(),
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE,
+                    false
+                ),
+                mesh(),
+                dimensionedScalar(dimless, 0)
+            );
+
+            const labelList& cellLevel = meshCutter_.cellLevel();
+
+            forAll(cellLevel, celli)
+            {
+                scalarCellLevel[celli] = cellLevel[celli];
+            }
+
+            writeOk = writeOk && scalarCellLevel.write();
         }
 
-        writeOk = writeOk && scalarCellLevel.write();
+        return writeOk;
     }
-
-    return writeOk;
+    else
+    {
+        return true;
+    }
 }
 
 
