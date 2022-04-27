@@ -20,24 +20,17 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         type            zeroGradient;
     }
     outlet
     {
-        type            fixedValue;
-        value           uniform 0;
-    }
-    side1
-    {
-        type            cyclicAMI;
-        value           uniform 0;
-    }
-    side2
-    {
-        type            cyclicAMI;
-        value           uniform 0;
+        type            totalPressure;
+        p0              uniform 0;
+        value           $internalField;
     }
     walls
     {

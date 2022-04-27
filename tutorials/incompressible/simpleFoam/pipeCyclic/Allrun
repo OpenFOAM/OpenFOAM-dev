@@ -9,7 +9,7 @@ application=$(getApplication)
 
 runApplication blockMesh
 runApplication topoSet
-runApplication refineHexMesh c0 -overwrite
+runApplication refineHexMesh c0 -noFields -overwrite
 
 runApplication decomposePar -cellDist
 runParallel $application

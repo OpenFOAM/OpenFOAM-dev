@@ -20,30 +20,22 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         type            calculated;
-        value           uniform 0;
+        value           $internalField;
     }
     outlet
     {
         type            calculated;
-        value           uniform 0;
-    }
-    side1
-    {
-        type            cyclicAMI;
-        value           uniform 0;
-    }
-    side2
-    {
-        type            cyclicAMI;
-        value           uniform 0;
+        value           $internalField;
     }
     walls
     {
         type            nutkWallFunction;
-        value           uniform 0;
+        value           $internalField;
     }
 }
 
