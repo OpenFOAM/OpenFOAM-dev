@@ -119,7 +119,7 @@ bool LaheyKEpsilon<BasicMomentumTransportModel>::read()
     {
         alphaInversion_.readIfPresent(this->coeffDict());
         Cp_.readIfPresent(this->coeffDict());
-        C3_.readIfPresent(this->coeffDict());
+        C4_.readIfPresent(this->coeffDict());
         Cmub_.readIfPresent(this->coeffDict());
 
         return true;
