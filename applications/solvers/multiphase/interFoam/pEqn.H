@@ -1,5 +1,5 @@
 {
-    if (correctPhi)
+    if (rAU.valid())
     {
         rAU.ref() = 1.0/UEqn.A();
     }
