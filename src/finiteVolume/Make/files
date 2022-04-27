@@ -311,6 +311,7 @@ $(schemes)/cubic/cubic.C
 $(schemes)/skewCorrected/skewCorrectionVectors.C
 $(schemes)/skewCorrected/skewCorrected.C
 $(schemes)/outletStabilised/outletStabilised.C
+$(schemes)/phaseStabilised/phaseStabilised.C
 $(schemes)/reverseLinear/reverseLinear.C
 $(schemes)/clippedLinear/clippedLinear.C
 $(schemes)/harmonic/harmonic.C
@@ -420,6 +421,7 @@ $(snGradSchemes)/uncorrectedSnGrad/uncorrectedSnGrads.C
 $(snGradSchemes)/orthogonalSnGrad/orthogonalSnGrads.C
 $(snGradSchemes)/quadraticFitSnGrad/quadraticFitSnGrads.C
 $(snGradSchemes)/linearFitSnGrad/linearFitSnGrads.C
+$(snGradSchemes)/phaseStabilisedSnGrad/phaseStabilisedSnGrads.C
 
 convectionSchemes = finiteVolume/convectionSchemes
 $(convectionSchemes)/convectionScheme/convectionSchemes.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "limitedSnGrad.H"
+#include "phaseStabilisedSnGrad.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "localMin.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,43 +41,31 @@ namespace fv
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-limitedSnGrad<Type>::limitedSnGrad(const fvMesh& mesh)
+phaseStabilisedSnGrad<Type>::phaseStabilisedSnGrad
+(
+    const fvMesh& mesh,
+    Istream& schemeData
+)
 :
     snGradScheme<Type>(mesh),
-    correctedScheme_(new correctedSnGrad<Type>(this->mesh())),
-    limitCoeff_(1)
+    correctedScheme_
+    (
+        fv::snGradScheme<Type>::New(this->mesh(), schemeData)
+    )
 {}
-
-
-template<class Type>
-limitedSnGrad<Type>::limitedSnGrad(const fvMesh& mesh, Istream& schemeData)
-:
-    snGradScheme<Type>(mesh),
-    correctedScheme_(lookupCorrectedScheme(schemeData))
-{
-    if (limitCoeff_ < 0 || limitCoeff_ > 1)
-    {
-        FatalIOErrorInFunction
-        (
-            schemeData
-        )   << "limitCoeff is specified as " << limitCoeff_
-            << " but should be >= 0 && <= 1"
-            << exit(FatalIOError);
-    }
-}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-limitedSnGrad<Type>::~limitedSnGrad()
+phaseStabilisedSnGrad<Type>::~phaseStabilisedSnGrad()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<surfaceScalarField> limitedSnGrad<Type>::deltaCoeffs
+tmp<surfaceScalarField> phaseStabilisedSnGrad<Type>::deltaCoeffs
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
@@ -87,7 +76,7 @@ tmp<surfaceScalarField> limitedSnGrad<Type>::deltaCoeffs
 
 template<class Type>
 tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
-limitedSnGrad<Type>::correction
+phaseStabilisedSnGrad<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
@@ -97,18 +86,17 @@ limitedSnGrad<Type>::correction
         correctedScheme_().correction(vf)
     );
 
+    const volScalarField& alpha
+    (
+        vf.db().template lookupObject<volScalarField>
+        (
+            IOobject::groupName("alpha", vf.group())
+        )
+    );
+
     const surfaceScalarField limiter
     (
-        min
-        (
-            limitCoeff_
-           *mag(snGradScheme<Type>::snGrad(vf, deltaCoeffs(vf), "SndGrad"))
-           /(
-                (1 - limitCoeff_)*mag(corr)
-              + dimensionedScalar(corr.dimensions(), small)
-            ),
-            dimensionedScalar(dimless, 1.0)
-        )
+        pos(localMin<scalar>(vf.mesh()).interpolate(alpha) - 1e-3)
     );
 
     if (fv::debug)
