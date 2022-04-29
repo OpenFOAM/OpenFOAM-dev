@@ -97,15 +97,20 @@ void Foam::diameterModels::driftModels::phaseChange::precompute()
 
     forAll(interfaces_, k)
     {
-        forAll(popBal_.velocityGroups(), j)
+        forAllConstIter
+        (
+            HashTable<const velocityGroup*>,
+            popBal_.velocityGroupPtrs(),
+            iter
+        )
         {
-            const velocityGroup& vgj = popBal_.velocityGroups()[j];
+            const velocityGroup& velGrp = *iter();
 
-            if (interfaces_[k].contains(vgj.phase()))
+            if (interfaces_[k].contains(velGrp.phase()))
             {
-                forAll(vgj.sizeGroups(), i)
+                forAll(velGrp.sizeGroups(), i)
                 {
-                    const sizeGroup& fi = vgj.sizeGroups()[i];
+                    const sizeGroup& fi = velGrp.sizeGroups()[i];
 
                     if (numberWeighted_)
                     {
@@ -128,11 +133,11 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
     const label i
 )
 {
-    const velocityGroup& vg = popBal_.sizeGroups()[i].VelocityGroup();
+    const velocityGroup& velGrp = popBal_.sizeGroups()[i].VelocityGroup();
 
     forAll(interfaces_, k)
     {
-        if (interfaces_[k].contains(vg.phase()))
+        if (interfaces_[k].contains(velGrp.phase()))
         {
             const volScalarField& dmidtf =
                 popBal_.mesh().lookupObject<volScalarField>
@@ -149,7 +154,7 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
                 );
 
             const scalar dmidtfSign =
-                interfaces_[k].index(vg.phase()) == 0 ? +1 : -1;
+                interfaces_[k].index(velGrp.phase()) == 0 ? +1 : -1;
 
             const sizeGroup& fi = popBal_.sizeGroups()[i];
 
@@ -163,7 +168,7 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
                 dDriftRate.ref() *= fi.a();
             }
 
-            driftRate += dDriftRate;
+            driftRate += velGrp.phase()*dDriftRate;
         }
     }
 }

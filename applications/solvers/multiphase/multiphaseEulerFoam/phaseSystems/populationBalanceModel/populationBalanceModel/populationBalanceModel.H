@@ -257,10 +257,10 @@ private:
         //- Continuous phase
         const phaseModel& continuousPhase_;
 
-        //- velocityGroups belonging to this populationBalance
-        UPtrList<velocityGroup> velocityGroups_;
+        //- Velocity groups belonging to this populationBalance
+        HashTable<const velocityGroup*> velocityGroupPtrs_;
 
-        //- sizeGroups belonging to this populationBalance
+        //- Size groups belonging to this populationBalance
         UPtrList<sizeGroup> sizeGroups_;
 
         //- sizeGroup boundaries
@@ -274,6 +274,9 @@ private:
 
         //- Implicitly treated sources
         PtrList<volScalarField> Sp_;
+
+        //- Dilatation errors
+        HashTable<volScalarField> dilatationErrors_;
 
         //- Field for caching sources
         volScalarField Sui_;
@@ -357,7 +360,7 @@ private:
 
         void sources();
 
-        void dmdt();
+        void correctDilatationError();
 
         void calcAlphas();
 
@@ -454,14 +457,17 @@ public:
         //- Return continuous phase
         inline const phaseModel& continuousPhase() const;
 
-        //- Return the velocityGroups belonging to this populationBalance
-        inline const UPtrList<velocityGroup>& velocityGroups() const;
+        //- Return the velocity groups belonging to this populationBalance
+        inline const HashTable<const velocityGroup*>& velocityGroupPtrs() const;
 
-        //- Return the sizeGroups belonging to this populationBalance
+        //- Return the size groups belonging to this populationBalance
         inline const UPtrList<sizeGroup>& sizeGroups() const;
 
         //- Return implicit source terms
         inline const volScalarField& Sp(const label i) const;
+
+        //- Return dilatation obtained from source terms
+        inline const HashTable<volScalarField>& sourceDilatation() const;
 
         //- Return coalescence relevant size group pairs
         inline const List<labelPair>& coalescencePairs() const;

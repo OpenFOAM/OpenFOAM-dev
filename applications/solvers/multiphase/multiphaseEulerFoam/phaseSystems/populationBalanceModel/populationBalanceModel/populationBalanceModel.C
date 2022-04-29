@@ -31,9 +31,12 @@ License
 #include "driftModel.H"
 #include "nucleationModel.H"
 #include "surfaceTensionModel.H"
-#include "fvm.H"
+#include "fvmDdt.H"
+#include "fvmDiv.H"
+#include "fvmSup.H"
 #include "fvcDdt.H"
 #include "fvcDiv.H"
+#include "fvcSup.H"
 #include "shapeModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -60,12 +63,26 @@ void Foam::diameterModels::populationBalanceModel::registerVelocityGroups()
 
             if (velGroup.popBalName() == this->name())
             {
-                velocityGroups_.resize(velocityGroups_.size() + 1);
+                velocityGroupPtrs_.insert(velGroup.phase().name(), &velGroup);
 
-                velocityGroups_.set
+                dilatationErrors_.insert
                 (
-                    velocityGroups_.size() - 1,
-                    &const_cast<velocityGroup&>(velGroup)
+                    velGroup.phase().name(),
+                    volScalarField
+                    (
+                        IOobject
+                        (
+                            IOobject::groupName
+                            (
+                                "dilatationError",
+                                velGroup.phase().name()
+                            ),
+                            fluid_.time().timeName(),
+                            mesh_
+                        ),
+                        mesh_,
+                        dimensionedScalar(inv(dimTime), 0)
+                    )
                 );
 
                 forAll(velGroup.sizeGroups(), i)
@@ -446,22 +463,21 @@ void Foam::diameterModels::populationBalanceModel::drift
         const sizeGroup& fe = sizeGroups()[i+1];
         volScalarField& Sue = Sui_;
 
-        Sp_[i] += 1/(fe.x() - fp.x())*pos(driftRate_())*driftRate_()*fp.phase();
+        Sp_[i] += 1/(fe.x() - fp.x())*pos(driftRate_())*driftRate_();
 
         Sue =
-            fe.x()/(fp.x()*(fe.x() - fp.x()))
-           *pos(driftRate_())*driftRate_()*fp*fp.phase();
+            fe.x()/(fp.x()*(fe.x() - fp.x()))*pos(driftRate_())*driftRate_()*fp;
 
         Su_[i+1] += Sue;
 
-        const phaseInterface interfaceij(fp.phase(), fe.phase());
+        const phaseInterface interfacepe(fp.phase(), fe.phase());
 
-        if (pDmdt_.found(interfaceij))
+        if (pDmdt_.found(interfacepe))
         {
             const scalar dmdtSign =
-                interfaceij.index(fp.phase()) == 0 ? +1 : -1;
+                interfacepe.index(fp.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[interfaceij] -= dmdtSign*Sue*fp.phase().rho();
+            *pDmdt_[interfacepe] -= dmdtSign*Sue*fp.phase().rho();
         }
 
         sizeGroups_[i+1].shapeModelPtr()->addDrift(Sue, fp, model);
@@ -469,7 +485,7 @@ void Foam::diameterModels::populationBalanceModel::drift
 
     if (i == sizeGroups().size() - 1)
     {
-        Sp_[i] -= pos(driftRate_())*driftRate_()*fp.phase()/fp.x();
+        Sp_[i] -= pos(driftRate_())*driftRate_()/fp.x();
     }
 
     if (i > 0)
@@ -477,22 +493,21 @@ void Foam::diameterModels::populationBalanceModel::drift
         const sizeGroup& fw = sizeGroups()[i-1];
         volScalarField& Suw = Sui_;
 
-        Sp_[i] += 1/(fw.x() - fp.x())*neg(driftRate_())*driftRate_()*fp.phase();
+        Sp_[i] += 1/(fw.x() - fp.x())*neg(driftRate_())*driftRate_();
 
         Suw =
-            fw.x()/(fp.x()*(fw.x() - fp.x()))
-           *neg(driftRate_())*driftRate_()*fp*fp.phase();
+            fw.x()/(fp.x()*(fw.x() - fp.x()))*neg(driftRate_())*driftRate_()*fp;
 
         Su_[i-1] += Suw;
 
-        const phaseInterface interfaceih(fp.phase(), fw.phase());
+        const phaseInterface interfacepw(fp.phase(), fw.phase());
 
-        if (pDmdt_.found(interfaceih))
+        if (pDmdt_.found(interfacepw))
         {
             const scalar dmdtSign =
-                interfaceih.index(fp.phase()) == 0 ? +1 : -1;
+                interfacepw.index(fp.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[interfaceih] -= dmdtSign*Suw*fp.phase().rho();
+            *pDmdt_[interfacepw] -= dmdtSign*Suw*fp.phase().rho();
         }
 
         sizeGroups_[i-1].shapeModelPtr()->addDrift(Suw, fp, model);
@@ -500,7 +515,7 @@ void Foam::diameterModels::populationBalanceModel::drift
 
     if (i == 0)
     {
-        Sp_[i] -= neg(driftRate_())*driftRate_()*fp.phase()/fp.x();
+        Sp_[i] -= neg(driftRate_())*driftRate_()/fp.x();
     }
 }
 
@@ -609,13 +624,43 @@ void Foam::diameterModels::populationBalanceModel::sources()
 }
 
 
+void Foam::diameterModels::populationBalanceModel::correctDilatationError()
+{
+    forAllIter
+    (
+        HashTable<volScalarField>,
+        dilatationErrors_,
+        iter
+    )
+    {
+        volScalarField& dilatationError = iter();
+        const word& phaseName = iter.key();
+        const phaseModel& phase = fluid_.phases()[phaseName];
+        const velocityGroup& velGroup = *velocityGroupPtrs_[phaseName];
+        const volScalarField& alpha = phase;
+        const volScalarField& rho = phase.thermo().rho();
+
+        dilatationError =
+            fvc::ddt(alpha) + fvc::div(phase.alphaPhi())
+          - (fluid_.fvModels().source(alpha, rho) & rho)/rho;
+
+        forAll(velGroup.sizeGroups(), i)
+        {
+            const sizeGroup& fi = velGroup.sizeGroups()[i];
+
+            dilatationError -= Su_[fi.i()] - fvc::Sp(Sp_[fi.i()], fi);
+        }
+    }
+}
+
+
 void Foam::diameterModels::populationBalanceModel::calcAlphas()
 {
     alphas_() = Zero;
 
-    forAll(velocityGroups_, v)
+    forAllConstIter(HashTable<const velocityGroup*>, velocityGroupPtrs_, iter)
     {
-        const phaseModel& phase = velocityGroups_[v].phase();
+        const phaseModel& phase = iter()->phase();
 
         alphas_() += max(phase, phase.residualAlpha());
     }
@@ -637,9 +682,9 @@ Foam::diameterModels::populationBalanceModel::calcDsm()
 
     volScalarField& invDsm = tInvDsm.ref();
 
-    forAll(velocityGroups_, v)
+    forAllConstIter(HashTable<const velocityGroup*>, velocityGroupPtrs_, iter)
     {
-        const phaseModel& phase = velocityGroups_[v].phase();
+        const phaseModel& phase = iter()->phase();
 
         invDsm += max(phase, phase.residualAlpha())/(phase.d()*alphas_());
     }
@@ -652,9 +697,9 @@ void Foam::diameterModels::populationBalanceModel::calcVelocity()
 {
     U_() = Zero;
 
-    forAll(velocityGroups_, v)
+    forAllConstIter(HashTable<const velocityGroup*>, velocityGroupPtrs_, iter)
     {
-        const phaseModel& phase = velocityGroups_[v].phase();
+        const phaseModel& phase = iter()->phase();
 
         U_() += max(phase, phase.residualAlpha())*phase.U()/alphas_();
     }
@@ -704,7 +749,6 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
             IOobject::groupName("alpha", dict_.lookup("continuousPhase"))
         )
     ),
-    velocityGroups_(),
     sizeGroups_(),
     v_(),
     delta_(),
@@ -890,7 +934,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         );
     }
 
-    if (velocityGroups_.size() > 1)
+    if (velocityGroupPtrs_.size() > 1)
     {
         alphas_.set
         (
@@ -1060,6 +1104,8 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 sources();
             }
 
+            correctDilatationError();
+
             maxInitialResidual = 0;
 
             forAll(sizeGroups(), i)
@@ -1068,15 +1114,18 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 const phaseModel& phase = fi.phase();
                 const volScalarField& alpha = phase;
                 const volScalarField& rho = phase.thermo().rho();
+                const volScalarField& dilatationError =
+                    dilatationErrors_[phase.name()];
 
                 fvScalarMatrix sizeGroupEqn
                 (
-                    fvm::ddt(alpha, fi) + fvm::div(phase.alphaPhi(), fi)
+                    fvm::ddt(alpha, fi)
+                  + fvm::div(phase.alphaPhi(), fi)
+                  - fvm::Sp(dilatationError, fi)
                 ==
-                    Su_[i]
+                    fvc::Su(Su_[i], fi)
                   - fvm::Sp(Sp_[i], fi)
                   + fluid_.fvModels().source(alpha, rho, fi)/rho
-
                   - correction
                     (
                         fvm::Sp
@@ -1121,7 +1170,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
 
 void Foam::diameterModels::populationBalanceModel::correct()
 {
-    if (velocityGroups_.size() > 1)
+    if (velocityGroupPtrs_.size() > 1)
     {
         calcAlphas();
         dsm_() = calcDsm();

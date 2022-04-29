@@ -26,9 +26,9 @@ License
 #include "fractal.H"
 #include "addToRunTimeSelectionTable.H"
 #include "sinteringModel.H"
-#include "fvm.H"
-#include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fvmDdt.H"
+#include "fvmDiv.H"
+#include "fvmSup.H"
 #include "mixedFvPatchField.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -122,7 +122,7 @@ Foam::diameterModels::shapeModels::fractal::fractal
 
         if
         (
-            isA<mixedFvPatchScalarField>(kappa_.boundaryFieldRef()[patchi])
+            isA<const mixedFvPatchScalarField>(kappa_.boundaryField()[patchi])
         )
         {
             mixedFvPatchScalarField& kappa =
@@ -205,12 +205,12 @@ void Foam::diameterModels::shapeModels::fractal::correct()
 
     fvScalarMatrix kappaEqn
     (
-        fvm::ddt(alpha, fi, kappa_) + fvm::div(fAlphaPhi, kappa_)
+        fvm::ddt(alpha, fi, kappa_)
+      + fvm::div(fAlphaPhi, kappa_)
       ==
       - sinteringModel_->R()
       + Su_
-      - fvm::Sp(popBal.Sp(fi.i()())*fi, kappa_)
-
+      - fvm::Sp(popBal.Sp(fi.i())*fi, kappa_)
       - correction
         (
             fvm::Sp

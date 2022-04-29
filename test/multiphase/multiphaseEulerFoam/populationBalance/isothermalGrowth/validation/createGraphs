@@ -12,7 +12,6 @@ gnuplot<<EOF
 
     set xlabel 'd (mm)'
     set ylabel 'y (m)'
-    set yrange [0.05:]
     set key bottom center
 
     latestTime = system("foamListTimes -case .. -latestTime")

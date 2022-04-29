@@ -75,7 +75,7 @@ Foam::diameterModels::sizeGroup::sizeGroup
 
         if
         (
-            isA<mixedFvPatchScalarField>(this->boundaryFieldRef()[patchi])
+            isA<const mixedFvPatchScalarField>(this->boundaryField()[patchi])
         )
         {
             mixedFvPatchScalarField& f =
@@ -108,7 +108,7 @@ Foam::diameterModels::sizeGroup::clone() const
 }
 
 
-const Foam::autoPtr<Foam::label>& Foam::diameterModels::sizeGroup::i() const
+const Foam::label& Foam::diameterModels::sizeGroup::i() const
 {
     if (!i_.valid())
     {
@@ -127,7 +127,7 @@ const Foam::autoPtr<Foam::label>& Foam::diameterModels::sizeGroup::i() const
         }
     }
 
-    return i_;
+    return i_();
 }
 
 

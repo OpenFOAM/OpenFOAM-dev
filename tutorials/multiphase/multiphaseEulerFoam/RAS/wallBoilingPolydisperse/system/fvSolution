@@ -28,7 +28,7 @@ solvers
         tolerance               1e-4;
         scale                   true;
         solveOnFinalIterOnly    true;
-        sourceUpdateInterval    1;
+        sourceUpdateInterval    20;
     }
 
     p_rgh

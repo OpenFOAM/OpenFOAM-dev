@@ -192,8 +192,8 @@ public:
         //- Return const-reference to diameterModel of the phase
         inline const autoPtr<shapeModel>& shapeModelPtr() const;
 
-        //- Return label of the sizeGroup within the population balance
-        const autoPtr<label>& i() const;
+        //- Return index of the size group within the population balance
+        const label& i() const;
 
         //- Return representative surface area of the sizeGroup
         const tmp<volScalarField> a() const;

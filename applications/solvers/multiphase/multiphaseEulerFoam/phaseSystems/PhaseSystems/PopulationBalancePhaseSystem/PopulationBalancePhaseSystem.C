@@ -46,20 +46,23 @@ PopulationBalancePhaseSystem
         const diameterModels::populationBalanceModel& popBal =
             populationBalances_[popBali];
 
-        forAll(popBal.velocityGroups(), velGrp1i)
+        forAllConstIter
+        (
+            HashTable<const diameterModels::velocityGroup*>,
+            popBal.velocityGroupPtrs(),
+            iter1
+        )
         {
-            const diameterModels::velocityGroup& velGrp1 =
-                popBal.velocityGroups()[velGrp1i];
+            const diameterModels::velocityGroup& velGrp1 = *iter1();
 
-            for
+            forAllConstIter
             (
-                label velGrp2i = velGrp1i + 1;
-                velGrp2i < popBal.velocityGroups().size();
-                ++ velGrp2i
+                HashTable<const diameterModels::velocityGroup*>,
+                popBal.velocityGroupPtrs(),
+                iter2
             )
             {
-                const diameterModels::velocityGroup& velGrp2 =
-                    popBal.velocityGroups()[velGrp2i];
+                const diameterModels::velocityGroup& velGrp2 = *iter2();
 
                 const phaseInterface interface
                 (
@@ -67,28 +70,36 @@ PopulationBalancePhaseSystem
                     velGrp2.phase()
                 );
 
-                this->template validateMassTransfer
-                    <diameterModels::populationBalanceModel>(interface);
-
-                dmdtfs_.insert
+                if
                 (
-                    interface,
-                    new volScalarField
+                    &velGrp1 != &velGrp2
+                    &&
+                    !dmdtfs_.found(interface)
+                )
+                {
+                    this->template validateMassTransfer
+                        <diameterModels::populationBalanceModel>(interface);
+
+                    dmdtfs_.insert
                     (
-                        IOobject
+                        interface,
+                        new volScalarField
                         (
-                            IOobject::groupName
+                            IOobject
                             (
-                                "populationBalance:dmdtf",
-                                interface.name()
+                                IOobject::groupName
+                                (
+                                    "populationBalance:dmdtf",
+                                    interface.name()
+                                ),
+                                this->mesh().time().timeName(),
+                                this->mesh()
                             ),
-                            this->mesh().time().timeName(),
-                            this->mesh()
-                        ),
-                        this->mesh(),
-                        dimensionedScalar(dimDensity/dimTime, 0)
-                    )
-                );
+                            this->mesh(),
+                            dimensionedScalar(dimDensity/dimTime, 0)
+                        )
+                    );
+                }
             }
         }
     }

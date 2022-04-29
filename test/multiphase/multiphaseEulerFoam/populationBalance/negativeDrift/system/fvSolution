@@ -60,7 +60,7 @@ PIMPLE
     pRefCell        0;
     pRefValue       1e5;
 
-    flow            no;
+    flow            yes;
     thermophysics   yes;
     models          yes;
 }

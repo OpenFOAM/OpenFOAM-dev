@@ -70,11 +70,11 @@ void Foam::diameterModels::driftModels::densityChangeDrift::addToDriftRate
     const volScalarField& rho = phase.thermo().rho();
 
     driftRate -=
-        fi.x()/(rho*max(alpha, phase.residualAlpha()))
+        fi.x()
        *(
             fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
           - fvc::Sp(fvc::ddt(alpha) + fvc::div(phase.alphaPhi()), rho)
-        );
+        )/rho;
 }
 
 

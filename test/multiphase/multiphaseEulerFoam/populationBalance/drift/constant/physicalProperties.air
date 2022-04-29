@@ -20,7 +20,7 @@ thermoType
     mixture         pureMixture;
     transport       const;
     thermo          hConst;
-    equationOfState rhoConst;
+    equationOfState perfectGas;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -30,10 +30,6 @@ mixture
     specie
     {
         molWeight   28.9;
-    }
-    equationOfState
-    {
-        rho         1;
     }
     thermodynamics
     {
