@@ -39,13 +39,14 @@ surfaceScalarField phiHbyA
   + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, phi, rhoUf))
 );
 
-fvc::makeRelative(phiHbyA, rho, U);
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
-
-bool adjustMass = false;
 
 // Update the pressure BCs to ensure flux consistency
 constrainPressure(p, rho, U, phiHbyA, rhorAAtUf, MRF);
+
+fvc::makeRelative(phiHbyA, rho, U);
+
+bool adjustMass = false;
 
 if (pimple.transonic())
 {

@@ -4,26 +4,27 @@ volScalarField rAU(1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 
+surfaceScalarField phiHbyA
+(
+    "phiHbyA",
+    fvc::interpolate(rho)*fvc::flux(HbyA)
+  + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, phi, rhoUf))
+);
+
+MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
+
+// Update the pressure BCs to ensure flux consistency
+constrainPressure(p, rho, U, phiHbyA, rhorAUf, MRF);
+
+fvc::makeRelative(phiHbyA, rho, U);
+
 if (pimple.transonic())
 {
-    surfaceScalarField phid
+    const surfaceScalarField phid
     (
         "phid",
-        fvc::interpolate(psi)
-       *(
-            (
-                fvc::flux(HbyA)
-              + MRF.zeroFilter
-                (
-                    rhorAUf*fvc::ddtCorr(rho, U, phi, rhoUf)
-                   /fvc::interpolate(rho)
-                )
-            )
-        )
+        (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
     );
-
-    fvc::makeRelative(phid, psi, U);
-    MRF.makeRelative(fvc::interpolate(psi), phid);
 
     while (pimple.correctNonOrthogonal())
     {
@@ -46,19 +47,6 @@ if (pimple.transonic())
 }
 else
 {
-    surfaceScalarField phiHbyA
-    (
-        "phiHbyA",
-        fvc::interpolate(rho)*fvc::flux(HbyA)
-      + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, phi, rhoUf))
-    );
-
-    fvc::makeRelative(phiHbyA, rho, U);
-    MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
-
-    // Update the pressure BCs to ensure flux consistency
-    constrainPressure(p, rho, U, phiHbyA, rhorAUf, MRF);
-
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
