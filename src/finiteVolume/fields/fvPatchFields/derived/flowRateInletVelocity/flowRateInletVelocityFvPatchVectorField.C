@@ -208,10 +208,10 @@ flowRateInletVelocityFvPatchVectorField
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),
     rhoInlet_(ptf.rhoInlet_),
-    alphaName_(ptf.alphaName_)
-{
-    setWallDist();
-}
+    alphaName_(ptf.alphaName_),
+    y_(mapper(ptf.y_)),
+    area_(ptf.area_)
+{}
 
 
 Foam::flowRateInletVelocityFvPatchVectorField::
