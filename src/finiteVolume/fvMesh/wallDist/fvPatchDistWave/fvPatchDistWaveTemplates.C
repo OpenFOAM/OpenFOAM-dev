@@ -119,6 +119,10 @@ Foam::label Foam::fvPatchDistWave::wave
     );
     List<WallInfo> cellInfo(mesh.nCells());
 
+    // Prevent hangs associated with generation of on-demand geometry
+    mesh.C();
+    mesh.Cf();
+
     // Do the wave
     FvFaceCellWave<WallInfo, TrackingData> wave
     (
