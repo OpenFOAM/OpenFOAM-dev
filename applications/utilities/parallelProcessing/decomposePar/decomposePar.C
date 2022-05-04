@@ -1069,7 +1069,7 @@ int main(int argc, char *argv[])
                     decomposeUniform
                     (
                         copyUniform,
-                        mesh,
+                        decomposition,
                         decomposition.procMeshes()[proci].time(),
                         regionDir
                     );
@@ -1082,7 +1082,7 @@ int main(int argc, char *argv[])
                         decomposeUniform
                         (
                             copyUniform,
-                            mesh,
+                            decomposition,
                             decomposition.procMeshes()[proci].time()
                         );
                     }
