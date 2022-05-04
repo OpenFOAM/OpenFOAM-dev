@@ -182,7 +182,7 @@ if (mesh.schemes().steady() || pimple.simpleRho() || adjustMass)
 }
 
 // Correct rhoUf if the mesh is moving
-fvc::correctRhoUf(rhoUf, rho, U, phi);
+fvc::correctRhoUf(rhoUf, rho, U, phi, MRF);
 
 if (mesh.schemes().steady() || pimple.simpleRho())
 {

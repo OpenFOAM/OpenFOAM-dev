@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,6 +99,53 @@ public:
 
         //- Disallow default bitwise assignment
         void operator=(const IOMRFZoneList&) = delete;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                           Class NullMRF Declaration
+\*---------------------------------------------------------------------------*/
+
+class NullMRF
+{
+public:
+
+    // Constructors
+
+        //- Construct null
+        NullMRF()
+        {}
+
+
+    // Member Functions
+
+        //- Return the argument unchanged
+        template<class Type>
+        inline const Type& relative(const Type& U) const
+        {
+            return U;
+        }
+
+        //- Return the argument unchanged
+        template<class Type>
+        inline const Type& relative(const Type& U, const label patchi) const
+        {
+            return U;
+        }
+
+        //- Return the argument unchanged
+        template<class Type>
+        inline const Type& absolute(const Type& U) const
+        {
+            return U;
+        }
+
+        //- Return the argument unchanged
+        template<class Type>
+        inline const Type& absolute(const Type& U, const label patchi) const
+        {
+            return U;
+        }
 };
 
 

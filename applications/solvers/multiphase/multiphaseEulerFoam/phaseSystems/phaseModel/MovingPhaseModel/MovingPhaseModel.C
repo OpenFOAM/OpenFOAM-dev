@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -295,7 +295,12 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correctUf()
     {
         Uf_.ref() = fvc::interpolate(U_);
         surfaceVectorField n(mesh.Sf()/mesh.magSf());
-        Uf_.ref() += n*(fvc::absolute(phi_, U_)/mesh.magSf() - (n & Uf_()));
+        Uf_.ref() +=
+          n*(
+                this->fluid().MRF().absolute(fvc::absolute(phi_, U_))
+               /mesh.magSf()
+              - (n & Uf_())
+            );
 
         surfaceVectorField::Boundary& UfBf = Uf_.ref().boundaryFieldRef();
         const volVectorField::Boundary& UBf = U_.boundaryField();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,7 @@ SourceFiles
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
 #include "dimensionedTypes.H"
+#include "IOMRFZoneList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -157,6 +158,25 @@ namespace fvc
         const volVectorField& U
     );
 
+    template<class MRFType>
+    void correctUf
+    (
+        autoPtr<surfaceVectorField>& Uf,
+        const volVectorField& U,
+        const surfaceScalarField& phi,
+        const MRFType& MRF
+    );
+
+    template<class MRFType>
+    void correctRhoUf
+    (
+        autoPtr<surfaceVectorField>& rhoUf,
+        const volScalarField& rho,
+        const volVectorField& U,
+        const surfaceScalarField& phi,
+        const MRFType& MRF
+    );
+
     void correctUf
     (
         autoPtr<surfaceVectorField>& Uf,
@@ -177,6 +197,12 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "fvcMeshPhiTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

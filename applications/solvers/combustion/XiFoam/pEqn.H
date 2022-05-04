@@ -76,7 +76,7 @@ fvConstraints.constrain(U);
 K = 0.5*magSqr(U);
 
 // Correct rhoUf if the mesh is moving
-fvc::correctRhoUf(rhoUf, rho, U, phi);
+fvc::correctRhoUf(rhoUf, rho, U, phi, MRF);
 
 if (thermo.dpdt())
 {
