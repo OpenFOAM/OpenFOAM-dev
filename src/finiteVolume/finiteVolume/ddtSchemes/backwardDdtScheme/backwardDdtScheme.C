@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -896,6 +896,30 @@ tmp<surfaceScalarField> backwardDdtScheme<Type>::meshPhi
     (
         mesh().phi().name(),
         coefftn_0*mesh().phi() - coefft0_00*mesh().phi().oldTime()
+    );
+}
+
+
+template<class Type>
+tmp<scalarField> backwardDdtScheme<Type>::meshPhi
+(
+    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const label patchi
+)
+{
+    const scalar deltaT = deltaT_();
+    const scalar deltaT0 = deltaT0_(vf);
+
+    // Coefficient for t-3/2 (between times 0 and 00)
+    const scalar coefft0_00 = deltaT/(deltaT + deltaT0);
+
+    // Coefficient for t-1/2 (between times n and 0)
+    const scalar coefftn_0 = 1 + coefft0_00;
+
+    return
+    (
+        coefftn_0*mesh().phi().boundaryField()[patchi]
+      - coefft0_00*mesh().phi().oldTime().boundaryField()[patchi]
     );
 }
 

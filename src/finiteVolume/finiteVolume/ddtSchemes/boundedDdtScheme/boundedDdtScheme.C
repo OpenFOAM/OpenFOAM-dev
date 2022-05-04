@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,6 +207,17 @@ tmp<surfaceScalarField> boundedDdtScheme<Type>::meshPhi
 )
 {
     return scheme_.ref().meshPhi(vf);
+}
+
+
+template<class Type>
+tmp<scalarField> boundedDdtScheme<Type>::meshPhi
+(
+    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const label patchi
+)
+{
+    return scheme_.ref().meshPhi(vf, patchi);
 }
 
 

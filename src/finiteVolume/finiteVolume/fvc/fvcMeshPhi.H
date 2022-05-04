@@ -57,6 +57,12 @@ namespace fvc
         const volVectorField& U
     );
 
+    tmp<scalarField> meshPhi
+    (
+        const volVectorField& U,
+        const label patchi
+    );
+
     tmp<surfaceScalarField> meshPhi
     (
         const dimensionedScalar& rho,

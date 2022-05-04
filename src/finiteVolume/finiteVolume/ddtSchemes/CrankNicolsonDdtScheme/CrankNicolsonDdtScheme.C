@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1507,6 +1507,36 @@ tmp<surfaceScalarField> CrankNicolsonDdtScheme<Type>::meshPhi
     (
         mesh().phi().name(),
         coef_(meshPhi0)*mesh().phi() - offCentre_(meshPhi0())
+    );
+}
+
+
+template<class Type>
+tmp<scalarField> CrankNicolsonDdtScheme<Type>::meshPhi
+(
+    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const label patchi
+)
+{
+    DDt0Field<surfaceScalarField>& meshPhi0 = ddt0_<surfaceScalarField>
+    (
+        "meshPhiCN_0",
+        dimVolume
+    );
+
+    if (evaluate(meshPhi0))
+    {
+        meshPhi0 =
+            coef0_(meshPhi0)*mesh().phi().oldTime() - offCentre_(meshPhi0());
+    }
+
+    return
+    (
+        coef_(meshPhi0)*mesh().phi().boundaryField()[patchi]
+      - offCentre_
+        (
+            static_cast<const scalarField&>(meshPhi0().boundaryField()[patchi])
+        )
     );
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -325,6 +325,20 @@ tmp<surfaceScalarField> steadyStateDdtScheme<Type>::meshPhi
         "meshPhi",
         mesh(),
         dimensionedScalar(dimVolume/dimTime, 0)
+    );
+}
+
+
+template<class Type>
+tmp<scalarField> steadyStateDdtScheme<Type>::meshPhi
+(
+    const GeometricField<Type, fvPatchField, volMesh>&,
+    const label patchi
+)
+{
+    return tmp<scalarField>
+    (
+        new scalarField(mesh().boundary()[patchi].size(), 0)
     );
 }
 

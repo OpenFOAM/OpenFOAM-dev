@@ -43,6 +43,20 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::meshPhi
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::fvc::meshPhi
+(
+    const volVectorField& vf,
+    const label patchi
+)
+{
+    return fv::ddtScheme<vector>::New
+    (
+        vf.mesh(),
+        vf.mesh().schemes().ddt("ddt(" + vf.name() + ')')
+    ).ref().meshPhi(vf, patchi);
+}
+
+
 Foam::tmp<Foam::surfaceScalarField> Foam::fvc::meshPhi
 (
     const dimensionedScalar& rho,
