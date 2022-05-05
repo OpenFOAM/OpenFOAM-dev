@@ -88,7 +88,7 @@ class wallDist
         mutable bool nRequired_;
 
         //- Normal-to-wall field
-        mutable tmp<volVectorField> n_;
+        mutable autoPtr<volVectorField> n_;
 
 
     // Private Member Functions

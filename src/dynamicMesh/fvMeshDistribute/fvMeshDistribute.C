@@ -585,8 +585,8 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
 
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
-    // Update fields. No inflation, parallel sync.
-    mapFields(map);
+    // Update fields
+    mesh_.mapFields(map);
 
     // Map patch fields using stored boundary fields. Note: assumes order
     // of fields has not changed in object registry!
@@ -595,13 +595,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
     mapBoundaryFields<sphericalTensor, surfaceMesh>(map, sptFlds);
     mapBoundaryFields<symmTensor, surfaceMesh>(map, sytFlds);
     mapBoundaryFields<tensor, surfaceMesh>(map, tFlds);
-
-
-    // Move mesh (since morphing does not do this)
-    if (map().hasMotionPoints())
-    {
-        mesh_.movePoints(map().preMotionPoints());
-    }
 
     // Adapt constructMaps.
 
@@ -777,8 +770,8 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::mergeSharedPoints
     // Change the mesh (no inflation). Note: parallel comms allowed.
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
 
-    // Update fields. No inflation, parallel sync.
-    mapFields(map);
+    // Update fields
+    mesh_.mapFields(map);
 
     // Adapt constructMaps for merged points.
     forAll(constructPointMap, proci)
@@ -1284,7 +1277,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, false);
 
     // Update fields
-    mapFields(map);
+    mesh_.mapFields(map);
 
     // Any exposed faces in a surfaceField will not be mapped. Map the value
     // of these separately (until there is support in all PatchFields for
@@ -1296,23 +1289,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
     mapExposedFaces(map(), sytFlds);
     mapExposedFaces(map(), tFlds);
 
-    // Move mesh (since morphing does not do this)
-    if (map().hasMotionPoints())
-    {
-        mesh_.movePoints(map().preMotionPoints());
-    }
-
     return map;
-}
-
-
-void Foam::fvMeshDistribute::mapFields(const polyTopoChangeMap& map)
-{
-    meshObject::topoChange<polyMesh>(mesh_, map);
-    meshObject::topoChange<pointMesh>(mesh_, map);
-    mesh_.mapFields(map);
-    meshObject::topoChange<fvMesh>(mesh_, map);
-    meshObject::topoChange<lduMesh>(mesh_, map);
 }
 
 

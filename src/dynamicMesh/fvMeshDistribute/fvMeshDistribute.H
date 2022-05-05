@@ -175,9 +175,6 @@ class fvMeshDistribute
                 labelListList& constructPointMap
             );
 
-            //- Map the fields
-            void mapFields(const polyTopoChangeMap& map);
-
 
         // Coupling information
 

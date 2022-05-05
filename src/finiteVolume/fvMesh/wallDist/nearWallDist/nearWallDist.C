@@ -39,6 +39,8 @@ namespace Foam
 
 void Foam::nearWallDist::resize()
 {
+    y_.setSize(mesh().boundary().size());
+
     forAll(y_, patchi)
     {
         y_.set
@@ -105,17 +107,13 @@ Foam::nearWallDist::~nearWallDist()
 bool Foam::nearWallDist::movePoints()
 {
     correct();
-
     return true;
 }
 
 
 void Foam::nearWallDist::topoChange(const polyTopoChangeMap& map)
 {
-    y_.setSize(mesh().boundary().size());
-
     resize();
-
     correct();
 }
 
@@ -123,13 +121,13 @@ void Foam::nearWallDist::topoChange(const polyTopoChangeMap& map)
 void Foam::nearWallDist::mapMesh(const polyMeshMap& map)
 {
     resize();
-
     correct();
 }
 
 
 void Foam::nearWallDist::distribute(const polyDistributionMap& map)
 {
+    resize();
     correct();
 }
 

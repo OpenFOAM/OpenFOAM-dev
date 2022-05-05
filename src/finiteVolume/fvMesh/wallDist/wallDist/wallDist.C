@@ -38,9 +38,14 @@ namespace Foam
 
 void Foam::wallDist::constructn() const
 {
-    n_ = volVectorField::New
+    n_ = new volVectorField
     (
-        "n" & patchTypeName_,
+        IOobject
+        (
+            "n" & patchTypeName_,
+            mesh().time().timeName(),
+            mesh()
+        ),
         mesh(),
         dimensionedVector(dimless, Zero),
         patchDistMethod::patchTypes<vector>(mesh(), patchIDs_)
@@ -48,7 +53,7 @@ void Foam::wallDist::constructn() const
 
     const fvPatchList& patches = mesh().boundary();
 
-    volVectorField::Boundary& nbf = n_.ref().boundaryFieldRef();
+    volVectorField::Boundary& nbf = n_->boundaryFieldRef();
 
     forAllConstIter(labelHashSet, patchIDs_, iter)
     {
@@ -91,8 +96,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
     (
         static_cast<const fvSchemes&>(mesh).subDict(patchTypeName_ & "Dist")
        .lookupOrDefault<Switch>("nRequired", false)
-    ),
-    n_(volVectorField::null())
+    )
 {
     if (nRequired_)
     {
@@ -139,8 +143,7 @@ Foam::wallDist::wallDist
     (
         static_cast<const fvSchemes&>(mesh).subDict(patchTypeName_ & "Dist")
        .lookupOrDefault<Switch>("nRequired", false)
-    ),
-    n_(volVectorField::null())
+    )
 {
     if (nRequired_)
     {
@@ -161,7 +164,7 @@ Foam::wallDist::~wallDist()
 
 const Foam::volVectorField& Foam::wallDist::n() const
 {
-    if (isNull(n_()))
+    if (!n_.valid())
     {
         WarningInFunction
             << "n requested but 'nRequired' not specified in the "
@@ -170,7 +173,7 @@ const Foam::volVectorField& Foam::wallDist::n() const
 
         nRequired_ = true;
         constructn();
-        pdm_->correct(y_, n_.ref());
+        pdm_->correct(y_, n_());
     }
 
     return n_();
@@ -183,7 +186,7 @@ bool Foam::wallDist::movePoints()
     {
         if (nRequired_)
         {
-            return pdm_->correct(y_, n_.ref());
+            return pdm_->correct(y_, n_());
         }
         else
         {
@@ -213,8 +216,7 @@ void Foam::wallDist::mapMesh(const polyMeshMap& map)
 
 void Foam::wallDist::distribute(const polyDistributionMap& map)
 {
-    pdm_->distribute(map);
-    movePoints();
+    // The y and n fields are registered and distributed automatically
 }
 
 
