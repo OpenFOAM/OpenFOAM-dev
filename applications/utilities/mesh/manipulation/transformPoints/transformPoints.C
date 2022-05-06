@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,8 @@ Usage
     Options:
       - \par -rotateFields \n
         Additionally transform vector and tensor fields.
+      - \par -pointSet \<name\> \n
+        Only transform points in the given point set.
 
     Example usage:
         transformPoints \
@@ -71,6 +73,7 @@ See also
 #include "surfaceFields.H"
 #include "ReadFields.H"
 #include "pointFields.H"
+#include "pointSet.H"
 #include "transformField.H"
 #include "transformGeometricField.H"
 #include "unitConversion.H"
@@ -164,13 +167,19 @@ int main(int argc, char *argv[])
         "\"translate=(1.2 0 0), Rx=90, translate=(-1.2 0 0)\""
     );
 
-
     argList::validArgs.append("transformations");
 
     argList::addBoolOption
     (
         "rotateFields",
         "transform vector and tensor fields"
+    );
+
+    argList::addOption
+    (
+        "pointSet",
+        "pointSet",
+        "Point set to limit the transformation to"
     );
 
     #include "addRegionOption.H"
@@ -185,6 +194,17 @@ int main(int argc, char *argv[])
     const wordList regionNames(selectRegionNames(args, runTime));
 
     const bool doRotateFields = args.optionFound("rotateFields");
+
+    word pointSetName = word::null;
+    const bool doPointSet = args.optionReadIfPresent("pointSet", pointSetName);
+
+    if (doRotateFields && doPointSet)
+    {
+        FatalErrorInFunction
+            << "Rotation of fields across the entire mesh, and limiting the "
+            << "transformation of points to a set, cannot be done "
+            << "simultaneously" << exit(FatalError);
+    }
 
     forAll(regionNames, regioni)
     {
@@ -207,7 +227,35 @@ int main(int argc, char *argv[])
             )
         );
 
-        transforms.transformPosition(points, points);
+        if (doPointSet)
+        {
+            const labelList setPointIDs
+            (
+                pointSet
+                (
+                    IOobject
+                    (
+                        pointSetName,
+                        runTime.findInstance(meshDir/"sets", word::null),
+                        polyMesh::meshSubDir/"sets",
+                        runTime,
+                        IOobject::MUST_READ,
+                        IOobject::NO_WRITE,
+                        false
+                    )
+                ).toc()
+            );
+
+            pointField setPoints(UIndirectList<point>(points, setPointIDs));
+
+            transforms.transformPosition(setPoints, setPoints);
+
+            UIndirectList<point>(points, setPointIDs) = setPoints;
+        }
+        else
+        {
+            transforms.transformPosition(points, points);
+        }
 
         if (doRotateFields)
         {
