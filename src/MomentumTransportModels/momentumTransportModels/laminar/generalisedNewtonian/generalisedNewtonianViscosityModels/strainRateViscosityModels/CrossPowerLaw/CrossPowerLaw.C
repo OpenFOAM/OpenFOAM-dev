@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,18 +81,18 @@ read
     const dictionary& coeffs =
         viscosityProperties.optionalSubDict(typeName + "Coeffs");
 
-    coeffs.lookup("nuInf") >> nuInf_;
+    nuInf_.read(coeffs);
 
     if (coeffs.found("tauStar"))
     {
-        coeffs.lookup("tauStar") >> tauStar_;
+        tauStar_.read(coeffs);
     }
     else
     {
-        coeffs.lookup("m") >> m_;
+        m_.read(coeffs);
     }
 
-    coeffs.lookup("n") >> n_;
+    n_.read(coeffs);
 
     return true;
 }

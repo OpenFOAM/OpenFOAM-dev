@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,10 +78,10 @@ bool Foam::laminarModels::generalisedNewtonianViscosityModels::Casson::read
     const dictionary& coeffs =
         viscosityProperties.optionalSubDict(typeName + "Coeffs");
 
-    coeffs.lookup("m") >> m_;
-    coeffs.lookup("tau0") >> tau0_;
-    coeffs.lookup("nuMin_") >> nuMin_;
-    coeffs.lookup("nuMax_") >> nuMax_;
+    m_.read(coeffs);
+    tau0_.read(coeffs);
+    nuMin_.read(coeffs);
+    nuMax_.read(coeffs);
 
     return true;
 }

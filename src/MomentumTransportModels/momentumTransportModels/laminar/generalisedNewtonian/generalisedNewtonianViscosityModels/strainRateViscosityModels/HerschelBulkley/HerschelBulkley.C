@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,9 +80,9 @@ HerschelBulkley::read
     const dictionary& coeffs =
         viscosityProperties.optionalSubDict(typeName + "Coeffs");
 
-    coeffs.lookup("k") >> k_;
-    coeffs.lookup("n") >> n_;
-    coeffs.lookup("tau0") >> tau0_;
+    k_.read(coeffs);
+    n_.read(coeffs);
+    tau0_.read(coeffs);
 
     return true;
 }
