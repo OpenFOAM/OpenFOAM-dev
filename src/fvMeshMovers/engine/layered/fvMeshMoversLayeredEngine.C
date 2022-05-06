@@ -102,9 +102,7 @@ void Foam::fvMeshMovers::layeredEngine::topoChange(const polyTopoChangeMap&)
 
 
 void Foam::fvMeshMovers::layeredEngine::mapMesh(const polyMeshMap&)
-{
-    NotImplemented;
-}
+{}
 
 
 void Foam::fvMeshMovers::layeredEngine::distribute
