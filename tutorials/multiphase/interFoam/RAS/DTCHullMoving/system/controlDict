@@ -57,7 +57,6 @@ functions
         type            forces;
         libs            ("libforces.so");
         patches         (hull);
-        rhoInf          998.8;
         log             on;
         writeControl    timeStep;
         writeInterval   1;
