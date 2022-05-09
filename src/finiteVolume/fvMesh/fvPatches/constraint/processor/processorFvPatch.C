@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,82 +36,39 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::processorFvPatch::makeWeights(scalarField& w) const
 {
     if (Pstream::parRun())
     {
-        const vectorField delta(coupledFvPatch::delta());
-
-        // The face normals point in the opposite direction on the other side
-        const vectorField nbrDelta
+        coupledFvPatch::makeWeights
         (
+            w,
+            procPolyPatch_.neighbFaceAreas(),
             procPolyPatch_.neighbFaceCentres()
           - procPolyPatch_.neighbFaceCellCentres()
         );
-
-        const scalarField nfDelta(nf() & delta);
-
-        const scalarField nbrNfDelta
-        (
-            (
-                procPolyPatch_.neighbFaceAreas()
-               /(mag(procPolyPatch_.neighbFaceAreas()) + vSmall)
-            ) & nbrDelta
-        );
-
-        forAll(delta, facei)
-        {
-            const scalar ndoi = nfDelta[facei];
-            const scalar ndni = nbrNfDelta[facei];
-            const scalar ndi = ndoi + ndni;
-
-            if (ndni/vGreat < ndi)
-            {
-                w[facei] = ndni/ndi;
-            }
-            else
-            {
-                const scalar doi = mag(delta[facei]);
-                const scalar dni = mag(nbrDelta[facei]);
-                const scalar di = doi + dni;
-
-                w[facei] = dni/di;
-            }
-        }
     }
     else
     {
-        w = 1.0;
+        w = 1;
     }
 }
 
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::vectorField> Foam::processorFvPatch::delta() const
 {
     if (Pstream::parRun())
     {
-        // To the transformation if necessary
-        if (transform().transforms())
-        {
-            return
-                coupledFvPatch::delta()
-               -transform().transform
-                (
-                    procPolyPatch_.neighbFaceCentres()
-                  - procPolyPatch_.neighbFaceCellCentres()
-                );
-        }
-        else
-        {
-            return
-                coupledFvPatch::delta()
-              - (
-                    procPolyPatch_.neighbFaceCentres()
-                  - procPolyPatch_.neighbFaceCellCentres()
-                );
-        }
+        return
+            coupledFvPatch::delta
+            (
+                procPolyPatch_.neighbFaceCentres()
+              - procPolyPatch_.neighbFaceCellCentres()
+            );
     }
     else
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -287,13 +287,13 @@ bool Foam::MomentumParcel<ParcelType>::move
     typename TrackCloudType::parcelType::trackingData& ttd =
         static_cast<typename TrackCloudType::parcelType::trackingData&>(td);
 
-    ttd.switchProcessor = false;
     ttd.keepParticle = true;
+    td.sendToProc = -1;
 
     const scalarField& cellLengthScale = cloud.cellLengthScale();
     const scalar maxCo = cloud.solution().maxCo();
 
-    while (ttd.keepParticle && !ttd.switchProcessor && p.stepFraction() < 1)
+    while (ttd.keepParticle && ttd.sendToProc == -1 && p.stepFraction() < 1)
     {
         // Cache the current position, cell and step-fraction
         const point start = p.position();
@@ -398,18 +398,6 @@ bool Foam::MomentumParcel<ParcelType>::hitPatch
         // Invoke patch interaction model
         return cloud.patchInteraction().correct(p, pp, td.keepParticle);
     }
-}
-
-
-template<class ParcelType>
-template<class TrackCloudType>
-void Foam::MomentumParcel<ParcelType>::hitProcessorPatch
-(
-    TrackCloudType&,
-    trackingData& td
-)
-{
-    td.switchProcessor = true;
 }
 
 

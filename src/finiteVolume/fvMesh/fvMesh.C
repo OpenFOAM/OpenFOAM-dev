@@ -35,6 +35,9 @@ License
 #include "fvMeshTopoChanger.H"
 #include "fvMeshDistributor.H"
 #include "fvMeshMover.H"
+#include "fvMeshStitcher.H"
+#include "nonConformalFvPatch.H"
+#include "nonConformalCalculatedFvsPatchFields.H"
 #include "polyTopoChangeMap.H"
 #include "MapFvFields.H"
 #include "fvMeshMapper.H"
@@ -43,8 +46,12 @@ License
 #include "MapPointField.H"
 #include "mapClouds.H"
 #include "MeshObject.H"
+#include "HashPtrTable.H"
+#include "CompactListList.H"
 
 #include "fvcSurfaceIntegrate.H"
+#include "fvcReconstruct.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -78,9 +85,13 @@ void Foam::fvMesh::clearGeomNotOldVol()
     >(*this);
 
     deleteDemandDrivenData(VPtr_);
+    deleteDemandDrivenData(SfSlicePtr_);
     deleteDemandDrivenData(SfPtr_);
+    deleteDemandDrivenData(magSfSlicePtr_);
     deleteDemandDrivenData(magSfPtr_);
+    deleteDemandDrivenData(CSlicePtr_);
     deleteDemandDrivenData(CPtr_);
+    deleteDemandDrivenData(CfSlicePtr_);
     deleteDemandDrivenData(CfPtr_);
 }
 
@@ -88,10 +99,10 @@ void Foam::fvMesh::clearGeomNotOldVol()
 void Foam::fvMesh::updateGeomNotOldVol()
 {
     bool haveV = (VPtr_ != nullptr);
-    bool haveSf = (SfPtr_ != nullptr);
-    bool haveMagSf = (magSfPtr_ != nullptr);
-    bool haveCP = (CPtr_ != nullptr);
-    bool haveCf = (CfPtr_ != nullptr);
+    bool haveSf = (SfSlicePtr_ != nullptr || SfPtr_ != nullptr);
+    bool haveMagSf = (magSfSlicePtr_ != nullptr || magSfPtr_ != nullptr);
+    bool haveCP = (CSlicePtr_ != nullptr || CPtr_ != nullptr);
+    bool haveCf = (CfSlicePtr_ != nullptr || CfPtr_ != nullptr);
 
     clearGeomNotOldVol();
 
@@ -128,6 +139,7 @@ void Foam::fvMesh::clearGeom()
 
     clearGeomNotOldVol();
 
+    deleteDemandDrivenData(phiPtr_);
     deleteDemandDrivenData(V0Ptr_);
     deleteDemandDrivenData(V00Ptr_);
 
@@ -171,7 +183,14 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
         meshObject::clear<fvMesh, TopologicalMeshObject>(*this);
         meshObject::clear<lduMesh, TopologicalMeshObject>(*this);
     }
+
     deleteDemandDrivenData(lduPtr_);
+    deleteDemandDrivenData(polyFacesBfPtr_);
+    deleteDemandDrivenData(polyBFaceOffsetsPtr_);
+    deleteDemandDrivenData(polyBFaceOffsetPatchesPtr_);
+    deleteDemandDrivenData(polyBFaceOffsetPatchFacesPtr_);
+    deleteDemandDrivenData(polyBFacePatchesPtr_);
+    deleteDemandDrivenData(polyBFacePatchFacesPtr_);
 }
 
 
@@ -242,14 +261,46 @@ void Foam::fvMesh::storeOldVol(const scalarField& V)
 void Foam::fvMesh::clearOut()
 {
     clearGeom();
+
     surfaceInterpolation::clearOut();
 
     clearAddressing();
 
-    // Clear mesh motion flux
-    deleteDemandDrivenData(phiPtr_);
-
     polyMesh::clearOut();
+}
+
+
+Foam::wordList Foam::fvMesh::polyFacesPatchTypes() const
+{
+    wordList wantedPatchTypes
+    (
+        boundary().size(),
+        calculatedFvsPatchLabelField::typeName
+    );
+
+    forAll(boundary(), patchi)
+    {
+        const fvPatch& fvp = boundary()[patchi];
+
+        if (isA<nonConformalFvPatch>(fvp))
+        {
+            wantedPatchTypes[patchi] =
+                nonConformalCalculatedFvsPatchLabelField::typeName;
+        }
+    }
+
+    return wantedPatchTypes;
+}
+
+
+Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBfRef()
+{
+    if (!polyFacesBfPtr_)
+    {
+        polyFacesBf();
+    }
+
+    return *polyFacesBfPtr_;
 }
 
 
@@ -261,17 +312,28 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
     surfaceInterpolation(*this),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
+    stitcher_(fvMeshStitcher::New(*this, changers)),
     topoChanger_(nullptr),
     distributor_(nullptr),
     mover_(nullptr),
     lduPtr_(nullptr),
+    polyFacesBfPtr_(nullptr),
+    polyBFaceOffsetsPtr_(nullptr),
+    polyBFaceOffsetPatchesPtr_(nullptr),
+    polyBFaceOffsetPatchFacesPtr_(nullptr),
+    polyBFacePatchesPtr_(nullptr),
+    polyBFacePatchFacesPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
     V0Ptr_(nullptr),
     V00Ptr_(nullptr),
+    SfSlicePtr_(nullptr),
     SfPtr_(nullptr),
+    magSfSlicePtr_(nullptr),
     magSfPtr_(nullptr),
+    CSlicePtr_(nullptr),
     CPtr_(nullptr),
+    CfSlicePtr_(nullptr),
     CfPtr_(nullptr),
     phiPtr_(nullptr)
 {
@@ -279,6 +341,9 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
     {
         Pout<< FUNCTION_NAME << "Constructing fvMesh from IOobject" << endl;
     }
+
+    // Stitch or Re-stitch if necessary
+    stitcher_->connect(false, changers);
 
     // Construct changers
     if (changers)
@@ -357,17 +422,28 @@ Foam::fvMesh::fvMesh
     surfaceInterpolation(*this),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
+    stitcher_(nullptr),
     topoChanger_(nullptr),
     distributor_(nullptr),
     mover_(nullptr),
     lduPtr_(nullptr),
+    polyFacesBfPtr_(nullptr),
+    polyBFaceOffsetsPtr_(nullptr),
+    polyBFaceOffsetPatchesPtr_(nullptr),
+    polyBFaceOffsetPatchFacesPtr_(nullptr),
+    polyBFacePatchesPtr_(nullptr),
+    polyBFacePatchFacesPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
     V0Ptr_(nullptr),
     V00Ptr_(nullptr),
+    SfSlicePtr_(nullptr),
     SfPtr_(nullptr),
+    magSfSlicePtr_(nullptr),
     magSfPtr_(nullptr),
+    CSlicePtr_(nullptr),
     CPtr_(nullptr),
+    CfSlicePtr_(nullptr),
     CfPtr_(nullptr),
     phiPtr_(nullptr)
 {
@@ -400,17 +476,28 @@ Foam::fvMesh::fvMesh
     surfaceInterpolation(*this),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
+    stitcher_(nullptr),
     topoChanger_(nullptr),
     distributor_(nullptr),
     mover_(nullptr),
     lduPtr_(nullptr),
+    polyFacesBfPtr_(nullptr),
+    polyBFaceOffsetsPtr_(nullptr),
+    polyBFaceOffsetPatchesPtr_(nullptr),
+    polyBFaceOffsetPatchFacesPtr_(nullptr),
+    polyBFacePatchesPtr_(nullptr),
+    polyBFacePatchFacesPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
     V0Ptr_(nullptr),
     V00Ptr_(nullptr),
+    SfSlicePtr_(nullptr),
     SfPtr_(nullptr),
+    magSfSlicePtr_(nullptr),
     magSfPtr_(nullptr),
+    CSlicePtr_(nullptr),
     CPtr_(nullptr),
+    CfSlicePtr_(nullptr),
     CfPtr_(nullptr),
     phiPtr_(nullptr)
 {
@@ -441,17 +528,28 @@ Foam::fvMesh::fvMesh
     surfaceInterpolation(*this),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this),
+    stitcher_(nullptr),
     topoChanger_(nullptr),
     distributor_(nullptr),
     mover_(nullptr),
     lduPtr_(nullptr),
+    polyFacesBfPtr_(nullptr),
+    polyBFaceOffsetsPtr_(nullptr),
+    polyBFaceOffsetPatchesPtr_(nullptr),
+    polyBFaceOffsetPatchFacesPtr_(nullptr),
+    polyBFacePatchesPtr_(nullptr),
+    polyBFacePatchFacesPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
     V0Ptr_(nullptr),
     V00Ptr_(nullptr),
+    SfSlicePtr_(nullptr),
     SfPtr_(nullptr),
+    magSfSlicePtr_(nullptr),
     magSfPtr_(nullptr),
+    CSlicePtr_(nullptr),
     CPtr_(nullptr),
+    CfSlicePtr_(nullptr),
     CfPtr_(nullptr),
     phiPtr_(nullptr)
 {
@@ -480,6 +578,8 @@ bool Foam::fvMesh::dynamic() const
 
 bool Foam::fvMesh::update()
 {
+    if (!conformal()) stitcher_->disconnect(true, true);
+
     bool updated = false;
 
     const bool hasV00 = V00Ptr_;
@@ -518,9 +618,13 @@ bool Foam::fvMesh::update()
 
 bool Foam::fvMesh::move()
 {
+    if (!conformal()) stitcher_->disconnect(true, true);
+
     const bool moved = mover_->update();
 
     curTimeIndex_ = time().timeIndex();
+
+    stitcher_->connect(true, true);
 
     return moved;
 }
@@ -606,6 +710,11 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
 
     polyMesh::readUpdateState state = polyMesh::readUpdate();
 
+    if (stitcher_.valid() && state != polyMesh::UNCHANGED)
+    {
+        stitcher_->disconnect(false, false);
+    }
+
     if (state == polyMesh::TOPO_PATCH_CHANGE)
     {
         if (debug)
@@ -643,6 +752,11 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
         }
     }
 
+    if (stitcher_.valid() && state != polyMesh::UNCHANGED)
+    {
+        stitcher_->connect(false, false);
+    }
+
     return state;
 }
 
@@ -661,6 +775,146 @@ const Foam::lduAddressing& Foam::fvMesh::lduAddr() const
     }
 
     return *lduPtr_;
+}
+
+
+bool Foam::fvMesh::conformal() const
+{
+    return !(polyFacesBfPtr_ && SfPtr_);
+}
+
+
+Foam::IOobject Foam::fvMesh::polyFacesBfIO(const IOobject::readOption r) const
+{
+    return
+        IOobject
+        (
+            "polyFaces",
+            pointsInstance(),
+            typeName,
+            *this,
+            r,
+            IOobject::NO_WRITE,
+            false
+        );
+}
+
+
+const Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBf() const
+{
+    if (!polyFacesBfPtr_)
+    {
+        polyFacesBfPtr_ =
+            new surfaceLabelField::Boundary
+            (
+                boundary(),
+                surfaceLabelField::null(),
+                polyFacesPatchTypes(),
+                boundaryMesh().types()
+            );
+
+        forAll(boundary(), patchi)
+        {
+            const polyPatch& pp = boundaryMesh()[patchi];
+            (*polyFacesBfPtr_)[patchi] =
+                labelList(identity(pp.size()) + pp.start());
+        }
+    }
+
+    return *polyFacesBfPtr_;
+}
+
+
+const Foam::UCompactListList<Foam::label>&
+Foam::fvMesh::polyBFacePatches() const
+{
+    if (!polyBFacePatchesPtr_)
+    {
+        const label nPolyBFaces = nFaces() - nInternalFaces();
+
+        // Count face-poly-bFaces to get the offsets
+        polyBFaceOffsetsPtr_ = new labelList(nPolyBFaces + 1, 0);
+        labelList& offsets = *polyBFaceOffsetsPtr_;
+        forAll(boundary(), patchi)
+        {
+            forAll(boundary()[patchi], patchFacei)
+            {
+                const label polyBFacei =
+                    (
+                        polyFacesBfPtr_
+                      ? (*polyFacesBfPtr_)[patchi][patchFacei]
+                      : boundary()[patchi].start() + patchFacei
+                    )
+                  - nInternalFaces();
+                offsets[polyBFacei + 1] ++;
+            }
+        }
+        for (label polyBFacei = 0; polyBFacei < nPolyBFaces; ++ polyBFacei)
+        {
+            offsets[polyBFacei + 1] += offsets[polyBFacei];
+        }
+
+        // Set the poly-bFace patches and patch-faces, using the offsets as
+        // counters
+        polyBFaceOffsetPatchesPtr_ = new labelList(offsets.last());
+        polyBFaceOffsetPatchFacesPtr_ = new labelList(offsets.last());
+        labelUList& patches = *polyBFaceOffsetPatchesPtr_;
+        labelUList& patchFaces = *polyBFaceOffsetPatchFacesPtr_;
+        forAll(boundary(), patchi)
+        {
+            forAll(boundary()[patchi], patchFacei)
+            {
+                const label polyBFacei =
+                    (
+                        polyFacesBfPtr_
+                      ? (*polyFacesBfPtr_)[patchi][patchFacei]
+                      : boundary()[patchi].start() + patchFacei
+                    )
+                  - nInternalFaces();
+                patches[offsets[polyBFacei]] = patchi;
+                patchFaces[offsets[polyBFacei]] = patchFacei;
+                offsets[polyBFacei] ++;
+            }
+        }
+
+        // Restore the offsets by removing the count
+        for
+        (
+            label polyBFacei = nPolyBFaces - 1;
+            polyBFacei >= 0;
+            -- polyBFacei
+        )
+        {
+            offsets[polyBFacei + 1] = offsets[polyBFacei];
+        }
+        offsets[0] = 0;
+
+        // List-lists
+        polyBFacePatchesPtr_ =
+            new UCompactListList<label>(offsets, patches);
+        polyBFacePatchFacesPtr_ =
+            new UCompactListList<label>(offsets, patchFaces);
+    }
+
+    return *polyBFacePatchesPtr_;
+}
+
+
+const Foam::UCompactListList<Foam::label>&
+Foam::fvMesh::polyBFacePatchFaces() const
+{
+    if (!polyBFacePatchFacesPtr_)
+    {
+        polyBFacePatches();
+    }
+
+    return *polyBFacePatchFacesPtr_;
+}
+
+
+const Foam::fvMeshStitcher& Foam::fvMesh::stitcher() const
+{
+    return stitcher_();
 }
 
 
@@ -990,6 +1244,117 @@ void Foam::fvMesh::distribute(const polyDistributionMap& map)
 }
 
 
+void Foam::fvMesh::conform()
+{
+    // Clear the geometry fields
+    clearGeomNotOldVol();
+
+    // Clear the current volume and other geometry factors
+    surfaceInterpolation::clearOut();
+
+    // Clear any non-updateable addressing
+    clearAddressing(true);
+}
+
+
+void Foam::fvMesh::unconform
+(
+    const surfaceLabelField::Boundary& polyFacesBf,
+    const surfaceVectorField& Sf,
+    const surfaceVectorField& Cf,
+    const surfaceScalarField& phi,
+    const bool sync
+)
+{
+    // Clear the geometry fields
+    clearGeomNotOldVol();
+
+    // Clear the current volume and other geometry factors
+    surfaceInterpolation::clearOut();
+
+    // Clear any non-updateable addressing
+    clearAddressing(true);
+
+    // Create non-sliced copies of geometry fields
+    SfRef();
+    magSfRef();
+    CRef();
+    CfRef();
+
+    // Set the topology
+    polyFacesBfRef() == polyFacesBf;
+
+    // Set the face geometry
+    SfRef() == Sf;
+    magSfRef() == mag(Sf);
+    CRef().boundaryFieldRef() == Cf.boundaryField();
+    CfRef() == Cf;
+
+    // Communicate processor-coupled cell geometry. Cell-centre processor patch
+    // fields must contain the (transformed) cell-centre locations on the other
+    // side of the coupling. This is so that non-conformal patches can
+    // construct weights and deltas without reference to the poly mesh
+    // geometry.
+    //
+    // Note that the initEvaluate/evaluate communication does a transformation,
+    // but it is wrong in this instance. A vector field gets transformed as if
+    // it were a displacement, but the cell-centres need a positional
+    // transformation. That's why there's the un-transform and re-transform bit
+    // below just after the evaluate call.
+    //
+    // This transform handling is a bit of a hack. It would be nicer to have a
+    // field attribute which identifies a field as needing a positional
+    // transformation, and for it to apply automatically within the coupled
+    // patch field. However, at the moment, the cell centres field is the only
+    // vol-field containing an absolute position, so the hack is functionally
+    // sufficient for now.
+    if (sync && (Pstream::parRun() || !time().processorCase()))
+    {
+        volVectorField::Boundary& CBf = CRef().boundaryFieldRef();
+
+        const label nReq = Pstream::nRequests();
+
+        forAll(CBf, patchi)
+        {
+            if (isA<processorFvPatch>(CBf[patchi].patch()))
+            {
+                CBf[patchi].initEvaluate(Pstream::defaultCommsType);
+            }
+        }
+
+        if
+        (
+            Pstream::parRun()
+         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
+        )
+        {
+            Pstream::waitRequests(nReq);
+        }
+
+        forAll(CBf, patchi)
+        {
+            if (isA<processorFvPatch>(CBf[patchi].patch()))
+            {
+                CBf[patchi].evaluate(Pstream::defaultCommsType);
+
+                const transformer& t =
+                    refCast<const processorFvPatch>(CBf[patchi].patch())
+                   .transform();
+
+                t.invTransform(CBf[patchi], CBf[patchi]);
+                t.transformPosition(CBf[patchi], CBf[patchi]);
+            }
+        }
+    }
+
+    // Modify the mesh fluxes, if necessary
+    if (notNull(phi) && phiPtr_)
+    {
+        phiRef() == phi;
+    }
+}
+
+
 void Foam::fvMesh::addPatch
 (
     const label insertPatchi,
@@ -1156,9 +1521,36 @@ bool Foam::fvMesh::writeObject
 ) const
 {
     bool ok = true;
+
+    if (!conformal())
+    {
+        // Create a full surface field with the polyFacesBf boundary field then
+        // overwrite all conformal faces with an index of -1 to save disk space
+
+        surfaceLabelField polyFaces
+        (
+            polyFacesBfIO(IOobject::NO_READ),
+            *this,
+            dimless,
+            labelField(nInternalFaces(), -1),
+            *polyFacesBfPtr_
+        );
+
+        forAll(boundary(), patchi)
+        {
+            const fvPatch& fvp = boundary()[patchi];
+            if (!isA<nonConformalFvPatch>(fvp))
+            {
+                polyFaces.boundaryFieldRef()[patchi] = -1;
+            }
+        }
+
+        ok = ok & polyFaces.write(write);
+    }
+
     if (phiPtr_)
     {
-        ok = phiPtr_->write(write);
+        ok = ok && phiPtr_->write(write);
     }
 
     // Write V0 only if V00 exists

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -292,6 +292,20 @@ bool Foam::argList::postProcess(int argc, char *argv[])
     }
 
     return postProcessOption;
+}
+
+
+bool Foam::argList::hasArgs(int argc, char *argv[])
+{
+    for (int i=1; i<argc; i++)
+    {
+        if (argv[i][0] != '-')
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 

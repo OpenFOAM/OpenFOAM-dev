@@ -78,6 +78,16 @@ class Cloud
         //- Reference to the mesh
         const polyMesh& polyMesh_;
 
+        //- Map from patch index to the neighbouring processor index
+        const labelList patchNbrProc_;
+
+        //- Map from patch index to the corresponding patch index on the
+        //  neighbouring processor
+        const labelList patchNbrProcPatch_;
+
+        //- Map from patch index to connected non-conformal cyclics
+        const labelListList patchNonConformalCyclicPatches_;
+
         //- Temporary storage for the global particle positions
         mutable autoPtr<vectorField> globalPositionsPtr_;
 
@@ -95,6 +105,19 @@ class Cloud
 
         //- Write cloud properties dictionary
         void writeCloudUniformProperties() const;
+
+        //- Map from patch index to the neighbouring processor index
+        static labelList patchNbrProc(const polyMesh&);
+
+        //- Map from patch index to the corresponding patch index on the
+        //  neighbouring processor
+        static labelList patchNbrProcPatch(const polyMesh&);
+
+        //- Map from patch index to connected non-conformal cyclics
+        static labelListList patchNonConformalCyclicPatches(const polyMesh&);
+
+        //- Store rays necessary for non conformal cyclic transfer
+        void storeRays() const;
 
 
 public:
@@ -143,6 +166,25 @@ public:
             const polyMesh& pMesh() const
             {
                 return polyMesh_;
+            }
+
+            //- Map from patch index to the neighbouring processor index
+            const labelList& patchNbrProc() const
+            {
+                return patchNbrProc_;
+            }
+
+            //- Map from patch index to the corresponding patch index on the
+            //  neighbouring processor
+            const labelList& patchNbrProcPatch() const
+            {
+                return patchNbrProcPatch_;
+            }
+
+            //- Return map from patch index to connected non-conformal cyclics
+            const labelListList& patchNonConformalCyclicPatches() const
+            {
+                return patchNonConformalCyclicPatches_;
             }
 
             //- Return the number of particles in the cloud

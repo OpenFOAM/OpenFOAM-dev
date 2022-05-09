@@ -1,16 +1,14 @@
 EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/lagrangian/basic/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
-    -I$(LIB_SRC)/parallel/reconstruct/reconstruct/lnInclude \
+    -I$(LIB_SRC)/parallel/parallel/lnInclude \
+    -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude
 
 EXE_LIBS = \
     -lfiniteVolume \
-    -lgenericPatchFields \
-    -llagrangian \
-    -ldynamicMesh \
     -lmeshTools \
-    -lreconstruct \
-    -lregionModels
+    -lparallel \
+    -llagrangian \
+    -lregionModels \
+    -lgenericPatchFields

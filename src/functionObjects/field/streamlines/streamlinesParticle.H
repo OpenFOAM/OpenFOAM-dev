@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -258,10 +258,6 @@ public:
             //- Track all particles to their end point
             bool move(streamlinesCloud&, trackingData&, const scalar);
 
-            //- Overridable function to handle the particle hitting a patch
-            //  Executed before other patch-hitting functions
-            bool hitPatch(streamlinesCloud&, trackingData&);
-
             //- Overridable function to handle the particle hitting a wedge
             void hitWedgePatch(streamlinesCloud&, trackingData&);
 
@@ -306,8 +302,19 @@ public:
                 trackingData&
             );
 
+            //- Overridable function to handle the particle hitting an
+            //  nonConformalCyclicPolyPatch
+            bool hitNonConformalCyclicPatch
+            (
+                const vector& displacement,
+                const scalar fraction,
+                const label patchi,
+                streamlinesCloud& cloud,
+                trackingData& td
+            );
+
             //- Overridable function to handle the particle hitting a
-            //- processorPatch
+            //  processorPatch
             void hitProcessorPatch(streamlinesCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wallPatch

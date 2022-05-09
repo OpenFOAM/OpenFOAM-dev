@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,6 +137,10 @@ class fvMeshSubset
 
 public:
 
+    //- Runtime type information
+    TypeName("fvMeshSubset");
+
+
     // Constructors
 
         //- Construct given a mesh to subset
@@ -144,6 +148,10 @@ public:
 
         //- Disallow default bitwise copy construction
         fvMeshSubset(const fvMeshSubset&) = delete;
+
+
+    //- Destructor
+    virtual ~fvMeshSubset();
 
 
     // Member Functions

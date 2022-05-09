@@ -182,6 +182,10 @@ public:
         //- Assignment to FieldField<PatchField, Type>
         void operator=(const FieldField<PatchField, Type>&);
 
+        //- Assignment to FieldField<OtherPatchField, Type>
+        template<template<class> class OtherPatchField>
+        void operator=(const FieldField<OtherPatchField, Type>&);
+
         //- Assignment to Type
         void operator=(const Type&);
 
@@ -192,6 +196,10 @@ public:
 
         //- Forced assignment to FieldField<PatchField, Type>
         void operator==(const FieldField<PatchField, Type>&);
+
+        //- Forced assignment to FieldField<OtherPatchField, Type>
+        template<template<class> class OtherPatchField>
+        void operator==(const FieldField<OtherPatchField, Type>&);
 
         //- Forced assignment to Type
         void operator==(const Type&);

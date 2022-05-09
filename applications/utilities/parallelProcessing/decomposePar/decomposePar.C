@@ -79,6 +79,7 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
+#include "processorRunTimes.H"
 #include "domainDecomposition.H"
 #include "decompositionMethod.H"
 #include "argList.H"
@@ -114,14 +115,12 @@ namespace Foam
 void decomposeUniform
 (
     const bool copyUniform,
-    const domainDecomposition& decomposition,
-    const Time& processorDb,
+    const bool distributeUniform,
+    const Time& runTime,
+    const Time& procRunTime,
     const word& regionDir = word::null
 )
 {
-    const Time& runTime = decomposition.mesh().time();
-
-    // Any uniform data to copy/link?
     const fileName uniformDir(regionDir/"uniform");
 
     if (fileHandler().isDir(runTime.timePath()/uniformDir))
@@ -131,9 +130,9 @@ void decomposeUniform
             << endl;
 
         const fileName timePath =
-            fileHandler().filePath(processorDb.timePath());
+            fileHandler().filePath(procRunTime.timePath());
 
-        if (copyUniform || decomposition.distributed())
+        if (copyUniform || distributeUniform)
         {
             if (!fileHandler().exists(timePath/uniformDir))
             {
@@ -171,9 +170,9 @@ void decomposeUniform
 }
 
 
-void writeDecomposition(const domainDecomposition& decomposition)
+void writeDecomposition(const domainDecomposition& meshes)
 {
-    const labelList& procIds = decomposition.cellToProc();
+    const labelList& procIds = meshes.cellToProc();
 
     // Write the decomposition as labelList for use with 'manual'
     // decomposition method.
@@ -182,8 +181,8 @@ void writeDecomposition(const domainDecomposition& decomposition)
         IOobject
         (
             "cellDecomposition",
-            decomposition.mesh().facesInstance(),
-            decomposition.mesh(),
+            meshes.completeMesh().facesInstance(),
+            meshes.completeMesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
@@ -203,12 +202,12 @@ void writeDecomposition(const domainDecomposition& decomposition)
         IOobject
         (
             "cellDist",
-            decomposition.mesh().time().timeName(),
-            decomposition.mesh(),
+            meshes.completeMesh().time().timeName(),
+            meshes.completeMesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        decomposition.mesh(),
+        meshes.completeMesh(),
         dimless,
         scalarField(scalarList(procIds))
     );
@@ -309,18 +308,20 @@ int main(int argc, char *argv[])
     }
 
     // Set time from database
-    #include "createTime.H"
+    Info<< "Create time\n" << endl;
+    processorRunTimes runTimes(Foam::Time::controlDictName, args);
 
     // Allow override of time
-    instantList times = timeSelector::selectIfPresent(runTime, args);
+    const instantList times = runTimes.selectComplete(args);
 
     // Get region names
-    const wordList regionNames(selectRegionNames(args, runTime));
+    const wordList regionNames =
+        selectRegionNames(args, runTimes.completeTime());
 
     // Handle existing decomposition directories
     {
         // Determine the processor count from the directories
-        label nProcs = fileHandler().nProcs(runTime.path());
+        label nProcs = fileHandler().nProcs(runTimes.completeTime().path());
 
         if (forceOverwrite)
         {
@@ -339,7 +340,7 @@ int main(int argc, char *argv[])
             (
                 fileHandler().readDir
                 (
-                    runTime.path(),
+                    runTimes.completeTime().path(),
                     fileType::directory
                 )
             );
@@ -379,11 +380,16 @@ int main(int argc, char *argv[])
                 << " domains, use the -force option or manually" << nl
                 << "remove processor directories before decomposing. e.g.,"
                 << nl
-                << "    rm -rf " << runTime.path().c_str() << "/processor*"
+                << "    rm -rf " << runTimes.completeTime().path().c_str()
+                << "/processor*"
                 << nl
                 << exit(FatalError);
         }
     }
+
+    // Get the decomposition dictionary
+    const dictionary decomposeParDict =
+        decompositionMethod::decomposeParDict(runTimes.completeTime());
 
     // Decompose all regions
     forAll(regionNames, regioni)
@@ -394,12 +400,12 @@ int main(int argc, char *argv[])
         Info<< "\n\nDecomposing mesh " << regionName << nl << endl;
 
         // Determine the existing processor count directly
-        label nProcs = fileHandler().nProcs(runTime.path(), regionDir);
+        const label nProcs =
+            fileHandler().nProcs(runTimes.completeTime().path(), regionDir);
 
         // Get requested numberOfSubdomains
         const label nDomains =
-            decompositionMethod::decomposeParDict(runTime)
-           .lookup<label>("numberOfSubdomains");
+            decomposeParDict.lookup<label>("numberOfSubdomains");
 
         // Give file handler a chance to determine the output directory
         const_cast<fileOperation&>(fileHandler()).setNProcs(nDomains);
@@ -421,74 +427,70 @@ int main(int argc, char *argv[])
             Info<< "Using existing processor directories" << nl;
         }
 
-        Info<< "Create mesh" << endl;
-        fvMesh mesh
-        (
-            IOobject
-            (
-                regionName,
-                runTime.timeName(),
-                runTime,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            false
-        );
+        // Get flag to determine whether or not to distribute uniform data
+        const label distributeUniform =
+            decomposeParDict.lookupOrDefault<bool>("distributed", false);
 
-        // Create decomposition
-        domainDecomposition decomposition(mesh);
+        // Create meshes
+        Info<< "Create mesh" << endl;
+        domainDecomposition meshes(runTimes, regionName);
+        meshes.readComplete();
 
         // Read or generate a decomposition as necessary
         if (decomposeFieldsOnly)
         {
-            decomposition.read();
+            meshes.readProcs();
+            if (!copyZero)
+            {
+                meshes.readAddressing();
+                meshes.readUpdate();
+            }
         }
         else
         {
-            decomposition.decompose();
-            decomposition.write(decomposeSets);
-            if (writeCellDist)
-            {
-                writeDecomposition(decomposition);
-            }
+            meshes.decompose();
+            meshes.writeProcs(decomposeSets);
+            if (writeCellDist) writeDecomposition(meshes);
             fileHandler().flush();
         }
 
         // Field maps. These are preserved if decomposing multiple times.
         PtrList<fvFieldDecomposer> fieldDecomposerList
         (
-            decomposition.nProcs()
+            meshes.nProcs()
         );
         PtrList<dimFieldDecomposer> dimFieldDecomposerList
         (
-            decomposition.nProcs()
+            meshes.nProcs()
         );
         PtrList<pointFieldDecomposer> pointFieldDecomposerList
         (
-            decomposition.nProcs()
+            meshes.nProcs()
         );
 
         // Loop over all times
         forAll(times, timeI)
         {
             // Set the time
-            runTime.setTime(times[timeI], timeI);
-            decomposition.setTime(times[timeI], timeI);
+            runTimes.setTime(times[timeI], timeI);
 
-            Info<< "Time = " << runTime.userTimeName() << endl;
+            Info<< "Time = " << runTimes.completeTime().userTimeName() << endl;
 
-            // Update the mesh
-            const fvMesh::readUpdateState state = mesh.readUpdate();
+            // Update the meshes, if necessary
+            fvMesh::readUpdateState state = fvMesh::UNCHANGED;
+            if (!decomposeFieldsOnly || !copyZero)
+            {
+                state = meshes.readUpdate();
+            }
 
-            // Update the decomposition
+            // Write the mesh out, if necessary
             if (decomposeFieldsOnly)
             {
-                decomposition.readUpdate();
+                // Nothing to do
             }
             else if (state == fvMesh::POINTS_MOVED)
             {
-                decomposition.writePoints();
+                meshes.writeProcs(false);
             }
             else if
             (
@@ -496,12 +498,9 @@ int main(int argc, char *argv[])
              || state == fvMesh::TOPO_PATCH_CHANGE
             )
             {
-                decomposition.decompose();
-                decomposition.write(decomposeSets);
-                if (writeCellDist)
-                {
-                    writeDecomposition(decomposition);
-                }
+                meshes.writeProcs(decomposeSets);
+                if (writeCellDist) writeDecomposition(meshes);
+                fileHandler().flush();
             }
 
             // Clear the field maps if there has been topology change
@@ -511,7 +510,7 @@ int main(int argc, char *argv[])
              || state == fvMesh::TOPO_PATCH_CHANGE
             )
             {
-                for (label proci = 0; proci < decomposition.nProcs(); proci++)
+                for (label proci = 0; proci < meshes.nProcs(); proci++)
                 {
                     fieldDecomposerList.set(proci, nullptr);
                     dimFieldDecomposerList.set(proci, nullptr);
@@ -528,43 +527,38 @@ int main(int argc, char *argv[])
             {
                 // Copy the field files from the <time> directory to the
                 // processor*/<time> directories without altering them
+                const fileName completeTimePath =
+                    runTimes.completeTime().timePath();
 
-                fileName prevTimePath;
-                for (label proci = 0; proci < decomposition.nProcs(); proci++)
+                fileName prevProcTimePath;
+                for (label proci = 0; proci < meshes.nProcs(); proci++)
                 {
-                    Time processorDb
-                    (
-                        Time::controlDictName,
-                        args.rootPath(),
-                        args.caseName()
-                       /fileName(word("processor") + name(proci))
-                    );
-                    processorDb.setTime(runTime);
+                    const Time& procRunTime =
+                        meshes.procMeshes()[proci].time();
 
-                    if (fileHandler().isDir(runTime.timePath()))
+                    if (fileHandler().isDir(completeTimePath))
                     {
-                        const fileName timePath
+                        const fileName procTimePath
                         (
                             fileHandler().objectPath
                             (
                                 IOobject
                                 (
                                     "",
-                                    processorDb.timeName(),
-                                    processorDb
+                                    procRunTime.timeName(),
+                                    procRunTime
                                 ),
                                 word::null
                             )
                         );
 
-                        if (timePath != prevTimePath)
+                        if (procTimePath != prevProcTimePath)
                         {
                             Info<< "Processor " << proci
-                                << ": copying " << runTime.timePath() << nl
-                                << " to " << timePath << endl;
-                            fileHandler().cp(runTime.timePath(), timePath);
-
-                            prevTimePath = timePath;
+                                << ": copying " << completeTimePath << nl
+                                << " to " << procTimePath << endl;
+                            fileHandler().cp(completeTimePath, procTimePath);
+                            prevProcTimePath = procTimePath;
                         }
                     }
                 }
@@ -574,49 +568,73 @@ int main(int argc, char *argv[])
                 // Decompose the fields
 
                 // Search for list of objects for this time
-                IOobjectList objects(mesh, runTime.timeName());
+                IOobjectList objects
+                (
+                    meshes.completeMesh(),
+                    runTimes.completeTime().timeName()
+                );
 
                 // Construct the vol fields
                 PtrList<volScalarField> volScalarFields;
-                readFields(mesh, objects, volScalarFields);
+                readFields(meshes.completeMesh(), objects, volScalarFields);
                 PtrList<volVectorField> volVectorFields;
-                readFields(mesh, objects, volVectorFields);
+                readFields(meshes.completeMesh(), objects, volVectorFields);
                 PtrList<volSphericalTensorField> volSphericalTensorFields;
-                readFields(mesh, objects, volSphericalTensorFields);
+                readFields
+                (
+                    meshes.completeMesh(),
+                    objects,
+                    volSphericalTensorFields
+                );
                 PtrList<volSymmTensorField> volSymmTensorFields;
-                readFields(mesh, objects, volSymmTensorFields);
+                readFields(meshes.completeMesh(), objects, volSymmTensorFields);
                 PtrList<volTensorField> volTensorFields;
-                readFields(mesh, objects, volTensorFields);
+                readFields(meshes.completeMesh(), objects, volTensorFields);
 
                 // Construct the dimensioned fields
                 PtrList<DimensionedField<scalar, volMesh>> dimScalarFields;
-                readFields(mesh, objects, dimScalarFields);
+                readFields(meshes.completeMesh(), objects, dimScalarFields);
                 PtrList<DimensionedField<vector, volMesh>> dimVectorFields;
-                readFields(mesh, objects, dimVectorFields);
+                readFields(meshes.completeMesh(), objects, dimVectorFields);
                 PtrList<DimensionedField<sphericalTensor, volMesh>>
                     dimSphericalTensorFields;
-                readFields(mesh, objects, dimSphericalTensorFields);
+                readFields
+                (
+                    meshes.completeMesh(),
+                    objects,
+                    dimSphericalTensorFields
+                );
                 PtrList<DimensionedField<symmTensor, volMesh>>
                     dimSymmTensorFields;
-                readFields(mesh, objects, dimSymmTensorFields);
+                readFields(meshes.completeMesh(), objects, dimSymmTensorFields);
                 PtrList<DimensionedField<tensor, volMesh>> dimTensorFields;
-                readFields(mesh, objects, dimTensorFields);
+                readFields(meshes.completeMesh(), objects, dimTensorFields);
 
                 // Construct the surface fields
                 PtrList<surfaceScalarField> surfaceScalarFields;
-                readFields(mesh, objects, surfaceScalarFields);
+                readFields(meshes.completeMesh(), objects, surfaceScalarFields);
                 PtrList<surfaceVectorField> surfaceVectorFields;
-                readFields(mesh, objects, surfaceVectorFields);
+                readFields(meshes.completeMesh(), objects, surfaceVectorFields);
                 PtrList<surfaceSphericalTensorField>
                     surfaceSphericalTensorFields;
-                readFields(mesh, objects, surfaceSphericalTensorFields);
+                readFields
+                (
+                    meshes.completeMesh(),
+                    objects,
+                    surfaceSphericalTensorFields
+                );
                 PtrList<surfaceSymmTensorField> surfaceSymmTensorFields;
-                readFields(mesh, objects, surfaceSymmTensorFields);
+                readFields
+                (
+                    meshes.completeMesh(),
+                    objects,
+                    surfaceSymmTensorFields
+                );
                 PtrList<surfaceTensorField> surfaceTensorFields;
-                readFields(mesh, objects, surfaceTensorFields);
+                readFields(meshes.completeMesh(), objects, surfaceTensorFields);
 
                 // Construct the point fields
-                const pointMesh& pMesh = pointMesh::New(mesh);
+                const pointMesh& pMesh = pointMesh::New(meshes.completeMesh());
                 PtrList<pointScalarField> pointScalarFields;
                 readFields(pMesh, objects, pointScalarFields);
                 PtrList<pointVectorField> pointVectorFields;
@@ -633,7 +651,7 @@ int main(int argc, char *argv[])
                 (
                     fileHandler().readDir
                     (
-                        runTime.timePath()/cloud::prefix,
+                        runTimes.completeTime().timePath()/cloud::prefix,
                         fileType::directory
                     )
                 );
@@ -672,8 +690,8 @@ int main(int argc, char *argv[])
                 {
                     IOobjectList sprayObjs
                     (
-                        mesh,
-                        runTime.timeName(),
+                        meshes.completeMesh(),
+                        runTimes.completeTime().timeName(),
                         cloud::prefix/cloudDirs[i],
                         IOobject::MUST_READ,
                         IOobject::NO_WRITE,
@@ -695,7 +713,7 @@ int main(int argc, char *argv[])
                             cloudI,
                             new Cloud<indexedParticle>
                             (
-                                mesh,
+                                meshes.completeMesh(),
                                 cloudDirs[i],
                                 false
                             )
@@ -707,7 +725,7 @@ int main(int argc, char *argv[])
                             cloudI,
                             new List<SLList<indexedParticle*>*>
                             (
-                                mesh.nCells(),
+                                meshes.completeMesh().nCells(),
                                 static_cast<SLList<indexedParticle*>*>(nullptr)
                             )
                         );
@@ -726,7 +744,11 @@ int main(int argc, char *argv[])
                             label celli = iter().cell();
 
                             // Check
-                            if (celli < 0 || celli >= mesh.nCells())
+                            if
+                            (
+                                celli < 0
+                             || celli >= meshes.completeMesh().nCells()
+                            )
                             {
                                 FatalErrorInFunction
                                     << "Illegal cell number " << celli
@@ -735,10 +757,11 @@ int main(int argc, char *argv[])
                                     << " at position "
                                     << iter().position() << nl
                                     << "Cell number should be between 0 and "
-                                    << mesh.nCells()-1 << nl
+                                    << meshes.completeMesh().nCells()-1 << nl
                                     << "On this mesh the particle should"
                                     << " be in cell "
-                                    << mesh.findCell(iter().position())
+                                    << meshes.completeMesh().findCell
+                                       (iter().position())
                                     << exit(FatalError);
                             }
 
@@ -754,8 +777,8 @@ int main(int argc, char *argv[])
                         // Read fields
                         IOobjectList lagrangianObjects
                         (
-                            mesh,
-                            runTime.timeName(),
+                            meshes.completeMesh(),
+                            runTimes.completeTime().timeName(),
                             cloud::prefix/cloudDirs[cloudI],
                             IOobject::MUST_READ,
                             IOobject::NO_WRITE,
@@ -856,7 +879,7 @@ int main(int argc, char *argv[])
                 Info<< endl;
 
                 // split the fields over processors
-                for (label proci = 0; proci < decomposition.nProcs(); proci++)
+                for (label proci = 0; proci < meshes.nProcs(); proci++)
                 {
                     Info<< "Processor " << proci << ": field transfer" << endl;
 
@@ -869,10 +892,11 @@ int main(int argc, char *argv[])
                                 proci,
                                 new fvFieldDecomposer
                                 (
-                                    mesh,
-                                    decomposition.procMeshes()[proci],
-                                    decomposition.procFaceAddressing()[proci],
-                                    decomposition.procCellAddressing()[proci]
+                                    meshes.completeMesh(),
+                                    meshes.procMeshes()[proci],
+                                    meshes.procFaceAddressing()[proci],
+                                    meshes.procCellAddressing()[proci],
+                                    meshes.procFaceAddressingBf()[proci]
                                 )
                             );
                         }
@@ -916,10 +940,10 @@ int main(int argc, char *argv[])
                                 proci,
                                 new dimFieldDecomposer
                                 (
-                                    mesh,
-                                    decomposition.procMeshes()[proci],
-                                    decomposition.procFaceAddressing()[proci],
-                                    decomposition.procCellAddressing()[proci]
+                                    meshes.completeMesh(),
+                                    meshes.procMeshes()[proci],
+                                    meshes.procFaceAddressing()[proci],
+                                    meshes.procCellAddressing()[proci]
                                 )
                             );
                         }
@@ -949,7 +973,7 @@ int main(int argc, char *argv[])
                     )
                     {
                         const pointMesh& procPMesh =
-                            pointMesh::New(decomposition.procMeshes()[proci]);
+                            pointMesh::New(meshes.procMeshes()[proci]);
 
                         if (!pointFieldDecomposerList.set(proci))
                         {
@@ -960,7 +984,7 @@ int main(int argc, char *argv[])
                                 (
                                     pMesh,
                                     procPMesh,
-                                    decomposition.procPointAddressing()[proci]
+                                    meshes.procPointAddressing()[proci]
                                 )
                             );
                         }
@@ -989,10 +1013,10 @@ int main(int argc, char *argv[])
                         {
                             lagrangianFieldDecomposer fieldDecomposer
                             (
-                                mesh,
-                                decomposition.procMeshes()[proci],
-                                decomposition.procFaceAddressing()[proci],
-                                decomposition.procCellAddressing()[proci],
+                                meshes.completeMesh(),
+                                meshes.procMeshes()[proci],
+                                meshes.procFaceAddressing()[proci],
+                                meshes.procCellAddressing()[proci],
                                 cloudDirs[cloudI],
                                 lagrangianPositions[cloudI],
                                 cellParticles[cloudI]
@@ -1069,8 +1093,9 @@ int main(int argc, char *argv[])
                     decomposeUniform
                     (
                         copyUniform,
-                        decomposition,
-                        decomposition.procMeshes()[proci].time(),
+                        distributeUniform,
+                        runTimes.completeTime(),
+                        meshes.procMeshes()[proci].time(),
                         regionDir
                     );
 
@@ -1082,8 +1107,9 @@ int main(int argc, char *argv[])
                         decomposeUniform
                         (
                             copyUniform,
-                            decomposition,
-                            decomposition.procMeshes()[proci].time()
+                            distributeUniform,
+                            runTimes.completeTime(),
+                            meshes.procMeshes()[proci].time()
                         );
                     }
                 }

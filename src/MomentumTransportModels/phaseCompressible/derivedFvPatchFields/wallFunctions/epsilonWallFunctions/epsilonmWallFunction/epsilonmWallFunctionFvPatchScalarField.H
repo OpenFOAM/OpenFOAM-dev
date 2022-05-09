@@ -128,13 +128,6 @@ public:
 
             //- Manipulate matrix
             virtual void manipulateMatrix(fvMatrix<scalar>& matrix);
-
-            //- Manipulate matrix with given weights
-            virtual void manipulateMatrix
-            (
-                fvMatrix<scalar>& matrix,
-                const scalarField& weights
-            );
 };
 
 

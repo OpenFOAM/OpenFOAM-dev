@@ -68,6 +68,24 @@ void Foam::polyMesh::setInstance(const fileName& inst)
 }
 
 
+void Foam::polyMesh::setPointsInstance(const fileName& inst)
+{
+    if (debug)
+    {
+        InfoInFunction << "Resetting file instance to " << inst << endl;
+    }
+
+    points_.writeOpt() = IOobject::AUTO_WRITE;
+    points_.instance() = inst;
+
+    if (tetBasePtIsPtr_.valid())
+    {
+        tetBasePtIsPtr_->writeOpt() = IOobject::AUTO_WRITE;
+        tetBasePtIsPtr_->instance() = inst;
+    }
+}
+
+
 Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 {
     if (debug)

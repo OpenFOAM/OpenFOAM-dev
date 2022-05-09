@@ -11,4 +11,5 @@ LIB_LIBS = \
     -ltriSurface \
     -lmeshTools \
     -ldynamicMesh \
-    -lfiniteVolume
+    -lfiniteVolume \
+    -lfvMeshStitchers

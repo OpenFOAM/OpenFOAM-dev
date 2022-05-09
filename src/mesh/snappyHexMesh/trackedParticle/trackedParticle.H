@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -240,10 +240,6 @@ public:
             //- Track all particles to their end point
             bool move(Cloud<trackedParticle>&, trackingData&, const scalar);
 
-            //- Overridable function to handle the particle hitting a patch
-            //  Executed before other patch-hitting functions
-            bool hitPatch(Cloud<trackedParticle>&, trackingData&);
-
             //- Overridable function to handle the particle hitting a wedge
             void hitWedgePatch(Cloud<trackedParticle>&, trackingData&);
 
@@ -286,16 +282,12 @@ public:
                 trackingData&
             );
 
-            //- Overridable function to handle the particle hitting a
-            //- processorPatch
-            void hitProcessorPatch(Cloud<trackedParticle>&, trackingData&);
-
             //- Overridable function to handle the particle hitting a wallPatch
             void hitWallPatch(Cloud<trackedParticle>&, trackingData&);
 
-            //- Convert processor patch addressing to the global equivalents
-            //  and set the celli to the face-neighbour
-            void correctAfterParallelTransfer(const label, trackingData&);
+            //- Do corrections to the particle and tracking data following a
+            //  transfer between processors
+            void correctAfterParallelTransfer(trackingData&);
 
 
     // Ostream Operator

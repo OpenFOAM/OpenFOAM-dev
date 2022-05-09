@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,71 +37,24 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::cyclicFvPatch::makeWeights(scalarField& w) const
 {
-    const cyclicFvPatch& nbrPatch = neighbFvPatch();
-
-    const vectorField delta(coupledFvPatch::delta());
-    const vectorField nbrDelta(nbrPatch.coupledFvPatch::delta());
-
-    const scalarField nfDelta(nf() & delta);
-    const scalarField nbrNfDelta(nbrPatch.nf() & nbrDelta);
-
-    forAll(delta, facei)
-    {
-        const scalar ndoi = nfDelta[facei];
-        const scalar ndni = nbrNfDelta[facei];
-        const scalar ndi = ndoi + ndni;
-
-        if (ndni/vGreat < ndi)
-        {
-            w[facei] = ndni/ndi;
-        }
-        else
-        {
-            const scalar doi = mag(delta[facei]);
-            const scalar dni = mag(nbrDelta[facei]);
-            const scalar di = doi + dni;
-
-            w[facei] = dni/di;
-        }
-    }
+    coupledFvPatch::makeWeights
+    (
+        w,
+        nbrPatch().Sf(),
+        nbrPatch().coupledFvPatch::delta()
+    );
 }
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 Foam::tmp<Foam::vectorField> Foam::cyclicFvPatch::delta() const
 {
-    const vectorField patchD(coupledFvPatch::delta());
-    const vectorField nbrPatchD(neighbFvPatch().coupledFvPatch::delta());
-
-    tmp<vectorField> tpdv(new vectorField(patchD.size()));
-    vectorField& pdv = tpdv.ref();
-
-    // To the transformation if necessary
-    if (transform().transforms())
-    {
-        forAll(patchD, facei)
-        {
-            vector ddi = patchD[facei];
-            vector dni = nbrPatchD[facei];
-
-            pdv[facei] = ddi - transform().transform(dni);
-        }
-    }
-    else
-    {
-        forAll(patchD, facei)
-        {
-            vector ddi = patchD[facei];
-            vector dni = nbrPatchD[facei];
-
-            pdv[facei] = ddi - dni;
-        }
-    }
-
-    return tpdv;
+    return coupledFvPatch::delta(nbrPatch().coupledFvPatch::delta());
 }
 
 

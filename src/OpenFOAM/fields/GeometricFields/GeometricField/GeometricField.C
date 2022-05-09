@@ -738,6 +738,30 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::clone() const
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>>
+Foam::GeometricField<Type, PatchField, GeoMesh>::cloneUnSliced() const
+{
+    return tmp<GeometricField<Type, PatchField, GeoMesh>>
+    (
+        new GeometricField<Type, PatchField, GeoMesh>
+        (
+            IOobject
+            (
+                this->name(),
+                this->mesh().thisDb().time().timeName(),
+                this->mesh().thisDb(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            *this,
+            GeometricField<Type, PatchField, GeoMesh>::Patch::calculatedType()
+        )
+    );
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>>
 Foam::GeometricField<Type, PatchField, GeoMesh>::New
 (
     const word& name,

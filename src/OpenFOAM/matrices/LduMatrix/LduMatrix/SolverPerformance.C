@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,12 +102,12 @@ void Foam::SolverPerformance<Type>::print
     {
         if (pTraits<Type>::nComponents == 1)
         {
-            os  << solverName_ << ":  Solving for " << fieldName_;
+            os  << indent << solverName_ << ":  Solving for " << fieldName_;
 
         }
         else
         {
-            os  << solverName_ << ":  Solving for "
+            os  << indent << solverName_ << ":  Solving for "
                 << word(fieldName_ + pTraits<Type>::componentNames[cmpt]);
         }
 

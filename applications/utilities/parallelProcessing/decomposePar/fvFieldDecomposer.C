@@ -25,95 +25,38 @@ License
 
 #include "fvFieldDecomposer.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::labelList Foam::fvFieldDecomposer::patchFieldDecomposer::alignAddressing
+Foam::label Foam::fvFieldDecomposer::completePatchID
 (
-    const labelUList& addressingSlice,
-    const label addressingOffset
+    const label procPatchi
 ) const
 {
-    labelList addressing(addressingSlice.size());
+    const fvPatch& procPatch = procMesh_.boundary()[procPatchi];
 
-    forAll(addressing, i)
+    if (procPatchi < completeMesh_.boundary().size())
     {
-        // Subtract one to align addressing.
-        addressing[i] = addressingSlice[i] - (addressingOffset + 1);
+        return procPatchi;
     }
-
-    return addressing;
+    else if (isA<processorCyclicFvPatch>(procPatch))
+    {
+        return refCast<const processorCyclicFvPatch>(procPatch).referPatchID();
+    }
+    else
+    {
+        return -1;
+    }
 }
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fvFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
 (
-    const labelUList& addressingSlice,
-    const label addressingOffset
+    const labelUList& addressing
 )
 :
-    labelList(alignAddressing(addressingSlice, addressingOffset)),
-    directFvPatchFieldMapper(static_cast<const labelList&>(*this))
-{}
-
-
-Foam::labelList Foam::fvFieldDecomposer::processorVolPatchFieldDecomposer::
-alignAddressing
-(
-    const fvMesh& mesh,
-    const labelUList& addressingSlice
-) const
-{
-    labelList addressing(addressingSlice.size());
-
-    const labelList& own = mesh.faceOwner();
-    const labelList& neighb = mesh.faceNeighbour();
-
-    forAll(addressing, i)
-    {
-        // Subtract one to align addressing.
-        label ai = mag(addressingSlice[i]) - 1;
-
-        if (ai < neighb.size())
-        {
-            // This is a regular face. it has been an internal face
-            // of the original mesh and now it has become a face
-            // on the parallel boundary.
-            // Give face the value of the neighbour.
-
-            if (addressingSlice[i] >= 0)
-            {
-                // I have the owner so use the neighbour value
-                addressing[i] = neighb[ai];
-            }
-            else
-            {
-                addressing[i] = own[ai];
-            }
-        }
-        else
-        {
-            // This is a face that used to be on a cyclic boundary
-            // but has now become a parallel patch face. I cannot
-            // do the interpolation properly (I would need to look
-            // up the different (face) list of data), so I will
-            // just grab the value from the owner cell
-
-            addressing[i] = own[ai];
-        }
-    }
-
-    return addressing;
-}
-
-
-Foam::fvFieldDecomposer::processorVolPatchFieldDecomposer::
-processorVolPatchFieldDecomposer
-(
-    const fvMesh& mesh,
-    const labelUList& addressingSlice
-)
-:
-    labelList(alignAddressing(mesh, addressingSlice)),
+    labelList(mag(addressing) - 1),
     directFvPatchFieldMapper(static_cast<const labelList&>(*this))
 {}
 
@@ -123,34 +66,22 @@ Foam::fvFieldDecomposer::fvFieldDecomposer
     const fvMesh& completeMesh,
     const fvMesh& procMesh,
     const labelList& faceAddressing,
-    const labelList& cellAddressing
+    const labelList& cellAddressing,
+    const surfaceLabelField::Boundary& faceAddressingBf
 )
 :
     completeMesh_(completeMesh),
     procMesh_(procMesh),
     faceAddressing_(faceAddressing),
     cellAddressing_(cellAddressing),
-    patchFieldDecomposers_(procMesh_.boundary().size()),
-    processorVolPatchFieldDecomposers_(procMesh_.boundary().size())
+    faceAddressingBf_(faceAddressingBf),
+    patchFieldDecomposers_(procMesh_.boundary().size())
 {
     forAll(procMesh_.boundary(), procPatchi)
     {
-        const fvPatch& procPatch = procMesh.boundary()[procPatchi];
+        const label completePatchi = completePatchID(procPatchi);
 
-        // Determine the index of the corresponding complete patch
-        label completePatchi = -1;
-        if (procPatchi < completeMesh_.boundary().size())
-        {
-            completePatchi = procPatchi;
-        }
-        else if (isA<processorCyclicFvPatch>(procPatch))
-        {
-            completePatchi =
-                refCast<const processorCyclicPolyPatch>
-                (procPatch.patch()).referPatchID();
-        }
-
-        // If there is a corresponding complete patch, then create a mapper
+        // If there is a corresponding complete patch then create a patch mapper
         if (completePatchi >= 0)
         {
             patchFieldDecomposers_.set
@@ -158,22 +89,7 @@ Foam::fvFieldDecomposer::fvFieldDecomposer
                 procPatchi,
                 new patchFieldDecomposer
                 (
-                    procPatch.patchSlice(faceAddressing_),
-                    completeMesh_.boundaryMesh()[completePatchi].start()
-                )
-            );
-        }
-
-        // If this is a processor patch then create a processor mapper
-        if (procPatchi >= completeMesh_.boundary().size())
-        {
-            processorVolPatchFieldDecomposers_.set
-            (
-                procPatchi,
-                new processorVolPatchFieldDecomposer
-                (
-                    completeMesh_,
-                    procPatch.patchSlice(faceAddressing_)
+                    faceAddressingBf[completePatchi]
                 )
             );
         }

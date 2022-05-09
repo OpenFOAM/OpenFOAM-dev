@@ -63,52 +63,12 @@ public:
             public labelList,
             public directFvPatchFieldMapper
         {
-            // Private Member Functions
-
-                labelList alignAddressing
-                (
-                    const labelUList& addressingSlice,
-                    const label addressingOffset
-                ) const;
-
-
         public:
 
             // Constructors
 
                 //- Construct given addressing
-                patchFieldDecomposer
-                (
-                    const labelUList& addressingSlice,
-                    const label addressingOffset
-                );
-        };
-
-        //- Processor patch field decomposer class. Maps either owner or
-        //  neighbour data (no interpolate anymore - processorFvPatchField
-        //  holds neighbour data)
-        class processorVolPatchFieldDecomposer
-        :
-            public labelList,
-            public directFvPatchFieldMapper
-        {
-            // Private Member Functions
-
-                labelList alignAddressing
-                (
-                    const fvMesh& mesh,
-                    const labelUList& addressingSlice
-                ) const;
-
-
-        public:
-
-            //- Construct given addressing
-            processorVolPatchFieldDecomposer
-            (
-                const fvMesh& mesh,
-                const labelUList& addressingSlice
-            );
+                patchFieldDecomposer(const labelUList& addressing);
         };
 
 
@@ -128,23 +88,35 @@ private:
         //- Reference to cell addressing
         const labelList& cellAddressing_;
 
+        //- Reference to face addressing boundary field
+        const surfaceLabelField::Boundary& faceAddressingBf_;
+
         //- List of patch field decomposers
         PtrList<patchFieldDecomposer> patchFieldDecomposers_;
-
-        //- ...
-        PtrList<processorVolPatchFieldDecomposer>
-            processorVolPatchFieldDecomposers_;
 
 
     // Private Member Functions
 
-        //- Helper: map & optionally flip a (face) field
+        //- Convert a processor patch to the corresponding complete patch index
+        label completePatchID(const label procPatchi) const;
+
+        //- Map cell values to faces
         template<class Type>
-        static tmp<Field<Type>> mapField
+        static tmp<Field<Type>> mapCellToFace
+        (
+            const labelUList& owner,
+            const labelUList& neighbour,
+            const Field<Type>& field,
+            const labelUList& addressing
+        );
+
+        //- Map face values to faces
+        template<class Type>
+        static tmp<Field<Type>> mapFaceToFace
         (
             const Field<Type>& field,
-            const labelUList& mapAndSign,
-            const bool applyFlip
+            const labelUList& addressing,
+            const bool isFlux
         );
 
 
@@ -158,7 +130,8 @@ public:
             const fvMesh& completeMesh,
             const fvMesh& procMesh,
             const labelList& faceAddressing,
-            const labelList& cellAddressing
+            const labelList& cellAddressing,
+            const surfaceLabelField::Boundary& faceAddressingBf
         );
 
         //- Disallow default bitwise copy construction

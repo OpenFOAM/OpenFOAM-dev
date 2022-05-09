@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -229,18 +229,8 @@ public:
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
 
-            //- Update the coefficients associated with the patch field
-            virtual void updateWeightedCoeffs(const scalarField& weights);
-
             //- Manipulate matrix
             virtual void manipulateMatrix(fvMatrix<scalar>& matrix);
-
-            //- Manipulate matrix with given weights
-            virtual void manipulateMatrix
-            (
-                fvMatrix<scalar>& matrix,
-                const scalarField& weights
-            );
 
 
         // I-O

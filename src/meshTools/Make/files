@@ -261,6 +261,7 @@ patchToPatch/patchToPatch/patchToPatchParallelOps.C
 patchToPatch/nearest/nearestPatchToPatch.C
 patchToPatch/inverseDistance/inverseDistancePatchToPatch.C
 patchToPatch/intersection/intersectionPatchToPatch.C
+patchToPatch/rays/raysPatchToPatch.C
 
 mappedPatches/mappedPolyPatch/mappedPatchBase.C
 mappedPatches/mappedPolyPatch/mappedPolyPatch.C
@@ -278,5 +279,21 @@ tetOverlapVolume/tetOverlapVolume.C
 
 triIntersect/triIntersect.C
 triIntersect/triIntersectLocationIO.C
+
+nonConformal/polyPatches/nonConformal/nonConformalPolyPatch.C
+nonConformal/polyPatches/nonConformalCoupled/nonConformalCoupledPolyPatch.C
+nonConformal/polyPatches/nonConformalCyclic/nonConformalCyclicPolyPatch.C
+nonConformal/polyPatches/nonConformalError/nonConformalErrorPolyPatch.C
+nonConformal/polyPatches/nonConformalProcessorCyclic/nonConformalProcessorCyclicPolyPatch.C
+
+nonConformal/pointPatches/nonConformalCyclic/nonConformalCyclicPointPatch.C
+nonConformal/pointPatches/nonConformalError/nonConformalErrorPointPatch.C
+nonConformal/pointPatches/nonConformalProcessorCyclic/nonConformalProcessorCyclicPointPatch.C
+
+nonConformal/pointPatchFields/nonConformalCyclic/nonConformalCyclicPointPatchFields.C
+nonConformal/pointPatchFields/nonConformalError/nonConformalErrorPointPatchFields.C
+nonConformal/pointPatchFields/nonConformalProcessorCyclic/nonConformalProcessorCyclicPointPatchFields.C
+
+nonConformalBoundary/nonConformalBoundary.C
 
 LIB = $(FOAM_LIBBIN)/libmeshTools

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ License
 #include "cyclicAMIPolyPatch.H"
 #include "cyclicACMIPolyPatch.H"
 #include "cyclicRepeatAMIPolyPatch.H"
+#include "nonConformalCyclicPolyPatch.H"
 #include "processorPolyPatch.H"
 #include "symmetryPlanePolyPatch.H"
 #include "symmetryPolyPatch.H"
@@ -156,6 +157,24 @@ void Foam::particle::hitFaceNoChangeToMasterPatch
     }
     else if (onBoundaryFace())
     {
+        forAll(cloud.patchNonConformalCyclicPatches()[p.patch()], i)
+        {
+            if
+            (
+                p.hitNonConformalCyclicPatch
+                (
+                    displacement,
+                    fraction,
+                    cloud.patchNonConformalCyclicPatches()[p.patch()][i],
+                    cloud,
+                    ttd
+                )
+            )
+            {
+                return;
+            }
+        }
+
         if (!p.hitPatch(cloud, ttd))
         {
             const polyPatch& patch = mesh_.boundaryMesh()[p.patch()];
@@ -478,8 +497,77 @@ void Foam::particle::hitCyclicRepeatAMIPatch
 
 
 template<class TrackCloudType>
-void Foam::particle::hitProcessorPatch(TrackCloudType&, trackingData&)
-{}
+bool Foam::particle::hitNonConformalCyclicPatch
+(
+    const vector& displacement,
+    const scalar fraction,
+    const label patchi,
+    TrackCloudType& cloud,
+    trackingData& td
+)
+{
+    const nonConformalCyclicPolyPatch& nccpp =
+        static_cast<const nonConformalCyclicPolyPatch&>
+        (mesh_.boundaryMesh()[patchi]);
+
+    const point sendPos = this->position();
+
+    // Get the send patch data
+    vector sendNormal, sendDisplacement;
+    patchData(sendNormal, sendDisplacement);
+
+    // Project the particle through the non-conformal patch
+    point receivePos;
+    const patchToPatch::procFace receiveProcFace =
+        nccpp.ray
+        (
+            stepFractionSpan()[0] + stepFraction_*stepFractionSpan()[1],
+            nccpp.origPatch().whichFace(facei_),
+            sendPos,
+            displacement - fraction*sendDisplacement,
+            receivePos
+        );
+
+    // If we didn't hit anything then this particle is assumed to project to
+    // the orig patch, or another different non-conformal patch. Return, so
+    // these can be tried.
+    if (receiveProcFace.proci == -1) return false;
+
+    // If we are transferring between processes then mark as such and return.
+    // The cloud will handle all processor transfers as a single batch.
+    if (receiveProcFace.proci != Pstream::myProcNo())
+    {
+        td.sendFromPatch = nccpp.index();
+        td.sendToProc = receiveProcFace.proci;
+        td.sendToPatch = nccpp.nbrPatchID();
+        td.sendToPatchFace = receiveProcFace.facei;
+
+        return true;
+    }
+
+    // If both sides are on the same process, then do the local transfer
+    prepareForNonConformalCyclicTransfer
+    (
+        nccpp.index(),
+        receiveProcFace.facei
+    );
+    correctAfterNonConformalCyclicTransfer
+    (
+        nccpp.nbrPatchID()
+    );
+
+    return true;
+}
+
+
+template<class TrackCloudType>
+void Foam::particle::hitProcessorPatch(TrackCloudType& cloud, trackingData& td)
+{
+    td.sendToProc = cloud.patchNbrProc()[patch()];
+    td.sendFromPatch = patch();
+    td.sendToPatch = cloud.patchNbrProcPatch()[patch()];
+    td.sendToPatchFace = mesh().boundaryMesh()[patch()].whichFace(face());
+}
 
 
 template<class TrackCloudType>

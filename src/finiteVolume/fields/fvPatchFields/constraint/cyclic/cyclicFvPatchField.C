@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,10 @@ Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::cyclicFvPatchField<Type>::patchNeighbourField() const
+Foam::cyclicFvPatchField<Type>::patchNeighbourField
+(
+    const Pstream::commsTypes
+) const
 {
     const Field<Type>& iField = this->primitiveField();
     const labelUList& nbrFaceCells =
@@ -118,7 +121,6 @@ Foam::cyclicFvPatchField<Type>::patchNeighbourField() const
 
     tmp<Field<Type>> tpnf(new Field<Type>(this->size()));
     Field<Type>& pnf = tpnf.ref();
-
 
     forAll(pnf, facei)
     {

@@ -67,6 +67,23 @@ class processorCyclicPolyPatch
 
 protected:
 
+    // Protected constructors
+
+        //- Construct from components with specified name
+        processorCyclicPolyPatch
+        (
+            const word& name,
+            const label size,
+            const label start,
+            const label index,
+            const polyBoundaryMesh& bm,
+            const int myProcNo,
+            const int neighbProcNo,
+            const word& referPatchName,
+            const word& patchType = typeName
+        );
+
+
     // Protected Member functions
 
         //- Initialise the calculation of the patch geometry
@@ -245,7 +262,7 @@ public:
             const polyBoundaryMesh& bm
         );
 
-        //- Referring patchID.
+        //- Return the referring patchID
         label referPatchID() const
         {
             if (referPatchID_ == -1)
@@ -266,6 +283,7 @@ public:
             return referPatchID_;
         }
 
+        //- Return a reference to the referring patch
         const cyclicPolyPatch& referPatch() const
         {
             const polyPatch& pp = this->boundaryMesh()[referPatchID()];

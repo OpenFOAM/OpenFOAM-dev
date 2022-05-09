@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,70 +99,6 @@ Foam::cyclicPointPatchField<Type>::cyclicPointPatchField
     coupledPointPatchField<Type>(ptf, iF),
     cyclicPatch_(ptf.cyclicPatch_)
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-void Foam::cyclicPointPatchField<Type>::swapAddSeparated
-(
-    const Pstream::commsTypes,
-    Field<Type>& pField
-) const
-{
-    // Get neighbouring pointPatch
-    const cyclicPointPatch& nbrPatch = cyclicPatch_.nbrPatch();
-
-    if (cyclicPatch_.cyclicPatch().owner())
-    {
-        // We inplace modify pField. To prevent the other side (which gets
-        // evaluated at a later date) using already changed values we do
-        // all swaps on the side that gets evaluated first.
-
-        // Get neighbouring pointPatchField
-        const GeometricField<Type, pointPatchField, pointMesh>& fld =
-            refCast<const GeometricField<Type, pointPatchField, pointMesh>>
-            (
-                this->internalField()
-            );
-
-        const cyclicPointPatchField<Type>& nbr =
-            refCast<const cyclicPointPatchField<Type>>
-            (
-                fld.boundaryField()[nbrPatch.index()]
-            );
-
-
-        Field<Type> pf(this->patchInternalField(pField));
-        Field<Type> nbrPf(nbr.patchInternalField(pField));
-
-        const edgeList& pairs = cyclicPatch_.transformPairs();
-
-        if (transform().template transforms<Type>())
-        {
-            // Transform both sides.
-            forAll(pairs, pairi)
-            {
-                label pointi = pairs[pairi][0];
-                label nbrPointi = pairs[pairi][1];
-
-                Type tmp = pf[pointi];
-                pf[pointi] = transform().transform(nbrPf[nbrPointi]);
-                nbrPf[nbrPointi] = transform().invTransform(tmp);
-            }
-        }
-        else
-        {
-            forAll(pairs, pairi)
-            {
-                Swap(pf[pairs[pairi][0]], nbrPf[pairs[pairi][1]]);
-            }
-        }
-
-        this->addToInternalField(pField, pf);
-        nbr.addToInternalField(pField, nbrPf);
-    }
-}
 
 
 // ************************************************************************* //

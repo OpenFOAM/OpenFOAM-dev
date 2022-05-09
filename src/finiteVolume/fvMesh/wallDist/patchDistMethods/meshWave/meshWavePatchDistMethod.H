@@ -83,6 +83,10 @@ class meshWave
         //- Do accurate distance calculation for near-wall cells.
         const label nCorrectors_;
 
+        //- Minimum fraction of a poly face considered to be a valid location
+        //  from which to measure distance
+        const scalar minFaceFraction_;
+
 
 public:
 
@@ -107,7 +111,8 @@ public:
         (
             const fvMesh& mesh,
             const labelHashSet& patchIDs,
-            const label nCorrectors = 2
+            const label nCorrectors = 2,
+            const scalar minFaceFraction = 1e-1
         );
 
         //- Disallow default bitwise copy construction

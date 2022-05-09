@@ -65,6 +65,7 @@ void Foam::nearWallDist::correct()
     (
         mesh(),
         mesh().boundaryMesh().findPatchIDs<wallPolyPatch>(),
+        -vGreat,
         2,
         yVf
     );
@@ -106,6 +107,8 @@ Foam::nearWallDist::~nearWallDist()
 
 bool Foam::nearWallDist::movePoints()
 {
+    resize();
+
     correct();
     return true;
 }

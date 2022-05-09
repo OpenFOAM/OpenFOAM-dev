@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -211,9 +211,6 @@ public:
 
             //- Track all particles to their end point
             bool move(sampledSetCloud&, trackingData&, const scalar);
-
-            //- Hit a generic patch. Does nothing.
-            bool hitPatch(sampledSetCloud&, trackingData&);
 
             //- Hit a wedge patch. Ends the track.
             void hitWedgePatch(sampledSetCloud&, trackingData&);

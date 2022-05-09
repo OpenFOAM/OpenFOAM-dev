@@ -33,35 +33,50 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fvFieldDecomposer::mapField
+Foam::tmp<Foam::Field<Type>> Foam::fvFieldDecomposer::mapCellToFace
 (
+    const labelUList& owner,
+    const labelUList& neighbour,
     const Field<Type>& field,
-    const labelUList& mapAndSign,
-    const bool applyFlip
+    const labelUList& addressing
 )
 {
-    tmp<Field<Type>> tfld(new Field<Type>(mapAndSign.size()));
+    tmp<Field<Type>> tfld(new Field<Type>(addressing.size()));
     Field<Type>& fld = tfld.ref();
 
-    if (applyFlip)
+    forAll(addressing, i)
     {
-        forAll(mapAndSign, i)
-        {
-            if (mapAndSign[i] < 0)
-            {
-                fld[i] = -field[-mapAndSign[i] - 1];
-            }
-            else
-            {
-                fld[i] = field[mapAndSign[i] - 1];
-            }
-        }
+        fld[i] =
+            field
+            [
+                addressing[i] > 0
+              ? neighbour[addressing[i] - 1]
+              : owner[- addressing[i] + 1]
+            ];
     }
-    else
+
+    return tfld;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::fvFieldDecomposer::mapFaceToFace
+(
+    const Field<Type>& field,
+    const labelUList& addressing,
+    const bool isFlux
+)
+{
+    tmp<Field<Type>> tfld(new Field<Type>(addressing.size()));
+    Field<Type>& fld = tfld.ref();
+
+    forAll(addressing, i)
     {
-        // Ignore face flipping
-        fld.map(field, mag(mapAndSign) - 1);
+        fld[i] =
+            (isFlux && addressing[i] < 0 ? -1 : +1)
+           *field[mag(addressing[i]) - 1];
     }
+
     return tfld;
 }
 
@@ -74,9 +89,8 @@ Foam::fvFieldDecomposer::decomposeField
     const bool allowUnknownPatchFields
 ) const
 {
-    // 1. Create the complete field with dummy patch fields
+    // Create dummy patch fields
     PtrList<fvPatchField<Type>> patchFields(procMesh_.boundary().size());
-
     forAll(procMesh_.boundary(), procPatchi)
     {
         patchFields.set
@@ -91,7 +105,7 @@ Foam::fvFieldDecomposer::decomposeField
         );
     }
 
-    // Create the field for the processor
+    // Create the processor field with the dummy patch fields
     tmp<GeometricField<Type, fvPatchField, volMesh>> tresF
     (
         new GeometricField<Type, fvPatchField, volMesh>
@@ -113,35 +127,17 @@ Foam::fvFieldDecomposer::decomposeField
     );
     GeometricField<Type, fvPatchField, volMesh>& resF = tresF.ref();
 
-
-    // 2. Change the fvPatchFields to the correct type using a mapper
-    //  constructor (with reference to the now correct internal field)
-
+    // Change the patch fields to the correct type using a mapper constructor
+    // (with reference to the now correct internal field)
     typename GeometricField<Type, fvPatchField, volMesh>::
         Boundary& bf = resF.boundaryFieldRef();
-
     forAll(bf, procPatchi)
     {
         const fvPatch& procPatch = procMesh_.boundary()[procPatchi];
 
-        // Determine the index of the corresponding complete patch
-        label completePatchi = -1;
-        if (procPatchi < completeMesh_.boundary().size())
-        {
-            completePatchi = procPatchi;
-        }
-        else if (isA<processorCyclicFvPatch>(procPatch))
-        {
-            const label referPatchi =
-                refCast<const processorCyclicPolyPatch>
-                (procPatch.patch()).referPatchID();
-            if (field.boundaryField()[referPatchi].overridesConstraint())
-            {
-                completePatchi = referPatchi;
-            }
-        }
+        const label completePatchi = completePatchID(procPatchi);
 
-        if (completePatchi != -1)
+        if (completePatchi == procPatchi)
         {
             bf.set
             (
@@ -157,6 +153,10 @@ Foam::fvFieldDecomposer::decomposeField
         }
         else if (isA<processorCyclicFvPatch>(procPatch))
         {
+            const label nbrCompletePatchi =
+                refCast<const processorCyclicFvPatch>(procPatch)
+               .referPatch().nbrPatchID();
+
             bf.set
             (
                 procPatchi,
@@ -164,9 +164,12 @@ Foam::fvFieldDecomposer::decomposeField
                 (
                     procPatch,
                     resF(),
-                    processorVolPatchFieldDecomposers_[procPatchi]
+                    mapCellToFace
                     (
-                        field.primitiveField()
+                        labelUList(),
+                        completeMesh_.lduAddr().patchAddr(nbrCompletePatchi),
+                        field.primitiveField(),
+                        faceAddressingBf_[procPatchi]
                     )
                 )
             );
@@ -180,9 +183,12 @@ Foam::fvFieldDecomposer::decomposeField
                 (
                     procPatch,
                     resF(),
-                    processorVolPatchFieldDecomposers_[procPatchi]
+                    mapCellToFace
                     (
-                        field.primitiveField()
+                        completeMesh_.owner(),
+                        completeMesh_.neighbour(),
+                        field.primitiveField(),
+                        faceAddressingBf_[procPatchi]
                     )
                 )
             );
@@ -206,7 +212,6 @@ Foam::fvFieldDecomposer::decomposeField
         }
     }
 
-    // Create the field for the processor
     return tresF;
 }
 
@@ -218,34 +223,14 @@ Foam::fvFieldDecomposer::decomposeField
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field
 ) const
 {
-    // Problem with addressing when a processor patch picks up both internal
-    // faces and faces from cyclic boundaries. This is a bit of a hack, but
-    // I cannot find a better solution without making the internal storage
-    // mechanism for surfaceFields correspond to the one of faces in polyMesh
-    // (i.e. using slices)
-    Field<Type> allFaceField(field.mesh().nFaces());
+    const SubList<label> faceAddressingIf
+    (
+        faceAddressing_,
+        procMesh_.nInternalFaces()
+    );
 
-    forAll(field.primitiveField(), i)
-    {
-        allFaceField[i] = field.primitiveField()[i];
-    }
-
-    forAll(field.boundaryField(), patchi)
-    {
-        const Field<Type> & p = field.boundaryField()[patchi];
-
-        const label patchStart = field.mesh().boundaryMesh()[patchi].start();
-
-        forAll(p, i)
-        {
-            allFaceField[patchStart + i] = p[i];
-        }
-    }
-
-
-    // 1. Create the complete field with dummy patch fields
+    // Create dummy patch fields
     PtrList<fvsPatchField<Type>> patchFields(procMesh_.boundary().size());
-
     forAll(procMesh_.boundary(), procPatchi)
     {
         patchFields.set
@@ -260,6 +245,7 @@ Foam::fvFieldDecomposer::decomposeField
         );
     }
 
+    // Create the processor field with the dummy patch fields
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tresF
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
@@ -275,14 +261,10 @@ Foam::fvFieldDecomposer::decomposeField
             ),
             procMesh_,
             field.dimensions(),
-            mapField
+            mapFaceToFace
             (
                 field,
-                labelList::subList
-                (
-                    faceAddressing_,
-                    procMesh_.nInternalFaces()
-                ),
+                faceAddressingIf,
                 isFlux(field)
             ),
             patchFields
@@ -290,18 +272,17 @@ Foam::fvFieldDecomposer::decomposeField
     );
     GeometricField<Type, fvsPatchField, surfaceMesh>& resF = tresF.ref();
 
-
-    // 2. Change the fvsPatchFields to the correct type using a mapper
-    //  constructor (with reference to the now correct internal field)
-
+    // Change the patch fields to the correct type using a mapper constructor
+    // (with reference to the now correct internal field)
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
         Boundary& bf = resF.boundaryFieldRef();
-
     forAll(procMesh_.boundary(), procPatchi)
     {
         const fvPatch& procPatch = procMesh_.boundary()[procPatchi];
 
-        if (procPatchi < completeMesh_.boundary().size())
+        const label completePatchi = completePatchID(procPatchi);
+
+        if (completePatchi == procPatchi)
         {
             bf.set
             (
@@ -317,7 +298,6 @@ Foam::fvFieldDecomposer::decomposeField
         }
         else if (isA<processorCyclicFvPatch>(procPatch))
         {
-            // Do our own mapping. Avoids a lot of mapping complexity.
             bf.set
             (
                 procPatchi,
@@ -325,10 +305,10 @@ Foam::fvFieldDecomposer::decomposeField
                 (
                     procPatch,
                     resF(),
-                    mapField
+                    mapFaceToFace
                     (
-                        allFaceField,
-                        procPatch.patchSlice(faceAddressing_),
+                        field.boundaryField()[completePatchi],
+                        faceAddressingBf_[procPatchi],
                         isFlux(field)
                     )
                 )
@@ -336,7 +316,6 @@ Foam::fvFieldDecomposer::decomposeField
         }
         else if (isA<processorFvPatch>(procPatch))
         {
-            // Do our own mapping. Avoids a lot of mapping complexity.
             bf.set
             (
                 procPatchi,
@@ -344,10 +323,10 @@ Foam::fvFieldDecomposer::decomposeField
                 (
                     procPatch,
                     resF(),
-                    mapField
+                    mapFaceToFace
                     (
-                        allFaceField,
-                        procPatch.patchSlice(faceAddressing_),
+                        field.primitiveField(),
+                        faceAddressingBf_[procPatchi],
                         isFlux(field)
                     )
                 )
@@ -360,7 +339,6 @@ Foam::fvFieldDecomposer::decomposeField
         }
     }
 
-    // Create the field for the processor
     return tresF;
 }
 

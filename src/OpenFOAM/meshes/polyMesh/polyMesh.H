@@ -403,6 +403,9 @@ public:
             //- Set the instance for mesh files
             void setInstance(const fileName&);
 
+            //- Set the instance for the points files
+            void setPointsInstance(const fileName&);
+
 
         // Access
 

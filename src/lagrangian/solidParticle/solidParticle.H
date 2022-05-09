@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,14 +198,6 @@ public:
 
 
         // Patch interactions
-
-            //- Overridable function to handle the particle hitting a patch
-            //  Executed before other patch-hitting functions
-            bool hitPatch(solidParticleCloud& cloud, trackingData& td);
-
-            //- Overridable function to handle the particle hitting a
-            //  processorPatch
-            void hitProcessorPatch(solidParticleCloud& cloud, trackingData& td);
 
             //- Overridable function to handle the particle hitting a wallPatch
             void hitWallPatch(solidParticleCloud& cloud, trackingData& td);

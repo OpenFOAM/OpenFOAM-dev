@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,8 +40,8 @@ bool Foam::DSMCParcel<ParcelType>::move
     typename TrackCloudType::parcelType& p =
         static_cast<typename TrackCloudType::parcelType&>(*this);
 
-    td.switchProcessor = false;
     td.keepParticle = true;
+    td.sendToProc = -1;
 
     const polyMesh& mesh = cloud.pMesh();
 
@@ -51,7 +51,7 @@ bool Foam::DSMCParcel<ParcelType>::move
     // needs to retain its 3D value for collision purposes.
     vector Utracking = U_;
 
-    while (td.keepParticle && !td.switchProcessor && p.stepFraction() < 1)
+    while (td.keepParticle && td.sendToProc == -1 && p.stepFraction() < 1)
     {
         Utracking = U_;
 
@@ -67,26 +67,6 @@ bool Foam::DSMCParcel<ParcelType>::move
     }
 
     return td.keepParticle;
-}
-
-
-template<class ParcelType>
-template<class TrackCloudType>
-bool Foam::DSMCParcel<ParcelType>::hitPatch(TrackCloudType&, trackingData&)
-{
-    return false;
-}
-
-
-template<class ParcelType>
-template<class TrackCloudType>
-void Foam::DSMCParcel<ParcelType>::hitProcessorPatch
-(
-    TrackCloudType&,
-    trackingData& td
-)
-{
-    td.switchProcessor = true;
 }
 
 

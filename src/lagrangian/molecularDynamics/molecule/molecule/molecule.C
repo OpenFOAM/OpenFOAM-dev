@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,8 +72,8 @@ bool Foam::molecule::move
     const scalar trackTime
 )
 {
-    td.switchProcessor = false;
     td.keepParticle = true;
+    td.sendToProc = -1;
 
     const constantProperties& constProps(cloud.constProps(id_));
 
@@ -90,7 +90,7 @@ bool Foam::molecule::move
     {
         // Leapfrog tracking part
 
-        while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
+        while (td.keepParticle && td.sendToProc == -1 && stepFraction() < 1)
         {
             const scalar f = 1 - stepFraction();
             trackToAndHitFace(f*trackTime*v_, f, cloud, td);
@@ -224,18 +224,6 @@ void Foam::molecule::setSiteSizes(label size)
     sitePositions_.setSize(size);
 
     siteForces_.setSize(size);
-}
-
-
-bool Foam::molecule::hitPatch(moleculeCloud&, trackingData&)
-{
-    return false;
-}
-
-
-void Foam::molecule::hitProcessorPatch(moleculeCloud&, trackingData& td)
-{
-    td.switchProcessor = true;
 }
 
 

@@ -27,6 +27,7 @@ License
 #include "processorFvPatch.H"
 #include "cyclicFvPatch.H"
 #include "cyclicAMIFvPatch.H"
+#include "CompactListList.H"
 #include "OPstream.H"
 #include "IPstream.H"
 #include "PstreamReduceOps.H"
@@ -850,9 +851,9 @@ Foam::label Foam::FvFaceCellWave<Type, TrackingData>::faceToCell()
     const labelList& owner = mesh_.owner();
     const labelList& neighbour = mesh_.neighbour();
 
-    forAll(changedPatchAndFaces_, i)
+    forAll(changedPatchAndFaces_, changedFacei)
     {
-        const labelPair& patchAndFacei = changedPatchAndFaces_[i];
+        const labelPair& patchAndFacei = changedPatchAndFaces_[changedFacei];
         const label patchi = patchAndFacei.first();
         const label facei = patchAndFacei.second();
 
@@ -929,9 +930,9 @@ Foam::label Foam::FvFaceCellWave<Type, TrackingData>::cellToFace()
 {
     const cellList& cells = mesh_.cells();
 
-    forAll(changedCells_, i)
+    forAll(changedCells_, changedCelli)
     {
-        const label celli = changedCells_[i];
+        const label celli = changedCells_[changedCelli];
 
         if (!cellChanged_[celli])
         {
@@ -946,35 +947,39 @@ Foam::label Foam::FvFaceCellWave<Type, TrackingData>::cellToFace()
         forAll(cells[celli], cellFacei)
         {
             // Get the patch (if any) and face index
-            label patchi, facei;
-            const label polyFacei = cells[celli][cellFacei];
+            label polyFacei = cells[celli][cellFacei];
+
+            // Get the FV patches and faces associated with this poly face
+            labelUList patches, faces;
             if (polyFacei < mesh_.nInternalFaces())
             {
-                patchi = -1;
-                facei = polyFacei;
+                static label noPatchi = -1;
+                patches.shallowCopy(labelUList(&noPatchi, 1));
+                faces.shallowCopy(labelUList(&polyFacei, 1));
             }
             else
             {
                 const label polyBFacei = polyFacei - mesh_.nInternalFaces();
-                patchi = mesh_.boundaryMesh().patchID()[polyBFacei];
-                facei = polyFacei - mesh_.boundaryMesh()[patchi].start();
+                patches.shallowCopy(mesh_.polyBFacePatches()[polyBFacei]);
+                faces.shallowCopy(mesh_.polyBFacePatchFaces()[polyBFacei]);
             }
 
-            // If connected to an empty patch then skip this face
-            if (patchi != -1 && !mesh_.boundary()[patchi].size()) continue;
-
-            Type& connectedInfo = faceInfo({patchi, facei});
-
-            if (!connectedInfo.equal(info, td_))
+            // Propagate into the connected FV faces
+            forAll(patches, i)
             {
-                updateFace
-                (
-                    {patchi, facei},
-                    celli,
-                    info,
-                    propagationTol_,
-                    connectedInfo
-                );
+                Type& connectedInfo = faceInfo({patches[i], faces[i]});
+
+                if (!connectedInfo.equal(info, td_))
+                {
+                    updateFace
+                    (
+                        {patches[i], faces[i]},
+                        celli,
+                        info,
+                        propagationTol_,
+                        connectedInfo
+                    );
+                }
             }
         }
 

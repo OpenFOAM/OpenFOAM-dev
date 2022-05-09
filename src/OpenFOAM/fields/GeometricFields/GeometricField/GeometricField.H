@@ -292,6 +292,9 @@ public:
         //- Clone
         tmp<GeometricField<Type, PatchField, GeoMesh>> clone() const;
 
+        //- Clone un-sliced
+        tmp<GeometricField<Type, PatchField, GeoMesh>> cloneUnSliced() const;
+
         //- Return a temporary field constructed from name,
         //  internal field and list of patch fields
         static tmp<GeometricField<Type, PatchField, GeoMesh>> New

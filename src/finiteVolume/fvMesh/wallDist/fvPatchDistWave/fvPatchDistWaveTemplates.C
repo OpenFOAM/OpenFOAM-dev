@@ -201,6 +201,7 @@ Foam::label Foam::fvPatchDistWave::calculate
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     GeometricField<scalar, PatchField, GeoMesh>& distance
 )
 {
@@ -208,7 +209,7 @@ Foam::label Foam::fvPatchDistWave::calculate
         wave<FvWallInfo<wallPoint>>
         (
             mesh,
-            getChangedPatchAndFaces(mesh, patchIDs),
+            getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction),
             -1,
             distance,
             FvFaceCellWave<FvWallInfo<wallPoint>>::defaultTrackingData_
@@ -221,6 +222,7 @@ void Foam::fvPatchDistWave::correct
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance
 )
@@ -228,7 +230,7 @@ void Foam::fvPatchDistWave::correct
     wave<FvWallInfo<wallFace>>
     (
         mesh,
-        getChangedPatchAndFaces(mesh, patchIDs),
+        getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction),
         nCorrections,
         distance,
         FvFaceCellWave<FvWallInfo<wallFace>>::defaultTrackingData_
@@ -241,12 +243,13 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance
 )
 {
     const List<labelPair> changedPatchAndFaces =
-        getChangedPatchAndFaces(mesh, patchIDs);
+        getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction);
 
     const label nUnset =
         wave<FvWallInfo<wallPoint>>
@@ -282,6 +285,7 @@ Foam::label Foam::fvPatchDistWave::calculate
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
     GeometricField
         <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
@@ -293,7 +297,7 @@ Foam::label Foam::fvPatchDistWave::calculate
         wave<WallInfoData<wallPoint>, TrackingData>
         (
             mesh,
-            getChangedPatchAndFaces(mesh, patchIDs),
+            getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction),
             -1,
             distance,
             td,
@@ -313,6 +317,7 @@ void Foam::fvPatchDistWave::correct
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
     GeometricField
@@ -324,7 +329,7 @@ void Foam::fvPatchDistWave::correct
     wave<WallInfoData<wallFace>, TrackingData>
     (
         mesh,
-        getChangedPatchAndFaces(mesh, patchIDs),
+        getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction),
         nCorrections,
         distance,
         td,
@@ -344,6 +349,7 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
     GeometricField
@@ -353,7 +359,7 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
 )
 {
     const List<labelPair> changedPatchAndFaces =
-        getChangedPatchAndFaces(mesh, patchIDs);
+        getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction);
 
     const label nUnset =
         wave<WallInfoData<wallPoint>, TrackingData>

@@ -88,6 +88,7 @@ Foam::inverseDistanceDiffusivity::operator()() const
         (
             mesh(),
             mesh().boundaryMesh().patchSet(patchNames_),
+            -vGreat,
             y
         );
     }

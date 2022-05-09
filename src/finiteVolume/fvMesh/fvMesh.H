@@ -70,11 +70,18 @@ namespace Foam
 {
 
 class fvMeshLduAddressing;
+class fvMeshStitcher;
 class fvMeshTopoChanger;
 class fvMeshDistributor;
 class fvMeshMover;
 class volMesh;
 class polyDistributionMap;
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+class GeometricBoundaryField;
+
+template<class Type>
+class UCompactListList;
 
 /*---------------------------------------------------------------------------*\
                            Class fvMesh Declaration
@@ -87,10 +94,15 @@ class fvMesh
     public surfaceInterpolation,
     public data
 {
+private:
+
     // Private Data
 
         //- Boundary mesh
         fvBoundaryMesh boundary_;
+
+        //- The stitcher function class
+        autoPtr<fvMeshStitcher> stitcher_;
 
         //- The topo-changer function class
         autoPtr<fvMeshTopoChanger> topoChanger_;
@@ -104,7 +116,27 @@ class fvMesh
 
     // Demand-driven data
 
+        //- Matrix addressing
         mutable fvMeshLduAddressing* lduPtr_;
+
+        //- Face-poly-face addressing
+        mutable GeometricBoundaryField<label, fvsPatchField, surfaceMesh>*
+            polyFacesBfPtr_;
+
+        //- Offsets for poly-bFace-patch and patch-face addressing
+        mutable labelList* polyBFaceOffsetsPtr_;
+
+        //- Poly-bFace-patch addressing
+        mutable labelList* polyBFaceOffsetPatchesPtr_;
+
+        //- Poly-bFace-patch-face addressing
+        mutable labelList* polyBFaceOffsetPatchFacesPtr_;
+
+        //- Poly-bFace-patch addressing
+        mutable UCompactListList<label>* polyBFacePatchesPtr_;
+
+        //- Poly-bFace-patch-face addressing
+        mutable UCompactListList<label>* polyBFacePatchFacesPtr_;
 
         //- Current time index for cell volumes
         //  Note.  The whole mechanism will be replaced once the
@@ -122,16 +154,28 @@ class fvMesh
         mutable DimensionedField<scalar, volMesh>* V00Ptr_;
 
         //- Face area vectors
-        mutable slicedSurfaceVectorField* SfPtr_;
+        mutable slicedSurfaceVectorField* SfSlicePtr_;
+
+        //- Face area vectors
+        mutable surfaceVectorField* SfPtr_;
 
         //- Mag face area vectors
-        mutable slicedSurfaceScalarField* magSfPtr_;
+        mutable slicedSurfaceScalarField* magSfSlicePtr_;
+
+        //- Mag face area vectors
+        mutable surfaceScalarField* magSfPtr_;
 
         //- Cell centres
-        mutable slicedVolVectorField* CPtr_;
+        mutable slicedVolVectorField* CSlicePtr_;
+
+        //- Cell centres
+        mutable volVectorField* CPtr_;
 
         //- Face centres
-        mutable slicedSurfaceVectorField* CfPtr_;
+        mutable slicedSurfaceVectorField* CfSlicePtr_;
+
+        //- Face centres
+        mutable surfaceVectorField* CfPtr_;
 
         //- Face motion fluxes
         mutable surfaceScalarField* phiPtr_;
@@ -164,13 +208,50 @@ class fvMesh
             void storeOldVol(const scalarField&);
 
 
+       // Make topological data
+
+            //- Get the patch types for the poly faces field
+            wordList polyFacesPatchTypes() const;
+
+            //- Modify face-poly-face addressing
+            GeometricBoundaryField<label, fvsPatchField, surfaceMesh>&
+                polyFacesBfRef();
+
+
        // Make geometric data
 
+            //- Make the face area vectors
             void makeSf() const;
+
+            //- Make the mag face area vectors
             void makeMagSf() const;
 
+            //- Make the cell centres
             void makeC() const;
+
+            //- Make the face centres
             void makeCf() const;
+
+            //- Modify old-time cell volumes
+            DimensionedField<scalar, volMesh>& V0Ref();
+
+            //- Modify old-old-time cell volumes
+            DimensionedField<scalar, volMesh>& V00Ref();
+
+            //- Modify cell face area vectors
+            surfaceVectorField& SfRef();
+
+            //- Modify cell face area magnitudes
+            surfaceScalarField& magSfRef();
+
+            //- Modify cell centres
+            volVectorField& CRef();
+
+            //- Modify face centres
+            surfaceVectorField& CfRef();
+
+            //- Modify cell face motion fluxes
+            surfaceScalarField& phiRef();
 
 
 public:
@@ -305,6 +386,25 @@ public:
                 return lduAddr().upperAddr();
             }
 
+            //- Return whether the fvMesh is conformal with the polyMesh
+            bool conformal() const;
+
+            //- Get the poly faces IO object
+            IOobject polyFacesBfIO(IOobject::readOption r) const;
+
+            //- Return face-poly-face addressing
+            const GeometricBoundaryField<label, fvsPatchField, surfaceMesh>&
+                polyFacesBf() const;
+
+            //- Return poly-bFace-patch addressing
+            const UCompactListList<label>& polyBFacePatches() const;
+
+            //- Return poly-bFace-patch-face addressing
+            const UCompactListList<label>& polyBFacePatchFaces() const;
+
+            //- Return the stitcher function class
+            const fvMeshStitcher& stitcher() const;
+
             //- Return the topo-changer function class
             const fvMeshTopoChanger& topoChanger() const;
 
@@ -320,14 +420,8 @@ public:
             //- Return old-time cell volumes
             const DimensionedField<scalar, volMesh>& V0() const;
 
-            //- Access old-time cell volumes
-            DimensionedField<scalar, volMesh>& V0Ref();
-
             //- Return old-old-time cell volumes
             const DimensionedField<scalar, volMesh>& V00() const;
-
-            //- Access old-old-time cell volumes
-            DimensionedField<scalar, volMesh>& V00Ref();
 
             //- Return sub-cycle cell volumes
             tmp<DimensionedField<scalar, volMesh>> Vsc() const;
@@ -341,10 +435,10 @@ public:
             //- Return cell face area magnitudes
             const surfaceScalarField& magSf() const;
 
-            //- Return cell centres as volVectorField
+            //- Return cell centres
             const volVectorField& C() const;
 
-            //- Return face centres as surfaceVectorField
+            //- Return face centres
             const surfaceVectorField& Cf() const;
 
             //- Return face deltas as surfaceVectorField
@@ -352,9 +446,6 @@ public:
 
             //- Return cell face motion fluxes
             const surfaceScalarField& phi() const;
-
-            //- Access cell face motion fluxes
-            surfaceScalarField& phiRef();
 
             //- Return a labelType of valid component indicators
             //  1 : valid (solved)
@@ -395,6 +486,21 @@ public:
 
             //- Move points, returns volumes swept by faces in motion
             virtual tmp<scalarField> movePoints(const pointField&);
+
+            //- Conform the fvMesh to the polyMesh
+            void conform();
+
+            //- Unconform the fvMesh from the polyMesh
+            void unconform
+            (
+                const GeometricBoundaryField<label, fvsPatchField, surfaceMesh>&
+                    polyFacesBf,
+                const surfaceVectorField& Sf,
+                const surfaceVectorField& Cf,
+                const surfaceScalarField& phi =
+                    NullObjectRef<surfaceScalarField>(),
+                const bool sync = true
+            );
 
             //- Map all fields in time using given map.
             virtual void mapFields(const polyTopoChangeMap& map);

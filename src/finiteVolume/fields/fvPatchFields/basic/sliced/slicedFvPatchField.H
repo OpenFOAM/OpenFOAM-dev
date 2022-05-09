@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,22 +133,6 @@ public:
             //- Update the coefficients associated with the patch field
             //  Sets Updated to true
             virtual void updateCoeffs();
-
-            //- Return internal field next to patch as patch field
-            virtual tmp<Field<Type>> patchInternalField() const;
-
-            //- Return internal field next to patch as patch field
-            virtual void patchInternalField(Field<Type>&) const;
-
-            //- Return neighbour coupled given internal cell data
-            virtual tmp<Field<Type>> patchNeighbourField
-            (
-                const Field<Type>& iField
-            ) const;
-
-            //- Return patchField of the values on the patch or on the
-            //  opposite patch
-            virtual tmp<Field<Type>> patchNeighbourField() const;
 
             //- Initialise the evaluation of the patch field
             virtual void initEvaluate

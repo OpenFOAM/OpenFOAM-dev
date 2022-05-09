@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,20 +148,6 @@ public:
                     Pstream::commsTypes::blocking
             )
             {}
-
-            //- Initialise swap of non-collocated patch point values
-            virtual void initSwapAddSeparated
-            (
-                const Pstream::commsTypes commsType,
-                Field<Type>&
-            ) const;
-
-            //- Complete swap of patch point values and add to local values
-            virtual void swapAddSeparated
-            (
-                const Pstream::commsTypes commsType,
-                Field<Type>&
-            ) const;
 };
 
 

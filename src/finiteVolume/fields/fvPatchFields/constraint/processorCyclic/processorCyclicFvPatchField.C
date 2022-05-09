@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
     processorFvPatchField<Type>(p, iF, dict),
     procPatch_(refCast<const processorCyclicFvPatch>(p))
 {
-    if (!isType<processorCyclicFvPatch>(p))
+    if (!isA<processorCyclicFvPatch>(p))
     {
         FatalIOErrorInFunction
         (
@@ -100,7 +100,7 @@ Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
     processorFvPatchField<Type>(ptf, p, iF, mapper),
     procPatch_(refCast<const processorCyclicFvPatch>(p))
 {
-    if (!isType<processorCyclicFvPatch>(this->patch()))
+    if (!isA<processorCyclicFvPatch>(this->patch()))
     {
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"

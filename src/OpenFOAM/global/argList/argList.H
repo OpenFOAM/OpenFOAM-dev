@@ -368,6 +368,9 @@ public:
             //- Return true if the post-processing option is specified
             static bool postProcess(int argc, char *argv[]);
 
+            //- Return true if there are arguments
+            static bool hasArgs(int argc, char *argv[]);
+
             //- Set option directly (use with caution)
             //  An option with an empty param is a bool option.
             //  Not all valid options can also be set: eg, -case, -roots, ...

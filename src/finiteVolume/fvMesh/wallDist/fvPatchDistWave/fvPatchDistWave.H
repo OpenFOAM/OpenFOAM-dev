@@ -54,7 +54,8 @@ namespace fvPatchDistWave
 List<labelPair> getChangedPatchAndFaces
 (
     const fvMesh& mesh,
-    const labelHashSet& patchIDs
+    const labelHashSet& patchIDs,
+    const scalar minFaceFraction
 );
 
 //- Wave distance (and maybe additional) data from faces. If nCorrections is
@@ -87,6 +88,7 @@ label calculate
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     GeometricField<scalar, PatchField, GeoMesh>& distance
 );
 
@@ -96,6 +98,7 @@ void correct
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance
 );
@@ -106,6 +109,7 @@ label calculateAndCorrect
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance
 );
@@ -122,6 +126,7 @@ label calculate
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
     GeometricField
         <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
@@ -142,6 +147,7 @@ void correct
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
     GeometricField
@@ -163,6 +169,7 @@ label calculateAndCorrect
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
     GeometricField

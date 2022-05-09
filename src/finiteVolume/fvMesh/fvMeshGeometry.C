@@ -44,14 +44,14 @@ void Foam::fvMesh::makeSf() const
 
     // It is an error to attempt to recalculate
     // if the pointer is already set
-    if (SfPtr_)
+    if (SfSlicePtr_ || SfPtr_)
     {
         FatalErrorInFunction
             << "face areas already exist"
             << abort(FatalError);
     }
 
-    SfPtr_ = new slicedSurfaceVectorField
+    SfSlicePtr_ = new slicedSurfaceVectorField
     (
         IOobject
         (
@@ -79,14 +79,14 @@ void Foam::fvMesh::makeMagSf() const
 
     // It is an error to attempt to recalculate
     // if the pointer is already set
-    if (magSfPtr_)
+    if (magSfSlicePtr_ || magSfPtr_)
     {
         FatalErrorInFunction
             << "mag face areas already exist"
             << abort(FatalError);
     }
 
-    magSfPtr_ = new slicedSurfaceScalarField
+    magSfSlicePtr_ = new slicedSurfaceScalarField
     (
         IOobject
         (
@@ -114,7 +114,7 @@ void Foam::fvMesh::makeC() const
 
     // It is an error to attempt to recalculate
     // if the pointer is already set
-    if (CPtr_)
+    if (CSlicePtr_ || CPtr_)
     {
         FatalErrorInFunction
             << "cell centres already exist"
@@ -123,7 +123,7 @@ void Foam::fvMesh::makeC() const
 
     // Construct as slices. Only preserve processor (not e.g. cyclic)
 
-    CPtr_ = new slicedVolVectorField
+    CSlicePtr_ = new slicedVolVectorField
     (
         IOobject
         (
@@ -154,14 +154,14 @@ void Foam::fvMesh::makeCf() const
 
     // It is an error to attempt to recalculate
     // if the pointer is already set
-    if (CfPtr_)
+    if (CfSlicePtr_ || CfPtr_)
     {
         FatalErrorInFunction
             << "face centres already exist"
             << abort(FatalError);
     }
 
-    CfPtr_ = new slicedSurfaceVectorField
+    CfSlicePtr_ = new slicedSurfaceVectorField
     (
         IOobject
         (
@@ -177,6 +177,82 @@ void Foam::fvMesh::makeCf() const
         dimLength,
         faceCentres()
     );
+}
+
+
+Foam::volScalarField::Internal& Foam::fvMesh::V0Ref()
+{
+    if (!V0Ptr_)
+    {
+        FatalErrorInFunction
+            << "V0 is not available"
+            << abort(FatalError);
+    }
+
+    return *V0Ptr_;
+}
+
+
+Foam::volScalarField::Internal& Foam::fvMesh::V00Ref()
+{
+    if (!V00Ptr_)
+    {
+        V00();
+    }
+
+    return *V00Ptr_;
+}
+
+
+Foam::surfaceVectorField& Foam::fvMesh::SfRef()
+{
+    if (!SfPtr_)
+    {
+        SfPtr_ = Sf().cloneUnSliced().ptr();
+
+        deleteDemandDrivenData(SfSlicePtr_);
+    }
+
+    return *SfPtr_;
+}
+
+
+Foam::surfaceScalarField& Foam::fvMesh::magSfRef()
+{
+    if (!magSfPtr_)
+    {
+        magSfPtr_ = magSf().cloneUnSliced().ptr();
+
+        deleteDemandDrivenData(magSfSlicePtr_);
+    }
+
+    return *magSfPtr_;
+}
+
+
+Foam::volVectorField& Foam::fvMesh::CRef()
+{
+    if (!CPtr_)
+    {
+        CPtr_ = C().cloneUnSliced().ptr();
+
+        deleteDemandDrivenData(CSlicePtr_);
+    }
+
+    return *CPtr_;
+}
+
+
+Foam::surfaceVectorField& Foam::fvMesh::CfRef()
+{
+    if (!CfPtr_)
+    {
+        CfPtr_ = Cf().cloneUnSliced().ptr();
+
+        deleteDemandDrivenData(CfSlicePtr_);
+    }
+
+    return *CfPtr_;
 }
 
 
@@ -226,19 +302,6 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V0() const
 }
 
 
-Foam::volScalarField::Internal& Foam::fvMesh::V0Ref()
-{
-    if (!V0Ptr_)
-    {
-        FatalErrorInFunction
-            << "V0 is not available"
-            << abort(FatalError);
-    }
-
-    return *V0Ptr_;
-}
-
-
 const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
 {
     if (!V00Ptr_)
@@ -261,17 +324,6 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
             ),
             V0()
         );
-    }
-
-    return *V00Ptr_;
-}
-
-
-Foam::volScalarField::Internal& Foam::fvMesh::V00Ref()
-{
-    if (!V00Ptr_)
-    {
-        V00();
     }
 
     return *V00Ptr_;
@@ -339,45 +391,65 @@ Foam::fvMesh::Vsc0() const
 
 const Foam::surfaceVectorField& Foam::fvMesh::Sf() const
 {
-    if (!SfPtr_)
+    if (SfPtr_)
+    {
+        return *SfPtr_;
+    }
+
+    if (!SfSlicePtr_)
     {
         makeSf();
     }
 
-    return *SfPtr_;
+    return *SfSlicePtr_;
 }
 
 
 const Foam::surfaceScalarField& Foam::fvMesh::magSf() const
 {
-    if (!magSfPtr_)
+    if (magSfPtr_)
+    {
+        return *magSfPtr_;
+    }
+
+    if (!magSfSlicePtr_)
     {
         makeMagSf();
     }
 
-    return *magSfPtr_;
+    return *magSfSlicePtr_;
 }
 
 
 const Foam::volVectorField& Foam::fvMesh::C() const
 {
-    if (!CPtr_)
+    if (CPtr_)
+    {
+        return *CPtr_;
+    }
+
+    if (!CSlicePtr_)
     {
         makeC();
     }
 
-    return *CPtr_;
+    return *CSlicePtr_;
 }
 
 
 const Foam::surfaceVectorField& Foam::fvMesh::Cf() const
 {
-    if (!CfPtr_)
+    if (CfPtr_)
+    {
+        return *CfPtr_;
+    }
+
+    if (!CfSlicePtr_)
     {
         makeCf();
     }
 
-    return *CfPtr_;
+    return *CfSlicePtr_;
 }
 
 

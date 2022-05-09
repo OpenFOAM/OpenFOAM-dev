@@ -431,6 +431,35 @@ const Foam::labelList& Foam::polyBoundaryMesh::patchID() const
 }
 
 
+const Foam::labelList& Foam::polyBoundaryMesh::patchFaceID() const
+{
+    if (!patchFaceIDPtr_.valid())
+    {
+        patchFaceIDPtr_.reset
+        (
+            new labelList
+            (
+                mesh_.nFaces()
+              - mesh_.nInternalFaces()
+            )
+        );
+        labelList& patchFaceID = patchFaceIDPtr_();
+
+        const polyBoundaryMesh& bm = *this;
+
+        forAll(bm, patchi)
+        {
+            label bFacei = bm[patchi].start() - mesh_.nInternalFaces();
+            forAll(bm[patchi], i)
+            {
+                patchFaceID[bFacei++] = i;
+            }
+        }
+    }
+    return patchFaceIDPtr_();
+}
+
+
 const Foam::HashTable<Foam::labelList, Foam::word>&
 Foam::polyBoundaryMesh::groupPatchIDs() const
 {

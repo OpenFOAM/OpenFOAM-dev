@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,7 @@ SourceFiles
 #include "SubList.H"
 #include "typeInfo.H"
 #include "tmp.H"
+#include "tmpNrc.H"
 #include "primitiveFields.H"
 #include "SubField.H"
 #include "fvPatchFieldsFwd.H"
@@ -133,7 +134,7 @@ public:
 
     // Member Functions
 
-    // Access
+        // Access
 
             //- Return the polyPatch
             const polyPatch& patch() const

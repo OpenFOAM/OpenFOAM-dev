@@ -396,20 +396,27 @@ public:
             //  Sets Updated to true
             virtual void updateCoeffs();
 
-            //- Update the coefficients associated with the patch field
-            //  with a weight field (0..1). This weight field is usually
-            //  provided as the amount of geometric overlap for 'duplicate'
-            //  patches. Sets Updated to true
-            virtual void updateWeightedCoeffs(const scalarField& weights);
-
             //- Return internal field next to patch as patch field
             virtual tmp<Field<Type>> patchInternalField() const;
 
             //- Return internal field next to patch as patch field
             virtual void patchInternalField(Field<Type>&) const;
 
+            //- Initialise return of the patchField on the opposite patch of a
+            //  coupled patch
+            virtual void initPatchNeighbourField
+            (
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
+            ) const
+            {}
+
             //- Return patchField on the opposite patch of a coupled patch
-            virtual tmp<Field<Type>> patchNeighbourField() const
+            virtual tmp<Field<Type>> patchNeighbourField
+            (
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
+            ) const
             {
                 NotImplemented;
                 return *this;
@@ -493,16 +500,8 @@ public:
                 return *this;
             }
 
-
             //- Manipulate matrix
             virtual void manipulateMatrix(fvMatrix<Type>& matrix);
-
-            //- Manipulate matrix with given weights
-            virtual void manipulateMatrix
-            (
-                fvMatrix<Type>& matrix,
-                const scalarField& weights
-            );
 
 
         // I-O

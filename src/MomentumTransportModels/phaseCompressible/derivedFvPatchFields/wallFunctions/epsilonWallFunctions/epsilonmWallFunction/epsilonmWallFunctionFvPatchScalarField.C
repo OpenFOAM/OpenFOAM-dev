@@ -29,7 +29,7 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-Foam::scalar Foam::epsilonmWallFunctionFvPatchScalarField::tolerance_ = 1e-5;
+Foam::scalar Foam::epsilonmWallFunctionFvPatchScalarField::tolerance_ = 1e-1;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -96,59 +96,20 @@ void Foam::epsilonmWallFunctionFvPatchScalarField::manipulateMatrix
         return;
     }
 
-    matrix.setValues(patch().faceCells(), patchInternalField()());
+    const DimensionedField<scalar, volMesh>& epsilon = internalField();
 
-    fvPatchField<scalar>::manipulateMatrix(matrix);
-}
-
-
-void Foam::epsilonmWallFunctionFvPatchScalarField::manipulateMatrix
-(
-    fvMatrix<scalar>& matrix,
-    const Field<scalar>& weights
-)
-{
-    if (manipulatedMatrix())
-    {
-        return;
-    }
-
-    DynamicList<label> constraintCells(weights.size());
-    DynamicList<scalar> constraintEpsilon(weights.size());
-    const labelUList& faceCells = patch().faceCells();
-
-    const DimensionedField<scalar, volMesh>& epsilon
-        = internalField();
-
-    label nConstrainedCells = 0;
-
-
+    scalarField weights(patch().magSf()/patch().patch().magFaceAreas());
     forAll(weights, facei)
     {
-        // Only set the values if the weights are > tolerance
-        if (weights[facei] > tolerance_)
-        {
-            nConstrainedCells++;
-
-            label celli = faceCells[facei];
-
-            constraintCells.append(celli);
-            constraintEpsilon.append(epsilon[celli]);
-        }
-    }
-
-    if (debug)
-    {
-        Pout<< "Patch: " << patch().name()
-            << ": number of constrained cells = " << nConstrainedCells
-            << " out of " << patch().size()
-            << endl;
+        scalar& w = weights[facei];
+        w = w <= tolerance_ ? 0 : (w - tolerance_)/(1 - tolerance_);
     }
 
     matrix.setValues
     (
-        constraintCells,
-        scalarField(constraintEpsilon)
+        patch().faceCells(),
+        UIndirectList<scalar>(epsilon, patch().faceCells()),
+        weights
     );
 
     fvPatchField<scalar>::manipulateMatrix(matrix);

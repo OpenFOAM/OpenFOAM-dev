@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ protected:
     // Protected Member functions
 
         //- Make patch weighting factors
-        void makeWeights(scalarField&) const;
+        virtual void makeWeights(scalarField& w) const;
 
 
 public:
@@ -119,11 +119,6 @@ public:
             {
                 return false;
             }
-        }
-
-        const processorPolyPatch& procPolyPatch() const
-        {
-            return procPolyPatch_;
         }
 
         //- Return transformation between the coupled patches

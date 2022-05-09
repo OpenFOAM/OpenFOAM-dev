@@ -61,6 +61,7 @@ class vanDriestDelta
         scalar Cdelta_;
         label calcInterval_;
         scalar yPlusCutOff_;
+        scalar minWallFaceFraction_;
 
 
     // Private Member Functions

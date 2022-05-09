@@ -131,12 +131,7 @@ Foam::solution::solution
             dictName,
             obr.time().system(),
             obr,
-            (
-                obr.readOpt() == IOobject::MUST_READ
-             || obr.readOpt() == IOobject::READ_IF_PRESENT
-              ? IOobject::MUST_READ_IF_MODIFIED
-              : obr.readOpt()
-            ),
+            IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
     ),
@@ -148,15 +143,7 @@ Foam::solution::solution
     eqnRelaxDefault_(0),
     solvers_(dictionary::null)
 {
-    if
-    (
-        readOpt() == IOobject::MUST_READ
-     || readOpt() == IOobject::MUST_READ_IF_MODIFIED
-     || (readOpt() == IOobject::READ_IF_PRESENT && headerOk())
-    )
-    {
-        read(dict());
-    }
+    read(dict());
 }
 
 

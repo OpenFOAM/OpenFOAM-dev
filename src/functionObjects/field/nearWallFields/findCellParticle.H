@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,10 +207,6 @@ public:
 
             //- Track all particles to their end point
             bool move(Cloud<findCellParticle>&, trackingData&, const scalar);
-
-            //- Overridable function to handle the particle hitting a patch
-            //  Executed before other patch-hitting functions
-            bool hitPatch(Cloud<findCellParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wedge
             void hitWedgePatch(Cloud<findCellParticle>&, trackingData&);

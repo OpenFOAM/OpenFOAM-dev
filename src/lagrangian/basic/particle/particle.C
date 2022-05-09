@@ -1065,21 +1065,58 @@ void Foam::particle::transformProperties(const transformer&)
 {}
 
 
-void Foam::particle::prepareForParallelTransfer()
-{
-    // Convert the face index to be local to the processor patch
-    facei_ = mesh_.boundaryMesh()[patch()].whichFace(facei_);
-}
-
-
-void Foam::particle::correctAfterParallelTransfer
+void Foam::particle::prepareForParallelTransfer
 (
-    const label patchi,
     trackingData& td
 )
 {
-    const coupledPolyPatch& ppp =
-        refCast<const coupledPolyPatch>(mesh_.boundaryMesh()[patchi]);
+    if (td.sendFromPatch == patch())
+    {
+        prepareForProcessorTransfer(td);
+    }
+    else
+    {
+        prepareForNonConformalCyclicTransfer
+        (
+            td.sendFromPatch,
+            td.sendToPatchFace
+        );
+    }
+}
+
+
+void Foam::particle::correctAfterParallelTransfer(trackingData& td)
+{
+    const polyPatch& pp = mesh_.boundaryMesh()[td.sendToPatch];
+
+    if (isA<processorPolyPatch>(pp))
+    {
+        correctAfterProcessorTransfer(td);
+    }
+    else if (isA<nonConformalCyclicPolyPatch>(pp))
+    {
+        correctAfterNonConformalCyclicTransfer(td.sendToPatch);
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Transfer patch type not recognised"
+            << exit(FatalError);
+    }
+}
+
+
+void Foam::particle::prepareForProcessorTransfer(trackingData& td)
+{
+    // Store the local patch face in the face index
+    facei_ = td.sendToPatchFace;
+}
+
+
+void Foam::particle::correctAfterProcessorTransfer(trackingData& td)
+{
+    const processorPolyPatch& ppp =
+        refCast<const processorPolyPatch>(mesh_.boundaryMesh()[td.sendToPatch]);
 
     if (ppp.transform().transformsPosition())
     {
@@ -1091,18 +1128,85 @@ void Foam::particle::correctAfterParallelTransfer
     facei_ += ppp.start();
     tetFacei_ = facei_;
 
-    // Faces either side of a coupled patch are numbered in opposite directions
-    // as their normals both point away from their connected cells. The tet
-    // point therefore counts in the opposite direction from the base point.
+    // Faces either side of a coupled patch are numbered in opposite
+    // directions as their normals both point away from their connected
+    // cells. The tet point therefore counts in the opposite direction from
+    // the base point.
     tetPti_ = mesh_.faces()[tetFacei_].size() - 1 - tetPti_;
 
-    // Reflect to account for the change of triangle orientation in the new cell
+    // Reflect to account for the change of tri orientation in the new cell
     reflect();
 
-    // Note that the position does not need transforming explicitly. The face-
-    // triangle on the receive patch is the transformation of the one on the
-    // send patch, so whilst the barycentric coordinates remain the same, the
-    // change of triangle implicitly transforms the position.
+    // Note that the position does not need transforming explicitly. The
+    // face-triangle on the receive patch is the transformation of the one
+    // on the send patch, so whilst the barycentric coordinates remain the
+    // same, the change of triangle implicitly transforms the position.
+}
+
+
+void Foam::particle::prepareForNonConformalCyclicTransfer
+(
+    const label sendFromPatch,
+    const label sendToPatchFace
+)
+{
+    const nonConformalCyclicPolyPatch& nccpp =
+        static_cast<const nonConformalCyclicPolyPatch&>
+        (mesh_.boundaryMesh()[sendFromPatch]);
+
+    // Get the transformed position
+    const vector pos = nccpp.transform().invTransformPosition(position());
+
+    // Store the position in the barycentric data
+    coordinates_ = barycentric(1 - cmptSum(pos), pos.x(), pos.y(), pos.z());
+
+    // Break the topology
+    celli_ = -1;
+    tetFacei_ = -1;
+    tetPti_ = -1;
+
+    // Store the local patch face in the face index
+    facei_ = sendToPatchFace;
+
+    // Transform the properties
+    if (nccpp.transform().transformsPosition())
+    {
+        transformProperties(nccpp.nbrPatch().transform());
+    }
+}
+
+
+void Foam::particle::correctAfterNonConformalCyclicTransfer
+(
+    const label sendToPatch
+)
+{
+    const nonConformalCyclicPolyPatch& nccpp =
+        static_cast<const nonConformalCyclicPolyPatch&>
+        (mesh_.boundaryMesh()[sendToPatch]);
+
+    // Get the position from the barycentric data
+    const vector receivePos
+    (
+        coordinates_.b(),
+        coordinates_.c(),
+        coordinates_.d()
+    );
+
+    // Locate the particle on the receiving side
+    locate
+    (
+        receivePos,
+        mesh_.faceOwner()[facei_ + nccpp.origPatch().start()],
+        false,
+        "Particle crossed between " + nonConformalCyclicPolyPatch::typeName +
+        " patches " + nccpp.name() + " and " + nccpp.nbrPatch().name() +
+        " to a location outside of the mesh."
+    );
+
+    // The particle must remain associated with a face for the tracking to
+    // register as incomplete
+    facei_ = tetFacei_;
 }
 
 
@@ -1118,7 +1222,6 @@ void Foam::particle::prepareForInteractionListReferral
     celli_ = -1;
     tetFacei_ = -1;
     tetPti_ = -1;
-    facei_ = -1;
 
     // Store the position in the barycentric data
     coordinates_ = barycentric(1 - cmptSum(pos), pos.x(), pos.y(), pos.z());
@@ -1140,7 +1243,6 @@ void Foam::particle::correctAfterInteractionListReferral(const label celli)
     celli_ = celli;
     tetFacei_ = mesh_.cells()[celli_][0];
     tetPti_ = 1;
-    facei_ = -1;
 
     // Get the reverse transform and directly set the coordinates from the
     // position. This isn't likely to be correct; the particle is probably not

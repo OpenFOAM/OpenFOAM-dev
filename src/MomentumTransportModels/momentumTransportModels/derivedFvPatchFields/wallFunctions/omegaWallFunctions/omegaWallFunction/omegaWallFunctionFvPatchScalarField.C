@@ -36,7 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-scalar omegaWallFunctionFvPatchScalarField::tolerance_ = 1e-5;
+scalar omegaWallFunctionFvPatchScalarField::tolerance_ = 1e-1;
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -415,76 +415,29 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
         (
             db().lookupObject<FieldType>(turbModel.GName())
         );
-
-    FieldType& omega = const_cast<FieldType&>(internalField());
-
-    forAll(*this, facei)
-    {
-        label celli = patch().faceCells()[facei];
-
-        G[celli] = G0[celli];
-        omega[celli] = omega0[celli];
-    }
-
-    fvPatchField<scalar>::updateCoeffs();
-}
-
-
-void omegaWallFunctionFvPatchScalarField::updateWeightedCoeffs
-(
-    const scalarField& weights
-)
-{
-    if (updated())
-    {
-        return;
-    }
-
-    const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
-
-    setMaster();
-
-    if (patch().index() == master_)
-    {
-        createAveragingWeights();
-        calculateTurbulenceFields(turbModel, G(true), omega(true));
-    }
-
-    const scalarField& G0 = this->G();
-    const scalarField& omega0 = this->omega();
-
-    FieldType& G =
+    FieldType& omega =
         const_cast<FieldType&>
         (
-            db().lookupObject<FieldType>(turbModel.GName())
+            internalField()
         );
 
-    FieldType& omega = const_cast<FieldType&>(internalField());
-
-    scalarField& omegaf = *this;
-
-    // only set the values if the weights are > tolerance
+    scalarField weights(patch().magSf()/patch().patch().magFaceAreas());
     forAll(weights, facei)
     {
-        scalar w = weights[facei];
-
-        if (w > tolerance_)
-        {
-            label celli = patch().faceCells()[facei];
-
-            G[celli] = (1.0 - w)*G[celli] + w*G0[celli];
-            omega[celli] = (1.0 - w)*omega[celli] + w*omega0[celli];
-            omegaf[facei] = omega[celli];
-        }
+        scalar& w = weights[facei];
+        w = w <= tolerance_ ? 0 : (w - tolerance_)/(1 - tolerance_);
     }
+
+    forAll(weights, facei)
+    {
+        const scalar w = weights[facei];
+        const label celli = patch().faceCells()[facei];
+
+        G[celli] = (1 - w)*G[celli] + w*G0[celli];
+        omega[celli] = (1 - w)*omega[celli] + w*omega0[celli];
+    }
+
+    this->operator==(scalarField(omega, patch().faceCells()));
 
     fvPatchField<scalar>::updateCoeffs();
 }
@@ -500,59 +453,20 @@ void omegaWallFunctionFvPatchScalarField::manipulateMatrix
         return;
     }
 
-    matrix.setValues(patch().faceCells(), patchInternalField()());
+    const scalarField& omega0 = this->omega();
 
-    fvPatchField<scalar>::manipulateMatrix(matrix);
-}
-
-
-void omegaWallFunctionFvPatchScalarField::manipulateMatrix
-(
-    fvMatrix<scalar>& matrix,
-    const Field<scalar>& weights
-)
-{
-    if (manipulatedMatrix())
-    {
-        return;
-    }
-
-    DynamicList<label> constraintCells(weights.size());
-    DynamicList<scalar> constraintomega(weights.size());
-    const labelUList& faceCells = patch().faceCells();
-
-    const DimensionedField<scalar, volMesh>& omega
-        = internalField();
-
-    label nConstrainedCells = 0;
-
-
+    scalarField weights(patch().magSf()/patch().patch().magFaceAreas());
     forAll(weights, facei)
     {
-        // only set the values if the weights are > tolerance
-        if (weights[facei] > tolerance_)
-        {
-            nConstrainedCells++;
-
-            label celli = faceCells[facei];
-
-            constraintCells.append(celli);
-            constraintomega.append(omega[celli]);
-        }
-    }
-
-    if (debug)
-    {
-        Pout<< "Patch: " << patch().name()
-            << ": number of constrained cells = " << nConstrainedCells
-            << " out of " << patch().size()
-            << endl;
+        scalar& w = weights[facei];
+        w = w <= tolerance_ ? 0 : (w - tolerance_)/(1 - tolerance_);
     }
 
     matrix.setValues
     (
-        constraintCells,
-        scalarField(constraintomega)
+        patch().faceCells(),
+        UIndirectList<scalar>(omega0, patch().faceCells()),
+        weights
     );
 
     fvPatchField<scalar>::manipulateMatrix(matrix);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,8 @@ Description
 #include "faceSet.H"
 #include "volFields.H"
 #include "systemDict.H"
+#include "processorFvPatch.H"
+#include "CompactListList.H"
 
 using namespace Foam;
 
@@ -231,72 +233,96 @@ bool setFaceFieldType
             << fieldHeader.headerClassName()
             << " " << fieldName << endl;
 
+        // Read the field
         fieldType field(fieldHeader, mesh);
+        typename fieldType::Boundary& fieldBf = field.boundaryFieldRef();
 
+        // Read the value
         const Type& value = pTraits<Type>(fieldValueStream);
 
-        // Create flat list of selected faces and their value.
-        Field<Type> allBoundaryValues(mesh.nFaces()-mesh.nInternalFaces());
-        forAll(field.boundaryField(), patchi)
+        // Determine the number of non-processor patches
+        label nNonProcPatches = 0;
+        forAll(fieldBf, patchi)
         {
-            SubField<Type>
-            (
-                allBoundaryValues,
-                field.boundaryField()[patchi].size(),
-                field.boundaryField()[patchi].patch().start()
-              - mesh.nInternalFaces()
-            ) = field.boundaryField()[patchi];
+            nNonProcPatches = patchi;
+            if (isA<processorFvPatch>(mesh.boundary()[patchi]))
+            {
+                break;
+            }
         }
 
-        // Override
-        bool hasWarned = false;
-        labelList nChanged
+        // Create a copy of the boundary field
+        typename fieldType::Boundary fieldBfCopy
         (
-            returnReduce(field.boundaryField().size(), maxOp<label>()),
-            0
+            fieldType::Internal::null(),
+            fieldBf
         );
+
+        // Loop selected faces and set values in the copied boundary field
+        bool haveWarnedInternal = false, haveWarnedProc = false;
+        labelList nonProcPatchNChangedFaces(nNonProcPatches, 0);
         forAll(selectedFaces, i)
         {
-            label facei = selectedFaces[i];
+            const label facei = selectedFaces[i];
+
             if (mesh.isInternalFace(facei))
             {
-                if (!hasWarned)
+                if (!haveWarnedInternal)
                 {
-                    hasWarned = true;
                     WarningInFunction
                         << "Ignoring internal face " << facei
                         << ". Suppressing further warnings." << endl;
+                    haveWarnedInternal = true;
                 }
             }
             else
             {
-                label bFacei = facei-mesh.nInternalFaces();
-                allBoundaryValues[bFacei] = value;
-                nChanged[mesh.boundaryMesh().patchID()[bFacei]]++;
+                const labelUList patches =
+                    mesh.polyBFacePatches()[facei - mesh.nInternalFaces()];
+                const labelUList patchFaces =
+                    mesh.polyBFacePatchFaces()[facei - mesh.nInternalFaces()];
+
+                forAll(patches, i)
+                {
+                    if (patches[i] >= nNonProcPatches)
+                    {
+                        if (!haveWarnedProc)
+                        {
+                            WarningInFunction
+                                << "Ignoring face " << patchFaces[i]
+                                << " of processor patch " << patches[i]
+                                << ". Suppressing further warnings." << endl;
+                            haveWarnedProc = true;
+                        }
+                    }
+                    else
+                    {
+                        fieldBfCopy[patches[i]][patchFaces[i]] = value;
+                        nonProcPatchNChangedFaces[patches[i]] ++;
+                    }
+                }
             }
         }
+        Pstream::listCombineGather
+        (
+            nonProcPatchNChangedFaces,
+            plusEqOp<label>()
+        );
+        Pstream::listCombineScatter
+        (
+            nonProcPatchNChangedFaces
+        );
 
-        Pstream::listCombineGather(nChanged, plusEqOp<label>());
-        Pstream::listCombineScatter(nChanged);
-
-        typename GeometricField<Type, fvPatchField, volMesh>::
-            Boundary& fieldBf = field.boundaryFieldRef();
-
-        // Reassign.
-        forAll(field.boundaryField(), patchi)
+        // Reassign boundary values
+        forAll(nonProcPatchNChangedFaces, patchi)
         {
-            if (nChanged[patchi] > 0)
+            if (nonProcPatchNChangedFaces[patchi] > 0)
             {
                 Info<< "    On patch "
                     << field.boundaryField()[patchi].patch().name()
-                    << " set " << nChanged[patchi] << " values" << endl;
-                fieldBf[patchi] == SubField<Type>
-                (
-                    allBoundaryValues,
-                    fieldBf[patchi].size(),
-                    fieldBf[patchi].patch().start()
-                  - mesh.nInternalFaces()
-                );
+                    << " set " << nonProcPatchNChangedFaces[patchi]
+                    << " values" << endl;
+                fieldBf[patchi] == fieldBfCopy[patchi];
             }
         }
 

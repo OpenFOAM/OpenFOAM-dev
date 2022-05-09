@@ -472,8 +472,11 @@ boundaryInternalField() const
 {
     tmp<GeometricBoundaryField<Type, PatchField, GeoMesh>> tresult
     (
-        GeometricField<Type, PatchField, GeoMesh>::Internal::null(),
-        *this
+        new GeometricBoundaryField<Type, PatchField, GeoMesh>
+        (
+            GeometricField<Type, PatchField, GeoMesh>::Internal::null(),
+            *this
+        )
     );
 
     GeometricBoundaryField<Type, PatchField, GeoMesh>& result = tresult.ref();
@@ -687,6 +690,17 @@ void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::operator=
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+template<template<class> class OtherPatchField>
+void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::operator=
+(
+    const FieldField<OtherPatchField, Type>& ptff
+)
+{
+    FieldField<PatchField, Type>::operator=(ptff);
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::
 operator=
 (
@@ -715,6 +729,21 @@ void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::
 operator==
 (
     const FieldField<PatchField, Type>& ptff
+)
+{
+    forAll((*this), patchi)
+    {
+        this->operator[](patchi) == ptff[patchi];
+    }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+template<template<class> class OtherPatchField>
+void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::
+operator==
+(
+    const FieldField<OtherPatchField, Type>& ptff
 )
 {
     forAll((*this), patchi)

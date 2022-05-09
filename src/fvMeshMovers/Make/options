@@ -6,4 +6,5 @@ EXE_INC = \
 LIB_LIBS = \
     -ldynamicMesh \
     -lfiniteVolume \
-    -lmeshTools
+    -lmeshTools \
+    -lfvMeshStitchers

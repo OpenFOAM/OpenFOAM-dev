@@ -31,7 +31,7 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-Foam::scalar Foam::epsilonWallFunctionFvPatchScalarField::tolerance_ = 1e-5;
+Foam::scalar Foam::epsilonWallFunctionFvPatchScalarField::tolerance_ = 1e-1;
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -368,84 +368,34 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
     const scalarField& epsilon0 = this->epsilon();
 
     typedef DimensionedField<scalar, volMesh> FieldType;
-
     FieldType& G =
         const_cast<FieldType&>
         (
             db().lookupObject<FieldType>(turbModel.GName())
         );
-
-    FieldType& epsilon = const_cast<FieldType&>(internalField());
-
-    forAll(*this, facei)
-    {
-        label celli = patch().faceCells()[facei];
-
-        G[celli] = G0[celli];
-        epsilon[celli] = epsilon0[celli];
-    }
-
-    fvPatchField<scalar>::updateCoeffs();
-}
-
-
-void Foam::epsilonWallFunctionFvPatchScalarField::updateWeightedCoeffs
-(
-    const scalarField& weights
-)
-{
-    if (updated())
-    {
-        return;
-    }
-
-    const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
-
-    setMaster();
-
-    if (patch().index() == master_)
-    {
-        createAveragingWeights();
-        calculateTurbulenceFields(turbModel, G(true), epsilon(true));
-    }
-
-    const scalarField& G0 = this->G();
-    const scalarField& epsilon0 = this->epsilon();
-
-    typedef DimensionedField<scalar, volMesh> FieldType;
-
-    FieldType& G =
+    FieldType& epsilon =
         const_cast<FieldType&>
         (
-            db().lookupObject<FieldType>(turbModel.GName())
+            internalField()
         );
 
-    FieldType& epsilon = const_cast<FieldType&>(internalField());
-
-    scalarField& epsilonf = *this;
-
-    // Only set the values if the weights are > tolerance
+    scalarField weights(patch().magSf()/patch().patch().magFaceAreas());
     forAll(weights, facei)
     {
-        scalar w = weights[facei];
-
-        if (w > tolerance_)
-        {
-            label celli = patch().faceCells()[facei];
-
-            G[celli] = (1.0 - w)*G[celli] + w*G0[celli];
-            epsilon[celli] = (1.0 - w)*epsilon[celli] + w*epsilon0[celli];
-            epsilonf[facei] = epsilon[celli];
-        }
+        scalar& w = weights[facei];
+        w = w <= tolerance_ ? 0 : (w - tolerance_)/(1 - tolerance_);
     }
+
+    forAll(weights, facei)
+    {
+        const scalar w = weights[facei];
+        const label celli = patch().faceCells()[facei];
+
+        G[celli] = (1 - w)*G[celli] + w*G0[celli];
+        epsilon[celli] = (1 - w)*epsilon[celli] + w*epsilon0[celli];
+    }
+
+    this->operator==(scalarField(epsilon, patch().faceCells()));
 
     fvPatchField<scalar>::updateCoeffs();
 }
@@ -461,59 +411,20 @@ void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
         return;
     }
 
-    matrix.setValues(patch().faceCells(), patchInternalField()());
+    const scalarField& epsilon0 = this->epsilon();
 
-    fvPatchField<scalar>::manipulateMatrix(matrix);
-}
-
-
-void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
-(
-    fvMatrix<scalar>& matrix,
-    const Field<scalar>& weights
-)
-{
-    if (manipulatedMatrix())
-    {
-        return;
-    }
-
-    DynamicList<label> constraintCells(weights.size());
-    DynamicList<scalar> constraintEpsilon(weights.size());
-    const labelUList& faceCells = patch().faceCells();
-
-    const DimensionedField<scalar, volMesh>& epsilon
-        = internalField();
-
-    label nConstrainedCells = 0;
-
-
+    scalarField weights(patch().magSf()/patch().patch().magFaceAreas());
     forAll(weights, facei)
     {
-        // Only set the values if the weights are > tolerance
-        if (weights[facei] > tolerance_)
-        {
-            nConstrainedCells++;
-
-            label celli = faceCells[facei];
-
-            constraintCells.append(celli);
-            constraintEpsilon.append(epsilon[celli]);
-        }
-    }
-
-    if (debug)
-    {
-        Pout<< "Patch: " << patch().name()
-            << ": number of constrained cells = " << nConstrainedCells
-            << " out of " << patch().size()
-            << endl;
+        scalar& w = weights[facei];
+        w = w <= tolerance_ ? 0 : (w - tolerance_)/(1 - tolerance_);
     }
 
     matrix.setValues
     (
-        constraintCells,
-        scalarField(constraintEpsilon)
+        patch().faceCells(),
+        UIndirectList<scalar>(epsilon0, patch().faceCells()),
+        weights
     );
 
     fvPatchField<scalar>::manipulateMatrix(matrix);

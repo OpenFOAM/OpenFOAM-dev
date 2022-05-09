@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,8 +63,26 @@ protected:
 
     // Protected Member Functions
 
+protected:
+
+    // Protected Member functions
+
         //- Make patch weighting factors
-        virtual void makeWeights(scalarField&) const = 0;
+        void makeWeights
+        (
+            scalarField& w,
+            const vectorField& nbrSf,
+            const vectorField& nbrDelta
+        ) const;
+
+        //- Make patch weighting factors
+        virtual void makeWeights(scalarField& w) const = 0;
+
+        //- Return delta (P to N) vectors across coupled patch
+        tmp<vectorField> delta
+        (
+            const vectorField& nbrDelta
+        ) const;
 
 
 public:
@@ -98,6 +116,18 @@ public:
             virtual bool coupled() const
             {
                 return coupledPolyPatch_.coupled();
+            }
+
+            //- Does this side own the patch ?
+            virtual bool owner() const
+            {
+                return coupledPolyPatch_.owner();
+            }
+
+            //- Does the coupled side own the patch ?
+            virtual bool neighbour() const
+            {
+                return !owner();
             }
 
             //- Return transformation between the coupled patches

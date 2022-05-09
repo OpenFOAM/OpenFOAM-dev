@@ -30,6 +30,8 @@ License
 #include "demandDrivenData.H"
 #include "pointConstraints.H"
 #include "surfaceFields.H"
+#include "syncTools.H"
+#include "cpuTime.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -41,205 +43,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::volPointInterpolation::calcBoundaryAddressing()
-{
-    if (debug)
-    {
-        Pout<< "volPointInterpolation::calcBoundaryAddressing() : "
-            << "constructing boundary addressing"
-            << endl;
-    }
-
-    boundaryPtr_.reset
-    (
-        new primitivePatch
-        (
-            SubList<face>
-            (
-                mesh().faces(),
-                mesh().nFaces()-mesh().nInternalFaces(),
-                mesh().nInternalFaces()
-            ),
-            mesh().points()
-        )
-    );
-    const primitivePatch& boundary = boundaryPtr_();
-
-    boundaryIsPatchFace_.setSize(boundary.size());
-    boundaryIsPatchFace_ = false;
-
-    isPatchPoint_.setSize(mesh().nPoints());
-    isPatchPoint_ = false;
-
-    const polyBoundaryMesh& pbm = mesh().boundaryMesh();
-
-    // Get precalculated volField only so we can use coupled() tests for
-    // cyclicAMI
-    const surfaceScalarField& magSf = mesh().magSf();
-
-    forAll(pbm, patchi)
-    {
-        const polyPatch& pp = pbm[patchi];
-
-        if
-        (
-            !isA<emptyPolyPatch>(pp)
-         && !magSf.boundaryField()[patchi].coupled()
-        )
-        {
-            label bFacei = pp.start()-mesh().nInternalFaces();
-
-            forAll(pp, i)
-            {
-                boundaryIsPatchFace_[bFacei] = true;
-
-                const face& f = boundary[bFacei++];
-
-                forAll(f, fp)
-                {
-                    isPatchPoint_[f[fp]] = true;
-                }
-            }
-        }
-    }
-
-    // Make sure point status is synchronised so even processor that holds
-    // no face of a certain patch still can have boundary points marked.
-    if (debug)
-    {
-        boolList oldData(isPatchPoint_);
-
-        pointConstraints::syncUntransformedData
-        (
-            mesh(),
-            isPatchPoint_,
-            orEqOp<bool>()
-        );
-
-        forAll(isPatchPoint_, pointi)
-        {
-            if (isPatchPoint_[pointi] != oldData[pointi])
-            {
-                Pout<< "volPointInterpolation::calcBoundaryAddressing():"
-                    << " added dangling mesh point:" << pointi
-                    << " at:" << mesh().points()[pointi]
-                    << endl;
-            }
-        }
-
-        label nPatchFace = 0;
-        forAll(boundaryIsPatchFace_, i)
-        {
-            if (boundaryIsPatchFace_[i])
-            {
-                nPatchFace++;
-            }
-        }
-        label nPatchPoint = 0;
-        forAll(isPatchPoint_, i)
-        {
-            if (isPatchPoint_[i])
-            {
-                nPatchPoint++;
-            }
-        }
-        Pout<< "boundary:" << nl
-            << "    faces :" << boundary.size() << nl
-            << "    of which on proper patch:" << nPatchFace << nl
-            << "    points:" << boundary.nPoints() << nl
-            << "    of which on proper patch:" << nPatchPoint << endl;
-    }
-}
-
-
-void Foam::volPointInterpolation::makeInternalWeights(scalarField& sumWeights)
-{
-    if (debug)
-    {
-        Pout<< "volPointInterpolation::makeInternalWeights() : "
-            << "constructing weighting factors for internal and non-coupled"
-            << " points." << endl;
-    }
-
-    const pointField& points = mesh().points();
-    const labelListList& pointCells = mesh().pointCells();
-    const vectorField& cellCentres = mesh().cellCentres();
-
-    // Allocate storage for weighting factors
-    pointWeights_.clear();
-    pointWeights_.setSize(points.size());
-
-    // Calculate inverse distances between cell centres and points
-    // and store in weighting factor array
-    forAll(points, pointi)
-    {
-        if (!isPatchPoint_[pointi])
-        {
-            const labelList& pcp = pointCells[pointi];
-
-            scalarList& pw = pointWeights_[pointi];
-            pw.setSize(pcp.size());
-
-            forAll(pcp, pointCelli)
-            {
-                pw[pointCelli] =
-                    1.0/mag(points[pointi] - cellCentres[pcp[pointCelli]]);
-
-                sumWeights[pointi] += pw[pointCelli];
-            }
-        }
-    }
-}
-
-
-void Foam::volPointInterpolation::makeBoundaryWeights(scalarField& sumWeights)
-{
-    if (debug)
-    {
-        Pout<< "volPointInterpolation::makeBoundaryWeights() : "
-            << "constructing weighting factors for boundary points." << endl;
-    }
-
-    const pointField& points = mesh().points();
-    const pointField& faceCentres = mesh().faceCentres();
-
-    const primitivePatch& boundary = boundaryPtr_();
-
-    boundaryPointWeights_.clear();
-    boundaryPointWeights_.setSize(boundary.meshPoints().size());
-
-    forAll(boundary.meshPoints(), i)
-    {
-        label pointi = boundary.meshPoints()[i];
-
-        if (isPatchPoint_[pointi])
-        {
-            const labelList& pFaces = boundary.pointFaces()[i];
-
-            scalarList& pw = boundaryPointWeights_[i];
-            pw.setSize(pFaces.size());
-
-            sumWeights[pointi] = 0.0;
-
-            forAll(pFaces, i)
-            {
-                if (boundaryIsPatchFace_[pFaces[i]])
-                {
-                    label facei = mesh().nInternalFaces() + pFaces[i];
-
-                    pw[i] = 1.0/mag(points[pointi] - faceCentres[facei]);
-                    sumWeights[pointi] += pw[i];
-                }
-                else
-                {
-                    pw[i] = 0.0;
-                }
-            }
-        }
-    }
-}
-
-
 void Foam::volPointInterpolation::makeWeights()
 {
     if (debug)
@@ -249,11 +52,205 @@ void Foam::volPointInterpolation::makeWeights()
             << endl;
     }
 
+    const pointField& points = mesh().points();
+    const labelListList& pointCells = mesh().pointCells();
+    const polyBoundaryMesh& pbm = mesh().boundaryMesh();
+    const fvBoundaryMesh& fvbm = mesh().boundary();
+
     // Update addressing over all boundary faces
-    calcBoundaryAddressing();
+    boundaryPtr_.reset
+    (
+        new primitivePatch
+        (
+            SubList<face>
+            (
+                mesh().faces(),
+                mesh().nFaces() - mesh().nInternalFaces(),
+                mesh().nInternalFaces()
+            ),
+            mesh().points()
+        )
+    );
+    const primitivePatch& boundary = boundaryPtr_();
 
+    // Allocate storage for weighting factors
+    pointWeights_.clear();
+    pointWeights_.setSize(points.size());
+    boundaryPointWeights_.clear();
+    boundaryPointWeights_.setSize(boundary.meshPoints().size());
+    boundaryPointNbrWeights_.clear();
+    boundaryPointNbrWeights_.setSize(boundary.meshPoints().size());
 
-    // Running sum of weights
+    // Cache calls to patch coupled flags
+    boolList isCoupledPolyPatch(pbm.size(), false);
+    boolList isCoupledFvPatch(fvbm.size(), false);
+    forAll(isCoupledFvPatch, patchi)
+    {
+        isCoupledPolyPatch[patchi] = pbm[patchi].coupled();
+        isCoupledFvPatch[patchi] = fvbm[patchi].coupled();
+    }
+
+    // Determine the factor to which a point has its values set by adjacent
+    // boundary faces, rather than connected cells
+    scalarList pointBoundaryFactor(mesh().nPoints(), Zero);
+    forAll(boundary.meshPoints(), bPointi)
+    {
+        const label pointi = boundary.meshPoints()[bPointi];
+
+        const labelList& pFaces = boundary.pointFaces()[bPointi];
+
+        forAll(pFaces, pPointFacei)
+        {
+            // Poly indices
+            const label patchi = pbm.patchID()[pFaces[pPointFacei]];
+            const label patchFacei = pbm.patchFaceID()[pFaces[pPointFacei]];
+
+            // FV indices
+            const labelUList patches =
+                mesh().polyBFacePatches()[pFaces[pPointFacei]];
+            const labelUList patchFaces =
+                mesh().polyBFacePatchFaces()[pFaces[pPointFacei]];
+
+            scalar nonCoupledMagSf = 0;
+            forAll(patches, i)
+            {
+                if
+                (
+                    !isCoupledPolyPatch[patches[i]]
+                 && !isCoupledFvPatch[patches[i]]
+                )
+                {
+                    nonCoupledMagSf += fvbm[patches[i]].magSf()[patchFaces[i]];
+                }
+            }
+
+            pointBoundaryFactor[pointi] =
+                max
+                (
+                    pointBoundaryFactor[pointi],
+                    nonCoupledMagSf/pbm[patchi].magFaceAreas()[patchFacei]
+                );
+        }
+    }
+    syncTools::syncPointList
+    (
+        mesh(),
+        pointBoundaryFactor,
+        maxEqOp<scalar>(),
+        scalar(0)
+    );
+
+    // Calculate inverse distances between cell centres and points
+    // and store in the weighting factor array
+    forAll(points, pointi)
+    {
+        if (pointBoundaryFactor[pointi] > 1 - rootSmall) continue;
+
+        pointWeights_[pointi].setSize(pointCells[pointi].size());
+
+        const scalar f = pointBoundaryFactor[pointi];
+
+        forAll(pointCells[pointi], pointCelli)
+        {
+            const label celli = pointCells[pointi][pointCelli];
+
+            pointWeights_[pointi][pointCelli] =
+                (1 - f)/mag(points[pointi] - mesh().C()[celli]);
+        }
+    }
+
+    // Get the cell centres on the other side of coupled boundaries
+    typename volVectorField::Boundary CBnf
+    (
+        mesh().boundary(),
+        volVectorField::Internal::null(),
+        calculatedFvPatchField<vector>::typeName
+    );
+    forAll(fvbm, patchi)
+    {
+        if
+        (
+            !isCoupledPolyPatch[patchi]
+         && isCoupledFvPatch[patchi]
+        )
+        {
+            CBnf[patchi] = fvbm[patchi].Cn() + fvbm[patchi].delta();
+        }
+    }
+
+    // Calculate inverse distanced between boundary face centres and points and
+    // store in the boundary weighting factor arrays
+    forAll(boundary.meshPoints(), bPointi)
+    {
+        const label pointi = boundary.meshPoints()[bPointi];
+
+        const labelList& pFaces = boundary.pointFaces()[bPointi];
+
+        boundaryPointWeights_[bPointi].resize(pFaces.size());
+        boundaryPointNbrWeights_[bPointi].resize(pFaces.size());
+
+        forAll(pFaces, bPointFacei)
+        {
+            // Poly indices
+            const label patchi = pbm.patchID()[pFaces[bPointFacei]];
+            const label patchFacei = pbm.patchFaceID()[pFaces[bPointFacei]];
+
+            // FV indices
+            const labelUList patches =
+                mesh().polyBFacePatches()[pFaces[bPointFacei]];
+            const labelUList patchFaces =
+                mesh().polyBFacePatchFaces()[pFaces[bPointFacei]];
+
+            boundaryPointWeights_[bPointi][bPointFacei].resize
+            (
+                patches.size(),
+                0
+            );
+            boundaryPointNbrWeights_[bPointi][bPointFacei].resize
+            (
+                patches.size(),
+                0
+            );
+
+            forAll(patches, i)
+            {
+                const scalar a =
+                    fvbm[patches[i]].magSf()[patchFaces[i]]
+                   /pbm[patchi].magFaceAreas()[patchFacei];
+
+                const scalar f = pointBoundaryFactor[pointi];
+
+                // If FV coupled only, add a weight to the neighbouring cell.
+                // This is necessary because point synchronisation will not sum
+                // the contributions across this interface as would be the case
+                // with a poly coupled interface.
+                if
+                (
+                    !isCoupledPolyPatch[patches[i]]
+                 && isCoupledFvPatch[patches[i]]
+                )
+                {
+                    const point C = CBnf[patches[i]][patchFaces[i]];
+                    boundaryPointNbrWeights_[bPointi][bPointFacei][i] =
+                        (1 - f)*a/mag(points[pointi] - C);
+                }
+
+                // If not coupled, add a weight to the boundary value
+                if
+                (
+                    !isCoupledPolyPatch[patches[i]]
+                 && !isCoupledFvPatch[patches[i]]
+                )
+                {
+                    const point Cf = fvbm[patches[i]].Cf()[patchFaces[i]];
+                    boundaryPointWeights_[bPointi][bPointFacei][i] =
+                        f*a/mag(points[pointi] - Cf);
+                }
+            }
+        }
+    }
+
+    // Construct a sum of weights
     pointScalarField sumWeights
     (
         IOobject
@@ -266,80 +263,59 @@ void Foam::volPointInterpolation::makeWeights()
         dimensionedScalar(dimless, 0)
     );
 
+    // Add the internal weights
+    forAll(pointWeights_, pointi)
+    {
+        forAll(pointWeights_[pointi], i)
+        {
+            sumWeights[pointi] += pointWeights_[pointi][i];
+        }
+    }
 
-    // Create internal weights; add to sumWeights
-    makeInternalWeights(sumWeights);
+    // Add the boundary weights
+    forAll(boundary.meshPoints(), bPointi)
+    {
+        const label pointi = boundary.meshPoints()[bPointi];
+        forAll(boundaryPointWeights_[bPointi], i)
+        {
+            forAll(boundaryPointWeights_[bPointi][i], j)
+            {
+                sumWeights[pointi] += boundaryPointWeights_[bPointi][i][j];
+                sumWeights[pointi] += boundaryPointNbrWeights_[bPointi][i][j];
+            }
+        }
+    }
 
-
-    // Create boundary weights; override sumWeights
-    makeBoundaryWeights(sumWeights);
-
-
-    // forAll(boundary.meshPoints(), i)
-    //{
-    //    label pointi = boundary.meshPoints()[i];
-    //
-    //    if (isPatchPoint_[pointi])
-    //    {
-    //        Pout<< "Calculated Weight at boundary point:" << i
-    //            << " at:" << mesh().points()[pointi]
-    //            << " sumWeight:" << sumWeights[pointi]
-    //            << " from:" << boundaryPointWeights_[i]
-    //            << endl;
-    //    }
-    //}
-
-
-    // Sum collocated contributions
-    pointConstraints::syncUntransformedData
+    // Synchronise over conformal couplings
+    syncTools::syncPointList
     (
         mesh(),
         sumWeights,
-        plusEqOp<scalar>()
+        plusEqOp<scalar>(),
+        scalar(0)
     );
-
-    // And add separated contributions
-    addSeparated(sumWeights);
-
-    // Push master data to slaves. It is possible (not sure how often) for
-    // a coupled point to have its master on a different patch so
-    // to make sure just push master data to slaves. Reuse the syncPointData
-    // structure.
-    pushUntransformedData(sumWeights);
-
 
     // Normalise internal weights
     forAll(pointWeights_, pointi)
     {
-        scalarList& pw = pointWeights_[pointi];
-        // Note:pw only sized for !isPatchPoint
-        forAll(pw, i)
+        forAll(pointWeights_[pointi], i)
         {
-            pw[i] /= sumWeights[pointi];
+            pointWeights_[pointi][i] /= sumWeights[pointi];
         }
     }
 
     // Normalise boundary weights
-    const primitivePatch& boundary = boundaryPtr_();
-
-    forAll(boundary.meshPoints(), i)
+    forAll(boundary.meshPoints(), bPointi)
     {
-        label pointi = boundary.meshPoints()[i];
-
-        scalarList& pw = boundaryPointWeights_[i];
-        // Note:pw only sized for isPatchPoint
-        forAll(pw, i)
+        const label pointi = boundary.meshPoints()[bPointi];
+        forAll(boundaryPointWeights_[bPointi], i)
         {
-            pw[i] /= sumWeights[pointi];
+            forAll(boundaryPointWeights_[bPointi][i], j)
+            {
+                boundaryPointWeights_[bPointi][i][j] /= sumWeights[pointi];
+                boundaryPointNbrWeights_[bPointi][i][j] /= sumWeights[pointi];
+            }
         }
-    }
-
-
-    if (debug)
-    {
-        Pout<< "volPointInterpolation::makeWeights() : "
-            << "finished constructing weighting factors"
-            << endl;
     }
 }
 
@@ -394,15 +370,10 @@ void Foam::volPointInterpolation::interpolateDisplacement
     pointVectorField& pf
 ) const
 {
-    interpolateInternalField(vf, pf);
-
-    // Interpolate to the patches but no constraints
-    interpolateBoundaryField(vf, pf);
+    interpolateUnconstrained(vf, pf);
 
     // Apply displacement constraints
-    const pointConstraints& pcs = pointConstraints::New(pf.mesh());
-
-    pcs.constrainDisplacement(pf, false);
+    pointConstraints::New(pf.mesh()).constrainDisplacement(pf);
 }
 
 

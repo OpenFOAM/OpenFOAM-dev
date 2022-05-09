@@ -49,6 +49,7 @@ parallel/Allwmake $targetType $*
 wmake $targetType conversion
 wmake $targetType sampling
 
+wmake $targetType fvMeshStitchers
 wmake $targetType fvMeshMovers
 fvMeshTopoChangers/Allwmake $targetType $*
 wmake $targetType fvMeshDistributors

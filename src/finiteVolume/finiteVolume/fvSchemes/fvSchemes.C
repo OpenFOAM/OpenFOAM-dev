@@ -204,12 +204,7 @@ Foam::fvSchemes::fvSchemes(const objectRegistry& obr)
             "fvSchemes",
             obr.time().system(),
             obr,
-            (
-                obr.readOpt() == IOobject::MUST_READ
-             || obr.readOpt() == IOobject::READ_IF_PRESENT
-              ? IOobject::MUST_READ_IF_MODIFIED
-              : obr.readOpt()
-            ),
+            IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
     ),
@@ -315,15 +310,7 @@ Foam::fvSchemes::fvSchemes(const objectRegistry& obr)
     defaultFluxRequired_(false),
     steady_(false)
 {
-    if
-    (
-        readOpt() == IOobject::MUST_READ
-     || readOpt() == IOobject::MUST_READ_IF_MODIFIED
-     || (readOpt() == IOobject::READ_IF_PRESENT && headerOk())
-    )
-    {
-        read(dict());
-    }
+    read(dict());
 }
 
 

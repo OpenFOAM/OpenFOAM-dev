@@ -24,13 +24,15 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvPatchDistWave.H"
+#include "nonConformalFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 Foam::List<Foam::labelPair> Foam::fvPatchDistWave::getChangedPatchAndFaces
 (
     const fvMesh& mesh,
-    const labelHashSet& patchIDs
+    const labelHashSet& patchIDs,
+    const scalar minFaceFraction
 )
 {
     label nChangedFaces = 0;
@@ -40,19 +42,34 @@ Foam::List<Foam::labelPair> Foam::fvPatchDistWave::getChangedPatchAndFaces
     }
 
     List<labelPair> changedPatchAndFaces(nChangedFaces);
-    label changedFacei = 0;
 
+    label changedFacei = 0;
     forAllConstIter(labelHashSet, patchIDs, iter)
     {
         const label patchi = iter.key();
         const fvPatch& patch = mesh.boundary()[patchi];
 
+        if (isA<nonConformalFvPatch>(patch))
+        {
+            FatalErrorInFunction
+                << "Cannot initialise a patch distance wave from a "
+                << "non-conformal patch" << exit(FatalError);
+        }
+
         forAll(patch, patchFacei)
         {
+            const scalar faceFraction =
+                patch.magSf()[patchFacei]
+               /patch.patch().magFaceAreas()[patchFacei];
+
+            if (faceFraction < minFaceFraction) continue;
+
             changedPatchAndFaces[changedFacei] = labelPair(patchi, patchFacei);
             changedFacei++;
         }
     }
+
+    changedPatchAndFaces.resize(changedFacei);
 
     return changedPatchAndFaces;
 }

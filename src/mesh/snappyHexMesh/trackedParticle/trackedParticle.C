@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,24 +122,22 @@ bool Foam::trackedParticle::move
     const scalar trackTime
 )
 {
-    td.switchProcessor = false;
-
     scalar tEnd = (1.0 - stepFraction())*trackTime;
 
     if (tEnd <= small && onBoundaryFace())
     {
-        // This is a hack to handle particles reaching their endpoint
-        // on a processor boundary. If the endpoint is on a processor face
-        // it currently gets transferred backwards and forwards infinitely.
-
-        // Remove the particle
+        // This is a hack to handle particles reaching their endpoint on a
+        // processor boundary. This prevents a particle being endlessly
+        // transferred backwards and forwards across the interface.
         td.keepParticle = false;
+        td.sendToProc = -1;
     }
     else
     {
         td.keepParticle = true;
+        td.sendToProc = -1;
 
-        while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
+        while (td.keepParticle && td.sendToProc == -1 && stepFraction() < 1)
         {
             // mark visited cell with max level.
             td.maxLevel_[cell()] = max(td.maxLevel_[cell()], level_);
@@ -151,12 +149,6 @@ bool Foam::trackedParticle::move
     }
 
     return td.keepParticle;
-}
-
-
-bool Foam::trackedParticle::hitPatch(Cloud<trackedParticle>&, trackingData&)
-{
-    return false;
 }
 
 
@@ -243,17 +235,6 @@ void Foam::trackedParticle::hitCyclicRepeatAMIPatch
 }
 
 
-void Foam::trackedParticle::hitProcessorPatch
-(
-    Cloud<trackedParticle>&,
-    trackingData& td
-)
-{
-    // Move to different processor
-    td.switchProcessor = true;
-}
-
-
 void Foam::trackedParticle::hitWallPatch
 (
     Cloud<trackedParticle>&,
@@ -265,21 +246,15 @@ void Foam::trackedParticle::hitWallPatch
 }
 
 
-void Foam::trackedParticle::correctAfterParallelTransfer
-(
-    const label patchi,
-    trackingData& td
-)
+void Foam::trackedParticle::correctAfterParallelTransfer(trackingData& td)
 {
-    particle::correctAfterParallelTransfer(patchi, td);
+    particle::correctAfterParallelTransfer(td);
 
-    label edgei = k();
+    // Mark edge we are currently on (if any). This was set on the sending
+    // processor but has not yet been set on the receiving side.
+    const label feati = i(), edgei = k();
     if (edgei != -1)
     {
-        label feati = i();
-
-        // Mark edge we're currently on (was set on sending processor but not
-        // receiving sender)
         td.featureEdgeVisited_[feati].set(edgei, 1u);
     }
 }

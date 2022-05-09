@@ -152,7 +152,10 @@ public:
             virtual bool coupled() const;
 
             //- Return neighbour coupled internal cell data
-            virtual tmp<Field<Type>> patchNeighbourField() const;
+            virtual tmp<Field<Type>> patchNeighbourField
+            (
+                const Pstream::commsTypes
+            ) const;
 
             //- Return reference to neighbour patchField
             const cyclicAMIFvPatchField<Type>& nbrPatchField() const;

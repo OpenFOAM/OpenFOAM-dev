@@ -87,6 +87,7 @@ Foam::inverseFaceDistanceDiffusivity::operator()() const
         (
             mesh(),
             patchIDs,
+            -vGreat,
             y
         );
 

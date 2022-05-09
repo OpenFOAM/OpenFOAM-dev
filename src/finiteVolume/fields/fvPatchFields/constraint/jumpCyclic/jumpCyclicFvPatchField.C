@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,10 @@ Foam::jumpCyclicFvPatchField<Type>::jumpCyclicFvPatchField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::jumpCyclicFvPatchField<Type>::patchNeighbourField() const
+Foam::jumpCyclicFvPatchField<Type>::patchNeighbourField
+(
+    const Pstream::commsTypes
+) const
 {
     const Field<Type>& iField = this->primitiveField();
     const labelUList& nbrFaceCells =

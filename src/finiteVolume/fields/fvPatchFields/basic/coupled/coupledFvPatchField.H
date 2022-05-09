@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,11 @@ public:
             }
 
             //- Return neighbour field of internal field
-            virtual tmp<Field<Type>> patchNeighbourField() const = 0;
+            virtual tmp<Field<Type>> patchNeighbourField
+            (
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
+            ) const = 0;
 
 
         // Evaluation functions

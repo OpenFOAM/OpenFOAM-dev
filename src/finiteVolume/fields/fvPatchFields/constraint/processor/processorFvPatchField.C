@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,10 @@ Foam::processorFvPatchField<Type>::~processorFvPatchField()
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::processorFvPatchField<Type>::patchNeighbourField() const
+Foam::processorFvPatchField<Type>::patchNeighbourField
+(
+    const Pstream::commsTypes
+) const
 {
     if (debug && !this->ready())
     {

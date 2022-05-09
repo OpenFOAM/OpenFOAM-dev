@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,37 +42,6 @@ Foam::cyclicACMIFvPatchField<Type>::nonOverlapPatchField() const
     [
         cyclicACMIPatch().cyclicACMIPatch().nonOverlapPatchID()
     ];
-}
-
-
-template<class Type>
-void Foam::cyclicACMIFvPatchField<Type>::manipulateMatrix
-(
-    fvMatrix<Type>& matrix
-)
-{
-    const scalarField& mask = cyclicACMIPatch().cyclicACMIPatch().mask();
-
-    // nothing to be done by the AMI, but re-direct to non-overlap patch
-    // with non-overlap patch weights
-    const fvPatchField<Type>& npf = nonOverlapPatchField();
-
-    const_cast<fvPatchField<Type>&>(npf).manipulateMatrix(matrix, 1.0 - mask);
-}
-
-
-template<class Type>
-void Foam::cyclicACMIFvPatchField<Type>::updateCoeffs()
-{
-    // Update non-overlap patch - some will implement updateCoeffs, and
-    // others will implement evaluate
-
-    // Pass in (1 - mask) to give non-overlap patch the chance to do
-    // manipulation of non-face based data
-
-    const scalarField& mask = cyclicACMIPatch().cyclicACMIPatch().mask();
-    const fvPatchField<Type>& npf = nonOverlapPatchField();
-    const_cast<fvPatchField<Type>&>(npf).updateWeightedCoeffs(1.0 - mask);
 }
 
 

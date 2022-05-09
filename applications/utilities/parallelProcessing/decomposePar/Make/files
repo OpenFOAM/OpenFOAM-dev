@@ -1,5 +1,4 @@
 decomposePar.C
-domainDecomposition.C
 dimFieldDecomposer.C
 fvFieldDecomposer.C
 pointFieldDecomposer.C

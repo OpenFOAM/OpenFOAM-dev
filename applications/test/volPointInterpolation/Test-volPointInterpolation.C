@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,44 +27,44 @@ Application
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "timeSelector.H"
 #include "volPointInterpolation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+template<class Type>
+bool interpolate(const fvMesh& mesh, const word& name)
+{
+    typeIOobject<VolField<Type>> io
+    (
+        name,
+        mesh.time().timeName(),
+        mesh,
+        IOobject::MUST_READ
+    );
+
+    if (!io.headerOk()) return false;
+
+    Info<< "Reading field " << name << nl << endl;
+
+    const VolField<Type> vf(io, mesh);
+    const PointField<Type> pf(volPointInterpolation::New(mesh).interpolate(vf));
+
+    Info<< "Writing field " << pf.name() << nl << endl;
+
+    return pf.write();
+}
+
+
 int main(int argc, char *argv[])
 {
+    argList::validArgs.append("field");
+
+    Foam::timeSelector::addOptions();
     #include "setRootCase.H"
-
     #include "createTime.H"
+    Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
     #include "createMesh.H"
-
-    Info<< "Reading field p\n" << endl;
-    volScalarField p
-    (
-        IOobject
-        (
-            "p",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
-
-    Info<< "Reading field U\n" << endl;
-    volVectorField U
-    (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
 
     const pointMesh& pMesh = pointMesh::New(mesh);
     const pointBoundaryMesh& pbm = pMesh.boundary();
@@ -78,21 +78,31 @@ int main(int argc, char *argv[])
             << endl;
     }
 
-    const volPointInterpolation& pInterp = volPointInterpolation::New(mesh);
+    const word name = args.argRead<word>(1);
 
-
-    pointScalarField pp(pInterp.interpolate(p));
-    Info<< pp.name() << " boundary" << endl;
-    forAll(pp.boundaryField(), patchi)
+    forAll(timeDirs, timei)
     {
-        Info<< pbm[patchi].name() << " coupled="
-            << pp.boundaryField()[patchi].coupled()<< endl;
+        runTime.setTime(timeDirs[timei], timei);
+
+        Info<< "Time = " << runTime.userTimeName() << endl;
+
+        mesh.readUpdate();
+
+        if
+        (
+            !interpolate<scalar>(mesh, name)
+         && !interpolate<vector>(mesh, name)
+         && !interpolate<sphericalTensor>(mesh, name)
+         && !interpolate<symmTensor>(mesh, name)
+         && !interpolate<tensor>(mesh, name)
+        )
+        {
+            WarningInFunction
+                << "Could not find field " << name << nl << endl;
+        }
     }
 
-    pp.write();
-
-    pointVectorField pU(pInterp.interpolate(U));
-    pU.write();
+    Info<< "End\n" << endl;
 
     return 0;
 }

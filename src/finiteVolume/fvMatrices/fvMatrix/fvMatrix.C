@@ -29,6 +29,7 @@ License
 #include "extrapolatedCalculatedFvPatchFields.H"
 #include "coupledFvPatchFields.H"
 #include "UIndirectList.H"
+#include "UCompactListList.H"
 #include "fvmDdt.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -235,18 +236,17 @@ void Foam::fvMatrix<Type>::setValue
             }
             else
             {
-                label patchi = mesh.boundaryMesh().whichPatch(facei);
+                const label bFacei = facei - mesh.nInternalFaces();
 
-                if (internalCoeffs_[patchi].size())
+                const labelUList patches =
+                    mesh.polyBFacePatches()[bFacei];
+                const labelUList patchFaces =
+                    mesh.polyBFacePatchFaces()[bFacei];
+
+                forAll(patches, i)
                 {
-                    label patchFacei =
-                        mesh.boundaryMesh()[patchi].whichFace(facei);
-
-                    internalCoeffs_[patchi][patchFacei] =
-                        Zero;
-
-                    boundaryCoeffs_[patchi][patchFacei] =
-                        Zero;
+                    internalCoeffs_[patches[i]][patchFaces[i]] = Zero;
+                    boundaryCoeffs_[patches[i]][patchFaces[i]] = Zero;
                 }
             }
         }

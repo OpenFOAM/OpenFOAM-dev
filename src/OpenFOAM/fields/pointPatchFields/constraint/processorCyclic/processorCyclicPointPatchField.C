@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,89 +89,6 @@ Foam::processorCyclicPointPatchField<Type>::processorCyclicPointPatchField
 template<class Type>
 Foam::processorCyclicPointPatchField<Type>::~processorCyclicPointPatchField()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-void Foam::processorCyclicPointPatchField<Type>::initSwapAddSeparated
-(
-    const Pstream::commsTypes commsType,
-    Field<Type>& pField
-) const
-{
-    if (Pstream::parRun())
-    {
-        // Get internal field into correct order for opposite side
-        Field<Type> pf
-        (
-            this->patchInternalField
-            (
-                pField,
-                procPatch_.reverseMeshPoints()
-            )
-        );
-
-        if (commsType == Pstream::commsTypes::nonBlocking)
-        {
-            receiveBuf_.setSize(pf.size());
-            IPstream::read
-            (
-                commsType,
-                procPatch_.neighbProcNo(),
-                reinterpret_cast<char*>(receiveBuf_.begin()),
-                receiveBuf_.byteSize(),
-                procPatch_.tag(),
-                procPatch_.comm()
-            );
-        }
-        OPstream::write
-        (
-            commsType,
-            procPatch_.neighbProcNo(),
-            reinterpret_cast<const char*>(pf.begin()),
-            pf.byteSize(),
-            procPatch_.tag(),
-            procPatch_.comm()
-        );
-    }
-}
-
-
-template<class Type>
-void Foam::processorCyclicPointPatchField<Type>::swapAddSeparated
-(
-    const Pstream::commsTypes commsType,
-    Field<Type>& pField
-) const
-{
-    if (Pstream::parRun())
-    {
-        // If nonblocking data has already been received into receiveBuf_
-        if (commsType != Pstream::commsTypes::nonBlocking)
-        {
-            receiveBuf_.setSize(this->size());
-            IPstream::read
-            (
-                commsType,
-                procPatch_.neighbProcNo(),
-                reinterpret_cast<char*>(receiveBuf_.begin()),
-                receiveBuf_.byteSize(),
-                procPatch_.tag(),
-                procPatch_.comm()
-            );
-        }
-
-        procPatch_.procCyclicPolyPatch().transform().transform
-        (
-            receiveBuf_,
-            receiveBuf_
-        );
-
-        // All points are separated
-        this->addToInternalField(pField, receiveBuf_);
-    }
-}
 
 
 // ************************************************************************* //

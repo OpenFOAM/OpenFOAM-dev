@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,110 +115,6 @@ template<class Type>
 bool Foam::cyclicAMIPointPatchField<Type>::coupled() const
 {
     return cyclicAMIPatch_.coupled();
-}
-
-
-template<class Type>
-void Foam::cyclicAMIPointPatchField<Type>::swapAddSeparated
-(
-    const Pstream::commsTypes,
-    Field<Type>& pField
-) const
-{
-    if (cyclicAMIPatch_.cyclicAMIPatch().owner())
-    {
-        // We inplace modify pField. To prevent the other side (which gets
-        // evaluated at a later date) using already changed values we do
-        // all swaps on the side that gets evaluated first.
-
-        // Get neighbouring pointPatch
-        const cyclicAMIPointPatch& nbrPatch = cyclicAMIPatch_.nbrPatch();
-
-        // Get neighbouring pointPatchField
-        const GeometricField<Type, pointPatchField, pointMesh>& fld =
-            refCast<const GeometricField<Type, pointPatchField, pointMesh>>
-            (
-                this->internalField()
-            );
-
-        const cyclicAMIPointPatchField<Type>& nbr =
-            refCast<const cyclicAMIPointPatchField<Type>>
-            (
-                fld.boundaryField()[nbrPatch.index()]
-            );
-
-
-        Field<Type> ptFld(this->patchInternalField(pField));
-        Field<Type> nbrPtFld(nbr.patchInternalField(pField));
-
-        transform().invTransform(ptFld, ptFld);
-        transform().transform(nbrPtFld, nbrPtFld);
-
-        // convert point field to face field, AMI interpolate, then
-        // face back to point
-        {
-            // add neighbour side contribution to owner
-            Field<Type> nbrFcFld(nbrPpi().pointToFaceInterpolate(nbrPtFld));
-
-            // interpolate to owner
-            if (cyclicAMIPatch_.cyclicAMIPatch().applyLowWeightCorrection())
-            {
-                Field<Type> fcFld(ppi().pointToFaceInterpolate(ptFld));
-
-                nbrFcFld =
-                    cyclicAMIPatch_.cyclicAMIPatch().interpolate
-                    (
-                        nbrFcFld,
-                        fcFld
-                    );
-            }
-            else
-            {
-                nbrFcFld =
-                    cyclicAMIPatch_.cyclicAMIPatch().interpolate(nbrFcFld);
-            }
-
-            // add to internal field
-            this->addToInternalField
-            (
-                pField,
-                ppi().faceToPointInterpolate(nbrFcFld)()
-            );
-        }
-
-        {
-            // add owner side contribution to neighbour
-            Field<Type> fcFld(ppi().pointToFaceInterpolate(ptFld));
-
-            // interpolate to neighbour
-            if (cyclicAMIPatch_.cyclicAMIPatch().applyLowWeightCorrection())
-            {
-                Field<Type> nbrFcFld(nbrPpi().pointToFaceInterpolate(nbrPtFld));
-
-                fcFld =
-                    cyclicAMIPatch_.cyclicAMIPatch().nbrPatch().interpolate
-                    (
-                        fcFld,
-                        nbrFcFld
-                    );
-            }
-            else
-            {
-                fcFld =
-                    cyclicAMIPatch_.cyclicAMIPatch().nbrPatch().interpolate
-                    (
-                        fcFld
-                    );
-            }
-
-            // add to internal field
-            nbr.addToInternalField
-            (
-                pField,
-                nbrPpi().faceToPointInterpolate(fcFld)()
-            );
-        }
-    }
 }
 
 

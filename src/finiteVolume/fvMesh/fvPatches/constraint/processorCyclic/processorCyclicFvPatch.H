@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,7 @@ SourceFiles
 
 #include "processorCyclicPolyPatch.H"
 #include "processorFvPatch.H"
+#include "cyclicFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,9 +81,17 @@ public:
             return procPolyPatch_.tag();
         }
 
-        const processorCyclicPolyPatch& procPolyPatch() const
+        //- Return the referring patch ID
+        label referPatchID() const
         {
-            return procPolyPatch_;
+            return procPolyPatch_.referPatchID();
+        }
+
+        //- Return a reference to the referring patch
+        const cyclicFvPatch& referPatch() const
+        {
+            const fvPatch& fvp = this->boundaryMesh()[referPatchID()];
+            return refCast<const cyclicFvPatch>(fvp);
         }
 
         //- Return transformation between the coupled patches

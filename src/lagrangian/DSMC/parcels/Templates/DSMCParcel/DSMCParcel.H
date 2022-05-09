@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -258,16 +258,6 @@ public:
 
 
         // Patch interactions
-
-            //- Overridable function to handle the particle hitting a patch
-            //  Executed before other patch-hitting functions
-            template<class TrackCloudType>
-            bool hitPatch(TrackCloudType&, trackingData&);
-
-            //- Overridable function to handle the particle hitting a
-            //  processorPatch
-            template<class TrackCloudType>
-            void hitProcessorPatch(TrackCloudType&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wallPatch
             template<class TrackCloudType>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,46 +109,6 @@ template<class Type>
 void Foam::slicedFvPatchField<Type>::updateCoeffs()
 {
     NotImplemented;
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::slicedFvPatchField<Type>::patchInternalField() const
-{
-    NotImplemented;
-
-    return Field<Type>::null();
-}
-
-
-template<class Type>
-void Foam::slicedFvPatchField<Type>::patchInternalField(Field<Type>&) const
-{
-    NotImplemented;
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::slicedFvPatchField<Type>::patchNeighbourField
-(
-    const Field<Type>& iField
-) const
-{
-    NotImplemented;
-
-    return Field<Type>::null();
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::slicedFvPatchField<Type>::patchNeighbourField() const
-{
-    NotImplemented;
-
-    return Field<Type>::null();
 }
 
 

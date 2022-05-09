@@ -32,20 +32,14 @@ Description
 
 #include "argList.H"
 #include "timeSelector.H"
-
 #include "fvCFD.H"
 #include "IOobjectList.H"
-#include "processorMeshes.H"
+#include "processorRunTimes.H"
+#include "domainDecomposition.H"
 #include "regionProperties.H"
 #include "fvFieldReconstructor.H"
 #include "pointFieldReconstructor.H"
 #include "reconstructLagrangian.H"
-
-#include "cellSet.H"
-#include "faceSet.H"
-#include "pointSet.H"
-
-#include "hexRef8Data.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -120,7 +114,6 @@ int main(int argc, char *argv[])
     );
 
     #include "setRootCase.H"
-    #include "createTime.H"
 
     HashSet<word> selectedFields;
     if (args.optionFound("fields"))
@@ -144,7 +137,6 @@ int main(int argc, char *argv[])
             << nl << endl;
     }
 
-
     const bool noReconstructSets = args.optionFound("noSets");
 
     if (noReconstructSets)
@@ -152,7 +144,6 @@ int main(int argc, char *argv[])
         Info<< "Skipping reconstructing cellSets, faceSets and pointSets"
             << nl << endl;
     }
-
 
     HashSet<word> selectedLagrangianFields;
     if (args.optionFound("lagrangianFields"))
@@ -168,12 +159,20 @@ int main(int argc, char *argv[])
         args.optionLookup("lagrangianFields")() >> selectedLagrangianFields;
     }
 
-    const wordList regionNames(selectRegionNames(args, runTime));
+    // Set time from database
+    Info<< "Create time\n" << endl;
+    processorRunTimes runTimes(Foam::Time::controlDictName, args);
+
+    // Allow override of time
+    const instantList times = runTimes.selectProc(args);
+
+    // Get region names
+    const wordList regionNames =
+        selectRegionNames(args, runTimes.procTimes()[0]);
 
     // Determine the processor count
     const label nProcs =
         fileHandler().nProcs(args.path(), regionDir(regionNames[0]));
-
     if (!nProcs)
     {
         FatalErrorInFunction
@@ -184,38 +183,12 @@ int main(int argc, char *argv[])
     // Warn fileHandler of number of processors
     const_cast<fileOperation&>(fileHandler()).setNProcs(nProcs);
 
-    // Create the processor databases
-    PtrList<Time> databases(nProcs);
-
-    forAll(databases, proci)
-    {
-        databases.set
-        (
-            proci,
-            new Time
-            (
-                Time::controlDictName,
-                args.rootPath(),
-                args.caseName()/fileName(word("processor") + name(proci))
-            )
-        );
-    }
-
-    // Use the times list from the master processor
-    // and select a subset based on the command-line options
-    instantList timeDirs = timeSelector::select
-    (
-        databases[0].times(),
-        args
-    );
-
     // Note that we do not set the runTime time so it is still the
     // one set through the controlDict. The -time option
     // only affects the selected set of times from processor0.
     // - can be illogical
     // + any point motion handled through mesh.readUpdate
-
-    if (timeDirs.empty())
+    if (times.empty())
     {
         WarningInFunction << "No times selected" << endl;
         exit(1);
@@ -226,130 +199,76 @@ int main(int argc, char *argv[])
     instantList masterTimeDirs;
     if (newTimes)
     {
-        masterTimeDirs = runTime.times();
+        masterTimeDirs = runTimes.completeTime().times();
     }
-
     HashSet<word> masterTimeDirSet(2*masterTimeDirs.size());
     forAll(masterTimeDirs, i)
     {
         masterTimeDirSet.insert(masterTimeDirs[i].name());
     }
-
     if
     (
         newTimes
      && regionNames.size() == 1
      && regionNames[0] == fvMesh::defaultRegion
-     && haveAllTimes(masterTimeDirSet, timeDirs)
+     && haveAllTimes(masterTimeDirSet, times)
     )
     {
         Info<< "All times already reconstructed.\n\nEnd\n" << endl;
         return 0;
     }
 
-    // Set all times on processor meshes equal to reconstructed mesh
-    forAll(databases, proci)
-    {
-        databases[proci].setTime(runTime);
-    }
-
+    // Reconstruct all regions
     forAll(regionNames, regioni)
     {
         const word& regionName = regionNames[regioni];
         const word& regionDir = Foam::regionDir(regionName);
 
-        Info<< "\n\nReconstructing fields for mesh " << regionName << nl
-            << endl;
-
-        fvMesh mesh
-        (
-            IOobject
-            (
-                regionName,
-                runTime.timeName(),
-                runTime,
-                IOobject::MUST_READ
-            ),
-            false
-        );
-
-
-        // Read all meshes and addressing to reconstructed mesh
-        processorMeshes procMeshes(databases, regionName);
-
-
-        // Check face addressing for meshes that have been decomposed
-        // with a very old foam version
-        #include "checkFaceAddressingComp.H"
+        // Create meshes
+        Info<< "\n\nReconstructing fields for mesh " << regionName
+            << nl << endl;
+        domainDecomposition meshes(runTimes, regionName);
+        meshes.readComplete();
+        meshes.readProcs();
+        meshes.readAddressing();
+        meshes.readUpdate();
 
         // Loop over all times
-        forAll(timeDirs, timei)
+        forAll(times, timei)
         {
-            if (newTimes && masterTimeDirSet.found(timeDirs[timei].name()))
+            if (newTimes && masterTimeDirSet.found(times[timei].name()))
             {
-                Info<< "Skipping time " << timeDirs[timei].name()
+                Info<< "Skipping time " << times[timei].name()
                     << endl << endl;
                 continue;
             }
 
+            // Set the time
+            runTimes.setTime(times[timei], timei);
 
-            // Set time for global database
-            runTime.setTime(timeDirs[timei], timei);
+            Info<< "Time = " << runTimes.completeTime().userTimeName()
+                << nl << endl;
 
-            Info<< "Time = " << runTime.userTimeName() << endl << endl;
-
-            // Set time for all databases
-            forAll(databases, proci)
+            // Update the meshes
+            const fvMesh::readUpdateState state = meshes.readUpdate();
+            if (state == fvMesh::POINTS_MOVED)
             {
-                databases[proci].setTime(timeDirs[timei], timei);
+                meshes.writeComplete(false);
             }
-
-            // Check if any new meshes need to be read.
-            fvMesh::readUpdateState meshStat = mesh.readUpdate();
-            fvMesh::readUpdateState procStat = procMeshes.readUpdate();
             if
             (
-                meshStat != procStat
-
-                // Allowed status difference. Mesh has moved in parallel, but
-                // the change has not yet been reconstructed.
-             && !(
-                    meshStat == fvMesh::UNCHANGED
-                 && procStat == fvMesh::POINTS_MOVED
-                )
-
-                // Allowed status difference. Mesh has changed topology in both
-                // cases, and this has lead to new processor interfaces
-                // (probably). These interfaces are compatible with a
-                // reconstructed mesh in which patches have not changed.
-             && !(
-                    meshStat == fvMesh::TOPO_CHANGE
-                 && procStat == fvMesh::TOPO_PATCH_CHANGE
-                )
+                state == fvMesh::TOPO_CHANGE
+             || state == fvMesh::TOPO_PATCH_CHANGE
             )
             {
-                WarningInFunction
-                    << "readUpdate for the reconstructed mesh:"
-                    << meshStat << nl
-                    << "readUpdate for the processor meshes  :"
-                    << procStat << nl
-                    << "These should be equal or your addressing"
-                    << " might be incorrect."
-                    << " Please check your time directories for any "
-                    << "mesh directories." << endl;
-            }
-
-            // Reconstruct and write the points for moving mesh cases
-            if (procStat == fvMesh::POINTS_MOVED)
-            {
-                procMeshes.reconstructPoints(mesh);
+                meshes.writeComplete(!noReconstructSets);
             }
 
             // Get list of objects from processor0 database
             IOobjectList objects
             (
-                procMeshes.meshes()[0],
-                databases[0].timeName()
+                meshes.procMeshes()[0],
+                runTimes.procTimes()[0].timeName()
             );
 
             if (!noFields)
@@ -359,10 +278,11 @@ int main(int argc, char *argv[])
 
                 fvFieldReconstructor fvReconstructor
                 (
-                    mesh,
-                    procMeshes.meshes(),
-                    procMeshes.faceProcAddressing(),
-                    procMeshes.cellProcAddressing()
+                    meshes.completeMesh(),
+                    meshes.procMeshes(),
+                    meshes.procFaceAddressing(),
+                    meshes.procCellAddressing(),
+                    meshes.procFaceAddressingBf()
                 );
 
                 fvReconstructor.reconstructFvVolumeInternalFields<scalar>
@@ -454,23 +374,23 @@ int main(int argc, char *argv[])
             {
                 Info<< "Reconstructing point fields" << nl << endl;
 
-                const pointMesh& pMesh = pointMesh::New(mesh);
-                PtrList<pointMesh> pMeshes(procMeshes.meshes().size());
-
-                forAll(pMeshes, proci)
+                const pointMesh& completePMesh =
+                    pointMesh::New(meshes.completeMesh());
+                PtrList<pointMesh> procPMeshes(nProcs);
+                forAll(procPMeshes, proci)
                 {
-                    pMeshes.set
+                    procPMeshes.set
                     (
                         proci,
-                        new pointMesh(procMeshes.meshes()[proci])
+                        new pointMesh(meshes.procMeshes()[proci])
                     );
                 }
 
                 pointFieldReconstructor pointReconstructor
                 (
-                    pMesh,
-                    pMeshes,
-                    procMeshes.pointProcAddressing()
+                    completePMesh,
+                    procPMeshes,
+                    meshes.procPointAddressing()
                 );
 
                 pointReconstructor.reconstructFields<scalar>
@@ -517,15 +437,15 @@ int main(int argc, char *argv[])
             {
                 HashTable<IOobjectList> cloudObjects;
 
-                forAll(databases, proci)
+                forAll(runTimes.procTimes(), proci)
                 {
                     fileName lagrangianDir
                     (
                         fileHandler().filePath
                         (
-                            databases[proci].timePath()
-                          / regionDir
-                          / cloud::prefix
+                            runTimes.procTimes()[proci].timePath()
+                           /regionDir
+                           /cloud::prefix
                         )
                     );
 
@@ -551,8 +471,8 @@ int main(int argc, char *argv[])
                             // Do local scan for valid cloud objects
                             IOobjectList sprayObjs
                             (
-                                procMeshes.meshes()[proci],
-                                databases[proci].timeName(),
+                                meshes.procMeshes()[proci],
+                                runTimes.procTimes()[proci].timeName(),
                                 cloud::prefix/cloudDirs[i]
                             );
 
@@ -567,16 +487,13 @@ int main(int argc, char *argv[])
                     }
                 }
 
-
                 if (cloudObjects.size())
                 {
                     // Pass2: reconstruct the cloud
                     forAllConstIter(HashTable<IOobjectList>, cloudObjects, iter)
                     {
-                        const word cloudName = string::validate<word>
-                        (
-                            iter.key()
-                        );
+                        const word cloudName =
+                            string::validate<word>(iter.key());
 
                         // Objects (on arbitrary processor)
                         const IOobjectList& sprayObjs = iter();
@@ -586,105 +503,105 @@ int main(int argc, char *argv[])
 
                         reconstructLagrangianPositions
                         (
-                            mesh,
+                            meshes.completeMesh(),
                             cloudName,
-                            procMeshes.meshes(),
-                            procMeshes.faceProcAddressing(),
-                            procMeshes.cellProcAddressing()
+                            meshes.procMeshes(),
+                            meshes.procFaceAddressing(),
+                            meshes.procCellAddressing()
                         );
                         reconstructLagrangianFields<label>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFieldFields<label>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFields<scalar>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFieldFields<scalar>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFields<vector>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFieldFields<vector>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFields<sphericalTensor>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFieldFields<sphericalTensor>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFields<symmTensor>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFieldFields<symmTensor>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFields<tensor>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
                         reconstructLagrangianFieldFields<tensor>
                         (
                             cloudName,
-                            mesh,
-                            procMeshes.meshes(),
+                            meshes.completeMesh(),
+                            meshes.procMeshes(),
                             sprayObjs,
                             selectedLagrangianFields
                         );
@@ -696,278 +613,6 @@ int main(int argc, char *argv[])
                 }
             }
 
-
-            if (!noReconstructSets)
-            {
-                // Scan to find all sets
-                HashTable<label> cSetNames;
-                HashTable<label> fSetNames;
-                HashTable<label> pSetNames;
-
-                forAll(procMeshes.meshes(), proci)
-                {
-                    const fvMesh& procMesh = procMeshes.meshes()[proci];
-
-                    // Note: look at sets in current time only or between
-                    // mesh and current time?. For now current time. This will
-                    // miss out on sets in intermediate times that have not
-                    // been reconstructed.
-                    IOobjectList objects
-                    (
-                        procMesh,
-                        databases[0].timeName(),    // procMesh.facesInstance()
-                        polyMesh::meshSubDir/"sets"
-                    );
-
-                    IOobjectList cSets(objects.lookupClass(cellSet::typeName));
-                    forAllConstIter(IOobjectList, cSets, iter)
-                    {
-                        cSetNames.insert(iter.key(), cSetNames.size());
-                    }
-
-                    IOobjectList fSets(objects.lookupClass(faceSet::typeName));
-                    forAllConstIter(IOobjectList, fSets, iter)
-                    {
-                        fSetNames.insert(iter.key(), fSetNames.size());
-                    }
-                    IOobjectList pSets(objects.lookupClass(pointSet::typeName));
-                    forAllConstIter(IOobjectList, pSets, iter)
-                    {
-                        pSetNames.insert(iter.key(), pSetNames.size());
-                    }
-                }
-
-                if (cSetNames.size() || fSetNames.size() || pSetNames.size())
-                {
-                    // Construct all sets
-                    PtrList<cellSet> cellSets(cSetNames.size());
-                    PtrList<faceSet> faceSets(fSetNames.size());
-                    PtrList<pointSet> pointSets(pSetNames.size());
-
-                    Info<< "Reconstructing sets:" << endl;
-                    if (cSetNames.size())
-                    {
-                        Info<< "    cellSets "
-                            << cSetNames.sortedToc() << endl;
-                    }
-                    if (fSetNames.size())
-                    {
-                        Info<< "    faceSets "
-                            << fSetNames.sortedToc() << endl;
-                    }
-                    if (pSetNames.size())
-                    {
-                        Info<< "    pointSets "
-                            << pSetNames.sortedToc() << endl;
-                    }
-
-                    // Load sets
-                    forAll(procMeshes.meshes(), proci)
-                    {
-                        const fvMesh& procMesh = procMeshes.meshes()[proci];
-
-                        IOobjectList objects
-                        (
-                            procMesh,
-                            databases[0].timeName(),
-                            polyMesh::meshSubDir/"sets"
-                        );
-
-                        // cellSets
-                        const labelList& cellMap =
-                            procMeshes.cellProcAddressing()[proci];
-
-                        IOobjectList cSets
-                        (
-                            objects.lookupClass(cellSet::typeName)
-                        );
-
-                        forAllConstIter(IOobjectList, cSets, iter)
-                        {
-                            // Load cellSet
-                            const cellSet procSet(*iter());
-                            label setI = cSetNames[iter.key()];
-                            if (!cellSets.set(setI))
-                            {
-                                cellSets.set
-                                (
-                                    setI,
-                                    new cellSet
-                                    (
-                                        mesh,
-                                        iter.key(),
-                                        procSet.size()
-                                    )
-                                );
-                            }
-                            cellSet& cSet = cellSets[setI];
-                            cSet.instance() = runTime.timeName();
-
-                            forAllConstIter(cellSet, procSet, iter)
-                            {
-                                cSet.insert(cellMap[iter.key()]);
-                            }
-                        }
-
-                        // faceSets
-                        const labelList& faceMap =
-                        procMeshes.faceProcAddressing()[proci];
-
-                        IOobjectList fSets
-                        (
-                            objects.lookupClass(faceSet::typeName)
-                        );
-
-                        forAllConstIter(IOobjectList, fSets, iter)
-                        {
-                            // Load faceSet
-                            const faceSet procSet(*iter());
-                            label setI = fSetNames[iter.key()];
-                            if (!faceSets.set(setI))
-                            {
-                                faceSets.set
-                                (
-                                    setI,
-                                    new faceSet
-                                    (
-                                        mesh,
-                                        iter.key(),
-                                        procSet.size()
-                                    )
-                                );
-                            }
-                            faceSet& fSet = faceSets[setI];
-                            fSet.instance() = runTime.timeName();
-
-                            forAllConstIter(faceSet, procSet, iter)
-                            {
-                                fSet.insert(mag(faceMap[iter.key()])-1);
-                            }
-                        }
-                        // pointSets
-                        const labelList& pointMap =
-                            procMeshes.pointProcAddressing()[proci];
-
-                        IOobjectList pSets
-                        (
-                            objects.lookupClass(pointSet::typeName)
-                        );
-                        forAllConstIter(IOobjectList, pSets, iter)
-                        {
-                            // Load pointSet
-                            const pointSet propSet(*iter());
-                            label setI = pSetNames[iter.key()];
-                            if (!pointSets.set(setI))
-                            {
-                                pointSets.set
-                                (
-                                    setI,
-                                    new pointSet
-                                    (
-                                        mesh,
-                                        iter.key(),
-                                        propSet.size()
-                                    )
-                                );
-                            }
-                            pointSet& pSet = pointSets[setI];
-                            pSet.instance() = runTime.timeName();
-
-                            forAllConstIter(pointSet, propSet, iter)
-                            {
-                                pSet.insert(pointMap[iter.key()]);
-                            }
-                        }
-                    }
-
-                    // Write sets
-                    forAll(cellSets, i)
-                    {
-                        cellSets[i].write();
-                    }
-                    forAll(faceSets, i)
-                    {
-                        faceSets[i].write();
-                    }
-                    forAll(pointSets, i)
-                    {
-                        pointSets[i].write();
-                    }
-                }
-            }
-
-
-            // Reconstruct refinement data
-            {
-                PtrList<hexRef8Data> procData(procMeshes.meshes().size());
-
-                forAll(procMeshes.meshes(), procI)
-                {
-                    const fvMesh& procMesh = procMeshes.meshes()[procI];
-
-                    procData.set
-                    (
-                        procI,
-                        new hexRef8Data
-                        (
-                            IOobject
-                            (
-                                "dummy",
-                                procMesh.time().timeName(),
-                                polyMesh::meshSubDir,
-                                procMesh,
-                                IOobject::READ_IF_PRESENT,
-                                IOobject::NO_WRITE,
-                                false
-                            )
-                        )
-                    );
-                }
-
-                // Combine individual parts
-
-                const PtrList<labelIOList>& cellAddr =
-                    procMeshes.cellProcAddressing();
-
-                UPtrList<const labelList> cellMaps(cellAddr.size());
-                forAll(cellAddr, i)
-                {
-                    cellMaps.set(i, &cellAddr[i]);
-                }
-
-                const PtrList<labelIOList>& pointAddr =
-                    procMeshes.pointProcAddressing();
-
-                UPtrList<const labelList> pointMaps(pointAddr.size());
-                forAll(pointAddr, i)
-                {
-                    pointMaps.set(i, &pointAddr[i]);
-                }
-
-                UPtrList<const hexRef8Data> procRefs(procData.size());
-                forAll(procData, i)
-                {
-                    procRefs.set(i, &procData[i]);
-                }
-
-                hexRef8Data
-                (
-                    IOobject
-                    (
-                        "dummy",
-                        mesh.time().timeName(),
-                        polyMesh::meshSubDir,
-                        mesh,
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
-                    cellMaps,
-                    pointMaps,
-                    procRefs
-                ).write();
-            }
-
             // If there is a "uniform" directory in the time region
             // directory copy from the master processor
             {
@@ -975,13 +620,17 @@ int main(int argc, char *argv[])
                 (
                     fileHandler().filePath
                     (
-                        databases[0].timePath()/regionDir/"uniform"
+                        runTimes.procTimes()[0].timePath()/regionDir/"uniform"
                     )
                 );
 
                 if (!uniformDir0.empty() && fileHandler().isDir(uniformDir0))
                 {
-                    fileHandler().cp(uniformDir0, runTime.timePath()/regionDir);
+                    fileHandler().cp
+                    (
+                        uniformDir0,
+                        runTimes.completeTime().timePath()/regionDir
+                    );
                 }
             }
 
@@ -993,13 +642,17 @@ int main(int argc, char *argv[])
                 (
                     fileHandler().filePath
                     (
-                        databases[0].timePath()/"uniform"
+                        runTimes.procTimes()[0].timePath()/"uniform"
                     )
                 );
 
                 if (!uniformDir0.empty() && fileHandler().isDir(uniformDir0))
                 {
-                    fileHandler().cp(uniformDir0, runTime.timePath());
+                    fileHandler().cp
+                    (
+                        uniformDir0,
+                        runTimes.completeTime().timePath()
+                    );
                 }
             }
         }

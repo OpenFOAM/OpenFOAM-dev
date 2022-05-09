@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,16 +103,16 @@ bool Foam::findCellParticle::move
     const scalar maxTrackLen
 )
 {
-    td.switchProcessor = false;
     td.keepParticle = true;
+    td.sendToProc = -1;
 
-    while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
+    while (td.keepParticle && td.sendToProc == -1 && stepFraction() < 1)
     {
         const scalar f = 1 - stepFraction();
         trackToAndHitFace(f*displacement_, f, cloud, td);
     }
 
-    if (!td.switchProcessor)
+    if (td.sendToProc == -1)
     {
         // Hit endpoint or patch. If patch hit could do fancy stuff but just
         // to use the patch point is good enough for now.
@@ -121,12 +121,6 @@ bool Foam::findCellParticle::move
     }
 
     return td.keepParticle;
-}
-
-
-bool Foam::findCellParticle::hitPatch(Cloud<findCellParticle>&, trackingData&)
-{
-    return false;
 }
 
 
@@ -215,12 +209,21 @@ void Foam::findCellParticle::hitCyclicRepeatAMIPatch
 
 void Foam::findCellParticle::hitProcessorPatch
 (
-    Cloud<findCellParticle>&,
+    Cloud<findCellParticle>& cloud,
     trackingData& td
 )
 {
-    // Remove particle
-    td.switchProcessor = true;
+    const processorPolyPatch& ppp =
+        static_cast<const processorPolyPatch&>(mesh().boundaryMesh()[patch()]);
+
+    if (ppp.transform().transforms())
+    {
+        td.keepParticle = false;
+    }
+    else
+    {
+        particle::hitProcessorPatch(cloud, td);
+    }
 }
 
 

@@ -52,7 +52,8 @@ Foam::patchDistMethods::meshWave::meshWave
 )
 :
     patchDistMethod(mesh, patchIDs),
-    nCorrectors_(dict.lookupOrDefault<label>("nCorrectors", 2))
+    nCorrectors_(dict.lookupOrDefault<label>("nCorrectors", 2)),
+    minFaceFraction_(dict.lookupOrDefault<scalar>("minFaceFraction", 1e-1))
 {}
 
 
@@ -60,11 +61,13 @@ Foam::patchDistMethods::meshWave::meshWave
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
-    const label nCorrectors
+    const label nCorrectors,
+    const scalar minFaceFraction
 )
 :
     patchDistMethod(mesh, patchIDs),
-    nCorrectors_(nCorrectors)
+    nCorrectors_(nCorrectors),
+    minFaceFraction_(minFaceFraction)
 {}
 
 
@@ -79,6 +82,7 @@ bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
         (
             mesh_,
             patchIDs_,
+            minFaceFraction_,
             nCorrectors_,
             y
         );
@@ -103,6 +107,7 @@ bool Foam::patchDistMethods::meshWave::correct
         (
             mesh_,
             patchIDs_,
+            minFaceFraction_,
             nCorrectors_,
             y,
             n

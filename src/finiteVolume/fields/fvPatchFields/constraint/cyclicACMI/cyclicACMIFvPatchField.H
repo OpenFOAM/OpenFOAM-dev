@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,12 +125,6 @@ public:
 
             //- Return reference to non-overlapping patchField
             const fvPatchField<Type>& nonOverlapPatchField() const;
-
-            //- Manipulate matrix
-            virtual void manipulateMatrix(fvMatrix<Type>& matrix);
-
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
 };
 
 

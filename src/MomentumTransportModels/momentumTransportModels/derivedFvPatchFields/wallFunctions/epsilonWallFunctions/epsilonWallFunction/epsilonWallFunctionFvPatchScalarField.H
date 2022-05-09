@@ -226,18 +226,8 @@ public:
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
 
-            //- Update the coefficients associated with the patch field
-            virtual void updateWeightedCoeffs(const scalarField& weights);
-
             //- Manipulate matrix
             virtual void manipulateMatrix(fvMatrix<scalar>& matrix);
-
-            //- Manipulate matrix with given weights
-            virtual void manipulateMatrix
-            (
-                fvMatrix<scalar>& matrix,
-                const scalarField& weights
-            );
 };
 
 

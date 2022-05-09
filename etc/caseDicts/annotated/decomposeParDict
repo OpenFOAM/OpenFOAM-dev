@@ -37,10 +37,9 @@ constraints
 
    preservePatches
    {
-       //- Keep owner and neighbour on same processor for faces in patches
-       //  (only makes sense for cyclic patches. Not suitable for e.g.
-       //   cyclicAMI since these are not coupled on the patch level. Use
-       //   singleProcessorFaceSets for those)
+       //- Keep owner and neighbour on same processor for faces in patches. Can
+       //  be used to prevent a cyclic patch from being decomposed into
+       //  multiple processor cyclics.
        type    preservePatches;
        patches (".*");
    }
@@ -48,12 +47,12 @@ constraints
    singleProcessorFaceSets
    {
        //- Keep all of faceSet on a single processor. This puts all cells
-       //  connected with a point, edge or face on the same processor.
+       //  connected with a point, edge or face on the same processor
        //  (just having face connected cells might not guarantee a balanced
-       //  decomposition)
-       // The processor can be -1 (the decompositionMethod chooses the
-       // processor for a good load balance) or explicitly provided (upsets
-       // balance)
+       //  decomposition). If processor index is set to -1, the decomposition
+       //  method chooses the processor to which the face set is decomposed.
+       //  This is likely to create a better balance than if the processor
+       //  index is explicitly specified.
        type    singleProcessorFaceSets;
        singleProcessorFaceSets ((f1 -1));
    }

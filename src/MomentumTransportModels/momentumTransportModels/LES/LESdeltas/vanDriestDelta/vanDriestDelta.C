@@ -91,6 +91,7 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
     (
         mesh,
         mesh.boundaryMesh().findPatchIDs<wallPolyPatch>(),
+        minWallFaceFraction_,
         2, // <-- roughly equivalent to old point-cell corrections
         y,
         yStar,
@@ -155,6 +156,14 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
         (
             "yPlusCutOff",
             500
+        )
+    ),
+    minWallFaceFraction_
+    (
+        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        (
+            "minWallFaceFraction",
+            0.1
         )
     )
 {

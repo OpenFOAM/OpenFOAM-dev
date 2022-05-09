@@ -151,15 +151,8 @@ public:
             return !isMaster();
         }
 
-        //- Return the underlying processorPolyPatch
-        const processorPolyPatch& procPolyPatch() const
-        {
-            return procPolyPatch_;
-        }
-
         //- Return mesh points in the correct order for the receiving side
         const labelList& reverseMeshPoints() const;
-
 };
 
 

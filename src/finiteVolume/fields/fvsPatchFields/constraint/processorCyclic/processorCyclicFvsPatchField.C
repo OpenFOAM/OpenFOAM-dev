@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
     processorFvsPatchField<Type>(p, iF, dict),
     procPatch_(refCast<const processorCyclicFvPatch>(p))
 {
-    if (!isType<processorCyclicFvPatch>(p))
+    if (!isA<processorCyclicFvPatch>(p))
     {
         FatalIOErrorInFunction
         (
@@ -87,7 +87,7 @@ Foam::processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
     processorFvsPatchField<Type>(ptf, p, iF, mapper),
     procPatch_(refCast<const processorCyclicFvPatch>(p))
 {
-    if (!isType<processorCyclicFvPatch>(this->patch()))
+    if (!isA<processorCyclicFvPatch>(this->patch()))
     {
         FatalErrorInFunction
             << "Field type does not correspond to patch type for patch "

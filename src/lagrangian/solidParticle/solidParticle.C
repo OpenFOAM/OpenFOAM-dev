@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,10 +42,10 @@ bool Foam::solidParticle::move
     const scalar trackTime
 )
 {
-    td.switchProcessor = false;
     td.keepParticle = true;
+    td.sendToProc = -1;
 
-    while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
+    while (td.keepParticle && td.sendToProc == -1 && stepFraction() < 1)
     {
         if (debug)
         {
@@ -84,22 +84,6 @@ bool Foam::solidParticle::move
     }
 
     return td.keepParticle;
-}
-
-
-bool Foam::solidParticle::hitPatch(solidParticleCloud&, trackingData&)
-{
-    return false;
-}
-
-
-void Foam::solidParticle::hitProcessorPatch
-(
-    solidParticleCloud&,
-    trackingData& td
-)
-{
-    td.switchProcessor = true;
 }
 
 
