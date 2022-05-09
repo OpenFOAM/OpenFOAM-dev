@@ -11,6 +11,7 @@ runApplication snappyHexMesh -overwrite
 
 runApplication createBaffles -overwrite
 runApplication splitBaffles -overwrite
+runApplication createNonConformalCouples -overwrite nonCouple1 nonCouple2
 
 runApplication $(getApplication)
 

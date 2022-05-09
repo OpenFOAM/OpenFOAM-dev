@@ -83,15 +83,9 @@ edges
     arc 15 31 (2 $r4 0)
 );
 
-defaultPatch
-{
-    name movingWalls;
-    type wall;
-}
-
 boundary
 (
-    stationaryWalls
+    statorDuct
     {
         type wall;
         faces
@@ -100,6 +94,34 @@ boundary
             (8 9 25 24)
             (12 14 30 28)
             (13 15 31 29)
+        );
+    }
+
+    rotorDuct
+    {
+        type wall;
+        faces
+        (
+            (0 1 17 16)
+            (1 2 18 17)
+            (0 5 21 16)
+            (5 10 26 21)
+            (6 7 23 22)
+            (6 11 27 22)
+        );
+    }
+
+    rotorBlades
+    {
+        type wall;
+        faces
+        (
+            (0 1 6 5)
+            (1 2 7 6)
+            (5 6 11 10)
+            (16 17 22 21)
+            (17 18 23 22)
+            (21 22 27 26)
         );
     }
 
@@ -141,22 +163,20 @@ boundary
         );
     }
 
-    cyclicRepeatAMIIn1
+    nonCoupleIn1
     {
-        type cyclicRepeatAMI;
-        neighbourPatch cyclicRepeatAMIIn2;
-        transformPatch cyclicIn1;
+        type patch;
+        inGroups (nonCouple);
         faces
         (
             (3 8 24 19)
         );
     }
 
-    cyclicRepeatAMIIn2
+    nonCoupleIn2
     {
-        type cyclicRepeatAMI;
-        neighbourPatch cyclicRepeatAMIIn1;
-        transformPatch cyclicIn1;
+        type patch;
+        inGroups (nonCouple);
         faces
         (
             (2 7 23 18)
@@ -183,22 +203,20 @@ boundary
         );
     }
 
-    cyclicRepeatAMIOut1
+    nonCoupleOut1
     {
-        type cyclicRepeatAMI;
-        neighbourPatch cyclicRepeatAMIOut2;
-        transformPatch cyclicIn1;
+        type patch;
+        inGroups (nonCouple);
         faces
         (
             (10 11 27 26)
         );
     }
 
-    cyclicRepeatAMIOut2
+    nonCoupleOut2
     {
-        type cyclicRepeatAMI;
-        neighbourPatch cyclicRepeatAMIOut1;
-        transformPatch cyclicIn1;
+        type patch;
+        inGroups (nonCouple);
         faces
         (
             (12 13 29 28)

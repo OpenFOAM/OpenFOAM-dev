@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -21,6 +22,8 @@ internalField   uniform $!outerInlet/T;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     innerInlet
     {
         type            fixedValue;
@@ -48,7 +51,10 @@ boundaryField
         $staticWalls;
     }
 
-    #includeEtc "caseDicts/setConstraintTypes"
+    nonCouple
+    {
+        type            zeroGradient;
+    }
 }
 
 // ************************************************************************* //

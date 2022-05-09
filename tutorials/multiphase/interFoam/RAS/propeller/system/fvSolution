@@ -31,28 +31,34 @@ solvers
         minIter         1;
     };
 
-    "pcorr.*"
+    p_rgh
     {
         solver          GAMG;
         smoother        DICGaussSeidel;
-
-        tolerance       1e-2;
-        relTol          0;
-
-        cacheAgglomeration no;
-        maxIter         50;
-    }
-
-    p_rgh
-    {
-        $pcorr;
         tolerance       1e-9;
         relTol          0.01;
+        cacheAgglomeration no;
+        maxIter         50;
     }
 
     p_rghFinal
     {
         $p_rgh;
+        relTol          0;
+    }
+
+    "pcorr.*"
+    {
+        $p_rgh;
+        tolerance       1e-2;
+        relTol          0;
+    }
+
+    MeshPhi
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-2;
         relTol          0;
     }
 
@@ -75,6 +81,7 @@ solvers
 PIMPLE
 {
     correctPhi          yes;
+    correctMeshPhi      yes;
     nOuterCorrectors    3;
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;

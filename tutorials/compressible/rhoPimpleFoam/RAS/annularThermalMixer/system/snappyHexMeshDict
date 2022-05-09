@@ -19,10 +19,10 @@ addLayers       false;
 
 geometry
 {
-    AMI
+    couple
     {
         type        triSurfaceMesh;
-        file        "AMI.obj";
+        file        "couple.obj";
     }
 
     innerInlet
@@ -85,7 +85,7 @@ castellatedMeshControls
     features
     (
         {
-            file        "AMI.eMesh";
+            file        "couple.eMesh";
             level       2;
         }
         {
@@ -108,11 +108,11 @@ castellatedMeshControls
 
     refinementSurfaces
     {
-        AMI
+        couple
         {
             level       (2 2);
-            faceZone    rotatingZone;
-            cellZone    rotatingZone;
+            faceZone    couple;
+            cellZone    rotating;
             mode        inside;
         }
 

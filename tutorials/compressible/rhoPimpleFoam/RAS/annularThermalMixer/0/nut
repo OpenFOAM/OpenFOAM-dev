@@ -22,6 +22,8 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         $!calculated/nut;
@@ -42,7 +44,10 @@ boundaryField
         $movingWalls;
     }
 
-    #includeEtc "caseDicts/setConstraintTypes"
+    nonCouple
+    {
+        type            zeroGradient;
+    }
 }
 
 // ************************************************************************* //

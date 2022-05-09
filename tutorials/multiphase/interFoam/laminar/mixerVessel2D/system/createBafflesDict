@@ -1,0 +1,48 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+internalFacesOnly true;
+
+#include "$FOAM_TUTORIALS/resources/blockMesh/mixerVessel2D"
+
+baffles
+{
+    baffleFaces
+    {
+        type    searchableSurface;
+        surface searchableCylinder;
+        point1  (0 0 -100);
+        point2  (0 0 100);
+        radius  $rotorRegion;
+
+        patches
+        {
+            master
+            {
+                name            nonCouple1;
+                type            patch;
+                inGroups        (nonCouple);
+            }
+            slave
+            {
+                name            nonCouple2;
+                type            patch;
+                inGroups        (nonCouple);
+            }
+        }
+    }
+}
+
+// ************************************************************************* //

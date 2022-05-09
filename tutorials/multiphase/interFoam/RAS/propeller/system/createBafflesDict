@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      createPatchDict;
+    object      createBafflesDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -27,16 +27,16 @@ baffles
         {
             master
             {
-                name            AMI1;
-                type            cyclicAMI;
-                neighbourPatch  AMI2;
+                name            nonCouple1;
+                type            patch;
+                inGroups        (nonCouple);
             }
 
             slave
             {
-                name            AMI2;
-                type            cyclicAMI;
-                neighbourPatch  AMI1;
+                name            nonCouple2;
+                type            patch;
+                inGroups        (nonCouple);
             }
         }
     }

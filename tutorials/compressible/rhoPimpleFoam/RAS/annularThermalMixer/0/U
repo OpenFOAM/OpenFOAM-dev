@@ -22,6 +22,8 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     innerInlet
     {
         type            fixedValue;
@@ -49,7 +51,10 @@ boundaryField
         $!movingWall/U;
     }
 
-    #includeEtc "caseDicts/setConstraintTypes"
+    nonCouple
+    {
+        type            zeroGradient;
+    }
 }
 
 // ************************************************************************* //

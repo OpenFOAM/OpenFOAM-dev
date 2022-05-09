@@ -33,6 +33,12 @@ boundaryField
         type            nutkWallFunction;
         value           uniform 0;
     }
+
+    nonCouple
+    {
+        type            calculated;
+        value           uniform 0;
+    }
 }
 
 

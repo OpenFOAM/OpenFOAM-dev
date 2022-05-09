@@ -24,12 +24,17 @@ boundaryField
 
     "(inlet|outlet)"
     {
-        type            totalPressure;
+        type            entrainmentPressure;
         p0              $internalField;
         value           $internalField;
     }
 
     wall
+    {
+        type            fixedFluxPressure;
+    }
+
+    nonCouple
     {
         type            fixedFluxPressure;
     }

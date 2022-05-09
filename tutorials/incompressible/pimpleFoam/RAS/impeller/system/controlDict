@@ -50,10 +50,23 @@ maxCo           1.0;
 
 functions
 {
-    #includeFunc patchFlowRate(patch=inlet)
-    #includeFunc patchFlowRate(patch=outlet)
-    #includeFunc triSurfaceVolumetricFlowRate(name=surface0.stl)
-    #includeFunc triSurfaceVolumetricFlowRate(name=surface1.stl)
+    #includeFunc patchFlowRate(patch=inlet, funcName=inletFlowRate)
+    #includeFunc patchFlowRate(patch=outlet, funcName=outletFlowRate)
+
+    cartesianToCylindrical
+    {
+        type        cylindrical;
+        libs        ("libfieldFunctionObjects.so");
+
+        origin      (0 0 0);
+        axis        (1 0 0);
+
+        field       U;
+
+        writeControl    outputTime;
+        writeInterval   1;
+    }
 }
+
 
 // ************************************************************************* //

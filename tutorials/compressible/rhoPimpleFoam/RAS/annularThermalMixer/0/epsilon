@@ -22,6 +22,8 @@ internalField   uniform $!innerInlet/epsilon;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     innerInlet
     {
         type            fixedValue;
@@ -49,7 +51,15 @@ boundaryField
         $staticWalls;
     }
 
-    #includeEtc "caseDicts/setConstraintTypes"
+    nonCouple
+    {
+        type            zeroGradient;
+    }
+
+    nonCouple
+    {
+        type            zeroGradient;
+    }
 }
 
 // ************************************************************************* //

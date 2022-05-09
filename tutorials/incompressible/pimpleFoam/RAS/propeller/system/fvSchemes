@@ -22,14 +22,12 @@ ddtSchemes
 gradSchemes
 {
     default         Gauss linear;
-    grad(p)         Gauss linear;
     grad(U)         cellLimited Gauss linear 1;
 }
 
 divSchemes
 {
     default         none;
-//    div(phi,U)      Gauss upwind;
     div(phi,U)      Gauss linearUpwind grad(U);
     div(phi,k)      Gauss upwind;
     div(phi,epsilon) Gauss upwind;
@@ -38,7 +36,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default         Gauss linear limited corrected 0.33;
+    default         Gauss linear corrected;
 }
 
 interpolationSchemes
@@ -48,7 +46,7 @@ interpolationSchemes
 
 snGradSchemes
 {
-    default         limited corrected 0.33;
+    default         corrected;
 }
 
 

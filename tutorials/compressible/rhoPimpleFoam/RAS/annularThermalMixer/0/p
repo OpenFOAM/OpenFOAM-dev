@@ -22,6 +22,8 @@ internalField   uniform 1e5;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         $!inlet/p;
@@ -42,7 +44,10 @@ boundaryField
         $staticWalls;
     }
 
-    #includeEtc "caseDicts/setConstraintTypes"
+    nonCouple
+    {
+        type            zeroGradient;
+    }
 }
 
 // ************************************************************************* //

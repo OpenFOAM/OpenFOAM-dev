@@ -15,7 +15,7 @@ FoamFile
 
 surfaces
 (
-    "AMI.obj"
+    "couple.obj"
     "shaft.obj"
     "wall.obj"
     "statorBlades.obj"

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+inletFlowRate=postProcessing/inletFlowRate/0/surfaceFieldValue.dat
+lowerOutletFlowRate=postProcessing/lowerOutletFlowRate/0/surfaceFieldValue.dat
+upperOutletFlowRate=postProcessing/upperOutletFlowRate/0/surfaceFieldValue.dat
+
+gnuplot << EOF
+set terminal postscript eps color enhanced
+set output "flowRate.eps"
+set xlabel "Time (s)"
+set ylabel "Flow Rate (m^3/s)"
+plot \
+    "$inletFlowRate" us 1:(-\$2) every 10 w p t "Inlet", \
+    "$lowerOutletFlowRate" us 1:2 w l t "Lower Outlet", \
+    "$upperOutletFlowRate" us 1:2 w l t "Upper Outlet", \
+    "< paste $lowerOutletFlowRate $upperOutletFlowRate" \
+    us 1:(\$2+\$4) w l t "Total Outlet"
+EOF
+
+gnuplot << EOF
+set terminal postscript eps color enhanced
+set output "error.eps"
+set xlabel "Time (s)"
+set ylabel "Inlet-Outlet Conservation Error (%)"
+plot \
+    "< paste $inletFlowRate $lowerOutletFlowRate $upperOutletFlowRate" \
+    us 1:(100*(\$2+\$4+\$6)/\$2) w l t ''
+EOF

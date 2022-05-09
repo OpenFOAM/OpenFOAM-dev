@@ -20,25 +20,30 @@ internalField   uniform 0;
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
     #includeEtc "caseDicts/setConstraintTypes"
 
     inlet
     {
         type            calculated;
-        value           uniform 0;
+        value           $internalField;
     }
 
     outlet
     {
         type            calculated;
-        value           uniform 0;
+        value           $internalField;
     }
 
     wall
     {
         type            nutkWallFunction;
-        value           uniform 0;
+        value           $internalField;
+    }
+
+    nonCouple
+    {
+        type            calculated;
+        value           $internalField;
     }
 }
 

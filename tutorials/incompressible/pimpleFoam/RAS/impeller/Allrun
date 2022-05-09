@@ -6,8 +6,6 @@ cd "${0%/*}" || exit 1
 
 runApplication blockMesh
 
-runApplication decomposePar
+runApplication createNonConformalCouples -overwrite
 
-runParallel $(getApplication)
-
-runApplication reconstructPar
+runApplication $(getApplication)

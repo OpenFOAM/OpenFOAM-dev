@@ -7,15 +7,20 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Copy propeller surfaces from resources directory
 cp $FOAM_TUTORIALS/resources/geometry/propeller*.obj.gz constant/geometry/
 
+# Mesh in parallel
 runApplication blockMesh
 runApplication surfaceFeatures
-runApplication snappyHexMesh -overwrite
+runApplication decomposePar -noFields
+runParallel snappyHexMesh -overwrite
 
-# Create the inlet/outlet and AMI patches
-runApplication createBaffles -overwrite
-runApplication splitBaffles -overwrite
+# Create the sliding patches
+runParallel createBaffles -overwrite
+runParallel splitBaffles -overwrite
 
-# Renumbering
-runApplication renumberMesh -noFields -overwrite
+# Renumber
+runParallel renumberMesh -noFields -overwrite
+
+# Create non-conformal couples
+runParallel createNonConformalCouples -overwrite nonCouple1 nonCouple2
 
 #------------------------------------------------------------------------------

@@ -20,7 +20,6 @@ internalField   uniform 0;
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
     #includeEtc "caseDicts/setConstraintTypes"
 
     inlet
@@ -31,10 +30,15 @@ boundaryField
     outlet
     {
         type            fixedValue;
-        value           uniform 0;
+        value           $internalField;
     }
 
     wall
+    {
+        type            zeroGradient;
+    }
+
+    nonCouple
     {
         type            zeroGradient;
     }

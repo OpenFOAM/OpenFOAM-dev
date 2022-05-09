@@ -1,0 +1,44 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "blockMeshDict.internal"
+
+boundary
+(
+    #include "blockMeshDict.boundary"
+
+    nonCoupleUp
+    {
+        type patch;
+        inGroups (nonCouple);
+        faces
+        (
+            (7 8 24 23)
+            (8 9 25 24)
+        );
+    }
+    nonCoupleDown
+    {
+        type patch;
+        inGroups (nonCouple);
+        faces
+        (
+            (10 11 27 26)
+            (11 12 28 27)
+        );
+    }
+);
+
+// ************************************************************************* //

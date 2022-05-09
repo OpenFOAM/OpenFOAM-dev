@@ -20,7 +20,6 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
     #includeEtc "caseDicts/setConstraintTypes"
 
     inlet
@@ -32,8 +31,8 @@ boundaryField
     outlet
     {
         type            inletOutlet;
-        inletValue      uniform (0 0 0);
-        value           uniform (0 0 0);
+        inletValue      $internalField;
+        value           $internalField;
     }
 
     outerCylinder
@@ -44,7 +43,13 @@ boundaryField
     "propeller.*"
     {
         type            movingWallVelocity;
-        value           uniform (0 0 0);
+        value           $internalField;
+    }
+
+    nonCouple
+    {
+        type            movingWallSlipVelocity;
+        value           $internalField;
     }
 }
 

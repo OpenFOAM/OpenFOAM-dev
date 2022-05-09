@@ -18,10 +18,8 @@ solvers
 {
     p
     {
-        solver           GAMG;
-
-        smoother         GaussSeidel;
-
+        solver          GAMG;
+        smoother        GaussSeidel;
         tolerance       1e-6;
         relTol          0.01;
     }
@@ -39,6 +37,14 @@ solvers
         relTol          0;
     }
 
+    MeshPhi
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-2;
+        relTol          0;
+    }
+
     "(rho|U|h|k|epsilon|omega)"
     {
         solver          smoothSolver;
@@ -52,13 +58,13 @@ solvers
         $U;
         relTol          0;
     }
-
 }
 
 PIMPLE
 {
     momentumPredictor   yes;
     transonic           no;
+    correctMeshPhi      yes;
     nOuterCorrectors    3;
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;

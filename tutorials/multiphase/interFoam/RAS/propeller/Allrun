@@ -8,12 +8,18 @@ cd ${0%/*} || exit 1    # Run from this directory
 if ! cloneMesh ../../../incompressible/pimpleFoam/RAS/propeller .
 then
     ./Allmesh
+else
+    runApplication decomposePar -noFields
 fi
 
-runApplication decomposePar
+# Copy the fields into the processor directories
+runApplication -a decomposePar -fields -copyZero
 
+# Run
 runParallel $(getApplication)
 
+# Reconstruct
+runApplication reconstructParMesh -constant
 runApplication reconstructPar
 
 #------------------------------------------------------------------------------

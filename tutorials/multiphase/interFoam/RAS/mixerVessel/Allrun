@@ -1,0 +1,22 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+./Allmesh
+
+# Copy the fields into the processor directories
+runApplication -a decomposePar -fields -copyZero
+
+# Initialise alpha
+runParallel setFields
+
+# Run
+runParallel $(getApplication)
+
+# Reconstruct
+runApplication reconstructParMesh -constant
+runApplication reconstructPar
+
+#------------------------------------------------------------------------------

@@ -54,13 +54,11 @@ solvers
 
 PIMPLE
 {
-    correctPhi          yes;
+    correctPhi          no;
+    correctMeshPhi      no;
     nOuterCorrectors    2;
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;
-
-    pRefCell            0;
-    pRefValue           0;
 }
 
 relaxationFactors

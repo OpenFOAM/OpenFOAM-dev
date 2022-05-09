@@ -28,14 +28,20 @@ boundaryField
         value           $internalField;
     }
 
-    stationaryWalls
+    "(statorDuct|nonCoupleIn1|nonCoupleOut2)"
     {
         type            noSlip;
     }
 
-    movingWalls
+    "(rotorDuct|rotorBlades|nonCoupleIn2|nonCoupleOut1)"
     {
         type            movingWallVelocity;
+        value           $internalField;
+    }
+
+    nonCouple
+    {
+        type            movingWallSlipVelocity;
         value           $internalField;
     }
 }

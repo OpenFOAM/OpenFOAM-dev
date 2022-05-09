@@ -1,0 +1,46 @@
+#!/bin/sh
+
+cd "${0%/*}" || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+mesh()
+{
+    runApplication -s $1 blockMesh -dict system/blockMeshDict.$1
+}
+
+run()
+{
+    runApplication -s $1 $(getApplication)
+    mv postProcessing/inletFlowRate postProcessing/inletFlowRate.$1
+    mv postProcessing/outletFlowRate postProcessing/outletFlowRate.$1
+}
+
+if isTest $@
+then
+    foamDictionary -entry startFrom -set startTime system/controlDict
+fi
+
+mesh AMI
+run AMI
+
+mesh nonConformalCyclic
+runApplication -s nonConformalCyclic createNonConformalCouples -overwrite nonCoupleUp nonCoupleDown
+run nonConformalCyclic
+
+inletFlowRateAMI=postProcessing/inletFlowRate.AMI/0/surfaceFieldValue.dat
+outletFlowRateAMI=postProcessing/outletFlowRate.AMI/0/surfaceFieldValue.dat
+inletFlowRateNonConformalCyclic=postProcessing/inletFlowRate.nonConformalCyclic/0/surfaceFieldValue.dat
+outletFlowRateNonConformalCyclic=postProcessing/outletFlowRate.nonConformalCyclic/0/surfaceFieldValue.dat
+
+gnuplot << EOF
+set terminal postscript eps color enhanced
+set output "error.eps"
+set xlabel "Time (s)"
+set ylabel "Inlet-Outlet Conservation Error (%)"
+plot \
+    "< paste $inletFlowRateAMI $outletFlowRateAMI" \
+    us 1:(100*(\$4+\$2)/\$2) every ::1 w l t "AMI" , \
+    "< paste $inletFlowRateNonConformalCyclic $outletFlowRateNonConformalCyclic" \
+    us 1:(100*(\$4+\$2)/\$2) every ::1 w l t "nonConformalCyclic"
+EOF
