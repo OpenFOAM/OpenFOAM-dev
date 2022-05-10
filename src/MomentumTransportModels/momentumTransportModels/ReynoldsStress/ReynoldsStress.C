@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,27 +75,26 @@ void Foam::ReynoldsStress<BasicMomentumTransportModel>::correctWallShearStress
 
             const scalarField& nutw = this->nut_.boundaryField()[patchi];
 
-            const vectorField snGradU
+            const vectorField snGradUw
             (
                 this->U_.boundaryField()[patchi].snGrad()
             );
 
-            const vectorField& faceAreas
-                = this->mesh_.Sf().boundaryField()[patchi];
+            const vectorField& Sf = this->mesh_.Sf().boundaryField()[patchi];
 
-            const scalarField& magFaceAreas
-                = this->mesh_.magSf().boundaryField()[patchi];
+            const scalarField& magSf =
+                this->mesh_.magSf().boundaryField()[patchi];
 
             forAll(curPatch, facei)
             {
                 // Calculate near-wall velocity gradient
                 const tensor gradUw
-                    = (faceAreas[facei]/magFaceAreas[facei])*snGradU[facei];
+                    = (Sf[facei]/magSf[facei])*snGradUw[facei];
 
                 // Set the wall Reynolds-stress to the near-wall shear-stress
                 // Note: the spherical part of the normal stress is included in
                 // the pressure
-                Rw[facei] = -nutw[facei]*2*dev(symm(gradUw));
+                Rw[facei] = -nutw[facei]*dev(twoSymm(gradUw));
             }
         }
     }
@@ -148,7 +147,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
         (
             "couplingFactor",
             this->coeffDict_,
-            0.0
+            1
         )
     ),
 
@@ -178,7 +177,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
         this->mesh_
     )
 {
-    if (couplingFactor_.value() < 0.0 || couplingFactor_.value() > 1.0)
+    if (couplingFactor_.value() < 0 || couplingFactor_.value() > 1)
     {
         FatalErrorInFunction
             << "couplingFactor = " << couplingFactor_
@@ -238,42 +237,34 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::DivDevRhoReff
     volVectorField& U
 ) const
 {
-    if (couplingFactor_.value() > 0.0)
-    {
-        return
-        (
-            fvc::laplacian
-            (
-                (1.0 - couplingFactor_)*this->alpha_*rho*this->nut(),
-                U,
-                "laplacian(nuEff,U)"
-            )
-          + fvc::div
-            (
-                this->alpha_*rho*R_
-              + couplingFactor_
-               *this->alpha_*rho*this->nut()*fvc::grad(U),
-                "div(devTau)"
-            )
-          - fvc::div(this->alpha_*rho*this->nu()*dev2(T(fvc::grad(U))))
-          - fvm::laplacian(this->alpha_*rho*this->nuEff(), U)
-        );
-    }
-    else
-    {
-        return
-        (
-            fvc::laplacian
-            (
-                this->alpha_*rho*this->nut(),
-                U,
-                "laplacian(nuEff,U)"
-            )
-          + fvc::div(this->alpha_*rho*R_)
-          - fvc::div(this->alpha_*rho*this->nu()*dev2(T(fvc::grad(U))))
-          - fvm::laplacian(this->alpha_*rho*this->nuEff(), U)
-        );
-    }
+    tmp<volTensorField> tgradU = fvc::grad(U);
+    const volTensorField& gradU = tgradU();
+    const surfaceTensorField gradUf(fvc::interpolate(gradU));
+
+    // Interpolate Reynolds stress to the faces
+    // with either a stress or velocity coupling correction
+    const surfaceVectorField Refff
+    (
+        (this->mesh().Sf() & fvc::interpolate(R_))
+
+        // Stress coupling
+      + couplingFactor_
+       *(this->mesh().Sf() & fvc::interpolate(this->nut()*gradU))
+
+        // or velocity gradient coupling
+   // + couplingFactor_
+   //  *fvc::interpolate(this->nut())*(this->mesh().Sf() & gradUf)
+
+      - fvc::interpolate(couplingFactor_*this->nut() + this->nu())
+       *this->mesh().magSf()*fvc::snGrad(U)
+      - fvc::interpolate(this->nu())*(this->mesh().Sf() & dev2(gradUf.T()))
+    );
+
+    return
+    (
+        fvc::div(fvc::interpolate(this->alpha_*rho)*Refff)
+      - correction(fvm::laplacian(this->alpha_*rho*this->nuEff(), U))
+    );
 }
 
 

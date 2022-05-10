@@ -34,9 +34,11 @@ solvers
     "pcorr.*"
     {
         solver          GAMG;
+        smoother        DICGaussSeidel;
+
         tolerance       1e-2;
         relTol          0;
-        smoother        DICGaussSeidel;
+
         cacheAgglomeration no;
         maxIter         50;
     }
@@ -51,7 +53,6 @@ solvers
     p_rghFinal
     {
         $p_rgh;
-        tolerance       1e-9;
         relTol          0;
     }
 

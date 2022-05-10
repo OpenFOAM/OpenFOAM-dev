@@ -25,21 +25,22 @@ solvers
     p_rgh
     {
         solver          GAMG;
+        smoother        GaussSeidel;
+
         tolerance       1e-6;
         relTol          0.02;
-        smoother        GaussSeidel;
+    }
+
+    p_rghFinal
+    {
+        $p_rgh;
+        relTol          0;
     }
 
     "pcorr.*"
     {
         $p_rgh;
         tolerance       0.1;
-        relTol          0;
-    }
-
-    p_rghFinal
-    {
-        $p_rgh;
         relTol          0;
     }
 
