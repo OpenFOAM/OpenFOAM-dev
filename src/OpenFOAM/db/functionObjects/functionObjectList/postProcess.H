@@ -97,6 +97,8 @@ if (argList::postProcess(argc, argv))
 
         Info<< "Time = " << runTime.userTimeName() << endl;
 
+        mesh.readUpdate();
+
         FatalIOError.throwExceptions();
 
         try
