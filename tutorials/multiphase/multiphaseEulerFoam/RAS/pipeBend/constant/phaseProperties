@@ -1,0 +1,179 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type populationBalanceMultiphaseSystem;
+
+phases (particles water);
+
+populationBalances (agglomerates);
+
+particles
+{
+    type            pureIsothermalPhaseModel;
+
+    diameterModel   velocityGroup;
+
+    velocityGroupCoeffs
+    {
+        populationBalance agglomerates;
+
+        shapeModel spherical;
+
+        sizeGroups
+        (
+            f1 {dSph 1e-6; value 0;}
+            f2 {dSph 1.21e-6; value 0.000;}
+            f3 {dSph 1.463e-6; value 0.0001;}
+            f4 {dSph 1.77e-6; value 0.0002;}
+            f5 {dSph 2.142e-6; value 0.0004;}
+            f6 {dSph 2.591e-6; value 0.0008;}
+            f7 {dSph 3.134e-6; value 0.0015;}
+            f8 {dSph 3.792e-6; value 0.0025;}
+            f9 {dSph 4.587e-6; value 0.004;}
+            f10 {dSph 5.549e-6; value 0.0062;}
+            f11 {dSph 6.71e-6; value 0.0093;}
+            f12 {dSph 8.12e-6; value 0.0137;}
+            f13 {dSph 9.82e-6; value 0.0198;}
+            f14 {dSph 11.88e-6; value 0.0279;}
+            f15 {dSph 14.38e-6; value 0.0383;}
+            f16 {dSph 17.39e-6; value 0.0512;}
+            f17 {dSph 21.04e-6; value 0.0663;}
+            f18 {dSph 25.45e-6; value 0.0829;}
+            f19 {dSph 30.79e-6; value 0.0991;}
+            f20 {dSph 37.24e-6; value 0.1121;}
+            f21 {dSph 45.06e-6; value 0.1183;}
+            f22 {dSph 54.51e-6; value 0.1141;}
+            f23 {dSph 65.94e-6; value 0.0977;}
+            f24 {dSph 79.77e-6; value 0.0712;}
+            f25 {dSph 96.49e-6; value 0.0412;}
+            f26 {dSph 116.7e-6; value 0.0170;}
+            f27 {dSph 141.2e-6; value 0.004;}
+            f28 {dSph 170.8e-6; value 0.0002;}
+            f29 {dSph 206.7e-6; value 0;}
+            f30 {dSph 250e-6; value 0;}
+        );
+    }
+
+    residualAlpha   1e-8;
+}
+
+water
+{
+    type              pureIsothermalPhaseModel;
+
+    diameterModel     none;
+
+    residualAlpha     1e-8;
+}
+
+populationBalanceCoeffs
+{
+    agglomerates
+    {
+        continuousPhase water;
+
+        coalescenceModels
+        (
+            AdachiStuartFokkink{}
+        );
+
+        binaryBreakupModels
+        ();
+
+        breakupModels
+        (
+            Kusters
+            {
+                daughterSizeDistributionModel Laakkonen;
+                C4 2;
+                B 50e-7;
+                dP 250e-9;
+                Df 2.4;
+            }
+        );
+
+        driftModels
+        ();
+
+        nucleationModels
+        ();
+    }
+}
+
+blending
+{
+    default
+    {
+        type            continuous;
+        phase water;
+    }
+}
+
+surfaceTension
+{}
+
+aspectRatio
+{}
+
+interfaceCompression
+{}
+
+drag
+{
+    particles_dispersedIn_water
+    {
+        type            WenYu;
+        residualRe      1e-3;
+    }
+}
+
+virtualMass
+{
+    particles_dispersedIn_water
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+}
+
+heatTransfer
+{}
+
+phaseTransfer
+{}
+
+lift
+{
+    particles_dispersedIn_water
+    {
+        type            SaffmanMei;
+        residualRe      1e-6;
+    }
+}
+
+wallLubrication
+{}
+
+turbulentDispersion
+{
+    particles_dispersedIn_water
+    {
+        type            Burns;
+        residualRe      1e-3;
+        sigma           1;
+    }
+}
+
+// ************************************************************************* //

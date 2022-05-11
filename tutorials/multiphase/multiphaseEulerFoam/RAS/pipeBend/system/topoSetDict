@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    {
+        name    beforeBend_1d;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (-0.03 0.35 -0.03) (0.03 0.37 0.03);
+    }
+    {
+        name    afterBend_1d;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (-0.03 0.43 0.09) (0.03 0.48 0.11);
+    }
+    {
+        name    afterBend_5d;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (-0.03 0.43 0.25) (0.03 0.48 0.27);
+    }
+    {
+        name    afterBend_9d;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (-0.03 0.43 0.41) (0.03 0.48 0.43);
+    }
+    {
+        name    beforeBend_1d;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     beforeBend_1d;
+    }
+    {
+        name    afterBend_1d;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     afterBend_1d;
+    }
+    {
+        name    afterBend_5d;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     afterBend_5d;
+    }
+    {
+        name    afterBend_9d;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     afterBend_9d;
+    }
+);
+
+// ************************************************************************* //

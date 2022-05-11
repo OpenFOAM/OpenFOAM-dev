@@ -1,0 +1,46 @@
+#!/bin/sh
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo 'gnuplot not found - skipping graph creation' >&2
+    exit 1
+fi
+
+time=$(foamListTimes -case .. -latestTime)
+beforeBend=../postProcessing/probabilityDensity.beforeBend_1d/$time/probabilityDensity.beforeBend_1d.xy
+afterBend1D=../postProcessing/probabilityDensity.afterBend_1d/$time/probabilityDensity.afterBend_1d.xy
+afterBend3D=../postProcessing/probabilityDensity.afterBend_3d/$time/probabilityDensity.afterBend_3d.xy
+afterBend5D=../postProcessing/probabilityDensity.afterBend_5d/$time/probabilityDensity.afterBend_5d.xy
+afterBend7D=../postProcessing/probabilityDensity.afterBend_7d/$time/probabilityDensity.afterBend_7d.xy
+afterBend9D=../postProcessing/probabilityDensity.afterBend_9d/$time/probabilityDensity.afterBend_9d.xy
+layerAverage=../postProcessing/graphCrossSection/$time/layerAverage.xy
+
+gnuplot<<EOF
+    set terminal postscript eps color enhanced font "Helvetica,20"
+
+    set output '../volumeDensity.eps'
+    set logscale x
+    set xlabel 'd ({/Symbol m}m)'
+    set ylabel '({/Symbol a}/{/Symbol a}_{tot})/{/Symbol D}d (mm^{-1})'
+    set key left top
+    set grid
+
+    plot "$beforeBend" u (\$1*1e6):(\$2) w histeps lw 3 lc rgb 'web-green' t 'Before bend',\
+         "$afterBend1D" u (\$1*1e6):(\$2) w histeps lw 3 lc rgb 'red' t 'After bend: 1D',\
+         "$afterBend5D" u (\$1*1e6):(\$2) w histeps lw 3 lc rgb 'orange' t 'After bend: 5D',\
+         "$afterBend9D" u (\$1*1e6):(\$2) w histeps lw 3 lc rgb 'blue' t 'After bend: 9D'
+EOF
+
+gnuplot<<EOF
+    set terminal postscript eps color enhanced font "Helvetica,20"
+
+    set output '../crossSectionAverageDiameter.eps'
+    set xlabel 'Distance along pipe (m)'
+    set ylabel 'Cross-section average particle diameter ({/Symbol m}m)'
+    set key left top
+    set grid
+
+    plot "$layerAverage" u (\$1):(\$2*1e6) w histeps lw 3 lc rgb 'web-green' t ''
+EOF
+
+#------------------------------------------------------------------------------
