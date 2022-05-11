@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,9 +28,9 @@ Description
     A HashTable for two labels to another label.
     Used for e.g. for face1, face2 to shared edge.
 
-Note
-    The hash table is based on a FixedList and not edge, since an edge
-    hashes commutatively!
+    Note:
+        The hash table is based on a FixedList and not edge, since an edge
+        hashes commutatively!
 
 \*---------------------------------------------------------------------------*/
 

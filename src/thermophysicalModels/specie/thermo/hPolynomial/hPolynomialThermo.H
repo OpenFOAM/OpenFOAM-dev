@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,9 +54,9 @@ Usage
     }
     \endverbatim
 
-Note
-    Specific heat at constant pressure polynomial coefficients evaluate to an
-    expression in [J/kg/K].
+    Note:
+        Specific heat at constant pressure polynomial coefficients evaluate to
+        an expression in [J/kg/K].
 
 SourceFiles
     hPolynomialThermoI.H

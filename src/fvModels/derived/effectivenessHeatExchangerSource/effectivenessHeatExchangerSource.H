@@ -79,13 +79,13 @@ Usage
     }
     \endverbatim
 
-Note
-    - The effectiveness Function2 is described in terms of the primary and
-      secondary mass flow rates and has the same units as the secondary mass
-      flow rate and kg/s for phi.
-    - faceZone is the faces at the inlet of the cellzone, it needs to be
-      created with flip map flags. It is used to integrate the net mass flow
-      rate into the heat exchanger
+    Note:
+      - The effectiveness Function2 is described in terms of the primary and
+        secondary mass flow rates and has the same units as the secondary mass
+        flow rate and kg/s for phi.
+      - faceZone is the faces at the inlet of the cellzone, it needs to be
+        created with flip map flags. It is used to integrate the net mass flow
+        rate into the heat exchanger
 
 SourceFiles
     effectivenessHeatExchangerSource.C

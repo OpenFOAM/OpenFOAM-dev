@@ -87,9 +87,9 @@ Usage
         points         | a specified set of locations
     \endplaintable
 
-Note
-    When specifying the track resolution, the \c trackLength OR \c nSubCycle
-    option should be used
+    Note:
+        When specifying the track resolution, the \c trackLength OR \c nSubCycle
+        option should be used
 
 See also
     Foam::functionObject

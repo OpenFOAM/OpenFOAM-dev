@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,8 +75,8 @@ Usage
         Uref     | Reference velocity magnitude  | yes      | no
     \endtable
 
-Note
-    Cp and rho are required only for incompressible flow calclulations.
+    Note:
+        Cp and rho are required only for incompressible flow calclulations.
 
 SourceFiles
     ReynoldsAnalogy.C

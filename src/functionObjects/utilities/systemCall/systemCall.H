@@ -68,11 +68,11 @@ Usage
         endCalls     | list of calls on end     | yes         |
     \endtable
 
-Note
-    Since this function object executes system calls, there is a potential
-    security risk.  In order to use the \c systemCall function object, the
-    \c allowSystemOperations must be set to '1'; otherwise, system calls will
-    not be allowed.
+    Note:
+        Since this function object executes system calls, there is a potential
+        security risk.  In order to use the \c systemCall function object, the
+        \c allowSystemOperations must be set to '1'; otherwise, system calls
+        will not be allowed.
 
 See also
     Foam::functionObject

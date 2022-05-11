@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,9 +28,9 @@ Description
     A list of lists. Interpolates based on the first dimension.
     The values must be positive and monotonically increasing in each dimension
 
-Note
-    - Accessing an empty list results in an error.
-    - Accessing a list with a single element always returns the same value.
+    Note:
+      - Accessing an empty list results in an error.
+      - Accessing a list with a single element always returns the same value.
 
 SourceFiles
     interpolationLookUpTable.C

@@ -48,9 +48,9 @@ Usage
             \kappa = 1000 - 0.05 T + 0.003 T^2
         \f]
 
-Note
-    Thermal conductivity polynomial coefficients evaluate to an expression in
-    [W/m/K].
+    Note:
+        Thermal conductivity polynomial coefficients evaluate to an expression
+        in [W/m/K].
 
 SourceFiles
     polynomialSolidTransportI.H

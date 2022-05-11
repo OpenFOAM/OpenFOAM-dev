@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,15 +195,14 @@ Description
 
     </ol>
 
-Note
-    \c gpart can be found in the current search path by adding the respective
-    \c bin folder from the Scotch installation, namely by running the following
-    commands:
-
-    \verbatim
-    source $(foamEtcFile config.sh/scotch)
-    export PATH=$PATH:$SCOTCH_ARCH_PATH/bin
-    \endverbatim
+    Note:
+        \c gpart can be found in the current search path by adding the
+        respective \c bin folder from the Scotch installation, namely by running
+        the following commands:
+        \verbatim
+            source $(foamEtcFile config.sh/scotch)
+            export PATH=$PATH:$SCOTCH_ARCH_PATH/bin
+        \endverbatim
 
 SourceFiles
     scotchDecomp.C

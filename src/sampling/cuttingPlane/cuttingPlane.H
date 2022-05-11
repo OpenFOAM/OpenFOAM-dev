@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,9 +30,9 @@ Description
     No attempt at resolving degenerate cases. Since the cut faces are
     usually quite ugly, they will always be triangulated.
 
-Note
-    When the cutting plane coincides with a mesh face, the cell edge on the
-    positive side of the plane is taken.
+    Note:
+        When the cutting plane coincides with a mesh face, the cell edge on the
+        positive side of the plane is taken.
 
 SourceFiles
     cuttingPlane.C

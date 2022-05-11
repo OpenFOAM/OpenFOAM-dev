@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,31 +74,31 @@ Usage
         cumulative   | bin data accumulated with increasing distance | yes |
     \endtable
 
-Note
-  - For incompressible cases, set \c rho to \c rhoInf and provide
-    a \c rhoInf value corresponding to the free-stream constant density.
-  - If the \c phase name is specified the corresponding phase-fraction field
-    \c alpha.<phase> is used to filter the surface force field
-    before integration.
-  - If the force density is supplied directly, set the \c directForceDensity
-    flag to 'yes', and supply the force density field using the \c
-    fDName entry
-  - The centre of rotation (CofR) for moment calculations can either be
-    specified by an \c CofR entry, or be taken from origin of the local
-    coordinate system.  For example,
-    \verbatim
-        CofR        (0 0 0);
-    \endverbatim
-    or
-    \verbatim
-        origin (0 0 0);
-        coordinateRotation
-        {
-            type axesRotation;
-            e1 (1 0 0);
-            e3 (0 0 1);
-        }
-    \endverbatim
+  Note
+    - For incompressible cases, set \c rho to \c rhoInf and provide
+      a \c rhoInf value corresponding to the free-stream constant density.
+    - If the \c phase name is specified the corresponding phase-fraction field
+      \c alpha.<phase> is used to filter the surface force field
+      before integration.
+    - If the force density is supplied directly, set the \c directForceDensity
+      flag to 'yes', and supply the force density field using the \c
+      fDName entry
+    - The centre of rotation (CofR) for moment calculations can either be
+      specified by an \c CofR entry, or be taken from origin of the local
+      coordinate system.  For example,
+      \verbatim
+          CofR        (0 0 0);
+      \endverbatim
+      or
+      \verbatim
+          origin (0 0 0);
+          coordinateRotation
+          {
+              type axesRotation;
+              e1 (1 0 0);
+              e3 (0 0 1);
+          }
+      \endverbatim
 
 See also
     Foam::functionObject

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,10 +84,10 @@ Description
     }
     \endverbatim
 
-Note
-    Writing field 'wallHeatTransferCoeff' is done by default, but it can be
-    overridden by defining an empty \c objects list. For details see
-    writeLocalObjects.
+    Note:
+        Writing field 'wallHeatTransferCoeff' is done by default, but it can be
+        overridden by defining an empty \c objects list. For details see
+        writeLocalObjects.
 
 See also
     Foam::functionObject

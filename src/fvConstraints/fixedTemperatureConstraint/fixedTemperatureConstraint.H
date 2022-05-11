@@ -46,9 +46,9 @@ Usage
     }
     \endverbatim
 
-Note
-    The 'uniform' option allows the use of a time-varying uniform temperature
-    by means of the Function1 type.
+    Note:
+        The 'uniform' option allows the use of a time-varying uniform
+        temperature by means of the Function1 type.
 
 SourceFiles
     fixedTemperatureConstraint.C

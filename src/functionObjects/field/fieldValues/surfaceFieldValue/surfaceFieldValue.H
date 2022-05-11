@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,22 +128,22 @@ Usage
        areaNormalIntegrate | area weighted integral in face normal direction
     \endplaintable
 
-Note
-    - Faces on empty patches get ignored.
-    - The `oriented' operations will flip the sign of the field so that all the
-      normals point in a consistent direction. This is only of relevance when
-      summing mesh-oriented fields, such as the flux, on faceZones.
-    - If the field is a volField then a \c faceZone can only consist of
-      boundary faces, because only these faces have a value associated with
-      them. No cell-to-face interpolation is performed.
-    - If the field is a surfaceField then the region cannot be a \c
-      sampledSurface
-    - If a sampledSurface has interpolation set to false then the surface
-      face values will be taken directly from the cell that contains the
-      surface face centre
-    - If a \c sampledSurface has interpolation set to true then the field
-      will be interpolated to the vertices, then averaged onto the surface
-      faces
+    Note:
+      - Faces on empty patches get ignored.
+      - The `oriented' operations will flip the sign of the field so that all
+        the normals point in a consistent direction. This is only of relevance
+        when summing mesh-oriented fields, such as the flux, on faceZones.
+      - If the field is a volField then a \c faceZone can only consist of
+        boundary faces, because only these faces have a value associated with
+        them. No cell-to-face interpolation is performed.
+      - If the field is a surfaceField then the region cannot be a \c
+        sampledSurface
+      - If a sampledSurface has interpolation set to false then the surface
+        face values will be taken directly from the cell that contains the
+        surface face centre
+      - If a \c sampledSurface has interpolation set to true then the field
+        will be interpolated to the vertices, then averaged onto the surface
+        faces
 
 See also
     Foam::fieldValues

@@ -54,8 +54,8 @@ Usage
     }
     \endverbatim
 
-Note
-    The porous region must be selected as a cellZone.
+    Note:
+        The porous region must be selected as a cellZone.
 
 SourceFiles
     explicitPorositySource.C

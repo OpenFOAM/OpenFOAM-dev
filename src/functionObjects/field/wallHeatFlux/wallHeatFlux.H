@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,9 +51,10 @@ Usage
         region   | region to be evaluated     | no         | default region
     \endtable
 
-Note
-    Writing field 'wallHeatFlux' is done by default, but it can be overridden by
-    defining an empty \c objects list. For details see writeLocalObjects.
+    Note:
+        Writing field 'wallHeatFlux' is done by default, but it can be
+        overridden by defining an empty \c objects list. For details see
+        writeLocalObjects.
 
 See also
     Foam::functionObject

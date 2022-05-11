@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,8 +90,8 @@ Usage
         fields            | list of fields and averaging options | yes |
     \endtable
 
-Note
-    To employ the \c prime2Mean option, the \c mean option must be selected.
+    Note:
+        To employ the \c prime2Mean option, the \c mean option must be selected.
 
 See also
     Foam::functionObjects::fvMeshFunctionObject

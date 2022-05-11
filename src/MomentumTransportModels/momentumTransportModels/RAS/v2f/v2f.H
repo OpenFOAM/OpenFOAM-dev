@@ -78,10 +78,10 @@ Description
         }
     \endverbatim
 
-Note
-    If the kLowReWallFunction is employed, a velocity variant of the turbulent
-    viscosity wall function should be used, e.g. nutUWallFunction.  Turbulence
-    k variants (nutk...) for this case will not behave correctly.
+    Note:
+        If the kLowReWallFunction is employed, a velocity variant of the
+        turbulent viscosity wall function should be used, e.g. nutUWallFunction.
+        Turbulence k variants (nutk...) for this case will not behave correctly.
 
 See also
     Foam::RASModels::v2fBase

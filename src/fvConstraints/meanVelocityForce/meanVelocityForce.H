@@ -44,8 +44,8 @@ Usage
     }
     \endverbatim
 
-Note
-    Currently only handles kinematic pressure (incompressible solvers).
+    Note:
+        Currently only handles kinematic pressure (incompressible solvers).
 
 SourceFiles
     meanVelocityForce.C
