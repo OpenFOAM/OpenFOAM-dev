@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,15 @@ inline Foam::scalar Foam::Function1s::squarePulse::integral
     const scalar t2
 ) const
 {
-    NotImplemented;
-    return NaN;
+    scalar sign = t1 < t2 ? +1 : -1;
+
+    const scalar tL = min(t1, t2);
+    const scalar tR = max(t1, t2);
+
+    const scalar tLStar = min(max(tL, start_), tR);
+    const scalar tRStar = max(min(tR, start_ + duration_), tL);
+
+    return sign*(tRStar - tLStar);
 }
 
 
