@@ -57,8 +57,6 @@ class polyPatch;
 
 class cyclicPolyPatch;
 class cyclicAMIPolyPatch;
-class cyclicACMIPolyPatch;
-class cyclicRepeatAMIPolyPatch;
 class processorPolyPatch;
 class symmetryPlanePolyPatch;
 class symmetryPolyPatch;
@@ -291,13 +289,6 @@ private:
             //- Change cell. Called when the particle hits an internal face.
             void changeCell();
 
-            //- Put the particle on the lowest indexed patch for the current set
-            //  of coincident faces. In the case of an ACMI-wall pair, this will
-            //  move the particle from the wall face to the ACMI face, because
-            //  ACMI patches are always listed before their associated non-
-            //  overlapping patch.
-            void changeToMasterPatch();
-
 
         // Geometry changes
 
@@ -340,28 +331,6 @@ protected:
         //- Overridable function to handle the particle hitting a cyclicAMIPatch
         template<class TrackCloudType>
         void hitCyclicAMIPatch
-        (
-            const vector& displacement,
-            const scalar fraction,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
-
-        //- Overridable function to handle the particle hitting a
-        //  cyclicACMIPatch
-        template<class TrackCloudType>
-        void hitCyclicACMIPatch
-        (
-            const vector& displacement,
-            const scalar fraction,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
-
-        //- Overridable function to handle the particle hitting an
-        //  cyclicRepeatAMIPolyPatch
-        template<class TrackCloudType>
-        void hitCyclicRepeatAMIPatch
         (
             const vector& displacement,
             const scalar fraction,
@@ -618,17 +587,6 @@ public:
         //  interact the particle with the relevant patch.
         template<class TrackCloudType>
         void hitFace
-        (
-            const vector& displacement,
-            const scalar fraction,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
-
-        //- As above, but does not change the master patch. Needed in order for
-        //  ACMI to be able to delegate a hit to the non-overlap patch.
-        template<class TrackCloudType>
-        void hitFaceNoChangeToMasterPatch
         (
             const vector& displacement,
             const scalar fraction,

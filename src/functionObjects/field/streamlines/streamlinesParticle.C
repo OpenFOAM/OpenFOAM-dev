@@ -391,38 +391,6 @@ void Foam::streamlinesParticle::hitCyclicAMIPatch
 }
 
 
-void Foam::streamlinesParticle::hitCyclicACMIPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    streamlinesCloud& cloud,
-    trackingData& td
-)
-{
-    // End this track
-    endTrack(td);
-
-    // Move across the cyclic
-    particle::hitCyclicACMIPatch(displacement, fraction, cloud, td);
-}
-
-
-void Foam::streamlinesParticle::hitCyclicRepeatAMIPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    streamlinesCloud& cloud,
-    trackingData& td
-)
-{
-    // End this track
-    endTrack(td);
-
-    // Move across the cyclic
-    particle::hitCyclicRepeatAMIPatch(displacement, fraction, cloud, td);
-}
-
-
 bool Foam::streamlinesParticle::hitNonConformalCyclicPatch
 (
     const vector& displacement,

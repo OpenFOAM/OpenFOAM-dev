@@ -16,12 +16,6 @@ cyclicAMI
     type  cyclicAMI;
 }
 
-cyclicACMI
-{
-    type  cyclicACMI;
-    value $internalField;
-}
-
 cyclicSlip
 {
     type  cyclicSlip;
@@ -47,11 +41,6 @@ nonConformalProcessorCyclic
 empty
 {
     type  empty;
-}
-
-cyclicRepeatAMI
-{
-    type  cyclicRepeatAMI;
 }
 
 processor

@@ -233,24 +233,6 @@ public:
                 trackingData&
             );
 
-            //- Hit a cyclicACMI patch. Ends the track.
-            void hitCyclicACMIPatch
-            (
-                const vector&,
-                const scalar,
-                sampledSetCloud&,
-                trackingData&
-            );
-
-            //- Hit a cyclicRepeatAMI patch. Ends the track.
-            void hitCyclicRepeatAMIPatch
-            (
-                const vector&,
-                const scalar,
-                sampledSetCloud&,
-                trackingData&
-            );
-
             //- Hit a processor patch. Transfers the particle if there is no
             //  transformation. Ends the track if there is a transformation.
             void hitProcessorPatch(sampledSetCloud&, trackingData&);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,9 +88,6 @@ Description
 
 
     Can optionally keep all regions local to the processor.
-
-    Note: does not walk across cyclicAMI/cyclicACMI - since not 'coupled()'
-          at the patch level.
 
 
 SourceFiles

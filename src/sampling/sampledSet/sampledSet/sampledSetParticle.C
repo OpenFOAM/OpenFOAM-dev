@@ -232,30 +232,6 @@ void Foam::sampledSetParticle::hitCyclicAMIPatch
 }
 
 
-void Foam::sampledSetParticle::hitCyclicACMIPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    sampledSetCloud& cloud,
-    trackingData& td
-)
-{
-    seti_ = labelMax;
-}
-
-
-void Foam::sampledSetParticle::hitCyclicRepeatAMIPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    sampledSetCloud& cloud,
-    trackingData& td
-)
-{
-    seti_ = labelMax;
-}
-
-
 void Foam::sampledSetParticle::hitProcessorPatch
 (
     sampledSetCloud& cloud,

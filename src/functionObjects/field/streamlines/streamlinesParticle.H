@@ -282,26 +282,6 @@ public:
                 trackingData&
             );
 
-            //- Overridable function to handle the particle hitting a
-            //  cyclicACMIPatch
-            void hitCyclicACMIPatch
-            (
-                const vector&,
-                const scalar,
-                streamlinesCloud&,
-                trackingData&
-            );
-
-            //- Overridable function to handle the particle hitting a
-            //  cyclicRepeatAMIPatch
-            void hitCyclicRepeatAMIPatch
-            (
-                const vector&,
-                const scalar,
-                streamlinesCloud&,
-                trackingData&
-            );
-
             //- Overridable function to handle the particle hitting an
             //  nonConformalCyclicPolyPatch
             bool hitNonConformalCyclicPatch

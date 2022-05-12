@@ -280,9 +280,7 @@ void Foam::particle::changeFace(const label tetTriI)
             continue;
         }
 
-        // Loop over the edges, looking for the shared one. Note that we have to
-        // match the direction of the edge as well as the end points in order to
-        // avoid false positives when dealing with coincident ACMI faces.
+        // Loop over the edges, looking for the shared one
         const label edgeComp = newOwner == celli_ ? -1 : +1;
         label edgeI = 0;
         for
@@ -365,45 +363,6 @@ void Foam::particle::changeCell()
 
     // Reflect to account for the change of triangle orientation in the new cell
     reflect();
-}
-
-
-void Foam::particle::changeToMasterPatch()
-{
-    if (debug)
-    {
-        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
-    }
-
-    label thisPatch = patch();
-
-    forAll(mesh_.cells()[celli_], cellFaceI)
-    {
-        // Skip the current face and any internal faces
-        const label otherFaceI = mesh_.cells()[celli_][cellFaceI];
-        if (facei_ == otherFaceI || mesh_.isInternalFace(otherFaceI))
-        {
-            continue;
-        }
-
-        // Compare the two faces. If they are the same, chose the one with the
-        // lower patch index. In the case of an ACMI-wall pair, this will be
-        // the ACMI, which is what we want.
-        const class face& thisFace = mesh_.faces()[facei_];
-        const class face& otherFace = mesh_.faces()[otherFaceI];
-        if (face::compare(thisFace, otherFace) != 0)
-        {
-            const label otherPatch =
-                mesh_.boundaryMesh().whichPatch(otherFaceI);
-            if (thisPatch > otherPatch)
-            {
-                facei_ = otherFaceI;
-                thisPatch = otherPatch;
-            }
-        }
-    }
-
-    tetFacei_ = facei_;
 }
 
 

@@ -28,8 +28,6 @@ License
 
 #include "cyclicPolyPatch.H"
 #include "cyclicAMIPolyPatch.H"
-#include "cyclicACMIPolyPatch.H"
-#include "cyclicRepeatAMIPolyPatch.H"
 #include "nonConformalCyclicPolyPatch.H"
 #include "processorPolyPatch.H"
 #include "symmetryPlanePolyPatch.H"
@@ -119,29 +117,6 @@ void Foam::particle::hitFace
         Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
     }
 
-    if (onBoundaryFace())
-    {
-        changeToMasterPatch();
-    }
-
-    hitFaceNoChangeToMasterPatch(displacement, fraction, cloud, td);
-}
-
-
-template<class TrackCloudType>
-void Foam::particle::hitFaceNoChangeToMasterPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    TrackCloudType& cloud,
-    trackingData& td
-)
-{
-    if (debug)
-    {
-        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
-    }
-
     typename TrackCloudType::particleType& p =
         static_cast<typename TrackCloudType::particleType&>(*this);
     typename TrackCloudType::particleType::trackingData& ttd =
@@ -195,17 +170,9 @@ void Foam::particle::hitFaceNoChangeToMasterPatch
             {
                 p.hitCyclicPatch(cloud, ttd);
             }
-            else if (isA<cyclicACMIPolyPatch>(patch))
-            {
-                p.hitCyclicACMIPatch(displacement, fraction, cloud, ttd);
-            }
             else if (isA<cyclicAMIPolyPatch>(patch))
             {
                 p.hitCyclicAMIPatch(displacement, fraction, cloud, ttd);
-            }
-            else if (isA<cyclicRepeatAMIPolyPatch>(patch))
-            {
-                p.hitCyclicRepeatAMIPatch(displacement, fraction, cloud, ttd);
             }
             else if (isA<processorPolyPatch>(patch))
             {
@@ -417,82 +384,6 @@ void Foam::particle::hitCyclicAMIPatch
             return;
         }
     }
-}
-
-
-template<class TrackCloudType>
-void Foam::particle::hitCyclicACMIPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    TrackCloudType& cloud,
-    trackingData& td
-)
-{
-    typename TrackCloudType::particleType& p =
-        static_cast<typename TrackCloudType::particleType&>(*this);
-    typename TrackCloudType::particleType::trackingData& ttd =
-        static_cast<typename TrackCloudType::particleType::trackingData&>(td);
-
-    const cyclicACMIPolyPatch& cpp =
-        static_cast<const cyclicACMIPolyPatch&>(mesh_.boundaryMesh()[patch()]);
-
-    vector patchNormal, patchDisplacement;
-    patchData(patchNormal, patchDisplacement);
-
-    const label localFacei = cpp.whichFace(facei_);
-
-    // If the mask is within the patch tolerance at either end, then we can
-    // assume an interaction with the appropriate part of the ACMI pair.
-    const scalar mask = cpp.mask()[localFacei];
-    bool couple = mask >= 1 - cpp.tolerance();
-    bool nonOverlap = mask <= cpp.tolerance();
-
-    // If the mask is an intermediate value, then we search for a location on
-    // the other side of the AMI. If we can't find a location, then we assume
-    // that we have hit the non-overlap patch.
-    if (!couple && !nonOverlap)
-    {
-        vector pos = position();
-        couple =
-            cpp.pointAMIAndFace
-            (
-                localFacei,
-                displacement - fraction*patchDisplacement,
-                pos
-            ).first() >= 0;
-        nonOverlap = !couple;
-    }
-
-    if (couple)
-    {
-        p.hitCyclicAMIPatch(displacement, fraction, cloud, ttd);
-    }
-    else
-    {
-        // Move to the face associated with the non-overlap patch and redo the
-        // face interaction.
-        tetFacei_ = facei_ = cpp.nonOverlapPatch().start() + localFacei;
-        p.hitFaceNoChangeToMasterPatch(displacement, fraction, cloud, td);
-    }
-}
-
-
-template<class TrackCloudType>
-void Foam::particle::hitCyclicRepeatAMIPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    TrackCloudType& cloud,
-    trackingData& td
-)
-{
-    typename TrackCloudType::particleType& p =
-        static_cast<typename TrackCloudType::particleType&>(*this);
-    typename TrackCloudType::particleType::trackingData& ttd =
-        static_cast<typename TrackCloudType::particleType::trackingData&>(td);
-
-    p.hitCyclicAMIPatch(displacement, fraction, cloud, ttd);
 }
 
 

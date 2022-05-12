@@ -263,25 +263,6 @@ public:
                 trackingData&
             );
 
-            //- Overridable function to handle the particle hitting a cyclicACMI
-            void hitCyclicACMIPatch
-            (
-                const vector&,
-                const scalar,
-                Cloud<trackedParticle>&,
-                trackingData&
-            );
-
-            //- Overridable function to handle the particle hitting a
-            //  cyclicRepeatAMI
-            void hitCyclicRepeatAMIPatch
-            (
-                const vector&,
-                const scalar,
-                Cloud<trackedParticle>&,
-                trackingData&
-            );
-
             //- Overridable function to handle the particle hitting a wallPatch
             void hitWallPatch(Cloud<trackedParticle>&, trackingData&);
 
