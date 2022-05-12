@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,9 @@ Description
     c #calc "($a)/$b";
     \endverbatim
 
-Note
-    Internally this is just a wrapper around codeStream functionality - the
-    #calc string gets used to construct a dictionary for codeStream.
+    Note:
+        Internally this is just a wrapper around codeStream functionality - the
+        #calc string gets used to construct a dictionary for codeStream.
 
 SourceFiles
     calcEntry.C

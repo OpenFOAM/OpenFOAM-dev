@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,11 +51,11 @@ Usage
 
     The \c flowRate entry is a \c Function1 of time, see Foam::Function1s.
 
-Note
-    - the value is positive into the domain
-    - may not work correctly for transonic inlets
-    - strange behaviour with potentialFoam since the momentum equation is
-      not solved
+    Note:
+      - the value is positive into the domain
+      - may not work correctly for transonic inlets
+      - strange behaviour with potentialFoam since the momentum equation is
+        not solved
 
 See also
     Foam::fixedValueFvPatchField

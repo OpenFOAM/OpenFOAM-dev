@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,16 +56,16 @@ Description
     The environment variable \b FOAM_CASENAME is set to the name of the
     global case.
 
-Note
-    - The document browser used is defined by the \b FOAM_DOC_BROWSER
-      environment variable or the <tt>Documentation/docBrowser</tt> entry
-      in the <tt>~OpenFOAM/controlDict</tt> file.
-      The \%f token is used as a placeholder for the file name.
-    - The valid (mandatory) arguments can be adjusted
-      by directly manipulating the argList::validArgs static member.
-    - The valid options can be adjusted
-      via the addOption/removeOption static methods instead of directly
-      manipulating the argList::validOptions static member.
+    Note:
+      - The document browser used is defined by the \b FOAM_DOC_BROWSER
+        environment variable or the <tt>Documentation/docBrowser</tt> entry
+        in the <tt>~OpenFOAM/controlDict</tt> file.
+        The \%f token is used as a placeholder for the file name.
+      - The valid (mandatory) arguments can be adjusted
+        by directly manipulating the argList::validArgs static member.
+      - The valid options can be adjusted
+        via the addOption/removeOption static methods instead of directly
+        manipulating the argList::validOptions static member.
 
 SourceFiles
     argList.C

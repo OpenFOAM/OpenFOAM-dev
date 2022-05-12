@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,12 +70,12 @@ Usage
 
     The \c flowRate entry is a \c Function1 of time, see Foam::Function1s.
 
-Note
-    - \c rhoOutlet is required for the case of a mass flow rate, where the
-      density field is not available at start-up
-    - The value is positive out of the domain (as an outlet)
-    - May not work correctly for transonic outlets
-    - Strange behaviour with potentialFoam since the U equation is not solved
+    Note:
+      - \c rhoOutlet is required for the case of a mass flow rate, where the
+        density field is not available at start-up
+      - The value is positive out of the domain (as an outlet)
+      - May not work correctly for transonic outlets
+      - Strange behaviour with potentialFoam since the U equation is not solved
 
 See also
     Foam::fixedValueFvPatchField

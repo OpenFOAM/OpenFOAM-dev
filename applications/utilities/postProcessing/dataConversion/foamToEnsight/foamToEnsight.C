@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,9 +49,10 @@ Usage
       - \par -cellZone zoneName
         Specify single cellZone to write (not lagrangian)
 
-Note
-    Parallel support for cloud data is not supported
-    - writes to \a EnSight directory to avoid collisions with foamToEnsightParts
+    Note:
+        Parallel support for cloud data is not supported
+      - writes to \a EnSight directory to avoid collisions with
+        foamToEnsightParts
 
 \*---------------------------------------------------------------------------*/
 

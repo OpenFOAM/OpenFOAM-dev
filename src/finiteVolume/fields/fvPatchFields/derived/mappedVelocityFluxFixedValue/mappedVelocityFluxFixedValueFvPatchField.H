@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,9 +47,9 @@ Usage
     The underlying sample mode should be set to \c nearestPatchFace or
     \c nearestFace
 
-Note
-    This boundary condition can only be applied to patches that are of
-    the \c mappedPolyPatch type.
+    Note:
+        This boundary condition can only be applied to patches that are of
+        the \c mappedPolyPatch type.
 
 See also
     Foam::mappedPatchBase

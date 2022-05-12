@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,9 +61,9 @@ Description
     }
     \endverbatim
 
-Note
-    If reverse flow is possible or expected use the
-    pressureInletOutletVelocity condition instead.
+    Note:
+        If reverse flow is possible or expected use the
+        pressureInletOutletVelocity condition instead.
 
 See also
     Foam::zeroGradientFvPatchField

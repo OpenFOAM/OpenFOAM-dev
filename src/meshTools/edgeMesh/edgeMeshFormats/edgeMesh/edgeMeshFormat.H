@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,8 @@ Class
 Description
     Provide a means of reading/writing the single-file OpenFOAM edge format.
 
-Note
-   This class provides more methods than the regular edge format interface.
+    Note:
+        This class provides more methods than the regular edge format interface.
 
 SourceFiles
     edgeMeshFormat.C

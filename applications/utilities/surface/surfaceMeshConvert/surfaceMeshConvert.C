@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,8 +50,8 @@ Usage
       - \par -tri
         Triangulate surface.
 
-Note
-    The filename extensions are used to determine the file format type.
+    Note:
+        The filename extensions are used to determine the file format type.
 
 \*---------------------------------------------------------------------------*/
 

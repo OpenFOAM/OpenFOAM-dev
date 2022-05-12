@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,8 @@ Class
 Description
     A zero-sized class without any storage. Used, for example, in HashSet.
 
-Note
-    A zero-sized class actually does still require at least 1 byte storage.
+    Note:
+        A zero-sized class actually does still require at least 1 byte storage.
 
 \*---------------------------------------------------------------------------*/
 

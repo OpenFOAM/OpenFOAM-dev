@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,9 @@ Class
 Description
     Provide a means of reading/writing STL files (ASCII and binary).
 
-Note
-    For efficiency, the zones are sorted before creating the faces.
-    The class is thus derived from MeshedSurface.
+    Note:
+        For efficiency, the zones are sorted before creating the faces.
+        The class is thus derived from MeshedSurface.
 
 SourceFiles
     STLsurfaceFormat.C

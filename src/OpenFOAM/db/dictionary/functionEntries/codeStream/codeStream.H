@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,13 +76,14 @@ Description
     - probably some other limitations (uses string::expand which expands
       \c \$ and \c ~ sequences)
 
-Note
-    The code to be compiled is stored under the local \c codeStream directory
-    with a subdirectory name corresponding to the SHA1 of the contents.
+    Note:
+        The code to be compiled is stored under the local \c codeStream
+        directory with a subdirectory name corresponding to the SHA1 of the
+        contents.
 
-    The corresponding library code is located under the local
-    \c codeStream/platforms/$WM_OPTIONS/lib directory in a library
-    \c libcodeStream_SHA1.so
+        The corresponding library code is located under the local
+        \c codeStream/platforms/$WM_OPTIONS/lib directory in a library
+        \c libcodeStream_SHA1.so
 
 SourceFiles
     codeStream.C

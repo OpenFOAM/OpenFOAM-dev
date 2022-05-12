@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,9 +53,9 @@ Usage
         refGrad      | patch normal gradient   | yes         |
     \endtable
 
-Note
-    This condition is not usually applied directly; instead, use a derived
-    mixed condition such as \c inletOutlet
+    Note:
+        This condition is not usually applied directly; instead, use a derived
+        mixed condition such as \c inletOutlet
 
 See also
     Foam::inletOutletFvPatchField

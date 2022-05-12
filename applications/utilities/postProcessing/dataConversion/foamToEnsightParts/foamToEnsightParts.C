@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,9 @@ Usage
       - \par -width \<n\>
         Width of Ensight data subdir
 
-Note
-    - no parallel data.
-    - writes to \a Ensight directory to avoid collisions with foamToEnsight.
+    Note:
+      - no parallel data.
+      - writes to \a Ensight directory to avoid collisions with foamToEnsight.
 
 \*---------------------------------------------------------------------------*/
 

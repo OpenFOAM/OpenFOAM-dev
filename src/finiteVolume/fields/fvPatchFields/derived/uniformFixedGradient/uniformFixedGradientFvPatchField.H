@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,10 +42,10 @@ Usage
     }
     \endverbatim
 
-Note
-    The uniformGradient entry is a Function1 type, able to describe time
-    varying functions.  The example above gives the usage for supplying a
-    constant value.
+    Note:
+        The uniformGradient entry is a Function1 type, able to describe time
+        varying functions.  The example above gives the usage for supplying a
+        constant value.
 
 See also
     Foam::Function1s

@@ -52,9 +52,9 @@ Usage
         points on them as features. The -doNotPreserveFaceZones disables this
         behaviour.
 
-Note
-    It is just a driver for meshDualiser. Substitute your own simpleMarkFeatures
-    to have different behaviour.
+    Note:
+        It is just a driver for meshDualiser. Substitute your own
+        simpleMarkFeatures to have different behaviour.
 
 \*---------------------------------------------------------------------------*/
 

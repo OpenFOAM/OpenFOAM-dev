@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,10 +52,10 @@ Usage
     }
     \endverbatim
 
-Note
-    The \c axialVelocity, \c radialVelocity and \c tangentialVelocity entries
-    are Function1 types, able to describe time varying functions.  The example
-    above gives the usage for supplying constant values.
+    Note:
+        The \c axialVelocity, \c radialVelocity and \c tangentialVelocity
+        entries are Function1 types, able to describe time varying functions.
+        The example above gives the usage for supplying constant values.
 
 See also
     Foam::fixedValueFvPatchField

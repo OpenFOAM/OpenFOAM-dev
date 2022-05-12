@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,10 +37,10 @@ Usage
     }
     \endverbatim
 
-Note
-    The patches must be topologically similar, i.e. if the owner patch is
-    transformed to the neighbour patch, the patches should be identical (or
-    very similar).
+    Note:
+        The patches must be topologically similar, i.e. if the owner patch is
+        transformed to the neighbour patch, the patches should be identical (or
+        very similar).
 
 SourceFiles
     cyclicFvPatchField.C

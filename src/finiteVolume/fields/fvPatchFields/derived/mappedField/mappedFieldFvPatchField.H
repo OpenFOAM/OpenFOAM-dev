@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,12 +49,12 @@ Usage
     }
     \endverbatim
 
-Note
-    Since this condition can be applied on a per-field and per-patch basis,
-    it is possible to duplicate the mapping information.  If possible, employ
-    the \c mapped condition in preference to avoid this situation, and only
-    employ this condition if it is not possible to change the underlying
-    geometric (poly) patch type to \c mapped.
+    Note:
+        Since this condition can be applied on a per-field and per-patch basis,
+        it is possible to duplicate the mapping information.  If possible,
+        employ the \c mapped condition in preference to avoid this situation,
+        and only employ this condition if it is not possible to change the
+        underlying geometric (poly) patch type to \c mapped.
 
 See also
     Foam::mappedPatchBase

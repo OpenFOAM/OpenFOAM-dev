@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,8 @@ Usage
         Treat any solid cells present just like fluid cells.
         The default is to discard them.
 
-Note
-    Baffles are written as interfaces for later use
+    Note:
+        Baffles are written as interfaces for later use
 
 \*---------------------------------------------------------------------------*/
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,9 +37,9 @@ Description
     the patch geometry (points and faces) for the coupled patches are output
     to the communications directory.
 
-Note:
-    The addressing is patch-local, i.e. point indices for each patch point
-    used for face addressing starts at index 0.
+    Note:
+        The addressing is patch-local, i.e. point indices for each patch point
+        used for face addressing starts at index 0.
 
 See also
     externalCoupledMixedFvPatchField

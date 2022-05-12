@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,11 @@ Usage
     The \c omega entry is a Function1 type, able to describe time varying
     functions.
 
-Note
-    Sign conventions:
-    - positive flux (out of domain): apply zero-gradient condition
-    - negative flux (into of domain): derive from the flux in the patch-normal
-      direction
+    Note:
+        Sign conventions:
+      - positive flux (out of domain): apply zero-gradient condition
+      - negative flux (into of domain): derive from the flux in the patch-normal
+        direction
 
 See also
     Foam::pressureInletOutletVelocityFvPatchVectorField

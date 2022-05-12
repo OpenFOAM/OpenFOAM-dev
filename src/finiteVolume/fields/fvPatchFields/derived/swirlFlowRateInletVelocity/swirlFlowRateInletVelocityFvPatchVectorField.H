@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,11 +55,11 @@ Usage
     }
     \endverbatim
 
-Note
-    - the \c flowRate and \c rpm entries are Function1 types, able to describe
-      time varying functions.  The example above gives the usage for supplying
-      constant values.
-    - the value is positive into the domain
+    Note:
+      - the \c flowRate and \c rpm entries are Function1 types, able to describe
+        time varying functions.  The example above gives the usage for supplying
+        constant values.
+      - the value is positive into the domain
 
 See also
     Foam::fixedValueFvPatchField

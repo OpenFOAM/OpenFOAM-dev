@@ -71,12 +71,12 @@ Description
     interFoam family of solvers.  Boundedness cannot be guaranteed with the
     backward scheme.
 
-Note
-    The Crank-Nicolson coefficient for the implicit part of the RHS is related
-    to the off-centering coefficient by
-    \verbatim
-        cnCoeff = 1.0/(1.0 + ocCoeff);
-    \endverbatim
+    Note:
+        The Crank-Nicolson coefficient for the implicit part of the RHS
+        is related to the off-centering coefficient by
+        \verbatim
+            cnCoeff = 1.0/(1.0 + ocCoeff);
+        \endverbatim
 
 See also
     Foam::Euler

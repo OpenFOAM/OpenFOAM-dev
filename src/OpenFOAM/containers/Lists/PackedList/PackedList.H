@@ -33,7 +33,6 @@ Description
 
     The number of bits per item is specified by the template parameter nBits.
 
-Note
     In a const context, the '[]' operator simply returns the stored value,
     with out-of-range elements returned as zero.
     In a non-const context, the '[]' operator returns an iteratorBase, which

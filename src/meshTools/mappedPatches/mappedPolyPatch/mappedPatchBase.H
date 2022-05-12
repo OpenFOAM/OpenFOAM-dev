@@ -69,10 +69,9 @@ Description
     Note: if offsetMode is \c normal it uses outwards pointing normals. So
     supply a negative distance if sampling inside the domain.
 
-
-Note
-    Storage is not optimal. It temporary collects all (patch)face centres
-    on all processors to keep the addressing calculation simple.
+    Note:
+        Storage is not optimal. It temporary collects all (patch)face centres
+        on all processors to keep the addressing calculation simple.
 
 SourceFiles
     mappedPatchBase.C

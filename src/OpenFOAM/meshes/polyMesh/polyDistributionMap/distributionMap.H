@@ -31,7 +31,6 @@ Description
     (subXXXMap) and from the received bits to their location in the new
     list (constructXXXMap).
 
-Note:
     Schedule is a list of processor pairs (one send, one receive. One of
     them will be myself) which forms a scheduled (i.e. non-buffered) exchange.
     See distribute on how to use it.
@@ -117,12 +116,10 @@ Note:
         |      |
         +------+ 0
 
-
     When constructing from components optionally a 'flip' on
     the maps can be specified. This will interpret the map
     values as index+flip, similar to e.g. faceProcAddressing. The flip
     will only be applied to fieldTypes (scalar, vector, .. triad)
-
 
 SourceFiles
     distributionMap.C

@@ -55,10 +55,10 @@ Description
         movePoints
     - PatchMeshObject: mesh object to be additionally updated patch changes
 
-Note
-    movePoints must be provided for MeshObjects of type MoveableMeshObject
-    and both movePoints and topoChange functions must exist, provided for
-    MeshObjects of type UpdateableMeshObject.
+    Note:
+        movePoints must be provided for MeshObjects of type MoveableMeshObject
+        and both movePoints and topoChange functions must exist, provided for
+        MeshObjects of type UpdateableMeshObject.
 
 SourceFiles
     MeshObject.C

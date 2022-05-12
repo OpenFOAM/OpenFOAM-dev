@@ -92,12 +92,12 @@ Usage
     Foam::Function1s::turbulentBL have been created specifically for this
     purpose and are likely to be appropriate for most cases.
 
-Note
-    - \c rhoInlet is required for the case of a mass flow rate, where the
-      density field is not available at start-up
-    - The value is positive into the domain (as an inlet)
-    - May not work correctly for transonic inlets
-    - Strange behaviour with potentialFoam since the U equation is not solved
+    Note:
+      - \c rhoInlet is required for the case of a mass flow rate, where the
+        density field is not available at start-up
+      - The value is positive into the domain (as an inlet)
+      - May not work correctly for transonic inlets
+      - Strange behaviour with potentialFoam since the U equation is not solved
 
 See also
     Foam::fixedValueFvPatchField

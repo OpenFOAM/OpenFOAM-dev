@@ -58,16 +58,16 @@ Description
     - a set of indices which indicate where to get transformed data in the
       field
 
-Note
-    - compared to 17x nTotalFaces, nTotalPoints do not compensate for
-      shared points since this would trigger full connectivity analysis
-    - most calculation is demand driven and uses parallel communication
-      so make sure to invoke on all processors at the same time
-    - old sharedEdge calculation: currently an edge is considered shared
-      if it uses two shared points and is used more than once.  This is not
-      correct on processor patches but it only slightly overestimates the number
-      of shared edges.  Doing full analysis of how many patches use the edge
-      would be too complicated
+    Note:
+      - compared to 17x nTotalFaces, nTotalPoints do not compensate for
+        shared points since this would trigger full connectivity analysis
+      - most calculation is demand driven and uses parallel communication
+        so make sure to invoke on all processors at the same time
+      - old sharedEdge calculation: currently an edge is considered shared if it
+        uses two shared points and is used more than once.  This is not correct
+        on processor patches but it only slightly overestimates the number of
+        shared edges.  Doing full analysis of how many patches use the edge
+        would be too complicated
 
 See also
     distributionMap

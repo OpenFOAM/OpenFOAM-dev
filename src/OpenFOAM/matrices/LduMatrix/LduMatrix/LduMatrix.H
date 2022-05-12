@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,10 @@ Description
 
     Addressing arrays must be supplied for the upper and lower triangles.
 
-Note
-    It might be better if this class were organised as a hierarchy starting
-    from an empty matrix, then deriving diagonal, symmetric and asymmetric
-    matrices.
+    Note:
+        It might be better if this class were organised as a hierarchy starting
+        from an empty matrix, then deriving diagonal, symmetric and asymmetric
+        matrices.
 
 SourceFiles
     LduMatrixATmul.C

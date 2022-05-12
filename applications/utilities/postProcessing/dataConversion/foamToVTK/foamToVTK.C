@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,41 +96,40 @@ Usage
       - \par -useTimeName
         use the time index in the VTK file name instead of the time index
 
-Note
-    mesh subset is handled by vtkMesh. Slight inconsistency in
-    interpolation: on the internal field it interpolates the whole volField
-    to the whole-mesh pointField and then selects only those values it
-    needs for the subMesh (using the fvMeshSubset cellMap(), pointMap()
-    functions). For the patches however it uses the
-    fvMeshSubset.interpolate function to directly interpolate the
-    whole-mesh values onto the subset patch.
+    Note:
+        mesh subset is handled by vtkMesh. Slight inconsistency in
+        interpolation: on the internal field it interpolates the whole volField
+        to the whole-mesh pointField and then selects only those values it
+        needs for the subMesh (using the fvMeshSubset cellMap(), pointMap()
+        functions). For the patches however it uses the
+        fvMeshSubset.interpolate function to directly interpolate the
+        whole-mesh values onto the subset patch.
 
-Note
-    \par new file format:
-    no automatic timestep recognition.
-    However can have .pvd file format which refers to time simulation
-    if XML *.vtu files are available:
+        \par new file format:
+        no automatic timestep recognition.
+        However can have .pvd file format which refers to time simulation
+        if XML *.vtu files are available:
 
-    \verbatim
-      <?xml version="1.0"?>
-      <VTKFile type="Collection"
-           version="0.1"
-           byte_order="LittleEndian"
-           compressor="vtkZLibDataCompressor">
-        <Collection>
-          <DataSet timestep="50" file="pitzDaily_2.vtu"/>
-          <DataSet timestep="100" file="pitzDaily_3.vtu"/>
-          <DataSet timestep="150" file="pitzDaily_4.vtu"/>
-          <DataSet timestep="200" file="pitzDaily_5.vtu"/>
-          <DataSet timestep="250" file="pitzDaily_6.vtu"/>
-          <DataSet timestep="300" file="pitzDaily_7.vtu"/>
-          <DataSet timestep="350" file="pitzDaily_8.vtu"/>
-          <DataSet timestep="400" file="pitzDaily_9.vtu"/>
-          <DataSet timestep="450" file="pitzDaily_10.vtu"/>
-          <DataSet timestep="500" file="pitzDaily_11.vtu"/>
-        </Collection>
-      </VTKFile>
-    \endverbatim
+        \verbatim
+          <?xml version="1.0"?>
+          <VTKFile type="Collection"
+               version="0.1"
+               byte_order="LittleEndian"
+               compressor="vtkZLibDataCompressor">
+            <Collection>
+              <DataSet timestep="50" file="pitzDaily_2.vtu"/>
+              <DataSet timestep="100" file="pitzDaily_3.vtu"/>
+              <DataSet timestep="150" file="pitzDaily_4.vtu"/>
+              <DataSet timestep="200" file="pitzDaily_5.vtu"/>
+              <DataSet timestep="250" file="pitzDaily_6.vtu"/>
+              <DataSet timestep="300" file="pitzDaily_7.vtu"/>
+              <DataSet timestep="350" file="pitzDaily_8.vtu"/>
+              <DataSet timestep="400" file="pitzDaily_9.vtu"/>
+              <DataSet timestep="450" file="pitzDaily_10.vtu"/>
+              <DataSet timestep="500" file="pitzDaily_11.vtu"/>
+            </Collection>
+          </VTKFile>
+        \endverbatim
 
 \*---------------------------------------------------------------------------*/
 

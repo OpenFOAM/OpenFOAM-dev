@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,10 +37,10 @@ Description
     Foam::wordRe (preserve the same type) or from a Foam::word (always
     literal).
 
-Note
-    If the string contents are changed - eg, by the operator+=() or by
-    string::replace(), etc - it will be necessary to use compile() or
-    recompile() to synchronise the regular expression.
+    Note:
+        If the string contents are changed - eg, by the operator+=() or by
+        string::replace(), etc - it will be necessary to use compile() or
+        recompile() to synchronise the regular expression.
 
 SourceFiles
     wordRe.C

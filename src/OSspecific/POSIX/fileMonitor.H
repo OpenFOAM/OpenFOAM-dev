@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,12 +27,12 @@ Class
 Description
     Checking for changes to files.
 
-Note
-    The default is to use stat to get the timestamp.
+    Note:
+        The default is to use stat to get the timestamp.
 
-    Compile with FOAM_USE_INOTIFY to use the inotify
-    (Linux specific, since 2.6.13) framework. The problem is that inotify does
-    not work on nfs3 mounted directories!!
+        Compile with FOAM_USE_INOTIFY to use the inotify (Linux specific, since
+        2.6.13) framework. The problem is that inotify does not work on nfs3
+        mounted directories!!
 
 SourceFiles
     fileMonitor.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,19 +40,19 @@ Usage
       - \par -xml
         Write output in XML format.
 
-Note
-    The filename extensions are used to determine the file format type.
+    Note:
+        The filename extensions are used to determine the file format type.
 
-    The XML-like output can be useful for extraction with other tools,
-    but either output format can be easily extracted with a simple sed
-    command:
-    \verbatim
-        surfaceMeshInfo surfaceFile -areas | \
-            sed -ne '/areas/,/:/{ /:/!p }'
+        The XML-like output can be useful for extraction with other tools,
+        but either output format can be easily extracted with a simple sed
+        command:
+        \verbatim
+            surfaceMeshInfo surfaceFile -areas | \
+                sed -ne '/areas/,/:/{ /:/!p }'
 
-        surfaceMeshInfo surfaceFile -areas -xml | \
-            sed -ne '/<areas/,/</{ /</!p }'
-    \endverbatim
+            surfaceMeshInfo surfaceFile -areas -xml | \
+                sed -ne '/<areas/,/</{ /</!p }'
+        \endverbatim
 
 \*---------------------------------------------------------------------------*/
 

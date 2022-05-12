@@ -28,8 +28,9 @@ Description
     Takes 2D mesh (all faces 2 points only, no front and back faces) and
     creates a 3D mesh by extruding with specified thickness.
 
-Note
-    Not sure about the walking of the faces to create the front and back faces.
+    Note:
+        Not sure about the walking of the faces to create the front and
+        back faces.
 
 \*---------------------------------------------------------------------------*/
 

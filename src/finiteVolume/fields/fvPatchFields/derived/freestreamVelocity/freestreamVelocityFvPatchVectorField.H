@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,8 +46,9 @@ Usage
     }
     \endverbatim
 
-Note
-    This condition is designed to operate with the freestreamPressure condition
+    Note:
+        This condition is designed to operate with the freestreamPressure
+        condition
 
 See also
     Foam::mixedFvPatchField

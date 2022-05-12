@@ -49,10 +49,10 @@ Usage
     The mode of operation is determined by the sign of the flux across the
     patch faces.
 
-Note
-    Sign conventions:
-    - Positive flux (out of domain): apply zero-gradient condition
-    - Negative flux (into of domain): apply the "inletValue" fixed-value
+    Note:
+        Sign conventions:
+      - Positive flux (out of domain): apply zero-gradient condition
+      - Negative flux (into of domain): apply the "inletValue" fixed-value
 
 See also
     Foam::mixedFvPatchField

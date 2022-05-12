@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,9 @@ Class
 Description
     Provide a means of reading/writing the single-file OpenFOAM surface format.
 
-Note
-    This class provides more methods than the regular surface format interface.
+    Note:
+        This class provides more methods than the regular surface format
+        interface.
 
 SourceFiles
     OFSsurfaceFormat.C

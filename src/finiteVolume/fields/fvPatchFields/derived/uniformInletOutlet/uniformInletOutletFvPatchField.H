@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,10 +48,10 @@ Usage
     The mode of operation is determined by the sign of the flux across the
     patch faces.
 
-Note
-    Sign conventions:
-    - positive flux (out of domain): apply zero-gradient condition
-    - negative flux (into of domain): apply the user-specified fixed value
+    Note:
+        Sign conventions:
+      - positive flux (out of domain): apply zero-gradient condition
+      - negative flux (into of domain): apply the user-specified fixed value
 
 See also
     Foam::inletOutletFvPatchField

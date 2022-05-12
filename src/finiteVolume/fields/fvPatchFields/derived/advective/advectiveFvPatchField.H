@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,9 +64,9 @@ Usage
     }
     \endverbatim
 
-Note
-    If \c lInf is specified, \c fieldInf will be required; \c rho is only
-    required in the case of a mass-based flux.
+    Note:
+        If \c lInf is specified, \c fieldInf will be required; \c rho is only
+        required in the case of a mass-based flux.
 
 SourceFiles
     advectiveFvPatchField.C

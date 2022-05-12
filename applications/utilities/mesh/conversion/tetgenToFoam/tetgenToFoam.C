@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,12 +54,12 @@ Description
         0
     \endverbatim
 
-Note
-    - for some reason boundary faces point inwards. I just reverse them
-      always. Might use some geometric check instead.
-    - marked faces might not actually be boundary faces of mesh.
-      This is hopefully handled now by first constructing without boundaries
-      and then reconstructing with boundary faces.
+    Note:
+      - for some reason boundary faces point inwards. I just reverse them
+        always. Might use some geometric check instead.
+      - marked faces might not actually be boundary faces of mesh.
+        This is hopefully handled now by first constructing without boundaries
+        and then reconstructing with boundary faces.
 
 \*---------------------------------------------------------------------------*/
 

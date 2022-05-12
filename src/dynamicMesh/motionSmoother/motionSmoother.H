@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,22 +50,22 @@ Description
         }
     \endverbatim
 
-Note
-    - Shared points (parallel): a processor can have points which are part of
-    pp on another processor but have no pp itself (i.e. it has points
-    and/or edges but no faces of pp). Hence we have to be careful when e.g.
-    synchronising displacements that the value from the processor which has
-    faces of pp get priority. This is currently handled in setDisplacement
-    by resetting the internal displacement to zero before doing anything
-    else. The combine operator used will give preference to non-zero
-    values.
+    Note:
+      - Shared points (parallel): a processor can have points which are part of
+        pp on another processor but have no pp itself (i.e. it has points
+        and/or edges but no faces of pp). Hence we have to be careful when e.g.
+        synchronising displacements that the value from the processor which has
+        faces of pp get priority. This is currently handled in setDisplacement
+        by resetting the internal displacement to zero before doing anything
+        else. The combine operator used will give preference to non-zero
+        values.
 
-    - Various routines take baffles. These are sets of boundary faces that
-    are treated as a single internal face. This is a hack used to apply
-    movement to internal faces.
+      - Various routines take baffles. These are sets of boundary faces that
+        are treated as a single internal face. This is a hack used to apply
+        movement to internal faces.
 
-    - Mesh constraints are looked up from the supplied dictionary. (uses
-    recursive lookup)
+      - Mesh constraints are looked up from the supplied dictionary. (uses
+        recursive lookup)
 
 SourceFiles
     motionSmoother.C

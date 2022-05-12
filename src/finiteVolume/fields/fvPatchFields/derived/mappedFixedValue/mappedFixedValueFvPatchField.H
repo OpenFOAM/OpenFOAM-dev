@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,9 +61,9 @@ Usage
     boundary faces and both faces sample into the cell, both faces will get the
     same value.
 
-Note
-    It is not possible to sample internal faces since volume fields are not
-    defined on faces.
+    Note:
+        It is not possible to sample internal faces since volume fields are not
+        defined on faces.
 
 See also
     Foam::mappedPatchBase

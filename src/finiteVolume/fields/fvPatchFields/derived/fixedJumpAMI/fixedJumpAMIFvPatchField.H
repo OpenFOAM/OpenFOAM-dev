@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,8 +50,8 @@ Usage
 
     The above example shows the use of a fixed jump of '10'.
 
-Note
-     The underlying \c patchType should be set to \c cyclicAMI
+    Note:
+        The underlying \c patchType should be set to \c cyclicAMI
 
 See also
     Foam::jumpCyclicAMIFvPatchField
