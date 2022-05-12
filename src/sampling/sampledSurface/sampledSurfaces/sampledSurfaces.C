@@ -65,6 +65,7 @@ Foam::functionObjects::sampledSurfaces::sampledSurfaces
     outputPath_(fileName::null),
     fields_(),
     interpolationScheme_(word::null),
+    writeEmpty_(false),
     mergeList_(),
     formatter_(nullptr)
 {
@@ -158,7 +159,11 @@ bool Foam::functionObjects::sampledSurfaces::write()
 
             if (Pstream::parRun())
             {
-                if (Pstream::master() && mergeList_[surfi].faces.size())
+                if
+                (
+                    Pstream::master()
+                 && (mergeList_[surfi].faces.size() || writeEmpty_)
+                )
                 {
                     formatter_->write
                     (
@@ -177,7 +182,7 @@ bool Foam::functionObjects::sampledSurfaces::write()
             }
             else
             {
-                if (s.faces().size())
+                if (s.faces().size() || writeEmpty_)
                 {
                     formatter_->write
                     (
@@ -210,6 +215,8 @@ bool Foam::functionObjects::sampledSurfaces::read(const dictionary& dict)
         dict.lookup("fields") >> fields_;
 
         dict.lookup("interpolationScheme") >> interpolationScheme_;
+
+        dict.readIfPresent("writeEmpty", writeEmpty_);
 
         const word writeType(dict.lookup("surfaceFormat"));
 

@@ -61,6 +61,7 @@ Usage
         surfaceFormat | the format in which to write the surface file | yes   |
         interpolationScheme | the method by which values are interpolated \\
                               from the mesh to the surface | yes
+        writeEmpty   | write out files for empty surfaces | no | no
         surfaces     | the list of surfaces    | yes         |
     \endtable
 
@@ -146,6 +147,9 @@ class sampledSurfaces
 
             //- Interpolation scheme to use
             word interpolationScheme_;
+
+            //- Should we create files for empty surfaces?
+            Switch writeEmpty_;
 
 
         // Surfaces
