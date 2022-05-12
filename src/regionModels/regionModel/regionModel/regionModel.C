@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,94 +171,6 @@ bool Foam::regionModels::regionModel::read(const dictionary& dict)
 }
 
 
-const Foam::AMIInterpolation&
-Foam::regionModels::regionModel::interRegionAMI
-(
-    const regionModel& nbrRegion,
-    const label regionPatchi,
-    const label nbrPatchi,
-    const bool flip
-) const
-{
-    label nbrRegionID = findIndex(interRegionAMINames_, nbrRegion.name());
-
-    const fvMesh& nbrRegionMesh = nbrRegion.regionMesh();
-
-    if (nbrRegionID != -1)
-    {
-        if (!interRegionAMI_[nbrRegionID].set(regionPatchi))
-        {
-            const polyPatch& p = regionMesh().boundaryMesh()[regionPatchi];
-            const polyPatch& nbrP = nbrRegionMesh.boundaryMesh()[nbrPatchi];
-
-            int oldTag = UPstream::msgType();
-            UPstream::msgType() = oldTag + 1;
-
-            interRegionAMI_[nbrRegionID].set
-            (
-                regionPatchi,
-                new AMIInterpolation
-                (
-                    p,
-                    nbrP,
-                    faceAreaIntersect::tmMesh,
-                    true,
-                    faceAreaWeightAMI::typeName,
-                    -1,
-                    flip
-                )
-            );
-
-            UPstream::msgType() = oldTag;
-        }
-
-        return interRegionAMI_[nbrRegionID][regionPatchi];
-    }
-    else
-    {
-        label nbrRegionID = interRegionAMINames_.size();
-
-        interRegionAMINames_.append(nbrRegion.name());
-
-        const polyPatch& p = regionMesh().boundaryMesh()[regionPatchi];
-        const polyPatch& nbrP = nbrRegionMesh.boundaryMesh()[nbrPatchi];
-
-        label nPatch = regionMesh().boundaryMesh().size();
-
-
-        interRegionAMI_.resize(nbrRegionID + 1);
-
-        interRegionAMI_.set
-        (
-            nbrRegionID,
-            new PtrList<AMIInterpolation>(nPatch)
-        );
-
-        int oldTag = UPstream::msgType();
-        UPstream::msgType() = oldTag + 1;
-
-        interRegionAMI_[nbrRegionID].set
-        (
-            regionPatchi,
-            new AMIInterpolation
-            (
-                p,
-                nbrP,
-                faceAreaIntersect::tmMesh,
-                true,
-                faceAreaWeightAMI::typeName,
-                -1,
-                flip
-            )
-        );
-
-        UPstream::msgType() = oldTag;
-
-        return interRegionAMI_[nbrRegionID][regionPatchi];
-    }
-}
-
-
 Foam::label Foam::regionModels::regionModel::nbrCoupledPatchID
 (
     const regionModel& nbrRegion,
@@ -356,9 +268,7 @@ Foam::regionModels::regionModel::regionModel
     primaryPatchIDs_(),
     intCoupledPatchIDs_(),
     regionName_("none"),
-    functions_(*this),
-    interRegionAMINames_(),
-    interRegionAMI_()
+    functions_(*this)
 {}
 
 

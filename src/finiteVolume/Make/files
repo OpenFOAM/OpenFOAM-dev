@@ -36,9 +36,6 @@ derivedFvPatches = $(fvPatches)/derived
 $(derivedFvPatches)/wall/wallFvPatch.C
 $(derivedFvPatches)/mapped/mappedFvPatch.C
 $(derivedFvPatches)/mapped/mappedWallFvPatch.C
-$(derivedFvPatches)/regionCoupled/regionCoupledBaseFvPatch.C
-$(derivedFvPatches)/regionCoupled/regionCoupledFvPatch.C
-$(derivedFvPatches)/regionCoupled/regionCoupledWallFvPatch.C
 
 
 meshWave = algorithms/FvFaceCellWave
