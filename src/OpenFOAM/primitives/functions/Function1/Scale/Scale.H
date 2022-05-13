@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,8 @@ Description
     This is particularly useful to ramp a time-varying value by one of the
     monotonic ramp functions.
 
-    Usage for a vector:
+Usage
+    For a vector:
     \verbatim
         <name>
         {
@@ -78,7 +79,7 @@ Description
         }
     \endverbatim
 
-    Usage including the optional 'xScale' function:
+    Including the optional 'xScale' function:
     \verbatim
         <name>
         {

@@ -29,7 +29,7 @@ Description
     instantaneously to 1, remains at 1 for \c duration, then drops
     instantaneously back to 0.
 
-    Usage:
+Usage
     \verbatim
         <name> squarePulse;
         <name>Coeffs

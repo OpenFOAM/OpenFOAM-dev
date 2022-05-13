@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,53 @@ Description
     Linear ramp function starting from 0 and increasing linearRamply to 1 from
     \c start over the \c duration and remaining at 1 thereafter.
 
+Usage
+    \verbatim
+        <name> linearRamp;
+        <name>Coeffs
+        {
+            start     10;
+            duration  20;
+        }
+    \endverbatim
+    or
+    \verbatim
+        <name>
+        {
+            type      linearRamp;
+            start     10;
+            duration  20;
+        }
+    \endverbatim
+    or including a constant scaling factor:
+    \verbatim
+        <name>
+        {
+            type      scale;
+
+            scale
+            {
+                type        linearRamp;
+
+                start       0;
+                duration    10;
+            }
+
+            value       100;
+        }
+    \endverbatim
+    for more details of scaling the ramp see Foam::Function1s::Scale.
+
+    Where:
+    \table
+        Property | Description  | Required | Default value
+        start    | Start time   | no       | 0
+        duration | Duration     | yes      |
+    \endtable
+
 See also
     Foam::Function1s::Ramp
+    Foam::Function1s::Scale
 
 SourceFiles
     linearRamp.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,8 @@ Class
 Description
     Templated function of two variables that returns a constant value.
 
-    Usage - for entry \<name\> returning the value <value>:
+Usage
+    For entry \<name\> returning the value <value>:
     \verbatim
         <name>     constant <value>;
     \endverbatim

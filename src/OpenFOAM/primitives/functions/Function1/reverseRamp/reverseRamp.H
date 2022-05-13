@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,8 @@ Description
     from 1 decreasing to 0 from \c start over the \c duration and remaining at 0
     thereafter.
 
-    Usage for scaling a vector:
+Usage
+    For scaling a vector:
     \verbatim
         <name>
         {

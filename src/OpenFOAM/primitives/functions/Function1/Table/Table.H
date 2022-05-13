@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     Items are stored in a list of Tuple2's. First column is always stored as
     scalar entries. Data is read in Tuple2 form:
 
-    Usage:
+Usage
     \verbatim
         <name>   table
         (
@@ -74,7 +74,6 @@ Description
 
     The data may be read from a separate file in either native or CSV format:
 
-    Usage:
     \verbatim
         <name>
         {
