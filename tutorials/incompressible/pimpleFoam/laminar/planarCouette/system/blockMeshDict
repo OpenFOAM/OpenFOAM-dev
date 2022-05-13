@@ -50,17 +50,19 @@ boundary
             (1 5 4 0)
         );
     }
-    left
+    cyc_half0
     {
-        type wall;
+        type cyclic;
+        neighbourPatch cyc_half1;
         faces
         (
             (0 4 7 3)
         );
     }
-    right
+    cyc_half1
     {
-        type wall;
+        type cyclic;
+        neighbourPatch cyc_half0;
         faces
         (
             (2 6 5 1)
