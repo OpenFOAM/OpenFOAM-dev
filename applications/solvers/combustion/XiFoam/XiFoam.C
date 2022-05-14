@@ -122,8 +122,6 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
-        #include "rhoEqn.H"
-
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
