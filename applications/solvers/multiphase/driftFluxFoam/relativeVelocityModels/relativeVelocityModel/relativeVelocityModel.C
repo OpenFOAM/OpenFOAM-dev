@@ -144,7 +144,18 @@ Foam::relativeVelocityModel::~relativeVelocityModel()
 Foam::tmp<Foam::volVectorField>
 Foam::relativeVelocityModel::acceleration() const
 {
-    const volVectorField Ud(mixture_.U() + Udm_);
+    // Dispersed phase velocity
+    // const volVectorField Ud(mixture_.U() + Udm_);
+
+    // Use the mixture rather than the dispersed-phase velocity to approximate
+    // the dispersed-phase acceleration to improve stability as only the mixture
+    // momentum equation is coupled to continuity and pressure
+    //
+    // This approximation is valid only in the limit of small drift-velocity.
+    // For large drift-velocity an Euler-Euler approach should be used in
+    // which both the continuous and dispersed-phase momentum equations are
+    // solved and coupled to the pressure.
+    const volVectorField& Ud = mixture_.U();
 
     return g_ - (Ud & fvc::grad(Ud));
 }
