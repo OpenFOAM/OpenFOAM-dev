@@ -74,7 +74,7 @@ Foam::mixtureViscosityModels::Quemada::mu
 {
     return min
     (
-        muc*pow(max(1 - mixture_.alphad()/mixture_.alphaMax(), 0.0), -q_),
+        muc*pow(max(1 - mixture_.alphad()/mixture_.alphaMax(), small), -q_),
         muMax_
     );
 }
