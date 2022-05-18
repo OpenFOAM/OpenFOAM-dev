@@ -326,7 +326,7 @@ void Foam::fvMeshStitchers::moving::internalFaceCorrectMeshPhi
         {
             subMeshRegionRefProcs[subMeshRegions[subCelli]] = proci;
         }
-        reduce(subMeshRegionRefProcs, minOp<labelList>());
+        reduce(subMeshRegionRefProcs, ListOp<minOp<label>>());
 
         forAll(subMeshRegions, subCelli)
         {
@@ -352,8 +352,8 @@ void Foam::fvMeshStitchers::moving::internalFaceCorrectMeshPhi
     );
 
     // Determine the total mesh flux error and area magnitude for each region
-    scalarField regionPhiError(subNRegions, 0);
-    scalarField regionMagSf(subNRegions, vSmall);
+    scalarList regionPhiError(subNRegions, scalar(0));
+    scalarList regionMagSf(subNRegions, vSmall);
     forAll(phiBf, nccPatchi)
     {
         const fvPatch& fvp = mesh().boundary()[nccPatchi];
@@ -382,8 +382,8 @@ void Foam::fvMeshStitchers::moving::internalFaceCorrectMeshPhi
                 magSfBf[nccPatchi][nccPatchFacei];
         }
     }
-    reduce(regionPhiError, sumOp<scalarField>());
-    reduce(regionMagSf, sumOp<scalarField>());
+    reduce(regionPhiError, ListOp<sumOp<scalar>>());
+    reduce(regionMagSf, ListOp<sumOp<scalar>>());
 
     // Synchronise the mesh fluxes, but offset so that the total flux for each
     // region is the same as for the non-synchronised mesh fluxes

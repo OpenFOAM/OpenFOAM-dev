@@ -1418,9 +1418,9 @@ bool Foam::fvMeshStitcher::connect
 
             // Work out the min, avg and max error for all non-conformal
             // cyclics, including any errors on referred processor cyclics
-            scalarField minMfe(nNonProcPatches, vGreat);
+            scalarList minMfe(nNonProcPatches, vGreat);
             scalarField sumMfe(nNonProcPatches, 0), nSumMfe(nNonProcPatches, 0);
-            scalarField maxMfe(nNonProcPatches, -vGreat);
+            scalarList maxMfe(nNonProcPatches, -vGreat);
             forAll(mfe, patchi)
             {
                 const fvPatch& fvp = mesh_.boundary()[patchi];
@@ -1444,10 +1444,10 @@ bool Foam::fvMeshStitcher::connect
                         max(maxMfe[nccPatchi], max(mfe[patchi]));
                 }
             }
-            reduce(minMfe, minOp<scalarField>());
-            reduce(sumMfe, sumOp<scalarField>());
-            reduce(nSumMfe, sumOp<scalarField>());
-            reduce(maxMfe, maxOp<scalarField>());
+            reduce(minMfe, ListOp<minOp<scalar>>());
+            reduce(sumMfe, ListOp<minOp<scalar>>());
+            reduce(nSumMfe, ListOp<minOp<scalar>>());
+            reduce(maxMfe, ListOp<maxOp<scalar>>());
 
             // Report
             forAll(minMfe, patchi)

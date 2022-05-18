@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -756,28 +756,6 @@ Foam::List<Container> Foam::initListList(const T elems[mRows][nColumns])
 }
 
 
-template<class T>
-void Foam::ListAppendEqOp<T>::operator()(List<T>& x, const List<T>& y) const
-{
-    if (y.size())
-    {
-        if (x.size())
-        {
-            label sz = x.size();
-            x.setSize(sz + y.size());
-            forAll(y, i)
-            {
-                x[sz++] = y[i];
-            }
-        }
-        else
-        {
-            x = y;
-        }
-    }
-}
-
-
 template<class ListType>
 ListType Foam::reverseList(const ListType& list)
 {
@@ -854,6 +832,58 @@ void Foam::inplaceRotateList(ListType<DataType>& list, label n)
     inplaceReverseList(secondHalf);
 
     inplaceReverseList(list);
+}
+
+
+template<class Type, template<class> class BinaryOp>
+Foam::List<Type> Foam::ListOp<BinaryOp<Type>>::operator()
+(
+    const List<Type>& a,
+    const List<Type>& b
+) const
+{
+    List<Type> c(a.size());
+    forAll(a, i)
+    {
+        c[i] = BinaryOp<Type>()(a[i], b[i]);
+    }
+    return c;
+}
+
+
+template<class Type, template<class> class BinaryEqOp>
+void Foam::ListEqOp<BinaryEqOp<Type>>::operator()
+(
+    List<Type>& a,
+    const List<Type>& b
+) const
+{
+    forAll(a, i)
+    {
+        BinaryEqOp<Type>()(a[i], b[i]);
+    }
+}
+
+
+template<class T>
+void Foam::ListAppendEqOp<T>::operator()(List<T>& x, const List<T>& y) const
+{
+    if (y.size())
+    {
+        if (x.size())
+        {
+            label sz = x.size();
+            x.setSize(sz + y.size());
+            forAll(y, i)
+            {
+                x[sz++] = y[i];
+            }
+        }
+        else
+        {
+            x = y;
+        }
+    }
 }
 
 
