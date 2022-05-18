@@ -209,6 +209,7 @@ void Foam::polyBoundaryMesh::clearAddressing()
 {
     nbrEdgesPtr_.clear();
     patchIDPtr_.clear();
+    patchFaceIDPtr_.clear();
     groupPatchIDsPtr_.clear();
 
     forAll(*this, patchi)
@@ -1089,6 +1090,7 @@ void Foam::polyBoundaryMesh::topoChange()
 {
     nbrEdgesPtr_.clear();
     patchIDPtr_.clear();
+    patchFaceIDPtr_.clear();
     groupPatchIDsPtr_.clear();
 
     PstreamBuffers pBufs(Pstream::defaultCommsType);
