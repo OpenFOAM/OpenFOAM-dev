@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,7 @@ SourceFiles
 
 #include "faceList.H"
 #include "oppositeFace.H"
+#include "boundBox.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -112,7 +113,6 @@ public:
             const faceUList& meshFaces
         ) const;
 
-
         // Instructions for centre and mag:
         // When one wants to access the cell centre and magnitude, the
         // functionality on the mesh level should be used in preference to the
@@ -126,6 +126,9 @@ public:
 
         //- Returns cell volume
         scalar mag(const pointField&, const faceUList&) const;
+
+        //- Returns the cell bounding box
+        boundBox bb(const pointField&, const faceUList&) const;
 
 
     // Member Operators

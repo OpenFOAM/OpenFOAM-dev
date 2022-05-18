@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,21 +59,23 @@ bool Foam::cellVolumeWeightMethod::findInitialSeeds
 
     for (label i = startSeedI; i < srcCellIDs.size(); i++)
     {
-        label srcI = srcCellIDs[i];
+        const label srcI = srcCellIDs[i];
 
         if (mapFlag[srcI])
         {
-            const pointField pts
+            const labelList tgtIDs
             (
-                srcCells[srcI].points(srcFaces, srcPts)
+                tgt_.cellTree().findBox
+                (
+                    treeBoundBox(srcCells[srcI].bb(srcPts, srcFaces))
+                )
             );
 
-            forAll(pts, ptI)
+            forAll(tgtIDs, j)
             {
-                const point& pt = pts[ptI];
-                label tgtI = tgt_.cellTree().findInside(pt);
+                const label tgtI = tgtIDs[j];
 
-                if (tgtI != -1 && intersect(srcI, tgtI))
+                if (intersect(srcI, tgtI))
                 {
                     srcSeedI = srcI;
                     tgtSeedI = tgtI;

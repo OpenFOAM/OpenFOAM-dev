@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,7 @@ class treeDataCell
 {
     // Private Data
 
+        //- Reference to the mesh
         const polyMesh& mesh_;
 
         //- Subset of cells to work on
@@ -73,11 +74,9 @@ class treeDataCell
 
     // Private Member Functions
 
-        //- Calculate cell bounding box
-        treeBoundBox calcCellBb(const label celli) const;
-
         //- Initialise all member data
         void update();
+
 
 public:
 

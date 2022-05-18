@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,36 +37,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::treeBoundBox Foam::treeDataCell::calcCellBb(const label celli) const
-{
-    const cellList& cells = mesh_.cells();
-    const faceList& faces = mesh_.faces();
-    const pointField& points = mesh_.points();
-
-    treeBoundBox cellBb
-    (
-        vector(great, great, great),
-        vector(-great, -great, -great)
-    );
-
-    const cell& cFaces = cells[celli];
-
-    forAll(cFaces, cFacei)
-    {
-        const face& f = faces[cFaces[cFacei]];
-
-        forAll(f, fp)
-        {
-            const point& p = points[f[fp]];
-
-            cellBb.min() = min(cellBb.min(), p);
-            cellBb.max() = max(cellBb.max(), p);
-        }
-    }
-    return cellBb;
-}
-
-
 void Foam::treeDataCell::update()
 {
     if (cacheBb_)
@@ -75,7 +45,15 @@ void Foam::treeDataCell::update()
 
         forAll(cellLabels_, i)
         {
-            bbs_[i] = calcCellBb(cellLabels_[i]);
+            bbs_[i] =
+                treeBoundBox
+                (
+                    mesh_.cells()[cellLabels_[i]].bb
+                    (
+                        mesh_.points(),
+                        mesh_.faces()
+                    )
+                );
         }
     }
 }
@@ -178,7 +156,14 @@ bool Foam::treeDataCell::overlaps
     }
     else
     {
-        return cubeBb.overlaps(calcCellBb(cellLabels_[index]));
+        return cubeBb.overlaps
+        (
+            mesh_.cells()[cellLabels_[index]].bb
+            (
+                mesh_.points(),
+                mesh_.faces()
+            )
+        );
     }
 }
 
@@ -259,7 +244,14 @@ bool Foam::treeDataCell::findIntersectOp::operator()
     }
     else
     {
-        const treeBoundBox cellBb = shape.calcCellBb(shape.cellLabels_[index]);
+        const treeBoundBox cellBb
+        (
+            shape.mesh_.cells()[shape.cellLabels_[index]].bb
+            (
+                shape.mesh_.points(),
+                shape.mesh_.faces()
+            )
+        );
 
         if ((cellBb.posBits(start) & cellBb.posBits(end)) != 0)
         {
