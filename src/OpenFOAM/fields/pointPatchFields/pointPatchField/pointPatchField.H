@@ -368,7 +368,7 @@ public:
             //- Given the internal field and a patch field,
             //  set the patch field in the internal field
             template<class Type1>
-            void setInInternalField
+            void setInternalField
             (
                 Field<Type1>& iF,
                 const Field<Type1>& pF,
@@ -378,7 +378,7 @@ public:
             //- Given the internal field and a patch field,
             //  set the patch field in the internal field
             template<class Type1>
-            void setInInternalField
+            void setInternalField
             (
                 Field<Type1>& iF,
                 const Field<Type1>& pF

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -226,7 +226,7 @@ void Foam::pointPatchField<Type>::addToInternalField
 
 template<class Type>
 template<class Type1>
-void Foam::pointPatchField<Type>::setInInternalField
+void Foam::pointPatchField<Type>::setInternalField
 (
     Field<Type1>& iF,
     const Field<Type1>& pF,
@@ -261,13 +261,13 @@ void Foam::pointPatchField<Type>::setInInternalField
 
 template<class Type>
 template<class Type1>
-void Foam::pointPatchField<Type>::setInInternalField
+void Foam::pointPatchField<Type>::setInternalField
 (
     Field<Type1>& iF,
     const Field<Type1>& pF
 ) const
 {
-    setInInternalField(iF, pF, patch().meshPoints());
+    setInternalField(iF, pF, patch().meshPoints());
 }
 
 

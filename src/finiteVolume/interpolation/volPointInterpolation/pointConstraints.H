@@ -151,7 +151,7 @@ public:
 
             //- Helper: set patchField values from internal values (on
             //  valuePointPatchFields). Opposite of
-            //  pointPatchField::setInInternalField
+            //  pointPatchField::setInternalField
             template<class Type>
             static void setPatchFields
             (

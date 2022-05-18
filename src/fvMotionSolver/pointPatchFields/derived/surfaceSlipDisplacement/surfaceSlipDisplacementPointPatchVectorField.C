@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -410,8 +410,8 @@ void surfaceSlipDisplacementPointPatchVectorField::evaluate
     // Get internal field to insert values into
     Field<vector>& iF = const_cast<Field<vector>&>(this->primitiveField());
 
-    // setInInternalField(iF, motionU);
-    setInInternalField(iF, displacement);
+    // setInternalField(iF, motionU);
+    setInternalField(iF, displacement);
 
     pointPatchVectorField::evaluate(commsType);
 }
