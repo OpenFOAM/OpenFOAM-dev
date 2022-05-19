@@ -256,12 +256,6 @@ public:
         const PtrList<surfaceLabelField::Boundary>&
             procFaceAddressingBf() const;
 
-        //- Write additional points, if necessary
-        void writeCompletePoints() const;
-
-        //- Writ additional points, if necessary
-        void writeProcPoints() const;
-
         //- Write the decomposition addressing
         void writeAddressing() const;
 

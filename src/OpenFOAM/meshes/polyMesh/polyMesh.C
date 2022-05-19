@@ -1260,16 +1260,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
         }
     }
 
-    points_.writeOpt() = IOobject::AUTO_WRITE;
-    points_.instance() = time().timeName();
-    points_.eventNo() = getEvent();
-
-    if (tetBasePtIsPtr_.valid())
-    {
-        tetBasePtIsPtr_().writeOpt() = IOobject::AUTO_WRITE;
-        tetBasePtIsPtr_().instance() = time().timeName();
-        tetBasePtIsPtr_().eventNo() = getEvent();
-    }
+    setPointsInstance(time().timeName());
 
     tmp<scalarField> sweptVols = primitiveMesh::movePoints
     (

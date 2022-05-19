@@ -213,6 +213,12 @@ private:
         //- Read and return the tetBasePtIs
         autoPtr<labelIOList> readTetBasePtIs() const;
 
+        //- Set the write option of the points
+        void setPointsWrite(const IOobject::writeOption wo);
+
+        //- Set the write option of the topology
+        void setTopologyWrite(const IOobject::writeOption wo);
+
 
         // Helper functions for constructor from cell shapes
 
@@ -754,6 +760,18 @@ public:
             (
                 const point& p,
                 const cellDecomposition = CELL_TETS
+            ) const;
+
+
+        // Write
+
+            //- Write the underlying polyMesh
+            virtual bool writeObject
+            (
+                IOstream::streamFormat fmt,
+                IOstream::versionNumber ver,
+                IOstream::compressionType cmp,
+                const bool write = true
             ) const;
 
 

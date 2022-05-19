@@ -29,42 +29,28 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::polyMesh::setInstance(const fileName& inst)
+void Foam::polyMesh::setPointsWrite(const Foam::IOobject::writeOption wo)
 {
-    if (debug)
-    {
-        InfoInFunction << "Resetting file instance to " << inst << endl;
-    }
-
-    points_.writeOpt() = IOobject::AUTO_WRITE;
-    points_.instance() = inst;
-
-    faces_.writeOpt() = IOobject::AUTO_WRITE;
-    faces_.instance() = inst;
-
-    owner_.writeOpt() = IOobject::AUTO_WRITE;
-    owner_.instance() = inst;
-
-    neighbour_.writeOpt() = IOobject::AUTO_WRITE;
-    neighbour_.instance() = inst;
-
-    boundary_.writeOpt() = IOobject::AUTO_WRITE;
-    boundary_.instance() = inst;
-
-    pointZones_.writeOpt() = IOobject::AUTO_WRITE;
-    pointZones_.instance() = inst;
-
-    faceZones_.writeOpt() = IOobject::AUTO_WRITE;
-    faceZones_.instance() = inst;
-
-    cellZones_.writeOpt() = IOobject::AUTO_WRITE;
-    cellZones_.instance() = inst;
+    points_.writeOpt() = wo;
 
     if (tetBasePtIsPtr_.valid())
     {
-        tetBasePtIsPtr_->writeOpt() = IOobject::AUTO_WRITE;
-        tetBasePtIsPtr_->instance() = inst;
+        tetBasePtIsPtr_->writeOpt() = wo;
     }
+}
+
+
+void Foam::polyMesh::setTopologyWrite(const Foam::IOobject::writeOption wo)
+{
+    setPointsWrite(wo);
+
+    faces_.writeOpt() = wo;
+    owner_.writeOpt() = wo;
+    neighbour_.writeOpt() = wo;
+    boundary_.writeOpt() = wo;
+    pointZones_.writeOpt() = wo;
+    faceZones_.writeOpt() = wo;
+    cellZones_.writeOpt() = wo;
 }
 
 
@@ -72,17 +58,40 @@ void Foam::polyMesh::setPointsInstance(const fileName& inst)
 {
     if (debug)
     {
-        InfoInFunction << "Resetting file instance to " << inst << endl;
+        InfoInFunction << "Resetting points instance to " << inst << endl;
     }
 
-    points_.writeOpt() = IOobject::AUTO_WRITE;
     points_.instance() = inst;
+    points_.eventNo() = getEvent();
 
     if (tetBasePtIsPtr_.valid())
     {
-        tetBasePtIsPtr_->writeOpt() = IOobject::AUTO_WRITE;
         tetBasePtIsPtr_->instance() = inst;
+        tetBasePtIsPtr_().eventNo() = getEvent();
     }
+
+    setPointsWrite(IOobject::AUTO_WRITE);
+}
+
+
+void Foam::polyMesh::setInstance(const fileName& inst)
+{
+    if (debug)
+    {
+        InfoInFunction << "Resetting topology instance to " << inst << endl;
+    }
+
+    setPointsInstance(inst);
+
+    faces_.instance() = inst;
+    owner_.instance() = inst;
+    neighbour_.instance() = inst;
+    boundary_.instance() = inst;
+    pointZones_.instance() = inst;
+    faceZones_.instance() = inst;
+    cellZones_.instance() = inst;
+
+    setTopologyWrite(IOobject::AUTO_WRITE);
 }
 
 
@@ -96,7 +105,6 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
     // Find the points and faces instance
     fileName pointsInst(time().findInstance(meshDir(), "points"));
     fileName facesInst(time().findInstance(meshDir(), "faces"));
-    // fileName boundaryInst(time().findInstance(meshDir(), "boundary"));
 
     if (debug)
     {
@@ -490,6 +498,22 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         return polyMesh::UNCHANGED;
     }
+}
+
+
+bool Foam::polyMesh::writeObject
+(
+    IOstream::streamFormat fmt,
+    IOstream::versionNumber ver,
+    IOstream::compressionType cmp,
+    const bool write
+) const
+{
+    const bool written = objectRegistry::writeObject(fmt, ver, cmp, write);
+
+    const_cast<polyMesh&>(*this).setTopologyWrite(IOobject::NO_WRITE);
+
+    return written;
 }
 
 

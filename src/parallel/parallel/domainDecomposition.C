@@ -1137,102 +1137,6 @@ Foam::domainDecomposition::procFaceAddressingBf() const
 }
 
 
-void Foam::domainDecomposition::writeCompletePoints() const
-{
-    if (procMeshes_[0].pointsInstance() != procMeshes_[0].facesInstance())
-    {
-        pointField completeFacesInstancePoints(completeMesh().nPoints());
-
-        for (label proci = 0; proci < nProcs(); proci++)
-        {
-            const fvMesh& procMesh = procMeshes_[proci];
-
-            pointIOField procFacesInstancePoints
-            (
-                IOobject
-                (
-                    "points",
-                    procMesh.facesInstance(),
-                    polyMesh::meshSubDir,
-                    procMesh,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE,
-                    false
-                )
-            );
-
-            completeFacesInstancePoints.rmap
-            (
-                procFacesInstancePoints,
-                procPointAddressing_[proci]
-            );
-        }
-
-        pointIOField
-        (
-            IOobject
-            (
-                "points",
-                procMeshes_[0].facesInstance(),
-                polyMesh::meshSubDir,
-                completeMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            move(completeFacesInstancePoints)
-        ).write();
-    }
-}
-
-
-void Foam::domainDecomposition::writeProcPoints() const
-{
-    if (completeMesh().pointsInstance() != completeMesh().facesInstance())
-    {
-        pointIOField completeFacesInstancePoints
-        (
-            IOobject
-            (
-                "points",
-                completeMesh().facesInstance(),
-                polyMesh::meshSubDir,
-                completeMesh(),
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE,
-                false
-            )
-        );
-
-        for (label proci = 0; proci < nProcs(); proci++)
-        {
-            const fvMesh& procMesh = procMeshes_[proci];
-
-            pointField procFacesInstancePoints
-            (
-                completeFacesInstancePoints,
-                procPointAddressing_[proci]
-            );
-
-            pointIOField
-            (
-                IOobject
-                (
-                    "points",
-                    completeMesh().facesInstance(),
-                    polyMesh::meshSubDir,
-                    procMesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                move(procFacesInstancePoints)
-            ).write();
-        }
-    }
-}
-
-
 void Foam::domainDecomposition::writeAddressing() const
 {
     for (label proci = 0; proci < nProcs(); proci++)
@@ -1534,9 +1438,6 @@ void Foam::domainDecomposition::writeComplete(const bool doSets) const
         refinementDatas
     ).write();
 
-    // Write points if pointsInstance differing from facesInstance
-    writeCompletePoints();
-
     // Write decomposition addressing
     writeAddressing();
 }
@@ -1667,9 +1568,6 @@ void Foam::domainDecomposition::writeProcs(const bool doSets) const
             procPointAddressing_[proci]
         ).write();
     }
-
-    // Write points if pointsInstance differing from facesInstance
-    writeProcPoints();
 
     // Write decomposition addressing
     writeAddressing();
