@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -174,7 +174,8 @@ _foamCloneCase_ ()
 {
 $(declareLocals)
 
-    opts="-add -help -latestTime -no-orig -no-scripts -processor -template"
+    opts="-add -help -latestTime -no-orig -no-scripts \
+          -processor -startFrom -template"
     for o in \$used ; do opts="\${opts/\$o/}" ; done
     extra="-d"
 

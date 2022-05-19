@@ -4977,12 +4977,15 @@ _foamCloneCase_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-add -help -latestTime -no-orig -no-scripts -processor -template"
+    opts="-add -help -latestTime -no-orig -no-scripts \
+          -processor -startFrom -template"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
+        -startFrom) opts="" ; extra="" ;;
+        *) ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
