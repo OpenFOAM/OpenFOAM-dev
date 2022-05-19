@@ -48,6 +48,8 @@ Note
 
 #include "argList.H"
 #include "fvMeshStitchersStationary.H"
+#include "fvMeshTools.H"
+#include "IOobjectList.H"
 #include "nonConformalCyclicPolyPatch.H"
 #include "nonConformalErrorPolyPatch.H"
 #include "nonConformalProcessorCyclicPolyPatch.H"
@@ -55,6 +57,11 @@ Note
 #include "processorPolyPatch.H"
 #include "systemDict.H"
 #include "Time.H"
+
+#include "ReadFields.H"
+#include "volFields.H"
+#include "surfaceFields.H"
+#include "pointFields.H"
 
 using namespace Foam;
 
@@ -275,9 +282,19 @@ void createNonConformalCouples
         }
     }
 
-    // Re-patch the mesh
-    mesh.removeFvBoundary();
-    mesh.addFvPatches(newPatches);
+    // Re-patch the mesh. Note that new patches are all constraints, so the
+    // dictionary and patch type do not get used.
+    forAll(newPatches, newPatchi)
+    {
+        fvMeshTools::addPatch
+        (
+            mesh,
+            *newPatches[newPatchi],
+            dictionary(),
+            calculatedFvPatchField<scalar>::typeName,
+            false
+        );
+    }
 }
 
 
@@ -298,16 +315,23 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     runTime.functionObjects().off();
 
-    // Get the patches between which to create interfaces and the associated
-    // transformations. If there are arguments then read the patch names from
-    // the arguments and assume an identity transformation. If not, then load
-    // the system dictionary and read potentially multiple pairs of patches and
-    // associated transformations.
+    // Flag to determine whether or not patches are added to fields
+    bool fields;
+
+    // Patch names between which to create couples, the associated cyclic name
+    // prefix and transformation (if any)
     List<Pair<word>> patchNames;
     wordList cyclicNames;
     List<cyclicTransform> transforms;
+
+    // If there are patch name arguments, then we assume fields are not being
+    // changed, the cyclic name is just the cyclic typename, and that there is
+    // no transformation. If there are no arguments then get all this
+    // information from the system dictionary.
     if (haveArgs)
     {
+        fields = false;
+
         patchNames.append(Pair<word>(args[1], args[2]));
         cyclicNames.append(nonConformalCyclicPolyPatch::typeName);
         transforms.append(cyclicTransform(true));
@@ -318,8 +342,12 @@ int main(int argc, char *argv[])
 
         IOdictionary dict(systemDict(dictName, args, runTime));
 
+        fields = dict.lookupOrDefault<bool>("fields", false);
+
         forAllConstIter(dictionary, dict, iter)
         {
+            if (!iter().isDict()) continue;
+
             patchNames.append(iter().dict().lookup<Pair<word>>("patches"));
             cyclicNames.append(iter().dict().dictName());
             transforms.append(cyclicTransform(iter().dict(), true));
@@ -332,6 +360,14 @@ int main(int argc, char *argv[])
     const bool overwrite = args.optionFound("overwrite");
 
     #include "createNamedMesh.H"
+
+    // Read the fields
+    IOobjectList objects(mesh, runTime.timeName());
+    if (fields) Info<< "Reading geometric fields" << nl << endl;
+    #include "readVolFields.H"
+    #include "readSurfaceFields.H"
+    #include "readPointFields.H"
+    if (fields) Info<< endl;
 
     const word oldInstance = mesh.pointsInstance();
 
