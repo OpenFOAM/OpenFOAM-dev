@@ -65,7 +65,7 @@ extern "C" {
 
 #define Z_STATIC                (0)          /* static geometry          */
 #define Z_CHANGE_COORDS         (1)          /* coordinate changing only */
-#define Z_CHANGE_CONN           (2)          /* conectivity changing     */
+#define Z_CHANGE_CONN           (2)          /* connectivity changing     */
 
 #define Z_GEOM                  (0)          /* Geometry type */
 #define Z_VARI                  (1)          /* Variable type */

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ bool Foam::slidingInterface::projectPoints() const
     //    edges of the face it has hit.  If the distance is smaller than the
     //    edge merge tolerance, the point will be moved onto the edge.
     //    Remember the master edge index.
-    // 6) The remaning slave points will be projected into faces.  Remember the
+    // 6) The remaining slave points will be projected into faces.  Remember the
     //    master face index.
     // 7) For the points that miss the master patch, grab the nearest face
     //    on the master and leave the slave point where it started

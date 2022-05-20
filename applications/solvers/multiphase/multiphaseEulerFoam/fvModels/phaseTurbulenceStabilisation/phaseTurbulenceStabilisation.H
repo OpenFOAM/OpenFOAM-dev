@@ -42,7 +42,7 @@ Description
     alphaInversion can be set to a small value e.g. 1e-2, but unless the phase
     turbulence model is specifically designed to handle phase-inversion and both
     continuous and dispersed regimes it may be useful to set \c alphaInversion
-    to a higher value, corresponding to the phase-fraction at which transision
+    to a higher value, corresponding to the phase-fraction at which transition
     from continuous to dispersed happens and effectively use the turbulence
     properties of the other phase when the phase is dispersed.  This is of
     course an approximation to the real system and if accurate handling of both

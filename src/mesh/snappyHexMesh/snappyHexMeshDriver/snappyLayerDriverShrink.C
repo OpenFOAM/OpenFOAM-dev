@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1710,7 +1710,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
         }
     }
 
-    // Make sure displacement boundary conditions is uptodate with
+    // Make sure displacement boundary conditions is up-to-date with
     // internal field
     meshMover.setDisplacementPatchFields();
 

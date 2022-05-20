@@ -77,7 +77,7 @@ class regIOobject
         //- Return Istream
         Istream& readStream(const bool read = true);
 
-        //- Dissallow assignment
+        //- Disallow assignment
         void operator=(const regIOobject&);
 
 

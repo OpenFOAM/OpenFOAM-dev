@@ -207,7 +207,7 @@ public:
             //- Apply a constraint to an equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_CONSTRAINT_CONSTRAIN);
 
-            //- Apply contraint to a field
+            //- Apply constraint to a field
             FOR_ALL_FIELD_TYPES(DEFINE_FV_CONSTRAINT_CONSTRAIN_FIELD);
 
 

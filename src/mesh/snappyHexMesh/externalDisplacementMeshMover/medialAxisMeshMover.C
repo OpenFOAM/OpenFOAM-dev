@@ -2045,7 +2045,7 @@ bool Foam::medialAxisMeshMover::shrinkMesh
 
 
 
-    // Make sure displacement boundary conditions is uptodate with
+    // Make sure displacement boundary conditions is up-to-date with
     // internal field
     meshMover_.setDisplacementPatchFields();
 

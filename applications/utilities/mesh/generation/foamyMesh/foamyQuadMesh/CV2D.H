@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
 
     // Min cell size used in tolerances when inserting points for
     // boundary conforming.
-    // Also used to as the grid spacing usind in insertGrid.
+    // Also used as the grid spacing in insertGrid.
     minCellSize  0.05;
 
     // Feature angle used to inser feature points

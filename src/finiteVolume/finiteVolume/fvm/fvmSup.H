@@ -153,7 +153,7 @@ namespace fvm
         );
 
 
-    // Explict and implicit sources provided as a pair
+    // Explicit and implicit sources provided as a pair
 
         template<class Type>
         tmp<fvMatrix<Type>> S

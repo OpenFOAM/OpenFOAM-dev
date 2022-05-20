@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,9 +128,9 @@ Foam::string& Foam::stringOps::inplaceExpand
                     (
                         isalnum(*iter)
                      || *iter == '/' // For dictionary slash syntax
-                     || *iter == '!' // For dictionary slash systax
-                     || *iter == '.' // For dictionary dot systax
-                     || *iter == ':' // For dictionary dot systax
+                     || *iter == '!' // For dictionary slash syntax
+                     || *iter == '.' // For dictionary dot syntax
+                     || *iter == ':' // For dictionary dot syntax
                      || *iter == '_'
                     )
                 )
@@ -408,9 +408,9 @@ Foam::string& Foam::stringOps::inplaceExpand
                     (
                         isalnum(*iter)
                      || *iter == '/' // For dictionary slash syntax
-                     || *iter == '!' // For dictionary slash systax
-                     || *iter == '.' // For dictionary dot systax
-                     || *iter == ':' // For dictionary dot systax
+                     || *iter == '!' // For dictionary slash syntax
+                     || *iter == '.' // For dictionary dot syntax
+                     || *iter == ':' // For dictionary dot syntax
                      || *iter == '_'
                     )
                 )
@@ -547,9 +547,9 @@ Foam::string& Foam::stringOps::inplaceExpand
                     (
                         isalnum(*iter)
                      || *iter == '/' // For dictionary slash syntax
-                     || *iter == '!' // For dictionary slash systax
-                     || *iter == '.' // For dictionary dot systax
-                     || *iter == ':' // For dictionary dot systax
+                     || *iter == '!' // For dictionary slash syntax
+                     || *iter == '.' // For dictionary dot syntax
+                     || *iter == ':' // For dictionary dot syntax
                      || *iter == '_'
                     )
                 )

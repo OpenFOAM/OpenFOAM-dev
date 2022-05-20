@@ -140,7 +140,7 @@ class sampledSurfaces
         fileName outputPath_;
 
 
-        // Read from dictonary
+        // Read from dictionary
 
             //- Names of fields to sample
             wordList fields_;

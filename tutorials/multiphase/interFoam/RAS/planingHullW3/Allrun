@@ -7,8 +7,8 @@ usage () {
 Usage: ${0##*/} [OPTIONS]
 
 Options:
-  -i | -interface      no refinment in vertical direction of the mesh
-  -l | -local          mesh with local refinment
+  -i | -interface      no refinement in vertical direction of the mesh
+  -l | -local          mesh with local refinement
   -h | -help           help
 
 Ship hull simulation to demonstrate two different meshing strategies that can be

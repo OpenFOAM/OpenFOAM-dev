@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     fvMesh as subset of other mesh. Consists of one cell and all original
-    bounday faces. Useful when manipulating boundary data. Single internal
+    boundary faces. Useful when manipulating boundary data. Single internal
     cell only needed to be able to manipulate in a standard way.
 
 SourceFiles

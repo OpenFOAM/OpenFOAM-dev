@@ -92,7 +92,7 @@ protected:
         const fvMesh& mesh_;
 
 
-        // Read from dictonary
+        // Read from dictionary
 
             //- Names of fields to probe
             wordList fields_;

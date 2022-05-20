@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -279,7 +279,7 @@ void Foam::coupledPolyPatch::initOrder
 
         // Generate the face tolerances
         //
-        // !!! It is possble that a different metric would be more appropriate
+        // !!! It is possible that a different metric would be more appropriate
         // for this method than the tolerance that was developed when all faces
         // were being geometrically compared
         //

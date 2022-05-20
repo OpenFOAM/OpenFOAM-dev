@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -665,7 +665,7 @@ bool Foam::MPLICcell::singleCutCell
             cellInfo.isOwner()[facei]
         );
 
-        // Potentialy multiple cuts through the cell
+        // Potentially multiple cuts through the cell
         if (cutType == -1)
         {
             moreCutsPerFace = 1;
@@ -705,7 +705,7 @@ bool Foam::MPLICcell::singleCutCell
         appendSfCf(cutSf_, Cf, mag(cutSf_));
     }
 
-    // Potentialy multiple cuts through cell
+    // Potentially multiple cuts through cell
     if (cutOrientationDiffers || moreCutsPerFace)
     {
         return 0;

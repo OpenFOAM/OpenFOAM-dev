@@ -418,7 +418,7 @@ public:
             ) const;
 
 
-        // Procesor agglomeration. Note that the mesh and agglomeration is
+        // Processor agglomeration. Note that the mesh and agglomeration is
         // stored per fineLevel (even though it is the coarse level mesh that
         // has been agglomerated). This is just for convenience and consistency
         // with GAMGSolver notation.

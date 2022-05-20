@@ -276,7 +276,7 @@ Foam::label Foam::zoltanDecomp::decompose
     Zoltan_Set_Param(zz, "obj_weight_dim", name(nWeights).c_str());
     Zoltan_Set_Param(zz, "edge_weight_dim", "0");
 
-    // General default paramaters
+    // General default parameters
     Zoltan_Set_Param(zz, "debug_level", "0");
     Zoltan_Set_Param(zz, "imbalance_tol", "1.05");
 

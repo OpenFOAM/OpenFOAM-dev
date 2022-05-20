@@ -25,7 +25,7 @@ Class
     Foam::extendedCellToFaceStencil
 
 Description
-    Calculates/constains the extended cell-to-face stencil.
+    Calculates/contains the extended cell-to-face stencil.
 
     The stencil is a list of indices into either cells or boundary faces
     in a compact way. (element 0 is owner, 1 is neighbour). The index numbering

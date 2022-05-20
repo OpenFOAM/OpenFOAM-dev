@@ -1794,7 +1794,7 @@ bool Foam::hexRef8::matchHexShape
             const face& f = mesh_.faces()[facei];
 
             // Pick up any faces with only one level point.
-            // See if there are four of these where the commont point
+            // See if there are four of these where the common point
             // is a level+1 point. This common point is then the mid of
             // a split face.
 

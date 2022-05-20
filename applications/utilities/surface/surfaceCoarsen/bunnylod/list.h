@@ -77,7 +77,7 @@ void List<Type>::Add(Type t){
         }
         // int i;
         // for(i=0;i<num;i++) {
-                // dissallow duplicates
+                // disallow duplicates
         //      assert(element[i] != t);
         //}
         element[num++] = t;

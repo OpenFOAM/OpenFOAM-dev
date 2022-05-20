@@ -93,7 +93,7 @@ class cyclicPolyPatch
         mutable edgeList* coupledPointsPtr_;
 
         //- List of connected edges. e[0] is the edge on this patch,
-        //  e[1] the corresponding edge on the cyclic neigbour
+        //  e[1] the corresponding edge on the cyclic neighbour
         mutable edgeList* coupledEdgesPtr_;
 
         //- Data to pass from owner.initOrder to nbr.order

@@ -87,7 +87,7 @@ class sampledSets
         meshSearch searchEngine_;
 
 
-        // Read from dictonary
+        // Read from dictionary
 
             //- Names of fields to sample
             wordList fields_;

@@ -25,7 +25,7 @@ Class
     Foam::cyclicTransform
 
 Description
-    Cyclic plane tranformation.
+    Cyclic plane transformation.
 
 SourceFiles
     cyclicTransform.C
@@ -55,7 +55,7 @@ public:
     enum transformTypes
     {
         UNSPECIFIED,        // Unspecified -> automatic transformation
-        NONE,               // No tranformation
+        NONE,               // No transformation
         ROTATIONAL,         // Rotation around a coordinate axis
         TRANSLATIONAL       // Translation
     };
