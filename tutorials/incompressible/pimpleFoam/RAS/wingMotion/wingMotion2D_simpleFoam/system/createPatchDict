@@ -11,10 +11,7 @@ FoamFile
     class       dictionary;
     object      createPatchDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-pointSync false;
 
 patches
 (
@@ -22,7 +19,7 @@ patches
         // Name of new patch
         name front;
 
-        // Type of new patch
+        // Dictionary to construct new patch from
         patchInfo
         {
             type empty;
@@ -38,7 +35,7 @@ patches
         // Name of new patch
         name back;
 
-        // Type of new patch
+        // Dictionary to construct new patch from
         patchInfo
         {
             type empty;

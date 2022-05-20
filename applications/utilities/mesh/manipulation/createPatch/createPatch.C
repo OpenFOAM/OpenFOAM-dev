@@ -29,10 +29,10 @@ Description
     from existing patches or from a faceSet.
 
     More specifically it:
-    - creates new patches (from selected boundary faces). Synchronise faces
-      on coupled patches.
-    - synchronises points on coupled boundaries
-    - remove non-constraint patches with 0 faces
+    - Creates new patches from selected boundary faces
+    - Synchronises faces on coupled patches
+    - Synchronises points on coupled patches (optional)
+    - Removes non-constraint patches with no faces
 
 \*---------------------------------------------------------------------------*/
 
@@ -489,7 +489,7 @@ int main(int argc, char *argv[])
     const dictionary dict(systemDict("createPatchDict", args, mesh));
 
     // Whether to synchronise points
-    const Switch pointSync(dict.lookup("pointSync"));
+    const Switch pointSync(dict.lookupOrDefault("pointSync", false));
 
     // Whether to write cyclic matches to .OBJ files
     const Switch writeCyclicMatch

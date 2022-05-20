@@ -13,32 +13,38 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-pointSync false;
-
-writeCyclicMatch  false;
-
 patches
 (
     {
+        // Name of new patch
         name inlet;
 
+        // Dictionary to construct new patch from
         patchInfo
         {
             type patch;
         }
 
+        // How to construct: either from 'patches' or 'set'
         constructFrom set;
+
+        // If constructFrom = set : name of faceSet
         set inlet;
     }
     {
+        // Name of new patch
         name outlet;
 
+        // Dictionary to construct new patch from
         patchInfo
         {
             type patch;
         }
 
+        // How to construct: either from 'patches' or 'set'
         constructFrom set;
+
+        // If constructFrom = set : name of faceSet
         set outlet;
     }
 );

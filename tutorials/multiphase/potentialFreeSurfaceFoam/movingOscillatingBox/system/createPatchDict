@@ -11,18 +11,8 @@ FoamFile
     class       dictionary;
     object      createPatchDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Do a synchronisation of coupled points after creation of any patches.
-// Note: this does not work with points that are on multiple coupled patches
-//       with transformations (i.e. cyclics).
-pointSync false;
-
-// Optional: Write cyclic matches into .obj format; defaults to false.
-writeCyclicMatch  false;
-
-// Patches to create.
 patches
 (
     {

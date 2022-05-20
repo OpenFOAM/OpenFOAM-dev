@@ -13,40 +13,23 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// This application/dictionary controls:
-// - optional: create new patches from boundary faces (either given as
-//   a set of patches or as a faceSet)
-// - always: order faces on coupled patches such that they are opposite. This
-//   is done for all coupled faces, not just for any patches created.
-// - optional: synchronise points on coupled patches.
-// - always: remove zero-sized (non-coupled) patches (that were not added)
+// This application/dictionary does the following:
+// - Creates new patches from boundary faces, either specified as a set of
+//   existing patches or as a faceSet.
+// - Orders faces on coupled patches such that they are opposite. This is done
+//   for all coupled faces, not just for any patches created.
+// - Optional: Synchronises points on coupled patches.
+// - Removes any zero-sized non-coupled patches that were not added.
 
-// 1. Create cyclic:
-// - specify where the faces should come from
-// - specify the type of cyclic. If a rotational specify the rotationAxis
-//   and centre to make matching easier
-// - always create both halves in one invocation with correct 'neighbourPatch'
-//   setting.
-// - optionally pointSync true to guarantee points to line up.
-
-// 2. Correct incorrect cyclic:
-// This will usually fail upon loading:
-//  "face 0 area does not match neighbour 2 by 0.0100005%"
-//  " -- possible face ordering problem."
-// - in polyMesh/boundary file:
-//      - loosen matchTolerance of all cyclics to get case to load
-//      - or change patch type from 'cyclic' to 'patch'
-//        and regenerate cyclic as above
-
-// Do a synchronisation of coupled points after creation of any patches.
-// Note: this does not work with points that are on multiple coupled patches
-//       with transformations (i.e. cyclics).
+// Optional: Do a synchronisation of coupled points after creation of any
+// patches; defaults to false. Note: this does not work with points that are on
+// multiple coupled patches with transformations (i.e. cyclics).
 pointSync false;
 
 // Optional: Write cyclic matches into .obj format; defaults to false.
-writeCyclicMatch  false;
+writeCyclicMatch false;
 
-// Patches to create.
+// Patches to create
 patches
 (
     {
@@ -59,16 +42,15 @@ patches
             type cyclic;
             neighbourPatch cyc_half1;
 
-            // Optional: explicitly set transformation tensor.
-            // Used when matching and synchronising points.
+            // Optional: Explicitly set the transformation.
             transformType rotational;
             rotationAxis (1 0 0);
             rotationCentre (0 0 0);
             // transformType translational;
             // separation (1 0 0);
 
-            // Optional non-default tolerance to be able to define cyclics
-            // on bad meshes
+            // Optional: Non-default tolerance to prevent ordering failure
+            // errors on poor meshes
             // matchTolerance 1e-2;
         }
 
@@ -91,13 +73,12 @@ patches
             type cyclic;
             neighbourPatch cyc_half0;
 
-            // Optional: explicitly set transformation tensor.
-            // Used when matching and synchronising points.
+            // Optional: Explicitly set the transformation.
             transformType rotational;
             rotationAxis (1 0 0);
             rotationCentre (0 0 0);
             // transformType translational;
-            // separation (1 0 0);
+            // separation (-1 0 0);
         }
 
         // How to construct: either from 'patches' or 'set'
