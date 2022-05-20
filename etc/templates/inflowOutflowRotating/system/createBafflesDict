@@ -28,15 +28,23 @@ baffles
         {
             master
             {
-                name            AMI1;
-                type            cyclicAMI;
-                neighbourPatch  AMI2;
+                name            nonCouple1;
+                type            patch;
+                patchFields
+                {
+                    #include    "nonCouplePatchFields"
+                }
+                inGroups        (nonCouple);
             }
             slave
             {
-                name            AMI2;
-                type            cyclicAMI;
-                neighbourPatch  AMI1;
+                name            nonCouple2;
+                type            patch;
+                patchFields
+                {
+                    #include    "nonCouplePatchFields"
+                }
+                inGroups        (nonCouple);
             }
         }
     }

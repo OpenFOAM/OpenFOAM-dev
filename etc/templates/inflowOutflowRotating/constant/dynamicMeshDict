@@ -13,16 +13,19 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-mover           motionSolver;
+mover
+{
+    type            motionSolver;
 
-libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-motionSolver    solidBody;
+    motionSolver    solidBody;
 
-cellZone        rotatingZone;
+    cellZone        rotatingZone;
 
-solidBodyMotionFunction  rotatingMotion;
+    solidBodyMotionFunction  rotatingMotion;
 
-#include        "rotatingZoneProperties"
+    #include        "rotatingZoneProperties"
+}
 
 // ************************************************************************* //

@@ -9,23 +9,17 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      dynamicMeshDict;
+    location    "system";
+    object      createNonConformalCouplesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-mover
+fields true;
+
+NCC
 {
-    type            motionSolver;
-
-    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
-
-    motionSolver    solidBody;
-
-    cellZone        rotatingZone;
-
-    solidBodyMotionFunction  rotatingMotion;
-
-    #include        "rotatingZoneProperties"
+    patches         (nonCouple1 nonCouple2);
+    transform       none;
 }
 
 // ************************************************************************* //

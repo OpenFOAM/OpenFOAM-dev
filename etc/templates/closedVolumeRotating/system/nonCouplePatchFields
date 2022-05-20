@@ -9,23 +9,25 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      dynamicMeshDict;
+    object      nonCouplePatchFields;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-mover
+U
 {
-    type            motionSolver;
+    type            movingWallSlipVelocity;
+    value           uniform (0 0 0);
+}
 
-    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
+nut
+{
+    type            calculated;
+    value           uniform 0;
+}
 
-    motionSolver    solidBody;
-
-    cellZone        rotatingZone;
-
-    solidBodyMotionFunction  rotatingMotion;
-
-    #include        "rotatingZoneProperties"
+"(p|k|omega|epsilon)"
+{
+    type            zeroGradient;
 }
 
 // ************************************************************************* //
