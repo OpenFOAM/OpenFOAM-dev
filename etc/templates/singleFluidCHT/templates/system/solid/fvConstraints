@@ -9,19 +9,20 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      fvModels;
+    object      fvConstraints;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*
-fixedPower
+fixedTemperature
 {
-    type            heatSource;
+    type            fixedTemperatureConstraint;
     selectionMode   all;
 
-    Q               100;          // Set power (W)
+    mode            uniform;
+
+    temperature     constant 300; // Set temperature (K)
 }
 */
-
 
 //************************************************************************** //
