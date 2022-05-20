@@ -58,7 +58,8 @@ edges
 
 defaultPatch
 {
-    type wall;
+    name background;
+    type internal;
 }
 
 boundary

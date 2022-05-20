@@ -187,7 +187,8 @@ edges
 
 defaultPatch
 {
-    type patch;
+    name background;
+    type internal;
 }
 
 boundary
