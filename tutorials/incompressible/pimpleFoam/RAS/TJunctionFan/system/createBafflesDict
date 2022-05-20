@@ -13,92 +13,108 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Whether to convert internal faces only (so leave boundary faces intact).
-// This is only relevant if your face selection type can pick up boundary
-// faces.
 internalFacesOnly true;
 
 fields true;
 
-// Baffles to create.
 baffles
 {
     baffleFaces
     {
-        //- Use predefined faceZone to select faces and orientation.
         type        faceZone;
         zoneName    baffleFaces;
 
-        patchPairs
+        owner
         {
-            type            wall;
+            name        baffle0;
+            type        wall;
 
             patchFields
             {
                 epsilon
                 {
-                    type            epsilonWallFunction;
-                    Cmu             0.09;
-                    kappa           0.41;
-                    E               9.8;
-                    value           uniform 0;
+                    type        epsilonWallFunction;
+                    Cmu         0.09;
+                    kappa       0.41;
+                    E           9.8;
+                    value       uniform 0;
                 }
                 k
                 {
-                    type            kqRWallFunction;
-                    value           uniform 0;
+                    type        kqRWallFunction;
+                    value       uniform 0;
                 }
                 nut
                 {
-                    type            nutkWallFunction;
-                    Cmu             0.09;
-                    kappa           0.41;
-                    E               9.8;
-                    value           uniform 0;
+                    type        nutkWallFunction;
+                    Cmu         0.09;
+                    kappa       0.41;
+                    E           9.8;
+                    value       uniform 0;
                 }
                 nuTilda
                 {
-                    type            zeroGradient;
+                    type        zeroGradient;
                 }
                 p
                 {
-                    type            zeroGradient;
+                    type        zeroGradient;
                 }
                 U
                 {
-                    type            fixedValue;
-                    value           uniform (0 0 0);
+                    type        fixedValue;
+                    value       uniform (0 0 0);
                 }
+            }
+        }
+
+        neighbour
+        {
+            name        baffle1;
+            type        wall;
+
+            patchFields
+            {
+                $../../owner/patchFields;
             }
         }
     }
 
-
-
     cyclicFaces
     {
-        //- Select faces and orientation through a searchableSurface
         type        searchableSurface;
         surface     searchablePlate;
         origin      (0.099 -0.006 0.004);
         span        (0 0.012 0.012);
 
-        patchPairs
+        owner
         {
-            type            cyclic;
+            name        cyclic0;
+            type        cyclic;
+            neighbourPatch cyclic1;
 
-            //- Optional override of added patchfields. If not specified
-            //  any added patchfields are of type calculated.
             patchFields
             {
                 p
                 {
-                    type            fanPressureJump;
-                    patchType       cyclic;
-                    jump            uniform 0;
-                    value           uniform 0;
-                    jumpTable       polynomial 1((100 0));
+                    type        fanPressureJump;
+                    patchType   cyclic;
+                    jump        uniform 0;
+                    value       uniform 0;
+                    jumpTable   polynomial 1((100 0));
                 }
+            }
+        }
+
+        neighbour
+        {
+            name        cyclic1;
+            type        cyclic;
+            neighbourPatch cyclic0;
+
+            patchFields
+            {
+                $../../owner/patchFields;
             }
         }
     }

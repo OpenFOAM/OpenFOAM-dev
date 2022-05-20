@@ -13,30 +13,24 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Whether to convert internal faces only (so leave boundary faces intact).
-// This is only relevant if your face selection type can pick up boundary
-// faces.
 internalFacesOnly true;
 
 baffles
 {
     baffles
     {
-        //- Use predefined faceZone to select faces and orientation.
         type        faceZone;
         zoneName    rotorBlades;
 
-        patches
+        owner
         {
-            master
-            {
-                name        blades;
-                type        wall;
-            }
-            slave
-            {
-                $master;
-            }
+            name        blades;
+            type        wall;
+        }
+
+        neighbour
+        {
+            name        blades;
         }
     }
 }

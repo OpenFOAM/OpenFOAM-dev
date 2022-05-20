@@ -19,32 +19,30 @@ fields true;
 
 baffles
 {
-    baffleFaces
+    nonCouple
     {
         type        faceZone;
         zoneName    rotatingZone;
 
-        patches
+        owner
         {
-            master
+            name        nonCouple1;
+            type        patch;
+
+            patchFields
             {
-                name            nonCouple1;
-                type            patch;
-                patchFields
-                {
-                    #include    "nonCouplePatchFields"
-                }
-                inGroups        (nonCouple);
+                #include    "nonCouplePatchFields"
             }
-            slave
+        }
+
+        neighbour
+        {
+            name        nonCouple2;
+            type        patch;
+
+            patchFields
             {
-                name            nonCouple2;
-                type            patch;
-                patchFields
-                {
-                    #include    "nonCouplePatchFields"
-                }
-                inGroups        (nonCouple);
+                #include    "nonCouplePatchFields"
             }
         }
     }

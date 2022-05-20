@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,10 +45,13 @@ void Foam::fvMeshTools::setPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::Boundary& bfld =
-            fld.boundaryFieldRef();
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
-        if (patchFieldDict.found(fld.name()))
+        if
+        (
+            patchFieldDict.found(fld.name())
+        || !fvPatch::constraintType(mesh.boundary()[patchi].type())
+        )
         {
             bfld.set
             (
@@ -81,8 +84,7 @@ void Foam::fvMeshTools::setPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::Boundary& bfld =
-            fld.boundaryFieldRef();
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
         bfld[patchi] == value;
     }

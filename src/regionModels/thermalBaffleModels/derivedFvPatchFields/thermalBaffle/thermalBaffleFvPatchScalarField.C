@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thermalBaffleFvPatchScalarField.H"
-#include "emptyPolyPatch.H"
 #include "mappedWallPolyPatch.H"
+#include "symmetryPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -35,25 +35,256 @@ namespace Foam
 namespace compressible
 {
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * /
+
+bool thermalBaffleFvPatchScalarField::primary() const
+{
+    return patch().boundaryMesh().mesh().name() == polyMesh::defaultRegion;
+}
+
+
+bool thermalBaffleFvPatchScalarField::owner() const
+{
+    return
+        primary()
+     && patch().index() < patch().boundaryMesh()[nbrPatch_].index();
+}
+
+
+void thermalBaffleFvPatchScalarField::checkPatches() const
+{
+    if (!primary()) return;
+
+    const polyPatch& pp = patch().patch();
+    const polyPatch& nbrPp = patch().patch().boundaryMesh()[nbrPatch_];
+
+    // The patches should be of mapped type
+    auto checkPatchIsMapped = [&](const polyPatch& pp)
+    {
+        if (!isA<mappedPatchBase>(pp))
+        {
+            FatalErrorInFunction
+                << "Patch field of type \"" << typeName
+                << "\" specified for patch \"" << pp.name() << "\" of field \""
+                << internalField().name() << "\", but this patch is not of "
+                << "type \"" << mappedPatchBase::typeName << "\""
+                << exit(FatalError);
+        }
+    };
+    checkPatchIsMapped(pp);
+    checkPatchIsMapped(nbrPp);
+
+    const mappedPatchBase& mpp = refCast<const mappedPatchBase>(pp);
+    const mappedPatchBase nbrMpp = refCast<const mappedPatchBase>(nbrPp);
+
+    // The patches should sample a different region
+    auto checkPatchMapsDifferentRegion = [&](const mappedPatchBase& mpp)
+    {
+        if (mpp.sameRegion())
+        {
+            FatalErrorInFunction
+                << "Patch field of type \"" << typeName
+                << "\" specified for patch \"" << pp.name() << "\" of field \""
+                << internalField().name() << "\", but this patch maps to "
+                << "another patch in the same region. It should map to a "
+                << "different region; i.e., that of the thermal baffle model."
+                << exit(FatalError);
+        }
+    };
+    checkPatchMapsDifferentRegion(mpp);
+    checkPatchMapsDifferentRegion(nbrMpp);
+
+    // The sample region of this patch and it's neighbour should be the same,
+    // i.e., that of the thermal baffle model
+    if (mpp.sampleRegion() != nbrMpp.sampleRegion())
+    {
+        FatalErrorInFunction
+            << "Patch fields of type \"" << typeName
+            << "\" specified for patches \"" << pp.name() << "\" and \""
+            << nbrPp.name() << "\" of field \"" << internalField().name()
+            << "\", but these patches map to different regions \""
+            << mpp.sampleRegion() << "\" and \"" << nbrMpp.sampleRegion()
+            << ". They should map to the same region; i.e., that of the "
+            << "thermal baffle model."
+            << exit(FatalError);
+    }
+
+    // The sample patch of this patch and it's neighbour should be different,
+    // i.e., they should sample opposite ends of the thermal baffle mesh
+    if (mpp.samplePatch() == nbrMpp.samplePatch())
+    {
+        FatalErrorInFunction
+            << "Patch fields of type \"" << typeName
+            << "\" specified for patches \"" << pp.name() << "\" and \""
+            << nbrPp.name() << "\" of field \"" << internalField().name()
+            << "\", but these patches map to the same patch; \""
+            << mpp.samplePatch() << "\" of region \"" << mpp.sampleRegion()
+            << ". They should map to different patches, as these will become "
+            << "the patches at opposite ends of the extruded baffle mesh."
+            << exit(FatalError);
+    }
+}
+
+
+void thermalBaffleFvPatchScalarField::checkPatchFields() const
+{
+    if (!primary()) return;
+
+    const fvPatch& fvp = patch();
+    const fvPatch& nbrFvp = patch().boundaryMesh()[nbrPatch_];
+
+    const fvPatchScalarField& nbrTp =
+        nbrFvp.lookupPatchField<volScalarField, scalar>(internalField().name());
+
+    // The neighbour patch field should be of the same type
+    if (!isA<thermalBaffleFvPatchScalarField>(nbrTp))
+    {
+        FatalErrorInFunction
+            << "Patch field of type \"" << typeName
+            << "\" specified for patch \"" << fvp.name() << "\" of field \""
+            << internalField().name() << "\" but the field on the "
+            << "neighbouring patch \"" << nbrFvp.name()
+            << "\" is of a different type. Both should be of type \""
+            << typeName << "\"."
+            << exit(FatalError);
+    }
+
+    // The neighbour patch field's neighbour should be this patch
+    const thermalBaffleFvPatchScalarField& nbrTBp =
+        refCast<const thermalBaffleFvPatchScalarField>(nbrTp);
+    if (nbrTBp.nbrPatch_ != patch().name())
+    {
+        FatalErrorInFunction
+            << "Patch field of type \"" << typeName
+            << "\" on patch \"" << fvp.name() << "\" of field \""
+            << internalField().name() << "\" is specified to neighbour "
+            << "patch \"" << nbrPatch_ << "\", but this patch does not "
+            << "reciprocally neighbour patch \"" << fvp.name() << "\""
+            << exit(FatalError);
+    }
+}
+
+
+autoPtr<extrudePatchMesh>
+thermalBaffleFvPatchScalarField::initBaffleMesh() const
+{
+    if (!owner())
+    {
+        FatalErrorInFunction
+            << "Baffle mesh is only available to the owner patch in the "
+            << "primary region" << exit(FatalError);
+    }
+
+    checkPatches();
+
+    const fvMesh& mesh = patch().boundaryMesh().mesh();
+
+    const mappedPatchBase& mpp =
+        refCast<const mappedPatchBase>(patch().patch());
+
+    const mappedPatchBase nbrMpp =
+        refCast<const mappedPatchBase>
+        (patch().patch().boundaryMesh()[nbrPatch_]);
+
+    const List<word> patchNames
+    ({
+        mpp.samplePatch(),
+        nbrMpp.samplePatch(),
+        "sides"
+    });
+
+    const List<word> patchTypes
+    ({
+        mappedWallPolyPatch::typeName,
+        mappedWallPolyPatch::typeName,
+        symmetryPolyPatch::typeName
+    });
+
+    List<dictionary> patchDicts(3);
+    forAll(patchDicts, patchi)
+    {
+        patchDicts[patchi].set("nFaces", 0);
+        patchDicts[patchi].set("startFace", 0);
+    }
+    patchDicts[0].add("sampleMode", mpp.sampleModeNames_[mpp.mode()]);
+    patchDicts[0].add("sampleRegion", mesh.name());
+    patchDicts[0].add("samplePatch", patch().name());
+    patchDicts[1].add("sampleMode", mpp.sampleModeNames_[nbrMpp.mode()]);
+    patchDicts[1].add("sampleRegion", mesh.name());
+    patchDicts[1].add("samplePatch", nbrPatch_);
+
+    List<polyPatch*> patchPtrs(3);
+    forAll(patchPtrs, patchi)
+    {
+        patchPtrs[patchi] = polyPatch::New
+        (
+            patchTypes[patchi],
+            patchNames[patchi],
+            patchDicts[patchi],
+            patchi,
+            mesh.boundaryMesh()
+        ).ptr();
+    }
+
+    dictionary dict(dict_);
+    dict.add("columnCells", false);
+
+    return
+        autoPtr<extrudePatchMesh>
+        (
+            new extrudePatchMesh
+            (
+                mesh,
+                patch(),
+                dict,
+                mpp.sampleRegion(),
+                patchPtrs
+            )
+        );
+}
+
+
+autoPtr<regionModels::thermalBaffleModel>
+thermalBaffleFvPatchScalarField::initBaffle() const
+{
+    if (!owner())
+    {
+        FatalErrorInFunction
+            << "Baffle model is only available to the owner patch in the "
+            << "primary region" << exit(FatalError);
+    }
+
+    checkPatches();
+
+    const fvMesh& mesh = patch().boundaryMesh().mesh();
+
+    const mappedPatchBase& mpp =
+        refCast<const mappedPatchBase>(patch().patch());
+
+    dictionary dict(dict_);
+    dict.add("regionName", mpp.sampleRegion());
+
+    return regionModels::thermalBaffleModel::New(mesh, dict);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-thermalBaffleFvPatchScalarField::
-thermalBaffleFvPatchScalarField
+thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
     turbulentTemperatureRadCoupledMixedFvPatchScalarField(p, iF),
-    owner_(false),
-    baffle_(),
     dict_(dictionary::null),
-    extrudeMeshPtr_()
+    nbrPatch_(word::null),
+    baffleMeshPtr_(),
+    bafflePtr_()
 {}
 
 
-thermalBaffleFvPatchScalarField::
-thermalBaffleFvPatchScalarField
+thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -61,44 +292,14 @@ thermalBaffleFvPatchScalarField
 )
 :
     turbulentTemperatureRadCoupledMixedFvPatchScalarField(p, iF, dict),
-    owner_(false),
-    baffle_(),
     dict_(dict),
-    extrudeMeshPtr_()
-{
-
-    const fvMesh& thisMesh = patch().boundaryMesh().mesh();
-
-    typedef regionModels::thermalBaffleModel baffle;
-
-    if (thisMesh.name() == polyMesh::defaultRegion)
-    {
-        const word regionName =
-            dict_.lookupOrDefault<word>("regionName", "none");
-
-        const word baffleName("3DBaffle" + regionName);
-
-        if
-        (
-            !thisMesh.time().foundObject<fvMesh>(regionName)
-         && regionName != "none"
-        )
-        {
-            if (extrudeMeshPtr_.empty())
-            {
-                createPatchMesh();
-            }
-
-            baffle_.reset(baffle::New(thisMesh, dict).ptr());
-            owner_ = true;
-            baffle_->rename(baffleName);
-        }
-    }
-}
+    nbrPatch_(primary() ? dict.lookup<word>("neighbourPatch") : word::null),
+    baffleMeshPtr_(owner() ? initBaffleMesh().ptr() : nullptr),
+    bafflePtr_(owner() ? initBaffle().ptr() : nullptr)
+{}
 
 
-thermalBaffleFvPatchScalarField::
-thermalBaffleFvPatchScalarField
+thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 (
     const thermalBaffleFvPatchScalarField& ptf,
     const fvPatch& p,
@@ -113,37 +314,33 @@ thermalBaffleFvPatchScalarField
         iF,
         mapper
     ),
-    owner_(ptf.owner_),
-    baffle_(),
     dict_(ptf.dict_),
-    extrudeMeshPtr_()
+    baffleMeshPtr_(),
+    bafflePtr_()
 {}
 
 
-thermalBaffleFvPatchScalarField::
-thermalBaffleFvPatchScalarField
+thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 (
     const thermalBaffleFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
     turbulentTemperatureRadCoupledMixedFvPatchScalarField(ptf, iF),
-    owner_(ptf.owner_),
-    baffle_(),
     dict_(ptf.dict_),
-    extrudeMeshPtr_()
+    baffleMeshPtr_(),
+    bafflePtr_()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
 
 void thermalBaffleFvPatchScalarField::autoMap
 (
     const fvPatchFieldMapper& m
 )
 {
-    mixedFvPatchScalarField::autoMap(m);
+    turbulentTemperatureRadCoupledMixedFvPatchScalarField::autoMap(m);
 }
 
 
@@ -153,95 +350,7 @@ void thermalBaffleFvPatchScalarField::rmap
     const labelList& addr
 )
 {
-    mixedFvPatchScalarField::rmap(ptf, addr);
-}
-
-
-void thermalBaffleFvPatchScalarField::createPatchMesh()
-{
-
-    const fvMesh& thisMesh = patch().boundaryMesh().mesh();
-
-    word regionName = dict_.lookup("regionName");
-
-    List<polyPatch*> regionPatches(3);
-    List<word> patchNames(regionPatches.size());
-    List<word> patchTypes(regionPatches.size());
-    List<dictionary> dicts(regionPatches.size());
-
-    patchNames[bottomPatchID] = word("bottom");
-    patchNames[sidePatchID] = word("side");
-    patchNames[topPatchID] = word("top");
-
-    patchTypes[bottomPatchID] = mappedWallPolyPatch::typeName;
-    patchTypes[topPatchID] = mappedWallPolyPatch::typeName;
-
-    if (readBool(dict_.lookup("columnCells")))
-    {
-        patchTypes[sidePatchID] = emptyPolyPatch::typeName;
-    }
-    else
-    {
-        patchTypes[sidePatchID] = polyPatch::typeName;
-    }
-
-    const mappedPatchBase& mpp =
-        refCast<const mappedPatchBase>(patch().patch());
-
-    const word coupleGroup(mpp.coupleGroup());
-
-    wordList inGroups(1);
-    inGroups[0] = coupleGroup;
-
-    dicts[bottomPatchID].add("coupleGroup", coupleGroup);
-    dicts[bottomPatchID].add("inGroups", inGroups);
-    dicts[bottomPatchID].add("sampleMode", mpp.sampleModeNames_[mpp.mode()]);
-
-    const label sepPos = coupleGroup.find('_');
-
-    const word coupleGroupSlave = coupleGroup(0, sepPos) + "_slave";
-
-    inGroups[0] = coupleGroupSlave;
-    dicts[topPatchID].add("coupleGroup", coupleGroupSlave);
-    dicts[topPatchID].add("inGroups", inGroups);
-    dicts[topPatchID].add("sampleMode", mpp.sampleModeNames_[mpp.mode()]);
-
-
-    forAll(regionPatches, patchi)
-    {
-        dictionary&  patchDict = dicts[patchi];
-        patchDict.set("nFaces", 0);
-        patchDict.set("startFace", 0);
-
-        regionPatches[patchi] = polyPatch::New
-        (
-            patchTypes[patchi],
-            patchNames[patchi],
-            dicts[patchi],
-            patchi,
-            thisMesh.boundaryMesh()
-        ).ptr();
-    }
-
-    extrudeMeshPtr_.reset
-    (
-        new extrudePatchMesh
-        (
-            thisMesh,
-            patch(),
-            dict_,
-            regionName,
-            regionPatches
-        )
-    );
-
-    if (extrudeMeshPtr_.empty())
-    {
-        WarningInFunction
-            << "Specified IOobject::MUST_READ_IF_MODIFIED but class"
-            << " patchMeshPtr not set."
-            << endl;
-    }
+    turbulentTemperatureRadCoupledMixedFvPatchScalarField::rmap(ptf, addr);
 }
 
 
@@ -252,11 +361,11 @@ void thermalBaffleFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const fvMesh& thisMesh = patch().boundaryMesh().mesh();
+    checkPatchFields();
 
-    if (owner_ && thisMesh.name() == polyMesh::defaultRegion)
+    if (owner())
     {
-        baffle_->evolve();
+        bafflePtr_->evolve();
     }
 
     turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs();
@@ -267,38 +376,17 @@ void thermalBaffleFvPatchScalarField::write(Ostream& os) const
 {
     turbulentTemperatureRadCoupledMixedFvPatchScalarField::write(os);
 
-    const fvMesh& thisMesh = patch().boundaryMesh().mesh();
-
-    if (thisMesh.name() == polyMesh::defaultRegion && owner_)
+    if (owner())
     {
-
-        writeKeyword(os, "extrudeModel");
-        os << word(dict_.lookup("extrudeModel"))
-           << token::END_STATEMENT << nl;
-
-        writeKeyword(os, "nLayers");
-        os << dict_.lookup<label>("nLayers")
-           << token::END_STATEMENT << nl;
-
-        writeKeyword(os, "expansionRatio");
-        os << dict_.lookup<scalar>("expansionRatio")
-           << token::END_STATEMENT << nl;
-
-        writeKeyword(os, "columnCells");
-        os << readBool(dict_.lookup("columnCells"))
-           << token::END_STATEMENT << nl;
-
-        word extrudeModel(word(dict_.lookup("extrudeModel")) + "Coeffs");
-        writeKeyword(os, extrudeModel);
-        os << dict_.subDict(extrudeModel) << nl;
-
-        word regionName = dict_.lookup("regionName");
-        writeKeyword(os, "regionName") << regionName
-            << token::END_STATEMENT << nl;
-
-        writeKeyword(os, "radiation");
-        os << dict_.subDict("radiation") << nl;
-   }
+        forAllConstIter(dictionary, dict_, iter)
+        {
+            os << *iter;
+        }
+    }
+    else if (primary())
+    {
+        writeEntry(os, "neighbourPatch", nbrPatch_);
+    }
 }
 
 
@@ -315,6 +403,5 @@ makePatchTypeField
 
 } // End namespace compressible
 } // End namespace Foam
-
 
 // ************************************************************************* //

@@ -13,36 +13,31 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Whether to convert internal faces only (so leave boundary faces intact).
-// This is only relevant if your face selection type can pick up boundary
-// faces.
+// Whether to convert internal faces only, and ignore any boundary faces that
+// are in the selection
 internalFacesOnly true;
 
-// Example creating two opposing patches named "nonCouple1" and "nonCouple2",
-// both of which are included in the "nonCouple" group. These patches can then
-// be coupled afterwards by calling "createNonConformalCouples -overwrite
-// nonCouple1 nonCouple2".
+// Example creating two opposing patches named 'nonCouple1' and 'nonCouple2',
+// both of which are included in the 'nonCouple' group. These patches can then
+// be coupled afterwards by calling 'createNonConformalCouples -overwrite
+// nonCouple1 nonCouple2'.
 baffles
 {
-    rotating
+    nonCouple
     {
         type        faceZone;
         zoneName    rotatingZone;
 
-        patches
+        owner
         {
-            master
-            {
-                name            nonCouple1;
-                type            patch;
-                inGroups        (nonCouple);
-            }
-            slave
-            {
-                name            nonCouple2;
-                type            patch;
-                inGroups        (nonCouple);
-            }
+            name        nonCouple1;
+            type        patch;
+        }
+
+        neighbour
+        {
+            name        nonCouple2;
+            type        patch;
         }
     }
 }

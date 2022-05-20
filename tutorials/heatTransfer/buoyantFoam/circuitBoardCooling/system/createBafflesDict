@@ -13,35 +13,81 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Whether to convert internal faces only (so leave boundary faces intact).
-// This is only relevant if your face selection type can pick up boundary
-// faces.
 internalFacesOnly true;
 
 fields true;
 
-// Baffles to create.
 baffles
 {
     baffleFacesThermoBaffle1D
     {
-        //- Use predefined faceZone to select faces and orientation.
         type        searchableSurface;
         surface     triSurfaceMesh;
         name        baffle1D.stl;
 
-        patchPairs
+        owner
         {
-            type            wall;
+            name        baffle1D0;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            samplePatch baffle1D1;
+
             patchFields
             {
                 #include "./include/wallBafflePatches"
-                #include "./include/1DBaffle/1DTemperatureMasterBafflePatches"
+
+                T
+                {
+                    type        compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
+                    value       uniform 300;
+
+                    // Baffle thickness [m]
+                    thickness   uniform 0.005;
+
+                    // Baffle source heat flux [W/m^2]
+                    qs          uniform 100;
+
+                    // Baffle physical properties
+                    specie
+                    {
+                        molWeight   20;
+                    }
+                    transport
+                    {
+                        kappa       1;
+                    }
+                    thermodynamics
+                    {
+                        Hf          0;
+                        Cv          10;
+                    }
+                    equationOfState
+                    {
+                        rho         10;
+                    }
+                }
+            }
+        }
+
+        neighbour
+        {
+            name        baffle1D1;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            samplePatch baffle1D0;
+
+            patchFields
+            {
+                #include "./include/wallBafflePatches"
+
+                T
+                {
+                    type        compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
+                    value       uniform 300;
+                }
             }
         }
     }
-
-    #include "./include/baffle3DSetup"
 
     baffleFacesThermoBaffle3D
     {
@@ -49,17 +95,62 @@ baffles
         surface     triSurfaceMesh;
         name        baffle3D.stl;
 
-        patchPairs
+        owner
         {
-            type            mappedWall;
-            sampleMode      nearestPatchFace;
-            // Put master and slave patch in same group (default on)
-            // Otherwise makeup group names xxx_master and xxx_slave
-            sameGroup       off;
+            name        baffle3D0;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            sampleRegion baffle3DRegion;
+            samplePatch baffle3D0;
+
             patchFields
             {
                 #include "./include/wallBafflePatches"
-                #include "./include/3DBaffle/3DTemperatureMasterBafflePatches"
+
+                T
+                {
+                    type        compressible::thermalBaffle;
+                    neighbourPatch baffle3D1;
+                    value       uniform 300;
+
+                    // Baffle geometry and mesh properties
+                    extrudeModel linearNormal;
+                    nLayers      50;
+                    expansionRatio 1;
+                    linearNormalCoeffs
+                    {
+                        thickness   0.02;
+                    }
+
+                    // Baffle radiation properties
+                    radiation
+                    {
+                        radiationModel opaqueSolid;
+                        absorptionEmissionModel none;
+                        scatterModel none;
+                    }
+                }
+            }
+        }
+
+        neighbour
+        {
+            name        baffle3D1;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            sampleRegion baffle3DRegion;
+            samplePatch baffle3D1;
+
+            patchFields
+            {
+                #include "./include/wallBafflePatches"
+
+                T
+                {
+                    type        compressible::thermalBaffle;
+                    neighbourPatch baffle3D0;
+                    value       uniform 300;
+                }
             }
         }
     }

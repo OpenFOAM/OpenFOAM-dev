@@ -13,31 +13,27 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Whether to convert internal faces only (so leave boundary faces intact).
-// This is only relevant if your face selection type can pick up boundary
-// faces.
+// Whether to convert internal faces only, and ignore any boundary faces that
+// are in the selection
 internalFacesOnly true;
 
-// Example using "blades" as name of baffle patch
+// Example creating a wall baffle called 'blades'
 baffles
 {
-    baffles  // group name
+    baffles // <-- group name
     {
-        //- Use predefined faceZone to select faces and orientation.
+        // Use a zone to select faces and orientation
         type        faceZone;
         zoneName    blades;
 
-        patches
+        owner
         {
-            master
-            {
-                name        blades;  // patch name
-                type        wall;
-            }
-            slave
-            {
-                $master;
-            }
+            name        blades; // <-- patch name
+            type        wall;
+        }
+        neighbour
+        {
+            $owner;
         }
     }
 }
