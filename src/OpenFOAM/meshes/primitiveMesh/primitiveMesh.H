@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -525,6 +525,9 @@ public:
 
                 //- Return old points for mesh motion
                 virtual const pointField& oldPoints() const = 0;
+
+                //- Return old cell centres for mesh motion
+                virtual const pointField& oldCellCentres() const = 0;
 
 
             // Derived mesh data

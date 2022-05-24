@@ -1141,18 +1141,6 @@ const Foam::pointField& Foam::polyMesh::points() const
 }
 
 
-bool Foam::polyMesh::upToDatePoints(const regIOobject& io) const
-{
-    return io.upToDate(points_);
-}
-
-
-void Foam::polyMesh::setUpToDatePoints(regIOobject& io) const
-{
-    io.eventNo() = points_.eventNo()+1;
-}
-
-
 const Foam::faceList& Foam::polyMesh::faces() const
 {
     if (clearedPrimitives_)
@@ -1213,6 +1201,18 @@ const Foam::pointField& Foam::polyMesh::oldCellCentres() const
     }
 
     return oldCellCentresPtr_();
+}
+
+
+bool Foam::polyMesh::upToDatePoints(const regIOobject& io) const
+{
+    return io.upToDate(points_);
+}
+
+
+void Foam::polyMesh::setUpToDatePoints(regIOobject& io) const
+{
+    io.eventNo() = points_.eventNo()+1;
 }
 
 

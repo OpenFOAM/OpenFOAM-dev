@@ -415,29 +415,32 @@ public:
 
         // Access
 
-            //- Return raw points
-            virtual const pointField& points() const;
+            // Primitive mesh data
+
+                //- Return raw points
+                virtual const pointField& points() const;
+
+                //- Return raw faces
+                virtual const faceList& faces() const;
+
+                //- Return face owner
+                virtual const labelList& faceOwner() const;
+
+                //- Return face neighbour
+                virtual const labelList& faceNeighbour() const;
+
+                //- Return old points for mesh motion
+                virtual const pointField& oldPoints() const;
+
+                //- Return old cell centres for mesh motion
+                virtual const pointField& oldCellCentres() const;
+
 
             //- Return true if io is up-to-date with points
-            virtual bool upToDatePoints(const regIOobject& io) const;
+            bool upToDatePoints(const regIOobject& io) const;
 
             //- Set io to be up-to-date with points
-            virtual void setUpToDatePoints(regIOobject& io) const;
-
-            //- Return raw faces
-            virtual const faceList& faces() const;
-
-            //- Return face owner
-            virtual const labelList& faceOwner() const;
-
-            //- Return face neighbour
-            virtual const labelList& faceNeighbour() const;
-
-            //- Return old points for mesh motion
-            virtual const pointField& oldPoints() const;
-
-            //- Return old points for mesh motion
-            virtual const pointField& oldCellCentres() const;
+            void setUpToDatePoints(regIOobject& io) const;
 
             //- Return boundary mesh
             const polyBoundaryMesh& boundaryMesh() const
@@ -643,7 +646,7 @@ public:
             );
 
 
-        //  Storage management
+        // Storage management
 
             //- Clear geometry
             void clearGeom();

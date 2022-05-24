@@ -467,10 +467,10 @@ public:
 
             //- Update the mesh for topology change, mesh to mesh mapping
             //  or redistribution
-            virtual bool update();
+            bool update();
 
             //- Move the mesh
-            virtual bool move();
+            bool move();
 
             //- Clear all geometry and addressing
             void clearOut();
@@ -503,7 +503,7 @@ public:
             );
 
             //- Map all fields in time using given map.
-            virtual void mapFields(const polyTopoChangeMap& map);
+            void mapFields(const polyTopoChangeMap& map);
 
             //- Add/insert single patch. If validBoundary the new situation
             //  is consistent across processors.
