@@ -129,7 +129,7 @@ protected:
         //- Main driver to calculate the turbulence fields
         virtual void calculateTurbulenceFields
         (
-            const momentumTransportModel& turbulence,
+            const momentumTransportModel& turbModel,
             scalarField& G0,
             scalarField& omega0
         );
@@ -137,7 +137,7 @@ protected:
         //- Calculate the omega and G
         virtual void calculate
         (
-            const momentumTransportModel& turbulence,
+            const momentumTransportModel& turbModel,
             const List<scalar>& cornerWeights,
             const fvPatch& patch,
             scalarField& G,

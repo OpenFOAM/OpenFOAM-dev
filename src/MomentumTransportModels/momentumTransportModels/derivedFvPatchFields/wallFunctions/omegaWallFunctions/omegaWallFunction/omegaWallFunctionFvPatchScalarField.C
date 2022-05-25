@@ -152,6 +152,11 @@ void omegaWallFunctionFvPatchScalarField::calculateTurbulenceFields
     scalarField& omega0
 )
 {
+    // Ask for the wall distance in advance. Some processes may not have any
+    // corner weights, so we cannot allow functions inside the if statements
+    // below to trigger the wall distance calculation.
+    turbModel.y();
+
     // accumulate all of the G and omega contributions
     forAll(cornerWeights_, patchi)
     {

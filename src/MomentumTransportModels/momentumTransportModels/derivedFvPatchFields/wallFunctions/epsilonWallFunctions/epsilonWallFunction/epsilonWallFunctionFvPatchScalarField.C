@@ -141,7 +141,7 @@ Foam::epsilonWallFunctionFvPatchScalarField::epsilonPatch(const label patchi)
 
 void Foam::epsilonWallFunctionFvPatchScalarField::calculateTurbulenceFields
 (
-    const momentumTransportModel& turbulence,
+    const momentumTransportModel& turbModel,
     scalarField& G0,
     scalarField& epsilon0
 )
@@ -149,7 +149,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::calculateTurbulenceFields
     // Ask for the wall distance in advance. Some processes may not have any
     // corner weights, so we cannot allow functions inside the if statements
     // below to trigger the wall distance calculation.
-    turbulence.y();
+    turbModel.y();
 
     // Accumulate all of the G and epsilon contributions
     forAll(cornerWeights_, patchi)
@@ -160,7 +160,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::calculateTurbulenceFields
 
             const List<scalar>& w = cornerWeights_[patchi];
 
-            epf.calculate(turbulence, w, epf.patch(), G0, epsilon0);
+            epf.calculate(turbModel, w, epf.patch(), G0, epsilon0);
         }
     }
 

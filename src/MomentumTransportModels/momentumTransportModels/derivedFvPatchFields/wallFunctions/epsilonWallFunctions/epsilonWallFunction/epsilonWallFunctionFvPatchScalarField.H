@@ -123,7 +123,7 @@ protected:
         //- Main driver to calculate the turbulence fields
         virtual void calculateTurbulenceFields
         (
-            const momentumTransportModel& turbulence,
+            const momentumTransportModel& turbModel,
             scalarField& G0,
             scalarField& epsilon0
         );
@@ -131,7 +131,7 @@ protected:
         //- Calculate the epsilon and G
         virtual void calculate
         (
-            const momentumTransportModel& turbulence,
+            const momentumTransportModel& turbModel,
             const List<scalar>& cornerWeights,
             const fvPatch& patch,
             scalarField& G,
