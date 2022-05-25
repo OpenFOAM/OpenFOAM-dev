@@ -297,6 +297,7 @@ void Foam::fvMeshStitchers::moving::internalFaceCorrectMeshPhi
     fvMeshSubset subsetter(mesh());
     subsetter.setLargeCellSubset(ownerCoupledCellSet());
     const fvMesh& subMesh = subsetter.subMesh();
+    subMesh.deltaCoeffs();
 
     // Determine the disconnected regions of the sub mesh
     const regionSplit subMeshRegions(subMesh);
