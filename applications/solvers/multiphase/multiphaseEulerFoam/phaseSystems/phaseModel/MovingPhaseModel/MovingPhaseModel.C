@@ -464,7 +464,12 @@ Foam::MovingPhaseModel<BasePhaseModel>::DUDt() const
     {
         const tmp<surfaceScalarField> taphi(fvc::absolute(phi_, U_));
         const surfaceScalarField& aphi(taphi());
-        DUDt_ = fvc::ddt(U_) + fvc::div(aphi, U_) - fvc::div(aphi)*U_;
+        DUDt_ =
+            new volVectorField
+            (
+                IOobject::groupName("DUDt", this->name()),
+                fvc::ddt(U_) + fvc::div(aphi, U_) - fvc::div(aphi)*U_
+            );
     }
 
     return tmp<volVectorField>(DUDt_());
@@ -477,7 +482,12 @@ Foam::MovingPhaseModel<BasePhaseModel>::DUDtf() const
 {
     if (!DUDtf_.valid())
     {
-        DUDtf_ = byDt(phi_ - phi_.oldTime());
+        DUDtf_ =
+            new surfaceScalarField
+            (
+                IOobject::groupName("DUDtf", this->name()),
+                byDt(phi_ - phi_.oldTime())
+            );
     }
 
     return tmp<surfaceScalarField>(DUDtf_());
@@ -498,11 +508,12 @@ Foam::MovingPhaseModel<BasePhaseModel>::K() const
 {
     if (!K_.valid())
     {
-        K_ = volScalarField::New
-        (
-            IOobject::groupName("K", this->name()),
-            0.5*magSqr(this->U())
-        );
+        K_ =
+            new volScalarField
+            (
+                IOobject::groupName("K", this->name()),
+                0.5*magSqr(this->U())
+            );
     }
 
     return tmp<volScalarField>(K_());
