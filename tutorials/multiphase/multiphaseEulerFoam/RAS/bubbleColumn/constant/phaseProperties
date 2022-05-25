@@ -16,7 +16,7 @@ FoamFile
 
 type    basicMultiphaseSystem;
 
-phases (air water);
+phases  (air water);
 
 air
 {

@@ -88,13 +88,13 @@ class mixtureKEpsilon
     // Private Data
 
         mutable mixtureKEpsilon<BasicMomentumTransportModel>
-            *liquidTurbulencePtr_;
+            *gasTurbulencePtr_;
 
 
     // Private Member Functions
 
         //- Return the turbulence model for the other phase
-        mixtureKEpsilon<BasicMomentumTransportModel>& liquidTurbulence() const;
+        mixtureKEpsilon<BasicMomentumTransportModel>& gasTurbulence() const;
 
 
 protected:
@@ -126,14 +126,6 @@ protected:
 
 
     // Protected Member Functions
-
-        wordList epsilonBoundaryTypes(const volScalarField& epsilon) const;
-
-        void correctInletOutlet
-        (
-            volScalarField& vsf,
-            const volScalarField& refVsf
-        ) const;
 
         void initMixtureFields();
 

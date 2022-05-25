@@ -67,7 +67,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
         viscosity
     ),
 
-    liquidTurbulencePtr_(nullptr),
+    gasTurbulencePtr_(nullptr),
 
     Cmu_
     (
@@ -174,62 +174,77 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
     {
         this->printCoeffs(type);
     }
-}
 
+    const phaseModel& phase = refCast<const phaseModel>(this->properties());
 
-template<class BasicMomentumTransportModel>
-wordList mixtureKEpsilon<BasicMomentumTransportModel>::epsilonBoundaryTypes
-(
-    const volScalarField& epsilon
-) const
-{
-    const volScalarField::Boundary& ebf = epsilon.boundaryField();
-
-    wordList ebt = ebf.types();
-
-    forAll(ebf, patchi)
+    // Construct mixture properties only for liquid phase (phase 1)
+    if (phase.index() == 1)
     {
-        if (isType<epsilonWallFunctionFvPatchScalarField>(ebf[patchi]))
-        {
-            ebt[patchi] = epsilonmWallFunctionFvPatchScalarField::typeName;
-        }
-        else if (isA<fixedValueFvPatchScalarField>(ebf[patchi]))
-        {
-            ebt[patchi] = fixedValueFvPatchScalarField::typeName;
-        }
-    }
-
-    return ebt;
-}
-
-
-template<class BasicMomentumTransportModel>
-void mixtureKEpsilon<BasicMomentumTransportModel>::correctInletOutlet
-(
-    volScalarField& vsf,
-    const volScalarField& refVsf
-) const
-{
-    volScalarField::Boundary& bf = vsf.boundaryFieldRef();
-    const volScalarField::Boundary& refBf =
-        refVsf.boundaryField();
-
-    forAll(bf, patchi)
-    {
-        if
+        km_.set
         (
-            isA<inletOutletFvPatchScalarField>(bf[patchi])
-         && isA<inletOutletFvPatchScalarField>(refBf[patchi])
-        )
-        {
-            refCast<inletOutletFvPatchScalarField>
-            (bf[patchi]).refValue() =
-            refCast<const inletOutletFvPatchScalarField>
-            (refBf[patchi]).refValue();
+            new volScalarField
+            (
+                IOobject
+                (
+                    "km",
+                    this->runTime_.timeName(),
+                    this->mesh_,
+                    IOobject::MUST_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                this->mesh_
+            )
+        );
 
-            refCast<inletOutletFvPatchScalarField>
-            (bf[patchi]).phiName() = "phim";
-        }
+        epsilonm_.set
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "epsilonm",
+                    this->runTime_.timeName(),
+                    this->mesh_,
+                    IOobject::MUST_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                this->mesh_
+            )
+        );
+
+        Ct2_.set
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "Ct2",
+                    this->runTime_.timeName(),
+                    this->mesh_,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::AUTO_WRITE
+                ),
+                this->mesh_,
+                dimensionedScalar(dimless, 0)
+            )
+        );
+
+        rhom_.set
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "rhom",
+                    this->runTime_.timeName(),
+                    this->mesh_,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::AUTO_WRITE
+                ),
+                this->mesh_,
+                dimensionedScalar(dimDensity, 0)
+            )
+        );
     }
 }
 
@@ -237,91 +252,14 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correctInletOutlet
 template<class BasicMomentumTransportModel>
 void mixtureKEpsilon<BasicMomentumTransportModel>::initMixtureFields()
 {
-    if (rhom_.valid()) return;
+    static bool initialised = false;
 
-    // Local references to gas-phase properties
-    const volScalarField& kg = this->k_;
-    const volScalarField& epsilong = this->epsilon_;
-
-    // Local references to liquid-phase properties
-    mixtureKEpsilon<BasicMomentumTransportModel>& turbc =
-        this->liquidTurbulence();
-    const volScalarField& kl = turbc.k_;
-    const volScalarField& epsilonl = turbc.epsilon_;
-
-    word startTimeName
-    (
-        this->runTime_.timeName(this->runTime_.startTime().value())
-    );
-
-    Ct2_.set
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "Ct2",
-                startTimeName,
-                this->mesh_,
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            ),
-            Ct2()
-        )
-    );
-
-    rhom_.set
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "rhom",
-                startTimeName,
-                this->mesh_,
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            ),
-            rhom()
-        )
-    );
-
-    km_.set
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "km",
-                startTimeName,
-                this->mesh_,
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            ),
-            mix(kl, kg),
-            kl.boundaryField().types()
-        )
-    );
-    correctInletOutlet(km_(), kl);
-
-    epsilonm_.set
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "epsilonm",
-                startTimeName,
-                this->mesh_,
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            ),
-            mix(epsilonl, epsilong),
-            epsilonBoundaryTypes(epsilonl)
-        )
-    );
-
-    correctInletOutlet(epsilonm_(), epsilonl);
+    if (!initialised)
+    {
+        Ct2_() = Ct2();
+        rhom_() = rhom();
+        initialised = true;
+    }
 }
 
 
@@ -360,17 +298,18 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correctNut()
 
 template<class BasicMomentumTransportModel>
 mixtureKEpsilon<BasicMomentumTransportModel>&
-mixtureKEpsilon<BasicMomentumTransportModel>::liquidTurbulence() const
+mixtureKEpsilon<BasicMomentumTransportModel>::gasTurbulence() const
 {
-    if (!liquidTurbulencePtr_)
+    if (!gasTurbulencePtr_)
     {
         const volVectorField& U = this->U_;
 
-        const phaseModel& gas = refCast<const phaseModel>(this->properties());
-        const phaseSystem& fluid = gas.fluid();
-        const phaseModel& liquid = fluid.otherPhase(gas);
+        const phaseModel& liquid =
+            refCast<const phaseModel>(this->properties());
+        const phaseSystem& fluid = liquid.fluid();
+        const phaseModel& gas = fluid.phases()[0];
 
-        liquidTurbulencePtr_ =
+        gasTurbulencePtr_ =
            &const_cast<mixtureKEpsilon<BasicMomentumTransportModel>&>
             (
                 U.db().lookupObject
@@ -381,39 +320,38 @@ mixtureKEpsilon<BasicMomentumTransportModel>::liquidTurbulence() const
                     IOobject::groupName
                     (
                         momentumTransportModel::typeName,
-                        liquid.name()
+                        gas.name()
                     )
                 )
             );
     }
 
-    return *liquidTurbulencePtr_;
+    return *gasTurbulencePtr_;
 }
 
 
 template<class BasicMomentumTransportModel>
 tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::Ct2() const
 {
-    const mixtureKEpsilon<BasicMomentumTransportModel>& liquidTurbulence =
-        this->liquidTurbulence();
+    const mixtureKEpsilon<BasicMomentumTransportModel>& gasTurbulence =
+        this->gasTurbulence();
 
-    const phaseModel& gas = refCast<const phaseModel>(this->properties());
-    const phaseSystem& fluid = gas.fluid();
-    const phaseModel& liquid = fluid.otherPhase(gas);
+    const phaseModel& liquid = refCast<const phaseModel>(this->properties());
+    const phaseSystem& fluid = liquid.fluid();
+    const phaseModel& gas = fluid.phases()[0];
 
     const dragModels::dispersedDragModel& drag =
         fluid.lookupInterfacialModel<dragModels::dispersedDragModel>
         (dispersedPhaseInterface(gas, liquid));
 
-    const volScalarField& alphag = this->alpha_;
-
-    volScalarField magUr(mag(liquidTurbulence.U() - this->U()));
+    const volScalarField& alphag = gasTurbulence.alpha();
+    const volScalarField magUr(mag(this->U() - gasTurbulence.U()));
 
     volScalarField beta
     (
         (6*this->Cmu_/(4*sqrt(3.0/2.0)))
        *drag.K()/liquid.rho()
-       *(liquidTurbulence.k_/liquidTurbulence.epsilon_)
+       *(k_/epsilon_)
     );
     volScalarField Ct0((3 + beta)/(1 + beta + 2*gas.rho()/liquid.rho()));
     volScalarField fAlphad((180 + (-4.71e3 + 4.26e4*alphag)*alphag)*alphag);
@@ -426,9 +364,8 @@ template<class BasicMomentumTransportModel>
 tmp<volScalarField>
 mixtureKEpsilon<BasicMomentumTransportModel>::rholEff() const
 {
-    const phaseModel& gas = refCast<const phaseModel>(this->properties());
-    const phaseSystem& fluid = gas.fluid();
-    return fluid.otherPhase(gas).rho();
+    const phaseModel& liquid = refCast<const phaseModel>(this->properties());
+    return liquid.rho();
 }
 
 
@@ -436,24 +373,24 @@ template<class BasicMomentumTransportModel>
 tmp<volScalarField>
 mixtureKEpsilon<BasicMomentumTransportModel>::rhogEff() const
 {
-    const phaseModel& gas = refCast<const phaseModel>(this->properties());
-    const phaseSystem& fluid = gas.fluid();
-    const phaseModel& liquid = fluid.otherPhase(gas);
+    const phaseModel& liquid = refCast<const phaseModel>(this->properties());
+    const phaseSystem& fluid = liquid.fluid();
+    const phaseModel& gas = fluid.phases()[0];
 
     const virtualMassModels::dispersedVirtualMassModel& virtualMass =
         fluid.lookupInterfacialModel
         <virtualMassModels::dispersedVirtualMassModel>
         (dispersedPhaseInterface(gas, liquid));
 
-    return gas.rho() + virtualMass.Cvm()*fluid.otherPhase(gas).rho();
+    return gas.rho() + virtualMass.Cvm()*liquid.rho();
 }
 
 
 template<class BasicMomentumTransportModel>
 tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::rhom() const
 {
-    const volScalarField& alphag = this->alpha_;
-    const volScalarField& alphal = this->liquidTurbulence().alpha_;
+    const volScalarField& alphal = this->alpha_;
+    const volScalarField& alphag = this->gasTurbulence().alpha_;
 
     return alphal*rholEff() + alphag*rhogEff();
 }
@@ -466,8 +403,8 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mix
     const volScalarField& fd
 ) const
 {
-    const volScalarField& alphag = this->alpha_;
-    const volScalarField& alphal = this->liquidTurbulence().alpha_;
+    const volScalarField& alphal = this->alpha_;
+    const volScalarField& alphag = this->gasTurbulence().alpha_;
 
     return (alphal*rholEff()*fc + alphag*rhogEff()*fd)/rhom_();
 }
@@ -480,8 +417,8 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mixU
     const volScalarField& fd
 ) const
 {
-    const volScalarField& alphag = this->alpha_;
-    const volScalarField& alphal = this->liquidTurbulence().alpha_;
+    const volScalarField& alphal = this->alpha_;
+    const volScalarField& alphag = this->gasTurbulence().alpha_;
 
     return
         (alphal*rholEff()*fc + alphag*rhogEff()*Ct2_()*fd)
@@ -496,8 +433,8 @@ tmp<surfaceScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mixFlux
     const surfaceScalarField& fd
 ) const
 {
-    const volScalarField& alphag = this->alpha_;
-    const volScalarField& alphal = this->liquidTurbulence().alpha_;
+    const volScalarField& alphal = this->alpha_;
+    const volScalarField& alphag = this->gasTurbulence().alpha_;
 
     surfaceScalarField alphalf(fvc::interpolate(alphal));
     surfaceScalarField alphagf(fvc::interpolate(alphag));
@@ -515,18 +452,18 @@ template<class BasicMomentumTransportModel>
 tmp<volScalarField>
 mixtureKEpsilon<BasicMomentumTransportModel>::bubbleG() const
 {
-    const mixtureKEpsilon<BasicMomentumTransportModel>& liquidTurbulence =
-        this->liquidTurbulence();
+    const mixtureKEpsilon<BasicMomentumTransportModel>& gasTurbulence =
+        this->gasTurbulence();
 
-    const phaseModel& gas = refCast<const phaseModel>(this->properties());
-    const phaseSystem& fluid = gas.fluid();
-    const phaseModel& liquid = fluid.otherPhase(gas);
+    const phaseModel& liquid = refCast<const phaseModel>(this->properties());
+    const phaseSystem& fluid = liquid.fluid();
+    const phaseModel& gas = fluid.phases()[0];
 
     const dragModels::dispersedDragModel& drag =
         fluid.lookupInterfacialModel<dragModels::dispersedDragModel>
         (dispersedPhaseInterface(gas, liquid));
 
-    volScalarField magUr(mag(liquidTurbulence.U() - this->U()));
+    volScalarField magUr(mag(this->U() - gasTurbulence.U()));
 
     // Lahey model
     tmp<volScalarField> bubbleG
@@ -571,17 +508,20 @@ mixtureKEpsilon<BasicMomentumTransportModel>::epsilonSource() const
 template<class BasicMomentumTransportModel>
 void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
 {
-    const phaseModel& gas = refCast<const phaseModel>(this->properties());
-    const phaseSystem& fluid = gas.fluid();
+    const phaseModel& phase = refCast<const phaseModel>(this->properties());
 
-    // Only solve the mixture turbulence for the gas-phase
-    if (&gas != &fluid.phases()[0])
+    // Only solve the mixture turbulence for the liquid phase (phase 1)
+    if (phase.index() == 0)
     {
         // This is the liquid phase but check the model for the gas-phase
         // is consistent
-        this->liquidTurbulence();
+        this->gasTurbulence();
 
         return;
+    }
+    else
+    {
+        initMixtureFields();
     }
 
     if (!this->turbulence_)
@@ -589,26 +529,23 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
         return;
     }
 
-    // Initialise the mixture fields if they have not yet been constructed
-    initMixtureFields();
+    // Local references to liquid-phase properties
+    tmp<surfaceScalarField> phil = this->phi();
+    const volVectorField& Ul = this->U_;
+    const volScalarField& alphal = this->alpha_;
+    volScalarField& kl = this->k_;
+    volScalarField& epsilonl = this->epsilon_;
+    volScalarField& nutl = this->nut_;
 
     // Local references to gas-phase properties
-    tmp<surfaceScalarField> phig = this->phi();
-    const volVectorField& Ug = this->U_;
-    const volScalarField& alphag = this->alpha_;
-    volScalarField& kg = this->k_;
-    volScalarField& epsilong = this->epsilon_;
-    volScalarField& nutg = this->nut_;
-
-    // Local references to liquid-phase properties
-    mixtureKEpsilon<BasicMomentumTransportModel>& liquidTurbulence =
-        this->liquidTurbulence();
-    tmp<surfaceScalarField> phil = liquidTurbulence.phi();
-    const volVectorField& Ul = liquidTurbulence.U_;
-    const volScalarField& alphal = liquidTurbulence.alpha_;
-    volScalarField& kl = liquidTurbulence.k_;
-    volScalarField& epsilonl = liquidTurbulence.epsilon_;
-    volScalarField& nutl = liquidTurbulence.nut_;
+    mixtureKEpsilon<BasicMomentumTransportModel>& gasTurbulence =
+        this->gasTurbulence();
+    tmp<surfaceScalarField> phig = gasTurbulence.phi();
+    const volVectorField& Ug = gasTurbulence.U_;
+    const volScalarField& alphag = gasTurbulence.alpha_;
+    volScalarField& kg = gasTurbulence.k_;
+    volScalarField& epsilong = gasTurbulence.epsilon_;
+    volScalarField& nutg = gasTurbulence.nut_;
 
     // Local references to mixture properties
     volScalarField& rhom = rhom_();
@@ -740,14 +677,14 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     kl.correctBoundaryConditions();
     epsilonl = Cc2*epsilonm;
     epsilonl.correctBoundaryConditions();
-    liquidTurbulence.correctNut();
+    correctNut();
 
     Ct2_() = Ct2();
     kg = Ct2_()*kl;
     kg.correctBoundaryConditions();
     epsilong = Ct2_()*epsilonl;
     epsilong.correctBoundaryConditions();
-    nutg = Ct2_()*(liquidTurbulence.nu()/this->nu())*nutl;
+    nutg = Ct2_()*(this->nu()/gasTurbulence.nu())*nutl;
 }
 
 
