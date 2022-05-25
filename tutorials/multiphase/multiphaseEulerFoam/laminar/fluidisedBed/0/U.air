@@ -21,17 +21,17 @@ boundaryField
 {
     inlet
     {
-        type               interstitialInletVelocity;
+        type            interstitialInletVelocity;
         inletVelocity      uniform (0 0.25 0);
         alpha              alpha.air;
-        value              $internalField;
+        value           $internalField;
     }
 
     outlet
     {
-        type               pressureInletOutletVelocity;
-        phi                phi.air;
-        value              $internalField;
+        type            pressureInletOutletVelocity;
+        phi             phi.air;
+        value           $internalField;
     }
 
     walls
@@ -41,7 +41,7 @@ boundaryField
 
     frontAndBackPlanes
     {
-        type               empty;
+        type            empty;
     }
 }
 

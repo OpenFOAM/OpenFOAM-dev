@@ -21,26 +21,26 @@ boundaryField
 {
     inlet
     {
-        type               fixedValue;
-        value              uniform 300;
+        type            fixedValue;
+        value           uniform 300;
     }
 
     outlet
     {
-        type               inletOutlet;
-        phi                phi.air;
-        inletValue         uniform 300;
-        value              uniform 300;
+        type            inletOutlet;
+        phi             phi.air;
+        inletValue      uniform 300;
+        value           uniform 300;
     }
 
     walls
     {
-        type               zeroGradient;
+        type            zeroGradient;
     }
 
     frontAndBackPlanes
     {
-        type               empty;
+        type            empty;
     }
 }
 

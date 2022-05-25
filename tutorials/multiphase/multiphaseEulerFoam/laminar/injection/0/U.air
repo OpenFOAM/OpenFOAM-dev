@@ -21,14 +21,14 @@ boundaryField
 {
     outlet
     {
-        type               pressureInletOutletVelocity;
-        phi                phi.air;
-        value              $internalField;
+        type            pressureInletOutletVelocity;
+        phi             phi.air;
+        value           $internalField;
     }
     walls
     {
-        type               fixedValue;
-        value              uniform (0 0 0);
+        type            fixedValue;
+        value           uniform (0 0 0);
     }
 }
 

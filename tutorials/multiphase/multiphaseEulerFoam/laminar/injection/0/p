@@ -21,13 +21,13 @@ boundaryField
 {
     outlet
     {
-        type               calculated;
-        value              $internalField;
+        type            calculated;
+        value           $internalField;
     }
     walls
     {
-        type               calculated;
-        value              $internalField;
+        type            calculated;
+        value           $internalField;
     }
 }
 

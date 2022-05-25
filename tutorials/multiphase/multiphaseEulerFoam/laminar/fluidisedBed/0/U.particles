@@ -21,25 +21,25 @@ boundaryField
 {
     inlet
     {
-        type               fixedValue;
-        value              uniform (0 0 0);
+        type            fixedValue;
+        value           uniform (0 0 0);
     }
 
     outlet
     {
-        type               fixedValue;
-        value              uniform (0 0 0);
+        type            fixedValue;
+        value           uniform (0 0 0);
     }
 
     walls
     {
-        type               fixedValue;
-        value              uniform (0 0 0);
+        type            fixedValue;
+        value           uniform (0 0 0);
     }
 
     frontAndBackPlanes
     {
-        type               empty;
+        type            empty;
     }
 }
 

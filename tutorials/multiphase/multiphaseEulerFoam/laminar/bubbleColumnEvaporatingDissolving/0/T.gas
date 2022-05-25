@@ -21,19 +21,19 @@ boundaryField
 {
     walls
     {
-        type               zeroGradient;
+        type            zeroGradient;
     }
     outlet
     {
-        type               inletOutlet;
-        phi                phi.gas;
-        inletValue         $internalField;
-        value              $internalField;
+        type            inletOutlet;
+        phi             phi.gas;
+        inletValue      $internalField;
+        value           $internalField;
     }
     inlet
     {
-        type               fixedValue;
-        value              $internalField;
+        type            fixedValue;
+        value           $internalField;
     }
 }
 

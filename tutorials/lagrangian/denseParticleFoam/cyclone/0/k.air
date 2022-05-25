@@ -21,22 +21,22 @@ boundaryField
 {
     inlet
     {
-        type               fixedValue;
-        value              $internalField;
+        type            fixedValue;
+        value           $internalField;
     }
 
     outlet
     {
-        type               inletOutlet;
-        phi                phi.air;
-        inletValue         $internalField;
-        value              $internalField;
+        type            inletOutlet;
+        phi             phi.air;
+        inletValue      $internalField;
+        value           $internalField;
     }
 
     walls
     {
-        type               kqRWallFunction;
-        value              $internalField;
+        type            kqRWallFunction;
+        value           $internalField;
     }
 }
 

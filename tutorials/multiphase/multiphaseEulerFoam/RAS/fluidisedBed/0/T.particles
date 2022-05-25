@@ -21,22 +21,22 @@ boundaryField
 {
     inlet
     {
-        type               zeroGradient;
+        type            zeroGradient;
     }
 
     outlet
     {
-        type               zeroGradient;
+        type            zeroGradient;
     }
 
     walls
     {
-        type               zeroGradient;
+        type            zeroGradient;
     }
 
     frontAndBackPlanes
     {
-        type               empty;
+        type            empty;
     }
 }
 

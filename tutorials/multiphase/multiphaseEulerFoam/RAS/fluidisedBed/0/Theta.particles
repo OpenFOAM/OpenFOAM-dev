@@ -23,13 +23,13 @@ boundaryField
 {
     inlet
     {
-        type               fixedValue;
-        value              uniform 1e-4;
+        type            fixedValue;
+        value           uniform 1e-4;
     }
 
     outlet
     {
-        type               zeroGradient;
+        type            zeroGradient;
     }
 
     walls
@@ -37,12 +37,12 @@ boundaryField
         type               JohnsonJacksonParticleTheta;
         restitutionCoefficient 0.8;
         specularityCoefficient 0.01;
-        value              uniform 1e-4;
+        value           uniform 1e-4;
     }
 
     frontAndBackPlanes
     {
-        type               empty;
+        type            empty;
     }
 }
 

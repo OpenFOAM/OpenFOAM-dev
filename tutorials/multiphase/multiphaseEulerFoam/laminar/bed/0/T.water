@@ -21,14 +21,14 @@ boundaryField
 {
     top
     {
-        type               inletOutlet;
-        phi                phi.water;
-        inletValue         $internalField;
-        value              $internalField;
+        type            inletOutlet;
+        phi             phi.water;
+        inletValue      $internalField;
+        value           $internalField;
     }
     walls
     {
-        type               zeroGradient;
+        type            zeroGradient;
     }
 }
 

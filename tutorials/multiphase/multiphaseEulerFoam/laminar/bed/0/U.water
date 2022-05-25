@@ -27,7 +27,7 @@ boundaryField
     }
     walls
     {
-        type               noSlip;
+        type            noSlip;
     }
 }
 

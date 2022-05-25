@@ -21,23 +21,23 @@ boundaryField
 {
     walls
     {
-        type               zeroGradient;
+        type            zeroGradient;
     }
     outlet
     {
-        type               inletOutlet;
-        phi                phi.air;
-        inletValue         $internalField;
-        value              $internalField;
+        type            inletOutlet;
+        phi             phi.air;
+        inletValue      $internalField;
+        value           $internalField;
     }
     inlet
     {
-        type               fixedValue;
-        value              $internalField;
+        type            fixedValue;
+        value           $internalField;
     }
     frontAndBackPlanes
     {
-        type               empty;
+        type            empty;
     }
 }
 
