@@ -26,7 +26,6 @@ RAS
     {
         preAlphaExp     500;
         expMax          1000;
-        alphaMax        0.62;
         g0              1000;
     }
 }

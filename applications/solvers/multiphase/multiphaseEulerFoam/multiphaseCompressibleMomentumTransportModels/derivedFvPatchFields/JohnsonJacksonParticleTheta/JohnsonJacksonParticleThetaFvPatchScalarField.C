@@ -205,21 +205,6 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
 
     const scalarField Theta(patchInternalField());
 
-    // lookup the packed volume fraction
-    dimensionedScalar alphaMax
-    (
-        "alphaMax",
-        dimless,
-        db()
-       .lookupObject<IOdictionary>
-        (
-            IOobject::groupName("momentumTransport", phase.name())
-        )
-       .subDict("RAS")
-       .subDict("kineticTheoryCoeffs")
-       .lookup("alphaMax")
-    );
-
     // calculate the reference value and the value fraction
     if (restitutionCoefficient_.value() != 1.0)
     {
@@ -238,7 +223,7 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
             *gs0
             *(scalar(1) - sqr(restitutionCoefficient_.value()))
             *sqrt(3*Theta)
-            /max(4*kappa*alphaMax.value(), small)
+            /max(4*kappa*phase.alphaMax(), small)
         );
 
         this->valueFraction() = c/(c + patch().deltaCoeffs());
@@ -258,7 +243,7 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
            *gs0
            *sqrt(3*Theta)
            *magSqr(U)
-           /max(6*kappa*alphaMax.value(), small);
+           /max(6*kappa*phase.alphaMax(), small);
 
         this->valueFraction() = 0;
     }

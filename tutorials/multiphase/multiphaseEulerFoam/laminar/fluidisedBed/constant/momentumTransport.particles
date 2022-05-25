@@ -28,7 +28,6 @@ RAS
         equilibrium             on;
 
         e                       0.8;
-        alphaMax                0.62;
         alphaMinFriction        0.5;
 
         granularViscosityModel      Gidaspow;
@@ -51,7 +50,6 @@ RAS
     {
         preAlphaExp     500;
         expMax          1000;
-        alphaMax        0.62;
         g0              1000;
     }
 }

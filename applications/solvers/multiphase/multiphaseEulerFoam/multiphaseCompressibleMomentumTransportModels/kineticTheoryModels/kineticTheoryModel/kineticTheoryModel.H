@@ -56,7 +56,6 @@ SourceFiles
 #include "granularPressureModel.H"
 #include "frictionalStressModel.H"
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -74,12 +73,10 @@ class kineticTheoryModel
 {
     // Private Data
 
-        // Input Fields
+        const phaseModel& phase_;
 
-            const phaseModel& phase_;
-
-            //- Name of the continuous phase
-            word continuousPhaseName_;
+        //- Name of the continuous phase
+        word continuousPhaseName_;
 
 
         // Sub-models
@@ -109,9 +106,6 @@ class kineticTheoryModel
 
             //- Coefficient of restitution
             dimensionedScalar e_;
-
-            //- Maximum packing phase-fraction
-            dimensionedScalar alphaMax_;
 
             //- Min value for which the frictional stresses are zero
             dimensionedScalar alphaMinFriction_;

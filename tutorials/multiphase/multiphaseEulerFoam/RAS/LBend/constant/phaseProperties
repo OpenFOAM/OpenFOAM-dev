@@ -29,7 +29,8 @@ solids
         d               462e-6;
     }
 
-    residualAlpha 1e-5;
+    alphaMax        0.65;
+    residualAlpha   1e-5;
 }
 
 gas

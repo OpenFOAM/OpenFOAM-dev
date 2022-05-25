@@ -66,6 +66,7 @@ particles
         );
     }
 
+    alphaMax        0.62;
     residualAlpha   1e-8;
 }
 

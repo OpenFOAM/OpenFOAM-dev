@@ -192,21 +192,6 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
       : alpha
     );
 
-    // lookup the packed volume fraction
-    dimensionedScalar alphaMax
-    (
-        "alphaMax",
-        dimless,
-        db()
-       .lookupObject<IOdictionary>
-        (
-            IOobject::groupName("momentumTransport", phase.name())
-        )
-       .subDict("RAS")
-       .subDict("kineticTheoryCoeffs")
-       .lookup("alphaMax")
-    );
-
     // calculate the slip value fraction
     scalarField c
     (
@@ -215,7 +200,7 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
        *gs0
        *specularityCoefficient_.value()
        *sqrt(3*Theta)
-       /max(6*(nu - nuFric)*alphaMax.value(), small)
+       /max(6*(nu - nuFric)*phase.alphaMax(), small)
     );
 
     this->valueFraction() = c/(c + patch().deltaCoeffs());

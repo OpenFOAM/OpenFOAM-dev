@@ -53,13 +53,7 @@ blending
 }
 
 surfaceTension
-{
-    air_particles
-    {
-        type            constant;
-        sigma           0;
-    }
-}
+{}
 
 interfaceCompression
 {}

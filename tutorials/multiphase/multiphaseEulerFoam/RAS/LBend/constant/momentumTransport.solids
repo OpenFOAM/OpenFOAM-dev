@@ -28,7 +28,6 @@ RAS
         equilibrium             off;
 
         e                       0.8;
-        alphaMax                0.65;
         alphaMinFriction        0.5;
         residualAlpha           1e-6;
 

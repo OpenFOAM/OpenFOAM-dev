@@ -38,7 +38,6 @@ Description
         {
             preAlphaExp     500;
             expMax          1000;
-            alphaMax        0.62;
             g0              1000;
         }
     \endverbatim
@@ -73,10 +72,9 @@ class phasePressureModel
 {
     // Private Data
 
-        // Kinetic Theory Model coefficients
+        const phaseModel& phase_;
 
-            //- Maximum packing phase-fraction
-            scalar alphaMax_;
+        // Phase pressure coefficients
 
             //- Pre-exponential factor
             scalar preAlphaExp_;

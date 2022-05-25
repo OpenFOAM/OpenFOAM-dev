@@ -49,7 +49,8 @@ Foam::RASModels::phasePressureModel::phasePressureModel
         viscosity
     ),
 
-    alphaMax_(coeffDict_.lookup<scalar>("alphaMax")),
+    phase_(refCast<const phaseModel>(viscosity)),
+
     preAlphaExp_(coeffDict_.lookup<scalar>("preAlphaExp")),
     expMax_(coeffDict_.lookup<scalar>("expMax")),
     g0_
@@ -84,7 +85,6 @@ bool Foam::RASModels::phasePressureModel::read()
         read()
     )
     {
-        coeffDict().lookup("alphaMax") >> alphaMax_;
         coeffDict().lookup("preAlphaExp") >> preAlphaExp_;
         coeffDict().lookup("expMax") >> expMax_;
         g0_.readIfPresent(coeffDict());
@@ -153,7 +153,7 @@ Foam::RASModels::phasePressureModel::pPrime() const
             g0_
            *min
             (
-                exp(preAlphaExp_*(alpha_ - alphaMax_)),
+                exp(preAlphaExp_*(alpha_ - phase_.alphaMax())),
                 expMax_
             )
         )
@@ -185,7 +185,8 @@ Foam::RASModels::phasePressureModel::pPrimef() const
             g0_
            *min
             (
-                exp(preAlphaExp_*(fvc::interpolate(alpha_) - alphaMax_)),
+                exp(preAlphaExp_
+               *(fvc::interpolate(alpha_) - phase_.alphaMax())),
                 expMax_
             )
         )
