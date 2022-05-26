@@ -392,7 +392,8 @@ Foam::RASModels::kineticTheoryModel::divDevTau
         (
             (rho_*nut_)*dev2(T(fvc::grad(U)))
           + ((rho_*lambda_)*fvc::div(phi_))
-           *dimensioned<symmTensor>("I", dimless, symmTensor::I)
+           *dimensioned<symmTensor>("I", dimless, symmTensor::I),
+            "divDevTau(" + U_.name() + ')'
         )
     );
 }
