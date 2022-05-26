@@ -27,12 +27,16 @@ baffles
             master
             {
                 name            membranePipe;
-                type            wall;
+                type            mappedWall;
+                sampleMode      nearestPatchFace;
+                samplePatch     membraneSleeve;
             }
             slave
             {
                 name            membraneSleeve;
-                type            wall;
+                type            mappedWall;
+                sampleMode      nearestPatchFace;
+                samplePatch     membranePipe;
             }
         }
     }

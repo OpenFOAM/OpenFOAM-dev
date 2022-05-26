@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 #include "surfaceFields.H"
 #include "thermophysicalTransportModel.H"
 #include "basicSpecieMixture.H"
+#include "mappedPatchBase.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -40,7 +41,6 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    mappedPatchBase(p.patch()),
     specieTransferMassFractionFvPatchScalarField(p, iF)
 {}
 
@@ -53,9 +53,18 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     const dictionary& dict
 )
 :
-    mappedPatchBase(p.patch(), NEARESTPATCHFACE, dict),
     specieTransferMassFractionFvPatchScalarField(p, iF, dict)
-{}
+{
+    if (!isA<mappedPatchBase>(patch().patch()))
+    {
+        FatalErrorInFunction
+            << "' not type '" << mappedPatchBase::typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
+            << exit(FatalError);
+    }
+}
 
 
 Foam::semiPermeableBaffleMassFractionFvPatchScalarField::
@@ -67,7 +76,6 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    mappedPatchBase(p.patch(), ptf),
     specieTransferMassFractionFvPatchScalarField(ptf, p, iF, mapper)
 {}
 
@@ -79,7 +87,6 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    mappedPatchBase(ptf.patch().patch(), ptf),
     specieTransferMassFractionFvPatchScalarField(ptf, iF)
 {}
 
@@ -96,7 +103,13 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
 
     const word& YName = internalField().name();
 
-    const fvPatch& nbrPatch = patch().boundaryMesh()[samplePolyPatch().index()];
+    // Get the coupling information from the mappedPatchBase
+    const mappedPatchBase& mpp =
+        refCast<const mappedPatchBase>(patch().patch());
+    const polyMesh& nbrMesh = mpp.sampleMesh();
+    const label samplePatchi = mpp.samplePolyPatch().index();
+    const fvPatch& nbrPatch =
+        refCast<const fvMesh>(nbrMesh).boundary()[samplePatchi];
 
     const fluidThermo& thermo =
         db().lookupObject<fluidThermo>(physicalProperties::typeName);
@@ -108,7 +121,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
         nbrPatch.lookupPatchField<volScalarField, scalar>(YName)
        .patchInternalField()
     );
-    mappedPatchBase::map().distribute(nbrYc);
+    mpp.distribute(nbrYc);
 
     // Get the patch delta coefficients multiplied by the diffusivity
     const thermophysicalTransportModel& ttm =
@@ -124,7 +137,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     (
         ttm.alphaEff(nbrPatch.index())*nbrPatch.deltaCoeffs()
     );
-    mappedPatchBase::map().distribute(nbrAlphaEffDeltap);
+    mpp.distribute(nbrAlphaEffDeltap);
 
     // Get the specie molecular weight, if needed
     scalar Wi = NaN;
@@ -140,7 +153,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     {
         tW = thermo.W(patch().index());
         tNbrW = thermo.W(nbrPatch.index());
-        mappedPatchBase::map().distribute(tNbrW.ref());
+        mpp.distribute(tNbrW.ref());
     }
 
     // Construct coefficients that convert mass fraction to the property that
@@ -160,7 +173,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
             {
                 k *= thermo.rho(patch().index())/Wi;
                 scalarField nbrRhop(thermo.rho(nbrPatch.index()));
-                mappedPatchBase::map().distribute(nbrRhop);
+                mpp.distribute(nbrRhop);
                 nbrK *= nbrRhop/Wi;
             }
             break;
@@ -169,7 +182,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
             {
                 k *= thermo.p().boundaryField()[patch().index()]*tW/Wi;
                 scalarField nbrPp(thermo.p().boundaryField()[nbrPatch.index()]);
-                mappedPatchBase::map().distribute(nbrPp);
+                mpp.distribute(nbrPp);
                 nbrK *= nbrPp*tNbrW/Wi;
             }
             break;
@@ -191,7 +204,6 @@ void Foam::semiPermeableBaffleMassFractionFvPatchScalarField::write
     Ostream& os
 ) const
 {
-    mappedPatchBase::write(os);
     specieTransferMassFractionFvPatchScalarField::write(os);
     writeEntry(os, "value", *this);
 }
