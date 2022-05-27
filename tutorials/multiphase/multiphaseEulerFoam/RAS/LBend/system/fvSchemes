@@ -44,7 +44,7 @@ divSchemes
 
     div((((alpha.gas*thermo:rho.gas)*nuEff.gas)*dev2(T(grad(U.gas))))) Gauss linear;
 
-     div((((thermo:rho.solids*nut.solids)*dev2(T(grad(U.solids))))+(((thermo:rho.solids*lambda.solids)*div(phi.solids))*I)))  Gauss linear;
+    divDevTau(U.solids)             Gauss linear;
 }
 
 laplacianSchemes

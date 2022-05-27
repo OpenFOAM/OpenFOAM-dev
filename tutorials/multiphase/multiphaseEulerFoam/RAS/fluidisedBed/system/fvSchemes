@@ -44,7 +44,7 @@ divSchemes
 
     div((((alpha.air*thermo:rho.air)*nuEff.air)*dev2(T(grad(U.air))))) Gauss linear;
 
-    div((((thermo:rho.particles*nut.particles)*dev2(T(grad(U.particles))))+(((thermo:rho.particles*lambda.particles)*div(phi.particles))*I)))  Gauss linear;
+    divDevTau(U.particles)          Gauss linear;
 }
 
 laplacianSchemes
