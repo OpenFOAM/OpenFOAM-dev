@@ -710,7 +710,7 @@ void Foam::fvMesh::reset(const fvMesh& newMesh)
 }
 
 
-Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
+Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate(const bool changers)
 {
     if (debug)
     {
@@ -721,7 +721,7 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
 
     if (stitcher_.valid() && state != polyMesh::UNCHANGED)
     {
-        stitcher_->disconnect(false, false);
+        stitcher_->disconnect(false, changers);
     }
 
     if (state == polyMesh::TOPO_PATCH_CHANGE)
@@ -763,7 +763,7 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
 
     if (stitcher_.valid() && state != polyMesh::UNCHANGED)
     {
-        stitcher_->connect(false, false, true);
+        stitcher_->connect(false, changers, true);
     }
 
     // If the mesh has been re-stitched with different geometry, then the

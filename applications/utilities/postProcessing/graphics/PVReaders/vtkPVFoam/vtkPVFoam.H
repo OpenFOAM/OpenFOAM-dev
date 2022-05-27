@@ -749,9 +749,10 @@ public:
 
     // Member Functions
 
-        //- Update
+        //- Update information for selection dialogs
         void updateInfo();
 
+        //- Update
         void Update
         (
             vtkMultiBlockDataSet* output,
@@ -773,11 +774,10 @@ public:
         //  sets to "constant" on error
         int setTime(int count, const double requestTimes[]);
 
-
         //- The current time index
         int timeIndex() const
         {
-           return timeIndex_;
+            return timeIndex_;
         }
 
 

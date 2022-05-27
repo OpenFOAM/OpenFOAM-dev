@@ -94,13 +94,13 @@ private:
             (
                 const nonConformalCyclicFvPatch& nccFvp,
                 SurfaceFieldBoundary<label>& polyFacesBf,
+                SurfaceFieldBoundary<vector>& SfBf,
+                SurfaceFieldBoundary<vector>& CfBf,
                 const tmp<SurfaceFieldBoundary<label>>& tOrigFacesNbrBf,
                 const tmp<SurfaceFieldBoundary<vector>>& tOrigSfNbrBf,
                 const tmp<SurfaceFieldBoundary<point>>& tOrigCfNbrBf,
-                SurfaceFieldBoundary<vector>& SfBf,
-                SurfaceFieldBoundary<vector>& CfBf,
                 List<part>& origEdgeParts
-            );
+            ) const;
 
             //- Convert per-patch lists of edge parts into a single
             //  owner-orig-boundary list of edge parts that can be applied to
@@ -108,7 +108,7 @@ private:
             List<part> calculateOwnerOrigBoundaryEdgeParts
             (
                 const List<List<part>>& patchEdgeParts
-            );
+            ) const;
 
             //- Apply a list of owner-orig-boundary edge parts to
             //  non-orig-patch faces (both internal and boundary)
@@ -117,7 +117,7 @@ private:
                 surfaceVectorField& SfSf,
                 surfaceVectorField& CfSf,
                 const List<part>& ownerOrigBoundaryEdgeParts
-            );
+            ) const;
 
             //- Stabilise the faces that have had non-conformal coupled parts
             //  cut out from them
@@ -125,18 +125,16 @@ private:
             (
                 SurfaceFieldBoundary<vector>& SfBf,
                 SurfaceFieldBoundary<vector>& CfBf
-            );
+            ) const;
 
             //- Perform intersections for all non-conformal interfaces
             void intersectNonConformalCyclics
             (
                 SurfaceFieldBoundary<label>& polyFacesBf,
-                const tmp<SurfaceFieldBoundary<label>>& tOrigFacesNbrBf,
-                const tmp<SurfaceFieldBoundary<vector>>& tOrigSfNbrBf,
-                const tmp<SurfaceFieldBoundary<point>>& tOrigCfNbrBf,
                 surfaceVectorField& SfSf,
-                surfaceVectorField& CfSf
-            );
+                surfaceVectorField& CfSf,
+                const bool haveTopology
+            ) const;
 
             //- Apply the given non-conformal topology (polyFacesBf) to the
             //  face geometry fields for the given patch type. Just set small
@@ -149,7 +147,7 @@ private:
                 const SurfaceFieldBoundary<label>& polyFacesBf,
                 surfaceVectorField& SfSf,
                 surfaceVectorField& CfSf
-            );
+            ) const;
 
 
         // Motion
@@ -302,6 +300,10 @@ protected:
 
         // Checking
 
+            //- Is the connection "geometric", or has the topology just been
+            //  loaded and stabilisation geometry applied?
+            bool geometric() const;
+
             //- Return the non-dimensional cell openness for debugging/checking
             tmp<DimensionedField<scalar, volMesh>> openness() const;
 
@@ -385,6 +387,10 @@ public:
             const bool geometric,
             const bool load
         );
+
+        //- Re-compute the connection. Topology is preserved. Permits a change
+        //  in whether or not the connection is "geometric".
+        void reconnect(const bool geometric) const;
 
         //- Write the mover state
         virtual bool write(const bool write = true) const

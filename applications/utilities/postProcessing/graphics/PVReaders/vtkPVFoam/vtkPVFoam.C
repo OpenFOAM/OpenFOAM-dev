@@ -28,6 +28,7 @@ License
 
 // OpenFOAM includes
 #include "fvMesh.H"
+#include "fvMeshStitcher.H"
 #include "Time.H"
 #include "patchZones.H"
 #include "collatedFileOperation.H"
@@ -132,7 +133,6 @@ int Foam::vtkPVFoam::setTime(int nRequest, const double requestTimes[])
             << ", nearestIndex = " << nearestIndex << endl;
     }
 
-
     // See what has changed
     if (timeIndex_ != nearestIndex)
     {
@@ -144,7 +144,7 @@ int Foam::vtkPVFoam::setTime(int nRequest, const double requestTimes[])
 
         if (meshPtr_)
         {
-            if (meshPtr_->readUpdate() != polyMesh::UNCHANGED)
+            if (meshPtr_->readUpdate(false) != polyMesh::UNCHANGED)
             {
                 meshChanged_ = true;
             }
@@ -153,6 +153,12 @@ int Foam::vtkPVFoam::setTime(int nRequest, const double requestTimes[])
         {
             meshChanged_ = true;
         }
+    }
+
+    // Stitch if necessary
+    if (meshPtr_)
+    {
+        meshPtr_->stitcher().reconnect(reader_->GetInterpolateVolFields());
     }
 
     if (debug)
@@ -456,9 +462,7 @@ void Foam::vtkPVFoam::updateFoamMesh()
         {
             InfoInFunction << endl
                 << "    Creating OpenFOAM mesh for region " << meshRegion_
-                << " at time=" << dbPtr_().timeName()
-                << endl;
-
+                << " at time=" << dbPtr_().timeName() << endl;
         }
 
         meshPtr_ = new fvMesh
@@ -481,6 +485,12 @@ void Foam::vtkPVFoam::updateFoamMesh()
         {
             Info<< "    Using existing OpenFOAM mesh" << endl;
         }
+    }
+
+    // Stitch if necessary
+    if (meshPtr_)
+    {
+        meshPtr_->stitcher().reconnect(reader_->GetInterpolateVolFields());
     }
 
     if (debug)
@@ -506,6 +516,7 @@ void Foam::vtkPVFoam::Update
         lagrangianOutput->Print(cout);
         printMemory();
     }
+
     reader_->UpdateProgress(0.1);
 
     // Set up mesh parts selection(s)
