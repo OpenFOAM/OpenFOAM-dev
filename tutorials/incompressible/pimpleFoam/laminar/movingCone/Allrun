@@ -6,17 +6,19 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 application=$(getApplication)
 
-runApplication -a blockMesh -dict blockMeshDict.2
-rm -rf constant/meshToMesh_0.0015
-mkdir constant/meshToMesh_0.0015
-mv constant/polyMesh constant/meshToMesh_0.0015
+mapTimes="0.0015 0.003"
 
-runApplication -a blockMesh -dict blockMeshDict.3
-rm -rf constant/meshToMesh_0.003
-mkdir constant/meshToMesh_0.003
-mv constant/polyMesh constant/meshToMesh_0.003
+# Iterate the string variable using for loop
+for mapTime in $mapTimes; do
 
-runApplication -a blockMesh -dict blockMeshDict.1
+    runApplication -a blockMesh -dict blockMeshDict_$mapTime
+    rm -rf constant/meshToMesh_$mapTime
+    mkdir constant/meshToMesh_$mapTime
+    mv constant/polyMesh constant/meshToMesh_$mapTime
+
+done
+
+runApplication -a blockMesh
 
 runApplication $application
 
