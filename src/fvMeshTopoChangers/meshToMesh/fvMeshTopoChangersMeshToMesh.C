@@ -33,6 +33,7 @@ License
 #include "cellVolumeWeightMethod.H"
 #include "MeshToMeshMapGeometricFields.H"
 #include "polyMeshMap.H"
+#include "processorPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -52,6 +53,9 @@ namespace fvMeshTopoChangers
 void Foam::fvMeshTopoChangers::meshToMesh::readDict()
 {
     const dictionary& meshToMeshDict(dict());
+
+    cuttingPatches_ =
+        meshToMeshDict.lookupOrDefault("cuttingPatches", wordList::null());
 
     meshToMeshDict.lookup("times") >> times_;
 
@@ -181,12 +185,52 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             false
         );
 
-        Foam::meshToMesh mapper
-        (
-            mesh(),
-            newMesh,
-            cellVolumeWeightMethod::typeName
-        );
+        autoPtr<Foam::meshToMesh> mapper;
+
+        // Create mesh-to-mesh mapper with support for cuttingPatches
+        // if specified
+        if (cuttingPatches_.size())
+        {
+            HashSet<word> cuttingPatchTable;
+            forAll(cuttingPatches_, i)
+            {
+                cuttingPatchTable.insert(cuttingPatches_[i]);
+            }
+
+            HashTable<word> patchMap(mesh().boundary().size());
+
+            const polyBoundaryMesh& pbm = mesh().boundaryMesh();
+
+            forAll(pbm, i)
+            {
+                if
+                (
+                    !cuttingPatchTable.found(pbm[i].name())
+                 && !isA<processorPolyPatch>(pbm[i])
+                )
+                {
+                    patchMap.insert(pbm[i].name(), pbm[i].name());
+                }
+            }
+
+            mapper = new Foam::meshToMesh
+            (
+                mesh(),
+                newMesh,
+                cellVolumeWeightMethod::typeName,
+                patchMap,
+                cuttingPatches_
+            );
+        }
+        else
+        {
+            mapper = new Foam::meshToMesh
+            (
+                mesh(),
+                newMesh,
+                cellVolumeWeightMethod::typeName
+            );
+        }
 
         mesh().reset(newMesh);
 

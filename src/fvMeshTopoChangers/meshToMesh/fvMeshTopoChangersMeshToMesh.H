@@ -54,6 +54,10 @@ class meshToMesh
 {
     // Private Data
 
+        //- Optional names of the patches which "cut" the internal mesh
+        //  and hence cannot be mapped from existing patches
+        wordList cuttingPatches_;
+
         //- List of mesh mapping times
         scalarList times_;
 
