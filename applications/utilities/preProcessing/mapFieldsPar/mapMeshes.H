@@ -65,13 +65,6 @@ void mapSubMesh
 );
 
 
-wordList addProcessorPatches
-(
-    const fvMesh& meshTarget,
-    const wordList& cuttingPatches
-);
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

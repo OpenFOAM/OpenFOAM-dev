@@ -166,32 +166,4 @@ void Foam::mapSubMesh
 }
 
 
-Foam::wordList Foam::addProcessorPatches
-(
-    const fvMesh& meshTarget,
-    const wordList& cuttingPatches
-)
-{
-    // Add the processor patches to the cutting list
-    HashSet<word> cuttingPatchTable;
-    forAll(cuttingPatches, i)
-    {
-        cuttingPatchTable.insert(cuttingPatches[i]);
-    }
-
-    const polyBoundaryMesh& pbm = meshTarget.boundaryMesh();
-
-    forAll(pbm, patchi)
-    {
-        if (isA<processorPolyPatch>(pbm[patchi]))
-        {
-            const word& patchName = pbm[patchi].name();
-            cuttingPatchTable.insert(patchName);
-        }
-    }
-
-    return cuttingPatchTable.toc();
-}
-
-
 // ************************************************************************* //
