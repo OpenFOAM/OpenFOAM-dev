@@ -1,16 +1,13 @@
 #!/bin/sh
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Get application name
-application=$(getApplication)
-
+# Mesh
 runApplication blockMesh
-
-cp -R 0.orig 0
 
 # Create 1D and 3D baffles
 runApplication createBaffles -overwrite
 
-runApplication $application
+# Run
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

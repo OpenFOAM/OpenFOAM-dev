@@ -13,65 +13,47 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Whether to convert internal faces only (so leave boundary faces intact).
-// This is only relevant if your face selection type can pick up boundary
-// faces.
 internalFacesOnly true;
 
-// Baffles to create.
 baffles
 {
     cycLeft
     {
-        //- Use predefined faceZone to select faces and orientation.
         type        faceZone;
         zoneName    cycLeft;
 
-        patches
+        owner
         {
-            master
-            {
-                //- Master side patch
+            name        cycLeft_half0;
+            type        cyclic;
+            neighbourPatch cycLeft_half1;
+        }
 
-                name            cycLeft_half0;
-                type            cyclic;
-                neighbourPatch  cycLeft_half1;
-            }
-            slave
-            {
-                //- Slave side patch
-
-                name            cycLeft_half1;
-                type            cyclic;
-                neighbourPatch  cycLeft_half0;
-            }
+        neighbour
+        {
+            name        cycLeft_half1;
+            type        cyclic;
+            neighbourPatch cycLeft_half0;
         }
     }
 
     cycRight
     {
-        //- Use predefined faceZone to select faces and orientation.
         type        faceZone;
         zoneName    cycRight;
 
-        patches
+        owner
         {
-            master
-            {
-                //- Master side patch
+            name        cycRight_half0;
+            type        cyclic;
+            neighbourPatch cycRight_half1;
+        }
 
-                name            cycRight_half0;
-                type            cyclic;
-                neighbourPatch  cycRight_half1;
-            }
-            slave
-            {
-                //- Slave side patch
-
-                name            cycRight_half1;
-                type            cyclic;
-                neighbourPatch  cycRight_half0;
-            }
+        neighbour
+        {
+            name        cycRight_half1;
+            type        cyclic;
+            neighbourPatch cycRight_half0;
         }
     }
 }

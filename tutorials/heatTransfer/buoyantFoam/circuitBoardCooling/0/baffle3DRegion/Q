@@ -9,30 +9,21 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    location    "0";
-    object      T;
+    object      Q;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [1 -1 -3 0 0 0 0];
 
-internalField   uniform 300;
+internalField   uniform 17000;
 
 boundaryField
 {
-    bottom
-    {
-        type                compressible::thermalBaffle;
-        value               uniform 300;
-    }
-    side
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    ".*"
     {
         type                zeroGradient;
-    }
-    top
-    {
-        type                compressible::thermalBaffle;
-        value               uniform 300;
     }
 }
 

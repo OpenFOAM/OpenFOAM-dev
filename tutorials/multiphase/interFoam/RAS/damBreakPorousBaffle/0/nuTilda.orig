@@ -10,57 +10,37 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      epsilon;
+    object      nuTilda;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
+dimensions      [0 2 -1 0 0 0 0];
 
-internalField   uniform 0.1;
+internalField   uniform 0;
 
 boundaryField
 {
     leftWall
     {
-        type            epsilonWallFunction;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
-        value           uniform 0.1;
+        type            zeroGradient;
     }
     rightWall
     {
-        type            epsilonWallFunction;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
-        value           uniform 0.1;
+        type            zeroGradient;
     }
     lowerWall
     {
-        type            epsilonWallFunction;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
-        value           uniform 0.1;
+        type            zeroGradient;
     }
     atmosphere
     {
         type            inletOutlet;
-        inletValue      uniform 0.1;
-        value           uniform 0.1;
+        inletValue      $internalField;
+        value           $internalField;
     }
     defaultFaces
     {
         type            empty;
-    }
-    porous_half0
-    {
-        type            cyclic;
-    }
-    porous_half1
-    {
-        type            cyclic;
     }
 }
 

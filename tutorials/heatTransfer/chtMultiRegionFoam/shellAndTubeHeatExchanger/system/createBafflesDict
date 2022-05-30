@@ -22,24 +22,22 @@ baffles
         type        faceZone;
         zoneName    shell_to_solid;
 
-        patches
+        owner
         {
-            master
-            {
-                name        shell_to_solid;
-                type        mappedWall;
-                sampleMode  nearestPatchFace;
-                sampleRegion solid;
-                samplePatch solid_to_shell;
-            }
-            slave
-            {
-                name        solid_to_shell;
-                type        mappedWall;
-                sampleMode  nearestPatchFace;
-                sampleRegion shell;
-                samplePatch shell_to_solid;
-            }
+            name        shell_to_solid;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            sampleRegion solid;
+            samplePatch solid_to_shell;
+        }
+
+        neighbour
+        {
+            name        solid_to_shell;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            sampleRegion shell;
+            samplePatch shell_to_solid;
         }
     }
 
@@ -48,24 +46,22 @@ baffles
         type        faceZone;
         zoneName    tube_to_solid;
 
-        patches
+        owner
         {
-            master
-            {
-                name        tube_to_solid;
-                type        mappedWall;
-                sampleMode  nearestPatchFace;
-                sampleRegion solid;
-                samplePatch solid_to_tube;
-            }
-            slave
-            {
-                name        solid_to_tube;
-                type        mappedWall;
-                sampleMode  nearestPatchFace;
-                sampleRegion tube;
-                samplePatch tube_to_solid;
-            }
+            name        tube_to_solid;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            sampleRegion solid;
+            samplePatch solid_to_tube;
+        }
+
+        neighbour
+        {
+            name        solid_to_tube;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            sampleRegion tube;
+            samplePatch tube_to_solid;
         }
     }
 }

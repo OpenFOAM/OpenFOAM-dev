@@ -1083,7 +1083,6 @@ Foam::mappedPatchBase::mappedPatchBase
 
             case NONUNIFORM:
             {
-                // offsets_ = pointField(dict.lookup("offsets"));
                 offsets_ = readListOrField("offsets", dict, patch_.size());
             }
             break;
@@ -1103,15 +1102,12 @@ Foam::mappedPatchBase::mappedPatchBase
     else if (dict.found("offsets"))
     {
         offsetMode_ = NONUNIFORM;
-        // offsets_ = pointField(dict.lookup("offsets"));
         offsets_ = readListOrField("offsets", dict, patch_.size());
     }
     else if (mode_ != NEARESTPATCHFACE && mode_ != NEARESTPATCHFACEAMI)
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Please supply the offsetMode as one of "
+        FatalIOErrorInFunction(dict)
+            << "Please supply the offsetMode as one of "
             << NamedEnum<offsetMode, 3>::words()
             << exit(FatalIOError);
     }
@@ -1129,7 +1125,7 @@ Foam::mappedPatchBase::mappedPatchBase
     sampleRegion_(dict.lookupOrDefault<word>("sampleRegion", "")),
     mode_(mode),
     samplePatch_(dict.lookupOrDefault<word>("samplePatch", "")),
-    coupleGroup_(dict), // dict.lookupOrDefault<word>("coupleGroup", "")),
+    coupleGroup_(dict),
     offsetMode_(UNIFORM),
     offset_(Zero),
     offsets_(0),
@@ -1143,16 +1139,13 @@ Foam::mappedPatchBase::mappedPatchBase
 {
     if (mode != NEARESTPATCHFACE && mode != NEARESTPATCHFACEAMI)
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Construct from sampleMode and dictionary only applicable for "
+        FatalIOErrorInFunction(dict)
+            << "Construct from sampleMode and dictionary only applicable for "
             << " collocated patches in modes "
             << sampleModeNames_[NEARESTPATCHFACE] << ','
             << sampleModeNames_[NEARESTPATCHFACEAMI]
             << exit(FatalIOError);
     }
-
 
     if (!coupleGroup_.valid())
     {

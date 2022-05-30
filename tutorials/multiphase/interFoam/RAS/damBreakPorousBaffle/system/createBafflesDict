@@ -13,62 +13,49 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Whether to convert internal faces only (so leave boundary faces intact).
-// This is only relevant if your face selection type can pick up boundary
-// faces.
 internalFacesOnly true;
 
 fields true;
 
-// Baffles to create.
 baffles
 {
     cyclicFaces
     {
-        //- Select faces and orientation through a searchableSurface
         type        searchableSurface;
         surface     searchablePlate;
         origin      (0.3042 0.0493 -100);
         span        (0 0.1584  200);
 
-        patches
+        owner
         {
-            master
+            name        porous_half0;
+            type        cyclic;
+            neighbourPatch porous_half1;
+
+            patchFields
             {
-                //- Master side patch
-
-                name            porous_half0;
-                type            cyclic;
-                neighbourPatch  porous_half1;
-
-                //- Optional override of added patchfields. If not specified
-                //  any added patchfields are of type calculated.
-                patchFields
+                p_rgh
                 {
-                    p_rgh
-                    {
-                        type            porousBafflePressure;
-                        patchType       cyclic;
-                        D               10;
-                        I               5;
-                        length          0.15;
-                        jump            uniform 0;
-                        value           uniform 0;
-                    }
+                    type        porousBafflePressure;
+                    patchType   cyclic;
+                    D           10;
+                    I           5;
+                    length      0.15;
+                    jump        uniform 0;
+                    value       uniform 0;
                 }
             }
-            slave
+        }
+
+        neighbour
+        {
+            name        porous_half1;
+            type        cyclic;
+            neighbourPatch porous_half0;
+
+            patchFields
             {
-                //- Slave side patch
-
-                name            porous_half1;
-                type            cyclic;
-                neighbourPatch  porous_half0;
-
-                patchFields
-                {
-                    ${...master.patchFields}
-                }
+                $../../owner/patchFields;
             }
         }
     }

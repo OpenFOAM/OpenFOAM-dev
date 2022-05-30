@@ -13,126 +13,126 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Sample for creating baffles:
-// - usually converting internal faces into two boundary faces
-// - or converting boundary faces into a boundary face
-//   (internalFacesOnly=false)(though should use really createPatch
-//    to do this)
+// This is a sample configuration for creating baffles. Notes:
 //
-// - selection of faces (and orientation) to 'baffle' through:
-//      faceZone:
-//          type        faceZone;
-//          zoneName    f0;
-//      searchableSurface:
-//          type        searchableSurface;
-//          surface     triSurfaceMesh;
-//          name        baffle1D.stl;
+// - This utility usually converts internal faces into two boundary faces.
 //
-// - specification of patches for baffle sides in one of two modes:
-//      - patchPairs : create two patches of same type, same input
-//      - patches    : create patches separately, full control over what
-//                     to create on what side
-//                     (this mode can also create duplicate (overlapping)
-//                      sets of baffles:
-//                      - internalFacesOnly = false
-//                      - have 4 entries in patches:
-//                          - master
-//                          - slave
-//                          - additional master
-//                          - additional slave)
+// - It can also convert boundary faces into a boundary face on a different
+//   patch.
+//
+// - Faces are selected to make into baffles by specifying either a faceZone or
+//   a searchableSurface.
+//
+// - Each selection requires two patches to be specified; the owner (or master)
+//   and the neighbour (or slave).
+//
+// - Orientation matters. Internal faces will be split into two faces, and the
+//   face that is oriented in the same direction as the zone or surface will be
+//   added to the owner/master patch. The other face will be added to the
+//   neighbour/slave patch. Boundary faces will be added to the owner patch if
+//   they are oriented in the same direction as the zone or surface, and they
+//   will be added to the neighbour patch otherwise.
+//
+// - Optionally, fields can also be modified. If the added patches are of
+//   non-constrained type then patch-field entries must be provided for all
+//   fields.
+//
 
-
-// Whether to convert internal faces only (so leave boundary faces intact).
-// This is only relevant if your face selection type can pick up boundary
-// faces.
+// Whether to convert internal faces only, and ignore any boundary faces that
+// are in the selection
 internalFacesOnly true;
 
-// Optionally do not read/convert/write any fields.
-//noFields true;
+// Whether to add patch fields to the field files
+fields true;
 
-
-// Baffles to create.
+// Baffles to create
 baffles
 {
-    baffle1
+    // Wall baffle example
+    baffleFaces
     {
-        //- Use surface to select faces and orientation.
+        // Use a surface to select faces and orientation.
         type        searchableSurface;
         surface     triSurfaceMesh;
         name        baffle1D.stl;
-        //- Optional flip
-        // flip        false;
 
-
-        // Generate patchGroup baffle1 with two patches:
-        //  - baffle1_master
-        //  - baffle1_slave
-        patchPairs
+        // Owner patch
+        owner
         {
-            type            wall;
-            //- Optional override of added patchfields. If not specified
-            //  any added patchfields are of type calculated.
+            name        baffleWall0;
+            type        wall;
+
+            // Patch field settings (can be omitted if fields = false)
             patchFields
             {
+                p
+                {
+                    type        zeroGradient;
+                }
+
                 U
                 {
-                    type            fixedValue;
-                    value           uniform (0 0 0);
+                    type        noSlip;
                 }
             }
         }
+
+        // Neighbour patch. Use the same settings as for the owner.
+        neighbour
+        {
+            name        baffleWall1;
+            $owner;
+        }
     }
 
-
+    // Cyclic example
     cyclicFaces
     {
-        //- Select faces and orientation through a searchableSurface
-        type        searchableSurface;
-        surface     searchablePlate;
+        // Use a zone to select faces and orientation
+        type        faceZone;
+        zoneName    cyclicFaces;
 
-        origin      (0.099 -0.006 0.004);
-        span        (0 0.012 0.012);
-
-
-        // Generate patches explicitly
-        patches
+        // Owner patch
+        owner
         {
-            master
+            name        fan0;
+            type        cyclic;
+            neighbourPatch fan1;
+            transform   none;
+
+            // Patch field settings. Note U (and others) are not needed because
+            // the patch that is being created is of constrained type, so the
+            // fields can be constructed automatically. A field for p is given
+            // here as it is an override (see the 'patchType' entry).
+            patchFields
             {
-                //- Master side patch
-
-                name            fan_half0;
-                type            cyclic;
-                neighbourPatch  fan_half1;
-
-                patchFields
+                p
                 {
-                    p
-                    {
-                        type            fan;
-                        patchType       cyclic;
-                        jump            uniform 0;
-                        value           uniform 0;
-                        jumpTable       polynomial 1((100 0));
-                    }
+                    type        fan;
+                    patchType   cyclic;
+                    jump        uniform 0;
+                    value       uniform 0;
+                    jumpTable   polynomial 1((100 0));
                 }
             }
-            slave
+        }
+
+        // Neighbour patch
+        neighbour
+        {
+            name        fan1;
+            type        cyclic;
+            neighbourPatch fan0;
+            transform   none;
+
+            // Patch field settings
+            patchFields
             {
-                //- Slave side patch
-
-                name            fan_half1;
-                type            cyclic;
-                neighbourPatch  fan_half0;
-
-                patchFields
+                p
                 {
-                    p
-                    {
-                        type            fan;
-                        patchType       cyclic;
-                        value           uniform 0;
-                    }
+                    type        fan;
+                    patchType   cyclic;
+                    value       uniform 0;
                 }
             }
         }

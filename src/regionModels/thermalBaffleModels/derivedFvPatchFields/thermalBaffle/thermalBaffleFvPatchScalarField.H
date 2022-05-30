@@ -145,15 +145,11 @@ SourceFiles
 #ifndef thermalBaffleFvPatchScalarField_H
 #define thermalBaffleFvPatchScalarField_H
 
-
-#include "autoPtr.H"
-#include "regionModel.H"
 #include "thermalBaffleModel.H"
 #include "extrudePatchMesh.H"
 #include "turbulentTemperatureRadCoupledMixedFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 
 namespace Foam
 {
@@ -170,31 +166,39 @@ class thermalBaffleFvPatchScalarField
 {
     // Private Data
 
-        //- Enumeration of patch IDs
-        enum patchID
-        {
-            bottomPatchID,
-            topPatchID,
-            sidePatchID
-        };
-
-        //- Is the baffle owner
-        bool owner_;
-
-        //- Thermal baffle
-        autoPtr<regionModels::thermalBaffleModel> baffle_;
-
         //- Dictionary
         dictionary dict_;
 
-        //- Auto pointer to extrapolated mesh from patch
-        autoPtr<extrudePatchMesh> extrudeMeshPtr_;
+        //- The neighbouring baffle patch name
+        const word nbrPatch_;
+
+        //- Thermal baffle mesh extruded from this patch
+        autoPtr<extrudePatchMesh> baffleMeshPtr_;
+
+        //- Thermal baffle model
+        autoPtr<regionModels::thermalBaffleModel> bafflePtr_;
 
 
     // Private Member Functions
 
-        //- Extrude mesh
-        void createPatchMesh();
+        //- Is this patch in the primary region?
+        bool primary() const;
+
+        //- Is this patch the owner?
+        bool owner() const;
+
+        //- Check consistency of the patch settings
+        void checkPatches() const;
+
+        //- Check consistency of the patch field settings
+        void checkPatchFields() const;
+
+        //- Construct and return the thermal baffle mesh
+        autoPtr<extrudePatchMesh> initBaffleMesh() const;
+
+        //- Construct and return the thermal baffle model
+        autoPtr<regionModels::thermalBaffleModel> initBaffle() const;
+
 
 public:
 
@@ -251,7 +255,6 @@ public:
 
     // Member Functions
 
-
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
@@ -277,7 +280,6 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 
 #endif
 

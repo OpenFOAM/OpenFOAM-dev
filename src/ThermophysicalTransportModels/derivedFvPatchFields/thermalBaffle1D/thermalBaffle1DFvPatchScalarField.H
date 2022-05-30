@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,6 @@ SourceFiles
 
 #include "mixedFvPatchFields.H"
 #include "autoPtr.H"
-#include "mappedPatchBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -110,7 +109,6 @@ namespace compressible
 template<class solidType>
 class thermalBaffle1DFvPatchScalarField
 :
-    public mappedPatchBase,
     public mixedFvPatchScalarField
 {
     // Private Data
@@ -154,8 +152,11 @@ class thermalBaffle1DFvPatchScalarField
         //- Return thickness from master
         tmp<scalarField> baffleThickness() const;
 
-        //- Is Owner
+        //- Is this patch the owner?
         bool owner() const;
+
+        //- Access the neighbour field
+        const thermalBaffle1DFvPatchScalarField& nbrField() const;
 
 
 public:

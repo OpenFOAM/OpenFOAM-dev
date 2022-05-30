@@ -17,25 +17,21 @@ internalFacesOnly true;
 
 baffles
 {
-    baffleFaces
+    nonCouple
     {
         type        faceZone;
         zoneName    couple;
 
-        patches
+        owner
         {
-            master
-            {
-                name            nonCouple1;
-                type            patch;
-                inGroups        (nonCouple);
-            }
-            slave
-            {
-                name            nonCouple2;
-                type            patch;
-                inGroups        (nonCouple);
-            }
+            name        nonCouple1;
+            type        patch;
+        }
+
+        neighbour
+        {
+            name        nonCouple2;
+            type        patch;
         }
     }
 }

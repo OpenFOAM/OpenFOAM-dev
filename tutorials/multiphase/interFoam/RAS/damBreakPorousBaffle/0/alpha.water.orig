@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.water.orig;
+    object      alpha.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -24,37 +24,23 @@ boundaryField
     {
         type            zeroGradient;
     }
-
     rightWall
     {
         type            zeroGradient;
     }
-
     lowerWall
     {
         type            zeroGradient;
     }
-
     atmosphere
     {
         type            inletOutlet;
-        inletValue      uniform 0;
-        value           uniform 0;
+        inletValue      $internalField;
+        value           $internalField;
     }
-
     defaultFaces
     {
         type            empty;
-    }
-
-    porous_half0
-    {
-        type            cyclic;
-    }
-
-    porous_half1
-    {
-        type            cyclic;
     }
 }
 

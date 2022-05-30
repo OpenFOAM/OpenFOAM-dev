@@ -5,23 +5,29 @@
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-specie
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 300;
+
+boundaryField
 {
-    molWeight       20;
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    ".*"
+    {
+        type                compressible::thermalBaffle;
+        value               uniform 300;
+    }
 }
-transport
-{
-    kappa           1;
-}
-thermodynamics
-{
-    Hf              0;
-    Cv              10;
-}
-equationOfState
-{
-    rho             10;
-}
+
 
 // ************************************************************************* //

@@ -8,46 +8,41 @@
 FoamFile
 {
     format      ascii;
-    class       volVectorField;
+    class       volScalarField;
     location    "0";
-    object      U;
+    object      nut;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [0 2 -1 0 0 0 0];
 
-internalField   uniform (0 0 0);
+internalField   uniform 0;
 
 boundaryField
 {
     leftWall
     {
-        type            noSlip;
+        type            nutkWallFunction;
+        value           $internalField;
     }
     rightWall
     {
-        type            noSlip;
+        type            nutkWallFunction;
+        value           $internalField;
     }
     lowerWall
     {
-        type            noSlip;
+        type            nutkWallFunction;
+        value           $internalField;
     }
     atmosphere
     {
-        type            pressureInletOutletVelocity;
-        value           uniform (0 0 0);
+        type            calculated;
+        value           $internalField;
     }
     defaultFaces
     {
         type            empty;
-    }
-    porous_half0
-    {
-        type            cyclic;
-    }
-    porous_half1
-    {
-        type            cyclic;
     }
 }
 
