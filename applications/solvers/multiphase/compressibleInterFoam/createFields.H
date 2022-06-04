@@ -76,7 +76,18 @@ surfaceScalarField rhoPhi
     fvc::interpolate(rho)*phi
 );
 
-volScalarField dgdt(alpha1*fvc::div(phi));
+volScalarField::Internal dgdt
+(
+    IOobject
+    (
+        "dgdt",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    alpha1*fvc::div(phi)
+);
 
 #include "createAlphaFluxes.H"
 
