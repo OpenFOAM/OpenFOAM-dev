@@ -462,8 +462,8 @@ public:
 
         // Edit
 
-            //- Is mesh dynamic
-            virtual bool dynamic() const;
+            //- Is this mesh dynamic?
+            bool dynamic() const;
 
             //- Update the mesh for topology change, mesh to mesh mapping
             //  or redistribution

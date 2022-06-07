@@ -514,12 +514,6 @@ public:
 
         // Mesh motion
 
-            //- Is mesh dynamic
-            virtual bool dynamic() const
-            {
-                return false;
-            }
-
             //- Is mesh moving
             bool moving() const
             {
