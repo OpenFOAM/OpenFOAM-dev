@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -436,7 +436,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
         Foam::fvConstraints::New(this->mesh_)
     );
 
-    BasicMomentumTransportModel::correct();
+    MomentumTransportModel::correct();
 
     volScalarField::Internal divU
     (
