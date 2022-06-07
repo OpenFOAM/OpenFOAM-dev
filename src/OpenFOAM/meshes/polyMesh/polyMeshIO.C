@@ -26,6 +26,7 @@ License
 #include "polyMesh.H"
 #include "Time.H"
 #include "cellIOList.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -509,6 +510,33 @@ bool Foam::polyMesh::writeObject
     const bool write
 ) const
 {
+    if (faces_.writeOpt() == AUTO_WRITE)
+    {
+        auto rmAddressing = [&](const word& name)
+        {
+            const IOobject faceProcAddressingIO
+            (
+                name,
+                facesInstance(),
+                meshSubDir,
+                *this
+            );
+
+            rm(faceProcAddressingIO.objectPath(false));
+        };
+
+        if (!Pstream::parRun())
+        {
+            rmAddressing("cellProc");
+        }
+        else
+        {
+            rmAddressing("pointProcAddressing");
+            rmAddressing("faceProcAddressing");
+            rmAddressing("cellProcAddressing");
+        }
+    }
+
     const bool written = objectRegistry::writeObject(fmt, ver, cmp, write);
 
     const_cast<polyMesh&>(*this).setTopologyWrite(IOobject::NO_WRITE);

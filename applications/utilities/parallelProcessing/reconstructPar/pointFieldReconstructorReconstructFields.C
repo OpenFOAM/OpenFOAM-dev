@@ -169,6 +169,8 @@ void Foam::pointFieldReconstructor::reconstructFields
                 Info<< "        " << fieldIter()->name() << endl;
 
                 reconstructField<Type>(*fieldIter())().write();
+
+                nReconstructed_++;
             }
         }
 

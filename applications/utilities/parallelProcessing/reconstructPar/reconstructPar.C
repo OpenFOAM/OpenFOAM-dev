@@ -45,24 +45,55 @@ Description
 
 namespace Foam
 {
-    bool haveAllTimes
-    (
-        const HashSet<word>& masterTimeDirSet,
-        const instantList& timeDirs
-    )
+
+bool haveAllTimes
+(
+    const HashSet<word>& masterTimeDirSet,
+    const instantList& timeDirs
+)
+{
+    // Loop over all times
+    forAll(timeDirs, timei)
     {
-        // Loop over all times
-        forAll(timeDirs, timei)
+        if (!masterTimeDirSet.found(timeDirs[timei].name()))
         {
-            if (!masterTimeDirSet.found(timeDirs[timei].name()))
-            {
-                return false;
-            }
+            return false;
         }
-        return true;
     }
+    return true;
 }
 
+
+void writeDecomposition(const domainDecomposition& meshes)
+{
+    // Write as volScalarField for postprocessing.
+    volScalarField::Internal cellProc
+    (
+        IOobject
+        (
+            "cellProc",
+            meshes.completeMesh().time().timeName(),
+            meshes.completeMesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        meshes.completeMesh(),
+        dimless,
+        scalarField(scalarList(meshes.cellProc()))
+    );
+
+    cellProc.write();
+
+    Info<< "Wrote decomposition as volScalarField to "
+        << cellProc.name() << " for use in postprocessing."
+        << nl << endl;
+}
+
+
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
@@ -77,6 +108,12 @@ int main(int argc, char *argv[])
     argList::noParallel();
     #include "addRegionOption.H"
     #include "addAllRegionsOption.H"
+    argList::addBoolOption
+    (
+        "cellDist",
+        "write cell distribution as a labelList - for use with 'manual' "
+        "decomposition method or as a volScalarField for post-processing."
+    );
     argList::addOption
     (
         "fields",
@@ -114,6 +151,8 @@ int main(int argc, char *argv[])
     );
 
     #include "setRootCase.H"
+
+    const bool writeCellDist = args.optionFound("cellDist");
 
     HashSet<word> selectedFields;
     if (args.optionFound("fields"))
@@ -225,25 +264,12 @@ int main(int argc, char *argv[])
         const word& regionDir = Foam::regionDir(regionName);
 
         // Create meshes
-        Info<< "\n\nReconstructing fields for mesh " << regionName
-            << nl << endl;
+        Info<< "\n\nReconstructing mesh " << regionName << nl << endl;
         domainDecomposition meshes(runTimes, regionName);
-        meshes.readComplete();
-        meshes.readProcs();
-        meshes.readAddressing();
-        meshes.readUpdate();
-
-        // Write the complete mesh if at the constant instant. Otherwise
-        // mesh-associated things (sets, hexRef8, ...) will not be written by
-        // domainDecomposition because there is no change of mesh to trigger
-        // them to write.
-        if
-        (
-            runTimes.completeTime().timeName()
-         == runTimes.completeTime().constant()
-        )
+        if (meshes.readReconstruct(!noReconstructSets) && writeCellDist)
         {
-            meshes.writeComplete(!noReconstructSets);
+            writeDecomposition(meshes);
+            fileHandler().flush();
         }
 
         // Loop over all times
@@ -263,18 +289,25 @@ int main(int argc, char *argv[])
                 << nl << endl;
 
             // Update the meshes
-            const fvMesh::readUpdateState state = meshes.readUpdate();
-            if (state == fvMesh::POINTS_MOVED)
-            {
-                meshes.writeComplete(false);
-            }
-            if
-            (
-                state == fvMesh::TOPO_CHANGE
-             || state == fvMesh::TOPO_PATCH_CHANGE
-            )
+            const fvMesh::readUpdateState state =
+                meshes.readUpdateReconstruct();
+
+            // Write the mesh out, if necessary
+            if (state != fvMesh::UNCHANGED)
             {
                 meshes.writeComplete(!noReconstructSets);
+            }
+
+            // Write the decomposition, if necessary
+            if
+            (
+                writeCellDist
+             && meshes.completeMesh().facesInstance()
+             == runTimes.completeTime().timeName()
+            )
+            {
+                writeDecomposition(meshes);
+                fileHandler().flush();
             }
 
             // Get list of objects from processor0 database

@@ -50,7 +50,7 @@ cleanCase()
                $d/fvMesh       $d/*/fvMesh \
                $d/cellToRegion $d/*/cellToRegion \
                $d/cellLevel*   $d/pointLevel* \
-               $d/cellDist     $d/cellDecomposition
+               $d/cellProc
     done
 
     [ -d system ] && [ -d dynamicCode ] && rm -rf dynamicCode

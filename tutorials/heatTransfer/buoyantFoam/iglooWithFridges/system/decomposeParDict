@@ -18,21 +18,5 @@ numberOfSubdomains 2;
 
 method          scotch;
 
-simpleCoeffs
-{
-    n               (4 1 1);
-}
-
-hierarchicalCoeffs
-{
-    n               (3 2 1);
-    order           xyz;
-}
-
-manualCoeffs
-{
-    dataFile        "cellDecomposition";
-}
-
 
 // ************************************************************************* //

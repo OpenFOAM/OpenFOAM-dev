@@ -178,7 +178,7 @@ Foam::labelList Foam::domainDecomposition::distributeCells()
 template<class BinaryOp>
 inline void Foam::domainDecomposition::processInterCyclics
 (
-    const labelList& cellToProc,
+    const labelList& cellProc,
     const polyBoundaryMesh& patches,
     List<DynamicList<DynamicList<label>>>& interPatchFaces,
     List<Map<label>>& procNbrToInterPatch,
@@ -209,12 +209,12 @@ inline void Foam::domainDecomposition::processInterCyclics
             forAll(origPatchFaceCells, origFacei)
             {
                 const label ownerProc =
-                    cellToProc[origPatchFaceCells[origFacei]];
+                    cellProc[origPatchFaceCells[origFacei]];
 
                 forAll(nbrOrigPatchFaceCells, nbrOrigFacei)
                 {
                     const label nbrProc =
-                        cellToProc[nbrOrigPatchFaceCells[nbrOrigFacei]];
+                        cellProc[nbrOrigPatchFaceCells[nbrOrigFacei]];
 
                     if (bop(ownerProc, nbrProc))
                     {
@@ -246,8 +246,8 @@ inline void Foam::domainDecomposition::processInterCyclics
             // Add faces with different owner and neighbour processors
             forAll(patchFaceCells, facei)
             {
-                const label ownerProc = cellToProc[patchFaceCells[facei]];
-                const label nbrProc = cellToProc[nbrPatchFaceCells[facei]];
+                const label ownerProc = cellProc[patchFaceCells[facei]];
+                const label nbrProc = cellProc[nbrPatchFaceCells[facei]];
 
                 if (bop(ownerProc, nbrProc))
                 {
@@ -274,7 +274,7 @@ inline void Foam::domainDecomposition::processInterCyclics
 void Foam::domainDecomposition::decompose()
 {
     // Decide which cell goes to which processor
-    const labelList cellToProc = distributeCells();
+    cellProc_ = distributeCells();
 
     // Distribute the cells according to the given processor label
 
@@ -293,7 +293,7 @@ void Foam::domainDecomposition::decompose()
     Info<< "\nDistributing cells to processors" << endl;
 
     // Cells per processor
-    procCellAddressing_ = invertOneToMany(nProcs(), cellToProc);
+    procCellAddressing_ = invertOneToMany(nProcs(), cellProc_);
 
     Info<< "\nDistributing faces to processors" << endl;
 
@@ -306,10 +306,10 @@ void Foam::domainDecomposition::decompose()
     // Internal faces
     forAll(neighbour, facei)
     {
-        if (cellToProc[owner[facei]] == cellToProc[neighbour[facei]])
+        if (cellProc_[owner[facei]] == cellProc_[neighbour[facei]])
         {
             // Face internal to processor. Notice no turning index.
-            dynProcFaceAddressing[cellToProc[owner[facei]]].append(facei+1);
+            dynProcFaceAddressing[cellProc_[owner[facei]]].append(facei+1);
         }
     }
 
@@ -345,7 +345,7 @@ void Foam::domainDecomposition::decompose()
 
             forAll(patchFaceCells, facei)
             {
-                const label curProc = cellToProc[patchFaceCells[facei]];
+                const label curProc = cellProc_[patchFaceCells[facei]];
 
                 // add the face without turning index
                 dynProcFaceAddressing[curProc].append(patchStart+facei+1);
@@ -367,8 +367,8 @@ void Foam::domainDecomposition::decompose()
 
             forAll(patchFaceCells, facei)
             {
-                const label curProc = cellToProc[patchFaceCells[facei]];
-                const label nbrProc = cellToProc[nbrPatchFaceCells[facei]];
+                const label curProc = cellProc_[patchFaceCells[facei]];
+                const label nbrProc = cellProc_[nbrPatchFaceCells[facei]];
 
                 if (curProc == nbrProc)
                 {
@@ -398,8 +398,8 @@ void Foam::domainDecomposition::decompose()
     // Processor boundaries from internal faces
     forAll(neighbour, facei)
     {
-        label ownerProc = cellToProc[owner[facei]];
-        label nbrProc = cellToProc[neighbour[facei]];
+        const label ownerProc = cellProc_[owner[facei]];
+        const label nbrProc = cellProc_[neighbour[facei]];
 
         if (ownerProc != nbrProc)
         {
@@ -443,7 +443,7 @@ void Foam::domainDecomposition::decompose()
 
     processInterCyclics
     (
-        cellToProc,
+        cellProc_,
         patches,
         interPatchFaces,
         procNbrToInterPatch,
@@ -455,7 +455,7 @@ void Foam::domainDecomposition::decompose()
 
     processInterCyclics
     (
-        cellToProc,
+        cellProc_,
         patches,
         interPatchFaces,
         procNbrToInterPatch,
@@ -467,7 +467,7 @@ void Foam::domainDecomposition::decompose()
 
     processInterCyclics
     (
-        cellToProc,
+        cellProc_,
         patches,
         interPatchFaces,
         procNbrToInterPatch,
@@ -479,7 +479,7 @@ void Foam::domainDecomposition::decompose()
 
     processInterCyclics
     (
-        cellToProc,
+        cellProc_,
         patches,
         interPatchFaces,
         procNbrToInterPatch,

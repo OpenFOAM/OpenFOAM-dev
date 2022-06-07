@@ -164,36 +164,12 @@ void decomposeUniform
 
 void writeDecomposition(const domainDecomposition& meshes)
 {
-    const labelList& procIds = meshes.cellToProc();
-
-    // Write the decomposition as labelList for use with 'manual'
-    // decomposition method.
-    labelIOList cellDecomposition
-    (
-        IOobject
-        (
-            "cellDecomposition",
-            meshes.completeMesh().facesInstance(),
-            meshes.completeMesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        procIds
-    );
-
-    cellDecomposition.write();
-
-    Info<< nl << "Wrote decomposition to "
-        << cellDecomposition.relativeObjectPath()
-        << " for use in manual decomposition." << endl;
-
     // Write as volScalarField for postprocessing.
-    volScalarField::Internal cellDist
+    volScalarField::Internal cellProc
     (
         IOobject
         (
-            "cellDist",
+            "cellProc",
             meshes.completeMesh().time().timeName(),
             meshes.completeMesh(),
             IOobject::NO_READ,
@@ -201,14 +177,14 @@ void writeDecomposition(const domainDecomposition& meshes)
         ),
         meshes.completeMesh(),
         dimless,
-        scalarField(scalarList(procIds))
+        scalarField(scalarList(meshes.cellProc()))
     );
 
-    cellDist.write();
+    cellProc.write();
 
-    Info<< nl << "Wrote decomposition as volScalarField to "
-        << cellDist.name() << " for use in postprocessing."
-        << endl;
+    Info<< "Wrote decomposition as volScalarField to "
+        << cellProc.name() << " for use in postprocessing."
+        << nl << endl;
 }
 
 
@@ -281,8 +257,7 @@ int main(int argc, char *argv[])
 
     if (decomposeGeomOnly)
     {
-        Info<< "Skipping decomposing fields"
-            << nl << endl;
+        Info<< "Skipping decomposing fields" << nl << endl;
 
         if (decomposeFieldsOnly || copyZero)
         {
@@ -304,65 +279,71 @@ int main(int argc, char *argv[])
     const wordList regionNames =
         selectRegionNames(args, runTimes.completeTime());
 
-    // Handle existing decomposition directories
+    // Remove existing processor directories if requested
+    if (forceOverwrite)
     {
-        // Determine the processor count from the directories
-        label nProcs = fileHandler().nProcs(runTimes.completeTime().path());
-
-        if (forceOverwrite)
+        if (region)
         {
-            if (region)
+            FatalErrorInFunction
+                << "Cannot force the decomposition of a single region"
+                << exit(FatalError);
+        }
+
+        const label nProcs0 =
+            fileHandler().nProcs(runTimes.completeTime().path());
+
+        Info<< "Removing " << nProcs0
+            << " existing processor directories" << endl;
+
+        // Remove existing processor directories
+        const fileNameList dirs
+        (
+            fileHandler().readDir
+            (
+                runTimes.completeTime().path(),
+                fileType::directory
+            )
+        );
+        forAllReverse(dirs, diri)
+        {
+            const fileName& d = dirs[diri];
+
+            // Starts with 'processors'
+            if (d.find("processors") == 0)
             {
-                FatalErrorInFunction
-                    << "Cannot force the decomposition of a single region"
-                    << exit(FatalError);
+                if (fileHandler().exists(d))
+                {
+                    fileHandler().rmDir(d);
+                }
             }
 
-            Info<< "Removing " << nProcs
-                << " existing processor directories" << endl;
-
-            // Remove existing processors directory
-            fileNameList dirs
-            (
-                fileHandler().readDir
-                (
-                    runTimes.completeTime().path(),
-                    fileType::directory
-                )
-            );
-            forAllReverse(dirs, diri)
+            // Starts with 'processor'
+            if (d.find("processor") == 0)
             {
-                const fileName& d = dirs[diri];
-
-                // Starts with 'processors'
-                if (d.find("processors") == 0)
+                // Check that integer after processor
+                fileName num(d.substr(9));
+                label proci = -1;
+                if (Foam::read(num.c_str(), proci))
                 {
                     if (fileHandler().exists(d))
                     {
                         fileHandler().rmDir(d);
                     }
                 }
-
-                // Starts with 'processor'
-                if (d.find("processor") == 0)
-                {
-                    // Check that integer after processor
-                    fileName num(d.substr(9));
-                    label proci = -1;
-                    if (Foam::read(num.c_str(), proci))
-                    {
-                        if (fileHandler().exists(d))
-                        {
-                            fileHandler().rmDir(d);
-                        }
-                    }
-                }
             }
         }
-        else if (nProcs && !region && !decomposeFieldsOnly)
+    }
+
+    // Check the specified number of processes is consistent with any existing
+    // processor directories
+    {
+        const label nProcs0 =
+            fileHandler().nProcs(runTimes.completeTime().path());
+
+        if (nProcs0 && nProcs0 != runTimes.nProcs())
         {
             FatalErrorInFunction
-                << "Case is already decomposed with " << nProcs
+                << "Case is already decomposed with " << nProcs0
                 << " domains, use the -force option or manually" << nl
                 << "remove processor directories before decomposing. e.g.,"
                 << nl
@@ -413,24 +394,13 @@ int main(int argc, char *argv[])
         // Create meshes
         Info<< "Create mesh" << endl;
         domainDecomposition meshes(runTimes, regionName);
-        meshes.readComplete();
-
-        // Read or generate a decomposition as necessary
-        if (decomposeFieldsOnly)
+        if (!decomposeFieldsOnly || !copyZero)
         {
-            meshes.readProcs();
-            if (!copyZero)
+            if (meshes.readDecompose(decomposeSets) && writeCellDist)
             {
-                meshes.readAddressing();
-                meshes.readUpdate();
+                writeDecomposition(meshes);
+                fileHandler().flush();
             }
-        }
-        else
-        {
-            meshes.decompose();
-            meshes.writeProcs(decomposeSets);
-            if (writeCellDist) writeDecomposition(meshes);
-            fileHandler().flush();
         }
 
         // Field maps. These are preserved if decomposing multiple times.
@@ -448,10 +418,10 @@ int main(int argc, char *argv[])
         );
 
         // Loop over all times
-        forAll(times, timeI)
+        forAll(times, timei)
         {
             // Set the time
-            runTimes.setTime(times[timeI], timeI);
+            runTimes.setTime(times[timei], timei);
 
             Info<< "Time = " << runTimes.completeTime().userTimeName() << endl;
 
@@ -459,7 +429,7 @@ int main(int argc, char *argv[])
             fvMesh::readUpdateState state = fvMesh::UNCHANGED;
             if (!decomposeFieldsOnly || !copyZero)
             {
-                state = meshes.readUpdate();
+                state = meshes.readUpdateDecompose();
             }
 
             // Write the mesh out, if necessary
@@ -467,18 +437,20 @@ int main(int argc, char *argv[])
             {
                 // Nothing to do
             }
-            else if (state == fvMesh::POINTS_MOVED)
-            {
-                meshes.writeProcs(false);
-            }
-            else if
-            (
-                state == fvMesh::TOPO_CHANGE
-             || state == fvMesh::TOPO_PATCH_CHANGE
-            )
+            else if (state != fvMesh::UNCHANGED)
             {
                 meshes.writeProcs(decomposeSets);
-                if (writeCellDist) writeDecomposition(meshes);
+            }
+
+            // Write the decomposition, if necessary
+            if
+            (
+                writeCellDist
+             && meshes.completeMesh().facesInstance()
+             == runTimes.completeTime().timeName()
+            )
+            {
+                writeDecomposition(meshes);
                 fileHandler().flush();
             }
 
@@ -510,10 +482,9 @@ int main(int argc, char *argv[])
                     runTimes.completeTime().timePath();
 
                 fileName prevProcTimePath;
-                for (label proci = 0; proci < meshes.nProcs(); proci++)
+                for (label proci = 0; proci < runTimes.nProcs(); proci++)
                 {
-                    const Time& procRunTime =
-                        meshes.procMeshes()[proci].time();
+                    const Time& procRunTime = runTimes.procTimes()[proci];
 
                     if (fileHandler().isDir(completeTimePath))
                     {

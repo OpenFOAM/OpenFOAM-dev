@@ -29,7 +29,8 @@ Description
 
 SourceFiles
     domainDecomposition.C
-    decomposeMesh.C
+    domainDecompositionDecompose.C
+    domainDecompositionReconstruct.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -67,12 +68,18 @@ class domainDecomposition
         PtrList<fvMesh> procMeshes_;
 
 
+        // Complete mesh to processor mesh addressing
+
+            //- For each complete cell, the processor index
+            labelList cellProc_;
+
+
         // Processor mesh to complete mesh addressing
 
-            //- Labels of points for each processor
+            //- For each processor point, the complete point index
             labelListList procPointAddressing_;
 
-            //- Labels of faces for each processor
+            //- For each processor face, the complete face index
             // Note: Face turning index is stored as the sign on addressing
             // Only the processor boundary faces are affected: if the sign of
             // the index is negative, the processor face is the reverse of the
@@ -82,7 +89,7 @@ class domainDecomposition
             // sign.
             labelListList procFaceAddressing_;
 
-            //- Labels of cells for each processor
+            //- For each processor cell, the complete point index
             labelListList procCellAddressing_;
 
 
@@ -128,7 +135,7 @@ class domainDecomposition
             template<class BinaryOp>
             inline void processInterCyclics
             (
-                const labelList& cellToProc,
+                const labelList& cellProc,
                 const polyBoundaryMesh& patches,
                 List<DynamicList<DynamicList<label>>>& interPatchFaces,
                 List<Map<label>>& procNbrToInterPatch,
@@ -164,6 +171,35 @@ class domainDecomposition
 
         //- Validate that the processor meshes have been generated or read
         void validateProcs() const;
+
+        //- ...
+        void readComplete();
+
+        //- ...
+        void readProcs();
+
+        //- ...
+        void readAddressing();
+
+        //- ...
+        fvMesh::readUpdateState readUpdate();
+
+        //- ...
+        void readUpdateDecompose(const fvMesh::readUpdateState& stat);
+
+        //- ...
+        void readUpdateReconstruct(const fvMesh::readUpdateState& stat);
+
+        //- Decompose the complete mesh to create the processor meshes and
+        //  populate the addressing
+        void decompose();
+
+        //- Reconstruct the processor meshes to create the complete mesh and
+        //  populate the addressing
+        void reconstruct();
+
+        //- Write the decomposition addressing
+        void writeAddressing() const;
 
 
 public:
@@ -208,28 +244,27 @@ public:
             return runTimes_.nProcs();
         }
 
-        //- ...
-        void readComplete();
+        //- Read in the complete mesh. Read the processor meshes if they are
+        //  available and up to date relative to the complete mesh, or
+        //  decompose if not. Return whether or not decomposition happened.
+        bool readDecompose(const bool doSets);
+
+        //- Read in the processor meshes. Read the complete mesh if it is
+        //  available and up to date relative to the processor meshes, or
+        //  reconstruct if not. Return whether or not reconstruction happened.
+        bool readReconstruct(const bool doSets);
 
         //- ...
-        void readProcs();
+        fvMesh::readUpdateState readUpdateDecompose();
 
         //- ...
-        void readAddressing();
-
-        //- ...
-        fvMesh::readUpdateState readUpdate();
-
-        //- Decompose the complete mesh to create the processor meshes and
-        //  populate the addressing
-        void decompose();
-
-        //- Reconstruct the processor meshes to create the complete mesh and
-        //  populate the addressing
-        void reconstruct();
+        fvMesh::readUpdateState readUpdateReconstruct();
 
         //- Return the distribution as an FV field for writing
-        labelList cellToProc() const;
+        const labelList& cellProc() const
+        {
+            return cellProc_;
+        }
 
         //- Access the labels of points for each processor
         const labelListList& procPointAddressing() const
@@ -255,9 +290,6 @@ public:
         //- Access the labels of faces for each processor (see notes above)
         const PtrList<surfaceLabelField::Boundary>&
             procFaceAddressingBf() const;
-
-        //- Write the decomposition addressing
-        void writeAddressing() const;
 
         //- Write the decomposed meshes and associated data
         void writeComplete(const bool doSets) const;
