@@ -1,10 +1,8 @@
 refiner/fvMeshTopoChangersRefiner.C
-raw/fvMeshTopoChangersRaw.C
 movingCone/fvMeshTopoChangersMovingCone.C
 list/fvMeshTopoChangersList.C
 
 # linearValveFvMesh/linearValveFvMesh.C
 # linearValveLayersFvMesh/linearValveLayersFvMesh.C
-# mixerFvMesh/mixerFvMesh.C
 
 LIB = $(FOAM_LIBBIN)/libfvMeshTopoChangers

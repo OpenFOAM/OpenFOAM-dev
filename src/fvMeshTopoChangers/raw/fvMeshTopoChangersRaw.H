@@ -25,10 +25,13 @@ Class
     Foam::fvMeshTopoChangers::raw
 
 Description
-    fvMeshTopoChanger without any added functionality.
+    Prototype fvMeshTopoChanger without any added functionality.
+
+    Can be used as the starting point for any polyTopoChanger based
+    topo-changer.
 
     Note: run without FOAM_SETNAN. Temporary has unitialised patch
-    data when faces get created out of nothing.
+    data when faces are created out of nothing.
 
 SourceFiles
     fvMeshTopoChangersRaw.C
