@@ -84,8 +84,8 @@ public:
 
     // Constructors
 
-        //- Construct from fvMesh
-        explicit raw(fvMesh& io);
+        //- Construct from fvMesh and dictionary
+        raw(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         raw(const raw&) = delete;

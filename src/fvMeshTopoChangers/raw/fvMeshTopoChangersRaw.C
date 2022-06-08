@@ -42,7 +42,7 @@ namespace fvMeshTopoChangers
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshTopoChangers::raw::raw(fvMesh& mesh)
+Foam::fvMeshTopoChangers::raw::raw(fvMesh& mesh, const dictionary& dict)
 :
     fvMeshTopoChanger(mesh),
     topoChanger_(mesh)

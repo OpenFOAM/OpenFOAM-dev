@@ -50,24 +50,6 @@ namespace fvMeshTopoChangers
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-void Foam::fvMeshTopoChangers::meshToMesh::readDict()
-{
-    const dictionary& meshToMeshDict(dict());
-
-    cuttingPatches_ =
-        meshToMeshDict.lookupOrDefault("cuttingPatches", wordList::null());
-
-    meshToMeshDict.lookup("times") >> times_;
-
-    meshToMeshDict.lookup("timeDelta") >> timeDelta_;
-
-    forAll(times_, i)
-    {
-        timeIndices_.insert(label(times_[i]/timeDelta_));
-    }
-}
-
-
 Foam::word Foam::fvMeshTopoChangers::meshToMesh::Uname
 (
     const surfaceVectorField& Uf
@@ -116,13 +98,23 @@ void Foam::fvMeshTopoChangers::meshToMesh::interpolateUfs()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshTopoChangers::meshToMesh::meshToMesh(fvMesh& mesh)
+Foam::fvMeshTopoChangers::meshToMesh::meshToMesh
+(
+    fvMesh& mesh,
+    const dictionary& dict
+)
 :
     fvMeshTopoChanger(mesh),
+    dict_(dict),
+    cuttingPatches_(dict.lookupOrDefault("cuttingPatches", wordList::null())),
+    times_(dict.lookup("times")),
+    timeDelta_(dict.lookup<scalar>("timeDelta")),
     timeIndex_(-1)
 {
-    // Read static part of dictionary
-    readDict();
+    forAll(times_, i)
+    {
+        timeIndices_.insert(label(times_[i]/timeDelta_));
+    }
 }
 
 
@@ -144,7 +136,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             (
                 "meshToMeshAdjustTimeStep",
                 mesh().time(),
-                dict()
+                dict_
             )
         );
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,54 @@ License
 
 Foam::autoPtr<Foam::fvMeshTopoChanger> Foam::fvMeshTopoChanger::New
 (
+    fvMesh& mesh,
+    const dictionary& dict
+)
+{
+    const word fvMeshTopoChangerTypeName
+    (
+        dict.lookup("type")
+    );
+
+    Info<< "Selecting fvMeshTopoChanger "
+        << fvMeshTopoChangerTypeName << endl;
+
+    libs.open
+    (
+        dict,
+        "libs",
+        fvMeshConstructorTablePtr_
+    );
+
+    if (!fvMeshConstructorTablePtr_)
+    {
+        FatalErrorInFunction
+            << "fvMeshTopoChangers table is empty"
+            << exit(FatalError);
+    }
+
+    fvMeshConstructorTable::iterator cstrIter =
+        fvMeshConstructorTablePtr_->find(fvMeshTopoChangerTypeName);
+
+    if (cstrIter == fvMeshConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown fvMeshTopoChanger type "
+            << fvMeshTopoChangerTypeName << nl << nl
+            << "Valid fvMeshTopoChangers are :" << endl
+            << fvMeshConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<fvMeshTopoChanger>
+    (
+        cstrIter()(mesh, dict)
+    );
+}
+
+
+Foam::autoPtr<Foam::fvMeshTopoChanger> Foam::fvMeshTopoChanger::New
+(
     fvMesh& mesh
 )
 {
@@ -52,44 +100,7 @@ Foam::autoPtr<Foam::fvMeshTopoChanger> Foam::fvMeshTopoChanger::New
 
         if (dict.found("topoChanger"))
         {
-            const dictionary& topoChangerDict = dict.subDict("topoChanger");
-
-            const word fvMeshTopoChangerTypeName
-            (
-                topoChangerDict.lookup("type")
-            );
-
-            Info<< "Selecting fvMeshTopoChanger "
-                << fvMeshTopoChangerTypeName << endl;
-
-            libs.open
-            (
-                topoChangerDict,
-                "libs",
-                fvMeshConstructorTablePtr_
-            );
-
-            if (!fvMeshConstructorTablePtr_)
-            {
-                FatalErrorInFunction
-                    << "fvMeshTopoChangers table is empty"
-                    << exit(FatalError);
-            }
-
-            fvMeshConstructorTable::iterator cstrIter =
-                fvMeshConstructorTablePtr_->find(fvMeshTopoChangerTypeName);
-
-            if (cstrIter == fvMeshConstructorTablePtr_->end())
-            {
-                FatalErrorInFunction
-                    << "Unknown fvMeshTopoChanger type "
-                    << fvMeshTopoChangerTypeName << nl << nl
-                    << "Valid fvMeshTopoChangers are :" << endl
-                    << fvMeshConstructorTablePtr_->sortedToc()
-                    << exit(FatalError);
-            }
-
-            return autoPtr<fvMeshTopoChanger>(cstrIter()(mesh));
+            return New(mesh, dict.subDict("topoChanger"));
         }
     }
 

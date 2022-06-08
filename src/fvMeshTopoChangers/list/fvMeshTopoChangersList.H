@@ -22,20 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvMeshTopoChangers::meshToMesh
+    Foam::fvMeshTopoChangers::list
 
 Description
-    fvMeshTopoChanger which maps to new mesh
+    Sequence of mesh topology changes applied in order.
 
 SourceFiles
-    fvMeshTopoChangersMeshToMesh.C
+    fvMeshTopoChangersList.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshTopoChangersMeshToMesh_H
-#define fvMeshTopoChangersMeshToMesh_H
+#ifndef fvMeshTopoChangersList_H
+#define fvMeshTopoChangersList_H
 
 #include "fvMeshTopoChanger.H"
+#include "PtrDictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,74 +46,38 @@ namespace fvMeshTopoChangers
 {
 
 /*---------------------------------------------------------------------------*\
-                Class fvMeshTopoChangers::meshToMesh Declaration
+                   Class fvMeshTopoChangers::list Declaration
 \*---------------------------------------------------------------------------*/
 
-class meshToMesh
+class list
 :
     public fvMeshTopoChanger
 {
     // Private Data
 
-        //- Mesh-to-mesh control dictionary
-        dictionary dict_;
-
-        //- Optional names of the patches which "cut" the internal mesh
-        //  and hence cannot be mapped from existing patches
-        wordList cuttingPatches_;
-
-        //- List of mesh mapping times
-        scalarList times_;
-
-        //- Time delta used for time -> index
-        scalar timeDelta_;
-
-        //- Hash set of mesh mapping time indices
-        labelHashSet timeIndices_;
-
-        //- The time index used for updating
-        label timeIndex_;
-
-
-    // Private Member Functions
-
-        //- Find the U field name corresponding to Uf
-        word Uname(const surfaceVectorField& Uf) const;
-
-        //- Interpolate U's to Uf's
-        void interpolateUfs();
+        PtrDictionary<fvMeshTopoChanger> list_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("meshToMesh");
+    TypeName("list");
 
 
     // Constructors
 
         //- Construct from fvMesh and dictionary
-        meshToMesh(fvMesh&, const dictionary& dict);
+        list(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        meshToMesh(const meshToMesh&) = delete;
+        list(const list&) = delete;
 
 
     //- Destructor
-    virtual ~meshToMesh();
+    virtual ~list();
 
 
     // Member Functions
-
-        const scalarList& times() const
-        {
-            return times_;
-        }
-
-        scalar timeDelta() const
-        {
-            return timeDelta_;
-        }
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
@@ -130,7 +95,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const meshToMesh&) = delete;
+        void operator=(const list&) = delete;
 };
 
 

@@ -74,8 +74,8 @@ public:
             autoPtr,
             fvMeshTopoChanger,
             fvMesh,
-            (fvMesh& mesh),
-            (mesh)
+            (fvMesh& mesh, const dictionary& dict),
+            (mesh, dict)
         );
 
 
@@ -118,8 +118,9 @@ public:
     // Selectors
 
         //- Select, construct and return the fvMeshTopoChanger
-        //  If the constant/dynamicMeshDict does not exist
-        //  a staticFvMesh is returned
+        static autoPtr<fvMeshTopoChanger> New(fvMesh&, const dictionary& dict);
+
+        //- Select, construct and return the fvMeshTopoChanger
         static autoPtr<fvMeshTopoChanger> New(fvMesh&);
 
 
@@ -139,12 +140,6 @@ public:
         const fvMesh& mesh() const
         {
             return mesh_;
-        }
-
-        //- Return the dynamicMeshDict/topoChanger sub-dict
-        const dictionary& dict() const
-        {
-            return dynamicMeshDict_.subDict("topoChanger");
         }
 
         //- Is mesh dynamic, i.e. might it change?
