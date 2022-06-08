@@ -141,6 +141,8 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         );
     }
 
+    bool hasChanged = false;
+
     // Only refine on the first call in a time-step
     if (timeIndex_ != mesh().time().timeIndex())
     {
@@ -148,12 +150,8 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
     }
     else
     {
-        mesh().topoChanging(false);
-
-        return false;
+        return hasChanged;
     }
-
-    bool hasChanged = false;
 
     const scalar userTime = mesh().time().userTimeValue();
 
@@ -249,8 +247,6 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         polyMeshMap map;
         mesh().mapMesh(map);
     }
-
-    mesh().topoChanging(hasChanged);
 
     return hasChanged;
 }

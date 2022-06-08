@@ -580,8 +580,6 @@ bool Foam::fvMesh::update()
 {
     if (!conformal()) stitcher_->disconnect(true, true);
 
-    bool updated = false;
-
     const bool hasV00 = V00Ptr_;
     deleteDemandDrivenData(V00Ptr_);
 
@@ -590,7 +588,10 @@ bool Foam::fvMesh::update()
         deleteDemandDrivenData(V0Ptr_);
     }
 
-    updated = topoChanger_->update() || updated;
+    // Set topoChanging false before any mesh change
+    topoChanging(false);
+    bool updated = topoChanger_->update();
+    topoChanging(updated);
 
     // Register V0 for distribution
     if (V0Ptr_)
@@ -620,6 +621,9 @@ bool Foam::fvMesh::move()
 {
     if (!conformal()) stitcher_->disconnect(true, true);
 
+    // Do not set moving false
+    // Once the mesh starts moving it is considered to be moving
+    // for the rest of the run
     const bool moved = mover_->update();
 
     curTimeIndex_ = time().timeIndex();

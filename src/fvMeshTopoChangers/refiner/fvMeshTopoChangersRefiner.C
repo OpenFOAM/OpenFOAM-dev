@@ -1493,9 +1493,7 @@ bool Foam::fvMeshTopoChangers::refiner::update()
 
     if (refineInterval_ == 0)
     {
-        mesh().topoChanging(hasChanged);
-
-        return false;
+        return hasChanged;
     }
 
     // Note: cannot refine at time 0 since no V0 present since mesh not
@@ -1646,15 +1644,6 @@ bool Foam::fvMeshTopoChangers::refiner::update()
             const_cast<refinementHistory&>(meshCutter().history()).compact();
         }
         nRefinementIterations_++;
-    }
-
-    mesh().topoChanging(hasChanged);
-
-    if (hasChanged)
-    {
-        // Reset moving flag (if any). If not using inflation we'll not move,
-        // if are using inflation any follow on movePoints will set it.
-        mesh().moving(false);
     }
 
     return hasChanged;

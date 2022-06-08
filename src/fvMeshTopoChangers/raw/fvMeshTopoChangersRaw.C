@@ -63,10 +63,6 @@ bool Foam::fvMeshTopoChangers::raw::update()
     Info<< "raw : Checking for topology changes..."
         << endl;
 
-    // Mesh not moved/changed yet
-    mesh().moving(false);
-    mesh().topoChanging(false);
-
     // Do any topology changes. Sets topoChanging (through polyTopoChange)
     autoPtr<polyTopoChangeMap> topoChangeMap = topoChanger_.changeMesh(true);
 

@@ -3225,8 +3225,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
         );
 
         mesh.topoChanging(true);
-        // Note: could already set moving flag as well
-        //       mesh.moving(true);
     }
     else
     {
