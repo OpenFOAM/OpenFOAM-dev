@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,7 @@ transonicEntrainmentPressureFvPatchScalarField
     psiName_("thermo:psi"),
     phiName_("phi"),
     gamma_(0),
+    Mb_(0),
     p0_(p.size(), 0)
 {}
 
@@ -58,6 +59,7 @@ transonicEntrainmentPressureFvPatchScalarField
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     gamma_(dict.lookup<scalar>("gamma")),
+    Mb_(dict.lookupOrDefault<scalar>("Mb", 0.5)),
     p0_("p0", dict, p.size())
 {
     if (dict.found("value"))
@@ -74,7 +76,7 @@ transonicEntrainmentPressureFvPatchScalarField
 
     refValue() = p0_;
     refGrad() = Zero;
-    valueFraction() = 0;
+    valueFraction() = 1;
 }
 
 
@@ -92,6 +94,7 @@ transonicEntrainmentPressureFvPatchScalarField
     psiName_(psf.psiName_),
     phiName_(psf.phiName_),
     gamma_(psf.gamma_),
+    Mb_(psf.Mb_),
     p0_(mapper(psf.p0_))
 {}
 
@@ -108,6 +111,7 @@ transonicEntrainmentPressureFvPatchScalarField
     psiName_(psf.psiName_),
     phiName_(psf.phiName_),
     gamma_(psf.gamma_),
+    Mb_(psf.Mb_),
     p0_(psf.p0_)
 {}
 
@@ -170,7 +174,6 @@ void Foam::transonicEntrainmentPressureFvPatchScalarField::updateCoeffs()
     const scalarField Ma(max(Unp/c, scalar(0)));
 
     const scalar gM1ByG = (gamma_ - 1)/gamma_;
-    const scalar Mb = 0.5;
 
     refValue() =
         p0_
@@ -179,7 +182,8 @@ void Foam::transonicEntrainmentPressureFvPatchScalarField::updateCoeffs()
             1 - (0.5*gM1ByG)*psip*negPart(Unp)*mag(Unp),
             1/gM1ByG
         );
-    valueFraction() = 1 - min(max(Ma - Mb, scalar(0))/(1 - Mb), scalar(1));
+
+    valueFraction() = 1 - min(max(Ma - Mb_, scalar(0))/(1 - Mb_), scalar(1));
 
     mixedFvPatchField<scalar>::updateCoeffs();
 }
@@ -194,6 +198,7 @@ void Foam::transonicEntrainmentPressureFvPatchScalarField::write
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
     writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+    writeEntry(os, "Mb", Mb_);
     writeEntry(os, "gamma", gamma_);
     writeEntry(os, "p0", p0_);
     writeEntry(os, "value", *this);
