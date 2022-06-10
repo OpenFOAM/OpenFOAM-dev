@@ -250,7 +250,8 @@ void Foam::PatchCollisionDensity<CloudType>::postPatch
         const scalar magSf =
             this->owner().mesh().magSf().boundaryField()[patchi][patchFacei];
         numberCollisionDensity_[patchi][patchFacei] += 1/magSf;
-        massCollisionDensity_[patchi][patchFacei] += p.mass()/magSf;
+        massCollisionDensity_[patchi][patchFacei] +=
+            p.mass()*p.nParticle()/magSf;
     }
 }
 
