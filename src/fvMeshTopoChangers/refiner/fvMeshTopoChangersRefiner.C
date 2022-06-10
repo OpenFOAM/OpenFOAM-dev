@@ -1678,7 +1678,7 @@ void Foam::fvMeshTopoChangers::refiner::distribute
 
 bool Foam::fvMeshTopoChangers::refiner::write(const bool write) const
 {
-    if (mesh().topoChanging())
+    if (mesh().topoChanged())
     {
         // Force refinement data to go to the current time directory.
         const_cast<hexRef8&>(meshCutter_).setInstance(mesh().time().timeName());

@@ -389,7 +389,7 @@ void Foam::MRFZoneList::correctBoundaryVelocity(volVectorField& U) const
 
 void Foam::MRFZoneList::update()
 {
-    if (mesh_.topoChanging())
+    if (mesh_.topoChanged())
     {
         forAll(*this, i)
         {

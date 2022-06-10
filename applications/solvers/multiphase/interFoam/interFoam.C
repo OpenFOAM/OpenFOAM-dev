@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
         (
             correctPhi
          && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
-         && mesh.topoChanging()
+         && mesh.topoChanged()
         )
         {
             // Construct and register divU for correctPhi

@@ -1754,7 +1754,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
     const labelList& distribution
 )
 {
-    const bool topoChanging = mesh_.topoChanging();
+    const bool topoChanged = mesh_.topoChanged();
 
     // Some checks on distribution
     if (distribution.size() != mesh_.nCells())
@@ -3013,9 +3013,9 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
 
     mesh_.setInstance(mesh_.time().timeName());
 
-    // Reset the topoChanging state of the mesh
+    // Reset the topoChanged state of the mesh
     // Distribution is not a topology change
-    mesh_.topoChanging(topoChanging);
+    mesh_.topoChanged(topoChanged);
 
     // Print a bit
     if (debug)

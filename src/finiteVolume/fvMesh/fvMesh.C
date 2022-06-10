@@ -588,10 +588,10 @@ bool Foam::fvMesh::update()
         deleteDemandDrivenData(V0Ptr_);
     }
 
-    // Set topoChanging false before any mesh change
-    topoChanging(false);
+    // Set topoChanged false before any mesh change
+    topoChanged(false);
     bool updated = topoChanger_->update();
-    topoChanging(updated);
+    topoChanged(updated);
 
     // Register V0 for distribution
     if (V0Ptr_)

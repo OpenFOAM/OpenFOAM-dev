@@ -180,7 +180,7 @@ private:
             bool moving_;
 
             //- Is the mesh topology changing
-            bool topoChanging_;
+            bool topoChanged_;
 
             //- Current time index for mesh motion
             mutable label curMotionTimeIndex_;
@@ -529,23 +529,23 @@ public:
             }
 
             //- Is mesh topology changing
-            bool topoChanging() const
+            bool topoChanged() const
             {
-                return topoChanging_;
+                return topoChanged_;
             }
 
             //- Set the mesh topology to be changing
-            bool topoChanging(const bool c)
+            bool topoChanged(const bool c)
             {
-                bool c0 = topoChanging_;
-                topoChanging_ = c;
+                bool c0 = topoChanged_;
+                topoChanged_ = c;
                 return c0;
             }
 
             //- Is mesh changing (topology changing and/or moving)
             bool changing() const
             {
-                return moving()||topoChanging();
+                return moving()||topoChanged();
             }
 
             //- Move points, returns volumes swept by faces in motion
