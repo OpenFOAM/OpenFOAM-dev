@@ -104,6 +104,7 @@ fvMeshTopoChangers = fvMesh/fvMeshTopoChangers
 $(fvMeshTopoChangers)/fvMeshTopoChanger/fvMeshTopoChanger.C
 $(fvMeshTopoChangers)/fvMeshTopoChanger/fvMeshTopoChangerNew.C
 $(fvMeshTopoChangers)/none/fvMeshTopoChangersNone.C
+$(fvMeshTopoChangers)/list/fvMeshTopoChangersList.C
 
 fvMeshDistributors = fvMesh/fvMeshDistributors
 

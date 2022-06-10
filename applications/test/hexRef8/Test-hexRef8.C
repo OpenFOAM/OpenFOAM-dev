@@ -191,10 +191,6 @@ int main(int argc, char *argv[])
         }
 
 
-        mesh.moving(false);
-        mesh.topoChanged(false);
-
-
         label action = rndGen.sampleAB<label>(0, 6);
 
 

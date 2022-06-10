@@ -3223,8 +3223,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
             patchStarts,
             syncParallel
         );
-
-        mesh.topoChanged(true);
     }
     else
     {
@@ -3239,7 +3237,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
             patchStarts,
             syncParallel
         );
-        mesh.topoChanged(true);
     }
 
     // Clear out primitives

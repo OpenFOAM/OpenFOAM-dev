@@ -80,7 +80,7 @@ bool Foam::fvMeshTopoChangers::list::update()
     forAllIter(PtrDictionary<fvMeshTopoChanger>, list_, iter)
     {
         updated = iter().update() || updated;
-        mesh().topoChanged(updated);
+        mesh().topoChanged_ = updated;
     }
 
     return updated;

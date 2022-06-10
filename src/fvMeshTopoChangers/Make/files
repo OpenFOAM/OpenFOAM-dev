@@ -1,5 +1,4 @@
 refiner/fvMeshTopoChangersRefiner.C
 movingCone/fvMeshTopoChangersMovingCone.C
-list/fvMeshTopoChangersList.C
 
 LIB = $(FOAM_LIBBIN)/libfvMeshTopoChangers

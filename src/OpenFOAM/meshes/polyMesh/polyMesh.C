@@ -287,12 +287,12 @@ Foam::polyMesh::polyMesh(const IOobject& io)
         *this
     ),
     globalMeshDataPtr_(nullptr),
-    moving_(false),
-    topoChanged_(false),
     curMotionTimeIndex_(-1),
     oldPointsPtr_(nullptr),
     oldCellCentresPtr_(nullptr),
-    storeOldCellCentres_(false)
+    storeOldCellCentres_(false),
+    moving_(false),
+    topoChanged_(false)
 {
     if (!owner_.headerClassName().empty())
     {
@@ -471,12 +471,12 @@ Foam::polyMesh::polyMesh
         PtrList<cellZone>()
     ),
     globalMeshDataPtr_(nullptr),
-    moving_(false),
-    topoChanged_(false),
     curMotionTimeIndex_(-1),
     oldPointsPtr_(nullptr),
     oldCellCentresPtr_(nullptr),
-    storeOldCellCentres_(false)
+    storeOldCellCentres_(false),
+    moving_(false),
+    topoChanged_(false)
 {
     // Check if the faces and cells are valid
     forAll(faces_, facei)
@@ -625,12 +625,12 @@ Foam::polyMesh::polyMesh
         0
     ),
     globalMeshDataPtr_(nullptr),
-    moving_(false),
-    topoChanged_(false),
     curMotionTimeIndex_(-1),
     oldPointsPtr_(nullptr),
     oldCellCentresPtr_(nullptr),
-    storeOldCellCentres_(false)
+    storeOldCellCentres_(false),
+    moving_(false),
+    topoChanged_(false)
 {
     // Check if faces are valid
     forAll(faces_, facei)
@@ -1227,8 +1227,6 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
             << "Moving points for time " << time().value()
             << " index " << time().timeIndex() << endl;
     }
-
-    moving(true);
 
     // Pick up old points and cell centres
     if (curMotionTimeIndex_ != time().timeIndex())

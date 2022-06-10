@@ -83,6 +83,12 @@ class GeometricBoundaryField;
 template<class Type>
 class UCompactListList;
 
+namespace fvMeshTopoChangers
+{
+    class list;
+}
+
+
 /*---------------------------------------------------------------------------*\
                            Class fvMesh Declaration
 \*---------------------------------------------------------------------------*/
@@ -94,8 +100,6 @@ class fvMesh
     public surfaceInterpolation,
     public data
 {
-private:
-
     // Private Data
 
         //- Boundary mesh
@@ -261,6 +265,7 @@ public:
         typedef fvMesh Mesh;
         typedef fvBoundaryMesh BoundaryMesh;
 
+        friend fvMeshTopoChangers::list;
 
     // Declare name of the class and its debug switch
     ClassName("fvMesh");

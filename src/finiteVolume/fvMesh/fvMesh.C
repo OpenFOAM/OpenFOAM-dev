@@ -588,10 +588,10 @@ bool Foam::fvMesh::update()
         deleteDemandDrivenData(V0Ptr_);
     }
 
-    // Set topoChanged false before any mesh change
-    topoChanged(false);
+    // Set topoChanged_ false before any mesh change
+    topoChanged_ = false;
     bool updated = topoChanger_->update();
-    topoChanged(updated);
+    topoChanged_ = updated;
 
     // Register V0 for distribution
     if (V0Ptr_)
@@ -1086,6 +1086,10 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 
     meshObject::movePoints<fvMesh>(*this);
     meshObject::movePoints<lduMesh>(*this);
+
+    // Set moving_ true
+    // Note: once set it remains true for the rest of the run
+    moving_ = true;
 
     return tsweptVols;
 }

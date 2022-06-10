@@ -69,7 +69,6 @@ void Foam::domainDecomposition::decomposePoints()
                     procPointAddressing_[proci]
                 )
             );
-            procMesh.moving(false);
         }
     }
 }
@@ -96,7 +95,6 @@ void Foam::domainDecomposition::reconstructPoints()
         }
 
         completeMesh_->movePoints(completePoints);
-        completeMesh_->moving(false);
     }
 }
 
