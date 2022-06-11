@@ -1014,6 +1014,10 @@ void Foam::fvMesh::mapFields(const polyTopoChangeMap& map)
 
 Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 {
+    // Set moving_ true
+    // Note: once set it remains true for the rest of the run
+    moving_ = true;
+
     // Grab old time volumes if the time has been incremented
     // This will update V0, V00
     if (curTimeIndex_ < time().timeIndex())
@@ -1055,6 +1059,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
     scalar rDeltaT = 1.0/time().deltaTValue();
 
     tmp<scalarField> tsweptVols = polyMesh::movePoints(p);
+
     scalarField& sweptVols = tsweptVols.ref();
 
     phi.primitiveFieldRef() =
@@ -1086,10 +1091,6 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 
     meshObject::movePoints<fvMesh>(*this);
     meshObject::movePoints<lduMesh>(*this);
-
-    // Set moving_ true
-    // Note: once set it remains true for the rest of the run
-    moving_ = true;
 
     return tsweptVols;
 }
