@@ -1216,6 +1216,50 @@ void Foam::polyMesh::setUpToDatePoints(regIOobject& io) const
 }
 
 
+void Foam::polyMesh::setPoints(const pointField& newPoints)
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Set points for time " << time().value()
+            << " index " << time().timeIndex() << endl;
+    }
+
+    primitiveMesh::clearGeom();
+
+    points_ = newPoints;
+
+    setPointsInstance(time().timeName());
+
+    // Adjust parallel shared points
+    if (globalMeshDataPtr_.valid())
+    {
+        globalMeshDataPtr_().movePoints(points_);
+    }
+
+    // Force recalculation of all geometric data with new points
+
+    bounds_ = boundBox(points_);
+    boundary_.movePoints(points_);
+
+    pointZones_.movePoints(points_);
+    faceZones_.movePoints(points_);
+    cellZones_.movePoints(points_);
+
+    // Cell tree might become invalid
+    cellTreePtr_.clear();
+
+    // Reset valid directions (could change with rotation)
+    geometricD_ = Zero;
+    solutionD_ = Zero;
+
+    meshObject::movePoints<polyMesh>(*this);
+    meshObject::movePoints<pointMesh>(*this);
+
+    const_cast<Time&>(time()).functionObjects().movePoints(*this);
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
 (
     const pointField& newPoints

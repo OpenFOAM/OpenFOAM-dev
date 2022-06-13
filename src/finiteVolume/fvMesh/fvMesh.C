@@ -142,9 +142,6 @@ void Foam::fvMesh::clearGeom()
     deleteDemandDrivenData(phiPtr_);
     deleteDemandDrivenData(V0Ptr_);
     deleteDemandDrivenData(V00Ptr_);
-
-    // Mesh motion flux cannot be deleted here because the old-time flux
-    // needs to be saved.
 }
 
 
@@ -680,9 +677,6 @@ void Foam::fvMesh::reset(const fvMesh& newMesh)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    // Clear mesh motion flux
-    deleteDemandDrivenData(phiPtr_);
-
     const polyPatchList& newBoundary = newMesh.boundaryMesh();
     labelList patchSizes(newBoundary.size());
     labelList patchStarts(newBoundary.size());
@@ -1009,6 +1003,21 @@ void Foam::fvMesh::mapFields(const polyTopoChangeMap& map)
 
     // Map all the clouds in the objectRegistry
     mapClouds(*this, map);
+}
+
+
+void Foam::fvMesh::setPoints(const pointField& p)
+{
+    polyMesh::setPoints(p);
+
+    clearGeom();
+
+    // Update other local data
+    boundary_.movePoints();
+    surfaceInterpolation::movePoints();
+
+    meshObject::movePoints<fvMesh>(*this);
+    meshObject::movePoints<lduMesh>(*this);
 }
 
 

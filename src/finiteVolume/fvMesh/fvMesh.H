@@ -489,6 +489,10 @@ public:
             //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap& map);
 
+            //- Reset the points
+            //  without storing old points or returning swept volumes
+            virtual void setPoints(const pointField&);
+
             //- Move points, returns volumes swept by faces in motion
             virtual tmp<scalarField> movePoints(const pointField&);
 

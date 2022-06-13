@@ -61,7 +61,7 @@ void Foam::domainDecomposition::decomposePoints()
 
         if (pointsCompare == -1)
         {
-            procMesh.polyMesh::movePoints
+            procMesh.setPoints
             (
                 pointField
                 (
@@ -94,7 +94,7 @@ void Foam::domainDecomposition::reconstructPoints()
             completePoints.rmap(procMesh.points(), procPointAddressing_[proci]);
         }
 
-        completeMesh_->polyMesh::movePoints(completePoints);
+        completeMesh_->setPoints(completePoints);
     }
 }
 
