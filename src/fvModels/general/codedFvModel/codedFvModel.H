@@ -34,8 +34,6 @@ Usage
     {
         type            coded;
 
-        selectionMode   all;
-
         field           h;
 
         codeInclude
@@ -73,7 +71,6 @@ SourceFiles
 #define codedFvModel_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
 #include "codedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
