@@ -34,6 +34,8 @@ Usage
     {
         type            coded;
 
+        selectionMode   all;
+
         field           h;
 
         codeInclude
