@@ -1145,7 +1145,7 @@ int main(int argc, char *argv[])
     // Move mesh (since morphing might not do this)
     if (map().hasMotionPoints())
     {
-        subsetter.subMesh().movePoints(map().preMotionPoints());
+        subsetter.subMesh().setPoints(map().preMotionPoints());
     }
 
     Info<< "Writing mesh with split blockedFaces to time "

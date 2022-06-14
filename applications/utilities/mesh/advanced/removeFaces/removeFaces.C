@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
     // Move mesh (since morphing does not do this)
     if (map().hasMotionPoints())
     {
-        mesh.movePoints(map().preMotionPoints());
+        mesh.setPoints(map().preMotionPoints());
     }
 
     // Update numbering of cells/vertices.

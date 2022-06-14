@@ -113,7 +113,7 @@ label mergePatchFaces
             // Move mesh (since morphing does not do this)
             if (map().hasMotionPoints())
             {
-                mesh.movePoints(map().preMotionPoints());
+                mesh.setPoints(map().preMotionPoints());
             }
             else
             {
@@ -269,7 +269,7 @@ label mergePatchFaces
             // Move mesh (since morphing does not do this)
             if (map().hasMotionPoints())
             {
-                mesh.movePoints(map().preMotionPoints());
+                mesh.setPoints(map().preMotionPoints());
             }
             else
             {
@@ -322,7 +322,7 @@ label mergeEdges(const scalar minCos, polyMesh& mesh)
         // Move mesh (since morphing does not do this)
         if (map().hasMotionPoints())
         {
-            mesh.movePoints(map().preMotionPoints());
+            mesh.setPoints(map().preMotionPoints());
         }
         else
         {

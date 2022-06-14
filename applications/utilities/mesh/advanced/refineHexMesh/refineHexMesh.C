@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
     // Optionally inflate mesh
     if (map().hasMotionPoints())
     {
-        mesh.movePoints(map().preMotionPoints());
+        mesh.setPoints(map().preMotionPoints());
     }
 
     Info<< "Refined from " << returnReduce(map().nOldCells(), sumOp<label>())

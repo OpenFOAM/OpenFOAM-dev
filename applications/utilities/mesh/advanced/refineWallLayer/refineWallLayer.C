@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
 
     if (map().hasMotionPoints())
     {
-        mesh.movePoints(map().preMotionPoints());
+        mesh.setPoints(map().preMotionPoints());
     }
 
     // Update stored labels on meshCutter.

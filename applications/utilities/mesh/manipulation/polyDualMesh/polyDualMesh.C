@@ -517,7 +517,7 @@ int main(int argc, char *argv[])
     // Optionally inflate mesh
     if (map().hasMotionPoints())
     {
-        mesh.movePoints(map().preMotionPoints());
+        mesh.setPoints(map().preMotionPoints());
     }
 
     if (!overwrite)

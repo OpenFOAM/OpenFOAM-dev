@@ -104,7 +104,7 @@ static const NamedEnum<ExtrudeMode, 2> ExtrudeModeNames;
 //          - layer0Points[meshPointi];
 //    }
 
-//    fMesh.movePoints(layer0Points);
+//    fMesh.setPoints(layer0Points);
 
 //    return displacement;
 //}

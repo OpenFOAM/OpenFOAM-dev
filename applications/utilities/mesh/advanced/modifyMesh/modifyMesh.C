@@ -534,7 +534,7 @@ int main(int argc, char *argv[])
 
         if (map().hasMotionPoints())
         {
-            mesh.movePoints(map().preMotionPoints());
+            mesh.setPoints(map().preMotionPoints());
         }
 
         cutter.topoChange(map());
@@ -580,7 +580,7 @@ int main(int argc, char *argv[])
         }
 
         // Move master point to destination.
-        mesh.movePoints(newPoints);
+        mesh.setPoints(newPoints);
 
         List<pointEdgeCollapse> allPointInfo;
         const globalIndex globalPoints(mesh.nPoints());
@@ -606,7 +606,7 @@ int main(int argc, char *argv[])
 
         if (map().hasMotionPoints())
         {
-            mesh.movePoints(map().preMotionPoints());
+            mesh.setPoints(map().preMotionPoints());
         }
 
         // Not implemented yet:
@@ -651,7 +651,7 @@ int main(int argc, char *argv[])
 
         if (map().hasMotionPoints())
         {
-            mesh.movePoints(map().preMotionPoints());
+            mesh.setPoints(map().preMotionPoints());
         }
 
         cutter.topoChange(map());

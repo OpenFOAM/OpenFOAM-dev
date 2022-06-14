@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.userTimeName() << endl;
 
-        mesh.movePoints(motionPtr->newPoints());
+        mesh.setPoints(motionPtr->newPoints());
 
         runTime.write();
 
