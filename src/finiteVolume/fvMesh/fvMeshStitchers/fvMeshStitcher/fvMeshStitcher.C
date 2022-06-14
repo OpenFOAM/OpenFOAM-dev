@@ -1149,7 +1149,8 @@ bool Foam::fvMeshStitcher::disconnect
 bool Foam::fvMeshStitcher::connect
 (
     const bool changing,
-    const bool geometric
+    const bool geometric,
+    const bool load
 )
 {
     if (!stitches() || (changing && !mesh_.dynamic()))
@@ -1172,7 +1173,7 @@ bool Foam::fvMeshStitcher::connect
     tmp<surfaceLabelField::Boundary> tOrigFacesNbrBf;
     tmp<surfaceVectorField::Boundary> tOrigSfNbrBf;
     tmp<surfaceVectorField::Boundary> tOrigCfNbrBf;
-    if (!changing)
+    if (load)
     {
         const IOobject polyFacesBfIO(mesh_.polyFacesBfIO(IOobject::MUST_READ));
 

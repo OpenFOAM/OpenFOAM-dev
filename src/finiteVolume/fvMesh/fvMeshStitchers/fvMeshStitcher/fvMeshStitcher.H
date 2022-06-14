@@ -369,10 +369,19 @@ public:
         virtual void movePoints();
 
         //- Disconnect the mesh by removing faces from the nonConformalCyclics
-        virtual bool disconnect(const bool changing, const bool geometric);
+        virtual bool disconnect
+        (
+            const bool changing,
+            const bool geometric
+        );
 
         //- Connect the mesh by adding faces into the nonConformalCyclics
-        virtual bool connect(const bool changing, const bool geometric);
+        virtual bool connect
+        (
+            const bool changing,
+            const bool geometric,
+            const bool load
+        );
 
         //- Write the mover state
         virtual bool write(const bool write = true) const

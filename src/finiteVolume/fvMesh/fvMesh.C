@@ -340,7 +340,7 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
     }
 
     // Stitch or Re-stitch if necessary
-    stitcher_->connect(false, changers);
+    stitcher_->connect(false, changers, true);
 
     // Construct changers
     if (changers)
@@ -625,7 +625,7 @@ bool Foam::fvMesh::move()
 
     curTimeIndex_ = time().timeIndex();
 
-    stitcher_->connect(true, true);
+    stitcher_->connect(true, true, false);
 
     return moved;
 }
@@ -752,7 +752,7 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
 
     if (stitcher_.valid() && state != polyMesh::UNCHANGED)
     {
-        stitcher_->connect(false, false);
+        stitcher_->connect(false, false, true);
     }
 
     return state;
