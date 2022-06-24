@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,11 +201,11 @@ public:
         //- Assign to a SphericalTensor
         inline void operator=(const SphericalTensor<Cmpt>&);
 
-        //- Assign to a SymmTensor
-        inline void operator=(const SymmTensor<Cmpt>&);
-
         //- Assign to a DiagTensor
         inline void operator=(const DiagTensor<Cmpt>&);
+
+        //- Assign to a SymmTensor
+        inline void operator=(const SymmTensor<Cmpt>&);
 
         //- Assign to a triad
         inline void operator=(const Vector<Vector<Cmpt>>&);
