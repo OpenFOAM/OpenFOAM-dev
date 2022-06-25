@@ -288,7 +288,7 @@ int main(int argc, char *argv[])
         {
             FatalErrorInFunction
                 << "Cannot combine geometry-only decomposition (-noFields)"
-                << " with field decomposition (-noFields or -copyZero)"
+                << " with field decomposition (-fields or -copyZero)"
                 << exit(FatalError);
         }
     }
