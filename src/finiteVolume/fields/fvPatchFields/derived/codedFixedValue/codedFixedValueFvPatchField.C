@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,7 +169,14 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
     {
         OStringStream os;
         writeEntry(os, "type", codeName());
+
+        if (this->overridesConstraint())
+        {
+            writeEntry(os, "patchType", this->patch().type());
+        }
+
         writeEntry(os, "value", *this);
+
         IStringStream is(os.str());
         dictionary dict(is);
 
