@@ -83,7 +83,11 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         // Optional number of energy correctors
-        const int nEcorr = pimples.dict().lookupOrDefault<int>("nEcorr", 1);
+        const int nEcorr = pimples.dict().lookupOrDefault<int>
+        (
+            "nEcorrectors",
+            1
+        );
 
         // --- PIMPLE loop
         while (pimples.loop())
