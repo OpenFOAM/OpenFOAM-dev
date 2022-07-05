@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -88,7 +88,7 @@ error() {
 #-------------------------------------------------------------------------------
 
 # the bin dir:
-binDir="${0%/*}"
+binDir="$(cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit ; pwd -P)"
 
 # the project dir:
 projectDir="${binDir%/bin}"
@@ -106,34 +106,38 @@ unset versionNum
 # handle standard and debian naming convention
 #
 case "$projectDirName" in
-OpenFOAM-*)         # standard naming convention OpenFOAM-<VERSION>
-    version="${projectDirName##OpenFOAM-}"
-    ;;
-
-openfoam[0-9]* | openfoam-dev)     # debian naming convention 'openfoam<VERSION>'
-    versionNum="${projectDirName##openfoam}"
-    case "$versionNum" in
-    ??)         # convert 2 digit version number to decimal delineated
-        version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)@\1.\2@')
+    OpenFOAM-*)     # standard naming convention OpenFOAM-<VERSION>
+        version="${projectDirName##OpenFOAM-}"
         ;;
-    ???)        # convert 3 digit version number to decimal delineated
-        version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)\(.\)@\1.\2.\3@')
+    openfoam[0-9]*) # debian naming convention
+        versionNum="${projectDirName##openfoam}"
+        case "$versionNum" in
+        [4-9]) # v4-9
+            version="$versionNum"
+            ;;
+        [1-2][0-9]) # v10 onwards
+            version="$versionNum"
+            ;;
+        3[0-9]) # e.g. v3.0
+            version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)@\1.\2@')
+            ;;
+        [1-2][0-9][0-9]) # e.g. v1.7.0
+            version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)\(.\)@\1.\2.\3@')
+            ;;
+        *)
+            version="$WM_PROJECT_VERSION"
+            ;;
+        esac
         ;;
-    ????)       # convert 4 digit version number to decimal delineated
-        version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)\(.\)\(.\)@\1.\2.\3.\4@')
+    openfoam-dev) # debian naming convention
+        versionNum="${projectDirName##openfoam}"
+        version="${versionNum##-}"
         ;;
-    *)          # failback - use current environment setting
-        version="$WM_PROJECT_VERSION"
+    *)
+        echo "Error : unknown/unsupported naming convention"
+        exit 1
         ;;
-    esac
-    ;;
-
-*)
-    echo "Error : unknown/unsupported naming convention"
-    exit 1
-    ;;
 esac
-
 
 # default mode is 'ugo'
 mode=ugo
@@ -293,7 +297,6 @@ else
     done
 
 fi
-
 
 exit $exitCode
 
