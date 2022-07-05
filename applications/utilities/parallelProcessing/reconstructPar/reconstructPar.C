@@ -233,6 +233,19 @@ int main(int argc, char *argv[])
         meshes.readAddressing();
         meshes.readUpdate();
 
+        // Write the complete mesh if at the constant instant. Otherwise
+        // mesh-associated things (sets, hexRef8, ...) will not be written by
+        // domainDecomposition because there is no change of mesh to trigger
+        // them to write.
+        if
+        (
+            runTimes.completeTime().timeName()
+         == runTimes.completeTime().constant()
+        )
+        {
+            meshes.writeComplete(!noReconstructSets);
+        }
+
         // Loop over all times
         forAll(times, timei)
         {

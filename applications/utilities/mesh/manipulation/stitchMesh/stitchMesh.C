@@ -450,7 +450,7 @@ int main(int argc, char *argv[])
     // Execute all polyMeshModifiers
     autoPtr<polyTopoChangeMap> map = stitcher.changeMesh(true);
 
-    mesh.movePoints(map->preMotionPoints());
+    mesh.setPoints(map->preMotionPoints());
 
     // Write mesh
     if (overwrite)

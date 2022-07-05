@@ -3223,10 +3223,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
             patchStarts,
             syncParallel
         );
-
-        mesh.topoChanging(true);
-        // Note: could already set moving flag as well
-        //       mesh.moving(true);
     }
     else
     {
@@ -3241,7 +3237,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
             patchStarts,
             syncParallel
         );
-        mesh.topoChanging(true);
     }
 
     // Clear out primitives

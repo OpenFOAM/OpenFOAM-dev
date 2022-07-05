@@ -384,7 +384,7 @@ int main(int argc, char *argv[])
     );
 
     // Connect the mesh so that the new stitching topology gets written out
-    stitcher.connect(false, false);
+    stitcher.connect(false, false, false);
 
     mesh.setInstance(runTime.timeName());
 

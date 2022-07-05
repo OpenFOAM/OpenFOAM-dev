@@ -724,7 +724,7 @@ int main(int argc, char *argv[])
     // tensors.
     Info<< "Doing topology modification to order faces." << nl << endl;
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, true);
-    mesh.movePoints(map().preMotionPoints());
+    mesh.setPoints(map().preMotionPoints());
 
     if (writeCyclicMatch)
     {
@@ -754,7 +754,7 @@ int main(int argc, char *argv[])
         Info<< "Points changed by average:" << gAverage(diff)
             << " max:" << gMax(diff) << nl << endl;
 
-        mesh.movePoints(newPoints);
+        mesh.setPoints(newPoints);
     }
 
     // 3. Remove zeros-sized patches

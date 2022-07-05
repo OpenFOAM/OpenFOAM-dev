@@ -429,7 +429,7 @@ int main(int argc, char *argv[])
             // Move mesh (since morphing does not do this)
             if (map().hasMotionPoints())
             {
-                mesh.movePoints(map().preMotionPoints());
+                mesh.setPoints(map().preMotionPoints());
             }
         }
 
@@ -610,7 +610,7 @@ int main(int argc, char *argv[])
             {
                 newPoints[extrudePatch.meshPoints()[i]] = layer0Points[i];
             }
-            mesh.movePoints(newPoints);
+            mesh.setPoints(newPoints);
         }
 
 
@@ -894,7 +894,7 @@ int main(int argc, char *argv[])
             // Move mesh (if inflation used)
             if (map().hasMotionPoints())
             {
-                mesh.movePoints(map().preMotionPoints());
+                mesh.setPoints(map().preMotionPoints());
             }
         }
     }
@@ -1024,7 +1024,7 @@ int main(int argc, char *argv[])
         // Move mesh (if inflation used)
         if (map().hasMotionPoints())
         {
-            mesh.movePoints(map().preMotionPoints());
+            mesh.setPoints(map().preMotionPoints());
         }
     }
 

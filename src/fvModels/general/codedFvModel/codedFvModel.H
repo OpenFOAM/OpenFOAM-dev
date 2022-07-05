@@ -73,7 +73,6 @@ SourceFiles
 #define codedFvModel_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
 #include "codedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

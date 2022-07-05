@@ -200,11 +200,33 @@ void Foam::fvMeshTopoChangers::refiner::calculateProtectedCells
 
 void Foam::fvMeshTopoChangers::refiner::readDict()
 {
-    const dictionary& refineDict(dict());
+    refineInterval_ = dict_.lookup<label>("refineInterval");
+
+    if (refineInterval_ < 0)
+    {
+        FatalIOErrorInFunction(dict_)
+            << "Illegal refineInterval " << refineInterval_ << nl
+            << "The refineInterval setting in the dynamicMeshDict should"
+            << " be >= 1." << nl
+            << exit(FatalIOError);
+    }
+
+    maxCells_ = dict_.lookup<label>("maxCells");
+
+    if (maxCells_ <= 0)
+    {
+        FatalIOErrorInFunction(dict_)
+            << "Illegal maximum number of cells " << maxCells_ << nl
+            << "The maxCells setting in the dynamicMeshDict should"
+            << " be > 0." << nl
+            << exit(FatalIOError);
+    }
+
+    nBufferLayers_ = dict_.lookup<label>("nBufferLayers");
 
     const List<Pair<word>> fluxVelocities = List<Pair<word>>
     (
-        refineDict.lookup("correctFluxes")
+        dict_.lookup("correctFluxes")
     );
 
     // Rework into hashtable.
@@ -214,7 +236,7 @@ void Foam::fvMeshTopoChangers::refiner::readDict()
         correctFluxes_.insert(fluxVelocities[i][0], fluxVelocities[i][1]);
     }
 
-    dumpLevel_ = Switch(refineDict.lookup("dumpLevel"));
+    dumpLevel_ = Switch(dict_.lookup("dumpLevel"));
 }
 
 
@@ -1255,9 +1277,10 @@ void Foam::fvMeshTopoChangers::refiner::checkEightAnchorPoints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshTopoChangers::refiner::refiner(fvMesh& mesh)
+Foam::fvMeshTopoChangers::refiner::refiner(fvMesh& mesh, const dictionary& dict)
 :
     fvMeshTopoChanger(mesh),
+    dict_(dict),
     meshCutter_(mesh),
     dumpLevel_(false),
     nRefinementIterations_(0),
@@ -1466,28 +1489,11 @@ bool Foam::fvMeshTopoChangers::refiner::update()
         return false;
     }
 
-    // Re-read dictionary. Chosen since usually -small so trivial amount
-    // of time compared to actual refinement. Also very useful to be able
-    // to modify on-the-fly.
-    const dictionary& refineDict(dict());
-
-    const label refineInterval = refineDict.lookup<label>("refineInterval");
-
     bool hasChanged = false;
 
-    if (refineInterval == 0)
+    if (refineInterval_ == 0)
     {
-        mesh().topoChanging(hasChanged);
-
-        return false;
-    }
-    else if (refineInterval < 0)
-    {
-        FatalErrorInFunction
-            << "Illegal refineInterval " << refineInterval << nl
-            << "The refineInterval setting in the dynamicMeshDict should"
-            << " be >= 1." << nl
-            << exit(FatalError);
+        return hasChanged;
     }
 
     // Note: cannot refine at time 0 since no V0 present since mesh not
@@ -1496,33 +1502,19 @@ bool Foam::fvMeshTopoChangers::refiner::update()
     if
     (
         mesh().time().timeIndex() > 0
-     && mesh().time().timeIndex() % refineInterval == 0
+     && mesh().time().timeIndex() % refineInterval_ == 0
     )
     {
-        const label maxCells = refineDict.lookup<label>("maxCells");
-
-        if (maxCells <= 0)
-        {
-            FatalErrorInFunction
-                << "Illegal maximum number of cells " << maxCells << nl
-                << "The maxCells setting in the dynamicMeshDict should"
-                << " be > 0." << nl
-                << exit(FatalError);
-        }
-
-        const label nBufferLayers =
-            refineDict.lookup<label>("nBufferLayers");
-
         // Cells marked for refinement or otherwise protected from unrefinement.
         PackedBoolList refineCells(mesh().nCells());
 
         label maxRefinement = 0;
 
-        if (refineDict.isDict("refinementRegions"))
+        if (dict_.isDict("refinementRegions"))
         {
             const dictionary& refinementRegions
             (
-                refineDict.subDict("refinementRegions")
+                dict_.subDict("refinementRegions")
             );
 
             forAllConstIter(dictionary, refinementRegions, iter)
@@ -1540,12 +1532,12 @@ bool Foam::fvMeshTopoChangers::refiner::update()
         }
         else
         {
-            maxRefinement = selectRefineCandidates(refineCells, refineDict);
+            maxRefinement = selectRefineCandidates(refineCells, dict_);
         }
 
         // Extend with a buffer layer to prevent neighbouring points
         // being unrefined.
-        for (label i = 0; i < nBufferLayers; i++)
+        for (label i = 0; i < nBufferLayers_; i++)
         {
             extendMarkedCells(refineCells);
         }
@@ -1565,7 +1557,7 @@ bool Foam::fvMeshTopoChangers::refiner::update()
             }
         }
 
-        if (mesh().globalData().nTotalCells() < maxCells)
+        if (mesh().globalData().nTotalCells() < maxCells_)
         {
             // Select subset of candidates. Take into account max allowable
             // cells, refinement level, protected cells.
@@ -1573,7 +1565,7 @@ bool Foam::fvMeshTopoChangers::refiner::update()
             (
                 selectRefineCells
                 (
-                    maxCells,
+                    maxCells_,
                     maxRefinement,
                     refinableCells
                 )
@@ -1654,15 +1646,6 @@ bool Foam::fvMeshTopoChangers::refiner::update()
         nRefinementIterations_++;
     }
 
-    mesh().topoChanging(hasChanged);
-
-    if (hasChanged)
-    {
-        // Reset moving flag (if any). If not using inflation we'll not move,
-        // if are using inflation any follow on movePoints will set it.
-        mesh().moving(false);
-    }
-
     return hasChanged;
 }
 
@@ -1695,7 +1678,7 @@ void Foam::fvMeshTopoChangers::refiner::distribute
 
 bool Foam::fvMeshTopoChangers::refiner::write(const bool write) const
 {
-    if (mesh().topoChanging())
+    if (mesh().topoChanged())
     {
         // Force refinement data to go to the current time directory.
         const_cast<hexRef8&>(meshCutter_).setInstance(mesh().time().timeName());

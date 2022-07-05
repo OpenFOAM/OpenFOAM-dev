@@ -54,6 +54,9 @@ class meshToMesh
 {
     // Private Data
 
+        //- Mesh-to-mesh control dictionary
+        dictionary dict_;
+
         //- Optional names of the patches which "cut" the internal mesh
         //  and hence cannot be mapped from existing patches
         wordList cuttingPatches_;
@@ -73,9 +76,6 @@ class meshToMesh
 
     // Private Member Functions
 
-        //- Read the parameters from dictionary
-        void readDict();
-
         //- Find the U field name corresponding to Uf
         word Uname(const surfaceVectorField& Uf) const;
 
@@ -91,8 +91,8 @@ public:
 
     // Constructors
 
-        //- Construct from fvMesh
-        explicit meshToMesh(fvMesh& io);
+        //- Construct from fvMesh and dictionary
+        meshToMesh(fvMesh&, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         meshToMesh(const meshToMesh&) = delete;

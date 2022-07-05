@@ -2669,7 +2669,7 @@ int main(int argc, char *argv[])
         // Move mesh (since morphing might not do this)
         if (addBafflesMap().hasMotionPoints())
         {
-            mesh.movePoints(addBafflesMap().preMotionPoints());
+            mesh.setPoints(addBafflesMap().preMotionPoints());
         }
 
         mesh.setInstance(meshInstance);

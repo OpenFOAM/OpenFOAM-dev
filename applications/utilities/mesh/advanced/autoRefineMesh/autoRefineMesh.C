@@ -517,7 +517,7 @@ void subsetMesh
 
     if (map().hasMotionPoints())
     {
-        mesh.movePoints(map().preMotionPoints());
+        mesh.setPoints(map().preMotionPoints());
     }
 
     // Update topology on cellRemover

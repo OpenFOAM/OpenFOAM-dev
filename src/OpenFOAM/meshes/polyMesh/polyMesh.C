@@ -287,12 +287,12 @@ Foam::polyMesh::polyMesh(const IOobject& io)
         *this
     ),
     globalMeshDataPtr_(nullptr),
-    moving_(false),
-    topoChanging_(false),
     curMotionTimeIndex_(-1),
     oldPointsPtr_(nullptr),
     oldCellCentresPtr_(nullptr),
-    storeOldCellCentres_(false)
+    storeOldCellCentres_(false),
+    moving_(false),
+    topoChanged_(false)
 {
     if (!owner_.headerClassName().empty())
     {
@@ -471,12 +471,12 @@ Foam::polyMesh::polyMesh
         PtrList<cellZone>()
     ),
     globalMeshDataPtr_(nullptr),
-    moving_(false),
-    topoChanging_(false),
     curMotionTimeIndex_(-1),
     oldPointsPtr_(nullptr),
     oldCellCentresPtr_(nullptr),
-    storeOldCellCentres_(false)
+    storeOldCellCentres_(false),
+    moving_(false),
+    topoChanged_(false)
 {
     // Check if the faces and cells are valid
     forAll(faces_, facei)
@@ -625,12 +625,12 @@ Foam::polyMesh::polyMesh
         0
     ),
     globalMeshDataPtr_(nullptr),
-    moving_(false),
-    topoChanging_(false),
     curMotionTimeIndex_(-1),
     oldPointsPtr_(nullptr),
     oldCellCentresPtr_(nullptr),
-    storeOldCellCentres_(false)
+    storeOldCellCentres_(false),
+    moving_(false),
+    topoChanged_(false)
 {
     // Check if faces are valid
     forAll(faces_, facei)
@@ -1216,6 +1216,50 @@ void Foam::polyMesh::setUpToDatePoints(regIOobject& io) const
 }
 
 
+void Foam::polyMesh::setPoints(const pointField& newPoints)
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Set points for time " << time().value()
+            << " index " << time().timeIndex() << endl;
+    }
+
+    primitiveMesh::clearGeom();
+
+    points_ = newPoints;
+
+    setPointsInstance(time().timeName());
+
+    // Adjust parallel shared points
+    if (globalMeshDataPtr_.valid())
+    {
+        globalMeshDataPtr_().movePoints(points_);
+    }
+
+    // Force recalculation of all geometric data with new points
+
+    bounds_ = boundBox(points_);
+    boundary_.movePoints(points_);
+
+    pointZones_.movePoints(points_);
+    faceZones_.movePoints(points_);
+    cellZones_.movePoints(points_);
+
+    // Cell tree might become invalid
+    cellTreePtr_.clear();
+
+    // Reset valid directions (could change with rotation)
+    geometricD_ = Zero;
+    solutionD_ = Zero;
+
+    meshObject::movePoints<polyMesh>(*this);
+    meshObject::movePoints<pointMesh>(*this);
+
+    const_cast<Time&>(time()).functionObjects().movePoints(*this);
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
 (
     const pointField& newPoints
@@ -1227,8 +1271,6 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
             << "Moving points for time " << time().value()
             << " index " << time().timeIndex() << endl;
     }
-
-    moving(true);
 
     // Pick up old points and cell centres
     if (curMotionTimeIndex_ != time().timeIndex())

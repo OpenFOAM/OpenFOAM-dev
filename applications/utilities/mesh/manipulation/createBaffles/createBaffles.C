@@ -729,7 +729,7 @@ int main(int argc, char *argv[])
     // Move mesh (since morphing might not do this)
     if (map().hasMotionPoints())
     {
-        mesh.movePoints(map().preMotionPoints());
+        mesh.setPoints(map().preMotionPoints());
     }
 
     // Remove any now zero-sized patches

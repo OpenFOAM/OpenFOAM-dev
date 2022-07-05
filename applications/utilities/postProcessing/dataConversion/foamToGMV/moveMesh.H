@@ -23,5 +23,5 @@ if (ioPoints.headerOk())
         )
     );
 
-    mesh.movePoints(newPoints);
+    mesh.setPoints(newPoints);
 }

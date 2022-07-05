@@ -105,8 +105,8 @@ public:
 
     // Constructors
 
-        //- Construct from fvMesh
-        explicit movingCone(fvMesh& io);
+        //- Construct from fvMesh and dictionary
+        movingCone(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         movingCone(const movingCone&) = delete;

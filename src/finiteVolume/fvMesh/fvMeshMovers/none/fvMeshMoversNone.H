@@ -68,7 +68,7 @@ public:
 
 
     //- Destructor
-    ~none();
+    virtual ~none();
 
 
     // Member Functions

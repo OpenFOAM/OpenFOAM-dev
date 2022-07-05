@@ -11,6 +11,6 @@
     {
         // Read new points
         io.readOpt() = IOobject::MUST_READ;
-        mesh.movePoints(pointIOField(io));
+        mesh.setPoints(pointIOField(io));
     }
 }

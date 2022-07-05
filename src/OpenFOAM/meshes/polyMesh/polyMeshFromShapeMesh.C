@@ -518,12 +518,12 @@ Foam::polyMesh::polyMesh
         0
     ),
     globalMeshDataPtr_(nullptr),
-    moving_(false),
-    topoChanging_(false),
     curMotionTimeIndex_(-1),
     oldPointsPtr_(nullptr),
     oldCellCentresPtr_(nullptr),
-    storeOldCellCentres_(false)
+    storeOldCellCentres_(false),
+    moving_(false),
+    topoChanged_(false)
 {
     if (debug)
     {
@@ -807,12 +807,12 @@ Foam::polyMesh::polyMesh
         0
     ),
     globalMeshDataPtr_(nullptr),
-    moving_(false),
-    topoChanging_(false),
     curMotionTimeIndex_(-1),
     oldPointsPtr_(nullptr),
     oldCellCentresPtr_(nullptr),
-    storeOldCellCentres_(false)
+    storeOldCellCentres_(false),
+    moving_(false),
+    topoChanged_(false)
 {
     if (debug)
     {

@@ -28,7 +28,7 @@ deltaT          1e-5;
 writeControl    adjustableRunTime;
 writeInterval   0.001;
 
-////- For testing with moveDynamicMesh
+////- For testing with moveMesh
 //deltaT          0.01;
 //writeControl    timeStep;
 //writeInterval   1;

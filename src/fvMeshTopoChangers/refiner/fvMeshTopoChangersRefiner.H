@@ -179,6 +179,15 @@ class refiner
 {
     // Private Member Data
 
+        //- Refinement control dictionary
+        dictionary dict_;
+
+        label refineInterval_;
+
+        label maxCells_;
+
+        label nBufferLayers_;
+
         //- Mesh cutting engine
         hexRef8 meshCutter_;
 
@@ -329,8 +338,8 @@ public:
 
     // Constructors
 
-        //- Construct from fvMesh
-        explicit refiner(fvMesh& mesh);
+        //- Construct from fvMesh and dictionary
+        refiner(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         refiner(const refiner&) = delete;

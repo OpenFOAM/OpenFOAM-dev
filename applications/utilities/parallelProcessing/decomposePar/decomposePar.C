@@ -66,14 +66,6 @@ Usage
         Remove any existing \a processor subdirectories before decomposing the
         geometry.
 
-      - \par -ifRequired \n
-        Only decompose the geometry if the number of domains has changed from a
-        previous decomposition. No \a processor subdirectories will be removed
-        unless the \a -force option is also specified. This option can be used
-        to avoid redundant geometry decomposition (eg, in scripts), but should
-        be used with caution when the underlying (serial) geometry or the
-        decomposition method etc. have been changed between decompositions.
-
       - \par -dict \<filename\>
         Specify alternative dictionary for the decomposition.
 
@@ -272,11 +264,6 @@ int main(int argc, char *argv[])
         "force",
         "remove existing processor*/ subdirs before decomposing the geometry"
     );
-    argList::addBoolOption
-    (
-        "ifRequired",
-        "only decompose geometry if the number of domains has changed"
-    );
 
     // Include explicit constant options, have zero from time range
     timeSelector::addOptions(true, false);
@@ -291,7 +278,6 @@ int main(int argc, char *argv[])
     bool decomposeGeomOnly       = args.optionFound("noFields");
     bool decomposeSets           = !args.optionFound("noSets");
     bool forceOverwrite          = args.optionFound("force");
-    bool ifRequiredDecomposition = args.optionFound("ifRequired");
 
     if (decomposeGeomOnly)
     {
@@ -302,7 +288,7 @@ int main(int argc, char *argv[])
         {
             FatalErrorInFunction
                 << "Cannot combine geometry-only decomposition (-noFields)"
-                << " with field decomposition (-noFields or -copyZero)"
+                << " with field decomposition (-fields or -copyZero)"
                 << exit(FatalError);
         }
     }
@@ -418,13 +404,6 @@ int main(int argc, char *argv[])
                 << nProcs << " domains" << nl << "instead of " << nDomains
                 << " domains as specified in decomposeParDict" << nl
                 << exit(FatalError);
-        }
-
-        // Reuse the decomposition if permitted
-        if (ifRequiredDecomposition && nProcs == nDomains)
-        {
-            decomposeFieldsOnly = true;
-            Info<< "Using existing processor directories" << nl;
         }
 
         // Get flag to determine whether or not to distribute uniform data

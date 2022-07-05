@@ -49,3 +49,11 @@ argList::addBoolOption
     "List momentumTransportModels"
 );
 #endif
+
+#ifdef fluidThermophysicalTransportModel_H
+argList::addBoolOption
+(
+    "listThermophysicalTransportModels",
+    "List thermophysicalTransportModels"
+);
+#endif

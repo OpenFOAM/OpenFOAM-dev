@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,90 +22,62 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mixerFvMesh
+    Foam::fvMeshTopoChangers::list
 
 Description
-    A rotating slider mesh
+    Sequence of mesh topology changes applied in order.
 
 SourceFiles
-    mixerFvMesh.C
+    fvMeshTopoChangersList.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mixerFvMesh_H
-#define mixerFvMesh_H
+#ifndef fvMeshTopoChangersList_H
+#define fvMeshTopoChangersList_H
 
-#include "topoChangerFvMesh.H"
-#include "coordinateSystem.H"
+#include "fvMeshTopoChanger.H"
+#include "PtrDictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
+namespace fvMeshTopoChangers
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class mixerFvMesh Declaration
+                   Class fvMeshTopoChangers::list Declaration
 \*---------------------------------------------------------------------------*/
 
-class mixerFvMesh
+class list
 :
-    public topoChangerFvMesh
+    public fvMeshTopoChanger
 {
     // Private Data
 
-        //- Motion dictionary
-        dictionary motionDict_;
-
-        //- Coordinate system
-        autoPtr<coordinateSystem> csPtr_;
-
-        // - Rotational speed in rotations per minute (rpm)
-        scalar rpm_;
-
-        //- Markup field for points.  Moving points marked with 1
-        mutable scalarField* movingPointsMaskPtr_;
-
-
-    // Private Member Functions
-
-        //- Add mixer zones and modifiers
-        void addZonesAndModifiers();
-
-        //- Calculate moving masks
-        void calcMovingMasks() const;
-
-        //- Return moving points mask
-        const scalarField& movingPointsMask() const;
+        PtrDictionary<fvMeshTopoChanger> list_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("mixerFvMesh");
+    TypeName("list");
 
 
     // Constructors
 
-        //- Construct from IOobject
-        explicit mixerFvMesh(const IOobject& io);
+        //- Construct from fvMesh and dictionary
+        list(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        mixerFvMesh(const mixerFvMesh&) = delete;
+        list(const list&) = delete;
 
 
     //- Destructor
-    virtual ~mixerFvMesh();
+    virtual ~list();
 
 
     // Member Functions
-
-        //- Return coordinate system
-        const coordinateSystem& cs() const
-        {
-            return csPtr_();
-        }
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
@@ -123,12 +95,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const mixerFvMesh&) = delete;
+        void operator=(const list&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace fvMeshTopoChangers
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

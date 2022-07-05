@@ -232,11 +232,15 @@ void Foam::fvMeshTopoChangers::movingCone::addZonesAndModifiers()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshTopoChangers::movingCone::movingCone(fvMesh& mesh)
+Foam::fvMeshTopoChangers::movingCone::movingCone
+(
+    fvMesh& mesh,
+    const dictionary& dict
+)
 :
     fvMeshTopoChanger(mesh),
     topoChanger_(mesh),
-    motionDict_(dict()),
+    motionDict_(dict),
     motionVelAmplitude_(motionDict_.lookup("motionVelAmplitude")),
     motionVelPeriod_(motionDict_.lookup<scalar>("motionVelPeriod")),
     curMotionVel_

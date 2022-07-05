@@ -89,7 +89,7 @@ Foam::argList::initValidTables::initValidTables()
     argList::addOption
     (
         "libs",
-        "(lib1 .. libN)",
+        "'(\"lib1.so\" ... \"libN.so\")'",
         "pre-load libraries"
      );
 
@@ -1251,8 +1251,16 @@ void Foam::argList::printUsage() const
         if (iter().size())
         {
             // Length includes space and between option/param and '<>'
-            len += iter().size() + 3;
-            Info<< " <" << iter().c_str() << '>';
+            if (iter()[0] == '\'')
+            {
+                len += iter().size() + 1;
+                Info<< ' ' << iter().c_str();
+            }
+            else
+            {
+                len += iter().size() + 3;
+                Info<< " <" << iter().c_str() << '>';
+            }
         }
 
         HashTable<string>::const_iterator usageIter =

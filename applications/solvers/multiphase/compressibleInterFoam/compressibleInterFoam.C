@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
         // same divergence
         tmp<volScalarField> divU;
 
-        if (correctPhi && mesh.topoChanging())
+        if (correctPhi && mesh.topoChanged())
         {
             // Construct and register divU for mapping
             divU = new volScalarField

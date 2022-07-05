@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ void Foam::TimeFunction1<Type>::reset(const dictionary& dict)
 template<class Type>
 Type Foam::TimeFunction1<Type>::value(const scalar x) const
 {
-    return function_->value(time_.userTimeToTime(x));
+    return function_->value(time_.timeToUserTime(x));
 }
 
 
@@ -97,11 +97,11 @@ Type Foam::TimeFunction1<Type>::integral
 ) const
 {
     return
-        time_.timeToUserTime(1)
+        time_.userTimeToTime(1)
        *function_->integral
         (
-            time_.userTimeToTime(x1),
-            time_.userTimeToTime(x2)
+            time_.timeToUserTime(x1),
+            time_.timeToUserTime(x2)
         );
 }
 

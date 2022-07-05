@@ -174,13 +174,7 @@ private:
         mutable autoPtr<globalMeshData> globalMeshDataPtr_;
 
 
-        // Mesh motion related data
-
-            //- Is the mesh moving
-            bool moving_;
-
-            //- Is the mesh topology changing
-            bool topoChanging_;
+        // Mesh motion related dat
 
             //- Current time index for mesh motion
             mutable label curMotionTimeIndex_;
@@ -302,6 +296,20 @@ private:
                 const scalar minRatio,
                 labelHashSet* setPtr
             ) const;
+
+
+protected:
+
+    // Protected Member Data
+
+        //- Member data pending transfer to fvMesh
+
+            //- Is the mesh moving
+            bool moving_;
+
+            //- Is the mesh topology changing
+            bool topoChanged_;
+
 
 public:
 
@@ -514,45 +522,27 @@ public:
 
         // Mesh motion
 
-            //- Is mesh dynamic
-            virtual bool dynamic() const
-            {
-                return false;
-            }
-
             //- Is mesh moving
             bool moving() const
             {
                 return moving_;
             }
 
-            //- Set the mesh to be moving
-            bool moving(const bool m)
-            {
-                bool m0 = moving_;
-                moving_ = m;
-                return m0;
-            }
-
             //- Is mesh topology changing
-            bool topoChanging() const
+            bool topoChanged() const
             {
-                return topoChanging_;
-            }
-
-            //- Set the mesh topology to be changing
-            bool topoChanging(const bool c)
-            {
-                bool c0 = topoChanging_;
-                topoChanging_ = c;
-                return c0;
+                return topoChanged_;
             }
 
             //- Is mesh changing (topology changing and/or moving)
             bool changing() const
             {
-                return moving()||topoChanging();
+                return moving() || topoChanged();
             }
+
+            //- Reset the points
+            //  without storing old points or returning swept volumes
+            virtual void setPoints(const pointField&);
 
             //- Move points, returns volumes swept by faces in motion
             virtual tmp<scalarField> movePoints(const pointField&);

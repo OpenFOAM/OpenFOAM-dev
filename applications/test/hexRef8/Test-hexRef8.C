@@ -191,10 +191,6 @@ int main(int argc, char *argv[])
         }
 
 
-        mesh.moving(false);
-        mesh.topoChanging(false);
-
-
         label action = rndGen.sampleAB<label>(0, 6);
 
 
@@ -293,7 +289,7 @@ int main(int argc, char *argv[])
 
 
         Info<< nl<< "-- Mesh : moving:" << mesh.moving()
-            << " topoChanging:" << mesh.topoChanging()
+            << " topoChanged:" << mesh.topoChanged()
             << " changing:" << mesh.changing()
             << endl;
 

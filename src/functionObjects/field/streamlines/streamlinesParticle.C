@@ -271,7 +271,7 @@ bool Foam::streamlinesParticle::move
 
             age_ +=
                 (td.trackForward_ ? +1 : -1)
-               *dt
+               *dt/magU
                *(1 - trackToAndHitFace(dt*U, 0, cloud, td));
 
             if (!td.keepParticle || td.sendToProc != -1 || lifeTime_ == 0)

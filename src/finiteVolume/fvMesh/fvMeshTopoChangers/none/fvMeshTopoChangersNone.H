@@ -63,6 +63,9 @@ public:
         //- Construct from fvMesh
         none(fvMesh& mesh);
 
+        //- Construct from fvMesh and dictionary
+        none(fvMesh& mesh, const dictionary& dict);
+
         //- Disallow default bitwise copy construction
         none(const none&) = delete;
 

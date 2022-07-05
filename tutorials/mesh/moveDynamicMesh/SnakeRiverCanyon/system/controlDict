@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     moveDynamicMesh;
+application     moveMesh;
 
 startFrom       startTime;
 

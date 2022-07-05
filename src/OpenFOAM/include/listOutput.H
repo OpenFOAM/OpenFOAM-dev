@@ -81,6 +81,11 @@ if (args.optionFound("listMomentumTransportModels"))
            dictionaryConstructorTablePtr_->sortedToc()
         << endl;
 
+    Info<< "Laminar models"
+        << compressible::laminarModel::
+           dictionaryConstructorTablePtr_->sortedToc()
+        << endl;
+
     Info<< "RAS models"
         << compressible::RASModel::
            dictionaryConstructorTablePtr_->sortedToc()
@@ -88,6 +93,33 @@ if (args.optionFound("listMomentumTransportModels"))
 
     Info<< "LES models"
         << compressible::LESModel::
+           dictionaryConstructorTablePtr_->sortedToc()
+        << endl;
+    listOptions = true;
+}
+#endif
+
+#ifdef fluidThermophysicalTransportModel_H
+if (args.optionFound("listThermophysicalTransportModels"))
+{
+    Info<< "Turbulence models"
+        << fluidThermophysicalTransportModel::
+           dictionaryConstructorTablePtr_->sortedToc()
+        << endl;
+
+    Info<< "Laminar models"
+        << laminarThermophysicalTransportModel
+           <fluidThermophysicalTransportModel>::
+           dictionaryConstructorTablePtr_->sortedToc()
+        << endl;
+
+    Info<< "RAS models"
+        << RASThermophysicalTransportModel<fluidThermophysicalTransportModel>::
+           dictionaryConstructorTablePtr_->sortedToc()
+        << endl;
+
+    Info<< "LES models"
+        << LESThermophysicalTransportModel<fluidThermophysicalTransportModel>::
            dictionaryConstructorTablePtr_->sortedToc()
         << endl;
     listOptions = true;

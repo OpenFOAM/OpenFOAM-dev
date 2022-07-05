@@ -631,7 +631,7 @@ bool Foam::MRFZone::read(const dictionary& dict)
 
 void Foam::MRFZone::update()
 {
-    if (mesh_.topoChanging())
+    if (mesh_.topoChanged())
     {
         setMRFFaces();
     }

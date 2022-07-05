@@ -688,15 +688,6 @@ Foam::labelList Foam::decompositionMethod::decompose
     // Any weights specified?
     label nWeights = returnReduce(cellWeights.size(), sumOp<label>());
 
-    if (nWeights > 0 && cellWeights.size() != mesh.nCells())
-    {
-        FatalErrorInFunction
-            << "Number of weights " << cellWeights.size()
-            << " differs from number of cells " << mesh.nCells()
-            << exit(FatalError);
-    }
-
-
     // Any processor sets?
     label nProcSets = 0;
     forAll(specifiedProcessorFaces, setI)
@@ -722,7 +713,6 @@ Foam::labelList Foam::decompositionMethod::decompose
         }
     }
     reduce(nUnblocked, sumOp<label>());
-
 
 
     // Either do decomposition on cell centres or on agglomeration

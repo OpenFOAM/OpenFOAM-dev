@@ -25,14 +25,21 @@ Application
     moveMesh
 
 Description
-    Solver for moving meshes.
+    Mesh motion and topological mesh change utility.
+
+    Executes the mover, topoChanger and distributor specified in the
+    dynamicMeshDict in a time-loop.
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
 #include "Time.H"
 #include "fvMesh.H"
-#include "motionSolver.H"
+#include "pimpleControl.H"
+#include "vtkSurfaceWriter.H"
+#include "cyclicAMIPolyPatch.H"
+#include "PatchTools.H"
+#include "checkGeometry.H"
 
 using namespace Foam;
 
@@ -40,29 +47,81 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    #include "addRegionOption.H"
+    argList::addBoolOption
+    (
+        "checkAMI",
+        "check AMI weights"
+    );
+
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createMeshNoChangers.H"
 
-    IOdictionary dynamicMeshDict
+    Foam::word regionName;
+
+    if (args.optionReadIfPresent("region", regionName))
+    {
+        Foam::Info
+            << "Create mesh " << regionName << " for time = "
+            << runTime.timeName() << Foam::nl << Foam::endl;
+    }
+    else
+    {
+        regionName = Foam::fvMesh::defaultRegion;
+        Foam::Info
+            << "Create mesh for time = "
+            << runTime.timeName() << Foam::nl << Foam::endl;
+    }
+
+    Foam::fvMesh mesh
     (
-        IOobject
+        Foam::IOobject
         (
-            "dynamicMeshDict",
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ
+            regionName,
+            runTime.timeName(),
+            runTime,
+            Foam::IOobject::MUST_READ
         )
     );
 
-    autoPtr<motionSolver> motionPtr =
-        motionSolver::New("motionSolver", mesh, dynamicMeshDict);
+    const bool checkAMI  = args.optionFound("checkAMI");
 
-    while (runTime.loop())
+    if (checkAMI)
     {
+        Info<< "Writing VTK files with weights of AMI patches." << nl << endl;
+    }
+
+    pimpleControl pimple(mesh);
+
+    bool moveMeshOuterCorrectors
+    (
+        pimple.dict().lookupOrDefault<Switch>("moveMeshOuterCorrectors", false)
+    );
+
+    while (runTime.run())
+    {
+        // Update the mesh for topology change, mesh to mesh mapping
+        mesh.update();
+
+        runTime++;
+
         Info<< "Time = " << runTime.userTimeName() << endl;
 
-        mesh.movePoints(motionPtr->newPoints());
+        while (pimple.loop())
+        {
+            if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+            {
+                // Move the mesh
+                mesh.move();
+            }
+        }
+
+        mesh.checkMesh(true);
+
+        if (checkAMI)
+        {
+            writeAMIWeightsSums(mesh);
+        }
 
         runTime.write();
 

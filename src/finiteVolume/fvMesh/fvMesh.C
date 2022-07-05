@@ -142,9 +142,6 @@ void Foam::fvMesh::clearGeom()
     deleteDemandDrivenData(phiPtr_);
     deleteDemandDrivenData(V0Ptr_);
     deleteDemandDrivenData(V00Ptr_);
-
-    // Mesh motion flux cannot be deleted here because the old-time flux
-    // needs to be saved.
 }
 
 
@@ -343,7 +340,7 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
     }
 
     // Stitch or Re-stitch if necessary
-    stitcher_->connect(false, changers);
+    stitcher_->connect(false, changers, true);
 
     // Construct changers
     if (changers)
@@ -580,8 +577,6 @@ bool Foam::fvMesh::update()
 {
     if (!conformal()) stitcher_->disconnect(true, true);
 
-    bool updated = false;
-
     const bool hasV00 = V00Ptr_;
     deleteDemandDrivenData(V00Ptr_);
 
@@ -590,7 +585,10 @@ bool Foam::fvMesh::update()
         deleteDemandDrivenData(V0Ptr_);
     }
 
-    updated = topoChanger_->update() || updated;
+    // Set topoChanged_ false before any mesh change
+    topoChanged_ = false;
+    bool updated = topoChanger_->update();
+    topoChanged_ = updated;
 
     // Register V0 for distribution
     if (V0Ptr_)
@@ -620,11 +618,14 @@ bool Foam::fvMesh::move()
 {
     if (!conformal()) stitcher_->disconnect(true, true);
 
+    // Do not set moving false
+    // Once the mesh starts moving it is considered to be moving
+    // for the rest of the run
     const bool moved = mover_->update();
 
     curTimeIndex_ = time().timeIndex();
 
-    stitcher_->connect(true, true);
+    stitcher_->connect(true, true, false);
 
     return moved;
 }
@@ -675,9 +676,6 @@ void Foam::fvMesh::reset(const fvMesh& newMesh)
 
     // Clear any non-updateable addressing
     clearAddressing(true);
-
-    // Clear mesh motion flux
-    deleteDemandDrivenData(phiPtr_);
 
     const polyPatchList& newBoundary = newMesh.boundaryMesh();
     labelList patchSizes(newBoundary.size());
@@ -754,7 +752,7 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
 
     if (stitcher_.valid() && state != polyMesh::UNCHANGED)
     {
-        stitcher_->connect(false, false);
+        stitcher_->connect(false, false, true);
     }
 
     return state;
@@ -1008,8 +1006,27 @@ void Foam::fvMesh::mapFields(const polyTopoChangeMap& map)
 }
 
 
+void Foam::fvMesh::setPoints(const pointField& p)
+{
+    polyMesh::setPoints(p);
+
+    clearGeom();
+
+    // Update other local data
+    boundary_.movePoints();
+    surfaceInterpolation::movePoints();
+
+    meshObject::movePoints<fvMesh>(*this);
+    meshObject::movePoints<lduMesh>(*this);
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 {
+    // Set moving_ true
+    // Note: once set it remains true for the rest of the run
+    moving_ = true;
+
     // Grab old time volumes if the time has been incremented
     // This will update V0, V00
     if (curTimeIndex_ < time().timeIndex())
@@ -1051,6 +1068,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
     scalar rDeltaT = 1.0/time().deltaTValue();
 
     tmp<scalarField> tsweptVols = polyMesh::movePoints(p);
+
     scalarField& sweptVols = tsweptVols.ref();
 
     phi.primitiveFieldRef() =

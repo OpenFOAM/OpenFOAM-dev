@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,7 @@ Usage
         rho          | Density field name          | no       | rho
         psi          | Compressibility field name  | no       | thermo:psi
         gamma        | Heat capacity ratio (cp/Cv) | yes      |
+        Mb           | Blending Mach No            | no       | 0.5
         phi          | Flux field name             | no       | phi
         p0           | Reference pressure          | yes      |
     \endtable
@@ -89,6 +90,9 @@ class transonicEntrainmentPressureFvPatchScalarField
 
         //- Heat capacity ratio
         const scalar gamma_;
+
+        //-
+        const scalar Mb_;
 
         //- Reference pressure
         scalarField p0_;
