@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::OSHA1stream
 
 Description
-    An output stream for calculating SHA1 digests.
+    A Foam::OSstream for calculating SHA-1 digests
 
 SourceFiles
     OSHA1stream.C
@@ -43,24 +43,19 @@ SourceFiles
 namespace Foam
 {
 
-class osha1stream;
-class OSHA1stream;
-
 /*---------------------------------------------------------------------------*\
                         Class sha1streambuf Declaration
 \*---------------------------------------------------------------------------*/
 
-//- A streambuf class for calculating SHA1 digests
 class sha1streambuf
 :
     public std::streambuf
 {
     // Private Data
 
-    //- This does all the work and has its own buffering
-    SHA1 sha1_;
+        //- The SHA-1 class which processes the strings
+        SHA1 sha1_;
 
-    friend class osha1stream;
 
 public:
 
@@ -70,15 +65,38 @@ public:
         sha1streambuf()
         {}
 
+
     // Member Functions
 
-    // Write
-
-        //- Process unbuffered
-        virtual std::streamsize xsputn(const char* str, std::streamsize n)
+        //- Return the SHA-1
+        SHA1& sha1()
         {
-            sha1_.append(str, n);
+            return sha1_;
+        }
+
+        //- Writes characters from the array pointed to by s
+        //  into the controlled output sequence, until either n characters
+        //  have been written or the end of the output sequence is reached
+        virtual std::streamsize xsputn(const char* s, std::streamsize n)
+        {
+            sha1_.append(s, n);
             return n;
+        }
+
+        //- Writes c to the current position of the put pointer (pptr),
+        //  and advances that pointer one position forward.
+        //  If c is EOF, no characters are written and the put pointer
+        //  (pptr) is not advanced.
+        //  Maybe used by xsputn (C++11).
+        virtual int overflow(int c = EOF)
+        {
+            if (c != EOF)
+            {
+                const char cc = c;
+                sha1_.append(&cc, 1);
+            }
+
+            return c;
         }
 };
 
@@ -87,7 +105,6 @@ public:
                          Class osha1stream Declaration
 \*---------------------------------------------------------------------------*/
 
-//- A basic output stream for calculating SHA1 digests
 class osha1stream
 :
     virtual public std::ios,
@@ -95,7 +112,9 @@ class osha1stream
 {
     // Private Data
 
-    sha1streambuf sbuf_;
+        // SHA-1 stream buffer
+        sha1streambuf sbuf_;
+
 
 public:
 
@@ -107,22 +126,20 @@ public:
             std::ostream(&sbuf_)
         {}
 
+
     // Member Functions
 
-    // Access
+        //- Return the SHA-1
+        SHA1& sha1()
+        {
+            return sbuf_.sha1();
+        }
 
-        //- This hides both signatures of std::basic_ios::rdbuf()
+        //- Return the stream buffer
         sha1streambuf* rdbuf()
         {
             return &sbuf_;
         }
-
-        //- Full access to the sha1
-        SHA1& sha1()
-        {
-            return sbuf_.sha1_;
-        }
-
 };
 
 
@@ -130,7 +147,6 @@ public:
                          Class OSHA1stream Declaration
 \*---------------------------------------------------------------------------*/
 
-//- The output stream for calculating SHA1 digests
 class OSHA1stream
 :
     public OSstream
@@ -169,14 +185,14 @@ public:
 
     // Member Functions
 
-        //- Full access to the sha1
-        Foam::SHA1& sha1()
+        //- Return the SHA-1
+        SHA1& sha1()
         {
             return dynamic_cast<osha1stream&>(stdStream()).sha1();
         }
 
-        //- Return SHA1::Digest for the data processed until now
-        Foam::SHA1Digest digest()
+        //- Return the SHA-1 digest for the data processed until now
+        SHA1Digest digest()
         {
             return sha1().digest();
         }
