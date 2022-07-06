@@ -89,7 +89,7 @@ bool setCellFieldType
 
         fieldType field(fieldHeader, mesh);
 
-        const Type& value = pTraits<Type>(fieldValueStream);
+        const Type value = pTraits<Type>(fieldValueStream);
 
         if (selectedCells.size() == field.size())
         {
@@ -238,7 +238,7 @@ bool setFaceFieldType
         typename fieldType::Boundary& fieldBf = field.boundaryFieldRef();
 
         // Read the value
-        const Type& value = pTraits<Type>(fieldValueStream);
+        const Type value = pTraits<Type>(fieldValueStream);
 
         // Determine the number of non-processor patches
         label nNonProcPatches = 0;

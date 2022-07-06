@@ -892,7 +892,11 @@ Foam::patchToPatches::intersection::srcWeights
     const primitivePatch& srcPatch
 ) const
 {
-    List<DynamicList<scalar>> result(srcCouples_.size());
+    List<DynamicList<scalar>>* resultPtr
+    (
+        new List<DynamicList<scalar>>(srcCouples_.size())
+    );
+    List<DynamicList<scalar>>& result = *resultPtr;
 
     forAll(srcCouples_, srcFacei)
     {
@@ -906,7 +910,7 @@ Foam::patchToPatches::intersection::srcWeights
         }
     }
 
-    return result;
+    return tmpNrc<List<DynamicList<scalar>>>(resultPtr);
 }
 
 
@@ -916,7 +920,11 @@ Foam::patchToPatches::intersection::tgtWeights
     const primitivePatch& tgtPatch
 ) const
 {
-    List<DynamicList<scalar>> result(tgtCouples_.size());
+    List<DynamicList<scalar>>* resultPtr
+    (
+        new List<DynamicList<scalar>>(tgtCouples_.size())
+    );
+    List<DynamicList<scalar>>& result = *resultPtr;
 
     forAll(tgtCouples_, tgtFacei)
     {
@@ -930,7 +938,7 @@ Foam::patchToPatches::intersection::tgtWeights
         }
     }
 
-    return result;
+    return tmpNrc<List<DynamicList<scalar>>>(resultPtr);
 }
 
 

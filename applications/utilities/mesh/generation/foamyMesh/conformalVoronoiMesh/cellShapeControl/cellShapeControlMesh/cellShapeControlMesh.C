@@ -756,7 +756,7 @@ Foam::label Foam::cellShapeControlMesh::estimateCellCount
                 cit->vertex(3)->point()
             );
 
-            pointFromPoint centre = topoint(CGAL::centroid(tet));
+            const Foam::point centre(topoint(CGAL::centroid(tet)));
 
             if
             (
