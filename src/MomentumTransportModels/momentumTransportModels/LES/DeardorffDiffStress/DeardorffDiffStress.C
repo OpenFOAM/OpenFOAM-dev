@@ -199,7 +199,11 @@ void DeardorffDiffStress<BasicMomentumTransportModel>::correct()
     (
         fvm::ddt(alpha, rho, R)
       + fvm::div(alphaRhoPhi, R)
-      - fvm::laplacian(I*this->nu() + Cs_*(k/this->epsilon())*R, R)
+      - fvm::laplacian
+        (
+            symmTensor::one*this->nu() + Cs_*(k/this->epsilon())*R,
+            R
+        )
       + fvm::Sp(Cm_*alpha*rho*sqrt(k)/this->delta(), R)
      ==
         alpha*rho*P
