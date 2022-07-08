@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 
     Reference:
     \verbatim
-        Thien, N. P., & Tanner, R. I. (1977).
+        Phan-Thien, N., & Tanner, R. I. (1977).
         A new constitutive equation derived from network theory.
         Journal of Non-Newtonian Fluid Mechanics, 2(4), 353-365.
     \endverbatim
