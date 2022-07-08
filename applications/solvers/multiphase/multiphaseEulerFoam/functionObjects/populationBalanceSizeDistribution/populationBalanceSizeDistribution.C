@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sizeDistribution.H"
+#include "populationBalanceSizeDistribution.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,8 +32,13 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(sizeDistribution, 0);
-    addToRunTimeSelectionTable(functionObject, sizeDistribution, dictionary);
+    defineTypeNameAndDebug(populationBalanceSizeDistribution, 0);
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        populationBalanceSizeDistribution,
+        dictionary
+    );
 }
 }
 
@@ -41,7 +46,7 @@ template<>
 const char*
 Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::functionType,
+    Foam::functionObjects::populationBalanceSizeDistribution::functionType,
     6
 >::names[] =
 {
@@ -55,15 +60,15 @@ Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::functionType,
+    Foam::functionObjects::populationBalanceSizeDistribution::functionType,
     6
-> Foam::functionObjects::sizeDistribution::functionTypeNames_;
+> Foam::functionObjects::populationBalanceSizeDistribution::functionTypeNames_;
 
 template<>
 const char*
 Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::coordinateType,
+    Foam::functionObjects::populationBalanceSizeDistribution::coordinateType,
     4
 >::names[] =
 {
@@ -75,9 +80,10 @@ Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::coordinateType,
+    Foam::functionObjects::populationBalanceSizeDistribution::coordinateType,
     4
-> Foam::functionObjects::sizeDistribution::coordinateTypeNames_;
+> Foam::functionObjects::populationBalanceSizeDistribution::
+  coordinateTypeNames_;
 
 
 namespace Foam
@@ -85,7 +91,7 @@ namespace Foam
     template<>
     const char* NamedEnum
     <
-        Foam::functionObjects::sizeDistribution::weightType,
+        Foam::functionObjects::populationBalanceSizeDistribution::weightType,
         4
     >::names[] =
     {
@@ -99,17 +105,19 @@ namespace Foam
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::sizeDistribution::weightType,
+    Foam::functionObjects::populationBalanceSizeDistribution::weightType,
     4
 >
-Foam::functionObjects::sizeDistribution::weightTypeNames_;
+Foam::functionObjects::populationBalanceSizeDistribution::weightTypeNames_;
 
 using Foam::constant::mathematical::pi;
 
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
-Foam::word Foam::functionObjects::sizeDistribution::functionTypeSymbolicName()
+Foam::word
+Foam::functionObjects::populationBalanceSizeDistribution::
+functionTypeSymbolicName()
 {
     word functionTypeSymbolicName(word::null);
 
@@ -157,7 +165,9 @@ Foam::word Foam::functionObjects::sizeDistribution::functionTypeSymbolicName()
 }
 
 
-Foam::word Foam::functionObjects::sizeDistribution::coordinateTypeSymbolicName
+Foam::word
+Foam::functionObjects::populationBalanceSizeDistribution::
+coordinateTypeSymbolicName
 (
     const coordinateType& cType
 )
@@ -197,7 +207,7 @@ Foam::word Foam::functionObjects::sizeDistribution::coordinateTypeSymbolicName
 
 
 Foam::tmp<Foam::scalarField>
-Foam::functionObjects::sizeDistribution::filterField
+Foam::functionObjects::populationBalanceSizeDistribution::filterField
 (
     const scalarField& field
 ) const
@@ -213,7 +223,8 @@ Foam::functionObjects::sizeDistribution::filterField
 }
 
 
-Foam::scalar Foam::functionObjects::sizeDistribution::averageCoordinateValue
+Foam::scalar
+Foam::functionObjects::populationBalanceSizeDistribution::averageCoordinateValue
 (
     const Foam::diameterModels::sizeGroup& fi,
     const coordinateType& cType
@@ -256,7 +267,8 @@ Foam::scalar Foam::functionObjects::sizeDistribution::averageCoordinateValue
 }
 
 
-Foam::scalar Foam::functionObjects::sizeDistribution::weightedAverage
+Foam::scalar
+Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
 (
     const Foam::scalarField& fld,
     const Foam::diameterModels::sizeGroup& fi
@@ -332,7 +344,8 @@ Foam::scalar Foam::functionObjects::sizeDistribution::weightedAverage
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::sizeDistribution::sizeDistribution
+Foam::functionObjects::populationBalanceSizeDistribution::
+populationBalanceSizeDistribution
 (
     const word& name,
     const Time& runTime,
@@ -379,13 +392,17 @@ Foam::functionObjects::sizeDistribution::sizeDistribution
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::sizeDistribution::~sizeDistribution()
+Foam::functionObjects::populationBalanceSizeDistribution::
+~populationBalanceSizeDistribution()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::sizeDistribution::read(const dictionary& dict)
+bool Foam::functionObjects::populationBalanceSizeDistribution::read
+(
+    const dictionary& dict
+)
 {
     Log << type() << " " << name() << ":" << nl;
 
@@ -397,13 +414,13 @@ bool Foam::functionObjects::sizeDistribution::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::sizeDistribution::execute()
+bool Foam::functionObjects::populationBalanceSizeDistribution::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::sizeDistribution::write()
+bool Foam::functionObjects::populationBalanceSizeDistribution::write()
 {
     Log << type() << " " << name() << " write:" << nl;
 

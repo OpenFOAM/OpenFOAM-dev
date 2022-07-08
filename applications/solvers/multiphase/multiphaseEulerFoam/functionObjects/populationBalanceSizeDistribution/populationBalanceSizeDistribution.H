@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::sizeDistribution
+    Foam::functionObjects::populationBalanceSizeDistribution
 
 Description
     Writes out the size distribution determined by a population balance model,
@@ -36,7 +36,7 @@ Description
     \verbatim
     numberDensity
     {
-        type                sizeDistribution;
+        type                populationBalanceSizeDistribution;
         libs                ("libmultiphaseEulerFoamFunctionObjects.so");
         writeControl        writeTime;
         populationBalance   bubbles;
@@ -71,12 +71,12 @@ See also
     Foam::functionObject
 
 SourceFiles
-    sizeDistribution.C
+    populationBalanceSizeDistribution.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sizeDistribution_H
-#define sizeDistribution_H
+#ifndef populationBalanceSizeDistribution_H
+#define populationBalanceSizeDistribution_H
 
 #include "fvMeshFunctionObject.H"
 #include "volRegion.H"
@@ -92,10 +92,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class sizeDistribution Declaration
+             Class populationBalanceSizeDistribution Declaration
 \*---------------------------------------------------------------------------*/
 
-class sizeDistribution
+class populationBalanceSizeDistribution
 :
     public fvMeshFunctionObject,
     public volRegion
@@ -207,13 +207,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("sizeDistribution");
+    TypeName("populationBalanceSizeDistribution");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        sizeDistribution
+        populationBalanceSizeDistribution
         (
             const word& name,
             const Time& runTime,
@@ -221,11 +221,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        sizeDistribution(const sizeDistribution&) = delete;
+        populationBalanceSizeDistribution
+        (
+            const populationBalanceSizeDistribution&
+        ) = delete;
 
 
     //- Destructor
-    virtual ~sizeDistribution();
+    virtual ~populationBalanceSizeDistribution();
 
 
     // Member Functions
@@ -236,7 +239,7 @@ public:
             return wordList::null();
         }
 
-        //- Read the sizeDistribution data
+        //- Read the populationBalanceSizeDistribution data
         virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
@@ -249,7 +252,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const sizeDistribution&) = delete;
+        void operator=(const populationBalanceSizeDistribution&) = delete;
 };
 
 

@@ -11,7 +11,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-type                sizeDistribution;
+type                populationBalanceSizeDistribution;
 libs                ("libmultiphaseEulerFoamFunctionObjects.so");
 
 populationBalance   <populationBalance>;

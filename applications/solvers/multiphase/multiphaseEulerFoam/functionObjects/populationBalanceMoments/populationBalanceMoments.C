@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "moments.H"
+#include "populationBalanceMoments.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,8 +32,13 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(moments, 0);
-    addToRunTimeSelectionTable(functionObject, moments, dictionary);
+    defineTypeNameAndDebug(populationBalanceMoments, 0);
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        populationBalanceMoments,
+        dictionary
+    );
 }
 }
 
@@ -43,7 +48,7 @@ namespace Foam
     template<>
     const char* NamedEnum
     <
-        Foam::functionObjects::moments::momentType,
+        Foam::functionObjects::populationBalanceMoments::momentType,
         4
     >::names[] = {"integerMoment", "mean", "variance", "stdDev"};
 }
@@ -51,10 +56,10 @@ namespace Foam
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::moments::momentType,
+    Foam::functionObjects::populationBalanceMoments::momentType,
     4
 >
-Foam::functionObjects::moments::momentTypeNames_;
+Foam::functionObjects::populationBalanceMoments::momentTypeNames_;
 
 
 namespace Foam
@@ -62,7 +67,7 @@ namespace Foam
     template<>
     const char* NamedEnum
     <
-        Foam::functionObjects::moments::coordinateType,
+        Foam::functionObjects::populationBalanceMoments::coordinateType,
         3
     >::names[] = {"volume", "area", "diameter"};
 }
@@ -70,10 +75,10 @@ namespace Foam
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::moments::coordinateType,
+    Foam::functionObjects::populationBalanceMoments::coordinateType,
     3
 >
-Foam::functionObjects::moments::coordinateTypeNames_;
+Foam::functionObjects::populationBalanceMoments::coordinateTypeNames_;
 
 
 namespace Foam
@@ -81,7 +86,7 @@ namespace Foam
     template<>
     const char* NamedEnum
     <
-        Foam::functionObjects::moments::weightType,
+        Foam::functionObjects::populationBalanceMoments::weightType,
         3
     >::names[] =
     {
@@ -94,10 +99,10 @@ namespace Foam
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::moments::weightType,
+    Foam::functionObjects::populationBalanceMoments::weightType,
     3
 >
-Foam::functionObjects::moments::weightTypeNames_;
+Foam::functionObjects::populationBalanceMoments::weightTypeNames_;
 
 
 namespace Foam
@@ -105,7 +110,7 @@ namespace Foam
     template<>
     const char* NamedEnum
     <
-        Foam::functionObjects::moments::meanType,
+        Foam::functionObjects::populationBalanceMoments::meanType,
         3
     >::names[] = {"arithmetic", "geometric", "notApplicable"};
 }
@@ -113,15 +118,16 @@ namespace Foam
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::moments::meanType,
+    Foam::functionObjects::populationBalanceMoments::meanType,
     3
 >
-Foam::functionObjects::moments::meanTypeNames_;
+Foam::functionObjects::populationBalanceMoments::meanTypeNames_;
 
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
-Foam::word Foam::functionObjects::moments::coordinateTypeSymbolicName()
+Foam::word
+Foam::functionObjects::populationBalanceMoments::coordinateTypeSymbolicName()
 {
     word coordinateTypeSymbolicName(word::null);
 
@@ -151,7 +157,8 @@ Foam::word Foam::functionObjects::moments::coordinateTypeSymbolicName()
 }
 
 
-Foam::word Foam::functionObjects::moments::weightTypeSymbolicName()
+Foam::word
+Foam::functionObjects::populationBalanceMoments::weightTypeSymbolicName()
 {
     word weightTypeSymbolicName(word::null);
 
@@ -181,7 +188,7 @@ Foam::word Foam::functionObjects::moments::weightTypeSymbolicName()
 }
 
 
-Foam::word Foam::functionObjects::moments::defaultFldName()
+Foam::word Foam::functionObjects::populationBalanceMoments::defaultFldName()
 {
     word meanName
     (
@@ -209,7 +216,8 @@ Foam::word Foam::functionObjects::moments::defaultFldName()
 }
 
 
-Foam::word Foam::functionObjects::moments::integerMomentFldName()
+Foam::word
+Foam::functionObjects::populationBalanceMoments::integerMomentFldName()
 {
     return
         word
@@ -229,7 +237,7 @@ Foam::word Foam::functionObjects::moments::integerMomentFldName()
 }
 
 
-void Foam::functionObjects::moments::setDimensions
+void Foam::functionObjects::populationBalanceMoments::setDimensions
 (
     volScalarField& fld,
     momentType momType
@@ -385,7 +393,7 @@ void Foam::functionObjects::moments::setDimensions
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::functionObjects::moments::totalConcentration()
+Foam::functionObjects::populationBalanceMoments::totalConcentration()
 {
     tmp<volScalarField> tTotalConcentration
     (
@@ -456,7 +464,8 @@ Foam::functionObjects::moments::totalConcentration()
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::functionObjects::moments::mean()
+Foam::tmp<Foam::volScalarField>
+Foam::functionObjects::populationBalanceMoments::mean()
 {
     tmp<volScalarField> tMean
     (
@@ -582,7 +591,8 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::moments::mean()
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::functionObjects::moments::variance()
+Foam::tmp<Foam::volScalarField>
+Foam::functionObjects::populationBalanceMoments::variance()
 {
     tmp<volScalarField> tVariance
     (
@@ -699,7 +709,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::moments::variance()
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::functionObjects::moments::stdDev()
+Foam::functionObjects::populationBalanceMoments::stdDev()
 {
     switch (meanType_)
     {
@@ -717,7 +727,7 @@ Foam::functionObjects::moments::stdDev()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::moments::moments
+Foam::functionObjects::populationBalanceMoments::populationBalanceMoments
 (
     const word& name,
     const Time& runTime,
@@ -750,13 +760,14 @@ Foam::functionObjects::moments::moments
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::moments::~moments()
+Foam::functionObjects::populationBalanceMoments::~populationBalanceMoments()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::moments::read(const dictionary& dict)
+bool
+Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
@@ -872,7 +883,7 @@ bool Foam::functionObjects::moments::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::moments::execute()
+bool Foam::functionObjects::populationBalanceMoments::execute()
 {
     switch (momentType_)
     {
@@ -961,7 +972,7 @@ bool Foam::functionObjects::moments::execute()
 }
 
 
-bool Foam::functionObjects::moments::write()
+bool Foam::functionObjects::populationBalanceMoments::write()
 {
     writeObject(fldPtr_->name());
 

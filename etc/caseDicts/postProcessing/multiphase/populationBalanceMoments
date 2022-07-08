@@ -12,7 +12,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-type                moments;
+type                populationBalanceMoments;
 libs                ("libmultiphaseEulerFoamFunctionObjects.so");
 
 populationBalance   <populationBalance>;
