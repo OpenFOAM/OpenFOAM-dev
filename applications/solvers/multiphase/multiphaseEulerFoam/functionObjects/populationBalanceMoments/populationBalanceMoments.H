@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::moments
+    Foam::functionObjects::populationBalanceMoments
 
 Description
     Calculates and writes out integral (integer moments) or mean properties
@@ -34,9 +34,9 @@ Description
     the phase fraction of the particulate phase:
 
     \verbatim
-    moments
+    populationBalanceMoments
     {
-        type                moments;
+        type                populationBalanceMoments;
         libs                ("libmultiphaseEulerFoamFunctionObjects.so");
         executeControl      timeStep;
         writeControl        writeTime;
@@ -68,12 +68,12 @@ See also
     Foam::functionObject
 
 SourceFiles
-    moments.C
+    populationBalanceMoments.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_moments_H
-#define functionObjects_moments_H
+#ifndef functionObjects_populationBalanceMoments_H
+#define functionObjects_populationBalanceMoments_H
 
 #include "fvMeshFunctionObject.H"
 #include "populationBalanceModel.H"
@@ -86,10 +86,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class moments Declaration
+                  Class populationBalanceMoments Declaration
 \*---------------------------------------------------------------------------*/
 
-class moments
+class populationBalanceMoments
 :
     public fvMeshFunctionObject
 {
@@ -200,13 +200,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("moments");
+    TypeName("populationBalanceMoments");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        moments
+        populationBalanceMoments
         (
             const word& name,
             const Time& runTime,
@@ -214,11 +214,11 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        moments(const moments&) = delete;
+        populationBalanceMoments(const populationBalanceMoments&) = delete;
 
 
     //- Destructor
-    virtual ~moments();
+    virtual ~populationBalanceMoments();
 
 
     // Member Functions
@@ -242,7 +242,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const moments&) = delete;
+        void operator=(const populationBalanceMoments&) = delete;
 };
 
 

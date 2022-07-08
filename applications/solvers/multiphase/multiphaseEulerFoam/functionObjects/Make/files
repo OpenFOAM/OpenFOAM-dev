@@ -1,5 +1,5 @@
-moments/moments.C
-sizeDistribution/sizeDistribution.C
+populationBalanceMoments/populationBalanceMoments.C
+populationBalanceSizeDistribution/populationBalanceSizeDistribution.C
 phaseForces/phaseForces.C
 phaseMap/phaseMap.C
 
