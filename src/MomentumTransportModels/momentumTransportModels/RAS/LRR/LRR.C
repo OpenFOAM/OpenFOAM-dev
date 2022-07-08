@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -257,7 +257,7 @@ tmp<volSymmTensorField> LRR<BasicMomentumTransportModel>::DREff() const
     return volSymmTensorField::New
     (
         "DREff",
-        (Cs_*(this->k_/this->epsilon_))*this->R_ + symmTensor::one*this->nu()
+        (Cs_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
     );
 }
 
@@ -268,7 +268,7 @@ tmp<volSymmTensorField> LRR<BasicMomentumTransportModel>::DepsilonEff() const
     return volSymmTensorField::New
     (
         "DepsilonEff",
-        (Ceps_*(this->k_/this->epsilon_))*this->R_ + symmTensor::one*this->nu()
+        (Ceps_*(this->k_/this->epsilon_))*this->R_ + I*this->nu()
     );
 }
 
