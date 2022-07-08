@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,29 @@ Class
 
 Description
     Herschel-Bulkley generalised Newtonian viscosity model
+
+    The Herschel-Bulkley model combines the effects of a Bingham plastic
+    and power-law behaviour of a fluid. At a low strain rate \f$\gamma\f$
+    the fluid adopts a viscosity \f$\nu_0\f$. Beyond a threshold stress
+    \f$\tau_0\f$, the viscosity is described as a power law.
+
+    Kinematic viscosity [m^2/s]
+
+    \f[
+        \nu = \min(\nu_0, \tau_0/\gamma + k\gamma^{n - 1})
+    \f]
+
+    Example specification:
+    \verbatim
+         viscosityModel HerschelBulkley;
+
+         tau0       0.01;
+         k          0.001;
+         n          0.2;
+    \endverbatim
+
+    Note the viscosity \c nu0 at zero strain rate is a physical property,
+    generally specified in the physicalProperties file.
 
 SourceFiles
     HerschelBulkley.C

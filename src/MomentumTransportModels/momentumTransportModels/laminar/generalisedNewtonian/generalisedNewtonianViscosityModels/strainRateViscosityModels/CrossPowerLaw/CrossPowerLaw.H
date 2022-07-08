@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,9 @@ Class
 Description
     Cross-Power law generalised Newtonian viscosity model
 
-    The strain rate coefficient can be specified either as the constant \c m or
-    the critical stress level at the transition to shear thinning \c
-    tauStar if \c tauStar is provided:
+    The coefficient applied to strain rate \f$\gamma\f$ can be specified either
+    as the constant \c m or the critical stress level at the transition to
+    shear thinning \c tauStar if \c tauStar is provided:
 
     Kinematic viscosity [m^2/s]
 
@@ -53,6 +53,9 @@ Description
          m          0.4;
          n          3;
     \endverbatim
+
+    Note the viscosity \c nu0 at zero strain rate is a physical property,
+    generally specified in the physicalProperties file.
 
 SourceFiles
     CrossPowerLaw.C

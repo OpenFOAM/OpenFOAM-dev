@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,25 @@ Class
 
 Description
     Standard power-law generalised Newtonian viscosity model
+
+    The power-law model provides a function for viscosity, limited by
+    minimum and maximum values \f$\nu_\min\f$ and \f$\nu_\max\f$ respectively.
+
+    Kinematic viscosity [m^2/s]
+
+    \f[
+        \nu = k\gamma^{n - 1}, \nu_\min \le \nu \le \nu_\max
+    \f]
+
+    Example specification:
+    \verbatim
+         viscosityModel powerLaw;
+
+         nuMax      1e-3;
+         nuMin      1e-5;
+         k          1;
+         n          0.5;
+    \endverbatim
 
 SourceFiles
     powerLaw.C
