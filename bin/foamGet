@@ -154,8 +154,12 @@ setTgt () {
     _tgt="$3"
 
     ! [ "$_tgt" ] && \
-        echo "$_file" | grep -Eq "(fvModel|fvConstraint)" && \
+        echo "$_file" | grep -q fvModel && \
         _tgt="constant"
+
+    ! [ "$_tgt" ] && \
+        echo "$_file" | grep -q fvConstraint && \
+        _tgt="system"
 
     ! [ "$_tgt" ] && \
         case "$prefix" in
