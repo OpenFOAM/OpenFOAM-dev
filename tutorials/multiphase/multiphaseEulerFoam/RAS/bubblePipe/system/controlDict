@@ -73,7 +73,7 @@ functions
         )
     )
 
-    #includeFunc sizeDistribution
+    #includeFunc populationBalanceSizeDistribution
     (
         populationBalance=bubbles,
         regionType=cellZone,
@@ -84,7 +84,7 @@ functions
         funcName=probabilityDensity.injection
     )
 
-    #includeFunc sizeDistribution
+    #includeFunc populationBalanceSizeDistribution
     (
         populationBalance=bubbles,
         regionType=cellZone,

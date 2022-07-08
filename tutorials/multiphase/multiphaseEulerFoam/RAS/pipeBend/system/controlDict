@@ -53,7 +53,7 @@ functions
 {
     #includeFunc writeObjects(d.particles)
 
-    #includeFunc sizeDistribution
+    #includeFunc populationBalanceSizeDistribution
     (
         populationBalance=agglomerates,
         regionType=cellZone,
@@ -64,7 +64,7 @@ functions
         funcName=probabilityDensity.afterBend_1d
     )
 
-    #includeFunc sizeDistribution
+    #includeFunc populationBalanceSizeDistribution
     (
         populationBalance=agglomerates,
         regionType=cellZone,
@@ -75,7 +75,7 @@ functions
         funcName=probabilityDensity.afterBend_5d
     )
 
-    #includeFunc sizeDistribution
+    #includeFunc populationBalanceSizeDistribution
     (
         populationBalance=agglomerates,
         regionType=cellZone,
@@ -86,7 +86,7 @@ functions
         funcName=probabilityDensity.afterBend_9d
     )
 
-    #includeFunc sizeDistribution
+    #includeFunc populationBalanceSizeDistribution
     (
         populationBalance=agglomerates,
         regionType=cellZone,

@@ -60,7 +60,7 @@ functions
         fields=(TiCl4.vapor O2.vapor Cl2.vapor alpha.particles)
     )
 
-    #includeFunc sizeDistribution
+    #includeFunc populationBalanceSizeDistribution
     (
         populationBalance=aggregates,
         regionType=cellZone,

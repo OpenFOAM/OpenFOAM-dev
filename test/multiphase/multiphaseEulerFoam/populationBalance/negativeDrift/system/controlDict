@@ -52,7 +52,7 @@ maxDeltaT       1;
 
 functions
 {
-    #includeFunc sizeDistribution
+    #includeFunc populationBalanceSizeDistribution
     (
         populationBalance=bubbles,
         functionType=numberDensity,
@@ -60,7 +60,7 @@ functions
         funcName=numberDensity
     )
 
-    #includeFunc moments
+    #includeFunc populationBalanceMoments
     (
         populationBalance=bubbles,
         momentType=integerMoment,
@@ -68,7 +68,7 @@ functions
         order=1
     )
 
-    #includeFunc moments
+    #includeFunc populationBalanceMoments
     (
         populationBalance=bubbles,
         momentType=integerMoment,
