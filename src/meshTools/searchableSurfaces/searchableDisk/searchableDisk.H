@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,24 @@ Class
     Foam::searchableDisk
 
 Description
-    Searching on circular disk given as origin, normal (gets normalised)
-    and radius
+    Surface geometry with a circular disk shape, which can be used with
+    snappyHexMesh.
+
+Usage
+    \table
+        Property  | Description                 | Required
+        origin    | Centre of the disk          | yes
+        centre    | Normal to the disk surface  | yes
+        radius    | Radius of the disk          | yes
+    \endtable
+
+    Example specification in snappyHexMeshDict/geometry:
+    \verbatim
+        type       searchableDisk;
+        origin     (10 10 10);
+        normal     (0 1 0);
+        radius     5;
+    \endverbatim
 
 SourceFiles
     searchableDisk.C

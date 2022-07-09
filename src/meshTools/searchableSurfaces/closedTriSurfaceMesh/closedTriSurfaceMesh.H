@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,29 @@ Class
     Foam::closedTriSurfaceMesh
 
 Description
-    A triSurfaceMesh where it is forced to check volumeTypes, used for surfaces
-    that are topologically non-manifold (small holes or multiple parts) but are
-    geometrically essentially closed
+    Like triSurface, a surface geometry formed of discrete facets, e.g. \
+    triangles and/or quadrilaterals, defined in a file using formats such as
+    Wavefront OBJ, or stereolithography STL. A closedTriSurfaceMesh is a
+    geometry surface which is meant to be closed but contains some
+    imperfections, e.g. small holes or multiple parts, which mean it is not
+    strictly closed.
+
+Usage
+    \table
+        Property     | Description                | Required
+        file         | Name of the geometry file  | yes
+        scale        | Scaling factor for surface | no
+        minQuality   | Threshold triangle quality | no
+    \endtable
+
+    Note: when calculating surface normal vectors, triangles are ignored with
+    quality < minQuality.
+
+    Example specification in snappyHexMeshDict/geometry:
+    \verbatim
+        type       closedTriSurfaceMesh;
+        file       "surfaceFile.obj";
+    \endverbatim
 
 SourceFiles
     closedTriSurfaceMesh.C

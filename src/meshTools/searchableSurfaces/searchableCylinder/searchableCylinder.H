@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,24 @@ Class
     Foam::searchableCylinder
 
 Description
-    Searching on cylinder
+    Surface geometry with a cylinder shape, which can be used with
+    snappyHexMesh.
+
+Usage
+    \table
+        Property  | Description                          | Required
+        point1    | Point at one end of cylinder axis    | yes
+        point2    | Point at other end of cylinder axis  | yes
+        radius    | Cylinder radius                      | yes
+    \endtable
+
+    Example specification in snappyHexMeshDict/geometry:
+    \verbatim
+        type       searchableCylinder;
+        point1     (10  10  10);
+        point2     (20  10  10);
+        radius     5;
+    \endverbatim
 
 SourceFiles
     searchableCylinder.C

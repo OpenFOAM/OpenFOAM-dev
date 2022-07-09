@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,26 @@ Class
     Foam::triSurfaceMesh
 
 Description
-    IOoject and searching on triSurface
+    A surface geometry formed of discrete facets, e.g. triangles and/or
+    quadrilaterals, defined in a file using formats such as Wavefront OBJ, or
+    stereolithography STL.
 
-    Note: when constructing from dictionary has optional parameters:
-        - scale     : scaling factor.
-        - tolerance : relative tolerance for doing intersections
-                      (see triangle::intersection)
-        - minQuality: discard triangles with low quality when getting normal
+Usage
+    \table
+        Property     | Description                | Required
+        file         | Name of the geometry file  | yes
+        scale        | Scaling factor for surface | no
+        minQuality   | Threshold triangle quality | no
+    \endtable
+
+    Note: when calculating surface normal vectors, triangles are ignored with
+    quality < minQuality.
+
+    Example specification in snappyHexMeshDict/geometry:
+    \verbatim
+        type       triSurfaceMesh;
+        file       "surfaceFile.obj";
+    \endverbatim
 
 SourceFiles
     triSurfaceMesh.C

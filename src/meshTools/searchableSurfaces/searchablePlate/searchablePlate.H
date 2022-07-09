@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,25 @@ Class
     Foam::searchablePlate
 
 Description
-    Searching on finite plate. Plate has to be aligned with coordinate
-    axes.
-    Plate defined as origin and span. One of the components of span has
-    to be 0 which defines the normal direction. E.g.
+    Surface geometry of a finite plane, aligned with the coordinate
+    axes, which can be used with snappyHexMesh.
 
-    span    = (Sx Sy 0)     // plate in x-y plane
-    origin  = (Ox Oy Oz)
+Usage
+    \table
+        Property  | Description                         | Required
+        origin    | Position of one corner of the plate | yes
+        span      | The vector span of the plate        | yes
+    \endtable
 
-    now plane is from (Ox Oy Oz) to (Ox+Sx Oy+Sy Oz)
+    Note: the span of the plate requires one zero component corresponding to the
+    normal direction of the plate.
+
+    Example specification in snappyHexMeshDict/geometry:
+    \verbatim
+        type       searchablePlate;
+        origin     (10 10 10);
+        span       (20  0 10);
+    \endverbatim
 
 SourceFiles
     searchablePlate.C

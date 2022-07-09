@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,27 @@ Class
     Foam::searchablePlane
 
 Description
-    Searching on (infinite) plane. See plane.H
+    Surface geometry of an infinite plane, which can be used with
+    snappyHexMesh.
+
+Usage
+    \table
+        Property  | Description                             | Required
+        planeType | Plane type, e.g. pointAndNormal         | yes
+        point     | Point location for pointAndNormal plane | yes
+        normal    | Normal vector for pointAndNormal plane  | yes
+    \endtable
+
+    Note: there are also other options for planeType, including
+    'planeEquation' and 'embeddedPoints'.
+
+    Example specification in snappyHexMeshDict/geometry:
+    \verbatim
+        type       searchablePlane;
+        planeType  pointAndNormal;
+        point      (10 10 10);
+        normal     (0  1  0);
+    \endverbatim
 
 SourceFiles
     searchablePlane.C

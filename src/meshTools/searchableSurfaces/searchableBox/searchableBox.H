@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,22 @@ Class
     Foam::searchableBox
 
 Description
-    Searching on bounding box
+    Surface geometry with a rectangular box shape, aligned with the coordinate
+    axes, which can be used with snappyHexMesh.
+
+Usage
+    \table
+        Property  | Description                    | Required
+        min       | Minimum point of bounding box  | yes
+        max       | Maximum point of bounding box  | yes
+    \endtable
+
+    Example specification in snappyHexMeshDict/geometry:
+    \verbatim
+        type       searchableBox;
+        min        (0  0  0);
+        max        (10 10 10);
+    \endverbatim
 
 SourceFiles
     searchableBox.C

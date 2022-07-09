@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,24 @@ Class
     Foam::searchableExtrudedCircle
 
 Description
-    Searching on edgemesh with constant radius
+    Surface geometry with a tube shape, which can be used with
+    snappyHexMesh. The geometry is formed from a line geometry, described
+    by the edgeMesh (.eMesh) file format, to which a radius is applied
+    to form a tube.
+
+Usage
+    \table
+        Property  | Description                          | Required
+        file      | File describing the line (.eMesh)    | yes
+        radius    | Tube radius                          | yes
+    \endtable
+
+    Example specification in snappyHexMeshDict/geometry:
+    \verbatim
+        type       searchableExtrudedCircle;
+        file       "line.eMesh";
+        radius     5;
+    \endverbatim
 
 SourceFiles
     searchableExtrudedCircle.C
