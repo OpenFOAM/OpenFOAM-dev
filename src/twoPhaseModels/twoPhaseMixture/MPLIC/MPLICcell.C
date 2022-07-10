@@ -260,10 +260,10 @@ Foam::FixedList<Foam::scalar, 4> Foam::MPLICcell::solveVanderMatrix() const
 
     return FixedList<scalar, 4>
     {
-      - 4.5*b[0] + 13.5*b[1] - 13.5*b[2] + 4.5*b[3],
-        9.0*b[0] - 22.5*b[1] + 18.0*b[2] - 4.5*b[3],
-      - 5.5*b[0] +  9.0*b[1] -  4.5*b[2] + 1.0*b[3],
-        1.0*b[0]
+        scalar(- 4.5*b[0] + 13.5*b[1] - 13.5*b[2] + 4.5*b[3]),
+        scalar(9.0*b[0] - 22.5*b[1] + 18.0*b[2] - 4.5*b[3]),
+        scalar(- 5.5*b[0] +  9.0*b[1] -  4.5*b[2] + 1.0*b[3]),
+        scalar(1.0*b[0])
     };
 }
 

@@ -71,8 +71,10 @@ void Foam::relativeVelocityModels::MichaelsBolger::correct()
 {
     Udm_ =
         (mixture_.rhoc()/mixture_.rho())*Vc_
-       *(a0_ + pow(max(1 - mixture_.alphad()/mixture().alphaMax(), 0.0), a1_))
-       *acceleration();
+       *(
+           a0_
+         + pow(max(1 - mixture_.alphad()/mixture().alphaMax(), scalar(0)), a1_)
+        )*acceleration();
 }
 
 
