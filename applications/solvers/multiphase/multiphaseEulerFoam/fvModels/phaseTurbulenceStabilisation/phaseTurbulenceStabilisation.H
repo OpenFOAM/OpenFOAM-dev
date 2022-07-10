@@ -152,6 +152,8 @@ public:
         //  to the transport equation
         virtual wordList addSupFields() const;
 
+        using fvModel::addSup;
+
         //- Add contribution to phase k, epsilon or omega equation
         virtual void addSup
         (

@@ -75,9 +75,6 @@ class incompressibleTwoPhaseInteractingMixture
         //- Optional maximum dispersed phase-fraction (e.g. packing limit)
         scalar alphaMax_;
 
-        //- Acceleration due to gravity
-        const uniformDimensionedVectorField& g_;
-
         //- Optional MRF zones
         IOMRFZoneList MRF_;
 

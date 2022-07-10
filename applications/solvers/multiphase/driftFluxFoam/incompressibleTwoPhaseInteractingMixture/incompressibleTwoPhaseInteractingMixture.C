@@ -64,8 +64,6 @@ incompressibleTwoPhaseInteractingMixture
     ),
     alphaMax_(lookupOrDefault("alphaMax", 1.0)),
 
-    g_(g),
-
     MRF_(U.mesh()),
 
     mu_
