@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -27,7 +27,7 @@
 #
 # Description
 #     Creates a video file from PNG images
-#     - requires mencoder or ffmpeg
+#     - requires ffmpeg or mencoder installed
 #
 #------------------------------------------------------------------------------
 
@@ -36,13 +36,15 @@ usage() {
 
 Usage: ${0##*/} [OPTIONS] ...
 options:
-  -dir   | -d <dir>   directory containing png images (default local dir)
-  -fps   | -f <fps>   frames per second (default = 10)
-  -help  | -h         print the usage
-  -image | -i <name>  name of image sequence (default = image)
-  -out   | -o <name>  name of output video file (default = video)
-  -start | -s <frame> specify the start frame number for ffmpeg
-  -webm  | -w         WebM output video file format
+  -begin-pause | -b <time>  pause at beginning of the video by <time> seconds
+  -dir         | -d <dir>   directory containing png images (default local dir)
+  -end-pause   | -e <time>  pause at the end of the video by <time> seconds
+  -fps         | -f <fps>   frames per second (default = 10)
+  -help        | -h         print the usage
+  -image       | -i <name>  name of image sequence (default = image)
+  -out         | -o <name>  name of output video file (default = video)
+  -start       | -s <frame> specify the start image
+  -webm        | -w         WebM output video file format
 
 Creates a video file from a sequence of PNG images
 - A sequence named "image" will expect files image.0000.png, image.0001.png, etc
@@ -50,16 +52,33 @@ Creates a video file from a sequence of PNG images
 - The default file name, using MPEG-4 compression, is video.mp4
 - By default the video codec is high resolution
 
-Requires mencoder or ffmpeg for MPEG-4 output, ffmpeg for WebM output
+Requires 'ffmpeg' or 'mencoder' to be installed. 'ffmpeg' is preferred since
+'mencoder' does not support the '-begin-pause', '-end-pause' & '-webm' options.
 
 USAGE
 }
 
 error() {
     exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    while [ "$#" -ge 1 ]
+    do
+        [ "$#" -eq 1 ] && printf "%s\n" "$1" || printf "%s" "$1"
+        shift
+    done
     usage
     exit 1
+}
+
+isInstalled () {
+    command -v "$1" >/dev/null 2>&1
+}
+
+isInteger () {
+    [ "$1" -eq "$1" ] 2> /dev/null
+}
+
+isNumber () {
+    printf "%f" "$1" > /dev/null 2>&1 || isInteger "$1"
 }
 
 # Default settings
@@ -68,49 +87,88 @@ image=image
 video=video
 fps=10
 fmt=mp4
-start=
+start=1
+begin_pause=
+end_pause=
+
+image_list="$(mktemp /tmp/temp.XXXXXX)" || exit
+echo "Creating temporary file $image_list"
+trap 'rm -f "$image_list"' EXIT
+
+# Check whether ffmpeg or mencoder are installed to create video
+isInstalled ffmpeg && app="ffmpeg"
+! [ "$app" ] && isInstalled mencoder && app="mencoder"
+[ "$app" ] || \
+    usage "Neither ffmpeg nor mencoder are installed." \
+          "Install one of them to use foamCreateVideo."
+echo "Running foamCreateVideo with $app"
 
 while [ "$#" -gt 0 ]
 do
    case "$1" in
-   -h | -help)
-      usage && exit 0
+   -b | -begin-pause)
+      [ "$app" = "mencoder" ] && \
+          error "The '$1' option is invalid when using mencoder to create " \
+                "the video. Either do not use the option, or install ffmpeg."
+      [ "$#" -ge 2 ] || error "The '$1' option requires an argument."
+      begin_pause=$2
+      isNumber "$begin_pause" || \
+          error "The '$1' option requires a numeric argument."
+      shift 2
       ;;
    -d | -dir)
-      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      [ "$#" -ge 2 ] || error "The '$1' option requires an argument."
       dir=$2
       shift 2
       ;;
-   -f | -fps)
-      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-      fps=$2
+   -e | -end-pause)
+      [ "$app" = "mencoder" ] && \
+          error "The '$1' option is invalid when using mencoder to create " \
+                "the video. Either do not use the option, or install ffmpeg."
+      [ "$#" -ge 2 ] || error "The '$1' option requires an argument."
+      end_pause=$2
+      isNumber "$begin_pause" || \
+          error "The '$1' option requires a numeric argument."
       shift 2
       ;;
+   -f | -fps)
+      [ "$#" -ge 2 ] || error "The '$1' option requires an argument."
+      fps=$2
+      isInteger "$fps" || \
+          error "The '$1' option requires an integer argument."
+      shift 2
+      ;;
+   -h | -help)
+      usage && exit 0
+      ;;
    -i | -image)
-      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      [ "$#" -ge 2 ] || error "The '$1' option requires an argument."
       image=$2
       shift 2
       ;;
    -o | -out)
-      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      [ "$#" -ge 2 ] || error "The '$1' option requires an argument."
       video=$2
       shift 2
       ;;
    -s | -start)
-      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      [ "$#" -ge 2 ] || error "The '$1' option requires an argument."
       start=$2
       echo "Selected start frame, requires ffmpeg..."
-      [ "$start" -eq "$start" ] 2> /dev/null || \
-          error "'$1' option requires an integer argument"
+      isInteger "$start" || \
+          error "The '$1' option requires an integer argument."
       shift 2
       ;;
    -w | -webm)
+      [ "$app" = "mencoder" ] && \
+          error "The '$1' option is invalid when using mencoder to create " \
+                "the video. Either do not use the option, or install ffmpeg."
       fmt=webm
       echo "Selected $fmt format, requires ffmpeg..."
       shift
       ;;
    -*)
-      error "invalid option '$1'"
+      error "invalid option '$1'."
       ;;
    *)
       break
@@ -119,38 +177,47 @@ do
 done
 
 ffmpegCreateVideo () {
-    _dir="$1"
-    _image="$2"
-    _fps="$3"
-    _out="$4"
-    _fmt="$5"
-    _start="$6"
-    _pwd="$(pwd)"
+    _image_list="$1"
+    _out="$2"
+    _fmt="$3"
 
-    [ "$_start" ] && _start="-start_number $_start"
+    _video_output="\
+        -c:v libx264 \
+        -b:v 5M \
+        -r:v 40 \
+        -vf format=yuv420p,pad=ceil(iw/2)*2:ceil(ih/2)*2 \
+        -flags +cgop \
+        -threads 2 \
+        -crf 18 \
+        -bf 2 \
+        -preset medium \
+        -profile:v baseline \
+        -shortest \
+        -movflags faststart"
 
-    cd "$_dir" || return 1
+    [ "$_fmt" = webm ] && \
+        _video_output="\
+            -vf format=yuv420p,pad=ceil(iw/2)*2:ceil(ih/2)*2"
 
     #shellcheck disable=SC2086
     ffmpeg \
-        -framerate "$_fps" \
-        $_start \
-        -i "$_image".%04d.png \
-        -vf "format=yuv420p,pad=ceil(iw/2)*2:ceil(ih/2)*2" \
-        "$_pwd/$_out.$_fmt"
+        -f concat \
+        -safe 0 \
+        -i "$_image_list" \
+        $_video_output \
+        "$_out.$_fmt"
 
     return 0
 }
 
 mencoderCreateVideo () {
-    _dir="$1"
-    _image="$2"
-    _fps="$3"
-    _out="$4"
-    _fmt="$5"
+    _image_list="$1"
+    _fps="$2"
+    _out="$3"
+    _fmt="$4"
 
     mencoder \
-        "mf://$_dir/$_image.*.png" \
+        "mf://@$image_list" \
         -mf fps="$_fps" \
         -o "$_out.$_fmt" \
         -ovc x264
@@ -158,21 +225,42 @@ mencoderCreateVideo () {
     return 0
 }
 
-isInstalled () {
-    command -v "$1" >/dev/null 2>&1
-}
-
 #
 # MAIN
 #
 
-[ -f "$(find "$dir" -name "$image.*.png" | sort | head -1)" ] || \
-    error "Cannot find first file in image sequence"
+images="$(find "$dir" -maxdepth 1 -name "$image.*.png" -type f -print0 |  \
+         xargs -0 realpath | sort  | xargs -n 1)"
+first_image="$(echo "$images" | sed "$start!d")"
+last_image="$(echo "$images" | tail -1)"
 
-! [ "$fmt" = "webm" ] && ! [ "$start" ] && isInstalled mencoder && \
-    mencoderCreateVideo "$dir" "$image" "$fps" "$video" "$fmt" && \
-    exit 0
+[ -f "$first_image" ] || error "Cannot find first file in image sequence."
 
-isInstalled ffmpeg && \
-    ffmpegCreateVideo "$dir" "$image" "$fps" "$video" "$fmt" "$start" || \
-        echo "ffmpeg not installed."
+delay="$(awk -v f="$fps" 'BEGIN {print 1/f}')"
+write=""
+
+echo "$images" | while read -r line
+do
+    [ "$line" = "$first_image" ] && write=on
+    [ "$write" = on ] || continue
+
+    [ "$app" = mencoder ] && echo "$line" >> "$image_list" && continue
+
+    # ffmpeg settings
+    echo "file $line" >> "$image_list"
+    [ "$line" = "$first_image" ] && \
+        [ "$begin_pause" ] && \
+        echo "duration $begin_pause" >> "$image_list" && continue
+
+    [ "$line" = "$last_image" ] && \
+        [ "$end_pause" ] && \
+        echo "duration $end_pause" >> "$image_list" && \
+        echo "file $line" >> "$image_list" && continue
+
+    echo "duration $delay" >> "$image_list"
+done
+
+[ "$app" = ffmpeg ] && \
+    ffmpegCreateVideo "$image_list" "$video" "$fmt" && exit 0
+
+mencoderCreateVideo "$image_list" "$fps" "$video" "$fmt"
