@@ -143,6 +143,20 @@ void Foam::transonicEntrainmentPressureFvPatchScalarField::rmap
 }
 
 
+void Foam::transonicEntrainmentPressureFvPatchScalarField::reset
+(
+    const fvPatchScalarField& psf
+)
+{
+    mixedFvPatchScalarField::reset(psf);
+
+    const transonicEntrainmentPressureFvPatchScalarField& toppsf =
+        refCast<const transonicEntrainmentPressureFvPatchScalarField>(psf);
+
+    p0_.reset(toppsf.p0_);
+}
+
+
 void Foam::transonicEntrainmentPressureFvPatchScalarField::updateCoeffs()
 {
     if (updated())

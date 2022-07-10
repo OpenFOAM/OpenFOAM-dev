@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,6 +145,17 @@ void Foam::mappedFieldFvPatchField<Type>::rmap
 )
 {
     fixedValueFvPatchField<Type>::rmap(ptf, addr);
+    mappedPatchBase::clearOut();
+}
+
+
+template<class Type>
+void Foam::mappedFieldFvPatchField<Type>::reset
+(
+    const fvPatchField<Type>& ptf
+)
+{
+    fixedValueFvPatchField<Type>::reset(ptf);
     mappedPatchBase::clearOut();
 }
 

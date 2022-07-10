@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,6 +162,20 @@ void nutkAtmRoughWallFunctionFvPatchScalarField::rmap
         refCast<const nutkAtmRoughWallFunctionFvPatchScalarField>(ptf);
 
     z0_.rmap(nrwfpsf.z0_, addr);
+}
+
+
+void nutkAtmRoughWallFunctionFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    nutkWallFunctionFvPatchScalarField::reset(ptf);
+
+    const nutkAtmRoughWallFunctionFvPatchScalarField& nrwfpsf =
+        refCast<const nutkAtmRoughWallFunctionFvPatchScalarField>(ptf);
+
+    z0_.reset(nrwfpsf.z0_);
 }
 
 

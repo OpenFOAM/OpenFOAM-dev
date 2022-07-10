@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,6 +108,21 @@ void Foam::fixedNormalSlipFvPatchField<Type>::rmap
         refCast<const fixedNormalSlipFvPatchField<Type>>(ptf);
 
     fixedValue_.rmap(dmptf.fixedValue_, addr);
+}
+
+
+template<class Type>
+void Foam::fixedNormalSlipFvPatchField<Type>::reset
+(
+    const fvPatchField<Type>& ptf
+)
+{
+    transformFvPatchField<Type>::reset(ptf);
+
+    const fixedNormalSlipFvPatchField<Type>& dmptf =
+        refCast<const fixedNormalSlipFvPatchField<Type>>(ptf);
+
+    fixedValue_.reset(dmptf.fixedValue_);
 }
 
 

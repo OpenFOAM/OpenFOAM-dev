@@ -363,6 +363,12 @@ public:
             //- Return reference to boundary mesh
             const fvBoundaryMesh& boundary() const;
 
+            //- Return reference to polyMesh
+            const polyMesh& operator()() const
+            {
+                return *this;
+            }
+
             //- Return ldu addressing
             virtual const lduAddressing& lduAddr() const;
 

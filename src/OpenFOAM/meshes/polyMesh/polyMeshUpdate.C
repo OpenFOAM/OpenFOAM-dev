@@ -131,6 +131,8 @@ void Foam::polyMesh::mapMesh(const polyMeshMap& map)
 {
     meshObject::mapMesh<polyMesh>(*this, map);
     meshObject::mapMesh<pointMesh>(*this, map);
+
+    const_cast<Time&>(time()).functionObjects().mapMesh(map);
 }
 
 

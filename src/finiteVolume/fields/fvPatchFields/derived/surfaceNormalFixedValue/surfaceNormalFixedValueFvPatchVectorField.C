@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,6 +114,20 @@ void Foam::surfaceNormalFixedValueFvPatchVectorField::rmap
         refCast<const surfaceNormalFixedValueFvPatchVectorField>(ptf);
 
     refValue_.rmap(tiptf.refValue_, addr);
+}
+
+
+void Foam::surfaceNormalFixedValueFvPatchVectorField::reset
+(
+    const fvPatchVectorField& ptf
+)
+{
+    fixedValueFvPatchVectorField::reset(ptf);
+
+    const surfaceNormalFixedValueFvPatchVectorField& tiptf =
+        refCast<const surfaceNormalFixedValueFvPatchVectorField>(ptf);
+
+    refValue_.reset(tiptf.refValue_);
 }
 
 

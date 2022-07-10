@@ -72,24 +72,6 @@ Foam::pointMesh::~pointMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::pointMesh::reset(const bool validBoundary)
-{
-    const polyMesh& pm = operator()();
-    if (debug)
-    {
-        Pout<< "pointMesh::reset(const bool validBoundary): "
-            << "Resetting from polyMesh " << pm.name() << endl;
-    }
-
-    boundary_.reset(pm.boundaryMesh());
-    if (validBoundary)
-    {
-        // Calculate the geometry for the patches (transformation tensors etc.)
-        boundary_.calcGeometry();
-    }
-}
-
-
 bool Foam::pointMesh::movePoints()
 {
     if (debug)
@@ -200,6 +182,18 @@ void Foam::pointMesh::addPatch(const label patchi)
     );
     AddPatchFields<pointSymmTensorField>(db, patchi, d, patchFieldType, Zero);
     AddPatchFields<pointTensorField>(db, patchi, d, patchFieldType, Zero);
+}
+
+
+void Foam::pointMesh::reset()
+{
+    if (debug)
+    {
+        Pout<< "pointMesh::reset(): "
+            << "Mesh reset." << endl;
+        Pout<< endl;
+    }
+    boundary_.reset();
 }
 
 

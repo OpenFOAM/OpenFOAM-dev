@@ -115,25 +115,6 @@ JohnsonJacksonParticleSlipFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    partialSlipFvPatchVectorField::autoMap(m);
-}
-
-
-void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::rmap
-(
-    const fvPatchVectorField& ptf,
-    const labelList& addr
-)
-{
-    partialSlipFvPatchVectorField::rmap(ptf, addr);
-}
-
-
 void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
 {
     if (updated())

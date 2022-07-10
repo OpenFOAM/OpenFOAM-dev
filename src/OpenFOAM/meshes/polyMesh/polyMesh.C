@@ -769,6 +769,86 @@ void Foam::polyMesh::resetPrimitives
 }
 
 
+void Foam::polyMesh::reset(const polyMesh& newMesh)
+{
+    // Clear addressing. Keep geometric props and updateable props for mapping.
+    clearAddressing(true);
+
+    points_ = newMesh.points();
+    bounds_ = boundBox(points_, true);
+    faces_ = newMesh.faces();
+    owner_ = newMesh.faceOwner();
+    neighbour_ = newMesh.faceNeighbour();
+
+    const polyPatchList& patches(newMesh.boundaryMesh());
+
+    boundary_.clearGeom();
+    boundary_.clearAddressing();
+
+    // Reset the number of patches in case the decomposition changed
+    boundary_.setSize(patches.size());
+
+    forAll(boundary_, patchi)
+    {
+        // Construct new processor patches in case the decomposition changed
+        if (!isA<processorPolyPatch>(patches[patchi]))
+        {
+            boundary_[patchi] = polyPatch
+            (
+                boundary_[patchi],
+                boundary_,
+                patchi,
+                patches[patchi].size(),
+                patches[patchi].start()
+            );
+        }
+        else
+        {
+            boundary_.set(patchi, patches[patchi].clone(boundary_));
+        }
+    }
+
+    // parallelData depends on the processorPatch ordering so force
+    // recalculation. Problem: should really be done in removeBoundary but
+    // there is some info in parallelData which might be interesting in between
+    // removeBoundary and addPatches.
+    globalMeshDataPtr_.clear();
+
+    // Flags the mesh files as being changed
+    setInstance(time().timeName());
+
+    // Check if the faces and cells are valid
+    forAll(faces_, facei)
+    {
+        const face& curFace = faces_[facei];
+
+        if (min(curFace) < 0 || max(curFace) > points_.size())
+        {
+            FatalErrorInFunction
+                << "Face " << facei << " contains vertex labels out of range: "
+                << curFace << " Max point index = " << points_.size()
+                << abort(FatalError);
+        }
+    }
+
+    // Set the primitive mesh from the owner_, neighbour_.
+    // Works out from patch end where the active faces stop.
+    initMesh();
+
+    // Calculate topology for the patches (processor-processor comms etc.)
+    boundary_.topoChange();
+
+    // Calculate the geometry for the patches (transformation tensors etc.)
+    boundary_.calcGeometry();
+
+    // Update the optional pointMesh with respect to the updated polyMesh
+    if (foundObject<pointMesh>(pointMesh::typeName))
+    {
+        pointMesh::New(*this).reset();
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::polyMesh::~polyMesh()

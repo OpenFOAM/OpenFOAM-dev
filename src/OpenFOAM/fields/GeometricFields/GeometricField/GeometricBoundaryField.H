@@ -167,6 +167,14 @@ public:
         //  pointing to interfaces being set
         lduInterfaceFieldPtrsList scalarInterfaces() const;
 
+        //- Reset the boundary field contents to the given field
+        //  Used for mesh to mesh mapping
+        void reset
+        (
+            const Internal&,
+            const GeometricBoundaryField<Type, PatchField, GeoMesh>&
+        );
+
         //- Write boundary field as dictionary entry
         void writeEntry(const word& keyword, Ostream& os) const;
 

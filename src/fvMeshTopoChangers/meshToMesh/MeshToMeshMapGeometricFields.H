@@ -39,6 +39,7 @@ Description
 #include "fvPatchFieldMapper.H"
 #include "pointPatchFieldMapper.H"
 #include "setSizeFieldMapper.H"
+#include "processorPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -265,12 +266,30 @@ void NaNGeometricFields
         field.primitiveFieldRef().setSize(GeoMesh::size(mesh));
         field.primitiveFieldRef() = NaN;
 
+        field.boundaryFieldRef().setSize(mesh.boundary().size());
+
         forAll(mesh.boundary(), patchi)
         {
-            typename Gfield::Patch& pf = field.boundaryFieldRef()[patchi];
+            if (isA<processorPolyPatch>(mesh().boundaryMesh()[patchi]))
+            {
+                field.boundaryFieldRef().set
+                (
+                    patchi,
+                    PatchField<Type>::New
+                    (
+                        calculatedFvPatchField<Type>::typeName,
+                        mesh.boundary()[patchi],
+                        field
+                    )
+                );
+            }
+            else
+            {
+                typename Gfield::Patch& pf = field.boundaryFieldRef()[patchi];
+                pf.autoMap(patchFieldResizeMapper(pf.patch().size()));
+            }
 
-            pf.autoMap(patchFieldResizeMapper(pf.patch().size()));
-            pf == NaN;
+            field.boundaryFieldRef()[patchi] == NaN;
         }
 
         field.instance() = field.time().timeName();

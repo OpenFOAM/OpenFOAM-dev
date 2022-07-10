@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,6 +133,10 @@ public:
             //- Reverse map the given pointPatchField onto this pointPatchField
             //  Used to reconstruct fields
             virtual void rmap(const pointPatchField<Type>&, const labelList&);
+
+            //- Reset the pointPatchField to the given pointPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const pointPatchField<Type>&);
 
 
         //- Write

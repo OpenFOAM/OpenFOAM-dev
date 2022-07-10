@@ -252,8 +252,13 @@ public:
             //- Map (and resize as needed) from self given a mapping object
             void autoMap(const fvPatchFieldMapper&);
 
-            //- Reverse map the given fvPatchField onto this fvPatchField
+            //- Reverse map the given atmBoundaryLayer onto this
+            //  atmBoundaryLayer
             void rmap(const atmBoundaryLayer&, const labelList&);
+
+            //- Reset the atmBoundaryLayer to the given atmBoundaryLayer
+            //  Used for mesh to mesh mapping
+            void reset(const atmBoundaryLayer&);
 
 
         // Evaluate functions

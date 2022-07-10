@@ -143,6 +143,20 @@ void Foam::inletOutletTotalTemperatureFvPatchScalarField::rmap
 }
 
 
+void Foam::inletOutletTotalTemperatureFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    inletOutletFvPatchScalarField::reset(ptf);
+
+    const inletOutletTotalTemperatureFvPatchScalarField& tiptf =
+        refCast<const inletOutletTotalTemperatureFvPatchScalarField>(ptf);
+
+    T0_.reset(tiptf.T0_);
+}
+
+
 void Foam::inletOutletTotalTemperatureFvPatchScalarField::updateCoeffs()
 {
     if (updated())

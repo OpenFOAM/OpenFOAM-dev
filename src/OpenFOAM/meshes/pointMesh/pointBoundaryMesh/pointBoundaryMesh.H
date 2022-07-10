@@ -105,8 +105,9 @@ public:
         //- Correct pointBoundaryMesh after topology update
         void topoChange();
 
-        //- Create pointBoundaryMesh from polyBoundaryMesh
-        void reset(const polyBoundaryMesh&);
+        //- Reset pointBoundaryMesh with respect to the updated polyBoundaryMesh
+        //  For run-time mesh replacement and mesh to mesh mapping
+        void reset();
 
         //- Reorders patches. Ordering does not have to be done in
         //  ascending or descending order. Reordering has to be unique.

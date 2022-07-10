@@ -264,6 +264,23 @@ void Foam::flowRateInletVelocityFvPatchVectorField::rmap
 }
 
 
+void Foam::flowRateInletVelocityFvPatchVectorField::reset
+(
+    const fvPatchVectorField& ptf
+)
+{
+    fixedValueFvPatchVectorField::reset(ptf);
+
+    const flowRateInletVelocityFvPatchVectorField& tiptf =
+        refCast<const flowRateInletVelocityFvPatchVectorField>(ptf);
+
+    if (profile_.valid())
+    {
+        y_.reset(tiptf.y_);
+    }
+}
+
+
 Foam::tmp<Foam::scalarField>
 Foam::flowRateInletVelocityFvPatchVectorField::profile()
 {

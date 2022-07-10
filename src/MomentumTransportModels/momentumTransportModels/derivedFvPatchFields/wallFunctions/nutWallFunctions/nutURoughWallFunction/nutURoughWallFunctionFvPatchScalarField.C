@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -298,6 +298,21 @@ void nutURoughWallFunctionFvPatchScalarField::rmap
 
     Ks_.rmap(nrwfpsf.Ks_, addr);
     Cs_.rmap(nrwfpsf.Cs_, addr);
+}
+
+
+void nutURoughWallFunctionFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    nutUWallFunctionFvPatchScalarField::reset(ptf);
+
+    const nutURoughWallFunctionFvPatchScalarField& nrwfpsf =
+        refCast<const nutURoughWallFunctionFvPatchScalarField>(ptf);
+
+    Ks_.reset(nrwfpsf.Ks_);
+    Cs_.reset(nrwfpsf.Cs_);
 }
 
 

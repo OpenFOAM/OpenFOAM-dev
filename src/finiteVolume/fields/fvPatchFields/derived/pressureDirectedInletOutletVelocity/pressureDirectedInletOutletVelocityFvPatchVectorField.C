@@ -127,6 +127,21 @@ void Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::rmap
 }
 
 
+void Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::reset
+(
+    const fvPatchVectorField& ptf
+)
+{
+    mixedFvPatchVectorField::reset(ptf);
+
+    const pressureDirectedInletOutletVelocityFvPatchVectorField& tiptf =
+        refCast<const pressureDirectedInletOutletVelocityFvPatchVectorField>
+        (ptf);
+
+    inletDir_.reset(tiptf.inletDir_);
+}
+
+
 void Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::updateCoeffs()
 {
     if (updated())

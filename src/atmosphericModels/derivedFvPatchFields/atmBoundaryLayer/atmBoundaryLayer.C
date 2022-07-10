@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,6 +187,14 @@ void Foam::atmBoundaryLayer::rmap
     z0_.rmap(blptf.z0_, addr);
     zGround_.rmap(blptf.zGround_, addr);
     Ustar_.rmap(blptf.Ustar_, addr);
+}
+
+
+void Foam::atmBoundaryLayer::reset(const atmBoundaryLayer& blptf)
+{
+    z0_.reset(blptf.z0_);
+    zGround_.reset(blptf.zGround_);
+    Ustar_.reset(blptf.Ustar_);
 }
 
 

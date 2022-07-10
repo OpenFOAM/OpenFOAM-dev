@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,6 +168,30 @@ void Foam::activeBaffleVelocityFvPatchVectorField::rmap
 )
 {
     fixedValueFvPatchVectorField::rmap(ptf, addr);
+
+    // See autoMap.
+    const vectorField& areas = patch().boundaryMesh().mesh().faceAreas();
+    initWallSf_ = patch().patchSlice(areas);
+    initCyclicSf_ = patch().boundaryMesh()
+    [
+        cyclicPatchLabel_
+    ].patchSlice(areas);
+    nbrCyclicSf_ = refCast<const cyclicFvPatch>
+    (
+        patch().boundaryMesh()
+        [
+            cyclicPatchLabel_
+        ]
+    ).neighbFvPatch().patch().patchSlice(areas);
+}
+
+
+void Foam::activeBaffleVelocityFvPatchVectorField::reset
+(
+    const fvPatchVectorField& ptf
+)
+{
+    fixedValueFvPatchVectorField::reset(ptf);
 
     // See autoMap.
     const vectorField& areas = patch().boundaryMesh().mesh().faceAreas();

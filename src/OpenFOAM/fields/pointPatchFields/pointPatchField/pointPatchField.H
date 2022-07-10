@@ -196,6 +196,17 @@ public:
             const DimensionedField<Type, pointMesh>& iF
         ) const = 0;
 
+        //- Construct and return a clone setting internal field reference
+        virtual autoPtr<pointPatchField<Type>> clone
+        (
+            const pointPatch& patch,
+            const DimensionedField<Type, pointMesh>& iF
+        ) const
+        {
+            NotImplemented;
+            return autoPtr<pointPatchField<Type>>(nullptr);
+        }
+
 
     // Selectors
 
@@ -395,6 +406,11 @@ public:
             //- Reverse map the given pointPatchField onto this pointPatchField
             //  Used to reconstruct fields
             virtual void rmap(const pointPatchField<Type>&, const labelList&)
+            {}
+
+            //- Reset the pointPatchField to the given pointPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const pointPatchField<Type>&)
             {}
 
 

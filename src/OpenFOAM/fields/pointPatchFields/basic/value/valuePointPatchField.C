@@ -147,6 +147,16 @@ void Foam::valuePointPatchField<Type>::rmap
 
 
 template<class Type>
+void Foam::valuePointPatchField<Type>::reset
+(
+    const pointPatchField<Type>& ptf
+)
+{
+    Field<Type>::reset(refCast<const valuePointPatchField<Type>>(ptf));
+}
+
+
+template<class Type>
 void Foam::valuePointPatchField<Type>::updateCoeffs()
 {
     if (this->updated())

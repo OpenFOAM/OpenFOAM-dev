@@ -28,6 +28,7 @@ License
 #include "commSchedule.H"
 #include "globalMeshData.H"
 #include "cyclicPolyPatch.H"
+#include "processorPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -630,6 +631,35 @@ scalarInterfaces() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::reset
+(
+    const DimensionedField<Type, GeoMesh>& field,
+    const GeometricBoundaryField<Type, PatchField, GeoMesh>& btf
+)
+{
+    // Reset the number of patches in case the decomposition changed
+    this->setSize(btf.size());
+
+    const polyBoundaryMesh& pbm = field.mesh()().boundaryMesh();
+
+    forAll(*this, patchi)
+    {
+        // Construct new processor patch fields in case the decomposition
+        // changed
+        if (isA<processorPolyPatch>(pbm[patchi]))
+        {
+            this->set(patchi, btf[patchi].clone(bmesh_[patchi], field));
+        }
+        else
+        {
+            this->operator[](patchi).reset(btf[patchi]);
+        }
+    }
+}
+
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::writeEntry
 (
     const word& keyword,
@@ -717,7 +747,7 @@ void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::operator==
     const GeometricBoundaryField<Type, PatchField, GeoMesh>& bf
 )
 {
-    forAll((*this), patchi)
+    forAll(*this, patchi)
     {
         this->operator[](patchi) == bf[patchi];
     }
@@ -731,7 +761,7 @@ operator==
     const FieldField<PatchField, Type>& ptff
 )
 {
-    forAll((*this), patchi)
+    forAll(*this, patchi)
     {
         this->operator[](patchi) == ptff[patchi];
     }
@@ -746,7 +776,7 @@ operator==
     const FieldField<OtherPatchField, Type>& ptff
 )
 {
-    forAll((*this), patchi)
+    forAll(*this, patchi)
     {
         this->operator[](patchi) == ptff[patchi];
     }
@@ -759,7 +789,7 @@ void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::operator==
     const Type& t
 )
 {
-    forAll((*this), patchi)
+    forAll(*this, patchi)
     {
         this->operator[](patchi) == t;
     }

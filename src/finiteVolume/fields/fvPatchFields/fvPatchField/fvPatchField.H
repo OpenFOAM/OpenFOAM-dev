@@ -219,6 +219,20 @@ public:
             return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this, iF));
         }
 
+        //- Construct and return a clone onto a new patch
+        //  setting internal field reference
+        virtual tmp<fvPatchField<Type>> clone
+        (
+            const fvPatch& patch,
+            const DimensionedField<Type, volMesh>& iF
+        ) const
+        {
+            return tmp<fvPatchField<Type>>
+            (
+                new fvPatchField<Type>(patch, iF, *this)
+            );
+        }
+
 
     // Selectors
 
@@ -374,6 +388,10 @@ public:
             //- Reverse map the given fvPatchField onto this fvPatchField
             //  Used to reconstruct fields
             virtual void rmap(const fvPatchField<Type>&, const labelList&);
+
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const fvPatchField<Type>&);
 
 
         // Evaluation functions

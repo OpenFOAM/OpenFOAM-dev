@@ -354,6 +354,15 @@ void thermalBaffleFvPatchScalarField::rmap
 }
 
 
+void thermalBaffleFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    turbulentTemperatureRadCoupledMixedFvPatchScalarField::reset(ptf);
+}
+
+
 void thermalBaffleFvPatchScalarField::updateCoeffs()
 {
     if (this->updated())

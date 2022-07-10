@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,6 +137,20 @@ void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::rmap
         refCast<const MarshakRadiationFixedTemperatureFvPatchScalarField>(ptf);
 
     Trad_.rmap(mrptf.Trad_, addr);
+}
+
+
+void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    mixedFvPatchScalarField::reset(ptf);
+    radiationCoupledBase::reset(ptf);
+    const MarshakRadiationFixedTemperatureFvPatchScalarField& mrptf =
+        refCast<const MarshakRadiationFixedTemperatureFvPatchScalarField>(ptf);
+
+    Trad_.reset(mrptf.Trad_);
 }
 
 

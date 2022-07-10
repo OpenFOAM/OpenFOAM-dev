@@ -677,25 +677,27 @@ void Foam::fvMesh::reset(const fvMesh& newMesh)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    const polyPatchList& newBoundary = newMesh.boundaryMesh();
-    labelList patchSizes(newBoundary.size());
-    labelList patchStarts(newBoundary.size());
+    polyMesh::reset(newMesh);
 
-    forAll(newBoundary, patchi)
+    // Reset the number of patches in case the decomposition changed
+    boundary_.setSize(boundaryMesh().size());
+
+    forAll(boundaryMesh(), patchi)
     {
-        patchSizes[patchi] = newBoundary[patchi].size();
-        patchStarts[patchi] = newBoundary[patchi].start();
+        // Construct new processor patches in case the decomposition changed
+        if (isA<processorPolyPatch>(boundaryMesh()[patchi]))
+        {
+            boundary_.set
+            (
+                patchi,
+                fvPatch::New
+                (
+                    boundaryMesh()[patchi],
+                    boundary_
+                )
+            );
+        }
     }
-
-    polyMesh::resetPrimitives
-    (
-        pointField(newMesh.points()),
-        faceList(newMesh.faces()),
-        labelList(newMesh.faceOwner()),
-        labelList(newMesh.faceNeighbour()),
-        patchSizes,
-        patchStarts
-    );
 }
 
 
@@ -844,6 +846,7 @@ Foam::fvMesh::polyBFacePatches() const
                       : boundary()[patchi].start() + patchFacei
                     )
                   - nInternalFaces();
+
                 offsets[polyBFacei + 1] ++;
             }
         }

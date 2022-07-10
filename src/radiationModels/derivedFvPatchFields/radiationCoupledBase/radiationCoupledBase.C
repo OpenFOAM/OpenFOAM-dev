@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -218,6 +218,18 @@ void Foam::radiationCoupledBase::rmap
         refCast<const radiationCoupledBase>(ptf);
 
     emissivity_.rmap(mrptf.emissivity_, addr);
+}
+
+
+void Foam::radiationCoupledBase::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    const radiationCoupledBase& mrptf =
+        refCast<const radiationCoupledBase>(ptf);
+
+    emissivity_.reset(mrptf.emissivity_);
 }
 
 

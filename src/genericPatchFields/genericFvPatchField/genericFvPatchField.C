@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -665,6 +665,99 @@ void Foam::genericFvPatchField<Type>::rmap
         if (dptfIter != dptf.tensorFields_.end())
         {
             iter()->rmap(*dptfIter(), addr);
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::genericFvPatchField<Type>::reset
+(
+    const fvPatchField<Type>& ptf
+)
+{
+    calculatedFvPatchField<Type>::reset(ptf);
+
+    const genericFvPatchField<Type>& dptf =
+        refCast<const genericFvPatchField<Type>>(ptf);
+
+    forAllIter
+    (
+        HashPtrTable<scalarField>,
+        scalarFields_,
+        iter
+    )
+    {
+        HashPtrTable<scalarField>::const_iterator dptfIter =
+            dptf.scalarFields_.find(iter.key());
+
+        if (dptfIter != dptf.scalarFields_.end())
+        {
+            iter()->reset(*dptfIter());
+        }
+    }
+
+    forAllIter
+    (
+        HashPtrTable<vectorField>,
+        vectorFields_,
+        iter
+    )
+    {
+        HashPtrTable<vectorField>::const_iterator dptfIter =
+            dptf.vectorFields_.find(iter.key());
+
+        if (dptfIter != dptf.vectorFields_.end())
+        {
+            iter()->reset(*dptfIter());
+        }
+    }
+
+    forAllIter
+    (
+        HashPtrTable<sphericalTensorField>,
+        sphericalTensorFields_,
+        iter
+    )
+    {
+        HashPtrTable<sphericalTensorField>::const_iterator dptfIter =
+            dptf.sphericalTensorFields_.find(iter.key());
+
+        if (dptfIter != dptf.sphericalTensorFields_.end())
+        {
+            iter()->reset(*dptfIter());
+        }
+    }
+
+    forAllIter
+    (
+        HashPtrTable<symmTensorField>,
+        symmTensorFields_,
+        iter
+    )
+    {
+        HashPtrTable<symmTensorField>::const_iterator dptfIter =
+            dptf.symmTensorFields_.find(iter.key());
+
+        if (dptfIter != dptf.symmTensorFields_.end())
+        {
+            iter()->reset(*dptfIter());
+        }
+    }
+
+    forAllIter
+    (
+        HashPtrTable<tensorField>,
+        tensorFields_,
+        iter
+    )
+    {
+        HashPtrTable<tensorField>::const_iterator dptfIter =
+            dptf.tensorFields_.find(iter.key());
+
+        if (dptfIter != dptf.tensorFields_.end())
+        {
+            iter()->reset(*dptfIter());
         }
     }
 }

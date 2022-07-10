@@ -176,6 +176,20 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::rmap
 }
 
 
+void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    fixedValueFvPatchScalarField::reset(ptf);
+
+    const fixedMultiPhaseHeatFluxFvPatchScalarField& mptf =
+        refCast<const fixedMultiPhaseHeatFluxFvPatchScalarField>(ptf);
+
+    q_.reset(mptf.q_);
+}
+
+
 void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);

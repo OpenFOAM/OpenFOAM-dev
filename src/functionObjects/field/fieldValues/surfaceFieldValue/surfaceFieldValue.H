@@ -259,6 +259,9 @@ protected:
 
     // Protected data
 
+        //- Input dictionary
+        dictionary dict_;
+
         //- Surface writer
         autoPtr<surfaceWriter> surfaceWriterPtr_;
 
@@ -486,6 +489,15 @@ public:
 
         //- Calculate and write
         virtual bool write();
+
+        //- Update for mesh point-motion
+        virtual void movePoints(const polyMesh&);
+
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 };
 
 

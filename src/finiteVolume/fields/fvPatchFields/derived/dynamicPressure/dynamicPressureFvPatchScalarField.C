@@ -208,6 +208,20 @@ void Foam::dynamicPressureFvPatchScalarField::rmap
 }
 
 
+void Foam::dynamicPressureFvPatchScalarField::reset
+(
+    const fvPatchScalarField& psf
+)
+{
+    fixedValueFvPatchScalarField::reset(psf);
+
+    const dynamicPressureFvPatchScalarField& dpsf =
+        refCast<const dynamicPressureFvPatchScalarField>(psf);
+
+    p0_.reset(dpsf.p0_);
+}
+
+
 void Foam::dynamicPressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);

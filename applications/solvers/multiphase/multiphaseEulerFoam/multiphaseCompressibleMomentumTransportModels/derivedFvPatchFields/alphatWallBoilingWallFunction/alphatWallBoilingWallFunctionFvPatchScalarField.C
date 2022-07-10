@@ -274,6 +274,23 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::rmap
 }
 
 
+void alphatWallBoilingWallFunctionFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    alphatPhaseChangeWallFunctionFvPatchScalarField::reset(ptf);
+
+    const alphatWallBoilingWallFunctionFvPatchScalarField& tiptf =
+        refCast<const alphatWallBoilingWallFunctionFvPatchScalarField>(ptf);
+
+    AbyV_.reset(tiptf.AbyV_);
+    alphatConv_.reset(tiptf.alphatConv_);
+    dDep_.reset(tiptf.dDep_);
+    qq_.reset(tiptf.qq_);
+}
+
+
 void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 {
     if (updated())

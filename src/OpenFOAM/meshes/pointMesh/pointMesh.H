@@ -112,8 +112,9 @@ public:
             return GeoMesh<polyMesh>::mesh_.thisDb();
         }
 
-        //- Reset for changed polyMesh
-        void reset(const bool validBoundary);
+        //- Reset pointMesh with respect to the updated polyMesh
+        //  For run-time mesh replacement and mesh to mesh mapping
+        void reset();
 
 
         // Mesh callbacks

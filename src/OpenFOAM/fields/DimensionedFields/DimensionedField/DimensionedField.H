@@ -325,7 +325,7 @@ public:
             const tmp<DimensionedField<scalar, GeoMesh>>&
         ) const;
 
-        //- Reset the field contents to the given field
+        //- Reset the field values to the given field
         //  Used for mesh to mesh mapping
         void reset(const DimensionedField<Type, GeoMesh>&);
 

@@ -207,6 +207,10 @@ public:
             //  Used to reconstruct fields
             virtual void rmap(const fvPatchVectorField&, const labelList&);
 
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const fvPatchVectorField&);
+
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

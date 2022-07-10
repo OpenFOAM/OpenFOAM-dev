@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,6 +124,23 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::rmap
             const timeVaryingMappedFixedValueFvPatchField<Type>
         >(ptf).fieldMapper_,
         addr
+    );
+}
+
+
+template<class Type>
+void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::reset
+(
+    const fvPatchField<Type>& ptf
+)
+{
+    fixedValueFvPatchField<Type>::reset(ptf);
+    fieldMapper_.reset
+    (
+        refCast
+        <
+            const timeVaryingMappedFixedValueFvPatchField<Type>
+        >(ptf).fieldMapper_
     );
 }
 

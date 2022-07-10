@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,6 +126,20 @@ void atmBoundaryLayerInletVelocityFvPatchVectorField::rmap
         refCast<const atmBoundaryLayerInletVelocityFvPatchVectorField>(pvf);
 
     atmBoundaryLayer::rmap(blpvf, addr);
+}
+
+
+void atmBoundaryLayerInletVelocityFvPatchVectorField::reset
+(
+    const fvPatchVectorField& pvf
+)
+{
+    inletOutletFvPatchVectorField::reset(pvf);
+
+    const atmBoundaryLayerInletVelocityFvPatchVectorField& blpvf =
+        refCast<const atmBoundaryLayerInletVelocityFvPatchVectorField>(pvf);
+
+    atmBoundaryLayer::reset(blpvf);
 }
 
 

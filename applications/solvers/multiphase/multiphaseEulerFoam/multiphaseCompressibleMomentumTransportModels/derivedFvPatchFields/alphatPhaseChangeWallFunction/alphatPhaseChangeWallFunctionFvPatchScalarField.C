@@ -192,6 +192,20 @@ void alphatPhaseChangeWallFunctionFvPatchScalarField::rmap
 }
 
 
+void alphatPhaseChangeWallFunctionFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField::reset(ptf);
+
+    const alphatPhaseChangeWallFunctionFvPatchScalarField& tiptf =
+        refCast<const alphatPhaseChangeWallFunctionFvPatchScalarField>(ptf);
+
+    dmdtf_.reset(tiptf.dmdtf_);
+}
+
+
 void alphatPhaseChangeWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     alphatPhaseJayatillekeWallFunctionFvPatchScalarField::write(os);

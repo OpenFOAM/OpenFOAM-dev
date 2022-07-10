@@ -322,6 +322,25 @@ void thermalBaffle1DFvPatchScalarField<solidType>::rmap
 
 
 template<class solidType>
+void thermalBaffle1DFvPatchScalarField<solidType>::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    mixedFvPatchScalarField::reset(ptf);
+
+    const thermalBaffle1DFvPatchScalarField& tiptf =
+        refCast<const thermalBaffle1DFvPatchScalarField>(ptf);
+
+    if (this->owner())
+    {
+        thickness_.reset(tiptf.thickness_);
+        qs_.reset(tiptf.qs_);
+    }
+}
+
+
+template<class solidType>
 void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
 {
     if (updated())

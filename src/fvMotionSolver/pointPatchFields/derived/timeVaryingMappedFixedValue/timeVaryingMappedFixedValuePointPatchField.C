@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,6 +210,27 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::rmap
 
     startSampledValues_.rmap(tiptf.startSampledValues_, addr);
     endSampledValues_.rmap(tiptf.endSampledValues_, addr);
+
+    // Clear interpolator
+    mapperPtr_.clear();
+    startSampleTime_ = -1;
+    endSampleTime_ = -1;
+}
+
+
+template<class Type>
+void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::reset
+(
+    const pointPatchField<Type>& ptf
+)
+{
+    fixedValuePointPatchField<Type>::reset(ptf);
+
+    const timeVaryingMappedFixedValuePointPatchField<Type>& tiptf =
+        refCast<const timeVaryingMappedFixedValuePointPatchField<Type>>(ptf);
+
+    startSampledValues_.reset(tiptf.startSampledValues_);
+    endSampledValues_.reset(tiptf.endSampledValues_);
 
     // Clear interpolator
     mapperPtr_.clear();

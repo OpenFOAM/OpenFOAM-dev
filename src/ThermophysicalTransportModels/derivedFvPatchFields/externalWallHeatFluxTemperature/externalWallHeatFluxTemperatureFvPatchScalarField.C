@@ -249,6 +249,33 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::rmap
 }
 
 
+void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    mixedFvPatchScalarField::reset(ptf);
+
+    const externalWallHeatFluxTemperatureFvPatchScalarField& tiptf =
+        refCast<const externalWallHeatFluxTemperatureFvPatchScalarField>(ptf);
+
+    if (haveq_)
+    {
+        q_.reset(tiptf.q_);
+    }
+
+    if (haveh_)
+    {
+        h_.reset(tiptf.h_);
+    }
+
+    if (qrName_ != word::null)
+    {
+        qrPrevious_.reset(tiptf.qrPrevious_);
+    }
+}
+
+
 void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 {
     if (updated())

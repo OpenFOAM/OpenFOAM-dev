@@ -184,6 +184,20 @@ void Foam::uniformInletOutletFvPatchField<Type>::rmap
 }
 
 
+template<class Type>
+void Foam::uniformInletOutletFvPatchField<Type>::reset
+(
+    const fvPatchField<Type>& ptf
+)
+{
+    mixedFvPatchField<Type>::reset(ptf);
+
+    // Override
+    this->refValue() =
+        uniformInletValue_->value(this->db().time().userTimeValue());
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>

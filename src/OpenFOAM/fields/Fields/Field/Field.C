@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -425,6 +425,20 @@ void Foam::Field<Type>::rmap
 {
     rmap(tmapF(), mapAddressing, mapWeights);
     tmapF.clear();
+}
+
+
+template<class Type>
+void Foam::Field<Type>::reset(const Field<Type>& rhs)
+{
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    List<Type>::operator=(rhs);
 }
 
 

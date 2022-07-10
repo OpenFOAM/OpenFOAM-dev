@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,6 +182,20 @@ void Foam::specieTransferMassFractionFvPatchScalarField::rmap
         refCast<const specieTransferMassFractionFvPatchScalarField>(ptf);
 
     phiYp_.rmap(tiptf.phiYp_, addr);
+}
+
+
+void Foam::specieTransferMassFractionFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    mixedFvPatchScalarField::reset(ptf);
+
+    const specieTransferMassFractionFvPatchScalarField& tiptf =
+        refCast<const specieTransferMassFractionFvPatchScalarField>(ptf);
+
+    phiYp_.reset(tiptf.phiYp_);
 }
 
 

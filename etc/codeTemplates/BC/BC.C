@@ -170,6 +170,21 @@ void Foam::CLASS::rmap
 
 
 template<class Type>
+void Foam::CLASS::reset
+(
+    const FVPATCHF& ptf
+)
+{
+    PARENT::reset(ptf);
+
+    const CLASS& tiptf =
+        refCast<const CLASS>(ptf);
+
+    fieldData_.reset(tiptf.fieldData_);
+}
+
+
+template<class Type>
 void Foam::CLASS::updateCoeffs()
 {
     if (this->updated())

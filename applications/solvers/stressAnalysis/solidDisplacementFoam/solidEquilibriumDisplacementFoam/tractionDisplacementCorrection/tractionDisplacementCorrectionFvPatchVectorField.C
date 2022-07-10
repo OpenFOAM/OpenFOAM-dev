@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,6 @@ void tractionDisplacementCorrectionFvPatchVectorField::autoMap
 }
 
 
-// Reverse-map the given fvPatchField onto this fvPatchField
 void tractionDisplacementCorrectionFvPatchVectorField::rmap
 (
     const fvPatchVectorField& ptf,
@@ -125,7 +124,21 @@ void tractionDisplacementCorrectionFvPatchVectorField::rmap
 }
 
 
-// Update the coefficients associated with the patch field
+void tractionDisplacementCorrectionFvPatchVectorField::reset
+(
+    const fvPatchVectorField& ptf
+)
+{
+    fixedGradientFvPatchVectorField::reset(ptf);
+
+    const tractionDisplacementCorrectionFvPatchVectorField& dmptf =
+        refCast<const tractionDisplacementCorrectionFvPatchVectorField>(ptf);
+
+    traction_.reset(dmptf.traction_);
+    pressure_.reset(dmptf.pressure_);
+}
+
+
 void tractionDisplacementCorrectionFvPatchVectorField::updateCoeffs()
 {
     if (updated())

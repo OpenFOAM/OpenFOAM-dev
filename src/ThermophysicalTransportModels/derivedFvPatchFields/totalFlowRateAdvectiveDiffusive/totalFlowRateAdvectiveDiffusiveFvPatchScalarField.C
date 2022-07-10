@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,6 +127,15 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::rmap
 )
 {
     mixedFvPatchField<scalar>::rmap(ptf, addr);
+}
+
+
+void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    mixedFvPatchField<scalar>::reset(ptf);
 }
 
 

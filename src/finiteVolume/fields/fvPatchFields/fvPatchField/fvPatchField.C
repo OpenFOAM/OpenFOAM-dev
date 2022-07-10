@@ -206,6 +206,13 @@ void Foam::fvPatchField<Type>::rmap
 
 
 template<class Type>
+void Foam::fvPatchField<Type>::reset(const fvPatchField<Type>& ptf)
+{
+    Field<Type>::reset(ptf);
+}
+
+
+template<class Type>
 void Foam::fvPatchField<Type>::updateCoeffs()
 {
     updated_ = true;

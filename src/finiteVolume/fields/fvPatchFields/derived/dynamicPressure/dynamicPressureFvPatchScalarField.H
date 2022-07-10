@@ -147,6 +147,10 @@ public:
             //  Used to reconstruct fields
             virtual void rmap(const fvPatchScalarField&, const labelList&);
 
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const fvPatchScalarField&);
+
 
         //- Write
         virtual void write(Ostream&) const;

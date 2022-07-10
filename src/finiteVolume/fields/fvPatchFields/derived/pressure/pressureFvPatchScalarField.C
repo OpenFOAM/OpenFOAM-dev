@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,6 +114,20 @@ void Foam::pressureFvPatchScalarField::rmap
         refCast<const pressureFvPatchScalarField>(ptf);
 
     p_.rmap(tiptf.p_, addr);
+}
+
+
+void Foam::pressureFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    fixedValueFvPatchScalarField::reset(ptf);
+
+    const pressureFvPatchScalarField& tiptf =
+        refCast<const pressureFvPatchScalarField>(ptf);
+
+    p_.reset(tiptf.p_);
 }
 
 

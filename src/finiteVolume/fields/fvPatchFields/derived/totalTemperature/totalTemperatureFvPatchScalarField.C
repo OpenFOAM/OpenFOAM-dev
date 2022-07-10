@@ -133,6 +133,20 @@ void Foam::totalTemperatureFvPatchScalarField::rmap
 }
 
 
+void Foam::totalTemperatureFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    fixedValueFvPatchScalarField::reset(ptf);
+
+    const totalTemperatureFvPatchScalarField& tiptf =
+        refCast<const totalTemperatureFvPatchScalarField>(ptf);
+
+    T0_.reset(tiptf.T0_);
+}
+
+
 void Foam::totalTemperatureFvPatchScalarField::updateCoeffs()
 {
     if (updated())

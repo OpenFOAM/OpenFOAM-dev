@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,6 +151,20 @@ void Foam::fixedJumpAMIFvPatchField<Type>::rmap
     const fixedJumpAMIFvPatchField<Type>& tiptf =
         refCast<const fixedJumpAMIFvPatchField<Type>>(ptf);
     jump_.rmap(tiptf.jump_, addr);
+}
+
+
+template<class Type>
+void Foam::fixedJumpAMIFvPatchField<Type>::reset
+(
+    const fvPatchField<Type>& ptf
+)
+{
+    jumpCyclicAMIFvPatchField<Type>::reset(ptf);
+
+    const fixedJumpAMIFvPatchField<Type>& tiptf =
+        refCast<const fixedJumpAMIFvPatchField<Type>>(ptf);
+    jump_.reset(tiptf.jump_);
 }
 
 

@@ -10,7 +10,7 @@ mapTimes="0.0015 0.003"
 for mapTime in $mapTimes; do
 
     runApplication -a blockMesh -dict blockMeshDict_$mapTime
-    runApplication -a decomposePar -force -noFields
+    runApplication -a decomposePar -force -noFields -dict decomposeParDict_$mapTime
 
     rm -rf constant/meshToMesh_$mapTime
     mkdir constant/meshToMesh_$mapTime

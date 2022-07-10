@@ -1211,7 +1211,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::reset
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
     Internal::reset(gf);
-    boundaryField_ == gf.boundaryField();
+    boundaryField_.reset(*this, gf.boundaryField());
 
     tgf.clear();
 }

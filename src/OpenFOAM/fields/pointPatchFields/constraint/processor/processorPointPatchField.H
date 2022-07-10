@@ -112,6 +112,23 @@ public:
             );
         }
 
+        //- Construct and return a clone setting internal field reference
+        virtual autoPtr<pointPatchField<Type>> clone
+        (
+            const pointPatch& patch,
+            const DimensionedField<Type, pointMesh>& iF
+        ) const
+        {
+            return autoPtr<pointPatchField<Type>>
+            (
+                new processorPointPatchField<Type>
+                (
+                    patch,
+                    iF
+                )
+            );
+        }
+
 
     //- Destructor
     virtual ~processorPointPatchField();

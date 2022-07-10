@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,6 +119,23 @@ void Foam::directionMixedFvPatchField<Type>::rmap
     refValue_.rmap(dmptf.refValue_, addr);
     refGrad_.rmap(dmptf.refGrad_, addr);
     valueFraction_.rmap(dmptf.valueFraction_, addr);
+}
+
+
+template<class Type>
+void Foam::directionMixedFvPatchField<Type>::reset
+(
+    const fvPatchField<Type>& ptf
+)
+{
+    transformFvPatchField<Type>::reset(ptf);
+
+    const directionMixedFvPatchField<Type>& dmptf =
+        refCast<const directionMixedFvPatchField<Type>>(ptf);
+
+    refValue_.reset(dmptf.refValue_);
+    refGrad_.reset(dmptf.refGrad_);
+    valueFraction_.reset(dmptf.valueFraction_);
 }
 
 

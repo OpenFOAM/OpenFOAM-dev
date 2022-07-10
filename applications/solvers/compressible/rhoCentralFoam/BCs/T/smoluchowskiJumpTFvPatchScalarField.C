@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,6 +157,20 @@ void Foam::smoluchowskiJumpTFvPatchScalarField::rmap
         refCast<const smoluchowskiJumpTFvPatchScalarField>(ptf);
 
     Twall_.rmap(ptpsf.Twall_, addr);
+}
+
+
+void Foam::smoluchowskiJumpTFvPatchScalarField::reset
+(
+    const fvPatchField<scalar>& ptf
+)
+{
+    mixedFvPatchField<scalar>::reset(ptf);
+
+    const smoluchowskiJumpTFvPatchScalarField& ptpsf =
+        refCast<const smoluchowskiJumpTFvPatchScalarField>(ptf);
+
+    Twall_.reset(ptpsf.Twall_);
 }
 
 

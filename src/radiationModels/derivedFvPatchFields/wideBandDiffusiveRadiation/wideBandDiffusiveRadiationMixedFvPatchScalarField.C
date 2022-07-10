@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,6 +149,16 @@ void Foam::wideBandDiffusiveRadiationMixedFvPatchScalarField::rmap
 {
     mixedFvPatchScalarField::rmap(ptf, addr);
     radiationCoupledBase::rmap(ptf, addr);
+}
+
+
+void Foam::wideBandDiffusiveRadiationMixedFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    mixedFvPatchScalarField::reset(ptf);
+    radiationCoupledBase::reset(ptf);
 }
 
 

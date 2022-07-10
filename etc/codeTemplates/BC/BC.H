@@ -199,6 +199,10 @@ public:
             //  Used to reconstruct fields
             virtual void rmap(const FVPATCHF&, const labelList&);
 
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const FVPATCHF&);
+
 
         // Evaluation functions
 

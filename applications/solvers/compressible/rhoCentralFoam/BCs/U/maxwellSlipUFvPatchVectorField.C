@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,6 +169,20 @@ void Foam::maxwellSlipUFvPatchVectorField::rmap
         refCast<const maxwellSlipUFvPatchVectorField>(pvf);
 
     Uwall_.rmap(mspvf.Uwall_, addr);
+}
+
+
+void Foam::maxwellSlipUFvPatchVectorField::reset
+(
+    const fvPatchVectorField& pvf
+)
+{
+    mixedFixedValueSlipFvPatchVectorField::reset(pvf);
+
+    const maxwellSlipUFvPatchVectorField& mspvf =
+        refCast<const maxwellSlipUFvPatchVectorField>(pvf);
+
+    Uwall_.reset(mspvf.Uwall_);
 }
 
 

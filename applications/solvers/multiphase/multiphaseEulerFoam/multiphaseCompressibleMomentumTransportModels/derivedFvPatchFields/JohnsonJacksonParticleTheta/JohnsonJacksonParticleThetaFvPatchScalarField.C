@@ -135,25 +135,6 @@ JohnsonJacksonParticleThetaFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFvPatchScalarField::autoMap(m);
-}
-
-
-void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::rmap
-(
-    const fvPatchScalarField& ptf,
-    const labelList& addr
-)
-{
-    mixedFvPatchScalarField::rmap(ptf, addr);
-}
-
-
 void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
 {
     if (updated())

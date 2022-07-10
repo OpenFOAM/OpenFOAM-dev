@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,6 +106,20 @@ void Foam::SRFVelocityFvPatchVectorField::rmap
         refCast<const SRFVelocityFvPatchVectorField>(ptf);
 
     inletValue_.rmap(tiptf.inletValue_, addr);
+}
+
+
+void Foam::SRFVelocityFvPatchVectorField::reset
+(
+    const fvPatchVectorField& ptf
+)
+{
+    fixedValueFvPatchVectorField::reset(ptf);
+
+    const SRFVelocityFvPatchVectorField& tiptf =
+        refCast<const SRFVelocityFvPatchVectorField>(ptf);
+
+    inletValue_.reset(tiptf.inletValue_);
 }
 
 

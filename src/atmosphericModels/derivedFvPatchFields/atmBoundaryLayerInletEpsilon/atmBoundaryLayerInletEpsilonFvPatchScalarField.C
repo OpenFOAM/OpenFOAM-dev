@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,6 +126,20 @@ void atmBoundaryLayerInletEpsilonFvPatchScalarField::rmap
         refCast<const atmBoundaryLayerInletEpsilonFvPatchScalarField>(psf);
 
     atmBoundaryLayer::rmap(blpsf, addr);
+}
+
+
+void atmBoundaryLayerInletEpsilonFvPatchScalarField::reset
+(
+    const fvPatchScalarField& psf
+)
+{
+    inletOutletFvPatchScalarField::reset(psf);
+
+    const atmBoundaryLayerInletEpsilonFvPatchScalarField& blpsf =
+        refCast<const atmBoundaryLayerInletEpsilonFvPatchScalarField>(psf);
+
+    atmBoundaryLayer::reset(blpsf);
 }
 
 

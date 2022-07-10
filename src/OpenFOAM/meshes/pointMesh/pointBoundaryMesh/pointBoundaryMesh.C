@@ -25,6 +25,7 @@ License
 
 #include "pointBoundaryMesh.H"
 #include "polyBoundaryMesh.H"
+#include "processorPolyPatch.H"
 #include "facePointPatch.H"
 #include "pointMesh.H"
 #include "PstreamBuffers.H"
@@ -36,13 +37,24 @@ License
 Foam::pointBoundaryMesh::pointBoundaryMesh
 (
     const pointMesh& m,
-    const polyBoundaryMesh& basicBdry
+    const polyBoundaryMesh& pbm
 )
 :
-    pointPatchList(basicBdry.size()),
+    pointPatchList(pbm.size()),
     mesh_(m)
 {
-    reset(basicBdry);
+    // Set boundary patches
+    pointPatchList& Patches = *this;
+
+    forAll(Patches, patchi)
+    {
+        Patches.set
+        (
+            patchi,
+            facePointPatch::New(pbm[patchi], *this).ptr()
+        );
+    }
+    // reset(pbm);
 }
 
 
@@ -202,18 +214,25 @@ void Foam::pointBoundaryMesh::topoChange()
 }
 
 
-void Foam::pointBoundaryMesh::reset(const polyBoundaryMesh& basicBdry)
+void Foam::pointBoundaryMesh::reset()
 {
-    // Set boundary patches
+    const polyBoundaryMesh& boundaryMesh = mesh()().boundaryMesh();
     pointPatchList& Patches = *this;
 
-    forAll(Patches, patchi)
+    // Reset the number of patches in case the decomposition changed
+    Patches.setSize(boundaryMesh.size());
+
+    forAll(boundaryMesh, patchi)
     {
-        Patches.set
-        (
-            patchi,
-            facePointPatch::New(basicBdry[patchi], *this).ptr()
-        );
+        // Construct new processor patches in case the decomposition changed
+        if (isA<processorPolyPatch>(boundaryMesh[patchi]))
+        {
+            Patches.set
+            (
+                patchi,
+                facePointPatch::New(boundaryMesh[patchi], *this).ptr()
+            );
+        }
     }
 }
 
