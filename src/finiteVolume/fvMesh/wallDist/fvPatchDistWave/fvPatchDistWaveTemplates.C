@@ -161,7 +161,7 @@ Foam::label Foam::fvPatchDistWave::wave
             distance.primitiveFieldRef()[internali] =
                 internalInfo[internali].dist(td);
 
-            std::initializer_list<nil>
+            (void)std::initializer_list<nil>
             {(
                 data.primitiveFieldRef()[internali] =
                     internalInfo[internali].data(td),
@@ -182,7 +182,7 @@ Foam::label Foam::fvPatchDistWave::wave
                 distance.boundaryFieldRef()[patchi][patchFacei] =
                     patchFaceInfo[patchi][patchFacei].dist(td) + small;
 
-                std::initializer_list<nil>
+                (void)std::initializer_list<nil>
                 {(
                     data.boundaryFieldRef()[patchi][patchFacei] =
                         patchFaceInfo[patchi][patchFacei].data(td),
