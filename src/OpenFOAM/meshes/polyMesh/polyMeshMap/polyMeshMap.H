@@ -50,19 +50,30 @@ class polyMesh;
 
 class polyMeshMap
 {
+    // Private Data
+
+        //- Reference to polyMesh
+        const polyMesh& mesh_;
+
 
 public:
 
     // Constructors
 
-        //- Construct null
-        polyMeshMap();
+        //- Construct for mesh
+        polyMeshMap(const polyMesh& mesh);
 
         //- Disallow default bitwise copy construction
         polyMeshMap(const polyMeshMap&) = delete;
 
 
     // Member Functions
+
+        //- Return polyMesh
+        const polyMesh& mesh() const
+        {
+            return mesh_;
+        }
 };
 
 

@@ -30,6 +30,8 @@ License
 #include "syncTools.H"
 #include "volFields.H"
 #include "writeFile.H"
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -349,24 +351,36 @@ bool Foam::functionObjects::layerAverage::write()
 }
 
 
-void Foam::functionObjects::layerAverage::movePoints(const polyMesh&)
+void Foam::functionObjects::layerAverage::movePoints(const polyMesh& mesh)
 {
-    Info<< type() << " " << name() << ":" << nl;
-    calcLayers();
+    if (&mesh == &mesh_)
+    {
+        Info<< type() << " " << name() << ":" << nl;
+        calcLayers();
+    }
 }
 
 
-void Foam::functionObjects::layerAverage::topoChange(const polyTopoChangeMap&)
+void Foam::functionObjects::layerAverage::topoChange
+(
+    const polyTopoChangeMap& map
+)
 {
-    Info<< type() << " " << name() << ":" << nl;
-    calcLayers();
+    if (&map.mesh() == &mesh_)
+    {
+        Info<< type() << " " << name() << ":" << nl;
+        calcLayers();
+    }
 }
 
 
-void Foam::functionObjects::layerAverage::mapMesh(const polyMeshMap&)
+void Foam::functionObjects::layerAverage::mapMesh(const polyMeshMap& map)
 {
-    Info<< type() << " " << name() << ":" << nl;
-    calcLayers();
+    if (&map.mesh() == &mesh_)
+    {
+        Info<< type() << " " << name() << ":" << nl;
+        calcLayers();
+    }
 }
 
 

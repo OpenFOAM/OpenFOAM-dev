@@ -31,6 +31,7 @@ License
 #include "indirectPrimitivePatch.H"
 #include "PatchTools.H"
 #include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -832,8 +833,11 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::movePoints
     const polyMesh& mesh
 )
 {
-    // Moving mesh might affect patch or region area
-    totalArea_ = totalArea();
+    if (&mesh == &mesh_)
+    {
+        // It may be necessary to reset if the mesh moves
+        // initialise(dict_);
+    }
 }
 
 
@@ -842,7 +846,10 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::topoChange
     const polyTopoChangeMap& map
 )
 {
-    initialise(dict_);
+    if (&map.mesh() == &mesh_)
+    {
+        initialise(dict_);
+    }
 }
 
 
@@ -851,7 +858,10 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::mapMesh
     const polyMeshMap& map
 )
 {
-    initialise(dict_);
+    if (&map.mesh() == &mesh_)
+    {
+        initialise(dict_);
+    }
 }
 
 

@@ -34,8 +34,9 @@ License
 #include "distributionMap.H"
 #include "interpolationCellPoint.H"
 #include "PatchTools.H"
-#include "polyTopoChangeMap.H"
 #include "writeFile.H"
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -612,7 +613,10 @@ void Foam::functionObjects::streamlines::mapMesh
     const polyMeshMap& map
 )
 {
-    read(dict_);
+    if (&map.mesh() == &mesh_)
+    {
+        read(dict_);
+    }
 }
 
 

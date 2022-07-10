@@ -244,7 +244,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         // Interpolate U's to Uf's
         interpolateUfs();
 
-        polyMeshMap map;
+        polyMeshMap map(mesh());
         mesh().mapMesh(map);
     }
 
