@@ -289,7 +289,7 @@ _buoyantFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listThermophysicalTransportModels -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -600,7 +600,7 @@ _compressibleMultiphaseInterFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -670,6 +670,33 @@ _createExternalCoupledPatchGeometry_ ()
 }
 complete -o filenames -o nospace -F _createExternalCoupledPatchGeometry_ createExternalCoupledPatchGeometry
 
+_createNonConformalCouples_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="-case -dict -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -overwrite -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -fileHandler)
+            opts="uncollated collated masterUncollated" ; extra="" ;;
+        -hostRoots|-libs|-region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _createNonConformalCouples_ createNonConformalCouples
+
 _createPatch_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -735,7 +762,7 @@ _decomposePar_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-allRegions -case -cellDist -constant -copyUniform -copyZero -dict -doc -fields -fileHandler -force -help -ifRequired -latestTime -libs -noFields -noFunctionObjects -noSets -noZero -region -srcDoc -time"
+    opts="-allRegions -case -cellDist -constant -copyUniform -copyZero -dict -doc -fields -fileHandler -force -help -latestTime -libs -noFields -noFunctionObjects -noSets -noZero -region -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -956,31 +983,6 @@ _engineCompRatio_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _engineCompRatio_ engineCompRatio
-
-_engineFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _engineFoam_ engineFoam
 
 _engineSwirl_ ()
 {
@@ -1945,7 +1947,7 @@ _mapFields_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -consistent -doc -fileHandler -help -libs -mapMethod -noFunctionObjects -parallelSource -parallelTarget -sourceRegion -sourceTime -srcDoc -subtract -targetRegion"
+    opts="-case -consistent -doc -fileHandler -help -libs -mapMethod -noFunctionObjects -parallelSource -parallelTarget -sourceRegion -sourceTime -srcDoc -targetRegion"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d"
 
@@ -1976,7 +1978,7 @@ _mapFieldsPar_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -consistent -doc -fields -fileHandler -help -hostRoots -libs -mapMethod -noFunctionObjects -noLagrangian -parallel -roots -sourceRegion -sourceTime -srcDoc -subtract -targetRegion"
+    opts="-case -consistent -doc -fields -fileHandler -help -hostRoots -libs -mapMethod -noFunctionObjects -noLagrangian -parallel -roots -sourceRegion -sourceTime -srcDoc -targetRegion"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d"
 
@@ -2544,7 +2546,7 @@ _PDRFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listThermophysicalTransportModels -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2717,33 +2719,6 @@ _porousSimpleFoam_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _porousSimpleFoam_ porousSimpleFoam
-
-_postChannel_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -constant -doc -fileHandler -help -latestTime -libs -noFunctionObjects -noZero -srcDoc -time"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -time)
-            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
-        -libs)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _postChannel_ postChannel
 
 _postProcess_ ()
 {
@@ -3091,7 +3066,7 @@ _rhoCentralFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listMomentumTransportModels -listScalarBCs -listSwitches -listThermophysicalTransportModels -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3141,7 +3116,7 @@ _rhoPimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listThermophysicalTransportModels -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3166,7 +3141,7 @@ _rhoPorousSimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listThermophysicalTransportModels -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3191,7 +3166,7 @@ _rhoSimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listThermophysicalTransportModels -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3310,6 +3285,35 @@ _selectCells_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _selectCells_ selectCells
+
+_setAtmBoundaryLayer_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="-case -dict -doc -fileHandler -help -hostRoots -latestTime -libs -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -fileHandler)
+            opts="uncollated collated masterUncollated" ; extra="" ;;
+        -time)
+            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
+        -hostRoots|-libs|-region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _setAtmBoundaryLayer_ setAtmBoundaryLayer
 
 _setFields_ ()
 {
@@ -4590,13 +4594,14 @@ _surfaceTransformPoints_ ()
     case "$prev" in
        -*) ;;
         *)
-            opts=""; extra=""
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                *) opts="";     extra="-d -f" ;;
+            esac
             ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _surfaceTransformPoints_ surfaceTransformPoints
-
 _temporalInterpolate_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -4656,7 +4661,7 @@ _thermoFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listThermophysicalTransportModels -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4710,7 +4715,7 @@ _transformPoints_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-allRegions -case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -region -roots -rotateFields -srcDoc"
+    opts="-allRegions -case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -pointSet -region -roots -rotateFields -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4720,7 +4725,7 @@ _transformPoints_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-region|-roots)
+        -hostRoots|-libs|-pointSet|-region|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4843,7 +4848,7 @@ _XiFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listThermophysicalTransportModels -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4952,15 +4957,12 @@ _foamCloneCase_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-add -help -latestTime -no-orig -no-scripts \
-          -processor -startFrom -template"
+    opts="-add -help -latestTime -no-orig -no-scripts           -processor -startFrom -template"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-        -startFrom) opts="" ; extra="" ;;
-        *) ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -4973,7 +4975,7 @@ _foamCreateVideo_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-dir -fps -help -image -out -start -webm"
+    opts="-begin-pause -dir -end-pause -fps -help -image -out -start -webm"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4981,7 +4983,7 @@ _foamCreateVideo_ ()
     case "$prev" in
         -dir)
             opts="" ; extra="-d" ;;
-        -fps|-image|-out|-start)
+        -begin-pause|-end-pause|-fps|-image|-out|-start)
             opts="" ; extra="" ;;
        *) ;;
     esac
