@@ -69,7 +69,7 @@ Foam::argList::initValidTables::initValidTables()
 
     argList::addOption
     (
-        "hostRoots", "(((host1 dir1) .. (hostN dirN))",
+        "hostRoots", "((host1 dir1) .. (hostN dirN))",
         "slave root directories (per host) for distributed running"
     );
     validParOptions.set("hostRoots", "((host1 dir1) .. (hostN dirN))");
