@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,19 @@ Description
 #ifndef addToRunTimeSelectionTable_H
 #define addToRunTimeSelectionTable_H
 
+namespace Foam
+{
+    class word;
+
+    bool addToRunTimeSelectionTableToC
+    (
+        const word& baseType,
+        const word& baseTypeName,
+        const word& thisTypeName
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 //- Add to hash-table of functions with typename as the key
@@ -37,7 +50,11 @@ Description
                                                                                \
     /* Add the thisType constructor function to the table */                   \
     baseType::add##argNames##ConstructorToTable<thisType>                      \
-        add##thisType##argNames##ConstructorTo##baseType##Table_
+        add##thisType##argNames##ConstructorTo##baseType##Table_;              \
+                                                                               \
+    bool add##thisType##argNames##To##baseType##ToC_ =                         \
+        addToRunTimeSelectionTableToC                                          \
+        (#baseType, baseType::typeName, thisType::typeName)
 
 
 //- Add to hash-table of functions with 'lookup' as the key
@@ -47,7 +64,10 @@ Description
     /* Add the thisType constructor function to the table, find by lookup */   \
     baseType::add##argNames##ConstructorToTable<thisType>                      \
         add_##lookup##_##thisType##argNames##ConstructorTo##baseType##Table_   \
-        (#lookup)
+        (#lookup);                                                             \
+                                                                               \
+    bool add_##lookup##_##thisType##argNames##To##baseType##ToC_ =             \
+        addToRunTimeSelectionTableToC(#baseType, baseType::typeName, #lookup)
 
 
 //- Add to hash-table of functions with typename as the key
@@ -56,7 +76,11 @@ Description
                                                                                \
     /* Add the thisType constructor function to the table */                   \
     baseType::addRemovable##argNames##ConstructorToTable<thisType>             \
-        addRemovable##thisType##argNames##ConstructorTo##baseType##Table_
+        addRemovable##thisType##argNames##ConstructorTo##baseType##Table_;     \
+                                                                               \
+    bool addRemovable##thisType##argNames##To##baseType##ToC_ =                \
+        addToRunTimeSelectionTableToC                                          \
+        (#baseType, baseType::typeName, thisType::typeName)
 
 
 //- Add to hash-table of functions with 'lookup' as the key
@@ -66,7 +90,10 @@ Description
     /* Add the thisType constructor function to the table, find by lookup */   \
     baseType::addRemovable##argNames##ConstructorToTable<thisType>             \
         addRemovable_##lookup##_##thisType##argNames##ConstructorTo            \
-        ##baseType##Table_(#lookup)
+        ##baseType##Table_(#lookup);                                           \
+                                                                               \
+    bool addRemovable_##lookup##_##thisType##argNames##To##baseType##ToC_ =    \
+        addToRunTimeSelectionTableToC(#baseType, baseType::typeName, #lookup)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,5 +95,10 @@ float Foam::regIOobject::fileModificationSkew
 // Create the jobInfo file in the $FOAM_JOB_DIR/runningJobs directory
 
 #include "jobInfo.C"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Construct runTimeSelectionToC
+
+#include "runTimeSelectionToC.C"
 
 // ************************************************************************* //
