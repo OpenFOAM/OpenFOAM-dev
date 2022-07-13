@@ -1459,6 +1459,7 @@ bool Foam::fvMeshStitcher::connect
                 (
                     isA<nonConformalCyclicFvPatch>(fvp)
                  && refCast<const nonConformalCyclicFvPatch>(fvp).owner()
+                 && nSumMfe[patchi] > 0
                 )
                 {
                     Info<< indent << fvp.name()
