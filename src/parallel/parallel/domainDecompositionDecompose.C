@@ -78,7 +78,7 @@ void Foam::domainDecomposition::addInterProcFace
         nbrToInterPatch[ownerProc].insert(nbrProc, toNbrProcPatchi);
         interPatchFaces[ownerProc].append(DynamicList<label>());
         subPatchIDs[ownerProc].append(labelList(1, subPatchID));
-        subPatchStarts[ownerProc].append(labelList(1, 0));
+        subPatchStarts[ownerProc].append(labelList(1, label(0)));
 
         if (facei != -1 && completeMesh().isInternalFace(facei))
         {
@@ -86,7 +86,7 @@ void Foam::domainDecomposition::addInterProcFace
             nbrToInterPatch[nbrProc].insert(ownerProc, toOwnerProcPatchi);
             interPatchFaces[nbrProc].append(DynamicList<label>());
             subPatchIDs[nbrProc].append(labelList(1, subPatchID));
-            subPatchStarts[nbrProc].append(labelList(1, 0));
+            subPatchStarts[nbrProc].append(labelList(1, label(0)));
         }
     }
     else

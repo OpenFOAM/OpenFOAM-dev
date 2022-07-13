@@ -400,7 +400,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryEdgeMeshEdge() const
             ownerOrigAndProcBoundaryMeshEdges,
             rMap,
             maxEqOp<label>(),
-            -1
+            label(-1)
         );
 
         // Remove all local indexing from the map

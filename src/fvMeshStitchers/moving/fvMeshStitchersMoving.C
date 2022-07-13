@@ -218,7 +218,7 @@ Foam::labelHashSet Foam::fvMeshStitchers::moving::ownerCoupledCellSet()
         ncb.ownerOrigBoundaryEdgeMeshEdge(),
         ownerOrigBoundaryEdgeNSet,
         plusEqOp<label>(),
-        0
+        label(0)
     );
 
     // Isolate the cells that are edge connected to the owner patches. This

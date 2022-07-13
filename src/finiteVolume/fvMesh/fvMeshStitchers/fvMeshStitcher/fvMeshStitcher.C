@@ -520,7 +520,7 @@ Foam::fvMeshStitcher::calculateOwnerOrigBoundaryEdgeParts
         ownerOrigBoundaryEdgeMeshEdge,
         ownerOrigBoundaryEdgeNParts,
         plusEqOp<label>(),
-        0
+        label(0)
     );
     syncTools::syncEdgeList
     (
@@ -642,7 +642,7 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
         ownerOrigBoundaryEdgeMeshEdge,
         ownerOrigBoundaryEdgeNOrigFaces,
         plusEqOp<label>(),
-        0
+        label(0)
     );
 
     // If debugging, check that face changes are in sync
