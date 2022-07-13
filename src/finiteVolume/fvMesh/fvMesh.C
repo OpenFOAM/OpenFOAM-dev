@@ -1021,6 +1021,8 @@ void Foam::fvMesh::setPoints(const pointField& p)
 
     meshObject::movePoints<fvMesh>(*this);
     meshObject::movePoints<lduMesh>(*this);
+
+    const_cast<Time&>(time()).functionObjects().movePoints(*this);
 }
 
 
@@ -1103,6 +1105,8 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 
     meshObject::movePoints<fvMesh>(*this);
     meshObject::movePoints<lduMesh>(*this);
+
+    const_cast<Time&>(time()).functionObjects().movePoints(*this);
 
     return tsweptVols;
 }
@@ -1202,6 +1206,8 @@ void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
     meshObject::topoChange<fvMesh>(*this, map);
     meshObject::topoChange<lduMesh>(*this, map);
 
+    const_cast<Time&>(time()).functionObjects().topoChange(map);
+
     if (topoChanger_.valid())
     {
         topoChanger_->topoChange(map);
@@ -1235,6 +1241,8 @@ void Foam::fvMesh::mapMesh(const polyMeshMap& map)
 
     meshObject::mapMesh<fvMesh>(*this, map);
     meshObject::mapMesh<lduMesh>(*this, map);
+
+    const_cast<Time&>(time()).functionObjects().mapMesh(map);
 
     topoChanger_->mapMesh(map);
     distributor_->mapMesh(map);

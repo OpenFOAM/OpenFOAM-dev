@@ -1335,8 +1335,6 @@ void Foam::polyMesh::setPoints(const pointField& newPoints)
 
     meshObject::movePoints<polyMesh>(*this);
     meshObject::movePoints<pointMesh>(*this);
-
-    const_cast<Time&>(time()).functionObjects().movePoints(*this);
 }
 
 
@@ -1414,9 +1412,6 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
 
     meshObject::movePoints<polyMesh>(*this);
     meshObject::movePoints<pointMesh>(*this);
-
-    const_cast<Time&>(time()).functionObjects().movePoints(*this);
-
 
     if (debug && moveError)
     {

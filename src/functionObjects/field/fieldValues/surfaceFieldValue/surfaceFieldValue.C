@@ -836,7 +836,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::movePoints
     if (&mesh == &mesh_)
     {
         // It may be necessary to reset if the mesh moves
-        // initialise(dict_);
+        initialise(dict_);
     }
 }
 
