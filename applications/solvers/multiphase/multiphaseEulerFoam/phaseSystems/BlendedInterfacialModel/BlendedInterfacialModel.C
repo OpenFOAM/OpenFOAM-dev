@@ -932,7 +932,7 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     PtrList<scalarGeoField> fSD(nPhases);
     calculateBlendingCoeffs
     (
-        interface_.fluid().phases().convert<const volScalarField>(),
+        interface_.fluid().phases().template convert<const volScalarField>(),
         fG, f1D2, f2D1, fS,
         fGD, f1D2D, f2D1D, fSD,
         subtract
@@ -1036,7 +1036,7 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     PtrList<scalarGeoField> fSD(nPhases);
     calculateBlendingCoeffs
     (
-        interface_.fluid().phases().convert<const volScalarField>(),
+        interface_.fluid().phases().template convert<const volScalarField>(),
         fG, f1D2, f2D1, fS,
         fGD, f1D2D, f2D1D, fSD,
         subtract
