@@ -200,8 +200,7 @@ public:
         //- Calculate turbulence fields
         virtual bool execute();
 
-        //- Do nothing.
-        //  The turbulence fields are registered and written automatically
+        //- Write the turbulence fields
         virtual bool write();
 
 
