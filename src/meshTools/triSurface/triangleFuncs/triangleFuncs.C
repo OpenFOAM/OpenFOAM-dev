@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,18 +97,18 @@ bool Foam::triangleFuncs::intersectAxesBundle
     // we can directly check u,v components for inclusion in triangle.
 
     // Get other components
-    label i1 = (i0 + 1) % 3;
-    label i2 = (i1 + 1) % 3;
+    const label i1 = (i0 + 1) % 3;
+    const label i2 = (i1 + 1) % 3;
 
-    scalar u1 = V10[i1];
-    scalar v1 = V10[i2];
+    const scalar u1 = V10[i1];
+    const scalar v1 = V10[i2];
 
-    scalar u2 = V20[i1];
-    scalar v2 = V20[i2];
+    const scalar u2 = V20[i1];
+    const scalar v2 = V20[i2];
 
-    scalar localScale = mag(u1)+mag(v1)+mag(u2)+mag(v2);
+    const scalar localScale = mag(u1) + mag(v1) + mag(u2) + mag(v2);
 
-    scalar det = v2*u1 - u2*v1;
+    const scalar det = v2*u1 - u2*v1;
 
     // Fix for  V0:(-31.71428 0 -15.10714)
     //          V10:(-1.285715 8.99165e-16 -1.142858)
@@ -124,14 +124,14 @@ bool Foam::triangleFuncs::intersectAxesBundle
     {
         const point& P = origin[originI];
 
-        scalar u0 = P[i1] - V0[i1];
-        scalar v0 = P[i2] - V0[i2];
+        const scalar u0 = P[i1] - V0[i1];
+        const scalar v0 = P[i2] - V0[i2];
 
         scalar alpha = 0;
         scalar beta = 0;
         bool inter = false;
 
-        if (Foam::mag(u1) < rootVSmall)
+        if (mag(u1) < rootVSmall)
         {
             beta = u0/u2;
             if ((beta >= 0) && (beta <= 1))
@@ -153,7 +153,7 @@ bool Foam::triangleFuncs::intersectAxesBundle
         if (inter)
         {
             pInter = V0 + alpha*V10 + beta*V20;
-            scalar s = (pInter - origin[originI])[i0];
+            const scalar s = pInter[i0] - P[i0];
 
             if ((s >= 0) && (s <= maxLength))
             {
@@ -161,6 +161,7 @@ bool Foam::triangleFuncs::intersectAxesBundle
             }
         }
     }
+
     return false;
 }
 
