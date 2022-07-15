@@ -456,6 +456,7 @@ $(general)/bound/bound.C
 $(general)/CorrectPhi/correctUphiBCs.C
 $(general)/pressureReference/pressureReference.C
 $(general)/levelSet/levelSet.C
+$(general)/surfaceToVolVelocity/surfaceToVolVelocity.C
 
 solutionControl = $(general)/solutionControl
 $(solutionControl)/solutionControl/solutionControl/solutionControl.C

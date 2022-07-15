@@ -303,13 +303,18 @@ Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBfRef()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
+Foam::fvMesh::fvMesh
+(
+    const IOobject& io,
+    const bool changers,
+    const bool stitcher
+)
 :
     polyMesh(io),
     surfaceInterpolation(*this),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
-    stitcher_(fvMeshStitcher::New(*this, changers)),
+    stitcher_(nullptr),
     topoChanger_(nullptr),
     distributor_(nullptr),
     mover_(nullptr),
@@ -340,7 +345,11 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool changers)
     }
 
     // Stitch or Re-stitch if necessary
-    stitcher_->connect(false, changers, true);
+    if (stitcher)
+    {
+        stitcher_.set(fvMeshStitcher::New(*this, changers).ptr());
+        stitcher_->connect(false, changers, true);
+    }
 
     // Construct changers
     if (changers)

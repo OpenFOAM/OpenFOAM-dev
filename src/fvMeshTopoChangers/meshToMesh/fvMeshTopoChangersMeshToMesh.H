@@ -76,9 +76,6 @@ class meshToMesh
 
     // Private Member Functions
 
-        //- Find the U field name corresponding to Uf
-        word Uname(const surfaceVectorField& Uf) const;
-
         //- Interpolate U's to Uf's
         void interpolateUfs();
 

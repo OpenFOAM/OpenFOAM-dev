@@ -28,6 +28,7 @@ License
 #include "fvcSurfaceIntegrate.H"
 #include "MeshObject.H"
 #include "syncTools.H"
+#include "surfaceToVolVelocity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -1366,6 +1367,9 @@ bool Foam::fvMeshStitcher::connect
     // values to be set. This is done by evaluating all the nonConformalCoupled
     // patch fields.
     evaluateVolFields();
+
+    // Do special post-non-conformation for surface velocities.
+    postNonConformSurfaceVelocities();
 
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();

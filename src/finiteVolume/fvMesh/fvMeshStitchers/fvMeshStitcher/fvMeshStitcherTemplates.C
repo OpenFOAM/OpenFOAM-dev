@@ -36,6 +36,7 @@ Description
 #include "nonConformalProcessorCyclicFvPatch.H"
 #include "nonConformalErrorFvPatch.H"
 #include "processorFvPatch.H"
+#include "surfaceToVolVelocity.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -113,10 +114,6 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
         mesh_.foundObject<surfaceScalarField>("meshPhi")
       ? &mesh_.lookupObject<surfaceScalarField>("meshPhi")
       : nullptr;
-    const surfaceScalarField* phi0Ptr =
-        mesh_.foundObject<surfaceScalarField>("meshPhi_0")
-      ? &mesh_.lookupObject<surfaceScalarField>("meshPhi_0")
-      : nullptr;
 
     forAllIter(typename HashTable<SurfaceField<Type>*>, fields, iter)
     {
@@ -125,7 +122,7 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
         if
         (
             &field == static_cast<const regIOobject*>(phiPtr)
-         || &field == static_cast<const regIOobject*>(phi0Ptr)
+         || field.isOldTime()
         ) continue;
 
         autoPtr<SurfaceField<Type>> nccFieldPtr
@@ -142,11 +139,16 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
             )
         );
 
-        nccFieldPtr->boundaryFieldRef() =
-            conformalNccBoundaryField<Type>(field.boundaryField());
+        for (label i = 0; i <= field.nOldTimes(); ++ i)
+        {
+            SurfaceField<Type>& field0 = field.oldTime(i);
 
-        field.boundaryFieldRef() =
-            conformalOrigBoundaryField<Type>(field.boundaryField());
+            nccFieldPtr->oldTime(i).boundaryFieldRef() =
+                conformalNccBoundaryField<Type>(field0.boundaryField());
+
+            field0.boundaryFieldRef() =
+                conformalOrigBoundaryField<Type>(field0.boundaryField());
+        }
 
         nccFieldPtr.ptr()->store();
     }
@@ -174,10 +176,6 @@ void Foam::fvMeshStitcher::postNonConformSurfaceFields()
         mesh_.foundObject<surfaceScalarField>("meshPhi")
       ? &mesh_.lookupObject<surfaceScalarField>("meshPhi")
       : nullptr;
-    const surfaceScalarField* phi0Ptr =
-        mesh_.foundObject<surfaceScalarField>("meshPhi_0")
-      ? &mesh_.lookupObject<surfaceScalarField>("meshPhi_0")
-      : nullptr;
 
     forAllIter(typename HashTable<SurfaceField<Type>*>, fields, iter)
     {
@@ -188,7 +186,8 @@ void Foam::fvMeshStitcher::postNonConformSurfaceFields()
         if
         (
             &field == static_cast<const regIOobject*>(phiPtr)
-         || &field == static_cast<const regIOobject*>(phi0Ptr)
+         || field.isOldTime()
+         || mesh_.topoChanged()
         ) continue;
 
         const word nccFieldName = nccFieldPrefix_ + field.name();
@@ -196,15 +195,20 @@ void Foam::fvMeshStitcher::postNonConformSurfaceFields()
         const SurfaceField<Type>& nccField =
             mesh_.lookupObject<SurfaceField<Type>>(nccFieldName);
 
-        field.boundaryFieldRef() =
-            nonConformalBoundaryField<Type>
-            (
-                nccField.boundaryField(),
-                field.boundaryField()
-            );
+        for (label i = 0; i <= field.nOldTimes(); ++ i)
+        {
+            SurfaceField<Type>& field0 = field.oldTime(i);
 
-        field.boundaryFieldRef() =
-            synchronisedBoundaryField<Type>(field.boundaryField());
+            field0.boundaryFieldRef() =
+                nonConformalBoundaryField<Type>
+                (
+                    nccField.oldTime(i).boundaryField(),
+                    field0.boundaryField()
+                );
+
+            field0.boundaryFieldRef() =
+                synchronisedBoundaryField<Type>(field0.boundaryField());
+        }
     }
 
     // Remove NCC fields after all fields have been mapped. This is so that
@@ -219,19 +223,27 @@ void Foam::fvMeshStitcher::postNonConformSurfaceFields()
         if
         (
             &field == static_cast<const regIOobject*>(phiPtr)
-         || &field == static_cast<const regIOobject*>(phi0Ptr)
+         || field.isOldTime()
         ) continue;
 
         const word nccFieldName = nccFieldPrefix_ + field.name();
-
-        // If the NCC field isn't here, then it is assumed to be an old-time
-        // field that got removed when the current-time field was removed
-        if (!mesh_.foundObject<SurfaceField<Type>>(nccFieldName)) continue;
 
         SurfaceField<Type>& nccField =
             mesh_.lookupObjectRef<SurfaceField<Type>>(nccFieldName);
 
         nccField.checkOut();
+    }
+
+    // Check there are no NCC fields left over
+    fields = mesh_.lookupClass<SurfaceField<Type>>();
+    forAllIter(typename HashTable<SurfaceField<Type>*>, fields, iter)
+    {
+        if (iter.key()(nccFieldPrefix_.size()) != nccFieldPrefix_) continue;
+
+        FatalErrorInFunction
+            << "Stitching mapping field \"" << iter()->name()
+            << "\" found, but the field it corresponds to no longer exists"
+            << exit(FatalError);
     }
 }
 
@@ -293,6 +305,37 @@ inline void Foam::fvMeshStitcher::evaluateVolFields()
         evaluateVolFields<Type>();
     FOR_ALL_FIELD_TYPES(EvaluateVolFields);
     #undef EvaluateVolFields
+}
+
+
+inline void Foam::fvMeshStitcher::postNonConformSurfaceVelocities()
+{
+    if (mesh_.topoChanged())
+    {
+        HashTable<surfaceVectorField*> Ufs
+        (
+            mesh_.lookupClass<surfaceVectorField>()
+        );
+
+        forAllIter(HashTable<surfaceVectorField*>, Ufs, iter)
+        {
+            surfaceVectorField& Uf = *iter();
+
+            const volVectorField& U = surfaceToVolVelocity(Uf);
+
+            if (!isNull(U))
+            {
+                forAll(Uf.boundaryField(), patchi)
+                {
+                    if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
+                    {
+                        Uf.boundaryFieldRef()[patchi] ==
+                            U.boundaryField()[patchi];
+                    }
+                }
+            }
+        }
+    }
 }
 
 

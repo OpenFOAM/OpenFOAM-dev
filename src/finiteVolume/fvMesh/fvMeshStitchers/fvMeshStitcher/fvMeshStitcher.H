@@ -222,6 +222,9 @@ private:
             //- Evaluate all non-conformal vol patch fields
             inline void evaluateVolFields();
 
+            //- Special post-non-conform for surface velocities
+            inline void postNonConformSurfaceVelocities();
+
 
 protected:
 

@@ -1043,17 +1043,18 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::boundaryFieldRef()
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+bool Foam::GeometricField<Type, PatchField, GeoMesh>::isOldTime() const
+{
+    return
+        this->name().size() > 2
+     && this->name()(this->name().size()-2, 2) == "_0";
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::storeOldTimes() const
 {
-    if
-    (
-        field0Ptr_
-     && timeIndex_ != this->time().timeIndex()
-     && !(
-            this->name().size() > 2
-         && this->name()(this->name().size()-2, 2) == "_0"
-         )
-    )
+    if (field0Ptr_ && timeIndex_ != this->time().timeIndex() && !isOldTime())
     {
         storeOldTime();
     }
@@ -1139,6 +1140,36 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::oldTime()
         .oldTime();
 
     return *field0Ptr_;
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+const Foam::GeometricField<Type, PatchField, GeoMesh>&
+Foam::GeometricField<Type, PatchField, GeoMesh>::oldTime(const label n) const
+{
+    if (n == 0)
+    {
+        return *this;
+    }
+    else
+    {
+        return oldTime().oldTime(n - 1);
+    }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Foam::GeometricField<Type, PatchField, GeoMesh>&
+Foam::GeometricField<Type, PatchField, GeoMesh>::oldTime(const label n)
+{
+    if (n == 0)
+    {
+        return *this;
+    }
+    else
+    {
+        return oldTime().oldTime(n - 1);
+    }
 }
 
 

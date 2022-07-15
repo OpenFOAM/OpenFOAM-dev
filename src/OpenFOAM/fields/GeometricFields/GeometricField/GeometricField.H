@@ -401,6 +401,9 @@ public:
         //- Return the time index of the field
         inline label& timeIndex();
 
+        //- Return whether or not this is an old-time field
+        bool isOldTime() const;
+
         //- Store the old-time fields
         void storeOldTimes() const;
 
@@ -416,6 +419,16 @@ public:
         //- Return non-const old time field
         //  (Not a good idea but it is used for sub-cycling)
         GeometricField<Type, PatchField, GeoMesh>& oldTime();
+
+        //- Return the n-th old time field
+        const GeometricField<Type, PatchField, GeoMesh>& oldTime
+        (
+            const label n
+        ) const;
+
+        //- Return the n-th non-const old time field
+        //  (Not a good idea but it is used for sub-cycling)
+        GeometricField<Type, PatchField, GeoMesh>& oldTime(const label n);
 
         //- Store the field as the previous iteration value
         void storePrevIter() const;

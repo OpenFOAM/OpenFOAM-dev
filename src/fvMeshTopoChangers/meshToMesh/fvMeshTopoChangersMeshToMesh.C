@@ -31,6 +31,7 @@ License
 #include "meshToMeshAdjustTimeStepFunctionObject.H"
 #include "meshToMesh.H"
 #include "cellVolumeWeightMethod.H"
+#include "surfaceToVolVelocity.H"
 #include "MeshToMeshMapGeometricFields.H"
 #include "polyMeshMap.H"
 #include "processorPolyPatch.H"
@@ -50,27 +51,10 @@ namespace fvMeshTopoChangers
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::word Foam::fvMeshTopoChangers::meshToMesh::Uname
-(
-    const surfaceVectorField& Uf
-) const
-{
-    const word UfName(Uf.member());
-
-    return
-        IOobject::groupName
-        (
-            UfName.back() == 'f'
-          ? word(UfName(UfName.size() - 1))
-          : word::null,
-            Uf.group()
-        );
-}
-
-
 void Foam::fvMeshTopoChangers::meshToMesh::interpolateUfs()
 {
     // Interpolate U to Uf
+
     HashTable<surfaceVectorField*> Ufs
     (
         mesh().lookupClass<surfaceVectorField>()
@@ -80,17 +64,11 @@ void Foam::fvMeshTopoChangers::meshToMesh::interpolateUfs()
     {
         surfaceVectorField& Uf = *iter();
 
-        const word Uname(this->Uname(Uf));
+        const volVectorField& U = surfaceToVolVelocity(Uf);
 
-        if (Uname != word::null)
+        if (!isNull(U))
         {
-            Uf.reset
-            (
-                fvc::interpolate
-                (
-                    mesh().lookupObject<volVectorField>(Uname)
-                )
-            );
+            Uf.reset(fvc::interpolate(U));
         }
     }
 }
@@ -172,6 +150,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
                 mesh().time(),
                 IOobject::MUST_READ
             ),
+            false,
             false
         );
 

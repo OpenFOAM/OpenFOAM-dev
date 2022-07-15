@@ -274,8 +274,13 @@ public:
     // Constructors
 
         //- Construct from IOobject
-        //  with the option to not instantiate the mesh changers
-        explicit fvMesh(const IOobject& io, const bool changers = true);
+        //  with the option to not instantiate the mesh changers or stitcher
+        explicit fvMesh
+        (
+            const IOobject& io,
+            const bool changers = true,
+            const bool stitcher = true
+        );
 
         //- Construct from cellShapes with boundary.
         fvMesh
