@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
     - The \c diffusivity entry can be set to \c none, \c constant, \c viscosity
     - A constant diffusivity is specified with the \c D entry,
     - If a momentum transport model is available and the \c viscosity
-      diffusivety option specified an effective diffusivity may be constructed
+      diffusivity option specified an effective diffusivity may be constructed
       from the laminar and turbulent viscosities using the diffusivity
       coefficients \c alphal and \c alphat:
       \verbatim
@@ -42,7 +42,7 @@ Description
 
     Example:
     \verbatim
-        #includeFunc scalarTransport(T, alphaD=1, alphaDt=1)
+        #includeFunc scalarTransport(T, alphal=1, alphat=1)
     \endverbatim
 
     For incompressible flow the passive scalar may optionally be solved with the
