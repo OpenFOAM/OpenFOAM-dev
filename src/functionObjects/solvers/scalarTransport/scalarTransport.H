@@ -42,7 +42,7 @@ Description
 
     Example:
     \verbatim
-        #includeFunc scalarTransport(T, alphaD=1, alphaDt=1)
+        #includeFunc scalarTransport(T, alphal=1, alphat=1)
     \endverbatim
 
     For incompressible flow the passive scalar may optionally be solved with the
