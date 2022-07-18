@@ -178,6 +178,11 @@ Foam::functionObjects::scalarTransport::scalarTransport
             sPhiHeader,
             phi*fvc::interpolate(s_)
         );
+
+        if (controls.lookupOrDefault<Switch>("MULESCorr", false))
+        {
+            mesh_.schemes().setFluxRequired(s_.name());
+        }
     }
 }
 
