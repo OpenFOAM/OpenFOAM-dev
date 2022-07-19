@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -27,11 +27,17 @@
 #
 # Description
 #     Creates symbolic links to all VTK files in a post-processing directory
-#     Links form a sequence like name.0000.vtk, name.0001.vtk, etc.
-#     Paraview recognises link names as a sequence which can be animated.
-#     The sequence of links can be used to create a video from the images.
-#     - Default directory name for VTK files is postProcessing
+#     Links form a sequence like 'patch.0000.vtk', 'patch.0001.vtk', etc.
 #
+#     If files of the same name exist in different sub-directories of the main
+#     directory, e.g. 'inletPatch/0/patch.vtk' and 'outletPatch/0/patch.vtk',
+#     a further index is appended to the name in the links, e.g.
+#     'patch0.0000.vtk' and 'patch1.0000.vtk'
+#
+#     Paraview recognises the link names as a sequence which can be opened and
+#     played. The sequence of links to images can be used to create a video
+#     from the images.
+#     - Default directory name for VTK files is 'postProcessing'
 #------------------------------------------------------------------------------
 error() {
     exec 1>&2
@@ -51,11 +57,37 @@ options:
   -out  | -o <dir>    output links directory <dir> (default = sequencedVTK)
 
 Creates symbolic links to all VTK files in a post-processing directory
-Links form a sequence like name.0000.vtk, name.0001.vtk, etc.
+Links form a sequence like 'patch.0000.vtk', 'patch.0001.vtk', etc.
+
+If files of the same name exist in different sub-directories of the main
+directory, e.g. 'inletPatch/0/patch.vtk' and 'outletPatch/0/patch.vtk', a
+further index is appended to the name in the links, e.g. 'patch0.0000.vtk' and
+'patch1.0000.vtk'
+
 Paraview recognises the link names as a sequence which can be opened and played.
 The sequence of links to images can be used to create a video from the images.
-- Default directory name for VTK files is postProcessing
+- Default directory name for VTK files is 'postProcessing'
 USAGE
+}
+
+# If image files of the same name exist in multiple sub-directories,
+# list the sub-directory names
+multipleSeries () {
+    _file_list="$1"
+    _depth="$(echo "$file_list" | awk -F'/' '{print NF}' | sort -un | head -1)"
+
+    # List no sub-directories if there are insufficient directory levels
+    [ "$_depth" -lt 3 ] && return 1
+
+    # Unique sub-directories
+    _dirs="$(echo "$_file_list" | \
+        awk -F'/' '{for(i=1; i<NF-1; i++) printf "%s/", $i; printf "\n"}' | \
+        sort -u | xargs -n 1)"
+
+    # Only return sub-directories if there is more than one
+    [ "$(echo "$_dirs" | wc -l)" -gt 1 ] || return 1
+
+    echo "$_dirs"
 }
 
 dir=postProcessing
@@ -93,7 +125,7 @@ done
 
 [ ! -d "$dir" ] && error "Cannot find postProcessing directory, exiting."
 
-files=$(find "$dir" -type f -name "*vtk")
+files=$(find "$dir" -type f -name "*vtk" -print0 | xargs -0 -n 1)
 names=$(for f in $files; do basename "$f" .vtk; done | sort -u)
 
 if [ -d "$out" ]; then
@@ -110,17 +142,35 @@ do
 
     # Create list of VTK files, ordered by time step
     file_list=$(echo "$files" | \
-        tr " " "\n" | \
         grep -w "$n\.vtk" | \
         awk -F'/' '{print($(NF-1)" "$0)}' | \
         LC_ALL=C  sort -k 1 -g | \
         cut -d' ' -f2)
 
-    i=0
-    for f in $file_list
+    # sub-dirs of files with same name
+    dirs="$(multipleSeries "$file_list")" || dirs=SINGLE
+
+    # Series index, required if files with same name exist in multiple sub-dirs
+    s=0
+
+    for d in $dirs
     do
-        link=$(printf "${n}.%04d.vtk" $i)
-        ln -s "../$f" "$out/$link"
-        i=$(( i + 1 )) # Relies on ordered list of files
+        # Image index
+        i=0
+
+        for f in $file_list
+        do
+            ! [ "$d" = SINGLE ] && \
+                ! echo "$f" | grep -q "$d" && \
+                continue
+
+            [ "$d" = SINGLE ] && unset s
+
+            link=$(printf "${n}${s}.%04d.vtk" $i)
+            ln -s "../$f" "$out/$link"
+            i=$(( i + 1 )) # Relies on ordered list of files
+        done
+
+        s=$(( s + 1 ))
     done
 done
