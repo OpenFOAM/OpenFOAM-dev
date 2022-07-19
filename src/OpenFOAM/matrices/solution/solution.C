@@ -326,6 +326,12 @@ const Foam::dictionary& Foam::solution::dict() const
 }
 
 
+const Foam::dictionary& Foam::solution::solversDict() const
+{
+    return solvers_;
+}
+
+
 const Foam::dictionary& Foam::solution::solverDict(const word& name) const
 {
     if (debug)

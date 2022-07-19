@@ -87,7 +87,7 @@ const Foam::NamedEnum
 Foam::tmp<Foam::volScalarField>
 Foam::functionObjects::scalarTransport::D() const
 {
-    const word Dname("D" + s_.name());
+    const word Dname("D" + fieldName_);
 
     if (diffusion_ == diffusionType::constant)
     {
@@ -147,41 +147,44 @@ Foam::functionObjects::scalarTransport::scalarTransport
 {
     read(dict);
 
-    const dictionary& controls = mesh_.solution().solverDict(s_.name());
-
-    if (controls.found("nSubCycles"))
+    if (mesh_.solution().solversDict().found(fieldName_))
     {
-        MULES_ = true;
+        const dictionary& controls = mesh_.solution().solverDict(fieldName_);
 
-        typeIOobject<surfaceScalarField> sPhiHeader
-        (
-            IOobject::groupName("sPhi", s_.group()),
-            runTime.timeName(),
-            mesh_,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        );
-
-        sRestart_ = sPhiHeader.headerOk();
-
-        if (sRestart_)
+        if (controls.found("nSubCycles"))
         {
-            Info << "Restarting s" << endl;
-        }
+            MULES_ = true;
 
-        const surfaceScalarField& phi =
+            typeIOobject<surfaceScalarField> sPhiHeader
+            (
+                IOobject::groupName("sPhi", s_.group()),
+                runTime.timeName(),
+                mesh_,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            );
+
+            sRestart_ = sPhiHeader.headerOk();
+
+            if (sRestart_)
+            {
+                Info << "Restarting s" << endl;
+            }
+
+            const surfaceScalarField& phi =
             mesh_.lookupObject<surfaceScalarField>(phiName_);
 
-        // Scalar volumetric flux
-        tsPhi_ = new surfaceScalarField
-        (
-            sPhiHeader,
-            phi*fvc::interpolate(s_)
-        );
+            // Scalar volumetric flux
+            tsPhi_ = new surfaceScalarField
+            (
+                sPhiHeader,
+                phi*fvc::interpolate(s_)
+            );
 
-        if (controls.lookupOrDefault<Switch>("MULESCorr", false))
-        {
-            mesh_.schemes().setFluxRequired(s_.name());
+            if (controls.lookupOrDefault<Switch>("MULESCorr", false))
+            {
+                mesh_.schemes().setFluxRequired(fieldName_);
+            }
         }
     }
 }
@@ -334,7 +337,7 @@ bool Foam::functionObjects::scalarTransport::execute()
 
 void Foam::functionObjects::scalarTransport::subCycleMULES()
 {
-    const dictionary& controls = mesh_.solution().solverDict(s_.name());
+    const dictionary& controls = mesh_.solution().solverDict(fieldName_);
     const label nSubCycles(controls.lookup<label>("nSubCycles"));
     const bool LTS = fv::localEulerDdt::enabled(mesh_);
 
@@ -375,10 +378,10 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
 
         sEqn.solve(controls.subDict("diffusion"));
 
-        Info<< s_.name() << " volume fraction = "
+        Info<< fieldName_ << " volume fraction = "
             << s_.weightedAverage(mesh_.V()).value()
-            << "  Min(" << s_.name() << ") = " << min(s_).value()
-            << "  Max(" << s_.name() << ") = " << max(s_).value()
+            << "  Min(" << fieldName_ << ") = " << min(s_).value()
+            << "  Max(" << fieldName_ << ") = " << max(s_).value()
             << endl;
     }
 }
@@ -386,7 +389,7 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
 
 void Foam::functionObjects::scalarTransport::solveMULES()
 {
-    const dictionary& controls = mesh_.solution().solverDict(s_.name());
+    const dictionary& controls = mesh_.solution().solverDict(fieldName_);
     const label nCorr(controls.lookup<label>("nCorr"));
     const label nSubCycles(controls.lookup<label>("nSubCycles"));
     const bool MULESCorr(controls.lookupOrDefault<Switch>("MULESCorr", false));
@@ -514,10 +517,10 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
         sEqn.solve();
 
-        Info<< s_.name() << " volume fraction = "
+        Info<< fieldName_ << " volume fraction = "
             << s_.weightedAverage(mesh_.Vsc()).value()
-            << "  Min(" << s_.name() << ") = " << min(s_).value()
-            << "  Max(" << s_.name() << ") = " << max(s_).value()
+            << "  Min(" << fieldName_ << ") = " << min(s_).value()
+            << "  Max(" << fieldName_ << ") = " << max(s_).value()
             << endl;
 
         tmp<surfaceScalarField> tsPhiUD(sEqn.flux());
@@ -621,10 +624,10 @@ void Foam::functionObjects::scalarTransport::solveMULES()
         }
     }
 
-    Info<< s_.name() << "volume fraction = "
+    Info<< fieldName_ << "volume fraction = "
         << s_.weightedAverage(mesh_.Vsc()).value()
-        << "  Min(" << s_.name() << ") = " << min(s_).value()
-        << "  Max(" << s_.name() << ") = " << max(s_).value()
+        << "  Min(" << fieldName_ << ") = " << min(s_).value()
+        << "  Max(" << fieldName_ << ") = " << max(s_).value()
         << endl;
 }
 

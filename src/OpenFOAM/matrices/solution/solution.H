@@ -136,6 +136,9 @@ public:
             //  keyword is given, otherwise return the complete dictionary
             const dictionary& dict() const;
 
+            //- Return the solver controls dictionary
+            const dictionary& solversDict() const;
+
             //- Return the solver controls dictionary for the given field
             const dictionary& solverDict(const word& name) const;
 
