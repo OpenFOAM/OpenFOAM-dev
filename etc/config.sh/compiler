@@ -57,6 +57,9 @@ OpenFOAM | ThirdParty)
     Gcc82)
         gcc_version=gcc-8.2.0
         ;;
+    Gcc95)
+        gcc_version=gcc-9.5.0
+        ;;
     Gcc111)
         gcc_version=gcc-11.1.0
         ;;
