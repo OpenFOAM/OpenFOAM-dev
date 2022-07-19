@@ -13,6 +13,7 @@ runApplication $(getApplication)
 ## Parallel
 #runApplication decomposePar -fileHandler collated
 #runParallel snappyHexMesh -overwrite -fileHandler collated
+#
 ## Remove any include files from the field dictionaries
 #(   mkdir -p processors/0 && \
 #    cd 0 && \
@@ -21,7 +22,6 @@ runApplication $(getApplication)
 #)
 #
 #runParallel $(getApplication) -fileHandler collated
-#runApplication reconstructParMesh -constant
 #runApplication reconstructPar
 
 #------------------------------------------------------------------------------

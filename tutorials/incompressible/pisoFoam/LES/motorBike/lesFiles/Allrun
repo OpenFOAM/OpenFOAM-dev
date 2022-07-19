@@ -13,6 +13,4 @@ ls -d processor* | xargs -I {} rm -rf ./{}/0/uniform
 
 runParallel pisoFoam
 
-runApplication reconstructParMesh -constant
-
 runApplication reconstructPar

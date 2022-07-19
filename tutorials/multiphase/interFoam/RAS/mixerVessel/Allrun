@@ -16,7 +16,6 @@ runParallel setFields
 runParallel $(getApplication)
 
 # Reconstruct
-runApplication reconstructParMesh -constant
 runApplication reconstructPar
 
 #------------------------------------------------------------------------------

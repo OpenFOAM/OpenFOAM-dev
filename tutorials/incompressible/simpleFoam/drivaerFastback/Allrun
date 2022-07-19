@@ -114,7 +114,6 @@ runParallel checkMesh
 
 runParallel "$(getApplication)"
 
-# runApplication reconstructParMesh -constant
 # runApplication reconstructPar -latestTime
 
 #------------------------------------------------------------------------------

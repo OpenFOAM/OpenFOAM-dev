@@ -17,7 +17,6 @@ runParallel patchSummary
 runParallel potentialFoam
 runParallel $(getApplication)
 
-runApplication reconstructParMesh -constant
 runApplication reconstructPar -latestTime
 
 #------------------------------------------------------------------------------

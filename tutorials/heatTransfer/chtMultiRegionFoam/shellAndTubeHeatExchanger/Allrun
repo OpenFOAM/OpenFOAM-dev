@@ -8,7 +8,6 @@ cd ${0%/*} || exit 1
 
 runParallel $(getApplication)
 
-runApplication reconstructParMesh -allRegions -constant
 runApplication reconstructPar -allRegions
 
 paraFoam -touchAll

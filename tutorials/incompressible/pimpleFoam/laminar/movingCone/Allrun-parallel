@@ -38,7 +38,6 @@ for mapTime in $mapTimes; do
 done
 
 runParallel $(getApplication)
-runApplication reconstructParMesh
 runApplication reconstructPar
 
 #------------------------------------------------------------------------------

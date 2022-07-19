@@ -17,7 +17,7 @@ runParallel -s collapseFaceSet \
 
 runParallel checkMesh -latestTime -allTopology -allGeometry
 
-runApplication reconstructParMesh -latestTime
+runApplication reconstructPar -latestTime
 
 
 #------------------------------------------------------------------------------

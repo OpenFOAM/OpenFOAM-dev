@@ -19,7 +19,6 @@ runApplication -a decomposePar -fields -copyZero
 runParallel $(getApplication)
 
 # Reconstruct
-runApplication reconstructParMesh -constant
 runApplication reconstructPar
 
 #------------------------------------------------------------------------------

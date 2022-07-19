@@ -11,7 +11,6 @@ runApplication setFields
 
 runApplication decomposePar -cellDist
 runParallel $(getApplication)
-runApplication reconstructParMesh -cellDist
-runApplication reconstructPar
+runApplication reconstructPar -cellDist
 
 #------------------------------------------------------------------------------
