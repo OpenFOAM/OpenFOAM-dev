@@ -54,7 +54,7 @@ namespace Foam
                                                                                \
     bool add##thisType##argNames##To##baseType##ToC_ =                         \
         addToRunTimeSelectionTableToC                                          \
-        (#baseType, baseType::typeName, thisType::typeName)
+        (#baseType, baseType::typeName_(), thisType::typeName)
 
 
 //- Add to hash-table of functions with 'lookup' as the key
@@ -67,7 +67,7 @@ namespace Foam
         (#lookup);                                                             \
                                                                                \
     bool add_##lookup##_##thisType##argNames##To##baseType##ToC_ =             \
-        addToRunTimeSelectionTableToC(#baseType, baseType::typeName, #lookup)
+        addToRunTimeSelectionTableToC(#baseType, baseType::typeName_(), #lookup)
 
 
 //- Add to hash-table of functions with typename as the key
@@ -80,7 +80,7 @@ namespace Foam
                                                                                \
     bool addRemovable##thisType##argNames##To##baseType##ToC_ =                \
         addToRunTimeSelectionTableToC                                          \
-        (#baseType, baseType::typeName, thisType::typeName)
+        (#baseType, baseType::typeName_(), thisType::typeName)
 
 
 //- Add to hash-table of functions with 'lookup' as the key
@@ -93,7 +93,7 @@ namespace Foam
         ##baseType##Table_(#lookup);                                           \
                                                                                \
     bool addRemovable_##lookup##_##thisType##argNames##To##baseType##ToC_ =    \
-        addToRunTimeSelectionTableToC(#baseType, baseType::typeName, #lookup)
+        addToRunTimeSelectionTableToC(#baseType, baseType::typeName_(), #lookup)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
