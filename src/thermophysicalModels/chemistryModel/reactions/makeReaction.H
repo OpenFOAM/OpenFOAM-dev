@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,10 +58,9 @@ Description
 
 #define makeReaction(ReactionType, ReactionRate, ThermoPhysics)                \
                                                                                \
+    typedef Reaction<ThermoPhysics> Reaction##ThermoPhysics;                   \
     typedef ReactionType<ThermoPhysics, ReactionRate>                          \
         ReactionType##ThermoPhysics##ReactionRate;                             \
-    typedef Reaction<ThermoPhysics>                                            \
-        ReactionType##ThermoPhysics##ReactionRate##Base;                       \
                                                                                \
     template<>                                                                 \
     const word ReactionType##ThermoPhysics##ReactionRate::typeName             \
@@ -72,7 +71,7 @@ Description
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        ReactionType##ThermoPhysics##ReactionRate##Base,                       \
+        Reaction##ThermoPhysics,                                               \
         ReactionType##ThermoPhysics##ReactionRate,                             \
         dictionary                                                             \
     )
@@ -80,10 +79,9 @@ Description
 
 #define makeGeneralReaction(ReactionType, ReactionRate, ThermoPhysics)         \
                                                                                \
+    typedef Reaction<ThermoPhysics> Reaction##ThermoPhysics;                   \
     typedef ReactionType<ThermoPhysics, ReactionRate>                          \
         ReactionType##ThermoPhysics##ReactionRate;                             \
-    typedef Reaction<ThermoPhysics>                                            \
-        ReactionType##ThermoPhysics##ReactionRate##Base;                       \
                                                                                \
     template<>                                                                 \
     const word ReactionType##ThermoPhysics##ReactionRate::typeName             \
@@ -94,7 +92,7 @@ Description
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        ReactionType##ThermoPhysics##ReactionRate##Base,                       \
+        Reaction##ThermoPhysics,                                               \
         ReactionType##ThermoPhysics##ReactionRate,                             \
         objectRegistry                                                         \
     );
