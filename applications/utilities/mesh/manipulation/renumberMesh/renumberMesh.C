@@ -59,32 +59,29 @@ Description
 using namespace Foam;
 
 
-// Create named field from labelList for postprocessing
-tmp<volScalarField> createScalarField
+void writeCellLabels
 (
     const fvMesh& mesh,
     const word& name,
     const labelList& elems
 )
 {
-    tmp<volScalarField> tfld
+    volScalarField::Internal fld
     (
-        volScalarField::New
+        IOobject
         (
             name,
+            mesh.time().timeName(),
             mesh,
-            dimensionedScalar(dimless, 0),
-            zeroGradientFvPatchScalarField::typeName
-        )
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        dimless,
+        scalarField(scalarList(elems))
     );
-    volScalarField& fld = tfld.ref();
 
-    forAll(fld, celli)
-    {
-       fld[celli] = elems[celli];
-    }
-
-    return tfld;
+    fld.write();
 }
 
 
@@ -850,17 +847,15 @@ int main(int argc, char *argv[])
         UPstream::parRun() = oldParRun;
 
         // For debugging: write out region
-        createScalarField
+        writeCellLabels
         (
             mesh,
-            "cellDist",
+            "cellProc",
             cellToRegion
-        )().write();
-
-        Info<< nl << "Written decomposition as volScalarField to "
-            << "cellDist for use in postprocessing."
+        );
+        Info<< nl << "Written decomposition as volScalarField::Internal to "
+            << "cellProc for use in postprocessing."
             << nl << endl;
-
 
         cellOrder = regionRenumber(renumberPtr(), mesh, cellToRegion);
 
@@ -1237,19 +1232,19 @@ int main(int argc, char *argv[])
     if (writeMaps)
     {
         // For debugging: write out region
-        createScalarField
+        writeCellLabels
         (
             mesh,
             "origCellID",
             map().cellMap()
-        )().write();
+        );
 
-        createScalarField
+        writeCellLabels
         (
             mesh,
             "cellID",
             identity(mesh.nCells())
-        )().write();
+        );
 
         Info<< nl << "Written current cellID and origCellID as volScalarField"
             << " for use in postprocessing."

@@ -66,7 +66,7 @@ bool haveAllTimes
 
 void writeDecomposition(const domainDecomposition& meshes)
 {
-    // Write as volScalarField for postprocessing.
+    // Write as volScalarField::Internal for postprocessing.
     volScalarField::Internal cellProc
     (
         IOobject
@@ -84,7 +84,7 @@ void writeDecomposition(const domainDecomposition& meshes)
 
     cellProc.write();
 
-    Info<< "Wrote decomposition as volScalarField to "
+    Info<< "Wrote decomposition as volScalarField::Internal to "
         << cellProc.name() << " for use in postprocessing."
         << nl << endl;
 }
@@ -110,9 +110,9 @@ int main(int argc, char *argv[])
     #include "addAllRegionsOption.H"
     argList::addBoolOption
     (
-        "cellDist",
-        "write cell distribution as a labelList - for use with 'manual' "
-        "decomposition method or as a volScalarField for post-processing."
+        "cellProc",
+        "write cell processor indices as a volScalarField::Internal for "
+        "post-processing."
     );
     argList::addOption
     (
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
 
-    const bool writeCellDist = args.optionFound("cellDist");
+    const bool writeCellProc = args.optionFound("cellProc");
 
     HashSet<word> selectedFields;
     if (args.optionFound("fields"))
@@ -266,7 +266,7 @@ int main(int argc, char *argv[])
         // Create meshes
         Info<< "\n\nReconstructing mesh " << regionName << nl << endl;
         domainDecomposition meshes(runTimes, regionName);
-        if (meshes.readReconstruct(!noReconstructSets) && writeCellDist)
+        if (meshes.readReconstruct(!noReconstructSets) && writeCellProc)
         {
             writeDecomposition(meshes);
             fileHandler().flush();
@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
             // Write the decomposition, if necessary
             if
             (
-                writeCellDist
+                writeCellProc
              && meshes.completeMesh().facesInstance()
              == runTimes.completeTime().timeName()
             )

@@ -16,7 +16,7 @@ runApplication transformPoints -pointSet ball "Rz=-45"
 runApplication createNonConformalCouples -overwrite pipeNonCouple ballNonCouple
 
 # Decompose
-runApplication decomposePar -cellDist
+runApplication decomposePar -cellProc
 
 # Set the value of the scalar transport field
 runParallel setFields

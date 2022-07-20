@@ -11,7 +11,7 @@ runApplication blockMesh
 runApplication topoSet
 runApplication refineHexMesh c0 -noFields -overwrite
 
-runApplication decomposePar -cellDist
+runApplication decomposePar -cellProc
 runParallel $application
 
 runApplication reconstructPar

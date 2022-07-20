@@ -32,9 +32,9 @@ Usage
     \b decomposePar [OPTION]
 
     Options:
-      - \par -cellDist
-        Write the cell distribution as a labelList, for use with 'manual'
-        decomposition method or as a volScalarField for post-processing.
+      - \par -cellProc
+        Write cell processor indices as a volScalarField::Internal for
+        post-processing.
 
       - \par -region \<regionName\> \n
         Decompose named region. Does not check for existence of processor*.
@@ -164,7 +164,7 @@ void decomposeUniform
 
 void writeDecomposition(const domainDecomposition& meshes)
 {
-    // Write as volScalarField for postprocessing.
+    // Write as volScalarField::Internal for postprocessing.
     volScalarField::Internal cellProc
     (
         IOobject
@@ -182,7 +182,7 @@ void writeDecomposition(const domainDecomposition& meshes)
 
     cellProc.write();
 
-    Info<< "Wrote decomposition as volScalarField to "
+    Info<< "Wrote decomposition as volScalarField::Internal to "
         << cellProc.name() << " for use in postprocessing."
         << nl << endl;
 }
@@ -206,9 +206,9 @@ int main(int argc, char *argv[])
     #include "addAllRegionsOption.H"
     argList::addBoolOption
     (
-        "cellDist",
-        "write cell distribution as a labelList - for use with 'manual' "
-        "decomposition method or as a volScalarField for post-processing."
+        "cellProc",
+        "write cell processor indices as a volScalarField::Internal for "
+        "post-processing."
     );
     argList::addBoolOption
     (
@@ -247,7 +247,7 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
 
     bool region                  = args.optionFound("region");
-    bool writeCellDist           = args.optionFound("cellDist");
+    bool writeCellProc           = args.optionFound("cellProc");
     bool copyZero                = args.optionFound("copyZero");
     bool copyUniform             = args.optionFound("copyUniform");
     bool decomposeFieldsOnly     = args.optionFound("fields");
@@ -396,7 +396,7 @@ int main(int argc, char *argv[])
         domainDecomposition meshes(runTimes, regionName);
         if (!decomposeFieldsOnly || !copyZero)
         {
-            if (meshes.readDecompose(decomposeSets) && writeCellDist)
+            if (meshes.readDecompose(decomposeSets) && writeCellProc)
             {
                 writeDecomposition(meshes);
                 fileHandler().flush();
@@ -445,7 +445,7 @@ int main(int argc, char *argv[])
             // Write the decomposition, if necessary
             if
             (
-                writeCellDist
+                writeCellProc
              && meshes.completeMesh().facesInstance()
              == runTimes.completeTime().timeName()
             )

@@ -14,7 +14,7 @@ runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/ballValve
 runApplication createNonConformalCouples -overwrite pipeNonCouple ballNonCouple
 
 # Decompose
-runApplication decomposePar -cellDist
+runApplication decomposePar -cellProc
 
 # Initialise the velocity field
 runParallel potentialFoam -pName p_rgh

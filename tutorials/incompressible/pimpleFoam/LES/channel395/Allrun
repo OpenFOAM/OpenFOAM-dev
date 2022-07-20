@@ -13,7 +13,7 @@ runApplication blockMesh
 #runApplication $application
 
 #- Run parallel
-runApplication decomposePar -cellDist
+runApplication decomposePar -cellProc
 runParallel $application
 runApplication reconstructPar
 
