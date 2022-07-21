@@ -862,7 +862,14 @@ Foam::scalar Foam::Time::timeToUserTime(const scalar t) const
 
 Foam::word Foam::Time::userTimeName() const
 {
-    return timeName(userTimeValue()) + userTime_->unit();
+    if (timeName() == constant())
+    {
+        return constant();
+    }
+    else
+    {
+        return timeName(userTimeValue()) + userTime_->unit();
+    }
 }
 
 
