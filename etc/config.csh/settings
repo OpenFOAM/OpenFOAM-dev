@@ -186,8 +186,12 @@ setenv FOAM_UTILITIES $FOAM_APP/utilities
 setenv FOAM_SOLVERS $FOAM_APP/solvers
 setenv FOAM_RUN $WM_PROJECT_USER_DIR/run
 
-# Add wmake to the path - not required for runtime-only environment
+# Add application bins to the path
+_foamAddPath ${FOAM_USER_APPBIN}:${FOAM_SITE_APPBIN}:${FOAM_APPBIN}
+
+# Add wmake scripts to the path - not required for runtime-only environment
 if ( -d "${WM_DIR}" ) setenv PATH ${WM_DIR}:${PATH}
+
 # Add OpenFOAM scripts to the path
 setenv PATH ${WM_PROJECT_DIR}/bin:${PATH}
 
@@ -200,7 +204,6 @@ if ( -d "$siteDir/$WM_PROJECT_VERSION/bin" ) then   # Version-specific
 endif
 unset siteDir
 
-_foamAddPath ${FOAM_USER_APPBIN}:${FOAM_SITE_APPBIN}:${FOAM_APPBIN}
 # Make sure to pick up dummy versions of external libraries last
 _foamAddLib  ${FOAM_USER_LIBBIN}:${FOAM_SITE_LIBBIN}:${FOAM_LIBBIN}:${FOAM_EXT_LIBBIN}:${FOAM_LIBBIN}/dummy
 
