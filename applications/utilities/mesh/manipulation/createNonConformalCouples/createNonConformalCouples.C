@@ -30,6 +30,14 @@ Description
 Usage
     \b createNonConformalCouples <patch1> <patch2>
 
+    Options:
+      - \par -overwrite \n
+        Replace the old mesh with the new one, rather than writing the new one
+        into a separate time directory
+
+      - \par -fields \n
+        Add non-conformal boundary conditions to the fields.
+
 Note
     If run with two arguments, these arguments specify the patches between
     which a single couple is to be created. The resulting couple will not have
@@ -309,6 +317,11 @@ int main(int argc, char *argv[])
     {
         argList::validArgs.append("patch1");
         argList::validArgs.append("patch2");
+        argList::addBoolOption
+        (
+            "fields",
+            "add non-conformal boundary conditions to the fields"
+        );
     }
 
     #include "setRootCase.H"
@@ -330,7 +343,7 @@ int main(int argc, char *argv[])
     // information from the system dictionary.
     if (haveArgs)
     {
-        fields = false;
+        fields = args.optionFound("fields");
 
         patchNames.append(Pair<word>(args[1], args[2]));
         cyclicNames.append(nonConformalCyclicPolyPatch::typeName);
