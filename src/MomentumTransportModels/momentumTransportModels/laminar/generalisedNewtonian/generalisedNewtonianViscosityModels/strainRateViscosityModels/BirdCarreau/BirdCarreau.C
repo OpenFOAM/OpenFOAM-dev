@@ -93,7 +93,7 @@ read
     }
 
     n_.read(coeffs);
-    a_.read(coeffs);
+    a_.readIfPresent(coeffs);
 
     return true;
 }
