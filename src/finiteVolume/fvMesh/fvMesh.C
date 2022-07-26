@@ -766,6 +766,18 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
         stitcher_->connect(false, false, true);
     }
 
+    // If the mesh has been re-stitched with different geometry, then the
+    // finite-volume topology has changed
+    if
+    (
+        stitcher_.valid()
+     && stitcher_->stitches()
+     && state == polyMesh::POINTS_MOVED
+    )
+    {
+        state = polyMesh::TOPO_CHANGE;
+    }
+
     return state;
 }
 
