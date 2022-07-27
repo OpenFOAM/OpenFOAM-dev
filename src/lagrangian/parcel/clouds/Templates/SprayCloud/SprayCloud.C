@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,21 +81,16 @@ Foam::SprayCloud<CloudType>::SprayCloud
 :
     CloudType(cloudName, rho, U, g, carrierThermo, false),
     cloudCopyPtr_(nullptr),
-    averageParcelMass_(0.0),
     atomisationModel_(nullptr),
     breakupModel_(nullptr)
 {
     setModels();
-
-    averageParcelMass_ = this->injectors().averageParcelMass();
 
     if (readFields)
     {
         parcelType::readFields(*this, this->composition());
         this->deleteLostParticles();
     }
-
-    Info << "Average parcel mass: " << averageParcelMass_ << endl;
 
     if (this->solution().resetSourcesOnStartup())
     {
@@ -113,7 +108,6 @@ Foam::SprayCloud<CloudType>::SprayCloud
 :
     CloudType(c, name),
     cloudCopyPtr_(nullptr),
-    averageParcelMass_(c.averageParcelMass_),
     atomisationModel_(c.atomisationModel_->clone()),
     breakupModel_(c.breakupModel_->clone())
 {}
@@ -129,7 +123,6 @@ Foam::SprayCloud<CloudType>::SprayCloud
 :
     CloudType(mesh, name, c),
     cloudCopyPtr_(nullptr),
-    averageParcelMass_(0.0),
     atomisationModel_(nullptr),
     breakupModel_(nullptr)
 {}

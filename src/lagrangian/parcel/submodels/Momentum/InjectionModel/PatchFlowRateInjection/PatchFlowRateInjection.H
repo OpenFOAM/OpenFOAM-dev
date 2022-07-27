@@ -142,6 +142,9 @@ public:
         //- Volume of parcels to introduce relative to SOI
         virtual scalar volumeToInject(const scalar time0, const scalar time1);
 
+        //- Return the average parcel mass over the injection period
+        virtual scalar averageParcelMass();
+
 
         // Injection geometry
 

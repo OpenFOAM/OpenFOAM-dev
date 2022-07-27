@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,8 @@ bool Foam::ReitzKHRT<CloudType>::update
 {
     bool addParcel = false;
 
-    const scalar averageParcelMass = this->owner().averageParcelMass();
+    const scalar averageParcelMass =
+        this->owner().injectors().averageParcelMass();
 
     scalar r = 0.5*d;
     scalar d3 = pow3(d);

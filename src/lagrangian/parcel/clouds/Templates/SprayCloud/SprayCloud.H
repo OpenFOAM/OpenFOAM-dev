@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,9 +93,6 @@ private:
         //- Cloud copy pointer
         autoPtr<SprayCloud<CloudType>> cloudCopyPtr_;
 
-        //- Average parcel mass
-        scalar averageParcelMass_;
-
 
 protected:
 
@@ -183,9 +180,6 @@ public:
 
             //- Return a reference to the cloud copy
             inline const SprayCloud& cloudCopy() const;
-
-            //- Return const-access to the average parcel mass
-            inline scalar averageParcelMass() const;
 
 
         // Check

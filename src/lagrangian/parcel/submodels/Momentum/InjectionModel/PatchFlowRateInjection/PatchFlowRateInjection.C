@@ -210,6 +210,14 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::volumeToInject
 
 
 template<class CloudType>
+Foam::scalar Foam::PatchFlowRateInjection<CloudType>::averageParcelMass()
+{
+    NotImplemented;
+    return NaN;
+}
+
+
+template<class CloudType>
 void Foam::PatchFlowRateInjection<CloudType>::setPositionAndCell
 (
     const label,
