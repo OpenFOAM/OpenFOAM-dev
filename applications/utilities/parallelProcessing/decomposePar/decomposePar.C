@@ -455,11 +455,7 @@ int main(int argc, char *argv[])
             }
 
             // Clear the field maps if there has been topology change
-            if
-            (
-                state == fvMesh::TOPO_CHANGE
-             || state == fvMesh::TOPO_PATCH_CHANGE
-            )
+            if (state >= fvMesh::TOPO_CHANGE)
             {
                 for (label proci = 0; proci < meshes.nProcs(); proci++)
                 {
