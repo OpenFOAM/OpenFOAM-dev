@@ -146,16 +146,18 @@ class domainDecomposition
             ) const;
 
 
-        //- ...
+        //- Decompose the complete mesh's points and apply the result to the
+        //  processor meshes
         void decomposePoints();
 
-        //- ...
+        //- Reconstruct the processor meshes' points and apply the result to
+        //  the complete mesh
         void reconstructPoints();
 
-        //- ...
+        //- Is the complete mesh conformal?
         bool completeConformal() const;
 
-        //- ...
+        //- Are the processor meshes conformal?
         bool procsConformal() const;
 
         //- If the complete mesh is non-conformal and the processor meshes are
@@ -163,7 +165,9 @@ class domainDecomposition
         //  processor meshes. And vice versa.
         void unconform();
 
-        //- ...
+        //- Compare two instances. A return value of -1 means a is newer than b
+        //  (i.e., the arguments are in reverse order), 0 means a is equal to
+        //  b, and +1 means a is older than b (in order).
         label compareInstances(const fileName& a, const fileName& b) const;
 
         //- Validate that the complete mesh has been generated or read
@@ -172,23 +176,17 @@ class domainDecomposition
         //- Validate that the processor meshes have been generated or read
         void validateProcs() const;
 
-        //- ...
+        //- Read the complete mesh
         void readComplete();
 
-        //- ...
+        //- Read the processor meshes
         void readProcs();
 
-        //- ...
+        //- Read the addressing
         void readAddressing();
 
-        //- ...
+        //- Read-update the complete and processor meshes for a change in time
         fvMesh::readUpdateState readUpdate();
-
-        //- ...
-        void readUpdateDecompose(const fvMesh::readUpdateState& stat);
-
-        //- ...
-        void readUpdateReconstruct(const fvMesh::readUpdateState& stat);
 
         //- Decompose the complete mesh to create the processor meshes and
         //  populate the addressing
@@ -200,6 +198,16 @@ class domainDecomposition
 
         //- Write the decomposition addressing
         void writeAddressing() const;
+
+        //- Write the processor meshes' points for an instance different from
+        //  the current. Used to additionally write out points associated with
+        //  the face instance.
+        void writeProcPoints(const fileName& inst);
+
+        //- Write the complete mesh's points for an instance different from
+        //  the current. Used to additionally write out points associated with
+        //  the face instance.
+        void writeCompletePoints(const fileName& inst);
 
 
 public:
@@ -254,10 +262,10 @@ public:
         //  reconstruct if not. Return whether or not reconstruction happened.
         bool readReconstruct(const bool doSets);
 
-        //- ...
+        //- Read-update for decomposition
         fvMesh::readUpdateState readUpdateDecompose();
 
-        //- ...
+        //- Read-update for reconstruction
         fvMesh::readUpdateState readUpdateReconstruct();
 
         //- Return the distribution as an FV field for writing

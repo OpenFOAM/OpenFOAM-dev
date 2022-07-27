@@ -693,11 +693,330 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdate()
 }
 
 
-void Foam::domainDecomposition::readUpdateDecompose
-(
-    const Foam::fvMesh::readUpdateState& stat
-)
+void Foam::domainDecomposition::writeAddressing() const
 {
+    labelIOList cellProc
+    (
+        IOobject
+        (
+            "cellProc",
+            completeMesh().facesInstance(),
+            completeMesh().meshSubDir,
+            completeMesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        cellProc_
+    );
+    cellProc.write();
+
+    for (label proci = 0; proci < nProcs(); proci++)
+    {
+        const fvMesh& procMesh = procMeshes_[proci];
+
+        labelIOList pointProcAddressing
+        (
+            IOobject
+            (
+                "pointProcAddressing",
+                procMesh.facesInstance(),
+                procMesh.meshSubDir,
+                procMesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            procPointAddressing_[proci]
+        );
+        pointProcAddressing.write();
+
+        labelIOList faceProcAddressing
+        (
+            IOobject
+            (
+                "faceProcAddressing",
+                procMesh.facesInstance(),
+                procMesh.meshSubDir,
+                procMesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            procFaceAddressing_[proci]
+        );
+        faceProcAddressing.write();
+
+        labelIOList cellProcAddressing
+        (
+            IOobject
+            (
+                "cellProcAddressing",
+                procMesh.facesInstance(),
+                procMesh.meshSubDir,
+                procMesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            procCellAddressing_[proci]
+        );
+        cellProcAddressing.write();
+    }
+}
+
+
+void Foam::domainDecomposition::writeProcPoints(const fileName& inst)
+{
+    IOobject completePointsIo
+    (
+        "points",
+        inst,
+        polyMesh::meshSubDir,
+        completeMesh(),
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE,
+        false
+    );
+
+    if (!completePointsIo.headerOk()) return;
+
+    const pointIOField completePoints(completePointsIo);
+
+    for (label proci = 0; proci < nProcs(); proci++)
+    {
+        pointIOField procPoints
+        (
+            IOobject
+            (
+                "points",
+                inst,
+                polyMesh::meshSubDir,
+                procMeshes()[proci],
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            pointField
+            (
+                completePoints,
+                procPointAddressing_[proci]
+            )
+        );
+
+        procPoints.write();
+    }
+}
+
+
+void Foam::domainDecomposition::writeCompletePoints(const fileName& inst)
+{
+    pointIOField completePoints
+    (
+        IOobject
+        (
+            "points",
+            inst,
+            polyMesh::meshSubDir,
+            completeMesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+        pointField(completeMesh().nPoints())
+    );
+
+    for (label proci = 0; proci < nProcs(); proci++)
+    {
+        IOobject procPointsIo
+        (
+            "points",
+            inst,
+            polyMesh::meshSubDir,
+            procMeshes()[proci],
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        );
+
+        if (!procPointsIo.headerOk()) return;
+
+        completePoints.rmap
+        (
+            pointIOField(procPointsIo),
+            procPointAddressing_[proci]
+        );
+    }
+
+    completePoints.write();
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::domainDecomposition::domainDecomposition
+(
+    const processorRunTimes& runTimes,
+    const word& regionName
+)
+:
+    runTimes_(runTimes),
+    regionName_(regionName),
+    completeMesh_(nullptr),
+    procMeshes_(nProcs()),
+    procPointAddressing_(nProcs()),
+    procFaceAddressing_(nProcs()),
+    procCellAddressing_(nProcs()),
+    procFaceAddressingBf_()
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::domainDecomposition::~domainDecomposition()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::domainDecomposition::readDecompose(const bool doSets)
+{
+    readComplete();
+
+    typeIOobject<labelIOList> addrIo
+    (
+        "cellProc",
+        completeMesh().facesInstance(),
+        completeMesh().meshDir(),
+        completeMesh()
+    );
+    typeIOobject<labelIOList> procAddrIo
+    (
+        "cellProcAddressing",
+        completeMesh().facesInstance(),
+        completeMesh().meshDir(),
+        runTimes_.procTimes()[0]
+    );
+
+    const bool addrOk = addrIo.headerOk() && procAddrIo.headerOk();
+
+    if (addrOk)
+    {
+        readProcs();
+
+        readAddressing();
+
+        decomposePoints();
+    }
+    else
+    {
+        if
+        (
+            completeMesh().facesInstance()
+         != runTimes_.completeTime().timeName()
+         && completeMesh().facesInstance()
+         != runTimes_.completeTime().constant()
+        )
+        {
+            FatalErrorInFunction
+                << "Cannot begin mesh decomposition at time "
+                << fileName(runTimes_.completeTime().timeName()) << nl
+                << "The mesh at this instant is that of an earlier"
+                << " time " << completeMesh().facesInstance() << nl
+                << "Decomposition must start from this earlier time"
+                << exit(FatalError);
+        }
+
+        decompose();
+    }
+
+    if (!completeConformal())
+    {
+        procFaceAddressingBf_.clear();
+        forAll(procMeshes_, proci) procMeshes_[proci].conform();
+        unconform();
+    }
+
+    writeProcs(doSets);
+
+    if (!addrOk)
+    {
+        writeProcPoints(completeMesh().facesInstance());
+    }
+
+    return !addrOk;
+}
+
+
+bool Foam::domainDecomposition::readReconstruct(const bool doSets)
+{
+    readProcs();
+
+    typeIOobject<labelIOList> addrIo
+    (
+        "cellProc",
+        procMeshes()[0].facesInstance(),
+        procMeshes()[0].meshDir(),
+        runTimes_.completeTime()
+    );
+    typeIOobject<labelIOList> procAddrIo
+    (
+        "cellProcAddressing",
+        procMeshes()[0].facesInstance(),
+        procMeshes()[0].meshDir(),
+        procMeshes()[0]
+    );
+
+    const bool addrOk = addrIo.headerOk() && procAddrIo.headerOk();
+
+    if (addrOk)
+    {
+        readComplete();
+
+        readAddressing();
+
+        reconstructPoints();
+    }
+    else
+    {
+        if
+        (
+            procMeshes()[0].facesInstance()
+         != runTimes_.procTimes()[0].timeName()
+         && procMeshes()[0].facesInstance()
+         != runTimes_.procTimes()[0].constant()
+        )
+        {
+            FatalErrorInFunction
+                << "Cannot begin mesh reconstruction at time "
+                << fileName(runTimes_.procTimes()[0].timeName()) << nl
+                << "The mesh at this instant is that of an earlier"
+                << " time " << procMeshes()[0].facesInstance() << nl
+                << "Reconstruction must start from this earlier time"
+                << exit(FatalError);
+        }
+
+        reconstruct();
+    }
+
+    if (!procsConformal())
+    {
+        procFaceAddressingBf_.clear();
+        completeMesh_->conform();
+        unconform();
+    }
+
+    writeComplete(doSets);
+
+    if (!addrOk)
+    {
+        writeCompletePoints(procMeshes()[0].facesInstance());
+    }
+
+    return !addrOk;
+}
+
+
+Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateDecompose()
+{
+    const fvMesh::readUpdateState stat = readUpdate();
+
     // Topology changes
     {
         const label facesCompare =
@@ -769,14 +1088,15 @@ void Foam::domainDecomposition::readUpdateDecompose
             unconform();
         }
     }
+
+    return stat;
 }
 
 
-void Foam::domainDecomposition::readUpdateReconstruct
-(
-    const Foam::fvMesh::readUpdateState& stat
-)
+Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateReconstruct()
 {
+    const fvMesh::readUpdateState stat = readUpdate();
+
     // Topology changes
     {
         const label facesCompare =
@@ -849,230 +1169,6 @@ void Foam::domainDecomposition::readUpdateReconstruct
             unconform();
         }
     }
-}
-
-
-void Foam::domainDecomposition::writeAddressing() const
-{
-    labelIOList cellProc
-    (
-        IOobject
-        (
-            "cellProc",
-            completeMesh().facesInstance(),
-            completeMesh().meshSubDir,
-            completeMesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        cellProc_
-    );
-    cellProc.write();
-
-    for (label proci = 0; proci < nProcs(); proci++)
-    {
-        const fvMesh& procMesh = procMeshes_[proci];
-
-        labelIOList pointProcAddressing
-        (
-            IOobject
-            (
-                "pointProcAddressing",
-                procMesh.facesInstance(),
-                procMesh.meshSubDir,
-                procMesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            procPointAddressing_[proci]
-        );
-        pointProcAddressing.write();
-
-        labelIOList faceProcAddressing
-        (
-            IOobject
-            (
-                "faceProcAddressing",
-                procMesh.facesInstance(),
-                procMesh.meshSubDir,
-                procMesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            procFaceAddressing_[proci]
-        );
-        faceProcAddressing.write();
-
-        labelIOList cellProcAddressing
-        (
-            IOobject
-            (
-                "cellProcAddressing",
-                procMesh.facesInstance(),
-                procMesh.meshSubDir,
-                procMesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            procCellAddressing_[proci]
-        );
-        cellProcAddressing.write();
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::domainDecomposition::domainDecomposition
-(
-    const processorRunTimes& runTimes,
-    const word& regionName
-)
-:
-    runTimes_(runTimes),
-    regionName_(regionName),
-    completeMesh_(nullptr),
-    procMeshes_(nProcs()),
-    procPointAddressing_(nProcs()),
-    procFaceAddressing_(nProcs()),
-    procCellAddressing_(nProcs()),
-    procFaceAddressingBf_()
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::domainDecomposition::~domainDecomposition()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::domainDecomposition::readDecompose(const bool doSets)
-{
-    readComplete();
-
-    typeIOobject<labelIOList> addrIo
-    (
-        "cellProc",
-        completeMesh().facesInstance(),
-        completeMesh().meshDir(),
-        completeMesh()
-    );
-    typeIOobject<labelIOList> procAddrIo
-    (
-        "cellProcAddressing",
-        completeMesh().facesInstance(),
-        completeMesh().meshDir(),
-        runTimes_.procTimes()[0]
-    );
-
-    const bool addrOk = addrIo.headerOk() && procAddrIo.headerOk();
-
-    if (addrOk)
-    {
-        readProcs();
-    }
-    else
-    {
-        if
-        (
-            completeMesh().facesInstance()
-         != runTimes_.completeTime().timeName()
-         && completeMesh().facesInstance()
-         != runTimes_.completeTime().constant()
-        )
-        {
-            FatalErrorInFunction
-                << "Cannot begin mesh decomposition at time "
-                << fileName(runTimes_.completeTime().timeName()) << nl
-                << "The mesh at this instant is that of an earlier"
-                << " time " << completeMesh().facesInstance() << nl
-                << "Decomposition must start from this earlier time"
-                << exit(FatalError);
-        }
-
-        decompose();
-
-        writeProcs(doSets);
-    }
-
-    readUpdateDecompose(fvMesh::TOPO_PATCH_CHANGE);
-
-    return !addrOk;
-}
-
-
-bool Foam::domainDecomposition::readReconstruct(const bool doSets)
-{
-    readProcs();
-
-    typeIOobject<labelIOList> addrIo
-    (
-        "cellProc",
-        procMeshes()[0].facesInstance(),
-        procMeshes()[0].meshDir(),
-        runTimes_.completeTime()
-    );
-    typeIOobject<labelIOList> procAddrIo
-    (
-        "cellProcAddressing",
-        procMeshes()[0].facesInstance(),
-        procMeshes()[0].meshDir(),
-        procMeshes()[0]
-    );
-
-    const bool addrOk = addrIo.headerOk() && procAddrIo.headerOk();
-
-    if (addrOk)
-    {
-        readComplete();
-    }
-    else
-    {
-        if
-        (
-            procMeshes()[0].facesInstance()
-         != runTimes_.procTimes()[0].timeName()
-         && procMeshes()[0].facesInstance()
-         != runTimes_.procTimes()[0].constant()
-        )
-        {
-            FatalErrorInFunction
-                << "Cannot begin mesh reconstruction at time "
-                << fileName(runTimes_.procTimes()[0].timeName()) << nl
-                << "The mesh at this instant is that of an earlier"
-                << " time " << procMeshes()[0].facesInstance() << nl
-                << "Reconstruction must start from this earlier time"
-                << exit(FatalError);
-        }
-
-        reconstruct();
-
-        writeComplete(doSets);
-    }
-
-    readUpdateReconstruct(fvMesh::TOPO_PATCH_CHANGE);
-
-    return !addrOk;
-}
-
-
-Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateDecompose()
-{
-    const fvMesh::readUpdateState stat = readUpdate();
-
-    readUpdateDecompose(stat);
-
-    return stat;
-}
-
-
-Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateReconstruct()
-{
-    const fvMesh::readUpdateState stat = readUpdate();
-
-    readUpdateReconstruct(stat);
 
     return stat;
 }
