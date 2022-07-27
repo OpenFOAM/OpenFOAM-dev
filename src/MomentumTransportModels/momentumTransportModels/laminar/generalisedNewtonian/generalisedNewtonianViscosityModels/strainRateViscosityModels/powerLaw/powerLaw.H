@@ -28,12 +28,13 @@ Description
     Standard power-law generalised Newtonian viscosity model
 
     The power-law model provides a function for viscosity, limited by
-    minimum and maximum values \f$\nu_\min\f$ and \f$\nu_\max\f$ respectively.
+    minimum and maximum values \f$\nu_{\min}\f$ and \f$\nu_{\max}\f$
+    respectively.
 
     Kinematic viscosity [m^2/s]
 
     \f[
-        \nu = k\gamma^{n - 1}, \nu_\min \le \nu \le \nu_\max
+        \nu = k\gamma^{n - 1}, \nu_{\min} \le \nu \le \nu_{\max}
     \f]
 
     Example specification:
