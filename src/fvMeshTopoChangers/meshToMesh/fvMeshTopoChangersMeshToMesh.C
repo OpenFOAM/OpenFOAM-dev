@@ -151,7 +151,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
                 IOobject::MUST_READ
             ),
             false,
-            false
+            fvMesh::stitchType::none
         );
 
         autoPtr<Foam::meshToMesh> mapper;

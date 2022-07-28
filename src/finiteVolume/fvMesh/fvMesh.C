@@ -307,14 +307,14 @@ Foam::fvMesh::fvMesh
 (
     const IOobject& io,
     const bool changers,
-    const bool stitcher
+    const stitchType stitch
 )
 :
     polyMesh(io),
     surfaceInterpolation(*this),
     data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
-    stitcher_(nullptr),
+    stitcher_(fvMeshStitcher::New(*this, changers).ptr()),
     topoChanger_(nullptr),
     distributor_(nullptr),
     mover_(nullptr),
@@ -345,10 +345,9 @@ Foam::fvMesh::fvMesh
     }
 
     // Stitch or Re-stitch if necessary
-    if (stitcher)
+    if (stitch != stitchType::none)
     {
-        stitcher_.set(fvMeshStitcher::New(*this, changers).ptr());
-        stitcher_->connect(false, changers, true);
+        stitcher_->connect(false, stitch == stitchType::geometric, true);
     }
 
     // Construct changers
@@ -710,7 +709,10 @@ void Foam::fvMesh::reset(const fvMesh& newMesh)
 }
 
 
-Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate(const bool changers)
+Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate
+(
+    const stitchType stitch
+)
 {
     if (debug)
     {
@@ -719,9 +721,14 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate(const bool changers)
 
     polyMesh::readUpdateState state = polyMesh::readUpdate();
 
-    if (stitcher_.valid() && state != polyMesh::UNCHANGED)
+    if
+    (
+        stitcher_.valid()
+     && stitch != stitchType::none
+     && state != polyMesh::UNCHANGED
+    )
     {
-        stitcher_->disconnect(false, changers);
+        stitcher_->disconnect(false, stitch == stitchType::geometric);
     }
 
     if (state == polyMesh::TOPO_PATCH_CHANGE)
@@ -761,9 +768,14 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate(const bool changers)
         }
     }
 
-    if (stitcher_.valid() && state != polyMesh::UNCHANGED)
+    if
+    (
+        stitcher_.valid()
+     && stitch != stitchType::none
+     && state != polyMesh::UNCHANGED
+    )
     {
-        stitcher_->connect(false, changers, true);
+        stitcher_->connect(false, stitch == stitchType::geometric, true);
     }
 
     // If the mesh has been re-stitched with different geometry, then the

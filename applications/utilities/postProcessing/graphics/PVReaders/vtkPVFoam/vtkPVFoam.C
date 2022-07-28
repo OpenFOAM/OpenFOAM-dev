@@ -144,7 +144,11 @@ int Foam::vtkPVFoam::setTime(int nRequest, const double requestTimes[])
 
         if (meshPtr_)
         {
-            if (meshPtr_->readUpdate(false) != polyMesh::UNCHANGED)
+            if
+            (
+                meshPtr_->readUpdate(fvMesh::stitchType::nonGeometric)
+             != polyMesh::UNCHANGED
+            )
             {
                 meshChanged_ = true;
             }
@@ -474,7 +478,8 @@ void Foam::vtkPVFoam::updateFoamMesh()
                 dbPtr_(),
                 IOobject::MUST_READ
             ),
-            false
+            false,
+            fvMesh::stitchType::nonGeometric
         );
 
         meshChanged_ = true;

@@ -100,6 +100,26 @@ class fvMesh
     public surfaceInterpolation,
     public data
 {
+public:
+
+    // Public data types
+
+        //- Extent to which to stitch on read and readUpdate. By default, a
+        //  full geometric stitch is performed. A non-geometric stitch can be
+        //  done as an optimisation in situations when finite volume geometry
+        //  is not needed (e.g., decomposition). Stitching can also be
+        //  prevented altogether if that is appropriate (e.g., if the mesh is
+        //  loaded for mapping in an un-stitched state).
+        enum class stitchType
+        {
+            none,
+            nonGeometric,
+            geometric
+        };
+
+
+private:
+
     // Private Data
 
         //- Boundary mesh
@@ -274,12 +294,13 @@ public:
     // Constructors
 
         //- Construct from IOobject
-        //  with the option to not instantiate the mesh changers or stitcher
+        //  with the option to not instantiate the mesh changers and the option
+        //  to prevent some or all of the stitching
         explicit fvMesh
         (
             const IOobject& io,
             const bool changers = true,
-            const bool stitcher = true
+            const stitchType stitch = stitchType::geometric
         );
 
         //- Construct from cellShapes with boundary.
@@ -340,7 +361,10 @@ public:
 
             //- Update the mesh based on the mesh files saved in time
             //  directories
-            readUpdateState readUpdate(const bool changers = true);
+            readUpdateState readUpdate
+            (
+                const stitchType stitch = stitchType::geometric
+            );
 
 
         // Access

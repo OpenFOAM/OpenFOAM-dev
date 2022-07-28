@@ -679,10 +679,12 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdate()
     validateProcs();
 
     // Do read-update on all meshes
-    fvMesh::readUpdateState stat = completeMesh_->readUpdate(false);
+    fvMesh::readUpdateState stat =
+        completeMesh_->readUpdate(fvMesh::stitchType::nonGeometric);
     forAll(runTimes_.procTimes(), proci)
     {
-        fvMesh::readUpdateState procStat = procMeshes_[proci].readUpdate(false);
+        fvMesh::readUpdateState procStat =
+            procMeshes_[proci].readUpdate(fvMesh::stitchType::nonGeometric);
         if (procStat > stat)
         {
             stat = procStat;
