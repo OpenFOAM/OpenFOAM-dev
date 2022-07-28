@@ -25,6 +25,7 @@ License
 
 #include "surfaceFieldValue.H"
 #include "processorFvPatch.H"
+#include "processorCyclicFvPatch.H"
 #include "sampledSurface.H"
 #include "mergePoints.H"
 #include "indirectPrimitivePatch.H"
@@ -172,9 +173,9 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
 
 void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
 {
-    const label patchid = mesh_.boundaryMesh().findPatchID(regionName_);
+    const label patchId = mesh_.boundaryMesh().findPatchID(regionName_);
 
-    if (patchid < 0)
+    if (patchId < 0)
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
@@ -185,11 +186,29 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
             << exit(FatalError);
     }
 
-    const fvPatch& fvp = mesh_.boundary()[patchid];
+    const fvPatch& fvp = mesh_.boundary()[patchId];
 
     faceId_ = identity(fvp.size());
-    facePatchId_ = labelList(fvp.size(), patchid);
+    facePatchId_ = labelList(fvp.size(), patchId);
     faceSign_ = labelList(fvp.size(), 1);
+
+    // If we have selected a cyclic, also include any associated processor
+    // cyclic faces
+    forAll(mesh_.boundary(), patchi)
+    {
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        if
+        (
+            isA<processorCyclicFvPatch>(fvp)
+         && refCast<const processorCyclicFvPatch>(fvp).referPatchID() == patchId
+        )
+        {
+            faceId_.append(identity(fvp.size()));
+            facePatchId_.append(labelList(fvp.size(), patchi));
+            faceSign_.append(labelList(fvp.size(), 1));
+        }
+    }
 
     nFaces_ = returnReduce(faceId_.size(), sumOp<label>());
 }
