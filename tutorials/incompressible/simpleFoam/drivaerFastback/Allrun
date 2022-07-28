@@ -81,8 +81,8 @@ do
       mesh=$2
       shift 2
       case "$mesh" in
-          S)  ;;
-          M)  nRefine=1 ;;
+          S)  nRefine=0 ;;
+          M)  ;;
           L)  nRefine=2 ; setKeyword endTime 2000 system/controlDict ;;
           XL) nRefine=3 ; setKeyword endTime 2000 system/controlDict ;;
           *)  usage "Invalid argument '$mesh' to -m|-mesh <S|M|L|XL>." ;;
