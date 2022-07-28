@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceFieldValue.H"
-#include "emptyPolyPatch.H"
-#include "coupledPolyPatch.H"
+#include "processorFvPatch.H"
 #include "sampledSurface.H"
 #include "mergePoints.H"
 #include "indirectPrimitivePatch.H"
@@ -115,74 +114,59 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
             << nl << exit(FatalError);
     }
 
-    const faceZone& fZone = mesh_.faceZones()[zoneId];
+    // Ensure addressing is built on all processes
+    mesh_.polyBFacePatches();
+    mesh_.polyBFacePatchFaces();
 
-    DynamicList<label> faceIds(fZone.size());
-    DynamicList<label> facePatchIds(fZone.size());
-    DynamicList<label> faceSigns(fZone.size());
+    const faceZone& zone = mesh_.faceZones()[zoneId];
 
-    forAll(fZone, i)
+    DynamicList<label> faceIds(zone.size());
+    DynamicList<label> facePatchIds(zone.size());
+    DynamicList<label> faceSigns(zone.size());
+
+    forAll(zone, zoneFacei)
     {
-        label facei = fZone[i];
+        const label facei = zone[zoneFacei];
+        const label faceSign = zone.flipMap()[zoneFacei] ? -1 : 1;
 
-        label faceId = -1;
-        label facePatchId = -1;
         if (mesh_.isInternalFace(facei))
         {
-            faceId = facei;
-            facePatchId = -1;
+            faceIds.append(facei);
+            facePatchIds.append(-1);
+            faceSigns.append(faceSign);
         }
         else
         {
-            facePatchId = mesh_.boundaryMesh().whichPatch(facei);
-            const polyPatch& pp = mesh_.boundaryMesh()[facePatchId];
-            if (isA<coupledPolyPatch>(pp))
-            {
-                if (refCast<const coupledPolyPatch>(pp).owner())
-                {
-                    faceId = pp.whichFace(facei);
-                }
-                else
-                {
-                    faceId = -1;
-                }
-            }
-            else if (!isA<emptyPolyPatch>(pp))
-            {
-                faceId = facei - pp.start();
-            }
-            else
-            {
-                faceId = -1;
-                facePatchId = -1;
-            }
-        }
+            const label bFacei = facei - mesh_.nInternalFaces();
 
-        if (faceId >= 0)
-        {
-            if (fZone.flipMap()[i])
+            const labelUList patches = mesh_.polyBFacePatches()[bFacei];
+            const labelUList patchFaces = mesh_.polyBFacePatchFaces()[bFacei];
+
+            forAll(patches, i)
             {
-                faceSigns.append(-1);
+                // Don't include processor patch faces twice
+                const fvPatch& fvp = mesh_.boundary()[patches[i]];
+                if
+                (
+                    isType<processorFvPatch>(fvp)
+                 && refCast<const processorFvPatch>(fvp).neighbour()
+                )
+                {
+                    continue;
+                }
+
+                faceIds.append(patchFaces[i]);
+                facePatchIds.append(patches[i]);
+                faceSigns.append(faceSign);
             }
-            else
-            {
-                faceSigns.append(1);
-            }
-            faceIds.append(faceId);
-            facePatchIds.append(facePatchId);
         }
     }
 
     faceId_.transfer(faceIds);
     facePatchId_.transfer(facePatchIds);
     faceSign_.transfer(faceSigns);
-    nFaces_ = returnReduce(faceId_.size(), sumOp<label>());
 
-    if (debug)
-    {
-        Pout<< "Original face zone size = " << fZone.size()
-            << ", new size = " << faceId_.size() << endl;
-    }
+    nFaces_ = returnReduce(faceId_.size(), sumOp<label>());
 }
 
 
@@ -201,25 +185,13 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
             << exit(FatalError);
     }
 
-    const polyPatch& pp = mesh_.boundaryMesh()[patchid];
+    const fvPatch& fvp = mesh_.boundary()[patchid];
 
-    label nFaces = pp.size();
-    if (isA<emptyPolyPatch>(pp))
-    {
-        nFaces = 0;
-    }
+    faceId_ = identity(fvp.size());
+    facePatchId_ = labelList(fvp.size(), patchid);
+    faceSign_ = labelList(fvp.size(), 1);
 
-    faceId_.setSize(nFaces);
-    facePatchId_.setSize(nFaces);
-    faceSign_.setSize(nFaces);
     nFaces_ = returnReduce(faceId_.size(), sumOp<label>());
-
-    forAll(faceId_, facei)
-    {
-        faceId_[facei] = facei;
-        facePatchId_[facei] = patchid;
-        faceSign_[facei] = 1;
-    }
 }
 
 
