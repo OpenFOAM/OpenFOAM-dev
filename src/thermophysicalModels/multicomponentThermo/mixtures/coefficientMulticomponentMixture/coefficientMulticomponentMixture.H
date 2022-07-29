@@ -22,30 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::coefficientWilkeMultiComponentMixture
+    Foam::coefficientMulticomponentMixture
 
 Description
     Thermophysical properties mixing class which applies mass-fraction weighted
-    mixing to the thermodynamic coefficients and Wilke's equation to
-    transport properties.
-
-    Reference:
-    \verbatim
-        Wilke, C. R. (1950).
-        A viscosity equation for gas mixtures.
-        The journal of chemical physics, 18(4), 517-519.
-    \endverbatim
+    mixing to the thermodynamic and transport coefficients.
 
 SourceFiles
-    coefficientWilkeMultiComponentMixture.C
+    coefficientMulticomponentMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef coefficientWilkeMultiComponentMixture_H
-#define coefficientWilkeMultiComponentMixture_H
+#ifndef coefficientMulticomponentMixture_H
+#define coefficientMulticomponentMixture_H
 
-#include "multiComponentMixture.H"
-#include "scalarMatrices.H"
+#include "multicomponentMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,76 +44,22 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-            Class coefficientWilkeMultiComponentMixture Declaration
+              Class coefficientMulticomponentMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class coefficientWilkeMultiComponentMixture
+class coefficientMulticomponentMixture
 :
-    public multiComponentMixture<ThermoType>
+    public multicomponentMixture<ThermoType>
 {
 
 public:
 
-    class transportMixture
-    {
-        //- List of specie thermo
-        const PtrList<ThermoType>& specieThermos_;
-
-        //- List of molecular weights
-        scalarList M_;
-
-        //- Matrix of (4/sqrt(2.0))*sqrt(1 + M_[i]/M_[j])
-        scalarSquareMatrix A_;
-
-        //- Matrix of sqrt(M_[j]/M_[i])
-        scalarSquareMatrix B_;
-
-        //- List of mole fractions
-        mutable scalarList X_;
-
-        //- List of specie viscosities
-        mutable scalarList mu_;
-
-        //- List of Wilke weights
-        mutable scalarList w_;
-
-        //- mu cache state to avoid recalculation of the Wilke weight for kappa
-        mutable bool muCached_;
-
-        //- Calculate the Wilke weights and store in w_
-        void WilkeWeights(const scalar p, const scalar T) const;
-
-
-    public:
-
-        friend class coefficientWilkeMultiComponentMixture;
-
-        // Constructors
-
-            transportMixture
-            (
-                const PtrList<ThermoType>& specieThermos
-            );
-
-
-        // Transport properties
-
-            //- Dynamic viscosity [kg/m/s]
-            scalar mu(const scalar p, const scalar T) const;
-
-            //- Thermal conductivity [W/m/K]
-            scalar kappa(const scalar p, const scalar T) const;
-    };
-
-
-public:
-
     //- Mixing type for thermodynamic properties
-    typedef typename ThermoType::thermoType thermoMixtureType;
+    typedef ThermoType thermoMixtureType;
 
     //- Mixing type for transport properties
-    typedef transportMixture transportMixtureType;
+    typedef ThermoType transportMixtureType;
 
 
 private:
@@ -132,16 +69,13 @@ private:
         //- Temporary storage for the cell/face mixture thermo data
         mutable thermoMixtureType mixture_;
 
-        //- Mutable storage for the cell/face mixture transport data
-        mutable transportMixtureType transportMixture_;
-
 
 public:
 
     // Constructors
 
         //- Construct from dictionary, mesh and phase name
-        coefficientWilkeMultiComponentMixture
+        coefficientMulticomponentMixture
         (
             const dictionary&,
             const fvMesh&,
@@ -149,14 +83,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        coefficientWilkeMultiComponentMixture
+        coefficientMulticomponentMixture
         (
-            const coefficientWilkeMultiComponentMixture<ThermoType>&
+            const coefficientMulticomponentMixture<ThermoType>&
         ) = delete;
 
 
     //- Destructor
-    virtual ~coefficientWilkeMultiComponentMixture()
+    virtual ~coefficientMulticomponentMixture()
     {}
 
 
@@ -165,9 +99,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return
-                "coefficientWilkeMultiComponentMixture<"
-               + ThermoType::typeName() + '>';
+            return "multicomponentMixture<" + ThermoType::typeName() + '>';
         }
 
         const thermoMixtureType& cellThermoMixture(const label celli) const;
@@ -181,26 +113,38 @@ public:
         const transportMixtureType& cellTransportMixture
         (
             const label celli
-        ) const;
+        ) const
+        {
+            return cellThermoMixture(celli);
+        }
 
         const transportMixtureType& patchFaceTransportMixture
         (
             const label patchi,
             const label facei
-        ) const;
+        ) const
+        {
+            return patchFaceThermoMixture(patchi, facei);
+        }
 
         const transportMixtureType& cellTransportMixture
         (
-            const label celli,
+            const label,
             const thermoMixtureType& thermoMixture
-        ) const;
+        ) const
+        {
+            return thermoMixture;
+        }
 
         const transportMixtureType& patchFaceTransportMixture
         (
-            const label patchi,
-            const label facei,
+            const label,
+            const label,
             const thermoMixtureType& thermoMixture
-        ) const;
+        ) const
+        {
+            return thermoMixture;
+        }
 };
 
 
@@ -211,7 +155,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "coefficientWilkeMultiComponentMixture.C"
+    #include "coefficientMulticomponentMixture.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

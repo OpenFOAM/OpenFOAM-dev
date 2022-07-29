@@ -23,19 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "valueMultiComponentMixture.H"
+#include "valueMulticomponentMixture.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::valueMultiComponentMixture<ThermoType>::valueMultiComponentMixture
+Foam::valueMulticomponentMixture<ThermoType>::valueMulticomponentMixture
 (
     const dictionary& thermoDict,
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    multiComponentMixture<ThermoType>
+    multicomponentMixture<ThermoType>
     (
         thermoDict,
         mesh,
@@ -50,7 +50,7 @@ Foam::valueMultiComponentMixture<ThermoType>::valueMultiComponentMixture
 
 template<class ThermoType>
 Foam::scalar
-Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::limit
+Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::limit
 (
     const scalar T
 ) const
@@ -62,7 +62,7 @@ Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::limit
 template<class ThermoType>
 template<class Method, class ... Args>
 Foam::scalar
-Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::massWeighted
+Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::massWeighted
 (
     Method psiMethod,
     const Args& ... args
@@ -82,7 +82,7 @@ Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::massWeighted
 template<class ThermoType>
 template<class Method, class ... Args>
 Foam::scalar
-Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::
+Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::
 harmonicMassWeighted
 (
     Method psiMethod,
@@ -103,7 +103,7 @@ harmonicMassWeighted
 template<class ThermoType>
 template<class Method, class ... Args>
 Foam::scalar
-Foam::valueMultiComponentMixture<ThermoType>::transportMixture::moleWeighted
+Foam::valueMulticomponentMixture<ThermoType>::transportMixture::moleWeighted
 (
     Method psiMethod,
     const Args& ... args
@@ -121,7 +121,7 @@ Foam::valueMultiComponentMixture<ThermoType>::transportMixture::moleWeighted
 
 
 template<class ThermoType>
-Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::W
+Foam::scalar Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::W
 () const
 {
     return harmonicMassWeighted(&ThermoType::W);
@@ -129,7 +129,7 @@ Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::W
 
 
 template<class ThermoType>
-Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::rho
+Foam::scalar Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::rho
 (
     scalar p,
     scalar T
@@ -140,7 +140,7 @@ Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::rho
 
 
 template<class ThermoType>
-Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::psi
+Foam::scalar Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::psi
 (
     scalar p,
     scalar T
@@ -167,7 +167,7 @@ Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::psi
 
 
 template<class ThermoType>
-Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::Hf
+Foam::scalar Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::Hf
 () const
 {
     return massWeighted(&ThermoType::Hf);
@@ -177,7 +177,7 @@ Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::Hf
 #define thermoMixtureFunction(Func)                                            \
 template<class ThermoType>                                                     \
 Foam::scalar                                                                   \
-Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::Func            \
+Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::Func            \
 (                                                                              \
     scalar p,                                                                  \
     scalar T                                                                   \
@@ -196,7 +196,7 @@ thermoMixtureFunction(HE)
 
 
 template<class ThermoType>
-Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::THE
+Foam::scalar Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::THE
 (
     const scalar he,
     scalar p,
@@ -218,7 +218,7 @@ Foam::scalar Foam::valueMultiComponentMixture<ThermoType>::thermoMixture::THE
 
 template<class ThermoType>
 Foam::scalar
-Foam::valueMultiComponentMixture<ThermoType>::transportMixture::mu
+Foam::valueMulticomponentMixture<ThermoType>::transportMixture::mu
 (
     scalar p,
     scalar T
@@ -230,7 +230,7 @@ Foam::valueMultiComponentMixture<ThermoType>::transportMixture::mu
 
 template<class ThermoType>
 Foam::scalar
-Foam::valueMultiComponentMixture<ThermoType>::transportMixture::kappa
+Foam::valueMulticomponentMixture<ThermoType>::transportMixture::kappa
 (
     scalar p,
     scalar T
@@ -242,8 +242,8 @@ Foam::valueMultiComponentMixture<ThermoType>::transportMixture::kappa
 
 template<class ThermoType>
 const typename
-Foam::valueMultiComponentMixture<ThermoType>::thermoMixtureType&
-Foam::valueMultiComponentMixture<ThermoType>::cellThermoMixture
+Foam::valueMulticomponentMixture<ThermoType>::thermoMixtureType&
+Foam::valueMulticomponentMixture<ThermoType>::cellThermoMixture
 (
     const label celli
 ) const
@@ -261,8 +261,8 @@ Foam::valueMultiComponentMixture<ThermoType>::cellThermoMixture
 
 template<class ThermoType>
 const typename
-Foam::valueMultiComponentMixture<ThermoType>::thermoMixtureType&
-Foam::valueMultiComponentMixture<ThermoType>::patchFaceThermoMixture
+Foam::valueMulticomponentMixture<ThermoType>::thermoMixtureType&
+Foam::valueMulticomponentMixture<ThermoType>::patchFaceThermoMixture
 (
     const label patchi,
     const label facei
@@ -281,8 +281,8 @@ Foam::valueMultiComponentMixture<ThermoType>::patchFaceThermoMixture
 
 template<class ThermoType>
 const typename
-Foam::valueMultiComponentMixture<ThermoType>::transportMixtureType&
-Foam::valueMultiComponentMixture<ThermoType>::cellTransportMixture
+Foam::valueMulticomponentMixture<ThermoType>::transportMixtureType&
+Foam::valueMulticomponentMixture<ThermoType>::cellTransportMixture
 (
     const label celli
 ) const
@@ -308,8 +308,8 @@ Foam::valueMultiComponentMixture<ThermoType>::cellTransportMixture
 
 template<class ThermoType>
 const typename
-Foam::valueMultiComponentMixture<ThermoType>::transportMixtureType&
-Foam::valueMultiComponentMixture<ThermoType>::patchFaceTransportMixture
+Foam::valueMulticomponentMixture<ThermoType>::transportMixtureType&
+Foam::valueMulticomponentMixture<ThermoType>::patchFaceTransportMixture
 (
     const label patchi,
     const label facei

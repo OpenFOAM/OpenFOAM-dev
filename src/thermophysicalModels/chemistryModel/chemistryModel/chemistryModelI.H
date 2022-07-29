@@ -34,7 +34,7 @@ Foam::chemistryModel<ThermoType>::RR()
 
 
 template<class ThermoType>
-inline const Foam::multiComponentMixture<ThermoType>&
+inline const Foam::multicomponentMixture<ThermoType>&
 Foam::chemistryModel<ThermoType>::mixture() const
 {
     return mixture_;

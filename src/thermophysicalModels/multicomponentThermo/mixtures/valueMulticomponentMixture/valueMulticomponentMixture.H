@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::valueMultiComponentMixture
+    Foam::valueMulticomponentMixture
 
 Description
     Thermophysical properties mixing class which applies mass-fraction weighted
@@ -30,14 +30,14 @@ Description
     transport properties.
 
 SourceFiles
-    valueMultiComponentMixture.C
+    valueMulticomponentMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef valueMultiComponentMixture_H
-#define valueMultiComponentMixture_H
+#ifndef valueMulticomponentMixture_H
+#define valueMulticomponentMixture_H
 
-#include "multiComponentMixture.H"
+#include "multicomponentMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,13 +45,13 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class valueMultiComponentMixture Declaration
+                 Class valueMulticomponentMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class valueMultiComponentMixture
+class valueMulticomponentMixture
 :
-    public multiComponentMixture<ThermoType>
+    public multicomponentMixture<ThermoType>
 {
 
 public:
@@ -79,7 +79,7 @@ public:
 
     public:
 
-        friend class valueMultiComponentMixture;
+        friend class valueMulticomponentMixture;
 
         // Constructors
 
@@ -159,7 +159,7 @@ public:
 
     public:
 
-        friend class valueMultiComponentMixture;
+        friend class valueMulticomponentMixture;
 
         transportMixture
         (
@@ -204,7 +204,7 @@ public:
     // Constructors
 
         //- Construct from dictionary, mesh and phase name
-        valueMultiComponentMixture
+        valueMulticomponentMixture
         (
             const dictionary&,
             const fvMesh&,
@@ -212,14 +212,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        valueMultiComponentMixture
+        valueMulticomponentMixture
         (
-            const valueMultiComponentMixture<ThermoType>&
+            const valueMulticomponentMixture<ThermoType>&
         ) = delete;
 
 
     //- Destructor
-    virtual ~valueMultiComponentMixture()
+    virtual ~valueMulticomponentMixture()
     {}
 
 
@@ -229,7 +229,7 @@ public:
         static word typeName()
         {
             return
-                "valueMultiComponentMixture<" + ThermoType::typeName() + '>';
+                "valueMulticomponentMixture<" + ThermoType::typeName() + '>';
         }
 
         const thermoMixtureType& cellThermoMixture(const label celli) const;
@@ -279,7 +279,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "valueMultiComponentMixture.C"
+    #include "valueMulticomponentMixture.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

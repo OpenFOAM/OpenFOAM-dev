@@ -35,7 +35,7 @@ License
 #include "IsothermalPhaseModel.H"
 #include "AnisothermalPhaseModel.H"
 #include "PurePhaseModel.H"
-#include "MultiComponentPhaseModel.H"
+#include "MulticomponentPhaseModel.H"
 #include "InertPhaseModel.H"
 #include "ReactingPhaseModel.H"
 #include "MovingPhaseModel.H"
@@ -144,7 +144,7 @@ namespace Foam
     typedef
         AnisothermalPhaseModel
         <
-            MultiComponentPhaseModel
+            MulticomponentPhaseModel
             <
                 InertPhaseModel
                 <
@@ -155,12 +155,22 @@ namespace Foam
                 >
             >
         >
-        multiComponentPhaseModel;
+        multicomponentPhaseModel;
 
     addNamedToRunTimeSelectionTable
     (
         phaseModel,
-        multiComponentPhaseModel,
+        multicomponentPhaseModel,
+        phaseSystem,
+        multicomponentPhaseModel
+    );
+
+    // Also add multicomponentPhaseModel with the name multiComponentPhaseModel
+    // for backward-compatibility
+    addNamedToRunTimeSelectionTable
+    (
+        phaseModel,
+        multicomponentPhaseModel,
         phaseSystem,
         multiComponentPhaseModel
     );
@@ -168,7 +178,7 @@ namespace Foam
     typedef
         IsothermalPhaseModel
         <
-            MultiComponentPhaseModel
+            MulticomponentPhaseModel
             <
                 InertPhaseModel
                 <
@@ -179,20 +189,20 @@ namespace Foam
                 >
             >
         >
-        multiComponentIsothermalPhaseModel;
+        multicomponentIsothermalPhaseModel;
 
     addNamedToRunTimeSelectionTable
     (
         phaseModel,
-        multiComponentIsothermalPhaseModel,
+        multicomponentIsothermalPhaseModel,
         phaseSystem,
-        multiComponentIsothermalPhaseModel
+        multicomponentIsothermalPhaseModel
     );
 
     typedef
         AnisothermalPhaseModel
         <
-            MultiComponentPhaseModel
+            MulticomponentPhaseModel
             <
                 ReactingPhaseModel
                 <

@@ -7,9 +7,9 @@
 
     fluid.correctReactions();
 
-    forAll(fluid.multiComponentPhases(), multiComponentPhasei)
+    forAll(fluid.multicomponentPhases(), multicomponentPhasei)
     {
-        phaseModel& phase = fluid.multiComponentPhases()[multiComponentPhasei];
+        phaseModel& phase = fluid.multicomponentPhases()[multicomponentPhasei];
 
         UPtrList<volScalarField>& Y = phase.YActiveRef();
         const volScalarField& alpha = phase;

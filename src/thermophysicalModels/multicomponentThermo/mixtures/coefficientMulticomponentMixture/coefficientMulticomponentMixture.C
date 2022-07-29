@@ -23,20 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "coefficientMultiComponentMixture.H"
+#include "coefficientMulticomponentMixture.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::coefficientMultiComponentMixture<ThermoType>::
-coefficientMultiComponentMixture
+Foam::coefficientMulticomponentMixture<ThermoType>::
+coefficientMulticomponentMixture
 (
     const dictionary& thermoDict,
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    multiComponentMixture<ThermoType>
+    multicomponentMixture<ThermoType>
     (
         thermoDict,
         mesh,
@@ -50,8 +50,8 @@ coefficientMultiComponentMixture
 
 template<class ThermoType>
 const typename
-Foam::coefficientMultiComponentMixture<ThermoType>::thermoMixtureType&
-Foam::coefficientMultiComponentMixture<ThermoType>::cellThermoMixture
+Foam::coefficientMulticomponentMixture<ThermoType>::thermoMixtureType&
+Foam::coefficientMulticomponentMixture<ThermoType>::cellThermoMixture
 (
     const label celli
 ) const
@@ -69,8 +69,8 @@ Foam::coefficientMultiComponentMixture<ThermoType>::cellThermoMixture
 
 template<class ThermoType>
 const typename
-Foam::coefficientMultiComponentMixture<ThermoType>::thermoMixtureType&
-Foam::coefficientMultiComponentMixture<ThermoType>::patchFaceThermoMixture
+Foam::coefficientMulticomponentMixture<ThermoType>::thermoMixtureType&
+Foam::coefficientMulticomponentMixture<ThermoType>::patchFaceThermoMixture
 (
     const label patchi,
     const label facei

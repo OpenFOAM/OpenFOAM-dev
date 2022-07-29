@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "coefficientMultiComponentMixture.H"
-#include "coefficientWilkeMultiComponentMixture.H"
+#include "coefficientMulticomponentMixture.H"
+#include "coefficientWilkeMulticomponentMixture.H"
 #include "singleComponentMixture.H"
 
 #include "psiThermo.H"
@@ -62,13 +62,13 @@ namespace Foam
     forCoeffGases
     (
         makePsiMulticomponentThermos,
-        coefficientMultiComponentMixture
+        coefficientMulticomponentMixture
     );
 
     forCoeffGases
     (
         makePsiMulticomponentThermos,
-        coefficientWilkeMultiComponentMixture
+        coefficientWilkeMulticomponentMixture
     );
 
     forGases(makePsiMulticomponentThermo, singleComponentMixture);

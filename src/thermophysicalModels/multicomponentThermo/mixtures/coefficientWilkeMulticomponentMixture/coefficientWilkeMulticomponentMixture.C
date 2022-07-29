@@ -23,20 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "coefficientWilkeMultiComponentMixture.H"
+#include "coefficientWilkeMulticomponentMixture.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::
-coefficientWilkeMultiComponentMixture
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::
+coefficientWilkeMulticomponentMixture
 (
     const dictionary& thermoDict,
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    multiComponentMixture<ThermoType>
+    multicomponentMixture<ThermoType>
     (
         thermoDict,
         mesh,
@@ -48,7 +48,7 @@ coefficientWilkeMultiComponentMixture
 
 
 template<class ThermoType>
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::transportMixture::
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture::
 transportMixture
 (
     const PtrList<ThermoType>& specieThermos
@@ -85,7 +85,7 @@ transportMixture
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-void Foam::coefficientWilkeMultiComponentMixture<ThermoType>::transportMixture::
+void Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture::
 WilkeWeights
 (
     scalar p,
@@ -123,7 +123,7 @@ WilkeWeights
 
 template<class ThermoType>
 Foam::scalar
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::transportMixture::
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture::
 mu
 (
     scalar p,
@@ -144,7 +144,7 @@ mu
 
 template<class ThermoType>
 Foam::scalar
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::transportMixture::
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture::
 kappa
 (
     scalar p,
@@ -168,8 +168,8 @@ kappa
 
 template<class ThermoType>
 const typename
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::thermoMixtureType&
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::cellThermoMixture
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::thermoMixtureType&
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::cellThermoMixture
 (
     const label celli
 ) const
@@ -187,8 +187,8 @@ Foam::coefficientWilkeMultiComponentMixture<ThermoType>::cellThermoMixture
 
 template<class ThermoType>
 const typename
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::thermoMixtureType&
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::patchFaceThermoMixture
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::thermoMixtureType&
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::patchFaceThermoMixture
 (
     const label patchi,
     const label facei
@@ -211,8 +211,8 @@ Foam::coefficientWilkeMultiComponentMixture<ThermoType>::patchFaceThermoMixture
 
 template<class ThermoType>
 const typename
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::transportMixtureType&
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::cellTransportMixture
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType&
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::cellTransportMixture
 (
     const label celli
 ) const
@@ -240,8 +240,8 @@ Foam::coefficientWilkeMultiComponentMixture<ThermoType>::cellTransportMixture
 
 template<class ThermoType>
 const typename
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::transportMixtureType&
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType&
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::
 patchFaceTransportMixture
 (
     const label patchi,
@@ -272,8 +272,8 @@ patchFaceTransportMixture
 
 template<class ThermoType>
 const typename
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::transportMixtureType&
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType&
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::
 cellTransportMixture
 (
     const label celli,
@@ -288,8 +288,8 @@ cellTransportMixture
 
 template<class ThermoType>
 const typename
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::transportMixtureType&
-Foam::coefficientWilkeMultiComponentMixture<ThermoType>::
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType&
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::
 patchFaceTransportMixture
 (
     const label patchi,

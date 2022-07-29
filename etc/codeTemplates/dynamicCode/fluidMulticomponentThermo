@@ -36,15 +36,15 @@ energy
 mixture
 (
     pureMixture
-    multiComponentMixture
-    valueMultiComponentMixture
-    coefficientWilkeMultiComponentMixture
+    multicomponentMixture
+    valueMulticomponentMixture
+    coefficientWilkeMulticomponentMixture
 );
 
 mixtureRenamed
 (
     pureMixture singleComponentMixture
-    multiComponentMixture coefficientMultiComponentMixture
+    multicomponentMixture coefficientMulticomponentMixture
 );
 
 transport

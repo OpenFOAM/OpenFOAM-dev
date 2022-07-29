@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,15 @@ License
 #include "compileTemplate.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+// Convert multiComponent -> multicomponent for backward-compatibility
+inline Foam::word mixtureName(const Foam::dictionary& thermoTypeDict)
+{
+    return
+        thermoTypeDict.lookup<Foam::word>("mixture")
+       .replace("multiComponent", "multicomponent");
+}
+
 
 template<class Thermo, class Table>
 typename Table::iterator Foam::basicThermo::lookupCstrIter
@@ -57,7 +66,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
                 List<Pair<word>>
                 {
                     {"type", thermoTypeDict.lookup("type")},
-                    {"mixture", thermoTypeDict.lookup("mixture")},
+                    {"mixture", mixtureName(thermoTypeDict)},
                     {"transport", thermoTypeDict.lookup("transport")},
                     {"thermo", thermoTypeDict.lookup("thermo")},
                     {
@@ -161,7 +170,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
             const word thermoTypeName
             (
                 word(thermoTypeDict.lookup("type")) + '<'
-              + word(thermoTypeDict.lookup("mixture")) + '<'
+              + word(mixtureName(thermoTypeDict)) + '<'
               + word(thermoTypeDict.lookup("properties")) + ','
               + word(thermoTypeDict.lookup("energy")) + ">>"
             );
@@ -193,7 +202,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
             const word thermoTypeName
             (
                 word(thermoTypeDict.lookup("type")) + '<'
-              + word(thermoTypeDict.lookup("mixture")) + '<'
+              + word(mixtureName(thermoTypeDict)) + '<'
               + word(thermoTypeDict.lookup("transport")) + '<'
               + word(thermoTypeDict.lookup("thermo")) + '<'
               + word(thermoTypeDict.lookup("equationOfState")) + '<'

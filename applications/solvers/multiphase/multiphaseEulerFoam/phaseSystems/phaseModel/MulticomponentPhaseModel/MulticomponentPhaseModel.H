@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::MultiComponentPhaseModel
+    Foam::MulticomponentPhaseModel
 
 Description
     Class which represents a phase with multiple species. Returns the species'
     mass fractions, and their governing equations.
 
 SourceFiles
-    MultiComponentPhaseModel.C
+    MulticomponentPhaseModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MultiComponentPhaseModel_H
-#define MultiComponentPhaseModel_H
+#ifndef MulticomponentPhaseModel_H
+#define MulticomponentPhaseModel_H
 
 #include "phaseModel.H"
 
@@ -44,11 +44,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class MultiComponentPhaseModel Declaration
+                  Class MulticomponentPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel>
-class MultiComponentPhaseModel
+class MulticomponentPhaseModel
 :
     public BasePhaseModel
 {
@@ -64,7 +64,7 @@ public:
 
     // Constructors
 
-        MultiComponentPhaseModel
+        MulticomponentPhaseModel
         (
             const phaseSystem& fluid,
             const word& phaseName,
@@ -74,7 +74,7 @@ public:
 
 
     //- Destructor
-    virtual ~MultiComponentPhaseModel();
+    virtual ~MulticomponentPhaseModel();
 
 
     // Member Functions
@@ -114,7 +114,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "MultiComponentPhaseModel.C"
+    #include "MulticomponentPhaseModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -17,7 +17,7 @@ FoamFile
 thermoType
 {
     type            hePsiThermo;
-    mixture         coefficientWilkeMultiComponentMixture;
+    mixture         coefficientWilkeMulticomponentMixture;
     transport       sutherland;
     thermo          janaf;
     energy          sensibleEnthalpy;

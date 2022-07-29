@@ -22,7 +22,7 @@ populationBalances (aggregates);
 
 particles
 {
-    type            multiComponentPhaseModel;
+    type            multicomponentPhaseModel;
 
     diameterModel   velocityGroup;
 

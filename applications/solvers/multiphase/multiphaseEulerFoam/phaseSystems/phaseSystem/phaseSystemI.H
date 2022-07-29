@@ -88,16 +88,16 @@ Foam::phaseSystem::anisothermalPhases()
 
 
 inline const Foam::phaseSystem::phaseModelPartialList&
-Foam::phaseSystem::multiComponentPhases() const
+Foam::phaseSystem::multicomponentPhases() const
 {
-    return multiComponentPhaseModels_;
+    return multicomponentPhaseModels_;
 }
 
 
 inline Foam::phaseSystem::phaseModelPartialList&
-Foam::phaseSystem::multiComponentPhases()
+Foam::phaseSystem::multicomponentPhases()
 {
-    return multiComponentPhaseModels_;
+    return multicomponentPhaseModels_;
 }
 
 

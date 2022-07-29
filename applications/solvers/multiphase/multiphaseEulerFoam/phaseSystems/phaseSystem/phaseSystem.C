@@ -261,24 +261,24 @@ Foam::phaseSystem::phaseSystem
     label movingPhasei = 0;
     label stationaryPhasei = 0;
     label anisothermalPhasei = 0;
-    label multiComponentPhasei = 0;
+    label multicomponentPhasei = 0;
     forAll(phaseModels_, phasei)
     {
         phaseModel& phase = phaseModels_[phasei];
         movingPhasei += !phase.stationary();
         stationaryPhasei += phase.stationary();
         anisothermalPhasei += !phase.isothermal();
-        multiComponentPhasei += !phase.pure();
+        multicomponentPhasei += !phase.pure();
     }
     movingPhaseModels_.resize(movingPhasei);
     stationaryPhaseModels_.resize(stationaryPhasei);
     anisothermalPhaseModels_.resize(anisothermalPhasei);
-    multiComponentPhaseModels_.resize(multiComponentPhasei);
+    multicomponentPhaseModels_.resize(multicomponentPhasei);
 
     movingPhasei = 0;
     stationaryPhasei = 0;
     anisothermalPhasei = 0;
-    multiComponentPhasei = 0;
+    multicomponentPhasei = 0;
     forAll(phaseModels_, phasei)
     {
         phaseModel& phase = phaseModels_[phasei];
@@ -296,7 +296,7 @@ Foam::phaseSystem::phaseSystem
         }
         if (!phase.pure())
         {
-            multiComponentPhaseModels_.set(multiComponentPhasei++, &phase);
+            multicomponentPhaseModels_.set(multicomponentPhasei++, &phase);
         }
     }
 

@@ -20,7 +20,7 @@ phases (gas liquid);
 
 gas
 {
-    type            multiComponentPhaseModel;
+    type            multicomponentPhaseModel;
     diameterModel   isothermal;
     isothermalCoeffs
     {
@@ -33,7 +33,7 @@ gas
 
 liquid
 {
-    type            multiComponentPhaseModel;
+    type            multicomponentPhaseModel;
     diameterModel constant;
     constantCoeffs
     {

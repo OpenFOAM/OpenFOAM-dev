@@ -22,7 +22,7 @@ nInterfaceCorrectors 1;
 
 gas
 {
-    type            multiComponentPhaseModel;
+    type            multicomponentPhaseModel;
     diameterModel   none;
     residualAlpha   1e-6;
     Sct             0.7;

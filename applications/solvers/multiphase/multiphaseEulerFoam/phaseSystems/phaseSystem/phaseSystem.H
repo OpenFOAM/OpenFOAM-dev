@@ -143,7 +143,7 @@ protected:
         phaseModelPartialList anisothermalPhaseModels_;
 
         //- Multi-component phase models
-        phaseModelPartialList multiComponentPhaseModels_;
+        phaseModelPartialList multicomponentPhaseModels_;
 
         //- Total volumetric flux
         surfaceScalarField phi_;
@@ -302,10 +302,10 @@ public:
             inline phaseModelPartialList& anisothermalPhases();
 
             //- Return the models for phases that have multiple species
-            inline const phaseModelPartialList& multiComponentPhases() const;
+            inline const phaseModelPartialList& multicomponentPhases() const;
 
             //- Access the models for phases that have multiple species
-            inline phaseModelPartialList& multiComponentPhases();
+            inline phaseModelPartialList& multicomponentPhases();
 
             //- Return the phase not given as an argument in a two-phase system
             //  An error is generated if the system is not two-phase

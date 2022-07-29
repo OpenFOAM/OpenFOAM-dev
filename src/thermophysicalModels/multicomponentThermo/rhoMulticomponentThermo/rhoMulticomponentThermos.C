@@ -23,9 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "coefficientMultiComponentMixture.H"
-#include "coefficientWilkeMultiComponentMixture.H"
-#include "valueMultiComponentMixture.H"
+#include "coefficientMulticomponentMixture.H"
+#include "coefficientWilkeMulticomponentMixture.H"
+#include "valueMulticomponentMixture.H"
 #include "singleComponentMixture.H"
 
 #include "rhoThermo.H"
@@ -65,13 +65,13 @@ namespace Foam
     forCoeffGases
     (
         makeRhoMulticomponentThermos,
-        coefficientMultiComponentMixture
+        coefficientMulticomponentMixture
     );
 
     forCoeffGases
     (
         makeRhoMulticomponentThermos,
-        coefficientWilkeMultiComponentMixture
+        coefficientWilkeMulticomponentMixture
     );
 
     forGases(makeRhoMulticomponentThermo, singleComponentMixture);
@@ -79,12 +79,12 @@ namespace Foam
     forCoeffLiquids
     (
         makeRhoMulticomponentThermos,
-        coefficientMultiComponentMixture
+        coefficientMulticomponentMixture
     );
-    forLiquids(makeRhoMulticomponentThermos, valueMultiComponentMixture);
+    forLiquids(makeRhoMulticomponentThermos, valueMulticomponentMixture);
     forLiquids(makeRhoMulticomponentThermo, singleComponentMixture);
 
-    forTabulated(makeRhoMulticomponentThermos, valueMultiComponentMixture);
+    forTabulated(makeRhoMulticomponentThermos, valueMulticomponentMixture);
     forTabulated(makeRhoMulticomponentThermo, singleComponentMixture);
 }
 

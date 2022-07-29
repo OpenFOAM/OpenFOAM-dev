@@ -18,7 +18,7 @@ thermoType
 {
 
     type            hePsiThermo;
-    mixture         multiComponentMixture;
+    mixture         multicomponentMixture;
     transport       sutherland;
     thermo          janaf;
     energy          sensibleEnthalpy;

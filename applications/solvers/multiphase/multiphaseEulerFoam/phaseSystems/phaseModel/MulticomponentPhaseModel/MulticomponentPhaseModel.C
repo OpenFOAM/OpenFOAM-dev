@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "MultiComponentPhaseModel.H"
+#include "MulticomponentPhaseModel.H"
 
 #include "phaseSystem.H"
 
@@ -38,7 +38,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-Foam::MultiComponentPhaseModel<BasePhaseModel>::MultiComponentPhaseModel
+Foam::MulticomponentPhaseModel<BasePhaseModel>::MulticomponentPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
@@ -65,14 +65,14 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::MultiComponentPhaseModel
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-Foam::MultiComponentPhaseModel<BasePhaseModel>::~MultiComponentPhaseModel()
+Foam::MulticomponentPhaseModel<BasePhaseModel>::~MulticomponentPhaseModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-void Foam::MultiComponentPhaseModel<BasePhaseModel>::correctSpecies()
+void Foam::MulticomponentPhaseModel<BasePhaseModel>::correctSpecies()
 {
     this->thermo_->composition().normalise();
     BasePhaseModel::correctSpecies();
@@ -80,7 +80,7 @@ void Foam::MultiComponentPhaseModel<BasePhaseModel>::correctSpecies()
 
 
 template<class BasePhaseModel>
-bool Foam::MultiComponentPhaseModel<BasePhaseModel>::pure() const
+bool Foam::MulticomponentPhaseModel<BasePhaseModel>::pure() const
 {
     return false;
 }
@@ -88,7 +88,7 @@ bool Foam::MultiComponentPhaseModel<BasePhaseModel>::pure() const
 
 template<class BasePhaseModel>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
+Foam::MulticomponentPhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
 {
     const volScalarField& alpha = *this;
     const volScalarField& rho = this->thermo().rho();
@@ -119,7 +119,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
 
 template<class BasePhaseModel>
 const Foam::PtrList<Foam::volScalarField>&
-Foam::MultiComponentPhaseModel<BasePhaseModel>::Y() const
+Foam::MulticomponentPhaseModel<BasePhaseModel>::Y() const
 {
     return this->thermo_->composition().Y();
 }
@@ -127,7 +127,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::Y() const
 
 template<class BasePhaseModel>
 const Foam::volScalarField&
-Foam::MultiComponentPhaseModel<BasePhaseModel>::Y(const word& name) const
+Foam::MulticomponentPhaseModel<BasePhaseModel>::Y(const word& name) const
 {
     return this->thermo_->composition().Y(name);
 }
@@ -135,7 +135,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::Y(const word& name) const
 
 template<class BasePhaseModel>
 Foam::PtrList<Foam::volScalarField>&
-Foam::MultiComponentPhaseModel<BasePhaseModel>::YRef()
+Foam::MulticomponentPhaseModel<BasePhaseModel>::YRef()
 {
     return this->thermo_->composition().Y();
 }
@@ -143,7 +143,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YRef()
 
 template<class BasePhaseModel>
 const Foam::UPtrList<Foam::volScalarField>&
-Foam::MultiComponentPhaseModel<BasePhaseModel>::YActive() const
+Foam::MulticomponentPhaseModel<BasePhaseModel>::YActive() const
 {
     return YActive_;
 }
@@ -151,7 +151,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YActive() const
 
 template<class BasePhaseModel>
 Foam::UPtrList<Foam::volScalarField>&
-Foam::MultiComponentPhaseModel<BasePhaseModel>::YActiveRef()
+Foam::MulticomponentPhaseModel<BasePhaseModel>::YActiveRef()
 {
     return YActive_;
 }

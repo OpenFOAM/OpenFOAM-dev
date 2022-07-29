@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "multiComponentMixture.H"
+#include "multicomponentMixture.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class ThermoType>
 Foam::PtrList<ThermoType>
-Foam::multiComponentMixture<ThermoType>::readSpeciesData
+Foam::multicomponentMixture<ThermoType>::readSpeciesData
 (
     const dictionary& thermoDict
 ) const
@@ -51,7 +51,7 @@ Foam::multiComponentMixture<ThermoType>::readSpeciesData
 
 template<class ThermoType>
 Foam::List<Foam::List<Foam::specieElement>>
-Foam::multiComponentMixture<ThermoType>::readSpeciesComposition
+Foam::multicomponentMixture<ThermoType>::readSpeciesComposition
 (
     const dictionary& thermoDict
 ) const
@@ -87,7 +87,7 @@ Foam::multiComponentMixture<ThermoType>::readSpeciesComposition
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::multiComponentMixture<ThermoType>::multiComponentMixture
+Foam::multicomponentMixture<ThermoType>::multicomponentMixture
 (
     const dictionary& thermoDict,
     const fvMesh& mesh,
@@ -111,7 +111,7 @@ Foam::multiComponentMixture<ThermoType>::multiComponentMixture
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-void Foam::multiComponentMixture<ThermoType>::read
+void Foam::multicomponentMixture<ThermoType>::read
 (
     const dictionary& thermoDict
 )
@@ -123,7 +123,7 @@ void Foam::multiComponentMixture<ThermoType>::read
 
 template<class ThermoType>
 const Foam::List<Foam::specieElement>&
-Foam::multiComponentMixture<ThermoType>::specieComposition
+Foam::multicomponentMixture<ThermoType>::specieComposition
 (
     const label speciei
 ) const

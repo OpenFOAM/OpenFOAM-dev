@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::multiComponentMixture
+    Foam::multicomponentMixture
 
 Description
-    Foam::multiComponentMixture
+    Foam::multicomponentMixture
 
 SourceFiles
-    multiComponentMixture.C
+    multicomponentMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef multiComponentMixture_H
-#define multiComponentMixture_H
+#ifndef multicomponentMixture_H
+#define multicomponentMixture_H
 
 #include "basicSpecieMixture.H"
 #include "HashPtrTable.H"
@@ -45,11 +45,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class multiComponentMixture Declaration
+                    Class multicomponentMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class multiComponentMixture
+class multicomponentMixture
 :
     public basicSpecieMixture
 {
@@ -88,17 +88,17 @@ public:
     // Constructors
 
         //- Construct from dictionary, mesh and phase name
-        multiComponentMixture(const dictionary&, const fvMesh&, const word&);
+        multicomponentMixture(const dictionary&, const fvMesh&, const word&);
 
         //- Disallow default bitwise copy construction
-        multiComponentMixture
+        multicomponentMixture
         (
-            const multiComponentMixture<ThermoType>&
+            const multicomponentMixture<ThermoType>&
         ) = delete;
 
 
     //- Destructor
-    virtual ~multiComponentMixture()
+    virtual ~multicomponentMixture()
     {}
 
 
@@ -134,7 +134,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "multiComponentMixture.C"
+    #include "multicomponentMixture.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
