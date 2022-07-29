@@ -1,0 +1,3 @@
+fluidMulticomponentThermophysicalTransportModels.C
+
+LIB = $(FOAM_LIBBIN)/libfluidMulticomponentThermophysicalTransportModels

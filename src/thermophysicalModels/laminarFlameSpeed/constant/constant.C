@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ namespace laminarFlameSpeedModels
 Foam::laminarFlameSpeedModels::constant::constant
 (
     const dictionary& dict,
-    const psiuReactionThermo& ct
+    const psiuMulticomponentThermo& ct
 )
 :
     laminarFlameSpeed(dict, ct),
@@ -72,7 +72,7 @@ Foam::laminarFlameSpeedModels::constant::operator()() const
     return volScalarField::New
     (
         "Su0",
-        psiuReactionThermo_.T().mesh(),
+        psiuMulticomponentThermo_.T().mesh(),
         Su_
     );
 }

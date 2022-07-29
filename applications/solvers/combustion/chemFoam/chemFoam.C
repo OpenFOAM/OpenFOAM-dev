@@ -33,7 +33,7 @@ Description
 
 #include "fvCFD.H"
 #include "zeroDimensionalFvMesh.H"
-#include "fluidReactionThermo.H"
+#include "fluidMulticomponentThermo.H"
 #include "basicChemistryModel.H"
 #include "multiComponentMixture.H"
 #include "chemistrySolver.H"

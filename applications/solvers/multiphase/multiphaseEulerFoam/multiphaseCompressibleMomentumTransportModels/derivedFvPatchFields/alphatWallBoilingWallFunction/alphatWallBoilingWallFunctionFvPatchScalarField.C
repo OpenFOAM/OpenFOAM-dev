@@ -29,7 +29,7 @@ License
 #include "compressibleMomentumTransportModels.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "saturationModel.H"
-#include "rhoReactionThermo.H"
+#include "rhoMulticomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant::mathematical;

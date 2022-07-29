@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,15 +27,15 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-inline Foam::scalar Foam::Reaction<ReactionThermo>::Tlow() const
+template<class MulticomponentThermo>
+inline Foam::scalar Foam::Reaction<MulticomponentThermo>::Tlow() const
 {
     return Tlow_;
 }
 
 
-template<class ReactionThermo>
-inline Foam::scalar Foam::Reaction<ReactionThermo>::Thigh() const
+template<class MulticomponentThermo>
+inline Foam::scalar Foam::Reaction<MulticomponentThermo>::Thigh() const
 {
     return Thigh_;
 }
@@ -43,11 +43,11 @@ inline Foam::scalar Foam::Reaction<ReactionThermo>::Thigh() const
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
+template<class MulticomponentThermo>
 inline Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const Reaction<ReactionThermo>& r
+    const Reaction<MulticomponentThermo>& r
 )
 {
     r.write(os);

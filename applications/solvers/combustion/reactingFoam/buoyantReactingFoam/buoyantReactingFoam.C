@@ -35,10 +35,10 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "fluidReactionThermo.H"
+#include "fluidMulticomponentThermo.H"
 #include "combustionModel.H"
 #include "compressibleMomentumTransportModels.H"
-#include "fluidReactionThermophysicalTransportModel.H"
+#include "fluidMulticomponentThermophysicalTransportModel.H"
 #include "multivariateScheme.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"

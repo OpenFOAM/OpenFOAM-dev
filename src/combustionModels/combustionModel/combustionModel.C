@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ const Foam::word Foam::combustionModel::combustionPropertiesName
 
 Foam::IOobject Foam::combustionModel::createIOobject
 (
-    const fluidReactionThermo& thermo,
+    const fluidMulticomponentThermo& thermo,
     const word& combustionProperties
 ) const
 {
@@ -74,7 +74,7 @@ Foam::IOobject Foam::combustionModel::createIOobject
 Foam::combustionModel::combustionModel
 (
     const word& modelType,
-    const fluidReactionThermo& thermo,
+    const fluidMulticomponentThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )

@@ -33,8 +33,8 @@ Description
 
 #include "fvCFD.H"
 #include "compressibleMomentumTransportModels.H"
-#include "fluidReactionThermophysicalTransportModel.H"
-#include "fluidReactionThermo.H"
+#include "fluidMulticomponentThermophysicalTransportModel.H"
+#include "fluidMulticomponentThermo.H"
 #include "combustionModel.H"
 #include "fixedGradientFvPatchFields.H"
 #include "regionProperties.H"

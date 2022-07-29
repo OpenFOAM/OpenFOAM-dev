@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,61 +27,62 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ReactionRate>
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
 NonEquilibriumReversibleReaction
 (
-    const Reaction<ReactionThermo>& reaction,
+    const Reaction<MulticomponentThermo>& reaction,
     const ReactionRate& forwardReactionRate,
     const ReactionRate& reverseReactionRate
 )
 :
-    Reaction<ReactionThermo>(reaction),
+    Reaction<MulticomponentThermo>(reaction),
     fk_(forwardReactionRate),
     rk_(reverseReactionRate)
 {}
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
 NonEquilibriumReversibleReaction
 (
     const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
     const dictionary& dict
 )
 :
-    Reaction<ReactionThermo>(species, thermoDatabase, dict),
+    Reaction<MulticomponentThermo>(species, thermoDatabase, dict),
     fk_(species, dict.subDict("forward")),
     rk_(species, dict.subDict("reverse"))
 {}
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
 NonEquilibriumReversibleReaction
 (
     const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
     const objectRegistry& ob,
     const dictionary& dict
 )
 :
-    Reaction<ReactionThermo>(species, thermoDatabase, dict),
+    Reaction<MulticomponentThermo>(species, thermoDatabase, dict),
     fk_(species, ob, dict.subDict("forward")),
     rk_(species, ob, dict.subDict("reverse"))
 {}
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
 NonEquilibriumReversibleReaction
 (
-    const NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>& nerr,
+    const NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>&
+        nerr,
     const speciesTable& species
 )
 :
-    Reaction<ReactionThermo>(nerr, species),
+    Reaction<MulticomponentThermo>(nerr, species),
     fk_(nerr.fk_),
     rk_(nerr.rk_)
 {}
@@ -89,8 +90,9 @@ NonEquilibriumReversibleReaction
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ReactionRate>
-void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+void
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
 preEvaluate() const
 {
     fk_.preEvaluate();
@@ -98,8 +100,9 @@ preEvaluate() const
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+void
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
 postEvaluate() const
 {
     fk_.postEvaluate();
@@ -107,9 +110,9 @@ postEvaluate() const
 }
 
 
-template<class ReactionThermo, class ReactionRate>
+template<class MulticomponentThermo, class ReactionRate>
 Foam::scalar
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::kf
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::kf
 (
     const scalar p,
     const scalar T,
@@ -121,9 +124,9 @@ Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::kf
 }
 
 
-template<class ReactionThermo, class ReactionRate>
+template<class MulticomponentThermo, class ReactionRate>
 Foam::scalar
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::kr
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::kr
 (
     const scalar,
     const scalar p,
@@ -136,9 +139,9 @@ Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::kr
 }
 
 
-template<class ReactionThermo, class ReactionRate>
+template<class MulticomponentThermo, class ReactionRate>
 Foam::scalar
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::kr
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::kr
 (
     const scalar p,
     const scalar T,
@@ -150,9 +153,10 @@ Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::kr
 }
 
 
-template<class ReactionThermo, class ReactionRate>
+template<class MulticomponentThermo, class ReactionRate>
 Foam::scalar
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkfdT
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
+dkfdT
 (
     const scalar p,
     const scalar T,
@@ -164,9 +168,10 @@ Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkfdT
 }
 
 
-template<class ReactionThermo, class ReactionRate>
+template<class MulticomponentThermo, class ReactionRate>
 Foam::scalar
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkrdT
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
+dkrdT
 (
     const scalar p,
     const scalar T,
@@ -180,16 +185,19 @@ Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkrdT
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-bool Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+bool
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
 hasDkdc() const
 {
     return fk_.hasDdc() || rk_.hasDdc();
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkfdc
+template<class MulticomponentThermo, class ReactionRate>
+void
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
+dkfdc
 (
     const scalar p,
     const scalar T,
@@ -202,8 +210,10 @@ void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkfdc
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkrdc
+template<class MulticomponentThermo, class ReactionRate>
+void
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
+dkrdc
 (
     const scalar p,
     const scalar T,
@@ -218,14 +228,15 @@ void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::dkrdc
 }
 
 
-template<class ReactionThermo, class ReactionRate>
+template<class MulticomponentThermo, class ReactionRate>
 void
-Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::write
+Foam::NonEquilibriumReversibleReaction<MulticomponentThermo, ReactionRate>::
+write
 (
     Ostream& os
 ) const
 {
-    Reaction<ReactionThermo>::write(os);
+    Reaction<MulticomponentThermo>::write(os);
 
     os  << indent << "forward" << nl;
     os  << indent << token::BEGIN_BLOCK << nl;

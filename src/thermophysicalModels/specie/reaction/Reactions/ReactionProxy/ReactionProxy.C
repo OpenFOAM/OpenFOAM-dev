@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,16 +27,16 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::ReactionProxy<ReactionThermo>::ReactionProxy
+template<class MulticomponentThermo>
+Foam::ReactionProxy<MulticomponentThermo>::ReactionProxy
 (
     const speciesTable& species,
     const List<specieCoeffs>& lhs,
     const List<specieCoeffs>& rhs,
-    const HashPtrTable<ReactionThermo>& thermoDatabase
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase
 )
 :
-    Reaction<ReactionThermo>
+    Reaction<MulticomponentThermo>
     (
         species,
         lhs,
@@ -46,14 +46,14 @@ Foam::ReactionProxy<ReactionThermo>::ReactionProxy
 {}
 
 
-template<class ReactionThermo>
-Foam::ReactionProxy<ReactionThermo>::ReactionProxy
+template<class MulticomponentThermo>
+Foam::ReactionProxy<MulticomponentThermo>::ReactionProxy
 (
-    const Reaction<ReactionThermo>& r,
+    const Reaction<MulticomponentThermo>& r,
     const speciesTable& species
 )
 :
-    Reaction<ReactionThermo>
+    Reaction<MulticomponentThermo>
     (
         r,
         species
@@ -61,15 +61,15 @@ Foam::ReactionProxy<ReactionThermo>::ReactionProxy
 {}
 
 
-template<class ReactionThermo>
-Foam::ReactionProxy<ReactionThermo>::ReactionProxy
+template<class MulticomponentThermo>
+Foam::ReactionProxy<MulticomponentThermo>::ReactionProxy
 (
     const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
     const dictionary& dict
 )
 :
-    Reaction<ReactionThermo>
+    Reaction<MulticomponentThermo>
     (
         species,
         thermoDatabase,
@@ -78,41 +78,41 @@ Foam::ReactionProxy<ReactionThermo>::ReactionProxy
 {}
 
 
-template<class ReactionThermo>
-Foam::autoPtr<Foam::Reaction<ReactionThermo>>
-Foam::ReactionProxy<ReactionThermo>::clone() const
+template<class MulticomponentThermo>
+Foam::autoPtr<Foam::Reaction<MulticomponentThermo>>
+Foam::ReactionProxy<MulticomponentThermo>::clone() const
 {
     NotImplemented;
-    return autoPtr<Foam::Reaction<ReactionThermo>>();
+    return autoPtr<Foam::Reaction<MulticomponentThermo>>();
 }
 
 
-template<class ReactionThermo>
-Foam::autoPtr<Foam::Reaction<ReactionThermo>>
-Foam::ReactionProxy<ReactionThermo>::clone
+template<class MulticomponentThermo>
+Foam::autoPtr<Foam::Reaction<MulticomponentThermo>>
+Foam::ReactionProxy<MulticomponentThermo>::clone
 (
     const speciesTable& species
 ) const
 {
     NotImplemented;
-    return autoPtr<Reaction<ReactionThermo>>();
+    return autoPtr<Reaction<MulticomponentThermo>>();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-void Foam::ReactionProxy<ReactionThermo>::preEvaluate() const
+template<class MulticomponentThermo>
+void Foam::ReactionProxy<MulticomponentThermo>::preEvaluate() const
 {}
 
 
-template<class ReactionThermo>
-void Foam::ReactionProxy<ReactionThermo>::postEvaluate() const
+template<class MulticomponentThermo>
+void Foam::ReactionProxy<MulticomponentThermo>::postEvaluate() const
 {}
 
 
-template<class ReactionThermo>
-Foam::scalar Foam::ReactionProxy<ReactionThermo>::kf
+template<class MulticomponentThermo>
+Foam::scalar Foam::ReactionProxy<MulticomponentThermo>::kf
 (
     const scalar p,
     const scalar T,
@@ -125,8 +125,8 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::kf
 }
 
 
-template<class ReactionThermo>
-Foam::scalar Foam::ReactionProxy<ReactionThermo>::kr
+template<class MulticomponentThermo>
+Foam::scalar Foam::ReactionProxy<MulticomponentThermo>::kr
 (
     const scalar kfwd,
     const scalar p,
@@ -140,8 +140,8 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::kr
 }
 
 
-template<class ReactionThermo>
-Foam::scalar Foam::ReactionProxy<ReactionThermo>::kr
+template<class MulticomponentThermo>
+Foam::scalar Foam::ReactionProxy<MulticomponentThermo>::kr
 (
     const scalar p,
     const scalar T,
@@ -154,8 +154,8 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::kr
 }
 
 
-template<class ReactionThermo>
-Foam::scalar Foam::ReactionProxy<ReactionThermo>::dkfdT
+template<class MulticomponentThermo>
+Foam::scalar Foam::ReactionProxy<MulticomponentThermo>::dkfdT
 (
     const scalar p,
     const scalar T,
@@ -168,8 +168,8 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::dkfdT
 }
 
 
-template<class ReactionThermo>
-Foam::scalar Foam::ReactionProxy<ReactionThermo>::dkrdT
+template<class MulticomponentThermo>
+Foam::scalar Foam::ReactionProxy<MulticomponentThermo>::dkrdT
 (
     const scalar p,
     const scalar T,
@@ -184,16 +184,16 @@ Foam::scalar Foam::ReactionProxy<ReactionThermo>::dkrdT
 }
 
 
-template<class ReactionThermo>
-bool Foam::ReactionProxy<ReactionThermo>::hasDkdc() const
+template<class MulticomponentThermo>
+bool Foam::ReactionProxy<MulticomponentThermo>::hasDkdc() const
 {
     NotImplemented;
     return false;
 }
 
 
-template<class ReactionThermo>
-void Foam::ReactionProxy<ReactionThermo>::dkfdc
+template<class MulticomponentThermo>
+void Foam::ReactionProxy<MulticomponentThermo>::dkfdc
 (
     const scalar p,
     const scalar T,
@@ -206,8 +206,8 @@ void Foam::ReactionProxy<ReactionThermo>::dkfdc
 }
 
 
-template<class ReactionThermo>
-void Foam::ReactionProxy<ReactionThermo>::dkrdc
+template<class MulticomponentThermo>
+void Foam::ReactionProxy<MulticomponentThermo>::dkrdc
 (
     const scalar p,
     const scalar T,

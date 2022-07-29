@@ -33,8 +33,7 @@ Description
 
 bool Foam::debug::enableRunTimeSelectionToC = false;
 
-Foam::HashTable<Foam::Tuple2<Foam::word, Foam::wordHashSet>>
-    Foam::debug::runTimeSelectionToC;
+Foam::debug::runTimeSelectionToCType Foam::debug::runTimeSelectionToC;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

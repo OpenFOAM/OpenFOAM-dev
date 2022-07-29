@@ -97,7 +97,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        odeChemistryModel(const fluidReactionThermo& thermo);
+        odeChemistryModel(const fluidMulticomponentThermo& thermo);
 
         //- Disallow default bitwise copy construction
         odeChemistryModel(const odeChemistryModel&) = delete;

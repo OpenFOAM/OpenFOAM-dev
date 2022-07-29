@@ -28,22 +28,22 @@ License
 
 // * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::scalar Foam::Reaction<ReactionThermo>::TlowDefault(0);
+template<class MulticomponentThermo>
+Foam::scalar Foam::Reaction<MulticomponentThermo>::TlowDefault(0);
 
-template<class ReactionThermo>
-Foam::scalar Foam::Reaction<ReactionThermo>::ThighDefault(great);
+template<class MulticomponentThermo>
+Foam::scalar Foam::Reaction<MulticomponentThermo>::ThighDefault(great);
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::setThermo
+template<class MulticomponentThermo>
+void Foam::Reaction<MulticomponentThermo>::setThermo
 (
-    const HashPtrTable<ReactionThermo>& thermoDatabase
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase
 )
 {
-    typename ReactionThermo::thermoType rhsThermo
+    typename MulticomponentThermo::thermoType rhsThermo
     (
         rhs()[0].stoichCoeff
        *(*thermoDatabase[species()[rhs()[0].index]]).W()
@@ -58,7 +58,7 @@ void Foam::Reaction<ReactionThermo>::setThermo
            *(*thermoDatabase[species()[rhs()[i].index]]);
     }
 
-    typename ReactionThermo::thermoType lhsThermo
+    typename MulticomponentThermo::thermoType lhsThermo
     (
         lhs()[0].stoichCoeff
        *(*thermoDatabase[species()[lhs()[0].index]]).W()
@@ -84,23 +84,23 @@ void Foam::Reaction<ReactionThermo>::setThermo
             << exit(FatalError);
     }
 
-    ReactionThermo::thermoType::operator=(lhsThermo == rhsThermo);
+    MulticomponentThermo::thermoType::operator=(lhsThermo == rhsThermo);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::Reaction<ReactionThermo>::Reaction
+template<class MulticomponentThermo>
+Foam::Reaction<MulticomponentThermo>::Reaction
 (
     const speciesTable& species,
     const List<specieCoeffs>& lhs,
     const List<specieCoeffs>& rhs,
-    const HashPtrTable<ReactionThermo>& thermoDatabase
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase
 )
 :
     reaction(species, lhs, rhs),
-    ReactionThermo::thermoType(*thermoDatabase[species[0]]),
+    MulticomponentThermo::thermoType(*thermoDatabase[species[0]]),
     Tlow_(TlowDefault),
     Thigh_(ThighDefault)
 {
@@ -108,30 +108,30 @@ Foam::Reaction<ReactionThermo>::Reaction
 }
 
 
-template<class ReactionThermo>
-Foam::Reaction<ReactionThermo>::Reaction
+template<class MulticomponentThermo>
+Foam::Reaction<MulticomponentThermo>::Reaction
 (
-    const Reaction<ReactionThermo>& r,
+    const Reaction<MulticomponentThermo>& r,
     const speciesTable& species
 )
 :
     reaction(r, species),
-    ReactionThermo::thermoType(r),
+    MulticomponentThermo::thermoType(r),
     Tlow_(r.Tlow()),
     Thigh_(r.Thigh())
 {}
 
 
-template<class ReactionThermo>
-Foam::Reaction<ReactionThermo>::Reaction
+template<class MulticomponentThermo>
+Foam::Reaction<MulticomponentThermo>::Reaction
 (
     const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
     const dictionary& dict
 )
 :
     reaction(species, dict),
-    ReactionThermo::thermoType(*thermoDatabase[species[0]]),
+    MulticomponentThermo::thermoType(*thermoDatabase[species[0]]),
     Tlow_(dict.lookupOrDefault<scalar>("Tlow", TlowDefault)),
     Thigh_(dict.lookupOrDefault<scalar>("Thigh", ThighDefault))
 {
@@ -141,12 +141,12 @@ Foam::Reaction<ReactionThermo>::Reaction
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::autoPtr<Foam::Reaction<ReactionThermo>>
-Foam::Reaction<ReactionThermo>::New
+template<class MulticomponentThermo>
+Foam::autoPtr<Foam::Reaction<MulticomponentThermo>>
+Foam::Reaction<MulticomponentThermo>::New
 (
     const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
     const dictionary& dict
 )
 {
@@ -156,9 +156,10 @@ Foam::Reaction<ReactionThermo>::New
         dictionaryConstructorTablePtr_->find(reactionTypeName);
 
     // Backwards compatibility check. Reaction names used to have "Reaction"
-    // (Reaction<ReactionThermo>::typeName_()) appended. This was removed as it
-    // is unnecessary given the context in which the reaction is specified. If
-    // this reaction name was not found, search also for the old name.
+    // (Reaction<MulticomponentThermo>::typeName_()) appended. This was
+    // removed as it is unnecessary given the context in which the reaction is
+    // specified. If this reaction name was not found, search also for the old
+    // name.
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         cstrIter = dictionaryConstructorTablePtr_->find
@@ -177,19 +178,19 @@ Foam::Reaction<ReactionThermo>::New
             << exit(FatalError);
     }
 
-    return autoPtr<Reaction<ReactionThermo>>
+    return autoPtr<Reaction<MulticomponentThermo>>
     (
         cstrIter()(species, thermoDatabase, dict)
     );
 }
 
 
-template<class ReactionThermo>
-Foam::autoPtr<Foam::Reaction<ReactionThermo>>
-Foam::Reaction<ReactionThermo>::New
+template<class MulticomponentThermo>
+Foam::autoPtr<Foam::Reaction<MulticomponentThermo>>
+Foam::Reaction<MulticomponentThermo>::New
 (
     const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
     const objectRegistry& ob,
     const dictionary& dict
 )
@@ -240,29 +241,29 @@ Foam::Reaction<ReactionThermo>::New
                 << exit(FatalError);
         }
 
-        return autoPtr<Reaction<ReactionThermo>>
+        return autoPtr<Reaction<MulticomponentThermo>>
         (
             cstrIter()(species, thermoDatabase, dict)
         );
     }
 
-    return autoPtr<Reaction<ReactionThermo>>
+    return autoPtr<Reaction<MulticomponentThermo>>
     (
         cstrIter()(species, thermoDatabase, ob, dict)
     );
 }
 
 
-template<class ReactionThermo>
-Foam::autoPtr<Foam::Reaction<ReactionThermo>>
-Foam::Reaction<ReactionThermo>::New
+template<class MulticomponentThermo>
+Foam::autoPtr<Foam::Reaction<MulticomponentThermo>>
+Foam::Reaction<MulticomponentThermo>::New
 (
     const speciesTable& species,
-    const PtrList<ReactionThermo>& speciesThermo,
+    const PtrList<MulticomponentThermo>& speciesThermo,
     const dictionary& dict
 )
 {
-    HashPtrTable<ReactionThermo> thermoDatabase;
+    HashPtrTable<MulticomponentThermo> thermoDatabase;
     forAll(speciesThermo, i)
     {
         thermoDatabase.insert
@@ -278,15 +279,15 @@ Foam::Reaction<ReactionThermo>::New
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::write(Ostream& os) const
+template<class MulticomponentThermo>
+void Foam::Reaction<MulticomponentThermo>::write(Ostream& os) const
 {
     reaction::write(os);
 }
 
 
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::C
+template<class MulticomponentThermo>
+void Foam::Reaction<MulticomponentThermo>::C
 (
     const scalar p,
     const scalar T,
@@ -314,8 +315,8 @@ void Foam::Reaction<ReactionThermo>::C
 }
 
 
-template<class ReactionThermo>
-Foam::scalar Foam::Reaction<ReactionThermo>::omega
+template<class MulticomponentThermo>
+Foam::scalar Foam::Reaction<MulticomponentThermo>::omega
 (
     const scalar p,
     const scalar T,
@@ -342,8 +343,8 @@ Foam::scalar Foam::Reaction<ReactionThermo>::omega
 }
 
 
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::dNdtByV
+template<class MulticomponentThermo>
+void Foam::Reaction<MulticomponentThermo>::dNdtByV
 (
     const scalar p,
     const scalar T,
@@ -373,8 +374,8 @@ void Foam::Reaction<ReactionThermo>::dNdtByV
 }
 
 
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::ddNdtByVdcTp
+template<class MulticomponentThermo>
+void Foam::Reaction<MulticomponentThermo>::ddNdtByVdcTp
 (
     const scalar p,
     const scalar T,

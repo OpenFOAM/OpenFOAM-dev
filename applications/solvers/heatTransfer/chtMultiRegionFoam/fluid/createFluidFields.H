@@ -1,5 +1,5 @@
 // Initialise fluid field pointer lists
-PtrList<fluidReactionThermo> thermoFluid(fluidRegions.size());
+PtrList<fluidMulticomponentThermo> thermoFluid(fluidRegions.size());
 PtrList<volScalarField> rhoFluid(fluidRegions.size());
 PtrList<volVectorField> UFluid(fluidRegions.size());
 PtrList<surfaceScalarField> phiFluid(fluidRegions.size());
@@ -10,7 +10,7 @@ PtrList<volScalarField> ghFluid(fluidRegions.size());
 PtrList<surfaceScalarField> ghfFluid(fluidRegions.size());
 PtrList<compressible::momentumTransportModel>
     turbulenceFluid(fluidRegions.size());
-PtrList<fluidReactionThermophysicalTransportModel>
+PtrList<fluidMulticomponentThermophysicalTransportModel>
     thermophysicalTransportFluid(fluidRegions.size());
 PtrList<combustionModel> reactionFluid(fluidRegions.size());
 PtrList<volScalarField> p_rghFluid(fluidRegions.size());
@@ -32,7 +32,7 @@ forAll(fluidRegions, i)
         << fluidRegions[i].name() << nl << endl;
 
     Info<< "    Adding to thermoFluid\n" << endl;
-    thermoFluid.set(i, fluidReactionThermo::New(fluidRegions[i]).ptr());
+    thermoFluid.set(i, fluidMulticomponentThermo::New(fluidRegions[i]).ptr());
 
     Info<< "    Adding to rhoFluid\n" << endl;
     rhoFluid.set
@@ -183,7 +183,7 @@ forAll(fluidRegions, i)
     thermophysicalTransportFluid.set
     (
         i,
-        fluidReactionThermophysicalTransportModel::New
+        fluidMulticomponentThermophysicalTransportModel::New
         (
             turbulenceFluid[i],
             thermoFluid[i]

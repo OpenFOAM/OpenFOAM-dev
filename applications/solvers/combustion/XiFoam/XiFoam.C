@@ -50,7 +50,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "psiuReactionThermo.H"
+#include "psiuMulticomponentThermo.H"
 #include "compressibleMomentumTransportModels.H"
 #include "fluidThermophysicalTransportModel.H"
 #include "laminarFlameSpeed.H"

@@ -202,7 +202,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        chemistryModel(const fluidReactionThermo& thermo);
+        chemistryModel(const fluidMulticomponentThermo& thermo);
 
         //- Disallow default bitwise copy construction
         chemistryModel(const chemistryModel&) = delete;

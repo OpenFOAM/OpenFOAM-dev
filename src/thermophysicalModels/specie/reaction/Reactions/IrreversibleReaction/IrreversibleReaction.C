@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,81 +27,81 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ReactionRate>
-Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::
 IrreversibleReaction
 (
-    const Reaction<ReactionThermo>& reaction,
+    const Reaction<MulticomponentThermo>& reaction,
     const ReactionRate& k
 )
 :
-    Reaction<ReactionThermo>(reaction),
+    Reaction<MulticomponentThermo>(reaction),
     k_(k)
 {}
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::
 IrreversibleReaction
 (
     const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
     const dictionary& dict
 )
 :
-    Reaction<ReactionThermo>(species, thermoDatabase, dict),
+    Reaction<MulticomponentThermo>(species, thermoDatabase, dict),
     k_(species, dict)
 {}
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::
 IrreversibleReaction
 (
     const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
     const objectRegistry& ob,
     const dictionary& dict
 )
 :
-    Reaction<ReactionThermo>(species, thermoDatabase, dict),
+    Reaction<MulticomponentThermo>(species, thermoDatabase, dict),
     k_(species, ob, dict)
 {}
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::
+template<class MulticomponentThermo, class ReactionRate>
+Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::
 IrreversibleReaction
 (
-    const IrreversibleReaction<ReactionThermo,ReactionRate>& irr,
+    const IrreversibleReaction<MulticomponentThermo,ReactionRate>& irr,
     const speciesTable& species
 )
 :
-    Reaction<ReactionThermo>(irr, species),
+    Reaction<MulticomponentThermo>(irr, species),
     k_(irr.k_)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ReactionRate>
-void
-Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::preEvaluate() const
+template<class MulticomponentThermo, class ReactionRate>
+void Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::
+preEvaluate() const
 {
     k_.preEvaluate();
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-void
-Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::postEvaluate() const
+template<class MulticomponentThermo, class ReactionRate>
+void Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::
+postEvaluate() const
 {
     k_.postEvaluate();
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::kf
+template<class MulticomponentThermo, class ReactionRate>
+Foam::scalar Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::kf
 (
     const scalar p,
     const scalar T,
@@ -113,8 +113,8 @@ Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::kf
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::kr
+template<class MulticomponentThermo, class ReactionRate>
+Foam::scalar Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::kr
 (
     const scalar kfwd,
     const scalar p,
@@ -127,8 +127,8 @@ Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::kr
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::kr
+template<class MulticomponentThermo, class ReactionRate>
+Foam::scalar Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::kr
 (
     const scalar p,
     const scalar T,
@@ -140,8 +140,9 @@ Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::kr
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::dkfdT
+template<class MulticomponentThermo, class ReactionRate>
+Foam::scalar
+Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::dkfdT
 (
     const scalar p,
     const scalar T,
@@ -153,8 +154,9 @@ Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::dkfdT
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::dkrdT
+template<class MulticomponentThermo, class ReactionRate>
+Foam::scalar
+Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::dkrdT
 (
     const scalar p,
     const scalar T,
@@ -168,15 +170,16 @@ Foam::scalar Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::dkrdT
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-bool Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::hasDkdc() const
+template<class MulticomponentThermo, class ReactionRate>
+bool
+Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::hasDkdc() const
 {
     return k_.hasDdc();
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-void Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::dkfdc
+template<class MulticomponentThermo, class ReactionRate>
+void Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::dkfdc
 (
     const scalar p,
     const scalar T,
@@ -189,8 +192,8 @@ void Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::dkfdc
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-void Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::dkrdc
+template<class MulticomponentThermo, class ReactionRate>
+void Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::dkrdc
 (
     const scalar p,
     const scalar T,
@@ -205,13 +208,13 @@ void Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::dkrdc
 }
 
 
-template<class ReactionThermo, class ReactionRate>
-void Foam::IrreversibleReaction<ReactionThermo, ReactionRate>::write
+template<class MulticomponentThermo, class ReactionRate>
+void Foam::IrreversibleReaction<MulticomponentThermo, ReactionRate>::write
 (
     Ostream& os
 ) const
 {
-    Reaction<ReactionThermo>::write(os);
+    Reaction<MulticomponentThermo>::write(os);
     k_.write(os);
 }
 

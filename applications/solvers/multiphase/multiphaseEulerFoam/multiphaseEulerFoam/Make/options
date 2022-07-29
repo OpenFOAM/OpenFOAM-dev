@@ -21,7 +21,7 @@ EXE_LIBS = \
     -lmultiphaseReactions \
     -lmultiphaseProperties \
     -lphaseFluidThermophysicalTransportModels \
-    -lphaseFluidReactionThermophysicalTransportModels \
+    -lphaseFluidMulticomponentThermophysicalTransportModels \
     -lfiniteVolume \
     -lfvModels \
     -lfvConstraints \

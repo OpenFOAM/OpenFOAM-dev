@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ namespace laminarFlameSpeedModels
 Foam::laminarFlameSpeedModels::Gulders::Gulders
 (
     const dictionary& dict,
-    const psiuReactionThermo& ct
+    const psiuMulticomponentThermo& ct
 )
 :
     laminarFlameSpeed(dict, ct),
@@ -196,19 +196,20 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
 Foam::tmp<Foam::volScalarField>
 Foam::laminarFlameSpeedModels::Gulders::operator()() const
 {
-    if (psiuReactionThermo_.composition().contains("ft"))
+    if (psiuMulticomponentThermo_.composition().contains("ft"))
     {
-        const volScalarField& ft = psiuReactionThermo_.composition().Y("ft");
+        const volScalarField& ft =
+            psiuMulticomponentThermo_.composition().Y("ft");
 
         return Su0pTphi
         (
-            psiuReactionThermo_.p(),
-            psiuReactionThermo_.Tu(),
+            psiuMulticomponentThermo_.p(),
+            psiuMulticomponentThermo_.Tu(),
             dimensionedScalar
             (
                 "stoichiometricAirFuelMassRatio",
                 dimless,
-                psiuReactionThermo_.properties()
+                psiuMulticomponentThermo_.properties()
             )*ft/max(1 - ft, small)
         );
     }
@@ -216,8 +217,8 @@ Foam::laminarFlameSpeedModels::Gulders::operator()() const
     {
         return Su0pTphi
         (
-            psiuReactionThermo_.p(),
-            psiuReactionThermo_.Tu(),
+            psiuMulticomponentThermo_.p(),
+            psiuMulticomponentThermo_.Tu(),
             equivalenceRatio_
         );
     }

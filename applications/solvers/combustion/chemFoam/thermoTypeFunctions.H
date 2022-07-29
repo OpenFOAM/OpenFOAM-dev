@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-scalarList W(const fluidReactionThermo& thermo)
+scalarList W(const fluidMulticomponentThermo& thermo)
 {
     const basicSpecieMixture& composition = thermo.composition();
 
@@ -40,7 +40,7 @@ scalarList W(const fluidReactionThermo& thermo)
 
 scalar h0
 (
-    const fluidReactionThermo& thermo,
+    const fluidMulticomponentThermo& thermo,
     const scalarList& Y,
     const scalar p,
     const scalar T

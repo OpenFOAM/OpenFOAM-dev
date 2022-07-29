@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ SourceFiles
 #ifndef basicChemistryModel_H
 #define basicChemistryModel_H
 
-#include "fluidReactionThermo.H"
+#include "fluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,7 +78,7 @@ protected:
         const fvMesh& mesh_;
 
         //- Reference to the thermo
-        const fluidReactionThermo& thermo_;
+        const fluidMulticomponentThermo& thermo_;
 
         //- Chemistry activation switch
         Switch chemistry_;
@@ -111,7 +111,7 @@ public:
         autoPtr,
         basicChemistryModel,
         thermo,
-        (const fluidReactionThermo& thermo),
+        (const fluidMulticomponentThermo& thermo),
         (thermo)
     );
 
@@ -119,7 +119,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        basicChemistryModel(const fluidReactionThermo& thermo);
+        basicChemistryModel(const fluidMulticomponentThermo& thermo);
 
         //- Disallow default bitwise copy construction
         basicChemistryModel(const basicChemistryModel&) = delete;
@@ -130,7 +130,7 @@ public:
         //- Select based on fluid reaction thermo
         static autoPtr<basicChemistryModel> New
         (
-            const fluidReactionThermo& thermo
+            const fluidMulticomponentThermo& thermo
         );
 
 
@@ -144,7 +144,7 @@ public:
         inline const fvMesh& mesh() const;
 
         //- Return const access to the thermo
-        inline const fluidReactionThermo& thermo() const;
+        inline const fluidMulticomponentThermo& thermo() const;
 
         //- Chemistry activation switch
         inline Switch chemistry() const;

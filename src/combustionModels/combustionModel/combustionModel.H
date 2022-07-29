@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 
 #include "IOdictionary.H"
 #include "compressibleMomentumTransportModels.H"
-#include "fluidReactionThermo.H"
+#include "fluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,7 +57,7 @@ class combustionModel
         //- Construct the base IO object
         IOobject createIOobject
         (
-            const fluidReactionThermo& thermo,
+            const fluidMulticomponentThermo& thermo,
             const word& combustionProperties
         ) const;
 
@@ -70,7 +70,7 @@ protected:
         const fvMesh& mesh_;
 
         //- Reference to the thermo
-        const fluidReactionThermo& thermo_;
+        const fluidMulticomponentThermo& thermo_;
 
         //- Reference to the turbulence model
         const compressibleMomentumTransportModel& turb_;
@@ -99,7 +99,7 @@ public:
         dictionary,
         (
             const word& modelType,
-            const fluidReactionThermo& thermo,
+            const fluidMulticomponentThermo& thermo,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties
         ),
@@ -113,7 +113,7 @@ public:
         combustionModel
         (
             const word& modelType,
-            const fluidReactionThermo& thermo,
+            const fluidMulticomponentThermo& thermo,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties = combustionPropertiesName
         );
@@ -127,7 +127,7 @@ public:
         //- Select using thermo and turbulence
         static autoPtr<combustionModel> New
         (
-            const fluidReactionThermo& thermo,
+            const fluidMulticomponentThermo& thermo,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties = combustionPropertiesName
         );
@@ -143,7 +143,7 @@ public:
         inline const fvMesh& mesh() const;
 
         //- Return const access to the thermo
-        inline const fluidReactionThermo& thermo() const;
+        inline const fluidMulticomponentThermo& thermo() const;
 
         //- Return access to turbulence
         inline const compressibleMomentumTransportModel& turbulence() const;

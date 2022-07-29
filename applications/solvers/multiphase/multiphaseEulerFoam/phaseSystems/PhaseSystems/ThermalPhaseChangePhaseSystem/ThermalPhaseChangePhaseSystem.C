@@ -28,7 +28,7 @@ License
 #include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 #include "fvcVolumeIntegrate.H"
 #include "fvmSup.H"
-#include "rhoReactionThermo.H"
+#include "rhoMulticomponentThermo.H"
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 

@@ -38,7 +38,7 @@ namespace Foam
 
 Foam::odeChemistryModel::odeChemistryModel
 (
-    const fluidReactionThermo& thermo
+    const fluidMulticomponentThermo& thermo
 )
 :
     basicChemistryModel(thermo),

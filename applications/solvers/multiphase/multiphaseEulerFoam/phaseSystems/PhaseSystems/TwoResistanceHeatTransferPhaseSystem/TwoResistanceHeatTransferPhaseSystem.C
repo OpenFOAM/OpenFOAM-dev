@@ -26,7 +26,7 @@ License
 #include "TwoResistanceHeatTransferPhaseSystem.H"
 #include "heatTransferModel.H"
 #include "fvmSup.H"
-#include "rhoReactionThermo.H"
+#include "rhoMulticomponentThermo.H"
 
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 

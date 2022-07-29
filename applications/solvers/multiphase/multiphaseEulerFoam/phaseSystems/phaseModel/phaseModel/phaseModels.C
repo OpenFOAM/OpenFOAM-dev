@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 
 #include "rhoThermo.H"
-#include "rhoReactionThermo.H"
+#include "rhoMulticomponentThermo.H"
 
 #include "combustionModel.H"
 
@@ -150,7 +150,7 @@ namespace Foam
                 <
                     MovingPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoReactionThermo>
+                        ThermoPhaseModel<phaseModel, rhoMulticomponentThermo>
                     >
                 >
             >
@@ -174,7 +174,7 @@ namespace Foam
                 <
                     MovingPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoReactionThermo>
+                        ThermoPhaseModel<phaseModel, rhoMulticomponentThermo>
                     >
                 >
             >
@@ -198,7 +198,7 @@ namespace Foam
                 <
                     MovingPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoReactionThermo>
+                        ThermoPhaseModel<phaseModel, rhoMulticomponentThermo>
                     >
                 >
             >

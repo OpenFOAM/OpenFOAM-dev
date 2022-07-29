@@ -25,7 +25,7 @@ License
 
 #include "HeatTransferPhaseSystem.H"
 #include "fvmSup.H"
-#include "rhoReactionThermo.H"
+#include "rhoMulticomponentThermo.H"
 
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
@@ -92,12 +92,12 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
         const rhoThermo& thermo1 = phase1.thermo();
         const rhoThermo& thermo2 = phase2.thermo();
         const basicSpecieMixture* compositionPtr1 =
-            isA<rhoReactionThermo>(thermo1)
-          ? &refCast<const rhoReactionThermo>(thermo1).composition()
+            isA<rhoMulticomponentThermo>(thermo1)
+          ? &refCast<const rhoMulticomponentThermo>(thermo1).composition()
           : static_cast<const basicSpecieMixture*>(nullptr);
         const basicSpecieMixture* compositionPtr2 =
-            isA<rhoReactionThermo>(thermo2)
-          ? &refCast<const rhoReactionThermo>(thermo2).composition()
+            isA<rhoMulticomponentThermo>(thermo2)
+          ? &refCast<const rhoMulticomponentThermo>(thermo2).composition()
           : static_cast<const basicSpecieMixture*>(nullptr);
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
@@ -308,12 +308,12 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefsWithoutL
         const rhoThermo& thermo1 = phase1.thermo();
         const rhoThermo& thermo2 = phase2.thermo();
         const basicSpecieMixture* compositionPtr1 =
-            isA<rhoReactionThermo>(thermo1)
-          ? &refCast<const rhoReactionThermo>(thermo1).composition()
+            isA<rhoMulticomponentThermo>(thermo1)
+          ? &refCast<const rhoMulticomponentThermo>(thermo1).composition()
           : static_cast<const basicSpecieMixture*>(nullptr);
         const basicSpecieMixture* compositionPtr2 =
-            isA<rhoReactionThermo>(thermo2)
-          ? &refCast<const rhoReactionThermo>(thermo2).composition()
+            isA<rhoMulticomponentThermo>(thermo2)
+          ? &refCast<const rhoMulticomponentThermo>(thermo2).composition()
           : static_cast<const basicSpecieMixture*>(nullptr);
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
@@ -598,12 +598,12 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
     const rhoThermo& thermo1 = interface.phase1().thermo();
     const rhoThermo& thermo2 = interface.phase2().thermo();
     const basicSpecieMixture* compositionPtr1 =
-        isA<rhoReactionThermo>(thermo1)
-      ? &refCast<const rhoReactionThermo>(thermo1).composition()
+        isA<rhoMulticomponentThermo>(thermo1)
+      ? &refCast<const rhoMulticomponentThermo>(thermo1).composition()
       : static_cast<const basicSpecieMixture*>(nullptr);
     const basicSpecieMixture* compositionPtr2 =
-        isA<rhoReactionThermo>(thermo2)
-      ? &refCast<const rhoReactionThermo>(thermo2).composition()
+        isA<rhoMulticomponentThermo>(thermo2)
+      ? &refCast<const rhoMulticomponentThermo>(thermo2).composition()
       : static_cast<const basicSpecieMixture*>(nullptr);
     const label speciei1 =
         compositionPtr1 ? compositionPtr1->species()[specie] : -1;
@@ -671,12 +671,12 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
     const rhoThermo& thermo1 = interface.phase1().thermo();
     const rhoThermo& thermo2 = interface.phase2().thermo();
     const basicSpecieMixture* compositionPtr1 =
-        isA<rhoReactionThermo>(thermo1)
-      ? &refCast<const rhoReactionThermo>(thermo1).composition()
+        isA<rhoMulticomponentThermo>(thermo1)
+      ? &refCast<const rhoMulticomponentThermo>(thermo1).composition()
       : static_cast<const basicSpecieMixture*>(nullptr);
     const basicSpecieMixture* compositionPtr2 =
-        isA<rhoReactionThermo>(thermo2)
-      ? &refCast<const rhoReactionThermo>(thermo2).composition()
+        isA<rhoMulticomponentThermo>(thermo2)
+      ? &refCast<const rhoMulticomponentThermo>(thermo2).composition()
       : static_cast<const basicSpecieMixture*>(nullptr);
     const label speciei1 =
         compositionPtr1 ? compositionPtr1->species()[specie] : -1;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,10 +49,10 @@ namespace Foam
                         Class ReactionProxy Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo>
+template<class MulticomponentThermo>
 class ReactionProxy
 :
-    public Reaction<ReactionThermo>
+    public Reaction<MulticomponentThermo>
 {
 
 public:
@@ -65,13 +65,13 @@ public:
             const speciesTable& species,
             const List<specieCoeffs>& lhs,
             const List<specieCoeffs>& rhs,
-            const HashPtrTable<ReactionThermo>& thermoDatabase
+            const HashPtrTable<MulticomponentThermo>& thermoDatabase
         );
 
         //- Construct as copy given new speciesTable
         ReactionProxy
         (
-            const Reaction<ReactionThermo>&,
+            const Reaction<MulticomponentThermo>&,
             const speciesTable& species
         );
 
@@ -79,15 +79,15 @@ public:
         ReactionProxy
         (
             const speciesTable& species,
-            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
             const dictionary& dict
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<ReactionThermo>> clone() const;
+        virtual autoPtr<Reaction<MulticomponentThermo>> clone() const;
 
         //- Construct and return a clone with new speciesTable
-        virtual autoPtr<Reaction<ReactionThermo>> clone
+        virtual autoPtr<Reaction<MulticomponentThermo>> clone
         (
             const speciesTable& species
         ) const;

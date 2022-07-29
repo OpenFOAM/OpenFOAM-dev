@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,8 @@ Class
     Foam::Reaction
 
 Description
-    Simple extension of ReactionThermo to handle reaction kinetics in addition
-    to the equilibrium thermodynamics already handled.
+    Simple extension of MulticomponentThermo to handle reaction kinetics in
+    addition to the equilibrium thermodynamics already handled.
 
 SourceFiles
     ReactionI.H
@@ -52,11 +52,11 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-template<class ReactionThermo>
+template<class MulticomponentThermo>
 class Reaction;
 
-template<class ReactionThermo>
-inline Ostream& operator<<(Ostream&, const Reaction<ReactionThermo>&);
+template<class MulticomponentThermo>
+inline Ostream& operator<<(Ostream&, const Reaction<MulticomponentThermo>&);
 
 class objectRegistry;
 
@@ -65,11 +65,11 @@ class objectRegistry;
                           Class Reaction Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo>
+template<class MulticomponentThermo>
 class Reaction
 :
     public reaction,
-    public ReactionThermo::thermoType
+    public MulticomponentThermo::thermoType
 {
 
 public:
@@ -91,7 +91,10 @@ private:
     // Private Member Functions
 
         //- Construct reaction thermo
-        void setThermo(const HashPtrTable<ReactionThermo>& thermoDatabase);
+        void setThermo
+        (
+            const HashPtrTable<MulticomponentThermo>& thermoDatabase
+        );
 
 
 public:
@@ -109,7 +112,7 @@ public:
             dictionary,
             (
                 const speciesTable& species,
-                const HashPtrTable<ReactionThermo>& thermoDatabase,
+                const HashPtrTable<MulticomponentThermo>& thermoDatabase,
                 const dictionary& dict
             ),
             (species, thermoDatabase, dict)
@@ -122,7 +125,7 @@ public:
             objectRegistry,
             (
                 const speciesTable& species,
-                const HashPtrTable<ReactionThermo>& thermoDatabase,
+                const HashPtrTable<MulticomponentThermo>& thermoDatabase,
                 const objectRegistry& ob,
                 const dictionary& dict
             ),
@@ -138,25 +141,29 @@ public:
             const speciesTable& species,
             const List<specieCoeffs>& lhs,
             const List<specieCoeffs>& rhs,
-            const HashPtrTable<ReactionThermo>& thermoDatabase
+            const HashPtrTable<MulticomponentThermo>& thermoDatabase
         );
 
         //- Construct as copy given new speciesTable
-        Reaction(const Reaction<ReactionThermo>&, const speciesTable& species);
+        Reaction
+        (
+            const Reaction<MulticomponentThermo>&,
+            const speciesTable& species
+        );
 
         //- Construct from dictionary
         Reaction
         (
             const speciesTable& species,
-            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
             const dictionary& dict
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<ReactionThermo>> clone() const = 0;
+        virtual autoPtr<Reaction<MulticomponentThermo>> clone() const = 0;
 
         //- Construct and return a clone with new speciesTable
-        virtual autoPtr<Reaction<ReactionThermo>> clone
+        virtual autoPtr<Reaction<MulticomponentThermo>> clone
         (
             const speciesTable& species
         ) const = 0;
@@ -166,19 +173,19 @@ public:
 
         //- Return a pointer to new patchField created on freestore
         //  from dictionary
-        static autoPtr<Reaction<ReactionThermo>> New
+        static autoPtr<Reaction<MulticomponentThermo>> New
         (
             const speciesTable& species,
-            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
             const dictionary& dict
         );
 
         //- Return a pointer to new patchField created on freestore
         //  from objectRegistry and dictionary
-        static autoPtr<Reaction<ReactionThermo>> New
+        static autoPtr<Reaction<MulticomponentThermo>> New
         (
             const speciesTable& species,
-            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
             const objectRegistry& ob,
             const dictionary& dict
         );
@@ -186,10 +193,10 @@ public:
         //- Return a pointer to new patchField created on freestore from dict.
         //  This is used to construct a single reaction given a speciesThermo
         //  list from which a temporary thermoDatabase is created.
-        static autoPtr<Reaction<ReactionThermo>> New
+        static autoPtr<Reaction<MulticomponentThermo>> New
         (
             const speciesTable& species,
-            const PtrList<ReactionThermo>& speciesThermo,
+            const PtrList<MulticomponentThermo>& speciesThermo,
             const dictionary& dict
         );
 
@@ -364,15 +371,15 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const Reaction<ReactionThermo>&) = delete;
+        void operator=(const Reaction<MulticomponentThermo>&) = delete;
 
 
     // Ostream Operator
 
-        friend Ostream& operator<< <ReactionThermo>
+        friend Ostream& operator<< <MulticomponentThermo>
         (
             Ostream&,
-            const Reaction<ReactionThermo>&
+            const Reaction<MulticomponentThermo>&
         );
 };
 

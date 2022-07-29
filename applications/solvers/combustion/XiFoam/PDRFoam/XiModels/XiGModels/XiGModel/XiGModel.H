@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ SourceFiles
 #define XiGModel_H
 
 #include "IOdictionary.H"
-#include "psiuReactionThermo.H"
+#include "psiuMulticomponentThermo.H"
 #include "compressibleMomentumTransportModels.H"
 #include "runTimeSelectionTables.H"
 
@@ -61,7 +61,7 @@ protected:
 
         dictionary XiGModelCoeffs_;
 
-        const psiuReactionThermo& thermo_;
+        const psiuMulticomponentThermo& thermo_;
         const compressible::RASModel& turbulence_;
         const volScalarField& Su_;
 
@@ -81,7 +81,7 @@ public:
             dictionary,
             (
                 const dictionary& XiGProperties,
-                const psiuReactionThermo& thermo,
+                const psiuMulticomponentThermo& thermo,
                 const compressible::RASModel& turbulence,
                 const volScalarField& Su
             ),
@@ -100,7 +100,7 @@ public:
         XiGModel
         (
             const dictionary& XiGProperties,
-            const psiuReactionThermo& thermo,
+            const psiuMulticomponentThermo& thermo,
             const compressible::RASModel& turbulence,
             const volScalarField& Su
         );
@@ -115,7 +115,7 @@ public:
         static autoPtr<XiGModel> New
         (
             const dictionary& XiGProperties,
-            const psiuReactionThermo& thermo,
+            const psiuMulticomponentThermo& thermo,
             const compressible::RASModel& turbulence,
             const volScalarField& Su
         );

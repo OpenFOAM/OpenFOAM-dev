@@ -1,10 +1,10 @@
 Info<< "Reading thermophysical properties\n" << endl;
 
-autoPtr<psiuReactionThermo> pThermo
+autoPtr<psiuMulticomponentThermo> pThermo
 (
-    psiuReactionThermo::New(mesh)
+    psiuMulticomponentThermo::New(mesh)
 );
-psiuReactionThermo& thermo = pThermo();
+psiuMulticomponentThermo& thermo = pThermo();
 thermo.validate(args.executable(), "ha", "ea");
 
 basicCombustionMixture& composition = thermo.composition();

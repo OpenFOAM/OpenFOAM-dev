@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ void Foam::combustionModels::singleStepCombustion::calculateMaxProducts()
 Foam::combustionModels::singleStepCombustion::singleStepCombustion
 (
     const word& modelType,
-    const fluidReactionThermo& thermo,
+    const fluidMulticomponentThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )

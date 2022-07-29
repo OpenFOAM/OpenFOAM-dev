@@ -33,7 +33,7 @@ License
 template<class ThermoType>
 Foam::chemistryModel<ThermoType>::chemistryModel
 (
-    const fluidReactionThermo& thermo
+    const fluidMulticomponentThermo& thermo
 )
 :
     odeChemistryModel(thermo),

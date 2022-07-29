@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ namespace laminarFlameSpeedModels
 Foam::laminarFlameSpeedModels::GuldersEGR::GuldersEGR
 (
     const dictionary& dict,
-    const psiuReactionThermo& ct
+    const psiuMulticomponentThermo& ct
 )
 :
     laminarFlameSpeed(dict, ct),
@@ -200,33 +200,33 @@ Foam::laminarFlameSpeedModels::GuldersEGR::operator()() const
 {
     if
     (
-        psiuReactionThermo_.composition().contains("ft")
-     && psiuReactionThermo_.composition().contains("egr")
+        psiuMulticomponentThermo_.composition().contains("ft")
+     && psiuMulticomponentThermo_.composition().contains("egr")
     )
     {
         return Su0pTphi
         (
-            psiuReactionThermo_.p(),
-            psiuReactionThermo_.Tu(),
+            psiuMulticomponentThermo_.p(),
+            psiuMulticomponentThermo_.Tu(),
             dimensionedScalar
             (
                 "stoichiometricAirFuelMassRatio",
                 dimless,
-                psiuReactionThermo_.properties()
+                psiuMulticomponentThermo_.properties()
             )
            /(
-                scalar(1)/psiuReactionThermo_.composition().Y("ft")
+                scalar(1)/psiuMulticomponentThermo_.composition().Y("ft")
               - scalar(1)
             ),
-            psiuReactionThermo_.composition().Y("egr")
+            psiuMulticomponentThermo_.composition().Y("egr")
         );
     }
     else
     {
         return Su0pTphi
         (
-            psiuReactionThermo_.p(),
-            psiuReactionThermo_.Tu(),
+            psiuMulticomponentThermo_.p(),
+            psiuMulticomponentThermo_.Tu(),
             equivalenceRatio_
         );
     }

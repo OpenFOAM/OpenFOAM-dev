@@ -2,10 +2,10 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
-    -I$(LIB_SRC)/ThermophysicalTransportModels/fluidReactionThermo/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/fluidMulticomponentThermo/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/multicomponentThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
     -I$(LIB_SRC)/ODE/lnInclude \
@@ -21,11 +21,11 @@ EXE_LIBS = \
     -lchemistryModel \
     -lODE \
     -lcombustionModels \
-    -lreactionThermophysicalModels \
+    -lmulticomponentThermophysicalModels \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
     -lthermophysicalTransportModels \
-    -lfluidReactionThermophysicalTransportModels \
+    -lfluidMulticomponentThermophysicalTransportModels \
     -lfiniteVolume \
     -lfvModels \
     -lfvConstraints \

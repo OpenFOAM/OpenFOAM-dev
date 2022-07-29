@@ -28,7 +28,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "thermophysicalTransportModel.H"
-#include "fluidReactionThermo.H"
+#include "fluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
@@ -65,7 +65,7 @@ Foam::specieTransferMassFractionFvPatchScalarField::composition
 {
     const word& name = physicalProperties::typeName;
 
-    return db.lookupObject<fluidReactionThermo>(name).composition();
+    return db.lookupObject<fluidMulticomponentThermo>(name).composition();
 }
 
 

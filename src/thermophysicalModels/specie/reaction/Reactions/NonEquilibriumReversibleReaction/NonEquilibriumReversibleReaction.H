@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,10 +47,10 @@ namespace Foam
               Class NonEquilibriumReversibleReaction Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo, class ReactionRate>
+template<class MulticomponentThermo, class ReactionRate>
 class NonEquilibriumReversibleReaction
 :
-    public Reaction<ReactionThermo>
+    public Reaction<MulticomponentThermo>
 {
     // Private Data
 
@@ -69,7 +69,7 @@ public:
         //- Construct from components
         NonEquilibriumReversibleReaction
         (
-            const Reaction<ReactionThermo>& reaction,
+            const Reaction<MulticomponentThermo>& reaction,
             const ReactionRate& forwardReactionRate,
             const ReactionRate& reverseReactionRate
         );
@@ -79,7 +79,7 @@ public:
         (
             const NonEquilibriumReversibleReaction
             <
-                ReactionThermo,
+                MulticomponentThermo,
                 ReactionRate
             >&,
             const speciesTable& species
@@ -89,7 +89,7 @@ public:
         NonEquilibriumReversibleReaction
         (
             const speciesTable& species,
-            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
             const dictionary& dict
         );
 
@@ -97,35 +97,35 @@ public:
         NonEquilibriumReversibleReaction
         (
             const speciesTable& species,
-            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
             const objectRegistry& ob,
             const dictionary& dict
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<ReactionThermo>> clone() const
+        virtual autoPtr<Reaction<MulticomponentThermo>> clone() const
         {
-            return autoPtr<Reaction<ReactionThermo>>
+            return autoPtr<Reaction<MulticomponentThermo>>
             (
                 new NonEquilibriumReversibleReaction
                 <
-                    ReactionThermo,
+                    MulticomponentThermo,
                     ReactionRate
                 >(*this)
             );
         }
 
         //- Construct and return a clone with new speciesTable
-        virtual autoPtr<Reaction<ReactionThermo>> clone
+        virtual autoPtr<Reaction<MulticomponentThermo>> clone
         (
             const speciesTable& species
         ) const
         {
-            return autoPtr<Reaction<ReactionThermo>>
+            return autoPtr<Reaction<MulticomponentThermo>>
             (
                 new NonEquilibriumReversibleReaction
                 <
-                    ReactionThermo,
+                    MulticomponentThermo,
                     ReactionRate
                 >
                 (
@@ -244,7 +244,7 @@ public:
         (
             const NonEquilibriumReversibleReaction
             <
-                ReactionThermo,
+                MulticomponentThermo,
                 ReactionRate
             >&
         ) = delete;

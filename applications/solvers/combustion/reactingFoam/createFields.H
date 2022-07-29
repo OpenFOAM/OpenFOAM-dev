@@ -1,8 +1,11 @@
 #include "createRDeltaT.H"
 
 Info<< "Reading thermophysical properties\n" << endl;
-autoPtr<fluidReactionThermo> pThermo(fluidReactionThermo::New(mesh));
-fluidReactionThermo& thermo = pThermo();
+autoPtr<fluidMulticomponentThermo> pThermo
+(
+    fluidMulticomponentThermo::New(mesh)
+);
+fluidMulticomponentThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
 
 basicSpecieMixture& composition = thermo.composition();
@@ -56,10 +59,10 @@ autoPtr<compressible::momentumTransportModel> turbulence
 );
 
 Info<< "Creating thermophysical transport model\n" << endl;
-autoPtr<fluidReactionThermophysicalTransportModel>
+autoPtr<fluidMulticomponentThermophysicalTransportModel>
 thermophysicalTransport
 (
-    fluidReactionThermophysicalTransportModel::New
+    fluidMulticomponentThermophysicalTransportModel::New
     (
         turbulence(),
         thermo

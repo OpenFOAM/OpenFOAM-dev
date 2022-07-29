@@ -1,3 +1,0 @@
-phaseFluidReactionThermophysicalTransportModels.C
-
-LIB = $(FOAM_LIBBIN)/libphaseFluidReactionThermophysicalTransportModels

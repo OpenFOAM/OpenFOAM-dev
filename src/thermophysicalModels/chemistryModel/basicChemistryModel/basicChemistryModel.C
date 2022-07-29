@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ void Foam::basicChemistryModel::correct()
 
 Foam::basicChemistryModel::basicChemistryModel
 (
-    const fluidReactionThermo& thermo
+    const fluidMulticomponentThermo& thermo
 )
 :
     IOdictionary

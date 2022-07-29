@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ SourceFiles
 #ifndef laminarFlameSpeed_H
 #define laminarFlameSpeed_H
 
-#include "psiuReactionThermo.H"
+#include "psiuMulticomponentThermo.H"
 #include "autoPtr.H"
 #include "runTimeSelectionTables.H"
 
@@ -62,7 +62,7 @@ protected:
 
     // Protected data
 
-        const psiuReactionThermo& psiuReactionThermo_;
+        const psiuMulticomponentThermo& psiuMulticomponentThermo_;
 
         //- Fuel
         word fuel_;
@@ -86,7 +86,7 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const psiuReactionThermo& ct
+                const psiuMulticomponentThermo& ct
             ),
             (dict, ct)
         );
@@ -94,11 +94,11 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and psiuReactionThermo
+        //- Construct from dictionary and psiuMulticomponentThermo
         laminarFlameSpeed
         (
             const dictionary&,
-            const psiuReactionThermo&
+            const psiuMulticomponentThermo&
         );
 
         //- Disallow default bitwise copy construction
@@ -109,7 +109,7 @@ public:
 
         static autoPtr<laminarFlameSpeed> New
         (
-            const psiuReactionThermo&
+            const psiuMulticomponentThermo&
         );
 
 

@@ -40,7 +40,7 @@ const Foam::hashedWordList& Foam::interfaceCompositionModel::species() const
 }
 
 
-const Foam::rhoReactionThermo&
+const Foam::rhoMulticomponentThermo&
 Foam::interfaceCompositionModel::thermo() const
 {
     return thermo_;
@@ -62,14 +62,14 @@ const Foam::rhoThermo& Foam::interfaceCompositionModel::otherThermo() const
 
 bool Foam::interfaceCompositionModel::otherHasComposition() const
 {
-    return isA<rhoReactionThermo>(otherThermo_);
+    return isA<rhoMulticomponentThermo>(otherThermo_);
 }
 
 
 const Foam::basicSpecieMixture&
 Foam::interfaceCompositionModel::otherComposition() const
 {
-    return refCast<const rhoReactionThermo>(otherThermo_).composition();
+    return refCast<const rhoMulticomponentThermo>(otherThermo_).composition();
 }
 
 
