@@ -88,27 +88,18 @@ baffles
         owner
         {
             name        fan0;
-            type        cyclic;
-            neighbourPatch fan1;
+            type        wall;
 
             patchFields
             {
-                p
-                {
-                    type        fanPressureJump;
-                    patchType   cyclic;
-                    jump        uniform 0;
-                    value       uniform 0;
-                    jumpTable   polynomial 1((100 0));
-                }
+                $../../../baffle/owner/patchFields;
             }
         }
 
         neighbour
         {
             name        fan1;
-            type        cyclic;
-            neighbourPatch fan0;
+            type        wall;
 
             patchFields
             {

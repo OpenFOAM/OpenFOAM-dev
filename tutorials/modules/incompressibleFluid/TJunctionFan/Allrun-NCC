@@ -12,6 +12,9 @@ runApplication blockMesh
 runApplication topoSet
 
 # Create baffles and the fields on them
-runApplication createBaffles -overwrite
+runApplication createBaffles -overwrite -dict system/createBafflesDict.NCC
+
+# Create non-conformal couplings
+runApplication createNonConformalCouples -overwrite
 
 runApplication $application

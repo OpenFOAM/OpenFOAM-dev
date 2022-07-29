@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      createNonConformalCouplesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fields      yes;
+
+nonConformalCouples
+{
+    fan
+    {
+        owner
+        {
+            patch       fan0;
+
+            patchFields
+            {
+                p
+                {
+                    type        fanPressureJump;
+                    patchType   nonConformalCyclic;
+                    jump        uniform 0;
+                    value       uniform 0;
+                    jumpTable   polynomial 1((100 0));
+                }
+            }
+        }
+
+        neighbour
+        {
+            patch       fan1;
+
+            patchFields
+            {
+                $../../owner/patchFields;
+            }
+        }
+
+        transform       none;
+    }
+}
+
+
+// ************************************************************************* //

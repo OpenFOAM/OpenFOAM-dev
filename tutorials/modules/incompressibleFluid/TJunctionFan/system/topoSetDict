@@ -17,52 +17,28 @@ FoamFile
 actions
 (
     {
-        name    cyclicFacesFaceSet;
-        type    faceSet;
-        action  new;
-        source  boxToFace;
-        box     (0.099 -0.006 0.004)(0.101 0.006 0.016);
-    }
-
-    {
-        name    cyclicFacesSlaveCells;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
-        box     (-10 -10 -10)(0.1 10 10);
-    }
-
-    {
-        name    cyclicFaces;
+        name    baffle;
         type    faceZoneSet;
         action  new;
-        source  setsToFaceZone;
-        faceSet cyclicFacesFaceSet;
-        cellSet cyclicFacesSlaveCells;
+        source  planeToFaceZone;
+        point   (0.1 0 0);
+        normal  (1 0 0);
     }
-
     {
-        name    baffleFaceSet;
-        type    faceSet;
+        name    fan;
+        type    faceZoneSet;
         action  new;
-        source  boxToFace;
-        box     (0.099 -10 -10)(0.101 10 10);
+        source  searchableSurfaceToFaceZone;
+        surface searchablePlate;
+        origin  (0.1 -0.006 0.004);
+        span    (0 0.012 0.012);
     }
-
     {
-        name    baffleFaceSet;
-        type    faceSet;
+        name    baffle;
+        type    faceZoneSet;
         action  delete;
-        source  boxToFace;
-        box     (0.099 -0.006 0.004)(0.101 0.006 0.016);
-    }
-
-    {
-        name    baffleFaces;
-        type    faceZoneSet;
-        action  new;
-        source  setToFaceZone;
-        faceSet baffleFaceSet;
+        source  faceZoneToFaceZone;
+        zone    fan;
     }
 );
 

@@ -1206,12 +1206,15 @@ bool Foam::fvMeshStitcher::disconnect
         Info<< indent << typeName << ": Disconnecting" << incrIndent << endl;
     }
 
-    // Pre-conform surface fields. This splits the original and cyclic parts of
-    // the interface fields into separate boundary fields, with both sets of
-    // values store on the original faces. The original field overwrites the
-    // existing boundary values, whilst the cyclic field is stored as a
-    // separate field for use later.
-    preConformSurfaceFields();
+    if (changing)
+    {
+        // Pre-conform surface fields. This splits the original and cyclic
+        // parts of the interface fields into separate boundary fields, with
+        // both sets of values store on the original faces. The original field
+        // overwrites the existing boundary values, whilst the cyclic field is
+        // stored as a separate field for use later.
+        preConformSurfaceFields();
+    }
 
     // Undo all non-conformal changes and clear all geometry and topology
     mesh_.conform();
@@ -1382,20 +1385,23 @@ bool Foam::fvMeshStitcher::connect
         correctMeshPhi(polyFacesBf, Sf, Cf);
     }
 
-    // Post-non-conform surface fields. This reconstructs the original and
-    // cyclic parts of the interface fields from separate original and cyclic
-    // parts. The original part was store in the same field, whilst the cyclic
-    // part was separately registered.
-    postNonConformSurfaceFields();
+    if (changing)
+    {
+        // Post-non-conform surface fields. This reconstructs the original and
+        // cyclic parts of the interface fields from separate original and
+        // cyclic parts. The original part was store in the same field, whilst
+        // the cyclic part was separately registered.
+        postNonConformSurfaceFields();
 
-    // Volume fields are assumed to be intensive. So, the value on a face which
-    // has changed in size can be retained without modification. New faces need
-    // values to be set. This is done by evaluating all the nonConformalCoupled
-    // patch fields.
-    evaluateVolFields();
+        // Volume fields are assumed to be intensive. So, the value on a face
+        // which has changed in size can be retained without modification. New
+        // faces need values to be set. This is done by evaluating all the
+        // nonConformalCoupled patch fields.
+        evaluateVolFields();
 
-    // Do special post-non-conformation for surface velocities.
-    postNonConformSurfaceVelocities();
+        // Do special post-non-conformation for surface velocities.
+        postNonConformSurfaceVelocities();
+    }
 
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();

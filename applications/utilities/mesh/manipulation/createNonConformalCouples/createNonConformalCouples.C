@@ -75,17 +75,140 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void createNonConformalCouples
-(
-    fvMesh& mesh,
-    const List<Pair<word>>& patchNames,
-    const wordList& cyclicNames,
-    const List<cyclicTransform>& transforms
-)
+int main(int argc, char *argv[])
 {
+    #include "addOverwriteOption.H"
+    #include "addRegionOption.H"
+    #include "addDictOption.H"
+
+    const bool haveArgs = argList::hasArgs(argc, argv);
+    if (haveArgs)
+    {
+        argList::validArgs.append("patch1");
+        argList::validArgs.append("patch2");
+        argList::addBoolOption
+        (
+            "fields",
+            "add non-conformal boundary conditions to the fields"
+        );
+    }
+
+    #include "setRootCase.H"
+    #include "createTime.H"
+    runTime.functionObjects().off();
+
+    // Flag to determine whether or not patches are added to fields
+    bool fields;
+
+    // Patch names between which to create couples, field dictionaries, the
+    // associated cyclic name prefix and transformation (if any)
+    List<Pair<word>> patchNames;
+    List<Pair<dictionary>> patchFieldDicts;
+    wordList cyclicNames;
+    List<cyclicTransform> transforms;
+
+    // If there are patch name arguments, then we assume fields are not being
+    // changed, the cyclic name is just the cyclic typename, and that there is
+    // no transformation. If there are no arguments then get all this
+    // information from the system dictionary.
+    if (haveArgs)
+    {
+        fields = args.optionFound("fields");
+
+        patchNames.append(Pair<word>(args[1], args[2]));
+        patchFieldDicts.append(Pair<dictionary>());
+        cyclicNames.append(nonConformalCyclicPolyPatch::typeName);
+        transforms.append(cyclicTransform(true));
+    }
+    else
+    {
+        static const word dictName("createNonConformalCouplesDict");
+
+        IOdictionary dict(systemDict(dictName, args, runTime));
+
+        fields = dict.lookupOrDefault<bool>("fields", false);
+
+        const dictionary& couplesDict =
+            dict.optionalSubDict("nonConformalCouples");
+
+        forAllConstIter(dictionary, couplesDict, iter)
+        {
+            if (!iter().isDict()) continue;
+
+            const dictionary& subDict = iter().dict();
+
+            const bool havePatches = subDict.found("patches");
+            const bool haveOwnerNeighbour =
+                subDict.found("owner") || subDict.found("neighbour");
+
+            if (havePatches == haveOwnerNeighbour)
+            {
+                FatalIOErrorInFunction(subDict)
+                    << "Patches should be specified with either a single "
+                    << "\"patches\" entry with a pair of patch names, or with "
+                    << "two sub-dictionaries named \"owner\" and "
+                    << "\"neighbour\"." << exit(FatalIOError);
+            }
+
+            if (havePatches)
+            {
+                patchNames.append(subDict.lookup<Pair<word>>("patches"));
+                patchFieldDicts.append(Pair<dictionary>());
+            }
+
+            if (haveOwnerNeighbour)
+            {
+                const dictionary& ownerDict = subDict.subDict("owner");
+                const dictionary& neighbourDict = subDict.subDict("neighbour");
+
+                patchNames.append
+                (
+                    Pair<word>
+                    (
+                        ownerDict["patch"],
+                        neighbourDict["patch"]
+                    )
+                );
+                patchFieldDicts.append
+                (
+                    Pair<dictionary>
+                    (
+                        ownerDict.subOrEmptyDict("patchFields"),
+                        neighbourDict.subOrEmptyDict("patchFields")
+                    )
+                );
+            }
+
+            cyclicNames.append(subDict.dictName());
+            transforms.append(cyclicTransform(subDict, true));
+        }
+    }
+
+    Foam::word meshRegionName = polyMesh::defaultRegion;
+    args.optionReadIfPresent("region", meshRegionName);
+
+    #include "createNamedMesh.H"
+
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
+    const bool overwrite = args.optionFound("overwrite");
+
+    const word oldInstance = mesh.pointsInstance();
+
+    // Read the fields
+    IOobjectList objects(mesh, runTime.timeName());
+    if (fields) Info<< "Reading geometric fields" << nl << endl;
+    #include "readVolFields.H"
+    #include "readSurfaceFields.H"
+    #include "readPointFields.H"
+    if (fields) Info<< endl;
+
+    // Make sure the mesh is not connected before couples are added
+    mesh.conform();
+
+    // Start building lists of patches and patch-fields to add
     List<polyPatch*> newPatches;
+    List<dictionary> newPatchFieldDicts;
 
     // Find the first processor patch and face
     label firstProcPatchi = patches.size(), firstProcFacei = mesh.nFaces();
@@ -115,6 +238,10 @@ void createNonConformalCouples
         newPatches.append
         (
             pp.clone(patches, patchi, pp.size(), pp.start()).ptr()
+        );
+        newPatchFieldDicts.append
+        (
+            dictionary()
         );
     }
 
@@ -157,6 +284,10 @@ void createNonConformalCouples
                 transforms[i]
             )
         );
+        newPatchFieldDicts.append
+        (
+            patchFieldDicts[i][0]
+        );
         newPatches.append
         (
             new nonConformalCyclicPolyPatch
@@ -171,6 +302,10 @@ void createNonConformalCouples
                 patchNames[i][1],
                 inv(transforms[i])
             )
+        );
+        newPatchFieldDicts.append
+        (
+            patchFieldDicts[i][1]
         );
     }
 
@@ -198,6 +333,10 @@ void createNonConformalCouples
                     iter.key()
                 )
             );
+            newPatchFieldDicts.append
+            (
+                dictionary()
+            );
         }
     };
     appendErrorPatches(true);
@@ -211,6 +350,10 @@ void createNonConformalCouples
         newPatches.append
         (
             pp.clone(patches, newPatches.size(), pp.size(), pp.start()).ptr()
+        );
+        newPatchFieldDicts.append
+        (
+            dictionary()
         );
     }
 
@@ -278,6 +421,10 @@ void createNonConformalCouples
                                     patchNames[i][!owner]
                                 )
                             );
+                            newPatchFieldDicts.append
+                            (
+                                patchFieldDicts[i][!owner]
+                            );
                         }
                     }
                 }
@@ -291,7 +438,8 @@ void createNonConformalCouples
     }
 
     // Re-patch the mesh. Note that new patches are all constraints, so the
-    // dictionary and patch type do not get used.
+    // dictionary and patch type do not get used. Overrides will be handled
+    // later, once all patches have been added and the mesh has been stitched.
     forAll(newPatches, newPatchi)
     {
         fvMeshTools::addPatch
@@ -303,104 +451,24 @@ void createNonConformalCouples
             false
         );
     }
-}
-
-
-int main(int argc, char *argv[])
-{
-    #include "addOverwriteOption.H"
-    #include "addRegionOption.H"
-    #include "addDictOption.H"
-
-    const bool haveArgs = argList::hasArgs(argc, argv);
-    if (haveArgs)
-    {
-        argList::validArgs.append("patch1");
-        argList::validArgs.append("patch2");
-        argList::addBoolOption
-        (
-            "fields",
-            "add non-conformal boundary conditions to the fields"
-        );
-    }
-
-    #include "setRootCase.H"
-    #include "createTime.H"
-    runTime.functionObjects().off();
-
-    // Flag to determine whether or not patches are added to fields
-    bool fields;
-
-    // Patch names between which to create couples, the associated cyclic name
-    // prefix and transformation (if any)
-    List<Pair<word>> patchNames;
-    wordList cyclicNames;
-    List<cyclicTransform> transforms;
-
-    // If there are patch name arguments, then we assume fields are not being
-    // changed, the cyclic name is just the cyclic typename, and that there is
-    // no transformation. If there are no arguments then get all this
-    // information from the system dictionary.
-    if (haveArgs)
-    {
-        fields = args.optionFound("fields");
-
-        patchNames.append(Pair<word>(args[1], args[2]));
-        cyclicNames.append(nonConformalCyclicPolyPatch::typeName);
-        transforms.append(cyclicTransform(true));
-    }
-    else
-    {
-        static const word dictName("createNonConformalCouplesDict");
-
-        IOdictionary dict(systemDict(dictName, args, runTime));
-
-        fields = dict.lookupOrDefault<bool>("fields", false);
-
-        const dictionary& couplesDict =
-            dict.optionalSubDict("nonConformalCouples");
-
-        forAllConstIter(dictionary, couplesDict, iter)
-        {
-            if (!iter().isDict()) continue;
-
-            patchNames.append(iter().dict().lookup<Pair<word>>("patches"));
-            cyclicNames.append(iter().dict().dictName());
-            transforms.append(cyclicTransform(iter().dict(), true));
-        }
-    }
-
-    Foam::word meshRegionName = polyMesh::defaultRegion;
-    args.optionReadIfPresent("region", meshRegionName);
-
-    const bool overwrite = args.optionFound("overwrite");
-
-    #include "createNamedMesh.H"
-
-    // Read the fields
-    IOobjectList objects(mesh, runTime.timeName());
-    if (fields) Info<< "Reading geometric fields" << nl << endl;
-    #include "readVolFields.H"
-    #include "readSurfaceFields.H"
-    #include "readPointFields.H"
-    if (fields) Info<< endl;
-
-    const word oldInstance = mesh.pointsInstance();
-
-    // Make sure the mesh is not connected before couples are added
-    fvMeshStitchers::stationary stitcher(mesh);
-    stitcher.disconnect(false, false);
-
-    createNonConformalCouples
-    (
-        mesh,
-        patchNames,
-        cyclicNames,
-        transforms
-    );
 
     // Connect the mesh so that the new stitching topology gets written out
-    stitcher.connect(false, false, false);
+    fvMeshStitchers::stationary(mesh).connect(false, false, false);
+
+    // Set the fields on the new patches. All new patches are constraints, so
+    // this should only be creating overrides; e.g., jump cyclics.
+    forAll(newPatches, newPatchi)
+    {
+        if (!newPatchFieldDicts[newPatchi].empty())
+        {
+            fvMeshTools::setPatchFields
+            (
+                mesh,
+                newPatchi,
+                newPatchFieldDicts[newPatchi]
+            );
+        }
+    }
 
     mesh.setInstance(runTime.timeName());
 

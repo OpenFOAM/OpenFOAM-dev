@@ -205,12 +205,9 @@ Foam::wordList Foam::basicThermo::heBoundaryBaseTypes()
 
     forAll(tbf, patchi)
     {
-        if (isA<fixedJumpFvPatchScalarField>(tbf[patchi]))
+        if (tbf[patchi].overridesConstraint())
         {
-            const fixedJumpFvPatchScalarField& pf =
-                dynamic_cast<const fixedJumpFvPatchScalarField&>(tbf[patchi]);
-
-            hbt[patchi] = pf.interfaceFieldType();
+            hbt[patchi] = tbf[patchi].patch().type();
         }
         else if (isA<fixedJumpAMIFvPatchScalarField>(tbf[patchi]))
         {
