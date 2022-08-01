@@ -250,7 +250,7 @@ Foam::label Foam::CV2D::insertBoundaryConformPointPairs
 
             // Check dimensions of dual-cell
             /*
-            // Quick rejection of dual-cell refinement based on it's perimeter
+            // Quick rejection of dual-cell refinement based on its perimeter
             if (perimeter < 2*meshControls().minCellSize()) continue;
 
             // Also check the area of the cell and reject refinement

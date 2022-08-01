@@ -62,7 +62,7 @@ Description
 
     To calculate an intersection with a line between points \f$l_0\f$ to
     \f$l_1\f$, we define a local coordinate, \f$w\f$, along the line, and
-    subtract it's equation from that of the surface:
+    subtract its equation from that of the surface:
     \f[
         0 = (p_0 - l_0) - (l_1 - l_0) w + (p_1 - p_0) u +
             [ q_0 + (q_1 - q_0) u ] v

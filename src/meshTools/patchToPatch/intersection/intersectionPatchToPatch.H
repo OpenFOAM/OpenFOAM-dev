@@ -207,7 +207,7 @@ private:
 
         // Geometry
 
-            //- The coupling geometry for for each source face
+            //- The coupling geometry for each source face
             List<DynamicList<couple>> srcCouples_;
 
             //- The non-coupled geometry associated with each source edge
@@ -217,7 +217,7 @@ private:
             //  source face's couplings
             List<part> srcErrorParts_;
 
-            //- The coupling geometry for for each target face
+            //- The coupling geometry for each target face
             List<DynamicList<couple>> tgtCouples_;
 
 

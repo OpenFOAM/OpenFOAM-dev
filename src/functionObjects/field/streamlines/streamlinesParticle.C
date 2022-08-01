@@ -285,7 +285,7 @@ bool Foam::streamlinesParticle::move
     {
         if (lifeTime_ == 0)
         {
-            // Failure exit. Particle stagnated or it's life ran out.
+            // Failure exit. Particle stagnated or its life ran out.
             if (debug)
             {
                 Pout<< "streamlinesParticle: Removing stagnant particle:"

@@ -109,7 +109,7 @@ private:
             const bPatch& patchLevel
         );
 
-        //- Combine leves
+        //- Combine levels
         void combineLevels(const label curLevel);
 
         //- Shrink the number of levels to that specified

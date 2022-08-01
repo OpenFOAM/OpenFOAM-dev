@@ -820,7 +820,7 @@ void Foam::CV2D::newPoints()
             } while (++ec != ecStart);
 
             // Initialise cd0 such that the mesh will align
-            // in in the x-y directions
+            // in the x-y directions
             vector2D cd0(1, 0);
 
             if (meshControls().relaxOrientation())

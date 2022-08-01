@@ -406,7 +406,7 @@ polyMeshFiltering
 
     // Maximum number of times an to allow an equal faceSet to be
     // returned from the face quality assessment before stopping iterations
-    // to break an infinitie loop.
+    // to break an infinite loop.
     maxConsecutiveEqualFaceSets             5;
     // Remove little steps (almost perp to surface) by collapsing face.
     surfaceStepFaceAngle                    80;

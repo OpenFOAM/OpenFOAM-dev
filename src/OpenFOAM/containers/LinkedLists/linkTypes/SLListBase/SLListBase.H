@@ -75,7 +75,7 @@ private:
        //  last_->next_ points to first element, i.e. circular storage
        link* last_;
 
-       //- Number of elements in in list
+       //- Number of elements in list
        label nElmts_;
 
 

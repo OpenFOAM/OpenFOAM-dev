@@ -85,7 +85,7 @@ checkEnv
 
 
 #------------------------------------------------------------------------------
-# Check <file> is is the current directory,
+# Check if <file> is in the current directory,
 # otherwise search tree for first occurrence
 #------------------------------------------------------------------------------
 

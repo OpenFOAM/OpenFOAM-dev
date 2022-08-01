@@ -84,7 +84,7 @@ inline void Foam::pointConstraint::combine(const pointConstraint& pc)
     {
         // Save single normal
         vector n = second();
-        // Apply to supplied point constaint
+        // Apply to supplied point constraint
         operator=(pc);
         applyConstraint(n);
     }
