@@ -30,6 +30,7 @@ License
 #include "mergePoints.H"
 #include "indirectPrimitivePatch.H"
 #include "PatchTools.H"
+#include "fvMeshStitcher.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
 #include "addToRunTimeSelectionTable.H"
@@ -442,7 +443,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
         }
     }
 
-    if (nFaces_ == 0)
+    if (nFaces_ == 0 && (!mesh_.stitcher().stitches() || !mesh_.conformal()))
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
@@ -826,7 +827,8 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::movePoints
 {
     if (&mesh == &mesh_)
     {
-        // It may be necessary to reset if the mesh moves
+        // It may be necessary to reset if the mesh moves. The total area might
+        // change, as might non-conformal faces.
         initialise(dict_);
     }
 }
