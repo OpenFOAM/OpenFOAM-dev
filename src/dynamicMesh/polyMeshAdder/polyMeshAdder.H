@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,14 +74,13 @@ private:
         //- Index of zone in all zones
         static label zoneIndex(const word&, DynamicList<word>&);
 
+        //- ...
         static void mergePatchNames
         (
             const polyBoundaryMesh& patches0,
             const polyBoundaryMesh& patches1,
-
             DynamicList<word>& allPatchNames,
             DynamicList<word>& allPatchTypes,
-
             labelList& from1ToAllPatches,
             labelList& fromAllTo1Patches
         );
@@ -91,21 +90,6 @@ private:
 
         //- Get sizes of patches
         static labelList getPatchSizes(const polyBoundaryMesh&);
-
-        static List<polyPatch*> combinePatches
-        (
-            const polyMesh& mesh0,
-            const polyMesh& mesh1,
-            const polyBoundaryMesh& allBoundaryMesh,
-            const label nAllPatches,
-            const labelList& fromAllTo1Patches,
-
-            const label nInternalFaces,
-            const labelList& nFaces,
-
-            labelList& from0ToAllPatches,
-            labelList& from1ToAllPatches
-        );
 
         //- Determine order for internalFaces to be upper-triangular.
         //  Does not change order of external faces.
@@ -232,20 +216,10 @@ private:
             polyMesh& mesh
         );
 
+
 public:
 
-
     // Member Functions
-
-        //- Add two polyMeshes. Returns new polyMesh and map construct.
-        static autoPtr<polyMesh> add
-        (
-            const IOobject& io,
-            const polyMesh& mesh0,
-            const polyMesh& mesh1,
-            const faceCoupleInfo& coupleInfo,
-            autoPtr<mapAddedPolyMesh>& mapPtr
-        );
 
         //- Inplace add mesh to polyMesh. Returns map construct.
         static autoPtr<mapAddedPolyMesh> add
