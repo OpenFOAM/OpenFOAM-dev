@@ -231,4 +231,16 @@ void Foam::functionObjects::timeControl::mapMesh
 }
 
 
+void Foam::functionObjects::timeControl::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    if (active())
+    {
+        foPtr_->distribute(map);
+    }
+}
+
+
 // ************************************************************************* //

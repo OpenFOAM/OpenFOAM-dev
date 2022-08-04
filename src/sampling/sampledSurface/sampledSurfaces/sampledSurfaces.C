@@ -26,6 +26,8 @@ License
 #include "sampledSurfaces.H"
 #include "PatchTools.H"
 #include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "OSspecific.H"
 #include "writeFile.H"
 #include "addToRunTimeSelectionTable.H"
@@ -47,8 +49,109 @@ namespace functionObjects
 }
 }
 
-bool Foam::functionObjects::sampledSurfaces::verbose_ = false;
 Foam::scalar Foam::functionObjects::sampledSurfaces::mergeTol_ = 1e-10;
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::sampledSurfaces::needsUpdate() const
+{
+    forAll(*this, si)
+    {
+        if (operator[](si).needsUpdate())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+bool Foam::functionObjects::sampledSurfaces::expire()
+{
+    bool justExpired = false;
+
+    forAll(*this, si)
+    {
+        if (operator[](si).expire())
+        {
+            justExpired = true;
+        }
+
+        // Clear merge information
+        if (Pstream::parRun())
+        {
+            mergeList_[si].clear();
+        }
+    }
+
+    // true if any surfaces just expired
+    return justExpired;
+}
+
+
+bool Foam::functionObjects::sampledSurfaces::update()
+{
+    bool updated = false;
+
+    if (!needsUpdate())
+    {
+        return updated;
+    }
+
+    // Serial: quick and easy, no merging required
+    if (!Pstream::parRun())
+    {
+        forAll(*this, si)
+        {
+            if (operator[](si).update())
+            {
+                updated = true;
+            }
+        }
+
+        return updated;
+    }
+
+    // Dimension as fraction of mesh bounding box
+    scalar mergeDim = mergeTol_ * mesh_.bounds().mag();
+
+    if (Pstream::master() && debug)
+    {
+        Pout<< nl << "Merging all points within "
+            << mergeDim << " metre" << endl;
+    }
+
+    forAll(*this, si)
+    {
+        sampledSurface& s = operator[](si);
+
+        if (s.update())
+        {
+            updated = true;
+        }
+        else
+        {
+            continue;
+        }
+
+        PatchTools::gatherAndMerge
+        (
+            mergeDim,
+            primitivePatch
+            (
+                SubList<face>(s.faces(), s.faces().size()),
+                s.points()
+            ),
+            mergeList_[si].points,
+            mergeList_[si].faces,
+            mergeList_[si].pointsMap
+        );
+    }
+
+    return updated;
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -89,9 +192,75 @@ Foam::functionObjects::sampledSurfaces::~sampledSurfaces()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::sampledSurfaces::verbose(const bool verbosity)
+bool Foam::functionObjects::sampledSurfaces::read(const dictionary& dict)
 {
-    verbose_ = verbosity;
+    bool surfacesFound = dict.found("surfaces");
+
+    if (surfacesFound)
+    {
+        dict.lookup("fields") >> fields_;
+
+        dict.lookup("interpolationScheme") >> interpolationScheme_;
+
+        dict.readIfPresent("writeEmpty", writeEmpty_);
+
+        const word writeType(dict.lookup("surfaceFormat"));
+
+        // Define the surface formatter
+        formatter_ = surfaceWriter::New(writeType, dict);
+
+        PtrList<sampledSurface> newList
+        (
+            dict.lookup("surfaces"),
+            sampledSurface::iNew(mesh_)
+        );
+        transfer(newList);
+
+        if (Pstream::parRun())
+        {
+            mergeList_.setSize(size());
+        }
+
+        // Ensure all surfaces and merge information are expired
+        expire();
+
+        if (this->size())
+        {
+            Info<< "Reading surface description:" << nl;
+            forAll(*this, si)
+            {
+                Info<< "    " << operator[](si).name() << nl;
+            }
+            Info<< endl;
+        }
+    }
+
+    if (Pstream::master() && debug)
+    {
+        Pout<< "sample fields:" << fields_ << nl
+            << "sample surfaces:" << nl << "(" << nl;
+
+        forAll(*this, si)
+        {
+            Pout<< "  " << operator[](si) << endl;
+        }
+        Pout<< ")" << endl;
+    }
+
+    return true;
+}
+
+
+Foam::wordList Foam::functionObjects::sampledSurfaces::fields() const
+{
+    wordList fields(fields_);
+
+    forAll(*this, si)
+    {
+        fields.append(operator[](si).fields());
+    }
+
+    return fields;
 }
 
 
@@ -206,78 +375,6 @@ bool Foam::functionObjects::sampledSurfaces::write()
 }
 
 
-bool Foam::functionObjects::sampledSurfaces::read(const dictionary& dict)
-{
-    bool surfacesFound = dict.found("surfaces");
-
-    if (surfacesFound)
-    {
-        dict.lookup("fields") >> fields_;
-
-        dict.lookup("interpolationScheme") >> interpolationScheme_;
-
-        dict.readIfPresent("writeEmpty", writeEmpty_);
-
-        const word writeType(dict.lookup("surfaceFormat"));
-
-        // Define the surface formatter
-        formatter_ = surfaceWriter::New(writeType, dict);
-
-        PtrList<sampledSurface> newList
-        (
-            dict.lookup("surfaces"),
-            sampledSurface::iNew(mesh_)
-        );
-        transfer(newList);
-
-        if (Pstream::parRun())
-        {
-            mergeList_.setSize(size());
-        }
-
-        // Ensure all surfaces and merge information are expired
-        expire();
-
-        if (this->size())
-        {
-            Info<< "Reading surface description:" << nl;
-            forAll(*this, si)
-            {
-                Info<< "    " << operator[](si).name() << nl;
-            }
-            Info<< endl;
-        }
-    }
-
-    if (Pstream::master() && debug)
-    {
-        Pout<< "sample fields:" << fields_ << nl
-            << "sample surfaces:" << nl << "(" << nl;
-
-        forAll(*this, si)
-        {
-            Pout<< "  " << operator[](si) << endl;
-        }
-        Pout<< ")" << endl;
-    }
-
-    return true;
-}
-
-
-Foam::wordList Foam::functionObjects::sampledSurfaces::fields() const
-{
-    wordList fields(fields_);
-
-    forAll(*this, si)
-    {
-        fields.append(operator[](si).fields());
-    }
-
-    return fields;
-}
-
-
 void Foam::functionObjects::sampledSurfaces::movePoints(const polyMesh& mesh)
 {
     if (&mesh == &mesh_)
@@ -296,8 +393,6 @@ void Foam::functionObjects::sampledSurfaces::topoChange
     {
         expire();
     }
-
-    // pointMesh and interpolation will have been reset in mesh.update
 }
 
 
@@ -306,119 +401,22 @@ void Foam::functionObjects::sampledSurfaces::mapMesh
     const polyMeshMap& map
 )
 {
-    expire();
-}
-
-
-void Foam::functionObjects::sampledSurfaces::readUpdate
-(
-    const polyMesh::readUpdateState state
-)
-{
-    if (state != polyMesh::UNCHANGED)
+    if (&map.mesh() == &mesh_)
     {
         expire();
     }
 }
 
 
-bool Foam::functionObjects::sampledSurfaces::needsUpdate() const
+void Foam::functionObjects::sampledSurfaces::distribute
+(
+    const polyDistributionMap& map
+)
 {
-    forAll(*this, si)
+    if (&map.mesh() == &mesh_)
     {
-        if (operator[](si).needsUpdate())
-        {
-            return true;
-        }
+        expire();
     }
-
-    return false;
-}
-
-
-bool Foam::functionObjects::sampledSurfaces::expire()
-{
-    bool justExpired = false;
-
-    forAll(*this, si)
-    {
-        if (operator[](si).expire())
-        {
-            justExpired = true;
-        }
-
-        // Clear merge information
-        if (Pstream::parRun())
-        {
-            mergeList_[si].clear();
-        }
-    }
-
-    // true if any surfaces just expired
-    return justExpired;
-}
-
-
-bool Foam::functionObjects::sampledSurfaces::update()
-{
-    bool updated = false;
-
-    if (!needsUpdate())
-    {
-        return updated;
-    }
-
-    // Serial: quick and easy, no merging required
-    if (!Pstream::parRun())
-    {
-        forAll(*this, si)
-        {
-            if (operator[](si).update())
-            {
-                updated = true;
-            }
-        }
-
-        return updated;
-    }
-
-    // Dimension as fraction of mesh bounding box
-    scalar mergeDim = mergeTol_ * mesh_.bounds().mag();
-
-    if (Pstream::master() && debug)
-    {
-        Pout<< nl << "Merging all points within "
-            << mergeDim << " metre" << endl;
-    }
-
-    forAll(*this, si)
-    {
-        sampledSurface& s = operator[](si);
-
-        if (s.update())
-        {
-            updated = true;
-        }
-        else
-        {
-            continue;
-        }
-
-        PatchTools::gatherAndMerge
-        (
-            mergeDim,
-            primitivePatch
-            (
-                SubList<face>(s.faces(), s.faces().size()),
-                s.points()
-            ),
-            mergeList_[si].points,
-            mergeList_[si].faces,
-            mergeList_[si].pointsMap
-        );
-    }
-
-    return updated;
 }
 
 

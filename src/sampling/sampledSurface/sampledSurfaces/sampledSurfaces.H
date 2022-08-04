@@ -127,9 +127,6 @@ class sampledSurfaces
 
     // Static Data Members
 
-        //- Output verbosity
-        static bool verbose_;
-
         //- Tolerance for merging points (fraction of mesh bounding box)
         static scalar mergeTol_;
 
@@ -165,6 +162,18 @@ class sampledSurfaces
 
 
     // Private Member Functions
+
+        //- Does any of the surfaces need an update?
+        bool needsUpdate() const;
+
+        //- Mark the surfaces as needing an update.
+        //  May also free up unneeded data.
+        //  Return false if all surfaces were already marked as expired.
+        bool expire();
+
+        //- Update the surfaces as required and merge surface points (parallel).
+        //  Return false if no surfaces required an update.
+        bool update();
 
         //- Sample all fields of a type on a given surface
         template<class Type>
@@ -212,21 +221,6 @@ public:
 
     // Member Functions
 
-        //- Does any of the surfaces need an update?
-        virtual bool needsUpdate() const;
-
-        //- Mark the surfaces as needing an update.
-        //  May also free up unneeded data.
-        //  Return false if all surfaces were already marked as expired.
-        virtual bool expire();
-
-        //- Update the surfaces as required and merge surface points (parallel).
-        //  Return false if no surfaces required an update.
-        virtual bool update();
-
-        //- Set verbosity level
-        void verbose(const bool verbosity = true);
-
         //- Read the sampledSurfaces dictionary
         virtual bool read(const dictionary&);
 
@@ -248,9 +242,8 @@ public:
         //- Update from another mesh using the given map
         virtual void mapMesh(const polyMeshMap&);
 
-        //- Update topology using the given map due to readUpdate
-        //  - expires the surfaces
-        virtual void readUpdate(const polyMesh::readUpdateState state);
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap&);
 
 
     // Member Operators

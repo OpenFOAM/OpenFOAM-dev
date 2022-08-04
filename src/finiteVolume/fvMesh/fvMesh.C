@@ -1300,6 +1300,8 @@ void Foam::fvMesh::distribute(const polyDistributionMap& map)
     meshObject::distribute<fvMesh>(*this, map);
     meshObject::distribute<lduMesh>(*this, map);
 
+    const_cast<Time&>(time()).functionObjects().distribute(map);
+
     topoChanger_->distribute(map);
     distributor_->distribute(map);
     mover_->distribute(map);

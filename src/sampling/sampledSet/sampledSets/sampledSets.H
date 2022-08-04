@@ -69,12 +69,6 @@ class sampledSets
     public fvMeshFunctionObject,
     public PtrList<sampledSet>
 {
-    // Static Data Members
-
-        //- Output verbosity
-        static bool verbose_;
-
-
     // Private Data
 
         //- Keep the dictionary to recreate sets for moving mesh cases
@@ -116,6 +110,9 @@ class sampledSets
         //- Combine sets on all processors. Sort by curveDist and produce
         //  index list. Valid result only on master processor.
         void combineSampledSets();
+
+        //- Correct for mesh changes
+        void correct();
 
         //- Sample all fields of a type on a given set
         template<class Type>
@@ -163,9 +160,6 @@ public:
 
     // Member Functions
 
-        //- Set verbosity level
-        void verbose(const bool verbosity = true);
-
         //- Read the sampledSets
         virtual bool read(const dictionary&);
 
@@ -178,9 +172,6 @@ public:
         //- Sample and write
         virtual bool write();
 
-        //- Correct for mesh changes
-        void correct();
-
         //- Update for mesh point-motion
         virtual void movePoints(const polyMesh&);
 
@@ -190,8 +181,8 @@ public:
         //- Update from another mesh using the given map
         virtual void mapMesh(const polyMeshMap&);
 
-        //- Update topology using the given map due to readUpdate
-        virtual void readUpdate(const polyMesh::readUpdateState state);
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap&);
 
 
     // Member Operators

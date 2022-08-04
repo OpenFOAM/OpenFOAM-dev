@@ -66,6 +66,9 @@ class polyDistributionMap
 {
     // Private Data
 
+        //- Reference to the mesh
+        const polyMesh& mesh_;
+
         //- Number of old live points
         label nOldPoints_;
 
@@ -84,7 +87,6 @@ class polyDistributionMap
         //- List of numbers of mesh points per old patch
         labelList oldPatchNMeshPoints_;
 
-
         //- Point distribute map
         distributionMap pointMap_;
 
@@ -100,15 +102,13 @@ class polyDistributionMap
 
     // Private Member Functions
 
+        //- ...
         void calcPatchSizes();
 
 
 public:
 
     // Constructors
-
-        //- Construct null
-        polyDistributionMap();
 
         //- Move constructor from components.
         //  Note that mesh has to be changed already
@@ -140,29 +140,6 @@ public:
             const bool constructFaceHasFlip = false
         );
 
-        //- Move constructor from components
-        polyDistributionMap
-        (
-            // mesh before changes
-            const label nOldPoints,
-            const label nOldFaces,
-            const label nOldCells,
-            labelList&& oldPatchStarts,
-            labelList&& oldPatchNMeshPoints,
-
-            // how to subset pieces of mesh to send across
-            distributionMap&& pointMap,
-            distributionMap&& faceMap,
-            distributionMap&& cellMap,
-            distributionMap&& patchMap
-        );
-
-        //- Move constructor
-        polyDistributionMap(polyDistributionMap&&);
-
-        //- Construct from Istream
-        polyDistributionMap(Istream&);
-
         //- Disallow default bitwise copy construction
         polyDistributionMap(const polyDistributionMap&) = delete;
 
@@ -170,6 +147,12 @@ public:
     // Member Functions
 
         // Access
+
+            //- Return polyMesh
+            const polyMesh& mesh() const
+            {
+                return mesh_;
+            }
 
             //- Number of points in mesh before distribution
             label nOldPoints() const
@@ -234,9 +217,6 @@ public:
 
         // Other
 
-            //- Transfer the contents of the argument and annul the argument.
-            void transfer(polyDistributionMap&);
-
             //- Distribute list of point data
             template<class T>
             void distributePointData(List<T>& lst) const
@@ -265,30 +245,27 @@ public:
                 patchMap_.distribute(lst);
             }
 
-
-            //- Distribute list of point/face/cell/patch indices.
+            //- Distribute list of point indices
             //  (Converts to boolList, distributes boolList and reconstructs)
             void distributePointIndices(labelList& pointIDs) const;
 
+            //- Distribute list of face indices
+            //  (Converts to boolList, distributes boolList and reconstructs)
             void distributeFaceIndices(labelList& faceIDs) const;
+
+            //- Distribute list of cell indices
+            //  (Converts to boolList, distributes boolList and reconstructs)
             void distributeCellIndices(labelList& cellIDs) const;
+
+            //- Distribute list of patch indices
+            //  (Converts to boolList, distributes boolList and reconstructs)
             void distributePatchIndices(labelList& patchIDs) const;
 
 
     // Member Operators
 
-        void operator=(const polyDistributionMap&);
-
-        void operator=(polyDistributionMap&&);
-
-
-    // IOstream Operators
-
-        //- Read dictionary from Istream
-        friend Istream& operator>>(Istream&, polyDistributionMap&);
-
-        //- Write dictionary to Ostream
-        friend Ostream& operator<<(Ostream&, const polyDistributionMap&);
+        //- Disallow default bitwise assignment
+        void operator=(const polyDistributionMap&) = delete;
 };
 
 

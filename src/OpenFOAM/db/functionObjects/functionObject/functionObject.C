@@ -168,4 +168,8 @@ void Foam::functionObject::mapMesh(const polyMeshMap&)
 {}
 
 
+void Foam::functionObject::distribute(const polyDistributionMap&)
+{}
+
+
 // ************************************************************************* //

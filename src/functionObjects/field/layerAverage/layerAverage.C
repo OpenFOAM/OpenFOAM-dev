@@ -32,6 +32,7 @@ License
 #include "writeFile.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -375,6 +376,19 @@ void Foam::functionObjects::layerAverage::topoChange
 
 
 void Foam::functionObjects::layerAverage::mapMesh(const polyMeshMap& map)
+{
+    if (&map.mesh() == &mesh_)
+    {
+        Info<< type() << " " << name() << ":" << nl;
+        calcLayers();
+    }
+}
+
+
+void Foam::functionObjects::layerAverage::distribute
+(
+    const polyDistributionMap& map
+)
 {
     if (&map.mesh() == &mesh_)
     {

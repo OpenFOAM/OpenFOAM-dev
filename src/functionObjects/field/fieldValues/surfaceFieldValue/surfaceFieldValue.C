@@ -33,6 +33,7 @@ License
 #include "fvMeshStitcher.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -849,6 +850,18 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::topoChange
 void Foam::functionObjects::fieldValues::surfaceFieldValue::mapMesh
 (
     const polyMeshMap& map
+)
+{
+    if (&map.mesh() == &mesh_)
+    {
+        initialise(dict_);
+    }
+}
+
+
+void Foam::functionObjects::fieldValues::surfaceFieldValue::distribute
+(
+    const polyDistributionMap& map
 )
 {
     if (&map.mesh() == &mesh_)

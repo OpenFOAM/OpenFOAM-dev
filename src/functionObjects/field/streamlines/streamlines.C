@@ -37,6 +37,7 @@ License
 #include "writeFile.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -611,6 +612,18 @@ void Foam::functionObjects::streamlines::topoChange
 void Foam::functionObjects::streamlines::mapMesh
 (
     const polyMeshMap& map
+)
+{
+    if (&map.mesh() == &mesh_)
+    {
+        read(dict_);
+    }
+}
+
+
+void Foam::functionObjects::streamlines::distribute
+(
+    const polyDistributionMap& map
 )
 {
     if (&map.mesh() == &mesh_)

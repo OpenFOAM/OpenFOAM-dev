@@ -134,6 +134,7 @@ class Time;
 class polyMesh;
 class polyTopoChangeMap;
 class polyMeshMap;
+class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                        Class functionObject Declaration
@@ -247,6 +248,9 @@ public:
 
         //- Update from another mesh using the given map
         virtual void mapMesh(const polyMeshMap&);
+
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap&);
 
 
     // Member Operators

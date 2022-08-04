@@ -880,4 +880,16 @@ void Foam::functionObjectList::mapMesh(const polyMeshMap& map)
 }
 
 
+void Foam::functionObjectList::distribute(const polyDistributionMap& map)
+{
+    if (execution_)
+    {
+        forAll(*this, oi)
+        {
+            operator[](oi).distribute(map);
+        }
+    }
+}
+
+
 // ************************************************************************* //

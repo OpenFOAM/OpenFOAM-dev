@@ -59,21 +59,6 @@ void Foam::polyDistributionMap::calcPatchSizes()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::polyDistributionMap::polyDistributionMap()
-:
-    nOldPoints_(0),
-    nOldFaces_(0),
-    nOldCells_(0),
-    oldPatchSizes_(0),
-    oldPatchStarts_(0),
-    oldPatchNMeshPoints_(0),
-    pointMap_(),
-    faceMap_(),
-    cellMap_(),
-    patchMap_()
-{}
-
-
 Foam::polyDistributionMap::polyDistributionMap
 (
     const polyMesh& mesh,
@@ -101,6 +86,7 @@ Foam::polyDistributionMap::polyDistributionMap
     const bool constructFaceHasFlip
 )
 :
+    mesh_(mesh),
     nOldPoints_(nOldPoints),
     nOldFaces_(nOldFaces),
     nOldCells_(nOldCells),
@@ -128,77 +114,7 @@ Foam::polyDistributionMap::polyDistributionMap
 }
 
 
-Foam::polyDistributionMap::polyDistributionMap
-(
-    // mesh before changes
-    const label nOldPoints,
-    const label nOldFaces,
-    const label nOldCells,
-    labelList&& oldPatchStarts,
-    labelList&& oldPatchNMeshPoints,
-
-    // how to transfer pieces of mesh
-    distributionMap&& pointMap,
-    distributionMap&& faceMap,
-    distributionMap&& cellMap,
-    distributionMap&& patchMap
-)
-:
-    nOldPoints_(nOldPoints),
-    nOldFaces_(nOldFaces),
-    nOldCells_(nOldCells),
-    oldPatchSizes_(oldPatchStarts.size()),
-    oldPatchStarts_(move(oldPatchStarts)),
-    oldPatchNMeshPoints_(move(oldPatchNMeshPoints)),
-    pointMap_(move(pointMap)),
-    faceMap_(move(faceMap)),
-    cellMap_(move(cellMap)),
-    patchMap_(move(patchMap))
-{
-    calcPatchSizes();
-}
-
-
-Foam::polyDistributionMap::polyDistributionMap
-(
-    polyDistributionMap&& map
-)
-:
-    nOldPoints_(map.nOldPoints_),
-    nOldFaces_(map.nOldFaces_),
-    nOldCells_(map.nOldCells_),
-    oldPatchSizes_(move(map.oldPatchSizes_)),
-    oldPatchStarts_(move(map.oldPatchStarts_)),
-    oldPatchNMeshPoints_(move(map.oldPatchNMeshPoints_)),
-    pointMap_(move(map.pointMap_)),
-    faceMap_(move(map.faceMap_)),
-    cellMap_(move(map.cellMap_)),
-    patchMap_(move(map.patchMap_))
-{}
-
-
-Foam::polyDistributionMap::polyDistributionMap(Istream& is)
-{
-    is  >> *this;
-}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::polyDistributionMap::transfer(polyDistributionMap& rhs)
-{
-    nOldPoints_ = rhs.nOldPoints_;
-    nOldFaces_ = rhs.nOldFaces_;
-    nOldCells_ = rhs.nOldCells_;
-    oldPatchSizes_.transfer(rhs.oldPatchSizes_);
-    oldPatchStarts_.transfer(rhs.oldPatchStarts_);
-    oldPatchNMeshPoints_.transfer(rhs.oldPatchNMeshPoints_);
-    pointMap_.transfer(rhs.pointMap_);
-    faceMap_.transfer(rhs.faceMap_);
-    cellMap_.transfer(rhs.cellMap_);
-    patchMap_.transfer(rhs.patchMap_);
-}
-
 
 void Foam::polyDistributionMap::distributePointIndices(labelList& lst) const
 {
@@ -285,81 +201,6 @@ void Foam::polyDistributionMap::distributePatchIndices(labelList& lst) const
 
     // Collect selected elements
     lst = findIndices(isSelected, true);
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-void Foam::polyDistributionMap::operator=
-(
-    const polyDistributionMap& rhs
-)
-{
-    nOldPoints_ = rhs.nOldPoints_;
-    nOldFaces_ = rhs.nOldFaces_;
-    nOldCells_ = rhs.nOldCells_;
-    oldPatchSizes_ = rhs.oldPatchSizes_;
-    oldPatchStarts_ = rhs.oldPatchStarts_;
-    oldPatchNMeshPoints_ = rhs.oldPatchNMeshPoints_;
-    pointMap_ = rhs.pointMap_;
-    faceMap_ = rhs.faceMap_;
-    cellMap_ = rhs.cellMap_;
-    patchMap_ = rhs.patchMap_;
-}
-
-
-void Foam::polyDistributionMap::operator=(polyDistributionMap&& rhs)
-{
-    nOldPoints_ = rhs.nOldPoints_;
-    nOldFaces_ = rhs.nOldFaces_;
-    nOldCells_ = rhs.nOldCells_;
-    oldPatchSizes_ = move(rhs.oldPatchSizes_);
-    oldPatchStarts_ = move(rhs.oldPatchStarts_);
-    oldPatchNMeshPoints_ = move(rhs.oldPatchNMeshPoints_);
-    pointMap_ = move(rhs.pointMap_);
-    faceMap_ = move(rhs.faceMap_);
-    cellMap_ = move(rhs.cellMap_);
-    patchMap_ = move(rhs.patchMap_);
-}
-
-
-// * * * * * * * * * * * * * * Istream Operator  * * * * * * * * * * * * * * //
-
-Foam::Istream& Foam::operator>>(Istream& is, polyDistributionMap& map)
-{
-    is.fatalCheck("operator>>(Istream&, polyDistributionMap&)");
-
-    is  >> map.nOldPoints_
-        >> map.nOldFaces_
-        >> map.nOldCells_
-        >> map.oldPatchSizes_
-        >> map.oldPatchStarts_
-        >> map.oldPatchNMeshPoints_
-        >> map.pointMap_
-        >> map.faceMap_
-        >> map.cellMap_
-        >> map.patchMap_;
-
-    return is;
-}
-
-
-// * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const polyDistributionMap& map)
-{
-    os  << map.nOldPoints_
-        << token::SPACE << map.nOldFaces_
-        << token::SPACE << map.nOldCells_ << token::NL
-        << map.oldPatchSizes_ << token::NL
-        << map.oldPatchStarts_ << token::NL
-        << map.oldPatchNMeshPoints_ << token::NL
-        << map.pointMap_ << token::NL
-        << map.faceMap_ << token::NL
-        << map.cellMap_ << token::NL
-        << map.patchMap_;
-
-    return os;
 }
 
 

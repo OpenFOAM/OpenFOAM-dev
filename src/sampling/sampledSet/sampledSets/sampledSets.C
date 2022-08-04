@@ -31,6 +31,8 @@ License
 #include "SortableList.H"
 #include "volPointInterpolation.H"
 #include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "writeFile.H"
 #include "OFstream.H"
 #include "OSspecific.H"
@@ -52,8 +54,6 @@ namespace functionObjects
     );
 }
 }
-
-bool Foam::functionObjects::sampledSets::verbose_ = false;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -78,6 +78,24 @@ void Foam::functionObjects::sampledSets::combineSampledSets()
                 << "Sample set " << s.name()
                 << " has zero points." << endl;
         }
+    }
+}
+
+
+void Foam::functionObjects::sampledSets::correct()
+{
+    bool setsFound = dict_.found("sets");
+    if (setsFound)
+    {
+        searchEngine_.correct();
+
+        PtrList<sampledSet> newList
+        (
+            dict_.lookup("sets"),
+            sampledSet::iNew(mesh_, searchEngine_)
+        );
+        transfer(newList);
+        combineSampledSets();
     }
 }
 
@@ -118,9 +136,42 @@ Foam::functionObjects::sampledSets::~sampledSets()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::sampledSets::verbose(const bool verbosity)
+bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
 {
-    verbose_ = verbosity;
+    dict_ = dict;
+
+    bool setsFound = dict_.found("sets");
+    if (setsFound)
+    {
+        dict_.lookup("fields") >> fields_;
+
+        dict.lookup("interpolationScheme") >> interpolationScheme_;
+
+        const word writeType(dict.lookup("setFormat"));
+
+        // Define the set formatter
+        formatter_ = setWriter::New(writeType, dict);
+
+        PtrList<sampledSet> newList
+        (
+            dict_.lookup("sets"),
+            sampledSet::iNew(mesh_, searchEngine_)
+        );
+        transfer(newList);
+        combineSampledSets();
+
+        if (this->size())
+        {
+            Info<< "Reading set description:" << nl;
+            forAll(*this, seti)
+            {
+                Info<< "    " << operator[](seti).name() << nl;
+            }
+            Info<< endl;
+        }
+    }
+
+    return true;
 }
 
 
@@ -226,63 +277,6 @@ bool Foam::functionObjects::sampledSets::write()
 }
 
 
-bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
-{
-    dict_ = dict;
-
-    bool setsFound = dict_.found("sets");
-    if (setsFound)
-    {
-        dict_.lookup("fields") >> fields_;
-
-        dict.lookup("interpolationScheme") >> interpolationScheme_;
-
-        const word writeType(dict.lookup("setFormat"));
-
-        // Define the set formatter
-        formatter_ = setWriter::New(writeType, dict);
-
-        PtrList<sampledSet> newList
-        (
-            dict_.lookup("sets"),
-            sampledSet::iNew(mesh_, searchEngine_)
-        );
-        transfer(newList);
-        combineSampledSets();
-
-        if (this->size())
-        {
-            Info<< "Reading set description:" << nl;
-            forAll(*this, seti)
-            {
-                Info<< "    " << operator[](seti).name() << nl;
-            }
-            Info<< endl;
-        }
-    }
-
-    return true;
-}
-
-
-void Foam::functionObjects::sampledSets::correct()
-{
-    bool setsFound = dict_.found("sets");
-    if (setsFound)
-    {
-        searchEngine_.correct();
-
-        PtrList<sampledSet> newList
-        (
-            dict_.lookup("sets"),
-            sampledSet::iNew(mesh_, searchEngine_)
-        );
-        transfer(newList);
-        combineSampledSets();
-    }
-}
-
-
 void Foam::functionObjects::sampledSets::movePoints(const polyMesh& mesh)
 {
     if (&mesh == &mesh_)
@@ -307,16 +301,19 @@ void Foam::functionObjects::sampledSets::topoChange
 
 void Foam::functionObjects::sampledSets::mapMesh(const polyMeshMap& map)
 {
-    correct();
+    if (&map.mesh() == &mesh_)
+    {
+        correct();
+    }
 }
 
 
-void Foam::functionObjects::sampledSets::readUpdate
+void Foam::functionObjects::sampledSets::distribute
 (
-    const polyMesh::readUpdateState state
+    const polyDistributionMap& map
 )
 {
-    if (state != polyMesh::UNCHANGED)
+    if (&map.mesh() == &mesh_)
     {
         correct();
     }
