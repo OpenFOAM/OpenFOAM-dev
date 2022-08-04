@@ -13,6 +13,15 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 LIB_LIBS = \
+    -lphaseSystem \
+    -lmultiphaseSystems \
+    -leulerianInterfacialModels \
+    -leulerianInterfacialCompositionModels \
+    -lmultiphaseMomentumTransportModels \
+    -lmultiphaseReactions \
+    -lmultiphaseProperties \
+    -lphaseFluidThermophysicalTransportModels \
+    -lphaseFluidMulticomponentThermophysicalTransportModels \
     -lfiniteVolume \
     -lmeshTools \
     -lfileFormats \
