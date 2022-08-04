@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,17 +22,75 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    postProcess
+    foamPostProcess
 
 Description
     Execute the set of functionObjects specified in the selected dictionary
     (which defaults to system/controlDict) or on the command-line for the
     selected set of times on the selected set of fields.
 
+    The functionObjects are either executed directly or for the solver
+    optionally specified as a command-line argument.
+
+Usage
+    \b foamPostProcess [OPTION]
+      - \par -dict <file>
+        Read control dictionary from specified location
+
+      - \par -solver <name>
+        Solver name
+
+      - \par -libs '(\"lib1.so\" ... \"libN.so\")'
+        Specify the additional libraries loaded
+
+      -\par -region <name>
+        Specify the region
+
+      - \par -func <name>
+        Specify the name of the functionObject to execute, e.g. Q
+
+      - \par -funcs <list>
+        Specify the names of the functionObjects to execute, e.g. '(Q div(U))'
+
+      - \par -field <name>
+        Specify the name of the field to be processed, e.g. U
+
+      - \par -fields <list>
+        Specify a list of fields to be processed,
+        e.g. '(U T p)' - regular expressions not currently supported
+
+      - \par -time <ranges>
+        comma-separated time ranges - eg, ':10,20,40:70,1000:'
+
+      - \par -latestTime
+        Select the latest time
+
+      - \par -list
+        List the available configured functionObjects
+
+    Example usage:
+      - Print the list of available configured functionObjects:
+        \verbatim
+            foamPostProcess -list
+        \endverbatim
+
+      - Execute the functionObjects specified in the controlDict of the
+        fluid region for all the available times:
+        \verbatim
+            foamPostProcess -region fluid
+        \endverbatim
+
+      - Execute the functionObjects specified in the controlDict
+        for the 'fluid' solver in the 'cooling' region for the latest time only:
+        \verbatim
+            foamPostProcess -solver fluid -region cooling -latestTime
+        \endverbatim
+
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
 #include "timeSelector.H"
+#include "solver.H"
 #include "ReadFields.H"
 #include "volFields.H"
 #include "surfaceFields.H"
@@ -135,9 +193,18 @@ void executeFunctionObjects
 }
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 int main(int argc, char *argv[])
 {
-    Foam::timeSelector::addOptions();
+    argList::addOption
+    (
+        "solver",
+        "name",
+        "Solver name"
+    );
+
+    timeSelector::addOptions();
     #include "addRegionOption.H"
     #include "addFunctionObjectOptions.H"
 
@@ -156,18 +223,57 @@ int main(int argc, char *argv[])
     }
 
     #include "createTime.H"
-    Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
-    #include "createNamedMesh.H"
 
-    // Initialise the set of selected fields from the command-line options
-    HashSet<word> requiredFields;
-    if (args.optionFound("fields"))
+    instantList timeDirs = timeSelector::select0(runTime, args);
+
+    word regionName = fvMesh::defaultRegion;
+
+    if (args.optionReadIfPresent("region", regionName))
     {
-        args.optionLookup("fields")() >> requiredFields;
+        Info
+            << "Create mesh " << regionName << " for time = "
+            << runTime.timeName() << nl << endl;
     }
-    if (args.optionFound("field"))
+    else
     {
-        requiredFields.insert(args.optionLookup("field")());
+        Info
+            << "Create mesh for time = "
+            << runTime.timeName() << nl << endl;
+    }
+
+    fvMesh mesh
+    (
+        IOobject
+        (
+            regionName,
+            runTime.timeName(),
+            runTime,
+            IOobject::MUST_READ
+        )
+    );
+
+    // Either the solver name is specified...
+    word solverName;
+
+    // ...or the fields are specified on the command-line
+    // or later inferred from the function arguments
+    HashSet<word> requiredFields;
+
+    if (args.optionReadIfPresent("solver", solverName))
+    {
+        libs.open("lib" + solverName + ".so");
+    }
+    else
+    {
+        // Initialise the set of selected fields from the command-line options
+        if (args.optionFound("fields"))
+        {
+            args.optionLookup("fields")() >> requiredFields;
+        }
+        if (args.optionFound("field"))
+        {
+            requiredFields.insert(args.optionLookup("field")());
+        }
     }
 
     // Externally stored dictionary for functionObjectList
@@ -206,15 +312,30 @@ int main(int argc, char *argv[])
 
         try
         {
-            executeFunctionObjects
-            (
-                args,
-                runTime,
-                mesh,
-                requiredFields,
-                functionsPtr(),
-                timei == timeDirs.size()-1
-            );
+            if (solverName != word::null)
+            {
+                // Optionally instantiate the selected solver
+                autoPtr<solver> solverPtr;
+
+                solverPtr = solver::New(solverName, mesh);
+
+                functionsPtr->execute();
+
+                // Clear the objects owned by the mesh
+                mesh.objectRegistry::clear();
+            }
+            else
+            {
+                executeFunctionObjects
+                (
+                    args,
+                    runTime,
+                    mesh,
+                    requiredFields,
+                    functionsPtr(),
+                    timei == timeDirs.size()-1
+                );
+            }
         }
         catch (IOerror& err)
         {
