@@ -25,6 +25,8 @@ License
 
 #include "domainDecomposition.H"
 #include "fvMeshAdder.H"
+#include "processorPolyPatch.H"
+#include "processorCyclicPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -294,10 +296,162 @@ void Foam::domainDecomposition::reconstruct()
         }
     }
 
-    // Set the complete mesh
-    completeMesh_.reset(masterMeshes.set(0, nullptr).ptr());
-    completeMesh_->setInstance(procMeshes()[0].facesInstance());
-    completeMesh_->setPointsInstance(procMeshes()[0].pointsInstance());
+    const polyBoundaryMesh& patches = masterMeshes[0].boundaryMesh();
+
+    // Move all faces of processor cyclic patches into the associated cyclics
+    if (!patches.findPatchIDs<processorCyclicPolyPatch>().empty())
+    {
+        // Determine what patches are to be combined into each patch
+        List<DynamicList<label>> patchPatches
+        (
+            patches.size(),
+            DynamicList<label>(1)
+        );
+        forAll(patches, patchi)
+        {
+            patchPatches[patchi].append(patchi);
+        }
+
+        HashTable
+        <
+            label,
+            FixedList<label, 3>,
+            FixedList<label, 3>::Hash<>
+        > nbrProcessorCyclicIDs;
+
+        forAll(patches, patchi)
+        {
+            if (!isA<processorCyclicPolyPatch>(patches[patchi])) continue;
+
+            const processorCyclicPolyPatch& pcpp =
+                refCast<const processorCyclicPolyPatch>(patches[patchi]);
+
+            const label proci = pcpp.myProcNo();
+            const label nbrProci = pcpp.neighbProcNo();
+            const label refPatchi = pcpp.referPatchID();
+            const label nbrRefPatchi = pcpp.referPatch().nbrPatchID();
+
+            FixedList<label, 3> key({proci, nbrProci, refPatchi});
+            FixedList<label, 3> nbrKey({nbrProci, proci, nbrRefPatchi});
+
+            if (nbrProcessorCyclicIDs.found(nbrKey))
+            {
+                const label nbrPatchi = nbrProcessorCyclicIDs[nbrKey];
+
+                patchPatches[refPatchi].append
+                (
+                    patchPatches[patchi].remove()
+                );
+                patchPatches[nbrRefPatchi].append
+                (
+                    patchPatches[nbrPatchi].remove()
+                );
+
+                nbrProcessorCyclicIDs.erase(nbrKey);
+            }
+            else
+            {
+                nbrProcessorCyclicIDs.insert(key, patchi);
+            }
+        }
+
+        // Build the new patch indices and a permutation map for the mesh faces
+        labelList newPatchSizes(patches.size());
+        labelList newPatchStarts(patches.size());
+        labelList newToOldFace(masterMeshes[0].nFaces());
+        SubList<label>(newToOldFace, masterMeshes[0].nInternalFaces()) =
+            identity(masterMeshes[0].nInternalFaces());
+        forAll(patches, patchi)
+        {
+            newPatchSizes[patchi] = 0;
+            newPatchStarts[patchi] =
+                patchi == 0
+              ? masterMeshes[0].nInternalFaces()
+              : newPatchStarts[patchi-1] + newPatchSizes[patchi-1];
+
+            forAll(patchPatches[patchi], i)
+            {
+                const polyPatch& pp = patches[patchPatches[patchi][i]];
+
+                SubList<label>
+                (
+                    newToOldFace,
+                    pp.size(),
+                    newPatchStarts[patchi] + newPatchSizes[patchi]
+                ) = pp.start() + identity(pp.size());
+
+                newPatchSizes[patchi] += pp.size();
+            }
+        }
+
+        // Check that the face ordering is a permutation
+        if (debug)
+        {
+            boolList newHasOldFace(newToOldFace.size(), false);
+            forAll(newToOldFace, newFacei)
+            {
+                if (newHasOldFace[newToOldFace[newFacei]])
+                {
+                    FatalErrorInFunction
+                        << "Face re-ordering is not valid"
+                        << exit(FatalError);
+                }
+                newHasOldFace[newToOldFace[newFacei]] = true;
+            }
+        }
+
+        // Modify the mesh
+        const labelList oldToNewFace(invert(newToOldFace.size(), newToOldFace));
+        masterMeshes[0].resetPrimitives
+        (
+            NullObjectMove<pointField>(),
+            reorder(oldToNewFace, masterMeshes[0].faces()),
+            reorder(oldToNewFace, masterMeshes[0].faceOwner()),
+            reorder(oldToNewFace, masterMeshes[0].faceNeighbour()),
+            newPatchSizes,
+            newPatchStarts,
+            true
+        );
+
+        // Update the addressing
+        forAll(procFaceAddressing_, proci)
+        {
+            inplaceRenumber
+            (
+                oldToNewFace,
+                procFaceAddressing_[proci]
+            );
+        }
+    }
+
+    // Filter out all processor patches
+    {
+        label nNonProcPatches = 0;
+        labelList nonProcPatchIds(patches.size(), -1);
+
+        forAll(masterMeshes[0].boundary(), patchi)
+        {
+            if (isA<processorPolyPatch>(patches[patchi]))
+            {
+                if (patches[patchi].size() != 0)
+                {
+                    FatalErrorInFunction
+                        << "Non-empty processor patch \""
+                        << patches[patchi].name()
+                        << "\" found in reconstructed mesh"
+                        << exit(FatalError);
+                }
+            }
+            else
+            {
+                nonProcPatchIds[nNonProcPatches++] = patchi;
+            }
+        }
+
+        nonProcPatchIds.resize(nNonProcPatches);
+
+        masterMeshes[0].reorderPatches(nonProcPatchIds, false);
+    }
 
     // Add turning index to the face addressing
     for (label proci=0; proci<nProcs(); proci++)
@@ -311,7 +465,7 @@ void Foam::domainDecomposition::reconstruct()
             if
             (
                !procMesh.isInternalFace(procFacei)
-             && completeMesh().isInternalFace(completeFacei)
+             && masterMeshes[0].isInternalFace(completeFacei)
             )
             {
                 // Processor face is external, but the corresponding complete
@@ -320,7 +474,7 @@ void Foam::domainDecomposition::reconstruct()
                 const label procOwnCelli =
                     procMesh.faceOwner()[procFacei];
                 const label completeOwnCelli =
-                    completeMesh().faceOwner()[completeFacei];
+                    masterMeshes[0].faceOwner()[completeFacei];
 
                 if
                 (
@@ -350,7 +504,7 @@ void Foam::domainDecomposition::reconstruct()
     procFaceAddressingBf_.clear();
 
     // Construct complete cell to proc map
-    cellProc_.resize(completeMesh().nCells());
+    cellProc_.resize(masterMeshes[0].nCells());
     forAll(procCellAddressing_, proci)
     {
         forAll(procCellAddressing_[proci], procCelli)
@@ -358,6 +512,11 @@ void Foam::domainDecomposition::reconstruct()
             cellProc_[procCellAddressing_[proci][procCelli]] = proci;
         }
     }
+
+    // Set the complete mesh
+    completeMesh_.reset(masterMeshes.set(0, nullptr).ptr());
+    completeMesh_->setInstance(procMeshes()[0].facesInstance());
+    completeMesh_->setPointsInstance(procMeshes()[0].pointsInstance());
 
     Info<< decrIndent << endl;
 }
