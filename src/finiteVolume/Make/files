@@ -467,13 +467,11 @@ $(solutionControl)/solutionControl/fluidSolutionControl/fluidSolutionControl.C
 $(solutionControl)/simpleControl/simpleControl.C
 $(solutionControl)/pisoControl/pisoControl.C
 
-solidControl = $(solutionControl)/solidControl
-$(solidControl)/solidNoLoopControl/solidNoLoopControl.C
-
 pimpleControl = $(solutionControl)/pimpleControl
 $(pimpleControl)/pimpleControl/pimpleControl.C
 $(pimpleControl)/pimpleNoLoopControl/pimpleNoLoopControl.C
 $(pimpleControl)/pimpleLoop/pimpleLoop.C
+$(pimpleControl)/pimpleSingleRegionControl/pimpleSingleRegionControl.C
 $(pimpleControl)/pimpleMultiRegionControl/pimpleMultiRegionControl.C
 
 convergenceControl = $(solutionControl)/convergenceControl
@@ -518,5 +516,8 @@ $(cellSources)/fieldToCell/fieldToCell.C
 
 faceSources = sets/faceSources
 $(faceSources)/patchFluxToFace/patchFluxToFace.C
+
+solver/solver.C
+solver/solverNew.C
 
 LIB = $(FOAM_LIBBIN)/libfiniteVolume

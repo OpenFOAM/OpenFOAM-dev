@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,14 +99,11 @@ public:
             //- Return the solution dictionary
             virtual const dictionary& dict() const;
 
-            //- Flag to indicate whether in final state
-            virtual bool isFinal() const;
-
 
         // Evolution
 
             //- Update the mesh data for the final state
-            void updateFinal() const;
+            void updateFinal(const bool finalIter) const;
 
             //- Store previous iteration for fields
             void storePrevIterFields();

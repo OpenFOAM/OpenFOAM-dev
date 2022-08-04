@@ -1,3 +1,0 @@
-buoyantReactingFoam.C
-
-EXE = $(FOAM_APPBIN)/buoyantReactingFoam

@@ -39,9 +39,10 @@ Foam::debug::runTimeSelectionToCType Foam::debug::runTimeSelectionToC;
 
 bool Foam::addToRunTimeSelectionTableToC
 (
-    const word& baseType,
-    const word& baseTypeName,
-    const word& thisTypeName
+    const char* baseType,
+    const char* baseTypeName,
+    const word& thisTypeName,
+    const char* libName
 )
 {
     if (debug::enableRunTimeSelectionToC)
@@ -51,11 +52,15 @@ bool Foam::addToRunTimeSelectionTableToC
             debug::runTimeSelectionToC.insert
             (
                 baseType,
-                Tuple2<word, wordHashSet>(baseTypeName, wordHashSet())
+                Tuple2<word, HashTable<word>>(baseTypeName, HashTable<word>())
             );
         }
 
-        debug::runTimeSelectionToC[baseType].second().insert(thisTypeName);
+        debug::runTimeSelectionToC[baseType].second().insert
+        (
+            thisTypeName,
+            libName
+        );
     }
 
     return debug::enableRunTimeSelectionToC;

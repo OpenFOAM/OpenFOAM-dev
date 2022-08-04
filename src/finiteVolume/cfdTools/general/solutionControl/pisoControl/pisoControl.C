@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,16 +68,13 @@ bool Foam::pisoControl::read()
 }
 
 
-bool Foam::pisoControl::isFinal() const
+bool Foam::pisoControl::isFinal(const bool finalIter) const
 {
-    return
-        (!anyNonOrthogonalIter() && finalPisoIter())
-     || (finalNonOrthogonalIter() && finalPisoIter())
-     || (finalNonOrthogonalIter() && !anyPisoIter());
+    return (finalIter && !anyPisoIter()) || finalPisoIter();
 }
 
 
-bool Foam::pisoControl::correct()
+bool Foam::pisoControl::correct(const bool finalIter)
 {
     read();
 
@@ -85,16 +82,25 @@ bool Foam::pisoControl::correct()
     {
         corrPiso_ = 0;
 
-        updateFinal();
+        updateFinal(isFinal(finalIter));
 
         return false;
     }
 
-    ++ corrPiso_;
+    corrPiso_++;
 
-    updateFinal();
+    updateFinal(isFinal(finalIter));
 
     return true;
+}
+
+
+bool Foam::pisoControl::correctNonOrthogonal(const bool finalIter)
+{
+    return nonOrthogonalSolutionControl::correctNonOrthogonal
+    (
+        isFinal(finalIter)
+    );
 }
 
 

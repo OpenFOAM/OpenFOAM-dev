@@ -36,7 +36,6 @@ Description
 #include "IOobjectList.H"
 #include "processorRunTimes.H"
 #include "domainDecomposition.H"
-#include "regionProperties.H"
 #include "fvFieldReconstructor.H"
 #include "pointFieldReconstructor.H"
 #include "reconstructLagrangian.H"
@@ -205,13 +204,19 @@ int main(int argc, char *argv[])
     // Allow override of time
     const instantList times = runTimes.selectProc(args);
 
-    // Get region names
-    const wordList regionNames =
-        selectRegionNames(args, runTimes.procTimes()[0]);
+    const Time& runTime = runTimes.procTimes()[0];
+
+    #include "setRegionNames.H"
 
     // Determine the processor count
-    const label nProcs =
-        fileHandler().nProcs(args.path(), regionDir(regionNames[0]));
+    const label nProcs = fileHandler().nProcs
+    (
+        args.path(),
+        regionNames[0] == polyMesh::defaultRegion
+      ? word::null
+      : regionNames[0]
+    );
+
     if (!nProcs)
     {
         FatalErrorInFunction
@@ -261,7 +266,11 @@ int main(int argc, char *argv[])
     forAll(regionNames, regioni)
     {
         const word& regionName = regionNames[regioni];
-        const word& regionDir = Foam::regionDir(regionName);
+
+        const word& regionDir =
+            regionName == polyMesh::defaultRegion
+          ? word::null
+          : regionName;
 
         // Create meshes
         Info<< "\n\nReconstructing mesh " << regionName << nl << endl;

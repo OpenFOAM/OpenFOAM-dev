@@ -1,0 +1,5 @@
+regionSolvers/regionSolvers.C
+setDeltaT.C
+foamMultiRun.C
+
+EXE = $(FOAM_APPBIN)/foamMultiRun

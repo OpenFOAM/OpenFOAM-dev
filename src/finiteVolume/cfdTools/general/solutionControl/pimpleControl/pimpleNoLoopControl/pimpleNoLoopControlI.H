@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "pimpleLoop.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 inline bool Foam::pimpleNoLoopControl::simpleRho() const
@@ -31,9 +33,21 @@ inline bool Foam::pimpleNoLoopControl::simpleRho() const
 }
 
 
-inline bool Foam::pimpleNoLoopControl::turbOnFinalIterOnly() const
+inline bool Foam::pimpleNoLoopControl::transportCorr() const
 {
-    return turbOnFinalIterOnly_;
+    return !transportCorrectionFinal_ || finalIter();
+}
+
+
+inline bool Foam::pimpleNoLoopControl::firstIter() const
+{
+    return pimpleLoopPtr_ ? pimpleLoopPtr_->firstIter() : true;
+}
+
+
+inline bool Foam::pimpleNoLoopControl::finalIter() const
+{
+    return pimpleLoopPtr_ ? pimpleLoopPtr_->finalIter() : true;
 }
 
 

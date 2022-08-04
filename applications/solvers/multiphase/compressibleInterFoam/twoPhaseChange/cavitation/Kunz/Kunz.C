@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,16 +30,20 @@ License
 
 namespace Foam
 {
+namespace compressible
+{
 namespace twoPhaseChangeModels
 {
     defineTypeNameAndDebug(Kunz, 0);
     addToRunTimeSelectionTable(cavitationModel, Kunz, dictionary);
 }
 }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseChangeModels::Kunz::Kunz
+Foam::compressible::twoPhaseChangeModels::Kunz::Kunz
 (
     const compressibleTwoPhaseMixture& mixture
 )
@@ -60,7 +64,7 @@ Foam::twoPhaseChangeModels::Kunz::Kunz
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::twoPhaseChangeModels::Kunz::mDotAlphal() const
+Foam::compressible::twoPhaseChangeModels::Kunz::mDotAlphal() const
 {
     const volScalarField::Internal& p =
         mixture_.alpha1().db().lookupObject<volScalarField>("p");
@@ -87,7 +91,7 @@ Foam::twoPhaseChangeModels::Kunz::mDotAlphal() const
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::twoPhaseChangeModels::Kunz::mDotP() const
+Foam::compressible::twoPhaseChangeModels::Kunz::mDotP() const
 {
     const volScalarField::Internal& p =
         mixture_.alpha1().db().lookupObject<volScalarField>("p");
@@ -113,13 +117,13 @@ Foam::twoPhaseChangeModels::Kunz::mDotP() const
 }
 
 
-void Foam::twoPhaseChangeModels::Kunz::correct()
+void Foam::compressible::twoPhaseChangeModels::Kunz::correct()
 {
     cavitationModel::correct();
 }
 
 
-bool Foam::twoPhaseChangeModels::Kunz::read()
+bool Foam::compressible::twoPhaseChangeModels::Kunz::read()
 {
     if (cavitationModel::read())
     {

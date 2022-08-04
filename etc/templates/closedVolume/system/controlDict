@@ -13,7 +13,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     buoyantFoam;
+application     foamRun;
+
+solver          fluid;
 
 startFrom       latestTime;
 

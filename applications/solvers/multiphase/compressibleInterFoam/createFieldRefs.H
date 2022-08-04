@@ -1,4 +1,4 @@
-twoPhaseChangeModel& phaseChange = phaseChangePtr();
+compressible::twoPhaseChangeModel& phaseChange = phaseChangePtr();
 
 volScalarField& alpha2(mixture.alpha2());
 

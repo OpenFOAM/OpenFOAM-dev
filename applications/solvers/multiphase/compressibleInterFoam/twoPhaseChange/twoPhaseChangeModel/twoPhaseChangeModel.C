@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,11 +29,15 @@ License
 
 namespace Foam
 {
+namespace compressible
+{
     defineTypeNameAndDebug(twoPhaseChangeModel, 0);
     defineRunTimeSelectionTable(twoPhaseChangeModel, dictionary);
 }
+}
 
-const Foam::word Foam::twoPhaseChangeModel::phaseChangePropertiesName
+const Foam::word
+Foam::compressible::twoPhaseChangeModel::phaseChangePropertiesName
 (
     "phaseChangeProperties"
 );
@@ -41,7 +45,7 @@ const Foam::word Foam::twoPhaseChangeModel::phaseChangePropertiesName
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::IOobject Foam::twoPhaseChangeModel::createIOobject
+Foam::IOobject Foam::compressible::twoPhaseChangeModel::createIOobject
 (
     const compressibleTwoPhaseMixture& mixture
 ) const
@@ -70,7 +74,7 @@ Foam::IOobject Foam::twoPhaseChangeModel::createIOobject
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseChangeModel::twoPhaseChangeModel
+Foam::compressible::twoPhaseChangeModel::twoPhaseChangeModel
 (
     const word& type,
     const compressibleTwoPhaseMixture& mixture
@@ -84,11 +88,11 @@ Foam::twoPhaseChangeModel::twoPhaseChangeModel
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::twoPhaseChangeModel::correct()
+void Foam::compressible::twoPhaseChangeModel::correct()
 {}
 
 
-bool Foam::twoPhaseChangeModel::read()
+bool Foam::compressible::twoPhaseChangeModel::read()
 {
     if (regIOobject::read())
     {

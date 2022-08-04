@@ -40,7 +40,7 @@ Usage
         Decompose named region. Does not check for existence of processor*.
 
       - \par -allRegions \n
-        Decompose all regions in regionProperties. Does not check for
+        Decompose all regions in regionSolvers. Does not check for
         existence of processor*.
 
       - \par -copyZero \n
@@ -76,7 +76,6 @@ Usage
 #include "decompositionMethod.H"
 #include "argList.H"
 #include "timeSelector.H"
-#include "regionProperties.H"
 
 #include "labelIOField.H"
 #include "labelFieldIOField.H"
@@ -275,9 +274,9 @@ int main(int argc, char *argv[])
     // Allow override of time
     const instantList times = runTimes.selectComplete(args);
 
-    // Get region names
-    const wordList regionNames =
-        selectRegionNames(args, runTimes.completeTime());
+    const Time& runTime = runTimes.completeTime();
+
+    #include "setRegionNames.H"
 
     // Remove existing processor directories if requested
     if (forceOverwrite)
@@ -362,7 +361,11 @@ int main(int argc, char *argv[])
     forAll(regionNames, regioni)
     {
         const word& regionName = regionNames[regioni];
-        const word& regionDir = Foam::regionDir(regionName);
+
+        const word& regionDir =
+            regionName == polyMesh::defaultRegion
+          ? word::null
+          : regionName;
 
         Info<< "\n\nDecomposing mesh " << regionName << nl << endl;
 

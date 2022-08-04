@@ -33,9 +33,9 @@ volVectorField U
 Info<< "Constructing compressibleTwoPhaseMixture\n" << endl;
 compressibleTwoPhaseMixture mixture(U, phi);
 
-autoPtr<twoPhaseChangeModel> phaseChangePtr
+autoPtr<compressible::twoPhaseChangeModel> phaseChangePtr
 (
-    twoPhaseChangeModel::New(mixture)
+    compressible::twoPhaseChangeModel::New(mixture)
 );
 
 volScalarField& alpha1(mixture.alpha1());

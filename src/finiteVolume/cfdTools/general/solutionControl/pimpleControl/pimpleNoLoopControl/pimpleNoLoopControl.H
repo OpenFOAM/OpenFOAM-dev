@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,6 @@ SourceFiles
 #ifndef pimpleNoLoopControl_H
 #define pimpleNoLoopControl_H
 
-#include "pimpleLoop.H"
 #include "pisoControl.H"
 #include "singleRegionConvergenceControl.H"
 #include "singleRegionCorrectorConvergenceControl.H"
@@ -51,6 +50,8 @@ SourceFiles
 namespace Foam
 {
 
+class pimpleLoop;
+
 /*---------------------------------------------------------------------------*\
                      Class pimpleNoLoopControl Declaration
 \*---------------------------------------------------------------------------*/
@@ -61,12 +62,17 @@ class pimpleNoLoopControl
     public singleRegionConvergenceControl,
     public singleRegionCorrectorConvergenceControl
 {
+    friend class pimpleSingleRegionControl;
+    friend class pimpleMultiRegionControl;
+
+    // Private data
+
+        pimpleLoop* pimpleLoopPtr_;
+
+
 protected:
 
     // Protected data
-
-        //- The pimple loop
-        const pimpleLoop& loop_;
 
         //- Flag to indicate whether to update the density in SIMPLE mode rather
         //  than PISO mode
@@ -74,7 +80,7 @@ protected:
 
         //- Flag to control whether turbulence is solved just on the final
         //  pimple iteration, or on every pimple iteration
-        bool turbOnFinalIterOnly_;
+        bool transportCorrectionFinal_;
 
 
 public:
@@ -89,12 +95,7 @@ public:
 
         //- Construct from a mesh, the name of the algorithm, and a reference
         //  to the pimple loop
-        pimpleNoLoopControl
-        (
-            fvMesh& mesh,
-            const word& algorithmName,
-            const pimpleLoop& loop
-        );
+        pimpleNoLoopControl(fvMesh& mesh, const word& algorithmName="PIMPLE");
 
 
     //- Destructor
@@ -110,15 +111,26 @@ public:
 
         // Access
 
-            //- Flag to indicate whether in final state
-            virtual bool isFinal() const;
-
             //- Flag to indicate whether to update the density in simple mode
             inline bool simpleRho() const;
 
-            //- Flag to indicate whether to solve the turbulence on the final
-            //  pimple iteration only
-            inline bool turbOnFinalIterOnly() const;
+            //- Flag to indicate whether to correct the transport properties
+            inline bool transportCorr() const;
+
+            //- Flag to indicate the first iteration
+            inline bool firstIter() const;
+
+            //- Flag to indicate the final iteration
+            inline bool finalIter() const;
+
+
+        // Evolution
+
+            //- Piso loop within outer loop
+            bool correct();
+
+            //- Non-orthogonal corrector loop
+            bool correctNonOrthogonal();
 };
 
 

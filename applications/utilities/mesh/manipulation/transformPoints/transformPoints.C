@@ -68,7 +68,6 @@ See also
 
 #include "argList.H"
 #include "fvMesh.H"
-#include "regionProperties.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "ReadFields.H"
@@ -191,7 +190,7 @@ int main(int argc, char *argv[])
 
     #include "createTransforms.H"
 
-    const wordList regionNames(selectRegionNames(args, runTime));
+    #include "setRegionNames.H"
 
     const bool doRotateFields = args.optionFound("rotateFields");
 
@@ -209,9 +208,13 @@ int main(int argc, char *argv[])
     forAll(regionNames, regioni)
     {
         const word& regionName = regionNames[regioni];
-        const word& regionDir = Foam::regionDir(regionName);
 
-        fileName meshDir(regionDir/polyMesh::meshSubDir);
+        const word& regionDir =
+            regionName == polyMesh::defaultRegion
+          ? word::null
+          : regionName;
+
+        const fileName meshDir(regionDir/polyMesh::meshSubDir);
 
         pointIOField points
         (

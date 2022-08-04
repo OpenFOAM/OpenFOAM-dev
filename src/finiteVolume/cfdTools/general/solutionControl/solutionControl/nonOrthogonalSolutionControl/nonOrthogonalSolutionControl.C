@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,16 @@ bool Foam::nonOrthogonalSolutionControl::read()
 }
 
 
-bool Foam::nonOrthogonalSolutionControl::correctNonOrthogonal()
+bool Foam::nonOrthogonalSolutionControl::isFinal(const bool finalIter) const
+{
+    return finalIter && (finalNonOrthogonalIter() || !anyNonOrthogonalIter());
+}
+
+
+bool Foam::nonOrthogonalSolutionControl::correctNonOrthogonal
+(
+    const bool finalIter
+)
 {
     read();
 
@@ -81,14 +90,14 @@ bool Foam::nonOrthogonalSolutionControl::correctNonOrthogonal()
     {
         corrNonOrth_ = 0;
 
-        updateFinal();
+        updateFinal(isFinal(finalIter));
 
         return false;
     }
 
-    ++ corrNonOrth_;
+    corrNonOrth_++;
 
-    updateFinal();
+    updateFinal(isFinal(finalIter));
 
     return true;
 }

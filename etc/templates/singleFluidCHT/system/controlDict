@@ -13,7 +13,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     chtMultiRegionFoam;
+application     foamMultiRun;
+
+#includeIfPresent "regionSolvers"
 
 startFrom       startTime;
 

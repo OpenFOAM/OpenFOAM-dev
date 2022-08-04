@@ -13,7 +13,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rhoSimpleFoam;
+application     foamRun;
+
+solver          fluid;
 
 startFrom       latestTime;
 

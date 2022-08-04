@@ -1,0 +1,6 @@
+EXE_INC = \
+    -IregionSolvers \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+EXE_LIBS = \
+    -lfiniteVolume

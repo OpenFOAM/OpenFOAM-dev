@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,13 +110,16 @@ public:
             inline bool finalInnerIter() const;
 
             //- Flag to indicate whether in final state
-            virtual bool isFinal() const;
+            bool isFinal(const bool finalIter) const;
 
 
         // Evolution
 
-            //- Piso loop
-            bool correct();
+            //- Piso loop within outer loop
+            bool correct(const bool finalIter = false);
+
+            //- Non-orthogonal corrector loop
+            bool correctNonOrthogonal(const bool finalIter = true);
 
             //- Time run loop
             bool run(Time& time);

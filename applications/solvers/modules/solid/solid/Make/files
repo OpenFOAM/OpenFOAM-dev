@@ -1,0 +1,3 @@
+solid.C
+
+LIB = $(FOAM_LIBBIN)/libsolid

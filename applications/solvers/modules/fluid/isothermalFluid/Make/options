@@ -1,0 +1,18 @@
+EXE_INC = \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/cfdTools \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lfluidThermophysicalModels \
+    -lmomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lsampling \
+    -lfvModels \
+    -lfvConstraints

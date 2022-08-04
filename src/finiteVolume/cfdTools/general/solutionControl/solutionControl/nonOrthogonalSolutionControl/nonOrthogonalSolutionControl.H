@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,11 +103,14 @@ public:
             //- Flag to indicate the last non-orthogonal iteration
             inline bool finalNonOrthogonalIter() const;
 
+            //- Flag to indicate whether in final state
+            bool isFinal(const bool finalIter) const;
+
 
         // Evolution
 
             //- Non-orthogonal corrector loop
-            bool correctNonOrthogonal();
+            bool correctNonOrthogonal(const bool finalIter = false);
 };
 
 

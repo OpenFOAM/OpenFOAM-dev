@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,12 +38,12 @@ SourceFiles
 #ifndef pimpleMultiRegionControl_H
 #define pimpleMultiRegionControl_H
 
+#include "solver.H"
 #include "multiRegionSolutionControl.H"
 #include "pimpleLoop.H"
 #include "convergenceControl.H"
 #include "correctorConvergenceControl.H"
 #include "pimpleNoLoopControl.H"
-#include "solidNoLoopControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,25 +61,16 @@ class pimpleMultiRegionControl
     public convergenceControl,
     public correctorConvergenceControl
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- The per-region pimple controls
-        PtrList<pimpleNoLoopControl> pimpleControls_;
+        UPtrList<pimpleNoLoopControl> pimpleControls_;
 
-        //- The per-region solid controls
-        PtrList<solidNoLoopControl> solidControls_;
+        //- Maximum number of energy correctors
+        label nEcorr_;
 
-
-    // Protected Static Functions
-
-        //- Get the time from the region meshes
-        static const Time& time
-        (
-            const PtrList<fvMesh>& pimpleMeshes,
-            const PtrList<fvMesh>& solidMeshes
-        );
+        //- Current energy corrector
+        label Ecorr_;
 
 
 public:
@@ -92,12 +83,12 @@ public:
 
     // Constructors
 
-        //- Construct from meshes and the algorithm name
+        //- Construct from time and the list of solvers
         pimpleMultiRegionControl
         (
-            PtrList<fvMesh>& pimpleMeshes,
-            PtrList<fvMesh>& solidMeshes,
-            const word& algorithmName="PIMPLE"
+            const Time& runTime,
+            PtrList<solver>& solvers,
+            const word& algorithmName = "PIMPLE"
         );
 
 
@@ -116,12 +107,6 @@ public:
 
             //- Access the i-th pimple control
             inline pimpleNoLoopControl& pimple(const label i);
-
-            //- Access the i-th solid control
-            inline solidNoLoopControl& solid(const label i);
-
-            //- Flag to indicate whether to solve the turbulence
-            inline bool pimpleTurbCorr(const label i) const;
 
         // Evolution
 
@@ -145,6 +130,9 @@ public:
 
             //- Pimple loop
             bool loop();
+
+            //- Energy corrector loop
+            bool correctEnergy();
 
             //- Time run loop
             bool run(Time& time);

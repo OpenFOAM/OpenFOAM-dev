@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,32 +25,8 @@ Class
     Foam::pimpleControl
 
 Description
-    Pimple control class. Provides time-loop control methods which exit the
-    simulation once convergence criteria have been reached. Also provides
-    Pimple-loop control methods which exit the iteration once corrector
-    convergence criteria have been met. Example usage:
-
-    \verbatim
-    pimpleControl pimple(mesh);
-
-    while (pimple.run(runTime))
-    {
-        // pre-time-increment operations ...
-
-        runTime ++;
-        Info<< "Time = " << runTime.userTimeName() << nl << endl;
-
-        while (pimple.loop())
-        {
-            // solve ...
-        }
-
-        // post-solve operations ...
-    }
-    \endverbatim
 
 SourceFiles
-    pimpleControlI.H
     pimpleControl.C
 
 \*---------------------------------------------------------------------------*/
@@ -58,10 +34,7 @@ SourceFiles
 #ifndef pimpleControl_H
 #define pimpleControl_H
 
-#include "pimpleNoLoopControl.H"
-#include "pimpleLoop.H"
-#include "singleRegionConvergenceControl.H"
-#include "singleRegionCorrectorConvergenceControl.H"
+#include "pimpleSingleRegionControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,7 +48,7 @@ namespace Foam
 class pimpleControl
 :
     public pimpleNoLoopControl,
-    public pimpleLoop
+    public pimpleSingleRegionControl
 {
 public:
 
@@ -97,36 +70,33 @@ public:
 
     // Member Functions
 
-        // IO
+        using pimpleSingleRegionControl::loop;
 
-            //- Read controls
-            virtual bool read();
+        using pimpleSingleRegionControl::run;
 
-        // Access
+        //- Flag to indicate whether to correct the transport properties
+        bool turbCorr() const
+        {
+            return transportCorr();
+        }
 
-            //- Flag to indicate whether to solve the turbulence
-            inline bool turbCorr() const;
+        //- Flag to indicate the first iteration
+        bool firstPimpleIter() const
+        {
+            return pimpleSingleRegionControl::firstIter();
+        }
 
-        // Evolution
-
-            //- Pimple loop
-            bool loop();
-
-            //- Time run loop
-            bool run(Time& time);
-
-            //- Time loop loop
-            bool loop(Time& time);
+        //- Flag to indicate the final iteration
+        bool finalPimpleIter() const
+        {
+            return pimpleSingleRegionControl::finalIter();
+        }
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "pimpleControlI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

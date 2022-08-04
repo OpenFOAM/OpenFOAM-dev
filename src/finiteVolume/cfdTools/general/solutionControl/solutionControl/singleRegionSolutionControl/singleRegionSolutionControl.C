@@ -42,7 +42,18 @@ Foam::singleRegionSolutionControl::singleRegionSolutionControl
     const word& algorithmName
 )
 :
-    solutionControl(mesh, mesh.time(), algorithmName),
+    solutionControl
+    (
+        mesh,
+        mesh.time(),
+        (
+           !mesh.solution().dict().found(algorithmName)
+         && mesh.schemes().steady()
+         && mesh.solution().dict().found("SIMPLE")
+        )
+      ? "SIMPLE"
+      : algorithmName
+    ),
     mesh_(mesh)
 {}
 
@@ -61,17 +72,14 @@ const Foam::dictionary& Foam::singleRegionSolutionControl::dict() const
 }
 
 
-bool Foam::singleRegionSolutionControl::isFinal() const
-{
-    return false;
-}
-
-
-void Foam::singleRegionSolutionControl::updateFinal() const
+void Foam::singleRegionSolutionControl::updateFinal
+(
+    const bool finalIter
+) const
 {
     mesh_.data::remove("finalIteration");
 
-    if (isFinal())
+    if (finalIter)
     {
         mesh_.data::add("finalIteration", true);
     }

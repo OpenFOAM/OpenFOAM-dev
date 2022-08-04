@@ -1,0 +1,73 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     foamRun;
+
+solver          multicomponentFluid;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         500;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   20;
+
+purgeWrite      10;
+
+writeFormat     ascii;
+
+writePrecision  10;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+
+functions
+{
+    surfaceFieldValue1
+    {
+        type            surfaceFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        enabled         yes;
+        writeControl    writeTime;
+        log             yes;
+        writeFields     no;
+        regionType      patch;
+        name            outlet;
+        operation       average;
+        weightField     phi;
+        fields
+        (
+            H2O
+            T
+        );
+    }
+}
+
+
+// ************************************************************************* //

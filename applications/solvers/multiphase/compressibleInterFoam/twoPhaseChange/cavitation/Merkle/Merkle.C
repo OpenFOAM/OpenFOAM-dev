@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,16 +30,20 @@ License
 
 namespace Foam
 {
+namespace compressible
+{
 namespace twoPhaseChangeModels
 {
     defineTypeNameAndDebug(Merkle, 0);
     addToRunTimeSelectionTable(cavitationModel, Merkle, dictionary);
 }
 }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseChangeModels::Merkle::Merkle
+Foam::compressible::twoPhaseChangeModels::Merkle::Merkle
 (
     const compressibleTwoPhaseMixture& mixture
 )
@@ -62,7 +66,7 @@ Foam::twoPhaseChangeModels::Merkle::Merkle
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::twoPhaseChangeModels::Merkle::mDotAlphal() const
+Foam::compressible::twoPhaseChangeModels::Merkle::mDotAlphal() const
 {
     const volScalarField::Internal& p =
         mixture_.alpha1().db().lookupObject<volScalarField>("p");
@@ -81,7 +85,7 @@ Foam::twoPhaseChangeModels::Merkle::mDotAlphal() const
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::twoPhaseChangeModels::Merkle::mDotP() const
+Foam::compressible::twoPhaseChangeModels::Merkle::mDotP() const
 {
     const volScalarField::Internal& p =
         mixture_.alpha1().db().lookupObject<volScalarField>("p");
@@ -105,13 +109,13 @@ Foam::twoPhaseChangeModels::Merkle::mDotP() const
 }
 
 
-void Foam::twoPhaseChangeModels::Merkle::correct()
+void Foam::compressible::twoPhaseChangeModels::Merkle::correct()
 {
     cavitationModel::correct();
 }
 
 
-bool Foam::twoPhaseChangeModels::Merkle::read()
+bool Foam::compressible::twoPhaseChangeModels::Merkle::read()
 {
     if (cavitationModel::read())
     {

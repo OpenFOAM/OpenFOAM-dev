@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,16 +31,20 @@ License
 
 namespace Foam
 {
+namespace compressible
+{
 namespace twoPhaseChangeModels
 {
     defineTypeNameAndDebug(noPhaseChange, 0);
     addToRunTimeSelectionTable(twoPhaseChangeModel, noPhaseChange, dictionary);
 }
 }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseChangeModels::noPhaseChange::noPhaseChange
+Foam::compressible::twoPhaseChangeModels::noPhaseChange::noPhaseChange
 (
     const compressibleTwoPhaseMixture& mixture
 )
@@ -52,7 +56,7 @@ Foam::twoPhaseChangeModels::noPhaseChange::noPhaseChange
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::Pair<Foam::tmp<Foam::volScalarField>>
-Foam::twoPhaseChangeModels::noPhaseChange::mDotAlphal() const
+Foam::compressible::twoPhaseChangeModels::noPhaseChange::mDotAlphal() const
 {
     return Pair<tmp<volScalarField>>
     (
@@ -63,7 +67,7 @@ Foam::twoPhaseChangeModels::noPhaseChange::mDotAlphal() const
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField>>
-Foam::twoPhaseChangeModels::noPhaseChange::mDotP() const
+Foam::compressible::twoPhaseChangeModels::noPhaseChange::mDotP() const
 {
     return Pair<tmp<volScalarField>>
     (
@@ -74,7 +78,7 @@ Foam::twoPhaseChangeModels::noPhaseChange::mDotP() const
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::twoPhaseChangeModels::noPhaseChange::Salpha
+Foam::compressible::twoPhaseChangeModels::noPhaseChange::Salpha
 (
     volScalarField& alpha
 ) const
@@ -88,7 +92,7 @@ Foam::twoPhaseChangeModels::noPhaseChange::Salpha
 
 
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::twoPhaseChangeModels::noPhaseChange::Sp_rgh
+Foam::compressible::twoPhaseChangeModels::noPhaseChange::Sp_rgh
 (
     const volScalarField& rho,
     const volScalarField& gh,
@@ -100,7 +104,7 @@ Foam::twoPhaseChangeModels::noPhaseChange::Sp_rgh
 
 
 Foam::tmp<Foam::fvVectorMatrix>
-Foam::twoPhaseChangeModels::noPhaseChange::SU
+Foam::compressible::twoPhaseChangeModels::noPhaseChange::SU
 (
     const volScalarField& rho,
     const surfaceScalarField& rhoPhi,
@@ -114,13 +118,13 @@ Foam::twoPhaseChangeModels::noPhaseChange::SU
 }
 
 
-void Foam::twoPhaseChangeModels::noPhaseChange::correct()
+void Foam::compressible::twoPhaseChangeModels::noPhaseChange::correct()
 {
     twoPhaseChangeModel::correct();
 }
 
 
-bool Foam::twoPhaseChangeModels::noPhaseChange::read()
+bool Foam::compressible::twoPhaseChangeModels::noPhaseChange::read()
 {
     return twoPhaseChangeModel::read();
 }

@@ -35,7 +35,7 @@ SourceFiles
 #ifndef runTimeSelectionToC_H
 #define runTimeSelectionToC_H
 
-#include "HashSet.H"
+#include "HashTable.H"
 #include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,7 +47,7 @@ namespace debug
     //- Switch to enable runTimeSelectionToC collection and caching
     extern bool enableRunTimeSelectionToC;
 
-    typedef HashTable<Tuple2<word, wordHashSet>> runTimeSelectionToCType;
+    typedef HashTable<Tuple2<word, HashTable<word>>> runTimeSelectionToCType;
 
     //- Run-time selectable objects
     extern runTimeSelectionToCType runTimeSelectionToC;

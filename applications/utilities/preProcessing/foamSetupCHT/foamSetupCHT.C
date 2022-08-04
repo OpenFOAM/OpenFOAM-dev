@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,15 +28,14 @@ Description
     This utility sets up a multi-region case using template files for
     material properties, field and system files.
 
-    The utility reads constant/materialProperties to create a
-    regionProperties file and to create region directories containing
-    required files within the 0, system and constant directories. The
-    materialProperties file contains mesh region names with an
-    associated physical region type and a material:
+    The utility reads constant/materialProperties to create a regionSolvers list
+    and to create region directories containing required files within the 0,
+    system and constant directories. The materialProperties file contains mesh
+    region names with an associated solver and a material:
 
     bottomAir
     {
-        type            fluid;
+        solver          fluid;
         material        air;
     }
 
@@ -61,6 +60,8 @@ Description
 #include "argList.H"
 #include "Time.H"
 #include "IOdictionary.H"
+#include "dictionaryEntry.H"
+#include "OFstream.H"
 
 using namespace Foam;
 
@@ -87,58 +88,35 @@ int main(int argc, char *argv[])
         )
     );
 
-    IOdictionary regionProperties
-    (
-        IOobject
-        (
-            "regionProperties",
-            runTime.constant(),
-            runTime
-        ),
-        dictionary::null
-    );
-
     const fileName currentDir(runTime.path());
     const fileName materialsDir(currentDir/"templates"/"materials");
     const fileName systemDir(currentDir/"templates"/"system");
     const fileName constantDir(currentDir/"templates"/"constant");
     const fileName timeDir(currentDir/"templates"/"0");
 
-    HashTable<wordList> regionInfo;
+    dictionaryEntry regionSolvers
+    (
+        "regionSolvers",
+        dictionary::null,
+        dictionary::null
+    );
 
     forAllConstIter(dictionary, materialProperties, regionIter)
     {
         // Read region subdict name, then its type and material entries
         const word& regionName = regionIter().keyword();
         const dictionary& regionDict = regionIter().dict();
-        const word regionType(regionDict.lookup("type"));
+        const word regionSolver(regionDict.lookup("solver"));
         const word regionMaterial(regionDict.lookup("material"));
 
         Info<< "\nRegion " << regionName << ":\n"
             << "\tCreating 0/" << regionName
             << " directory" << endl;
 
-        // Create fluid and solid lists for regionProperties, e.g.
-        // fluid ( bottomAir ... )
-        HashTable<wordList>::iterator iter = regionInfo.find(regionType);
-
-        if (iter == regionInfo.end())
-        {
-            // Add fluid or solid list if does not exist
-            regionInfo.insert(regionType, wordList(1, regionName));
-        }
-        else
-        {
-            wordList& regionNames = iter();
-            if (findIndex(regionNames, regionName) == -1)
-            {
-                // Append region name to fluid/solid list
-                regionNames.append(regionName);
-            }
-        }
+        regionSolvers.add(regionName, regionSolver);
 
         // 0/<region>: from fluid/solid template
-        const fileName sourceDir(timeDir/regionType);
+        const fileName sourceDir(timeDir/regionSolver);
         if (isDir(sourceDir))
         {
             cpFiles(sourceDir, currentDir/"0"/regionName);
@@ -156,13 +134,13 @@ int main(int argc, char *argv[])
             Info<< "\tCreating constant/" << regionName
                 << " directory with " << regionMaterial
                 << " material" << endl;
-            cpFiles(constantDir/regionType, currentDir/"constant"/regionName);
+            cpFiles(constantDir/regionSolver, currentDir/"constant"/regionName);
             cpFiles(matDir, currentDir/"constant"/regionName);
 
             // system/<region>: from fluid or solid template
             Info<< "\tCreating system/" << regionName
                 << " directory" << endl;
-            cpFiles(systemDir/regionType, currentDir/"system"/regionName);
+            cpFiles(systemDir/regionSolver, currentDir/"system"/regionName);
         }
         else
         {
@@ -172,11 +150,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    regionProperties.add("regions", regionInfo);
-
-    Info<< "\nWriting region properties\n" << endl;
-
-    regionProperties.regIOobject::write();
+    Info<< "\nWriting regionSolvers\n" << endl;
+    {
+        OFstream regionSolversFile(currentDir/runTime.system()/"regionSolvers");
+        regionSolvers.write(regionSolversFile);
+    }
 
     Info<< "End\n" << endl;
 

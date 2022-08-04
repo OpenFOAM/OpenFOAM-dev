@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,92 +37,15 @@ namespace Foam
 
 Foam::pimpleControl::pimpleControl(fvMesh& mesh, const word& algorithmName)
 :
-    pimpleNoLoopControl(mesh, algorithmName, *this),
-    pimpleLoop(static_cast<solutionControl&>(*this))
-{
-    read();
-
-    printResidualControls();
-
-    if (nCorrPimple_ > 1)
-    {
-        printCorrResidualControls(nCorrPimple_);
-    }
-
-    Info<< nl << algorithmName << ": Operating solver in "
-        << (mesh.schemes().steady()
-        ? "steady-state"
-        : mesh.schemes().transient() ? "transient" :
-            "mixed steady-state/transient") << " mode with " << nCorrPimple_
-        << " outer corrector" << (nCorrPimple_ == 1 ? "" : "s") << nl;
-
-    if (nCorrPimple_ == 1)
-    {
-        Info<< algorithmName << ": Operating solver in "
-            << (mesh.schemes().steady() ? "SIMPLE" : "PISO") << " mode" << nl;
-    }
-
-    Info<< nl << endl;
-}
+    pimpleNoLoopControl(mesh, algorithmName),
+    pimpleSingleRegionControl(static_cast<pimpleNoLoopControl&>(*this))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::pimpleControl::~pimpleControl()
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-bool Foam::pimpleControl::read()
-{
-    return pimpleNoLoopControl::read() && pimpleLoop::read();
-}
-
-
-bool Foam::pimpleControl::loop()
-{
-    read();
-
-    if (!pimpleLoop::loop(*this))
-    {
-        updateFinal();
-
-        return false;
-    }
-
-    storePrevIterFields();
-
-    updateFinal();
-
-    return true;
-}
-
-
-bool Foam::pimpleControl::run(Time& time)
-{
-    read();
-
-    if (!endIfConverged(time))
-    {
-        storePrevIterFields();
-    }
-
-    return time.run();
-}
-
-
-bool Foam::pimpleControl::loop(Time& time)
-{
-    read();
-
-    if (!endIfConverged(time))
-    {
-        storePrevIterFields();
-    }
-
-    return time.loop();
-}
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,8 @@ License
 
 namespace Foam
 {
+namespace compressible
+{
 namespace twoPhaseChangeModels
 {
     defineTypeNameAndDebug(SchnerrSauer, 0);
@@ -42,11 +44,12 @@ namespace twoPhaseChangeModels
     );
 }
 }
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseChangeModels::SchnerrSauer::SchnerrSauer
+Foam::compressible::twoPhaseChangeModels::SchnerrSauer::SchnerrSauer
 (
     const compressibleTwoPhaseMixture& mixture
 )
@@ -67,7 +70,7 @@ Foam::twoPhaseChangeModels::SchnerrSauer::SchnerrSauer
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::twoPhaseChangeModels::SchnerrSauer::rRb
+Foam::compressible::twoPhaseChangeModels::SchnerrSauer::rRb
 (
     const volScalarField::Internal& limitedAlpha1
 ) const
@@ -82,7 +85,7 @@ Foam::twoPhaseChangeModels::SchnerrSauer::rRb
 
 
 Foam::dimensionedScalar
-Foam::twoPhaseChangeModels::SchnerrSauer::alphaNuc() const
+Foam::compressible::twoPhaseChangeModels::SchnerrSauer::alphaNuc() const
 {
     dimensionedScalar Vnuc = n_*constant::mathematical::pi*pow3(dNuc_)/6;
     return Vnuc/(1 + Vnuc);
@@ -90,7 +93,7 @@ Foam::twoPhaseChangeModels::SchnerrSauer::alphaNuc() const
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::twoPhaseChangeModels::SchnerrSauer::pCoeff
+Foam::compressible::twoPhaseChangeModels::SchnerrSauer::pCoeff
 (
     const volScalarField::Internal& p
 ) const
@@ -113,7 +116,7 @@ Foam::twoPhaseChangeModels::SchnerrSauer::pCoeff
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::twoPhaseChangeModels::SchnerrSauer::mDotAlphal() const
+Foam::compressible::twoPhaseChangeModels::SchnerrSauer::mDotAlphal() const
 {
     const volScalarField::Internal& p =
         mixture_.alpha1().db().lookupObject<volScalarField>("p");
@@ -135,7 +138,7 @@ Foam::twoPhaseChangeModels::SchnerrSauer::mDotAlphal() const
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::twoPhaseChangeModels::SchnerrSauer::mDotP() const
+Foam::compressible::twoPhaseChangeModels::SchnerrSauer::mDotP() const
 {
     const volScalarField::Internal& p =
         mixture_.alpha1().db().lookupObject<volScalarField>("p");
@@ -158,13 +161,13 @@ Foam::twoPhaseChangeModels::SchnerrSauer::mDotP() const
 }
 
 
-void Foam::twoPhaseChangeModels::SchnerrSauer::correct()
+void Foam::compressible::twoPhaseChangeModels::SchnerrSauer::correct()
 {
     cavitationModel::correct();
 }
 
 
-bool Foam::twoPhaseChangeModels::SchnerrSauer::read()
+bool Foam::compressible::twoPhaseChangeModels::SchnerrSauer::read()
 {
     if (cavitationModel::read())
     {

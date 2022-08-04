@@ -21,7 +21,7 @@ removeRegionDirs ()
 cleanCase
 removeRegionDirs
 rm -rf 0 > /dev/null 2>&1
-rm -rf constant/regionProperties > /dev/null 2>&1
+rm -rf system/regionSolvers > /dev/null 2>&1
 rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
 
 # ----------------------------------------------------------------- end-of-file

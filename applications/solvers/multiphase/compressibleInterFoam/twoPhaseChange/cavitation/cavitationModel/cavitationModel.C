@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,15 +32,19 @@ License
 
 namespace Foam
 {
+namespace compressible
+{
 namespace twoPhaseChangeModels
 {
     defineTypeNameAndDebug(cavitationModel, 0);
 }
 }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseChangeModels::cavitationModel::cavitationModel
+Foam::compressible::twoPhaseChangeModels::cavitationModel::cavitationModel
 (
     const word& type,
     const compressibleTwoPhaseMixture& mixture
@@ -54,7 +58,7 @@ Foam::twoPhaseChangeModels::cavitationModel::cavitationModel
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::twoPhaseChangeModels::cavitationModel::Salpha
+Foam::compressible::twoPhaseChangeModels::cavitationModel::Salpha
 (
     volScalarField& alpha
 ) const
@@ -78,7 +82,7 @@ Foam::twoPhaseChangeModels::cavitationModel::Salpha
 
 
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::twoPhaseChangeModels::cavitationModel::Sp_rgh
+Foam::compressible::twoPhaseChangeModels::cavitationModel::Sp_rgh
 (
     const volScalarField& rho,
     const volScalarField& gh,
@@ -98,7 +102,7 @@ Foam::twoPhaseChangeModels::cavitationModel::Sp_rgh
 
 
 Foam::tmp<Foam::fvVectorMatrix>
-Foam::twoPhaseChangeModels::cavitationModel::SU
+Foam::compressible::twoPhaseChangeModels::cavitationModel::SU
 (
     const volScalarField& rho,
     const surfaceScalarField& rhoPhi,
@@ -109,7 +113,7 @@ Foam::twoPhaseChangeModels::cavitationModel::SU
 }
 
 
-bool Foam::twoPhaseChangeModels::cavitationModel::read()
+bool Foam::compressible::twoPhaseChangeModels::cavitationModel::read()
 {
     if (twoPhaseChangeModel::read())
     {

@@ -5,7 +5,8 @@ ARFLAGS    = cr
 RANLIB     = ranlib
 LD         = ld
 
-GFLAGS     = -D$(WM_ARCH) -DWM_ARCH_OPTION=$(WM_ARCH_OPTION) \
+GFLAGS     = -DLIB_NAME=$(notdir $(LIB).$(SO)) \
+             -D$(WM_ARCH) -DWM_ARCH_OPTION=$(WM_ARCH_OPTION) \
              -DWM_$(WM_PRECISION_OPTION) -DWM_LABEL_SIZE=$(WM_LABEL_SIZE)
 GINC       =
 GLIBS      = -lm

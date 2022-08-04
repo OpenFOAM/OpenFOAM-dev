@@ -29,15 +29,18 @@ Description
 #ifndef addToRunTimeSelectionTable_H
 #define addToRunTimeSelectionTable_H
 
+#include "macros.H"
+
 namespace Foam
 {
     class word;
 
     bool addToRunTimeSelectionTableToC
     (
-        const word& baseType,
-        const word& baseTypeName,
-        const word& thisTypeName
+        const char* baseType,
+        const char* baseTypeName,
+        const word& thisTypeName,
+        const char* libName
     );
 }
 
@@ -54,7 +57,7 @@ namespace Foam
                                                                                \
     bool add##thisType##argNames##To##baseType##ToC_ =                         \
         addToRunTimeSelectionTableToC                                          \
-        (#baseType, baseType::typeName_(), thisType::typeName)
+        (#baseType, baseType::typeName_(), thisType::typeName, STR(LIB_NAME))
 
 
 //- Add to hash-table of functions with 'lookup' as the key
@@ -67,7 +70,8 @@ namespace Foam
         (#lookup);                                                             \
                                                                                \
     bool add_##lookup##_##thisType##argNames##To##baseType##ToC_ =             \
-        addToRunTimeSelectionTableToC(#baseType, baseType::typeName_(), #lookup)
+        addToRunTimeSelectionTableToC                                          \
+        (#baseType, baseType::typeName_(), #lookup, STR(LIB_NAME))
 
 
 //- Add to hash-table of functions with typename as the key
@@ -80,7 +84,7 @@ namespace Foam
                                                                                \
     bool addRemovable##thisType##argNames##To##baseType##ToC_ =                \
         addToRunTimeSelectionTableToC                                          \
-        (#baseType, baseType::typeName_(), thisType::typeName)
+        (#baseType, baseType::typeName_(), thisType::typeName, STR(LIB_NAME))
 
 
 //- Add to hash-table of functions with 'lookup' as the key
@@ -93,7 +97,8 @@ namespace Foam
         ##baseType##Table_(#lookup);                                           \
                                                                                \
     bool addRemovable_##lookup##_##thisType##argNames##To##baseType##ToC_ =    \
-        addToRunTimeSelectionTableToC(#baseType, baseType::typeName_(), #lookup)
+        addToRunTimeSelectionTableToC                                          \
+        (#baseType, baseType::typeName_(), #lookup, STR(LIB_NAME))
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
