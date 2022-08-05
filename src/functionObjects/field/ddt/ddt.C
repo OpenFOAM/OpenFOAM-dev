@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ bool Foam::functionObjects::ddt::calc()
     if (functionObject::postProcess)
     {
         WarningInFunction
-            << "ddt is not supported with the postProcess utility"
+            << "ddt is not supported with the foamPostProcess utility"
             << endl;
 
         return false;

@@ -8,9 +8,9 @@ runApplication blockMesh
 runApplication simpleFoam
 runApplication -s age simpleFoam -postProcess -latestTime \
     -func "age(diffusion=true)"
-runApplication -s probes1 postProcess -func probes1 -latestTime
-runApplication -s probes2 postProcess -func probes2 -latestTime
-runApplication -s patchFlowRate postProcess -latestTime \
+runApplication -s probes1 foamPostProcess -func probes1 -latestTime
+runApplication -s probes2 foamPostProcess -func probes2 -latestTime
+runApplication -s patchFlowRate foamPostProcess -latestTime \
     -func "patchFlowRate(funcName=inletFlowRate,patch=inlet)" -latestTime
 
 (cd validation && ./Allrun $*)

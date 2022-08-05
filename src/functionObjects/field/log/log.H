@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,9 @@ Description
     }
     \endverbatim
 
-    or using \c postProcess
+    or using \c foamPostProcess
     \verbatim
-    postProcess -func 'log(p, clip=1e-3, checkDimensions=no)'
+    foamPostProcess -func 'log(p, clip=1e-3, checkDimensions=no)'
     \endverbatim
 
 Usage

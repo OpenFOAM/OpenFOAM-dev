@@ -14,7 +14,7 @@ runParallel $(getApplication)
 runApplication reconstructPar -latestTime
 
 # Post-process
-runApplication postProcess -func "
+runApplication foamPostProcess -func "
     graphLayerAverage
     (
         funcName=graphCrossSection,

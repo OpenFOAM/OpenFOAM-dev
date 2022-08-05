@@ -263,7 +263,7 @@ public:
         bool start();
 
         //- Called at each ++ or += of the time-loop.
-        //  postProcess overrides the usual executeControl behaviour and
+        //  foamPostProcess overrides the usual executeControl behaviour and
         //  forces execution (used in post-processing mode)
         bool execute();
 

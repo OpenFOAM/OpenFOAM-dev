@@ -8,6 +8,6 @@ application=$(getApplication)
 
 runApplication blockMesh
 runApplication $application -withFunctionObjects -writePhi -writep
-runApplication postProcess -func streamFunction
+runApplication foamPostProcess -func streamFunction
 
 #------------------------------------------------------------------------------

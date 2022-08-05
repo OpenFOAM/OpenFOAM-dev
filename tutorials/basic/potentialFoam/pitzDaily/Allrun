@@ -8,6 +8,6 @@ application=$(getApplication)
 
 runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/pitzDaily
 runApplication $application -writePhi -writep
-runApplication postProcess -func streamFunction
+runApplication foamPostProcess -func streamFunction
 
 #------------------------------------------------------------------------------

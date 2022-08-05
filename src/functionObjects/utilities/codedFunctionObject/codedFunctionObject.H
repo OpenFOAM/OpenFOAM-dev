@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,12 +142,12 @@ public:
         virtual wordList fields() const;
 
         //- Called at each ++ or += of the time-loop.
-        //  postProcess overrides the usual executeControl behaviour and
+        //  foamPostProcess overrides the usual executeControl behaviour and
         //  forces execution (used in post-processing mode)
         virtual bool execute();
 
         //- Called at each ++ or += of the time-loop.
-        //  postProcess overrides the usual writeControl behaviour and
+        //  foamPostProcess overrides the usual writeControl behaviour and
         //  forces writing always (used in post-processing mode)
         virtual bool write();
 

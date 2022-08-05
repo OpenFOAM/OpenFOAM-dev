@@ -20,7 +20,7 @@ then
 fi
 
 runApplication reconstructPar -latestTime
-runApplication postProcess -latestTime -func "
+runApplication foamPostProcess -latestTime -func "
     graphCell
     (
         funcName=graph,

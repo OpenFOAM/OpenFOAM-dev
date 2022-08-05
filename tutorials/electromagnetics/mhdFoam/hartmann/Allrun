@@ -9,6 +9,6 @@ application=$(getApplication)
 
 runApplication blockMesh
 runApplication $application
-runApplication -s sample  postProcess -func sample
+runApplication -s sample foamPostProcess -func sample
 
 #------------------------------------------------------------------------------
