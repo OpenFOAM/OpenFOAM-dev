@@ -24,8 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvMeshStitchersMoving.H"
+#include "FvFaceCellWave.H"
 #include "fvMeshSubset.H"
 #include "fvmLaplacian.H"
+#include "meshPhiCorrectInfo.H"
+#include "meshPhiPreCorrectInfo.H"
 #include "movingWallVelocityFvPatchVectorField.H"
 #include "movingWallSlipVelocityFvPatchVectorField.H"
 #include "regionSplit.H"
@@ -537,17 +540,33 @@ void Foam::fvMeshStitchers::moving::internalFaceCorrectMeshPhi
     // across the couplings, as the mismatch will be fixed later when area and
     // mesh flux is added to the error faces. So, here, we correct the
     // correction (!) by propagating the error from the cells furthest from the
-    // interface back to the interface. This process is wave-like, but the
-    // sub-mesh is thin, so it should only require 1 or 2 iterations.
+    // interface back to the interface. This is done using waves.
 
-    // Initialise layers and weights
-    List<layerAndWeight> subFaceLayerAndWeight(subMesh.nFaces(), {-1, NaN});
-    List<layerAndWeight> subCellLayerAndWeight(subMesh.nCells(), {-1, Zero});
+    // Dynamic memory for wave initialisation
+    DynamicList<labelPair> subChangedPatchAndFaces;
+    DynamicList<meshPhiPreCorrectInfo> subChangedFacePci;
+    DynamicList<meshPhiCorrectInfo> subChangedFaceCi;
+
+    // Allocate data for the pre-correction wave
+    List<meshPhiPreCorrectInfo> subInternalFacePci(subMesh.nInternalFaces());
+    List<List<meshPhiPreCorrectInfo>> subPatchFacePci
+    (
+        FvFaceCellWave<meshPhiPreCorrectInfo>::template
+        sizesListList<List<List<meshPhiPreCorrectInfo>>>
+        (
+            FvFaceCellWave<meshPhiPreCorrectInfo>::template
+            listListSizes(subMesh.boundary()),
+            meshPhiPreCorrectInfo()
+        )
+    );
+    List<meshPhiPreCorrectInfo> subCellPci(subMesh.nCells());
+
+    // Initialisation for the pre-correction wave
+    subChangedPatchAndFaces.clear();
+    subChangedFacePci.clear();
     forAll(subMesh.boundary(), subPatchi)
     {
         const fvPatch& subFvp = subMesh.boundary()[subPatchi];
-
-        if (subFvp.coupled()) continue;
 
         forAll(subFvp, subPatchFacei)
         {
@@ -557,171 +576,127 @@ void Foam::fvMeshStitchers::moving::internalFaceCorrectMeshPhi
 
             if (bFacei >= 0 && bFaceIsOwnerOrig[bFacei])
             {
-                subFaceLayerAndWeight[subFacei] = {0, bFaceNccMagSf[bFacei]};
+                subChangedPatchAndFaces.append({subPatchi, subPatchFacei});
+                subChangedFacePci.append
+                (
+                    meshPhiPreCorrectInfo(0, bFaceNccMagSf[bFacei])
+                );
             }
         }
     }
 
-    // Create layers and weights by waving from owner-orig faces
-    while (gMin(subFaceLayerAndWeight).layer < 0)
+    // Pre-correction wave
+    FvFaceCellWave<meshPhiPreCorrectInfo> preWave
+    (
+        subMesh,
+        subInternalFacePci,
+        subPatchFacePci,
+        subCellPci
+    );
+    preWave.setFaceInfo(subChangedPatchAndFaces, subChangedFacePci);
+    const label nWaveLayers =
+        preWave.iterate(subMesh.globalData().nTotalCells() + 1);
+
+    // Allocate data for the correction wave
+    List<meshPhiCorrectInfo> subInternalFaceCi(subMesh.nInternalFaces());
+    List<List<meshPhiCorrectInfo>> subPatchFaceCi
+    (
+        FvFaceCellWave<meshPhiCorrectInfo>::template
+        sizesListList<List<List<meshPhiCorrectInfo>>>
+        (
+            FvFaceCellWave<meshPhiCorrectInfo>::template
+            listListSizes(subMesh.boundary()),
+            meshPhiCorrectInfo()
+        )
+    );
+    List<meshPhiCorrectInfo> subCellCi(subMesh.nCells());
+
+    // Calculate the current error in the rate of change of volume
+    const volScalarField::Internal dVdtError
+    (
+        (subV - subV0)/subMesh.time().deltaT()
+      - fvc::surfaceIntegrate(subPhi + subDeltaPhi)()*subV
+    );
+
+    // Construct track data for the correction wave
+    meshPhiCorrectInfo::trackData td
+    (
+        subInternalFacePci,
+        subPatchFacePci,
+        subCellPci,
+        dVdtError
+    );
+
+    // Wave backwards through the layers to generate the corrections. Note that
+    // this has to be done in stages, so that later layers complete in their
+    // entirety before the earlier layers begin. Otherwise they interfere.
+    for (label waveLayeri = nWaveLayers - 1; waveLayeri >= 0; waveLayeri --)
     {
-        // Face to cell
-        List<layerAndWeight> subCellLayerAndWeight0(subCellLayerAndWeight);
-        forAll(subMesh.faces(), subFacei)
+        // The layer indices on the faces that we want to wave from
+        const label faceLayeri = (waveLayeri + 1)*2;
+
+        // Initialisation for the correction wave
+        subChangedPatchAndFaces.clear();
+        subChangedFaceCi.clear();
+        forAll(subInternalFacePci, subFacei)
         {
-            if (subFaceLayerAndWeight[subFacei].layer != -1)
+            if (subInternalFacePci[subFacei].layer() == faceLayeri)
             {
-                const label subOwnCelli = subMesh.faceOwner()[subFacei];
-                if (subCellLayerAndWeight0[subOwnCelli].layer == -1)
-                {
-                    subCellLayerAndWeight[subOwnCelli].layer =
-                        subFaceLayerAndWeight[subFacei].layer + 1;
-                    subCellLayerAndWeight[subOwnCelli].weight +=
-                        subFaceLayerAndWeight[subFacei].weight;
-                }
-
-                if (!subMesh.isInternalFace(subFacei)) continue;
-
-                const label subNbrCelli = subMesh.faceNeighbour()[subFacei];
-                if (subCellLayerAndWeight0[subNbrCelli].layer == -1)
-                {
-                    subCellLayerAndWeight[subNbrCelli].layer =
-                        subFaceLayerAndWeight[subFacei].layer + 1;
-                    subCellLayerAndWeight[subNbrCelli].weight +=
-                        subFaceLayerAndWeight[subFacei].weight;
-                }
+                subChangedPatchAndFaces.append({-1, subFacei});
+                subChangedFaceCi.append
+                (
+                    subInternalFaceCi[subFacei].valid(td)
+                  ? subInternalFaceCi[subFacei]
+                  : meshPhiCorrectInfo(meshPhiCorrectInfo::shape::face)
+                );
             }
         }
-
-        // Cell to face
-        List<layerAndWeight> subFaceLayerAndWeight0(subFaceLayerAndWeight);
-        forAll(subMesh.cells(), subCelli)
+        forAll(subPatchFacePci, subPatchi)
         {
-            if (subCellLayerAndWeight[subCelli].layer != -1)
+            forAll(subPatchFacePci[subPatchi], subPatchFacei)
             {
-                forAll(subMesh.cells()[subCelli], subCellFacei)
-                {
-                    const label subFacei =
-                        subMesh.cells()[subCelli][subCellFacei];
-                    if (subFaceLayerAndWeight0[subFacei].layer == -1)
-                    {
-                        subFaceLayerAndWeight[subFacei].layer =
-                            subCellLayerAndWeight[subCelli].layer + 1;
-                        subFaceLayerAndWeight[subFacei].weight =
-                            subCellLayerAndWeight[subCelli].weight;
-                    }
-                }
-            }
-        }
-
-        // Synchronise
-        SubList<layerAndWeight> subBFaceLayerAndWeight
-        (
-            subFaceLayerAndWeight,
-            subMesh.nFaces() - subMesh.nInternalFaces(),
-            subMesh.nInternalFaces()
-        );
-        syncTools::syncBoundaryFaceList
-        (
-            subMesh,
-            subBFaceLayerAndWeight,
-            maxEqOp<layerAndWeight>(),
-            [](const coupledPolyPatch&, List<layerAndWeight>&){}
-        );
-    }
-
-    // Function to extract a value from a surface field given a face index
-    auto subFaceValue = [&subMesh]
-    (
-        surfaceScalarField& sf,
-        const label subFacei
-    ) -> scalar&
-    {
-        const label subBFacei =
-            subMesh.isInternalFace(subFacei)
-          ? -1 : subFacei -  subMesh.nInternalFaces();
-        const label subPatchi =
-            subMesh.isInternalFace(subFacei)
-          ? -1 : subMesh.boundaryMesh().patchID()[subBFacei];
-        const label subPatchFacei =
-            subMesh.isInternalFace(subFacei)
-          ? -1 : subFacei - subMesh.boundaryMesh()[subPatchi].start();
-
-        return
-            subMesh.isInternalFace(subFacei)
-          ? sf[subFacei]
-          : sf.boundaryFieldRef()[subPatchi][subPatchFacei];
-    };
-
-    // Correct volume conservation error by waving back to the owner-orig faces
-    for
-    (
-        label cellLayeri = gMax(subCellLayerAndWeight).layer;
-        cellLayeri > 0;
-        cellLayeri -= 2
-    )
-    {
-        const surfaceScalarField subDeltaPhi0(subDeltaPhi);
-
-        forAll(subMesh.cells(), subCelli)
-        {
-            if (subCellLayerAndWeight[subCelli].layer != cellLayeri) continue;
-
-            // Compute the error for this cell
-            scalar deltaV = subV[subCelli] - subV0[subCelli];
-            forAll(subV.mesh().cells()[subCelli], subCellFacei)
-            {
-                const label subFacei =
-                    subV.mesh().cells()[subCelli][subCellFacei];
-                const bool o = subV.mesh().faceOwner()[subFacei] == subCelli;
-
-                deltaV -=
-                    (
-                        subFaceValue(subPhi, subFacei)
-                      + subFaceValue(subDeltaPhi, subFacei)
-                    )
-                   *(o ? +1 : -1);
-            }
-
-            // Push the error onto the lower-layered faces
-            forAll(subMesh.cells()[subCelli], subCellFacei)
-            {
-                const label subFacei =
-                    subMesh.cells()[subCelli][subCellFacei];
-                const bool o = subMesh.faceOwner()[subFacei] == subCelli;
-                const scalar w =
-                    subFaceLayerAndWeight[subFacei].weight
-                   /subCellLayerAndWeight[subCelli].weight;
-
                 if
                 (
-                    subCellLayerAndWeight[subCelli].layer
-                  > subFaceLayerAndWeight[subFacei].layer
+                    subPatchFacePci[subPatchi][subPatchFacei].layer()
+                 == faceLayeri
                 )
                 {
-                    subFaceValue(subDeltaPhi, subFacei) +=
-                        deltaV*w*(o ? +1 : -1);
+                    subChangedPatchAndFaces.append({subPatchi, subPatchFacei});
+                    subChangedFaceCi.append
+                    (
+                        subPatchFaceCi[subPatchi][subPatchFacei].valid(td)
+                      ? subPatchFaceCi[subPatchi][subPatchFacei]
+                      : meshPhiCorrectInfo(meshPhiCorrectInfo::shape::face)
+                    );
                 }
             }
         }
 
-        // Synchronise
-        const surfaceScalarField::Boundary dSubDeltaPhiNbrBf
+        // Correction wave
+        FvFaceCellWave<meshPhiCorrectInfo, meshPhiCorrectInfo::trackData> wave
         (
-            surfaceScalarField::Internal::null(),
-            (subDeltaPhi - subDeltaPhi0)()
-           .boundaryField()
-           .boundaryNeighbourField()
+            subMesh,
+            subInternalFaceCi,
+            subPatchFaceCi,
+            subCellCi,
+            td
         );
-        forAll(subMesh.boundary(), subPatchi)
-        {
-            const fvPatch& subFvp = subMesh.boundary()[subPatchi];
+        wave.setFaceInfo(subChangedPatchAndFaces, subChangedFaceCi);
+        wave.iterate(1);
+    }
 
-            if (subFvp.coupled())
-            {
-                subDeltaPhi.boundaryFieldRef()[subPatchi] -=
-                    dSubDeltaPhiNbrBf[subPatchi];
-            }
+    // Apply corrections
+    forAll(subInternalFaceCi, subFacei)
+    {
+        subDeltaPhi.primitiveFieldRef()[subFacei] +=
+            subInternalFaceCi[subFacei].deltaPhi();
+    }
+    forAll(subPatchFacePci, subPatchi)
+    {
+        forAll(subPatchFacePci[subPatchi], subPatchFacei)
+        {
+            subDeltaPhi.boundaryFieldRef()[subPatchi][subPatchFacei] +=
+                subPatchFaceCi[subPatchi][subPatchFacei].deltaPhi();
         }
     }
 
