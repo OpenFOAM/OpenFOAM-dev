@@ -38,6 +38,6 @@ utility which will be executed instead:
 
 EOF
 
-foamPostProcess $*
+foamPostProcess "$@"
 
 #------------------------------------------------------------------------------
