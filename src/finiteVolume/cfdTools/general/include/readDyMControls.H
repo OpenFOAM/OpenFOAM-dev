@@ -11,9 +11,3 @@ checkMeshCourantNo = pimple.dict().lookupOrDefault
     "checkMeshCourantNo",
     checkMeshCourantNo
 );
-
-moveMeshOuterCorrectors = pimple.dict().lookupOrDefault
-(
-    "moveMeshOuterCorrectors",
-    moveMeshOuterCorrectors
-);

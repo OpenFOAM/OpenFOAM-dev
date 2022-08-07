@@ -93,11 +93,6 @@ int main(int argc, char *argv[])
 
     pimpleControl pimple(mesh);
 
-    bool moveMeshOuterCorrectors
-    (
-        pimple.dict().lookupOrDefault<Switch>("moveMeshOuterCorrectors", false)
-    );
-
     while (runTime.run())
     {
         // Update the mesh for topology change, mesh to mesh mapping
@@ -109,7 +104,7 @@ int main(int argc, char *argv[])
 
         while (pimple.loop())
         {
-            if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+            if (pimple.firstPimpleIter() || pimple.moveMeshOuterCorrectors())
             {
                 // Move the mesh
                 mesh.move();

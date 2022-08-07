@@ -74,11 +74,15 @@ protected:
 
     // Protected data
 
-        //- Flag to indicate whether to update the density in SIMPLE mode rather
-        //  than PISO mode
+        //- Switch to move the mesh at the start of every PIMPLE outer corrector
+        //  rather than the first corrector only which is the default
+        bool moveMeshOuterCorrectors_;
+
+        //- Switch to indicate whether to update the density in SIMPLE mode
+        //  rather than PISO mode
         bool simpleRho_;
 
-        //- Flag to control whether turbulence is solved just on the final
+        //- Switch to control whether turbulence is solved just on the final
         //  pimple iteration, or on every pimple iteration
         bool transportCorrectionFinal_;
 
@@ -111,7 +115,12 @@ public:
 
         // Access
 
-            //- Flag to indicate whether to update the density in simple mode
+            //- Switch to move the mesh at the start of every PIMPLE
+            //  outer corrected rather than the first corrector only
+            //  which is the default
+            inline bool moveMeshOuterCorrectors() const;
+
+            //- Switch to indicate whether to update the density in simple mode
             inline bool simpleRho() const;
 
             //- Flag to indicate whether to correct the transport properties

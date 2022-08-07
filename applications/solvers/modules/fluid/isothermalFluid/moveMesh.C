@@ -55,7 +55,7 @@ void Foam::solvers::isothermalFluid::meshCourantNo() const
 
 bool Foam::solvers::isothermalFluid::moveMesh()
 {
-    if (pimple.firstIter() || moveMeshOuterCorrectors)
+    if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
         // Move the mesh
         mesh.move();

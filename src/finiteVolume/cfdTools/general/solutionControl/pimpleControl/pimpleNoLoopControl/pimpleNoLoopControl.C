@@ -79,6 +79,12 @@ bool Foam::pimpleNoLoopControl::read()
         return false;
     }
 
+    moveMeshOuterCorrectors_ = dict().lookupOrDefault
+    (
+        "moveMeshOuterCorrectors",
+        false
+    );
+
     simpleRho_ =
         dict().lookupOrDefaultBackwardsCompatible<bool>
         (

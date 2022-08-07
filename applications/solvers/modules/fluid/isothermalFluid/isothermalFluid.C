@@ -53,19 +53,13 @@ void Foam::solvers::isothermalFluid::read()
     correctPhi = pimple.dict().lookupOrDefault
     (
         "correctPhi",
-        correctPhi
+        mesh.dynamic()
     );
 
     checkMeshCourantNo = pimple.dict().lookupOrDefault
     (
         "checkMeshCourantNo",
-        checkMeshCourantNo
-    );
-
-    moveMeshOuterCorrectors = pimple.dict().lookupOrDefault
-    (
-        "moveMeshOuterCorrectors",
-        moveMeshOuterCorrectors
+        false
     );
 }
 

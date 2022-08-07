@@ -152,7 +152,11 @@ int main(int argc, char *argv[])
             }
             else
             {
-                if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+                if
+                (
+                    pimple.firstPimpleIter()
+                 || pimple.moveMeshOuterCorrectors()
+                )
                 {
                     if (correctPhi && !divU.valid())
                     {

@@ -27,6 +27,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+inline bool Foam::pimpleNoLoopControl::moveMeshOuterCorrectors() const
+{
+    return moveMeshOuterCorrectors_;
+}
+
+
 inline bool Foam::pimpleNoLoopControl::simpleRho() const
 {
     return simpleRho_;

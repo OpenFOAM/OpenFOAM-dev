@@ -84,10 +84,6 @@ protected:
         //- Switch to check the mesh Courant number after mesh change
         bool checkMeshCourantNo;
 
-        //- Switch to move the mesh at the start of every PIMPLE outer corrected
-        //  rather than the first corrector only which is the default
-        bool moveMeshOuterCorrectors;
-
 
     // Thermophysical properties
 
