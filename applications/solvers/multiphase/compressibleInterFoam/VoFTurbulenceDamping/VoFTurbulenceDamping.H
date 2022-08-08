@@ -127,7 +127,7 @@ class VoFTurbulenceDamping
 public:
 
     //- Runtime type information
-    TypeName("VoFTurbulenceDamping");
+    TypeName("compressible::VoFTurbulenceDamping");
 
 
     // Constructors

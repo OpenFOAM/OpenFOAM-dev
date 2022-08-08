@@ -16,7 +16,7 @@ FoamFile
 
 turbulenceDamping
 {
-    type            VoFTurbulenceDamping;
+    type            compressible::VoFTurbulenceDamping;
 
     libs            ("libcompressibleVoFTurbulenceDamping.so");
 

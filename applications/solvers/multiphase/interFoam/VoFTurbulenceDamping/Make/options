@@ -11,6 +11,7 @@ EXE_INC = \
 LIB_LIBS = \
     -lphysicalProperties \
     -ltwoPhaseMixture \
+    -linterfaceProperties \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lfiniteVolume \

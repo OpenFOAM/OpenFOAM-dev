@@ -274,7 +274,7 @@ int main(int argc, char *argv[])
             if (libNames[i].ext() == "so")
             {
                 Info << "    " << libNames[i].c_str() << nl;
-                libs.open(libDir/libNames[i], false);
+                libs.open(libDir/libNames[i]);
             }
         }
         Info << endl;
