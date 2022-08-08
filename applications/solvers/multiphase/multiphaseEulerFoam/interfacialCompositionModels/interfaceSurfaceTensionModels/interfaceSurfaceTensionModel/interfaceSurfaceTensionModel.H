@@ -64,7 +64,7 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("interfaceSurfaceTensionModel");
+    TypeName("surfaceTensionModel");
 
 
     // Declare runtime construction
