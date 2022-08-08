@@ -160,6 +160,59 @@ HashTable<HashTable<wordHashSet>> baseTypeNameToC()
 }
 
 
+void printToC(const word& tableName)
+{
+    bool found = false;
+
+    if (debug::runTimeSelectionToC.found(tableName))
+    {
+        const wordList toc
+        (
+            debug::runTimeSelectionToC[tableName].second().sortedToc()
+        );
+
+        Info<< "Contents of table " << tableName
+            << ", base type "
+            << debug::runTimeSelectionToC[tableName].first()
+            << ":" << endl;
+
+        forAll(toc, i)
+        {
+            Info<< "    " << setf(ios_base::left) << setw(40) << toc[i]
+                << debug::runTimeSelectionToC[tableName].second()[toc[i]]
+                << endl;
+        }
+
+        found = true;
+    }
+    else
+    {
+        const HashTable<HashTable<wordHashSet>> runTimeSelectionToC
+        (
+            baseTypeNameToC()
+        );
+
+        if (runTimeSelectionToC.found(tableName))
+        {
+            const wordList toc(runTimeSelectionToC[tableName].sortedToc());
+
+            Info<< "Tables of type " << tableName << endl;
+            forAll(toc, i)
+            {
+                Info<< "    " << toc[i] << endl;
+            }
+
+            found = true;
+        }
+    }
+
+    if (!found)
+    {
+        Info<< "Table " << tableName << " not found" << endl;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
@@ -291,55 +344,7 @@ int main(int argc, char *argv[])
     word tableName;
     if (args.optionReadIfPresent("table", tableName))
     {
-        bool found = false;
-
-        if (debug::runTimeSelectionToC.found(tableName))
-        {
-            const wordList toc
-            (
-                debug::runTimeSelectionToC[tableName].second().sortedToc()
-            );
-
-            Info<< "Contents of table " << tableName
-                << ", base type "
-                << debug::runTimeSelectionToC[tableName].first()
-                << ":" << endl;
-
-            forAll(toc, i)
-            {
-                Info<< "    " << setf(ios_base::left) << setw(40) << toc[i]
-                    << debug::runTimeSelectionToC[tableName].second()[toc[i]]
-                    << endl;
-            }
-
-            found = true;
-        }
-        else
-        {
-            const HashTable<HashTable<wordHashSet>> runTimeSelectionToC
-            (
-                baseTypeNameToC()
-            );
-
-            if (runTimeSelectionToC.found(tableName))
-            {
-                const wordList toc(runTimeSelectionToC[tableName].sortedToc());
-
-                Info<< "Tables of type " << tableName << endl;
-                forAll(toc, i)
-                {
-                    Info<< "    " << toc[i] << endl;
-                }
-
-                found = true;
-            }
-        }
-
-        if (!found)
-        {
-            Info<< "Table " << tableName << " not found" << endl;
-        }
-
+        printToC(tableName);
         done = true;
     }
 
@@ -426,43 +431,36 @@ int main(int argc, char *argv[])
 
     if (args.optionFound("scalarBCs"))
     {
-        Info<< "Scalar boundary conditions:" << nl
-            << debug::runTimeSelectionToC["fvPatchScalarField"]
-              .second().sortedToc()
-            << endl;
+        Info<< "Scalar boundary conditions:" << endl;
+        printToC("fvPatchScalarField");
         done = true;
     }
 
     if (args.optionFound("vectorBCs"))
     {
-        Info<< "vector boundary conditions:" << nl
-            << debug::runTimeSelectionToC["fvPatchVectorField"]
-              .second().sortedToc()
-            << endl;
+        Info<< "vector boundary conditions:" << endl;
+        printToC("fvPatchVectorField");
         done = true;
     }
 
     if (args.optionFound("functionObjects"))
     {
-        Info<< "functionObjects:" << nl
-            << debug::runTimeSelectionToC["functionObject"].second().sortedToc()
-            << endl;
+        Info<< "functionObjects:" << endl;
+        printToC("functionObject");
         done = true;
     }
 
     if (args.optionFound("fvModels"))
     {
-        Info<< "fvModels:" << nl
-            << debug::runTimeSelectionToC["fvModel"].second().sortedToc()
-            << endl;
+        Info<< "fvModels:" << endl;
+        printToC("fvModel");
         done = true;
     }
 
     if (args.optionFound("fvConstraints"))
     {
-        Info<< "fvConstraints:" << nl
-            << debug::runTimeSelectionToC["fvConstraint"].second().sortedToc()
-            << endl;
+        Info<< "fvConstraints:" << endl;
+        printToC("fvConstraint");
         done = true;
     }
 
