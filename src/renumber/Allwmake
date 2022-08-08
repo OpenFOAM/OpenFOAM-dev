@@ -4,6 +4,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
+wmake $targetType renumberMethods
+
 # Deprecate SloanRenumber due to dependency on BOOST causing build and
 # installation problems on a range of legacy systems.
 # wmake $targetType SloanRenumber
@@ -29,8 +31,6 @@ else
     echo "    Error: no config.sh/zoltan settings"
     echo
 fi
-
-wmake $targetType renumberMethods
 
 
 #------------------------------------------------------------------------------
