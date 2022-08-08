@@ -1,0 +1,89 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     foamRun;
+
+solver          incompressibleFluid;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1000;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   50;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    streamlines
+    {
+        type            streamlines;
+
+        libs            ("libfieldFunctionObjects.so");
+
+        // Output every
+        writeControl    writeTime;
+
+        // Write format
+        setFormat       vtk;
+
+        // Track forward (+U) or backward (-U) or both
+        direction       forward;
+
+        // Names of fields to sample. Should contain above velocity field!
+        fields (p k U);
+
+        // Steps particles can travel before being removed
+        lifeTime        10000;
+
+        // Number of steps per cell (estimate). Set to 1 to disable subcycling.
+        nSubCycle 5;
+
+        // Cloud name to use
+        cloudName       particleTracks;
+
+        // Seeding method.
+        seedSampleSet
+        {
+            type        lineUniform;
+            start       (-0.0205 0.001  0.00001);
+            end         (-0.0205 0.0251 0.00001);
+            nPoints     10;
+        }
+    }
+}
+
+// ************************************************************************* //

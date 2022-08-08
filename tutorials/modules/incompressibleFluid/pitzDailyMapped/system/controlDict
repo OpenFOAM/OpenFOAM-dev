@@ -1,0 +1,112 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     foamRun;
+
+solver          incompressibleFluid;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.1;
+
+deltaT          1e-05;
+
+writeControl    timeStep;
+
+writeInterval   100;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    probes
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        writeControl    timeStep;
+        writeInterval   1;
+
+        fields
+        (
+            p
+        );
+
+        probeLocations
+        (
+            (0.0254 0.0253 0)
+            (0.0508 0.0253 0)
+            (0.0762 0.0253 0)
+            (0.1016 0.0253 0)
+            (0.127 0.0253 0)
+            (0.1524 0.0253 0)
+            (0.1778 0.0253 0)
+        );
+
+    }
+
+    #includeFunc fieldAverage(U, p, prime2Mean = yes)
+
+    surfaceSampling
+    {
+        // Sample near-wall velocity
+
+        type surfaces;
+
+        // Where to load it from (if not already in solver)
+        libs            ("libsampling.so");
+        writeControl    writeTime;
+
+        interpolationScheme cellPoint;
+
+        surfaceFormat vtk;
+
+        // Fields to be sampled
+        fields
+        (
+            U
+        );
+
+        surfaces
+        (
+            nearWall
+            {
+                type            patchInternalField;
+                patches         ( lowerWall );
+                distance        1e-6;
+                interpolate     true;
+                triangulate     false;
+            }
+        );
+    }
+}
+
+// ************************************************************************* //

@@ -27,10 +27,14 @@ Class
 Description
     Solver module for steady or transient turbulent flow of compressible fluids
     with heat-transfer for HVAC and similar applications, with optional
-    mesh motion and mesh topology changes.
+    mesh motion and change.
 
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient and steady simulations.
+
+    Optional fvModels and fvConstraints are provided to enhance the simulation
+    in many ways including adding various sources, Lagrangian particles,
+    radiation, surface film etc. and constraining or limiting the solution.
 
     Reference:
     \verbatim

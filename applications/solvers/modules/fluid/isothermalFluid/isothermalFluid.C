@@ -42,79 +42,15 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::isothermalFluid::read()
-{
-    maxCo =
-        runTime.controlDict().lookupOrDefault<scalar>("maxCo", 1.0);
-
-    maxDeltaT_ =
-        runTime.controlDict().lookupOrDefault<scalar>("maxDeltaT", great);
-
-    correctPhi = pimple.dict().lookupOrDefault
-    (
-        "correctPhi",
-        mesh.dynamic()
-    );
-
-    checkMeshCourantNo = pimple.dict().lookupOrDefault
-    (
-        "checkMeshCourantNo",
-        false
-    );
-}
-
-
 void Foam::solvers::isothermalFluid::correctCoNum()
 {
-    const scalarField sumPhi
-    (
-        fvc::surfaceSum(mag(phi))().primitiveField()/rho.primitiveField()
-    );
-
-    CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
-
-    const scalar meanCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
-
-    Info<< "Courant Number mean: " << meanCoNum
-        << " max: " << CoNum << endl;
+    fluidSolver::correctCoNum(rho, phi);
 }
 
 
 void Foam::solvers::isothermalFluid::continuityErrors()
 {
-    scalar sumLocalContErr = 0;
-    scalar globalContErr = 0;
-
-    if (mesh.schemes().steady())
-    {
-        const volScalarField contErr(fvc::div(phi));
-
-        sumLocalContErr =
-            runTime.deltaTValue()
-           *mag(contErr)().weightedAverage(mesh.V()).value();
-
-        globalContErr =
-            runTime.deltaTValue()
-           *contErr.weightedAverage(mesh.V()).value();
-    }
-    else
-    {
-        const dimensionedScalar totalMass = fvc::domainIntegrate(rho);
-
-        sumLocalContErr =
-            (fvc::domainIntegrate(mag(rho - thermo.rho()))/totalMass).value();
-
-        globalContErr =
-            (fvc::domainIntegrate(rho - thermo.rho())/totalMass).value();
-    }
-
-    cumulativeContErr += globalContErr;
-
-    Info<< "time step continuity errors : sum local = " << sumLocalContErr
-        << ", global = " << globalContErr
-        << ", cumulative = " << cumulativeContErr
-        << endl;
+    fluidSolver::continuityErrors(rho, thermo.rho(), phi);
 }
 
 
@@ -126,7 +62,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
     autoPtr<fluidThermo> thermoPtr
 )
 :
-    solver(mesh),
+    fluidSolver(mesh),
 
     thermo_(thermoPtr),
     thermo(thermo_()),
@@ -211,11 +147,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
 
     initialMass(fvc::domainIntegrate(rho)),
 
-    cumulativeContErr(0),
-
-    MRF(mesh),
-
-    CoNum(0)
+    MRF(mesh)
 {
     // Read the controls
     read();
@@ -300,20 +232,6 @@ Foam::solvers::isothermalFluid::~isothermalFluid()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::scalar Foam::solvers::isothermalFluid::maxDeltaT() const
-{
-    if (CoNum > small)
-    {
-        const scalar deltaT = maxCo*runTime.deltaTValue()/CoNum;
-        return min(min(deltaT, fvModels().maxDeltaT()), maxDeltaT_);
-    }
-    else
-    {
-        return runTime.deltaTValue();
-    }
-}
-
 
 void Foam::solvers::isothermalFluid::preSolve()
 {

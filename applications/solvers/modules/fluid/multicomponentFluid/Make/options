@@ -1,5 +1,6 @@
 EXE_INC = \
-    -I../isothermalFluid/lnInclude \
+    -I$(FOAM_SOLVERS)/modules/fluid/fluidSolver/lnInclude \
+    -I$(FOAM_SOLVERS)/modules/fluid/isothermalFluid/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
@@ -17,6 +18,7 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 LIB_LIBS = \
+    -lfluidSolver \
     -lisothermalFluid \
     -lfluidThermophysicalModels \
     -lspecie \

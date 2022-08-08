@@ -1,0 +1,18 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+runApplication foamRun
+runApplication -s age foamPostProcess -solver incompressibleFluid -latestTime \
+    -func "age(diffusion=true)"
+runApplication -s probes1 foamPostProcess -func probes1 -latestTime
+runApplication -s probes2 foamPostProcess -func probes2 -latestTime
+runApplication -s patchFlowRate foamPostProcess -latestTime \
+    -func "patchFlowRate(funcName=inletFlowRate,patch=inlet)" -latestTime
+
+(cd validation && ./Allrun $*)
+
+#------------------------------------------------------------------------------

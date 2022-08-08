@@ -26,10 +26,14 @@ Class
 
 Description
     Solver module for steady or transient turbulent flow of compressible
-    isothermal fluids with optional mesh motion and mesh topology changes.
+    isothermal fluids with optional mesh motion and change.
 
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient and steady simulations.
+
+    Optional fvModels and fvConstraints are provided to enhance the simulation
+    in many ways including adding various sources, Lagrangian
+    particles, surface film etc. and constraining or limiting the solution.
 
     Reference:
     \verbatim
@@ -41,12 +45,16 @@ Description
 SourceFiles
     isothermalFluid.C
 
+See also
+    Foam::solvers::fluidSolver
+    Foam::solvers::incompressibleFluid
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef isothermalFluid_H
 #define isothermalFluid_H
 
-#include "solver.H"
+#include "fluidSolver.H"
 #include "fluidThermo.H"
 #include "compressibleMomentumTransportModels.H"
 #include "buoyancy.H"
@@ -65,25 +73,10 @@ namespace solvers
 
 class isothermalFluid
 :
-    public solver
+    public fluidSolver
 {
 
 protected:
-
-    // Control parameters
-
-        //- Maximum allowed Courant number
-        scalar maxCo;
-
-        //- Maximum time-step
-        scalar maxDeltaT_;
-
-        //- Switch to correct the flux after mesh change
-        bool correctPhi;
-
-        //- Switch to check the mesh Courant number after mesh change
-        bool checkMeshCourantNo;
-
 
     // Thermophysical properties
 
@@ -145,23 +138,11 @@ protected:
         //- Initial mass in the region
         dimensionedScalar initialMass;
 
-        //- Current cumulative continuity error
-        scalar cumulativeContErr;
-
 
     // Optional models
 
         //- MRF zone list
         IOMRFZoneList MRF;
-
-
-    // Time-step controls
-
-        //- Current maximum Courant number
-        scalar CoNum;
-
-        //- Current mean Courant number
-        scalar meanCoNum;
 
 
     // Cached temporary fields
@@ -189,28 +170,13 @@ protected:
 
 private:
 
-    // Private Member Data
-
-        //- Pointer to the demand driven fvModels MeshObject
-        mutable Foam::fvModels* fvModelsPtr;
-
-        //- Pointer to the demand driven fvConstraints MeshObject
-        mutable Foam::fvConstraints* fvConstraintsPtr;
-
-
     // Private Member Functions
-
-        //- Read controls
-        void read();
 
         //- Set rDeltaT for LTS
         virtual void setRDeltaT();
 
         //- Correct the cached Courant numbers
         void correctCoNum();
-
-        //- Check mesh Courant numbers for moving mesh cases
-        void meshCourantNo() const;
 
         //- Calculate and print the continuity errors
         void continuityErrors();
@@ -250,9 +216,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the current maximum time-step for stable solution
-        virtual scalar maxDeltaT() const;
 
         //- Called at the start of the time-step, before the PIMPLE loop
         virtual void preSolve();

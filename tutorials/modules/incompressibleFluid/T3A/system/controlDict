@@ -1,0 +1,74 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     foamRun;
+
+solver          incompressibleFluid;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1000;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   500;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    #includeFunc wallShearStress
+
+    #includeFunc graphUniform
+    (
+        funcName=wallShearStressGraph,
+        start=(0.04075 0.00075 0),
+        end=(3.04 0.00075 0),
+        nPoints=100,
+        axis=x,
+        wallShearStress
+    )
+
+    #includeFunc graphUniform
+    (
+        funcName=kGraph,
+        start=(0.04075 0.05 0),
+        end=(3.04 0.05 0),
+        nPoints=100,
+        axis=x,
+        k
+    )
+}
+
+// ************************************************************************* //

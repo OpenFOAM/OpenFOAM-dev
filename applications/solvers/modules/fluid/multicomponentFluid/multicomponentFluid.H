@@ -26,10 +26,15 @@ Class
 
 Description
     Solver module for steady or transient turbulent flow of compressible
-    reacting fluids with optional mesh motion and mesh topology changes.
+    multicomponent fluids with optional mesh motion and change.
 
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient and steady simulations.
+
+    Optional fvModels and fvConstraints are provided to enhance the simulation
+    in many ways including adding various sources, chemical reactions,
+    combustion, Lagrangian particles, radiation, surface film etc. and
+    constraining or limiting the solution.
 
     Reference:
     \verbatim
@@ -40,6 +45,10 @@ Description
 
 SourceFiles
     multicomponentFluid.C
+
+See also
+    Foam::solvers::fluidSolver
+    Foam::solvers::isothermalFluid
 
 \*---------------------------------------------------------------------------*/
 
@@ -70,12 +79,19 @@ class multicomponentFluid
 
 protected:
 
-    // Compositon
+    // Thermophysical properties
 
         fluidMulticomponentThermo& thermo;
 
+
+    // Compositon
+
         basicSpecieMixture& composition;
         PtrList<volScalarField>& Y;
+
+
+    // Reactions
+
         autoPtr<combustionModel> reaction;
         multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
 

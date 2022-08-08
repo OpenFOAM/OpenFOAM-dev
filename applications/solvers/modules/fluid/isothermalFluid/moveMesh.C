@@ -28,31 +28,6 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::isothermalFluid::meshCourantNo() const
-{
-    if (checkMeshCourantNo)
-    {
-        const scalarField sumPhi
-        (
-            fvc::surfaceSum(mag(mesh.phi()))().primitiveField()
-        );
-
-        const scalar meshCoNum
-        (
-            0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue()
-        );
-
-        const scalar meanMeshCoNum
-        (
-            0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue()
-        );
-
-        Info<< "Mesh Courant Number mean: " << meanMeshCoNum
-            << " max: " << meshCoNum << endl;
-    }
-}
-
-
 bool Foam::solvers::isothermalFluid::moveMesh()
 {
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())

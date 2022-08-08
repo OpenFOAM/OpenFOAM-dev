@@ -27,14 +27,15 @@
 #
 # Description
 #     Script to inform the user that rhoPimpleFoam has been superseded
-#     and replaced by the more general foamMultiRun solver.
+#     and replaced by the more general fluid solver module executed by the
+#     foamRun application.
 #
 #------------------------------------------------------------------------------
 
 cat <<EOF
 
 rhoPimpleFoam has been superseded and replaced by the more general
-fluid solver module which will be executed using
+fluid solver module executed by the foamRun application:
 
     foamRun -solver fluid
 
