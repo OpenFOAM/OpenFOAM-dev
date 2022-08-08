@@ -171,10 +171,15 @@ void printToC(const word& tableName)
             debug::runTimeSelectionToC[tableName].second().sortedToc()
         );
 
-        Info<< "Contents of table " << tableName
-            << ", base type "
-            << debug::runTimeSelectionToC[tableName].first()
-            << ":" << endl;
+        Info<< "Contents of table " << tableName;
+
+        if (debug::runTimeSelectionToC[tableName].first() != tableName)
+        {
+            Info<< ", base type "
+                << debug::runTimeSelectionToC[tableName].first();
+        }
+
+        Info<< ":" << endl;
 
         forAll(toc, i)
         {
