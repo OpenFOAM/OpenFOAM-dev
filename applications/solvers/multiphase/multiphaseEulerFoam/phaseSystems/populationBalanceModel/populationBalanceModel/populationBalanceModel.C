@@ -30,7 +30,7 @@ License
 #include "binaryBreakupModel.H"
 #include "driftModel.H"
 #include "nucleationModel.H"
-#include "surfaceTensionModel.H"
+#include "interfaceSurfaceTensionModel.H"
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"

@@ -23,35 +23,77 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceTensionModel.H"
+#include "constantSurfaceTensionCoefficient.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(surfaceTensionModel, 0);
-    defineRunTimeSelectionTable(surfaceTensionModel, dictionary);
+namespace interfaceSurfaceTensionModels
+{
+    defineTypeNameAndDebug(constantSurfaceTensionCoefficient, 0);
+    addToRunTimeSelectionTable
+    (
+        interfaceSurfaceTensionModel,
+        constantSurfaceTensionCoefficient,
+        dictionary
+    );
 }
-
-const Foam::dimensionSet Foam::surfaceTensionModel::dimSigma(1, 0, -2, 0, 0);
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::surfaceTensionModel::surfaceTensionModel
+Foam::interfaceSurfaceTensionModels::constantSurfaceTensionCoefficient::
+constantSurfaceTensionCoefficient
 (
     const dictionary& dict,
     const phaseInterface& interface
 )
 :
-    interface_(interface)
+    interfaceSurfaceTensionModel(dict, interface),
+    sigma_("sigma", dimSigma, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::surfaceTensionModel::~surfaceTensionModel()
+Foam::interfaceSurfaceTensionModels::constantSurfaceTensionCoefficient::
+~constantSurfaceTensionCoefficient()
 {}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::interfaceSurfaceTensionModels::constantSurfaceTensionCoefficient::
+sigma() const
+{
+    return volScalarField::New
+    (
+        "sigma",
+        interface_.mesh(),
+        sigma_
+    );
+}
+
+
+Foam::tmp<Foam::scalarField>
+Foam::interfaceSurfaceTensionModels::constantSurfaceTensionCoefficient::sigma
+(
+    const label patchi
+) const
+{
+    return tmp<scalarField>
+    (
+        new scalarField
+        (
+            interface_.mesh().boundary()[patchi].size(),
+            sigma_.value()
+        )
+    );
+}
 
 
 // ************************************************************************* //

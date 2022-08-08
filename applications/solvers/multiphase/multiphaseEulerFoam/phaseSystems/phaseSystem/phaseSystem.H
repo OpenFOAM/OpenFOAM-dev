@@ -58,7 +58,7 @@ SourceFiles
 namespace Foam
 {
 
-class surfaceTensionModel;
+class interfaceSurfaceTensionModel;
 class pressureReference;
 class nonOrthogonalSolutionControl;
 
@@ -111,11 +111,11 @@ protected:
         typedef
             HashTable
             <
-                autoPtr<surfaceTensionModel>,
+                autoPtr<interfaceSurfaceTensionModel>,
                 phaseInterfaceKey,
                 phaseInterfaceKey::hash
             >
-            surfaceTensionModelTable;
+            interfaceSurfaceTensionModelTable;
 
         typedef HashTable<scalar, phaseInterfaceKey, phaseInterfaceKey::hash>
             cAlphaTable;
@@ -164,7 +164,7 @@ protected:
         // Sub Models
 
             //- Surface tension models
-            surfaceTensionModelTable surfaceTensionModels_;
+            interfaceSurfaceTensionModelTable interfaceSurfaceTensionModels_;
 
 
         //- Flag to indicate that returned lists of fields are "complete"; i.e.,

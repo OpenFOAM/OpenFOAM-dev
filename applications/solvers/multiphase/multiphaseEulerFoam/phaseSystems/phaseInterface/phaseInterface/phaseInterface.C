@@ -25,7 +25,7 @@ License
 
 #include "phaseInterface.H"
 #include "phaseSystem.H"
-#include "surfaceTensionModel.H"
+#include "interfaceSurfaceTensionModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

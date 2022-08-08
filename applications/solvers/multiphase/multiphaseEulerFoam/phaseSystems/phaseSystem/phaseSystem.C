@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "phaseSystem.H"
-#include "surfaceTensionModel.H"
+#include "interfaceSurfaceTensionModel.H"
 #include "surfaceInterpolate.H"
 #include "fvcDdt.H"
 #include "localEulerDdtScheme.H"
@@ -310,7 +310,7 @@ Foam::phaseSystem::phaseSystem
     }
 
     // Surface tension models
-    generateInterfacialModels(surfaceTensionModels_);
+    generateInterfacialModels(interfaceSurfaceTensionModels_);
 
     // Update motion fields
     correctKinematics();
@@ -405,17 +405,17 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 Foam::tmp<Foam::volScalarField>
 Foam::phaseSystem::sigma(const phaseInterfaceKey& key) const
 {
-    if (surfaceTensionModels_.found(key))
+    if (interfaceSurfaceTensionModels_.found(key))
     {
-        return surfaceTensionModels_[key]->sigma();
+        return interfaceSurfaceTensionModels_[key]->sigma();
     }
     else
     {
         return volScalarField::New
         (
-            surfaceTensionModel::typeName + ":sigma",
+            interfaceSurfaceTensionModel::typeName + ":sigma",
             mesh_,
-            dimensionedScalar(surfaceTensionModel::dimSigma, 0)
+            dimensionedScalar(interfaceSurfaceTensionModel::dimSigma, 0)
         );
     }
 }
@@ -424,9 +424,9 @@ Foam::phaseSystem::sigma(const phaseInterfaceKey& key) const
 Foam::tmp<Foam::scalarField>
 Foam::phaseSystem::sigma(const phaseInterfaceKey& key, const label patchi) const
 {
-    if (surfaceTensionModels_.found(key))
+    if (interfaceSurfaceTensionModels_.found(key))
     {
-        return surfaceTensionModels_[key]->sigma(patchi);
+        return interfaceSurfaceTensionModels_[key]->sigma(patchi);
     }
     else
     {

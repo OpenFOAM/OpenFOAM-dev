@@ -23,76 +23,38 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constantSurfaceTensionCoefficient.H"
-#include "addToRunTimeSelectionTable.H"
+#include "interfaceSurfaceTensionModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace surfaceTensionModels
-{
-    defineTypeNameAndDebug(constantSurfaceTensionCoefficient, 0);
-    addToRunTimeSelectionTable
-    (
-        surfaceTensionModel,
-        constantSurfaceTensionCoefficient,
-        dictionary
-    );
+    defineTypeNameAndDebug(interfaceSurfaceTensionModel, 0);
+    defineRunTimeSelectionTable(interfaceSurfaceTensionModel, dictionary);
 }
-}
+
+const Foam::dimensionSet Foam::interfaceSurfaceTensionModel::dimSigma
+(
+    1, 0, -2, 0, 0
+);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::
-constantSurfaceTensionCoefficient
+Foam::interfaceSurfaceTensionModel::interfaceSurfaceTensionModel
 (
     const dictionary& dict,
     const phaseInterface& interface
 )
 :
-    surfaceTensionModel(dict, interface),
-    sigma_("sigma", dimSigma, dict)
+    interface_(interface)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::
-~constantSurfaceTensionCoefficient()
+Foam::interfaceSurfaceTensionModel::~interfaceSurfaceTensionModel()
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField>
-Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::sigma() const
-{
-    return volScalarField::New
-    (
-        "sigma",
-        interface_.mesh(),
-        sigma_
-    );
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::sigma
-(
-    const label patchi
-) const
-{
-    return tmp<scalarField>
-    (
-        new scalarField
-        (
-            interface_.mesh().boundary()[patchi].size(),
-            sigma_.value()
-        )
-    );
-}
 
 
 // ************************************************************************* //

@@ -22,52 +22,75 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::surfaceTensionModels::constantSurfaceTensionCoefficient
+    Foam::interfaceSurfaceTensionModel
 
 Description
-    Constant value surface tension model.
+    Abstract base-class for interface surface-tension models which can be
+    used when interface compression is applied between two phases.
 
 SourceFiles
-    constantSurfaceTensionCoefficient.C
+    interfaceSurfaceTensionModel.C
+    interfaceSurfaceTensionModelNew.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constantSurfaceTensionCoefficient_H
-#define constantSurfaceTensionCoefficient_H
-
-#include "surfaceTensionModel.H"
+#ifndef interfaceSurfaceTensionModel_H
+#define interfaceSurfaceTensionModel_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "volFields.H"
+#include "dictionary.H"
+#include "runTimeSelectionTables.H"
+#include "phaseInterface.H"
+
 namespace Foam
-{
-namespace surfaceTensionModels
 {
 
 /*---------------------------------------------------------------------------*\
-              Class constantSurfaceTensionCoefficient Declaration
+                     Class interfaceSurfaceTensionModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class constantSurfaceTensionCoefficient
-:
-    public surfaceTensionModel
+class interfaceSurfaceTensionModel
 {
-    // Private Data
+protected:
 
-        //- Constant surface tension value
-        const dimensionedScalar sigma_;
+    // Protected data
+
+        //- Interface
+        const phaseInterface interface_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("constant");
+    TypeName("interfaceSurfaceTensionModel");
+
+
+    // Declare runtime construction
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        interfaceSurfaceTensionModel,
+        dictionary,
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        ),
+        (dict, interface)
+    );
+
+
+    // Static Data Members
+
+        //- Coefficient dimensions
+        static const dimensionSet dimSigma;
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        constantSurfaceTensionCoefficient
+        interfaceSurfaceTensionModel
         (
             const dictionary& dict,
             const phaseInterface& interface
@@ -75,22 +98,31 @@ public:
 
 
     //- Destructor
-    virtual ~constantSurfaceTensionCoefficient();
+    virtual ~interfaceSurfaceTensionModel();
+
+
+    // Selectors
+
+        static autoPtr<interfaceSurfaceTensionModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface,
+            const bool outer=true
+        );
 
 
     // Member Functions
 
         //- Surface tension
-        virtual tmp<volScalarField> sigma() const;
+        virtual tmp<volScalarField> sigma() const = 0;
 
         //- Surface tension for a patch
-        virtual tmp<scalarField> sigma(const label patchi) const;
+        virtual tmp<scalarField> sigma(const label patchi) const = 0;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceTensionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceTensionModel.H"
+#include "interfaceSurfaceTensionModel.H"
 #include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::surfaceTensionModel >
-Foam::surfaceTensionModel::New
+Foam::autoPtr<Foam::interfaceSurfaceTensionModel >
+Foam::interfaceSurfaceTensionModel::New
 (
     const dictionary& dict,
     const phaseInterface& interface,
@@ -38,23 +38,23 @@ Foam::surfaceTensionModel::New
 {
     const dictionary& modelDict =
         outer
-      ? interface.fluid().modelSubDict<surfaceTensionModel>(dict)
+      ? interface.fluid().modelSubDict<interfaceSurfaceTensionModel>(dict)
       : dict;
 
-    const word surfaceTensionModelType(modelDict.lookup("type"));
+    const word interfaceSurfaceTensionModelType(modelDict.lookup("type"));
 
-    Info<< "Selecting surfaceTensionModel for "
-        << interface.name() << ": " << surfaceTensionModelType << endl;
+    Info<< "Selecting interfaceSurfaceTensionModel for "
+        << interface.name() << ": " << interfaceSurfaceTensionModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(surfaceTensionModelType);
+        dictionaryConstructorTablePtr_->find(interfaceSurfaceTensionModelType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown surfaceTensionModelType type "
-            << surfaceTensionModelType << endl << endl
-            << "Valid surfaceTensionModel types are : " << endl
+            << "Unknown interfaceSurfaceTensionModelType type "
+            << interfaceSurfaceTensionModelType << endl << endl
+            << "Valid interfaceSurfaceTensionModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
