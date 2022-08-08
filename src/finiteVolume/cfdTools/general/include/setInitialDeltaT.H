@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,15 +34,9 @@ if (adjustTimeStep)
 {
     if ((runTime.timeIndex() == 0) && (CoNum > small))
     {
-        runTime.setDeltaT
-        (
-            min
-            (
-                maxCo*runTime.deltaTValue()/CoNum,
-                min(runTime.deltaTValue(), maxDeltaT)
-            )
-        );
+        runTime.setDeltaT(min(maxCo*runTime.deltaTValue()/CoNum, maxDeltaT));
     }
 }
+
 
 // ************************************************************************* //
