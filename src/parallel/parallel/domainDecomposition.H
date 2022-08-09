@@ -83,7 +83,7 @@ class domainDecomposition
             // Note: Face turning index is stored as the sign on addressing
             // Only the processor boundary faces are affected: if the sign of
             // the index is negative, the processor face is the reverse of the
-            // originae face. In order to do this properly, all face
+            // original face. In order to do this properly, all face
             // indices will be incremented by 1 and the decremented as
             // necessary to avoid the problem of face number zero having no
             // sign.
