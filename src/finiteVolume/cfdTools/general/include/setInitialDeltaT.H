@@ -34,7 +34,14 @@ if (adjustTimeStep)
 {
     if ((runTime.timeIndex() == 0) && (CoNum > small))
     {
-        runTime.setDeltaT(min(maxCo*runTime.deltaTValue()/CoNum, maxDeltaT));
+        runTime.setDeltaT
+        (
+            min
+            (
+                maxCo*runTime.deltaTValue()/CoNum,
+                min(runTime.deltaTValue(), maxDeltaT)
+            )
+        );
     }
 }
 

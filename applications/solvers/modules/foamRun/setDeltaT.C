@@ -36,7 +36,7 @@ void Foam::setDeltaT(Time& runTime, const solver& solver)
      && runTime.controlDict().lookupOrDefault("adjustTimeStep", false)
     )
     {
-        runTime.setDeltaT(solver.maxDeltaT());
+        runTime.setDeltaT(min(runTime.deltaTValue(), solver.maxDeltaT()));
     }
 }
 

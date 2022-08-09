@@ -47,7 +47,7 @@ void Foam::setDeltaT(Time& runTime, const PtrList<solver>& solvers)
 
         if (deltaT != great)
         {
-            runTime.setDeltaT(deltaT);
+            runTime.setDeltaT(min(runTime.deltaTValue(), deltaT));
         }
     }
 }
