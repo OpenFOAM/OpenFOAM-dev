@@ -604,7 +604,7 @@ void Foam::domainDecomposition::readProcs()
 }
 
 
-void Foam::domainDecomposition::readAddressing()
+void Foam::domainDecomposition::readCompleteAddressing()
 {
     cellProc_ =
         labelIOList
@@ -620,7 +620,11 @@ void Foam::domainDecomposition::readAddressing()
                 false
             )
         );
+}
 
+
+void Foam::domainDecomposition::readProcsAddressing()
+{
     for (label proci = 0; proci < nProcs(); proci++)
     {
         const fvMesh& procMesh = procMeshes_[proci];
@@ -673,6 +677,13 @@ void Foam::domainDecomposition::readAddressing()
 }
 
 
+void Foam::domainDecomposition::readAddressing()
+{
+    readCompleteAddressing();
+    readProcsAddressing();
+}
+
+
 Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdate()
 {
     validateComplete();
@@ -695,7 +706,7 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdate()
 }
 
 
-void Foam::domainDecomposition::writeAddressing() const
+void Foam::domainDecomposition::writeCompleteAddressing() const
 {
     labelIOList cellProc
     (
@@ -710,8 +721,13 @@ void Foam::domainDecomposition::writeAddressing() const
         ),
         cellProc_
     );
-    cellProc.write();
 
+    cellProc.write();
+}
+
+
+void Foam::domainDecomposition::writeProcsAddressing() const
+{
     for (label proci = 0; proci < nProcs(); proci++)
     {
         const fvMesh& procMesh = procMeshes_[proci];
@@ -761,6 +777,13 @@ void Foam::domainDecomposition::writeAddressing() const
         );
         cellProcAddressing.write();
     }
+}
+
+
+void Foam::domainDecomposition::writeAddressing() const
+{
+    writeCompleteAddressing();
+    writeProcsAddressing();
 }
 
 
@@ -862,6 +885,7 @@ Foam::domainDecomposition::domainDecomposition
     regionName_(regionName),
     completeMesh_(nullptr),
     procMeshes_(nProcs()),
+    cellProc_(),
     procPointAddressing_(nProcs()),
     procFaceAddressing_(nProcs()),
     procCellAddressing_(nProcs()),
@@ -888,6 +912,13 @@ bool Foam::domainDecomposition::readDecompose(const bool doSets)
         completeMesh().meshDir(),
         completeMesh()
     );
+    IOobject procFaceIo
+    (
+        "faces",
+        completeMesh().facesInstance(),
+        completeMesh().meshDir(),
+        runTimes_.procTimes()[0]
+    );
     typeIOobject<labelIOList> procAddrIo
     (
         "cellProcAddressing",
@@ -896,13 +927,30 @@ bool Foam::domainDecomposition::readDecompose(const bool doSets)
         runTimes_.procTimes()[0]
     );
 
-    const bool addrOk = addrIo.headerOk() && procAddrIo.headerOk();
+    const bool load = addrIo.headerOk() && procFaceIo.headerOk();
 
-    if (addrOk)
+    if (load)
     {
         readProcs();
 
-        readAddressing();
+        if (procAddrIo.headerOk())
+        {
+            readAddressing();
+        }
+        else
+        {
+            readCompleteAddressing();
+
+            FatalErrorInFunction
+                << nl << "    Processor meshes exist but have no addressing."
+                << nl << nl << "    This could be because the processor meshes "
+                << "have changed. Decomposing the" << nl << "    mesh would "
+                << "overwrite that change. If you are sure that this is "
+                << "appropriate," << nl << "    then delete the "
+                << fileName("processor*")/procFaceIo.relativePath().c_str()
+                << " directories and re-run this" << nl << "    command."
+                << exit(FatalError);
+        }
 
         decomposePoints();
     }
@@ -937,12 +985,12 @@ bool Foam::domainDecomposition::readDecompose(const bool doSets)
 
     writeProcs(doSets);
 
-    if (!addrOk)
+    if (!load)
     {
         writeProcPoints(completeMesh().facesInstance());
     }
 
-    return !addrOk;
+    return !load;
 }
 
 
@@ -950,6 +998,13 @@ bool Foam::domainDecomposition::readReconstruct(const bool doSets)
 {
     readProcs();
 
+    IOobject faceIo
+    (
+        "faces",
+        procMeshes()[0].facesInstance(),
+        procMeshes()[0].meshDir(),
+        runTimes_.completeTime()
+    );
     typeIOobject<labelIOList> addrIo
     (
         "cellProc",
@@ -965,13 +1020,48 @@ bool Foam::domainDecomposition::readReconstruct(const bool doSets)
         procMeshes()[0]
     );
 
-    const bool addrOk = addrIo.headerOk() && procAddrIo.headerOk();
+    const bool load = faceIo.headerOk() && procAddrIo.headerOk();
 
-    if (addrOk)
+    if (load)
     {
         readComplete();
 
-        readAddressing();
+        if (addrIo.headerOk())
+        {
+            readAddressing();
+        }
+        else
+        {
+            readProcsAddressing();
+
+            WarningInFunction
+                << nl << "    A complete mesh exists but has no "
+                << addrIo.name() << " addressing." << nl << nl << "    This "
+                << "could be because the complete mesh has changed. "
+                << "Reconstructing the" << nl << "    mesh would overwrite "
+                << "that change. If you are sure that this is appropriate,"
+                << nl << "    then delete the " << faceIo.relativePath()
+                << " directory and re-run this command." << nl << nl
+                << "    Or, it could be because the complete and processor "
+                << "meshes were decomposed" << nl << "    by a version of "
+                << "OpenFOAM that pre-dates the automatic generation of "
+                << nl << "    " << addrIo.name() << " addressing. This will be "
+                << "assumed and the " << addrIo.name() << " addressing will"
+                << nl << "    be re-built" << nl << endl;
+
+            cellProc_ = labelList(completeMesh().nCells(), -1);
+
+            for (label proci = 0; proci < nProcs(); proci++)
+            {
+                UIndirectList<label>
+                (
+                    cellProc_,
+                    procCellAddressing_[proci]
+                ) = proci;
+            }
+
+            writeCompleteAddressing();
+        }
 
         reconstructPoints();
     }
@@ -1006,12 +1096,12 @@ bool Foam::domainDecomposition::readReconstruct(const bool doSets)
 
     writeComplete(doSets);
 
-    if (!addrOk)
+    if (!load)
     {
         writeCompletePoints(procMeshes()[0].facesInstance());
     }
 
-    return !addrOk;
+    return !load;
 }
 
 

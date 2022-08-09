@@ -83,7 +83,7 @@ class domainDecomposition
             // Note: Face turning index is stored as the sign on addressing
             // Only the processor boundary faces are affected: if the sign of
             // the index is negative, the processor face is the reverse of the
-            // original face. In order to do this properly, all face
+            // originae face. In order to do this properly, all face
             // indices will be incremented by 1 and the decremented as
             // necessary to avoid the problem of face number zero having no
             // sign.
@@ -183,6 +183,12 @@ class domainDecomposition
         void readProcs();
 
         //- Read the addressing
+        void readCompleteAddressing();
+
+        //- Read the addressing
+        void readProcsAddressing();
+
+        //- Read the addressing
         void readAddressing();
 
         //- Read-update the complete and processor meshes for a change in time
@@ -195,6 +201,12 @@ class domainDecomposition
         //- Reconstruct the processor meshes to create the complete mesh and
         //  populate the addressing
         void reconstruct();
+
+        //- Write the decomposition addressing
+        void writeCompleteAddressing() const;
+
+        //- Write the decomposition addressing
+        void writeProcsAddressing() const;
 
         //- Write the decomposition addressing
         void writeAddressing() const;
