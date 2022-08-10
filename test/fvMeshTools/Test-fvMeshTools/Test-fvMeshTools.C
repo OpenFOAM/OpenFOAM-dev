@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,6 @@ int main(int argc, char *argv[])
 
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
-
     // Add/insert a (global) wall patch
     {
         wallPolyPatch pp
@@ -98,7 +97,6 @@ int main(int argc, char *argv[])
         mesh.write();
     }
 
-
     // Remove a (zero-sized!) patch everywhere
     const label removei = 0;
     if (!isA<processorPolyPatch>(pbm[removei]) && pbm[removei].size() == 0)
@@ -123,7 +121,6 @@ int main(int argc, char *argv[])
             << endl;
         mesh.write();
     }
-
 
     // Add a pair of processor patches
     if (Pstream::parRun())
@@ -166,17 +163,11 @@ int main(int argc, char *argv[])
                 << " at index " << newPatchi << endl;
         }
 
-        // Note: write on all processors. There is a slight problem in
-        // reconstructPar: mesh.readUpdate checks that the boundary file is
-        // different. On proc 0 and 1 it will be different, on proc2.. it
-        // stays the same. This causes a failure in reconstructPar.
-
         runTime++;
         mesh.setInstance(runTime.timeName());
-        Info<< "Writing mesh with added (local) patch to " << runTime.timeName()
-            << endl;
+        Info<< "Writing mesh with added (local) patch to "
+            << runTime.timeName() << endl;
         mesh.write();
-
 
         // Remove the added patch
         if (newPatchName.size())
@@ -186,7 +177,7 @@ int main(int argc, char *argv[])
             {
                 FatalErrorInFunction << "Problem" << exit(FatalError);
             }
-            Info<< "Removing patch " << pbm[removei].name() << endl;
+            Pout<< "Removing patch " << pbm[removei].name() << endl;
 
             labelList oldToNew(pbm.size());
             for (label i = 0; i < removei; i++)
@@ -203,8 +194,8 @@ int main(int argc, char *argv[])
 
         runTime++;
         mesh.setInstance(runTime.timeName());
-        Info<< "Writing mesh with removed local patch to " << runTime.timeName()
-            << endl;
+        Info<< "Writing mesh with removed (local) patch to "
+            << runTime.timeName() << endl;
         mesh.write();
     }
 

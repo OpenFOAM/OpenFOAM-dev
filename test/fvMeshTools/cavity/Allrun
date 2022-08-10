@@ -5,18 +5,20 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication blockMesh
+
+# Serial tests
 runApplication $(getApplication)
 runApplication checkMesh
 runApplication foamToVTK
 
+# Reset
+foamListTimes -rm
+
+# Parallel tests
 runApplication decomposePar
 runParallel -s par $(getApplication)
 runParallel -s par checkMesh
 runParallel -s par foamToEnsight
-
-# This will fail for any processors that does not have any local patches
-# added so exclude that time
-runApplication reconstructPar -time '0:0.01'
-runApplication -s latestTime reconstructPar -latestTime
+runApplication reconstructPar
 
 #------------------------------------------------------------------------------
