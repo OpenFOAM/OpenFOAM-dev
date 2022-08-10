@@ -137,6 +137,7 @@ Usage
 #include "pointMesh.H"
 #include "volPointInterpolation.H"
 #include "emptyPolyPatch.H"
+#include "nonConformalPolyPatch.H"
 #include "labelIOField.H"
 #include "scalarIOField.H"
 #include "sphericalTensorIOField.H"
@@ -204,12 +205,13 @@ labelList getSelectedPatches
 
         if
         (
-            isType<emptyPolyPatch>(pp)
+            isA<emptyPolyPatch>(pp)
+         || isA<nonConformalPolyPatch>(pp)
          || (Pstream::parRun() && isType<processorPolyPatch>(pp))
         )
         {
-            Info<< "    discarding empty/processor patch " << patchi
-                << " " << pp.name() << endl;
+            Info<< "    discarding empty/nonConformal/processor patch "
+                << patchi << " " << pp.name() << endl;
         }
         else if (findStrings(excludePatches, pp.name()))
         {
@@ -222,6 +224,7 @@ labelList getSelectedPatches
             Info<< "    patch " << patchi << " " << pp.name() << endl;
         }
     }
+
     return patchIDs.shrink();
 }
 
@@ -873,6 +876,8 @@ int main(int argc, char *argv[])
 
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
+        const labelList patchIDs(getSelectedPatches(patches, excludePatches));
+
         if (allPatches)
         {
             mkDir(fvPath/"allPatches");
@@ -944,94 +949,88 @@ int main(int argc, char *argv[])
         }
         else
         {
-            forAll(patches, patchi)
+            forAll(patchIDs, i)
             {
-                const polyPatch& pp = patches[patchi];
+                const polyPatch& pp = patches[patchIDs[i]];
 
-                if (!findStrings(excludePatches, pp.name()))
+                mkDir(fvPath/pp.name());
+
+                fileName patchFileName;
+
+                if (vMesh.useSubMesh())
                 {
-                    mkDir(fvPath/pp.name());
+                    patchFileName =
+                        fvPath/pp.name()/cellSetName
+                      + "_"
+                      + timeDesc
+                      + ".vtk";
+                }
+                else
+                {
+                    patchFileName =
+                        fvPath/pp.name()/pp.name()
+                      + "_"
+                      + timeDesc
+                      + ".vtk";
+                }
 
-                    fileName patchFileName;
+                Info<< "    Patch     : " << patchFileName << endl;
 
-                    if (vMesh.useSubMesh())
-                    {
-                        patchFileName =
-                            fvPath/pp.name()/cellSetName
-                          + "_"
-                          + timeDesc
-                          + ".vtk";
-                    }
-                    else
-                    {
-                        patchFileName =
-                            fvPath/pp.name()/pp.name()
-                          + "_"
-                          + timeDesc
-                          + ".vtk";
-                    }
+                patchWriter writer
+                (
+                    vMesh,
+                    binary,
+                    nearCellValue,
+                    patchFileName,
+                    labelList(1, patchIDs[i])
+                );
 
-                    Info<< "    Patch     : " << patchFileName << endl;
+                // VolFields + patchID
+                vtkWriteOps::writeCellDataHeader
+                (
+                    writer.os(),
+                    writer.nFaces(),
+                    1 + nVolFields
+                );
 
-                    patchWriter writer
+                // Write patchID field
+                writer.writePatchIDs();
+
+                // Write volFields
+                writer.write(vsf);
+                writer.write(vvf);
+                writer.write(vsptf);
+                writer.write(vsytf);
+                writer.write(vtf);
+
+                if (!noPointValues)
+                {
+                    vtkWriteOps::writePointDataHeader
                     (
-                        vMesh,
-                        binary,
-                        nearCellValue,
-                        patchFileName,
-                        labelList(1, patchi)
+                        writer.os(),
+                        writer.nPoints(),
+                        nVolFields
+                      + nPointFields
                     );
 
-                    if (!isA<emptyPolyPatch>(pp))
-                    {
-                        // VolFields + patchID
-                        vtkWriteOps::writeCellDataHeader
-                        (
-                            writer.os(),
-                            writer.nFaces(),
-                            1 + nVolFields
-                        );
+                    // Write pointFields
+                    writer.write(psf);
+                    writer.write(pvf);
+                    writer.write(psptf);
+                    writer.write(psytf);
+                    writer.write(ptf);
 
-                        // Write patchID field
-                        writer.writePatchIDs();
+                    PrimitivePatchInterpolation<primitivePatch> pInter
+                    (
+                        pp
+                    );
 
-                        // Write volFields
-                        writer.write(vsf);
-                        writer.write(vvf);
-                        writer.write(vsptf);
-                        writer.write(vsytf);
-                        writer.write(vtf);
-
-                        if (!noPointValues)
-                        {
-                            vtkWriteOps::writePointDataHeader
-                            (
-                                writer.os(),
-                                writer.nPoints(),
-                                nVolFields
-                              + nPointFields
-                            );
-
-                            // Write pointFields
-                            writer.write(psf);
-                            writer.write(pvf);
-                            writer.write(psptf);
-                            writer.write(psytf);
-                            writer.write(ptf);
-
-                            PrimitivePatchInterpolation<primitivePatch> pInter
-                            (
-                                pp
-                            );
-
-                            // Write interpolated volFields
-                            writer.write(pInter, vsf);
-                            writer.write(pInter, vvf);
-                            writer.write(pInter, vsptf);
-                            writer.write(pInter, vsytf);
-                            writer.write(pInter, vtf);
-                        }
-                    }
+                    // Write interpolated volFields
+                    writer.write(pInter, vsf);
+                    writer.write(pInter, vvf);
+                    writer.write(pInter, vsptf);
+                    writer.write(pInter, vsytf);
+                    writer.write(pInter, vtf);
                 }
             }
         }
