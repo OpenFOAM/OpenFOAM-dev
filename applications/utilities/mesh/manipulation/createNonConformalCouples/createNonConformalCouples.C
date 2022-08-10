@@ -357,7 +357,10 @@ int main(int argc, char *argv[])
 
         fields = dict.lookupOrDefault<bool>("fields", false);
 
-        forAllConstIter(dictionary, dict, iter)
+        const dictionary& couplesDict =
+            dict.optionalSubDict("nonConformalCouples");
+
+        forAllConstIter(dictionary, couplesDict, iter)
         {
             if (!iter().isDict()) continue;
 

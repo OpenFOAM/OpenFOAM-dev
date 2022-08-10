@@ -16,10 +16,13 @@ FoamFile
 
 fields true;
 
-NCC
+nonConformalCouples
 {
-    patches         (nonCouple1 nonCouple2);
-    transform       none;
+    NCC
+    {
+        patches         (nonCouple1 nonCouple2);
+        transform       none;
+    }
 }
 
 // ************************************************************************* //
