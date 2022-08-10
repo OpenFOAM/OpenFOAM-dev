@@ -7,4 +7,4 @@ cd ${0%/*} || exit 1
 runApplication blockMesh
 runApplication topoSet
 runApplication $(getApplication)
-runApplication -s postProcess $(getApplication) -postProcess -latestTime
+runApplication foamPostProcess -solver fluid -latestTime
