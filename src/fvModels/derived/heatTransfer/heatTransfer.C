@@ -73,7 +73,7 @@ Foam::fv::heatTransfer::heatTransfer
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     semiImplicit_(false),
     TName_(word::null),
     Ta_("Ta", dimTemperature, NaN),

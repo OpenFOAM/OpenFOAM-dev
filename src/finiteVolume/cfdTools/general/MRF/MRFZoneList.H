@@ -84,23 +84,6 @@ public:
         //- Reset the source list
         void reset(const dictionary& dict);
 
-        //- Add the Coriolis acceleration
-        void addCoriolis
-        (
-            const volVectorField& U,
-            volVectorField& ddtU
-        ) const;
-
-        //- Add the Coriolis acceleration to the momentum equation
-        void addCoriolis(fvVectorMatrix& UEqn) const;
-
-        //- Add the Coriolis acceleration to the momentum equation
-        void addCoriolis
-        (
-            const volScalarField& rho,
-            fvVectorMatrix& UEqn
-        ) const;
-
         //- Return the Coriolis acceleration
         tmp<volVectorField> DDt
         (
@@ -170,8 +153,7 @@ public:
             surfaceScalarField& phi
         ) const;
 
-        //- Correct the boundary velocity for the rotation of the MRF region
-        void correctBoundaryVelocity(volVectorField& U) const;
+        void makeAbsolute(Field<vector>& Up, const label patchi) const;
 
         //- Filter-out the MRF region contribution from the given field
         // setting the corresponding values to zero
@@ -189,16 +171,6 @@ public:
 
             //- Read dictionary
             bool read(const dictionary& dict);
-
-            //- Write data to Ostream
-            bool writeData(Ostream& os) const;
-
-            //- Ostream operator
-            friend Ostream& operator<<
-            (
-                Ostream& os,
-                const MRFZoneList& models
-            );
 
 
     // Member Operators

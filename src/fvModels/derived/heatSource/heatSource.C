@@ -97,7 +97,7 @@ Foam::fv::heatSource::heatSource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     q_(nullptr)
 {
     readCoeffs();

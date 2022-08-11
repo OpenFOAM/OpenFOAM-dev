@@ -62,7 +62,7 @@ Foam::fv::accelerationSource::accelerationSource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     UName_(word::null),
     velocity_(nullptr)
 {

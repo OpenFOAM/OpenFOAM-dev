@@ -1,0 +1,61 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     SRFPimpleFoam
+#
+# Description
+#     Script to inform the user that SRFPimpleFoam has been superseded
+#     and replaced by the more general incompressibleFluid solver module
+#     executed by the foamRun application.
+#
+#------------------------------------------------------------------------------
+
+cat <<EOF
+
+SRFPimpleFoam has been superseded and replaced by the more general
+fluid solver module executed by the foamRun application:
+
+    foamRun -solver incompressibleFluid
+
+The MRF functionality has been further developed to replace SRF, enabled by
+setting the MRF zone to all the cells in the mesh using the optional
+'selectionMode' entry to 'all' in the constant/MRFProperties dictionary, e.g.
+
+SRF
+{
+    selectionMode   all;
+
+    origin    (0 0 0);
+    axis      (0 0 1);
+
+    rpm       60;
+}
+
+Additionally the new 'MRFnoSlip' velocity boundary condition should be applied to the
+rotating wall patche in the MRF region.
+
+EOF
+
+#------------------------------------------------------------------------------

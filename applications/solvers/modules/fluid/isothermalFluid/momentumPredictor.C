@@ -29,8 +29,6 @@ License
 
 void Foam::solvers::isothermalFluid::momentumPredictor()
 {
-    MRF.correctBoundaryVelocity(U);
-
     tUEqn =
     (
         fvm::ddt(rho, U) + fvm::div(phi, U)

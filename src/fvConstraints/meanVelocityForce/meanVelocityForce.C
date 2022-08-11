@@ -95,7 +95,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
 )
 :
     fvConstraint(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     UName_(word::null),
     Ubar_(vector::uniform(NaN)),
     relaxation_(NaN),

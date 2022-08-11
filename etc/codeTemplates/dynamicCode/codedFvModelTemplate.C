@@ -101,7 +101,7 @@ ${typeName}FvModel${SourceType}
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh)
+    set_(mesh, coeffs())
 {
     if (${verbose:-false})
     {

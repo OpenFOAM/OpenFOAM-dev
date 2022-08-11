@@ -130,16 +130,27 @@ private:
         //- Set the sum of scalar volumes
         void setV();
 
+        //- Set the set for the selectionMode
+        void setSet(const dictionary& dict);
+
 
 public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from mesh and dictionary
         fvCellSet
         (
+            const fvMesh& mesh,
+            const dictionary& dict
+        );
+
+        //- Construct from mesh, dictionary and default selectionMode
+        fvCellSet
+        (
+            const fvMesh& mesh,
             const dictionary& dict,
-            const fvMesh& mesh
+            const selectionModeType defaultSelectionMode
         );
 
 
@@ -184,6 +195,13 @@ public:
 
             //- Read coefficients dictionary
             bool read(const dictionary& dict);
+
+            //- Read coefficients dictionary and default selectionMode
+            bool read
+            (
+                const dictionary& dict,
+                const selectionModeType defaultSelectionMode
+            );
 };
 
 

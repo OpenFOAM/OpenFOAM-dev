@@ -200,7 +200,7 @@ Foam::fv::semiImplicitSource::semiImplicitSource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     volumeMode_(volumeMode::absolute)
 {
     readCoeffs();

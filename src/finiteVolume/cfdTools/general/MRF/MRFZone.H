@@ -39,17 +39,10 @@ SourceFiles
 #ifndef MRFZone_H
 #define MRFZone_H
 
-#include "dictionary.H"
-#include "wordList.H"
-#include "labelList.H"
-#include "dimensionedScalar.H"
-#include "dimensionedVector.H"
+#include "fvCellSet.H"
 #include "volFieldsFwd.H"
 #include "surfaceFields.H"
-#include "fvMatricesFwd.H"
-#include "polyTopoChangeMap.H"
 #include "Function1.H"
-#include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,24 +66,14 @@ class MRFZone
         //- Coefficients dictionary
         dictionary coeffs_;
 
-        //- Name of cell zone
-        word cellZoneName_;
+        //- MRF zone cell set
+        fvCellSet cellSet_;
 
-        //- Cell zone ID
-        label cellZoneID_;
-
-        const wordReList excludedPatchNames_;
-
-        labelList excludedPatchLabels_;
-
-        //- Internal faces that are part of MRF
+        //- Internal faces that are in the MRF region
         labelList internalFaces_;
 
-        //- Outside faces (per patch) that move with the MRF
-        labelListList includedFaces_;
-
-        //- Excluded faces (per patch) that do not move with the MRF
-        labelListList excludedFaces_;
+        //- Patch faces that are in the MRF region
+        labelListList patchFaces_;
 
         //- Origin of the axis
         const vector origin_;
@@ -98,7 +81,7 @@ class MRFZone
         //- Axis vector
         vector axis_;
 
-        //- Angular velocity (rad/sec)
+        //- Angular velocity (rad/sec or rpm)
         autoPtr<Function1<scalar>> omega_;
 
 
@@ -106,6 +89,9 @@ class MRFZone
 
         //- Divide faces in frame according to patch
         void setMRFFaces();
+
+        //- Check that the case has been updated with correct MRF BCs
+        void checkMRFBCs(const volVectorField& U) const;
 
         //- Make the given absolute mass/vol flux relative within the MRF region
         template<class RhoFieldType>
@@ -154,8 +140,7 @@ public:
         (
             const word& name,
             const fvMesh& mesh,
-            const dictionary& dict,
-            const word& cellZoneName = word::null
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
@@ -182,23 +167,6 @@ public:
         (
             const volVectorField& U,
             volVectorField& ddtU
-        ) const;
-
-        //- Add the Coriolis force contribution to the momentum equation
-        //  Adds to the lhs of the equation; optionally add to rhs
-        void addCoriolis
-        (
-            fvVectorMatrix& UEqn,
-            const bool rhs = false
-        ) const;
-
-        //- Add the Coriolis force contribution to the momentum equation
-        //  Adds to the lhs of the equation; optionally add to rhs
-        void addCoriolis
-        (
-            const volScalarField& rho,
-            fvVectorMatrix& UEqn,
-            const bool rhs = false
         ) const;
 
         //- Add the centrifugal acceleration
@@ -241,8 +209,9 @@ public:
             surfaceScalarField& phi
         ) const;
 
-        //- Correct the boundary velocity for the rotation of the MRF region
-        void correctBoundaryVelocity(volVectorField& U) const;
+        //- Make the given relative patch velocity absolute
+        //  within the MRF region
+        void makeAbsolute(Field<vector>& Up, const label patchi) const;
 
         //- Zero the MRF region of the given field
         template<class Type>
@@ -253,9 +222,6 @@ public:
 
 
     // I-O
-
-        //- Write
-        void writeData(Ostream& os) const;
 
         //- Read MRF dictionary
         bool read(const dictionary& dict);

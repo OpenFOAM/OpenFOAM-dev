@@ -14,17 +14,14 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-MRF
+SRF
 {
-    cellZone    all;
+    selectionMode   all;
 
-    // Fixed patches (by default they 'move' with the MRF zone)
-    nonRotatingPatches (inlet outlet outerWall);
+    origin      (0 0 0);
+    axis        (0 0 1);
 
-    origin    (0 0 0);
-    axis      (0 0 1);
-
-    omega     104.72;
+    rpm         1000;
 }
 
 // ************************************************************************* //

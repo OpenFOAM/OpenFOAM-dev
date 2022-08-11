@@ -224,7 +224,6 @@ Foam::incompressibleTwoPhaseInteractingMixture::divTauDm() const
 
 void Foam::incompressibleTwoPhaseInteractingMixture::correct()
 {
-    MRF_.correctBoundaryVelocity(U_);
     mu_ = muModel_->mu(rhoc_*nucModel_->nu(), U_);
     UdmModel_->correct();
 }

@@ -30,7 +30,7 @@ boundaryField
         type            inletOutlet;
         inletValue      uniform 14.855;
     }
-    innerWall
+    rotor
     {
         type            epsilonWallFunction;
         value           uniform 14.855;

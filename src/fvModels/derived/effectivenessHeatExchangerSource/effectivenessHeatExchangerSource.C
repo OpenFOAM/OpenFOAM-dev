@@ -176,7 +176,7 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     secondaryMassFlowRate_(NaN),
     secondaryInletT_(NaN),
     primaryInletT_(NaN),

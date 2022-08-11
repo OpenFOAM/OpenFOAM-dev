@@ -66,7 +66,7 @@ Foam::fv::limitTemperature::limitTemperature
 )
 :
     fvConstraint(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     Tmin_(-vGreat),
     Tmax_(vGreat),
     fieldName_(word::null),

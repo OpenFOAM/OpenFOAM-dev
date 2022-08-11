@@ -514,7 +514,7 @@ Foam::fv::rotorDiskSource::rotorDiskSource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     UName_(word::null),
     omega_(0),
     nBlades_(0),

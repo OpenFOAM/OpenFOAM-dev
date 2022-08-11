@@ -225,7 +225,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     Tsol_(NaN),
     Tliq_(NaN),
     alpha1e_(NaN),

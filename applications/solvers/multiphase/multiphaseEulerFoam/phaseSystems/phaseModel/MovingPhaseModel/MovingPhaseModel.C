@@ -241,7 +241,6 @@ template<class BasePhaseModel>
 void Foam::MovingPhaseModel<BasePhaseModel>::correct()
 {
     BasePhaseModel::correct();
-    this->fluid().MRF().correctBoundaryVelocity(U_);
 }
 
 

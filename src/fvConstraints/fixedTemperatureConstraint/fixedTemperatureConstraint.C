@@ -100,7 +100,7 @@ Foam::fv::fixedTemperatureConstraint::fixedTemperatureConstraint
 )
 :
     fvConstraint(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     mode_(temperatureMode::uniform),
     TValue_(nullptr),
     TName_(word::null),

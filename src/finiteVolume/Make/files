@@ -494,14 +494,9 @@ MRF = $(general)/MRF
 $(MRF)/MRFZone.C
 $(MRF)/MRFZoneList.C
 $(MRF)/IOMRFZoneList.C
-
-SRF = $(general)/SRF
-$(SRF)/SRFModel/SRFModel/SRFModel.C
-$(SRF)/SRFModel/SRFModel/SRFModelNew.C
-$(SRF)/SRFModel/rpm/rpm.C
-$(SRF)/derivedFvPatchFields/SRFVelocityFvPatchVectorField/SRFVelocityFvPatchVectorField.C
-$(SRF)/derivedFvPatchFields/SRFWallVelocityFvPatchVectorField/SRFWallVelocityFvPatchVectorField.C
-$(SRF)/derivedFvPatchFields/SRFFreestreamVelocityFvPatchVectorField/SRFFreestreamVelocityFvPatchVectorField.C
+$(MRF)/derivedFvPatchFields/MRFPatchField/MRFPatchField.C
+$(MRF)/derivedFvPatchFields/MRFnoSlip/MRFnoSlipFvPatchVectorField.C
+$(MRF)/derivedFvPatchFields/MRFFreestreamVelocity/MRFFreestreamVelocityFvPatchVectorField.C
 
 fvModels = $(general)/fvModels
 $(fvModels)/fvModel.C

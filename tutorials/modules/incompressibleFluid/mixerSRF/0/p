@@ -29,7 +29,7 @@ boundaryField
         type            fixedValue;
         value           uniform 0;
     }
-    innerWall
+    rotor
     {
         type            zeroGradient;
     }

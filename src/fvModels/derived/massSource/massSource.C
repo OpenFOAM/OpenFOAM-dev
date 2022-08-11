@@ -208,7 +208,7 @@ Foam::fv::massSource::massSource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     phaseName_(),
     rhoName_(),
     heName_(),

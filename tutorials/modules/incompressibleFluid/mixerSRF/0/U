@@ -32,10 +32,9 @@ boundaryField
         value           $internalField;
     }
 
-    innerWall
+    rotor
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            MRFnoSlip;
     }
 
     outerWall

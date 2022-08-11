@@ -142,12 +142,50 @@ void Foam::fvCellSet::setV()
 }
 
 
+void Foam::fvCellSet::setSet(const dictionary& dict)
+{
+    switch (selectionMode_)
+    {
+        case selectionModeType::points:
+        {
+            dict.lookup("points") >> points_;
+            break;
+        }
+        case selectionModeType::cellSet:
+        {
+            dict.lookup("cellSet") >> cellSetName_;
+            break;
+        }
+        case selectionModeType::cellZone:
+        {
+            dict.lookup("cellZone") >> cellSetName_;
+            break;
+        }
+        case selectionModeType::all:
+        {
+            break;
+        }
+        default:
+        {
+            FatalErrorInFunction
+                << "Unknown selectionMode "
+                << selectionModeTypeNames_[selectionMode_]
+                << ". Valid selectionMode types are" << selectionModeTypeNames_
+                << exit(FatalError);
+        }
+    }
+
+    setCells();
+    setV();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fvCellSet::fvCellSet
 (
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
     mesh_(mesh),
@@ -156,6 +194,22 @@ Foam::fvCellSet::fvCellSet
     V_(NaN)
 {
     read(dict);
+}
+
+
+Foam::fvCellSet::fvCellSet
+(
+    const fvMesh& mesh,
+    const dictionary& dict,
+    const selectionModeType defaultSelectionMode
+)
+:
+    mesh_(mesh),
+    selectionMode_(defaultSelectionMode),
+    cellSetName_(word::null),
+    V_(NaN)
+{
+    read(dict, defaultSelectionMode);
 }
 
 
@@ -203,39 +257,28 @@ bool Foam::fvCellSet::read(const dictionary& dict)
     selectionMode_ =
         selectionModeTypeNames_.read(dict.lookup("selectionMode"));
 
-    switch (selectionMode_)
-    {
-        case selectionModeType::points:
-        {
-            dict.lookup("points") >> points_;
-            break;
-        }
-        case selectionModeType::cellSet:
-        {
-            dict.lookup("cellSet") >> cellSetName_;
-            break;
-        }
-        case selectionModeType::cellZone:
-        {
-            dict.lookup("cellZone") >> cellSetName_;
-            break;
-        }
-        case selectionModeType::all:
-        {
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown selectionMode "
-                << selectionModeTypeNames_[selectionMode_]
-                << ". Valid selectionMode types are" << selectionModeTypeNames_
-                << exit(FatalError);
-        }
-    }
+    setSet(dict);
 
-    setCells();
-    setV();
+    return true;
+}
+
+
+bool Foam::fvCellSet::read
+(
+    const dictionary& dict,
+    const selectionModeType defaultSelectionMode
+)
+{
+    selectionMode_ = selectionModeTypeNames_
+    [
+        dict.lookupOrDefault<word>
+        (
+            "selectionMode",
+            selectionModeTypeNames_[defaultSelectionMode]
+        )
+    ];
+
+    setSet(dict);
 
     return true;
 }

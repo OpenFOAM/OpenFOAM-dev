@@ -117,7 +117,7 @@ Foam::fv::limitMag::limitMag
 )
 :
     fvConstraint(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     fieldName_(word::null),
     max_(vGreat)
 {

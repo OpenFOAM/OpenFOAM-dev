@@ -106,7 +106,7 @@ Foam::fv::actuationDiskSource::actuationDiskSource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     phaseName_(word::null),
     UName_(word::null),
     diskDir_(vector::uniform(NaN)),

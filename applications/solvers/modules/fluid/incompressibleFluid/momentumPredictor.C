@@ -29,8 +29,6 @@ License
 
 void Foam::solvers::incompressibleFluid::momentumPredictor()
 {
-    MRF.correctBoundaryVelocity(U);
-
     tUEqn =
     (
         fvm::ddt(U) + fvm::div(phi, U)

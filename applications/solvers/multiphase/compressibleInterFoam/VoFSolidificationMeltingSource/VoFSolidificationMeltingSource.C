@@ -86,7 +86,7 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     alphaSolidT_(),
     L_("L", dimEnergy/dimMass, NaN),
     relax_(NaN),

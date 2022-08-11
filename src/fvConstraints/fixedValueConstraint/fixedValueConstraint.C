@@ -116,7 +116,7 @@ Foam::fv::fixedValueConstraint::fixedValueConstraint
 )
 :
     fvConstraint(name, modelType, dict, mesh),
-    set_(coeffs(), mesh)
+    set_(mesh, coeffs())
 {
     readCoeffs();
 }

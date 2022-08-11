@@ -95,53 +95,6 @@ bool Foam::MRFZoneList::read(const dictionary& dict)
 }
 
 
-bool Foam::MRFZoneList::writeData(Ostream& os) const
-{
-    forAll(*this, i)
-    {
-        os  << nl;
-        this->operator[](i).writeData(os);
-    }
-
-    return os.good();
-}
-
-
-void Foam::MRFZoneList::addCoriolis
-(
-    const volVectorField& U,
-    volVectorField& ddtU
-) const
-{
-    forAll(*this, i)
-    {
-        operator[](i).addCoriolis(U, ddtU);
-    }
-}
-
-
-void Foam::MRFZoneList::addCoriolis(fvVectorMatrix& UEqn) const
-{
-    forAll(*this, i)
-    {
-        operator[](i).addCoriolis(UEqn);
-    }
-}
-
-
-void Foam::MRFZoneList::addCoriolis
-(
-    const volScalarField& rho,
-    fvVectorMatrix& UEqn
-) const
-{
-    forAll(*this, i)
-    {
-        operator[](i).addCoriolis(rho, UEqn);
-    }
-}
-
-
 Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
 (
     const volVectorField& U
@@ -378,15 +331,6 @@ void Foam::MRFZoneList::makeAbsolute
 }
 
 
-void Foam::MRFZoneList::correctBoundaryVelocity(volVectorField& U) const
-{
-    forAll(*this, i)
-    {
-        operator[](i).correctBoundaryVelocity(U);
-    }
-}
-
-
 void Foam::MRFZoneList::update()
 {
     if (mesh_.topoChanged())
@@ -396,19 +340,6 @@ void Foam::MRFZoneList::update()
             operator[](i).update();
         }
     }
-}
-
-
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const MRFZoneList& models
-)
-{
-    models.writeData(os);
-    return os;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,6 @@ License
 #include "NonInertialFrameForce.H"
 #include "ParamagneticForce.H"
 #include "PressureGradientForce.H"
-#include "SRFForce.H"
 #include "VirtualMassForce.H"
 
 #include "ScaledForce.H"
@@ -64,7 +63,6 @@ License
     makeParticleForceModelType(NonInertialFrameForce, CloudType);              \
     makeParticleForceModelType(ParamagneticForce, CloudType);                  \
     makeParticleForceModelType(PressureGradientForce, CloudType);              \
-    makeParticleForceModelType(SRFForce, CloudType);                           \
     makeParticleForceModelType(VirtualMassForce, CloudType);                   \
     makeParticleForceModelType(ScaledForce, CloudType);
 

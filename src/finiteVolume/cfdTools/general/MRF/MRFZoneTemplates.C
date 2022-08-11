@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ void Foam::MRFZone::makeRelativeRhoFlux
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
-    const vector Omega = omega_->value(mesh_.time().userTimeValue())*axis_;
+    const vector Omega = this->Omega();
 
     const vectorField& Cfi = Cf;
     const vectorField& Sfi = Sf;
@@ -68,25 +68,13 @@ void Foam::MRFZone::makeRelativeRhoFlux
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
-    const vector Omega = omega_->value(mesh_.time().userTimeValue())*axis_;
+    const vector Omega = this->Omega();
 
-    // Included patches
-    forAll(includedFaces_, patchi)
+    forAll(patchFaces_, patchi)
     {
-        forAll(includedFaces_[patchi], i)
+        forAll(patchFaces_[patchi], i)
         {
-            label patchFacei = includedFaces_[patchi][i];
-
-            phi[patchi][patchFacei] = 0.0;
-        }
-    }
-
-    // Excluded patches
-    forAll(excludedFaces_, patchi)
-    {
-        forAll(excludedFaces_[patchi], i)
-        {
-            label patchFacei = excludedFaces_[patchi][i];
+            label patchFacei = patchFaces_[patchi][i];
 
             phi[patchi][patchFacei] -=
                 rho[patchi][patchFacei]
@@ -108,20 +96,11 @@ void Foam::MRFZone::makeRelativeRhoFlux
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
-    const vector Omega = omega_->value(mesh_.time().userTimeValue())*axis_;
+    const vector Omega = this->Omega();
 
-    // Included patches
-    forAll(includedFaces_[patchi], i)
+    forAll(patchFaces_[patchi], i)
     {
-        label patchFacei = includedFaces_[patchi][i];
-
-        phi[patchFacei] = 0.0;
-    }
-
-    // Excluded patches
-    forAll(excludedFaces_[patchi], i)
-    {
-        label patchFacei = excludedFaces_[patchi][i];
+        label patchFacei = patchFaces_[patchi][i];
 
         phi[patchFacei] -=
             rho[patchFacei]
@@ -141,7 +120,7 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
-    const vector Omega = omega_->value(mesh_.time().userTimeValue())*axis_;
+    const vector Omega = this->Omega();
 
     const vectorField& Cfi = Cf;
     const vectorField& Sfi = Sf;
@@ -156,27 +135,11 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
 
     surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
 
-
-    // Included patches
-    forAll(includedFaces_, patchi)
+    forAll(patchFaces_, patchi)
     {
-        forAll(includedFaces_[patchi], i)
+        forAll(patchFaces_[patchi], i)
         {
-            label patchFacei = includedFaces_[patchi][i];
-
-            phibf[patchi][patchFacei] +=
-                rho.boundaryField()[patchi][patchFacei]
-              * (Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
-              & Sf.boundaryField()[patchi][patchFacei];
-        }
-    }
-
-    // Excluded patches
-    forAll(excludedFaces_, patchi)
-    {
-        forAll(excludedFaces_[patchi], i)
-        {
-            label patchFacei = excludedFaces_[patchi][i];
+            label patchFacei = patchFaces_[patchi][i];
 
             phibf[patchi][patchFacei] +=
                 rho.boundaryField()[patchi][patchFacei]
@@ -203,19 +166,11 @@ void Foam::MRFZone::zero
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::Boundary& phibf =
         phi.boundaryFieldRef();
 
-    forAll(includedFaces_, patchi)
+    forAll(patchFaces_, patchi)
     {
-        forAll(includedFaces_[patchi], i)
+        forAll(patchFaces_[patchi], i)
         {
-            phibf[patchi][includedFaces_[patchi][i]] = Zero;
-        }
-    }
-
-    forAll(excludedFaces_, patchi)
-    {
-        forAll(excludedFaces_[patchi], i)
-        {
-            phibf[patchi][excludedFaces_[patchi][i]] = Zero;
+            phibf[patchi][patchFaces_[patchi][i]] = Zero;
         }
     }
 }

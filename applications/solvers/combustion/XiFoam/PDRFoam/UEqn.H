@@ -1,5 +1,3 @@
-    MRF.correctBoundaryVelocity(U);
-
     fvVectorMatrix UEqn
     (
         betav*fvm::ddt(rho, U) + fvm::div(phi, U)

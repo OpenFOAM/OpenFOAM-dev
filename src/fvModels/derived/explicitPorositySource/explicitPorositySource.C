@@ -84,7 +84,7 @@ Foam::fv::explicitPorositySource::explicitPorositySource
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
+    set_(mesh, coeffs()),
     UNames_(),
     porosityPtr_(nullptr)
 {
