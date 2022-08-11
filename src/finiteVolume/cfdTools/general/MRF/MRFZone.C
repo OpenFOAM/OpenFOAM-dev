@@ -188,7 +188,7 @@ void Foam::MRFZone::checkMRFBCs(const volVectorField& U) const
 {
     static bool checked = false;
 
-    if (!checked)
+    if (!checked && U.nOldTimes())
     {
         const volVectorField::Boundary& Ubf = U.boundaryField();
 
