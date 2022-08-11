@@ -112,19 +112,6 @@ public:
             cyclicPolyPatch(pp, bm, index, newSize, newStart, nbrPatchName)
         {}
 
-        //- Construct given the original patch and a map
-        cyclicSlipPolyPatch
-        (
-            const cyclicPolyPatch& pp,
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        )
-        :
-            cyclicPolyPatch(pp, bm, index, mapAddressing, newStart)
-        {}
-
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const
         {
@@ -151,29 +138,6 @@ public:
                     newSize,
                     newStart,
                     nbrPatchName()
-                )
-            );
-        }
-
-        //- Construct and return a clone, resetting the face list
-        //  and boundary mesh
-        virtual autoPtr<polyPatch> clone
-        (
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        ) const
-        {
-            return autoPtr<polyPatch>
-            (
-                new cyclicSlipPolyPatch
-                (
-                    *this,
-                    bm,
-                    index,
-                    mapAddressing,
-                    newStart
                 )
             );
         }

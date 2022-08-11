@@ -149,20 +149,6 @@ Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
 {}
 
 
-Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
-(
-    const mappedExtrudedWallPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    mappedWallPolyPatch(pp, bm, index, mapAddressing, newStart),
-    bottomPatch_(pp.bottomPatch_)
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::mappedExtrudedWallPolyPatch::~mappedExtrudedWallPolyPatch()

@@ -281,28 +281,6 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
 }
 
 
-Foam::cyclicPolyPatch::cyclicPolyPatch
-(
-    const cyclicPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    coupledPolyPatch(pp, bm, index, mapAddressing, newStart),
-    cyclicTransform(pp),
-    nbrPatchName_(pp.nbrPatchName_),
-    coupleGroup_(pp.coupleGroup_),
-    nbrPatchID_(-1),
-    coupledPointsPtr_(nullptr),
-    coupledEdgesPtr_(nullptr),
-    ownToNbrOrderDataPtr_(nullptr),
-    ownToNbrCyclicOrderDataPtr_(nullptr),
-    ownToNbrDebugOrderDataPtr_(nullptr)
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::cyclicPolyPatch::~cyclicPolyPatch()

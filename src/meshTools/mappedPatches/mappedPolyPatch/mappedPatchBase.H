@@ -28,42 +28,44 @@ Description
     Determines a mapping between patch face centres and mesh cell or face
     centres and processors they're on.
 
-    If constructed from dictionary:
+    Example:
     \verbatim
-        // Region to sample (default is region0)
-        sampleRegion region0;
-
-        // What to sample:
-        // - nearestCell         : sample cell containing point
-        // - nearestOnlyCell     : nearest sample cell (even if not containing
-        //                         point)
+        // What to sample
+        // - nearestCell         : cell containing the sampling point
         // - nearestPatchFace    : nearest face on selected patch
-        // - nearestPatchFaceAMI : nearest face on selected patch
-                                   - patches need not conform
-                                   - uses AMI interpolation
+        // - nearestPatchFaceAMI : AMI interpolation from selected patch
         // - nearestFace         : nearest boundary face on any patch
         sampleMode nearestCell;
 
-        // If sampleMode is nearestPatchFace : patch to find faces of
+        // Region to sample from
+        sampleRegion region0;
+
+        // If sampleMode is nearestPatchFace* : The patch to sample from
         samplePatch movingWall;
 
-        // If sampleMode is nearestPatchFace : specify patchgroup to find
-        // samplePatch and sampleRegion (if not provided)
+        // If sampleMode is nearestPatchFace* : Couple group to specify the
+        //                                      sample region and patch
+        //                                      (alternative to specifying
+        //                                      sampleRegion and samplePatch
+        //                                      directly)
         coupleGroup baffleGroup;
 
-        // How to supply offset (w.r.t. my patch face centres):
-        // - uniform : single offset vector
-        // - nonuniform : per-face offset vector
-        // - normal : using supplied distance and face normal
-        offsetMode uniform;
+        // How to offset the patch face centres to the sampling locations
+        // - none                : no offset
+        // - normal              : distance along the patch face normals
+        // - direction           : specified offset vector
+        offsetMode direction;
 
-        // According to offsetMode (see above) supply one of
-        // offset, offsets or distance
-        offset  (1 0 0);
+        // If offsetMode is normal : The normal distance to offset
+        distance 1;
+
+        // If offsetMode is direction : The offset vector
+        offset (1 0 0);
     \endverbatim
 
-    Note: if offsetMode is \c normal it uses outwards pointing normals. So
-    supply a negative distance if sampling inside the domain.
+    Note that patch normals point outward, so if offsetMode is \c normal then a
+    negative distance will be required in order to sample value from inside the
+    domain.
 
 SourceFiles
     mappedPatchBase.C
@@ -109,9 +111,9 @@ public:
         //- How to project face centres
         enum offsetMode
         {
-            UNIFORM,            // single offset vector
-            NONUNIFORM,         // per-face offset vector
-            NORMAL              // use face normal + distance
+            NONE,       // do not offset
+            NORMAL,     // offset a distance in the face-normal direction
+            DIRECTION   // offset with a specified vector
         };
 
         static const NamedEnum<sampleMode, 4> sampleModeNames_;
@@ -141,17 +143,14 @@ protected:
         //- PatchGroup (if in sampleMode NEARESTPATCH*)
         const coupleGroupIdentifier coupleGroup_;
 
-        //- How to obtain samples
+        //- How to offset the patch face centres to the sampling locations
         offsetMode offsetMode_;
 
-        //- Offset vector (uniform)
-        vector offset_;
-
-        //- Offset vector (nonuniform)
-        vectorField offsets_;
-
-        //- Offset distance (normal)
+        //- Offset distance
         scalar distance_;
+
+        //- Offset vector
+        vector offset_;
 
 
         // Derived information
@@ -179,6 +178,9 @@ protected:
 
 
     // Protected Member Functions
+
+        //- Read the offset mode from a dictionary
+        offsetMode readOffsetMode(const dictionary& dict) const;
 
         //- Find cells/faces containing samples
         void findSamples
@@ -217,34 +219,13 @@ public:
         //- Construct from patch
         mappedPatchBase(const polyPatch&);
 
-        //- Construct with offsetMode=non-uniform
+        //- Construct with no offset
         mappedPatchBase
         (
             const polyPatch& pp,
             const word& sampleRegion,
             const sampleMode sampleMode,
-            const word& samplePatch,
-            const vectorField& offsets
-        );
-
-        //- Construct from offsetMode=uniform
-        mappedPatchBase
-        (
-            const polyPatch& pp,
-            const word& sampleRegion,
-            const sampleMode sampleMode,
-            const word& samplePatch,
-            const vector& offset
-        );
-
-        //- Construct from offsetMode=normal and distance
-        mappedPatchBase
-        (
-            const polyPatch& pp,
-            const word& sampleRegion,
-            const sampleMode sampleMode,
-            const word& samplePatch,
-            const scalar distance
+            const word& samplePatch
         );
 
         //- Construct from dictionary
@@ -252,14 +233,6 @@ public:
 
         //- Construct as copy, resetting patch
         mappedPatchBase(const polyPatch&, const mappedPatchBase&);
-
-        //- Construct as copy, resetting patch, map original data
-        mappedPatchBase
-        (
-            const polyPatch&,
-            const mappedPatchBase&,
-            const labelUList& mapAddressing
-        );
 
 
     //- Destructor

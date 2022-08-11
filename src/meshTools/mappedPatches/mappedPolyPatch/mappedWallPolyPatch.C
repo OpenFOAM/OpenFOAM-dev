@@ -75,44 +75,11 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
     const word& sampleRegion,
     const mappedPatchBase::sampleMode mode,
     const word& samplePatch,
-    const vectorField& offset,
     const polyBoundaryMesh& bm
 )
 :
     wallPolyPatch(name, size, start, index, bm, typeName),
-    mappedPatchBase
-    (
-        static_cast<const polyPatch&>(*this),
-        sampleRegion,
-        mode,
-        samplePatch,
-        offset
-    )
-{}
-
-
-Foam::mappedWallPolyPatch::mappedWallPolyPatch
-(
-    const word& name,
-    const label size,
-    const label start,
-    const label index,
-    const word& sampleRegion,
-    const mappedPatchBase::sampleMode mode,
-    const word& samplePatch,
-    const vector& offset,
-    const polyBoundaryMesh& bm
-)
-:
-    wallPolyPatch(name, size, start, index, bm, typeName),
-    mappedPatchBase
-    (
-        static_cast<const polyPatch&>(*this),
-        sampleRegion,
-        mode,
-        samplePatch,
-        offset
-    )
+    mappedPatchBase(*this, sampleRegion, mode, samplePatch)
 {}
 
 
@@ -158,20 +125,6 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 :
     wallPolyPatch(pp, bm, index, newSize, newStart),
     mappedPatchBase(*this, pp)
-{}
-
-
-Foam::mappedWallPolyPatch::mappedWallPolyPatch
-(
-    const mappedWallPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    wallPolyPatch(pp, bm, index, mapAddressing, newStart),
-    mappedPatchBase(*this, pp, mapAddressing)
 {}
 
 

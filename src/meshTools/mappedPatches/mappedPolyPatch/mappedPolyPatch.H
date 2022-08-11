@@ -97,34 +97,6 @@ public:
             const word& patchType
         );
 
-        //- Construct from components
-        mappedPolyPatch
-        (
-            const word& name,
-            const label size,
-            const label start,
-            const label index,
-            const word& sampleRegion,
-            const mappedPatchBase::sampleMode mode,
-            const word& samplePatch,
-            const vectorField& offset,
-            const polyBoundaryMesh& bm
-        );
-
-        //- Construct from components. Uniform offset.
-        mappedPolyPatch
-        (
-            const word& name,
-            const label size,
-            const label start,
-            const label index,
-            const word& sampleRegion,
-            const mappedPatchBase::sampleMode mode,
-            const word& samplePatch,
-            const vector& offset,
-            const polyBoundaryMesh& bm
-        );
-
         //- Construct from dictionary
         mappedPolyPatch
         (
@@ -153,16 +125,6 @@ public:
             const label newStart
         );
 
-        //- Construct given the original patch and a map
-        mappedPolyPatch
-        (
-            const mappedPolyPatch& pp,
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        );
-
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const
         {
@@ -182,29 +144,6 @@ public:
             return autoPtr<polyPatch>
             (
                 new mappedPolyPatch(*this, bm, index, newSize, newStart)
-            );
-        }
-
-        //- Construct and return a clone, resetting the face list
-        //  and boundary mesh
-        virtual autoPtr<polyPatch> clone
-        (
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        ) const
-        {
-            return autoPtr<polyPatch>
-            (
-                new mappedPolyPatch
-                (
-                    *this,
-                    bm,
-                    index,
-                    mapAddressing,
-                    newStart
-                )
             );
         }
 

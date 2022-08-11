@@ -806,7 +806,7 @@ void Foam::domainDecomposition::decompose()
 
         label nPatches = 0;
 
-        // Map existing non-proc patches
+        // Copy existing non-proc patches
         forAll(curPatchSizes, patchi)
         {
             const polyPatch& meshPatch = meshPatches[patchi];
@@ -816,12 +816,7 @@ void Foam::domainDecomposition::decompose()
                 (
                     procMesh.boundaryMesh(),
                     nPatches,
-                    SubList<label>
-                    (
-                        curFaceLabels,
-                        curPatchSizes[patchi],
-                        curPatchStarts[patchi]
-                    ) - 1 - meshPatch.start(),
+                    curPatchSizes[patchi],
                     curPatchStarts[patchi]
                 ).ptr();
 

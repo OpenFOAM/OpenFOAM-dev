@@ -209,16 +209,6 @@ public:
             const label newStart
         );
 
-        //- Construct given the original patch and a map
-        polyPatch
-        (
-            const polyPatch& pp,
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        );
-
         //- Copy constructor
         polyPatch(const polyPatch&);
 
@@ -241,22 +231,6 @@ public:
             return autoPtr<polyPatch>
             (
                 new polyPatch(*this, bm, index, newSize, newStart)
-            );
-        }
-
-        //- Construct and return a clone, resetting the face list
-        //  and boundary mesh
-        virtual autoPtr<polyPatch> clone
-        (
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        ) const
-        {
-            return autoPtr<polyPatch>
-            (
-                new polyPatch(*this, bm, index, mapAddressing, newStart)
             );
         }
 

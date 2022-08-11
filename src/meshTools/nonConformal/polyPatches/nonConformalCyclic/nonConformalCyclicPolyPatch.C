@@ -220,24 +220,6 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
 {}
 
 
-Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
-(
-    const nonConformalCyclicPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    cyclicPolyPatch(pp, bm, index, mapAddressing, newStart),
-    nonConformalCoupledPolyPatch(*this, pp),
-    intersectionIsValid_(false),
-    intersection_(false),
-    raysIsValid_(false),
-    rays_(false)
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::nonConformalCyclicPolyPatch::~nonConformalCyclicPolyPatch()

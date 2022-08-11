@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,20 +132,6 @@ Foam::symmetryPlanePolyPatch::symmetryPlanePolyPatch
 )
 :
     polyPatch(pp, bm, index, newSize, newStart),
-    n_(pp.n_)
-{}
-
-
-Foam::symmetryPlanePolyPatch::symmetryPlanePolyPatch
-(
-    const symmetryPlanePolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    polyPatch(pp, bm, index, mapAddressing, newStart),
     n_(pp.n_)
 {}
 

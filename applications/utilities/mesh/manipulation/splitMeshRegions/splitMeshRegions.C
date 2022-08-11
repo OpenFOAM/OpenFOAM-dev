@@ -1032,7 +1032,6 @@ labelList addRegionPatches
         //    << " between regions " << e
         //    << " trying to add patches " << names << endl;
 
-
         mappedWallPolyPatch patch1
         (
             names[0],
@@ -1042,7 +1041,6 @@ labelList addRegionPatches
             regionNames[e[1]],  // sampleRegion
             mappedPatchBase::NEARESTPATCHFACE,
             names[1],           // samplePatch
-            point::zero,        // offset
             mesh.boundaryMesh()
         );
 
@@ -1064,7 +1062,6 @@ labelList addRegionPatches
             regionNames[e[0]],  // sampleRegion
             mappedPatchBase::NEARESTPATCHFACE,
             names[0],
-            point::zero,        // offset
             mesh.boundaryMesh()
         );
         fvMeshTools::addPatch

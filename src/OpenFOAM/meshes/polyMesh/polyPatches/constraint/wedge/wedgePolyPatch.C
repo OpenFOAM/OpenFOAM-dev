@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,25 +194,6 @@ Foam::wedgePolyPatch::wedgePolyPatch
 )
 :
     polyPatch(pp, bm, index, newSize, newStart),
-    axis_(pp.axis_),
-    centreNormal_(pp.centreNormal_),
-    n_(pp.n_),
-    cosAngle_(pp.cosAngle_),
-    faceT_(pp.faceT_),
-    cellT_(pp.cellT_)
-{}
-
-
-Foam::wedgePolyPatch::wedgePolyPatch
-(
-    const wedgePolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    polyPatch(pp, bm, index, mapAddressing, newStart),
     axis_(pp.axis_),
     centreNormal_(pp.centreNormal_),
     n_(pp.n_),

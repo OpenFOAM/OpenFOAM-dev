@@ -135,21 +135,6 @@ nonConformalProcessorCyclicPolyPatch
 {}
 
 
-Foam::nonConformalProcessorCyclicPolyPatch::
-nonConformalProcessorCyclicPolyPatch
-(
-    const nonConformalProcessorCyclicPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    processorCyclicPolyPatch(pp, bm, index, mapAddressing, newStart),
-    nonConformalCoupledPolyPatch(*this, pp)
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::nonConformalProcessorCyclicPolyPatch::

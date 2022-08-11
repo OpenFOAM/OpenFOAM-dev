@@ -581,21 +581,6 @@ Foam::coupledPolyPatch::coupledPolyPatch
 {}
 
 
-Foam::coupledPolyPatch::coupledPolyPatch
-(
-    const coupledPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    polyPatch(pp, bm, index, mapAddressing, newStart),
-    matchTolerance_(pp.matchTolerance_),
-    ownToOwnOrderDataPtr_(nullptr)
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::coupledPolyPatch::~coupledPolyPatch()

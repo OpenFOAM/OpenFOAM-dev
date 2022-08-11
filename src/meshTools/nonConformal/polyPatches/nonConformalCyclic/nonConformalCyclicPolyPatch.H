@@ -162,16 +162,6 @@ public:
             const word& origPatchName
         );
 
-        //- Construct given the original patch and a map
-        nonConformalCyclicPolyPatch
-        (
-            const nonConformalCyclicPolyPatch& pp,
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        );
-
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const
         {
@@ -202,29 +192,6 @@ public:
                     newStart,
                     nbrPatchName(),
                     origPatchName()
-                )
-            );
-        }
-
-        //- Construct and return a clone, resetting the face list
-        //  and boundary mesh
-        virtual autoPtr<polyPatch> clone
-        (
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        ) const
-        {
-            return autoPtr<polyPatch>
-            (
-                new nonConformalCyclicPolyPatch
-                (
-                    *this,
-                    bm,
-                    index,
-                    mapAddressing,
-                    newStart
                 )
             );
         }

@@ -374,31 +374,6 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
 }
 
 
-Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
-(
-    const cyclicAMIPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    coupledPolyPatch(pp, bm, index, mapAddressing, newStart),
-    cyclicTransform(pp),
-    nbrPatchName_(pp.nbrPatchName_),
-    coupleGroup_(pp.coupleGroup_),
-    nbrPatchID_(-1),
-    AMIs_(),
-    AMITransforms_(),
-    AMIReverse_(pp.AMIReverse_),
-    AMIRequireMatch_(pp.AMIRequireMatch_),
-    AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
-    AMIMethod_(pp.AMIMethod_),
-    surfPtr_(nullptr),
-    surfDict_(pp.surfDict_)
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::cyclicAMIPolyPatch::~cyclicAMIPolyPatch()

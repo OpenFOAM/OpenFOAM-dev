@@ -143,22 +143,6 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
 {}
 
 
-Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
-(
-    const processorCyclicPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    processorPolyPatch(pp, bm, index, mapAddressing, newStart),
-    referPatchName_(pp.referPatchName()),
-    tag_(-1),
-    referPatchID_(-1)
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::processorCyclicPolyPatch::~processorCyclicPolyPatch()

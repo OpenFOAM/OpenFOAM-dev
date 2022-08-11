@@ -214,33 +214,6 @@ Foam::polyPatch::polyPatch
 {}
 
 
-Foam::polyPatch::polyPatch
-(
-    const polyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    patchIdentifier(pp, index),
-    primitivePatch
-    (
-        faceSubList
-        (
-            bm.mesh().faces(),
-            mapAddressing.size(),
-            newStart
-        ),
-        bm.mesh().points()
-    ),
-    start_(newStart),
-    boundaryMesh_(bm),
-    faceCellsPtr_(nullptr),
-    mePtr_(nullptr)
-{}
-
-
 Foam::polyPatch::polyPatch(const polyPatch& p)
 :
     patchIdentifier(p),

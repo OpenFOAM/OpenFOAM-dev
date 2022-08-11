@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,21 +90,6 @@ Foam::genericPolyPatch::genericPolyPatch
 )
 :
     polyPatch(pp, bm, index, newSize, newStart),
-    actualTypeName_(pp.actualTypeName_),
-    dict_(pp.dict_)
-{}
-
-
-Foam::genericPolyPatch::genericPolyPatch
-(
-    const genericPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    polyPatch(pp, bm, index, mapAddressing, newStart),
     actualTypeName_(pp.actualTypeName_),
     dict_(pp.dict_)
 {}

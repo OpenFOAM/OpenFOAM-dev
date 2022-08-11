@@ -107,21 +107,6 @@ public:
             const word& sampleRegion,
             const mappedPatchBase::sampleMode mode,
             const word& samplePatch,
-            const vectorField& offset,
-            const polyBoundaryMesh& bm
-        );
-
-        //- Construct from components. Uniform offset.
-        mappedWallPolyPatch
-        (
-            const word& name,
-            const label size,
-            const label start,
-            const label index,
-            const word& sampleRegion,
-            const mappedPatchBase::sampleMode mode,
-            const word& samplePatch,
-            const vector& offset,
             const polyBoundaryMesh& bm
         );
 
@@ -153,16 +138,6 @@ public:
             const label newStart
         );
 
-        //- Construct given the original patch and a map
-        mappedWallPolyPatch
-        (
-            const mappedWallPolyPatch& pp,
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        );
-
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const
         {
@@ -187,29 +162,6 @@ public:
                     bm,
                     index,
                     newSize,
-                    newStart
-                )
-            );
-        }
-
-        //- Construct and return a clone, resetting the face list
-        //  and boundary mesh
-        virtual autoPtr<polyPatch> clone
-        (
-            const polyBoundaryMesh& bm,
-            const label index,
-            const labelUList& mapAddressing,
-            const label newStart
-        ) const
-        {
-            return autoPtr<polyPatch>
-            (
-                new mappedWallPolyPatch
-                (
-                    *this,
-                    bm,
-                    index,
-                    mapAddressing,
                     newStart
                 )
             );

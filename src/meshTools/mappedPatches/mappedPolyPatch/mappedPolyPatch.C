@@ -63,56 +63,6 @@ Foam::mappedPolyPatch::mappedPolyPatch
 Foam::mappedPolyPatch::mappedPolyPatch
 (
     const word& name,
-    const label size,
-    const label start,
-    const label index,
-    const word& sampleRegion,
-    const mappedPatchBase::sampleMode mode,
-    const word& samplePatch,
-    const vectorField& offset,
-    const polyBoundaryMesh& bm
-)
-:
-    polyPatch(name, size, start, index, bm, typeName),
-    mappedPatchBase
-    (
-        static_cast<const polyPatch&>(*this),
-        sampleRegion,
-        mode,
-        samplePatch,
-        offset
-    )
-{}
-
-
-Foam::mappedPolyPatch::mappedPolyPatch
-(
-    const word& name,
-    const label size,
-    const label start,
-    const label index,
-    const word& sampleRegion,
-    const mappedPatchBase::sampleMode mode,
-    const word& samplePatch,
-    const vector& offset,
-    const polyBoundaryMesh& bm
-)
-:
-    polyPatch(name, size, start, index, bm, typeName),
-    mappedPatchBase
-    (
-        static_cast<const polyPatch&>(*this),
-        sampleRegion,
-        mode,
-        samplePatch,
-        offset
-    )
-{}
-
-
-Foam::mappedPolyPatch::mappedPolyPatch
-(
-    const word& name,
     const dictionary& dict,
     const label index,
     const polyBoundaryMesh& bm,
@@ -152,20 +102,6 @@ Foam::mappedPolyPatch::mappedPolyPatch
 :
     polyPatch(pp, bm, index, newSize, newStart),
     mappedPatchBase(*this, pp)
-{}
-
-
-Foam::mappedPolyPatch::mappedPolyPatch
-(
-    const mappedPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    polyPatch(pp, bm, index, mapAddressing, newStart),
-    mappedPatchBase(*this, pp, mapAddressing)
 {}
 
 

@@ -132,20 +132,6 @@ Foam::nonConformalErrorPolyPatch::nonConformalErrorPolyPatch
 {}
 
 
-Foam::nonConformalErrorPolyPatch::nonConformalErrorPolyPatch
-(
-    const nonConformalErrorPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    polyPatch(pp, bm, index, mapAddressing, newStart),
-    nonConformalPolyPatch(*this, pp)
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::nonConformalErrorPolyPatch::~nonConformalErrorPolyPatch()

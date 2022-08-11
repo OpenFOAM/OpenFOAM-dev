@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,6 @@ namespace Foam
 {
 namespace sampledSurfaces
 {
-
     defineTypeNameAndDebug(patchInternalField, 0);
     addToRunTimeSelectionTable(sampledSurface, patchInternalField, word);
 }
@@ -51,79 +50,32 @@ Foam::sampledSurfaces::patchInternalField::patchInternalField
     patch(name, mesh, dict),
     mappers_(patchIDs().size())
 {
-    mappedPatchBase::offsetMode mode = mappedPatchBase::NORMAL;
-    if (dict.found("offsetMode"))
+    dictionary mappersDict(dict);
+
+    // Add the sample mode (i.e., nearest cell)
+    mappersDict.add
+    (
+        "sampleMode",
+        mappedPatchBase::sampleModeNames_[mappedPatchBase::NEARESTCELL]
+    );
+
+    // Negate the distance so that we sample cells inside the patch
+    if (dict.found("distance"))
     {
-        mode = mappedPatchBase::offsetModeNames_.read
-        (
-            dict.lookup("offsetMode")
-        );
+        mappersDict.set("distance", -mappersDict.lookup<scalar>("distance"));
     }
 
-    switch (mode)
+    forAll(patchIDs(), i)
     {
-        case mappedPatchBase::NORMAL:
-        {
-            const scalar distance = dict.lookup<scalar>("distance");
-            forAll(patchIDs(), i)
-            {
-                mappers_.set
-                (
-                    i,
-                    new mappedPatchBase
-                    (
-                        mesh.boundaryMesh()[patchIDs()[i]],
-                        mesh.name(),                        // sampleRegion
-                        mappedPatchBase::NEARESTCELL,       // sampleMode
-                        word::null,                         // samplePatch
-                        -distance                  // sample inside my domain
-                    )
-                );
-            }
-        }
-        break;
-
-        case mappedPatchBase::UNIFORM:
-        {
-            const point offset(dict.lookup("offset"));
-            forAll(patchIDs(), i)
-            {
-                mappers_.set
-                (
-                    i,
-                    new mappedPatchBase
-                    (
-                        mesh.boundaryMesh()[patchIDs()[i]],
-                        mesh.name(),                        // sampleRegion
-                        mappedPatchBase::NEARESTCELL,       // sampleMode
-                        word::null,                         // samplePatch
-                        offset                  // sample inside my domain
-                    )
-                );
-            }
-        }
-        break;
-
-        case mappedPatchBase::NONUNIFORM:
-        {
-            const pointField offsets(dict.lookup("offsets"));
-            forAll(patchIDs(), i)
-            {
-                mappers_.set
-                (
-                    i,
-                    new mappedPatchBase
-                    (
-                        mesh.boundaryMesh()[patchIDs()[i]],
-                        mesh.name(),                        // sampleRegion
-                        mappedPatchBase::NEARESTCELL,       // sampleMode
-                        word::null,                         // samplePatch
-                        offsets                  // sample inside my domain
-                    )
-                );
-            }
-        }
-        break;
+        mappers_.set
+        (
+            i,
+            new mappedPatchBase
+            (
+                mesh.boundaryMesh()[patchIDs()[i]],
+                mappersDict
+            )
+        );
     }
 }
 

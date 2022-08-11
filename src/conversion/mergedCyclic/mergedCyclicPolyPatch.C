@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,19 +85,6 @@ Foam::mergedCyclicPolyPatch::mergedCyclicPolyPatch
 )
 :
     polyPatch(pp, bm, index, newSize, newStart)
-{}
-
-
-Foam::mergedCyclicPolyPatch::mergedCyclicPolyPatch
-(
-    const mergedCyclicPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const labelUList& mapAddressing,
-    const label newStart
-)
-:
-    polyPatch(pp, bm, index, mapAddressing, newStart)
 {}
 
 
