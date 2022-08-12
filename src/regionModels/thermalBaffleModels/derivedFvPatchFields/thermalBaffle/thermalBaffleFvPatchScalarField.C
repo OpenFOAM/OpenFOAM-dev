@@ -94,7 +94,7 @@ void thermalBaffleFvPatchScalarField::checkPatches() const
     checkPatchMapsDifferentRegion(mpp);
     checkPatchMapsDifferentRegion(nbrMpp);
 
-    // The sample region of this patch and it's neighbour should be the same,
+    // The sample region of this patch and its neighbour should be the same,
     // i.e., that of the thermal baffle model
     if (mpp.sampleRegion() != nbrMpp.sampleRegion())
     {
@@ -109,7 +109,7 @@ void thermalBaffleFvPatchScalarField::checkPatches() const
             << exit(FatalError);
     }
 
-    // The sample patch of this patch and it's neighbour should be different,
+    // The sample patch of this patch and its neighbour should be different,
     // i.e., they should sample opposite ends of the thermal baffle mesh
     if (mpp.samplePatch() == nbrMpp.samplePatch())
     {

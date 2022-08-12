@@ -22,7 +22,7 @@
   permission for the directory that Doxygen writes files to.
 
 * Configuration
-  The Doygen configuration file, Doxyfile, in the =$WM_PROJECT_DIR/doc/Doxygen=
+  The Doxygen configuration file, Doxyfile, in the =$WM_PROJECT_DIR/doc/Doxygen=
   directory is configured to work with Doxygen versions 1.6.3-1.8.5.
 
   The Header, Footer, and Stylesheet are generated automatically:

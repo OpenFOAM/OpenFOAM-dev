@@ -77,7 +77,7 @@ Ostream& operator<<(Ostream& os, const FixedList<FixedList<Type, 3>, 3>& l)
 
 
 //- Clip the given vector between values of 0 and 1, and also clip one minus
-//  it's component sum. Clipping is applied to groups of components. It is done
+//  its component sum. Clipping is applied to groups of components. It is done
 //  by moving the value linearly towards the value where all components in the
 //  group, and one minus their sum, share the same value.
 vector clipped01(const vector x, const FixedList<label, 3> groups)

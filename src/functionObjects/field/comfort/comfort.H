@@ -132,7 +132,7 @@ class comfort
         //- Maximum number of correctors for cloth temperature
         int maxClothIter_;
 
-        //- Switch to use volume weighted velocity field for caluclation
+        //- Switch to use volume weighted velocity field for calculation
         Switch meanVelocity_;
 
 

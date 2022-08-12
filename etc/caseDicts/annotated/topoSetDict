@@ -128,7 +128,7 @@ set p0;
 option any;         // cell with any point in pointSet
 // option edge;      // cell with an edge with both points in pointSet
 
-// cellSet baed on shape of cells
+// cellSet based on shape of cells
 source shapeToCell;
 type hex;           // hex/wedge/prism/pyr/tet/tetWedge/splitHex
 

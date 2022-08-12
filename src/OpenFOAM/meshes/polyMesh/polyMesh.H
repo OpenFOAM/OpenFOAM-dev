@@ -407,7 +407,7 @@ public:
             fileName meshDir() const;
 
             //- Return the current instance directory for points
-            //  Used in the construction of gemometric mesh data dependent
+            //  Used in the construction of geometric mesh data dependent
             //  on points
             const fileName& pointsInstance() const;
 

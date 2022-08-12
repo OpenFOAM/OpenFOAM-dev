@@ -77,7 +77,7 @@ private:
        //- first_ points to first element and last_ points to last element.
        link *first_, *last_;
 
-       //- Number of elements in in list
+       //- Number of elements in list
        label nElmts_;
 
 

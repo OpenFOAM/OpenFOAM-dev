@@ -478,7 +478,7 @@ Foam::chemistryModel<ThermoType>::tc() const
                 c_[i] = rhoi*Yvf_[i][celli]/specieThermos_[i].W();
             }
 
-            // A reaction's rate scale is calculated as it's molar
+            // A reaction's rate scale is calculated as its molar
             // production rate divided by the total number of moles in the
             // system.
             //

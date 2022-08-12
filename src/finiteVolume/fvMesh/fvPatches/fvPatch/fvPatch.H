@@ -226,9 +226,9 @@ public:
             //- Return patch weighting factors
             const scalarField& weights() const;
 
-            //- Return the face - cell distance coeffient
+            //- Return the face - cell distance coefficient
             //  except for coupled patches for which the cell-centre
-            //  to coupled-cell-centre distance coeffient is returned
+            //  to coupled-cell-centre distance coefficient is returned
             const scalarField& deltaCoeffs() const;
 
 

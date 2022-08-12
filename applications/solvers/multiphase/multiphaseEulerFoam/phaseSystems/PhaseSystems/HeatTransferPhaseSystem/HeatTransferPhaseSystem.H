@@ -163,7 +163,7 @@ public:
     // Member Functions
 
         //- Return the latent heat for a given interface, mass transfer rate
-        //  (used only for it's sign), and interface temperature
+        //  (used only for its sign), and interface temperature
         virtual tmp<volScalarField> L
         (
             const phaseInterface& interface,
@@ -183,7 +183,7 @@ public:
         ) const;
 
         //- Return the latent heat for a given interface, specie, mass transfer
-        //  rate (used only for it's sign), and interface temperature
+        //  rate (used only for its sign), and interface temperature
         virtual tmp<volScalarField> Li
         (
             const phaseInterface& interface,

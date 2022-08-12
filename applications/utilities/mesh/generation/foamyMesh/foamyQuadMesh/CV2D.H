@@ -198,14 +198,14 @@ class CV2D
 
     // Private Member Functions
 
-        //- Insert point and return it's index
+        //- Insert point and return its index
         inline label insertPoint
         (
             const point2D& pt,
             const label type
         );
 
-        //- Insert point and return it's index
+        //- Insert point and return its index
         inline label insertPoint
         (
             const point2D& pt,
@@ -288,7 +288,7 @@ class CV2D
         );
 
         //- Insert point-pair at the best intersection point between the lines
-        //  from the dual-cell real centroid and it's vertices and the surface.
+        //  from the dual-cell real centroid and its vertices and the surface.
         bool insertPointPairAtIntersection
         (
             Triangulation::Finite_vertices_iterator& vit,
