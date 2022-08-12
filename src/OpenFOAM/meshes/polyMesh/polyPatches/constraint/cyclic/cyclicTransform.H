@@ -154,7 +154,6 @@ public:
         );
 
 
-
     // Destructor
     virtual ~cyclicTransform();
 

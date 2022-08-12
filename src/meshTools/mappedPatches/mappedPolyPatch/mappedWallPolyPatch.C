@@ -178,9 +178,7 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::mappedWallPolyPatch::~mappedWallPolyPatch()
-{
-    mappedPatchBase::clearOut();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
