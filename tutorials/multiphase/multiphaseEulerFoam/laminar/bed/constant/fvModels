@@ -18,7 +18,6 @@ massSource
 {
     type            massSource;
 
-    selectionMode   points;
     points          ((0.075 0.925 0.05));
 
     massFlowRate

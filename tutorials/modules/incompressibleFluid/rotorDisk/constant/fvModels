@@ -17,7 +17,6 @@ disk
 {
     type            rotorDisk;
 
-    selectionMode   cellZone;
     cellZone        rotatingZone;
 
     nBlades         3;      // Number of blades

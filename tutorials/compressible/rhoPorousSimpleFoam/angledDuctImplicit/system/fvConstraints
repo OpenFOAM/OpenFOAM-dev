@@ -26,7 +26,6 @@ source1
 {
     type            fixedTemperatureConstraint;
 
-    selectionMode   cellZone;
     cellZone        porosity;
 
     mode            uniform;

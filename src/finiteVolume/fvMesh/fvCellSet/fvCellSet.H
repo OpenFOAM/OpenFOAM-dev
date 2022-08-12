@@ -25,33 +25,36 @@ Class
     Foam::fv::fvCellSet
 
 Description
-    Cell-set fvConstraint abstract base class. Provides a base set of controls
-    regarding the location where the fvConstraint is applied.
+    General cell set selection class for models that apply to sub-sets
+    of the mesh.
+
+    Currently supports cell selection from a set of points, a specified cellSet
+    or cellZone or all of the cells.  The selection method can either be
+    specified explicitly using the \c selectionMode entry or inferred from the
+    presence of either a \c cellSet, \c cellZone or \c points entry.  The \c
+    selectionMode entry is required to select \c all cells.
 
 Usage
-    Example usage:
+    Examples:
     \verbatim
-    constraint1
-    {
-        type            <constraintType>
-
         // Apply everywhere
         selectionMode   all;
 
-        // // Apply within a given cell set
-        // selectionMode   cellSet;
-        // cellSet         c0;
+        // Apply within a given cellSet
+        selectionMode   cellSet; // Optional
+        cellSet         rotor;
 
-        // // Apply in cells containing a list of points
-        // selectionMode   points;
-        // points
-        // (
-        //     (2.25 0.5 0)
-        //     (2.75 0.5 0)
-        // );
+        // Apply within a given cellZone
+        selectionMode   cellZone; // Optional
+        cellSet         rotor;
 
-        ...
-    }
+        // Apply in cells containing a list of points
+        selectionMode   points; // Optional
+        points
+        (
+            (2.25 0.5 0)
+            (2.75 0.5 0)
+        );
     \endverbatim
 
 SourceFiles
@@ -130,9 +133,6 @@ private:
         //- Set the sum of scalar volumes
         void setV();
 
-        //- Set the set for the selectionMode
-        void setSet(const dictionary& dict);
-
 
 public:
 
@@ -143,14 +143,6 @@ public:
         (
             const fvMesh& mesh,
             const dictionary& dict
-        );
-
-        //- Construct from mesh, dictionary and default selectionMode
-        fvCellSet
-        (
-            const fvMesh& mesh,
-            const dictionary& dict,
-            const selectionModeType defaultSelectionMode
         );
 
 
@@ -195,13 +187,6 @@ public:
 
             //- Read coefficients dictionary
             bool read(const dictionary& dict);
-
-            //- Read coefficients dictionary and default selectionMode
-            bool read
-            (
-                const dictionary& dict,
-                const selectionModeType defaultSelectionMode
-            );
 };
 
 

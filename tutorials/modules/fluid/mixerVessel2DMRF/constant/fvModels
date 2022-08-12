@@ -20,7 +20,6 @@ porosity1
 
     explicitPorositySourceCoeffs
     {
-        selectionMode   cellZone;
         cellZone        stator;
 
         type            DarcyForchheimer;

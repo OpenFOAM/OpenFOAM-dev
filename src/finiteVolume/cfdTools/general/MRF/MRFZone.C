@@ -222,7 +222,7 @@ Foam::MRFZone::MRFZone
     mesh_(mesh),
     name_(name),
     coeffs_(dict),
-    cellSet_(mesh, coeffs_, fvCellSet::selectionModeType::cellZone),
+    cellSet_(mesh, coeffs_),
     origin_(coeffs_.lookup("origin")),
     axis_(coeffs_.lookup("axis")),
     omega_(coeffs_)

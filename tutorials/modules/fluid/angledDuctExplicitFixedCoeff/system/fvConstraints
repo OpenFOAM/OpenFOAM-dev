@@ -26,7 +26,6 @@ fixedTemperature
 {
     type            fixedTemperatureConstraint;
 
-    selectionMode   cellZone;
     cellZone        porosity;
 
     mode            uniform;
@@ -38,7 +37,6 @@ porosityTurbulence
 {
     type            fixedValueConstraint;
 
-    selectionMode   cellZone;
     cellZone        porosity;
 
     fieldValues

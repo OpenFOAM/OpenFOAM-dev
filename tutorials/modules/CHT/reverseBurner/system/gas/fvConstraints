@@ -18,7 +18,6 @@ ignition
 {
     type            fixedTemperatureConstraint;
 
-    selectionMode   cellSet;
     cellSet         ignition;
 
     mode            uniform;

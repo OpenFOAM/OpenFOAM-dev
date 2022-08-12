@@ -31,7 +31,6 @@ filter1
 
     explicitPorositySourceCoeffs
     {
-        selectionMode   cellZone;
         cellZone        filter;
 
         type            DarcyForchheimer;
@@ -57,7 +56,6 @@ massSource
 {
     type            massSource;
 
-    selectionMode   points;
     points
     (
         (2.75 0.5 0)

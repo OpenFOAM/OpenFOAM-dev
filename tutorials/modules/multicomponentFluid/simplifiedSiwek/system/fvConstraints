@@ -21,7 +21,6 @@ source1
     timeStart       0.1;
     duration        0.4;
 
-    selectionMode   cellSet;
     cellSet         ignitionCells;
 
     mode            uniform;

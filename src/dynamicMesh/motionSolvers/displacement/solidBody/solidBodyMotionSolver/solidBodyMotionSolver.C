@@ -61,10 +61,10 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
     moveAllCells_(false),
     transform_(SBMFPtr_().transformation())
 {
-    word cellZoneName =
+    const word cellZoneName =
         coeffDict().lookupOrDefault<word>("cellZone", "none");
 
-    word cellSetName =
+    const word cellSetName =
         coeffDict().lookupOrDefault<word>("cellSet", "none");
 
     if ((cellZoneName != "none") && (cellSetName != "none"))
@@ -105,7 +105,7 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
         cellIDs = set.toc();
     }
 
-    label nCells = returnReduce(cellIDs.size(), sumOp<label>());
+    const label nCells = returnReduce(cellIDs.size(), sumOp<label>());
     moveAllCells_ = nCells == 0;
 
     if (moveAllCells_)

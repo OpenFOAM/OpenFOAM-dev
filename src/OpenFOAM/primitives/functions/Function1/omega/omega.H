@@ -50,7 +50,7 @@ Usage
             origin     (0 0 0);
             axis       (0 0 1);
 
-            rpm        6.28319;
+            omega      6.28319;
         }
     \endverbatim
     or for a tabulated ramped rotational speed of a solid body:
