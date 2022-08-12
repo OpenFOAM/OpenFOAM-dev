@@ -39,13 +39,11 @@ SourceFiles
 
 #include "fvMesh.H"
 #include "timeIOdictionary.H"
-#include "regionModelFunctionObjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
 namespace regionModels
 {
 
@@ -109,9 +107,6 @@ protected:
 
         //- Region name
         word regionName_;
-
-        //- Region model function objects
-        regionModelFunctionObjectList functions_;
 
 
     // Protected member functions

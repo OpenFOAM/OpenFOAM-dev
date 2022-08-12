@@ -135,7 +135,7 @@ Usage
 
 See also
     Foam::compressible::turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
-    Foam::regionModels::thermalBaffleModels::thermalBaffleModel
+    Foam::regionModels::thermalBaffle
 
 SourceFiles
     thermalBaffleFvPatchScalarField.C
@@ -145,7 +145,7 @@ SourceFiles
 #ifndef thermalBaffleFvPatchScalarField_H
 #define thermalBaffleFvPatchScalarField_H
 
-#include "thermalBaffleModel.H"
+#include "thermalBaffle.H"
 #include "extrudePatchMesh.H"
 #include "turbulentTemperatureRadCoupledMixedFvPatchScalarField.H"
 
@@ -176,7 +176,7 @@ class thermalBaffleFvPatchScalarField
         autoPtr<extrudePatchMesh> baffleMeshPtr_;
 
         //- Thermal baffle model
-        autoPtr<regionModels::thermalBaffleModel> bafflePtr_;
+        autoPtr<regionModels::thermalBaffle> bafflePtr_;
 
 
     // Private Member Functions
@@ -197,7 +197,7 @@ class thermalBaffleFvPatchScalarField
         autoPtr<extrudePatchMesh> initBaffleMesh() const;
 
         //- Construct and return the thermal baffle model
-        autoPtr<regionModels::thermalBaffleModel> initBaffle() const;
+        autoPtr<regionModels::thermalBaffle> initBaffle() const;
 
 
 public:

@@ -244,7 +244,7 @@ thermalBaffleFvPatchScalarField::initBaffleMesh() const
 }
 
 
-autoPtr<regionModels::thermalBaffleModel>
+autoPtr<regionModels::thermalBaffle>
 thermalBaffleFvPatchScalarField::initBaffle() const
 {
     if (!owner())
@@ -264,7 +264,10 @@ thermalBaffleFvPatchScalarField::initBaffle() const
     dictionary dict(dict_);
     dict.add("regionName", mpp.sampleRegion());
 
-    return regionModels::thermalBaffleModel::New(mesh, dict);
+    return autoPtr<regionModels::thermalBaffle>
+    (
+        new regionModels::thermalBaffle("thermalBaffle", mesh, dict)
+    );
 }
 
 

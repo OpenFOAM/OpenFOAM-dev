@@ -45,6 +45,6 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-libs            ("libthermalBaffleModels.so");
+libs            ("libthermalBaffle.so");
 
 // ************************************************************************* //

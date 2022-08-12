@@ -267,8 +267,7 @@ Foam::regionModels::regionModel::regionModel
     outputPropertiesPtr_(nullptr),
     primaryPatchIDs_(),
     intCoupledPatchIDs_(),
-    regionName_("none"),
-    functions_(*this)
+    regionName_("none")
 {}
 
 
@@ -300,8 +299,7 @@ Foam::regionModels::regionModel::regionModel
     outputPropertiesPtr_(nullptr),
     primaryPatchIDs_(),
     intCoupledPatchIDs_(),
-    regionName_(lookup("regionName")),
-    functions_(*this, subOrEmptyDict("functions"))
+    regionName_(lookup("regionName"))
 {
     constructMeshObjects();
     initialise();
@@ -344,8 +342,7 @@ Foam::regionModels::regionModel::regionModel
     outputPropertiesPtr_(nullptr),
     primaryPatchIDs_(),
     intCoupledPatchIDs_(),
-    regionName_(dict.lookup("regionName")),
-    functions_(*this, subOrEmptyDict("functions"))
+    regionName_(dict.lookup("regionName"))
 {
     constructMeshObjects();
     initialise();
@@ -398,9 +395,7 @@ void Foam::regionModels::regionModel::evolve()
 
 
 void Foam::regionModels::regionModel::preEvolveRegion()
-{
-    functions_.preEvolveRegion();
-}
+{}
 
 
 void Foam::regionModels::regionModel::evolveRegion()
@@ -408,9 +403,7 @@ void Foam::regionModels::regionModel::evolveRegion()
 
 
 void Foam::regionModels::regionModel::postEvolveRegion()
-{
-    functions_.postEvolveRegion();
-}
+{}
 
 
 void Foam::regionModels::regionModel::info()
