@@ -35,6 +35,8 @@ Usage
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
         tangentialVelocity | tangential velocity field | no  |
+        origin       | origin of rotation in Cartesian co-ordinates | yes|
+        axis         | axis of rotation        | yes         |
         omega        | angular velocity of the frame [rad/s] | yes    |
     \endtable
 
@@ -45,6 +47,8 @@ Usage
         type            rotatingPressureInletOutletVelocity;
         phi             phi;
         tangentialVelocity uniform (0 0 0);
+        origin          (0 0 0);
+        axis            (0 0 1);
         omega           100;
     }
     \endverbatim
@@ -89,8 +93,14 @@ class rotatingPressureInletOutletVelocityFvPatchVectorField
 {
     // Private Data
 
+        //- Origin of the rotation
+        vector origin_;
+
+        //- Axis of the rotation
+        vector axis_;
+
         //- Angular velocity of the frame
-        autoPtr<Function1<vector>> omega_;
+        autoPtr<Function1<scalar>> omega_;
 
 
     // Private Member Functions

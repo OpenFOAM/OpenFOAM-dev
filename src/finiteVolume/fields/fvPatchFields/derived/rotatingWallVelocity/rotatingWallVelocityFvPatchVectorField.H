@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,33 +152,6 @@ public:
 
 
     // Member Functions
-
-        // Access functions
-
-            //- Return the origin of the rotation
-            const vector& origin() const
-            {
-                return origin_;
-            }
-
-            //- Return the axis of the rotation
-            const vector& axis() const
-            {
-                return axis_;
-            }
-
-            //- Return non-const access to the origin of the rotation
-            vector& origin()
-            {
-                return origin_;
-            }
-
-            //- Return non-const access to the axis of the rotation
-            vector& axis()
-            {
-                return axis_;
-            }
-
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
