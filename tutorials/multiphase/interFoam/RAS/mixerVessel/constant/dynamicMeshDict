@@ -28,7 +28,8 @@ mover
 
     origin        (0 0 0);
     axis          (0 0 1);
-    omega         -5; // 5 rad/s
+
+    rpm           -50;
 }
 
 

@@ -29,7 +29,6 @@ License
 #include "volFields.H"
 #include "fvMatrices.H"
 #include "geometricOneField.H"
-#include "Scale.H"
 #include "faceSet.H"
 #include "syncTools.H"
 
@@ -226,25 +225,7 @@ Foam::MRFZone::MRFZone
     cellSet_(mesh, coeffs_, fvCellSet::selectionModeType::cellZone),
     origin_(coeffs_.lookup("origin")),
     axis_(coeffs_.lookup("axis")),
-    omega_
-    (
-        coeffs_.found("omega")
-      ? Function1<scalar>::New("omega", coeffs_)
-      : autoPtr<Function1<scalar>>
-        (
-            new Function1s::Scale<scalar>
-            (
-                "omega",
-                Function1s::Constant<scalar>
-                (
-                    "piby30",
-                    constant::mathematical::pi/30.0
-                ),
-                Function1s::Constant<scalar>("1", 1),
-                Function1<scalar>::New("rpm", coeffs_)()
-            )
-        )
-    )
+    omega_(coeffs_)
 {
     axis_ = axis_/mag(axis_);
     setMRFFaces();
@@ -255,7 +236,7 @@ Foam::MRFZone::MRFZone
 
 Foam::vector Foam::MRFZone::Omega() const
 {
-    return omega_->value(mesh_.time().userTimeValue())*axis_;
+    return omega_.value(mesh_.time().userTimeValue())*axis_;
 }
 
 

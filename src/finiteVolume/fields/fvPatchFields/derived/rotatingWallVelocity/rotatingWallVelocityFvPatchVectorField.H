@@ -35,7 +35,8 @@ Usage
         Property     | Description             | Required    | Default value
         origin       | origin of rotation in Cartesian co-ordinates | yes|
         axis         | axis of rotation        | yes         |
-        omega        | angular velocity of the frame [rad/s] | yes    |
+        omega        | angular velocity of the frame [rad/s] | no |
+        rpm          | angular velocity of the frame [rpm]   | no |
     \endtable
 
     Example of the boundary condition specification:
@@ -45,11 +46,11 @@ Usage
         type            rotatingWallVelocity;
         origin          (0 0 0);
         axis            (0 0 1);
-        omega           100;
+        rpm             100;
     }
     \endverbatim
 
-    The \c omega entry is a Function1 of time, see Foam::Function1s.
+    The \c omega or \c rpm entries are Function1 of time, see Foam::Function1s.
 
 See also
     Foam::fixedValueFvPatchField
@@ -64,7 +65,7 @@ SourceFiles
 #define rotatingWallVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "Function1.H"
+#include "omega.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -88,7 +89,7 @@ class rotatingWallVelocityFvPatchVectorField
         vector axis_;
 
         //- Rotational speed
-        autoPtr<Function1<scalar>> omega_;
+        Function1s::omega omega_;
 
 
 public:

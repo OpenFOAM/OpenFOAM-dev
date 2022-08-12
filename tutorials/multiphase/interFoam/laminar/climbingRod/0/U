@@ -25,7 +25,7 @@ boundaryField
         type            rotatingWallVelocity;
         axis            (0 1 0);
         origin          (0 0 0);
-        omega           constant 13.2; // 2.1 rev/s
+        rpm             126;
         value           uniform (0 0 0);
     }
     vessel

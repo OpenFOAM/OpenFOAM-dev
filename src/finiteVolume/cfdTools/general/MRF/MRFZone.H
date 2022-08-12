@@ -42,7 +42,7 @@ SourceFiles
 #include "fvCellSet.H"
 #include "volFieldsFwd.H"
 #include "surfaceFields.H"
-#include "Function1.H"
+#include "omega.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,7 +82,7 @@ class MRFZone
         vector axis_;
 
         //- Angular velocity (rad/sec or rpm)
-        autoPtr<Function1<scalar>> omega_;
+        Function1s::omega omega_;
 
 
     // Private Member Functions

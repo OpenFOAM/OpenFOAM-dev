@@ -39,7 +39,8 @@ Usage
         p0           | static pressure reference | yes       |
         origin       | origin of rotation in Cartesian co-ordinates | yes|
         axis         | axis of rotation        | yes         |
-        omega        | angular velocity of the frame [rad/s] | yes    |
+        omega        | angular velocity of the frame [rad/s] | no |
+        rpm          | angular velocity of the frame [rpm]   | no |
     \endtable
 
     Example of the boundary condition specification:
@@ -55,12 +56,11 @@ Usage
         p0              uniform 1e5;
         origin          (0 0 0);
         axis            (0 0 1);
-        omega           100;
+        rpm             100;
     }
     \endverbatim
 
-    The \c omega entry is a Function1 type, able to describe time varying
-    functions.
+    The \c omega or \c rpm entries are Function1 of time, see Foam::Function1s.
 
 See also
     Foam::totalPressureFvPatchScalarField
@@ -75,7 +75,7 @@ SourceFiles
 #define rotatingTotalPressureFvPatchScalarField_H
 
 #include "totalPressureFvPatchScalarField.H"
-#include "Function1.H"
+#include "omega.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -98,8 +98,8 @@ class rotatingTotalPressureFvPatchScalarField
         //- Axis of the rotation
         vector axis_;
 
-        //- Angular velocity of the frame
-        const autoPtr<Function1<scalar>> omega_;
+        //- Angular velocity of the frame (rad/sec)
+        Function1s::omega omega_;
 
 
 public:

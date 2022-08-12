@@ -34,7 +34,8 @@ mover
 
             origin        (0 0 0);
             axis          (0 0 1);
-            omega         6.2832; // rad/s
+
+            rpm           60;
         }
 
         stator
@@ -47,7 +48,8 @@ mover
 
             origin        (0 0 0);
             axis          (0 0 -1);
-            omega         6.2832; // rad/s
+
+            rpm           60;
         }
     };
 }

@@ -37,7 +37,8 @@ Usage
         tangentialVelocity | tangential velocity field | no  |
         origin       | origin of rotation in Cartesian co-ordinates | yes|
         axis         | axis of rotation        | yes         |
-        omega        | angular velocity of the frame [rad/s] | yes    |
+        omega        | angular velocity of the frame [rad/s] | no |
+        rpm          | angular velocity of the frame [rpm]   | no |
     \endtable
 
     Example of the boundary condition specification:
@@ -49,12 +50,11 @@ Usage
         tangentialVelocity uniform (0 0 0);
         origin          (0 0 0);
         axis            (0 0 1);
-        omega           100;
+        rpm             100;
     }
     \endverbatim
 
-    The \c omega entry is a Function1 type, able to describe time varying
-    functions.
+    The \c omega or \c rpm entries are Function1 of time, see Foam::Function1s.
 
     Note:
         Sign conventions:
@@ -76,7 +76,7 @@ SourceFiles
 
 #include "fvPatchFields.H"
 #include "pressureInletOutletVelocityFvPatchVectorField.H"
-#include "Function1.H"
+#include "omega.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -99,8 +99,8 @@ class rotatingPressureInletOutletVelocityFvPatchVectorField
         //- Axis of the rotation
         vector axis_;
 
-        //- Angular velocity of the frame
-        autoPtr<Function1<scalar>> omega_;
+        //- Angular velocity of the frame (rad/sec)
+        Function1s::omega omega_;
 
 
     // Private Member Functions

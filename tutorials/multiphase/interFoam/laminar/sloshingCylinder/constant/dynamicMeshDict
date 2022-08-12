@@ -41,7 +41,7 @@ mover
         {
             origin        (0 0.02 0);
             axis          (0 0 1);
-            omega         18.8945578;
+            rpm           180;
         }
     }
 }

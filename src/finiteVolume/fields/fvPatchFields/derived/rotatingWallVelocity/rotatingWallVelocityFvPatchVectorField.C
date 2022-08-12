@@ -39,8 +39,7 @@ rotatingWallVelocityFvPatchVectorField
 :
     fixedValueFvPatchField<vector>(p, iF),
     origin_(),
-    axis_(Zero),
-    omega_(0)
+    axis_(Zero)
 {}
 
 
@@ -55,7 +54,7 @@ rotatingWallVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(p, iF, dict, false),
     origin_(dict.lookup("origin")),
     axis_(dict.lookup("axis")),
-    omega_(Function1<scalar>::New("omega", dict))
+    omega_(dict)
 {
     if (dict.found("value"))
     {
@@ -84,7 +83,7 @@ rotatingWallVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(pvf, p, iF, mapper),
     origin_(pvf.origin_),
     axis_(pvf.axis_),
-    omega_(pvf.omega_, false)
+    omega_(pvf.omega_)
 {}
 
 
@@ -98,7 +97,7 @@ rotatingWallVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(pvf, iF),
     origin_(pvf.origin_),
     axis_(pvf.axis_),
-    omega_(pvf.omega_, false)
+    omega_(pvf.omega_)
 {}
 
 
@@ -112,7 +111,7 @@ void Foam::rotatingWallVelocityFvPatchVectorField::updateCoeffs()
     }
 
     const scalar t = this->db().time().userTimeValue();
-    const scalar omega = omega_->value(t);
+    const scalar omega = omega_.value(t);
 
     // Calculate the rotating wall velocity from the specification of the motion
     const vectorField Up
@@ -134,7 +133,7 @@ void Foam::rotatingWallVelocityFvPatchVectorField::write(Ostream& os) const
     fvPatchVectorField::write(os);
     writeEntry(os, "origin", origin_);
     writeEntry(os, "axis", axis_);
-    writeEntry(os, omega_());
+    writeEntry(os, omega_);
     writeEntry(os, "value", *this);
 }
 

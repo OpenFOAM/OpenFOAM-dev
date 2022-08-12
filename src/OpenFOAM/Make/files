@@ -101,6 +101,7 @@ primitives/functions/Function1/squarePulse/squarePulse.C
 primitives/functions/Function1/Table/tableBase.C
 primitives/functions/Function1/Table/TableReader/makeTableReaders.C
 primitives/functions/Function1/unknownTypeFunction1/unknownTypeFunction1.C
+primitives/functions/Function1/omega/omega.C
 
 primitives/functions/Function2/makeFunction2s.C
 

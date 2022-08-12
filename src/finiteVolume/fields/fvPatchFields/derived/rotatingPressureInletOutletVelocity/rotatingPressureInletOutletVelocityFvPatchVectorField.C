@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rotatingPressureInletOutletVelocityFvPatchVectorField.H"
-#include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -34,7 +34,7 @@ void Foam::rotatingPressureInletOutletVelocityFvPatchVectorField::
 calcTangentialVelocity()
 {
     const scalar t = this->db().time().userTimeValue();
-    const scalar omega = omega_->value(t);
+    const scalar omega = omega_.value(t);
 
     const vectorField tangentialVelocity
     (
@@ -58,8 +58,7 @@ rotatingPressureInletOutletVelocityFvPatchVectorField
 :
     pressureInletOutletVelocityFvPatchVectorField(p, iF),
     origin_(),
-    axis_(Zero),
-    omega_()
+    axis_(Zero)
 {}
 
 
@@ -74,7 +73,7 @@ rotatingPressureInletOutletVelocityFvPatchVectorField
     pressureInletOutletVelocityFvPatchVectorField(p, iF, dict),
     origin_(dict.lookup("origin")),
     axis_(dict.lookup("axis")),
-    omega_(Function1<scalar>::New("omega", dict))
+    omega_(dict)
 {
     calcTangentialVelocity();
 }
@@ -92,7 +91,7 @@ rotatingPressureInletOutletVelocityFvPatchVectorField
     pressureInletOutletVelocityFvPatchVectorField(pvf, p, iF, mapper),
     origin_(pvf.origin_),
     axis_(pvf.axis_),
-    omega_(pvf.omega_, false)
+    omega_(pvf.omega_)
 {
     calcTangentialVelocity();
 }
@@ -108,7 +107,7 @@ rotatingPressureInletOutletVelocityFvPatchVectorField
     pressureInletOutletVelocityFvPatchVectorField(pvf, iF),
     origin_(pvf.origin_),
     axis_(pvf.axis_),
-    omega_(pvf.omega_, false)
+    omega_(pvf.omega_)
 {
     calcTangentialVelocity();
 }
@@ -125,7 +124,7 @@ void Foam::rotatingPressureInletOutletVelocityFvPatchVectorField::write
     writeEntry(os, "phi", phiName());
     writeEntry(os, "origin", origin_);
     writeEntry(os, "axis", axis_);
-    writeEntry(os, omega_());
+    writeEntry(os, omega_);
     writeEntry(os, "value", *this);
 }
 

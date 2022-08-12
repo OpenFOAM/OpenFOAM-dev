@@ -50,7 +50,7 @@ boundaryField
         type            rotatingWallVelocity;
         origin          (0 0 0);
         axis            (0 0 1);
-        omega           constant -5;
+        rpm             -50;
         value           $internalField;
     }
 

@@ -40,8 +40,7 @@ rotatingTotalPressureFvPatchScalarField
 :
     totalPressureFvPatchScalarField(p, iF),
     origin_(),
-    axis_(Zero),
-    omega_()
+    axis_(Zero)
 {}
 
 
@@ -56,7 +55,7 @@ rotatingTotalPressureFvPatchScalarField
     totalPressureFvPatchScalarField(p, iF, dict),
     origin_(dict.lookup("origin")),
     axis_(dict.lookup("axis")),
-    omega_(Function1<scalar>::New("omega", dict))
+    omega_(dict)
 {}
 
 
@@ -72,7 +71,7 @@ rotatingTotalPressureFvPatchScalarField
     totalPressureFvPatchScalarField(psf, p, iF, mapper),
     origin_(psf.origin_),
     axis_(psf.axis_),
-    omega_(psf.omega_, false)
+    omega_(psf.omega_)
 {}
 
 
@@ -86,7 +85,7 @@ rotatingTotalPressureFvPatchScalarField
     totalPressureFvPatchScalarField(psf, iF),
     origin_(psf.origin_),
     axis_(psf.axis_),
-    omega_(psf.omega_, false)
+    omega_(psf.omega_)
 {}
 
 
@@ -100,7 +99,7 @@ void Foam::rotatingTotalPressureFvPatchScalarField::updateCoeffs()
     }
 
     const scalar t = this->db().time().userTimeValue();
-    const scalar omega = omega_->value(t);
+    const scalar omega = omega_.value(t);
 
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
@@ -124,7 +123,7 @@ void Foam::rotatingTotalPressureFvPatchScalarField::write(Ostream& os) const
     totalPressureFvPatchScalarField::write(os);
     writeEntry(os, "origin", origin_);
     writeEntry(os, "axis", axis_);
-    writeEntry(os, omega_());
+    writeEntry(os, omega_);
 }
 
 
