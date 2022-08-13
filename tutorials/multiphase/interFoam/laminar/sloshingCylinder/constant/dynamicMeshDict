@@ -22,6 +22,8 @@ mover
 
     motionSolver    solidBody;
 
+    selectionMode   all;
+
     solidBodyMotionFunction multiMotion;
 
     oscillation

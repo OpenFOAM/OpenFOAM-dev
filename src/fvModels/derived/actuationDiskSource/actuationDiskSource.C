@@ -138,18 +138,15 @@ void Foam::fv::actuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (set_.V() > vSmall)
-    {
-        addActuationDiskAxialInertialResistance
-        (
-            Usource,
-            set_.cells(),
-            cellsV,
-            geometricOneField(),
-            geometricOneField(),
-            U
-        );
-    }
+    addActuationDiskAxialInertialResistance
+    (
+        Usource,
+        set_.cells(),
+        cellsV,
+        geometricOneField(),
+        geometricOneField(),
+        U
+    );
 }
 
 
@@ -164,18 +161,15 @@ void Foam::fv::actuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (set_.V() > vSmall)
-    {
-        addActuationDiskAxialInertialResistance
-        (
-            Usource,
-            set_.cells(),
-            cellsV,
-            geometricOneField(),
-            rho,
-            U
-        );
-    }
+    addActuationDiskAxialInertialResistance
+    (
+        Usource,
+        set_.cells(),
+        cellsV,
+        geometricOneField(),
+        rho,
+        U
+    );
 }
 
 
@@ -191,18 +185,15 @@ void Foam::fv::actuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (set_.V() > vSmall)
-    {
-        addActuationDiskAxialInertialResistance
-        (
-            Usource,
-            set_.cells(),
-            cellsV,
-            alpha,
-            rho,
-            U
-        );
-    }
+    addActuationDiskAxialInertialResistance
+    (
+        Usource,
+        set_.cells(),
+        cellsV,
+        alpha,
+        rho,
+        U
+    );
 }
 
 

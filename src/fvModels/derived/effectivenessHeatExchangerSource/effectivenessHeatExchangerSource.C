@@ -289,7 +289,7 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
     }
     reduce(sumWeight, sumOp<scalar>());
 
-    if (set_.V() > vSmall && mag(Qt) > vSmall)
+    if (mag(Qt) > vSmall)
     {
         scalarField& heSource = eqn.source();
 

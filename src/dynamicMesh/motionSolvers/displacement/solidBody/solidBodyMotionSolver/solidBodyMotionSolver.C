@@ -24,13 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "solidBodyMotionSolver.H"
-#include "addToRunTimeSelectionTable.H"
+#include "polyCellSet.H"
 #include "transformField.H"
-#include "meshCellZones.H"
-#include "cellSet.H"
-#include "boolList.H"
 #include "syncTools.H"
 #include "polyTopoChangeMap.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -61,52 +59,10 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
     moveAllCells_(false),
     transform_(SBMFPtr_().transformation())
 {
-    const word cellZoneName =
-        coeffDict().lookupOrDefault<word>("cellZone", "none");
+    const labelList cellIDs(polyCellSet(mesh, dict).cells());
 
-    const word cellSetName =
-        coeffDict().lookupOrDefault<word>("cellSet", "none");
-
-    if ((cellZoneName != "none") && (cellSetName != "none"))
-    {
-        FatalIOErrorInFunction(coeffDict())
-            << "Either cellZone OR cellSet can be supplied, but not both. "
-            << "If neither is supplied, all cells will be included"
-            << exit(FatalIOError);
-    }
-
-    labelList cellIDs;
-    if (cellZoneName != "none")
-    {
-        Info<< "Applying solid body motion to cellZone " << cellZoneName
-            << endl;
-
-        label zoneID = mesh.cellZones().findZoneID(cellZoneName);
-
-        if (zoneID == -1)
-        {
-            FatalErrorInFunction
-                << "Unable to find cellZone " << cellZoneName
-                << ".  Valid cellZones are:"
-                << mesh.cellZones().names()
-                << exit(FatalError);
-        }
-
-        cellIDs = mesh.cellZones()[zoneID];
-    }
-
-    if (cellSetName != "none")
-    {
-        Info<< "Applying solid body motion to cellSet " << cellSetName
-            << endl;
-
-        cellSet set(mesh, cellSetName);
-
-        cellIDs = set.toc();
-    }
-
-    const label nCells = returnReduce(cellIDs.size(), sumOp<label>());
-    moveAllCells_ = nCells == 0;
+    moveAllCells_ =
+        returnReduce(cellIDs.size() == mesh.nCells(), andOp<bool>());
 
     if (moveAllCells_)
     {
@@ -120,15 +76,13 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
 
         forAll(cellIDs, i)
         {
-            label celli = cellIDs[i];
-            const cell& c = mesh.cells()[celli];
+            const cell& c = mesh.cells()[cellIDs[i]];
             forAll(c, j)
             {
                 const face& f = mesh.faces()[c[j]];
                 forAll(f, k)
                 {
-                    label pointi = f[k];
-                    movePts[pointi] = true;
+                    movePts[f[k]] = true;
                 }
             }
         }

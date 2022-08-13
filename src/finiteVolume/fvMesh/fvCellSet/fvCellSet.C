@@ -26,116 +26,23 @@ License
 #include "fvCellSet.H"
 #include "volFields.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    template<> const char* NamedEnum
-    <
-        fvCellSet::selectionModeType,
-        4
-        >::names[] =
-    {
-        "points",
-        "cellSet",
-        "cellZone",
-        "all"
-    };
-
-    const NamedEnum<fvCellSet::selectionModeType, 4>
-        fvCellSet::selectionModeTypeNames_;
-}
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::fvCellSet::setCells()
-{
-    Info<< incrIndent;
-
-    switch (selectionMode_)
-    {
-        case selectionModeType::points:
-        {
-            Info<< indent << "- selecting cells using points" << endl;
-
-            labelHashSet selectedCells;
-
-            forAll(points_, i)
-            {
-                label celli = mesh_.findCell(points_[i]);
-                if (celli >= 0)
-                {
-                    selectedCells.insert(celli);
-                }
-
-                label globalCelli = returnReduce(celli, maxOp<label>());
-                if (globalCelli < 0)
-                {
-                    WarningInFunction
-                        << "Unable to find owner cell for point " << points_[i]
-                        << endl;
-                }
-
-            }
-
-            cells_ = selectedCells.toc();
-
-            break;
-        }
-        case selectionModeType::cellSet:
-        {
-            Info<< indent
-                << "- selecting cells using cellSet " << cellSetName_ << endl;
-
-            cellSet selectedCells(mesh_, cellSetName_);
-            cells_ = selectedCells.toc();
-
-            break;
-        }
-        case selectionModeType::cellZone:
-        {
-            Info<< indent
-                << "- selecting cells using cellZone " << cellSetName_ << endl;
-
-            label zoneID = mesh_.cellZones().findZoneID(cellSetName_);
-            if (zoneID == -1)
-            {
-                FatalErrorInFunction
-                    << "Cannot find cellZone " << cellSetName_ << endl
-                    << "Valid cellZones are " << mesh_.cellZones().names()
-                    << exit(FatalError);
-            }
-            cells_ = mesh_.cellZones()[zoneID];
-
-            break;
-        }
-        case selectionModeType::all:
-        {
-            Info<< indent << "- selecting all cells" << endl;
-            cells_ = identity(mesh_.nCells());
-
-            break;
-        }
-    }
-
-    Info<< decrIndent;
-}
-
 
 void Foam::fvCellSet::setV()
 {
     Info<< incrIndent;
 
+    const labelList& cells = this->cells();
+
     V_ = 0;
-    forAll(cells_, i)
+    forAll(cells, i)
     {
-        V_ += mesh_.V()[cells_[i]];
+        V_ += mesh_.V()[cells[i]];
     }
     reduce(V_, sumOp<scalar>());
 
     Info<< indent
-        << "- selected " << returnReduce(cells_.size(), sumOp<label>())
+        << "- selected " << returnReduce(cells.size(), sumOp<label>())
         << " cell(s) with volume " << V_ << endl;
 
     Info<< decrIndent;
@@ -150,12 +57,11 @@ Foam::fvCellSet::fvCellSet
     const dictionary& dict
 )
 :
+    polyCellSet(mesh, dict),
     mesh_(mesh),
-    selectionMode_(selectionModeType::all),
-    cellSetName_(word::null),
     V_(NaN)
 {
-    read(dict);
+    setV();
 }
 
 
@@ -169,94 +75,35 @@ Foam::fvCellSet::~fvCellSet()
 
 void Foam::fvCellSet::movePoints()
 {
-    if (selectionMode_ == selectionModeType::points)
-    {
-        setCells();
-    }
+    polyCellSet::movePoints();
     setV();
 }
 
 
-void Foam::fvCellSet::topoChange(const polyTopoChangeMap&)
+void Foam::fvCellSet::topoChange(const polyTopoChangeMap& map)
 {
-    setCells();
+    polyCellSet::topoChange(map);
     setV();
 }
 
 
-void Foam::fvCellSet::mapMesh(const polyMeshMap&)
+void Foam::fvCellSet::mapMesh(const polyMeshMap& map)
 {
-    setCells();
+    polyCellSet::mapMesh(map);
     setV();
 }
 
 
-void Foam::fvCellSet::distribute(const polyDistributionMap&)
+void Foam::fvCellSet::distribute(const polyDistributionMap& map)
 {
-    setCells();
+    polyCellSet::distribute(map);
     setV();
 }
 
 
 bool Foam::fvCellSet::read(const dictionary& dict)
 {
-    if (dict.found("selectionMode"))
-    {
-        selectionMode_ =
-            selectionModeTypeNames_.read(dict.lookup("selectionMode"));
-    }
-    else if (dict.found("points"))
-    {
-        selectionMode_ = selectionModeType::points;
-    }
-    else if (dict.found("cellSet"))
-    {
-        selectionMode_ = selectionModeType::cellSet;
-    }
-    else if (dict.lookup("cellZone"))
-    {
-        selectionMode_ = selectionModeType::cellZone;
-    }
-    else
-    {
-        FatalIOErrorInFunction(dict)
-            << "selectionMode,  points, cellSet or cellZone not specified. "
-            << "Valid selectionMode types are" << selectionModeTypeNames_
-            << exit(FatalIOError);
-    }
-
-    switch (selectionMode_)
-    {
-        case selectionModeType::points:
-        {
-            dict.lookup("points") >> points_;
-            break;
-        }
-        case selectionModeType::cellSet:
-        {
-            dict.lookup("cellSet") >> cellSetName_;
-            break;
-        }
-        case selectionModeType::cellZone:
-        {
-            dict.lookup("cellZone") >> cellSetName_;
-            break;
-        }
-        case selectionModeType::all:
-        {
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown selectionMode "
-                << selectionModeTypeNames_[selectionMode_]
-                << ". Valid selectionMode types are" << selectionModeTypeNames_
-                << exit(FatalError);
-        }
-    }
-
-    setCells();
+    polyCellSet::read(dict);
     setV();
 
     return true;

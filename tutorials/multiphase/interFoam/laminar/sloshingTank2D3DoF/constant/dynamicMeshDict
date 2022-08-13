@@ -22,6 +22,8 @@ mover
 
     motionSolver    solidBody;
 
+    selectionMode   all;
+
     solidBodyMotionFunction SDA;
 
     CofG            (0 0 0);
