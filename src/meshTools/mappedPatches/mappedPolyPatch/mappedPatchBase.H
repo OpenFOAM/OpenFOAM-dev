@@ -42,10 +42,6 @@ Description
                                    - patches need not conform
                                    - uses AMI interpolation
         // - nearestFace         : nearest boundary face on any patch
-        // - nearestPatchPoint   : nearest patch point (for coupled points
-        //                         this might be any of the points so you have
-        //                         to guarantee the point data is synchronised
-        //                         beforehand)
         sampleMode nearestCell;
 
         // If sampleMode is nearestPatchFace : patch to find faces of
@@ -113,7 +109,6 @@ public:
             NEARESTCELL,         // nearest cell containing sample
             NEARESTPATCHFACE,    // nearest face on selected patch
             NEARESTPATCHFACEAMI, // nearest patch face + AMI interpolation
-            NEARESTPATCHPOINT,   // nearest point on selected patch
             NEARESTFACE,         // nearest face
             NEARESTONLYCELL      // nearest cell (even if not containing cell)
         };
@@ -126,21 +121,18 @@ public:
             NORMAL              // use face normal + distance
         };
 
-        static const NamedEnum<sampleMode, 6> sampleModeNames_;
+        static const NamedEnum<sampleMode, 5> sampleModeNames_;
 
         static const NamedEnum<offsetMode, 3> offsetModeNames_;
 
 
-    //- Helper class for finding nearest
-    //  Nearest:
-    //  - point+local index
-    //  - sqr(distance)
-    //  - processor
+    //- Helper class for finding nearest. Point and local index, squared
+    //  distance, and processor index.
     typedef Tuple2<pointIndexHit, Tuple2<scalar, label>> nearInfo;
 
+    //- Equality operator for nearest info
     class nearestEqOp
     {
-
     public:
 
         void operator()(nearInfo& x, const nearInfo& y) const
@@ -152,27 +144,6 @@ public:
                     x = y;
                 }
                 else if (y.second().first() < x.second().first())
-                {
-                    x = y;
-                }
-            }
-        }
-    };
-
-    class maxProcEqOp
-    {
-
-    public:
-
-        void operator()(nearInfo& x, const nearInfo& y) const
-        {
-            if (y.first().hit())
-            {
-                if (!x.first().hit())
-                {
-                    x = y;
-                }
-                else if (y.second().second() > x.second().second())
                 {
                     x = y;
                 }
@@ -218,11 +189,7 @@ protected:
 
         // Derived information
 
-            //- Communication schedule:
-            //
-            //    - Cells/faces to sample per processor
-            //    - Patch faces to receive per processor
-            //    - schedule
+            //- Distributor
             mutable autoPtr<distributionMap> mapPtr_;
 
 
@@ -243,9 +210,25 @@ protected:
 
     // Protected Member Functions
 
+        //- Get a point on the face given a face decomposition method:
+        //  face-centre-tet : face centre. Returns index of face.
+        //  face-planes     : face centre. Returns index of face.
+        //  face-diagonal   : intersection of ray from cellcentre to
+        //                    facecentre with any of the triangles.
+        //                    Returns index (0..size-2) of triangle.
+        static pointIndexHit facePoint
+        (
+            const polyMesh&,
+            const label facei,
+            const polyMesh::cellDecomposition
+        );
+
         //- Get the points from face-centre-decomposition face centres
         //  and project them onto the face-diagonal-decomposition triangles.
         tmp<pointField> facePoints(const polyPatch&) const;
+
+        //- Get the sample points given the face points
+        tmp<pointField> samplePoints(const pointField&) const;
 
         //- Collect single list of samples and originating processor+face.
         void collectSamples
@@ -267,8 +250,8 @@ protected:
             pointField& sampleLocations // actual representative location
         ) const;
 
-        //- Get the sample points given the face points
-        tmp<pointField> samplePoints(const pointField&) const;
+        //- Return size of mapped mesh/patch/boundary
+        label sampleSize() const;
 
         //- Calculate mapping
         void calcMapping() const;
@@ -329,11 +312,6 @@ public:
         //- Construct from dictionary
         mappedPatchBase(const polyPatch&, const dictionary&);
 
-        //- Construct from dictionary and (collocated) sample mode
-        //  (only for nearestPatchFace, nearestPatchFaceAMI, nearestPatchPoint)
-        //  Assumes zero offset.
-        mappedPatchBase(const polyPatch&, const sampleMode, const dictionary&);
-
         //- Construct as copy, resetting patch
         mappedPatchBase(const polyPatch&, const mappedPatchBase&);
 
@@ -352,8 +330,6 @@ public:
 
     // Member Functions
 
-        void clearOut();
-
         // Access
 
             //- What to sample
@@ -365,32 +341,11 @@ public:
             //- Patch (only if NEARESTPATCHFACE)
             inline const word& samplePatch() const;
 
-            //- PatchGroup (only if NEARESTPATCHFACE)
-            inline const word& coupleGroup() const;
-
-            //- Return size of mapped mesh/patch/boundary
-            inline label sampleSize() const;
-
-            //- Offset vector (from patch faces to destination mesh objects)
-            inline const vector& offset() const;
-
-            //- Offset vector (from patch faces to destination mesh objects)
-            inline const vectorField& offsets() const;
-
             //- Cached sampleRegion != mesh.name()
             inline bool sameRegion() const;
 
             //- Return reference to the parallel distribution map
             inline const distributionMap& map() const;
-
-            //- Return reference to the AMI interpolator
-            inline const AMIInterpolation& AMI
-            (
-                const bool forceUpdate = false
-            ) const;
-
-            //- Return a pointer to the AMI projection surface
-            const autoPtr<Foam::searchableSurface>& surfPtr() const;
 
             //- Get the region mesh
             const polyMesh& sampleMesh() const;
@@ -398,24 +353,15 @@ public:
             //- Get the patch on the region
             const polyPatch& samplePolyPatch() const;
 
-
-        // Helpers
-
             //- Get the sample points
             tmp<pointField> samplePoints() const;
 
-            //- Get a point on the face given a face decomposition method:
-            //  face-centre-tet : face centre. Returns index of face.
-            //  face-planes     : face centre. Returns index of face.
-            //  face-diagonal   : intersection of ray from cellcentre to
-            //                    facecentre with any of the triangles.
-            //                    Returns index (0..size-2) of triangle.
-            static pointIndexHit facePoint
-            (
-                const polyMesh&,
-                const label facei,
-                const polyMesh::cellDecomposition
-            );
+
+
+        // Edit
+
+            //- Clear out data on mesh change
+            void clearOut();
 
 
         // Distribute

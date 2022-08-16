@@ -172,9 +172,7 @@ Foam::mappedPolyPatch::mappedPolyPatch
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::mappedPolyPatch::~mappedPolyPatch()
-{
-    mappedPatchBase::clearOut();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

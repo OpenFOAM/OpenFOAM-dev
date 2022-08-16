@@ -23,6 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "mappedPatchBase.H"
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 inline const Foam::mappedPatchBase::sampleMode&
 Foam::mappedPatchBase::mode() const
 {
@@ -44,14 +48,12 @@ inline const Foam::word& Foam::mappedPatchBase::sampleRegion() const
         }
 
         // Try and use patchGroup to find samplePatch and sampleRegion
-        label samplePatchID = coupleGroup_.findOtherPatchID
-        (
-            patch_,
-            sampleRegion_
-        );
+        const label samplePatchID =
+            coupleGroup_.findOtherPatchID(patch_, sampleRegion_);
 
         samplePatch_ = sampleMesh().boundaryMesh()[samplePatchID].name();
     }
+
     return sampleRegion_;
 }
 
@@ -70,68 +72,13 @@ inline const Foam::word& Foam::mappedPatchBase::samplePatch() const
         }
 
         // Try and use patchGroup to find samplePatch and sampleRegion
-        label samplePatchID = coupleGroup_.findOtherPatchID
-        (
-            patch_,
-            sampleRegion_
-        );
+        const label samplePatchID =
+            coupleGroup_.findOtherPatchID(patch_, sampleRegion_);
 
         samplePatch_ = sampleMesh().boundaryMesh()[samplePatchID].name();
     }
+
     return samplePatch_;
-}
-
-
-inline const Foam::word& Foam::mappedPatchBase::coupleGroup() const
-{
-    return coupleGroup_.name();
-}
-
-
-inline Foam::label Foam::mappedPatchBase::sampleSize() const
-{
-    switch (mode_)
-    {
-        case NEARESTPATCHFACEAMI:
-        {
-            return samplePolyPatch().size();
-        }
-        case NEARESTCELL:
-        {
-            return sampleMesh().nCells();
-        }
-        case NEARESTPATCHFACE:
-        {
-            return samplePolyPatch().size();
-        }
-        case NEARESTPATCHPOINT:
-        {
-            return samplePolyPatch().nPoints();
-        }
-        case NEARESTFACE:
-        {
-            const polyMesh& mesh = sampleMesh();
-            return mesh.nFaces() - mesh.nInternalFaces();
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "problem." << abort(FatalError);
-            return -1;
-        }
-    }
-}
-
-
-inline const Foam::vector& Foam::mappedPatchBase::offset() const
-{
-    return offset_;
-}
-
-
-inline const Foam::vectorField& Foam::mappedPatchBase::offsets() const
-{
-    return offsets_;
 }
 
 
@@ -149,20 +96,6 @@ inline const Foam::distributionMap& Foam::mappedPatchBase::map() const
     }
 
     return mapPtr_();
-}
-
-
-inline const Foam::AMIInterpolation& Foam::mappedPatchBase::AMI
-(
-    bool forceUpdate
-) const
-{
-    if (forceUpdate || AMIPtr_.empty())
-    {
-        calcAMI();
-    }
-
-    return AMIPtr_();
 }
 
 

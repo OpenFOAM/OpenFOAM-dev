@@ -24,13 +24,14 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thermalBaffle.H"
-
 #include "fvm.H"
 #include "fvcDiv.H"
-#include "addToRunTimeSelectionTable.H"
-#include "zeroGradientFvPatchFields.H"
-#include "fvMatrices.H"
 #include "absorptionEmissionModel.H"
+#include "zeroGradientFvPatchFields.H"
+#include "wedgePolyPatch.H"
+#include "emptyPolyPatch.H"
+#include "FaceCellWave.H"
+#include "DeltaInfoData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -38,29 +39,149 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace thermalBaffleModels
-{
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(thermalBaffle, 0);
 
-addToRunTimeSelectionTable(thermalBaffleModel, thermalBaffle, mesh);
-addToRunTimeSelectionTable(thermalBaffleModel, thermalBaffle, dictionary);
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+tmp<volScalarField::Internal> thermalBaffle::calcDelta() const
+{
+    if (intCoupledPatchIDs_.size() != 2)
+    {
+        FatalErrorInFunction
+            << "Mesh \"" << regionMesh().name()
+            << "\" does not have exactly two coupled patches"
+            << exit(FatalError);
+    }
+
+    // Initial faces from which to wave
+    DynamicList<label> initialFaces;
+
+    // Initialise faces on the first coupled patch with their centres as data
+    initialFaces.clear();
+    DynamicList<DeltaInfoData<point>> initialFaceInfoPoints;
+    {
+        const polyPatch& pp =
+            regionMesh().boundaryMesh()[intCoupledPatchIDs_[0]];
+
+        initialFaces.setCapacity(initialFaces.size() + pp.size());
+        initialFaceInfoPoints.setCapacity(initialFaces.size() + pp.size());
+
+        forAll(pp, ppFacei)
+        {
+            const point& c = pp.faceCentres()[ppFacei];
+
+            initialFaces.append(pp.start() + ppFacei);
+            initialFaceInfoPoints.append(DeltaInfoData<point>(-1, c));
+        }
+    }
+
+    // Wave across the mesh layers
+    List<DeltaInfoData<point>> faceInfoPoints(regionMesh().nFaces());
+    List<DeltaInfoData<point>> cellInfoPoints(regionMesh().nCells());
+    FaceCellWave<DeltaInfoData<point>>
+    (
+        regionMesh(),
+        initialFaces,
+        initialFaceInfoPoints,
+        faceInfoPoints,
+        cellInfoPoints,
+        regionMesh().globalData().nTotalCells() + 1
+    );
+
+    // Calculate the distances between the opposite patch and load into data to
+    // wave back in the opposite direction
+    initialFaces.clear();
+    DynamicList<DeltaInfoData<scalar>> initialFaceInfoDeltas;
+    {
+        const polyPatch& pp =
+            regionMesh().boundaryMesh()[intCoupledPatchIDs_[1]];
+
+        forAll(pp, ppFacei)
+        {
+            const point& c = pp.faceCentres()[ppFacei];
+
+            static nil td;
+
+            if (faceInfoPoints[pp.start() + ppFacei].valid(td))
+            {
+                const scalar d =
+                    mag(c - faceInfoPoints[pp.start() + ppFacei].data());
+
+                initialFaces.append(pp.start() + ppFacei);
+                initialFaceInfoDeltas.append(DeltaInfoData<scalar>(-1, d));
+            }
+        }
+    }
+
+    // Wave back across the layers
+    List<DeltaInfoData<scalar>> faceInfoDeltas(regionMesh().nFaces());
+    List<DeltaInfoData<scalar>> cellInfoDeltas(regionMesh().nCells());
+    FaceCellWave<DeltaInfoData<scalar>>
+    (
+        regionMesh(),
+        initialFaces,
+        initialFaceInfoDeltas,
+        faceInfoDeltas,
+        cellInfoDeltas,
+        regionMesh().globalData().nTotalCells() + 1
+    );
+
+    // Unpack distances into a dimensioned field and return
+    tmp<volScalarField::Internal> tDelta
+    (
+        new volScalarField::Internal
+        (
+            IOobject
+            (
+                "thickness",
+                regionMesh().pointsInstance(),
+                regionMesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            regionMesh(),
+            dimLength
+        )
+    );
+    volScalarField::Internal& delta = tDelta.ref();
+
+    forAll(cellInfoDeltas, celli)
+    {
+        static nil td;
+
+        if (!cellInfoDeltas[celli].valid(td))
+        {
+            FatalErrorInFunction
+                << "Mesh \"" << regionMesh().name()
+                << "\" is not layered between its coupled patches"
+                << exit(FatalError);
+        }
+
+        delta[celli] = cellInfoDeltas[celli].data();
+    }
+
+    return tDelta;
+}
+
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 bool thermalBaffle::read()
 {
-    this->solution().lookup("nNonOrthCorr") >> nNonOrthCorr_;
-    return regionModel1D::read();
+    solution().lookup("nNonOrthCorr") >> nNonOrthCorr_;
+    return regionModel::read();
 }
 
 
 bool thermalBaffle::read(const dictionary& dict)
 {
-    this->solution().lookup("nNonOrthCorr") >> nNonOrthCorr_;
-    return regionModel1D::read(dict);
+    solution().lookup("nNonOrthCorr") >> nNonOrthCorr_;
+    return regionModel::read(dict);
 }
 
 
@@ -68,62 +189,31 @@ void thermalBaffle::solveEnergy()
 {
     DebugInFunction << endl;
 
-    const polyBoundaryMesh& rbm = regionMesh().boundaryMesh();
-
-    tmp<volScalarField> tQ
+    // Modify thermo density and diffusivity to take into account the thickness
+    volScalarField dByT
     (
         volScalarField::New
         (
-            "tQ",
+            "dByT",
             regionMesh(),
-            dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
+            dimless,
+            extrapolatedCalculatedFvPatchField<scalar>::typeName
         )
     );
-
-    volScalarField& Q = tQ.ref();
-
-    volScalarField rho("rho", thermo_->rho());
-    volScalarField alphahe(thermo_->alphahe());
-
-
-    // If region is one-dimension variable thickness
-    if (oneD_ && !constantThickness_)
-    {
-        // Scale K and rhoCp and fill Q in the internal baffle region.
-        const label patchi = intCoupledPatchIDs_[0];
-        const polyPatch& ppCoupled = rbm[patchi];
-
-        forAll(ppCoupled, localFacei)
-        {
-            const labelList& cells = boundaryFaceCells_[localFacei];
-            forAll(cells, i)
-            {
-                const label cellId = cells[i];
-
-                Q[cellId] =
-                    Qs_.boundaryField()[patchi][localFacei]
-                   /thickness_[localFacei];
-
-                rho[cellId] *= delta_.value()/thickness_[localFacei];
-
-                alphahe[cellId] *= delta_.value()/thickness_[localFacei];
-            }
-        }
-    }
-    else
-    {
-        Q = Q_;
-    }
+    dByT.ref() = delta_/thickness_;
+    dByT.correctBoundaryConditions();
+    const volScalarField rho("rho", thermo_->rho()*dByT);
+    const volScalarField alphahe("alphahe", thermo_->alphahe()*dByT);
 
     fvScalarMatrix hEqn
     (
         fvm::ddt(rho, he_)
       - fvm::laplacian(alphahe, he_)
      ==
-        Q
+        Q_ + Qs_/thickness_
     );
 
-    if (moveMesh_)
+    if (regionMesh().moving())
     {
         surfaceScalarField phiMesh
         (
@@ -152,7 +242,20 @@ thermalBaffle::thermalBaffle
     const dictionary& dict
 )
 :
-    thermalBaffleModel(modelType, mesh, dict),
+    regionModel(mesh, "thermalBaffle", modelType, dict, true),
+    delta_(calcDelta()),
+    thickness_
+    (
+        IOobject
+        (
+            "thickness",
+            regionMesh().pointsInstance(),
+            regionMesh(),
+            IOobject::READ_IF_PRESENT,
+            IOobject::NO_WRITE
+        ),
+        delta_
+    ),
     nNonOrthCorr_(solution().lookup<label>("nNonOrthCorr")),
     thermo_(solidThermo::New(regionMesh())),
     he_(thermo_->he()),
@@ -191,56 +294,6 @@ thermalBaffle::thermalBaffle
         )
     )
 {
-    init();
-    thermo_->correct();
-}
-
-
-thermalBaffle::thermalBaffle
-(
-    const word& modelType,
-    const fvMesh& mesh
-)
-:
-    thermalBaffleModel(modelType, mesh),
-    nNonOrthCorr_(solution().lookup<label>("nNonOrthCorr")),
-    thermo_(solidThermo::New(regionMesh())),
-    he_(thermo_->he()),
-    Qs_
-    (
-        IOobject
-        (
-            "Qs",
-            regionMesh().time().timeName(),
-            regionMesh(),
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE
-        ),
-        regionMesh(),
-        dimensionedScalar(dimEnergy/dimArea/dimTime, Zero)
-    ),
-    Q_
-    (
-        IOobject
-        (
-            "Q",
-            regionMesh().time().timeName(),
-            regionMesh(),
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE
-        ),
-        regionMesh(),
-        dimensionedScalar(dimEnergy/dimVolume/dimTime, Zero)
-    ),
-    radiation_
-    (
-        radiationModel::New
-        (
-            thermo_->T()
-        )
-    )
-{
-    init();
     thermo_->correct();
 }
 
@@ -252,25 +305,6 @@ thermalBaffle::~thermalBaffle()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-void thermalBaffle::init()
-{
-    if (oneD_ && !constantThickness_)
-    {
-        label patchi = intCoupledPatchIDs_[0];
-        const label Qsb = Qs_.boundaryField()[patchi].size();
-
-        if (Qsb!= thickness_.size())
-        {
-            FatalErrorInFunction
-                << "the boundary field of Qs is "
-                << Qsb << " and " << nl
-                << "the field 'thickness' is " << thickness_.size() << nl
-                << exit(FatalError);
-        }
-    }
-}
-
 
 void thermalBaffle::preEvolveRegion()
 {}
@@ -330,20 +364,22 @@ void thermalBaffle::info()
         const label patchi = coupledPatches[i];
         const fvPatchScalarField& phe = he_.boundaryField()[patchi];
         const word patchName = regionMesh().boundary()[patchi].name();
-        Info<< indent << "Q : " << patchName << indent <<
+
+        Info<< indent << "Q : " << patchName << indent
+            <<
             gSum
             (
                 mag(regionMesh().Sf().boundaryField()[patchi])
                *phe.snGrad()
                *thermo_->alphahe(patchi)
-            ) << endl;
+            )
+            << endl;
     }
 }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // end namespace thermalBaffleModels
 } // end namespace regionModels
 } // end namespace Foam
 

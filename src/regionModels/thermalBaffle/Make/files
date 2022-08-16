@@ -1,0 +1,5 @@
+thermalBaffle/thermalBaffle.C
+
+derivedFvPatchFields/thermalBaffle/thermalBaffleFvPatchScalarField.C
+
+LIB = $(FOAM_LIBBIN)/libthermalBaffle

@@ -53,13 +53,12 @@ namespace Foam
     const char* Foam::NamedEnum
     <
         Foam::mappedPatchBase::sampleMode,
-        6
+        5
     >::names[] =
     {
         "nearestCell",
         "nearestPatchFace",
         "nearestPatchFaceAMI",
-        "nearestPatchPoint",
         "nearestFace",
         "nearestOnlyCell"
     };
@@ -78,7 +77,7 @@ namespace Foam
 }
 
 
-const Foam::NamedEnum<Foam::mappedPatchBase::sampleMode, 6>
+const Foam::NamedEnum<Foam::mappedPatchBase::sampleMode, 5>
     Foam::mappedPatchBase::sampleModeNames_;
 
 const Foam::NamedEnum<Foam::mappedPatchBase::offsetMode, 3>
@@ -86,6 +85,87 @@ const Foam::NamedEnum<Foam::mappedPatchBase::offsetMode, 3>
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::pointIndexHit Foam::mappedPatchBase::facePoint
+(
+    const polyMesh& mesh,
+    const label facei,
+    const polyMesh::cellDecomposition decompMode
+)
+{
+    const point& fc = mesh.faceCentres()[facei];
+
+    switch (decompMode)
+    {
+        case polyMesh::FACE_PLANES:
+        case polyMesh::FACE_CENTRE_TRIS:
+        {
+            // For both decompositions the face centre is guaranteed to be
+            // on the face
+            return pointIndexHit(true, fc, facei);
+        }
+        break;
+
+        case polyMesh::FACE_DIAG_TRIS:
+        case polyMesh::CELL_TETS:
+        {
+            // Find the intersection of a ray from face centre to cell centre
+            // Find intersection of (face-centre-decomposition) centre to
+            // cell-centre with face-diagonal-decomposition triangles.
+
+            const pointField& p = mesh.points();
+            const face& f = mesh.faces()[facei];
+
+            if (f.size() <= 3)
+            {
+                // Return centre of triangle.
+                return pointIndexHit(true, fc, 0);
+            }
+
+            label celli = mesh.faceOwner()[facei];
+            const point& cc = mesh.cellCentres()[celli];
+            vector d = fc-cc;
+
+            const label fp0 = mesh.tetBasePtIs()[facei];
+            const point& basePoint = p[f[fp0]];
+
+            label fp = f.fcIndex(fp0);
+            for (label i = 2; i < f.size(); i++)
+            {
+                const point& thisPoint = p[f[fp]];
+                label nextFp = f.fcIndex(fp);
+                const point& nextPoint = p[f[nextFp]];
+
+                const triPointRef tri(basePoint, thisPoint, nextPoint);
+                pointHit hitInfo = tri.intersection
+                (
+                    cc,
+                    d,
+                    intersection::algorithm::halfRay
+                );
+
+                if (hitInfo.hit() && hitInfo.distance() > 0)
+                {
+                    return pointIndexHit(true, hitInfo.hitPoint(), i-2);
+                }
+
+                fp = nextFp;
+            }
+
+            // Fall-back
+            return pointIndexHit(false, fc, -1);
+        }
+        break;
+
+        default:
+        {
+            FatalErrorInFunction
+                << "problem" << abort(FatalError);
+            return pointIndexHit();
+        }
+    }
+}
+
 
 Foam::tmp<Foam::pointField> Foam::mappedPatchBase::facePoints
 (
@@ -112,6 +192,41 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::facePoints
     }
 
     return tfacePoints;
+}
+
+
+Foam::tmp<Foam::pointField> Foam::mappedPatchBase::samplePoints
+(
+    const pointField& fc
+) const
+{
+    tmp<pointField> tfld(new pointField(fc));
+    pointField& fld = tfld.ref();
+
+    switch (offsetMode_)
+    {
+        case UNIFORM:
+        {
+            fld += offset_;
+            break;
+        }
+        case NONUNIFORM:
+        {
+            fld += offsets_;
+            break;
+        }
+        case NORMAL:
+        {
+            // Get outwards pointing normal
+            vectorField n(patch_.faceAreas());
+            n /= mag(n);
+
+            fld += distance_*n;
+            break;
+        }
+    }
+
+    return tfld;
 }
 
 
@@ -337,69 +452,6 @@ void Foam::mappedPatchBase::findSamples
             break;
         }
 
-        case NEARESTPATCHPOINT:
-        {
-            const polyPatch& pp = samplePolyPatch();
-
-            if (pp.empty())
-            {
-                forAll(samples, sampleI)
-                {
-                    nearest[sampleI].second().first() = Foam::sqr(great);
-                    nearest[sampleI].second().second() = Pstream::myProcNo();
-                }
-            }
-            else
-            {
-                // patch (local) points
-                treeBoundBox patchBb
-                (
-                    treeBoundBox(pp.points(), pp.meshPoints()).extend(1e-4)
-                );
-
-                indexedOctree<treeDataPoint> boundaryTree
-                (
-                    treeDataPoint   // all information needed to search faces
-                    (
-                        mesh.points(),
-                        pp.meshPoints() // selection of points to search on
-                    ),
-                    patchBb,        // overall search domain
-                    8,              // maxLevel
-                    10,             // leafsize
-                    3.0             // duplicity
-                );
-
-                forAll(samples, sampleI)
-                {
-                    const point& sample = samples[sampleI];
-
-                    pointIndexHit& nearInfo = nearest[sampleI].first();
-                    nearInfo = boundaryTree.findNearest
-                    (
-                        sample,
-                        magSqr(patchBb.span())
-                    );
-
-                    if (!nearInfo.hit())
-                    {
-                        nearest[sampleI].second().first() = Foam::sqr(great);
-                        nearest[sampleI].second().second() =
-                            Pstream::myProcNo();
-                    }
-                    else
-                    {
-                        const point& pt = nearInfo.hitPoint();
-
-                        nearest[sampleI].second().first() = magSqr(pt-sample);
-                        nearest[sampleI].second().second() =
-                            Pstream::myProcNo();
-                    }
-                }
-            }
-            break;
-        }
-
         case NEARESTFACE:
         {
             if (samplePatch().size() && samplePatch() != "none")
@@ -496,6 +548,36 @@ void Foam::mappedPatchBase::findSamples
             sampleProcs[sampleI] = nearest[sampleI].second().second();
             sampleIndices[sampleI] = nearest[sampleI].first().index();
             sampleLocations[sampleI] = nearest[sampleI].first().hitPoint();
+        }
+    }
+}
+
+
+Foam::label Foam::mappedPatchBase::sampleSize() const
+{
+    switch (mode_)
+    {
+        case NEARESTPATCHFACEAMI:
+        {
+            return samplePolyPatch().size();
+        }
+        case NEARESTCELL:
+        {
+            return sampleMesh().nCells();
+        }
+        case NEARESTPATCHFACE:
+        {
+            return samplePolyPatch().size();
+        }
+        case NEARESTFACE:
+        {
+            return sampleMesh().nFaces() - sampleMesh().nInternalFaces();
+        }
+        default:
+        {
+            FatalErrorInFunction
+                << "problem." << abort(FatalError);
+            return -1;
         }
     }
 }
@@ -774,38 +856,6 @@ void Foam::mappedPatchBase::calcMapping() const
 }
 
 
-const Foam::autoPtr<Foam::searchableSurface>& Foam::mappedPatchBase::surfPtr()
-const
-{
-    const word surfType(surfDict_.lookupOrDefault<word>("type", "none"));
-
-    if (!surfPtr_.valid() && surfType != "none")
-    {
-        word surfName(surfDict_.lookupOrDefault("name", patch_.name()));
-
-        const polyMesh& mesh = patch_.boundaryMesh().mesh();
-
-        surfPtr_ =
-            searchableSurface::New
-            (
-                surfType,
-                IOobject
-                (
-                    surfName,
-                    mesh.time().constant(),
-                    searchableSurface::geometryDir(mesh.time()),
-                    mesh,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE
-                ),
-                surfDict_
-            );
-    }
-
-    return surfPtr_;
-}
-
-
 void Foam::mappedPatchBase::calcAMI() const
 {
     if (AMIPtr_.valid())
@@ -843,6 +893,31 @@ void Foam::mappedPatchBase::calcAMI() const
         meshTools::writeOBJ(osO, patch_.localFaces(), patch_.localPoints());
     }
 
+    // Get the projection surface, if any
+    const word surfType(surfDict_.lookupOrDefault<word>("type", "none"));
+    if (!surfPtr_.valid() && surfType != "none")
+    {
+        word surfName(surfDict_.lookupOrDefault("name", patch_.name()));
+
+        const polyMesh& mesh = patch_.boundaryMesh().mesh();
+
+        surfPtr_ =
+            searchableSurface::New
+            (
+                surfType,
+                IOobject
+                (
+                    surfName,
+                    mesh.time().constant(),
+                    searchableSurface::geometryDir(mesh.time()),
+                    mesh,
+                    IOobject::MUST_READ,
+                    IOobject::NO_WRITE
+                ),
+                surfDict_
+            );
+    }
+
     // Construct/apply AMI interpolation to determine addressing and weights
     AMIPtr_.reset
     (
@@ -850,7 +925,7 @@ void Foam::mappedPatchBase::calcAMI() const
         (
             patch_,
             samplePolyPatch(), // nbrPatch0,
-            surfPtr(),
+            surfPtr_,
             faceAreaIntersect::tmMesh,
             true,
             faceAreaWeightAMI::typeName,
@@ -1117,51 +1192,6 @@ Foam::mappedPatchBase::mappedPatchBase
 Foam::mappedPatchBase::mappedPatchBase
 (
     const polyPatch& pp,
-    const sampleMode mode,
-    const dictionary& dict
-)
-:
-    patch_(pp),
-    sampleRegion_(dict.lookupOrDefault<word>("sampleRegion", "")),
-    mode_(mode),
-    samplePatch_(dict.lookupOrDefault<word>("samplePatch", "")),
-    coupleGroup_(dict),
-    offsetMode_(UNIFORM),
-    offset_(Zero),
-    offsets_(0),
-    distance_(0.0),
-    sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
-    mapPtr_(nullptr),
-    AMIPtr_(nullptr),
-    AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
-    surfPtr_(nullptr),
-    surfDict_(dict.subOrEmptyDict("surface"))
-{
-    if (mode != NEARESTPATCHFACE && mode != NEARESTPATCHFACEAMI)
-    {
-        FatalIOErrorInFunction(dict)
-            << "Construct from sampleMode and dictionary only applicable for "
-            << " collocated patches in modes "
-            << sampleModeNames_[NEARESTPATCHFACE] << ','
-            << sampleModeNames_[NEARESTPATCHFACEAMI]
-            << exit(FatalIOError);
-    }
-
-    if (!coupleGroup_.valid())
-    {
-        if (sampleRegion_.empty())
-        {
-            // If no coupleGroup and no sampleRegion assume local region
-            sampleRegion_ = patch_.boundaryMesh().mesh().name();
-            sameRegion_ = true;
-        }
-    }
-}
-
-
-Foam::mappedPatchBase::mappedPatchBase
-(
-    const polyPatch& pp,
     const mappedPatchBase& mpb
 )
 :
@@ -1216,17 +1246,7 @@ Foam::mappedPatchBase::mappedPatchBase
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::mappedPatchBase::~mappedPatchBase()
-{
-    clearOut();
-}
-
-
-void Foam::mappedPatchBase::clearOut()
-{
-    mapPtr_.clear();
-    AMIPtr_.clear();
-    surfPtr_.clear();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -1259,125 +1279,17 @@ const Foam::polyPatch& Foam::mappedPatchBase::samplePolyPatch() const
 }
 
 
-Foam::tmp<Foam::pointField> Foam::mappedPatchBase::samplePoints
-(
-    const pointField& fc
-) const
-{
-    tmp<pointField> tfld(new pointField(fc));
-    pointField& fld = tfld.ref();
-
-    switch (offsetMode_)
-    {
-        case UNIFORM:
-        {
-            fld += offset_;
-            break;
-        }
-        case NONUNIFORM:
-        {
-            fld += offsets_;
-            break;
-        }
-        case NORMAL:
-        {
-            // Get outwards pointing normal
-            vectorField n(patch_.faceAreas());
-            n /= mag(n);
-
-            fld += distance_*n;
-            break;
-        }
-    }
-
-    return tfld;
-}
-
-
 Foam::tmp<Foam::pointField> Foam::mappedPatchBase::samplePoints() const
 {
     return samplePoints(facePoints(patch_));
 }
 
 
-Foam::pointIndexHit Foam::mappedPatchBase::facePoint
-(
-    const polyMesh& mesh,
-    const label facei,
-    const polyMesh::cellDecomposition decompMode
-)
+void Foam::mappedPatchBase::clearOut()
 {
-    const point& fc = mesh.faceCentres()[facei];
-
-    switch (decompMode)
-    {
-        case polyMesh::FACE_PLANES:
-        case polyMesh::FACE_CENTRE_TRIS:
-        {
-            // For both decompositions the face centre is guaranteed to be
-            // on the face
-            return pointIndexHit(true, fc, facei);
-        }
-        break;
-
-        case polyMesh::FACE_DIAG_TRIS:
-        case polyMesh::CELL_TETS:
-        {
-            // Find the intersection of a ray from face centre to cell centre
-            // Find intersection of (face-centre-decomposition) centre to
-            // cell-centre with face-diagonal-decomposition triangles.
-
-            const pointField& p = mesh.points();
-            const face& f = mesh.faces()[facei];
-
-            if (f.size() <= 3)
-            {
-                // Return centre of triangle.
-                return pointIndexHit(true, fc, 0);
-            }
-
-            label celli = mesh.faceOwner()[facei];
-            const point& cc = mesh.cellCentres()[celli];
-            vector d = fc-cc;
-
-            const label fp0 = mesh.tetBasePtIs()[facei];
-            const point& basePoint = p[f[fp0]];
-
-            label fp = f.fcIndex(fp0);
-            for (label i = 2; i < f.size(); i++)
-            {
-                const point& thisPoint = p[f[fp]];
-                label nextFp = f.fcIndex(fp);
-                const point& nextPoint = p[f[nextFp]];
-
-                const triPointRef tri(basePoint, thisPoint, nextPoint);
-                pointHit hitInfo = tri.intersection
-                (
-                    cc,
-                    d,
-                    intersection::algorithm::halfRay
-                );
-
-                if (hitInfo.hit() && hitInfo.distance() > 0)
-                {
-                    return pointIndexHit(true, hitInfo.hitPoint(), i-2);
-                }
-
-                fp = nextFp;
-            }
-
-            // Fall-back
-            return pointIndexHit(false, fc, -1);
-        }
-        break;
-
-        default:
-        {
-            FatalErrorInFunction
-                << "problem" << abort(FatalError);
-            return pointIndexHit();
-        }
-    }
+    mapPtr_.clear();
+    AMIPtr_.clear();
+    surfPtr_.clear();
 }
 
 

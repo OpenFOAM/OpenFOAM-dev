@@ -23,6 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "mappedPatchBase.H"
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 template<class Type>
 void Foam::mappedPatchBase::distribute(List<Type>& lst) const
 {
@@ -30,7 +35,11 @@ void Foam::mappedPatchBase::distribute(List<Type>& lst) const
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToSource(Field<Type>(move(lst)));
+            if (AMIPtr_.empty())
+            {
+                calcAMI();
+            }
+            lst = AMIPtr_->interpolateToSource(Field<Type>(move(lst)));
             break;
         }
         default:
@@ -52,11 +61,11 @@ void Foam::mappedPatchBase::distribute
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToSource
-                (
-                    Field<Type>(move(lst)),
-                    cop
-                );
+            if (AMIPtr_.empty())
+            {
+                calcAMI();
+            }
+            lst = AMIPtr_->interpolateToSource(Field<Type>(move(lst)), cop);
             break;
         }
         default:
@@ -87,7 +96,11 @@ void Foam::mappedPatchBase::reverseDistribute(List<Type>& lst) const
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToTarget(Field<Type>(move(lst)));
+            if (AMIPtr_.empty())
+            {
+                calcAMI();
+            }
+            lst = AMIPtr_->interpolateToTarget(Field<Type>(move(lst)));
             break;
         }
         default:
@@ -110,21 +123,20 @@ void Foam::mappedPatchBase::reverseDistribute
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToTarget
-                (
-                    Field<Type>(move(lst)),
-                    cop
-                );
+            if (AMIPtr_.empty())
+            {
+                calcAMI();
+            }
+            lst = AMIPtr_->interpolateToTarget(Field<Type>(move(lst)), cop);
             break;
         }
         default:
         {
-            label cSize = sampleSize();
             distributionMapBase::distribute
             (
                 Pstream::defaultCommsType,
                 map().schedule(),
-                cSize,
+                sampleSize(),
                 map().constructMap(),
                 false,
                 map().subMap(),

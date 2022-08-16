@@ -4,6 +4,6 @@ makeType=${1:-libso}
 
 wclean $makeType regionModel
 wclean $makeType surfaceFilmModels
-wclean $makeType thermalBaffleModels
+wclean $makeType thermalBaffle
 
 #------------------------------------------------------------------------------
