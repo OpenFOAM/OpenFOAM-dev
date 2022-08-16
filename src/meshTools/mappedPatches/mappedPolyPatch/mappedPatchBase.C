@@ -1192,51 +1192,6 @@ Foam::mappedPatchBase::mappedPatchBase
 Foam::mappedPatchBase::mappedPatchBase
 (
     const polyPatch& pp,
-    const sampleMode mode,
-    const dictionary& dict
-)
-:
-    patch_(pp),
-    sampleRegion_(dict.lookupOrDefault<word>("sampleRegion", "")),
-    mode_(mode),
-    samplePatch_(dict.lookupOrDefault<word>("samplePatch", "")),
-    coupleGroup_(dict),
-    offsetMode_(UNIFORM),
-    offset_(Zero),
-    offsets_(0),
-    distance_(0.0),
-    sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
-    mapPtr_(nullptr),
-    AMIPtr_(nullptr),
-    AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
-    surfPtr_(nullptr),
-    surfDict_(dict.subOrEmptyDict("surface"))
-{
-    if (mode != NEARESTPATCHFACE && mode != NEARESTPATCHFACEAMI)
-    {
-        FatalIOErrorInFunction(dict)
-            << "Construct from sampleMode and dictionary only applicable for "
-            << " collocated patches in modes "
-            << sampleModeNames_[NEARESTPATCHFACE] << ','
-            << sampleModeNames_[NEARESTPATCHFACEAMI]
-            << exit(FatalIOError);
-    }
-
-    if (!coupleGroup_.valid())
-    {
-        if (sampleRegion_.empty())
-        {
-            // If no coupleGroup and no sampleRegion assume local region
-            sampleRegion_ = patch_.boundaryMesh().mesh().name();
-            sameRegion_ = true;
-        }
-    }
-}
-
-
-Foam::mappedPatchBase::mappedPatchBase
-(
-    const polyPatch& pp,
     const mappedPatchBase& mpb
 )
 :

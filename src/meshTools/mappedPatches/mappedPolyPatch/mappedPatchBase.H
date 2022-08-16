@@ -312,11 +312,6 @@ public:
         //- Construct from dictionary
         mappedPatchBase(const polyPatch&, const dictionary&);
 
-        //- Construct from dictionary and (collocated) sample mode
-        //  (only for nearestPatchFace, nearestPatchFaceAMI)
-        //  Assumes zero offset.
-        mappedPatchBase(const polyPatch&, const sampleMode, const dictionary&);
-
         //- Construct as copy, resetting patch
         mappedPatchBase(const polyPatch&, const mappedPatchBase&);
 
