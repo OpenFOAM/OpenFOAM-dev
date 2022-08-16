@@ -180,9 +180,6 @@ void Foam::solvers::incompressibleFluid::preSolve()
 
     fvModels().preUpdateMesh();
 
-    // Update the mesh for topology change, mesh to mesh mapping
-    mesh.update();
-
     if (transient())
     {
         correctCoNum();
@@ -191,6 +188,9 @@ void Foam::solvers::incompressibleFluid::preSolve()
     {
         setRDeltaT();
     }
+
+    // Update the mesh for topology change, mesh to mesh mapping
+    mesh.update();
 }
 
 

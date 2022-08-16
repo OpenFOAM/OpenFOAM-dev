@@ -238,6 +238,15 @@ void Foam::solvers::isothermalFluid::preSolve()
     // Read the controls
     read();
 
+    if (transient())
+    {
+        correctCoNum();
+    }
+    else if (LTS)
+    {
+        setRDeltaT();
+    }
+
     // Store divrhoU from the previous mesh so that it can be mapped
     // and used in correctPhi to ensure the corrected phi has the
     // same divergence
@@ -260,15 +269,6 @@ void Foam::solvers::isothermalFluid::preSolve()
 
     // Update the mesh for topology change, mesh to mesh mapping
     mesh.update();
-
-    if (transient())
-    {
-        correctCoNum();
-    }
-    else if (LTS)
-    {
-        setRDeltaT();
-    }
 }
 
 
