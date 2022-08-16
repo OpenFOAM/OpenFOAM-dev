@@ -210,44 +210,21 @@ protected:
 
     // Protected Member Functions
 
-        //- Get a point on the face given a face decomposition method:
-        //  face-centre-tet : face centre. Returns index of face.
-        //  face-planes     : face centre. Returns index of face.
-        //  face-diagonal   : intersection of ray from cellcentre to
-        //                    facecentre with any of the triangles.
-        //                    Returns index (0..size-2) of triangle.
-        static pointIndexHit facePoint
-        (
-            const polyMesh&,
-            const label facei,
-            const polyMesh::cellDecomposition
-        );
-
-        //- Get the points from face-centre-decomposition face centres
-        //  and project them onto the face-diagonal-decomposition triangles.
-        tmp<pointField> facePoints(const polyPatch&) const;
-
-        //- Get the sample points given the face points
-        tmp<pointField> samplePoints(const pointField&) const;
-
         //- Collect single list of samples and originating processor+face.
         void collectSamples
         (
-            const pointField& facePoints,
-            pointField&,
+            pointField& samples,
             labelList& patchFaceProcs,
-            labelList& patchFaces,
-            pointField& patchFc
+            labelList& patchFaces
         ) const;
 
         //- Find cells/faces containing samples
         void findSamples
         (
             const sampleMode mode,      // search mode
-            const pointField&,
+            const pointField& samples,
             labelList& sampleProcs,     // processor containing sample
-            labelList& sampleIndices,   // local index of cell/face
-            pointField& sampleLocations // actual representative location
+            labelList& sampleIndices    // local index of cell/face
         ) const;
 
         //- Return size of mapped mesh/patch/boundary
