@@ -43,6 +43,46 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+void Foam::interpolatingSolidBodyMotionSolver::calcScale()
+{
+    const pointMesh& pMesh = pointMesh::New(mesh());
+
+    pointPatchDist pDist(pMesh, patchSet_, points0());
+
+    // Scaling: 1 up to di then linear down to 0 at do away from patches
+    scale_.primitiveFieldRef() =
+        min
+        (
+            max
+            (
+                (do_ - pDist.primitiveField())/(do_ - di_),
+                scalar(0)
+            ),
+            scalar(1)
+        );
+
+    // Convert the scale function to a cosine
+    scale_.primitiveFieldRef() =
+        min
+        (
+            max
+            (
+                0.5
+              - 0.5
+               *cos(scale_.primitiveField()
+               *Foam::constant::mathematical::pi),
+                scalar(0)
+            ),
+            scalar(1)
+        );
+
+    pointConstraints::New(pMesh).constrain(scale_);
+    scale_.write();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::interpolatingSolidBodyMotionSolver::interpolatingSolidBodyMotionSolver
@@ -67,50 +107,14 @@ Foam::interpolatingSolidBodyMotionSolver::interpolatingSolidBodyMotionSolver
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
+            IOobject::NO_WRITE
         ),
         pointMesh::New(mesh),
         dimensionedScalar(dimless, 0)
     )
 {
     // Calculate scaling factor everywhere
-
-    {
-        const pointMesh& pMesh = pointMesh::New(mesh);
-
-        pointPatchDist pDist(pMesh, patchSet_, points0());
-
-        // Scaling: 1 up to di then linear down to 0 at do away from patches
-        scale_.primitiveFieldRef() =
-            min
-            (
-                max
-                (
-                    (do_ - pDist.primitiveField())/(do_ - di_),
-                    scalar(0)
-                ),
-                scalar(1)
-            );
-
-        // Convert the scale function to a cosine
-        scale_.primitiveFieldRef() =
-            min
-            (
-                max
-                (
-                    0.5
-                  - 0.5
-                   *cos(scale_.primitiveField()
-                   *Foam::constant::mathematical::pi),
-                    scalar(0)
-                ),
-                scalar(1)
-            );
-
-        pointConstraints::New(pMesh).constrain(scale_);
-        scale_.write();
-    }
+    calcScale();
 }
 
 
@@ -131,6 +135,7 @@ Foam::interpolatingSolidBodyMotionSolver::curPoints() const
     tmp<pointField> tpoints(new pointField(points0));
     pointField& points = tpoints.ref();
 
+    Info << points.size() << " " << scale_.size() << endl;
     forAll(points, pointi)
     {
         // Move non-stationary points
@@ -154,6 +159,27 @@ Foam::interpolatingSolidBodyMotionSolver::curPoints() const
     }
 
     return tpoints;
+}
+
+
+void Foam::interpolatingSolidBodyMotionSolver::topoChange
+(
+    const polyTopoChangeMap& map
+)
+{
+    // Pending implementation of the inverse transformation of points0
+    NotImplemented;
+}
+
+
+void Foam::interpolatingSolidBodyMotionSolver::mapMesh(const polyMeshMap& map)
+{
+    InfoInFunction << endl;
+    points0MotionSolver::mapMesh(map);
+
+    // scale is resized by the meshToMesh mapper
+    scale_ = Zero;
+    calcScale();
 }
 
 

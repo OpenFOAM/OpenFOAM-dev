@@ -75,6 +75,8 @@ class interpolatingSolidBodyMotionSolver
         //- Current interpolation scale (1 at patches, 0 at distance_)
         pointScalarField scale_;
 
+        void calcScale();
+
 
 public:
 
@@ -111,6 +113,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+        //-  Update local data for topology changes
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
 
     // Member Operators

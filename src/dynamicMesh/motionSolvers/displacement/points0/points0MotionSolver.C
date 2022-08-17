@@ -160,7 +160,7 @@ void Foam::points0MotionSolver::topoChange(const polyTopoChangeMap& map)
 
 void Foam::points0MotionSolver::mapMesh(const polyMeshMap& map)
 {
-    points0_ == mesh().points();
+    points0_.primitiveFieldRef() = mesh().points();
 }
 
 

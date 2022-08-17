@@ -201,7 +201,7 @@ void Foam::componentDisplacementMotionSolver::topoChange
 
 void Foam::componentDisplacementMotionSolver::mapMesh(const polyMeshMap& map)
 {
-    points0_ == mesh().points().component(cmpt_);
+    points0_ = mesh().points().component(cmpt_);
     pointDisplacement_ == Zero;
 }
 
