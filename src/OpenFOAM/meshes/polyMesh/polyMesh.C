@@ -763,7 +763,8 @@ void Foam::polyMesh::resetPrimitives
         )
         {
             FatalErrorInFunction
-                << "no points or no cells in mesh" << endl;
+                << "no points or no cells in mesh"
+                << exit(FatalError);
         }
     }
 }
@@ -845,6 +846,33 @@ void Foam::polyMesh::reset(const polyMesh& newMesh)
     if (foundObject<pointMesh>(pointMesh::typeName))
     {
         pointMesh::New(*this).reset();
+    }
+
+    // Update point zones
+    pointZones_.clearAddressing();
+    pointZones_.setSize(newMesh.pointZones_.size());
+
+    forAll(pointZones_, i)
+    {
+        pointZones_[i] = newMesh.pointZones_[i];
+    }
+
+    // Update face zones
+    faceZones_.clearAddressing();
+    faceZones_.setSize(newMesh.faceZones_.size());
+
+    forAll(faceZones_, i)
+    {
+        faceZones_[i] = newMesh.faceZones_[i];
+    }
+
+    // Update cell zones
+    cellZones_.clearAddressing();
+    cellZones_.setSize(newMesh.cellZones_.size());
+
+    forAll(cellZones_, i)
+    {
+        cellZones_[i] = newMesh.cellZones_[i];
     }
 }
 
