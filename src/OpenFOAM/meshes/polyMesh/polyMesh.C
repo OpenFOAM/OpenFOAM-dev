@@ -849,30 +849,63 @@ void Foam::polyMesh::reset(const polyMesh& newMesh)
     }
 
     // Update point zones
-    pointZones_.clearAddressing();
-    pointZones_.setSize(newMesh.pointZones_.size());
-
-    forAll(pointZones_, i)
+    if (pointZones_.size() == newMesh.pointZones_.size())
     {
-        pointZones_[i] = newMesh.pointZones_[i];
+        pointZones_.clearAddressing();
+
+        forAll(pointZones_, i)
+        {
+            pointZones_[i] = newMesh.pointZones_[i];
+        }
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Number of pointZones in new mesh = "
+            << newMesh.pointZones_.size()
+            << " is not the same as in the existing mesh = "
+            << pointZones_.size()
+            << exit(FatalError);
     }
 
     // Update face zones
-    faceZones_.clearAddressing();
-    faceZones_.setSize(newMesh.faceZones_.size());
-
-    forAll(faceZones_, i)
+    if (faceZones_.size() == newMesh.faceZones_.size())
     {
-        faceZones_[i] = newMesh.faceZones_[i];
+        faceZones_.clearAddressing();
+
+        forAll(faceZones_, i)
+        {
+            faceZones_[i] = newMesh.faceZones_[i];
+        }
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Number of faceZones in new mesh = "
+            << newMesh.faceZones_.size()
+            << " is not the same as in the existing mesh = "
+            << faceZones_.size()
+            << exit(FatalError);
     }
 
     // Update cell zones
-    cellZones_.clearAddressing();
-    cellZones_.setSize(newMesh.cellZones_.size());
-
-    forAll(cellZones_, i)
+    if (cellZones_.size() == newMesh.cellZones_.size())
     {
-        cellZones_[i] = newMesh.cellZones_[i];
+        cellZones_.clearAddressing();
+
+        forAll(cellZones_, i)
+        {
+            cellZones_[i] = newMesh.cellZones_[i];
+        }
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Number of cellZones in new mesh = "
+            << newMesh.cellZones_.size()
+            << " is not the same as in the existing mesh = "
+            << cellZones_.size()
+            << exit(FatalError);
     }
 }
 
