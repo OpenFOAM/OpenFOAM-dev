@@ -398,6 +398,8 @@ surfaceFieldValueFunctions
 
     #includeFunc faceZoneFlowRate(name=f0)
 
+    #includeFunc triSurfaceAverage(name=mid.obj, p)
+
     #includeFunc triSurfaceVolumetricFlowRate(name=mid.obj)
 
     #includeFunc triSurfaceDifference
