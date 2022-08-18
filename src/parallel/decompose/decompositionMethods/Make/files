@@ -5,8 +5,8 @@ hierarchGeomDecomp/hierarchGeomDecomp.C
 manualDecomp/manualDecomp.C
 multiLevelDecomp/multiLevelDecomp.C
 structuredDecomp/structuredDecomp.C
+randomDecomp/randomDecomp.C
 noDecomp/noDecomp.C
-
 
 decompositionConstraints = decompositionConstraints
 
