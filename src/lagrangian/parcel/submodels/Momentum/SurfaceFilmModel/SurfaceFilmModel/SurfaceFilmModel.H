@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,19 +83,19 @@ protected:
         // Cached injector fields per film patch
 
             //- Parcel mass / patch face
-            scalarList massParcelPatch_;
+            scalarField massParcelPatch_;
 
             //- Parcel diameter / patch face
-            scalarList diameterParcelPatch_;
+            scalarField diameterParcelPatch_;
 
             //- Film velocity / patch face
-            List<vector> UFilmPatch_;
+            vectorField UFilmPatch_;
 
             //- Film density / patch face
-            scalarList rhoFilmPatch_;
+            scalarField rhoFilmPatch_;
 
             //- Film height of all film patches / patch face
-            scalarListList deltaFilmPatch_;
+            List<scalarField> deltaFilmPatch_;
 
 
         // Counters

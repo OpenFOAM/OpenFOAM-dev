@@ -51,6 +51,8 @@ inline const Foam::word& Foam::mappedPatchBase::sampleRegion() const
         const label samplePatchID =
             coupleGroup_.findOtherPatchID(patch_, sampleRegion_);
 
+        sameRegion_ = sampleRegion_ == patch_.boundaryMesh().mesh().name();
+
         samplePatch_ = sampleMesh().boundaryMesh()[samplePatchID].name();
     }
 
@@ -62,20 +64,7 @@ inline const Foam::word& Foam::mappedPatchBase::samplePatch() const
 {
     if (samplePatch_.empty())
     {
-        if (!coupleGroup_.valid())
-        {
-            FatalErrorInFunction
-                << "Supply either a patchName or a coupleGroup"
-                << " for patch " << patch_.name()
-                << " in region " << patch_.boundaryMesh().mesh().name()
-                << exit(FatalError);
-        }
-
-        // Try and use patchGroup to find samplePatch and sampleRegion
-        const label samplePatchID =
-            coupleGroup_.findOtherPatchID(patch_, sampleRegion_);
-
-        samplePatch_ = sampleMesh().boundaryMesh()[samplePatchID].name();
+        sampleRegion();
     }
 
     return samplePatch_;
@@ -96,6 +85,17 @@ inline const Foam::distributionMap& Foam::mappedPatchBase::map() const
     }
 
     return mapPtr_();
+}
+
+
+inline const Foam::labelList& Foam::mappedPatchBase::mapIndices() const
+{
+    if (mapPtr_.empty())
+    {
+        calcMapping();
+    }
+
+    return mapIndices_;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "patchProbes.H"
 #include "volFields.H"
 #include "IOmanip.H"
-#include "mappedPatchBase.H"
+#include "RemoteData.H"
 #include "treeBoundBox.H"
 #include "treeDataFace.H"
 #include "addToRunTimeSelectionTable.H"
@@ -65,7 +65,7 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
     }
 
      // All the info for nearest. Construct to miss
-    List<mappedPatchBase::nearInfo> nearest(this->size());
+    List<RemoteData<scalar>> nearest(this->size());
 
     const polyPatch& pp = bm[patchi];
 
@@ -93,7 +93,6 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
             10,                             // leafsize
             3.0                             // duplicity
         );
-
 
         forAll(probeLocations(), probei)
         {
@@ -133,26 +132,19 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
             {
                 const point& fc = mesh.faceCentres()[facei];
 
-                mappedPatchBase::nearInfo sampleInfo;
-
-                sampleInfo.first() = pointIndexHit
-                (
-                    true,
-                    fc,
-                    facei
-                );
-
-                sampleInfo.second().first() = magSqr(fc-sample);
-                sampleInfo.second().second() = Pstream::myProcNo();
-
-                nearest[probei]= sampleInfo;
+                nearest[probei].proci = Pstream::myProcNo();
+                nearest[probei].elementi = facei;
+                nearest[probei].data = magSqr(fc-sample);
             }
         }
     }
 
-
     // Find nearest.
-    Pstream::listCombineGather(nearest, mappedPatchBase::nearestEqOp());
+    Pstream::listCombineGather
+    (
+        nearest,
+        RemoteData<scalar>::smallestEqOp()
+    );
     Pstream::listCombineScatter(nearest);
 
     if (debug)
@@ -160,26 +152,20 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
         InfoInFunction << endl;
         forAll(nearest, sampleI)
         {
-            label proci = nearest[sampleI].second().second();
-            label localI = nearest[sampleI].first().index();
-
-            Info<< "    " << sampleI << " coord:"<< operator[](sampleI)
-                << " found on processor:" << proci
-                << " in local cell/face:" << localI
-                << " with fc:" << nearest[sampleI].first().rawPoint() << endl;
+            Info<< "    " << sampleI << " coord:" << operator[](sampleI)
+                << " found on processor:" << nearest[sampleI].proci
+                << " in local cell/face:" << nearest[sampleI].elementi
+                << endl;
         }
     }
 
-
     // Extract any local faces to sample
     elementList_.setSize(nearest.size(), -1);
-
     forAll(nearest, sampleI)
     {
-        if (nearest[sampleI].second().second() == Pstream::myProcNo())
+        if (nearest[sampleI].proci == Pstream::myProcNo())
         {
-            // Store the face to sample
-            elementList_[sampleI] = nearest[sampleI].first().index();
+            elementList_[sampleI] = nearest[sampleI].elementi;
         }
     }
 }

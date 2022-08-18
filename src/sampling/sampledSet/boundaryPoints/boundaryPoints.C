@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 #include "treeDataFace.H"
 #include "Time.H"
 #include "meshTools.H"
-#include "mappedPatchBase.H"
+#include "RemoteData.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -105,42 +105,31 @@ void Foam::sampledSets::boundaryPoints::calcSamples
     (void)mesh().tetBasePtIs();
 
     // Generate the nearest patch information for each sampling point
-    List<mappedPatchBase::nearInfo> nearest(points_.size());
+    List<RemoteData<Tuple2<scalar, point>>> nearest(points_.size());
     forAll(points_, sampleI)
     {
         const point& sample = points_[sampleI];
 
-        pointIndexHit& nearHit = nearest[sampleI].first();
-        scalar& nearDist = nearest[sampleI].second().first();
-        label& nearProc = nearest[sampleI].second().second();
+        const pointIndexHit pih =
+            patchFaces.size()
+          ? patchTree.findNearest(sample, sqr(maxDistance_))
+          : pointIndexHit();
 
-        // Find the nearest
-        if (patchFaces.size())
+        if (pih.hit())
         {
-            nearHit = patchTree.findNearest(sample, sqr(maxDistance_));
-        }
-        else
-        {
-            nearHit.setMiss();
-        }
-
-        // Fill in the information
-        if (nearHit.hit())
-        {
-            nearHit.setIndex(patchFaces[nearHit.index()]);
-            nearDist = magSqr(nearHit.hitPoint() - sample);
-            nearProc = Pstream::myProcNo();
-        }
-        else
-        {
-            nearHit.setIndex(-1);
-            nearDist = Foam::sqr(great);
-            nearProc = Pstream::myProcNo();
+            nearest[sampleI].proci = Pstream::myProcNo();
+            nearest[sampleI].elementi = patchFaces[pih.index()];
+            nearest[sampleI].data.first() = magSqr(pih.hitPoint() - sample);
+            nearest[sampleI].data.second() = pih.hitPoint();
         }
     }
 
     // Reduce to get the nearest patch locations globally
-    Pstream::listCombineGather(nearest, mappedPatchBase::nearestEqOp());
+    Pstream::listCombineGather
+    (
+        nearest,
+        RemoteData<Tuple2<scalar, point>>::smallestFirstEqOp()
+    );
     Pstream::listCombineScatter(nearest);
 
     // Dump connecting lines from the sampling points to the hit locations
@@ -150,13 +139,13 @@ void Foam::sampledSets::boundaryPoints::calcSamples
 
         label verti = 0;
 
-        forAll(nearest, i)
+        forAll(nearest, sampleI)
         {
-            if (nearest[i].first().hit())
+            if (nearest[sampleI].proci != -1)
             {
-                meshTools::writeOBJ(str, points_[i]);
+                meshTools::writeOBJ(str, points_[sampleI]);
                 verti++;
-                meshTools::writeOBJ(str, nearest[i].first().hitPoint());
+                meshTools::writeOBJ(str, nearest[sampleI].data.second());
                 verti++;
                 str << "l " << verti - 1 << ' ' << verti << nl;
             }
@@ -166,16 +155,13 @@ void Foam::sampledSets::boundaryPoints::calcSamples
     // Store the sampling locations on the nearest processor
     forAll(nearest, sampleI)
     {
-        const pointIndexHit& nearHit = nearest[sampleI].first();
-        const label& nearProc = nearest[sampleI].second().second();
-
-        if (nearHit.hit())
+        if (nearest[sampleI].proci != -1)
         {
-            if (nearProc == Pstream::myProcNo())
+            if (nearest[sampleI].proci == Pstream::myProcNo())
             {
-                label facei = nearHit.index();
+                const label facei = nearest[sampleI].elementi;
 
-                samplingPositions.append(nearHit.hitPoint());
+                samplingPositions.append(nearest[sampleI].data.second());
                 samplingSegments.append(sampleI);
                 samplingCells.append(mesh().faceOwner()[facei]);
                 samplingFaces.append(facei);

@@ -225,7 +225,7 @@ public:
             void toPrimary
             (
                 const label regionPatchi,
-                List<Type>& regionField
+                Field<Type>& regionField
             ) const;
 
             //- Convert a local region field to the primary region with op
@@ -233,7 +233,7 @@ public:
             void toPrimary
             (
                 const label regionPatchi,
-                List<Type>& regionField,
+                Field<Type>& regionField,
                 const CombineOp& cop
             ) const;
 
@@ -242,7 +242,7 @@ public:
             void toRegion
             (
                 const label regionPatchi,
-                List<Type>& primaryFieldField
+                Field<Type>& primaryFieldField
             ) const;
 
             //- Return a primary patch field mapped the region internal field

@@ -25,11 +25,11 @@ License
 
 #include "mappedPatchBase.H"
 
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::mappedPatchBase::distribute(List<Type>& lst) const
+Foam::tmp<Foam::Field<Type>>
+Foam::mappedPatchBase::distribute(const Field<Type>& fld) const
 {
     switch (mode_)
     {
@@ -39,116 +39,77 @@ void Foam::mappedPatchBase::distribute(List<Type>& lst) const
             {
                 calcAMI();
             }
-            lst = AMIPtr_->interpolateToSource(Field<Type>(move(lst)));
-            break;
+            return AMIPtr_->interpolateToSource(fld);
         }
         default:
         {
-            map().distribute(lst);
-        }
-    }
-}
-
-
-template<class Type, class CombineOp>
-void Foam::mappedPatchBase::distribute
-(
-    List<Type>& lst,
-    const CombineOp& cop
-) const
-{
-    switch (mode_)
-    {
-        case NEARESTPATCHFACEAMI:
-        {
-            if (AMIPtr_.empty())
+            if (mapPtr_.empty())
             {
-                calcAMI();
+                calcMapping();
             }
-            lst = AMIPtr_->interpolateToSource(Field<Type>(move(lst)), cop);
-            break;
-        }
-        default:
-        {
-            distributionMapBase::distribute
-            (
-                Pstream::defaultCommsType,
-                map().schedule(),
-                map().constructSize(),
-                map().subMap(),
-                false,
-                map().constructMap(),
-                false,
-                lst,
-                cop,
-                flipOp(),
-                Type(Zero)
-            );
+            tmp<Field<Type>> tResult(new Field<Type>(fld, mapIndices_));
+            mapPtr_->distribute(tResult.ref());
+            return tResult;
         }
     }
 }
 
 
 template<class Type>
-void Foam::mappedPatchBase::reverseDistribute(List<Type>& lst) const
+Foam::tmp<Foam::Field<Type>>
+Foam::mappedPatchBase::distribute(const tmp<Field<Type>>& fld) const
+{
+    tmp<Field<Type>> tResult = distribute(fld());
+    fld.clear();
+    return tResult;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::mappedPatchBase::reverseDistribute(const Field<Type>& fld) const
 {
     switch (mode_)
     {
+        case NEARESTPATCHFACE:
+        {
+            if (mapPtr_.empty())
+            {
+                calcMapping();
+            }
+            Field<Type> sampleFld(fld);
+            mapPtr_->reverseDistribute(mapIndices_.size(), sampleFld);
+            tmp<Field<Type>> tResult(new Field<Type>(samplePolyPatch().size()));
+            UIndirectList<Type>(tResult.ref(), mapIndices_) = fld;
+            return tResult;
+        }
         case NEARESTPATCHFACEAMI:
         {
             if (AMIPtr_.empty())
             {
                 calcAMI();
             }
-            lst = AMIPtr_->interpolateToTarget(Field<Type>(move(lst)));
-            break;
+            return AMIPtr_->interpolateToTarget(fld);
         }
         default:
         {
-            map().reverseDistribute(sampleSize(), lst);
-            break;
+            FatalErrorInFunction
+                << "Reverse distribute can only be used in "
+                << sampleModeNames_[NEARESTPATCHFACE] << " or "
+                << sampleModeNames_[NEARESTPATCHFACEAMI] << "mode"
+                << exit(FatalError);
         }
     }
 }
 
 
-template<class Type, class CombineOp>
-void Foam::mappedPatchBase::reverseDistribute
-(
-    List<Type>& lst,
-    const CombineOp& cop
-) const
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::mappedPatchBase::reverseDistribute(const tmp<Field<Type>>& fld) const
 {
-    switch (mode_)
-    {
-        case NEARESTPATCHFACEAMI:
-        {
-            if (AMIPtr_.empty())
-            {
-                calcAMI();
-            }
-            lst = AMIPtr_->interpolateToTarget(Field<Type>(move(lst)), cop);
-            break;
-        }
-        default:
-        {
-            distributionMapBase::distribute
-            (
-                Pstream::defaultCommsType,
-                map().schedule(),
-                sampleSize(),
-                map().constructMap(),
-                false,
-                map().subMap(),
-                false,
-                lst,
-                cop,
-                flipOp(),
-                Type(Zero)
-            );
-            break;
-        }
-    }
+    tmp<Field<Type>> tResult = reverseDistribute(fld());
+    fld.clear();
+    return tResult;
 }
 
 

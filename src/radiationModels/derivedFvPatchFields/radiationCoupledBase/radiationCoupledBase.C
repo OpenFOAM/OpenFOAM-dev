@@ -142,7 +142,7 @@ Foam::radiationCoupledBase::~radiationCoupledBase()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalarField Foam::radiationCoupledBase::emissivity() const
+Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
 {
     switch (method_)
     {
@@ -168,16 +168,14 @@ Foam::scalarField Foam::radiationCoupledBase::emissivity() const
             // NOTE: for an opaqueSolid the absorptionEmission model returns the
             // emissivity of the surface rather than the emission coefficient
             // and the input specification MUST correspond to this.
-            scalarField emissivity
-            (
-                radiation.absorptionEmission().e()().boundaryField()
-                [
-                    nbrPatch.index()
-                ]
-            );
-            mpp.distribute(emissivity);
-
-            return emissivity;
+            return
+                mpp.distribute
+                (
+                    radiation.absorptionEmission().e()().boundaryField()
+                    [
+                        nbrPatch.index()
+                    ]
+                );
         }
         break;
 

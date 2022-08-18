@@ -26,6 +26,7 @@ License
 #include "sampledPatchInternalField.H"
 #include "interpolationCellPoint.H"
 #include "PrimitivePatchInterpolation.H"
+#include "OBJstream.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -64,6 +65,45 @@ Foam::sampledSurfaces::patchInternalField::sampleField
 }
 
 
+namespace Foam
+{
+
+template<class Type>
+inline labelList hist(const List<List<Type>>& ll)
+{
+    labelList result;
+    forAll(ll, i)
+    {
+        const label s = ll[i].size();
+        result.resize(max(result.size(), s + 1), 0);
+        result[s] ++;
+    }
+    return result;
+}
+
+template<class Type>
+inline List<Type> flatten(const List<List<Type>>& ll)
+{
+    label s = 0;
+    forAll(ll, i)
+    {
+        s += ll[i].size();
+    }
+
+    List<Type> result(s);
+    label resulti = 0;
+    forAll(ll, i)
+    {
+        SubList<Type>(result, ll[i].size(), resulti) = ll[i];
+        resulti += ll[i].size();
+    }
+
+    return result;
+}
+
+}
+
+
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::sampledSurfaces::patchInternalField::interpolateField
@@ -82,35 +122,32 @@ Foam::sampledSurfaces::patchInternalField::interpolateField
 
     forAll(patchIDs(), i)
     {
-        // See mappedFixedValueFvPatchField
+        // Cells on which samples are generated
+        const labelList& sampleCells = mappers_[i].mapIndices();
+
+        // Send the patch points to the cells
         const distributionMap& distMap = mappers_[i].map();
+        pointField samplePoints(mappers_[i].samplePoints());
+        distMap.reverseDistribute(sampleCells.size(), samplePoints);
 
-        // Send back sample points to processor that holds the cell.
-        // Mark cells with point::max so we know which ones we need
-        // to interpolate (since expensive).
-        vectorField samples(mappers_[i].samplePoints());
-        distMap.reverseDistribute(mesh().nCells(), point::max, samples);
-
-        Field<Type> patchVals(mesh().nCells());
-
-        forAll(samples, celli)
+        // Interpolate values
+        Field<Type> sampleValues(sampleCells.size());
+        forAll(sampleCells, i)
         {
-            if (samples[celli] != point::max)
+            if (sampleCells[i] != -1)
             {
-                patchVals[celli] = interpolator.interpolate
-                (
-                    samples[celli],
-                    celli
-                );
+                sampleValues[i] =
+                    interpolator.interpolate(samplePoints[i], sampleCells[i]);
             }
         }
 
-        distMap.distribute(patchVals);
+        // Send the values back to the patch
+        Field<Type> patchValues(sampleValues);
+        distMap.distribute(patchValues);
 
-        // Now patchVals holds the interpolated data in patch face order.
-        // Collect.
-        SubList<Type>(allPatchVals, patchVals.size(), sz) = patchVals;
-        sz += patchVals.size();
+        // Insert into the full value field
+        SubList<Type>(allPatchVals, patchValues.size(), sz) = patchValues;
+        sz += patchValues.size();
     }
 
     // Interpolate to points. Reconstruct the patch of all faces to aid

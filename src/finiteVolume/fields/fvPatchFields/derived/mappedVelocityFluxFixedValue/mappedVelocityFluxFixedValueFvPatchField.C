@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,11 +172,8 @@ void Foam::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
                 }
             }
 
-            mpp.distribute(allUValues);
-            newUValues.transfer(allUValues);
-
-            mpp.distribute(allPhiValues);
-            newPhiValues.transfer(allPhiValues);
+            newUValues = mpp.distribute(allUValues);
+            newPhiValues = mpp.distribute(allPhiValues);
 
             break;
         }
@@ -186,11 +183,8 @@ void Foam::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
             const label nbrPatchID =
                 nbrMesh.boundaryMesh().findPatchID(mpp.samplePatch());
 
-            newUValues = UField.boundaryField()[nbrPatchID];
-            mpp.distribute(newUValues);
-
-            newPhiValues = phiField.boundaryField()[nbrPatchID];
-            mpp.distribute(newPhiValues);
+            newUValues = mpp.distribute(UField.boundaryField()[nbrPatchID]);
+            newPhiValues = mpp.distribute(phiField.boundaryField()[nbrPatchID]);
 
             break;
         }

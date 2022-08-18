@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -216,27 +216,22 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
             << "currently of type " << nbrTp.type() << exit(FatalError);
     }
 
+    const scalarField myKDelta(kappa(*this)*patch().deltaCoeffs());
+
     const thisType& nbrField = refCast<const thisType>(nbrTp);
 
-    // Swap to obtain full local values of neighbour internal field
-    tmp<scalarField> nbrIntFld(new scalarField(nbrField.size(), 0.0));
-    tmp<scalarField> nbrKDelta(new scalarField(nbrField.size(), 0.0));
-
-    if (contactRes_ == 0.0)
-    {
-        nbrIntFld.ref() = nbrField.patchInternalField();
-        nbrKDelta.ref() = nbrField.kappa(nbrField)*nbrPatch.deltaCoeffs();
-    }
-    else
-    {
-        nbrIntFld.ref() = nbrField;
-        nbrKDelta.ref() = contactRes_;
-    }
-
-    mpp.distribute(nbrIntFld.ref());
-    mpp.distribute(nbrKDelta.ref());
-
-    tmp<scalarField> myKDelta = kappa(*this)*patch().deltaCoeffs();
+    const scalarField nbrIntFld
+    (
+        contactRes_ == 0
+      ? mpp.distribute(nbrField.patchInternalField())
+      : mpp.distribute(nbrField)
+    );
+    const scalarField nbrKDelta
+    (
+        contactRes_ == 0
+      ? mpp.distribute(nbrField.kappa(nbrField)*nbrPatch.deltaCoeffs())
+      : tmp<scalarField>(new scalarField(contactRes_, nbrField.size()))
+    );
 
     // Both sides agree on
     // - temperature : (myKDelta*fld + nbrKDelta*nbrFld)/(myKDelta+nbrKDelta)
@@ -251,11 +246,11 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
     //    same on both sides. This leads to the choice of
     //    - refGradient = qs_/kappa;
     //    - refValue = neighbour value
-    //    - mixFraction = nbrKDelta / (nbrKDelta + myKDelta())
+    //    - mixFraction = nbrKDelta / (nbrKDelta + myKDelta)
 
-    this->refValue() = nbrIntFld();
+    this->refValue() = nbrIntFld;
     this->refGrad() = qs_/kappa(*this);
-    this->valueFraction() = nbrKDelta()/(nbrKDelta() + myKDelta());
+    this->valueFraction() = nbrKDelta/(nbrKDelta + myKDelta);
 
     mixedFvPatchScalarField::updateCoeffs();
 

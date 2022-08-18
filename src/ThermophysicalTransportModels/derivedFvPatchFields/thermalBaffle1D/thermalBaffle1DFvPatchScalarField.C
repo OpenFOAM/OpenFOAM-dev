@@ -252,13 +252,7 @@ baffleThickness() const
     {
         const mappedPatchBase& mpp =
             refCast<const mappedPatchBase>(patch().patch());
-
-        tmp<scalarField> nbrBaffleThickness
-        (
-            new scalarField(nbrField().baffleThickness())
-        );
-        mpp.distribute(nbrBaffleThickness.ref());
-        return nbrBaffleThickness;
+        return mpp.distribute(nbrField().baffleThickness());
     }
 }
 
@@ -274,13 +268,7 @@ tmp<scalarField> thermalBaffle1DFvPatchScalarField<solidType>::qs() const
     {
         const mappedPatchBase& mpp =
             refCast<const mappedPatchBase>(patch().patch());
-
-        tmp<scalarField> nbrQs
-        (
-            new scalarField(nbrField().qs())
-        );
-        mpp.distribute(nbrQs.ref());
-        return nbrQs;
+        return mpp.distribute(nbrField().qs());
     }
 }
 
@@ -391,8 +379,7 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
         scalarField kappaDelta(kappap*patch().deltaCoeffs());
 
         // Neighbour properties
-        scalarField nbrTp(nbrField());
-        mpp.distribute(nbrTp);
+        const scalarField nbrTp(mpp.distribute(nbrField()));
 
         // Solid properties
         scalarField kappas(patch().size(), 0.0);

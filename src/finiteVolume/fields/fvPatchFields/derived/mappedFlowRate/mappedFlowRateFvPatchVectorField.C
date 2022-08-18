@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,11 +112,13 @@ void Foam::mappedFlowRateFvPatchVectorField::updateCoeffs()
         nbrMesh
     ).boundary()[mpp.samplePolyPatch().index()];
 
-    scalarList phi =
-        nbrPatch.lookupPatchField<surfaceScalarField, scalar>(nbrPhiName_);
-
-    mpp.distribute(phi);
-
+    const scalarField phi
+    (
+        mpp.distribute
+        (
+            nbrPatch.lookupPatchField<surfaceScalarField, scalar>(nbrPhiName_)
+        )
+    );
 
     const surfaceScalarField& phiName =
         db().lookupObject<surfaceScalarField>(phiName_);

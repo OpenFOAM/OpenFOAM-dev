@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,7 +182,6 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
     const fvPatch& nbrPatch =
         refCast<const fvMesh>(nbrMesh).boundary()[samplePatchi];
 
-
     scalarField Tc(patchInternalField());
     scalarField& Tp = *this;
 
@@ -204,36 +203,37 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
     const thisType& nbrField = refCast<const thisType>(nbrTp);
 
     // Swap to obtain full local values of neighbour internal field
-    scalarField TcNbr(nbrField.patchInternalField());
-    mpp.distribute(TcNbr);
+    const scalarField TcNbr(mpp.distribute(nbrField.patchInternalField()));
 
+    const scalarField KDelta(kappa(*this)*patch().deltaCoeffs());
 
     // Swap to obtain full local values of neighbour K*delta
-    scalarField KDeltaNbr;
-    if (contactRes_ == 0.0)
-    {
-        KDeltaNbr = nbrField.kappa(nbrField)*nbrPatch.deltaCoeffs();
-    }
-    else
-    {
-        KDeltaNbr.setSize(nbrField.size(), contactRes_);
-    }
-    mpp.distribute(KDeltaNbr);
+    const scalarField KDeltaNbr
+    (
+        contactRes_ == 0
+      ? mpp.distribute(nbrField.kappa(nbrField)*nbrPatch.deltaCoeffs())
+      : tmp<scalarField>(new scalarField(nbrField.size(), contactRes_))
+    );
 
-    scalarField KDelta(kappa(*this)*patch().deltaCoeffs());
+    const scalarField qr
+    (
+        qrName_ != "none"
+      ? static_cast<const scalarField&>
+        (
+            patch().lookupPatchField<volScalarField, scalar>(qrName_)
+        )
+      : scalarField(Tp.size(), 0)
+    );
 
-    scalarField qr(Tp.size(), 0.0);
-    if (qrName_ != "none")
-    {
-        qr = patch().lookupPatchField<volScalarField, scalar>(qrName_);
-    }
-
-    scalarField qrNbr(Tp.size(), 0.0);
-    if (qrNbrName_ != "none")
-    {
-        qrNbr = nbrPatch.lookupPatchField<volScalarField, scalar>(qrNbrName_);
-        mpp.distribute(qrNbr);
-    }
+    const scalarField qrNbr
+    (
+        qrNbrName_ != "none"
+      ? mpp.distribute
+        (
+            nbrPatch.lookupPatchField<volScalarField, scalar>(qrNbrName_)
+        )
+      : tmp<scalarField>(new scalarField(Tp.size(), 0))
+    );
 
     valueFraction() = KDeltaNbr/(KDeltaNbr + KDelta);
     refValue() = TcNbr;

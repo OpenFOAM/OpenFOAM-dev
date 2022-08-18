@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,8 +127,8 @@ void Foam::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
             const label samplePatchi = mpp.samplePolyPatch().index();
             const fvPatchField<Type>& nbrPatchField =
                 this->sampleField().boundaryField()[samplePatchi];
-            nbrIntFld = nbrPatchField.patchInternalField();
-            mpp.distribute(nbrIntFld);
+
+            nbrIntFld = mpp.distribute(nbrPatchField.patchInternalField());
 
             break;
         }
@@ -151,8 +151,7 @@ void Foam::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
                 }
             }
 
-            mpp.distribute(allValues);
-            nbrIntFld.transfer(allValues);
+            nbrIntFld = mpp.distribute(allValues);
 
             break;
         }

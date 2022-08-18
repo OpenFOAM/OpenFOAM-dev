@@ -146,11 +146,7 @@ mappedPatchFieldBase<Type>::sampleField() const
         if (fieldName_ == patchField_.internalField().name())
         {
             // Optimisation: bypass field lookup
-            return
-                dynamic_cast<const fieldType&>
-                (
-                    patchField_.internalField()
-                );
+            return dynamic_cast<const fieldType&>(patchField_.internalField());
         }
         else
         {
@@ -170,13 +166,12 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 
+    const fvMesh& nbrMesh = refCast<const fvMesh>(mapper_.sampleMesh());
+
     // Since we're inside initEvaluate/evaluate there might be processor
     // comms underway. Change the tag we use.
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag + 1;
-
-    const fvMesh& thisMesh = patchField_.patch().boundaryMesh().mesh();
-    const fvMesh& nbrMesh = refCast<const fvMesh>(mapper_.sampleMesh());
 
     // Result of obtaining remote values
     tmp<Field<Type>> tnewValues(new Field<Type>(0));
@@ -186,24 +181,10 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
     {
         case mappedPatchBase::NEARESTCELL:
         {
-            const distributionMap& distMap = mapper_.map();
-
             if (interpolationScheme_ != interpolationCell<Type>::typeName)
             {
-                // Send back sample points to the processor that holds the cell
-                vectorField samples(mapper_.samplePoints());
-                distMap.reverseDistribute
-                (
-                    (
-                        mapper_.sameRegion()
-                      ? thisMesh.nCells()
-                      : nbrMesh.nCells()
-                    ),
-                    point::max,
-                    samples
-                );
-
-                autoPtr<interpolation<Type>> interpolator
+                // Create an interpolation
+                autoPtr<interpolation<Type>> interpolatorPtr
                 (
                     interpolation<Type>::New
                     (
@@ -211,27 +192,42 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
                         sampleField()
                     )
                 );
-                const interpolation<Type>& interp = interpolator();
+                const interpolation<Type>& interpolator = interpolatorPtr();
 
-                newValues.setSize(samples.size(), pTraits<Type>::max);
-                forAll(samples, celli)
+                // Cells on which samples are generated
+                const labelList& sampleCells = mapper_.mapIndices();
+
+                // Send the patch points to the cells
+                pointField samplePoints(mapper_.samplePoints());
+                mapper_.map().reverseDistribute
+                (
+                    sampleCells.size(),
+                    samplePoints
+                );
+
+                // Interpolate values
+                Field<Type> sampleValues(sampleCells.size());
+                forAll(sampleCells, i)
                 {
-                    if (samples[celli] != point::max)
+                    if (sampleCells[i] != -1)
                     {
-                        newValues[celli] = interp.interpolate
-                        (
-                            samples[celli],
-                            celli
-                        );
+                        sampleValues[i] =
+                            interpolator.interpolate
+                            (
+                                samplePoints[i],
+                                sampleCells[i]
+                            );
                     }
                 }
+
+                // Send the values back to the patch
+                newValues = sampleValues;
+                mapper_.map().distribute(newValues);
             }
             else
             {
-                newValues = sampleField();
+                newValues = mapper_.distribute(sampleField());
             }
-
-            distMap.distribute(newValues);
 
             break;
         }
@@ -252,8 +248,8 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
 
             const fieldType& nbrField = sampleField();
 
-            newValues = nbrField.boundaryField()[nbrPatchID];
-            mapper_.distribute(newValues);
+            newValues =
+                mapper_.distribute(nbrField.boundaryField()[nbrPatchID]);
 
             break;
         }
@@ -275,8 +271,7 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
                 }
             }
 
-            mapper_.distribute(allValues);
-            newValues.transfer(allValues);
+            newValues = mapper_.distribute(allValues);
 
             break;
         }

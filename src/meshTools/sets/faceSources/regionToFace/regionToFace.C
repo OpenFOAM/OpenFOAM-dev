@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "regionToFace.H"
 #include "polyMesh.H"
 #include "faceSet.H"
-#include "mappedPatchBase.H"
+#include "RemoteData.H"
 #include "indirectPrimitivePatch.H"
 #include "PatchTools.H"
 #include "addToRunTimeSelectionTable.H"
@@ -108,45 +108,36 @@ void Foam::regionToFace::combine(topoSet& set, const bool add) const
         mesh_.points()
     );
 
-    mappedPatchBase::nearInfo ni
-    (
-        pointIndexHit(false, Zero, -1),
-        Tuple2<scalar, label>
-        (
-            sqr(great),
-            Pstream::myProcNo()
-        )
-    );
+    RemoteData<scalar> ni;
 
     forAll(patch, i)
     {
         const point& fc = patch.faceCentres()[i];
-        scalar d2 = magSqr(fc-nearPoint_);
 
-        if (!ni.first().hit() || d2 < ni.second().first())
+        const scalar dSqr = magSqr(fc - nearPoint_);
+
+        if (ni.proci == -1 || dSqr < ni.data)
         {
-            ni.second().first() = d2;
-            ni.first().setHit();
-            ni.first().setPoint(fc);
-            ni.first().setIndex(i);
+            ni.proci = Pstream::myProcNo();
+            ni.elementi = i;
+            ni.data = dSqr;
         }
     }
 
     // Globally reduce
-    combineReduce(ni, mappedPatchBase::nearestEqOp());
+    combineReduce(ni, RemoteData<scalar>::smallestEqOp());
 
-    Info<< "    Found nearest face at " << ni.first().rawPoint()
-        << " on processor " << ni.second().second()
-        << " face " << ni.first().index()
-        << " distance " << Foam::sqrt(ni.second().first()) << endl;
+    Info<< "    Found nearest face on processor " << ni.proci
+        << " face " << ni.elementi
+        << " distance " << Foam::sqrt(ni.data) << endl;
 
     labelList faceRegion(patch.size(), -1);
     markZone
     (
         patch,
-        ni.second().second(),   // proci
-        ni.first().index(),     // start face
-        0,                      // currentZone
+        ni.proci,
+        ni.elementi,
+        0,
         faceRegion
     );
 

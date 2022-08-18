@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,10 +104,10 @@ protected:
         // Cached injector fields per film patch
 
             //- Film temperature / patch face
-            scalarList TFilmPatch_;
+            scalarField TFilmPatch_;
 
             //- Film specific heat capacity / patch face
-            scalarList CpFilmPatch_;
+            scalarField CpFilmPatch_;
 
 
         // Interaction model data

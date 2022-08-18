@@ -116,12 +116,14 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
 
     // Get the cell-mass fractions
     const scalarField Yc(patchInternalField());
-    scalarField nbrYc
+    const scalarField nbrYc
     (
-        nbrPatch.lookupPatchField<volScalarField, scalar>(YName)
-       .patchInternalField()
+        mpp.distribute
+        (
+            nbrPatch.lookupPatchField<volScalarField, scalar>(YName)
+           .patchInternalField()
+        )
     );
-    mpp.distribute(nbrYc);
 
     // Get the patch delta coefficients multiplied by the diffusivity
     const thermophysicalTransportModel& ttm =
@@ -133,11 +135,13 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     (
         ttm.alphaEff(patch().index())*patch().deltaCoeffs()
     );
-    scalarField nbrAlphaEffDeltap
+    const scalarField nbrAlphaEffDeltap
     (
-        ttm.alphaEff(nbrPatch.index())*nbrPatch.deltaCoeffs()
+        mpp.distribute
+        (
+            ttm.alphaEff(nbrPatch.index())*nbrPatch.deltaCoeffs()
+        )
     );
-    mpp.distribute(nbrAlphaEffDeltap);
 
     // Get the specie molecular weight, if needed
     scalar Wi = NaN;
@@ -152,8 +156,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     if (property_ == moleFraction || property_ == partialPressure)
     {
         tW = thermo.W(patch().index());
-        tNbrW = thermo.W(nbrPatch.index());
-        mpp.distribute(tNbrW.ref());
+        tNbrW = mpp.distribute(thermo.W(nbrPatch.index()));
     }
 
     // Construct coefficients that convert mass fraction to the property that
@@ -172,8 +175,8 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
         case molarConcentration:
             {
                 k *= thermo.rho(patch().index())/Wi;
-                scalarField nbrRhop(thermo.rho(nbrPatch.index()));
-                mpp.distribute(nbrRhop);
+                tmp<scalarField> nbrRhop =
+                    mpp.distribute(thermo.rho(nbrPatch.index()));
                 nbrK *= nbrRhop/Wi;
             }
             break;
@@ -181,8 +184,11 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
         case partialPressure:
             {
                 k *= thermo.p().boundaryField()[patch().index()]*tW/Wi;
-                scalarField nbrPp(thermo.p().boundaryField()[nbrPatch.index()]);
-                mpp.distribute(nbrPp);
+                tmp<scalarField> nbrPp =
+                    mpp.distribute
+                    (
+                        thermo.p().boundaryField()[nbrPatch.index()]
+                    );
                 nbrK *= nbrPp*tNbrW/Wi;
             }
             break;

@@ -137,7 +137,7 @@ public:
 
 
             //- Calculate corresponding emissivity field
-            scalarField emissivity() const;
+            tmp<scalarField> emissivity() const;
 
 
         // Mapping functions
