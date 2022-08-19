@@ -115,8 +115,8 @@ Foam::blendingMethods::linear::linear
         {
             FatalErrorInFunction
                 << "The fully continuous alpha specified for " << iter().name()
-                << " is not greater than the greater than the partly "
-                << "continuous alpha" << exit(FatalError);
+                << " is not greater than the partly continuous alpha"
+                << exit(FatalError);
         }
     }
 
