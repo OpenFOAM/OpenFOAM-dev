@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
     const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
-    return this->source(field, field.name());
+    return this->source(rho, field, field.name());
 }
 
 
@@ -121,7 +121,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
     const word& fieldName
 ) const
 {
-    return source(field, fieldName, dimVolume/dimTime);
+    return source(field, fieldName, dimVolume/dimTime, rho);
 }
 
 
@@ -133,7 +133,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
     const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
-    return this->source(field, field.name());
+    return this->source(alpha, rho, field, field.name());
 }
 
 
@@ -146,8 +146,81 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
     const word& fieldName
 ) const
 {
-    return source(field, fieldName, dimVolume/dimTime);
+    return source(field, fieldName, dimVolume/dimTime, alpha, rho);
 }
 
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
+(
+    const geometricOneField& alpha,
+    const geometricOneField& rho,
+    const GeometricField<Type, fvPatchField, volMesh>& field
+) const
+{
+    return this->source(field, field.name());
+}
+
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
+(
+    const volScalarField& alpha,
+    const geometricOneField& rho,
+    const GeometricField<Type, fvPatchField, volMesh>& field
+) const
+{
+    volScalarField one
+    (
+        IOobject
+        (
+            "one",
+            this->mesh_.time().timeName(),
+            this->mesh_,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+        this->mesh_,
+        dimensionedScalar(dimless, 1.0)
+    );
+
+    return this->source(alpha, one, field, field.name());
+}
+
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
+(
+    const geometricOneField& alpha,
+    const volScalarField& rho,
+    const GeometricField<Type, fvPatchField, volMesh>& field
+) const
+{
+    return this->source(rho, field, field.name());
+}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::d2dt2
+(
+    const GeometricField<Type, fvPatchField, volMesh>& field
+) const
+{
+    return this->d2dt2(field, field.name());
+}
+
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::d2dt2
+(
+    const GeometricField<Type, fvPatchField, volMesh>& field,
+    const word& fieldName
+) const
+{
+    return source(field, fieldName, dimVolume/sqr(dimTime));
+}
 
 // ************************************************************************* //

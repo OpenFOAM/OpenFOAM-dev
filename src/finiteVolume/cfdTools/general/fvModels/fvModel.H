@@ -36,10 +36,12 @@ SourceFiles
 #define fvModel_H
 
 #include "fvMatricesFwd.H"
-#include "volFieldsFwd.H"
+#include "volFields.H"
 #include "dictionary.H"
 #include "dimensionSet.H"
 #include "fvModelM.H"
+#include "geometricOneField.H"
+#include "MeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -321,6 +323,48 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
+                const GeometricField<Type, fvPatchField, volMesh>& field,
+                const word& fieldName
+            ) const;
+
+            //- Return source for a phase equation
+            template<class Type>
+            tmp<fvMatrix<Type>> source
+            (
+                const volScalarField& alpha,
+                const geometricOneField& rho,
+                const GeometricField<Type, fvPatchField, volMesh>& field
+            ) const;
+
+            //- Return source for a phase equation
+            template<class Type>
+            tmp<fvMatrix<Type>> source
+            (
+                const geometricOneField& alpha,
+                const volScalarField& rho,
+                const GeometricField<Type, fvPatchField, volMesh>& field
+            ) const;
+
+            //- Return source for a phase equation
+            template<class Type>
+            tmp<fvMatrix<Type>> source
+            (
+                const geometricOneField& alpha,
+                const geometricOneField& rho,
+                const GeometricField<Type, fvPatchField, volMesh>& field
+            ) const;
+
+            //- Return source for an equation with a second time derivative
+            template<class Type>
+            tmp<fvMatrix<Type>> d2dt2
+            (
+                const GeometricField<Type, fvPatchField, volMesh>& field
+            ) const;
+
+            //- Return source for an equation with a second time derivative
+            template<class Type>
+            tmp<fvMatrix<Type>> d2dt2
+            (
                 const GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             ) const;
