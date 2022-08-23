@@ -721,6 +721,11 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate
 
     polyMesh::readUpdateState state = polyMesh::readUpdate();
 
+    if (state == polyMesh::TOPO_PATCH_CHANGE)
+    {
+        boundary_.readUpdate(boundaryMesh());
+    }
+
     if
     (
         stitcher_.valid()
@@ -737,8 +742,6 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate
         {
             Info<< "Boundary and topological update" << endl;
         }
-
-        boundary_.readUpdate(boundaryMesh());
 
         clearOut();
     }
