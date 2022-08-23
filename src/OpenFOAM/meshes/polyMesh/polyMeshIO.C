@@ -125,11 +125,6 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         clearOut();
 
-        // Set instance to new instance. Note that points instance can differ
-        // from from faces instance.
-        setInstance(facesInst);
-        points_.instance() = pointsInst;
-
         points_ = pointIOField
         (
             IOobject
@@ -143,6 +138,8 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
                 false
             )
         );
+
+        points_.instance() = pointsInst;
 
         faces_ = faceCompactIOList
         (
@@ -158,6 +155,8 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
             )
         );
 
+        faces_.instance() = facesInst;
+
         owner_ = labelIOList
         (
             IOobject
@@ -172,6 +171,8 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
             )
         );
 
+        owner_.instance() = facesInst;
+
         neighbour_ = labelIOList
         (
             IOobject
@@ -185,6 +186,8 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
                 false
             )
         );
+
+        neighbour_.instance() = facesInst;
 
         // Reset the boundary patches
         polyBoundaryMesh newBoundary
@@ -256,6 +259,8 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
                 );
             }
         }
+
+        boundary_.instance() = facesInst;
 
 
         // Boundary is set so can use initMesh now (uses boundary_ to
@@ -338,6 +343,8 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
             pointZones_.set(czI, newPointZones[czI].clone(pointZones_));
         }
 
+        pointZones_.instance() = facesInst;
+
 
         meshFaceZones newFaceZones
         (
@@ -379,6 +386,8 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
             faceZones_.set(fzI, newFaceZones[fzI].clone(faceZones_));
         }
 
+        faceZones_.instance() = facesInst;
+
 
         meshCellZones newCellZones
         (
@@ -415,6 +424,9 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         {
             cellZones_.set(czI, newCellZones[czI].clone(cellZones_));
         }
+
+        cellZones_.instance() = facesInst;
+
 
         // Re-read tet base points
         tetBasePtIsPtr_ = readTetBasePtIs();
@@ -469,6 +481,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         }
 
         points_.transfer(newPoints);
+
         points_.instance() = pointsInst;
 
         // Re-read tet base points
