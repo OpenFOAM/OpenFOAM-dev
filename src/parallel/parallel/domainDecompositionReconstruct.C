@@ -190,7 +190,8 @@ void Foam::domainDecomposition::reconstruct()
         (
             masterMesh,
             procMeshes()[proci],
-            couples
+            couples,
+            false
         );
 
         // Renumber addressing following the add
@@ -239,7 +240,8 @@ void Foam::domainDecomposition::reconstruct()
             (
                 masterMeshes[proci],
                 masterMeshes[procj],
-                couples
+                couples,
+                false
             );
 
             // Renumber processors that were already present

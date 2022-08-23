@@ -1017,7 +1017,7 @@ bool Foam::domainDecomposition::readReconstruct(const bool doSets)
         "cellProcAddressing",
         procMeshes()[0].facesInstance(),
         procMeshes()[0].meshDir(),
-        procMeshes()[0]
+        runTimes_.procTimes()[0]
     );
 
     const bool load = faceIo.headerOk() && procAddrIo.headerOk();
