@@ -89,11 +89,7 @@ nonConformalProcessorCyclicPolyPatch
         referPatchName,
         patchType
     ),
-    nonConformalCoupledPolyPatch
-    (
-        static_cast<const polyPatch&>(*this),
-        origPatchName
-    )
+    nonConformalCoupledPolyPatch(*this, origPatchName)
 {}
 
 
@@ -108,7 +104,7 @@ nonConformalProcessorCyclicPolyPatch
 )
 :
     processorCyclicPolyPatch(name, dict, index, bm, patchType),
-    nonConformalCoupledPolyPatch(static_cast<const polyPatch&>(*this), dict)
+    nonConformalCoupledPolyPatch(*this, dict)
 {}
 
 
@@ -120,10 +116,7 @@ nonConformalProcessorCyclicPolyPatch
 )
 :
     processorCyclicPolyPatch(pp, bm),
-    nonConformalCoupledPolyPatch
-    (
-        static_cast<const nonConformalCoupledPolyPatch&>(pp)
-    )
+    nonConformalCoupledPolyPatch(*this, pp)
 {}
 
 
@@ -138,10 +131,7 @@ nonConformalProcessorCyclicPolyPatch
 )
 :
     processorCyclicPolyPatch(pp, bm, index, newSize, newStart),
-    nonConformalCoupledPolyPatch
-    (
-        static_cast<const nonConformalCoupledPolyPatch&>(pp)
-    )
+    nonConformalCoupledPolyPatch(*this, pp)
 {}
 
 
@@ -156,10 +146,7 @@ nonConformalProcessorCyclicPolyPatch
 )
 :
     processorCyclicPolyPatch(pp, bm, index, mapAddressing, newStart),
-    nonConformalCoupledPolyPatch
-    (
-        static_cast<const nonConformalCoupledPolyPatch&>(pp)
-    )
+    nonConformalCoupledPolyPatch(*this, pp)
 {}
 
 

@@ -117,11 +117,12 @@ Foam::nonConformalPolyPatch::nonConformalPolyPatch
 
 Foam::nonConformalPolyPatch::nonConformalPolyPatch
 (
-    const nonConformalPolyPatch& patch
+    const polyPatch& patch,
+    const nonConformalPolyPatch& ncPatch
 )
 :
-    patch_(patch.patch_),
-    origPatchName_(patch.origPatchName_),
+    patch_(patch),
+    origPatchName_(ncPatch.origPatchName_),
     origPatchID_(-1)
 {
     validateSize();

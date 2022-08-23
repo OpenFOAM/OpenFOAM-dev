@@ -159,11 +159,7 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
         nbrPatchName,
         transform
     ),
-    nonConformalCoupledPolyPatch
-    (
-        static_cast<const polyPatch&>(*this),
-        origPatchName
-    ),
+    nonConformalCoupledPolyPatch(*this, origPatchName),
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),
@@ -181,7 +177,7 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
 )
 :
     cyclicPolyPatch(name, dict, index, bm, patchType, true),
-    nonConformalCoupledPolyPatch(static_cast<const polyPatch&>(*this), dict),
+    nonConformalCoupledPolyPatch(*this, dict),
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),
@@ -196,10 +192,7 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
 )
 :
     cyclicPolyPatch(pp, bm),
-    nonConformalCoupledPolyPatch
-    (
-        static_cast<const nonConformalCoupledPolyPatch&>(pp)
-    ),
+    nonConformalCoupledPolyPatch(*this, pp),
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),
@@ -219,11 +212,7 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
 )
 :
     cyclicPolyPatch(pp, bm, index, newSize, newStart, nbrPatchName),
-    nonConformalCoupledPolyPatch
-    (
-        static_cast<const polyPatch&>(*this),
-        origPatchName
-    ),
+    nonConformalCoupledPolyPatch(*this, origPatchName),
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),
@@ -241,10 +230,7 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
 )
 :
     cyclicPolyPatch(pp, bm, index, mapAddressing, newStart),
-    nonConformalCoupledPolyPatch
-    (
-        static_cast<const nonConformalCoupledPolyPatch&>(pp)
-    ),
+    nonConformalCoupledPolyPatch(*this, pp),
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),

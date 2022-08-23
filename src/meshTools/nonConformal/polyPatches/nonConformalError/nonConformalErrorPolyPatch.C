@@ -88,7 +88,7 @@ Foam::nonConformalErrorPolyPatch::nonConformalErrorPolyPatch
 )
 :
     polyPatch(name, size, start, index, bm, patchType),
-    nonConformalPolyPatch(static_cast<const polyPatch&>(*this), origPatchName)
+    nonConformalPolyPatch(*this, origPatchName)
 {}
 
 
@@ -102,7 +102,7 @@ Foam::nonConformalErrorPolyPatch::nonConformalErrorPolyPatch
 )
 :
     polyPatch(name, dict, index, bm, patchType),
-    nonConformalPolyPatch(static_cast<const polyPatch&>(*this), dict)
+    nonConformalPolyPatch(*this, dict)
 {}
 
 
@@ -113,7 +113,7 @@ Foam::nonConformalErrorPolyPatch::nonConformalErrorPolyPatch
 )
 :
     polyPatch(pp, bm),
-    nonConformalPolyPatch(static_cast<const nonConformalPolyPatch&>(pp))
+    nonConformalPolyPatch(*this, pp)
 {}
 
 
@@ -128,7 +128,7 @@ Foam::nonConformalErrorPolyPatch::nonConformalErrorPolyPatch
 )
 :
     polyPatch(pp, bm, index, newSize, newStart),
-    nonConformalPolyPatch(static_cast<const polyPatch&>(pp), origPatchName)
+    nonConformalPolyPatch(*this, origPatchName)
 {}
 
 
@@ -142,7 +142,7 @@ Foam::nonConformalErrorPolyPatch::nonConformalErrorPolyPatch
 )
 :
     polyPatch(pp, bm, index, mapAddressing, newStart),
-    nonConformalPolyPatch(static_cast<const nonConformalPolyPatch&>(pp))
+    nonConformalPolyPatch(*this, pp)
 {}
 
 

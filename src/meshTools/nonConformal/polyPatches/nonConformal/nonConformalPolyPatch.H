@@ -101,10 +101,18 @@ public:
         );
 
         //- Construct from a patch and a dictionary
-        nonConformalPolyPatch(const polyPatch& patch, const dictionary& dict);
+        nonConformalPolyPatch
+        (
+            const polyPatch& patch,
+            const dictionary& dict
+        );
 
-        //- Construct from a non-conformal patch
-        nonConformalPolyPatch(const nonConformalPolyPatch& patch);
+        //- Construct from a patch and a non-conformal patch
+        nonConformalPolyPatch
+        (
+            const polyPatch& patch,
+            const nonConformalPolyPatch& ncPatch
+        );
 
 
     //- Destructor

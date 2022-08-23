@@ -100,10 +100,11 @@ Foam::nonConformalCoupledPolyPatch::nonConformalCoupledPolyPatch
 
 Foam::nonConformalCoupledPolyPatch::nonConformalCoupledPolyPatch
 (
-    const nonConformalCoupledPolyPatch& patch
+    const polyPatch& patch,
+    const nonConformalCoupledPolyPatch& nccPatch
 )
 :
-    nonConformalPolyPatch(patch),
+    nonConformalPolyPatch(patch, nccPatch),
     patch_(refCast<const coupledPolyPatch>(patch)),
     errorPatchName_(word::null),
     errorPatchID_(-1)

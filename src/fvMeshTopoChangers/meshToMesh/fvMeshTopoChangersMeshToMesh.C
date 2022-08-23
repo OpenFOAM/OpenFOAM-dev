@@ -203,6 +203,8 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
 
         mesh().reset(newMesh);
 
+        mesh().deltaCoeffs();
+
         // Map all the volFields in the objectRegistry
         #define mapVolFieldType(Type, nullArg)                                 \
             MeshToMeshMapVolFields<Type>(mapper);

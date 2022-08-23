@@ -110,8 +110,12 @@ public:
             const dictionary& dict
         );
 
-        //- Construct from a non-conformal coupled patch
-        nonConformalCoupledPolyPatch(const nonConformalCoupledPolyPatch& patch);
+        //- Construct from a patch and a non-conformal coupled patch
+        nonConformalCoupledPolyPatch
+        (
+            const polyPatch& patch,
+            const nonConformalCoupledPolyPatch& nccPatch
+        );
 
 
     //- Destructor
