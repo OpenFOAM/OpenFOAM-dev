@@ -299,7 +299,14 @@ bool Foam::argList::hasArgs(int argc, char *argv[])
 {
     for (int i=1; i<argc; i++)
     {
-        if (argv[i][0] != '-')
+        const string arg(argv[i]);
+        const string argName(arg(1, arg.size() - 1));
+
+        if (arg[0] == '-' && validOptions.found(argName))
+        {
+            i += validOptions[argName].empty() ? 0 : 1;
+        }
+        else
         {
             return true;
         }
