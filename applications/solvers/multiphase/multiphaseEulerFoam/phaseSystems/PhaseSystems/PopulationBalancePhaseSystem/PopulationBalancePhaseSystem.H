@@ -62,9 +62,6 @@ class PopulationBalancePhaseSystem
         //- Population balances
         PtrList<diameterModels::populationBalanceModel> populationBalances_;
 
-        //- Mass transfer rates
-        phaseSystem::dmdtfTable dmdtfs_;
-
 
 public:
 

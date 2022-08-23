@@ -181,10 +181,6 @@ protected:
             const phaseModelList& phaseModels
         ) const;
 
-        //- Check that mass transfer is supported across the given interface
-        template<class ModelType>
-        void validateMassTransfer(const phaseInterface& interface) const;
-
         //- Return the sum of the phase fractions of the moving phases
         tmp<volScalarField> sumAlphaMoving() const;
 
@@ -412,6 +408,10 @@ public:
             //  returns it.
             template<class ModelType>
             static const dictionary& modelSubDict(const dictionary& dict);
+
+            //- Check that mass transfer is supported across the given interface
+            template<class ModelType>
+            void validateMassTransfer(const phaseInterface& interface) const;
 
 
         // Sub-model lookup

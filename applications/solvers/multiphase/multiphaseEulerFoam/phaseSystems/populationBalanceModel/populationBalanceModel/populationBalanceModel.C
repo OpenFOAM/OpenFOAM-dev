@@ -192,6 +192,63 @@ void Foam::diameterModels::populationBalanceModel::registerSizeGroups
 }
 
 
+void Foam::diameterModels::populationBalanceModel::initialiseDmdtfs()
+{
+    forAllConstIter
+    (
+        HashTable<const diameterModels::velocityGroup*>,
+        velocityGroupPtrs(),
+        iter1
+    )
+    {
+        const diameterModels::velocityGroup& velGrp1 = *iter1();
+
+        forAllConstIter
+        (
+            HashTable<const diameterModels::velocityGroup*>,
+            velocityGroupPtrs(),
+            iter2
+        )
+        {
+            const diameterModels::velocityGroup& velGrp2 = *iter2();
+
+            const phaseInterface interface(velGrp1.phase(), velGrp2.phase());
+
+            if
+            (
+                &velGrp1 != &velGrp2
+                &&
+                !dmdtfs_.found(interface)
+            )
+            {
+                fluid_.validateMassTransfer
+                    <diameterModels::populationBalanceModel>(interface);
+
+                dmdtfs_.insert
+                (
+                    interface,
+                    new volScalarField
+                    (
+                        IOobject
+                        (
+                            IOobject::groupName
+                            (
+                                "populationBalance:dmdtf",
+                                interface.name()
+                            ),
+                            mesh().time().timeName(),
+                            mesh()
+                        ),
+                        mesh(),
+                        dimensionedScalar(dimDensity/dimTime, 0)
+                    )
+                );
+            }
+        }
+    }
+}
+
+
 void Foam::diameterModels::populationBalanceModel::precompute()
 {
     forAll(coalescenceModels_, model)
@@ -260,22 +317,22 @@ void Foam::diameterModels::populationBalanceModel::birthByCoalescence
 
         const phaseInterface interfaceij(fi.phase(), fj.phase());
 
-        if (pDmdt_.found(interfaceij))
+        if (dmdtfs_.found(interfaceij))
         {
             const scalar dmdtSign =
                 interfaceij.index(fi.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[interfaceij] += dmdtSign*fj.x()/v*Sui_*fj.phase().rho();
+            *dmdtfs_[interfaceij] += dmdtSign*fj.x()/v*Sui_*fj.phase().rho();
         }
 
         const phaseInterface interfaceik(fi.phase(), fk.phase());
 
-        if (pDmdt_.found(interfaceik))
+        if (dmdtfs_.found(interfaceik))
         {
             const scalar dmdtSign =
                 interfaceik.index(fi.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[interfaceik] += dmdtSign*fk.x()/v*Sui_*fk.phase().rho();
+            *dmdtfs_[interfaceik] += dmdtSign*fk.x()/v*Sui_*fk.phase().rho();
         }
 
         sizeGroups_[i].shapeModelPtr()->addCoalescence(Sui_, fj, fk);
@@ -321,12 +378,12 @@ void Foam::diameterModels::populationBalanceModel::birthByBreakup
 
         const phaseInterface interface(fi.phase(), fk.phase());
 
-        if (pDmdt_.found(interface))
+        if (dmdtfs_.found(interface))
         {
             const scalar dmdtSign =
                 interface.index(fi.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[interface] += dmdtSign*Sui_*fk.phase().rho();
+            *dmdtfs_[interface] += dmdtSign*Sui_*fk.phase().rho();
         }
 
         sizeGroups_[i].shapeModelPtr()->addBreakup(Sui_, fk);
@@ -398,12 +455,12 @@ void Foam::diameterModels::populationBalanceModel::birthByBinaryBreakup
 
     const phaseInterface interfaceij(fi.phase(), fj.phase());
 
-    if (pDmdt_.found(interfaceij))
+    if (dmdtfs_.found(interfaceij))
     {
         const scalar dmdtSign =
             interfaceij.index(fi.phase()) == 0 ? +1 : -1;
 
-        *pDmdt_[interfaceij] += dmdtSign*Sui_*fj.phase().rho();
+        *dmdtfs_[interfaceij] += dmdtSign*Sui_*fj.phase().rho();
     }
 
     dimensionedScalar Eta;
@@ -425,12 +482,12 @@ void Foam::diameterModels::populationBalanceModel::birthByBinaryBreakup
 
         const phaseInterface interfacekj(fk.phase(), fj.phase());
 
-        if (pDmdt_.found(interfacekj))
+        if (dmdtfs_.found(interfacekj))
         {
             const scalar dmdtSign =
                 interfacekj.index(fk.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[interfacekj] += dmdtSign*Suk*fj.phase().rho();
+            *dmdtfs_[interfacekj] += dmdtSign*Suk*fj.phase().rho();
         }
 
         sizeGroups_[k].shapeModelPtr()->addBreakup(Suk, fj);
@@ -472,12 +529,12 @@ void Foam::diameterModels::populationBalanceModel::drift
 
         const phaseInterface interfacepe(fp.phase(), fe.phase());
 
-        if (pDmdt_.found(interfacepe))
+        if (dmdtfs_.found(interfacepe))
         {
             const scalar dmdtSign =
                 interfacepe.index(fp.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[interfacepe] -= dmdtSign*Sue*fp.phase().rho();
+            *dmdtfs_[interfacepe] -= dmdtSign*Sue*fp.phase().rho();
         }
 
         sizeGroups_[i+1].shapeModelPtr()->addDrift(Sue, fp, model);
@@ -502,12 +559,12 @@ void Foam::diameterModels::populationBalanceModel::drift
 
         const phaseInterface interfacepw(fp.phase(), fw.phase());
 
-        if (pDmdt_.found(interfacepw))
+        if (dmdtfs_.found(interfacepw))
         {
             const scalar dmdtSign =
                 interfacepw.index(fp.phase()) == 0 ? +1 : -1;
 
-            *pDmdt_[interfacepw] -= dmdtSign*Suw*fp.phase().rho();
+            *dmdtfs_[interfacepw] -= dmdtSign*Suw*fp.phase().rho();
         }
 
         sizeGroups_[i-1].shapeModelPtr()->addDrift(Suw, fp, model);
@@ -547,7 +604,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
         Sp_[i] = Zero;
     }
 
-    forAllIter(phaseSystem::dmdtfTable, pDmdt_, pDmdtIter)
+    forAllIter(phaseSystem::dmdtfTable, dmdtfs_, pDmdtIter)
     {
         *pDmdtIter() = Zero;
     }
@@ -720,8 +777,7 @@ bool Foam::diameterModels::populationBalanceModel::updateSources()
 Foam::diameterModels::populationBalanceModel::populationBalanceModel
 (
     const phaseSystem& fluid,
-    const word& name,
-    phaseSystem::dmdtfTable& pDmdt
+    const word& name
 )
 :
     regIOobject
@@ -734,7 +790,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         )
     ),
     fluid_(fluid),
-    pDmdt_(pDmdt),
+    dmdtfs_(),
     mesh_(fluid_.mesh()),
     name_(name),
     dict_
@@ -812,6 +868,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
             << exit(FatalError);
     }
 
+    this->initialiseDmdtfs();
 
     if (coalescenceModels_.size() != 0)
     {

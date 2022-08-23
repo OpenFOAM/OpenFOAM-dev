@@ -28,23 +28,6 @@ License
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class ModelType>
-void Foam::phaseSystem::validateMassTransfer
-(
-    const phaseInterface& interface
-) const
-{
-    if (interface.phase1().stationary() || interface.phase2().stationary())
-    {
-        FatalErrorInFunction
-            << "A " << ModelType::typeName << " was specified for pair "
-            << interface.name() << ", but one of these phases is stationary. "
-            << "Mass transfer is not supported on stationary phases"
-            << exit(FatalError);
-    }
-}
-
-
 namespace Foam
 {
 
@@ -452,6 +435,23 @@ const Foam::dictionary& Foam::phaseSystem::modelSubDict
     }
 
     return dict.first()->dict();
+}
+
+
+template<class ModelType>
+void Foam::phaseSystem::validateMassTransfer
+(
+    const phaseInterface& interface
+) const
+{
+    if (interface.phase1().stationary() || interface.phase2().stationary())
+    {
+        FatalErrorInFunction
+            << "A " << ModelType::typeName << " was specified for pair "
+            << interface.name() << ", but one of these phases is stationary. "
+            << "Mass transfer is not supported on stationary phases"
+            << exit(FatalError);
+    }
 }
 
 

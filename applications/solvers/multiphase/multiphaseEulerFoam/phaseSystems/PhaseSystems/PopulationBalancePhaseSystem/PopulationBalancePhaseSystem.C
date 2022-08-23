@@ -38,72 +38,9 @@ PopulationBalancePhaseSystem
     populationBalances_
     (
         this->lookup("populationBalances"),
-        diameterModels::populationBalanceModel::iNew(*this, dmdtfs_)
+        diameterModels::populationBalanceModel::iNew(*this)
     )
-{
-    forAll(populationBalances_, popBali)
-    {
-        const diameterModels::populationBalanceModel& popBal =
-            populationBalances_[popBali];
-
-        forAllConstIter
-        (
-            HashTable<const diameterModels::velocityGroup*>,
-            popBal.velocityGroupPtrs(),
-            iter1
-        )
-        {
-            const diameterModels::velocityGroup& velGrp1 = *iter1();
-
-            forAllConstIter
-            (
-                HashTable<const diameterModels::velocityGroup*>,
-                popBal.velocityGroupPtrs(),
-                iter2
-            )
-            {
-                const diameterModels::velocityGroup& velGrp2 = *iter2();
-
-                const phaseInterface interface
-                (
-                    velGrp1.phase(),
-                    velGrp2.phase()
-                );
-
-                if
-                (
-                    &velGrp1 != &velGrp2
-                    &&
-                    !dmdtfs_.found(interface)
-                )
-                {
-                    this->template validateMassTransfer
-                        <diameterModels::populationBalanceModel>(interface);
-
-                    dmdtfs_.insert
-                    (
-                        interface,
-                        new volScalarField
-                        (
-                            IOobject
-                            (
-                                IOobject::groupName
-                                (
-                                    "populationBalance:dmdtf",
-                                    interface.name()
-                                ),
-                                this->mesh().time().timeName(),
-                                this->mesh()
-                            ),
-                            this->mesh(),
-                            dimensionedScalar(dimDensity/dimTime, 0)
-                        )
-                    );
-                }
-            }
-        }
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -125,9 +62,12 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdtf
 {
     tmp<volScalarField> tDmdtf = BasePhaseSystem::dmdtf(key);
 
-    if (dmdtfs_.found(key))
+    forAll(populationBalances_, popBali)
     {
-        tDmdtf.ref() += *dmdtfs_[key];
+        if (populationBalances_[popBali].dmdtfs().found(key))
+        {
+            tDmdtf.ref() += *populationBalances_[popBali].dmdtfs()[key];
+        }
     }
 
     return tDmdtf;
@@ -140,12 +80,20 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
 {
     PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
 
-    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs_, dmdtfIter)
+    forAll(populationBalances_, popBali)
     {
-        const phaseInterface interface(*this, dmdtfIter.key());
+        forAllConstIter
+        (
+            phaseSystem::dmdtfTable,
+            populationBalances_[popBali].dmdtfs(),
+            dmdtfIter
+        )
+        {
+            const phaseInterface interface(*this, dmdtfIter.key());
 
-        addField(interface.phase1(), "dmdt", *dmdtfIter(), dmdts);
-        addField(interface.phase2(), "dmdt", - *dmdtfIter(), dmdts);
+            addField(interface.phase1(), "dmdt", *dmdtfIter(), dmdts);
+            addField(interface.phase2(), "dmdt", - *dmdtfIter(), dmdts);
+        }
     }
 
     return dmdts;
@@ -161,7 +109,10 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransfer()
 
     phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtUfs(dmdtfs_, eqns);
+    forAll(populationBalances_, popBali)
+    {
+        this->addDmdtUfs(populationBalances_[popBali].dmdtfs(), eqns);
+    }
 
     return eqnsPtr;
 }
@@ -176,7 +127,10 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransferf()
 
     phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtUfs(dmdtfs_, eqns);
+    forAll(populationBalances_, popBali)
+    {
+        this->addDmdtUfs(populationBalances_[popBali].dmdtfs(), eqns);
+    }
 
     return eqnsPtr;
 }
@@ -191,7 +145,10 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::heatTransfer() const
 
     phaseSystem::heatTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtHefs(dmdtfs_, eqns);
+    forAll(populationBalances_, popBali)
+    {
+        this->addDmdtHefs(populationBalances_[popBali].dmdtfs(), eqns);
+    }
 
     return eqnsPtr;
 }
@@ -206,7 +163,10 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::specieTransfer() const
 
     phaseSystem::specieTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtYfs(dmdtfs_, eqns);
+    forAll(populationBalances_, popBali)
+    {
+        this->addDmdtYfs(populationBalances_[popBali].dmdtfs(), eqns);
+    }
 
     return eqnsPtr;
 }

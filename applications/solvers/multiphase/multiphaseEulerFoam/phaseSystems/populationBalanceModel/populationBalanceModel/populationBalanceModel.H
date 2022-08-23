@@ -240,7 +240,7 @@ private:
         const phaseSystem& fluid_;
 
         //- Interfacial mass transfer rates
-        phaseSystem::dmdtfTable& pDmdt_;
+        phaseSystem::dmdtfTable dmdtfs_;
 
         //- Reference to the mesh
         const fvMesh& mesh_;
@@ -336,6 +336,8 @@ private:
 
         void registerSizeGroups(sizeGroup& group);
 
+        void initialiseDmdtfs();
+
         void createPhasePairs();
 
         void precompute();
@@ -380,19 +382,10 @@ public:
     TypeName("populationBalanceModel");
 
 
-    // Constructor
+    // Constructors
 
-        populationBalanceModel
-        (
-            const phaseSystem& fluid,
-            const word& name,
-            HashPtrTable
-            <
-                volScalarField,
-                phaseInterfaceKey,
-                phaseInterfaceKey::hash
-            >& pDmdt
-        );
+        //- Construct for a fluid
+        populationBalanceModel(const phaseSystem& fluid, const word& name);
 
         //- Return clone
         autoPtr<populationBalanceModel> clone() const;
@@ -403,29 +396,22 @@ public:
         {
             const phaseSystem& fluid_;
 
-            phaseSystem::dmdtfTable& pDmdt_;
-
         public:
 
-            iNew
-            (
-                const phaseSystem& fluid,
-                phaseSystem::dmdtfTable& pDmdt
-            )
+            iNew(const phaseSystem& fluid)
             :
-                fluid_(fluid),
-                pDmdt_(pDmdt)
+                fluid_(fluid)
             {}
 
             autoPtr<populationBalanceModel> operator()(Istream& is) const
             {
-                word name(is);
+                const word name(is);
 
                 Info << "Setting up population balance: " << name << endl;
 
                 return autoPtr<populationBalanceModel>
                 (
-                    new populationBalanceModel(fluid_, name, pDmdt_)
+                    new populationBalanceModel(fluid_, name)
                 );
             }
         };
@@ -434,6 +420,7 @@ public:
     //- Destructor
     virtual ~populationBalanceModel();
 
+
     // Member Functions
 
         //- Dummy write for regIOobject
@@ -441,6 +428,9 @@ public:
 
         //- Return reference to the phaseSystem
         inline const phaseSystem& fluid() const;
+
+        //- Return reference to the interfacial mass transfer rates
+        inline const phaseSystem::dmdtfTable& dmdtfs() const;
 
         //- Return reference to the mesh
         inline const fvMesh& mesh() const;

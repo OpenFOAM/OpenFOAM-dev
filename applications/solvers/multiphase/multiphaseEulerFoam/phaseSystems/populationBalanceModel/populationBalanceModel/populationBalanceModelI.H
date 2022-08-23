@@ -43,6 +43,13 @@ Foam::diameterModels::populationBalanceModel::fluid() const
 }
 
 
+inline const Foam::phaseSystem::dmdtfTable&
+Foam::diameterModels::populationBalanceModel::dmdtfs() const
+{
+    return dmdtfs_;
+}
+
+
 inline const Foam::fvMesh&
 Foam::diameterModels::populationBalanceModel::mesh() const
 {
