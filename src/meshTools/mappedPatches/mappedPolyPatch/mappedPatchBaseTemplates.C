@@ -98,6 +98,8 @@ Foam::mappedPatchBase::reverseDistribute(const Field<Type>& fld) const
                 << sampleModeNames_[NEARESTPATCHFACE] << " or "
                 << sampleModeNames_[NEARESTPATCHFACEAMI] << "mode"
                 << exit(FatalError);
+
+            return tmp<Field<Type>>(nullptr);
         }
     }
 }
