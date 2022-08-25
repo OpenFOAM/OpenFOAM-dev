@@ -1,0 +1,94 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+internalFacesOnly true;
+
+fields true;
+
+baffles
+{
+    baffle1D
+    {
+        type        searchableSurface;
+        surface     triSurfaceMesh;
+        name        baffle1D.stl;
+
+        owner
+        {
+            name        baffle1D0;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            samplePatch baffle1D1;
+
+            patchFields
+            {
+                #include "./include/wallPatchFields"
+
+                T
+                {
+                    type        compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
+                    value       uniform 300;
+
+                    // Baffle thickness [m]
+                    thickness   uniform 0.005;
+
+                    // Baffle source heat flux [W/m^2]
+                    qs          uniform 100;
+
+                    // Baffle physical properties
+                    specie
+                    {
+                        molWeight   20;
+                    }
+                    transport
+                    {
+                        kappa       1;
+                    }
+                    thermodynamics
+                    {
+                        Hf          0;
+                        Cv          10;
+                    }
+                    equationOfState
+                    {
+                        rho         10;
+                    }
+                }
+            }
+        }
+
+        neighbour
+        {
+            name        baffle1D1;
+            type        mappedWall;
+            sampleMode  nearestPatchFace;
+            samplePatch baffle1D0;
+
+            patchFields
+            {
+                #include "./include/wallPatchFields"
+
+                T
+                {
+                    type        compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
+                    value       uniform 300;
+                }
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

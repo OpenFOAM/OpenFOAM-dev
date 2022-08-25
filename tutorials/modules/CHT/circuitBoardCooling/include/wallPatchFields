@@ -1,0 +1,50 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+alphat
+{
+    type            compressible::alphatWallFunction;
+    value           uniform 0;
+}
+
+epsilon
+{
+    type            epsilonWallFunction;
+    value           uniform 0.01;
+}
+
+k
+{
+    type            kqRWallFunction;
+    value           uniform 0.01;
+}
+
+nut
+{
+    type            nutkWallFunction;
+    value           uniform 0;
+}
+
+p
+{
+    type            calculated;
+    value           uniform 101325;
+}
+
+p_rgh
+{
+    type            fixedFluxPressure;
+}
+
+U
+{
+    type            fixedValue;
+    value           uniform (0 0 0);
+}
+
+// ************************************************************************* //

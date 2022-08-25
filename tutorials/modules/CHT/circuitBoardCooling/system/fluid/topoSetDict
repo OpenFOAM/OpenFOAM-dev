@@ -1,0 +1,28 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    {
+        action  new;
+        type    faceZoneSet;
+        name    baffle3D;
+        source  searchableSurfaceToFaceZone;
+        surface triSurfaceMesh;
+        file    "baffle3D.stl";
+    }
+);
+
+// ************************************************************************* //

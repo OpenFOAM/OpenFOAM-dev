@@ -1,0 +1,20 @@
+#!/bin/sh
+cd ${0%/*} || exit 1 # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh -region fluid
+
+# Create the 3D baffle
+runApplication topoSet -region fluid
+runApplication extrudeToRegionMesh -region fluid -overwrite
+
+# Create the 1D baffle
+runApplication createBaffles -region fluid -overwrite
+
+runApplication $(getApplication)
+
+paraFoam -touchAll
+
+#------------------------------------------------------------------------------
