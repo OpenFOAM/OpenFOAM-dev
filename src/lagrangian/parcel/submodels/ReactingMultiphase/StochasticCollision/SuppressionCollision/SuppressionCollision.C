@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ void Foam::SuppressionCollision<CloudType>::collide
     volScalarField vDotSweep(sc.vDotSweep());
 
     dimensionedScalar Dt("dt", dimTime, dt);
-    volScalarField P(type() + ":p", 1.0 - exp(-vDotSweep*Dt));
+    volScalarField P(typedName("p"), 1.0 - exp(-vDotSweep*Dt));
 
     forAllIter(typename CloudType, this->owner(), iter)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ Foam::fv::heatTransferModels::constant::htc() const
 {
     if (!htcPtr_.valid())
     {
-        return volScalarField::New(type() + ":htc", mesh(), htc_);
+        return volScalarField::New(typedName("htc"), mesh(), htc_);
     }
     else
     {

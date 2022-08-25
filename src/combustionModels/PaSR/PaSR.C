@@ -54,7 +54,7 @@ Foam::combustionModels::PaSR::PaSR
     (
         IOobject
         (
-            thermo.phasePropertyName(typeName + ":kappa"),
+            thermo.phasePropertyName(typedName("kappa")),
             this->mesh().time().timeName(),
             this->mesh(),
             IOobject::NO_READ,
@@ -116,7 +116,7 @@ Foam::combustionModels::PaSR::Qdot() const
 {
     return volScalarField::New
     (
-        this->thermo().phasePropertyName(typeName + ":Qdot"),
+        this->thermo().phasePropertyName(typedName("Qdot")),
         kappa_*laminar::Qdot()
     );
 }

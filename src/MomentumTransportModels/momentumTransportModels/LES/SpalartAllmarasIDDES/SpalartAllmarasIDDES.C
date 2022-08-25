@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::IDDESalpha() const
 {
     return volScalarField::Internal::New
     (
-        modelName("alpha"),
+        typedName("alpha"),
         max(0.25 - this->y_()/IDDESDelta_.hmax(), scalar(-5))
     );
 }
@@ -55,7 +55,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::ft
 {
     return volScalarField::Internal::New
     (
-        modelName("ft"),
+        typedName("ft"),
         tanh(pow3(sqr(ct_)*rd(this->nut_, magGradU)))
     );
 }
@@ -70,7 +70,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::fl
 {
     return volScalarField::Internal::New
     (
-        modelName("fl"),
+        typedName("fl"),
         tanh(pow(sqr(cl_)*rd(this->nu(), magGradU), 10))
     );
 }
@@ -86,7 +86,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::rd
 {
     return volScalarField::Internal::New
     (
-        modelName("rd"),
+        typedName("rd"),
         min
         (
             nur
@@ -112,7 +112,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::fd
 {
     return volScalarField::Internal::New
     (
-        modelName("fd"),
+        typedName("fd"),
         1 - tanh(pow3(8*rd(this->nuEff(), magGradU)))
     );
 }
@@ -133,17 +133,17 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
 
     const volScalarField::Internal expTerm
     (
-        modelName("expTerm"),
+        typedName("expTerm"),
         exp(sqr(alpha))
     );
 
-    const volScalarField::Internal magGradU(modelName("magGradU"), mag(gradU));
+    const volScalarField::Internal magGradU(typedName("magGradU"), mag(gradU));
 
     tmp<volScalarField::Internal> fHill
     (
         volScalarField::Internal::New
         (
-            modelName("fHill"),
+            typedName("fHill"),
             2*(pos0(alpha)*pow(expTerm, -11.09) + neg(alpha)*pow(expTerm, -9.0))
         )
     );
@@ -152,14 +152,14 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
     (
         volScalarField::Internal::New
         (
-            modelName("fStep"),
+            typedName("fStep"),
             min(2*pow(expTerm, -9.0), scalar(1))
         )
     );
 
     const volScalarField::Internal fHyb
     (
-        modelName("fHyb"),
+        typedName("fHyb"),
         max(1 - fd(magGradU), fStep)
     );
 
@@ -167,7 +167,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
     (
         volScalarField::Internal::New
         (
-            modelName("fAmp"),
+            typedName("fAmp"),
             1 - max(ft(magGradU), fl(magGradU))
         )
     );
@@ -176,7 +176,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
     (
         volScalarField::Internal::New
         (
-            modelName("fRestore"),
+            typedName("fRestore"),
             max(fHill - 1, scalar(0))*fAmp
         )
     );
@@ -184,7 +184,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
     // IGNORING ft2 terms
     const volScalarField::Internal Psi
     (
-        modelName("Psi"),
+        typedName("Psi"),
         sqrt
         (
             min
@@ -201,7 +201,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
 
     return volScalarField::Internal::New
     (
-        modelName("dTilda"),
+        typedName("dTilda"),
         max
         (
             dimensionedScalar(dimLength, small),

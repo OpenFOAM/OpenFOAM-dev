@@ -79,7 +79,7 @@ Foam::combustionModels::noCombustion::Qdot() const
 {
     return volScalarField::New
     (
-        this->thermo().phasePropertyName(typeName + ":Qdot"),
+        this->thermo().phasePropertyName(typedName("Qdot")),
         this->mesh(),
         dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
     );

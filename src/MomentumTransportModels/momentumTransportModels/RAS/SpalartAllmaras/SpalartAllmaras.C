@@ -41,7 +41,7 @@ namespace RASModels
 template<class BasicMomentumTransportModel>
 tmp<volScalarField> SpalartAllmaras<BasicMomentumTransportModel>::chi() const
 {
-    return volScalarField::New(modelName("chi"), nuTilda_/this->nu());
+    return volScalarField::New(typedName("chi"), nuTilda_/this->nu());
 }
 
 
@@ -51,8 +51,8 @@ tmp<volScalarField> SpalartAllmaras<BasicMomentumTransportModel>::fv1
     const volScalarField& chi
 ) const
 {
-    const volScalarField chi3(modelName("chi3"), pow3(chi));
-    return volScalarField::New(modelName("fv1"), chi3/(chi3 + pow3(Cv1_)));
+    const volScalarField chi3(typedName("chi3"), pow3(chi));
+    return volScalarField::New(typedName("fv1"), chi3/(chi3 + pow3(Cv1_)));
 }
 
 
@@ -65,7 +65,7 @@ tmp<volScalarField::Internal> SpalartAllmaras<BasicMomentumTransportModel>::fv2
 {
     return volScalarField::Internal::New
     (
-        modelName("fv2"),
+        typedName("fv2"),
         1.0 - chi/(1.0 + chi*fv1)
     );
 }
@@ -81,13 +81,13 @@ SpalartAllmaras<BasicMomentumTransportModel>::Stilda
 {
     const volScalarField::Internal Omega
     (
-        modelName("Omega"),
+        typedName("Omega"),
         ::sqrt(2.0)*mag(skew(fvc::grad(this->U_)().v()))
     );
 
     return volScalarField::Internal::New
     (
-        modelName("Stilda"),
+        typedName("Stilda"),
         (
             max
             (
@@ -108,7 +108,7 @@ tmp<volScalarField::Internal> SpalartAllmaras<BasicMomentumTransportModel>::fw
 {
     const volScalarField::Internal r
     (
-        modelName("r"),
+        typedName("r"),
         min
         (
             nuTilda_()
@@ -124,11 +124,11 @@ tmp<volScalarField::Internal> SpalartAllmaras<BasicMomentumTransportModel>::fw
         )
     );
 
-    const volScalarField::Internal g(modelName("g"), r + Cw2_*(pow6(r) - r));
+    const volScalarField::Internal g(typedName("g"), r + Cw2_*(pow6(r) - r));
 
     return volScalarField::Internal::New
     (
-        modelName("fw"),
+        typedName("fw"),
         g*pow((1.0 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0)
     );
 }

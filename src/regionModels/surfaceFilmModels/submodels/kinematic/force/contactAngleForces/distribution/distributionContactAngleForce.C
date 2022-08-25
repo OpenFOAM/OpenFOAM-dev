@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ distributionContactAngleForce::distributionContactAngleForce
     (
         volScalarField::New
         (
-            IOobject::modelName("theta", typeName),
+            typedName("theta"),
             filmModel_.regionMesh(),
             dimensionedScalar(dimless, 0)
         )

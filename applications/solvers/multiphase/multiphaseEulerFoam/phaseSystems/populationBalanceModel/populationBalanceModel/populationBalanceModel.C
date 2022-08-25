@@ -233,7 +233,7 @@ void Foam::diameterModels::populationBalanceModel::initialiseDmdtfs()
                         (
                             IOobject::groupName
                             (
-                                "populationBalance:dmdtf",
+                                typedName("dmdtf"),
                                 interface.name()
                             ),
                             mesh().time().timeName(),

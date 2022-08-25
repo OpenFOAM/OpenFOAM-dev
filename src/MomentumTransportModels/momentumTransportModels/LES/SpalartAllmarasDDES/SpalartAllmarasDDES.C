@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ SpalartAllmarasDDES<BasicMomentumTransportModel>::rd
 {
     return volScalarField::Internal::New
     (
-        modelName("rd"),
+        typedName("rd"),
         min
         (
             this->nuEff()()
@@ -70,7 +70,7 @@ SpalartAllmarasDDES<BasicMomentumTransportModel>::fd
 {
     return volScalarField::Internal::New
     (
-        modelName("fd"),
+        typedName("fd"),
         1 - tanh(pow3(8*rd(magGradU)))
     );
 }
@@ -89,7 +89,7 @@ SpalartAllmarasDDES<BasicMomentumTransportModel>::dTilda
 {
     return volScalarField::Internal::New
     (
-        modelName("dTilda"),
+        typedName("dTilda"),
         max
         (
             this->y_

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,7 +169,7 @@ Foam::tmp<Foam::volScalarField> Foam::fv::heatTransferModel::AoV() const
 {
     if (!AoVPtr_.valid())
     {
-        return volScalarField::New(type() + ":AoV", mesh_, AoV_);
+        return volScalarField::New(typedName("AoV"), mesh_, AoV_);
     }
     else
     {

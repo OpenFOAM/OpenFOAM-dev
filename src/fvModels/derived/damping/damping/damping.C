@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::damping::forceCoeff() const
         (
             IOobject
             (
-                type() + ":forceCoeff",
+                typedName("forceCoeff"),
                 mesh().time().timeName(),
                 mesh()
             ),
@@ -152,7 +152,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::damping::forceCoeff() const
         (
             IOobject
             (
-                type() + ":forceCoeff",
+                typedName("forceCoeff"),
                 mesh().time().timeName(),
                 mesh()
             ),

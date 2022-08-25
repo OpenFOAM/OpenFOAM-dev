@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,13 +59,13 @@ tmp<volScalarField::Internal> kOmega2006<BasicMomentumTransportModel>::beta
 
     const volScalarField::Internal ChiOmega
     (
-        modelName("ChiOmega"),
+        typedName("ChiOmega"),
         mag((Omega & Omega) && Shat)/pow3(betaStar_*omega_.v())
     );
 
     const volScalarField::Internal fBeta
     (
-        modelName("fBeta"),
+        typedName("fBeta"),
         (1 + 85*ChiOmega)/(1 + 100*ChiOmega)
     );
 
@@ -294,7 +294,7 @@ void kOmega2006<BasicMomentumTransportModel>::correct()
 
     volScalarField::Internal divU
     (
-        modelName("divU"),
+        typedName("divU"),
         fvc::div(fvc::absolute(this->phi(), U))().v()
     );
 

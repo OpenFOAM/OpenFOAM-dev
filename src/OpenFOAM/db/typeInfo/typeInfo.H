@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,12 +64,16 @@ Description
 //- Declare a ClassNameNoDebug() with extra virtual type info
 #define TypeNameNoDebug(TypeNameString)                                        \
     ClassNameNoDebug(TypeNameString);                                          \
-    virtual const word& type() const { return typeName; }
+    virtual const word& type() const { return typeName; }                      \
+    template<class Name>                                                       \
+    word typedName(Name name) const { return (typeName + ':') + name; }
 
 //- Declare a ClassName() with extra virtual type info
 #define TypeName(TypeNameString)                                               \
     ClassName(TypeNameString);                                                 \
-    virtual const word& type() const { return typeName; }
+    virtual const word& type() const { return typeName; }                      \
+    template<class Name>                                                       \
+    word typedName(Name name) const { return (typeName + ':') + name; }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -135,6 +139,15 @@ inline bool isA(const Type& t)
 {
     const Type* tPtr = &t;
     return dynamic_cast<const TestType*>(tPtr);
+}
+
+
+//- Return the name of the object within the given type
+//  as <typeName>:<name>
+template<class TypeName, class Name>
+inline word typedName(Name name)
+{
+    return (TypeName::typeName + ':') + name;
 }
 
 

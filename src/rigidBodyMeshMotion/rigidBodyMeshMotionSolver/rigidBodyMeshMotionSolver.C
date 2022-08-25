@@ -115,7 +115,7 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
             (
                 IOobject
                 (
-                    "rigidBodyMotionSolver:meshSolver",
+                    typedName("meshSolver"),
                     mesh.time().constant(),
                     mesh
                 ),

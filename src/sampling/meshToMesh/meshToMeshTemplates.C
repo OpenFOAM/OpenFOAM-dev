@@ -408,7 +408,7 @@ Foam::meshToMesh::mapSrcToTgt
         (
             IOobject
             (
-                type() + ":interpolate(" + field.name() + ")",
+                typedName("interpolate(" + field.name() + ")"),
                 tgtMesh.time().timeName(),
                 tgtMesh,
                 IOobject::NO_READ,
@@ -588,7 +588,7 @@ Foam::meshToMesh::mapTgtToSrc
         (
             IOobject
             (
-                type() + ":interpolate(" + field.name() + ")",
+                typedName("interpolate(" + field.name() + ")"),
                 srcMesh.time().timeName(),
                 srcMesh,
                 IOobject::NO_READ,

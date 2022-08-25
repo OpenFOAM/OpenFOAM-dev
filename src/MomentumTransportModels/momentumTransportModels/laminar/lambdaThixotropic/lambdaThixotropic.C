@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
         (
             IOobject::groupName
             (
-                IOobject::modelName("lambda", typeName),
+                typedName("lambda"),
                 alphaRhoPhi.group()
             ),
             this->runTime_.timeName(),
@@ -90,7 +90,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
         (
             IOobject::groupName
             (
-                IOobject::modelName("nu", typeName),
+                typedName("nu"),
                 alphaRhoPhi.group()
             ),
             this->runTime_.timeName(),

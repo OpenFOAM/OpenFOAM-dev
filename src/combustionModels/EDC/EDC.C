@@ -80,7 +80,7 @@ Foam::combustionModels::EDC::EDC
     (
         IOobject
         (
-            this->thermo().phasePropertyName(typeName + ":kappa"),
+            this->thermo().phasePropertyName(typedName("kappa")),
             this->mesh().time().timeName(),
             this->mesh(),
             IOobject::NO_READ,
@@ -216,7 +216,7 @@ Foam::combustionModels::EDC::Qdot() const
 {
     return volScalarField::New
     (
-        this->thermo().phasePropertyName(typeName + ":Qdot"),
+        this->thermo().phasePropertyName(typedName("Qdot")),
         kappa_*chemistryPtr_->Qdot()
     );
 }

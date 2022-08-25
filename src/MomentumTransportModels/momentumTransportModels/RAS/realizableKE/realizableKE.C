@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,8 +88,8 @@ template<class BasicMomentumTransportModel>
 void realizableKE<BasicMomentumTransportModel>::correctNut()
 {
     const volTensorField gradU(fvc::grad(this->U_));
-    const volScalarField S2(modelName("S2"), 2*magSqr(dev(symm(gradU))));
-    const volScalarField magS(modelName("magS"), sqrt(S2));
+    const volScalarField S2(typedName("S2"), 2*magSqr(dev(symm(gradU))));
+    const volScalarField magS(typedName("magS"), sqrt(S2));
 
     correctNut(gradU, S2, magS);
 }
@@ -267,21 +267,21 @@ void realizableKE<BasicMomentumTransportModel>::correct()
 
     volScalarField::Internal divU
     (
-        modelName("divU"),
+        typedName("divU"),
         fvc::div(fvc::absolute(this->phi(), U))()
     );
 
     const volTensorField gradU(fvc::grad(U));
-    const volScalarField S2(modelName("S2"), 2*magSqr(dev(symm(gradU))));
-    const volScalarField magS(modelName("magS"), sqrt(S2));
+    const volScalarField S2(typedName("S2"), 2*magSqr(dev(symm(gradU))));
+    const volScalarField magS(typedName("magS"), sqrt(S2));
 
     const volScalarField::Internal eta
     (
-        modelName("eta"), magS()*k_()/epsilon_()
+        typedName("eta"), magS()*k_()/epsilon_()
     );
     const volScalarField::Internal C1
     (
-        modelName("C1"),
+        typedName("C1"),
         max(eta/(scalar(5) + eta), scalar(0.43))
     );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ Foam::diameterModels::IATEsources::turbulentBreakUp::R
     (
         IOobject
         (
-            "turbulentBreakUp:R",
+            typedName("R"),
             iate_.phase().time().timeName(),
             iate_.phase().mesh()
         ),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -259,14 +259,14 @@ void RNGkEpsilon<BasicMomentumTransportModel>::correct()
 
     volScalarField::Internal divU
     (
-        modelName("divU"),
+        typedName("divU"),
         fvc::div(fvc::absolute(this->phi(), U))()
     );
 
     tmp<volTensorField> tgradU = fvc::grad(U);
     volScalarField::Internal S2
     (
-        modelName("S2"),
+        typedName("S2"),
         (tgradU().v() && dev(twoSymm(tgradU().v())))
     );
     tgradU.clear();
@@ -275,15 +275,15 @@ void RNGkEpsilon<BasicMomentumTransportModel>::correct()
 
     volScalarField::Internal eta
     (
-        modelName("eta"),
+        typedName("eta"),
         sqrt(mag(S2))*k_()/epsilon_()
     );
 
-    volScalarField::Internal eta3(modelName("eta3"), eta*sqr(eta));
+    volScalarField::Internal eta3(typedName("eta3"), eta*sqr(eta));
 
     volScalarField::Internal R
     (
-        modelName("R"),
+        typedName("R"),
         ((eta*(-eta/eta0_ + scalar(1)))/(beta_*eta3 + scalar(1)))
     );
 

@@ -68,7 +68,7 @@ Foam::diameterModels::IATEsources::wallBoiling::R
     (
         IOobject
         (
-            "wallBoiling:R",
+            typedName("R"),
             phase().time().timeName(),
             phase().mesh()
         ),
@@ -80,7 +80,7 @@ Foam::diameterModels::IATEsources::wallBoiling::R
     (
         IOobject
         (
-            "wallBoiling:Rdk",
+            typedName("Rdk"),
             phase().time().timeName(),
             phase().mesh()
         ),

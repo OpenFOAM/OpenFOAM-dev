@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::nu
     (
         IOobject::groupName
         (
-            IOobject::modelName("nu", frictionalStressModel::typeName),
+            Foam::typedName<frictionalStressModel>("nu"),
             phase.group()
         ),
         dimensionedScalar(dimTime, 0.5)*pf*sin(phi_)

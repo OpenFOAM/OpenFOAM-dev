@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,8 +80,6 @@ class kOmega2006
     public eddyViscosity<RASModel<BasicMomentumTransportModel>>
 {
     // Private Member Functions
-
-        using IOobject::modelName;
 
         void correctNut(const volTensorField& gradU);
 

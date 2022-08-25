@@ -142,7 +142,7 @@ public:
         //- Helper function to return the name of the turbulence G field
         inline word GName() const
         {
-            return modelName("G");
+            return typedName("G");
         }
 
         //- Access function to velocity field

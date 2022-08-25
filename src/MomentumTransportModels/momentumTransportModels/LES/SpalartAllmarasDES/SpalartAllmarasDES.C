@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ tmp<volScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::chi() const
 {
     return volScalarField::New
     (
-        modelName("chi"),
+        typedName("chi"),
         nuTilda_/this->nu()
     );
 }
@@ -56,7 +56,7 @@ tmp<volScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::fv1
     const volScalarField chi3("chi3", pow3(chi));
     return volScalarField::New
     (
-        modelName("fv1"),
+        typedName("fv1"),
         chi3/(chi3 + pow3(Cv1_))
     );
 }
@@ -72,7 +72,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::fv2
 {
     return volScalarField::Internal::New
     (
-        modelName("fv2"),
+        typedName("fv2"),
         1.0 - chi/(1.0 + chi*fv1)
     );
 }
@@ -87,7 +87,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::Omega
 {
     return volScalarField::Internal::New
     (
-        modelName("Omega"),
+        typedName("Omega"),
         sqrt(2.0)*mag(skew(gradU))
     );
 }
@@ -105,7 +105,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::Stilda
 {
     return volScalarField::Internal::New
     (
-        modelName("Stilda"),
+        typedName("Stilda"),
         max
         (
             Omega
@@ -126,7 +126,7 @@ tmp<volScalarField::Internal> SpalartAllmarasDES<BasicMomentumTransportModel>::r
 {
     return volScalarField::Internal::New
     (
-        modelName("r"),
+        typedName("r"),
         min
         (
             nur
@@ -153,11 +153,11 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::fw
 ) const
 {
     const volScalarField::Internal r(this->r(nuTilda_, Omega, dTilda));
-    const volScalarField::Internal g(modelName("g"), r + Cw2_*(pow6(r) - r));
+    const volScalarField::Internal g(typedName("g"), r + Cw2_*(pow6(r) - r));
 
     return volScalarField::Internal::New
     (
-        modelName("fw"),
+        typedName("fw"),
         g*pow((1 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0)
     );
 }
@@ -174,7 +174,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::dTilda
 {
     return volScalarField::Internal::New
     (
-        modelName("dTilda"),
+        typedName("dTilda"),
         min(CDES_*this->delta()(), y_)
     );
 }
@@ -186,11 +186,11 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::cacheLESRegion
     const volScalarField::Internal& dTilda
 ) const
 {
-    if (this->mesh_.cacheTemporaryObject(modelName("LESRegion")))
+    if (this->mesh_.cacheTemporaryObject(typedName("LESRegion")))
     {
         volScalarField::Internal::New
         (
-            modelName("LESRegion"),
+            typedName("LESRegion"),
             neg(dTilda - y_())
         );
     }
@@ -422,7 +422,7 @@ tmp<volScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::k() const
     (
         volScalarField::New
         (
-            modelName("k"),
+            typedName("k"),
             sqr(this->nut()/ck_/dTildaExtrapolated)
         )
     );

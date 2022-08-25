@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,16 +301,16 @@ void v2f<BasicMomentumTransportModel>::correct()
 
     const volScalarField G(this->GName(), nut*S2);
     const volScalarField Ts(this->Ts());
-    const volScalarField L2(type() + ":L2", sqr(Ls()));
+    const volScalarField L2(typedName("L2"), sqr(Ls()));
     const volScalarField v2fAlpha
     (
-        type() + ":alpha",
+        typedName("alpha"),
         1.0/Ts*((C1_ - N)*v2_ - 2.0/3.0*k_*(C1_ - 1.0))
     );
 
     const volScalarField Ceps1
     (
-        "Ceps1",
+        typedName("Ceps1"),
         1.4*(1.0 + 0.05*min(sqrt(k_/v2_), scalar(100.0)))
     );
 

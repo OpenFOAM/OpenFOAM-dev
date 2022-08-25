@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ solidification::solidification
     (
         IOobject
         (
-            IOobject::modelName("mass", typeName),
+            typedName("mass"),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::READ_IF_PRESENT,
@@ -88,7 +88,7 @@ solidification::solidification
     (
         IOobject
         (
-            IOobject::modelName("thickness", typeName),
+            typedName("thickness"),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,

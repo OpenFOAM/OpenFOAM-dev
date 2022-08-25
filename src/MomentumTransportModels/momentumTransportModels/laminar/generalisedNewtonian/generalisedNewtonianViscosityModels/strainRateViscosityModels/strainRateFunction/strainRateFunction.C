@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ nu
     (
         volScalarField::New
         (
-            IOobject::groupName(type() + ":nu", nu0.group()),
+            IOobject::groupName(typedName("nu"), nu0.group()),
             nu0.mesh(),
             dimensionedScalar(dimViscosity, 0)
         )

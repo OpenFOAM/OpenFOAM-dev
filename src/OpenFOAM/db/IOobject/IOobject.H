@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -224,11 +224,6 @@ public:
         //- Return member (name without the extension)
         static word member(const word& name);
 
-        //- Return the name of the object within the given model
-        //  as <model>:<name>
-        template<class Name>
-        static inline word modelName(Name name, const word& model);
-
         //- Type of file modification checking
         static fileCheckTypes fileModificationChecking;
 
@@ -392,10 +387,6 @@ public:
 
             //- Return member (name without the extension)
             word member() const;
-
-            //- Return the name of the object within this model
-            //  as <model>:<name>
-            inline word modelName(const char* name) const;
 
             const fileName& rootPath() const;
 

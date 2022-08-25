@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ void waxSolventViscosity::correctMu()
     (
         film.regionMesh().lookupObject<uniformDimensionedScalarField>
         (
-            IOobject::modelName("Wwax", waxSolventEvaporation::typeName)
+            Foam::typedName<waxSolventEvaporation>("Wwax")
         )
     );
 
@@ -67,7 +67,7 @@ void waxSolventViscosity::correctMu()
     (
         film.regionMesh().lookupObject<uniformDimensionedScalarField>
         (
-            IOobject::modelName("Wsolvent", waxSolventEvaporation::typeName)
+            Foam::typedName<waxSolventEvaporation>("Wsolvent")
         )
     );
 
@@ -75,7 +75,7 @@ void waxSolventViscosity::correctMu()
     (
         film.regionMesh().lookupObject<uniformDimensionedScalarField>
         (
-            IOobject::modelName("Ysolvent0", waxSolventEvaporation::typeName)
+            Foam::typedName<waxSolventEvaporation>("Ysolvent0")
         )
     );
 
@@ -83,7 +83,7 @@ void waxSolventViscosity::correctMu()
     (
         film.regionMesh().lookupObject<volScalarField>
         (
-            IOobject::modelName("Ysolvent", waxSolventEvaporation::typeName)
+            Foam::typedName<waxSolventEvaporation>("Ysolvent")
         )
     );
 
@@ -116,7 +116,7 @@ waxSolventViscosity::waxSolventViscosity
     (
         IOobject
         (
-            IOobject::modelName("muWax", typeName),
+            typedName("muWax"),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,
@@ -139,7 +139,7 @@ waxSolventViscosity::waxSolventViscosity
     (
         IOobject
         (
-            IOobject::modelName("muSolvent", typeName),
+            typedName("muSolvent"),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,

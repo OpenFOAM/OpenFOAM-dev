@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ tmp<volScalarField::Internal> standardRadiation::Shs()
 {
     return volScalarField::Internal::New
     (
-        IOobject::modelName("Shs", typeName),
+        typedName("Shs"),
         beta_*qinFilm_*filmModel_.coverage()
        *(1 - exp(-kappaBar_*filmModel_.delta()()))
     );

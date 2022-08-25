@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
         (
             IOobject
             (
-                typeName + ":D",
+                typedName("D"),
                 mesh_.time().timeName(),
                 mesh_,
                 IOobject::NO_READ,
@@ -152,7 +152,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
         (
             IOobject
             (
-                typeName + ":F",
+                typedName("F"),
                 mesh_.time().timeName(),
                 mesh_,
                 IOobject::NO_READ,

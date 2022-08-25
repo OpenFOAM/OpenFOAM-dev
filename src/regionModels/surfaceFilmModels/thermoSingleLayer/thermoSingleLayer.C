@@ -597,7 +597,7 @@ tmp<volScalarField::Internal> thermoSingleLayer::SYi
     (
         volScalarField::Internal::New
         (
-            IOobject::modelName("SY(" + Foam::name(i) + ")", typeName),
+            typedName("SY(" + Foam::name(i) + ")"),
             primaryMesh(),
             dimensionedScalar(dimMass/dimVolume/dimTime, 0)
         )
@@ -639,7 +639,7 @@ tmp<volScalarField::Internal> thermoSingleLayer::Sh() const
     (
         volScalarField::Internal::New
         (
-            IOobject::modelName("Sh", typeName),
+            typedName("Sh"),
             primaryMesh(),
             dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
         )

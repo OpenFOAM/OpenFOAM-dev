@@ -87,7 +87,7 @@ waxSolventEvaporation::waxSolventEvaporation
     (
         IOobject
         (
-            IOobject::modelName("Wwax", typeName),
+            typedName("Wwax"),
             film.regionMesh().time().constant(),
             film.regionMesh()
         ),
@@ -97,7 +97,7 @@ waxSolventEvaporation::waxSolventEvaporation
     (
         IOobject
         (
-            IOobject::modelName("Wsolvent", typeName),
+            typedName("Wsolvent"),
             film.regionMesh().time().constant(),
             film.regionMesh()
         ),
@@ -107,7 +107,7 @@ waxSolventEvaporation::waxSolventEvaporation
     (
         IOobject
         (
-            IOobject::modelName("Ysolvent0", typeName),
+            typedName("Ysolvent0"),
             film.regionMesh().time().constant(),
             film.regionMesh(),
             IOobject::MUST_READ,
@@ -118,7 +118,7 @@ waxSolventEvaporation::waxSolventEvaporation
     (
         IOobject
         (
-            IOobject::modelName("Ysolvent", typeName),
+            typedName("Ysolvent"),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::MUST_READ,
@@ -195,7 +195,7 @@ void waxSolventEvaporation::correctModel
     (
         IOobject
         (
-            IOobject::modelName("evapRateCoeff", typeName),
+            typedName("evapRateCoeff"),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,
@@ -210,7 +210,7 @@ void waxSolventEvaporation::correctModel
     (
         IOobject
         (
-            IOobject::modelName("evapRateInf", typeName),
+            typedName("evapRateInf"),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,

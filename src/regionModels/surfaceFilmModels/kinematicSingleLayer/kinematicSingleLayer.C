@@ -158,7 +158,7 @@ tmp<volScalarField> kinematicSingleLayer::pe()
 
     return volScalarField::New
     (
-        IOobject::modelName("pe", typeName),
+        typedName("pe"),
         p_                             // Pressure (mapped from primary region)
       - tpSp                           // Accumulated particle impingement
     );
@@ -872,7 +872,7 @@ tmp<volScalarField> kinematicSingleLayer::sigma() const
     (
         volScalarField::New
         (
-            type() + ":sigma",
+            typedName("sigma"),
             regionMesh(),
             dimensionedScalar(dimMass/sqr(dimTime), 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -1086,7 +1086,7 @@ tmp<volScalarField::Internal> kinematicSingleLayer::SYi
 {
     return volScalarField::Internal::New
     (
-        IOobject::modelName("SY(" + Foam::name(i) + ")", typeName),
+        typedName("SY(" + Foam::name(i) + ")"),
         primaryMesh(),
         dimensionedScalar(dimMass/dimVolume/dimTime, 0)
     );
@@ -1099,7 +1099,7 @@ tmp<volVectorField::Internal> kinematicSingleLayer::SU() const
     (
         volVectorField::Internal::New
         (
-            IOobject::modelName("SU", typeName),
+            typedName("SU"),
             primaryMesh(),
             dimensionedVector(dimDensity*dimVelocity/dimTime, Zero)
         )
@@ -1135,7 +1135,7 @@ tmp<volScalarField::Internal> kinematicSingleLayer::Sh() const
 {
     return volScalarField::Internal::New
     (
-        IOobject::modelName("Sh", typeName),
+        typedName("Sh"),
         primaryMesh(),
         dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
     );

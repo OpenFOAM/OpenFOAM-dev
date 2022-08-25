@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ contactAngleForce::contactAngleForce
     (
         IOobject
         (
-            IOobject::modelName("contactForceMask", typeName),
+            typedName("contactForceMask"),
             filmModel_.time().timeName(),
             filmModel_.regionMesh(),
             IOobject::NO_READ,
@@ -133,7 +133,7 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
     (
         volVectorField::New
         (
-            IOobject::modelName("contactForce", typeName),
+            typedName("contactForce"),
             filmModel_.regionMesh(),
             dimensionedVector(dimForce/dimVolume, Zero)
         )
