@@ -22,17 +22,22 @@ boundaryField
 {
     inlet
     {
-        type            fixedFluxPressure;
+        type            prghTotalPressure;
+        p0              $internalField;
     }
+
     outlet
     {
-        type            fixedFluxPressure;
+        type            prghTotalPressure;
+        p0              $internalField;
     }
+
     sides
     {
         type            fixedFluxPressure;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+
+    region0_to_wallFilm_wallFilmFaces
     {
         type            fixedFluxPressure;
     }

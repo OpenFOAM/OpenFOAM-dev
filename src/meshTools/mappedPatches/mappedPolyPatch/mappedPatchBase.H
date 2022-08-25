@@ -296,7 +296,7 @@ public:
             const polyPatch& samplePolyPatch() const;
 
             //- Get the sample points
-            tmp<pointField> samplePoints() const;
+            virtual tmp<pointField> samplePoints() const;
 
 
 

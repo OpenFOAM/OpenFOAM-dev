@@ -33,8 +33,8 @@ solvers
 
     "(U|h)"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       0;
         relTol          0.1;
     }

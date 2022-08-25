@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-regionName      plateRegion;
+regionName      plate;
 
 phase           liquid;
 

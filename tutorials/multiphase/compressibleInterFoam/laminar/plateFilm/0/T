@@ -19,7 +19,7 @@ internalField   uniform 300;
 
 boundaryField
 {
-    region0_to_plateRegion_plateFaces
+    region0_to_plate_plateFaces
     {
         type            zeroGradient;
     }

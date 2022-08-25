@@ -17,38 +17,38 @@ FoamFile
 actions
 (
     {
-        name    c0;
+        name    notBoxes;
         type    cellSet;
         action  clear;
     }
     {
-        name    c0;
+        name    notBoxes;
         type    cellSet;
         action  invert;
     }
     {
-        name    c0;
+        name    notBoxes;
         type    cellSet;
         action  delete;
         source  boxToCell;
         box     (0.4 0.1 0.1) (0.6 0.3 0.3);
     }
     {
-        name    c0;
+        name    notBoxes;
         type    cellSet;
         action  delete;
         source  boxToCell;
         box     (0.4 0.1 0.4) (0.6 0.3 0.6);
     }
     {
-        name    c0;
+        name    notBoxes;
         type    cellSet;
         action  delete;
         source  boxToCell;
         box     (0.4 0.4 0.1) (0.6 0.6 0.3);
     }
     {
-        name    c0;
+        name    notBoxes;
         type    cellSet;
         action  delete;
         source  boxToCell;

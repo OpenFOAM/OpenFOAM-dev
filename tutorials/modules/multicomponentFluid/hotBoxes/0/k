@@ -20,16 +20,18 @@ internalField   uniform 1e-5;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     walls
     {
         type            kqRWallFunction;
         value           uniform 1e-5;
     }
 
-    "(region0_to.*)"
+    "region0_to_wallFilm_.*"
     {
         type            kqRWallFunction;
-        value           uniform 1e-05;
+        value           uniform 1e-5;
     }
 }
 

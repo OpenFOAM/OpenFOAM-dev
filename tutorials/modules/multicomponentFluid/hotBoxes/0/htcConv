@@ -20,13 +20,15 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     walls
     {
         type            calculated;
         value           uniform 0;
     }
 
-    "(region0_to.*)"
+    "region0_to_wallFilm_.*"
     {
         type            convectiveHeatTransfer;
         L               1;

@@ -32,7 +32,7 @@ boundaryField
         rho             thermo:rho;
     }
 
-    region0_to_wallFilmRegion_wallFilmFaces
+    "region0_to_wallFilm_.*"
     {
         type            fixedFluxPressure;
     }

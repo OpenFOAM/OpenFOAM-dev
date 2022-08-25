@@ -20,13 +20,15 @@ internalField   uniform 1e-7;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     walls
     {
         type            nutkWallFunction;
         value           uniform 0;
     }
 
-    "(region0_to.*)"
+    "region0_to_wallFilm_.*"
     {
         type            nutkFilmWallFunction;
         B               5.5;

@@ -23,7 +23,6 @@ actions
         source  patchToFace;
         patch   plate;
     }
-
     {
         name    plateFaces;
         type    faceZoneSet;

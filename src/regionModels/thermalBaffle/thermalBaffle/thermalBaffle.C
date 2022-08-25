@@ -31,7 +31,7 @@ License
 #include "wedgePolyPatch.H"
 #include "emptyPolyPatch.H"
 #include "FaceCellWave.H"
-#include "DeltaInfoData.H"
+#include "LayerInfoData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,7 +62,7 @@ tmp<volScalarField::Internal> thermalBaffle::calcDelta() const
 
     // Initialise faces on the first coupled patch with their centres as data
     initialFaces.clear();
-    DynamicList<DeltaInfoData<point>> initialFaceInfoPoints;
+    DynamicList<LayerInfoData<point>> initialFaceInfoPoints;
     {
         const polyPatch& pp =
             regionMesh().boundaryMesh()[intCoupledPatchIDs_[0]];
@@ -75,14 +75,14 @@ tmp<volScalarField::Internal> thermalBaffle::calcDelta() const
             const point& c = pp.faceCentres()[ppFacei];
 
             initialFaces.append(pp.start() + ppFacei);
-            initialFaceInfoPoints.append(DeltaInfoData<point>(-1, c));
+            initialFaceInfoPoints.append(LayerInfoData<point>(0, -1, c));
         }
     }
 
     // Wave across the mesh layers
-    List<DeltaInfoData<point>> faceInfoPoints(regionMesh().nFaces());
-    List<DeltaInfoData<point>> cellInfoPoints(regionMesh().nCells());
-    FaceCellWave<DeltaInfoData<point>>
+    List<LayerInfoData<point>> faceInfoPoints(regionMesh().nFaces());
+    List<LayerInfoData<point>> cellInfoPoints(regionMesh().nCells());
+    FaceCellWave<LayerInfoData<point>>
     (
         regionMesh(),
         initialFaces,
@@ -95,7 +95,7 @@ tmp<volScalarField::Internal> thermalBaffle::calcDelta() const
     // Calculate the distances between the opposite patch and load into data to
     // wave back in the opposite direction
     initialFaces.clear();
-    DynamicList<DeltaInfoData<scalar>> initialFaceInfoDeltas;
+    DynamicList<LayerInfoData<scalar>> initialFaceInfoDeltas;
     {
         const polyPatch& pp =
             regionMesh().boundaryMesh()[intCoupledPatchIDs_[1]];
@@ -112,15 +112,15 @@ tmp<volScalarField::Internal> thermalBaffle::calcDelta() const
                     mag(c - faceInfoPoints[pp.start() + ppFacei].data());
 
                 initialFaces.append(pp.start() + ppFacei);
-                initialFaceInfoDeltas.append(DeltaInfoData<scalar>(-1, d));
+                initialFaceInfoDeltas.append(LayerInfoData<scalar>(0, -1, d));
             }
         }
     }
 
     // Wave back across the layers
-    List<DeltaInfoData<scalar>> faceInfoDeltas(regionMesh().nFaces());
-    List<DeltaInfoData<scalar>> cellInfoDeltas(regionMesh().nCells());
-    FaceCellWave<DeltaInfoData<scalar>>
+    List<LayerInfoData<scalar>> faceInfoDeltas(regionMesh().nFaces());
+    List<LayerInfoData<scalar>> cellInfoDeltas(regionMesh().nCells());
+    FaceCellWave<LayerInfoData<scalar>>
     (
         regionMesh(),
         initialFaces,

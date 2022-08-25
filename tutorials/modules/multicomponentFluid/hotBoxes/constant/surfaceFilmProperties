@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-regionName      wallFilmRegion;
+regionName      wallFilm;
 
 viscosity
 {

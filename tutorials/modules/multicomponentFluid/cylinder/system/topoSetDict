@@ -21,7 +21,7 @@ actions
         type    faceSet;
         action  new;
         source  patchToFace;
-        patch   filmWalls;
+        patch   walls;
     }
     {
         name    wallFilmFaces;
@@ -29,6 +29,20 @@ actions
         action  new;
         source  setToFaceZone;
         faceSet wallFilmFaceSet;
+    }
+    {
+        name    cylinderFilmFaceSet;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        patch   cylinder;
+    }
+    {
+        name    cylinderFilmFaces;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        faceSet cylinderFilmFaceSet;
     }
 );
 

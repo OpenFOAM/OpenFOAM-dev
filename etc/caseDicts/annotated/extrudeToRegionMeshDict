@@ -13,66 +13,36 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Name of region to create
+// Name of the region to create
 region          liquidFilm;
 
 // Specification of faces to extrude. Either faceZones (either exclusively
-// internal faces or boundary faces) or faceSets (boundary faces only).
+// internal faces or boundary faces) or faceSets (boundary faces only). These
+// faces will be connected to the bottom patch of the extruded region. If
+// shadow faces are also specified then these will be connected to the top
+// patch of the extruded region.
 
-// FaceZones to extrude
+// The faceZones to extrude
 faceZones       (f0 f1);
-//faceZonesShadow (f0Shadow f1Shadow);
+// faceZonesShadow (f0Shadow f1Shadow);
 
-// faceSets to extrude
-//faceSets       (f0 f1);
-//faceSetsShadow (f0Shadow f1Shadow);
+// The faceSets to extrude
+// faceSets        (f0 f1);
+// faceSetsShadow  (f0Shadow f1Shadow);
 
-// Adapt the original mesh to have mapped patches at where the
-// faceZones are?
-// If true:
-// - extruding internal faces: become baffles on mapped patches
-// - extruding boundary faces: repatched to be on mapped patches
-// If false: leave original mesh intact. Extruded mesh will still have
-// mapped patch which might need to be adapted.
+// Adapt the original mesh to have mapped patches that connect to the extruded
+// region? If so, then extruded internal faces become baffles with mapped
+// patches, and extruded boundary faces are repatched onto mapped patches.
+// Otherwise the original mesh is not modified. The extruded mesh will still
+// have mapped patches created which will need to be changed.
 adaptMesh       true;
 
-// Sample mode for inter-region communication
-sampleMode      nearestPatchFace;
-
-
-// 1 D extrusion
-// ~~~~~~~~~~~~~
-
-    // Extrude 1D-columns of cells? This by default duplicates points so can
-    // have overlapping columns (i.e. non space filling)
-    oneD            false;
-
-    //- If oneD: specify which boundary is wanted between the layers
-    // oneDPolyPatchType empty; // wedge
-
-    //- If oneD: specify whether to duplicate points (i.e. disconnect 1D
-    //  columns) or only on non-manifold extrusion areas. Default is false.
-    //  nonManifold true;
-
-
-//- Extrusion model to use. The only logical choice is linearNormal?
-
-//- Linear extrusion in normal direction
+//- Extrusion settings
 extrudeModel    linearNormal;
-
-//- Linear extrusion in specified direction
 // extrudeModel   linearDirection;
-
-//- Wedge extrusion. If nLayers is 1 assumes symmetry around plane.
 // extrudeModel   wedge;
-
-//- Extrudes into sphere around (0 0 0)
 // extrudeModel   linearRadial;
-
-//- Extrudes into sphere around (0 0 0) with specified radii
-//extrudeModel        radial;
-
-//- Extrudes into sphere with grading according to pressure (atmospherics)
+// extrudeModel   radial;
 // extrudeModel   sigmaRadial;
 
 nLayers         10;
@@ -84,6 +54,12 @@ linearNormalCoeffs
     thickness       0.05;
 }
 
+linearDirectionCoeffs
+{
+    direction       (0 1 0);
+    thickness       0.05;
+}
+
 wedgeCoeffs
 {
     axisPt      (0 0.1 -0.05);
@@ -91,15 +67,9 @@ wedgeCoeffs
     angle       360;  // For nLayers=1 assume symmetry so angle/2 on each side
 }
 
-linearDirectionCoeffs
-{
-    direction       (0 1 0);
-    thickness       0.05;
-}
-
 linearRadialCoeffs
 {
-     R              0.1;
+    R              0.1;
     // Optional inner radius
     Rsurface        0.01;
 }

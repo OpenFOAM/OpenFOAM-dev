@@ -17,10 +17,6 @@ region          wallFilm;
 
 faceZones       (walls);
 
-oneD            false;
-
-sampleMode      nearestPatchFace;
-
 extrudeModel    linearNormal;
 
 nLayers         1;

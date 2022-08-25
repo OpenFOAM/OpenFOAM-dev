@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      alpha.liquid;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -29,7 +30,7 @@ boundaryField
         type            zeroGradient;
     }
 
-    region0_to_wallFilmRegion_wallFilmFaces
+    "region0_to_wallFilm_.*"
     {
         type            zeroGradient;
     }

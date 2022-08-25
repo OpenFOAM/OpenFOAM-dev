@@ -20,12 +20,14 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     walls
     {
         type            zeroGradient;
     }
 
-    "(region0_to.*)"
+    "region0_to_wallFilm_.*"
     {
         type            zeroGradient;
     }

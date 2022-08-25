@@ -13,13 +13,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-region          wallFilmRegion;
+region          wallFilm;
 
 faceZones       (wallFilmFaces);
-
-oneD            false;
-
-sampleMode      nearestPatchFace;
 
 extrudeModel    linearNormal;
 

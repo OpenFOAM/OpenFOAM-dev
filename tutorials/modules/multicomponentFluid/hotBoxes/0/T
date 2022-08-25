@@ -20,19 +20,21 @@ internalField   uniform 300;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     walls
     {
         type            fixedValue;
-        value           uniform 300;
+        value           $internalField;
     }
 
-    "(region0_to.*)"
+    "region0_to_wallFilm_.*"
     {
         type            mapped;
         field           T;
-        average         300;
         setAverage      no;
-        value           uniform 300;
+        average         300;
+        value           $internalField;
     }
 }
 

@@ -8,8 +8,8 @@
 FoamFile
 {
     format      ascii;
-    location    "0";
     class       volScalarField;
+    location    "0";
     object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -22,23 +22,28 @@ boundaryField
 {
     inlet
     {
-        type            fixedValue;
-        value           uniform 300;
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
     }
+
     outlet
     {
-        type            fixedValue;
-        value           uniform 300;
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
     }
+
     sides
     {
         type            fixedValue;
-        value           uniform 300;
+        value           $internalField;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+
+    region0_to_wallFilm_wallFilmFaces
     {
         type            fixedValue;
-        value           uniform 300;
+        value           $internalField;
     }
 }
 

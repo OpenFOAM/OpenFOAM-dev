@@ -46,13 +46,19 @@ boundary
             (1 5 4 0)
         );
     }
-    wallFilm
+    floor
     {
         type wall;
         faces
         (
             (0 3 2 1)
         );
+    }
+    boxes
+    {
+        type wall;
+        faces
+        ();
     }
 );
 

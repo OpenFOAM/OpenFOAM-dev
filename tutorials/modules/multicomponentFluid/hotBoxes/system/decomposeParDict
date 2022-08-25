@@ -14,13 +14,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-numberOfSubdomains 4;
+numberOfSubdomains 12;
 
-method          scotch;
+method          hierarchical;
 
-distributed     no;
-
-roots           ( );
+hierarchicalCoeffs
+{
+    n               (2 2 3);
+    order           xyz;
+}
 
 
 // ************************************************************************* //

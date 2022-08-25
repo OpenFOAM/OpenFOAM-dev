@@ -20,17 +20,18 @@ internalField   uniform 100000;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     walls
     {
         type            fixedFluxPressure;
-        value           uniform 100000;
+        value           $internalField;
     }
 
-    "(region0_to.*)"
+    "region0_to_wallFilm_.*"
     {
         type            fixedFluxPressure;
-        gradient        uniform 0;
-        value           uniform 100000;
+        value           $internalField;
     }
 }
 

@@ -12,7 +12,6 @@ FoamFile
     location    "0";
     object      O2;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 0 0 0 0];
@@ -23,17 +22,24 @@ boundaryField
 {
     inlet
     {
-        type            zeroGradient;
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
     }
+
     outlet
     {
-        type            zeroGradient;
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
     }
+
     sides
     {
         type            zeroGradient;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+
+    region0_to_wallFilm_wallFilmFaces
     {
         type            zeroGradient;
     }

@@ -23,19 +23,21 @@ boundaryField
     inlet
     {
         type            pressureInletOutletVelocity;
-        value           uniform (0 0 0);
+        value           $internalField;
     }
+
     outlet
     {
         type            pressureInletOutletVelocity;
-        value           uniform (0 0 0);
+        value           $internalField;
     }
+
     sides
     {
-        type            pressureInletOutletVelocity;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+
+    region0_to_wallFilm_wallFilmFaces
     {
         type            noSlip;
     }

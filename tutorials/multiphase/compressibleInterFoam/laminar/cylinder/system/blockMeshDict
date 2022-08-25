@@ -99,7 +99,7 @@ defaultPatch
 
 boundary
 (
-    filmWalls
+    walls
     {
         type wall;
         faces
@@ -108,13 +108,19 @@ boundary
             (1 2 21 20)
             (12 11 30 31)
             (13 12 31 32)
-            (10 5 24 29)
+        );
+    }
+    cylinder
+    {
+        type wall;
+        faces
+        (
             (5 0 19 24)
+            (10 5 24 29)
             (16 10 29 35)
             (11 16 35 30)
         );
     }
-
     sides
     {
         type patch;
@@ -126,14 +132,13 @@ boundary
             (17 14 33 36)
         );
     }
-
     top
     {
         type patch;
         faces
         (
-            (7 8 27 26)
             (6 7 26 25)
+            (7 8 27 26)
             (8 18 37 27)
             (18 17 36 37)
         );

@@ -20,20 +20,21 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     walls
     {
         type            uniformFixedValue;
         uniformValue    (0 0 0);
     }
 
-    "(region0_to.*)"
+    "region0_to_wallFilm_.*"
     {
         type            mapped;
-        uniformValue    constant (0 0 0);
-        value           uniform (0 0 0);
         field           U;
-        average         (0 0 0);
         setAverage      no;
+        average         (0 0 0);
+        value           uniform (0 0 0);
     }
 }
 

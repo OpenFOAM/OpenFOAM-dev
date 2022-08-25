@@ -13,13 +13,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-region          plateRegion;
+region          plate;
 
 faceZones       (plateFaces);
-
-oneD            false;
-
-sampleMode      nearestPatchFace;
 
 extrudeModel    linearNormal;
 

@@ -20,7 +20,7 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    region0_to_plateRegion_plateFaces
+    region0_to_plate_plateFaces
     {
         type        noSlip;
     }

@@ -25,17 +25,20 @@ boundaryField
         type            calculated;
         value           $internalField;
     }
+
     outlet
     {
         type            calculated;
         value           $internalField;
     }
+
     sides
     {
         type            calculated;
         value           $internalField;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+
+    region0_to_wallFilm_wallFilmFaces
     {
         type            calculated;
         value           $internalField;

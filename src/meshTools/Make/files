@@ -250,9 +250,11 @@ patchToPatch/rays/raysPatchToPatch.C
 mappedPatches/mappedPolyPatch/mappedPatchBase.C
 mappedPatches/mappedPolyPatch/mappedPolyPatch.C
 mappedPatches/mappedPolyPatch/mappedWallPolyPatch.C
+mappedPatches/mappedPolyPatch/mappedExtrudedWallPolyPatch.C
 
 mappedPatches/mappedPointPatch/mappedPointPatch.C
 mappedPatches/mappedPointPatch/mappedWallPointPatch.C
+mappedPatches/mappedPointPatch/mappedExtrudedWallPointPatch.C
 
 meshStructure/meshStructure.C
 meshStructure/topoDistanceData.C

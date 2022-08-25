@@ -14,18 +14,27 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
 dimensions      [0 0 0 0 0 0 0];
 
 internalField   uniform 0.77;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     "(sides|frontAndBack)"
     {
         type            zeroGradient;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+
+    top
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+
+    "region0_to_wallFilm_.*"
     {
         type            zeroGradient;
     }
