@@ -15,7 +15,7 @@ FoamFile
 
 region          wallFilm;
 
-faceZones       (floorFilmFaces boxesFilmFaces);
+patches         (floor boxes);
 
 extrudeModel    linearNormal;
 

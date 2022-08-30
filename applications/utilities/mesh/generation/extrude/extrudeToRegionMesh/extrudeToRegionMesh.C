@@ -672,7 +672,7 @@ void addCouplingPatches
     patchDict.add("sampleRegion", sampleRegionName);
 
     label nOldPatches = newPatches.size();
-    forAll(zoneNames, zoneI)
+    forAll(zoneNames, zonei)
     {
         const word patchNamePrefix =
             regionName + "_to_" + sampleRegionName + '_';
@@ -681,33 +681,33 @@ void addCouplingPatches
 
         word bottomPatchName, bottomSamplePatchName;
         word topPatchName, topSamplePatchName;
-        if (zoneIsInternal[zoneI])
+        if (zoneIsInternal[zonei])
         {
-            bottomPatchName = patchNamePrefix + zoneNames[zoneI] + "_bottom";
+            bottomPatchName = patchNamePrefix + zoneNames[zonei] + "_bottom";
             bottomSamplePatchName =
-                samplePatchNamePrefix + zoneNames[zoneI] + "_bottom";
-            topPatchName = patchNamePrefix + zoneNames[zoneI] + "_top";
+                samplePatchNamePrefix + zoneNames[zonei] + "_bottom";
+            topPatchName = patchNamePrefix + zoneNames[zonei] + "_top";
             topSamplePatchName =
-                samplePatchNamePrefix + zoneNames[zoneI] + "_top";
+                samplePatchNamePrefix + zoneNames[zonei] + "_top";
         }
-        else if (!zoneShadowNames.empty())
+        else if (!zoneShadowNames[zonei].empty())
         {
-            bottomPatchName = patchNamePrefix + zoneNames[zoneI];
-            bottomSamplePatchName = samplePatchNamePrefix + zoneNames[zoneI];
-            topPatchName = patchNamePrefix + zoneShadowNames[zoneI];
-            topSamplePatchName = samplePatchNamePrefix + zoneShadowNames[zoneI];
+            bottomPatchName = patchNamePrefix + zoneNames[zonei];
+            bottomSamplePatchName = samplePatchNamePrefix + zoneNames[zonei];
+            topPatchName = patchNamePrefix + zoneShadowNames[zonei];
+            topSamplePatchName = samplePatchNamePrefix + zoneShadowNames[zonei];
         }
         else
         {
-            bottomPatchName = patchNamePrefix + zoneNames[zoneI];
-            bottomSamplePatchName = samplePatchNamePrefix + zoneNames[zoneI];
-            topPatchName = zoneNames[zoneI] + "_top";
+            bottomPatchName = patchNamePrefix + zoneNames[zonei];
+            bottomSamplePatchName = samplePatchNamePrefix + zoneNames[zonei];
+            topPatchName = zoneNames[zonei] + "_top";
         }
 
         dictionary bottomPatchDict(patchDict);
         bottomPatchDict.add("samplePatch", bottomSamplePatchName);
 
-        zoneBottomPatch[zoneI] =
+        zoneBottomPatch[zonei] =
             addPatch<mappedWallPolyPatch>
             (
                 mesh.boundaryMesh(),
@@ -716,12 +716,12 @@ void addCouplingPatches
                 newPatches
             );
 
-        Pout<< zoneBottomPatch[zoneI]
-            << '\t' << newPatches[zoneBottomPatch[zoneI]]->name()
-            << '\t' << newPatches[zoneBottomPatch[zoneI]]->type()
+        Pout<< zoneBottomPatch[zonei]
+            << '\t' << newPatches[zoneBottomPatch[zonei]]->name()
+            << '\t' << newPatches[zoneBottomPatch[zonei]]->type()
             << nl;
 
-        if (zoneIsInternal[zoneI] || !zoneShadowNames.empty())
+        if (zoneIsInternal[zonei] || !zoneShadowNames[zonei].empty())
         {
             dictionary topPatchDict(patchDict);
             topPatchDict.add("samplePatch", topSamplePatchName);
@@ -730,7 +730,7 @@ void addCouplingPatches
                 topPatchDict.add("bottomPatch", bottomPatchName);
             }
 
-            zoneTopPatch[zoneI] =
+            zoneTopPatch[zonei] =
                 addPatch<mappedExtrudedWallPolyPatch>
                 (
                     mesh.boundaryMesh(),
@@ -741,7 +741,7 @@ void addCouplingPatches
         }
         else
         {
-            zoneTopPatch[zoneI] =
+            zoneTopPatch[zonei] =
                 addPatch<polyPatch>
                 (
                     mesh.boundaryMesh(),
@@ -751,9 +751,9 @@ void addCouplingPatches
                 );
         }
 
-        Pout<< zoneTopPatch[zoneI]
-            << '\t' << newPatches[zoneTopPatch[zoneI]]->name()
-            << '\t' << newPatches[zoneTopPatch[zoneI]]->type()
+        Pout<< zoneTopPatch[zonei]
+            << '\t' << newPatches[zoneTopPatch[zonei]]->name()
+            << '\t' << newPatches[zoneTopPatch[zonei]]->type()
             << nl;
     }
 
@@ -1068,38 +1068,75 @@ int main(int argc, char *argv[])
 
     bool overwrite = args.optionFound("overwrite");
 
-    const word oldInstance = mesh.pointsInstance();
-
     const dictionary dict(systemDict("extrudeToRegionMeshDict", args, mesh));
 
-    // Point generator
-    autoPtr<extrudeModel> model(extrudeModel::New(dict));
-
-    // Region
+    // Region to extrude from
     const word shellRegionName(dict.lookup("region"));
 
-    // Faces to extrude - either faceZones or faceSets (boundary faces only)
+    if (shellRegionName == regionName)
+    {
+        FatalIOErrorIn(args.executable().c_str(), dict)
+            << "Cannot extrude into same region as mesh." << endl
+            << "Mesh region : " << regionName << endl
+            << "Shell region : " << shellRegionName
+            << exit(FatalIOError);
+    }
+
+    // Select faces to extrude
+    enum class zoneSourceType { zone, set, patch };
+    static const wordList zoneSourceTypeNames =
+        {"faceZone", "faceSet", "patch" };
+    static const wordList zoneSourcesTypeNames =
+        {"faceZones", "faceSets", "patches" };
     wordList zoneNames;
     wordList zoneShadowNames;
-    bool hasZones = dict.found("faceZones");
-    if (hasZones)
+    List<zoneSourceType> zoneSourceTypes;
+    auto lookupZones = [&](const zoneSourceType& type)
     {
-        dict.lookup("faceZones") >> zoneNames;
-        dict.readIfPresent("faceZonesShadow", zoneShadowNames);
+        const word& keyword = zoneSourcesTypeNames[unsigned(type)];
 
-        if (dict.found("faceSets"))
+        if (dict.found(keyword))
         {
-            FatalIOErrorIn(args.executable().c_str(), dict)
-                << "Please supply faces to extrude either through 'faceZones'"
-                << " or 'faceSets' entry. Found both."
-                << exit(FatalIOError);
+            zoneNames.append(dict.lookup<wordList>(keyword));
+
+            zoneShadowNames.append
+            (
+                dict.lookupOrDefault<wordList>
+                (
+                    keyword + "Shadow",
+                    wordList
+                    (
+                        zoneNames.size() - zoneShadowNames.size(),
+                        word::null
+                    )
+                )
+            );
+
+            zoneSourceTypes.setSize(zoneNames.size(), type);
+        }
+    };
+    lookupZones(zoneSourceType::zone);
+    lookupZones(zoneSourceType::set);
+    lookupZones(zoneSourceType::patch);
+
+    Info<< nl << "Extruding:" << nl << incrIndent;
+    forAll(zoneNames, zonei)
+    {
+        const unsigned typei = unsigned(zoneSourceTypes[zonei]);
+
+        if (zoneShadowNames[zonei].empty())
+        {
+            Info<< indent << "From " << zoneSourceTypeNames[typei] << " \""
+                << zoneNames[zonei] << "\"" << nl;
+        }
+        else
+        {
+            Info<< indent << "Between " << zoneSourcesTypeNames[typei] << " \""
+                << zoneNames[zonei] << "\" and \"" << zoneShadowNames[zonei]
+                << "\"" << nl;
         }
     }
-    else
-    {
-        dict.lookup("faceSets") >> zoneNames;
-        dict.readIfPresent("faceSetsShadow", zoneShadowNames);
-    }
+    Info<< endl << decrIndent;
 
     // One-dimensional extrusion settings
     const Switch oneD(dict.lookupOrDefault("oneD", false));
@@ -1109,33 +1146,6 @@ int main(int argc, char *argv[])
     {
         oneDNonManifoldEdges = dict.lookupOrDefault("nonManifold", false);
         dict.lookup("oneDPolyPatchType") >> oneDPatchType;
-    }
-
-    // Change the primary mesh?
-    const Switch adaptMesh(dict.lookup("adaptMesh"));
-
-    if (hasZones)
-    {
-        Info<< "Extruding zones " << zoneNames
-            << " on mesh " << regionName
-            << " into shell mesh " << shellRegionName
-            << endl;
-    }
-    else
-    {
-        Info<< "Extruding faceSets " << zoneNames
-            << " on mesh " << regionName
-            << " into shell mesh " << shellRegionName
-            << endl;
-    }
-
-    if (shellRegionName == regionName)
-    {
-        FatalIOErrorIn(args.executable().c_str(), dict)
-            << "Cannot extrude into same region as mesh." << endl
-            << "Mesh region : " << regionName << endl
-            << "Shell region : " << shellRegionName
-            << exit(FatalIOError);
     }
 
     if (oneD)
@@ -1156,7 +1166,14 @@ int main(int argc, char *argv[])
         }
     }
 
+    // Construct the point generator
+    autoPtr<extrudeModel> model(extrudeModel::New(dict));
 
+    // Change the primary mesh?
+    const Switch adaptMesh(dict.lookup("adaptMesh"));
+
+
+    // Determine output instance
     word meshInstance;
     if (!overwrite)
     {
@@ -1165,222 +1182,185 @@ int main(int argc, char *argv[])
     }
     else
     {
-        meshInstance = oldInstance;
+        meshInstance = mesh.pointsInstance();
     }
     Info<< "Writing meshes to " << meshInstance << nl << endl;
 
 
-    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+    // Map from extrude zone to mesh zone, or -1 if not a mesh zone
+    labelList zoneMeshZoneID(zoneNames.size(), -1);
+    labelList shadowZoneMeshZoneID(zoneNames.size(), -1);
+    forAll(zoneNames, zonei)
+    {
+        if (zoneSourceTypes[zonei] != zoneSourceType::zone) continue;
+
+        zoneMeshZoneID[zonei] =
+            mesh.faceZones().findZoneID(zoneNames[zonei]);
+
+        if (zoneMeshZoneID[zonei] == -1)
+        {
+            FatalIOErrorIn(args.executable().c_str(), dict)
+                << "Cannot find zone " << zoneNames[zonei]
+                << endl << "Valid zones are " << mesh.faceZones().names()
+                << exit(FatalIOError);
+        }
+
+        if (!zoneShadowNames[zonei].empty())
+        {
+            shadowZoneMeshZoneID[zonei] =
+                mesh.faceZones().findZoneID(zoneShadowNames[zonei]);
+
+            if (shadowZoneMeshZoneID[zonei] == -1)
+            {
+                FatalIOErrorIn(args.executable().c_str(), dict)
+                    << "Cannot find shadow zone " << zoneShadowNames[zonei]
+                    << endl << "Valid zones are " << mesh.faceZones().names()
+                    << exit(FatalIOError);
+            }
+        }
+    }
 
 
     // Extract faces to extrude
-    // ~~~~~~~~~~~~~~~~~~~~~~~~
-
-    // From extrude zone to mesh zone (or -1 if extruding faceSets)
-    labelList zoneMeshZoneID;
-    labelList shadowZoneMeshZoneID;
-
-    // Primary
-    labelList extrudeFaces;
-    labelList extrudeFaceZoneIDs;
-    boolList extrudeFaceFlips;
-
-    // Shadow
-    labelList shadowExtrudeFaces;
-    labelList shadowExtrudeFaceZoneIDs;
-    boolList shadowExtrudeFaceFlips;
-
-    if (hasZones)
+    labelList extrudeFaces, shadowExtrudeFaces;
+    labelList extrudeFaceZoneIDs, shadowExtrudeFaceZoneIDs;
+    boolList extrudeFaceFlips, shadowExtrudeFaceFlips;
     {
-        const meshFaceZones& faceZones = mesh.faceZones();
-
-        zoneMeshZoneID.setSize(zoneNames.size());
-        forAll(zoneNames, i)
+        // Load any faceSets that we need
+        PtrList<faceSet> zoneSets(zoneNames.size());
+        PtrList<faceSet> zoneShadowSets(zoneNames.size());
+        forAll(zoneNames, zonei)
         {
-            zoneMeshZoneID[i] =
-                faceZones.findZoneID(zoneNames[i]);
-            if (zoneMeshZoneID[i] == -1)
+            if (zoneSourceTypes[zonei] == zoneSourceType::set)
             {
-                FatalIOErrorIn(args.executable().c_str(), dict)
-                    << "Cannot find zone " << zoneNames[i] << endl
-                    << "Valid zones are " << faceZones.names()
-                    << exit(FatalIOError);
-            }
-        }
-
-        label nExtrudeFaces = 0;
-        forAll(zoneMeshZoneID, i)
-        {
-            nExtrudeFaces += faceZones[zoneMeshZoneID[i]].size();
-        }
-
-        extrudeFaces.setSize(nExtrudeFaces);
-        extrudeFaceZoneIDs.setSize(nExtrudeFaces);
-        extrudeFaceFlips.setSize(nExtrudeFaces);
-
-        nExtrudeFaces = 0;
-        forAll(zoneMeshZoneID, i)
-        {
-            const faceZone& fz = faceZones[zoneMeshZoneID[i]];
-            forAll(fz, j)
-            {
-                extrudeFaces[nExtrudeFaces] = fz[j];
-                extrudeFaceZoneIDs[nExtrudeFaces] = i;
-                extrudeFaceFlips[nExtrudeFaces] = fz.flipMap()[j];
-                nExtrudeFaces++;
-            }
-        }
-
-        // Shadow zones
-        if (zoneShadowNames.size())
-        {
-            shadowZoneMeshZoneID.setSize(zoneShadowNames.size());
-            forAll(zoneShadowNames, i)
-            {
-                shadowZoneMeshZoneID[i] =
-                    faceZones.findZoneID(zoneShadowNames[i]);
-                if (shadowZoneMeshZoneID[i] == -1)
+                zoneSets.set(zonei, new faceSet(mesh, zoneNames[zonei]));
+                if (!zoneShadowNames.empty())
                 {
-                    FatalIOErrorIn(args.executable().c_str(), dict)
-                        << "Cannot find zone " << zoneShadowNames[i] << endl
-                        << "Valid zones are " << faceZones.names()
-                        << exit(FatalIOError);
-                }
-            }
-
-            label nShadowFaces = 0;
-            forAll(shadowZoneMeshZoneID, i)
-            {
-                nShadowFaces += faceZones[shadowZoneMeshZoneID[i]].size();
-            }
-
-            if (nExtrudeFaces != nShadowFaces)
-            {
-                FatalIOErrorIn(args.executable().c_str(), dict)
-                    << "Extruded faces " << nExtrudeFaces << endl
-                    << "is different from shadow faces. " << nShadowFaces
-                    << "This is not permitted " << endl
-                    << exit(FatalIOError);
-            }
-
-            shadowExtrudeFaces.setSize(nShadowFaces);
-            shadowExtrudeFaceZoneIDs.setSize(nShadowFaces);
-            shadowExtrudeFaceFlips.setSize(nShadowFaces);
-
-            nShadowFaces = 0;
-            forAll(shadowZoneMeshZoneID, i)
-            {
-                const faceZone& fz = faceZones[shadowZoneMeshZoneID[i]];
-                forAll(fz, j)
-                {
-                    shadowExtrudeFaces[nShadowFaces] = fz[j];
-                    shadowExtrudeFaceZoneIDs[nShadowFaces] = i;
-                    shadowExtrudeFaceFlips[nShadowFaces] = fz.flipMap()[j];
-                    nShadowFaces++;
+                    zoneShadowSets.set
+                    (
+                       zonei,
+                       new faceSet(mesh, zoneShadowNames[zonei])
+                    );
                 }
             }
         }
-    }
-    else
-    {
-        zoneMeshZoneID.setSize(zoneNames.size(), -1);
 
-        // Load faceSets
-        PtrList<faceSet> zones(zoneNames.size());
-        forAll(zoneNames, i)
+        // Create dynamic face lists
+        DynamicList<label> facesDyn, sdwFacesDyn;
+        DynamicList<label> zoneIDsDyn, sdwZoneIDsDyn;
+        DynamicList<bool> flipsDyn, sdwFlipsDyn;
+        forAll(zoneNames, zonei)
         {
-            Info<< "Loading faceSet " << zoneNames[i] << endl;
-            zones.set(i, new faceSet(mesh, zoneNames[i]));
-        }
-
-        label nExtrudeFaces = 0;
-        forAll(zones, i)
-        {
-            nExtrudeFaces += zones[i].size();
-        }
-
-        extrudeFaces.setSize(nExtrudeFaces);
-        extrudeFaceZoneIDs.setSize(nExtrudeFaces);
-        extrudeFaceFlips.setSize(nExtrudeFaces);
-
-        nExtrudeFaces = 0;
-        forAll(zones, i)
-        {
-            const faceSet& fz = zones[i];
-            forAllConstIter(faceSet, fz, iter)
+            switch (zoneSourceTypes[zonei])
             {
-                label facei = iter.key();
-                if (mesh.isInternalFace(facei))
+                case zoneSourceType::zone:
                 {
-                    FatalIOErrorIn(args.executable().c_str(), dict)
-                        << "faceSet " << fz.name()
-                        << "contains internal faces."
-                        << " This is not permitted."
-                        << exit(FatalIOError);
-                }
-                extrudeFaces[nExtrudeFaces] = facei;
-                extrudeFaceZoneIDs[nExtrudeFaces] = i;
-                extrudeFaceFlips[nExtrudeFaces] = false;
-                nExtrudeFaces++;
-            }
-        }
+                    const faceZone& fz =
+                        mesh.faceZones()[zoneMeshZoneID[zonei]];
+                    facesDyn.append(fz);
+                    zoneIDsDyn.append(labelList(fz.size(), zonei));
+                    flipsDyn.append(fz.flipMap());
 
-        // Shadow sets
-        if (zoneShadowNames.size())
-        {
-            shadowZoneMeshZoneID.setSize(zoneShadowNames.size(), -1);
-
-            // Load faceSets
-            PtrList<faceSet> shadowZones(zoneShadowNames.size());
-            forAll(zoneShadowNames, i)
-            {
-                shadowZones.set(i, new faceSet(mesh, zoneShadowNames[i]));
-            }
-
-            label nShadowFaces = 0;
-            forAll(shadowZones, i)
-            {
-                nShadowFaces += shadowZones[i].size();
-            }
-
-            if (nExtrudeFaces != nShadowFaces)
-            {
-                FatalIOErrorIn(args.executable().c_str(), dict)
-                    << "Extruded faces " << nExtrudeFaces << endl
-                    << "is different from shadow faces. " << nShadowFaces
-                    << "This is not permitted " << endl
-                    << exit(FatalIOError);
-            }
-
-            shadowExtrudeFaces.setSize(nShadowFaces);
-            shadowExtrudeFaceFlips.setSize(nShadowFaces);
-            shadowExtrudeFaceZoneIDs.setSize(nShadowFaces);
-
-            nShadowFaces = 0;
-            forAll(shadowZones, i)
-            {
-                const faceSet& fz = shadowZones[i];
-                forAllConstIter(faceSet, fz, iter)
-                {
-                    label facei = iter.key();
-                    if (mesh.isInternalFace(facei))
+                    if (!zoneShadowNames[zonei].empty())
                     {
-                        FatalIOErrorIn(args.executable().c_str(), dict)
-                            << "faceSet " << fz.name()
-                            << "contains internal faces."
-                            << " This is not permitted."
-                            << exit(FatalIOError);
+                        const faceZone& sfz =
+                            mesh.faceZones()[shadowZoneMeshZoneID[zonei]];
+                        if (sfz.size() != fz.size())
+                        {
+                            FatalIOErrorIn(args.executable().c_str(), dict)
+                                << "Shadow zone " << zoneShadowNames[zonei]
+                                << "is a different size from it's "
+                                << "corresponding zone " << zoneNames[zonei]
+                                << exit(FatalIOError);
+                        }
+                        sdwFacesDyn.append(sfz);
+                        sdwZoneIDsDyn.append(labelList(sfz.size(), zonei));
+                        sdwFlipsDyn.append(sfz.flipMap());
                     }
-                    shadowExtrudeFaces[nShadowFaces] = facei;
-                    shadowExtrudeFaceFlips[nShadowFaces] = false;
-                    shadowExtrudeFaceZoneIDs[nShadowFaces] = i;
-                    nShadowFaces++;
+                    else
+                    {
+                        sdwFacesDyn.append(labelList(fz.size(), -1));
+                        sdwZoneIDsDyn.append(labelList(fz.size(), -1));
+                        sdwFlipsDyn.append(boolList(fz.size(), false));
+                    }
+                    break;
+                }
+                case zoneSourceType::set:
+                {
+                    const faceSet& fs = zoneSets[zonei];
+                    facesDyn.append(fs.toc());
+                    zoneIDsDyn.append(labelList(fs.size(), zonei));
+                    flipsDyn.append(boolList(fs.size(), false));
+
+                    if (!zoneShadowNames[zonei].empty())
+                    {
+                        const faceSet& sfs = zoneShadowSets[zonei];
+                        if (sfs.size() != fs.size())
+                        {
+                            FatalIOErrorIn(args.executable().c_str(), dict)
+                                << "Shadow set " << zoneShadowNames[zonei]
+                                << "is a different size from it's "
+                                << "corresponding zone " << zoneNames[zonei]
+                                << exit(FatalIOError);
+                        }
+                        sdwFacesDyn.append(sfs.toc());
+                        sdwZoneIDsDyn.append(labelList(sfs.size(), zonei));
+                        sdwFlipsDyn.append(boolList(sfs.size(), false));
+                    }
+                    else
+                    {
+                        sdwFacesDyn.append(labelList(fs.size(), -1));
+                        sdwZoneIDsDyn.append(labelList(fs.size(), -1));
+                        sdwFlipsDyn.append(boolList(fs.size(), false));
+                    }
+                    break;
+                }
+                case zoneSourceType::patch:
+                {
+                    const polyPatch& pp =
+                        mesh.boundaryMesh()[zoneNames[zonei]];
+                    facesDyn.append(pp.start() + identity(pp.size()));
+                    zoneIDsDyn.append(labelList(pp.size(), zonei));
+                    flipsDyn.append(boolList(pp.size(), false));
+
+                    if (!zoneShadowNames[zonei].empty())
+                    {
+                        const polyPatch& spp =
+                            mesh.boundaryMesh()[zoneShadowNames[zonei]];
+                        if (spp.size() != pp.size())
+                        {
+                            FatalIOErrorIn(args.executable().c_str(), dict)
+                                << "Shadow patch " << zoneShadowNames[zonei]
+                                << "is a different size from it's "
+                                << "corresponding zone " << zoneNames[zonei]
+                                << exit(FatalIOError);
+                        }
+                        sdwFacesDyn.append(spp.start() + identity(spp.size()));
+                        sdwZoneIDsDyn.append(labelList(spp.size(), zonei));
+                        sdwFlipsDyn.append(boolList(spp.size(), false));
+                    }
+                    else
+                    {
+                        sdwFacesDyn.append(labelList(pp.size(), -1));
+                        sdwZoneIDsDyn.append(labelList(pp.size(), -1));
+                        sdwFlipsDyn.append(boolList(pp.size(), false));
+                    }
+                    break;
                 }
             }
         }
+
+        // Transfer to non-dynamic storage
+        extrudeFaces.transfer(facesDyn);
+        extrudeFaceZoneIDs.transfer(zoneIDsDyn);
+        extrudeFaceFlips.transfer(flipsDyn);
+        shadowExtrudeFaces.transfer(sdwFacesDyn);
+        shadowExtrudeFaceZoneIDs.transfer(sdwZoneIDsDyn);
+        shadowExtrudeFaceFlips.transfer(sdwFlipsDyn);
     }
 
 
+    // Create a primitive patch of the extruded faces
     const primitiveFacePatch extrudePatch
     (
         faceList(UIndirectList<face>(mesh.faces(), extrudeFaces)),
@@ -1454,16 +1434,16 @@ int main(int argc, char *argv[])
 
     // Copy all non-local patches since these are used on boundary edges of
     // the extrusion
-    DynamicList<polyPatch*> regionPatches(patches.size());
-    forAll(patches, patchi)
+    DynamicList<polyPatch*> regionPatches(mesh.boundaryMesh().size());
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        if (!isA<processorPolyPatch>(patches[patchi]))
+        if (!isA<processorPolyPatch>(mesh.boundaryMesh()[patchi]))
         {
             regionPatches.append
             (
-                patches[patchi].clone
+                mesh.boundaryMesh()[patchi].clone
                 (
-                    patches,
+                    mesh.boundaryMesh(),
                     regionPatches.size(),
                     0,              // size
                     0               // start
@@ -1497,6 +1477,8 @@ int main(int argc, char *argv[])
     labelList interMeshBottomPatch;
     if (adaptMesh)
     {
+        const polyBoundaryMesh& patches = mesh.boundaryMesh();
+
         // Clone existing non-processor patches
         DynamicList<polyPatch*> newPatches(patches.size());
         forAll(patches, patchi)
@@ -1670,11 +1652,15 @@ int main(int argc, char *argv[])
 
             if (facei != -1)
             {
-                label newPatchi = findPatchID
-                (
-                    regionPatches,
-                    patches[patches.whichPatch(facei)].name()
-                );
+                const label newPatchi =
+                    findPatchID
+                    (
+                        regionPatches,
+                        mesh.boundaryMesh()
+                        [
+                            mesh.boundaryMesh().whichPatch(facei)
+                        ].name()
+                    );
                 ePatches.setSize(eFaces.size(), newPatchi);
             }
             else
@@ -1872,11 +1858,11 @@ int main(int argc, char *argv[])
         polyTopoChange meshMod(mesh);
 
         // Modify faces to be in bottom (= always coupled) patch
-        forAll(extrudeFaces, zoneFacei)
+        forAll(extrudeFaces, facei)
         {
-            label meshFacei = extrudeFaces[zoneFacei];
-            label zoneI = extrudeFaceZoneIDs[zoneFacei];
-            bool flip = extrudeFaceFlips[zoneFacei];
+            const label meshFacei = extrudeFaces[facei];
+            const label zonei = extrudeFaceZoneIDs[facei];
+            const bool flip = extrudeFaceFlips[facei];
             const face& f = mesh.faces()[meshFacei];
 
             if (!flip)
@@ -1888,8 +1874,8 @@ int main(int argc, char *argv[])
                     mesh.faceOwner()[meshFacei],// owner
                     -1,                         // neighbour
                     false,                      // face flip
-                    interMeshBottomPatch[zoneI],// patch for face
-                    zoneMeshZoneID[zoneI],      // zone for face
+                    interMeshBottomPatch[zonei],// patch for face
+                    zoneMeshZoneID[zonei],      // zone for face
                     flip                        // face flip in zone
                 );
             }
@@ -1902,20 +1888,20 @@ int main(int argc, char *argv[])
                     mesh.faceNeighbour()[meshFacei],// owner
                     -1,                             // neighbour
                     true,                           // face flip
-                    interMeshBottomPatch[zoneI],    // patch for face
-                    zoneMeshZoneID[zoneI],          // zone for face
+                    interMeshBottomPatch[zonei],    // patch for face
+                    zoneMeshZoneID[zonei],          // zone for face
                     !flip                           // face flip in zone
                 );
             }
         }
 
-        if (zoneShadowNames.size() > 0) // if there is a top faceZone specified
+        forAll(extrudeFaces, facei)
         {
-            forAll(extrudeFaces, zoneFacei)
+            if (shadowExtrudeFaces[facei] != -1)
             {
-                label meshFacei = shadowExtrudeFaces[zoneFacei];
-                label zoneI = shadowExtrudeFaceZoneIDs[zoneFacei];
-                bool flip = shadowExtrudeFaceFlips[zoneFacei];
+                const label meshFacei = shadowExtrudeFaces[facei];
+                const label zonei = shadowExtrudeFaceZoneIDs[facei];
+                bool flip = shadowExtrudeFaceFlips[facei];
                 const face& f = mesh.faces()[meshFacei];
 
                 if (!flip)
@@ -1927,8 +1913,8 @@ int main(int argc, char *argv[])
                         mesh.faceOwner()[meshFacei],// owner
                         -1,                         // neighbour
                         false,                      // face flip
-                        interMeshTopPatch[zoneI],   // patch for face
-                        zoneMeshZoneID[zoneI],      // zone for face
+                        interMeshTopPatch[zonei],   // patch for face
+                        zoneMeshZoneID[zonei],      // zone for face
                         flip                        // face flip in zone
                     );
                 }
@@ -1941,21 +1927,17 @@ int main(int argc, char *argv[])
                         mesh.faceNeighbour()[meshFacei],// owner
                         -1,                             // neighbour
                         true,                           // face flip
-                        interMeshTopPatch[zoneI],       // patch for face
-                        zoneMeshZoneID[zoneI],          // zone for face
+                        interMeshTopPatch[zonei],       // patch for face
+                        zoneMeshZoneID[zonei],          // zone for face
                         !flip                           // face flip in zone
                     );
                 }
             }
-        }
-        else
-        {
-            // Add faces (using same points) to be in top patch
-            forAll(extrudeFaces, zoneFacei)
+            else
             {
-                label meshFacei = extrudeFaces[zoneFacei];
-                label zoneI = extrudeFaceZoneIDs[zoneFacei];
-                bool flip = extrudeFaceFlips[zoneFacei];
+                const label meshFacei = extrudeFaces[facei];
+                const label zonei = extrudeFaceZoneIDs[facei];
+                const bool flip = extrudeFaceFlips[facei];
                 const face& f = mesh.faces()[meshFacei];
 
                 if (!flip)
@@ -1971,7 +1953,7 @@ int main(int argc, char *argv[])
                             -1,                             // master edge
                             meshFacei,                      // master face
                             true,                           // flip flux
-                            interMeshTopPatch[zoneI],       // patch for face
+                            interMeshTopPatch[zonei],       // patch for face
                             -1,                             // zone for face
                             false                           // face flip in zone
                         );
@@ -1988,7 +1970,7 @@ int main(int argc, char *argv[])
                         -1,                             // master edge
                         meshFacei,                      // master face
                         false,                          // flip flux
-                        interMeshTopPatch[zoneI],       // patch for face
+                        interMeshTopPatch[zonei],       // patch for face
                         -1,                             // zone for face
                         false                           // zone flip
                     );

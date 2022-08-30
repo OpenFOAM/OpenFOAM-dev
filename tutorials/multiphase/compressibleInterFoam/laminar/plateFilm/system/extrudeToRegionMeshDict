@@ -15,7 +15,7 @@ FoamFile
 
 region          plate;
 
-faceZones       (plateFaces);
+patches         (plate);
 
 extrudeModel    linearNormal;
 

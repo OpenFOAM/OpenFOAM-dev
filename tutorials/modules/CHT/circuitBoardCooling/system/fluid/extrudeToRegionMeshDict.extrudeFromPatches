@@ -9,27 +9,26 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      extrudeToRegionMeshDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
-    {
-        name    walls;
-        type    faceSet;
-        action  new;
-        source  patchToFace;
-        patch   walls;
-    }
-    {
-        name    walls;
-        type    faceZoneSet;
-        action  new;
-        source  setToFaceZone;
-        faceSet walls;
-    }
-);
+region          baffle3D;
+
+patches         (baffle3D0);
+patchesShadow   (baffle3D1);
+
+extrudeModel    linearNormal;
+
+nLayers         50;
+
+expansionRatio  1;
+
+adaptMesh       yes; // apply mapped to both regions
+
+linearNormalCoeffs
+{
+    thickness       0.02;
+}
 
 // ************************************************************************* //

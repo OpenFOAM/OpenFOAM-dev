@@ -9,28 +9,35 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      createBafflesDict.baffle3D;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
+internalFacesOnly true;
+
+fields false;
+
+baffles
+{
+    baffle3D
     {
-        name    plateFaceSet;
-        type    faceSet;
-        action  new;
-        source  patchToFace;
-        patch   plate;
+        type        searchableSurface;
+        surface     triSurfaceMesh;
+        name        baffle3D.stl;
+
+        owner
+        {
+            name        baffle3D0;
+            type        wall;
+        }
+
+        neighbour
+        {
+            name        baffle3D1;
+            type        wall;
+        }
     }
-    {
-        name    plateFaces;
-        type    faceZoneSet;
-        action  new;
-        source  setToFaceZone;
-        faceSet plateFaceSet;
-    }
-);
+}
 
 
 // ************************************************************************* //

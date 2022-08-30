@@ -39,7 +39,7 @@ boundaryField
         type            zeroGradient;
     }
 
-    region0_to_wallFilm_wallFilmFaces
+    region0_to_wallFilm_walls
     {
         type            zeroGradient;
     }

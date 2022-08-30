@@ -82,7 +82,7 @@ boundary
         );
     }
 
-    filmWalls
+    walls
     {
         type wall;
         faces

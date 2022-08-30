@@ -22,12 +22,12 @@ boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
 
-    plateFaces_top
+    plate_top
     {
         type            slip;
     }
 
-    plate_to_region0_plateFaces
+    plate_to_region0_plate
     {
         type            noSlip;
     }

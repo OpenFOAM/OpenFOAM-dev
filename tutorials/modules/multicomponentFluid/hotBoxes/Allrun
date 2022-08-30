@@ -14,9 +14,6 @@ runParallel topoSet
 # Create the boxes and add their surfaces to the boxes patch
 runParallel subsetMesh notBoxes -patch boxes -overwrite -noFields
 
-# Create zones from the floor and the boxes
-runParallel -s wallFilm topoSet -dict topoSetDict.wallFilm
-
 # Create the film mesh
 runParallel extrudeToRegionMesh -overwrite
 

@@ -19,7 +19,7 @@ internalField   uniform 1e5;
 
 boundaryField
 {
-    region0_to_plate_plateFaces
+    region0_to_plate_plate
     {
         type            calculated;
         value           $internalField;
