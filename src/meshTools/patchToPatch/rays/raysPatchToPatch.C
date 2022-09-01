@@ -34,7 +34,6 @@ namespace Foam
 namespace patchToPatches
 {
     defineTypeNameAndDebug(rays, 0);
-    addToRunTimeSelectionTable(patchToPatch, rays, bool);
 }
 }
 

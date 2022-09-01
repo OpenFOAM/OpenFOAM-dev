@@ -30,6 +30,9 @@ Description
     This generates an outer "envelope" of possible intersections that can be
     used for ray shooting and Lagrangian transfer.
 
+    Note that this method is not added to the run-time selection table, as it
+    is not a method which facilitates patch coupling or mapping.
+
 SourceFiles
     rays.C
 
