@@ -9,5 +9,6 @@ wmake $targetType incompressibleFluid
 wmake $targetType isothermalFluid
 wmake $targetType fluid
 wmake $targetType multicomponentFluid
+compressibleVoF/Allwmake $targetType $*
 
 #------------------------------------------------------------------------------
