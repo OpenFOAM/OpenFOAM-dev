@@ -5,14 +5,14 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 wmake -all $targetType blockMesh
-wmake -all $targetType extrude
 wmake -all $targetType extrude2DMesh
+wmake -all $targetType extrudeMesh
+wmake -all $targetType extrudeToRegionMesh
 wmake -all $targetType snappyHexMesh
 
 if [ -n "$FOAMY_HEX_MESH" ]
 then
     foamyMesh/Allwmake $targetType $*
 fi
-
 
 #------------------------------------------------------------------------------
