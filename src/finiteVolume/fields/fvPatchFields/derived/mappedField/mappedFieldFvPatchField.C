@@ -74,46 +74,6 @@ Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 template<class Type>
 Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 (
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-
-    // mappedPatchBase
-    const word& sampleRegion,
-    const sampleMode sampleMode,
-    const word& samplePatch,
-    const scalar distance,
-
-    // My settings
-    const word& fieldName,
-    const bool setAverage,
-    const Type average,
-    const word& interpolationScheme
-)
-:
-    fixedValueFvPatchField<Type>(p, iF),
-    mappedPatchBase
-    (
-        p.patch(),
-        sampleRegion,
-        sampleMode,
-        samplePatch,
-        distance
-    ),
-    mappedPatchFieldBase<Type>
-    (
-        *this,
-        *this,
-        fieldName,
-        setAverage,
-        average,
-        interpolationScheme
-    )
-{}
-
-
-template<class Type>
-Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
-(
     const mappedFieldFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
 )

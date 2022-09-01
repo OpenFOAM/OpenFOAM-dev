@@ -115,29 +115,7 @@ public:
             const dictionary&
         );
 
-        //- Construct from patch, internal field and distance for normal type
-        //  sampling
-        mappedFieldFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-
-            // mappedPatchBase
-            const word& sampleRegion,
-            const sampleMode sampleMode,
-            const word& samplePatch,
-            const scalar distance,
-
-            // My settings
-            const word& fieldName,
-            const bool setAverage,
-            const Type average,
-            const word& interpolationScheme
-        );
-
-        //- Construct by mapping given
-        //  mappedFieldFvPatchField
-        //  onto a new patch
+        //- Construct by mapping given mappedFieldFvPatchField onto a new patch
         mappedFieldFvPatchField
         (
             const mappedFieldFvPatchField<Type>&,

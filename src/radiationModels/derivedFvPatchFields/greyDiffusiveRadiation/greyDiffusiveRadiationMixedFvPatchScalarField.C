@@ -199,7 +199,7 @@ void Foam::greyDiffusiveRadiationMixedFvPatchScalarField::updateCoeffs()
 
     ray.qr().boundaryFieldRef()[patchi] += Iw*nAve;
 
-    const scalarField temissivity = emissivity();
+    const scalarField emissivity(this->emissivity());
 
     scalarField& qem = ray.qem().boundaryFieldRef()[patchi];
     scalarField& qin = ray.qin().boundaryFieldRef()[patchi];
@@ -224,8 +224,8 @@ void Foam::greyDiffusiveRadiationMixedFvPatchScalarField::updateCoeffs()
             valueFraction()[facei] = 1.0;
             refValue()[facei] =
                 (
-                    Ir[facei]*(scalar(1) - temissivity[facei])
-                  + temissivity[facei]*physicoChemical::sigma.value()
+                    Ir[facei]*(scalar(1) - emissivity[facei])
+                  + emissivity[facei]*physicoChemical::sigma.value()
                   * pow4(Tp[facei])
                 )/pi;
 

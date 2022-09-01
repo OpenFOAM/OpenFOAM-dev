@@ -205,7 +205,7 @@ void Foam::wideBandDiffusiveRadiationMixedFvPatchScalarField::updateCoeffs()
         dom.blackBody().bLambda(lambdaId).boundaryField()[patchi]
     );
 
-    scalarField temissivity = emissivity();
+    scalarField emissivity(this->emissivity());
 
     scalarField& qem = ray.qem().boundaryFieldRef()[patchi];
     scalarField& qin = ray.qin().boundaryFieldRef()[patchi];
@@ -230,8 +230,8 @@ void Foam::wideBandDiffusiveRadiationMixedFvPatchScalarField::updateCoeffs()
             valueFraction()[facei] = 1.0;
             refValue()[facei] =
                 (
-                    Ir[facei]*(1.0 - temissivity[facei])
-                  + temissivity[facei]*Eb[facei]
+                    Ir[facei]*(1.0 - emissivity[facei])
+                  + emissivity[facei]*Eb[facei]
                 )/pi;
 
             // Emitted heat flux from this ray direction
