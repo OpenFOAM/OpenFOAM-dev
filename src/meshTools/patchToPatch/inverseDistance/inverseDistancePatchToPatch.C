@@ -190,13 +190,12 @@ void Foam::patchToPatches::inverseDistance::initialise
 
 void Foam::patchToPatches::inverseDistance::rDistributeTgt
 (
-    const primitiveOldTimePatch& tgtPatch,
-    const distributionMap& tgtMap
+    const primitiveOldTimePatch& tgtPatch
 )
 {
-    patchToPatch::rDistributeTgt(tgtPatch, tgtMap);
+    patchToPatch::rDistributeTgt(tgtPatch);
 
-    rDistributeListList(tgtPatch.size(), tgtMap, tgtWeights_);
+    rDistributeListList(tgtPatch.size(), tgtMapPtr_(), tgtWeights_);
 }
 
 
@@ -243,6 +242,20 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
 }
 
 
+Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
+Foam::patchToPatches::inverseDistance::srcWeights() const
+{
+    return srcWeights_;
+}
+
+
+Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
+Foam::patchToPatches::inverseDistance::tgtWeights() const
+{
+    return tgtWeights_;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::patchToPatches::inverseDistance::inverseDistance(const bool reverse)
@@ -257,28 +270,6 @@ Foam::patchToPatches::inverseDistance::inverseDistance(const bool reverse)
 
 Foam::patchToPatches::inverseDistance::~inverseDistance()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
-Foam::patchToPatches::inverseDistance::srcWeights
-(
-    const primitivePatch& srcPatch
-) const
-{
-    return srcWeights_;
-}
-
-
-Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
-Foam::patchToPatches::inverseDistance::tgtWeights
-(
-    const primitivePatch& tgtPatch
-) const
-{
-    return tgtWeights_;
-}
 
 
 // ************************************************************************* //

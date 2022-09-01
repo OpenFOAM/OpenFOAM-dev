@@ -242,6 +242,7 @@ $(AMICycPatches)/cyclicAMIPointPatchField/cyclicAMIPointPatchFields.C
 
 patchToPatch/patchToPatch/patchToPatch.C
 patchToPatch/patchToPatch/patchToPatchParallelOps.C
+patchToPatch/matching/matchingPatchToPatch.C
 patchToPatch/nearest/nearestPatchToPatch.C
 patchToPatch/inverseDistance/inverseDistancePatchToPatch.C
 patchToPatch/intersection/intersectionPatchToPatch.C

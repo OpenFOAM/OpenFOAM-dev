@@ -75,7 +75,7 @@ public:
             part()
             :
                 area(Zero),
-                centre(point::uniform(NaN))
+                centre(NaN<point>())
             {}
 
             //- Default construct
@@ -210,6 +210,9 @@ private:
             //- The coupling geometry for for each source face
             List<DynamicList<couple>> srcCouples_;
 
+            //- The proportion of the source faces that are coupled
+            List<scalar> srcCoverage_;
+
             //- The non-coupled geometry associated with each source edge
             List<part> srcEdgeParts_;
 
@@ -219,6 +222,9 @@ private:
 
             //- The coupling geometry for for each target face
             List<DynamicList<couple>> tgtCouples_;
+
+            //- The proportion of the target faces that are coupled
+            List<scalar> tgtCoverage_;
 
 
         //- Triangulation engine
@@ -325,11 +331,7 @@ private:
         //- Send data that resulted from an intersection between the source
         //  patch and a distributed source-local-target patch back to the
         //  original target processes.
-        virtual void rDistributeTgt
-        (
-            const primitiveOldTimePatch& tgtPatch,
-            const distributionMap& tgtMap
-        );
+        virtual void rDistributeTgt(const primitiveOldTimePatch& tgtPatch);
 
         //- Finalise the intersection
         virtual label finalise
@@ -340,6 +342,12 @@ private:
             const primitiveOldTimePatch& tgtPatch,
             const transformer& tgtToSrc
         );
+
+        //- For each source face, the coupled target weights
+        virtual tmpNrc<List<DynamicList<scalar>>> srcWeights() const;
+
+        //- For each target face, the coupled source weights
+        virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights() const;
 
 
 public:
@@ -393,18 +401,6 @@ public:
         //- For each target face, the target and source areas for each
         //  source coupling
         inline const List<DynamicList<couple>>& tgtCouples() const;
-
-        //- For each source face, the coupled target weights
-        virtual tmpNrc<List<DynamicList<scalar>>> srcWeights
-        (
-            const primitivePatch& srcPatch
-        ) const;
-
-        //- For each target face, the coupled source weights
-        virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights
-        (
-            const primitivePatch& tgtPatch
-        ) const;
 };
 
 

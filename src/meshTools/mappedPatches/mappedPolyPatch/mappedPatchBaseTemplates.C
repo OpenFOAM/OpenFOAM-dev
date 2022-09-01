@@ -41,6 +41,25 @@ Foam::mappedPatchBase::distribute(const Field<Type>& fld) const
             }
             return AMIPtr_->interpolateToSource(fld);
         }
+        case PATCHTOPATCH:
+        {
+            if
+            (
+                !patchToPatchIsValid_
+             && !(
+                    sampleIsMappedPatch()
+                 && sampleMappedPatch().patchToPatchIsValid_
+                )
+            )
+            {
+                calcPatchToPatch();
+            }
+
+            return
+                patchToPatchIsValid_
+              ? patchToPatchPtr_->tgtToSrc(fld)
+              : sampleMappedPatch().patchToPatchPtr_->srcToTgt(fld);
+        }
         default:
         {
             if (mapPtr_.empty())
@@ -91,12 +110,33 @@ Foam::mappedPatchBase::reverseDistribute(const Field<Type>& fld) const
             }
             return AMIPtr_->interpolateToTarget(fld);
         }
+        case PATCHTOPATCH:
+        {
+            if
+            (
+                !patchToPatchIsValid_
+             && !(
+                    sampleIsMappedPatch()
+                 && sampleMappedPatch().patchToPatchIsValid_
+                )
+            )
+            {
+                calcPatchToPatch();
+            }
+
+            return
+                patchToPatchIsValid_
+              ? patchToPatchPtr_->srcToTgt(fld)
+              : sampleMappedPatch().patchToPatchPtr_->tgtToSrc(fld);
+
+        }
         default:
         {
             FatalErrorInFunction
                 << "Reverse distribute can only be used in "
-                << sampleModeNames_[NEARESTPATCHFACE] << " or "
-                << sampleModeNames_[NEARESTPATCHFACEAMI] << "mode"
+                << sampleModeNames_[NEARESTPATCHFACE] << ", "
+                << sampleModeNames_[NEARESTPATCHFACEAMI] << " or "
+                << sampleModeNames_[PATCHTOPATCH] << " mode"
                 << exit(FatalError);
 
             return tmp<Field<Type>>(nullptr);

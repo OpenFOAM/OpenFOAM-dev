@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchToPatches::nearest
+    Foam::patchToPatches::matching
 
 Description
     Class to generate patchToPatch coupling geometry. Couples a face to the
-    single nearest opposite face only.
+    single matching opposite face only. This is functionally identical to the
+    nearest algorithm. It just adds some checking to ensure that the coupling
+    is perfectly one-to-one.
 
 SourceFiles
-    nearest.C
+    matching.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef nearestPatchToPatch_H
-#define nearestPatchToPatch_H
+#ifndef matchingPatchToPatch_H
+#define matchingPatchToPatch_H
 
-#include "patchToPatch.H"
+#include "nearestPatchToPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,91 +48,40 @@ namespace patchToPatches
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class nearest Declaration
+                          Class matching Declaration
 \*---------------------------------------------------------------------------*/
 
-class nearest
+class matching
 :
-    public patchToPatch
+    public nearest
 {
-protected:
-
-    // Private Member Data
-
-        //- For each source face, the distance to its coupled target face
-        List<scalar> srcDistances_;
-
-        //- For each target face, the distance to its coupled source face
-        List<scalar> tgtDistances_;
-
-
     // Private Member Functions
 
-        //- Get the bound box for a source face
-        virtual treeBoundBox srcBox
-        (
-            const face& srcFace,
-            const pointField& srcPoints,
-            const vectorField& srcPointNormals
-        ) const;
-
-        //- Intersect two faces
-        bool intersectFaces
-        (
-            const primitivePatch& patch,
-            const primitivePatch& otherPatch,
-            const label facei,
-            const label otherFacei,
-            DynamicList<label>& faceOtherFaces,
-            scalar& faceDistance
-        ) const;
-
-        //- Intersect two faces
-        virtual bool intersectFaces
+        //- Finalise the intersection
+        virtual label finalise
         (
             const primitiveOldTimePatch& srcPatch,
             const vectorField& srcPointNormals,
             const vectorField& srcPointNormals0,
             const primitiveOldTimePatch& tgtPatch,
-            const label srcFacei,
-            const label tgtFacei
+            const transformer& tgtToSrc
         );
-
-        //- Initialisation
-        virtual void initialise
-        (
-            const primitiveOldTimePatch& srcPatch,
-            const vectorField& srcPointNormals,
-            const vectorField& srcPointNormals0,
-            const primitiveOldTimePatch& tgtPatch
-        );
-
-        //- Send data that resulted from an intersection between the source
-        //  patch and a distributed source-local-target patch back to the
-        //  original target processes.
-        virtual void rDistributeTgt(const primitiveOldTimePatch& tgtPatch);
-
-        //- For each source face, the coupled target weights
-        virtual tmpNrc<List<DynamicList<scalar>>> srcWeights() const;
-
-        //- For each target face, the coupled source weights
-        virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("nearest");
+    TypeName("matching");
 
 
     // Constructors
 
         //- Construct from components
-        nearest(const bool reverse);
+        matching(const bool reverse);
 
 
     //- Destructor
-    ~nearest();
+    ~matching();
 };
 
 

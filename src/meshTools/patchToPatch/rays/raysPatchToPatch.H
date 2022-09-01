@@ -98,19 +98,14 @@ class rays
             const primitiveOldTimePatch& srcPatch,
             const vectorField& srcPointNormals,
             const vectorField& srcPointNormals0,
-            const primitiveOldTimePatch& tgtPatch,
-            distributionMap& tgtMap
+            const primitiveOldTimePatch& tgtPatch
         );
 
         //- Distribute the source patch so that everything the target
         //  intersects is locally available. Happens after intersection.
         virtual
         tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
-        distributeSrc
-        (
-            const primitiveOldTimePatch& srcPatch,
-            distributionMap& srcMap
-        );
+        distributeSrc(const primitiveOldTimePatch& srcPatch);
 
         //- Finalising
         virtual label finalise
@@ -137,6 +132,12 @@ class rays
             point& outP
         ) const;
 
+        //- For each source face, the coupled target weights
+        virtual tmpNrc<List<DynamicList<scalar>>> srcWeights() const;
+
+        //- For each target face, the coupled source weights
+        virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights() const;
+
 
 public:
 
@@ -155,18 +156,6 @@ public:
 
 
     // Member Functions
-
-        //- For each source face, the coupled target weights
-        virtual tmpNrc<List<DynamicList<scalar>>> srcWeights
-        (
-            const primitivePatch& srcPatch
-        ) const;
-
-        //- For each target face, the coupled source weights
-        virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights
-        (
-            const primitivePatch& tgtPatch
-        ) const;
 
         //- Compute a ray intersection from the source side to the target
         procFace srcToTgtRay

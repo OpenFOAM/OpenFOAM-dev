@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "autoPtr.H"
 #include "patchToPatch.H"
 #include "treeBoundBoxList.H"
 #include "uindirectPrimitivePatch.H"
@@ -153,7 +154,7 @@ Foam::labelListList Foam::patchToPatch::srcPatchSendFaces() const
 }
 
 
-Foam::distributionMap Foam::patchToPatch::patchDistributionMap
+Foam::autoPtr<Foam::distributionMap> Foam::patchToPatch::patchDistributionMap
 (
     labelListList&& sendFaces
 ) const
@@ -204,96 +205,15 @@ Foam::distributionMap Foam::patchToPatch::patchDistributionMap
 
     // Construct and return the map
     return
-        distributionMap
+        autoPtr<distributionMap>
         (
-            localFacei,
-            move(sendFaces),
-            move(receiveFaces)
+            new distributionMap
+            (
+                localFacei,
+                move(sendFaces),
+                move(receiveFaces)
+            )
         );
-}
-
-
-void Foam::patchToPatch::distributePatch
-(
-    const distributionMap& map,
-    List<procFace>& localProcFaces
-) const
-{
-    static const label thisProci = Pstream::myProcNo();
-
-    // Exchange per-processor data
-    List<labelList> procLocalFaceis(Pstream::nProcs());
-    {
-        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
-
-        // Send
-        for (label proci = 0; proci < Pstream::nProcs(); proci++)
-        {
-            const labelList& sendFaces = map.subMap()[proci];
-
-            if (proci != thisProci && sendFaces.size())
-            {
-                UOPstream(proci, pBufs)() << sendFaces;
-            }
-        }
-
-        pBufs.finishedSends();
-
-        // Map local data
-        {
-            const labelList& sendFaces = map.subMap()[thisProci];
-
-            procLocalFaceis[thisProci] = sendFaces;
-        }
-
-        // Receive remote data
-        for (label proci = 0; proci < Pstream::nProcs(); proci++)
-        {
-            const labelList& receiveNewFaces = map.constructMap()[proci];
-
-            if (proci != thisProci && receiveNewFaces.size())
-            {
-                UIPstream(proci, pBufs)() >> procLocalFaceis[proci];
-            }
-        }
-    }
-
-    // Allocate
-    {
-        label nLocalFaces = 0;
-        forAll(procLocalFaceis, proci)
-        {
-            nLocalFaces += procLocalFaceis[proci].size();
-        }
-        localProcFaces.setSize(nLocalFaces);
-    }
-
-    // Renumber and flatten
-    label localTgtFacei = 0;
-
-    // Local data first
-    {
-        const labelList& fis = procLocalFaceis[thisProci];
-        forAll(fis, i)
-        {
-            localProcFaces[localTgtFacei] = {thisProci, fis[i]};
-            localTgtFacei ++;
-        }
-    }
-
-    // Remote data after
-    forAll(procLocalFaceis, proci)
-    {
-        if (proci != thisProci)
-        {
-            const labelList& fis = procLocalFaceis[proci];
-            forAll(fis, i)
-            {
-                localProcFaces[localTgtFacei] = {proci, fis[i]};
-                localTgtFacei ++;
-            }
-        }
-    }
 }
 
 

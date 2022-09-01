@@ -26,7 +26,6 @@ License
 #include "nearWallFields.H"
 #include "wordReList.H"
 #include "findCellParticle.H"
-#include "mappedPatchBase.H"
 #include "OBJstream.H"
 #include "addToRunTimeSelectionTable.H"
 

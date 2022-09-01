@@ -714,11 +714,10 @@ Foam::patchToPatch::distributeTgt
     const primitiveOldTimePatch& srcPatch,
     const vectorField& srcPointNormals,
     const vectorField& srcPointNormals0,
-    const primitiveOldTimePatch& tgtPatch,
-    distributionMap& tgtMap
+    const primitiveOldTimePatch& tgtPatch
 )
 {
-    tgtMap =
+    tgtMapPtr_ =
         patchDistributionMap
         (
             tgtPatchSendFaces
@@ -740,7 +739,7 @@ Foam::patchToPatch::distributeTgt
         (
             new PrimitiveOldTimePatch<faceList, pointField>
             (
-                distributePatch(tgtMap, tgtPatch, localTgtProcFacesPtr_())
+                distributePatch(tgtMapPtr_(), tgtPatch, localTgtProcFacesPtr_())
             )
         );
 }
@@ -749,11 +748,10 @@ Foam::patchToPatch::distributeTgt
 Foam::tmpNrc<Foam::PrimitiveOldTimePatch<Foam::faceList, Foam::pointField>>
 Foam::patchToPatch::distributeSrc
 (
-    const primitiveOldTimePatch& srcPatch,
-    distributionMap& srcMap
+    const primitiveOldTimePatch& srcPatch
 )
 {
-    srcMap = patchDistributionMap(srcPatchSendFaces());
+    srcMapPtr_ = patchDistributionMap(srcPatchSendFaces());
 
     if (localSrcProcFacesPtr_.empty())
     {
@@ -765,7 +763,7 @@ Foam::patchToPatch::distributeSrc
         (
             new PrimitiveOldTimePatch<faceList, pointField>
             (
-                distributePatch(srcMap, srcPatch, localSrcProcFacesPtr_())
+                distributePatch(srcMapPtr_(), srcPatch, localSrcProcFacesPtr_())
             )
         );
 }
@@ -773,8 +771,7 @@ Foam::patchToPatch::distributeSrc
 
 void Foam::patchToPatch::rDistributeTgt
 (
-    const primitiveOldTimePatch& tgtPatch,
-    const distributionMap& tgtMap
+    const primitiveOldTimePatch& tgtPatch
 )
 {
     // Create a map from source procFace to local source face
@@ -793,7 +790,7 @@ void Foam::patchToPatch::rDistributeTgt
     List<List<procFace>> tgtSrcProcFaces =
         localFacesToProcFaces(tgtLocalSrcFaces_);
 
-    rDistributeListList(tgtPatch.size(), tgtMap, tgtSrcProcFaces);
+    rDistributeListList(tgtPatch.size(), tgtMapPtr_(), tgtSrcProcFaces);
 
     tgtLocalSrcFaces_ =
         procFacesToLocalFaces(tgtSrcProcFaces, srcProcFaceToLocal);
@@ -832,10 +829,12 @@ Foam::patchToPatch::patchToPatch(const bool reverse)
 :
     reverse_(reverse),
     singleProcess_(-labelMax),
-    localSrcProcFacesPtr_(nullptr),
-    localTgtProcFacesPtr_(nullptr),
     srcLocalTgtFaces_(),
-    tgtLocalSrcFaces_()
+    tgtLocalSrcFaces_(),
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr),
+    localSrcProcFacesPtr_(nullptr),
+    localTgtProcFacesPtr_(nullptr)
 {}
 
 
@@ -965,15 +964,13 @@ void Foam::patchToPatch::update
     else
     {
         // Distribute the target
-        distributionMap tgtMap;
         tmpNrc<PrimitiveOldTimePatch<faceList, pointField>> localTTgtPatchPtr =
             distributeTgt
             (
                 srcPatch,
                 srcPointNormals,
                 srcPointNormals0,
-                tTgtPatch,
-                tgtMap
+                tTgtPatch
             );
 
         // Massage target patch into form that can be used by the serial
@@ -1008,12 +1005,11 @@ void Foam::patchToPatch::update
         }
 
         // Distribute the source
-        distributionMap srcMap;
         tmpNrc<PrimitiveOldTimePatch<faceList, pointField>> localSrcPatchPtr =
-            distributeSrc(srcPatch, srcMap);
+            distributeSrc(srcPatch);
 
         // Reverse distribute coupling data back to the target
-        rDistributeTgt(tgtPatch, tgtMap);
+        rDistributeTgt(tgtPatch);
     }
 
     // Finalise the intersection
