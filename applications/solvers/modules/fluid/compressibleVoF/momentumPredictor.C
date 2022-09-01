@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,39 +21,49 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Global
-    setDeltaT
-
-Description
-    Reset the timestep to maintain a constant maximum courant Number.
-    Reduction of time-step is immediate, but increase is damped to avoid
-    unstable oscillations.
-
 \*---------------------------------------------------------------------------*/
 
-if (adjustTimeStep)
+#include "compressibleVoF.H"
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+void Foam::solvers::compressibleVoF::momentumPredictor()
 {
-    scalar deltaT = runTime.deltaTValue();
-
-    if (CoNum > small)
-    {
-        deltaT = min(maxCo/CoNum*runTime.deltaTValue(), fvModels.maxDeltaT());
-    }
-
-    if (alphaCoNum > small)
-    {
-        deltaT = min(maxAlphaCo/alphaCoNum*runTime.deltaTValue(), deltaT);
-    }
-
-    deltaT = min
+    tUEqn =
     (
-        min(deltaT, runTime.deltaTValue() + 0.1*deltaT),
-        1.2*runTime.deltaTValue()
+        fvm::ddt(rho, U) + fvm::div(rhoPhi, U) - fvm::Sp(contErr(), U)
+      + MRF.DDt(rho, U)
+      + turbulence.divDevTau(U)
+     ==
+        fvModels().source(rho, U)
     );
+    fvVectorMatrix& UEqn = tUEqn.ref();
 
-    runTime.setDeltaT(min(deltaT, maxDeltaT));
+    UEqn.relax();
 
-    Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
+    fvConstraints().constrain(UEqn);
+
+    if (pimple.momentumPredictor())
+    {
+        solve
+        (
+            UEqn
+         ==
+            fvc::reconstruct
+            (
+                (
+                    mixture.surfaceTensionForce()
+                  - buoyancy.ghf*fvc::snGrad(rho)
+                  - fvc::snGrad(p_rgh)
+                ) * mesh.magSf()
+            )
+        );
+
+        fvConstraints().constrain(U);
+
+        K = 0.5*magSqr(U);
+    }
 }
+
 
 // ************************************************************************* //

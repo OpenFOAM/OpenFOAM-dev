@@ -37,7 +37,7 @@ Usage
         selectionMode   all;
 
         // field           T;   // Optional energy/temperature field name
-                                // Set to T for compressibleInterFoam
+                                // Set to T for compressibleVoF
 
         phase           gas; // Optional phase name
 

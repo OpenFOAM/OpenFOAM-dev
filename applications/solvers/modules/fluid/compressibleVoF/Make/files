@@ -1,0 +1,9 @@
+setRDeltaT.C
+moveMesh.C
+alphaPredictor.C
+momentumPredictor.C
+thermophysicalPredictor.C
+pressureCorrector.C
+compressibleVoF.C
+
+LIB = $(FOAM_LIBBIN)/libcompressibleVoF
