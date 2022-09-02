@@ -228,30 +228,12 @@ public:
                 Field<Type>& regionField
             ) const;
 
-            //- Convert a local region field to the primary region with op
-            template<class Type, class CombineOp>
-            void toPrimary
-            (
-                const label regionPatchi,
-                Field<Type>& regionField,
-                const CombineOp& cop
-            ) const;
-
             //- Convert a primary region field to the local region
             template<class Type>
             void toRegion
             (
                 const label regionPatchi,
                 Field<Type>& primaryFieldField
-            ) const;
-
-            //- Return a primary patch field mapped the region internal field
-            template<class Type>
-            void toRegion
-            (
-                Field<Type>& regionField,
-                const label regionPatchi,
-                const fvPatchField<Type>& primaryPatchField
             ) const;
 
             //- Return a primary patch field mapped the local region

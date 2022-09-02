@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mappedPatchFieldBase.H"
+#include "regionModel.H"
+#include "mappedPatchBase.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -84,24 +85,6 @@ void Foam::regionModels::regionModel::toRegion
 template<class Type>
 void Foam::regionModels::regionModel::toRegion
 (
-    Field<Type>& regionField,
-    const label regionPatchi,
-    const fvPatchField<Type>& primaryPatchField
-) const
-{
-    const polyPatch& regionPatch = regionMesh().boundaryMesh()[regionPatchi];
-    const mappedPatchBase& mpb = refCast<const mappedPatchBase>(regionPatch);
-
-    mappedPatchFieldBase<Type> mpf(mpb, primaryPatchField);
-
-    UIndirectList<Type>(regionField, regionPatch.faceCells()) =
-        mpf.mappedField();
-}
-
-
-template<class Type>
-void Foam::regionModels::regionModel::toRegion
-(
     Field<Type>& rf,
     const typename GeometricField<Type, fvPatchField, volMesh>::Boundary& pBf
 ) const
@@ -111,7 +94,14 @@ void Foam::regionModels::regionModel::toRegion
         const label regionPatchi = intCoupledPatchIDs_[i];
         const label primaryPatchi = primaryPatchIDs_[i];
 
-        toRegion(rf, regionPatchi, pBf[primaryPatchi]);
+        const polyPatch& regionPatch =
+            regionMesh().boundaryMesh()[regionPatchi];
+
+        const mappedPatchBase& mpb =
+            refCast<const mappedPatchBase>(regionPatch);
+
+        UIndirectList<Type>(rf, regionPatch.faceCells()) =
+            mpb.distribute(pBf[primaryPatchi]);
     }
 }
 
