@@ -37,20 +37,18 @@ Description
 
     where
     \vartable
-        x_p   | patch values
-        x_c   | patch internal cell values
-        w     | weight field
-        \Delta| inverse distance from face centre to internal cell centre
-        w     | weighting (0-1)
+        x_p    | patch values
+        x_c    | patch internal cell values
+        w      | weight field (0-1)
+        \Delta | inverse distance from face centre to internal cell centre
     \endvartable
-
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        valueFraction | weight field           | yes         |
-        refValue     | fixed value             | yes         |
-        refGrad      | patch normal gradient   | yes         |
+        Property      | Description               | Required | Default value
+        refValue      | reference value           | yes      |
+        refGradient   | reference normal gradient | yes      |
+        valueFraction | weight field              | yes      |
     \endtable
 
     Note:
