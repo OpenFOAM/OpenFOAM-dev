@@ -117,11 +117,7 @@ class inverseDistance
         //- Send data that resulted from an intersection between the source
         //  patch and a distributed source-local-target patch back to the
         //  original target processes.
-        virtual void rDistributeTgt
-        (
-            const primitiveOldTimePatch& tgtPatch,
-            const distributionMap& tgtMap
-        );
+        virtual void rDistributeTgt(const primitiveOldTimePatch& tgtPatch);
 
         //- Finalise the intersection
         virtual label finalise
@@ -132,6 +128,12 @@ class inverseDistance
             const primitiveOldTimePatch& tgtPatch,
             const transformer& tgtToSrc
         );
+
+        //- For each source face, the coupled target weights
+        virtual tmpNrc<List<DynamicList<scalar>>> srcWeights() const;
+
+        //- For each target face, the coupled source weights
+        virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights() const;
 
 
 public:
@@ -148,21 +150,6 @@ public:
 
     //- Destructor
     ~inverseDistance();
-
-
-    // Member Functions
-
-        //- For each source face, the coupled target weights
-        virtual tmpNrc<List<DynamicList<scalar>>> srcWeights
-        (
-            const primitivePatch& srcPatch
-        ) const;
-
-        //- For each target face, the coupled source weights
-        virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights
-        (
-            const primitivePatch& tgtPatch
-        ) const;
 };
 
 

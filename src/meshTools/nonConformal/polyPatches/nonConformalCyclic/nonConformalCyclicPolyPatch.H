@@ -68,10 +68,10 @@ protected:
         //- Patch-to-patch intersection engine
         mutable patchToPatches::intersection intersection_;
 
-        //- Is the intersection engine up to date?
+        //- Is the rays engine up to date?
         mutable bool raysIsValid_;
 
-        //- Patch-to-patch intersection engine
+        //- Patch-to-patch rays engine
         mutable patchToPatches::rays rays_;
 
 

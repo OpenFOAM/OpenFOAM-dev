@@ -25,6 +25,31 @@ License
 
 #include "mappedPatchBase.H"
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+inline bool Foam::mappedPatchBase::sampleIsMappedPatch() const
+{
+    switch (mode_)
+    {
+        case NEARESTCELL:
+        case NEARESTFACE:
+            return false;
+        case NEARESTPATCHFACE:
+        case NEARESTPATCHFACEAMI:
+        case PATCHTOPATCH:
+            return isA<mappedPatchBase>(samplePolyPatch());
+    }
+    return false;
+}
+
+
+inline const Foam::mappedPatchBase&
+Foam::mappedPatchBase::sampleMappedPatch() const
+{
+    return refCast<const mappedPatchBase>(samplePolyPatch());
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline const Foam::mappedPatchBase::sampleMode&

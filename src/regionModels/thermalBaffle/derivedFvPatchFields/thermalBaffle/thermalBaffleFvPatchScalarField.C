@@ -75,7 +75,7 @@ void thermalBaffleFvPatchScalarField::checkPatches() const
     checkPatchIsMapped(nbrPp);
 
     const mappedPatchBase& mpp = refCast<const mappedPatchBase>(pp);
-    const mappedPatchBase nbrMpp = refCast<const mappedPatchBase>(nbrPp);
+    const mappedPatchBase& nbrMpp = refCast<const mappedPatchBase>(nbrPp);
 
     // The patches should sample a different region
     auto checkPatchMapsDifferentRegion = [&](const mappedPatchBase& mpp)

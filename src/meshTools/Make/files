@@ -242,16 +242,16 @@ $(AMICycPatches)/cyclicAMIPointPatchField/cyclicAMIPointPatchFields.C
 
 patchToPatch/patchToPatch/patchToPatch.C
 patchToPatch/patchToPatch/patchToPatchParallelOps.C
+patchToPatch/matching/matchingPatchToPatch.C
 patchToPatch/nearest/nearestPatchToPatch.C
 patchToPatch/inverseDistance/inverseDistancePatchToPatch.C
 patchToPatch/intersection/intersectionPatchToPatch.C
 patchToPatch/rays/raysPatchToPatch.C
 
-mappedPatches/mappedPolyPatch/mappedPatchBase.C
+mappedPatches/mappedPatchBase/mappedPatchBase.C
 mappedPatches/mappedPolyPatch/mappedPolyPatch.C
 mappedPatches/mappedPolyPatch/mappedWallPolyPatch.C
 mappedPatches/mappedPolyPatch/mappedExtrudedWallPolyPatch.C
-
 mappedPatches/mappedPointPatch/mappedPointPatch.C
 mappedPatches/mappedPointPatch/mappedWallPointPatch.C
 mappedPatches/mappedPointPatch/mappedExtrudedWallPointPatch.C

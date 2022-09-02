@@ -37,6 +37,7 @@ License
 #include "distributionMap.H"
 #include "triPointRef.H"
 #include "RemoteData.H"
+#include "intersectionPatchToPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,12 +50,13 @@ namespace Foam
     const char* Foam::NamedEnum
     <
         Foam::mappedPatchBase::sampleMode,
-        4
+        5
     >::names[] =
     {
         "nearestCell",
         "nearestPatchFace",
         "nearestPatchFaceAMI",
+        "patchToPatch",
         "nearestFace"
     };
 
@@ -72,7 +74,7 @@ namespace Foam
 }
 
 
-const Foam::NamedEnum<Foam::mappedPatchBase::sampleMode, 4>
+const Foam::NamedEnum<Foam::mappedPatchBase::sampleMode, 5>
     Foam::mappedPatchBase::sampleModeNames_;
 
 const Foam::NamedEnum<Foam::mappedPatchBase::offsetMode, 3>
@@ -272,6 +274,11 @@ void Foam::mappedPatchBase::findSamples
         {
             break;
         }
+
+        case PATCHTOPATCH:
+        {
+            break;
+        }
     }
 
     // Find nearest. Combine on master.
@@ -376,6 +383,10 @@ Foam::label Foam::mappedPatchBase::sampleSize() const
             return samplePolyPatch().size();
         }
         case NEARESTPATCHFACEAMI:
+        {
+            return samplePolyPatch().size();
+        }
+        case PATCHTOPATCH:
         {
             return samplePolyPatch().size();
         }
@@ -539,6 +550,25 @@ void Foam::mappedPatchBase::calcAMI() const
 }
 
 
+void Foam::mappedPatchBase::calcPatchToPatch() const
+{
+    if (patchToPatchIsValid_)
+    {
+        FatalErrorInFunction
+            << "Patch-to-patch already calculated" << exit(FatalError);
+    }
+
+    patchToPatchPtr_->update
+    (
+        patch_,
+        patch_.pointNormals(),
+        samplePolyPatch()
+    );
+
+    patchToPatchIsValid_ = true;
+}
+
+
 // Hack to read old (List-based) format. See Field.C. The difference
 // is only that in case of falling back to old format it expects a non-uniform
 // list instead of a single vector.
@@ -630,7 +660,9 @@ Foam::mappedPatchBase::mappedPatchBase
     AMIPtr_(nullptr),
     AMIReverse_(false),
     surfPtr_(nullptr),
-    surfDict_(fileName("surface"))
+    surfDict_(fileName("surface")),
+    patchToPatchIsValid_(false),
+    patchToPatchPtr_(nullptr)
 {}
 
 
@@ -656,7 +688,14 @@ Foam::mappedPatchBase::mappedPatchBase
     AMIPtr_(nullptr),
     AMIReverse_(false),
     surfPtr_(nullptr),
-    surfDict_(fileName("surface"))
+    surfDict_(fileName("surface")),
+    patchToPatchIsValid_(false),
+    patchToPatchPtr_
+    (
+        mode == PATCHTOPATCH
+      ? new patchToPatches::intersection(false)
+      : nullptr
+    )
 {}
 
 
@@ -690,7 +729,14 @@ Foam::mappedPatchBase::mappedPatchBase
     AMIPtr_(nullptr),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
     surfPtr_(nullptr),
-    surfDict_(dict.subOrEmptyDict("surface"))
+    surfDict_(dict.subOrEmptyDict("surface")),
+    patchToPatchIsValid_(false),
+    patchToPatchPtr_
+    (
+        mode_ == PATCHTOPATCH
+      ? patchToPatch::New(dict.lookup("patchToPatchMode"), false)
+      : autoPtr<patchToPatch>(nullptr)
+    )
 {
     if (!coupleGroup_.valid() && sampleRegion_.empty())
     {
@@ -721,7 +767,14 @@ Foam::mappedPatchBase::mappedPatchBase
     AMIPtr_(nullptr),
     AMIReverse_(mpb.AMIReverse_),
     surfPtr_(nullptr),
-    surfDict_(mpb.surfDict_)
+    surfDict_(mpb.surfDict_),
+    patchToPatchIsValid_(false),
+    patchToPatchPtr_
+    (
+        mode_ == PATCHTOPATCH
+      ? patchToPatch::New(mpb.patchToPatchPtr_->type(), false)
+      : autoPtr<patchToPatch>(nullptr)
+    )
 {}
 
 
@@ -843,6 +896,7 @@ void Foam::mappedPatchBase::clearOut()
     mapIndices_.clear();
     AMIPtr_.clear();
     surfPtr_.clear();
+    patchToPatchIsValid_ = false;
 }
 
 
@@ -885,6 +939,11 @@ void Foam::mappedPatchBase::write(Ostream& os) const
             writeKeyword(os, surfDict_.dictName());
             os  << surfDict_;
         }
+    }
+
+    if (mode_ == PATCHTOPATCH)
+    {
+        writeEntry(os, "patchToPatchMode", patchToPatchPtr_->type());
     }
 }
 

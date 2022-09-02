@@ -77,6 +77,7 @@ SourceFiles
 
 #include "pointField.H"
 #include "AMIInterpolation.H"
+#include "patchToPatch.H"
 #include "coupleGroupIdentifier.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -105,6 +106,7 @@ public:
             NEARESTCELL,         // nearest cell containing sample
             NEARESTPATCHFACE,    // nearest face on selected patch
             NEARESTPATCHFACEAMI, // nearest patch face + AMI interpolation
+            PATCHTOPATCH,        // ...
             NEARESTFACE          // nearest face
         };
 
@@ -116,7 +118,7 @@ public:
             DIRECTION   // offset with a specified vector
         };
 
-        static const NamedEnum<sampleMode, 4> sampleModeNames_;
+        static const NamedEnum<sampleMode, 5> sampleModeNames_;
 
         static const NamedEnum<offsetMode, 3> offsetModeNames_;
 
@@ -177,6 +179,15 @@ protected:
             dictionary surfDict_;
 
 
+        //- Patch-to-patch intersection engine (only for PATCHTOPATCH)
+
+            //- Is the patch-to-patch intersection engine up to date?
+            mutable bool patchToPatchIsValid_;
+
+            //- Patch-to-patch intersection engine
+            mutable autoPtr<patchToPatch> patchToPatchPtr_;
+
+
     // Protected Member Functions
 
         //- Read the offset mode from a dictionary
@@ -199,6 +210,9 @@ protected:
         //- Calculate AMI interpolator
         void calcAMI() const;
 
+        //- Calculate the patch-to-patch intersection engine
+        void calcPatchToPatch() const;
+
         //- Helper to read field or non-uniform list from dictionary
         static tmp<pointField> readListOrField
         (
@@ -206,6 +220,12 @@ protected:
             const dictionary& dict,
             const label size
         );
+
+        //- Return whether or not the sample patch (if any) is of mapped type
+        inline bool sampleIsMappedPatch() const;
+
+        //- Get the mapped sample patch
+        inline const mappedPatchBase& sampleMappedPatch() const;
 
 
 public:
@@ -298,22 +318,6 @@ public:
             tmp<Field<Type>> reverseDistribute
             (
                 const tmp<Field<Type>>& fld
-            ) const;
-
-            //- Wrapper around map/interpolate data distribution with operation
-            template<class Type, class CombineOp>
-            tmp<Field<Type>> reverseDistribute
-            (
-                const Field<Type>& fld,
-                const CombineOp& cop
-            ) const;
-
-            //- Wrapper around map/interpolate data distribution with operation
-            template<class Type, class CombineOp>
-            tmp<Field<Type>> reverseDistribute
-            (
-                const tmp<Field<Type>>& fld,
-                const CombineOp& cop
             ) const;
 
 

@@ -104,6 +104,18 @@ protected:
         //  if spread across multiple processors
         label singleProcess_;
 
+        //- For each source face, the coupled local target faces
+        List<DynamicList<label>> srcLocalTgtFaces_;
+
+        //- For each target face, the coupled local source faces
+        List<DynamicList<label>> tgtLocalSrcFaces_;
+
+        //- Map from source patch faces to target-local source patch faces
+        autoPtr<distributionMap> srcMapPtr_;
+
+        //- Map from target patch faces to source-local target patch faces
+        autoPtr<distributionMap> tgtMapPtr_;
+
         //- When running in parallel, a map from local source face index to
         //  source processor and face index
         autoPtr<List<procFace>> localSrcProcFacesPtr_;
@@ -111,12 +123,6 @@ protected:
         //- When running in parallel, a map from local target face index to
         //  target processor and face index
         autoPtr<List<procFace>> localTgtProcFacesPtr_;
-
-        //- For each source face, the coupled local target faces
-        List<DynamicList<label>> srcLocalTgtFaces_;
-
-        //- For each target face, the coupled local source faces
-        List<DynamicList<label>> tgtLocalSrcFaces_;
 
 
     // Private Member Functions
@@ -285,17 +291,9 @@ protected:
 
             //- Create a distribution map from a list-list of faces to be sent
             //  (i.e., the result of calling one of the above methods).
-            distributionMap patchDistributionMap
+            autoPtr<distributionMap> patchDistributionMap
             (
                 labelListList&& sendFaces
-            ) const;
-
-            //- Distribute a patch given its distribution map. Just generate
-            //  local-proc-face addressing; not the distributed patch itself.
-            void distributePatch
-            (
-                const distributionMap& map,
-                List<procFace>& localProcFaces
             ) const;
 
             //- Distribute a patch given its distribution map
@@ -321,8 +319,8 @@ protected:
             //- Distribute the target patch so that enough is locally available
             //  for its intersection with the source patch can be computed.
             //  Happens before intersection. Bound boxes are used to determine
-            //  what is needed where. Return the resulting local patch and the
-            //  map from which it was calculated.
+            //  what is needed where. Return the resulting local patch and
+            //  internally set the target map.
             virtual
             tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
             distributeTgt
@@ -330,31 +328,22 @@ protected:
                 const primitiveOldTimePatch& srcPatch,
                 const vectorField& srcPointNormals,
                 const vectorField& srcPointNormals0,
-                const primitiveOldTimePatch& tgtPatch,
-                distributionMap& tgtMap
+                const primitiveOldTimePatch& tgtPatch
             );
 
             //- Distribute the source patch so that everything the target
             //  intersects is locally available. Happens after intersection.
             //  The intersection addressing is used to determine what is needed
-            //  where. Return the resulting local patch and the map from which
-            //  it was calculated.
+            //  where. Return the resulting local patch and internally set the
+            //  source map.
             virtual
             tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
-            distributeSrc
-            (
-                const primitiveOldTimePatch& srcPatch,
-                distributionMap& srcMap
-            );
+            distributeSrc(const primitiveOldTimePatch& srcPatch);
 
             //- Send data that resulted from an intersection between the source
             //  patch and a distributed source-local-target patch back to the
             //  original target processes.
-            virtual void rDistributeTgt
-            (
-                const primitiveOldTimePatch& tgtPatch,
-                const distributionMap& tgtMap
-            );
+            virtual void rDistributeTgt(const primitiveOldTimePatch& tgtPatch);
 
             //- Finalising
             virtual label finalise
@@ -364,6 +353,40 @@ protected:
                 const vectorField& srcPointNormals0,
                 const primitiveOldTimePatch& tgtPatch,
                 const transformer& tgtToSrc
+            );
+
+
+        // Interpolation
+
+            //- For each source face, the coupled target weights
+            virtual tmpNrc<List<DynamicList<scalar>>> srcWeights() const = 0;
+
+            //- For each target face, the coupled source weights
+            virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights() const = 0;
+
+            //- Return a primitive with all components set to NaN
+            template<class Type>
+            static Type NaN();
+
+            //- Interpolate with normalisation
+            template<class Type>
+            static tmp<Field<Type>> interpolate
+            (
+                const List<DynamicList<label>>& localOtherFaces,
+                const List<DynamicList<scalar>>& weights,
+                const autoPtr<distributionMap>& otherMapPtr,
+                const Field<Type>& otherFld
+            );
+
+            //- Interpolate without normalisation
+            template<class Type>
+            static tmp<Field<Type>> interpolate
+            (
+                const List<DynamicList<label>>& localOtherFaces,
+                const List<DynamicList<scalar>>& weights,
+                const autoPtr<distributionMap>& otherMapPtr,
+                const Field<Type>& otherFld,
+                const Field<Type>& leftOverFld
             );
 
 
@@ -428,17 +451,32 @@ public:
             //- For each target face, the coupled source procs and faces
             inline List<List<procFace>> tgtSrcProcFaces() const;
 
-            //- For each source face, the coupled target weights
-            virtual tmpNrc<List<DynamicList<scalar>>> srcWeights
-            (
-                const primitivePatch& srcPatch
-            ) const = 0;
 
-            //- For each target face, the coupled source weights
-            virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights
+        // Interpolation
+
+            //- ...
+            template<class Type>
+            tmp<Field<Type>> srcToTgt(const Field<Type>& srcFld) const;
+
+            //- ...
+            template<class Type>
+            tmp<Field<Type>> srcToTgt
             (
-                const primitivePatch& tgtPatch
-            ) const = 0;
+                const Field<Type>& srcFld,
+                const Field<Type>& leftOverTgtFld
+            ) const;
+
+            //- ...
+            template<class Type>
+            tmp<Field<Type>> tgtToSrc(const Field<Type>& tgtFld) const;
+
+            //- ...
+            template<class Type>
+            tmp<Field<Type>> tgtToSrc
+            (
+                const Field<Type>& tgtFld,
+                const Field<Type>& leftOverSrcFld
+            ) const;
 
 
         // Manipulation
@@ -477,6 +515,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "patchToPatchI.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "patchToPatchTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

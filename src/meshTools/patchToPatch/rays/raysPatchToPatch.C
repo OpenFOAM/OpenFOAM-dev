@@ -34,7 +34,6 @@ namespace Foam
 namespace patchToPatches
 {
     defineTypeNameAndDebug(rays, 0);
-    addToRunTimeSelectionTable(patchToPatch, rays, bool);
 }
 }
 
@@ -93,8 +92,7 @@ Foam::patchToPatches::rays::distributeTgt
     const primitiveOldTimePatch& srcPatch,
     const vectorField& srcPointNormals,
     const vectorField& srcPointNormals0,
-    const primitiveOldTimePatch& tgtPatch,
-    distributionMap& tgtMap
+    const primitiveOldTimePatch& tgtPatch
 )
 {
     // Intercept generation of the local patch. Store it. Return a const
@@ -106,8 +104,7 @@ Foam::patchToPatches::rays::distributeTgt
             srcPatch,
             srcPointNormals,
             srcPointNormals0,
-            tgtPatch,
-            tgtMap
+            tgtPatch
         );
 
     localTgtPatchPtr_.reset(localTgtPatchPtr.ptr());
@@ -123,15 +120,14 @@ Foam::patchToPatches::rays::distributeTgt
 Foam::tmpNrc<Foam::PrimitiveOldTimePatch<Foam::faceList, Foam::pointField>>
 Foam::patchToPatches::rays::distributeSrc
 (
-    const primitiveOldTimePatch& srcPatch,
-    distributionMap& srcMap
+    const primitiveOldTimePatch& srcPatch
 )
 {
     // Intercept generation of the local patch. Store it. Return a const
     // reference tmp instead of a pointer.
 
     tmpNrc<PrimitiveOldTimePatch<faceList, pointField>> localSrcPatchPtr =
-        patchToPatch::distributeSrc(srcPatch, srcMap);
+        patchToPatch::distributeSrc(srcPatch);
 
     localSrcPatchPtr_.reset(localSrcPatchPtr.ptr());
 
@@ -242,6 +238,22 @@ Foam::patchToPatch::procFace Foam::patchToPatches::rays::ray
 }
 
 
+Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
+Foam::patchToPatches::rays::srcWeights() const
+{
+    NotImplemented;
+    return tmpNrc<List<DynamicList<scalar>>>(nullptr);
+}
+
+
+Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
+Foam::patchToPatches::rays::tgtWeights() const
+{
+    NotImplemented;
+    return tmpNrc<List<DynamicList<scalar>>>(nullptr);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::patchToPatches::rays::rays
@@ -260,22 +272,6 @@ Foam::patchToPatches::rays::~rays()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
-Foam::patchToPatches::rays::srcWeights(const primitivePatch& srcPatch) const
-{
-    NotImplemented;
-    return tmpNrc<List<DynamicList<scalar>>>(nullptr);
-}
-
-
-Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
-Foam::patchToPatches::rays::tgtWeights(const primitivePatch& tgtPatch) const
-{
-    NotImplemented;
-    return tmpNrc<List<DynamicList<scalar>>>(nullptr);
-}
-
 
 Foam::patchToPatch::procFace Foam::patchToPatches::rays::srcToTgtRay
 (

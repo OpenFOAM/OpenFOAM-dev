@@ -202,8 +202,7 @@ void Foam::patchToPatches::nearest::initialise
 
 void Foam::patchToPatches::nearest::rDistributeTgt
 (
-    const primitiveOldTimePatch& tgtPatch,
-    const distributionMap& tgtMap
+    const primitiveOldTimePatch& tgtPatch
 )
 {
     // Create a list-list of distances to match the addressing
@@ -217,10 +216,10 @@ void Foam::patchToPatches::nearest::rDistributeTgt
     }
 
     // Let the base class reverse distribute the addressing
-    patchToPatch::rDistributeTgt(tgtPatch, tgtMap);
+    patchToPatch::rDistributeTgt(tgtPatch);
 
     // Reverse distribute the distances
-    rDistributeListList(tgtPatch.size(), tgtMap, tgtDistances);
+    rDistributeListList(tgtPatch.size(), tgtMapPtr_(), tgtDistances);
 
     // If there is more than one address, remove all but the closest
     forAll(tgtLocalSrcFaces_, tgtFacei)
@@ -240,24 +239,8 @@ void Foam::patchToPatches::nearest::rDistributeTgt
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::patchToPatches::nearest::nearest(const bool reverse)
-:
-    patchToPatch(reverse)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::patchToPatches::nearest::~nearest()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
 Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
-Foam::patchToPatches::nearest::srcWeights(const primitivePatch& srcPatch) const
+Foam::patchToPatches::nearest::srcWeights() const
 {
     tmpNrc<List<DynamicList<scalar>>> tResult
     (
@@ -279,7 +262,7 @@ Foam::patchToPatches::nearest::srcWeights(const primitivePatch& srcPatch) const
 
 
 Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
-Foam::patchToPatches::nearest::tgtWeights(const primitivePatch& tgtPatch) const
+Foam::patchToPatches::nearest::tgtWeights() const
 {
     tmpNrc<List<DynamicList<scalar>>> tResult
     (
@@ -298,6 +281,20 @@ Foam::patchToPatches::nearest::tgtWeights(const primitivePatch& tgtPatch) const
 
     return tResult;
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::patchToPatches::nearest::nearest(const bool reverse)
+:
+    patchToPatch(reverse)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::patchToPatches::nearest::~nearest()
+{}
 
 
 // ************************************************************************* //

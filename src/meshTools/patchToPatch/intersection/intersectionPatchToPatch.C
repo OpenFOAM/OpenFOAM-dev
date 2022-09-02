@@ -544,13 +544,12 @@ void Foam::patchToPatches::intersection::initialise
 
 void Foam::patchToPatches::intersection::rDistributeTgt
 (
-    const primitiveOldTimePatch& tgtPatch,
-    const distributionMap& tgtMap
+    const primitiveOldTimePatch& tgtPatch
 )
 {
-    patchToPatch::rDistributeTgt(tgtPatch, tgtMap);
+    patchToPatch::rDistributeTgt(tgtPatch);
 
-    rDistributeListList(tgtPatch.size(), tgtMap, tgtCouples_);
+    rDistributeListList(tgtPatch.size(), tgtMapPtr_(), tgtCouples_);
 }
 
 
@@ -655,6 +654,44 @@ Foam::label Foam::patchToPatches::intersection::finalise
         }
     }
 
+    // Calculate coverage and total areas on both sides
+    auto coverage = []
+    (
+        const primitivePatch& patch,
+        const List<DynamicList<couple>>& couples,
+        scalar& area,
+        scalar& coupleArea,
+        List<scalar>& coverage
+    )
+    {
+        area = 0;
+        coupleArea = 0;
+        coverage.resize(patch.size());
+
+        forAll(patch, facei)
+        {
+            const scalar magA = mag(patch.faceAreas()[facei]);
+
+            vector aCouple = Zero;
+            forAll(couples[facei], i)
+            {
+                aCouple += couples[facei][i].area;
+            }
+            const scalar magACouple = mag(aCouple);
+
+            area += magA;
+            coupleArea += magACouple;
+            coverage[facei] = magACouple/magA;
+        }
+
+        reduce(area, sumOp<scalar>());
+        reduce(coupleArea, sumOp<scalar>());
+    };
+    scalar srcArea = 0, srcCoupleArea = 0;
+    scalar tgtArea = 0, tgtCoupleArea = 0;
+    coverage(srcPatch, srcCouples_, srcArea, srcCoupleArea, srcCoverage_);
+    coverage(tgtPatch, tgtCouples_, tgtArea, tgtCoupleArea, tgtCoverage_);
+
     // Clear the triangulation workspace
     srcTriPoints_.clear();
     srcTriFaceEdges_.clear();
@@ -669,8 +706,6 @@ Foam::label Foam::patchToPatches::intersection::finalise
     // Checking and reporting
     if (nCouples != 0)
     {
-        scalar srcArea = 0, srcCoupleArea = 0;
-        scalarField srcCoverage(srcPatch.size());
         scalarField srcOpenness(srcPatch.size());
         scalarField srcError(srcPatch.size());
         scalarField srcDepth(srcPatch.size());
@@ -689,11 +724,6 @@ Foam::label Foam::patchToPatches::intersection::finalise
                 Cpl += cpl;
                 Cpl.nbr += cpl.nbr;
             }
-            const scalar magCA = mag(Cpl.area);
-
-            srcArea += magA;
-            srcCoupleArea += magCA;
-            srcCoverage[srcFacei] = magCA/magA;
 
             vector projectionA = Zero;
             scalar projectionV = 0;
@@ -736,36 +766,15 @@ Foam::label Foam::patchToPatches::intersection::finalise
             srcDepth[srcFacei] = mag(projectionV)/pow3(sqrt(magA));
         }
 
-        reduce(srcArea, sumOp<scalar>());
-        reduce(srcCoupleArea, sumOp<scalar>());
-
-        scalar tgtArea = 0, tgtCoupleArea = 0;
-        scalarField tgtCoverage(tgtPatch.size());
-        forAll(tgtPatch, tgtFacei)
-        {
-            const scalar magA = mag(tgtPatch.faceAreas()[tgtFacei]);
-
-            vector aCouple = Zero;
-            forAll(tgtCouples_[tgtFacei], tgtSrcFacei)
-            {
-                aCouple += tgtCouples_[tgtFacei][tgtSrcFacei].area;
-            }
-            const scalar magACouple = mag(aCouple);
-
-            tgtArea += magA;
-            tgtCoupleArea += magACouple;
-            tgtCoverage[tgtFacei] = magACouple/magA;
-        }
-
         reduce(tgtArea, sumOp<scalar>());
         reduce(tgtCoupleArea, sumOp<scalar>());
 
         Info<< indent << "Source min/average/max coverage = "
-            << gMin(srcCoverage) << '/' << srcCoupleArea/srcArea << '/'
-            << gMax(srcCoverage) << endl
+            << gMin(srcCoverage_) << '/' << srcCoupleArea/srcArea << '/'
+            << gMax(srcCoverage_) << endl
             << indent << "Target min/average/max coverage = "
-            << gMin(tgtCoverage) << '/' << tgtCoupleArea/tgtArea << '/'
-            << gMax(tgtCoverage) << endl
+            << gMin(tgtCoverage_) << '/' << tgtCoupleArea/tgtArea << '/'
+            << gMax(tgtCoverage_) << endl
             << indent << "Source average openness/error/depth/angle = "
             << gAverage(srcOpenness) << '/' << gAverage(srcError) << '/'
             << gAverage(srcDepth) << '/' << gAverage(srcAngle) << endl
@@ -815,7 +824,7 @@ Foam::label Foam::patchToPatches::intersection::finalise
                 labelList(),
                 labelListList(),
                 srcPatch.localFaces(),
-                "coverage", false, srcCoverage,
+                "coverage", false, scalarField(srcCoverage_),
                 "openness", false, srcOpenness,
                 "error", false, srcError,
                 "depth", false, srcDepth,
@@ -833,12 +842,74 @@ Foam::label Foam::patchToPatches::intersection::finalise
                 labelList(),
                 labelListList(),
                 tgtPatch.localFaces(),
-                "coverage", false, tgtCoverage
+                "coverage", false, scalarField(tgtCoverage_)
             );
         }
     }
 
     return nCouples;
+}
+
+
+Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
+Foam::patchToPatches::intersection::srcWeights() const
+{
+    List<DynamicList<scalar>>* resultPtr
+    (
+        new List<DynamicList<scalar>>(srcCouples_.size())
+    );
+    List<DynamicList<scalar>>& result = *resultPtr;
+
+    forAll(srcCouples_, srcFacei)
+    {
+        result[srcFacei].resize(srcCouples_[srcFacei].size());
+        scalar aSum = 0;
+
+        forAll(srcCouples_[srcFacei], i)
+        {
+            const scalar a = mag(srcCouples_[srcFacei][i].area);
+            result[srcFacei][i] = a;
+            aSum += a;
+        }
+
+        forAll(srcCouples_[srcFacei], i)
+        {
+            result[srcFacei][i] *= srcCoverage_[srcFacei]/aSum;
+        }
+    }
+
+    return tmpNrc<List<DynamicList<scalar>>>(resultPtr);
+}
+
+
+Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
+Foam::patchToPatches::intersection::tgtWeights() const
+{
+    List<DynamicList<scalar>>* resultPtr
+    (
+        new List<DynamicList<scalar>>(tgtCouples_.size())
+    );
+    List<DynamicList<scalar>>& result = *resultPtr;
+
+    forAll(tgtCouples_, tgtFacei)
+    {
+        result[tgtFacei].resize(tgtCouples_[tgtFacei].size());
+        scalar aSum = 0;
+
+        forAll(tgtCouples_[tgtFacei], i)
+        {
+            const scalar a = mag(tgtCouples_[tgtFacei][i].area);
+            result[tgtFacei][i] = a;
+            aSum += a;
+        }
+
+        forAll(tgtCouples_[tgtFacei], i)
+        {
+            result[tgtFacei][i] *= tgtCoverage_[tgtFacei]/aSum;
+        }
+    }
+
+    return tmpNrc<List<DynamicList<scalar>>>(resultPtr);
 }
 
 
@@ -849,9 +920,11 @@ Foam::patchToPatches::intersection::intersection(const bool reverse)
     patchToPatch(reverse),
 
     srcCouples_(),
+    srcCoverage_(),
     srcEdgeParts_(),
     srcErrorParts_(),
     tgtCouples_(),
+    tgtCoverage_(),
 
     triEngine_(),
 
@@ -882,64 +955,6 @@ Foam::patchToPatches::intersection::intersection(const bool reverse)
 
 Foam::patchToPatches::intersection::~intersection()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
-Foam::patchToPatches::intersection::srcWeights
-(
-    const primitivePatch& srcPatch
-) const
-{
-    List<DynamicList<scalar>>* resultPtr
-    (
-        new List<DynamicList<scalar>>(srcCouples_.size())
-    );
-    List<DynamicList<scalar>>& result = *resultPtr;
-
-    forAll(srcCouples_, srcFacei)
-    {
-        result[srcFacei].resize(srcCouples_[srcFacei].size());
-
-        const scalar magA = mag(srcPatch.faceAreas()[srcFacei]);
-
-        forAll(srcCouples_[srcFacei], i)
-        {
-            result[srcFacei][i] = mag(srcCouples_[srcFacei][i].area)/magA;
-        }
-    }
-
-    return tmpNrc<List<DynamicList<scalar>>>(resultPtr);
-}
-
-
-Foam::tmpNrc<Foam::List<Foam::DynamicList<Foam::scalar>>>
-Foam::patchToPatches::intersection::tgtWeights
-(
-    const primitivePatch& tgtPatch
-) const
-{
-    List<DynamicList<scalar>>* resultPtr
-    (
-        new List<DynamicList<scalar>>(tgtCouples_.size())
-    );
-    List<DynamicList<scalar>>& result = *resultPtr;
-
-    forAll(tgtCouples_, tgtFacei)
-    {
-        result[tgtFacei].resize(tgtCouples_[tgtFacei].size());
-
-        const scalar magA = mag(tgtPatch.faceAreas()[tgtFacei]);
-
-        forAll(tgtCouples_[tgtFacei], i)
-        {
-            result[tgtFacei][i] = mag(tgtCouples_[tgtFacei][i].area)/magA;
-        }
-    }
-
-    return tmpNrc<List<DynamicList<scalar>>>(resultPtr);
-}
 
 
 // ************************************************************************* //
