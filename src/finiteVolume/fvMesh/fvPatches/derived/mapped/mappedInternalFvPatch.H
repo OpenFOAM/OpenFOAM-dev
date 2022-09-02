@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,22 +21,49 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::mappedInternalFvPatch
+
+SourceFiles
+    mappedInternalFvPatch.C
+
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedFixedValueFvPatchFields_H
-#define mappedFixedValueFvPatchFields_H
+#ifndef mappedInternalFvPatch_H
+#define mappedInternalFvPatch_H
 
-#include "mappedFixedValueFvPatchField.H"
-#include "fieldTypes.H"
+#include "fvPatch.H"
+#include "mappedInternalPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                        Class mappedInternalFvPatch Declaration
+\*---------------------------------------------------------------------------*/
 
-makePatchTypeFieldTypedefs(mappedFixedValue);
+class mappedInternalFvPatch
+:
+    public fvPatch
+{
+
+public:
+
+    //- Runtime type information
+    TypeName(mappedInternalPolyPatch::typeName_());
+
+
+    // Constructors
+
+        //- Construct from components
+        mappedInternalFvPatch(const polyPatch& patch, const fvBoundaryMesh& bm)
+        :
+            fvPatch(patch, bm)
+        {}
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

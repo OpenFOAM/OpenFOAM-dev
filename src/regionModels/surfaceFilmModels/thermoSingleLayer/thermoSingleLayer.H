@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,9 +160,6 @@ protected:
 
         //- Read control parameters from dictionary
         virtual bool read();
-
-        //- Correct sensible enthalpy for mapped temperature fields
-        virtual void correctHforMappedT();
 
         //- Reset source term fields
         virtual void resetPrimaryRegionSourceTerms();

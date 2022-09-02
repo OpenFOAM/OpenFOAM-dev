@@ -22,10 +22,7 @@ boundaryField
 {
     inlet
     {
-        type            mapped;
-        field           k.liquid;
-        setAverage      0;
-        average         0;
+        type            mappedInternalValue;
         interpolationScheme cell;
         value           uniform 0.01;
     }

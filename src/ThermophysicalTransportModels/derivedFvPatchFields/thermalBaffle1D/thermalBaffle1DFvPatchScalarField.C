@@ -187,7 +187,7 @@ bool thermalBaffle1DFvPatchScalarField<solidType>::owner() const
             << exit(FatalError);
     }
 
-    return patch().patch().index() < mpp.samplePolyPatch().index();
+    return patch().patch().index() < mpp.nbrPolyPatch().index();
 }
 
 
@@ -197,10 +197,10 @@ thermalBaffle1DFvPatchScalarField<solidType>::nbrField() const
 {
     const mappedPatchBase& mpp =
         refCast<const mappedPatchBase>(patch().patch());
-    const polyMesh& nbrMesh = mpp.sampleMesh();
-    const label samplePatchi = mpp.samplePolyPatch().index();
+    const polyMesh& nbrMesh = mpp.nbrMesh();
+    const label nbrPatchi = mpp.nbrPolyPatch().index();
     const fvPatch& nbrPatch =
-        refCast<const fvMesh>(nbrMesh).boundary()[samplePatchi];
+        refCast<const fvMesh>(nbrMesh).boundary()[nbrPatchi];
 
     return
         refCast<const thermalBaffle1DFvPatchScalarField>

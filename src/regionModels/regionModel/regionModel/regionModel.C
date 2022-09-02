@@ -75,6 +75,7 @@ void Foam::regionModels::regionModel::initialise()
     forAll(rbm, patchi)
     {
         const polyPatch& regionPatch = rbm[patchi];
+
         if (isA<mappedPatchBase>(regionPatch))
         {
             DebugInFunction
@@ -92,12 +93,12 @@ void Foam::regionModels::regionModel::initialise()
             (
                 primaryMesh_.time().foundObject<polyMesh>
                 (
-                    mapPatch.sampleRegion()
+                    mapPatch.nbrRegionName()
                 )
             )
             {
 
-                const label primaryPatchi = mapPatch.samplePolyPatch().index();
+                const label primaryPatchi = mapPatch.nbrPolyPatch().index();
                 primaryPatchIDs.append(primaryPatchi);
             }
         }
@@ -208,7 +209,7 @@ Foam::label Foam::regionModels::regionModel::nbrCoupledPatchID
     const mappedPatchBase& mpb = refCast<const mappedPatchBase>(pp);
 
     // sample patch name on the primary region
-    const word& primaryPatchName = mpb.samplePatch();
+    const word& primaryPatchName = mpb.nbrPatchName();
 
     // find patch on nbr region that has the same sample patch name
     forAll(nbrRegion.intCoupledPatchIDs(), j)
@@ -218,7 +219,7 @@ Foam::label Foam::regionModels::regionModel::nbrCoupledPatchID
         const mappedPatchBase& mpb =
             refCast<const mappedPatchBase>(nbrPbm[nbrRegionPatchi]);
 
-        if (mpb.samplePatch() == primaryPatchName)
+        if (mpb.nbrPatchName() == primaryPatchName)
         {
             nbrPatchi = nbrRegionPatchi;
             break;

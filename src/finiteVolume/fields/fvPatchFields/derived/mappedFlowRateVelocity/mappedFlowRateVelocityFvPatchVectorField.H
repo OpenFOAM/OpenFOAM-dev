@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,45 +22,46 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mappedFlowRateFvPatchVectorField
+    Foam::mappedFlowRateVelocityFvPatchVectorField
 
 Description
-    Describes a volumetric/mass flow normal vector boundary condition by its
-    magnitude as an integral over its area.
-
-    The inlet mass flux is taken from the neighbour region.
-
-    The basis of the patch (volumetric or mass) is determined by the
-    dimensions of the flux, phi.  The current density is used to correct the
-    velocity when applying the mass basis.
+    This boundary condition maps the flow rate from a neighbouring patch to
+    this patch, then uses it to set a corresponding velocity in a direction
+    normal to the patch.
 
 Usage
     \table
         Property     | Description             | Required    | Default value
+        nbrPhi       | name of flux field on neighbour mesh | no | phi
         phi          | flux field name         | no          | phi
         rho          | density field name      | no          | rho
-        neigPhi      | name of flux field on neighbour mesh | yes |
     \endtable
 
     Example of the boundary condition specification:
     \verbatim
     <patchName>
     {
-        type            mappedFlowRate;
-        phi             phi;
-        rho             rho;
-        neigPhi         phi;
-        value           uniform (0 0 0); // placeholder
+        type            mappedFlowRateVelocity;
+        value           uniform (0 0 0);
     }
     \endverbatim
 
+    This boundary condition can only be applied to patches that are of
+    mappedPatchBase type.
+
+See also
+    Foam::mappedPatchBase
+    Foam::mappedPolyPatch
+    Foam::mappedFvPatch
+    Foam::fixedValueFvPatchVectorField
+
 SourceFiles
-    mappedFlowRateFvPatchVectorField.C
+    mappedFlowRateVelocityFvPatchVectorField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedFlowRateFvPatchVectorField_H
-#define mappedFlowRateFvPatchVectorField_H
+#ifndef mappedFlowRateVelocityFvPatchVectorField_H
+#define mappedFlowRateVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
 
@@ -69,10 +70,10 @@ SourceFiles
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                Class flowRateInletVelocityFvPatch Declaration
+            Class mappedFlowRateVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
-class mappedFlowRateFvPatchVectorField
+class mappedFlowRateVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
@@ -91,20 +92,20 @@ class mappedFlowRateFvPatchVectorField
 public:
 
    //- Runtime type information
-   TypeName("mappedFlowRate");
+   TypeName("mappedFlowRateVelocity");
 
 
    // Constructors
 
         //- Construct from patch and internal field
-        mappedFlowRateFvPatchVectorField
+        mappedFlowRateVelocityFvPatchVectorField
         (
             const fvPatch&,
             const DimensionedField<vector, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        mappedFlowRateFvPatchVectorField
+        mappedFlowRateVelocityFvPatchVectorField
         (
             const fvPatch&,
             const DimensionedField<vector, volMesh>&,
@@ -112,26 +113,26 @@ public:
         );
 
         //- Construct by mapping given
-        //  mappedFlowRateFvPatchVectorField
+        //  mappedFlowRateVelocityFvPatchVectorField
         //  onto a new patch
-        mappedFlowRateFvPatchVectorField
+        mappedFlowRateVelocityFvPatchVectorField
         (
-            const mappedFlowRateFvPatchVectorField&,
+            const mappedFlowRateVelocityFvPatchVectorField&,
             const fvPatch&,
             const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        mappedFlowRateFvPatchVectorField
+        mappedFlowRateVelocityFvPatchVectorField
         (
-            const mappedFlowRateFvPatchVectorField&
+            const mappedFlowRateVelocityFvPatchVectorField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        mappedFlowRateFvPatchVectorField
+        mappedFlowRateVelocityFvPatchVectorField
         (
-            const mappedFlowRateFvPatchVectorField&,
+            const mappedFlowRateVelocityFvPatchVectorField&,
             const DimensionedField<vector, volMesh>&
         );
 
@@ -143,7 +144,7 @@ public:
         {
             return tmp<fvPatchVectorField>
             (
-                new mappedFlowRateFvPatchVectorField(*this, iF)
+                new mappedFlowRateVelocityFvPatchVectorField(*this, iF)
             );
         }
 

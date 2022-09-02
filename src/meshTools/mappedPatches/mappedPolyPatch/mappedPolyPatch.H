@@ -25,8 +25,7 @@ Class
     Foam::mappedPolyPatch
 
 Description
-    Determines a mapping between patch face centres and mesh cell or face
-    centres and processors they're on.
+    Patch which holds a mapping engine to map values from another patch
 
 SourceFiles
     mappedPolyPatch.C
@@ -81,7 +80,7 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("mappedPatch");
+    TypeName("mapped");
 
 
     // Constructors

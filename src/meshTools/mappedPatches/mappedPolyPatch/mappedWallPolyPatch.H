@@ -25,8 +25,7 @@ Class
     Foam::mappedWallPolyPatch
 
 Description
-    Determines a mapping between patch face centres and mesh cell or face
-    centres and processors they're on.
+    Wall patch which holds a mapping engine to map values from another patch
 
 SourceFiles
     mappedWallPolyPatch.C
@@ -104,9 +103,8 @@ public:
             const label size,
             const label start,
             const label index,
-            const word& sampleRegion,
-            const mappedPatchBase::sampleMode mode,
-            const word& samplePatch,
+            const word& neighbourRegion,
+            const word& neighbourPatch,
             const polyBoundaryMesh& bm
         );
 

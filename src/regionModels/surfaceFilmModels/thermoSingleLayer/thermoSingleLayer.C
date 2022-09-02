@@ -38,7 +38,6 @@ License
 
 #include "zeroGradientFvPatchFields.H"
 #include "mixedFvPatchFields.H"
-#include "mappedFieldFvPatchField.H"
 #include "distributionMap.H"
 #include "constants.H"
 
@@ -77,25 +76,6 @@ void thermoSingleLayer::resetPrimaryRegionSourceTerms()
     kinematicSingleLayer::resetPrimaryRegionSourceTerms();
 
     hSpPrimary_ == dimensionedScalar(hSp_.dimensions(), 0);
-}
-
-
-void thermoSingleLayer::correctHforMappedT()
-{
-    volScalarField& T = thermo_->T();
-
-    T.correctBoundaryConditions();
-
-    volScalarField::Boundary& heBf = thermo_->he().boundaryFieldRef();
-
-    forAll(heBf, patchi)
-    {
-        const fvPatchField<scalar>& Tp = T.boundaryField()[patchi];
-        if (isA<mappedFieldFvPatchField<scalar>>(Tp))
-        {
-            heBf[patchi] == thermo().he(Tp, patchi);
-        }
-    }
 }
 
 
@@ -246,8 +226,6 @@ tmp<fvScalarMatrix> thermoSingleLayer::q(volScalarField& h) const
 void thermoSingleLayer::solveEnergy()
 {
     DebugInFunction << endl;
-
-    correctHforMappedT();
 
     volScalarField& he = thermo_->he();
 
@@ -490,8 +468,6 @@ void thermoSingleLayer::evolveRegion()
 
     // Update film coverage indicator
     correctCoverage();
-
-    correctHforMappedT();
 
     // Predict delta_ from continuity
     predictDelta();

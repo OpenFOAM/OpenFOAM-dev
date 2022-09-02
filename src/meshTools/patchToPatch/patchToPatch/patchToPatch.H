@@ -454,11 +454,18 @@ public:
 
         // Interpolation
 
-            //- ...
+            //- Interpolate a source patch field to the target with no left
+            //  over values specified. If the interpolation weight sum is less
+            //  than one for a face then they will be normalised. If the
+            //  interpolation weight sum is zero for a face then that face's
+            //  value will be NaN.
             template<class Type>
             tmp<Field<Type>> srcToTgt(const Field<Type>& srcFld) const;
 
-            //- ...
+            //- Interpolate a source patch field to the target with left over
+            //  values specified. If the interpolation weight sum is less than
+            //  one for a face then the average will include the left over
+            //  value multiplied by one minus the weight sum.
             template<class Type>
             tmp<Field<Type>> srcToTgt
             (
@@ -466,11 +473,13 @@ public:
                 const Field<Type>& leftOverTgtFld
             ) const;
 
-            //- ...
+            //- Interpolate a target patch field to the source with no left
+            //  over values specified. As the corresponding srcToTgt.
             template<class Type>
             tmp<Field<Type>> tgtToSrc(const Field<Type>& tgtFld) const;
 
-            //- ...
+            //- Interpolate a target patch field to the source with left
+            //  over values specified. As the corresponding srcToTgt.
             template<class Type>
             tmp<Field<Type>> tgtToSrc
             (

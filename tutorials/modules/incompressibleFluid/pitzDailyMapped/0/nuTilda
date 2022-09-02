@@ -21,11 +21,9 @@ boundaryField
 {
     inlet
     {
-        type                mapped;
-        value               uniform 0;
+        type                mappedInternalValue;
         interpolationScheme cell;
-        setAverage          false;
-        average             0;
+        value               uniform 0;
     }
 
     outlet

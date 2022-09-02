@@ -646,7 +646,7 @@ void addCouplingPatches
     const fvMesh& mesh,
     const bool isShellMesh,
     const word& regionName,
-    const word& sampleRegionName,
+    const word& nbrRegionName,
     const wordList& zoneNames,
     const wordList& zoneShadowNames,
     const boolList& zoneIsInternal,
@@ -664,48 +664,42 @@ void addCouplingPatches
     zoneBottomPatch.setSize(zoneNames.size(), -1);
 
     dictionary patchDict;
-    patchDict.add
-    (
-        "sampleMode",
-        mappedPatchBase::sampleModeNames_[mappedPatchBase::NEARESTPATCHFACE]
-    );
-    patchDict.add("sampleRegion", sampleRegionName);
+    patchDict.add("neighbourRegion", nbrRegionName);
 
     label nOldPatches = newPatches.size();
     forAll(zoneNames, zonei)
     {
         const word patchNamePrefix =
-            regionName + "_to_" + sampleRegionName + '_';
-        const word samplePatchNamePrefix =
-            sampleRegionName + "_to_" + regionName + '_';
+            regionName + "_to_" + nbrRegionName + '_';
+        const word nbrPatchNamePrefix =
+            nbrRegionName + "_to_" + regionName + '_';
 
-        word bottomPatchName, bottomSamplePatchName;
-        word topPatchName, topSamplePatchName;
+        word bottomPatchName, bottomNbrPatchName;
+        word topPatchName, topNbrPatchName;
         if (zoneIsInternal[zonei])
         {
             bottomPatchName = patchNamePrefix + zoneNames[zonei] + "_bottom";
-            bottomSamplePatchName =
-                samplePatchNamePrefix + zoneNames[zonei] + "_bottom";
+            bottomNbrPatchName =
+                nbrPatchNamePrefix + zoneNames[zonei] + "_bottom";
             topPatchName = patchNamePrefix + zoneNames[zonei] + "_top";
-            topSamplePatchName =
-                samplePatchNamePrefix + zoneNames[zonei] + "_top";
+            topNbrPatchName = nbrPatchNamePrefix + zoneNames[zonei] + "_top";
         }
         else if (!zoneShadowNames[zonei].empty())
         {
             bottomPatchName = patchNamePrefix + zoneNames[zonei];
-            bottomSamplePatchName = samplePatchNamePrefix + zoneNames[zonei];
+            bottomNbrPatchName = nbrPatchNamePrefix + zoneNames[zonei];
             topPatchName = patchNamePrefix + zoneShadowNames[zonei];
-            topSamplePatchName = samplePatchNamePrefix + zoneShadowNames[zonei];
+            topNbrPatchName = nbrPatchNamePrefix + zoneShadowNames[zonei];
         }
         else
         {
             bottomPatchName = patchNamePrefix + zoneNames[zonei];
-            bottomSamplePatchName = samplePatchNamePrefix + zoneNames[zonei];
+            bottomNbrPatchName = nbrPatchNamePrefix + zoneNames[zonei];
             topPatchName = zoneNames[zonei] + "_top";
         }
 
         dictionary bottomPatchDict(patchDict);
-        bottomPatchDict.add("samplePatch", bottomSamplePatchName);
+        bottomPatchDict.add("neighbourPatch", bottomNbrPatchName);
 
         zoneBottomPatch[zonei] =
             addPatch<mappedWallPolyPatch>
@@ -724,7 +718,7 @@ void addCouplingPatches
         if (zoneIsInternal[zonei] || !zoneShadowNames[zonei].empty())
         {
             dictionary topPatchDict(patchDict);
-            topPatchDict.add("samplePatch", topSamplePatchName);
+            topPatchDict.add("neighbourPatch", topNbrPatchName);
             if (isShellMesh)
             {
                 topPatchDict.add("bottomPatch", bottomPatchName);

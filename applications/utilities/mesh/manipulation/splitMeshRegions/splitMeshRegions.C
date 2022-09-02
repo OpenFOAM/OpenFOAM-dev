@@ -1038,9 +1038,8 @@ labelList addRegionPatches
             0,                  // overridden
             0,                  // overridden
             0,                  // overridden
-            regionNames[e[1]],  // sampleRegion
-            mappedPatchBase::NEARESTPATCHFACE,
-            names[1],           // samplePatch
+            regionNames[e[1]],  // neighbourRegion
+            names[1],           // neighbourPatch
             mesh.boundaryMesh()
         );
 
@@ -1059,11 +1058,11 @@ labelList addRegionPatches
             0,
             0,
             0,
-            regionNames[e[0]],  // sampleRegion
-            mappedPatchBase::NEARESTPATCHFACE,
+            regionNames[e[0]],  // neighbourRegion
             names[0],
             mesh.boundaryMesh()
         );
+
         fvMeshTools::addPatch
         (
             mesh,

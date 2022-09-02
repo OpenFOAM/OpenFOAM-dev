@@ -29,8 +29,7 @@ baffles
         {
             name        baffle1D0;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            samplePatch baffle1D1;
+            neighbourPatch baffle1D1;
 
             patchFields
             {
@@ -73,8 +72,7 @@ baffles
         {
             name        baffle1D1;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            samplePatch baffle1D0;
+            neighbourPatch baffle1D0;
 
             patchFields
             {

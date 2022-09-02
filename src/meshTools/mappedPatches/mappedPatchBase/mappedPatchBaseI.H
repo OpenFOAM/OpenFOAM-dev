@@ -27,41 +27,36 @@ License
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-inline bool Foam::mappedPatchBase::sampleIsMappedPatch() const
+inline bool Foam::mappedPatchBase::nbrPatchIsMapped() const
 {
-    switch (mode_)
-    {
-        case NEARESTCELL:
-        case NEARESTFACE:
-            return false;
-        case NEARESTPATCHFACE:
-        case NEARESTPATCHFACEAMI:
-        case PATCHTOPATCH:
-            return isA<mappedPatchBase>(samplePolyPatch());
-    }
-    return false;
+    return isA<mappedPatchBase>(nbrPolyPatch());
 }
 
 
 inline const Foam::mappedPatchBase&
-Foam::mappedPatchBase::sampleMappedPatch() const
+Foam::mappedPatchBase::nbrMappedPatch() const
 {
-    return refCast<const mappedPatchBase>(samplePolyPatch());
+    return refCast<const mappedPatchBase>(nbrPolyPatch());
+}
+
+
+inline bool Foam::mappedPatchBase::symmetric() const
+{
+    return
+        nbrPatchIsMapped()
+     && nbrMappedPatch().nbrRegionName_ == patch_.boundaryMesh().mesh().name()
+     && nbrMappedPatch().nbrPatchName_ == patch_.name()
+     && patchToPatchIsUsed_
+     && nbrMappedPatch().patchToPatchIsUsed_
+     && nbrMappedPatch().patchToPatchPtr_->type() == patchToPatchPtr_->type();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::mappedPatchBase::sampleMode&
-Foam::mappedPatchBase::mode() const
+inline const Foam::word& Foam::mappedPatchBase::nbrRegionName() const
 {
-    return mode_;
-}
-
-
-inline const Foam::word& Foam::mappedPatchBase::sampleRegion() const
-{
-    if (sampleRegion_.empty())
+    if (nbrRegionName_.empty())
     {
         if (!coupleGroup_.valid())
         {
@@ -72,55 +67,31 @@ inline const Foam::word& Foam::mappedPatchBase::sampleRegion() const
                 << exit(FatalError);
         }
 
-        // Try and use patchGroup to find samplePatch and sampleRegion
-        const label samplePatchID =
-            coupleGroup_.findOtherPatchID(patch_, sampleRegion_);
+        // Try and use patchGroup to find nbrPatch and nbrRegion
+        const label nbrPatchID =
+            coupleGroup_.findOtherPatchID(patch_, nbrRegionName_);
 
-        sameRegion_ = sampleRegion_ == patch_.boundaryMesh().mesh().name();
-
-        samplePatch_ = sampleMesh().boundaryMesh()[samplePatchID].name();
+        nbrPatchName_ = nbrMesh().boundaryMesh()[nbrPatchID].name();
     }
 
-    return sampleRegion_;
+    return nbrRegionName_;
 }
 
 
-inline const Foam::word& Foam::mappedPatchBase::samplePatch() const
+inline const Foam::word& Foam::mappedPatchBase::nbrPatchName() const
 {
-    if (samplePatch_.empty())
+    if (nbrPatchName_.empty())
     {
-        sampleRegion();
+        nbrRegionName();
     }
 
-    return samplePatch_;
+    return nbrPatchName_;
 }
 
 
 inline bool Foam::mappedPatchBase::sameRegion() const
 {
-    return sameRegion_;
-}
-
-
-inline const Foam::distributionMap& Foam::mappedPatchBase::map() const
-{
-    if (mapPtr_.empty())
-    {
-        calcMapping();
-    }
-
-    return mapPtr_();
-}
-
-
-inline const Foam::labelList& Foam::mappedPatchBase::mapIndices() const
-{
-    if (mapPtr_.empty())
-    {
-        calcMapping();
-    }
-
-    return mapIndices_;
+    return nbrRegionName() == patch_.boundaryMesh().mesh().name();
 }
 
 

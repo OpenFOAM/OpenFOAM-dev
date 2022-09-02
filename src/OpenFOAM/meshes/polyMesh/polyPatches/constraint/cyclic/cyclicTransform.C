@@ -27,6 +27,34 @@ License
 #include "unitConversion.H"
 #include "IOmanip.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+template<class Type>
+Type sum(const Type& x, const bool global)
+{
+    return global ? returnReduce(x, sumOp<Type>()) : x;
+}
+
+template<class Type>
+Type sum(const Field<Type>& x, const bool global)
+{
+    return global ? gSum(x) : sum(x);
+}
+
+template<class Type>
+Type sum(const tmp<Field<Type>>& x, const bool global)
+{
+    const Type s = sum(x(), global);
+    x.clear();
+    return s;
+}
+
+}
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -279,13 +307,14 @@ Foam::cyclicTransform::cyclicTransform
     const cyclicTransform& transform,
     const word& nbrName,
     const cyclicTransform& nbrTransform,
-    const scalar matchTolerance
+    const scalar matchTolerance,
+    const bool global
 )
 :
     cyclicTransform(transform)
 {
     // Calculate the total (vector) areas for the supplied patch data
-    const vector area = sum(areas);
+    const vector area = sum(areas, global);
 
     // Calculate patch length scales
     const scalar lengthScale = sqrt(mag(area));
@@ -335,7 +364,8 @@ Foam::cyclicTransform::cyclicTransform
     const pointField& nbrCtrs,
     const vectorField& nbrAreas,
     const cyclicTransform& nbrTransform,
-    const scalar matchTolerance
+    const scalar matchTolerance,
+    const bool global
 )
 :
     cyclicTransform
@@ -350,20 +380,25 @@ Foam::cyclicTransform::cyclicTransform
 {
     // If there is no geometry from which to calculate the transform then
     // nothing can be calculated
-    if (areas.size() == 0 || nbrAreas.size() == 0) return;
+    if (sum(areas.size(), global) == 0 || sum(nbrAreas.size(), global) == 0)
+    {
+        return;
+    }
 
     // Calculate the total (vector) areas for the supplied patch data
-    const vector area = sum(areas);
-    const vector nbrArea = sum(nbrAreas);
+    const vector area = sum(areas, global);
+    const vector nbrArea = sum(nbrAreas, global);
 
     // Calculate the centroids for the supplied patch data
     const scalarField magAreas(mag(areas));
     const scalarField magNbrAreas(mag(nbrAreas));
-    const point ctr = sum(ctrs*magAreas)/sum(magAreas);
-    const point nbrCtr = sum(nbrCtrs*magNbrAreas)/sum(magNbrAreas);
+    const scalar sumMagAreas = sum(magAreas, global);
+    const scalar sumMagNbrAreas = sum(magNbrAreas, global);
+    const point ctr = sum(ctrs*magAreas, global)/sumMagAreas;
+    const point nbrCtr = sum(nbrCtrs*magNbrAreas, global)/sumMagNbrAreas;
 
     // Calculate patch length scales
-    const scalar lengthScale = sqrt(sum(magAreas));
+    const scalar lengthScale = sqrt(sumMagAreas);
 
     // Calculate the transformation from the patch geometry
     if (!transformComplete_)

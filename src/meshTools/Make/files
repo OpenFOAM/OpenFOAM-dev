@@ -256,6 +256,10 @@ mappedPatches/mappedPointPatch/mappedPointPatch.C
 mappedPatches/mappedPointPatch/mappedWallPointPatch.C
 mappedPatches/mappedPointPatch/mappedExtrudedWallPointPatch.C
 
+mappedPatches/mappedInternalPatchBase/mappedInternalPatchBase.C
+mappedPatches/mappedInternalPolyPatch/mappedInternalPolyPatch.C
+mappedPatches/mappedInternalPointPatch/mappedInternalPointPatch.C
+
 meshStructure/meshStructure.C
 meshStructure/topoDistanceData.C
 meshStructure/pointTopoDistanceData.C

@@ -50,16 +50,8 @@ Foam::sampledSurfaces::patchInternalField::patchInternalField
     patch(name, mesh, dict),
     mappers_(patchIDs().size())
 {
-    dictionary mappersDict(dict);
-
-    // Add the sample mode (i.e., nearest cell)
-    mappersDict.add
-    (
-        "sampleMode",
-        mappedPatchBase::sampleModeNames_[mappedPatchBase::NEARESTCELL]
-    );
-
     // Negate the distance so that we sample cells inside the patch
+    dictionary mappersDict(dict);
     if (dict.found("distance"))
     {
         mappersDict.set("distance", -mappersDict.lookup<scalar>("distance"));
@@ -70,7 +62,7 @@ Foam::sampledSurfaces::patchInternalField::patchInternalField
         mappers_.set
         (
             i,
-            new mappedPatchBase
+            new mappedInternalPatchBase
             (
                 mesh.boundaryMesh()[patchIDs()[i]],
                 mappersDict

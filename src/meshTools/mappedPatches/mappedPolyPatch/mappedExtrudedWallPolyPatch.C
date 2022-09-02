@@ -55,7 +55,7 @@ void Foam::mappedExtrudedWallPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
 void Foam::mappedExtrudedWallPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 {
     mappedWallPolyPatch::calcGeometry(pBufs);
-    samplePointsPtr_.clear();
+    bottomFaceCentresPtr_.clear();
 }
 
 
@@ -76,7 +76,7 @@ void Foam::mappedExtrudedWallPolyPatch::movePoints
 )
 {
     mappedWallPolyPatch::movePoints(pBufs, p);
-    samplePointsPtr_.clear();
+    bottomFaceCentresPtr_.clear();
 }
 
 
@@ -89,7 +89,130 @@ void Foam::mappedExtrudedWallPolyPatch::initTopoChange(PstreamBuffers& pBufs)
 void Foam::mappedExtrudedWallPolyPatch::topoChange(PstreamBuffers& pBufs)
 {
     mappedWallPolyPatch::topoChange(pBufs);
-    samplePointsPtr_.clear();
+    bottomFaceCentresPtr_.clear();
+}
+
+
+Foam::tmp<Foam::vectorField>
+Foam::mappedExtrudedWallPolyPatch::patchFaceAreas() const
+{
+    if (!bottomFaceAreasPtr_.valid())
+    {
+        const bool isExtrudedRegion = bottomPatch_ != word::null;
+
+        if (isExtrudedRegion)
+        {
+            // If this is the extruded region we need to work out what the
+            // corresponding areas and centres are on the bottom patch. We do
+            // this by waving these values across the layers.
+
+            const polyMesh& mesh = boundaryMesh().mesh();
+            const polyPatch& pp = *this;
+            const polyPatch& bottomPp = boundaryMesh()[bottomPatch_];
+
+            // Initialise faces on the bottom patch to wave from
+            labelList initialFaces(bottomPp.size());
+            List<LayerInfoData<Pair<vector>>> initialFaceInfo(bottomPp.size());
+            forAll(bottomPp, bottomPpFacei)
+            {
+                initialFaces[bottomPpFacei] =
+                    bottomPp.start() + bottomPpFacei;
+                initialFaceInfo[bottomPpFacei] =
+                    LayerInfoData<Pair<vector>>
+                    (
+                        0,
+                        -1,
+                        Pair<vector>
+                        (
+                            bottomPp.faceAreas()[bottomPpFacei],
+                            bottomPp.faceCentres()[bottomPpFacei]
+                        )
+                    );
+            }
+
+            // Wave across the mesh layers
+            List<LayerInfoData<Pair<vector>>> faceInfo(mesh.nFaces());
+            List<LayerInfoData<Pair<vector>>> cellInfo(mesh.nCells());
+            FaceCellWave<LayerInfoData<Pair<vector>>>
+            (
+                mesh,
+                initialFaces,
+                initialFaceInfo,
+                faceInfo,
+                cellInfo,
+                mesh.globalData().nTotalCells() + 1
+            );
+
+            // Unpack into this patch's bottom face areas and centres
+            bottomFaceAreasPtr_.set(new vectorField(pp.size()));
+            bottomFaceCentresPtr_.set(new pointField(pp.size()));
+            forAll(pp, ppFacei)
+            {
+                const LayerInfoData<Pair<vector>>& info =
+                    faceInfo[pp.start() + ppFacei];
+
+                static nil td;
+
+                if (!info.valid(td))
+                {
+                    FatalErrorInFunction
+                        << "Mesh \"" << mesh.name()
+                        << "\" is not layered between the extruded wall patch "
+                        << "\"" << pp.name() << "\" and the bottom patch \""
+                        << bottomPp.name() << "\"" << exit(FatalError);
+                }
+
+                bottomFaceAreasPtr_()[ppFacei] = info.data().first();
+                bottomFaceCentresPtr_()[ppFacei] = info.data().second();
+            }
+        }
+        else
+        {
+            // If this is not the extruded region then we trigger construction
+            // of mapping on the extruded region and then reverse map the
+            // extruded region's data so it is available here
+
+            const mappedExtrudedWallPolyPatch& nbrPp =
+                refCast<const mappedExtrudedWallPolyPatch>(nbrPolyPatch());
+
+            bottomFaceAreasPtr_.set
+            (
+                nbrPp.reverseDistribute
+                (
+                    nbrPp.primitivePatch::faceAreas()
+                ).ptr()
+            );
+            bottomFaceCentresPtr_.set
+            (
+                nbrPp.reverseDistribute
+                (
+                    nbrPp.primitivePatch::faceCentres()
+                ).ptr()
+            );
+        }
+    }
+
+    return bottomFaceAreasPtr_();
+}
+
+
+Foam::tmp<Foam::pointField>
+Foam::mappedExtrudedWallPolyPatch::patchFaceCentres() const
+{
+    if (!bottomFaceCentresPtr_.valid())
+    {
+        patchFaceAreas();
+    }
+
+    return bottomFaceCentresPtr_();
+}
+
+
+Foam::tmp<Foam::pointField>
+Foam::mappedExtrudedWallPolyPatch::patchLocalPoints() const
+{
+    NotImplemented;
+    return tmp<pointField>(nullptr);
 }
 
 
@@ -156,102 +279,6 @@ Foam::mappedExtrudedWallPolyPatch::~mappedExtrudedWallPolyPatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::pointField>
-Foam::mappedExtrudedWallPolyPatch::samplePoints() const
-{
-    if (!samplePointsPtr_.valid())
-    {
-        const bool isExtrudedRegion = bottomPatch_ != word::null;
-
-        if (isExtrudedRegion)
-        {
-            // If this is the extruded region we need to work out where the
-            // corresponding sampling points are on the bottom patch. We do
-            // this by waving the bottom patch points across the layers.
-
-            const polyMesh& mesh = boundaryMesh().mesh();
-            const polyPatch& pp = *this;
-            const polyPatch& bottomPp = boundaryMesh()[bottomPatch_];
-
-            // Get the sample points from the bottom patch
-            const pointField bottomSamplePoints
-            (
-                refCast<const mappedPatchBase>(bottomPp).samplePoints()
-            );
-
-            // Initialise faces on the bottom patch to wave from
-            labelList initialFaces(bottomPp.size());
-            List<LayerInfoData<point>> initialFaceInfo(bottomPp.size());
-            forAll(bottomPp, bottomPpFacei)
-            {
-                initialFaces[bottomPpFacei] =
-                    bottomPp.start() + bottomPpFacei;
-                initialFaceInfo[bottomPpFacei] =
-                    LayerInfoData<point>
-                    (
-                        0,
-                        -1,
-                        bottomSamplePoints[bottomPpFacei]
-                    );
-            }
-
-            // Wave across the mesh layers
-            List<LayerInfoData<point>> faceInfo(mesh.nFaces());
-            List<LayerInfoData<point>> cellInfo(mesh.nCells());
-            FaceCellWave<LayerInfoData<point>>
-            (
-                mesh,
-                initialFaces,
-                initialFaceInfo,
-                faceInfo,
-                cellInfo,
-                mesh.globalData().nTotalCells() + 1
-            );
-
-            // Unpack into this patch's sample points
-            samplePointsPtr_.set(new pointField(pp.size()));
-            forAll(pp, ppFacei)
-            {
-                const LayerInfoData<point>& info =
-                    faceInfo[pp.start() + ppFacei];
-
-                static nil td;
-
-                if (!info.valid(td))
-                {
-                    FatalErrorInFunction
-                        << "Mesh \"" << mesh.name()
-                        << "\" is not layered between the extruded wall patch "
-                        << "\"" << pp.name() << "\" and the bottom patch \""
-                        << bottomPp.name() << "\"" << exit(FatalError);
-                }
-
-                samplePointsPtr_()[ppFacei] = info.data();
-            }
-        }
-        else
-        {
-            // If this is not the extruded region then we trigger construction
-            // of mapping on the extruded region and then reverse map the
-            // extruded region's sampling locations so they are available here
-
-            const mappedExtrudedWallPolyPatch& samplePp =
-                refCast<const mappedExtrudedWallPolyPatch>(samplePolyPatch());
-
-            samplePointsPtr_.set
-            (
-                samplePp.reverseDistribute
-                (
-                    samplePp.mappedPatchBase::samplePoints()
-                ).ptr()
-            );
-        }
-    }
-
-    return samplePointsPtr_();
-}
-
 
 void Foam::mappedExtrudedWallPolyPatch::write(Ostream& os) const
 {

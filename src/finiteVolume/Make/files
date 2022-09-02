@@ -40,6 +40,7 @@ $(derivedFvPatches)/wall/wallFvPatch.C
 $(derivedFvPatches)/mapped/mappedFvPatch.C
 $(derivedFvPatches)/mapped/mappedWallFvPatch.C
 $(derivedFvPatches)/mapped/mappedExtrudedWallFvPatch.C
+$(derivedFvPatches)/mapped/mappedInternalFvPatch.C
 
 
 meshWave = algorithms/FvFaceCellWave
@@ -194,11 +195,11 @@ $(derivedFvPatchFields)/freestreamVelocity/freestreamVelocityFvPatchVectorField.
 $(derivedFvPatchFields)/freestreamPressure/freestreamPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/inletOutlet/inletOutletFvPatchFields.C
 $(derivedFvPatchFields)/inletOutletTotalTemperature/inletOutletTotalTemperatureFvPatchScalarField.C
-$(derivedFvPatchFields)/mappedField/mappedFieldFvPatchFields.C
-$(derivedFvPatchFields)/mappedFixedInternalValue/mappedFixedInternalValueFvPatchFields.C
-$(derivedFvPatchFields)/mappedFixedValue/mappedFixedValueFvPatchFields.C
-$(derivedFvPatchFields)/mappedFlowRate/mappedFlowRateFvPatchVectorField.C
-$(derivedFvPatchFields)/mappedVelocityFluxFixedValue/mappedVelocityFluxFixedValueFvPatchField.C
+$(derivedFvPatchFields)/mappedFlowRateVelocity/mappedFlowRateVelocityFvPatchVectorField.C
+$(derivedFvPatchFields)/mappedInternalValue/mappedInternalValueFvPatchFields.C
+$(derivedFvPatchFields)/mappedValue/mappedValueFvPatchFields.C
+$(derivedFvPatchFields)/mappedValueAndPatchInternalValue/mappedValueAndPatchInternalValueFvPatchFields.C
+$(derivedFvPatchFields)/mappedVelocityFlux/mappedVelocityFluxFvPatchField.C
 $(derivedFvPatchFields)/matchedFlowRateOutletVelocity/matchedFlowRateOutletVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/noSlip/noSlipFvPatchVectorField.C
 $(derivedFvPatchFields)/movingWallVelocity/movingWallVelocityFvPatchVectorField.C

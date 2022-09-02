@@ -152,7 +152,7 @@ Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
             const mappedPatchBase& mpp =
                 refCast<const mappedPatchBase>(patch_.patch());
 
-            const polyMesh& nbrMesh = mpp.sampleMesh();
+            const polyMesh& nbrMesh = mpp.nbrMesh();
 
             const radiationModels::opaqueSolid& radiation =
                 nbrMesh.lookupObject<radiationModels::opaqueSolid>
@@ -163,7 +163,7 @@ Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
             const fvMesh& nbrFvMesh = refCast<const fvMesh>(nbrMesh);
 
             const fvPatch& nbrPatch =
-                nbrFvMesh.boundary()[mpp.samplePolyPatch().index()];
+                nbrFvMesh.boundary()[mpp.nbrPolyPatch().index()];
 
             // NOTE: for an opaqueSolid the absorptionEmission model returns the
             // emissivity of the surface rather than the emission coefficient

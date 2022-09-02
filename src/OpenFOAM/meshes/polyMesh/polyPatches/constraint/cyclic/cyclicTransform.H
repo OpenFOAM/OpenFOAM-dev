@@ -133,7 +133,8 @@ public:
             const cyclicTransform& transform,
             const word& nbrName,
             const cyclicTransform& nbrTransform,
-            const scalar matchTolerance
+            const scalar matchTolerance,
+            const bool global = false
         );
 
         //- Construct from coupled patch data. Copies from the supplied
@@ -150,7 +151,8 @@ public:
             const pointField& nbrCtrs,
             const vectorField& nbrAreas,
             const cyclicTransform& nbrTransform,
-            const scalar matchTolerance
+            const scalar matchTolerance,
+            const bool global = false
         );
 
 

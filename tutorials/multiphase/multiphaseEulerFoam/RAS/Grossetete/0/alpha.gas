@@ -22,9 +22,7 @@ boundaryField
 {
     inlet
     {
-        type            mapped;
-        fieldName       alpha.air;
-        setAverage      yes;
+        type            mappedValue;
         average         0.0567;
         value           $internalField;
     }

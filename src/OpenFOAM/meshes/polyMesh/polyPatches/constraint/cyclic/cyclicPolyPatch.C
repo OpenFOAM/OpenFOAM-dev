@@ -296,7 +296,7 @@ const Foam::word& Foam::cyclicPolyPatch::nbrPatchName() const
 {
     if (nbrPatchName_.empty())
     {
-        // Try and use patchGroup to find samplePatch and sampleRegion
+        // Try and use patchGroup to find neighbourPatch and neighbourRegion
         label patchID = coupleGroup_.findOtherPatchID(*this);
 
         nbrPatchName_ = boundaryMesh()[patchID].name();

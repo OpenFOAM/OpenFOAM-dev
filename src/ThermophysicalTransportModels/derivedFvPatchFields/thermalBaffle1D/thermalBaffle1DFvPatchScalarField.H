@@ -41,7 +41,7 @@ Usage
     {
         type   compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
 
-        samplePatch     <slavePatchName>;
+        neighbourPatch  <slavePatchName>;
 
         thickness       uniform 0.005;  // Thickness [m]
         qs              uniform 100;    // Source heat flux [W/m^2]
@@ -75,7 +75,7 @@ Usage
     {
         type   compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
 
-        samplePatch     <masterPatchName>;
+        neighbourPatch  <masterPatchName>;
 
         qr              none;
         relaxation      1;

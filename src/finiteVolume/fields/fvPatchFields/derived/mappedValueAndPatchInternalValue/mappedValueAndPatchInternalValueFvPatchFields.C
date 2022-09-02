@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,28 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedFixedValueFvPatchFieldsFwd_H
-#define mappedFixedValueFvPatchFieldsFwd_H
-
-#include "fieldTypes.H"
+#include "mappedValueAndPatchInternalValueFvPatchFields.H"
+#include "volMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<class Type> class mappedFixedValueFvPatchField;
-
-makePatchTypeFieldTypedefs(mappedFixedValue);
+makePatchFields(mappedValueAndPatchInternalValue);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

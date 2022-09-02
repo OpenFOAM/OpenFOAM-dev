@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedFixedInternalValueFvPatchFields_H
-#define mappedFixedInternalValueFvPatchFields_H
+#ifndef mappedValueAndPatchInternalValueFvPatchFields_H
+#define mappedValueAndPatchInternalValueFvPatchFields_H
 
-#include "mappedFixedInternalValueFvPatchField.H"
+#include "mappedValueAndPatchInternalValueFvPatchField.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -36,7 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makePatchTypeFieldTypedefs(mappedFixedInternalValue)
+makePatchTypeFieldTypedefs(mappedValueAndPatchInternalValue)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

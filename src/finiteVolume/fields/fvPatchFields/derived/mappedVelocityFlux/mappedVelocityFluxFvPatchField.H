@@ -22,11 +22,11 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mappedVelocityFluxFixedValueFvPatchField
+    Foam::mappedVelocityFluxFvPatchField
 
 Description
-    This boundary condition maps the velocity and flux from a neighbour patch
-    to this patch
+    This boundary condition maps the velocity and flux from a neighbouring
+    patch to this patch.
 
 Usage
     \table
@@ -39,17 +39,12 @@ Usage
     <patchName>
     {
         type            mappedVelocityFlux;
-        phi             phi;
-        value           uniform 0;  // place holder
+        value           uniform (0 0 0);
     }
     \endverbatim
 
-    The underlying sample mode should be set to \c nearestPatchFace or
-    \c nearestFace
-
-    Note:
-        This boundary condition can only be applied to patches that are of
-        the \c mappedPolyPatch type.
+    This boundary condition can only be applied to patches that are of
+    mappedPatchBase type.
 
 See also
     Foam::mappedPatchBase
@@ -58,12 +53,12 @@ See also
     Foam::fixedValueFvPatchVectorField
 
 SourceFiles
-    mappedVelocityFluxFixedValueFvPatchField.C
+    mappedVelocityFluxFvPatchField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedVelocityFluxFixedValueFvPatchField_H
-#define mappedVelocityFluxFixedValueFvPatchField_H
+#ifndef mappedVelocityFluxFvPatchField_H
+#define mappedVelocityFluxFvPatchField_H
 
 #include "fixedValueFvPatchFields.H"
 #include "mappedFvPatch.H"
@@ -74,10 +69,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-             Class mappedVelocityFluxFixedValueFvPatch Declaration
+             Class mappedVelocityFluxFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
-class mappedVelocityFluxFixedValueFvPatchField
+class mappedVelocityFluxFvPatchField
 :
     public fixedValueFvPatchVectorField
 {
@@ -95,14 +90,14 @@ public:
     // Constructors
 
         //- Construct from patch and internal field
-        mappedVelocityFluxFixedValueFvPatchField
+        mappedVelocityFluxFvPatchField
         (
             const fvPatch&,
             const DimensionedField<vector, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        mappedVelocityFluxFixedValueFvPatchField
+        mappedVelocityFluxFvPatchField
         (
             const fvPatch&,
             const DimensionedField<vector, volMesh>&,
@@ -110,26 +105,26 @@ public:
         );
 
         //- Construct by mapping given
-        //  mappedVelocityFluxFixedValueFvPatchField
+        //  mappedVelocityFluxFvPatchField
         //  onto a new patch
-        mappedVelocityFluxFixedValueFvPatchField
+        mappedVelocityFluxFvPatchField
         (
-            const mappedVelocityFluxFixedValueFvPatchField&,
+            const mappedVelocityFluxFvPatchField&,
             const fvPatch&,
             const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        mappedVelocityFluxFixedValueFvPatchField
+        mappedVelocityFluxFvPatchField
         (
-            const mappedVelocityFluxFixedValueFvPatchField&
+            const mappedVelocityFluxFvPatchField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        mappedVelocityFluxFixedValueFvPatchField
+        mappedVelocityFluxFvPatchField
         (
-            const mappedVelocityFluxFixedValueFvPatchField&,
+            const mappedVelocityFluxFvPatchField&,
             const DimensionedField<vector, volMesh>&
         );
 
@@ -141,7 +136,7 @@ public:
         {
             return tmp<fvPatchVectorField>
             (
-                new mappedVelocityFluxFixedValueFvPatchField(*this, iF)
+                new mappedVelocityFluxFvPatchField(*this, iF)
             );
         }
 

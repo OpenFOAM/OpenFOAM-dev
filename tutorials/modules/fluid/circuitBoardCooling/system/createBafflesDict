@@ -29,8 +29,7 @@ baffles
         {
             name        baffle1D0;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            samplePatch baffle1D1;
+            neighbourPatch baffle1D1;
 
             patchFields
             {
@@ -73,8 +72,7 @@ baffles
         {
             name        baffle1D1;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            samplePatch baffle1D0;
+            neighbourPatch baffle1D0;
 
             patchFields
             {
@@ -99,9 +97,8 @@ baffles
         {
             name        baffle3D0;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            sampleRegion baffle3DRegion;
-            samplePatch baffle3D0;
+            neighbourRegion baffle3DRegion;
+            neighbourPatch baffle3D0;
 
             patchFields
             {
@@ -136,10 +133,9 @@ baffles
         neighbour
         {
             name        baffle3D1;
-            type        mappedWall;
-            sampleMode  nearestPatchFace;
-            sampleRegion baffle3DRegion;
-            samplePatch baffle3D1;
+            type        mappedExtrudedWall;
+            neighbourRegion baffle3DRegion;
+            neighbourPatch baffle3D1;
 
             patchFields
             {

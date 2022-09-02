@@ -26,7 +26,6 @@ License
 #include "sampledPatchInternalField.H"
 #include "interpolationCellPoint.H"
 #include "PrimitivePatchInterpolation.H"
-#include "OBJstream.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -65,45 +64,6 @@ Foam::sampledSurfaces::patchInternalField::sampleField
 }
 
 
-namespace Foam
-{
-
-template<class Type>
-inline labelList hist(const List<List<Type>>& ll)
-{
-    labelList result;
-    forAll(ll, i)
-    {
-        const label s = ll[i].size();
-        result.resize(max(result.size(), s + 1), 0);
-        result[s] ++;
-    }
-    return result;
-}
-
-template<class Type>
-inline List<Type> flatten(const List<List<Type>>& ll)
-{
-    label s = 0;
-    forAll(ll, i)
-    {
-        s += ll[i].size();
-    }
-
-    List<Type> result(s);
-    label resulti = 0;
-    forAll(ll, i)
-    {
-        SubList<Type>(result, ll[i].size(), resulti) = ll[i];
-        resulti += ll[i].size();
-    }
-
-    return result;
-}
-
-}
-
-
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::sampledSurfaces::patchInternalField::interpolateField
@@ -123,9 +83,9 @@ Foam::sampledSurfaces::patchInternalField::interpolateField
     forAll(patchIDs(), i)
     {
         // Cells on which samples are generated
-        const labelList& sampleCells = mappers_[i].mapIndices();
+        const labelList& sampleCells = mappers_[i].cellIndices();
 
-        // Send the patch points to the cells
+        // Send the sample points to the cells
         const distributionMap& distMap = mappers_[i].map();
         pointField samplePoints(mappers_[i].samplePoints());
         distMap.reverseDistribute(sampleCells.size(), samplePoints);

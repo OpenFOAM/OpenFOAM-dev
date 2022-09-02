@@ -48,11 +48,8 @@ boundary
 (
     inlet
     {
-        type mappedPatch;
-        sampleMode      nearestCell;
-        sampleRegion    region0;
-        samplePatch     none;
-        offset          (0.05 0 0);
+        type mappedInternal;
+        offset (0.05 0 0);
         faces
         (
             (0 4 6 2)

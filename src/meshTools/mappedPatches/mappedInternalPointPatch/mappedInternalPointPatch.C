@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mappedFixedValueFvPatchFields.H"
-#include "volMesh.H"
+#include "mappedInternalPointPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -32,9 +31,18 @@ License
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makePatchFields(mappedFixedValue);
+defineTypeNameAndDebug(mappedInternalPointPatch, 0);
+
+// Add the patch constructor functions to the hash tables
+addToRunTimeSelectionTable
+(
+    facePointPatch,
+    mappedInternalPointPatch,
+    polyPatch
+);
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

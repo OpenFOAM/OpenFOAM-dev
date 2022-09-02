@@ -72,14 +72,19 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
     const label size,
     const label start,
     const label index,
-    const word& sampleRegion,
-    const mappedPatchBase::sampleMode mode,
-    const word& samplePatch,
+    const word& neighbourRegion,
+    const word& neighbourPatch,
     const polyBoundaryMesh& bm
 )
 :
     wallPolyPatch(name, size, start, index, bm, typeName),
-    mappedPatchBase(*this, sampleRegion, mode, samplePatch)
+    mappedPatchBase
+    (
+        *this,
+        neighbourRegion,
+        neighbourPatch,
+        cyclicTransform(true)
+    )
 {}
 
 
@@ -93,7 +98,7 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 )
 :
     wallPolyPatch(name, dict, index, bm, patchType),
-    mappedPatchBase(*this, dict)
+    mappedPatchBase(*this, dict, true)
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)

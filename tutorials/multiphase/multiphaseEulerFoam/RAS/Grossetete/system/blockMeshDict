@@ -49,11 +49,8 @@ boundary
 (
     inlet
     {
-        type mappedPatch;
-        sampleMode      nearestPatchFace;
-        sampleRegion    region0;
-        samplePatch     outlet;
-        offset          ($!backgroundMesh/length 0 0);
+        type            mapped;
+        neighbourPatch  outlet;
         faces
         (
             (0 4 6 2)

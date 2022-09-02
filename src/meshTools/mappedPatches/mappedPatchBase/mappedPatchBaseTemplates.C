@@ -31,45 +31,40 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::mappedPatchBase::distribute(const Field<Type>& fld) const
 {
-    switch (mode_)
+    if (!patchToPatchIsUsed_)
     {
-        case NEARESTPATCHFACEAMI:
+        if (mapPtr_.empty())
         {
-            if (AMIPtr_.empty())
-            {
-                calcAMI();
-            }
-            return AMIPtr_->interpolateToSource(fld);
+            calcMapping();
         }
-        case PATCHTOPATCH:
-        {
-            if
-            (
-                !patchToPatchIsValid_
-             && !(
-                    sampleIsMappedPatch()
-                 && sampleMappedPatch().patchToPatchIsValid_
-                )
-            )
-            {
-                calcPatchToPatch();
-            }
 
-            return
+        tmp<Field<Type>> tResult(new Field<Type>(fld, nbrPatchFaceIndices_));
+        mapPtr_->distribute(tResult.ref());
+        return transform_.transform().transform(tResult);
+    }
+    else
+    {
+        if
+        (
+            !patchToPatchIsValid_
+         && !(symmetric() && nbrMappedPatch().patchToPatchIsValid_)
+        )
+        {
+            calcMapping();
+        }
+
+        if (!patchToPatchIsValid_ && !symmetric())
+        {
+            calcMapping();
+        }
+
+        return
+            transform_.transform().transform
+            (
                 patchToPatchIsValid_
               ? patchToPatchPtr_->tgtToSrc(fld)
-              : sampleMappedPatch().patchToPatchPtr_->srcToTgt(fld);
-        }
-        default:
-        {
-            if (mapPtr_.empty())
-            {
-                calcMapping();
-            }
-            tmp<Field<Type>> tResult(new Field<Type>(fld, mapIndices_));
-            mapPtr_->distribute(tResult.ref());
-            return tResult;
-        }
+              : nbrMappedPatch().patchToPatchPtr_->srcToTgt(fld)
+            );
     }
 }
 
@@ -88,59 +83,37 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::mappedPatchBase::reverseDistribute(const Field<Type>& fld) const
 {
-    switch (mode_)
+    if (!patchToPatchIsUsed_)
     {
-        case NEARESTPATCHFACE:
+        if (mapPtr_.empty())
         {
-            if (mapPtr_.empty())
-            {
-                calcMapping();
-            }
-            Field<Type> sampleFld(fld);
-            mapPtr_->reverseDistribute(mapIndices_.size(), sampleFld);
-            tmp<Field<Type>> tResult(new Field<Type>(samplePolyPatch().size()));
-            UIndirectList<Type>(tResult.ref(), mapIndices_) = fld;
-            return tResult;
+            calcMapping();
         }
-        case NEARESTPATCHFACEAMI:
-        {
-            if (AMIPtr_.empty())
-            {
-                calcAMI();
-            }
-            return AMIPtr_->interpolateToTarget(fld);
-        }
-        case PATCHTOPATCH:
-        {
-            if
-            (
-                !patchToPatchIsValid_
-             && !(
-                    sampleIsMappedPatch()
-                 && sampleMappedPatch().patchToPatchIsValid_
-                )
-            )
-            {
-                calcPatchToPatch();
-            }
 
-            return
+        Field<Type> nbrFld(fld);
+        mapPtr_->reverseDistribute(nbrPatchFaceIndices_.size(), nbrFld);
+        tmp<Field<Type>> tResult(new Field<Type>(nbrPolyPatch().size()));
+        UIndirectList<Type>(tResult.ref(), nbrPatchFaceIndices_) = nbrFld;
+        return transform_.transform().invTransform(tResult);
+    }
+    else
+    {
+        if
+        (
+            !patchToPatchIsValid_
+         && !(symmetric() && nbrMappedPatch().patchToPatchIsValid_)
+        )
+        {
+            calcMapping();
+        }
+
+        return
+            transform_.transform().invTransform
+            (
                 patchToPatchIsValid_
               ? patchToPatchPtr_->srcToTgt(fld)
-              : sampleMappedPatch().patchToPatchPtr_->tgtToSrc(fld);
-
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Reverse distribute can only be used in "
-                << sampleModeNames_[NEARESTPATCHFACE] << ", "
-                << sampleModeNames_[NEARESTPATCHFACEAMI] << " or "
-                << sampleModeNames_[PATCHTOPATCH] << " mode"
-                << exit(FatalError);
-
-            return tmp<Field<Type>>(nullptr);
-        }
+              : nbrMappedPatch().patchToPatchPtr_->tgtToSrc(fld)
+            );
     }
 }
 

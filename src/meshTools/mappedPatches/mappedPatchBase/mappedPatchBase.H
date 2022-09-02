@@ -25,47 +25,22 @@ Class
     Foam::mappedPatchBase
 
 Description
-    Determines a mapping between patch face centres and mesh cell or face
-    centres and processors they're on.
+    Engine which provides mapping between two patches
 
     Example:
     \verbatim
-        // What to sample
-        // - nearestCell         : cell containing the sampling point
-        // - nearestPatchFace    : nearest face on selected patch
-        // - nearestPatchFaceAMI : AMI interpolation from selected patch
-        // - nearestFace         : nearest boundary face on any patch
-        sampleMode nearestCell;
+        // The name of the region to map from. Optional. Defaults to the same
+        // region as the patch.
+        neighbourRegion region0;
 
-        // Region to sample from
-        sampleRegion region0;
+        // The name of the patch to map from
+        neighbourPatch movingWall;
 
-        // If sampleMode is nearestPatchFace* : The patch to sample from
-        samplePatch movingWall;
-
-        // If sampleMode is nearestPatchFace* : Couple group to specify the
-        //                                      sample region and patch
-        //                                      (alternative to specifying
-        //                                      sampleRegion and samplePatch
-        //                                      directly)
+        // Couple group to specify the region and patch to map from. This is an
+        // alternative to specifying neighbourRegion and neighbourPatch
+        // directly, as shown above.
         coupleGroup baffleGroup;
-
-        // How to offset the patch face centres to the sampling locations
-        // - none                : no offset
-        // - normal              : distance along the patch face normals
-        // - direction           : specified offset vector
-        offsetMode direction;
-
-        // If offsetMode is normal : The normal distance to offset
-        distance 1;
-
-        // If offsetMode is direction : The offset vector
-        offset (1 0 0);
     \endverbatim
-
-    Note that patch normals point outward, so if offsetMode is \c normal then a
-    negative distance will be required in order to sample value from inside the
-    domain.
 
 SourceFiles
     mappedPatchBase.C
@@ -76,9 +51,9 @@ SourceFiles
 #define mappedPatchBase_H
 
 #include "pointField.H"
-#include "AMIInterpolation.H"
 #include "patchToPatch.H"
 #include "coupleGroupIdentifier.H"
+#include "cyclicTransform.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -95,137 +70,69 @@ class distributionMap;
 
 class mappedPatchBase
 {
-
-public:
-
-    // Type enumerations
-
-        //- Mesh items to sample
-        enum sampleMode
-        {
-            NEARESTCELL,         // nearest cell containing sample
-            NEARESTPATCHFACE,    // nearest face on selected patch
-            NEARESTPATCHFACEAMI, // nearest patch face + AMI interpolation
-            PATCHTOPATCH,        // ...
-            NEARESTFACE          // nearest face
-        };
-
-        //- How to project face centres
-        enum offsetMode
-        {
-            NONE,       // do not offset
-            NORMAL,     // offset a distance in the face-normal direction
-            DIRECTION   // offset with a specified vector
-        };
-
-        static const NamedEnum<sampleMode, 5> sampleModeNames_;
-
-        static const NamedEnum<offsetMode, 3> offsetModeNames_;
-
-
 protected:
 
     // Protected data
 
-        //- Patch to sample
+        //- Patch to map to
         const polyPatch& patch_;
 
-        //- Region to sample
-        mutable word sampleRegion_;
+        //- Name of the region to map from
+        mutable word nbrRegionName_;
 
-        //- Same region
-        mutable bool sameRegion_;
+        //- Name of the patch to map from
+        mutable word nbrPatchName_;
 
-        //- What to sample
-        const sampleMode mode_;
-
-        //- Patch (if in sampleMode NEARESTPATCH*)
-        mutable word samplePatch_;
-
-        //- PatchGroup (if in sampleMode NEARESTPATCH*)
+        //- Couple group for the region/patch to map from
         const coupleGroupIdentifier coupleGroup_;
 
-        //- How to offset the patch face centres to the sampling locations
-        offsetMode offsetMode_;
+        //- The transformation between the patches
+        mutable cyclicTransform transform_;
 
-        //- Offset distance
-        scalar distance_;
+        //- Distributor (if not using patch-to-patch)
+        mutable autoPtr<distributionMap> mapPtr_;
 
-        //- Offset vector
-        vector offset_;
+        //- Indices of the neighbouring patch faces who's values have to be
+        //  supplied to the distribution map (if not using patch-to-patch)
+        mutable labelList nbrPatchFaceIndices_;
 
+        //- Is the patch-to-patch intersection engine being used?
+        const bool patchToPatchIsUsed_;
 
-        // Derived information
+        //- Is the patch-to-patch intersection engine up to date? (if using
+        //  patch-to-patch)
+        mutable bool patchToPatchIsValid_;
 
-            //- Distributor
-            mutable autoPtr<distributionMap> mapPtr_;
+        //- Patch-to-patch intersection engine (if using patch-to-patch)
+        mutable autoPtr<patchToPatch> patchToPatchPtr_;
 
-            //- Map pre-addressing
-            mutable labelList mapIndices_;
-
-
-        // AMI interpolator (only for NEARESTPATCHFACEAMI)
-
-            //- Pointer to AMI interpolator
-            mutable autoPtr<AMIInterpolation> AMIPtr_;
-
-            //- Flag to indicate that slave patch should be reversed for AMI
-            const bool AMIReverse_;
-
-            //- Pointer to projection surface employed by AMI interpolator
-            mutable autoPtr<searchableSurface> surfPtr_;
-
-            //- Dictionary storing projection surface description
-            dictionary surfDict_;
-
-
-        //- Patch-to-patch intersection engine (only for PATCHTOPATCH)
-
-            //- Is the patch-to-patch intersection engine up to date?
-            mutable bool patchToPatchIsValid_;
-
-            //- Patch-to-patch intersection engine
-            mutable autoPtr<patchToPatch> patchToPatchPtr_;
+        //- Matching tolerance
+        static const scalar matchTol_;
 
 
     // Protected Member Functions
 
-        //- Read the offset mode from a dictionary
-        offsetMode readOffsetMode(const dictionary& dict) const;
+        //- Get the face-areas for this patch
+        virtual tmp<vectorField> patchFaceAreas() const;
 
-        //- Find cells/faces containing samples
-        void findSamples
-        (
-            const globalIndex& patchGlobalIndex,
-            labelList& sampleGlobalPatchFaces,
-            labelList& sampleIndices
-        ) const;
+        //- Get the face-centres for this patch
+        virtual tmp<pointField> patchFaceCentres() const;
 
-        //- Return size of mapped mesh/patch/boundary
-        label sampleSize() const;
+        //- Get the local points for this patch
+        virtual tmp<pointField> patchLocalPoints() const;
 
         //- Calculate mapping
         void calcMapping() const;
 
-        //- Calculate AMI interpolator
-        void calcAMI() const;
+        //- Return whether or not the neighbour patch is of mapped type
+        inline bool nbrPatchIsMapped() const;
 
-        //- Calculate the patch-to-patch intersection engine
-        void calcPatchToPatch() const;
+        //- Get the mapped neighbouring patch
+        inline const mappedPatchBase& nbrMappedPatch() const;
 
-        //- Helper to read field or non-uniform list from dictionary
-        static tmp<pointField> readListOrField
-        (
-            const word& keyword,
-            const dictionary& dict,
-            const label size
-        );
-
-        //- Return whether or not the sample patch (if any) is of mapped type
-        inline bool sampleIsMappedPatch() const;
-
-        //- Get the mapped sample patch
-        inline const mappedPatchBase& sampleMappedPatch() const;
+        //- Determine whether the neighbouring patch maps from this patch in
+        //  the same way as this patch maps from its neighbour
+        inline bool symmetric() const;
 
 
 public:
@@ -239,17 +146,22 @@ public:
         //- Construct from patch
         mappedPatchBase(const polyPatch&);
 
-        //- Construct with no offset
+        //- Construct from components
         mappedPatchBase
         (
             const polyPatch& pp,
-            const word& sampleRegion,
-            const sampleMode sampleMode,
-            const word& samplePatch
+            const word& nbrRegionName,
+            const word& nbrPatchName,
+            const cyclicTransform& transform
         );
 
         //- Construct from dictionary
-        mappedPatchBase(const polyPatch&, const dictionary&);
+        mappedPatchBase
+        (
+            const polyPatch& pp,
+            const dictionary& dict,
+            const bool transformisNone
+        );
 
         //- Construct as copy, resetting patch
         mappedPatchBase(const polyPatch&, const mappedPatchBase&);
@@ -263,34 +175,20 @@ public:
 
         // Access
 
-            //- What to sample
-            inline const sampleMode& mode() const;
+            //- Name of the region to map from
+            inline const word& nbrRegionName() const;
 
-            //- Region to sample
-            inline const word& sampleRegion() const;
-
-            //- Patch (only if NEARESTPATCHFACE)
-            inline const word& samplePatch() const;
-
-            //- Cached sampleRegion != mesh.name()
+            //- Is the neighbour region the same as for this patch?
             inline bool sameRegion() const;
 
-            //- Return reference to the parallel distribution map
-            inline const distributionMap& map() const;
+            //- Name of the patch to map from
+            inline const word& nbrPatchName() const;
 
-            //- Return reference to the indices that have to be supplied to the
-            //  parallel distribution map
-            inline const labelList& mapIndices() const;
+            //- Get the mesh for the region to map from
+            const polyMesh& nbrMesh() const;
 
-            //- Get the region mesh
-            const polyMesh& sampleMesh() const;
-
-            //- Get the patch on the region
-            const polyPatch& samplePolyPatch() const;
-
-            //- Get the sample points
-            virtual tmp<pointField> samplePoints() const;
-
+            //- Get the patch to map from
+            const polyPatch& nbrPolyPatch() const;
 
 
         // Edit
@@ -322,6 +220,10 @@ public:
 
 
         // I/O
+
+            //- Return whether or not the given dictionary contains a
+            //  mappedPatchBase specification
+            static bool specified(const dictionary& dict);
 
             //- Write as a dictionary
             virtual void write(Ostream&) const;

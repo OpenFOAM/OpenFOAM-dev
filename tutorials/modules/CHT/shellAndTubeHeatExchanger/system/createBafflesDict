@@ -26,18 +26,16 @@ baffles
         {
             name        shell_to_solid;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            sampleRegion solid;
-            samplePatch solid_to_shell;
+            neighbourRegion solid;
+            neighbourPatch solid_to_shell;
         }
 
         neighbour
         {
             name        solid_to_shell;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            sampleRegion shell;
-            samplePatch shell_to_solid;
+            neighbourRegion shell;
+            neighbourPatch shell_to_solid;
         }
     }
 
@@ -50,18 +48,16 @@ baffles
         {
             name        tube_to_solid;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            sampleRegion solid;
-            samplePatch solid_to_tube;
+            neighbourRegion solid;
+            neighbourPatch solid_to_tube;
         }
 
         neighbour
         {
             name        solid_to_tube;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            sampleRegion tube;
-            samplePatch tube_to_solid;
+            neighbourRegion tube;
+            neighbourPatch tube_to_solid;
         }
     }
 }

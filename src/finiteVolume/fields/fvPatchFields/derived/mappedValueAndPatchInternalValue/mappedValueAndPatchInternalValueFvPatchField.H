@@ -22,58 +22,55 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mappedFieldFvPatchField
+    Foam::mappedValueAndPatchInternalValueFvPatchField
 
 Description
-    This boundary condition provides a self-contained version of the \c mapped
-    condition.  It does not use information on the patch; instead it holds
-    thr data locally.
+    This boundary condition maps the boundary and internal values from a
+    neighbouring patch field to the boundary and internal values of this patch.
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
+        Property     | Description                | Required | Default value
         fieldName    | name of field to be mapped | no       | this field name
-        setAverage   | flag to activate setting of average value | yes |
-        average      | average value to apply if \c setAverage = yes | yes |
+        setAverage   | set the average value?     | no       | yes if average \\
+                                                               is specified, \\
+                                                               no otherwise
+        average      | average value to apply     | if setAverage is true |
     \endtable
 
     Example of the boundary condition specification:
     \verbatim
     <patchName>
     {
-        type            mappedField;
-        fieldName       T;              // optional field name
-        setAverage      no;             // apply an average value
-        average         0;              // average to apply if setAverage
-        value           uniform 0;      // place holder
+        type            mappedValueAndPatchInternalValue;
+        fieldName       T;
+        average         300;
+        value           uniform 300;
     }
     \endverbatim
 
-    Note:
-        Since this condition can be applied on a per-field and per-patch basis,
-        it is possible to duplicate the mapping information.  If possible,
-        employ the \c mapped condition in preference to avoid this situation,
-        and only employ this condition if it is not possible to change the
-        underlying geometric (poly) patch type to \c mapped.
+    This boundary condition will usually be applied to a patch which is of
+    mappedPatchBase type, and which holds all the necessary mapping
+    information. It can also create its own mapping data which overrides that
+    in the mapped patch, or so that it can be applied to a non-mapped patch.
+    This is triggered by the presence of controls relating to mappedPatchBase
+    (i.e., neighbourRegion, neighbourPatch, etc ...).
 
 See also
     Foam::mappedPatchBase
     Foam::mappedPolyPatch
     Foam::mappedFvPatch
-    Foam::fixedValueFvPatchField
+    Foam::mappedValueFvPatchField
 
 SourceFiles
-    mappedFieldFvPatchField.C
+    mappedValueAndPatchInternalValue.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedFieldFvPatchField_H
-#define mappedFieldFvPatchField_H
+#ifndef mappedValueAndPatchInternalValueFvPatchField_H
+#define mappedValueAndPatchInternalValueFvPatchField_H
 
-#include "mappedPatchBase.H"
-#include "mappedPatchFieldBase.H"
-#include "fixedValueFvPatchFields.H"
-#include "interpolation.H"
+#include "mappedValueFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,56 +78,58 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class mappedFieldFvPatchField Declaration
+         Class mappedValueAndPatchInternalValueFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class mappedFieldFvPatchField
+class mappedValueAndPatchInternalValueFvPatchField
 :
-    public fixedValueFvPatchField<Type>,
-    public mappedPatchBase,
-    public mappedPatchFieldBase<Type>
+    public mappedValueFvPatchField<Type>
 {
 
 public:
 
     //- Runtime type information
-    TypeName("mappedField");
+    TypeName("mappedValueAndPatchInternalValue");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        mappedFieldFvPatchField
+        mappedValueAndPatchInternalValueFvPatchField
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        mappedFieldFvPatchField
+        mappedValueAndPatchInternalValueFvPatchField
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given mappedFieldFvPatchField onto a new patch
-        mappedFieldFvPatchField
+        //- Construct by mapping given
+        //  mappedValueAndPatchInternalValue onto a new patch
+        mappedValueAndPatchInternalValueFvPatchField
         (
-            const mappedFieldFvPatchField<Type>&,
+            const mappedValueAndPatchInternalValueFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        mappedFieldFvPatchField(const mappedFieldFvPatchField<Type>&) = delete;
+        mappedValueAndPatchInternalValueFvPatchField
+        (
+            const mappedValueAndPatchInternalValueFvPatchField<Type>&
+        ) = delete;
 
         //- Copy constructor setting internal field reference
-        mappedFieldFvPatchField
+        mappedValueAndPatchInternalValueFvPatchField
         (
-            const mappedFieldFvPatchField<Type>&,
+            const mappedValueAndPatchInternalValueFvPatchField<Type>&,
             const DimensionedField<Type, volMesh>&
         );
 
@@ -142,7 +141,7 @@ public:
         {
             return tmp<fvPatchField<Type>>
             (
-                new mappedFieldFvPatchField<Type>
+                new mappedValueAndPatchInternalValueFvPatchField<Type>
                 (
                     *this,
                     iF
@@ -153,26 +152,10 @@ public:
 
     // Member Functions
 
-        // Mapping functions
-
-            //- Map (and resize as needed) from self given a mapping object
-            //  Used to update fields following mesh topology change
-            virtual void autoMap(const fvPatchFieldMapper&);
-
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            //  Used to reconstruct fields
-            virtual void rmap(const fvPatchField<Type>&, const labelList&);
-
-            //- Reset the fvPatchField to the given fvPatchField
-            //  Used for mesh to mesh mapping
-            virtual void reset(const fvPatchField<Type>&);
-
-
         // Evaluation functions
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
-
 
         //- Write
         virtual void write(Ostream&) const;
@@ -186,7 +169,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "mappedFieldFvPatchField.C"
+    #include "mappedValueAndPatchInternalValueFvPatchField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

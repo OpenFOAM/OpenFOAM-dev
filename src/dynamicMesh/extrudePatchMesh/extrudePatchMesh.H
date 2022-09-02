@@ -46,10 +46,7 @@ Description
         {
             name        "bottom";
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            samplePatch fixedWalls;
-            offsetMode  uniform;
-            offset      (0 0 0);
+            neighbourPatch fixedWalls;
         }
 
         topCoeffs

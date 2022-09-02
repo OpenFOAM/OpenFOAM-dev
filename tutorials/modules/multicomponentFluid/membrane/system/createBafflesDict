@@ -26,16 +26,14 @@ baffles
         {
             name        membranePipe;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            samplePatch membraneSleeve;
+            neighbourPatch membraneSleeve;
         }
 
         neighbour
         {
             name        membraneSleeve;
             type        mappedWall;
-            sampleMode  nearestPatchFace;
-            samplePatch membranePipe;
+            neighbourPatch membranePipe;
         }
     }
 }

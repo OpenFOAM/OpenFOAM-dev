@@ -25,8 +25,8 @@ Class
     Foam::mappedExtrudedWallPolyPatch
 
 Description
-    Mapped wall patch which offsets the sampling points to account for the
-    extrusion thickness
+    Wall patch which holds a mapping engine to map values from another patch,
+    and which offsets the geometry to account for the extrusion thickness
 
 SourceFiles
     mappedExtrudedWallPolyPatch.C
@@ -61,8 +61,14 @@ private:
         //  this is not the extruded region.
         word bottomPatch_;
 
-        //- The sample points
-        mutable autoPtr<vectorField> samplePointsPtr_;
+        //- The face areas on the bottom patch
+        mutable autoPtr<vectorField> bottomFaceAreasPtr_;
+
+        //- The face centres on the bottom patch
+        mutable autoPtr<pointField> bottomFaceCentresPtr_;
+
+        //- The local points on the bottom patch
+        mutable autoPtr<pointField> bottomLocalPointsPtr_;
 
 
 protected:
@@ -86,6 +92,15 @@ protected:
 
         //- Update of the patch topology
         virtual void topoChange(PstreamBuffers&);
+
+        //- Get the face-areas for the patch
+        virtual tmp<vectorField> patchFaceAreas() const;
+
+        //- Get the face-centres for the patch
+        virtual tmp<pointField> patchFaceCentres() const;
+
+        //- Get the local points for the patch
+        virtual tmp<pointField> patchLocalPoints() const;
 
 
 public:
@@ -173,9 +188,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the sampling points
-        virtual tmp<pointField> samplePoints() const;
 
         //- Write the polyPatch data as a dictionary
         virtual void write(Ostream&) const;

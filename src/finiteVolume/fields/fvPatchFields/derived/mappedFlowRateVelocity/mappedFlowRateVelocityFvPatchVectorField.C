@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mappedFlowRateFvPatchVectorField.H"
+#include "mappedFlowRateVelocityFvPatchVectorField.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
@@ -32,7 +32,8 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
+Foam::mappedFlowRateVelocityFvPatchVectorField::
+mappedFlowRateVelocityFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF
@@ -45,7 +46,8 @@ Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
 {}
 
 
-Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
+Foam::mappedFlowRateVelocityFvPatchVectorField::
+mappedFlowRateVelocityFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -59,9 +61,10 @@ Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
 {}
 
 
-Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
+Foam::mappedFlowRateVelocityFvPatchVectorField::
+mappedFlowRateVelocityFvPatchVectorField
 (
-    const mappedFlowRateFvPatchVectorField& ptf,
+    const mappedFlowRateVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const fvPatchFieldMapper& mapper
@@ -74,9 +77,10 @@ Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
 {}
 
 
-Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
+Foam::mappedFlowRateVelocityFvPatchVectorField::
+mappedFlowRateVelocityFvPatchVectorField
 (
-    const mappedFlowRateFvPatchVectorField& ptf,
+    const mappedFlowRateVelocityFvPatchVectorField& ptf,
     const DimensionedField<vector, volMesh>& iF
 )
 :
@@ -89,7 +93,7 @@ Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::mappedFlowRateFvPatchVectorField::updateCoeffs()
+void Foam::mappedFlowRateVelocityFvPatchVectorField::updateCoeffs()
 {
     if (updated())
     {
@@ -101,57 +105,39 @@ void Foam::mappedFlowRateFvPatchVectorField::updateCoeffs()
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag+1;
 
-    // Get the coupling information from the mappedPatchBase
-    const mappedPatchBase& mpp = refCast<const mappedPatchBase>
-    (
-        patch().patch()
-    );
-    const polyMesh& nbrMesh = mpp.sampleMesh();
-    const fvPatch& nbrPatch = refCast<const fvMesh>
-    (
-        nbrMesh
-    ).boundary()[mpp.samplePolyPatch().index()];
+    const mappedPatchBase& mapper =
+        refCast<const mappedPatchBase>(patch().patch());
+    const fvMesh& nbrMesh = refCast<const fvMesh>(mapper.nbrMesh());
+    const label nbrPatchi = mapper.nbrPolyPatch().index();
+    const fvPatch& nbrPatch = nbrMesh.boundary()[nbrPatchi];
 
-    const scalarField phi
+    const surfaceScalarField& phi =
+        db().lookupObject<surfaceScalarField>(phiName_);
+
+    const scalarField phip
     (
-        mpp.distribute
+        mapper.distribute
         (
             nbrPatch.lookupPatchField<surfaceScalarField, scalar>(nbrPhiName_)
         )
     );
 
-    const surfaceScalarField& phiName =
-        db().lookupObject<surfaceScalarField>(phiName_);
+    const scalarField Unp(-phip/patch().magSf());
 
-    scalarField U(-phi/patch().magSf());
+    const vectorField np(patch().nf());
 
-    vectorField n(patch().nf());
-
-    if (phiName.dimensions() == dimFlux)
+    if (phi.dimensions() == dimFlux)
     {
         // volumetric flow-rate
-        operator==(n*U);
+        operator==(np*Unp);
     }
-    else if (phiName.dimensions() == dimMassFlux)
+    else if (phi.dimensions() == dimMassFlux)
     {
         const fvPatchField<scalar>& rhop =
             patch().lookupPatchField<volScalarField, scalar>(rhoName_);
 
         // mass flow-rate
-        operator==(n*U/rhop);
-
-        if (debug)
-        {
-            scalar phi = gSum(rhop*(*this) & patch().Sf());
-            Info<< patch().boundaryMesh().mesh().name() << ':'
-                << patch().name() << ':'
-                << this->internalField().name() << " <- "
-                << nbrMesh.name() << ':'
-                << nbrPatch.name() << ':'
-                << this->internalField().name() << " :"
-                << " mass flux[Kg/s]:" << -phi
-                << endl;
-        }
+        operator==(np*Unp/rhop);
     }
     else
     {
@@ -170,7 +156,7 @@ void Foam::mappedFlowRateFvPatchVectorField::updateCoeffs()
 }
 
 
-void Foam::mappedFlowRateFvPatchVectorField::write
+void Foam::mappedFlowRateVelocityFvPatchVectorField::write
 (
     Ostream& os
 ) const
@@ -190,7 +176,7 @@ namespace Foam
    makePatchTypeField
    (
        fvPatchVectorField,
-       mappedFlowRateFvPatchVectorField
+       mappedFlowRateVelocityFvPatchVectorField
    );
 }
 

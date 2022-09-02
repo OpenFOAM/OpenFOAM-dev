@@ -68,7 +68,12 @@ inline void Foam::LayerInfoData<Type>::transform
     TrackingData& td
 )
 {
-    data_ = transform.transform(data_);
+    if (transform.transformsPosition())
+    {
+        FatalErrorInFunction
+            << "Cannot have a transform within a set of mesh layers"
+            << exit(FatalError);
+    }
 }
 
 

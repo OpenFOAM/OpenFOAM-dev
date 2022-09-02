@@ -22,10 +22,8 @@ boundaryField
 {
     inlet
     {
-        type            mapped;
-        field           U.liquid;
-        setAverage      yes;
-        average         (0.916 0 0 );
+        type            mappedValue;
+        average         (0.916 0 0);
         value           $internalField;
     }
     outlet

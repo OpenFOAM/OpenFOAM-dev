@@ -193,10 +193,10 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
     // Get the coupling information from the mappedPatchBase
     const mappedPatchBase& mpp =
         refCast<const mappedPatchBase>(patch().patch());
-    const polyMesh& nbrMesh = mpp.sampleMesh();
-    const label samplePatchi = mpp.samplePolyPatch().index();
+    const polyMesh& nbrMesh = mpp.nbrMesh();
+    const label nbrPatchi = mpp.nbrPolyPatch().index();
     const fvPatch& nbrPatch =
-        refCast<const fvMesh>(nbrMesh).boundary()[samplePatchi];
+        refCast<const fvMesh>(nbrMesh).boundary()[nbrPatchi];
 
     // Calculate the temperature by harmonic averaging
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

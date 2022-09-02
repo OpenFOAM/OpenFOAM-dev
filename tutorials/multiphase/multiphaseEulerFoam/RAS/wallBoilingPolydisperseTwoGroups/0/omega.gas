@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      omega.liquid;
+    object      omega.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -22,10 +22,7 @@ boundaryField
 {
     inlet
     {
-        type            mapped;
-        field           omega.liquid;
-        setAverage      0;
-        average         0;
+        type            mappedInternalValue;
         interpolationScheme cell;
         value           uniform 0.01;
     }

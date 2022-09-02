@@ -22,10 +22,7 @@ boundaryField
 {
     inlet
     {
-        type            mapped;
-        field           U.gas2;
-        setAverage      0;
-        average         (1.75175 0 0);
+        type            mappedInternalValue;
         interpolationScheme cell;
         value           uniform (1.75175 0 0);
     }

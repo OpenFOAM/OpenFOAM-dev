@@ -30,10 +30,7 @@ boundaryField
 
     "region0_to_wallFilm_.*"
     {
-        type            mapped;
-        field           T;
-        setAverage      no;
-        average         300;
+        type            mappedValue;
         value           $internalField;
     }
 }

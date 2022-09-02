@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ SourceFiles
 #define sampledPatchInternalField_H
 
 #include "sampledPatch.H"
-#include "mappedPatchBase.H"
+#include "mappedInternalPatchBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,7 +61,7 @@ class patchInternalField
     // Private Data
 
         //- Mapping engines
-        PtrList<mappedPatchBase> mappers_;
+        PtrList<mappedInternalPatchBase> mappers_;
 
 
     // Private Member Functions
