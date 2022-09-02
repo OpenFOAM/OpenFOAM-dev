@@ -896,6 +896,7 @@ void Foam::mappedPatchBase::clearOut()
     mapIndices_.clear();
     AMIPtr_.clear();
     surfPtr_.clear();
+    patchToPatchIsValid_ = false;
 }
 
 

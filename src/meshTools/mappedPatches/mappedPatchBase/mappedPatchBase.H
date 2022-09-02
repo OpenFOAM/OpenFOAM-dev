@@ -320,22 +320,6 @@ public:
                 const tmp<Field<Type>>& fld
             ) const;
 
-            //- Wrapper around map/interpolate data distribution with operation
-            template<class Type, class CombineOp>
-            tmp<Field<Type>> reverseDistribute
-            (
-                const Field<Type>& fld,
-                const CombineOp& cop
-            ) const;
-
-            //- Wrapper around map/interpolate data distribution with operation
-            template<class Type, class CombineOp>
-            tmp<Field<Type>> reverseDistribute
-            (
-                const tmp<Field<Type>>& fld,
-                const CombineOp& cop
-            ) const;
-
 
         // I/O
 
