@@ -1259,19 +1259,18 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
         meshMod
     );
 
-
-    // Save internal fields (note: not as DimensionedFields since would
-    // get mapped)
+    // Save surface fields. This is not done as GeometricField as these would
+    // get mapped. Fields are flattened for convenience.
     PtrList<Field<scalar>> sFlds;
-    saveInternalFields(sFlds);
     PtrList<Field<vector>> vFlds;
-    saveInternalFields(vFlds);
     PtrList<Field<sphericalTensor>> sptFlds;
-    saveInternalFields(sptFlds);
     PtrList<Field<symmTensor>> sytFlds;
-    saveInternalFields(sytFlds);
     PtrList<Field<tensor>> tFlds;
-    saveInternalFields(tFlds);
+    initMapExposedFaces(sFlds);
+    initMapExposedFaces(vFlds);
+    initMapExposedFaces(sptFlds);
+    initMapExposedFaces(sytFlds);
+    initMapExposedFaces(tFlds);
 
     // Change the mesh. No inflation. Note: no parallel comms allowed.
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, false);
@@ -1282,7 +1281,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
     // Any exposed faces in a surfaceField will not be mapped. Map the value
     // of these separately (until there is support in all PatchFields for
     // mapping from internal faces ...)
-
     mapExposedFaces(map(), sFlds);
     mapExposedFaces(map(), vFlds);
     mapExposedFaces(map(), sptFlds);

@@ -127,11 +127,11 @@ class fvMeshDistribute
                 const PtrList<FieldField<fvsPatchField, T>>& oldBflds
             );
 
-            //- Save internal fields of surfaceFields
+            //- Set value of exposed patch faces
             template<class T>
-            void saveInternalFields(PtrList<Field<T>>& iflds) const;
+            void initMapExposedFaces(PtrList<Field<T>>& iflds) const;
 
-            //- Set value of patch faces resulting from internal faces
+            //- Set value of exposed patch faces
             template<class T>
             void mapExposedFaces
             (

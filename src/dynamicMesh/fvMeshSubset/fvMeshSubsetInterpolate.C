@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -260,6 +260,8 @@ Foam::fvMeshSubset::interpolate
     {
         const fvPatch& subPatch = sMesh.boundary()[patchi];
 
+        labelList directAddressing(subPatch.size(), -1);
+
         if (patchMap[patchi] != -1)
         {
             // Construct addressing
@@ -267,22 +269,13 @@ Foam::fvMeshSubset::interpolate
             const label baseStart = basePatch.start();
             const label baseSize = basePatch.size();
 
-            labelList directAddressing(subPatch.size());
-
             forAll(directAddressing, i)
             {
-                label baseFacei = faceMap[subPatch.start() + i];
+                const label baseFacei = faceMap[subPatch.start() + i];
 
                 if (baseFacei >= baseStart && baseFacei < baseStart+baseSize)
                 {
                     directAddressing[i] = baseFacei-baseStart;
-                }
-                else
-                {
-                    // Mapped from internal face. Do what? Leave up to
-                    // patchField. This would require also to pass in
-                    // original internal field so for now do as postprocessing
-                    directAddressing[i] = -1;
                 }
             }
 
@@ -309,32 +302,32 @@ Foam::fvMeshSubset::interpolate
         {
             const label baseFacei = faceMap[subPatch.start() + i];
 
-            if (baseFacei < sf.primitiveField().size())
+            if (directAddressing[i] == -1)
             {
-                Type val = sf.internalField()[baseFacei];
-
-                if (cellMap[fc[i]] == own[baseFacei] || !negateIfFlipped)
+                if (sf.mesh().isInternalFace(baseFacei))
                 {
-                    pfld[i] = val;
+                    const Type val = sf.internalField()[baseFacei];
+
+                    if (cellMap[fc[i]] == own[baseFacei] || !negateIfFlipped)
+                    {
+                        pfld[i] = val;
+                    }
+                    else
+                    {
+                        pfld[i] = flipOp()(val);
+                    }
                 }
                 else
                 {
-                    pfld[i] = flipOp()(val);
-                }
-            }
-            else
-            {
-                // Exposed face from other patch.
-                // Only possible in case of a coupled boundary
-                const label patchi = sf.mesh().boundaryMesh().whichPatch
-                (
-                    baseFacei
-                );
-                const fvPatch& otherPatch = sf.mesh().boundary()[patchi];
-                const label patchFacei =
-                    otherPatch.patch().whichFace(baseFacei);
+                    const label basePatchi =
+                        sf.mesh().boundaryMesh().patchID()
+                        [baseFacei - sf.mesh().nInternalFaces()];
+                    const label basePatchFacei =
+                        sf.mesh().boundaryMesh()[basePatchi]
+                       .whichFace(baseFacei);
 
-                pfld[i] = sf.boundaryField()[patchi][patchFacei];
+                    pfld[i] = sf.boundaryField()[basePatchi][basePatchFacei];
+                }
             }
         }
     }

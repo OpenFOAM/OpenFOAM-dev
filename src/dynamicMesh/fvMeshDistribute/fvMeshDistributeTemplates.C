@@ -148,29 +148,38 @@ void Foam::fvMeshDistribute::mapBoundaryFields
 
 
 template<class T>
-void Foam::fvMeshDistribute::saveInternalFields
+void Foam::fvMeshDistribute::initMapExposedFaces
 (
     PtrList<Field<T>>& iflds
 ) const
 {
-    typedef GeometricField<T, fvsPatchField, surfaceMesh> fldType;
-
-    HashTable<const fldType*> flds
+    HashTable<const SurfaceField<T>*> flds
     (
-        static_cast<const fvMesh&>(mesh_).objectRegistry::lookupClass<fldType>()
+        static_cast<const fvMesh&>(mesh_).lookupClass<SurfaceField<T>>()
     );
 
     iflds.setSize(flds.size());
 
-    label i = 0;
+    label fieldi = 0;
 
-    forAllConstIter(typename HashTable<const fldType*>, flds, iter)
+    forAllConstIter(typename HashTable<const SurfaceField<T>*>, flds, iter)
     {
-        const fldType& fld = *iter();
+        iflds.set(fieldi, Field<T>(mesh_.nFaces()));
 
-        iflds.set(i, fld.primitiveField().clone());
+        const SurfaceField<T>& fld = *iter();
 
-        i++;
+        SubList<T>(iflds[fieldi], fld.primitiveField().size()) =
+            fld.primitiveField();
+
+        forAll(fld.boundaryField(), patchi)
+        {
+            const fvsPatchField<T>& pfld = fld.boundaryField()[patchi];
+
+            SubList<T>(iflds[fieldi], pfld.size(), pfld.patch().start()) =
+                pfld;
+        }
+
+        fieldi++;
     }
 }
 
@@ -182,56 +191,49 @@ void Foam::fvMeshDistribute::mapExposedFaces
     const PtrList<Field<T>>& oldFlds
 )
 {
-    // Set boundary values of exposed internal faces
-
-    const labelList& faceMap = map.faceMap();
-
-    typedef GeometricField<T, fvsPatchField, surfaceMesh> fldType;
-
-    HashTable<fldType*> flds
+    HashTable<SurfaceField<T>*> flds
     (
-        mesh_.objectRegistry::lookupClass<fldType>()
+        mesh_.objectRegistry::lookupClass<SurfaceField<T>>()
     );
 
-    if (flds.size() != oldFlds.size())
+    label fieldi = 0;
+
+    forAllIter(typename HashTable<SurfaceField<T>*>, flds, iter)
     {
-        FatalErrorIn("fvMeshDistribute::mapExposedFaces(..)") << "problem"
-            << abort(FatalError);
-    }
+        SurfaceField<T>& fld = *iter();
 
+        const Field<T>& oldFld = oldFlds[fieldi];
 
-    label fieldI = 0;
-
-    forAllIter(typename HashTable<fldType*>, flds, iter)
-    {
-        fldType& fld = *iter();
-        typename fldType::Boundary& bfld = fld.boundaryFieldRef();
         const bool negateIfFlipped = isFlux(fld);
 
-        const Field<T>& oldInternal = oldFlds[fieldI++];
-
-        // Pull from old internal field into bfld.
-
-        forAll(bfld, patchi)
+        forAll(fld.boundaryField(), patchi)
         {
-            fvsPatchField<T>& patchFld = bfld[patchi];
+            fvsPatchField<T>& patchFld = fld.boundaryFieldRef()[patchi];
 
             forAll(patchFld, i)
             {
                 const label facei = patchFld.patch().start()+i;
-                const label oldFacei = faceMap[facei];
+                const label oldFacei = map.faceMap()[facei];
 
-                if (oldFacei < oldInternal.size())
+                if (oldFacei < map.nOldInternalFaces())
                 {
-                    patchFld[i] = oldInternal[oldFacei];
-
                     if (negateIfFlipped && map.flipFaceFlux().found(facei))
                     {
-                        patchFld[i] = flipOp()(patchFld[i]);
+                        patchFld[i] = flipOp()(oldFld[oldFacei]);
                     }
+                    else
+                    {
+                        patchFld[i] = oldFld[oldFacei];
+                    }
+                }
+                else
+                {
+                    patchFld[i] = oldFld[oldFacei];
                 }
             }
         }
+
+        fieldi++;
     }
 }
 
