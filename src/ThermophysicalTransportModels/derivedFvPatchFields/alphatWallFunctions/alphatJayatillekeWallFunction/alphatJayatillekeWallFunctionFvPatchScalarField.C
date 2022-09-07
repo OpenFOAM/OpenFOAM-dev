@@ -191,7 +191,7 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     const fvPatchScalarField& hew = ttm.thermo().he().boundaryField()[patchi];
 
     // Heat flux [W/m^2] - lagging alphatw
-    const scalarField qDot(ttm.thermo().alphaEff(alphatw, patchi)*hew.snGrad());
+    const scalarField qDot(ttm.alphaEff(patchi)*hew.snGrad());
 
     // Populate boundary values
     forAll(alphatw, facei)

@@ -360,35 +360,6 @@ public:
             //- Thermal diffusivity of energy of mixture for patch [kg/m/s]
             virtual tmp<scalarField> alphahe(const label patchi) const;
 
-            //- Effective thermal turbulent conductivity of mixture [W/m/K]
-            virtual tmp<volScalarField> kappaEff
-            (
-                const volScalarField&
-            ) const;
-
-            //- Effective thermal turbulent conductivity of mixture
-            //  for patch [W/m/K]
-            virtual tmp<scalarField> kappaEff
-            (
-                const scalarField& alphat,
-                const label patchi
-            ) const;
-
-            //- Effective turbulent thermal diffusivity of energy
-            //  of mixture [kg/m/s]
-            virtual tmp<volScalarField> alphaEff
-            (
-                const volScalarField& alphat
-            ) const;
-
-            //- Effective turbulent thermal diffusivity of energy
-            //  of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> alphaEff
-            (
-                const scalarField& alphat,
-                const label patchi
-            ) const;
-
 
         //- Read thermophysical properties dictionary
         virtual bool read();

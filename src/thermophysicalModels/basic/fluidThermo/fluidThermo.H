@@ -144,39 +144,6 @@ public:
 
             //- Kinematic viscosity of mixture for patch [m^2/s]
             virtual tmp<scalarField> nu(const label patchi) const;
-
-
-        // Fields derived from transport state variables
-
-            //- Effective thermal turbulent conductivity of mixture
-            //  for patch [W/m/K]
-            virtual tmp<volScalarField> kappaEff
-            (
-                const volScalarField&
-            ) const = 0;
-
-            //- Effective thermal turbulent conductivity of mixture
-            //  for patch [W/m/K]
-            virtual tmp<scalarField> kappaEff
-            (
-                const scalarField& alphat,
-                const label patchi
-            ) const = 0;
-
-            //- Effective turbulent thermal diffusivity of energy
-            //  of mixture [kg/m/s]
-            virtual tmp<volScalarField> alphaEff
-            (
-                const volScalarField& alphat
-            ) const = 0;
-
-            //- Effective turbulent thermal diffusivity of energy
-            //  of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> alphaEff
-            (
-                const scalarField& alphat,
-                const label patchi
-            ) const = 0;
 };
 
 

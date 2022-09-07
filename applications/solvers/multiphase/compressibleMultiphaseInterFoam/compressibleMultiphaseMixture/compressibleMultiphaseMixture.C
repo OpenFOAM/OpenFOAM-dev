@@ -247,16 +247,28 @@ Foam::tmp<Foam::scalarField> Foam::compressibleMultiphaseMixture::nu
 
 Foam::tmp<Foam::volScalarField> Foam::compressibleMultiphaseMixture::alphaEff
 (
-    const volScalarField& alphat
+    const volScalarField& nut
 ) const
 {
     PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
 
-    tmp<volScalarField> talphaEff(phasei()*phasei().thermo().alphaEff(alphat));
+    tmp<volScalarField> talphaEff
+    (
+        phasei()
+       *(
+           phasei().thermo().kappa()
+         + phasei().thermo().rho()*phasei().thermo().Cp()*nut
+        )/phasei().thermo().Cv()
+    );
 
     for (++phasei; phasei != phases_.end(); ++phasei)
     {
-        talphaEff.ref() += phasei()*phasei().thermo().alphaEff(alphat);
+        talphaEff.ref() +=
+            phasei()
+           *(
+               phasei().thermo().kappa()
+             + phasei().thermo().rho()*phasei().thermo().Cp()*nut
+            )/phasei().thermo().Cv();
     }
 
     return talphaEff;

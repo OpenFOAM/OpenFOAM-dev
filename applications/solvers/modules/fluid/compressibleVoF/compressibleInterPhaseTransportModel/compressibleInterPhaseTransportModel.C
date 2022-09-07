@@ -138,44 +138,37 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
 Foam::tmp<Foam::volScalarField>
 Foam::compressibleInterPhaseTransportModel::alphaEff() const
 {
-    /* ***HGW
     if (twoPhaseTransport_)
     {
         return
-            mixture_.alpha1()*mixture_.thermo1().alphaEff
-            (
-                turbulence1_->alphat()
-            )
-          + mixture_.alpha2()*mixture_.thermo2().alphaEff
-            (
-                turbulence2_->alphat()
-            );
+            mixture_.alpha1()
+           *(
+                mixture_.thermo1().kappa()
+              + mixture_.thermo1().rho()*mixture_.thermo1().Cp()
+               *turbulence1_->nut()
+            )/mixture_.thermo1().Cv()
+          + mixture_.alpha2()
+           *(
+                mixture_.thermo2().kappa()
+              + mixture_.thermo2().rho()*mixture_.thermo2().Cp()
+               *turbulence2_->nut()
+            )/mixture_.thermo2().Cv();
     }
     else
     {
-        return mixture_.alphaEff(turbulence_->alphat());
-    }
-    */
-
-    if (twoPhaseTransport_)
-    {
         return
-            mixture_.alpha1()*mixture_.thermo1().alphaEff
-            (
-                mixture_.thermo1().rho()*turbulence1_->nut()
-            )
-          + mixture_.alpha2()*mixture_.thermo2().alphaEff
-            (
-                mixture_.thermo2().rho()*turbulence2_->nut()
-            );
-    }
-    else
-    {
-        const volScalarField alphat(mixture_.rho()*turbulence_->nut());
-
-        return
-            mixture_.alpha1()*mixture_.thermo1().alphaEff(alphat)
-          + mixture_.alpha2()*mixture_.thermo2().alphaEff(alphat);
+            mixture_.alpha1()
+           *(
+                mixture_.thermo1().kappa()
+              + mixture_.thermo1().rho()*mixture_.thermo1().Cp()
+               *turbulence_->nut()
+            )/mixture_.thermo1().Cv()
+          + mixture_.alpha2()
+           *(
+                mixture_.thermo2().kappa()
+              + mixture_.thermo2().rho()*mixture_.thermo2().Cp()
+               *turbulence_->nut()
+            )/mixture_.thermo2().Cv();
     }
 }
 

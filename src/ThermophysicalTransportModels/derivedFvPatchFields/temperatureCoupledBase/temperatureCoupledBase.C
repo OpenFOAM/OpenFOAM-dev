@@ -71,36 +71,21 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
 
     const word& phase(Tp.internalField().group());
 
-    const word fluidThermoName
+    const word ttmName
     (
-        IOobject::groupName(physicalProperties::typeName, phase)
+        IOobject::groupName
+        (
+            thermophysicalTransportModel::typeName,
+            phase
+        )
     );
 
-    if (mesh.foundObject<fluidThermo>(fluidThermoName))
+    if (mesh.foundObject<thermophysicalTransportModel>(ttmName))
     {
-        static word ttmName
-        (
-            IOobject::groupName
-            (
-                thermophysicalTransportModel::typeName,
-                phase
-            )
-        );
+        const thermophysicalTransportModel& ttm =
+            mesh.lookupObject<thermophysicalTransportModel>(ttmName);
 
-        if (mesh.foundObject<thermophysicalTransportModel>(ttmName))
-        {
-            const thermophysicalTransportModel& ttm =
-                mesh.lookupObject<thermophysicalTransportModel>(ttmName);
-
-            return ttm.kappaEff(patchi);
-        }
-        else
-        {
-            const fluidThermo& thermo =
-                mesh.lookupObject<fluidThermo>(fluidThermoName);
-
-            return thermo.kappa().boundaryField()[patchi];
-        }
+        return ttm.kappaEff(patchi);
     }
     else if (mesh.foundObject<solidThermo>(physicalProperties::typeName))
     {

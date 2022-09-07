@@ -115,6 +115,7 @@ public:
     // Member Functions
 
         //- Return the effective temperature transport coefficient
+        //  derived from the phase internal energy equations i.e. <kappa/Cv>
         tmp<volScalarField> alphaEff() const;
 
         //- Return the effective momentum stress divergence

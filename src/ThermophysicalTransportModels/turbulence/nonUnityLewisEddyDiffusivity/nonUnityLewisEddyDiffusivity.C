@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,10 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
             fvc::interpolate
             (
                 this->alpha()
-               *this->thermo().alphaEff((this->Prt_/Sct_)*this->alphat())
+                *(
+                    this->thermo().kappa()/this->thermo().Cp()
+                  + (this->Prt_/Sct_)*this->alphat()
+                )
             )*hGradY;
     }
 
@@ -185,7 +188,10 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
             fvc::interpolate
             (
                 this->alpha()
-               *this->thermo().alphaEff((this->Prt_/Sct_)*this->alphat())
+               *(
+                    this->thermo().kappa()/this->thermo().Cp()
+                  + (this->Prt_/Sct_)*this->alphat()
+               )
             )*hGradY*he.mesh().magSf()
         );
 

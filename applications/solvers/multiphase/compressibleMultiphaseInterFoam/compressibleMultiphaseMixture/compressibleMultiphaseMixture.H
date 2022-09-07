@@ -263,10 +263,11 @@ public:
         //- Kinematic viscosity of mixture for patch [m^2/s]
         virtual tmp<scalarField> nu(const label patchi) const;
 
-        //- Effective thermal diffusivity of mixture [W/m/K]
+        //- Return the effective temperature transport coefficient
+        //  derived from the phase internal energy equations i.e. <kappa/Cv>
         virtual tmp<volScalarField> alphaEff
         (
-            const volScalarField& alphat
+            const volScalarField& nut
         ) const;
 
         //- Return the phase-averaged reciprocal Cv
