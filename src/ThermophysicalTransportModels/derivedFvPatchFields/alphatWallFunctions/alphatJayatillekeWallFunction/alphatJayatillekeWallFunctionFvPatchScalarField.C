@@ -190,8 +190,8 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
     const fvPatchScalarField& hew = ttm.thermo().he().boundaryField()[patchi];
 
-    // Heat flux [W/m^2] - lagging alphatw
-    const scalarField qDot(ttm.alphaEff(patchi)*hew.snGrad());
+    // Enthalpy gradient
+    const scalarField gradHew(hew.snGrad());
 
     // Populate boundary values
     forAll(alphatw, facei)
@@ -216,20 +216,20 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
         scalar alphaEff = 0.0;
         if (yPlus < yPlusTherm)
         {
-            const scalar A = qDot[facei]*rhow[facei]*uTau*y[facei];
+            const scalar A = gradHew[facei]*rhow[facei]*uTau*y[facei];
 
-            const scalar B = qDot[facei]*Pr*yPlus;
+            const scalar B = gradHew[facei]*Pr*yPlus;
 
             const scalar C = Pr*0.5*rhow[facei]*uTau*sqr(magUp[facei]);
 
-            alphaEff = A/(B + C + vSmall);
+            alphaEff = (A - C)/(B + sign(B)*vSmall);
         }
         else
         {
-            const scalar A = qDot[facei]*rhow[facei]*uTau*y[facei];
+            const scalar A = gradHew[facei]*rhow[facei]*uTau*y[facei];
 
             const scalar B =
-                qDot[facei]*Prt_*(1.0/nutw.kappa()*log(nutw.E()*yPlus) + P);
+                gradHew[facei]*Prt_*(1.0/nutw.kappa()*log(nutw.E()*yPlus) + P);
 
             const scalar magUc =
                 uTau/nutw.kappa()*log(nutw.E()*yPlusTherm) - mag(Uw[facei]);
@@ -238,25 +238,16 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
                 0.5*rhow[facei]*uTau
                *(Prt_*sqr(magUp[facei]) + (Pr - Prt_)*sqr(magUc));
 
-            alphaEff = A/(B + C + vSmall);
+            alphaEff = (A - C)/(B + sign(B)*vSmall);
         }
+
+        // Bounds on turbulent thermal diffusivity
+        static const scalar alphatwMin = 0;
+        const scalar alphatwMax = great*alphaw[facei]*nutw[facei]/nuw[facei];
 
         // Update turbulent thermal diffusivity
-        alphatw[facei] = max(0.0, alphaEff - alphaw[facei]);
-
-        if (debug)
-        {
-            Info<< "    uTau           = " << uTau << nl
-                << "    Pr             = " << Pr << nl
-                << "    Prt            = " << Prt_ << nl
-                << "    qDot           = " << qDot[facei] << nl
-                << "    yPlus          = " << yPlus << nl
-                << "    yPlusTherm     = " << yPlusTherm << nl
-                << "    alphaEff       = " << alphaEff << nl
-                << "    alphaw         = " << alphaw[facei] << nl
-                << "    alphatw        = " << alphatw[facei] << nl
-                << endl;
-        }
+        alphatw[facei] =
+            min(max(alphaEff - alphaw[facei], alphatwMin), alphatwMax);
     }
 
     fixedValueFvPatchField<scalar>::updateCoeffs();
