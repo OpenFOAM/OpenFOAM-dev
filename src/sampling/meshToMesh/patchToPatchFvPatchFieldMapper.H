@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::distributedWeightedFvPatchFieldMapper
+    Foam::patchToPatchFvPatchFieldMapper
 
 Description
-    FieldMapper with weighted mapping from (optionally remote) quantities.
+    FieldMapper which uses a patchToPatch object to map from another patch. The
+    source patch may be differently decomposed and/or geometrically and
+    topologically different from the target.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef distributedWeightedFvPatchFieldMapper_H
-#define distributedWeightedFvPatchFieldMapper_H
+#ifndef patchToPatchFvPatchFieldMapper_H
+#define patchToPatchFvPatchFieldMapper_H
 
 #include "fvPatchFieldMapper.H"
-#include "distributionMapBase.H"
+#include "patchToPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,104 +43,83 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-            Class distributedWeightedFvPatchFieldMapper Declaration
+            Class patchToPatchFvPatchFieldMapper Declaration
 \*---------------------------------------------------------------------------*/
 
-class distributedWeightedFvPatchFieldMapper
+class patchToPatchFvPatchFieldMapper
 :
     public fvPatchFieldMapper
 {
     // Private Data
 
-        const label singlePatchProc_;
+        //- Patch-to-patch mapping engine
+        const patchToPatch& pToP_;
 
-        const distributionMapBase* distMapPtr_;
+        //- Mapping direction
+        const bool forward_;
 
-        const labelListList& addressing_;
+        //- Size of the mapped field
+        label size_;
 
-        const scalarListList& weights_;
-
+        //- Does the mapping engine leave anything unmapped?
         bool hasUnmapped_;
 
 
     // Private Member Functions
 
-        label size() const
-        {
-            if (singlePatchProc_ == -1)
-            {
-                return distMapPtr_->constructSize();
-            }
-            else
-            {
-                return addressing().size();
-            }
-        }
-
+        //- Map from one field to another
         template<class Type>
         void map(Field<Type>& f, const Field<Type>& mapF) const;
 
+        //- Map a field and return the result as tmp
         template<class Type>
-        tmp<Field<Type>> map(const Field<Type>& f) const;
+        tmp<Field<Type>> map(const Field<Type>& mapF) const;
 
 
 public:
 
     // Constructors
 
-        //- Construct given addressing
-        distributedWeightedFvPatchFieldMapper
+        //- Construct given a patch-to-patch and a mapping direction
+        patchToPatchFvPatchFieldMapper
         (
-            const label singlePatchProc,
-            const distributionMapBase* distMapPtr,
-            const labelListList& addressing,
-            const scalarListList& weights
+            const patchToPatch& pToP,
+            const bool forward
         )
         :
-            singlePatchProc_(singlePatchProc),
-            distMapPtr_(distMapPtr),
-            addressing_(addressing),
-            weights_(weights),
+            fvPatchFieldMapper(),
+            pToP_(pToP),
+            forward_(forward),
+            size_(-1),
             hasUnmapped_(false)
         {
-            forAll(addressing_, i)
+            const List<List<patchToPatch::procFace>> procFaces =
+                forward_ ? pToP_.tgtSrcProcFaces() : pToP_.srcTgtProcFaces();
+
+            size_ = procFaces.size();
+
+            forAll(procFaces, i)
             {
-                if (addressing_[i].size() == 0)
+                if (procFaces[i].size() == 0)
                 {
                     hasUnmapped_ = true;
                 }
-            }
-
-            if ((singlePatchProc_ == -1) != (distMapPtr_ != nullptr))
-            {
-                FatalErrorIn
-                (
-                    "distributedWeightedFvPatchFieldMapper::"
-                    "distributedWeightedFvPatchFieldMapper(..)"
-                )   << "Supply a distributionMapBase if and only if "
-                    << "singlePatchProc is -1"
-                    << " singlePatchProc_:" << singlePatchProc_
-                    << " distMapPtr_:" << (distMapPtr_ != nullptr)
-                    << exit(FatalError);
             }
         }
 
 
     //- Destructor
-    virtual ~distributedWeightedFvPatchFieldMapper()
+    virtual ~patchToPatchFvPatchFieldMapper()
     {}
 
 
     // Member Functions
 
+        //- Return whether or not all faces receive a mapped value
         virtual bool hasUnmapped() const
         {
             return hasUnmapped_;
         }
-
-        virtual const labelListList& addressing() const;
-
-        virtual const scalarListList& weights() const;
 
 
     // Member Operators
@@ -166,7 +147,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "distributedWeightedFvPatchFieldMapperTemplates.C"
+    #include "patchToPatchFvPatchFieldMapperTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

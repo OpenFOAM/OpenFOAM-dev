@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,34 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "distributedWeightedFvPatchFieldMapper.H"
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::labelListList&
-Foam::distributedWeightedFvPatchFieldMapper::addressing() const
-{
-    return addressing_;
-}
-
-
-const Foam::scalarListList&
-Foam::distributedWeightedFvPatchFieldMapper::weights() const
-{
-    return weights_;
-}
-
+#include "patchToPatchFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 FOR_ALL_FIELD_TYPES
 (
     IMPLEMENT_FIELD_MAPPER_OPERATOR,
-    distributedWeightedFvPatchFieldMapper
+    patchToPatchFvPatchFieldMapper
 )
 
 
-IMPLEMENT_FIELD_MAPPER_OPERATOR(label, distributedWeightedFvPatchFieldMapper)
+void Foam::patchToPatchFvPatchFieldMapper::operator()
+(
+    Field<label>& f,
+    const Field<label>& mapF
+) const
+{
+    NotImplemented;
+}
+
+
+Foam::tmp<Foam::Field<Foam::label>>
+Foam::patchToPatchFvPatchFieldMapper::operator()
+(
+    const Field<label>& mapF
+) const
+{
+    NotImplemented;
+    return tmp<Field<label>>(nullptr);
+}
 
 
 // ************************************************************************* //

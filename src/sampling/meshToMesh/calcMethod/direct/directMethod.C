@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "directMethod.H"
-#include "directAMI.H"
+#include "matchingPatchToPatch.H"
 #include "indexedOctree.H"
 #include "treeDataCell.H"
 #include "addToRunTimeSelectionTable.H"
@@ -238,9 +238,9 @@ Foam::directMethod::~directMethod()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::word& Foam::directMethod::AMImethod() const
+const Foam::word& Foam::directMethod::patchToPatchMethod() const
 {
-    return directAMI::typeName;
+    return patchToPatches::matching::typeName;
 }
 
 

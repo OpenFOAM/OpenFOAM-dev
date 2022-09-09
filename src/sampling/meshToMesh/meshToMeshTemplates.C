@@ -23,11 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "meshToMesh.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "directFvPatchFieldMapper.H"
 #include "calculatedFvPatchField.H"
-#include "distributedWeightedFvPatchFieldMapper.H"
+#include "patchToPatchFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -258,25 +259,6 @@ Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapTgtToSrc
 
 
 template<class Type>
-void Foam::meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<Type>& srcField,
-    Field<Type>& tgtField
-) const
-{
-    tgtField = pTraits<Type>::zero;
-
-    AMI.interpolateToTarget
-    (
-        srcField,
-        tgtField,
-        UList<Type>::null()
-    );
-}
-
-
-template<class Type>
 void Foam::meshToMesh::mapSrcToTgt
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
@@ -285,12 +267,10 @@ void Foam::meshToMesh::mapSrcToTgt
 {
     mapSrcToTgt(field, result.primitiveFieldRef());
 
-    const PtrList<AMIInterpolation>& AMIList = patchAMIs();
-
     typename GeometricField<Type, fvPatchField, volMesh>::
         Boundary& resultBf = result.boundaryFieldRef();
 
-    forAll(AMIList, i)
+    forAll(patchToPatches(), i)
     {
         label srcPatchi = srcPatchID_[i];
         label tgtPatchi = tgtPatchID_[i];
@@ -306,27 +286,13 @@ void Foam::meshToMesh::mapSrcToTgt
                 srcField,
                 tgtField.patch(),
                 result(),
-                distributedWeightedFvPatchFieldMapper
-                (
-                    AMIList[i].singlePatchProc(),
-                    (
-                        AMIList[i].singlePatchProc() == -1
-                      ? &AMIList[i].srcMap()
-                      : nullptr
-                    ),
-                    AMIList[i].tgtAddress(),
-                    AMIList[i].tgtWeights()
-                )
+                patchToPatchFvPatchFieldMapper(patchToPatches()[i], true)
             )
         );
 
         // Transfer all mapped quantities (value and e.g. gradient) onto
         // tgtField. Value will get overwritten below.
         tgtField.rmap(tnewTgt(), identity(tgtField.size()));
-
-        // Override value to account for CombineOp (note: is dummy template
-        // specialisation for plusEqOp)
-        mapAndOpSrcToTgt(AMIList[i], srcField, tgtField);
     }
 
     forAll(cuttingPatches_, i)
@@ -439,25 +405,6 @@ Foam::meshToMesh::mapSrcToTgt
 
 
 template<class Type>
-void Foam::meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<Type>& srcField,
-    const Field<Type>& tgtField
-) const
-{
-    srcField = pTraits<Type>::zero;
-
-    AMI.interpolateToSource
-    (
-        tgtField,
-        srcField,
-        UList<Type>::null()
-    );
-}
-
-
-template<class Type>
 void Foam::meshToMesh::mapTgtToSrc
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
@@ -466,16 +413,13 @@ void Foam::meshToMesh::mapTgtToSrc
 {
     mapTgtToSrc(field, result.primitiveFieldRef());
 
-    const PtrList<AMIInterpolation>& AMIList = patchAMIs();
-
-    forAll(AMIList, i)
+    forAll(patchToPatches(), i)
     {
         label srcPatchi = srcPatchID_[i];
         label tgtPatchi = tgtPatchID_[i];
 
         fvPatchField<Type>& srcField = result.boundaryFieldRef()[srcPatchi];
         const fvPatchField<Type>& tgtField = field.boundaryField()[tgtPatchi];
-
 
         // Clone and map (since rmap does not do general mapping)
         tmp<fvPatchField<Type>> tnewSrc
@@ -485,28 +429,13 @@ void Foam::meshToMesh::mapTgtToSrc
                 tgtField,
                 srcField.patch(),
                 result(),
-                distributedWeightedFvPatchFieldMapper
-                (
-                    AMIList[i].singlePatchProc(),
-                    (
-                        AMIList[i].singlePatchProc() == -1
-                      ? &AMIList[i].tgtMap()
-                      : nullptr
-                    ),
-                    AMIList[i].srcAddress(),
-                    AMIList[i].srcWeights()
-                )
+                patchToPatchFvPatchFieldMapper(patchToPatches()[i], false)
             )
         );
 
         // Transfer all mapped quantities (value and e.g. gradient) onto
         // srcField. Value will get overwritten below
         srcField.rmap(tnewSrc(), identity(srcField.size()));
-
-
-        // Override value to account for CombineOp (could be dummy for
-        // plusEqOp)
-        mapAndOpTgtToSrc(AMIList[i], srcField, tgtField);
     }
 
     forAll(cuttingPatches_, i)

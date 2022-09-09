@@ -47,7 +47,7 @@ SourceFiles
 #include "distributionMap.H"
 #include "volFieldsFwd.H"
 #include "NamedEnum.H"
-#include "AMIInterpolation.H"
+#include "patchToPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,8 +74,9 @@ class meshToMesh
         //- List of source patch IDs per target patch (local index)
         List<label> tgtPatchID_;
 
-        //- List of AMIs between source and target patches
-        PtrList<AMIInterpolation> patchAMIs_;
+        //- List of patchToPatch interpolation engines between source and
+        //  target patches
+        PtrList<patchToPatch> patchToPatches_;
 
         //- Cutting patches whose values are set using a zero-gradient condition
         List<label> cuttingPatches_;
@@ -112,26 +113,6 @@ class meshToMesh
         template<class Type>
         void add(UList<Type>& fld, const label offset) const;
 
-        //- Helper function to interpolate patch field. Template
-        //  specialisations  below
-        template<class Type>
-        void mapAndOpSrcToTgt
-        (
-            const AMIInterpolation& AMI,
-            const Field<Type>& srcField,
-            Field<Type>& tgtField
-        ) const;
-
-        //- Helper function to interpolate patch field. Template
-        //  specialisations  below
-        template<class Type>
-        void mapAndOpTgtToSrc
-        (
-            const AMIInterpolation& AMI,
-            Field<Type>& srcField,
-            const Field<Type>& tgtField
-        ) const;
-
         //- Return src cell IDs for the overlap region
         labelList maskCells(const polyMesh& src, const polyMesh& tgt) const;
 
@@ -144,7 +125,7 @@ class meshToMesh
         ) const;
 
         //- Calculate the addressing between overlapping regions of src and tgt
-        //  meshes
+        //  meshes. Returns the patchToPatchType.
         word calcAddressing
         (
             const word& methodName,
@@ -152,12 +133,11 @@ class meshToMesh
             const polyMesh& tgt
         );
 
-        //- Calculate - main driver function
-        //  Returns the corresponding AMImethod
+        //- Calculate. Returns the patchToPatchType.
         word calculate(const word& methodName);
 
         //- Calculate patch overlap
-        void calculatePatchAMIs(const word& amiMethodName);
+        void calculatePatchToPatches(const word& patchToPatchType);
 
         //- Constructor helper
         void constructNoCuttingPatches
@@ -174,9 +154,9 @@ class meshToMesh
             const wordList& cuttingPatches
         );
 
-        //- Return the list of AMIs between source and target patches
-        inline const PtrList<AMIInterpolation>&
-        patchAMIs() const;
+        //- Return the list of patchToPatch interpolation engines between
+        //  source and target patches
+        inline const PtrList<patchToPatch>& patchToPatches() const;
 
 
         // Parallel operations
@@ -310,10 +290,7 @@ public:
                 //- Return the src field mapped to the tgt mesh with a defined
                 //  operation.  Initial values of the result are set to zero
                 template<class Type>
-                tmp<Field<Type>> mapSrcToTgt
-                (
-                    const Field<Type>& srcFld
-                ) const;
+                tmp<Field<Type>> mapSrcToTgt(const Field<Type>& srcFld) const;
 
                 //- Convenience function to map a tmp field to the tgt mesh
                 //  with a defined operation
@@ -339,10 +316,7 @@ public:
                 //- Return the tgt field mapped to the src mesh with a defined
                 //  operation.  Initial values of the result are set to zero
                 template<class Type>
-                tmp<Field<Type>> mapTgtToSrc
-                (
-                    const Field<Type>& tgtFld
-                ) const;
+                tmp<Field<Type>> mapTgtToSrc(const Field<Type>& tgtFld) const;
 
                 //- Convenience function to map a tmp field to the src mesh
                 //  with a defined operation
@@ -421,81 +395,6 @@ public:
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-// Disable fvPatchField value override after rmap
-
-template<>
-void meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<scalar>& srcField,
-    Field<scalar>& tgtField
-) const;
-template<>
-void meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<vector>& srcField,
-    Field<vector>& tgtField
-) const;
-template<>
-void meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<sphericalTensor>& srcField,
-    Field<sphericalTensor>& tgtField
-) const;
-template<>
-void meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<symmTensor>& srcField,
-    Field<symmTensor>& tgtField
-) const;
-template<>
-void meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<tensor>& srcField,
-    Field<tensor>& tgtField
-) const;
-
-
-template<>
-void meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<scalar>& srcField,
-    const Field<scalar>& tgtField
-) const;
-template<>
-void meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<vector>& srcField,
-    const Field<vector>& tgtField
-) const;
-template<>
-void meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<sphericalTensor>& srcField,
-    const Field<sphericalTensor>& tgtField
-) const;
-template<>
-void meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<symmTensor>& srcField,
-    const Field<symmTensor>& tgtField
-) const;
-template<>
-void meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<tensor>& srcField,
-    const Field<tensor>& tgtField
-) const;
 
 } // End namespace Foam
 

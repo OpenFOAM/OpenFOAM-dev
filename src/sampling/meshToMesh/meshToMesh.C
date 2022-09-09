@@ -39,106 +39,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<>
-void Foam::meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<scalar>& srcField,
-    Field<scalar>& tgtField
-) const
-{}
-
-
-template<>
-void Foam::meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<vector>& srcField,
-    Field<vector>& tgtField
-) const
-{}
-
-
-template<>
-void Foam::meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<sphericalTensor>& srcField,
-    Field<sphericalTensor>& tgtField
-) const
-{}
-
-
-template<>
-void Foam::meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<symmTensor>& srcField,
-    Field<symmTensor>& tgtField
-) const
-{}
-
-
-template<>
-void Foam::meshToMesh::mapAndOpSrcToTgt
-(
-    const AMIInterpolation& AMI,
-    const Field<tensor>& srcField,
-    Field<tensor>& tgtField
-) const
-{}
-
-
-template<>
-void Foam::meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<scalar>& srcField,
-    const Field<scalar>& tgtField
-) const
-{}
-
-
-template<>
-void Foam::meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<vector>& srcField,
-    const Field<vector>& tgtField
-) const
-{}
-
-
-template<>
-void Foam::meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<sphericalTensor>& srcField,
-    const Field<sphericalTensor>& tgtField
-) const
-{}
-
-
-template<>
-void Foam::meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<symmTensor>& srcField,
-    const Field<symmTensor>& tgtField
-) const
-{}
-
-
-template<>
-void Foam::meshToMesh::mapAndOpTgtToSrc
-(
-    const AMIInterpolation& AMI,
-    Field<tensor>& srcField,
-    const Field<tensor>& tgtField
-) const
-{}
-
-
 Foam::labelList Foam::meshToMesh::maskCells
 (
     const polyMesh& src,
@@ -235,7 +135,7 @@ Foam::word Foam::meshToMesh::calcAddressing
         methodPtr->writeConnectivity(src, tgt, srcToTgtCellAddr_);
     }
 
-    return methodPtr->AMImethod();
+    return methodPtr->patchToPatchMethod();
 }
 
 
@@ -247,7 +147,7 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
 
     singleMeshProc_ = calcDistribution(srcRegion_, tgtRegion_);
 
-    word amiMethod;
+    word patchToPatchType;
 
     if (singleMeshProc_ == -1)
     {
@@ -314,9 +214,6 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
         // force calculation of tet-base points used for point-in-cell
         (void)newTgt.tetBasePtIs();
 
-        // force construction of cell tree
-//        (void)newTgt.cellTree();
-
         if (debug)
         {
             Pout<< "Created newTgt mesh:" << nl
@@ -332,7 +229,7 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
             }
         }
 
-        amiMethod = calcAddressing(methodName, srcRegion_, newTgt);
+        patchToPatchType = calcAddressing(methodName, srcRegion_, newTgt);
 
         // per source cell the target cell address in newTgt mesh
         forAll(srcToTgtCellAddr_, i)
@@ -417,7 +314,7 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
     }
     else
     {
-        amiMethod = calcAddressing(methodName, srcRegion_, tgtRegion_);
+        patchToPatchType = calcAddressing(methodName, srcRegion_, tgtRegion_);
 
         normaliseWeights
         (
@@ -436,50 +333,38 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
 
     Info<< "    Overlap volume: " << V_ << endl;
 
-    return amiMethod;
+    return patchToPatchType;
 }
 
 
-void Foam::meshToMesh::calculatePatchAMIs(const word& AMIMethodName)
+void Foam::meshToMesh::calculatePatchToPatches(const word& patchToPatchType)
 {
-    if (!patchAMIs_.empty())
+    if (!patchToPatches_.empty())
     {
         FatalErrorInFunction
-            << "patch AMI already calculated"
+            << "patchToPatches already calculated"
             << exit(FatalError);
     }
 
-    patchAMIs_.setSize(srcPatchID_.size());
+    patchToPatches_.setSize(srcPatchID_.size());
 
     forAll(srcPatchID_, i)
     {
-        label srcPatchi = srcPatchID_[i];
-        label tgtPatchi = tgtPatchID_[i];
+        const label srcPatchi = srcPatchID_[i];
+        const label tgtPatchi = tgtPatchID_[i];
 
         const polyPatch& srcPP = srcRegion_.boundaryMesh()[srcPatchi];
         const polyPatch& tgtPP = tgtRegion_.boundaryMesh()[tgtPatchi];
 
-        Info<< "Creating AMI between source patch " << srcPP.name()
-            << " and target patch " << tgtPP.name()
-            << " using " << AMIMethodName
-            << endl;
+        Info<< "Creating patchToPatch between source patch "
+            << srcPP.name() << " and target patch " << tgtPP.name()
+            << " using " << patchToPatchType << endl;
 
         Info<< incrIndent;
 
-        patchAMIs_.set
-        (
-            i,
-            new AMIInterpolation
-            (
-                srcPP,
-                tgtPP,
-                faceAreaIntersect::tmMesh,
-                false,
-                AMIMethodName,
-                -1,
-                true // flip target patch since patch normals are aligned
-            )
-        );
+        patchToPatches_.set(i, patchToPatch::New(patchToPatchType, true));
+
+        patchToPatches_[i].update(srcPP, srcPP.pointNormals(), tgtPP);
 
         Info<< decrIndent;
     }
@@ -532,10 +417,10 @@ void Foam::meshToMesh::constructNoCuttingPatches
     }
 
     // calculate volume addressing and weights
-    const word amiMethod = calculate(methodName);
+    const word patchToPatchType = calculate(methodName);
 
     // calculate patch addressing and weights
-    calculatePatchAMIs(amiMethod);
+    calculatePatchToPatches(patchToPatchType);
 }
 
 
@@ -564,10 +449,10 @@ void Foam::meshToMesh::constructFromCuttingPatches
     }
 
     // calculate volume addressing and weights
-    const word amiMethod = calculate(methodName);
+    const word patchToPatchType = calculate(methodName);
 
     // calculate patch addressing and weights
-    calculatePatchAMIs(amiMethod);
+    calculatePatchToPatches(patchToPatchType);
 
     // set IDs of cutting patches on target mesh
     cuttingPatches_.setSize(cuttingPatches.size());
@@ -593,7 +478,7 @@ Foam::meshToMesh::meshToMesh
     tgtRegion_(tgt),
     srcPatchID_(),
     tgtPatchID_(),
-    patchAMIs_(),
+    patchToPatches_(),
     cuttingPatches_(),
     srcToTgtCellAddr_(),
     tgtToSrcCellAddr_(),
@@ -621,7 +506,7 @@ Foam::meshToMesh::meshToMesh
     tgtRegion_(tgt),
     srcPatchID_(),
     tgtPatchID_(),
-    patchAMIs_(),
+    patchToPatches_(),
     cuttingPatches_(),
     srcToTgtCellAddr_(),
     tgtToSrcCellAddr_(),

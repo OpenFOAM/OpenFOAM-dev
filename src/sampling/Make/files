@@ -62,7 +62,7 @@ $(surfWriters)/vtk/vtkSurfaceWriter.C
 
 meshToMesh/meshToMesh.C
 meshToMesh/meshToMeshParallelOps.C
-meshToMesh/distributedWeightedFvPatchFieldMapper.C
+meshToMesh/patchToPatchFvPatchFieldMapper.C
 meshToMeshMethods = meshToMesh/calcMethod
 $(meshToMeshMethods)/meshToMeshMethod/meshToMeshMethod.C
 $(meshToMeshMethods)/meshToMeshMethod/meshToMeshMethodNew.C

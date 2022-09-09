@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,56 +23,35 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "distributedWeightedFvPatchFieldMapper.H"
+#include "patchToPatchFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::distributedWeightedFvPatchFieldMapper::map
+void Foam::patchToPatchFvPatchFieldMapper::map
 (
     Field<Type>& f,
     const Field<Type>& mapF
 ) const
 {
-    if (singlePatchProc_ == -1)
-    {
-        // Fetch remote parts of mapF
-        const distributionMapBase& distMap = *distMapPtr_;
-        Field<Type> newMapF(mapF);
-
-        // Moved flux "flip" functionality to higher level
-        // if (applyFlip)
-        // {
-        //     distMap.distribute(newMapF);
-        // }
-        // else
-        {
-            distMap.distribute(newMapF, noOp());
-        }
-
-        f.map(newMapF, addressing(), weights());
-    }
-    else
-    {
-        f.map(mapF, addressing(), weights());
-    }
+    f = forward_ ? pToP_.srcToTgt(mapF) : pToP_.tgtToSrc(mapF);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::distributedWeightedFvPatchFieldMapper::map
+Foam::tmp<Foam::Field<Type>> Foam::patchToPatchFvPatchFieldMapper::map
 (
     const Field<Type>& mapF
 ) const
 {
-    tmp<Field<Type>> tf(new Field<Type>(size()));
+    tmp<Field<Type>> tf(new Field<Type>(size_));
     map(tf.ref(), mapF);
     return tf;
 }
 
 
 template<class Type>
-void Foam::distributedWeightedFvPatchFieldMapper::operator()
+void Foam::patchToPatchFvPatchFieldMapper::operator()
 (
     Field<Type>& f,
     const tmp<Field<Type>>& tmapF
@@ -85,7 +64,7 @@ void Foam::distributedWeightedFvPatchFieldMapper::operator()
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::distributedWeightedFvPatchFieldMapper::operator()
+Foam::patchToPatchFvPatchFieldMapper::operator()
 (
     const tmp<Field<Type>>& tmapF
 ) const

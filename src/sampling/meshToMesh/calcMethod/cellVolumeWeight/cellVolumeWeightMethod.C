@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellVolumeWeightMethod.H"
-#include "faceAreaWeightAMI.H"
+#include "intersectionPatchToPatch.H"
 #include "indexedOctree.H"
 #include "treeDataCell.H"
 #include "addToRunTimeSelectionTable.H"
@@ -316,9 +316,9 @@ Foam::cellVolumeWeightMethod::~cellVolumeWeightMethod()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::word& Foam::cellVolumeWeightMethod::AMImethod() const
+const Foam::word& Foam::cellVolumeWeightMethod::patchToPatchMethod() const
 {
-    return faceAreaWeightAMI::typeName;
+    return patchToPatches::intersection::typeName;
 }
 
 
