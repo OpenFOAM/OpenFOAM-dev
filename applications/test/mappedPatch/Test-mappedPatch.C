@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,30 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    testMappedPatch
+    Test-mappedPatch
 
 Description
-    Test mapped b.c. by mapping face centres (mesh.C().boundaryField()).
+    Test mapped patches and boundary conditions by mapping cell and face
+    centres and writing out the resulting point connections
 
 \*---------------------------------------------------------------------------*/
-
 
 #include "argList.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "meshTools.H"
 #include "Time.H"
-#include "OFstream.H"
+#include "OBJstream.H"
 #include "volFields.H"
 #include "mappedPolyPatch.H"
-#include "mappedFixedValueFvPatchFields.H"
+#include "mappedInternalPolyPatch.H"
+#include "mappedValueFvPatchFields.H"
+#include "mappedInternalValueFvPatchFields.H"
 
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-
-// Main program:
 
 int main(int argc, char *argv[])
 {
@@ -65,11 +64,14 @@ int main(int argc, char *argv[])
         if (isA<mappedPolyPatch>(mesh.boundaryMesh()[patchi]))
         {
             patchFieldTypes[patchi] =
-                mappedFixedValueFvPatchVectorField::typeName;
+                mappedValueFvPatchVectorField::typeName;
+        }
+        if (isA<mappedInternalPolyPatch>(mesh.boundaryMesh()[patchi]))
+        {
+            patchFieldTypes[patchi] =
+                mappedInternalValueFvPatchVectorField::typeName;
         }
     }
-
-    Pout<< "patchFieldTypes:" << patchFieldTypes << endl;
 
     volVectorField cc
     (
@@ -81,44 +83,36 @@ int main(int argc, char *argv[])
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh,
-        dimensionedVector(dimLength, Zero),
+        mesh.C(),
         patchFieldTypes
     );
 
-    cc.primitiveFieldRef() = mesh.C().primitiveField();
-    cc.boundaryFieldRef().updateCoeffs();
+    cc.correctBoundaryConditions();
 
     forAll(cc.boundaryField(), patchi)
     {
+        const fvPatchVectorField& ccp = cc.boundaryField()[patchi];
+
         if
         (
-            isA<mappedFixedValueFvPatchVectorField>
-            (
-                cc.boundaryField()[patchi]
-            )
+            isA<mappedValueFvPatchVectorField>(ccp)
+         || isA<mappedInternalValueFvPatchVectorField>(ccp)
         )
         {
-            Pout<< "Detected a mapped patch:" << patchi << endl;
+            OBJstream obj(mesh.boundaryMesh()[patchi].name() + ".obj");
 
-            OFstream str(mesh.boundaryMesh()[patchi].name() + ".obj");
-            Pout<< "Writing mapped values to " << str.name() << endl;
+            Pout<< "Detected a " << ccp.patch().type() << " field on patch \""
+                << ccp.patch().name() << "\". Writing point connections to "
+                << obj.name() << "." << endl;
 
-            label vertI = 0;
-            const fvPatchVectorField& fvp = cc.boundaryField()[patchi];
-
-            forAll(fvp, i)
+            forAll(ccp, i)
             {
-                meshTools::writeOBJ(str, fvp.patch().Cf()[i]);
-                vertI++;
-                meshTools::writeOBJ(str, fvp[i]);
-                vertI++;
-                str << "l " << vertI-1 << ' ' << vertI << nl;
+                obj.write(linePointRef(ccp.patch().Cf()[i], ccp[i]));
             }
         }
     }
 
-    Info<< "End\n" << endl;
+    Info<< nl << "End" << nl << endl;
 
     return 0;
 }
