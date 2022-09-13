@@ -31,7 +31,6 @@ License
 #include "polyMesh.H"
 #include "distributionMap.H"
 #include "labelIOList.H"
-#include "mergePoints.H"
 #include "globalIndexAndTransform.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -1984,34 +1983,6 @@ Foam::pointField Foam::globalMeshData::sharedPoints() const
     }
 
     return sharedPoints;
-}
-
-
-Foam::pointField Foam::globalMeshData::geometricSharedPoints() const
-{
-    // Get coords of my shared points
-    pointField sharedPoints(mesh_.points(), sharedPointLabels());
-
-    // Append from all processors
-    combineReduce(sharedPoints, ListPlusEqOp<pointField>());
-
-    // Merge tolerance
-    scalar tolDim = matchTol_ * mesh_.bounds().mag();
-
-    // And see how many are unique
-    labelList pMap;
-    pointField mergedPoints;
-
-    Foam::mergePoints
-    (
-        sharedPoints,   // coordinates to merge
-        tolDim,         // tolerance
-        false,          // verbosity
-        pMap,
-        mergedPoints
-    );
-
-    return mergedPoints;
 }
 
 

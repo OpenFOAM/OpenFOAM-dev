@@ -27,7 +27,6 @@ License
 #include "OFstream.H"
 #include "Time.H"
 #include "globalIndex.H"
-#include "mergePoints.H"
 #include "processorPolyPatch.H"
 #include "SubField.H"
 
@@ -203,7 +202,6 @@ Foam::autoPtr<Foam::distributionMap> Foam::meshToMesh::calcProcMap
         }
     }
 
-    // debug printing
     if (debug)
     {
         Pout<< "Of my " << cells.size() << " target cells I need to send to:"
@@ -827,38 +825,6 @@ void Foam::meshToMesh::distributeAndMergeCells
                     tgtFaceOwners[tgtFacei] = newOwn;
                     tgtFaceNeighbours[tgtFacei] = -1;
                 }
-            }
-        }
-    }
-
-
-    if (debug)
-    {
-        // only merging points in debug mode
-
-        labelList oldToNew;
-        pointField newTgtPoints;
-        bool hasMerged = mergePoints
-        (
-            tgtPoints,
-            small,
-            false,
-            oldToNew,
-            newTgtPoints
-        );
-
-        if (hasMerged)
-        {
-            if (debug)
-            {
-                Pout<< "Merged from " << tgtPoints.size()
-                    << " down to " << newTgtPoints.size() << " points" << endl;
-            }
-
-            tgtPoints.transfer(newTgtPoints);
-            forAll(tgtFaces, i)
-            {
-                inplaceRenumber(oldToNew, tgtFaces[i]);
             }
         }
     }

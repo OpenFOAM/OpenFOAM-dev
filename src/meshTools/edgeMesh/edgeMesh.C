@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "edgeMesh.H"
-#include "mergePoints.H"
 #include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 #include "ListOps.H"
@@ -273,83 +272,6 @@ void Foam::edgeMesh::scalePoints(const scalar scaleFactor)
     if (scaleFactor > 0 && scaleFactor != 1.0)
     {
         points_ *= scaleFactor;
-    }
-}
-
-
-void Foam::edgeMesh::mergePoints
-(
-    const scalar mergeDist,
-    labelList& reversePointMap
-    // labelList& edgeMap
-)
-{
-    pointField newPoints;
-    labelList pointMap;
-
-    bool hasMerged = Foam::mergePoints
-    (
-        points_,
-        mergeDist,
-        false,
-        pointMap,
-        newPoints,
-        vector::zero
-    );
-
-    if (hasMerged)
-    {
-        pointEdgesPtr_.clear();
-
-        points_.transfer(newPoints);
-
-        // connectivity changed
-        pointEdgesPtr_.clear();
-
-        // Renumber and make sure e[0] < e[1] (not really necessary)
-        forAll(edges_, edgeI)
-        {
-            edge& e = edges_[edgeI];
-
-            label p0 = pointMap[e[0]];
-            label p1 = pointMap[e[1]];
-
-            if (p0 < p1)
-            {
-                e[0] = p0;
-                e[1] = p1;
-            }
-            else
-            {
-                e[0] = p1;
-                e[1] = p0;
-            }
-        }
-
-        // Compact using a hashtable and commutative hash of edge.
-        EdgeMap<label> edgeToLabel(2*edges_.size());
-
-        label newEdgeI = 0;
-
-        forAll(edges_, edgeI)
-        {
-            const edge& e = edges_[edgeI];
-
-            if (e[0] != e[1])
-            {
-                if (edgeToLabel.insert(e, newEdgeI))
-                {
-                    newEdgeI++;
-                }
-            }
-        }
-
-        edges_.setSize(newEdgeI);
-
-        forAllConstIter(EdgeMap<label>, edgeToLabel, iter)
-        {
-            edges_[iter()] = iter.key();
-        }
     }
 }
 

@@ -459,16 +459,10 @@ public:
             const labelList& sharedPointGlobalLabels() const;
 
             //- Collect coordinates of shared points on all processors.
-            //  (does parallel communication!)
-            //  Note: not valid for cyclicParallel since shared cyclic points
-            //  are merged into single global point. (use geometricSharedPoints
-            //  instead)
+            //  Does parallel communication. Not valid for points on
+            //  cyclics since these combine into a single shared point but
+            //  span multiple locations.
             pointField sharedPoints() const;
-
-            //- Like sharedPoints but keeps cyclic points separate.
-            //  (does geometric merging; uses matchTol_*bb as merging tolerance)
-            //  Use sharedPoints() instead.
-            pointField geometricSharedPoints() const;
 
 
 

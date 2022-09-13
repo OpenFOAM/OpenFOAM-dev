@@ -29,7 +29,6 @@ License
 #include "polyTopoChange.H"
 #include "polyTopoChangeMap.H"
 #include "edgeFaceCirculator.H"
-#include "mergePoints.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -41,43 +40,6 @@ namespace Foam
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::meshDualiser::checkPolyTopoChange(const polyTopoChange& meshMod)
-{
-    // Assume no removed points
-    pointField points(meshMod.points().size());
-    forAll(meshMod.points(), i)
-    {
-        points[i] = meshMod.points()[i];
-    }
-
-    labelList oldToNew;
-    label nUnique = mergePoints
-    (
-        points,
-        1e-6,
-        false,
-        oldToNew
-    );
-
-    if (nUnique < points.size())
-    {
-        labelListList newToOld(invertOneToMany(nUnique, oldToNew));
-
-        forAll(newToOld, newI)
-        {
-            if (newToOld[newI].size() != 1)
-            {
-                FatalErrorInFunction
-                    << "duplicate verts:" << newToOld[newI]
-                    << " coords:"
-                    << UIndirectList<point>(points, newToOld[newI])()
-                    << abort(FatalError);
-            }
-        }
-    }
-}
-
 
 // Dump state so far.
 void Foam::meshDualiser::dumpPolyTopoChange
@@ -214,29 +176,6 @@ Foam::label Foam::meshDualiser::addInternalFace
     {
         reverse(newFace);
     }
-
-    if (debug)
-    {
-        pointField facePoints(meshMod.points(), newFace);
-
-        labelList oldToNew;
-        label nUnique = mergePoints
-        (
-            facePoints,
-            1e-6,
-            false,
-            oldToNew
-        );
-
-        if (nUnique < facePoints.size())
-        {
-            FatalErrorInFunction
-                << "verts:" << verts << " newFace:" << newFace
-                << " face points:" << facePoints
-                << abort(FatalError);
-        }
-    }
-
 
     label zoneID = -1;
     bool zoneFlip = false;
@@ -1269,7 +1208,6 @@ void Foam::meshDualiser::setRefinement
     if (debug)
     {
         dumpPolyTopoChange(meshMod, "generatedPoints_");
-        checkPolyTopoChange(meshMod);
     }
 
 
