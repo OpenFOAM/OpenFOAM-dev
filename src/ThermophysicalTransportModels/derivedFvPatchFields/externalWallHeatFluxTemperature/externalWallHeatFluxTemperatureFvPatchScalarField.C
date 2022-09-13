@@ -304,7 +304,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
     scalarField qTot(qr);
     if (haveQ_)
     {
-        qTot += Q_;
+        qTot += Q_/gSum(patch().magSf());
     }
     if (haveq_)
     {
