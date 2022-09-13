@@ -72,7 +72,7 @@ Foam::label Foam::patchDistWave::wave
 )
 {
     // Initialise changedFacesInfo to face centres on patches
-    List<wallPoint> changedFacesInfo;
+    List<wallPoint> changedFacesInfo(changedFaces.size());
     forAll(changedFaces, changedFacei)
     {
         const label facei = changedFaces[changedFacei];
