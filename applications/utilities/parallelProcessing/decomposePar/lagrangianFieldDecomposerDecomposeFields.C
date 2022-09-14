@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ void Foam::lagrangianFieldDecomposer::readFieldFields
 (
     const label cloudI,
     const IOobjectList& lagrangianObjects,
-    PtrList<PtrList<CompactIOField<Field<Type>, Type>>>& lagrangianFields
+    PtrList<PtrList<CompactIOField<Field<Type>>>>& lagrangianFields
 )
 {
     // Search list of objects for lagrangian fields
@@ -81,15 +81,14 @@ void Foam::lagrangianFieldDecomposer::readFieldFields
     (
         lagrangianObjects.lookupClass
         (
-            CompactIOField<Field<Type>,
-            Type>::typeName
+            CompactIOField<Field<Type>>::typeName
         )
     );
 
     lagrangianFields.set
     (
         cloudI,
-        new PtrList<CompactIOField<Field<Type>, Type>>
+        new PtrList<CompactIOField<Field<Type>>>
         (
             lagrangianTypeObjectsA.size() + lagrangianTypeObjectsB.size()
         )
@@ -102,7 +101,7 @@ void Foam::lagrangianFieldDecomposer::readFieldFields
         lagrangianFields[cloudI].set
         (
             lagrangianFieldi++,
-            new CompactIOField<Field<Type>, Type>(*iter())
+            new CompactIOField<Field<Type>>(*iter())
         );
     }
 
@@ -111,7 +110,7 @@ void Foam::lagrangianFieldDecomposer::readFieldFields
         lagrangianFields[cloudI].set
         (
             lagrangianFieldi++,
-            new CompactIOField<Field<Type>, Type>(*iter())
+            new CompactIOField<Field<Type>>(*iter())
         );
     }
 }
@@ -150,20 +149,20 @@ Foam::lagrangianFieldDecomposer::decomposeField
 
 
 template<class Type>
-Foam::tmp<Foam::CompactIOField<Foam::Field<Type>, Type>>
+Foam::tmp<Foam::CompactIOField<Foam::Field<Type>>>
 Foam::lagrangianFieldDecomposer::decomposeFieldField
 (
     const word& cloudName,
-    const CompactIOField<Field<Type>, Type>& field
+    const CompactIOField<Field<Type>>& field
 ) const
 {
     // Create and map the internal field values
     Field<Field<Type>> procField(field, particleIndices_);
 
     // Create the field for the processor
-    return tmp<CompactIOField<Field<Type>, Type>>
+    return tmp<CompactIOField<Field<Type>>>
     (
-        new CompactIOField<Field<Type>, Type>
+        new CompactIOField<Field<Type>>
         (
             IOobject
             (

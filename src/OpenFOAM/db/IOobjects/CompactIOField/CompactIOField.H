@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,58 +25,34 @@ Class
     Foam::CompactIOField
 
 Description
-    A Field of objects of type \<T\> with automated input and output using
+    A Field of objects of type \<Type\> with automated input and output using
     a compact storage. Behaves like IOField except when binary output in
     case it writes a CompactListList.
 
     Useful for fields of small subfields e.g. in lagrangian
-
-SourceFiles
-    CompactIOField.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef CompactIOField_H
 #define CompactIOField_H
 
+#include "CompactIOList.H"
 #include "IOField.H"
-#include "regIOobject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
-template<class Type, class BaseType> class CompactIOField;
-
-template<class Type, class BaseType> Istream& operator>>
-(
-    Istream&,
-    CompactIOField<Type, BaseType>&
-);
-
-template<class Type, class BaseType> Ostream& operator<<
-(
-    Ostream&,
-    const CompactIOField<Type, BaseType>&
-);
-
 /*---------------------------------------------------------------------------*\
                        Class CompactIOField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type, class BaseType>
+template<class Type>
 class CompactIOField
 :
-    public regIOobject,
-    public Field<Type>
+    public CompactIOListBase<Field, IOField, CompactIOField, Type>
 {
-    // Private Member Functions
-
-        //- Read according to header type
-        void readFromStream(const bool read = true);
-
 public:
 
     //- Runtime type information
@@ -85,62 +61,24 @@ public:
 
     // Constructors
 
-        //- Construct from IOobject
-        CompactIOField(const IOobject&);
-
-        //- Construct from IOobject; does local processor require reading?
-        CompactIOField(const IOobject&, const bool read);
-
-        //- Construct from IOobject and size
-        CompactIOField(const IOobject&, const label);
-
-        //- Construct from IOobject and a Field
-        CompactIOField(const IOobject&, const Field<Type>&);
-
-        //- Move construct by transferring the Field contents
-        CompactIOField(const IOobject&, Field<Type>&&);
-
-        //- Move constructor
-        CompactIOField(CompactIOField<Type, BaseType>&&);
-
-
-    // Destructor
-
-        virtual ~CompactIOField();
-
-
-    // Member Functions
-
-        virtual bool writeObject
-        (
-            IOstream::streamFormat,
-            IOstream::versionNumber,
-            IOstream::compressionType,
-            const bool write
-        ) const;
-
-        virtual bool writeData(Ostream&) const;
+        //- Inherit constructors
+        using
+            CompactIOListBase<Field, IOField, CompactIOField, Type>::
+            CompactIOListBase;
 
 
     // Member Operators
 
-        void operator=(const CompactIOField<Type, BaseType>&);
-        void operator=(CompactIOField<Type, BaseType>&&);
-
-        void operator=(const Field<Type>&);
-        void operator=(Field<Type>&&);
+        //- Inherit assignment operators
+        using
+            CompactIOListBase<Field, IOField, CompactIOField, Type>::
+            operator=;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "CompactIOField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

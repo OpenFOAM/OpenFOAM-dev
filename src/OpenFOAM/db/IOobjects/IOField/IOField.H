@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::IOField
 
 Description
-    A primitive field of type \<T\> with automated input and output.
+    A primitive field of type \<Type\> with automated input and output.
 
 SourceFiles
     IOField.C
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef IOField_H
 #define IOField_H
 
-#include "regIOobject.H"
+#include "IOList.H"
 #include "Field.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,56 +50,28 @@ namespace Foam
 template<class Type>
 class IOField
 :
-    public regIOobject,
-    public Field<Type>
+    public IOListBase<Field, IOField, Type>
 {
 
 public:
 
+    //- Runtime type information
     TypeName("Field");
 
 
     // Constructors
 
-        //- Construct from IOobject
-        IOField(const IOobject&);
+        //- Inherit constructors
+        using IOListBase<Field, IOField, Type>::IOListBase;
 
-        //- Construct from IOobject; does local processor require reading?
-        IOField(const IOobject&, const bool read);
-
-        //- Construct from IOobject and size (does not set values)
-        IOField(const IOobject&, const label size);
-
-        //- Construct from components
-        IOField(const IOobject&, const Field<Type>&);
-
-        //- Move construct by transferring the Field contents
-        IOField(const IOobject&, Field<Type>&&);
-
-        //- Move construct by transferring the Field contents
+        //- Move construct by transferring the Container contents
         IOField(const IOobject&, const tmp<Field<Type>>&);
-
-        //- Move constructor
-        IOField(IOField<Type>&&);
-
-
-    //- Destructor
-    virtual ~IOField();
-
-
-    // Member Functions
-
-        bool writeData(Ostream&) const;
 
 
     // Member Operators
 
-        void operator=(const IOField<Type>&);
-        void operator=(IOField<Type>&&);
-
-        void operator=(const Field<Type>&);
-        void operator=(Field<Type>&&);
-        void operator=(const tmp<Field<Type>>&);
+        //- Inherit assignment operators
+        using IOListBase<Field, IOField, Type>::operator=;
 };
 
 

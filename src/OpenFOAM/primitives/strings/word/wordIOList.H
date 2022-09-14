@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,12 +34,14 @@ Description
 
 #include "wordList.H"
 #include "IOList.H"
+#include "GlobalIOList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
     typedef IOList<word> wordIOList;
+    typedef GlobalIOList<word> wordGlobalIOList;
     typedef IOList<wordList> wordListIOList;
 
     // Print word list list as a table

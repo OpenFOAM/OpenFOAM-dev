@@ -45,7 +45,6 @@ Description
 #include "OFstream.H"
 #include "meshTools.H"
 #include "faceSet.H"
-#include "IOPtrList.H"
 #include "polyTopoChange.H"
 #include "polyModifyFace.H"
 #include "wordReList.H"
@@ -54,11 +53,6 @@ Description
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    defineTemplateTypeNameAndDebug(IOPtrList<dictionary>, 0);
-}
 
 void changePatchID
 (

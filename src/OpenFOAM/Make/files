@@ -246,11 +246,7 @@ $(IOdictionary)/localIOdictionary.C
 $(IOdictionary)/timeIOdictionary.C
 $(IOdictionary)/systemDict.C
 
-db/IOobjects/IOMap/IOMapName.C
 db/IOobjects/decomposedBlockData/decomposedBlockData.C
-db/IOobjects/GlobalIOList/GlobalIOLists.C
-db/IOobjects/GlobalIOField/GlobalIOFields.C
-
 
 IOobject = db/IOobject
 $(IOobject)/IOobject.C

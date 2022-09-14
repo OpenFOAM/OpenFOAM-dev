@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,10 +102,7 @@ public:
         (
             const label cloudI,
             const IOobjectList& lagrangianObjects,
-            PtrList
-            <
-                PtrList<CompactIOField<Field<Type>, Type>>
-            >& lagrangianFields
+            PtrList<PtrList<CompactIOField<Field<Type>>>>& lagrangianFields
         );
 
 
@@ -118,10 +115,10 @@ public:
         ) const;
 
         template<class Type>
-        tmp<CompactIOField<Field<Type>, Type>> decomposeFieldField
+        tmp<CompactIOField<Field<Type>>> decomposeFieldField
         (
             const word& cloudName,
-            const CompactIOField<Field<Type>, Type>& field
+            const CompactIOField<Field<Type>>& field
         ) const;
 
 

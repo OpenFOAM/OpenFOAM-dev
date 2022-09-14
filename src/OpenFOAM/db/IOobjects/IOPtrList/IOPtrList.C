@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,9 @@ License
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
-template<class T>
+template<class Type>
 template<class INew>
-Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const INew& inewt)
+Foam::IOPtrList<Type>::IOPtrList(const IOobject& io, const INew& iNew)
 :
     regIOobject(io)
 {
@@ -39,144 +39,15 @@ Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const INew& inewt)
             io.readOpt() == IOobject::MUST_READ
          || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
         )
-     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
+     || (io.readOpt() == IOobject::READ_IF_PRESENT && this->headerOk())
     )
     {
         // For if MUST_READ_IF_MODIFIED
-        addWatch();
+        this->addWatch();
 
-        PtrList<T>::read(readStream(typeName), inewt);
-        close();
+        PtrList<Type>::read(this->readStream(IOPtrList<Type>::typeName), iNew);
+        this->close();
     }
-}
-
-
-template<class T>
-Foam::IOPtrList<T>::IOPtrList(const IOobject& io)
-:
-    regIOobject(io)
-{
-    if
-    (
-        (
-            io.readOpt() == IOobject::MUST_READ
-         || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
-        )
-     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
-    )
-    {
-        // For if MUST_READ_IF_MODIFIED
-        addWatch();
-
-        PtrList<T>::read(readStream(typeName), INew<T>());
-        close();
-    }
-}
-
-
-template<class T>
-Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const label s)
-:
-    regIOobject(io),
-    PtrList<T>(s)
-{
-    if (io.readOpt() != IOobject::NO_READ)
-    {
-        FatalErrorInFunction
-            << "NO_READ must be set if specifying size" << nl
-            << exit(FatalError);
-    }
-}
-
-
-template<class T>
-Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const PtrList<T>& list)
-:
-    regIOobject(io)
-{
-    if
-    (
-        (
-            io.readOpt() == IOobject::MUST_READ
-         || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
-        )
-     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
-    )
-    {
-        // For if MUST_READ_IF_MODIFIED
-        addWatch();
-
-        PtrList<T>::read(readStream(typeName), INew<T>());
-        close();
-    }
-    else
-    {
-        PtrList<T>::operator=(list);
-    }
-}
-
-
-template<class T>
-Foam::IOPtrList<T>::IOPtrList(const IOobject& io, PtrList<T>&& list)
-:
-    regIOobject(io),
-    PtrList<T>(move(list))
-{
-    if
-    (
-        (
-            io.readOpt() == IOobject::MUST_READ
-         || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
-        )
-     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
-    )
-    {
-        // For if MUST_READ_IF_MODIFIED
-        addWatch();
-
-        PtrList<T>::read(readStream(typeName), INew<T>());
-        close();
-    }
-}
-
-
-template<class T>
-Foam::IOPtrList<T>::IOPtrList(IOPtrList<T>&& list)
-:
-    regIOobject(move(list)),
-    PtrList<T>(move(list))
-{}
-
-
-// * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
-
-template<class T>
-Foam::IOPtrList<T>::~IOPtrList()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class T>
-bool Foam::IOPtrList<T>::writeData(Ostream& os) const
-{
-    return (os << *this).good();
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class T>
-void Foam::IOPtrList<T>::operator=(const IOPtrList<T>& rhs)
-{
-    PtrList<T>::operator=(rhs);
-}
-
-
-template<class T>
-void Foam::IOPtrList<T>::operator=(IOPtrList<T>&& rhs)
-{
-    PtrList<T>::operator=(move(rhs));
 }
 
 

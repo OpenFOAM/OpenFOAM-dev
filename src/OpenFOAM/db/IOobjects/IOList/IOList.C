@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,23 @@ License
 
 #include "IOList.H"
 
-// * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class T>
-Foam::IOList<T>::IOList(const IOobject& io)
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+Foam::IOListBase<Container, IOContainer, Type>::IOListBase(const IOobject& io)
 :
     regIOobject(io)
 {
     // Check for MUST_READ_IF_MODIFIED
-    warnNoRereading<IOList<T>>();
+    if (!IOContainer<Type>::rereading)
+    {
+        warnNoRereading<IOContainer<Type>>();
+    }
 
     if
     (
@@ -44,19 +52,94 @@ Foam::IOList<T>::IOList(const IOobject& io)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
-        readStream(typeName) >> *this;
+        // For if MUST_READ_IF_MODIFIED
+        if (IOContainer<Type>::rereading)
+        {
+            addWatch();
+        }
+
+        readStream(IOContainer<Type>::typeName) >> *this;
         close();
     }
 }
 
 
-template<class T>
-Foam::IOList<T>::IOList(const IOobject& io, const label size)
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+Foam::IOListBase<Container, IOContainer, Type>::IOListBase
+(
+    const IOobject& io,
+    const bool read
+)
 :
     regIOobject(io)
 {
     // Check for MUST_READ_IF_MODIFIED
-    warnNoRereading<IOList<T>>();
+    if (!IOContainer<Type>::rereading)
+    {
+        warnNoRereading<IOContainer<Type>>();
+    }
+
+    if
+    (
+        io.readOpt() == IOobject::MUST_READ
+     || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
+    )
+    {
+        // For if MUST_READ_IF_MODIFIED
+        if (IOContainer<Type>::rereading)
+        {
+            addWatch();
+        }
+
+        Istream& is = readStream(IOContainer<Type>::typeName, read);
+
+        if (read)
+        {
+            is >> *this;
+        }
+
+        close();
+    }
+    else if (io.readOpt() == IOobject::READ_IF_PRESENT)
+    {
+        bool haveFile = headerOk();
+
+        Istream& is = readStream(IOContainer<Type>::typeName, haveFile && read);
+
+        if (read && haveFile)
+        {
+            is >> *this;
+        }
+
+        close();
+    }
+}
+
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+Foam::IOListBase<Container, IOContainer, Type>::IOListBase
+(
+    const IOobject& io,
+    const label size
+)
+:
+    regIOobject(io)
+{
+    // Check for MUST_READ_IF_MODIFIED
+    if (!IOContainer<Type>::rereading)
+    {
+        warnNoRereading<IOContainer<Type>>();
+    }
 
     if
     (
@@ -67,23 +150,41 @@ Foam::IOList<T>::IOList(const IOobject& io, const label size)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
-        readStream(typeName) >> *this;
+        // For if MUST_READ_IF_MODIFIED
+        if (IOContainer<Type>::rereading)
+        {
+            addWatch();
+        }
+
+        readStream(IOContainer<Type>::typeName) >> *this;
         close();
     }
     else
     {
-        List<T>::setSize(size);
+        Container<Type>::setSize(size);
     }
 }
 
 
-template<class T>
-Foam::IOList<T>::IOList(const IOobject& io, const List<T>& list)
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+Foam::IOListBase<Container, IOContainer, Type>::IOListBase
+(
+    const IOobject& io,
+    const Container<Type>& l
+)
 :
     regIOobject(io)
 {
     // Check for MUST_READ_IF_MODIFIED
-    warnNoRereading<IOList<T>>();
+    if (!IOContainer<Type>::rereading)
+    {
+        warnNoRereading<IOContainer<Type>>();
+    }
 
     if
     (
@@ -94,24 +195,42 @@ Foam::IOList<T>::IOList(const IOobject& io, const List<T>& list)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
-        readStream(typeName) >> *this;
+        // For if MUST_READ_IF_MODIFIED
+        if (IOContainer<Type>::rereading)
+        {
+            addWatch();
+        }
+
+        readStream(IOContainer<Type>::typeName) >> *this;
         close();
     }
     else
     {
-        List<T>::operator=(list);
+        Container<Type>::operator=(l);
     }
 }
 
 
-template<class T>
-Foam::IOList<T>::IOList(const IOobject& io, List<T>&& list)
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+Foam::IOListBase<Container, IOContainer, Type>::IOListBase
+(
+    const IOobject& io,
+    Container<Type>&& l
+)
 :
     regIOobject(io),
-    List<T>(move(list))
+    Container<Type>(move(l))
 {
     // Check for MUST_READ_IF_MODIFIED
-    warnNoRereading<IOList<T>>();
+    if (!IOContainer<Type>::rereading)
+    {
+        warnNoRereading<IOContainer<Type>>();
+    }
 
     if
     (
@@ -122,72 +241,108 @@ Foam::IOList<T>::IOList(const IOobject& io, List<T>&& list)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
-        readStream(typeName) >> *this;
+        // For if MUST_READ_IF_MODIFIED
+        if (IOContainer<Type>::rereading)
+        {
+            addWatch();
+        }
+
+        readStream(IOContainer<Type>::typeName) >> *this;
         close();
     }
 }
 
 
-template<class T>
-Foam::IOList<T>::IOList(const IOList<T>& f)
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+Foam::IOListBase<Container, IOContainer, Type>::IOListBase
+(
+    const IOListBase<Container, IOContainer, Type>& f
+)
 :
     regIOobject(f),
-    List<T>(f)
+    Container<Type>(f)
 {}
 
 
-template<class T>
-Foam::IOList<T>::IOList(IOList<T>&& f)
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+Foam::IOListBase<Container, IOContainer, Type>::IOListBase
+(
+    IOListBase<Container, IOContainer, Type>&& f
+)
 :
     regIOobject(move(f)),
-    List<T>(move(f))
+    Container<Type>(move(f))
 {}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
-template<class T>
-Foam::IOList<T>::~IOList()
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+Foam::IOListBase<Container, IOContainer, Type>::~IOListBase()
 {}
-
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class T>
-bool Foam::IOList<T>::writeData(Ostream& os) const
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+bool Foam::IOListBase<Container, IOContainer, Type>::writeData
+(
+    Ostream& os
+) const
 {
-    return (os << *this).good();
+    return (os << static_cast<const Container<Type>&>(*this)).good();
 }
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template<class T>
-void Foam::IOList<T>::operator=(const IOList<T>& rhs)
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+void Foam::IOListBase<Container, IOContainer, Type>::operator=
+(
+    const IOListBase<Container, IOContainer, Type>& rhs
+)
 {
-    List<T>::operator=(rhs);
+    Container<Type>::operator=(rhs);
 }
 
 
-template<class T>
-void Foam::IOList<T>::operator=(IOList<T>&& rhs)
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+void Foam::IOListBase<Container, IOContainer, Type>::operator=
+(
+    IOListBase<Container, IOContainer, Type>&& rhs
+)
 {
-    List<T>::operator=(move(rhs));
-}
-
-
-template<class T>
-void Foam::IOList<T>::operator=(const List<T>& rhs)
-{
-    List<T>::operator=(rhs);
-}
-
-
-template<class T>
-void Foam::IOList<T>::operator=(List<T>&& rhs)
-{
-    List<T>::operator=(move(rhs));
+    Container<Type>::operator=(move(rhs));
 }
 
 

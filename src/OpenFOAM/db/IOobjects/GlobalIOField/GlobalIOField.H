@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,17 +25,14 @@ Class
     Foam::GlobalIOField
 
 Description
-    IOField with global data (so optionally read from master)
-
-SourceFiles
-    GlobalIOField.C
+    A primitive field of type \<Type\> with automated input and output.
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef GlobalIOField_H
 #define GlobalIOField_H
 
-#include "regIOobject.H"
+#include "GlobalIOList.H"
 #include "Field.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -44,80 +41,37 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class GlobalIOField Declaration
+                           Class GlobalIOField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
 class GlobalIOField
 :
-    public regIOobject,
-    public Field<Type>
+    public GlobalIOListBase<Field, GlobalIOField, Type>
 {
 
 public:
 
+    //- Runtime type information
     TypeName("Field");
 
 
     // Constructors
 
-        //- Construct from IOobject
-        GlobalIOField(const IOobject&);
-
-        //- Construct from IOobject and size (does not set values)
-        GlobalIOField(const IOobject&, const label size);
-
-        //- Construct from components
-        GlobalIOField(const IOobject&, const Field<Type>&);
-
-        //- Move construct by transferring the Field contents
-        GlobalIOField(const IOobject&, Field<Type>&&);
-
-        //- Copy constructor
-        GlobalIOField(const GlobalIOField<Type>&);
-
-        //- Move constructor
-        GlobalIOField(GlobalIOField<Type>&&);
-
-
-    //- Destructor
-    virtual ~GlobalIOField();
-
-
-    // Member Functions
-
-        //- Is object global
-        virtual bool global() const
-        {
-            return true;
-        }
-
-        //- ReadData function required for regIOobject read operation
-        virtual bool readData(Istream&);
-
-        //- WriteData function required for regIOobject write operation
-        bool writeData(Ostream&) const;
+        //- Inherit constructors
+        using GlobalIOListBase<Field, GlobalIOField, Type>::GlobalIOListBase;
 
 
     // Member Operators
 
-        void operator=(const GlobalIOField<Type>&);
-        void operator=(GlobalIOField<Type>&&);
-
-        void operator=(const Field<Type>&);
-        void operator=(Field<Type>&&);
+        //- Inherit assignment operators
+        using GlobalIOListBase<Field, GlobalIOField, Type>::operator=;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-#   include "GlobalIOField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -97,9 +97,6 @@ class polyPatch;
 class faceSet;
 class pointSet;
 
-template<class Type> class IOField;
-template<class Type> class List;
-
 /*---------------------------------------------------------------------------*\
                           Class vtkPVFoam Declaration
 \*---------------------------------------------------------------------------*/

@@ -69,7 +69,7 @@ tmp<IOField<Type>> reconstructLagrangianField
 
 
 template<class Type>
-tmp<CompactIOField<Field<Type>, Type>> reconstructLagrangianFieldField
+tmp<CompactIOField<Field<Type>>> reconstructLagrangianFieldField
 (
     const word& cloudName,
     const polyMesh& mesh,

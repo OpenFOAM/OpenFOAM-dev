@@ -89,7 +89,7 @@ Foam::tmp<Foam::IOField<Type>> Foam::reconstructLagrangianField
 
 
 template<class Type>
-Foam::tmp<Foam::CompactIOField<Foam::Field<Type>, Type>>
+Foam::tmp<Foam::CompactIOField<Foam::Field<Type>>>
 Foam::reconstructLagrangianFieldField
 (
     const word& cloudName,
@@ -99,9 +99,9 @@ Foam::reconstructLagrangianFieldField
 )
 {
     // Construct empty field on mesh
-    tmp<CompactIOField<Field<Type>, Type >> tfield
+    tmp<CompactIOField<Field<Type>>> tfield
     (
-        new CompactIOField<Field<Type>, Type>
+        new CompactIOField<Field<Type>>
         (
             IOobject
             (
@@ -132,7 +132,7 @@ Foam::reconstructLagrangianFieldField
 
         if (localIOobject.headerOk())
         {
-            CompactIOField<Field<Type>, Type> fieldi(localIOobject);
+            CompactIOField<Field<Type>> fieldi(localIOobject);
 
             label offset = field.size();
             field.setSize(offset + fieldi.size());
@@ -203,7 +203,7 @@ void Foam::reconstructLagrangianFieldFields
 )
 {
     {
-        const word fieldClassName(CompactIOField<Field<Type>, Type>::typeName);
+        const word fieldClassName(CompactIOField<Field<Type>>::typeName);
 
         IOobjectList fields = objects.lookupClass(fieldClassName);
 

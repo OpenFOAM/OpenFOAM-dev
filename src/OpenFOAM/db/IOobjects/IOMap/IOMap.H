@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,19 +25,16 @@ Class
     Foam::IOMap
 
 Description
-    A Map of objects of type \<T\> with automated input and output.
+    A Map of objects of type \<Type\> with automated input and output.
     Is a global object; i.e. can be read from undecomposed case.
-
-SourceFiles
-    IOMap.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef IOMap_H
 #define IOMap_H
 
+#include "IOList.H"
 #include "Map.H"
-#include "regIOobject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,14 +45,19 @@ namespace Foam
                             Class IOMap Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T>
+template<class Type>
 class IOMap
 :
-    public regIOobject,
-    public Map<T>
+    public IOListBase<Map, IOMap, Type>
 {
 
 public:
+
+    // Public Static Data
+
+        //- Does this object support re-reading?
+        static const bool rereading = true;
+
 
     //- Runtime type information
     TypeName("Map");
@@ -63,62 +65,21 @@ public:
 
     // Constructors
 
-        //- Construct from IOobject
-        IOMap(const IOobject&);
-
-        //- Construct from IOobject and size of Map
-        IOMap(const IOobject&, const label);
-
-        //- Construct from IOobject and a Map
-        IOMap(const IOobject&, const Map<T>&);
-
-        //- Move construct by transferring the Map contents
-        IOMap(const IOobject&, Map<T>&&);
-
-        //- Move constructor
-        IOMap(IOMap<T>&&);
-
-
-    //- Destructor
-    virtual ~IOMap();
-
-
-    // Member Functions
-
-        bool writeData(Ostream&) const;
-
-        //- Is object global
-        virtual bool global() const
-        {
-            return true;
-        }
+        //- Inherit constructors
+        using IOListBase<Map, IOMap, Type>::IOListBase;
 
 
     // Member Operators
 
-        //- Assignment of other IOMap's entries to this IOMap
-        void operator=(const IOMap<T>&);
+        //- Inherit assignment operators
+        using IOListBase<Map, IOMap, Type>::operator=;
 
-        //- Move assignment of other IOMap's entries to this IOMap
-        void operator=(IOMap<T>&&);
-
-        //- Assignment of other Map's entries to this IOMap
-        void operator=(const Map<T>&);
-
-        //- Move assignment of other Map's entries to this IOMap
-        void operator=(Map<T>&&);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "IOMap.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

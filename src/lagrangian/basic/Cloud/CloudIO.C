@@ -208,7 +208,7 @@ template<class DataType>
 void Foam::Cloud<ParticleType>::checkFieldFieldIOobject
 (
     const Cloud<ParticleType>& c,
-    const CompactIOField<Field<DataType>, DataType>& data
+    const CompactIOField<Field<DataType>>& data
 ) const
 {
     if (data.size() != c.size())

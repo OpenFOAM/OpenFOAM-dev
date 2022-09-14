@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,39 +28,169 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class T, class BaseType>
-void Foam::CompactIOList<T, BaseType>::readFromStream()
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+bool
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+overflows() const
 {
-    Istream& is = readStream(word::null);
+    label size = 0;
 
-    if (headerClassName() == IOList<T>::typeName)
+    forAll(*this, i)
     {
-        is >> static_cast<ListCompactIO<T, BaseType>&>(*this);
-        close();
+        label oldSize = size;
+
+        size += this->operator[](i).size();
+
+        if (size < oldSize)
+        {
+            return true;
+        }
     }
-    else if (headerClassName() == typeName)
+
+    return false;
+}
+
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+void
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+convertToCompact
+(
+    labelList& start,
+    List<typename Type::value_type>& elems
+) const
+{
+    start.setSize(this->size() + 1);
+
+    start[0] = 0;
+
+    for (label i = 1; i < start.size(); i++)
     {
-        is >> *this;
-        close();
+        const label prev = start[i-1];
+
+        start[i] = prev + this->operator[](i-1).size();
+
+        if (start[i] < prev)
+        {
+            FatalErrorInFunction
+                << "Overall number of elements " << start[i]
+                << " of CompactIOListBase of size "
+                << this->size() << " overflows the representation of a label"
+                << endl << "Please recompile with a larger representation"
+                << " for label" << exit(FatalError);
+        }
     }
-    else
+
+    elems.setSize(start[start.size() - 1]);
+
+    label elemi = 0;
+
+    forAll(*this, i)
     {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "unexpected class name " << headerClassName()
-            << " expected " << typeName << " or " << IOList<T>::typeName
-            << endl
-            << "    while reading object " << name()
-            << exit(FatalIOError);
+        const Type& subList = this->operator[](i);
+
+        forAll(subList, j)
+        {
+            elems[elemi++] = subList[j];
+        }
+    }
+}
+
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+void
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+convertFromCompact
+(
+    const labelList& start,
+    const List<typename Type::value_type>& elems
+)
+{
+    this->setSize(start.size() - 1);
+
+    forAll(*this, i)
+    {
+        Type& subList = this->operator[](i);
+
+        label index = start[i];
+
+        subList.setSize(start[i+1] - index);
+
+        forAll(subList, j)
+        {
+            subList[j] = elems[index++];
+        }
+    }
+}
+
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+void
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+readFromStream(const bool read)
+{
+    Istream& is = readStream(word::null, read);
+
+    if (read)
+    {
+        if (headerClassName() == IOContainer<Type>::typeName)
+        {
+            is >> static_cast<Container<Type>&>(*this);
+            close();
+        }
+        else if (headerClassName() == CompactIOContainer<Type>::typeName)
+        {
+            is >> *this;
+            close();
+        }
+        else
+        {
+            FatalIOErrorInFunction(is)
+                << "unexpected class name " << headerClassName()
+                << " expected " << CompactIOContainer<Type>::typeName << " or "
+                << IOContainer<Type>::typeName << endl
+                << "    while reading object " << name()
+                << exit(FatalIOError);
+        }
     }
 }
 
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
-template<class T, class BaseType>
-Foam::CompactIOList<T, BaseType>::CompactIOList(const IOobject& io)
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+CompactIOListBase(const IOobject& io)
 :
     regIOobject(io)
 {
@@ -75,8 +205,43 @@ Foam::CompactIOList<T, BaseType>::CompactIOList(const IOobject& io)
 }
 
 
-template<class T, class BaseType>
-Foam::CompactIOList<T, BaseType>::CompactIOList
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+CompactIOListBase
+(
+    const IOobject& io,
+    const bool read
+)
+:
+    regIOobject(io)
+{
+    if (io.readOpt() == IOobject::MUST_READ)
+    {
+        readFromStream(read);
+    }
+    else if (io.readOpt() == IOobject::READ_IF_PRESENT)
+    {
+        bool haveFile = headerOk();
+        readFromStream(read && haveFile);
+    }
+}
+
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+CompactIOListBase
 (
     const IOobject& io,
     const label size
@@ -99,39 +264,22 @@ Foam::CompactIOList<T, BaseType>::CompactIOList
 }
 
 
-template<class T, class BaseType>
-Foam::CompactIOList<T, BaseType>::CompactIOList
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+CompactIOListBase
 (
     const IOobject& io,
-    const List<T>& list
-)
-:
-    regIOobject(io)
-{
-    if
-    (
-        io.readOpt() == IOobject::MUST_READ
-     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
-    )
-    {
-        readFromStream();
-    }
-    else
-    {
-        ListCompactIO<T, BaseType>::operator=(list);
-    }
-}
-
-
-template<class T, class BaseType>
-Foam::CompactIOList<T, BaseType>::CompactIOList
-(
-    const IOobject& io,
-    List<T>&& list
+    const Container<Type>& l
 )
 :
     regIOobject(io),
-    ListCompactIO<T, BaseType>(move(list))
+    Container<Type>(l)
 {
     if
     (
@@ -144,29 +292,78 @@ Foam::CompactIOList<T, BaseType>::CompactIOList
 }
 
 
-template<class T, class BaseType>
-Foam::CompactIOList<T, BaseType>::CompactIOList
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+CompactIOListBase
 (
-    CompactIOList<T, BaseType>&& list
+    const IOobject& io,
+    Container<Type>&& l
 )
 :
-    regIOobject(move(list)),
-    List<T>(move(list))
+    regIOobject(io),
+    Container<Type>(move(l))
+{
+    if
+    (
+        io.readOpt() == IOobject::MUST_READ
+     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
+    )
+    {
+        readFromStream();
+    }
+}
+
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+CompactIOListBase
+(
+    CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>&& l
+)
+:
+    regIOobject(move(l)),
+    Container<Type>(move(l))
 {}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
-template<class T, class BaseType>
-Foam::CompactIOList<T, BaseType>::~CompactIOList()
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+~CompactIOListBase()
 {}
-
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class T, class BaseType>
-bool Foam::CompactIOList<T, BaseType>::writeObject
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+bool
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
@@ -177,33 +374,35 @@ bool Foam::CompactIOList<T, BaseType>::writeObject
     if (fmt == IOstream::ASCII)
     {
         // Change type to be non-compact format type
-        const word oldTypeName = typeName;
+        const word oldTypeName = CompactIOContainer<Type>::typeName;
 
-        const_cast<word&>(typeName) = IOList<T>::typeName;
+        const_cast<word&>(CompactIOContainer<Type>::typeName) =
+            IOContainer<Type>::typeName;
 
         bool good = regIOobject::writeObject(fmt, ver, cmp, write);
 
         // Change type back
-        const_cast<word&>(typeName) = oldTypeName;
+        const_cast<word&>(CompactIOContainer<Type>::typeName) = oldTypeName;
 
         return good;
     }
     else if (this->overflows())
     {
         WarningInFunction
-            << "Overall number of elements of CompactIOList of size "
+            << "Overall number of elements of CompactIOListBase of size "
             << this->size() << " overflows the representation of a label"
             << endl << "    Switching to ascii writing" << endl;
 
         // Change type to be non-compact format type
-        const word oldTypeName = typeName;
+        const word oldTypeName = CompactIOContainer<Type>::typeName;
 
-        const_cast<word&>(typeName) = IOList<T>::typeName;
+        const_cast<word&>(CompactIOContainer<Type>::typeName) =
+            IOContainer<Type>::typeName;
 
         bool good = regIOobject::writeObject(IOstream::ASCII, ver, cmp, write);
 
         // Change type back
-        const_cast<word&>(typeName) = oldTypeName;
+        const_cast<word&>(CompactIOContainer<Type>::typeName) = oldTypeName;
 
         return good;
     }
@@ -214,8 +413,16 @@ bool Foam::CompactIOList<T, BaseType>::writeObject
 }
 
 
-template<class T, class BaseType>
-bool Foam::CompactIOList<T, BaseType>::writeData(Ostream& os) const
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+bool
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+writeData(Ostream& os) const
 {
     return (os << *this).good();
 }
@@ -223,43 +430,120 @@ bool Foam::CompactIOList<T, BaseType>::writeData(Ostream& os) const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template<class T, class BaseType>
-void Foam::CompactIOList<T, BaseType>::operator=
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+void
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+operator=
 (
-    const CompactIOList<T, BaseType>& rhs
+    const CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>&
+        rhs
 )
 {
-    ListCompactIO<T, BaseType>::operator=(rhs);
+    Container<Type>::operator=(rhs);
 }
 
 
-template<class T, class BaseType>
-void Foam::CompactIOList<T, BaseType>::operator=
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+void
+Foam::CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>::
+operator=
 (
-    CompactIOList<T, BaseType>&& rhs
+    CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>&& rhs
 )
 {
-    ListCompactIO<T, BaseType>::operator=(move(rhs));
+    Container<Type>::operator=(move(rhs));
 }
 
 
-template<class T, class BaseType>
-void Foam::CompactIOList<T, BaseType>::operator=
+// * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+void Foam::writeEntry
 (
-    const List<T>& rhs
+    Ostream& os,
+    const CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>& l
 )
 {
-    ListCompactIO<T, BaseType>::operator=(rhs);
+    os << l;
 }
 
 
-template<class T, class BaseType>
-void Foam::CompactIOList<T, BaseType>::operator=
+// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+Foam::Istream& Foam::operator>>
 (
-    List<T>&& rhs
+    Istream& is,
+    CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>& l
 )
 {
-    ListCompactIO<T, BaseType>::operator=(move(rhs));
+    // ASCII is not compacted
+    if (is.format() == IOstream::ASCII)
+    {
+        is >> static_cast<Container<Type>&>(l);
+    }
+    else
+    {
+        labelList start(is);
+        List<typename Type::value_type> elems(is);
+        l.convertFromCompact(start, elems);
+    }
+
+    return is;
+}
+
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    template<class> class CompactIOContainer,
+    class Type
+>
+Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const CompactIOListBase<Container, IOContainer, CompactIOContainer, Type>& l
+)
+{
+    // ASCII is not compacted
+    if (os.format() == IOstream::ASCII)
+    {
+        os << static_cast<const Container<Type>&>(l);
+    }
+    else
+    {
+        labelList start;
+        List<typename Type::value_type> elems;
+        l.convertToCompact(start, elems);
+        os << start << elems;
+    }
+
+    return os;
 }
 
 

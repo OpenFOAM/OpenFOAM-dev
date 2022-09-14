@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::IOList
 
 Description
-    A List of objects of type \<T\> with automated input and output.
+    A List of objects of type \<Type\> with automated input and output.
 
 SourceFiles
     IOList.C
@@ -35,8 +35,8 @@ SourceFiles
 #ifndef IOList_H
 #define IOList_H
 
-#include "List.H"
 #include "regIOobject.H"
+#include "List.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,14 +44,84 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
+                           Class IOListBase Declaration
+\*---------------------------------------------------------------------------*/
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+class IOListBase
+:
+    public regIOobject,
+    public Container<Type>
+{
+
+public:
+
+    // Public Static Data
+
+        //- Does this object support re-reading?
+        static const bool rereading = false;
+
+
+    // Constructors
+
+        //- Construct from IOobject
+        IOListBase(const IOobject&);
+
+        //- Construct from IOobject; does local processor require reading?
+        IOListBase(const IOobject&, const bool read);
+
+        //- Construct from IOobject and size (does not set values)
+        IOListBase(const IOobject&, const label size);
+
+        //- Construct from IOobject and a Container
+        IOListBase(const IOobject&, const Container<Type>&);
+
+        //- Move construct by transferring the Container contents
+        IOListBase(const IOobject&, Container<Type>&&);
+
+        //- Copy constructor
+        IOListBase(const IOListBase<Container, IOContainer, Type>&);
+
+        //- Move constructor
+        IOListBase(IOListBase<Container, IOContainer, Type>&&);
+
+
+    //- Destructor
+    virtual ~IOListBase();
+
+
+    // Member Functions
+
+        //- WriteData function required for regIOobject write operation
+        virtual bool writeData(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Inherit assignment operators
+        using Container<Type>::operator=;
+
+        //- Assign to another IOList
+        void operator=(const IOListBase<Container, IOContainer, Type>&);
+
+        //- Move-assign to another IOList
+        void operator=(IOListBase<Container, IOContainer, Type>&&);
+};
+
+
+/*---------------------------------------------------------------------------*\
                            Class IOList Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T>
+template<class Type>
 class IOList
 :
-    public regIOobject,
-    public List<T>
+    public IOListBase<List, IOList, Type>
 {
 
 public:
@@ -62,41 +132,14 @@ public:
 
     // Constructors
 
-        //- Construct from IOobject
-        IOList(const IOobject&);
-
-        //- Construct from IOobject and size of IOList
-        IOList(const IOobject&, const label);
-
-        //- Construct from IOobject and a List
-        IOList(const IOobject&, const List<T>&);
-
-        //- Move construct by transferring the List contents
-        IOList(const IOobject&, List<T>&&);
-
-        //- Copy constructor
-        IOList(const IOList<T>&);
-
-        //- Move constructor
-        IOList(IOList<T>&&);
-
-
-    //- Destructor
-    virtual ~IOList();
-
-
-    // Member Functions
-
-        bool writeData(Ostream&) const;
+        //- Inherit constructors
+        using IOListBase<List, IOList, Type>::IOListBase;
 
 
     // Member Operators
 
-        void operator=(const IOList<T>&);
-        void operator=(IOList<T>&&);
-
-        void operator=(const List<T>&);
-        void operator=(List<T>&&);
+        //- Inherit assignment operators
+        using IOListBase<List, IOList, Type>::operator=;
 };
 
 

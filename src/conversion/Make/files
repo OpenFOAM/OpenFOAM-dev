@@ -11,6 +11,7 @@ mergedCyclic/polyMeshUnMergeCyclics.C
 
 meshTables/boundaryRegion.C
 meshTables/cellTable.C
+meshTables/dictionaryIOMap.C
 
 meshReader/meshReader.C
 meshReader/meshReaderAux.C

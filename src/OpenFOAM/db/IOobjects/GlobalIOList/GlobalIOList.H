@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::GlobalIOList
 
 Description
-    IOList with global data (so optionally read from master)
+    IOContainer with global data (so optionally read from master)
 
 SourceFiles
     GlobalIOList.C
@@ -35,8 +35,8 @@ SourceFiles
 #ifndef GlobalIOList_H
 #define GlobalIOList_H
 
-#include "List.H"
 #include "regIOobject.H"
+#include "List.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,44 +44,46 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class GlobalIOList Declaration
+                     Class GlobalIOListBase Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class GlobalIOList
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+class GlobalIOListBase
 :
     public regIOobject,
-    public List<Type>
+    public Container<Type>
 {
 
 public:
 
-    TypeName("List");
-
-
     // Constructors
 
         //- Construct from IOobject
-        GlobalIOList(const IOobject&);
+        GlobalIOListBase(const IOobject&);
 
-        //- Construct from IOobject
-        GlobalIOList(const IOobject&, const label size);
+        //- Construct from IOobject and size (does not set values)
+        GlobalIOListBase(const IOobject&, const label size);
 
-        //- Construct from IOobject and a List
-        GlobalIOList(const IOobject&, const List<Type>&);
+        //- Construct from IOobject and a Container
+        GlobalIOListBase(const IOobject&, const Container<Type>&);
 
-        //- Move construct by transferring the List contents
-        GlobalIOList(const IOobject&, List<Type>&&);
+        //- Move construct by transferring the Container contents
+        GlobalIOListBase(const IOobject&, Container<Type>&&);
 
         //- Copy constructor
-        GlobalIOList(const GlobalIOList<Type>&);
+        GlobalIOListBase(const GlobalIOListBase<Container, IOContainer, Type>&);
 
         //- Move constructor
-        GlobalIOList(GlobalIOList<Type>&&);
+        GlobalIOListBase(GlobalIOListBase<Container, IOContainer, Type>&&);
 
 
     //- Destructor
-    virtual ~GlobalIOList();
+    virtual ~GlobalIOListBase();
 
 
     // Member Functions
@@ -96,16 +98,47 @@ public:
         virtual bool readData(Istream&);
 
         //- WriteData function required for regIOobject write operation
-        bool writeData(Ostream&) const;
+        virtual bool writeData(Ostream&) const;
+
+    // Member Operators
+
+        //- Inherit assignment operators
+        using Container<Type>::operator=;
+
+        //- Assign to another GlobalIOList
+        void operator=(const GlobalIOListBase<Container, IOContainer, Type>&);
+
+        //- Move-assign to another GlobalIOList
+        void operator=(GlobalIOListBase<Container, IOContainer, Type>&&);
+};
+
+
+/*---------------------------------------------------------------------------*\
+                           Class GlobalIOList Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class GlobalIOList
+:
+    public GlobalIOListBase<List, GlobalIOList, Type>
+{
+
+public:
+
+    //- Runtime type information
+    TypeName("List");
+
+
+    // Constructors
+
+        //- Inherit constructors
+        using GlobalIOListBase<List, GlobalIOList, Type>::GlobalIOListBase;
 
 
     // Member Operators
 
-        void operator=(const GlobalIOList<Type>&);
-        void operator=(GlobalIOList<Type>&&);
-
-        void operator=(const List<Type>&);
-        void operator=(List<Type>&&);
+        //- Inherit assignment operators
+        using GlobalIOListBase<List, GlobalIOList, Type>::operator=;
 };
 
 

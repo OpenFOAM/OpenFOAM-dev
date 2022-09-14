@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::IOPtrList
 
 Description
-    A PtrList of objects of type \<T\> with automated input and output.
+    A PtrList of objects of type \<Type\> with automated input and output.
 
 SourceFiles
     IOPtrList.C
@@ -35,8 +35,8 @@ SourceFiles
 #ifndef IOPtrList_H
 #define IOPtrList_H
 
+#include "IOList.H"
 #include "PtrList.H"
-#include "regIOobject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,14 +47,19 @@ namespace Foam
                           Class IOPtrList Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T>
+template<class Type>
 class IOPtrList
 :
-    public regIOobject,
-    public PtrList<T>
+    public IOListBase<PtrList, IOPtrList, Type>
 {
 
 public:
+
+    // Public Static Data
+
+        //- Does this object support re-reading?
+        static const bool rereading = true;
+
 
     //- Runtime type information
     TypeName("PtrList");
@@ -62,39 +67,18 @@ public:
 
     // Constructors
 
+        //- Inherit constructors
+        using IOListBase<PtrList, IOPtrList, Type>::IOListBase;
+
         //- Construct from IOobject using given Istream constructor class
         template<class INew>
         IOPtrList(const IOobject&, const INew&);
 
-        //- Construct from IOobject
-        IOPtrList(const IOobject&);
-
-        //- Construct from IOobject with given size
-        IOPtrList(const IOobject&, const label);
-
-        //- Construct from IOobject and a PtrList
-        IOPtrList(const IOobject&, const PtrList<T>&);
-
-        //- Move construct by transferring the PtrList contents
-        IOPtrList(const IOobject&, PtrList<T>&&);
-
-        //- Move constructor
-        IOPtrList(IOPtrList<T>&&);
-
-
-    //- Destructor
-    virtual ~IOPtrList();
-
-
-    // Member Functions
-
-        bool writeData(Ostream&) const;
-
 
     // Member Operators
 
-        void operator=(const IOPtrList<T>&);
-        void operator=(IOPtrList<T>&&);
+        //- Inherit assignment operators
+        using IOListBase<PtrList, IOPtrList, Type>::operator=;
 };
 
 

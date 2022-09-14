@@ -25,7 +25,7 @@ License
 
 #include "parcelCloudList.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
-#include "GlobalIOLists.H"
+#include "wordIOList.H"
 #include "fvMatrices.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
