@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ License
 #include "DynamicField.H"
 #include "syncTools.H"
 #include "polyMeshTetDecomposition.H"
+#include "cpuTime.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -1168,9 +1169,11 @@ Foam::isoSurface::isoSurface
     pVals_(pVals),
     iso_(iso)
 {
+    cpuTime cpuTime;
+
     if (debug)
     {
-        Pout<< "isoSurface : iso:" << iso_
+        Pout<< nl << "isoSurface : iso:" << iso_
             << " filter:" << filterTypeNames_[filter] << endl;
     }
 
@@ -1437,6 +1440,16 @@ Foam::isoSurface::isoSurface
             pointFromDiag = UIndirectList<bool>(pointFromDiag, pointMap)();
             meshCells_ = UIndirectList<label>(meshCells_, faceMap)();
         }
+    }
+
+    if (debug)
+    {
+        const label nLabels =
+            sum(ListListOps::subSizes(faces(), accessOp<face>()));
+
+        Pout<< typeName << " : constructed surface of size "
+            << points().size()*sizeof(point) + nLabels*sizeof(label)
+            << " in " << cpuTime.cpuTimeIncrement() << "s" << nl << endl;
     }
 }
 
