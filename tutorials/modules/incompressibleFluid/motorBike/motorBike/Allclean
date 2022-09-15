@@ -9,7 +9,4 @@ rm -f constant/geometry/motorBike.obj.gz
 
 cleanCase
 
-# Reset decomposeParDict
-cp system/decomposeParDict.hierarchical system/decomposeParDict
-
 #------------------------------------------------------------------------------
