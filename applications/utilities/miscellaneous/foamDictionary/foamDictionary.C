@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,9 @@ Description
 
 Usage
     \b foamDictionary [OPTION] dictionary
+      - \par -case \<dir\>
+        Select a case directory instead of the current working directory
+
       - \par -parallel
         Specify case as a parallel job
 
@@ -294,7 +297,6 @@ void substitute(dictionary& dict, string substitutions)
 
 int main(int argc, char *argv[])
 {
-    argList::removeOption("case");
     writeInfoHeader = false;
 
     argList::addNote("manipulates dictionaries");
