@@ -66,14 +66,14 @@ Description
     ClassNameNoDebug(TypeNameString);                                          \
     virtual const word& type() const { return typeName; }                      \
     template<class Name>                                                       \
-    word typedName(Name name) const { return (typeName + ':') + name; }
+    word typedName(Name name) const { return (type() + ':') + name; }
 
 //- Declare a ClassName() with extra virtual type info
 #define TypeName(TypeNameString)                                               \
     ClassName(TypeNameString);                                                 \
     virtual const word& type() const { return typeName; }                      \
     template<class Name>                                                       \
-    word typedName(Name name) const { return (typeName + ':') + name; }
+    word typedName(Name name) const { return (type() + ':') + name; }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -47,7 +47,7 @@ runTimeModifiable true;
 
 cacheTemporaryObjects
 (
-    SpalartAllmarasDES:LESRegion
+    SpalartAllmarasDDES:LESRegion
 );
 
 functions
@@ -62,7 +62,7 @@ functions
 
         objects
         (
-            SpalartAllmarasDES:LESRegion
+            SpalartAllmarasDDES:LESRegion
         );
     }
 
