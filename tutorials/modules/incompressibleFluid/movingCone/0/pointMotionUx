@@ -29,7 +29,8 @@ boundaryField
 
     farFieldMoving
     {
-        type            slip;
+        type            uniformFixedValue;
+        uniformValue    constant 1;
     }
 
     fixedWall
