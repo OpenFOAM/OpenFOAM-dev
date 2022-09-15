@@ -24,28 +24,35 @@ boundaryField
         type            uniformFixedValue;
         uniformValue    constant 160;
     }
+
     farFieldMoving
     {
-        type            slip;
+        type            uniformFixedValue;
+        uniformValue    constant 160;
     }
+
     fixedWall
     {
         type            uniformFixedValue;
         uniformValue    constant 0;
     }
+
     left
     {
         type            uniformFixedValue;
         uniformValue    constant 0;
     }
+
     farField
     {
         type            slip;
     }
+
     back
     {
         type            wedge;
     }
+
     front
     {
         type            wedge;
