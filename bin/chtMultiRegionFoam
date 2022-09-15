@@ -38,6 +38,6 @@ foamMultiRun solver module executor which will be executed instead:
 
 EOF
 
-foamMultiRun "$@"
+exec env foamMultiRun "$@"
 
 #------------------------------------------------------------------------------

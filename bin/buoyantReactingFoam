@@ -41,6 +41,6 @@ multicomponentFluid solver module executed by the foamRun application:
 
 EOF
 
-foamRun -solver multicomponentFluid "$@"
+exec env foamRun -solver multicomponentFluid "$@"
 
 #------------------------------------------------------------------------------

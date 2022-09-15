@@ -40,6 +40,6 @@ fluid solver module which will be executed using
 
 EOF
 
-foamRun -solver fluid "$@"
+exec env foamRun -solver fluid "$@"
 
 #------------------------------------------------------------------------------

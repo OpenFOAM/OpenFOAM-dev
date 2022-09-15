@@ -41,6 +41,6 @@ compressibleVoF solver module executed by the foamRun application:
 
 EOF
 
-foamRun -solver compressibleVoF "$@"
+exec env foamRun -solver compressibleVoF "$@"
 
 #------------------------------------------------------------------------------

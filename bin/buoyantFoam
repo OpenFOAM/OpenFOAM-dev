@@ -41,6 +41,6 @@ fluid solver module executed by the foamRun application:
 
 EOF
 
-foamRun -solver fluid "$@"
+exec env foamRun -solver fluid "$@"
 
 #------------------------------------------------------------------------------
