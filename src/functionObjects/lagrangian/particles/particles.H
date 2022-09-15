@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,8 @@ Description
     of an incompressible flow (laminar, RANS or LES).
 
     It may be used in conjunction with any transient single-phase incompressible
-    flow solver such as pisoFoam or pimpleFoam and tracks the particles or
-    parcels without affecting the flow-field.
+    flow solvers or solver modules such as incompressibleFluid and tracks the
+    particles or parcels without affecting the flow-field.
 
     The cloud requires the density of the fluid which is looked-up from
     constant/phaseProperties dictionary and the acceleration due to gravity

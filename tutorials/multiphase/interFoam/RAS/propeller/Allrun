@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Mesh if necessary
-if ! cloneMesh ../../../incompressible/pimpleFoam/RAS/propeller .
+if ! cloneMesh ../../../../modules/incompressibleFluid/propeller .
 then
     ./Allmesh
 else

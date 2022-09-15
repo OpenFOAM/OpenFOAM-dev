@@ -2,7 +2,7 @@ Overview
 ========
 + Template case for rotating geometry flow with single inlet and outlet
 + Can be used for MRF or NCC simulations. Also supports AMI.
-+ Setup to run the simpleFoam solver for MRF, pimpleFoam for NCC
++ Setup to run the incompressibleFluid solver module for MRF or NCC
 + The case is designed to be meshed with snappyHexMesh
 + snappyHexMesh is setup to use 3 trisurface files
   + fixed.obj: CAD of the stationary (external) geometry

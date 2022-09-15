@@ -67,6 +67,6 @@ nonConformalCouples
 // Note that in rare cases it may be appropriate to create multiple couplings
 // between the same two patches. That can be achieved with multiple entries
 // with the same patches specified. See the
-// incompressible/pimpleFoam/RAS/impeller tutorial for an example of this.
+// modules/incompressibleFluid/impeller tutorial for an example of this.
 
 // ************************************************************************* //

@@ -58,7 +58,7 @@ which is case-insensitive on the first character.
 Otherwise the user can try a broader keyword match with "-keyword | -k" option.
 
 Examples
-  foamInfo simpleFoam
+  foamInfo incompressibleFluid
   foamInfo interFoam
   foamInfo fixedValue
   foamInfo -k fixedValue
