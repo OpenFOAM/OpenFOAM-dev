@@ -139,9 +139,9 @@ class fvMeshDistribute
                 const PtrList<Field<T>>& oldFlds
             );
 
-            //- Correct processor patch fields
+            //- Correct coupled patch fields
             template<class GeoField>
-            void correctProcessorPatchFields();
+            void correctCoupledPatchFields();
 
             //- Delete all processor patches. Move any processor faces into
             //  destinationPatch

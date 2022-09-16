@@ -3000,12 +3000,12 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
     // we also need to adapt our constructMaps.
     repatch(newPatchID, constructFaceMap);
 
-    // Correct processor patch fields
-    correctProcessorPatchFields<volScalarField>();
-    correctProcessorPatchFields<volVectorField>();
-    correctProcessorPatchFields<volSphericalTensorField>();
-    correctProcessorPatchFields<volSymmTensorField>();
-    correctProcessorPatchFields<volTensorField>();
+    // Correct coupled patch fields
+    correctCoupledPatchFields<volScalarField>();
+    correctCoupledPatchFields<volVectorField>();
+    correctCoupledPatchFields<volSphericalTensorField>();
+    correctCoupledPatchFields<volSymmTensorField>();
+    correctCoupledPatchFields<volTensorField>();
 
     mesh_.setInstance(mesh_.time().timeName());
 

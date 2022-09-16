@@ -239,11 +239,8 @@ void Foam::fvMeshDistribute::mapExposedFaces
 
 
 template<class GeoField>
-void Foam::fvMeshDistribute::correctProcessorPatchFields()
+void Foam::fvMeshDistribute::correctCoupledPatchFields()
 {
-    typedef processorFvPatchField<typename GeoField::value_type>
-        processorPatchFieldType;
-
     HashTable<GeoField*> flds
     (
         mesh_.objectRegistry::lookupClass<GeoField>()
@@ -265,7 +262,7 @@ void Foam::fvMeshDistribute::correctProcessorPatchFields()
 
             forAll(bfld, patchi)
             {
-                if (isA<processorPatchFieldType>(bfld[patchi]))
+                if (bfld[patchi].coupled())
                 {
                     bfld[patchi].initEvaluate(Pstream::defaultCommsType);
                 }
@@ -283,7 +280,7 @@ void Foam::fvMeshDistribute::correctProcessorPatchFields()
 
             forAll(bfld, patchi)
             {
-                if (isA<processorPatchFieldType>(bfld[patchi]))
+                if (bfld[patchi].coupled())
                 {
                     bfld[patchi].evaluate(Pstream::defaultCommsType);
                 }
@@ -296,7 +293,7 @@ void Foam::fvMeshDistribute::correctProcessorPatchFields()
 
             forAll(patchSchedule, patchEvali)
             {
-                if (isA<processorPatchFieldType>(bfld[patchEvali]))
+                if (bfld[patchEvali].coupled())
                 {
                     if (patchSchedule[patchEvali].init)
                     {
