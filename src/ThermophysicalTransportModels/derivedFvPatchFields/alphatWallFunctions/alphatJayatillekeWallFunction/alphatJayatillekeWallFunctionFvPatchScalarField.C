@@ -222,7 +222,7 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
 
             const scalar C = Pr*0.5*rhow[facei]*uTau*sqr(magUp[facei]);
 
-            alphaEff = (A - C)/(B + sign(B)*vSmall);
+            alphaEff = (A - C)/(B + sign(B)*rootVSmall);
         }
         else
         {
@@ -238,7 +238,7 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
                 0.5*rhow[facei]*uTau
                *(Prt_*sqr(magUp[facei]) + (Pr - Prt_)*sqr(magUc));
 
-            alphaEff = (A - C)/(B + sign(B)*vSmall);
+            alphaEff = (A - C)/(B + sign(B)*rootVSmall);
         }
 
         // Bounds on turbulent thermal diffusivity
