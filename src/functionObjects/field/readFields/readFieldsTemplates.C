@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::functionObjects::readFields::loadField
     }
     else
     {
-        typeIOobject<VolFieldType> fieldHeader
+        IOobject fieldHeader
         (
             fieldName,
             mesh_.time().timeName(),
@@ -64,7 +64,11 @@ void Foam::functionObjects::readFields::loadField
             IOobject::NO_WRITE
         );
 
-        if (fieldHeader.headerOk())
+        if
+        (
+            fieldHeader.headerOk()
+         && fieldHeader.headerClassName() == VolFieldType::typeName
+        )
         {
             // Store field locally
             Log << "    Reading " << fieldName << endl;
@@ -73,26 +77,18 @@ void Foam::functionObjects::readFields::loadField
             vflds.setSize(sz+1);
             vflds.set(sz, new VolFieldType(fieldHeader, mesh_));
         }
-        else
+        else if
+        (
+            fieldHeader.headerOk()
+         && fieldHeader.headerClassName() == SurfaceFieldType::typeName
+        )
         {
-            typeIOobject<SurfaceFieldType> fieldHeader
-            (
-                fieldName,
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE
-            );
+            // Store field locally
+            Log << "    Reading " << fieldName << endl;
 
-            if (fieldHeader.headerOk())
-            {
-                // Store field locally
-                Log << "    Reading " << fieldName << endl;
-
-                label sz = sflds.size();
-                sflds.setSize(sz+1);
-                sflds.set(sz, new SurfaceFieldType(fieldHeader, mesh_));
-            }
+            label sz = sflds.size();
+            sflds.setSize(sz+1);
+            sflds.set(sz, new SurfaceFieldType(fieldHeader, mesh_));
         }
     }
 }
