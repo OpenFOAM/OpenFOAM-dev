@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,12 +77,12 @@ public:
 };
 
 
-//- Template function for obtaining global write status
+//- Trait for obtaining global write status
 template<>
-inline bool typeGlobalFile<timeIOdictionary>()
+struct typeGlobalFile<timeIOdictionary>
 {
-    return false;
-}
+    static const bool global = false;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

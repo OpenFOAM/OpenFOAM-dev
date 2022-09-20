@@ -469,12 +469,12 @@ public:
 };
 
 
-//- Template function for obtaining global status
+//- Trait for obtaining global status
 template<>
-inline bool typeGlobal<distributedTriSurfaceMesh>()
+struct typeGlobal<distributedTriSurfaceMesh>
 {
-    return false;
-}
+    static const bool global = false;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

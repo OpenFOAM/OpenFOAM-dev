@@ -179,12 +179,12 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Template function for obtaining global status
+//- Trait for obtaining global status
 template<>
-inline bool typeGlobal<fvConstraints>()
+struct typeGlobal<fvConstraints>
 {
-    return true;
-}
+    static const bool global = true;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

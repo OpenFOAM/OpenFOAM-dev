@@ -288,12 +288,12 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Template function for obtaining global status
+//- Trait for obtaining global status
 template<>
-inline bool typeGlobal<fvModels>()
+struct typeGlobal<fvModels>
 {
-    return true;
-}
+    static const bool global = true;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
