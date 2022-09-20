@@ -31,7 +31,6 @@ License
 #include "etcFiles.H"
 #include "wordAndDictionary.H"
 
-
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
 Foam::fileName Foam::functionObjectList::functionObjectDictPath
@@ -791,7 +790,8 @@ bool Foam::functionObjectList::read()
 
                 if
                 (
-                    dict.found("writeControl")
+                    dict.found("executeControl")
+                 || dict.found("writeControl")
                  || dict.found("outputControl")
                 )
                 {
