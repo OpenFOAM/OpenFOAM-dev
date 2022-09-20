@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "WallLocalSpringSliderDashpot.H"
+#include "polyMesh.H"
+#include "wallPolyPatch.H"
+#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -80,6 +83,8 @@ void Foam::WallLocalSpringSliderDashpot<CloudType>::evaluateWall
     bool cohesion
 ) const
 {
+    const polyMesh& mesh = this->owner().mesh();
+
     // wall patch index
     label wPI = patchMap_[data.patchIndex()];
 
@@ -92,7 +97,7 @@ void Foam::WallLocalSpringSliderDashpot<CloudType>::evaluateWall
     scalar cohesionEnergyDensity = cohesionEnergyDensity_[wPI];
     cohesion = cohesion && cohesion_[wPI];
 
-    vector r_PW = p.position() - site;
+    vector r_PW = p.position(mesh) - site;
 
     vector U_PW = p.U() - data.wallData();
 
@@ -116,7 +121,7 @@ void Foam::WallLocalSpringSliderDashpot<CloudType>::evaluateWall
     {
         fN_PW +=
            -cohesionEnergyDensity
-           *mathematical::pi*(sqr(pREff) - sqr(r_PW_mag))
+           *constant::mathematical::pi*(sqr(pREff) - sqr(r_PW_mag))
            *rHat_PW;
     }
 

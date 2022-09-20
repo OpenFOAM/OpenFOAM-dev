@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,9 @@ Foam::forceSuSp Foam::WenYuDragForce<CloudType>::calcCoupled
         this->alphacInterp().interpolate
         (
             p.coordinates(),
-            p.currentTetIndices()
+            p.currentTetIndices(td.mesh)
         );
+
     const scalar CdRe = SchillerNaumannDragForce<CloudType>::CdRe(alphac*Re);
 
     return forceSuSp

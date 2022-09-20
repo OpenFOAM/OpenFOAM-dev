@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "particle.H"
 #include "polyMesh.H"
 #include "Time.H"
 
@@ -30,15 +31,16 @@ License
 
 void Foam::particle::stationaryTetGeometry
 (
+    const polyMesh& mesh,
     vector& centre,
     vector& base,
     vector& vertex1,
     vector& vertex2
 ) const
 {
-    const triFace triIs(currentTetIndices().faceTriIs(mesh_));
-    const vectorField& ccs = mesh_.cellCentres();
-    const pointField& pts = mesh_.points();
+    const triFace triIs(currentTetIndices(mesh).faceTriIs(mesh));
+    const vectorField& ccs = mesh.cellCentres();
+    const pointField& pts = mesh.points();
 
     centre = ccs[celli_];
     base = pts[triIs[0]];
@@ -47,10 +49,13 @@ void Foam::particle::stationaryTetGeometry
 }
 
 
-inline Foam::barycentricTensor Foam::particle::stationaryTetTransform() const
+inline Foam::barycentricTensor Foam::particle::stationaryTetTransform
+(
+    const polyMesh& mesh
+) const
 {
     vector centre, base, vertex1, vertex2;
-    stationaryTetGeometry(centre, base, vertex1, vertex2);
+    stationaryTetGeometry(mesh, centre, base, vertex1, vertex2);
 
     return barycentricTensor(centre, base, vertex1, vertex2);
 }
@@ -58,6 +63,7 @@ inline Foam::barycentricTensor Foam::particle::stationaryTetTransform() const
 
 inline void Foam::particle::movingTetGeometry
 (
+    const polyMesh& mesh,
     const scalar fraction,
     Pair<vector>& centre,
     Pair<vector>& base,
@@ -65,16 +71,16 @@ inline void Foam::particle::movingTetGeometry
     Pair<vector>& vertex2
 ) const
 {
-    const triFace triIs(currentTetIndices().faceTriIs(mesh_));
-    const pointField& ptsOld = mesh_.oldPoints();
-    const pointField& ptsNew = mesh_.points();
-    const vector ccOld = mesh_.oldCellCentres()[celli_];
-    const vector ccNew = mesh_.cellCentres()[celli_];
+    const triFace triIs(currentTetIndices(mesh).faceTriIs(mesh));
+    const pointField& ptsOld = mesh.oldPoints();
+    const pointField& ptsNew = mesh.points();
+    const vector ccOld = mesh.oldCellCentres()[celli_];
+    const vector ccNew = mesh.cellCentres()[celli_];
 
     // Old and new points and cell centres are not sub-cycled. If we are sub-
     // cycling, then we have to account for the timestep change here by
     // modifying the fractions that we take of the old and new geometry.
-    const Pair<scalar> s = stepFractionSpan();
+    const Pair<scalar> s = stepFractionSpan(mesh);
     const scalar f0 = s[0] + stepFraction_*s[1], f1 = fraction*s[1];
 
     centre[0] = ccOld + f0*(ccNew - ccOld);
@@ -91,11 +97,12 @@ inline void Foam::particle::movingTetGeometry
 
 inline Foam::Pair<Foam::barycentricTensor> Foam::particle::movingTetTransform
 (
+    const polyMesh& mesh,
     const scalar fraction
 ) const
 {
     Pair<vector> centre, base, vertex1, vertex2;
-    movingTetGeometry(fraction, centre, base, vertex1, vertex2);
+    movingTetGeometry(mesh, fraction, centre, base, vertex1, vertex2);
 
     return
         Pair<barycentricTensor>
@@ -119,12 +126,6 @@ inline Foam::label Foam::particle::getNewParticleID() const
             << " when reconstructing particle tracks." << endl;
     }
     return id;
-}
-
-
-inline const Foam::polyMesh& Foam::particle::mesh() const
-{
-    return mesh_;
 }
 
 
@@ -194,12 +195,15 @@ inline Foam::label& Foam::particle::origId()
 }
 
 
-inline Foam::Pair<Foam::scalar> Foam::particle::stepFractionSpan() const
+inline Foam::Pair<Foam::scalar> Foam::particle::stepFractionSpan
+(
+    const polyMesh& mesh
+) const
 {
-    if (mesh_.time().subCycling())
+    if (mesh.time().subCycling())
     {
-        const TimeState& tsNew = mesh_.time();
-        const TimeState& tsOld = mesh_.time().prevTimeState();
+        const TimeState& tsNew = mesh.time();
+        const TimeState& tsOld = mesh.time().prevTimeState();
 
         const scalar tFrac =
         (
@@ -218,36 +222,45 @@ inline Foam::Pair<Foam::scalar> Foam::particle::stepFractionSpan() const
 }
 
 
-inline Foam::scalar Foam::particle::currentTimeFraction() const
+inline Foam::scalar Foam::particle::currentTimeFraction
+(
+    const polyMesh& mesh
+) const
 {
-    const Pair<scalar> s = stepFractionSpan();
+    const Pair<scalar> s = stepFractionSpan(mesh);
 
     return s[0] + stepFraction_*s[1];
 }
 
 
-inline Foam::tetIndices Foam::particle::currentTetIndices() const
+inline Foam::tetIndices Foam::particle::currentTetIndices
+(
+    const polyMesh& mesh
+) const
 {
     return tetIndices(celli_, tetFacei_, tetPti_);
 }
 
 
-inline Foam::barycentricTensor Foam::particle::currentTetTransform() const
+inline Foam::barycentricTensor Foam::particle::currentTetTransform
+(
+    const polyMesh& mesh
+) const
 {
-    if (mesh_.moving() && stepFraction_ != 1)
+    if (mesh.moving() && stepFraction_ != 1)
     {
-        return movingTetTransform(0)[0];
+        return movingTetTransform(mesh, 0)[0];
     }
     else
     {
-        return stationaryTetTransform();
+        return stationaryTetTransform(mesh);
     }
 }
 
 
-inline Foam::vector Foam::particle::normal() const
+inline Foam::vector Foam::particle::normal(const polyMesh& mesh) const
 {
-    return currentTetIndices().faceTri(mesh_).normal();
+    return currentTetIndices(mesh).faceTri(mesh).normal();
 }
 
 
@@ -257,27 +270,27 @@ inline bool Foam::particle::onFace() const
 }
 
 
-inline bool Foam::particle::onInternalFace() const
+inline bool Foam::particle::onInternalFace(const polyMesh& mesh) const
 {
-    return onFace() && mesh_.isInternalFace(facei_);
+    return onFace() && mesh.isInternalFace(facei_);
 }
 
 
-inline bool Foam::particle::onBoundaryFace() const
+inline bool Foam::particle::onBoundaryFace(const polyMesh& mesh) const
 {
-    return onFace() && !mesh_.isInternalFace(facei_);
+    return onFace() && !mesh.isInternalFace(facei_);
 }
 
 
-inline Foam::label Foam::particle::patch() const
+inline Foam::label Foam::particle::patch(const polyMesh& mesh) const
 {
-    return onFace() ? mesh_.boundaryMesh().whichPatch(facei_) : -1;
+    return onFace() ? mesh.boundaryMesh().whichPatch(facei_) : -1;
 }
 
 
-inline Foam::vector Foam::particle::position() const
+inline Foam::vector Foam::particle::position(const polyMesh& mesh) const
 {
-    return currentTetTransform() & coordinates_;
+    return currentTetTransform(mesh) & coordinates_;
 }
 
 
@@ -289,19 +302,24 @@ inline void Foam::particle::reset(const scalar stepFraction)
 }
 
 
-void Foam::particle::patchData(vector& normal, vector& displacement) const
+void Foam::particle::patchData
+(
+    const polyMesh& mesh,
+    vector& normal,
+    vector& displacement
+) const
 {
-    if (!onBoundaryFace())
+    if (!onBoundaryFace(mesh))
     {
         FatalErrorInFunction
             << "Patch data was requested for a particle that isn't on a patch"
             << exit(FatalError);
     }
 
-    if (mesh_.moving() && stepFraction_ != 1)
+    if (mesh.moving() && stepFraction_ != 1)
     {
         Pair<vector> centre, base, vertex1, vertex2;
-        movingTetGeometry(1, centre, base, vertex1, vertex2);
+        movingTetGeometry(mesh, 1, centre, base, vertex1, vertex2);
 
         normal = triPointRef(base[0], vertex1[0], vertex2[0]).normal();
 
@@ -315,7 +333,7 @@ void Foam::particle::patchData(vector& normal, vector& displacement) const
     else
     {
         vector centre, base, vertex1, vertex2;
-        stationaryTetGeometry(centre, base, vertex1, vertex2);
+        stationaryTetGeometry(mesh, centre, base, vertex1, vertex2);
 
         normal = triPointRef(base, vertex1, vertex2).normal();
 

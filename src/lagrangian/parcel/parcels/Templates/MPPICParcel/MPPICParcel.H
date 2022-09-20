@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,52 +204,22 @@ public:
         );
 
         //- Construct from Istream
-        MPPICParcel
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        MPPICParcel(Istream& is, bool readFields = true);
 
         //- Construct as a copy
         MPPICParcel(const MPPICParcel& p);
 
-        //- Construct as a copy
-        MPPICParcel(const MPPICParcel& p, const polyMesh& mesh);
-
-        //- Construct and return a (basic particle) clone
+        //- Construct and return a clone
         virtual autoPtr<particle> clone() const
         {
             return autoPtr<particle>(new MPPICParcel(*this));
         }
 
-        //- Construct and return a (basic particle) clone
-        virtual autoPtr<particle> clone(const polyMesh& mesh) const
+        //- Construct from Istream and return
+        static autoPtr<MPPICParcel> New(Istream& is)
         {
-            return autoPtr<particle>(new MPPICParcel(*this, mesh));
+            return autoPtr<MPPICParcel>(new MPPICParcel(is));
         }
-
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
-        {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<MPPICParcel<ParcelType>> operator()(Istream& is) const
-            {
-                return autoPtr<MPPICParcel<ParcelType>>
-                (
-                    new MPPICParcel<ParcelType>(mesh_, is, true)
-                );
-            }
-        };
 
 
     // Member Functions

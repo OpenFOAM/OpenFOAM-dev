@@ -184,12 +184,7 @@ public:
         );
 
         //- Construct from Istream
-        DSMCParcel
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        DSMCParcel(Istream& is, bool readFields = true);
 
         //- Construct and return a clone
         virtual autoPtr<particle> clone() const
@@ -197,27 +192,11 @@ public:
             return autoPtr<particle>(new DSMCParcel<ParcelType>(*this));
         }
 
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
+        //- Construct from Istream and return
+        static autoPtr<DSMCParcel> New(Istream& is)
         {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<DSMCParcel<ParcelType>> operator()(Istream& is) const
-            {
-                return autoPtr<DSMCParcel<ParcelType>>
-                (
-                    new DSMCParcel<ParcelType>(mesh_, is, true)
-                );
-            }
-        };
+            return autoPtr<DSMCParcel>(new DSMCParcel(is));
+        }
 
 
     // Member Functions

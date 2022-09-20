@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,14 +40,9 @@ const std::size_t Foam::DSMCParcel<ParcelType>::sizeofFields_
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParcelType>
-Foam::DSMCParcel<ParcelType>::DSMCParcel
-(
-    const polyMesh& mesh,
-    Istream& is,
-    bool readFields
-)
+Foam::DSMCParcel<ParcelType>::DSMCParcel(Istream& is, bool readFields)
 :
-    ParcelType(mesh, is, readFields),
+    ParcelType(is, readFields),
     U_(Zero),
     Ei_(0.0),
     typeId_(-1)

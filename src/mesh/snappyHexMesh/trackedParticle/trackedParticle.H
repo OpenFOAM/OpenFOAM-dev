@@ -147,12 +147,7 @@ public:
         );
 
         //- Construct from Istream
-        trackedParticle
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        trackedParticle(Istream& is, bool readFields = true);
 
         //- Construct and return a clone
         autoPtr<particle> clone() const
@@ -160,27 +155,11 @@ public:
             return autoPtr<particle>(new trackedParticle(*this));
         }
 
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
+        //- Construct from Istream and return
+        static autoPtr<trackedParticle> New(Istream& is)
         {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<trackedParticle> operator()(Istream& is) const
-            {
-                return autoPtr<trackedParticle>
-                (
-                    new trackedParticle(mesh_, is, true)
-                );
-            }
-        };
+            return autoPtr<trackedParticle>(new trackedParticle(is));
+        }
 
 
     // Member Functions

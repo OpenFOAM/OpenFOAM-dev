@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,14 +44,9 @@ const std::size_t Foam::CollidingParcel<ParcelType>::sizeofFields_
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParcelType>
-Foam::CollidingParcel<ParcelType>::CollidingParcel
-(
-    const polyMesh& mesh,
-    Istream& is,
-    bool readFields
-)
+Foam::CollidingParcel<ParcelType>::CollidingParcel(Istream& is, bool readFields)
 :
-    ParcelType(mesh, is, readFields),
+    ParcelType(is, readFields),
     f_(Zero),
     angularMomentum_(Zero),
     torque_(Zero),

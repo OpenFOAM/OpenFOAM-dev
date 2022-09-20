@@ -49,7 +49,7 @@ bool Foam::solidParticle::move
     {
         if (debug)
         {
-            Info<< "Time = " << mesh().time().timeName()
+            Info<< "Time = " << td.mesh.time().timeName()
                 << " trackTime = " << trackTime
                 << " stepFraction() = " << stepFraction() << endl;
         }
@@ -62,7 +62,7 @@ bool Foam::solidParticle::move
 
         const scalar dt = (stepFraction() - sfrac)*trackTime;
 
-        const tetIndices tetIs = this->currentTetIndices();
+        const tetIndices tetIs = this->currentTetIndices(td.mesh);
         scalar rhoc = td.rhoInterp().interpolate(this->coordinates(), tetIs);
         vector Uc = td.UInterp().interpolate(this->coordinates(), tetIs);
         scalar nuc = td.nuInterp().interpolate(this->coordinates(), tetIs);
@@ -87,9 +87,13 @@ bool Foam::solidParticle::move
 }
 
 
-void Foam::solidParticle::hitWallPatch(solidParticleCloud& cloud, trackingData&)
+void Foam::solidParticle::hitWallPatch
+(
+    solidParticleCloud& cloud,
+    trackingData& td
+)
 {
-    const vector nw = normal();
+    const vector nw = normal(td.mesh);
 
     const scalar Un = U_ & nw;
     const vector Ut = U_ - Un*nw;

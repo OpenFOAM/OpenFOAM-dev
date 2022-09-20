@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,7 +123,7 @@ void Foam::ensightParticlePositions
 
         forAllConstIter(Cloud<passiveParticle>, parcels, elmnt)
         {
-            const vector& p = elmnt().position();
+            const vector& p = elmnt().position(mesh);
 
             os.write(p.x());
             os.write(p.y());
@@ -136,7 +136,7 @@ void Foam::ensightParticlePositions
 
         forAllConstIter(Cloud<passiveParticle>, parcels, elmnt)
         {
-            const vector& p = elmnt().position();
+            const vector& p = elmnt().position(mesh);
 
             os.write(++nParcels, 8);    // unusual width
             os.write(p.x());

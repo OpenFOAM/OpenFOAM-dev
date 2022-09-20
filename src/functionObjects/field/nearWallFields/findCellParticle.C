@@ -59,14 +59,9 @@ Foam::findCellParticle::findCellParticle
 {}
 
 
-Foam::findCellParticle::findCellParticle
-(
-    const polyMesh& mesh,
-    Istream& is,
-    bool readFields
-)
+Foam::findCellParticle::findCellParticle(Istream& is, bool readFields)
 :
-    particle(mesh, is, readFields)
+    particle(is, readFields)
 {
     if (readFields)
     {
@@ -117,7 +112,7 @@ bool Foam::findCellParticle::move
         // Hit endpoint or patch. If patch hit could do fancy stuff but just
         // to use the patch point is good enough for now.
         td.cellToData()[cell()].append(data());
-        td.cellToEnd()[cell()].append(position());
+        td.cellToEnd()[cell()].append(position(td.mesh));
     }
 
     return td.keepParticle;
@@ -188,7 +183,10 @@ void Foam::findCellParticle::hitProcessorPatch
 )
 {
     const processorPolyPatch& ppp =
-        static_cast<const processorPolyPatch&>(mesh().boundaryMesh()[patch()]);
+        static_cast<const processorPolyPatch&>
+        (
+            td.mesh.boundaryMesh()[patch(td.mesh)]
+        );
 
     if (ppp.transform().transforms())
     {

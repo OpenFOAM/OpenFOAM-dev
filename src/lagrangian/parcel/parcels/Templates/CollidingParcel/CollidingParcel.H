@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -232,52 +232,22 @@ public:
         );
 
         //- Construct from Istream
-        CollidingParcel
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        CollidingParcel(Istream& is, bool readFields = true);
 
         //- Construct as a copy
         CollidingParcel(const CollidingParcel& p);
 
-        //- Construct as a copy
-        CollidingParcel(const CollidingParcel& p, const polyMesh& mesh);
-
-        //- Construct and return a (basic particle) clone
+        //- Construct and return a clone
         virtual autoPtr<particle> clone() const
         {
             return autoPtr<particle>(new CollidingParcel(*this));
         }
 
-        //- Construct and return a (basic particle) clone
-        virtual autoPtr<particle> clone(const polyMesh& mesh) const
+        //- Construct from Istream and return
+        static autoPtr<CollidingParcel> New(Istream& is)
         {
-            return autoPtr<particle>(new CollidingParcel(*this, mesh));
+            return autoPtr<CollidingParcel>(new CollidingParcel(is));
         }
-
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
-        {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<CollidingParcel<ParcelType>> operator()(Istream& is) const
-            {
-                return autoPtr<CollidingParcel<ParcelType>>
-                (
-                    new CollidingParcel<ParcelType>(mesh_, is, true)
-                );
-            }
-        };
 
 
     // Member Functions

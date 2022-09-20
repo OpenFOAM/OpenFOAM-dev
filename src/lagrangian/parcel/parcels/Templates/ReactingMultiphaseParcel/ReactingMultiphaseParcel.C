@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -716,21 +716,6 @@ Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 )
 :
     ParcelType(p),
-    YGas_(p.YGas_),
-    YLiquid_(p.YLiquid_),
-    YSolid_(p.YSolid_),
-    canCombust_(p.canCombust_)
-{}
-
-
-template<class ParcelType>
-Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
-(
-    const ReactingMultiphaseParcel<ParcelType>& p,
-    const polyMesh& mesh
-)
-:
-    ParcelType(p, mesh),
     YGas_(p.YGas_),
     YLiquid_(p.YLiquid_),
     YSolid_(p.YSolid_),

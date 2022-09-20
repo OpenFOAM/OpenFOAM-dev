@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "MomentumParcel.H"
 #include "mathematicalConstants.H"
 
 using namespace Foam::constant::mathematical;
@@ -72,14 +73,14 @@ inline Foam::MomentumParcel<ParcelType>::constantProperties::constantProperties
 template<class ParcelType>
 inline Foam::MomentumParcel<ParcelType>::MomentumParcel
 (
-    const polyMesh& owner,
+    const polyMesh& mesh,
     const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPti
 )
 :
-    ParcelType(owner, coordinates, celli, tetFacei, tetPti),
+    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
     moving_(true),
     typeId_(-1),
     nParticle_(0),
@@ -305,7 +306,7 @@ inline Foam::scalar Foam::MomentumParcel<ParcelType>::massCell
     const trackingData& td
 ) const
 {
-    return td.rhoc()*this->mesh().cellVolumes()[this->cell()];
+    return td.rhoc()*td.mesh.cellVolumes()[this->cell()];
 }
 
 

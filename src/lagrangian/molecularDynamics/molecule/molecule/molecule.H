@@ -297,12 +297,7 @@ public:
         );
 
         //- Construct from Istream
-        molecule
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        molecule(Istream& is, bool readFields = true);
 
         //- Construct and return a clone
         autoPtr<particle> clone() const
@@ -310,24 +305,11 @@ public:
             return autoPtr<particle>(new molecule(*this));
         }
 
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
+        //- Construct from Istream and return
+        static autoPtr<molecule> New(Istream& is)
         {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<molecule> operator()(Istream& is) const
-            {
-                return autoPtr<molecule>(new molecule(mesh_, is, true));
-            }
-        };
+            return autoPtr<molecule>(new molecule(is));
+        }
 
 
     // Member Functions
@@ -338,7 +320,11 @@ public:
 
             virtual void transformProperties(const transformer&);
 
-            void setSitePositions(const constantProperties& constProps);
+            void setSitePositions
+            (
+                const polyMesh& mesh,
+                const constantProperties& constProps
+            );
 
             void setSiteSizes(label size);
 

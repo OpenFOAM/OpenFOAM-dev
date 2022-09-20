@@ -189,19 +189,6 @@ Foam::ReactingParcel<ParcelType>::ReactingParcel
 {}
 
 
-template<class ParcelType>
-Foam::ReactingParcel<ParcelType>::ReactingParcel
-(
-    const ReactingParcel<ParcelType>& p,
-    const polyMesh& mesh
-)
-:
-    ParcelType(p, mesh),
-    mass0_(p.mass0_),
-    Y_(p.Y_)
-{}
-
-
 // * * * * * * * * * * * * *  Member Functions * * * * * * * * * * * * * * * //
 
 template<class ParcelType>
@@ -217,7 +204,7 @@ void Foam::ReactingParcel<ParcelType>::setCellValues
     td.pc() = td.pInterp().interpolate
     (
         this->coordinates(),
-        this->currentTetIndices()
+        this->currentTetIndices(td.mesh)
     );
 
     if (td.pc() < cloud.constProps().pMin())

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -282,7 +282,7 @@ public:
 
     // Constructors
 
-        //- Construct from mesh, position and topology
+        //- Construct from mesh, coordinates and topology
         //  Other properties initialised as null
         inline ReactingMultiphaseParcel
         (
@@ -303,59 +303,26 @@ public:
         );
 
         //- Construct from Istream
-        ReactingMultiphaseParcel
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        ReactingMultiphaseParcel(Istream& is, bool readFields = true);
 
         //- Construct as a copy
         ReactingMultiphaseParcel(const ReactingMultiphaseParcel& p);
 
-        //- Construct as a copy
-        ReactingMultiphaseParcel
-        (
-            const ReactingMultiphaseParcel& p,
-            const polyMesh& mesh
-        );
-
-        //- Construct and return a (basic particle) clone
+        //- Construct and return a clone
         virtual autoPtr<particle> clone() const
         {
             return autoPtr<particle>(new ReactingMultiphaseParcel(*this));
         }
 
-        //- Construct and return a (basic particle) clone
-        virtual autoPtr<particle> clone(const polyMesh& mesh) const
+        //- Construct from Istream and return
+        static autoPtr<ReactingMultiphaseParcel> New(Istream& is)
         {
-            return autoPtr<particle>(new ReactingMultiphaseParcel(*this, mesh));
-        }
-
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
-        {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<ReactingMultiphaseParcel<ParcelType>> operator()
-            (
-                Istream& is
-            ) const
-            {
-                return autoPtr<ReactingMultiphaseParcel<ParcelType>>
+            return
+                autoPtr<ReactingMultiphaseParcel>
                 (
-                    new ReactingMultiphaseParcel<ParcelType>(mesh_, is, true)
+                    new ReactingMultiphaseParcel(is)
                 );
-            }
-        };
+        }
 
 
     // Member Functions

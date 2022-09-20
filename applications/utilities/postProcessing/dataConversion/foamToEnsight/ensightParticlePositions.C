@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ void ensightParticlePositions
         // Output positions
         forAllConstIter(Cloud<passiveParticle>, parcels, elmnt)
         {
-            const vector& p = elmnt().position();
+            const vector& p = elmnt().position(mesh);
 
             ensightFile
                 << setw(8) << ++nParcels

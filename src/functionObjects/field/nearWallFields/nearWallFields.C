@@ -108,7 +108,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
 
         forAllConstIter(Cloud<findCellParticle>, cloud, iter)
         {
-            const vector p = iter().position();
+            const vector p = iter().position(mesh_);
             str.write(linePointRef(p, p + iter().displacement()));
         }
     }
@@ -135,7 +135,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
         forAllConstIter(Cloud<findCellParticle>, cloud, iter)
         {
             const findCellParticle& tp = iter();
-            start[nPatchFaces++] = tp.position();
+            start[nPatchFaces++] = tp.position(mesh_);
         }
     }
 

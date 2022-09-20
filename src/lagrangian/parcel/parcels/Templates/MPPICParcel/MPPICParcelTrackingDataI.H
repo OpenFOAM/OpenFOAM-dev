@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ inline void Foam::MPPICParcel<ParcelType>::trackingData::updateAverages
     forAllConstIter(typename TrackCloudType, cloud, iter)
     {
         const typename TrackCloudType::parcelType& p = iter();
-        const tetIndices tetIs = p.currentTetIndices();
+        const tetIndices tetIs = p.currentTetIndices(cloud.mesh());
 
         const scalar m = p.nParticle()*p.mass();
 
@@ -192,7 +192,7 @@ inline void Foam::MPPICParcel<ParcelType>::trackingData::updateAverages
     forAllConstIter(typename TrackCloudType, cloud, iter)
     {
         const typename TrackCloudType::parcelType& p = iter();
-        const tetIndices tetIs = p.currentTetIndices();
+        const tetIndices tetIs = p.currentTetIndices(cloud.mesh());
 
         const vector u = uAverage_->interpolate(p.coordinates(), tetIs);
 
@@ -211,7 +211,7 @@ inline void Foam::MPPICParcel<ParcelType>::trackingData::updateAverages
     forAllConstIter(typename TrackCloudType, cloud, iter)
     {
         const typename TrackCloudType::parcelType& p = iter();
-        const tetIndices tetIs = p.currentTetIndices();
+        const tetIndices tetIs = p.currentTetIndices(cloud.mesh());
 
         weightAverage.add
         (
@@ -228,7 +228,7 @@ inline void Foam::MPPICParcel<ParcelType>::trackingData::updateAverages
     forAllConstIter(typename TrackCloudType, cloud, iter)
     {
         const typename TrackCloudType::parcelType& p = iter();
-        const tetIndices tetIs = p.currentTetIndices();
+        const tetIndices tetIs = p.currentTetIndices(cloud.mesh());
 
         const scalar a = volumeAverage_->interpolate(p.coordinates(), tetIs);
         const scalar r = radiusAverage_->interpolate(p.coordinates(), tetIs);

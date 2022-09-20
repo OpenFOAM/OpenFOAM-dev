@@ -60,7 +60,7 @@ bool Foam::DSMCParcel<ParcelType>::move
         meshTools::constrainDirection(mesh, mesh.solutionD(), Utracking);
 
         // Deviation from the mesh centre for reduced-D cases
-        const vector d = p.deviationFromMeshCentre();
+        const vector d = p.deviationFromMeshCentre(mesh);
 
         const scalar f = 1 - p.stepFraction();
         p.trackToAndHitFace(f*trackTime*Utracking - d, f, cloud, td);
@@ -78,12 +78,12 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
     trackingData&
 )
 {
-    const label wppIndex = this->patch();
+    const label wppIndex = this->patch(cloud.pMesh());
 
     const wallPolyPatch& wpp =
         static_cast<const wallPolyPatch&>
         (
-            this->mesh().boundaryMesh()[wppIndex]
+            cloud.pMesh().boundaryMesh()[wppIndex]
         );
 
     const label wppLocalFace = wpp.whichFace(this->face());

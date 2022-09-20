@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
         label i = 0;
         forAllConstIter(passiveParticleCloud, myCloud, iter)
         {
-            allPositions[Pstream::myProcNo()][i] = iter().position();
+            allPositions[Pstream::myProcNo()][i] = iter().position(mesh);
             allOrigIds[Pstream::myProcNo()][i] = iter().origId();
             allOrigProcs[Pstream::myProcNo()][i] = iter().origProc();
             i++;

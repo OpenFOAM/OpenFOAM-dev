@@ -38,18 +38,6 @@ Foam::MPPICParcel<ParcelType>::MPPICParcel
 {}
 
 
-template<class ParcelType>
-Foam::MPPICParcel<ParcelType>::MPPICParcel
-(
-    const MPPICParcel<ParcelType>& p,
-    const polyMesh& mesh
-)
-:
-    ParcelType(p, mesh),
-    UCorrect_(p.UCorrect_)
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ParcelType>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ void Foam::ParticleTracks<CloudType>::postFace(const parcelType& p, bool&)
         {
             cloudPtr_->append
             (
-                static_cast<parcelType*>(p.clone(this->owner().mesh()).ptr())
+                static_cast<parcelType*>(p.clone().ptr())
             );
         }
     }

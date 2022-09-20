@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,8 +75,6 @@ bool Foam::IOPosition<CloudType>::writeData(Ostream& os) const
 template<class CloudType>
 void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
 {
-    const polyMesh& mesh = c.pMesh();
-
     token firstToken(is);
 
     if (firstToken.isLabel())
@@ -92,7 +90,7 @@ void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
         for (label i=0; i<s; i++)
         {
             // Read position only
-            c.append(new typename CloudType::particleType(mesh, is, false));
+            c.append(new typename CloudType::particleType(is, false));
         }
 
         // Read end of contents
@@ -121,7 +119,7 @@ void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
             is.putBack(lastToken);
 
             // Read position only
-            c.append(new typename CloudType::particleType(mesh, is, false));
+            c.append(new typename CloudType::particleType(is, false));
             is  >> lastToken;
         }
     }

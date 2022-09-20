@@ -531,7 +531,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                 label otherPointi = e.otherVertex(pointi);
 
                 trackedParticle* tp(new trackedParticle(startTp));
-                tp->start() = tp->position();
+                tp->start() = tp->position(mesh_);
                 tp->end() = featureMesh.points()[otherPointi];
                 tp->j() = otherPointi;
                 tp->k() = edgei;
@@ -539,7 +539,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                 if (debug&meshRefinement::FEATURESEEDS)
                 {
                     Pout<< "Adding particle for point:" << pointi
-                        << " coord:" << tp->position()
+                        << " coord:" << tp->position(mesh_)
                         << " feature:" << feati
                         << " to track to:" << tp->end()
                         << endl;
@@ -592,7 +592,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                     const edge& e = featureMesh.edges()[edgei];
                     const label otherPointi = e.otherVertex(pointi);
 
-                    tp.start() = tp.position();
+                    tp.start() = tp.position(mesh_);
                     tp.end() = featureMesh.points()[otherPointi];
                     tp.j() = otherPointi;
                     tp.k() = edgei;

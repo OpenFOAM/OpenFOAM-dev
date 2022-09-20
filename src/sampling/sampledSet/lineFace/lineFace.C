@@ -173,7 +173,7 @@ void Foam::sampledSets::lineFace::calcSamples
                     returnReduce
                     (
                         particles.size()
-                      ? mag(particles.first()->position() - start)
+                      ? mag(particles.first()->position(mesh) - start)
                        /mag(end - start)
                       : i == 0 ? vGreat : -vGreat,
                         [i](const scalar a, const scalar b)
@@ -207,13 +207,16 @@ void Foam::sampledSets::lineFace::calcSamples
                 if (proci == Pstream::myProcNo() && i == 0 && storeCells)
                 {
                     particle trackBwd(mesh, p, celli), trackFwd(trackBwd);
-                    trackBwd.trackToFace(start - p, 0);
-                    trackFwd.trackToFace(end - p, 0);
+                    trackBwd.trackToFace(mesh, start - p, 0);
+                    trackFwd.trackToFace(mesh, end - p, 0);
                     if (trackBwd.onFace() && trackFwd.onFace())
                     {
                         samplingPositions.append
                         (
-                            (trackBwd.position() + trackFwd.position())/2
+                            (
+                                trackBwd.position(mesh)
+                              + trackFwd.position(mesh)
+                            )/2
                         );
                         samplingSegments.append(segmenti);
                         samplingCells.append(celli);

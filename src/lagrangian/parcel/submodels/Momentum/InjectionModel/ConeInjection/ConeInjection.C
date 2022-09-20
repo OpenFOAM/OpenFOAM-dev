@@ -378,6 +378,8 @@ void Foam::ConeInjection<CloudType>::setProperties
     typename CloudType::parcelType& parcel
 )
 {
+    const polyMesh& mesh = this->owner().mesh();
+
     Random& rndGen = this->owner().rndGen();
 
     const scalar t = time - this->SOI_;
@@ -412,9 +414,9 @@ void Foam::ConeInjection<CloudType>::setProperties
         }
         case imDisc:
         {
-            const scalar r = mag(parcel.position() - position_.value(t));
+            const scalar r = mag(parcel.position(mesh) - position_.value(t));
             const scalar frac = (2*r - dInner_)/(dOuter_ - dInner_);
-            tanVec = normalised(parcel.position() - position_.value(t));
+            tanVec = normalised(parcel.position(mesh) - position_.value(t));
             theta =
                 degToRad
                 (

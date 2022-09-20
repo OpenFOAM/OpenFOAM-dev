@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "molecule.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -250,7 +252,7 @@ inline Foam::molecule::molecule
     siteForces_(constProps.nSites(), Zero),
     sitePositions_(constProps.nSites())
 {
-    setSitePositions(constProps);
+    setSitePositions(mesh, constProps);
 }
 
 
@@ -285,7 +287,7 @@ inline Foam::molecule::molecule
     siteForces_(constProps.nSites(), Zero),
     sitePositions_(constProps.nSites())
 {
-    setSitePositions(constProps);
+    setSitePositions(mesh, constProps);
 }
 
 

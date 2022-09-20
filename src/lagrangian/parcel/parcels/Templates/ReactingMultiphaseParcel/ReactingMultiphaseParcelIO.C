@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,12 +44,11 @@ const std::size_t Foam::ReactingMultiphaseParcel<ParcelType>::sizeofFields_
 template<class ParcelType>
 Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 (
-    const polyMesh& mesh,
     Istream& is,
     bool readFields
 )
 :
-    ParcelType(mesh, is, readFields),
+    ParcelType(is, readFields),
     YGas_(0),
     YLiquid_(0),
     YSolid_(0),

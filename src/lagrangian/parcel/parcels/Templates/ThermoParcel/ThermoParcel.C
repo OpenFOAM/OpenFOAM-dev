@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ void Foam::ThermoParcel<ParcelType>::setCellValues
 {
     ParcelType::setCellValues(cloud, td);
 
-    tetIndices tetIs = this->currentTetIndices();
+    tetIndices tetIs = this->currentTetIndices(td.mesh);
 
     td.Cpc() = td.CpInterp().interpolate(this->coordinates(), tetIs);
 
@@ -123,7 +123,7 @@ void Foam::ThermoParcel<ParcelType>::calcSurfaceValues
 
     rhos = td.rhoc()*TRatio;
 
-    tetIndices tetIs = this->currentTetIndices();
+    tetIndices tetIs = this->currentTetIndices(td.mesh);
     mus = td.muInterp().interpolate(this->coordinates(), tetIs)/TRatio;
     kappas = td.kappaInterp().interpolate(this->coordinates(), tetIs)/TRatio;
 
@@ -287,7 +287,7 @@ Foam::scalar Foam::ThermoParcel<ParcelType>::calcHeatTransfer
     scalar ancp = Sh;
     if (cloud.radiation())
     {
-        const tetIndices tetIs = this->currentTetIndices();
+        const tetIndices tetIs = this->currentTetIndices(td.mesh);
         const scalar Gc = td.GInterp().interpolate(this->coordinates(), tetIs);
         const scalar sigma = physicoChemical::sigma.value();
         const scalar epsilon = cloud.constProps().epsilon0();
@@ -322,19 +322,6 @@ Foam::ThermoParcel<ParcelType>::ThermoParcel
 )
 :
     ParcelType(p),
-    T_(p.T_),
-    Cp_(p.Cp_)
-{}
-
-
-template<class ParcelType>
-Foam::ThermoParcel<ParcelType>::ThermoParcel
-(
-    const ThermoParcel<ParcelType>& p,
-    const polyMesh& mesh
-)
-:
-    ParcelType(p, mesh),
     T_(p.T_),
     Cp_(p.Cp_)
 {}

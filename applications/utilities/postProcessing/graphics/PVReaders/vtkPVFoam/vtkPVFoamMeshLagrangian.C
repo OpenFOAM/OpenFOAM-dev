@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
         vtkIdType particleId = 0;
         forAllConstIter(Cloud<passiveParticle>, parcels, iter)
         {
-            vtkInsertNextOpenFOAMPoint(vtkpoints, iter().position());
+            vtkInsertNextOpenFOAMPoint(vtkpoints, iter().position(mesh));
 
             vtkcells->InsertNextCell(1, &particleId);
             particleId++;

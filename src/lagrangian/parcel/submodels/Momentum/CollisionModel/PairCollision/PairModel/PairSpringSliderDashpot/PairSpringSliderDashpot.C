@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PairSpringSliderDashpot.H"
+#include "polyMesh.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -172,7 +173,9 @@ void Foam::PairSpringSliderDashpot<CloudType>::evaluatePair
     typename CloudType::parcelType& pB
 ) const
 {
-    vector r_AB = (pA.position() - pB.position());
+    const polyMesh& mesh = this->owner().mesh();
+
+    vector r_AB = pA.position(mesh) - pB.position(mesh);
 
     scalar dAEff = pA.d();
 
@@ -232,7 +235,7 @@ void Foam::PairSpringSliderDashpot<CloudType>::evaluatePair
             U_AB - (U_AB & rHat_AB)*rHat_AB
           - ((dAEff/2*pA.omega() + dBEff/2*pB.omega()) ^ rHat_AB);
 
-        scalar deltaT = this->owner().mesh().time().deltaTValue();
+        scalar deltaT = mesh.time().deltaTValue();
 
         vector& tangentialOverlap_AB =
             pA.collisionRecords().matchPairRecord

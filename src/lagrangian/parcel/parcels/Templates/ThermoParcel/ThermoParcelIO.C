@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,14 +43,9 @@ const std::size_t Foam::ThermoParcel<ParcelType>::sizeofFields_
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParcelType>
-Foam::ThermoParcel<ParcelType>::ThermoParcel
-(
-    const polyMesh& mesh,
-    Istream& is,
-    bool readFields
-)
+Foam::ThermoParcel<ParcelType>::ThermoParcel(Istream& is, bool readFields)
 :
-    ParcelType(mesh, is, readFields),
+    ParcelType(is, readFields),
     T_(0.0),
     Cp_(0.0)
 {

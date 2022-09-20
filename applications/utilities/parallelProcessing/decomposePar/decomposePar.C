@@ -704,13 +704,19 @@ int main(int argc, char *argv[])
                                     << " for particle with index "
                                     << iter().index()
                                     << " at position "
-                                    << iter().position() << nl
+                                    << iter().position(meshes.completeMesh())
+                                    << nl
                                     << "Cell number should be between 0 and "
                                     << meshes.completeMesh().nCells()-1 << nl
                                     << "On this mesh the particle should"
                                     << " be in cell "
                                     << meshes.completeMesh().findCell
-                                       (iter().position())
+                                       (
+                                           iter().position
+                                           (
+                                               meshes.completeMesh()
+                                           )
+                                       )
                                     << exit(FatalError);
                             }
 

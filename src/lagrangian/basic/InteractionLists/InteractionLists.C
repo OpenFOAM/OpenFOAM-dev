@@ -966,7 +966,7 @@ void Foam::InteractionLists<ParticleType>::prepareParticleToBeReferred
         globalTransforms.transformIndex(ciat)
     );
 
-    particle->prepareForInteractionListReferral(transform);
+    particle->prepareForInteractionListReferral(mesh_, transform);
 }
 
 
@@ -1215,11 +1215,8 @@ void Foam::InteractionLists<ParticleType>::receiveReferredData
 
             forAll(constructMap, i)
             {
-                referredParticles_[constructMap[i]] = IDLList<ParticleType>
-                (
-                    str,
-                    typename ParticleType::iNew(mesh_)
-                );
+                referredParticles_[constructMap[i]] =
+                    IDLList<ParticleType>(str);
             }
         }
     }
@@ -1229,7 +1226,11 @@ void Foam::InteractionLists<ParticleType>::receiveReferredData
         IDLList<ParticleType>& refCell = referredParticles_[refCelli];
         forAllIter(typename IDLList<ParticleType>, refCell, iter)
         {
-            iter().correctAfterInteractionListReferral(ril_[refCelli][0]);
+            iter().correctAfterInteractionListReferral
+            (
+                mesh_,
+                ril_[refCelli][0]
+            );
         }
     }
 

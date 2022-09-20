@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,14 +37,9 @@ const std::size_t Foam::molecule::sizeofFields_
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::molecule::molecule
-(
-    const polyMesh& mesh,
-    Istream& is,
-    bool readFields
-)
+Foam::molecule::molecule(Istream& is, bool readFields)
 :
-    particle(mesh, is, readFields),
+    particle(is, readFields),
     Q_(Zero),
     v_(Zero),
     a_(Zero),

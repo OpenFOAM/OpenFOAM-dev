@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,14 +43,9 @@ const std::size_t Foam::MPPICParcel<ParcelType>::sizeofFields_
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParcelType>
-Foam::MPPICParcel<ParcelType>::MPPICParcel
-(
-    const polyMesh& mesh,
-    Istream& is,
-    bool readFields
-)
+Foam::MPPICParcel<ParcelType>::MPPICParcel(Istream& is, bool readFields)
 :
-    ParcelType(mesh, is, readFields),
+    ParcelType(is, readFields),
     UCorrect_(Zero)
 {
     if (readFields)

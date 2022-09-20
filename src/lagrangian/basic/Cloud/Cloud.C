@@ -41,7 +41,7 @@ License
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::checkPatches() const
 {
-    const polyBoundaryMesh& pbm = polyMesh_.boundaryMesh();
+    const polyBoundaryMesh& pbm = pMesh_.boundaryMesh();
     bool ok = true;
     forAll(pbm, patchi)
     {
@@ -165,7 +165,7 @@ Foam::labelListList Foam::Cloud<ParticleType>::patchNonConformalCyclicPatches
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::storeRays() const
 {
-    const polyBoundaryMesh& pbm = polyMesh_.boundaryMesh();
+    const polyBoundaryMesh& pbm = pMesh_.boundaryMesh();
 
     forAll(patchNonConformalCyclicPatches_, patchi)
     {
@@ -195,7 +195,7 @@ Foam::Cloud<ParticleType>::Cloud
 :
     cloud(pMesh, cloudName),
     IDLList<ParticleType>(),
-    polyMesh_(pMesh),
+    pMesh_(pMesh),
     patchNbrProc_(patchNbrProc(pMesh)),
     patchNbrProcPatch_(patchNbrProcPatch(pMesh)),
     patchNonConformalCyclicPatches_(patchNonConformalCyclicPatches(pMesh)),
@@ -206,8 +206,8 @@ Foam::Cloud<ParticleType>::Cloud
     // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
     // build them, otherwise, if some processors have no particles then there
     // is a comms mismatch.
-    polyMesh_.tetBasePtIs();
-    polyMesh_.oldCellCentres();
+    pMesh_.tetBasePtIs();
+    pMesh_.oldCellCentres();
 
     if (particles.size())
     {
@@ -242,8 +242,8 @@ void Foam::Cloud<ParticleType>::deleteLostParticles()
         if (p.cell() == -1)
         {
             WarningInFunction
-                << "deleting lost particle at position " << p.position()
-                << endl;
+                << "deleting lost particle at position "
+                << p.position(pMesh_) << endl;
 
             deleteParticle(p);
         }
@@ -313,7 +313,7 @@ void Foam::Cloud<ParticleType>::move
                 if (td.sendToProc != -1)
                 {
                     #ifdef FULLDEBUG
-                    if (!Pstream::parRun() || !p.onBoundaryFace())
+                    if (!Pstream::parRun() || !p.onBoundaryFace(pMesh_))
                     {
                         FatalErrorInFunction
                             << "Switch processor flag is true when no parallel "
@@ -386,11 +386,7 @@ void Foam::Cloud<ParticleType>::move
 
                 const labelList receivePatchIndices(particleStream);
 
-                IDLList<ParticleType> newParticles
-                (
-                    particleStream,
-                    typename ParticleType::iNew(polyMesh_)
-                );
+                IDLList<ParticleType> newParticles(particleStream);
 
                 label i = 0;
 
@@ -426,15 +422,15 @@ void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
     // Ask for the tetBasePtIs to trigger all processors to build
     // them, otherwise, if some processors have no particles then
     // there is a comms mismatch.
-    polyMesh_.tetBasePtIs();
-    polyMesh_.oldCellCentres();
+    pMesh_.tetBasePtIs();
+    pMesh_.oldCellCentres();
 
     const vectorField& positions = globalPositionsPtr_();
 
     label i = 0;
     forAllIter(typename Cloud<ParticleType>, *this, iter)
     {
-        iter().autoMap(positions[i], map);
+        iter().autoMap(pMesh_, positions[i], map);
         ++ i;
     }
 }
@@ -464,9 +460,9 @@ void Foam::Cloud<ParticleType>::writePositions() const
 
     forAllConstIter(typename Cloud<ParticleType>, *this, pIter)
     {
-        const ParticleType& p = pIter();
-        pObj<< "v " << p.position().x() << " " << p.position().y() << " "
-            << p.position().z() << nl;
+        const point& pos = pIter().position(pMesh_);
+
+        pObj<< "v " << pos.x() << " " << pos.y() << " " << pos.z() << nl;
     }
 
     pObj.flush();
@@ -488,7 +484,7 @@ void Foam::Cloud<ParticleType>::storeGlobalPositions() const
     label i = 0;
     forAllConstIter(typename Cloud<ParticleType>, *this, iter)
     {
-        positions[i] = iter().position();
+        positions[i] = iter().position(pMesh_);
         ++ i;
     }
 }

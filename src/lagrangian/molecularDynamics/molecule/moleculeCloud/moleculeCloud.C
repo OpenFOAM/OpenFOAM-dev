@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ void Foam::moleculeCloud::setSiteSizesAndPositions()
 
         mol().setSiteSizes(cP.nSites());
 
-        mol().setSitePositions(cP);
+        mol().setSitePositions(mesh(), cP);
     }
 }
 
@@ -221,7 +221,7 @@ void Foam::moleculeCloud::calculateTetherForce()
     {
         if (mol().tethered())
         {
-            vector rIT = mol().position() - mol().specialPosition();
+            vector rIT = mol().position(mesh()) - mol().specialPosition();
 
             label idI = mol().id();
 

@@ -44,9 +44,10 @@ int USERD_get_part_coords
 
         forAllConstIter(Cloud<passiveParticle>, *sprayPtr, iter)
         {
-            coord_array[0][indx] = float(iter().position().x());
-            coord_array[1][indx] = float(iter().position().y());
-            coord_array[2][indx] = float(iter().position().z());
+            const point p = iter().position(*meshPtr);
+            coord_array[0][indx] = float(p.x());
+            coord_array[1][indx] = float(p.y());
+            coord_array[2][indx] = float(p.z());
             indx++;
         }
 

@@ -171,7 +171,7 @@ void Foam::SprayCloud<CloudType>::checkParcelProperties
     CloudType::checkParcelProperties(parcel, lagrangianDt, fullyDescribed);
 
     // store the injection position and initial drop size
-    parcel.position0() = parcel.position();
+    parcel.position0() = parcel.position(this->mesh());
     parcel.d0() = parcel.d();
 
     parcel.y() = breakup().y0();

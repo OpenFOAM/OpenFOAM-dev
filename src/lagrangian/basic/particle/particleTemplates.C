@@ -126,13 +126,13 @@ void Foam::particle::hitFace
     {
         return;
     }
-    else if (onInternalFace())
+    else if (onInternalFace(td.mesh))
     {
-        changeCell();
+        changeCell(td.mesh);
     }
-    else if (onBoundaryFace())
+    else if (onBoundaryFace(td.mesh))
     {
-        forAll(cloud.patchNonConformalCyclicPatches()[p.patch()], i)
+        forAll(cloud.patchNonConformalCyclicPatches()[p.patch(td.mesh)], i)
         {
             if
             (
@@ -140,7 +140,7 @@ void Foam::particle::hitFace
                 (
                     displacement,
                     fraction,
-                    cloud.patchNonConformalCyclicPatches()[p.patch()][i],
+                    cloud.patchNonConformalCyclicPatches()[p.patch(td.mesh)][i],
                     cloud,
                     ttd
                 )
@@ -152,7 +152,7 @@ void Foam::particle::hitFace
 
         if (!p.hitPatch(cloud, ttd))
         {
-            const polyPatch& patch = mesh_.boundaryMesh()[p.patch()];
+            const polyPatch& patch = td.mesh.boundaryMesh()[p.patch(td.mesh)];
 
             if (isA<wedgePolyPatch>(patch))
             {
@@ -205,7 +205,7 @@ Foam::scalar Foam::particle::trackToAndHitFace
         Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
     }
 
-    const scalar f = trackToFace(displacement, fraction);
+    const scalar f = trackToFace(td.mesh, displacement, fraction);
 
     hitFace(displacement, fraction, cloud, td);
 
@@ -243,26 +243,29 @@ void Foam::particle::hitSymmetryPlanePatch
 
 
 template<class TrackCloudType>
-void Foam::particle::hitSymmetryPatch(TrackCloudType&, trackingData&)
+void Foam::particle::hitSymmetryPatch(TrackCloudType&, trackingData& td)
 {
-    const vector nf = normal();
+    const vector nf = normal(td.mesh);
     transformProperties(transformer::rotation(I - 2.0*nf*nf));
 }
 
 
 template<class TrackCloudType>
-void Foam::particle::hitCyclicPatch(TrackCloudType&, trackingData&)
+void Foam::particle::hitCyclicPatch(TrackCloudType&, trackingData& td)
 {
     const cyclicPolyPatch& cpp =
-        static_cast<const cyclicPolyPatch&>(mesh_.boundaryMesh()[patch()]);
+        static_cast<const cyclicPolyPatch&>
+        (
+            td.mesh.boundaryMesh()[patch(td.mesh)]
+        );
     const cyclicPolyPatch& receiveCpp = cpp.nbrPatch();
 
     // Set the topology
     facei_ = tetFacei_ = cpp.transformGlobalFace(facei_);
-    celli_ = mesh_.faceOwner()[facei_];
+    celli_ = td.mesh.faceOwner()[facei_];
 
     // See note in correctAfterParallelTransfer for tetPti addressing ...
-    tetPti_ = mesh_.faces()[tetFacei_].size() - 1 - tetPti_;
+    tetPti_ = td.mesh.faces()[tetFacei_].size() - 1 - tetPti_;
 
     // Reflect to account for the change of triangle orientation in the new cell
     reflect();
@@ -285,7 +288,10 @@ void Foam::particle::hitCyclicAMIPatch
 )
 {
     const cyclicAMIPolyPatch& cpp =
-        static_cast<const cyclicAMIPolyPatch&>(mesh_.boundaryMesh()[patch()]);
+        static_cast<const cyclicAMIPolyPatch&>
+        (
+            td.mesh.boundaryMesh()[patch(td.mesh)]
+        );
     const cyclicAMIPolyPatch& receiveCpp = cpp.nbrPatch();
 
     if (debug)
@@ -296,9 +302,9 @@ void Foam::particle::hitCyclicAMIPatch
 
     // Get the send patch data
     vector sendNormal, sendDisplacement;
-    patchData(sendNormal, sendDisplacement);
+    patchData(td.mesh, sendNormal, sendDisplacement);
 
-    vector pos = position();
+    vector pos = position(td.mesh);
 
     const labelPair receiveIs =
         cpp.pointAMIAndFace
@@ -331,8 +337,9 @@ void Foam::particle::hitCyclicAMIPatch
     // Locate the particle on the receiving side
     locate
     (
+        td.mesh,
         pos,
-        mesh_.faceOwner()[facei_],
+        td.mesh.faceOwner()[facei_],
         false,
         "Particle crossed between " + cyclicAMIPolyPatch::typeName +
         " patches " + cpp.name() + " and " + receiveCpp.name() +
@@ -365,10 +372,10 @@ void Foam::particle::hitCyclicAMIPatch
 
     // If on a boundary and the displacement points into the receiving face
     // then issue a warning and remove the particle
-    if (onBoundaryFace())
+    if (onBoundaryFace(td.mesh))
     {
         vector receiveNormal, receiveDisplacement;
-        patchData(receiveNormal, receiveDisplacement);
+        patchData(td.mesh, receiveNormal, receiveDisplacement);
 
         if (((displacementT - fraction*receiveDisplacement)&receiveNormal) > 0)
         {
@@ -399,20 +406,21 @@ bool Foam::particle::hitNonConformalCyclicPatch
 {
     const nonConformalCyclicPolyPatch& nccpp =
         static_cast<const nonConformalCyclicPolyPatch&>
-        (mesh_.boundaryMesh()[patchi]);
+        (td.mesh.boundaryMesh()[patchi]);
 
-    const point sendPos = this->position();
+    const point sendPos = position(td.mesh);
 
     // Get the send patch data
     vector sendNormal, sendDisplacement;
-    patchData(sendNormal, sendDisplacement);
+    patchData(td.mesh, sendNormal, sendDisplacement);
 
     // Project the particle through the non-conformal patch
     point receivePos;
     const patchToPatch::procFace receiveProcFace =
         nccpp.ray
         (
-            stepFractionSpan()[0] + stepFraction_*stepFractionSpan()[1],
+            stepFractionSpan(td.mesh)[0]
+          + stepFraction_*stepFractionSpan(td.mesh)[1],
             nccpp.origPatch().whichFace(facei_),
             sendPos,
             displacement - fraction*sendDisplacement,
@@ -439,11 +447,13 @@ bool Foam::particle::hitNonConformalCyclicPatch
     // If both sides are on the same process, then do the local transfer
     prepareForNonConformalCyclicTransfer
     (
+        td.mesh,
         nccpp.index(),
         receiveProcFace.facei
     );
     correctAfterNonConformalCyclicTransfer
     (
+        td.mesh,
         nccpp.nbrPatchID()
     );
 
@@ -454,10 +464,11 @@ bool Foam::particle::hitNonConformalCyclicPatch
 template<class TrackCloudType>
 void Foam::particle::hitProcessorPatch(TrackCloudType& cloud, trackingData& td)
 {
-    td.sendToProc = cloud.patchNbrProc()[patch()];
-    td.sendFromPatch = patch();
-    td.sendToPatch = cloud.patchNbrProcPatch()[patch()];
-    td.sendToPatchFace = mesh().boundaryMesh()[patch()].whichFace(face());
+    td.sendToProc = cloud.patchNbrProc()[patch(td.mesh)];
+    td.sendFromPatch = patch(td.mesh);
+    td.sendToPatch = cloud.patchNbrProcPatch()[patch(td.mesh)];
+    td.sendToPatchFace =
+        td.mesh.boundaryMesh()[patch(td.mesh)].whichFace(face());
 }
 
 

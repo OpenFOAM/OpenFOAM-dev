@@ -155,12 +155,7 @@ public:
         );
 
         //- Construct from Istream
-        sampledSetParticle
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        sampledSetParticle(Istream& is, bool readFields = true);
 
         //- Copy constructor
         sampledSetParticle(const sampledSetParticle&);
@@ -171,26 +166,11 @@ public:
             return autoPtr<particle>(new sampledSetParticle(*this));
         }
 
-        //- Factory class to read-construct particles used for parallel transfer
-        class iNew
+        //- Construct from Istream and return
+        static autoPtr<sampledSetParticle> New(Istream& is)
         {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<sampledSetParticle> operator()(Istream& is) const
-            {
-                return autoPtr<sampledSetParticle>
-                (
-                    new sampledSetParticle(mesh_, is, true)
-                );
-            }
-        };
+            return autoPtr<sampledSetParticle>(new sampledSetParticle(is));
+        }
 
 
     // Member Functions

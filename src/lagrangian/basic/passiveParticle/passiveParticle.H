@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,14 +84,9 @@ public:
         {}
 
         //- Construct from Istream
-        passiveParticle
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        )
+        passiveParticle(Istream& is, bool readFields = true)
         :
-            particle(mesh, is, readFields)
+            particle(is, readFields)
         {}
 
         //- Copy constructor
@@ -104,6 +99,12 @@ public:
         virtual autoPtr<particle> clone() const
         {
             return autoPtr<particle>(new passiveParticle(*this));
+        }
+
+        //- Construct from Istream and return
+        static autoPtr<passiveParticle> New(Istream& is)
+        {
+            return autoPtr<passiveParticle>(new passiveParticle(is));
         }
 };
 

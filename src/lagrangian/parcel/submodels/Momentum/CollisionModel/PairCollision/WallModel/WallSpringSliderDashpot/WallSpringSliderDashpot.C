@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "WallSpringSliderDashpot.H"
+#include "polyMesh.H"
+#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -81,7 +83,9 @@ void Foam::WallSpringSliderDashpot<CloudType>::evaluateWall
     bool cohesion
 ) const
 {
-    vector r_PW = p.position() - site;
+    const polyMesh& mesh = this->owner().mesh();
+
+    vector r_PW = p.position(mesh) - site;
 
     vector U_PW = p.U() - data.wallData();
 
@@ -103,7 +107,7 @@ void Foam::WallSpringSliderDashpot<CloudType>::evaluateWall
     {
         fN_PW +=
            -cohesionEnergyDensity_
-           *mathematical::pi*(sqr(pREff) - sqr(r_PW_mag))
+           *constant::mathematical::pi*(sqr(pREff) - sqr(r_PW_mag))
            *rHat_PW;
     }
 

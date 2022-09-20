@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,7 +143,7 @@ Foam::vector Foam::PackingModels::Explicit<CloudType>::velocityCorrection
     const scalar deltaT
 ) const
 {
-    const tetIndices tetIs(p.currentTetIndices());
+    const tetIndices tetIs(p.currentTetIndices(this->owner().mesh()));
 
     // interpolated quantities
     const scalar alpha =

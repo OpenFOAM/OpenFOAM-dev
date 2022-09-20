@@ -41,21 +41,6 @@ Foam::CollidingParcel<ParcelType>::CollidingParcel
 {}
 
 
-template<class ParcelType>
-Foam::CollidingParcel<ParcelType>::CollidingParcel
-(
-    const CollidingParcel<ParcelType>& p,
-    const polyMesh& mesh
-)
-:
-    ParcelType(p, mesh),
-    f_(p.f_),
-    angularMomentum_(p.angularMomentum_),
-    torque_(p.torque_),
-    collisionRecords_(p.collisionRecords_)
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ParcelType>

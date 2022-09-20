@@ -709,8 +709,8 @@ void Foam::MomentumCloud<CloudType>::patchData
     vector& Up
 ) const
 {
-    p.patchData(nw, Up);
-    Up /= p.mesh().time().deltaTValue();
+    p.patchData(this->mesh(), nw, Up);
+    Up /= this->mesh().time().deltaTValue();
 
     // If this is a wall patch, then there may be a non-zero tangential velocity
     // component; the lid velocity in a lid-driven cavity case, for example. We
@@ -731,7 +731,7 @@ void Foam::MomentumCloud<CloudType>::patchData
             const vector& Uw0 =
                 U_.oldTime().boundaryField()[patchi][patchFacei];
 
-            const scalar f = p.currentTimeFraction();
+            const scalar f = p.currentTimeFraction(this->mesh());
 
             const vector Uw = Uw0 + f*(Uw1 - Uw0);
 

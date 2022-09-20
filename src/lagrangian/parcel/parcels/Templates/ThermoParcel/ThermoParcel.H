@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -327,52 +327,22 @@ public:
         );
 
         //- Construct from Istream
-        ThermoParcel
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        ThermoParcel(Istream& is, bool readFields = true);
 
         //- Construct as a copy
         ThermoParcel(const ThermoParcel& p);
 
-        //- Construct as a copy
-        ThermoParcel(const ThermoParcel& p, const polyMesh& mesh);
-
-        //- Construct and return a (basic particle) clone
+        //- Construct and return a clone
         virtual autoPtr<particle> clone() const
         {
             return autoPtr<particle>(new ThermoParcel(*this));
         }
 
-        //- Construct and return a (basic particle) clone
-        virtual autoPtr<particle> clone(const polyMesh& mesh) const
+        //- Construct from Istream and return
+        static autoPtr<ThermoParcel> New(Istream& is)
         {
-            return autoPtr<particle>(new ThermoParcel(*this, mesh));
+            return autoPtr<ThermoParcel>(new ThermoParcel(is));
         }
-
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
-        {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<ThermoParcel<ParcelType>> operator()(Istream& is) const
-            {
-                return autoPtr<ThermoParcel<ParcelType>>
-                (
-                    new ThermoParcel<ParcelType>(mesh_, is, true)
-                );
-            }
-        };
 
 
     // Member Functions

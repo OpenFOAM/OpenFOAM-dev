@@ -47,14 +47,9 @@ Foam::sampledSetParticle::sampledSetParticle
 {}
 
 
-Foam::sampledSetParticle::sampledSetParticle
-(
-    const polyMesh& mesh,
-    Istream& is,
-    bool readFields
-)
+Foam::sampledSetParticle::sampledSetParticle(Istream& is, bool readFields)
 :
-    particle(mesh, is, readFields)
+    particle(is, readFields)
 {
     if (readFields)
     {
@@ -87,7 +82,7 @@ void Foam::sampledSetParticle::store
     trackingData& td
 )
 {
-    td.positions_.append(position());
+    td.positions_.append(position(td.mesh));
     td.distances_.append(distance_);
     td.cells_.append(cell());
     td.faces_.append(face());
@@ -112,14 +107,14 @@ void Foam::sampledSetParticle::storeCell
 {
     if (havePosition0_)
     {
-        td.positions_.append((position() + position0_)/2);
-        td.distances_.append(distance_ - mag(position() - position0_)/2);
+        td.positions_.append((position(td.mesh) + position0_)/2);
+        td.distances_.append(distance_ - mag(position(td.mesh) - position0_)/2);
         td.cells_.append(cell());
         td.faces_.append(-1);
     }
 
     havePosition0_ = true;
-    position0_ = position();
+    position0_ = position(td.mesh);
 }
 
 
@@ -138,18 +133,18 @@ bool Foam::sampledSetParticle::move
         const vector s = td.set_[seti_ + 1] - td.set_[seti_];
         const scalar magS = mag(s);
 
-        const scalar f = trackToFace(setF_*s, 0);
+        const scalar f = trackToFace(td.mesh, setF_*s, 0);
         distance_ += (1 - f)*setF_*magS;
         setF_ *= f;
 
-        while (onInternalFace())
+        while (onInternalFace(td.mesh))
         {
             if (td.storeCells_) storeCell(cloud, td);
             if (td.storeFaces_) storeFace(cloud, td);
 
             hitFace(setF_*s, 0, cloud, td);
 
-            const scalar f = trackToFace(setF_*s, 0);
+            const scalar f = trackToFace(td.mesh, setF_*s, 0);
             distance_ += (1 - f)*setF_*magS;
             setF_ *= f;
         }
@@ -162,7 +157,7 @@ bool Foam::sampledSetParticle::move
             hitFace(setF_*s, 0, cloud, td);
         }
 
-        if (onBoundaryFace() && setF_ < rootSmall)
+        if (onBoundaryFace(td.mesh) && setF_ < rootSmall)
         {
             if (td.storeSet_) store(cloud, td);
         }
@@ -239,7 +234,10 @@ void Foam::sampledSetParticle::hitProcessorPatch
 )
 {
     const processorPolyPatch& ppp =
-        static_cast<const processorPolyPatch&>(mesh().boundaryMesh()[patch()]);
+        static_cast<const processorPolyPatch&>
+        (
+            td.mesh.boundaryMesh()[patch(td.mesh)]
+        );
 
     if (ppp.transform().transformsPosition())
     {

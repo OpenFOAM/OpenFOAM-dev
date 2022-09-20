@@ -44,7 +44,7 @@ void Foam::MomentumParcel<ParcelType>::setCellValues
     trackingData& td
 )
 {
-    tetIndices tetIs = this->currentTetIndices();
+    tetIndices tetIs = this->currentTetIndices(td.mesh);
 
     td.rhoc() = td.rhoInterp().interpolate(this->coordinates(), tetIs);
 
@@ -250,27 +250,6 @@ Foam::MomentumParcel<ParcelType>::MomentumParcel
 {}
 
 
-template<class ParcelType>
-Foam::MomentumParcel<ParcelType>::MomentumParcel
-(
-    const MomentumParcel<ParcelType>& p,
-    const polyMesh& mesh
-)
-:
-    ParcelType(p, mesh),
-    moving_(p.moving_),
-    typeId_(p.typeId_),
-    nParticle_(p.nParticle_),
-    d_(p.d_),
-    dTarget_(p.dTarget_),
-    U_(p.U_),
-    rho_(p.rho_),
-    age_(p.age_),
-    tTurb_(p.tTurb_),
-    UTurb_(p.UTurb_)
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ParcelType>
@@ -296,7 +275,7 @@ bool Foam::MomentumParcel<ParcelType>::move
     while (ttd.keepParticle && ttd.sendToProc == -1 && p.stepFraction() < 1)
     {
         // Cache the current position, cell and step-fraction
-        const point start = p.position();
+        const point start = p.position(td.mesh);
         const scalar sfrac = p.stepFraction();
 
         // Total displacement over the time-step
@@ -306,7 +285,7 @@ bool Foam::MomentumParcel<ParcelType>::move
         const scalar l = cellLengthScale[p.cell()];
 
         // Deviation from the mesh centre for reduced-D cases
-        const vector d = p.deviationFromMeshCentre();
+        const vector d = p.deviationFromMeshCentre(td.mesh);
 
         // Fraction of the displacement to track in this loop. This is limited
         // to ensure that the both the time and distance tracked is less than
@@ -317,7 +296,7 @@ bool Foam::MomentumParcel<ParcelType>::move
         if (p.moving())
         {
             // Track to the next face
-            p.trackToFace(f*s - d, f);
+            p.trackToFace(td.mesh, f*s - d, f);
         }
         else
         {
@@ -377,7 +356,7 @@ bool Foam::MomentumParcel<ParcelType>::hitPatch
     typename TrackCloudType::parcelType& p =
         static_cast<typename TrackCloudType::parcelType&>(*this);
 
-    const polyPatch& pp = p.mesh().boundaryMesh()[p.patch()];
+    const polyPatch& pp = td.mesh.boundaryMesh()[p.patch(td.mesh)];
 
     // Invoke post-processing model
     cloud.functions().postPatch(p, pp, td.keepParticle);
@@ -406,14 +385,14 @@ template<class TrackCloudType>
 void Foam::MomentumParcel<ParcelType>::hitWallPatch
 (
     TrackCloudType&,
-    trackingData&
+    trackingData& td
 )
 {
-    const polyPatch& pp = this->mesh().boundaryMesh()[this->patch()];
+    const polyPatch& pp = td.mesh.boundaryMesh()[this->patch(td.mesh)];
 
     FatalErrorInFunction
         << "Particle " << this->origId() << " hit " << pp.type() << " patch "
-        << pp.name() << " at " << this->position()
+        << pp.name() << " at " << this->position(td.mesh)
         << " but no interaction model was specified for this patch"
         << exit(FatalError);
 }

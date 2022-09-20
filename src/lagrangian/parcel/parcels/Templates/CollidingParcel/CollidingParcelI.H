@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,14 +62,14 @@ inline Foam::CollidingParcel<ParcelType>::constantProperties::constantProperties
 template<class ParcelType>
 inline Foam::CollidingParcel<ParcelType>::CollidingParcel
 (
-    const polyMesh& owner,
+    const polyMesh& mesh,
     const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPti
 )
 :
-    ParcelType(owner, coordinates, celli, tetFacei, tetPti),
+    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
     f_(Zero),
     angularMomentum_(Zero),
     torque_(Zero),
@@ -80,12 +80,12 @@ inline Foam::CollidingParcel<ParcelType>::CollidingParcel
 template<class ParcelType>
 inline Foam::CollidingParcel<ParcelType>::CollidingParcel
 (
-    const polyMesh& owner,
+    const polyMesh& mesh,
     const vector& position,
     const label celli
 )
 :
-    ParcelType(owner, position, celli),
+    ParcelType(mesh, position, celli),
     f_(Zero),
     angularMomentum_(Zero),
     torque_(Zero),

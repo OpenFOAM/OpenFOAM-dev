@@ -76,7 +76,7 @@ class Cloud
     // Private Data
 
         //- Reference to the mesh
-        const polyMesh& polyMesh_;
+        const polyMesh& pMesh_;
 
         //- Map from patch index to the neighbouring processor index
         const labelList patchNbrProc_;
@@ -165,7 +165,7 @@ public:
             //- Return the polyMesh reference
             const polyMesh& pMesh() const
             {
-                return polyMesh_;
+                return pMesh_;
             }
 
             //- Map from patch index to the neighbouring processor index

@@ -70,7 +70,7 @@ void Foam::reconstructLagrangianPositions
                     ppi.coordinates(),
                     mappedCell,
                     mappedTetFace,
-                    ppi.procTetPt(mesh, mappedCell, mappedTetFace)
+                    ppi.procTetPt(meshes[i], mesh, mappedCell, mappedTetFace)
                 )
             );
         }

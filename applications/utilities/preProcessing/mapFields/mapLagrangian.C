@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -189,7 +189,13 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
                         );
                         passiveParticle& newP = newPtr();
 
-                        newP.track(iter().position() - newP.position(), 0);
+                        newP.track
+                        (
+                            meshTarget,
+                            iter().position(meshSource)
+                          - newP.position(meshTarget),
+                            0
+                        );
 
                         if (!newP.onFace())
                         {
@@ -228,7 +234,11 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
                     if (unmappedSource.found(sourceParticleI))
                     {
                         label targetCell =
-                            findCell(targetParcels, iter().position());
+                            findCell
+                            (
+                                targetParcels,
+                                iter().position(meshSource)
+                            );
 
                         if (targetCell >= 0)
                         {
@@ -239,7 +249,7 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
                                 new passiveParticle
                                 (
                                     meshTarget,
-                                    iter().position(),
+                                    iter().position(meshSource),
                                     targetCell
                                 )
                             );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,9 @@ class solidParticleCloud
         IOdictionary particleProperties_;
 
         scalar rhop_;
+
         scalar e_;
+
         scalar mu_;
 
 
@@ -95,7 +97,9 @@ public:
             inline const fvMesh& mesh() const;
 
             inline scalar rhop() const;
+
             inline scalar e() const;
+
             inline scalar mu() const;
 
 

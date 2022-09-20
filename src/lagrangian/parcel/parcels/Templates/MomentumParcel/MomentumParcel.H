@@ -336,52 +336,22 @@ public:
         );
 
         //- Construct from Istream
-        MomentumParcel
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        MomentumParcel(Istream& is, bool readFields = true);
 
         //- Construct as a copy
         MomentumParcel(const MomentumParcel& p);
 
-        //- Construct as a copy
-        MomentumParcel(const MomentumParcel& p, const polyMesh& mesh);
-
-        //- Construct and return a (basic particle) clone
+        //- Construct and return a clone
         virtual autoPtr<particle> clone() const
         {
             return autoPtr<particle>(new MomentumParcel(*this));
         }
 
-        //- Construct and return a (basic particle) clone
-        virtual autoPtr<particle> clone(const polyMesh& mesh) const
+        //- Construct from Istream and return
+        static autoPtr<MomentumParcel> New(Istream& is)
         {
-            return autoPtr<particle>(new MomentumParcel(*this, mesh));
+            return autoPtr<MomentumParcel>(new MomentumParcel(is));
         }
-
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
-        {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<MomentumParcel<ParcelType>> operator()(Istream& is) const
-            {
-                return autoPtr<MomentumParcel<ParcelType>>
-                (
-                    new MomentumParcel<ParcelType>(mesh_, is, true)
-                );
-            }
-        };
 
 
     // Member Functions

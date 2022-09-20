@@ -43,7 +43,7 @@ Foam::trackedParticle::trackedParticle
 )
 :
     particle(mesh, coordinates, celli, tetFacei, tetPtI),
-    start_(position()),
+    start_(position(mesh)),
     end_(end),
     level_(level),
     i_(i),
@@ -65,7 +65,7 @@ Foam::trackedParticle::trackedParticle
 )
 :
     particle(mesh, position, celli),
-    start_(this->position()),
+    start_(this->position(mesh)),
     end_(end),
     level_(level),
     i_(i),
@@ -74,14 +74,9 @@ Foam::trackedParticle::trackedParticle
 {}
 
 
-Foam::trackedParticle::trackedParticle
-(
-    const polyMesh& mesh,
-    Istream& is,
-    bool readFields
-)
+Foam::trackedParticle::trackedParticle(Istream& is, bool readFields)
 :
-    particle(mesh, is, readFields)
+    particle(is, readFields)
 {
     if (readFields)
     {
@@ -124,7 +119,7 @@ bool Foam::trackedParticle::move
 {
     scalar tEnd = (1.0 - stepFraction())*trackTime;
 
-    if (tEnd <= small && onBoundaryFace())
+    if (tEnd <= small && onBoundaryFace(td.mesh))
     {
         // This is a hack to handle particles reaching their endpoint on a
         // processor boundary. This prevents a particle being endlessly

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,7 +171,7 @@ void Foam::SprayParcel<ParcelType>::calcAtomisation
 
     scalar soi = cloud.injectors().timeStart();
     scalar currentTime = cloud.db().time().value();
-    const vector& pos = this->position();
+    const vector& pos = this->position(td.mesh);
     const vector& injectionPos = this->position0();
 
     // Disregard the continuous phase when calculating the relative velocity
@@ -415,30 +415,6 @@ template<class ParcelType>
 Foam::SprayParcel<ParcelType>::SprayParcel(const SprayParcel<ParcelType>& p)
 :
     ParcelType(p),
-    d0_(p.d0_),
-    position0_(p.position0_),
-    sigma_(p.sigma_),
-    mu_(p.mu_),
-    liquidCore_(p.liquidCore_),
-    KHindex_(p.KHindex_),
-    y_(p.y_),
-    yDot_(p.yDot_),
-    tc_(p.tc_),
-    ms_(p.ms_),
-    injector_(p.injector_),
-    tMom_(p.tMom_),
-    user_(p.user_)
-{}
-
-
-template<class ParcelType>
-Foam::SprayParcel<ParcelType>::SprayParcel
-(
-    const SprayParcel<ParcelType>& p,
-    const polyMesh& mesh
-)
-:
-    ParcelType(p, mesh),
     d0_(p.d0_),
     position0_(p.position0_),
     sigma_(p.sigma_),

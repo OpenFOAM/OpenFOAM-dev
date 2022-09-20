@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,59 +212,22 @@ public:
         );
 
         //- Construct from Istream
-        SprayParcel
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
-
-        //- Construct as a copy
-        SprayParcel
-        (
-            const SprayParcel& p,
-            const polyMesh& mesh
-        );
+        SprayParcel(Istream& is, bool readFields = true);
 
         //- Construct as a copy
         SprayParcel(const SprayParcel& p);
 
-        //- Construct and return a (basic particle) clone
+        //- Construct and return a clone
         virtual autoPtr<particle> clone() const
         {
             return autoPtr<particle>(new SprayParcel<ParcelType>(*this));
         }
 
-        //- Construct and return a (basic particle) clone
-        virtual autoPtr<particle> clone(const polyMesh& mesh) const
+        //- Construct from Istream and return
+        static autoPtr<SprayParcel> New(Istream& is)
         {
-            return autoPtr<particle>
-            (
-                new SprayParcel<ParcelType>(*this, mesh)
-            );
+            return autoPtr<SprayParcel>(new SprayParcel(is));
         }
-
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
-        {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<SprayParcel<ParcelType>> operator()(Istream& is) const
-            {
-                return autoPtr<SprayParcel<ParcelType>>
-                (
-                    new SprayParcel<ParcelType>(mesh_, is, true)
-                );
-            }
-        };
 
 
     // Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,8 +50,8 @@ bool Foam::TrajectoryCollision<CloudType>::collideParcels
 {
     bool coalescence = false;
 
-    const vector& pos1 = p1.position();
-    const vector& pos2 = p2.position();
+    const point pos1 = p1.position(this->owner().mesh());
+    const point pos2 = p2.position(this->owner().mesh());
 
     const vector& U1 = p1.U();
     const vector& U2 = p2.U();

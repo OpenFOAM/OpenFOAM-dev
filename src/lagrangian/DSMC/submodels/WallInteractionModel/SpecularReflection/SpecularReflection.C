@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,11 @@ void Foam::SpecularReflection<CloudType>::correct
     typename CloudType::parcelType& p
 )
 {
+    const polyMesh& mesh = this->owner().mesh();
+
     vector& U = p.U();
 
-    const vector nw = p.normal();
+    const vector nw = p.normal(mesh);
 
     scalar U_dot_nw = U & nw;
 

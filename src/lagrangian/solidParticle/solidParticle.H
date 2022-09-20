@@ -84,6 +84,7 @@ public:
 
     friend class Cloud<solidParticle>;
 
+
     //- Class used to pass tracking data to the trackToFace function
     class trackingData
     :
@@ -144,12 +145,7 @@ public:
         );
 
         //- Construct from Istream
-        solidParticle
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        solidParticle(Istream& is, bool readFields = true);
 
         //- Construct and return a clone
         virtual autoPtr<particle> clone() const
@@ -157,27 +153,11 @@ public:
             return autoPtr<particle>(new solidParticle(*this));
         }
 
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
+        //- Construct from Istream and return
+        static autoPtr<solidParticle> New(Istream& is)
         {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<solidParticle> operator()(Istream& is) const
-            {
-                return autoPtr<solidParticle>
-                (
-                    new solidParticle(mesh_, is, true)
-                );
-            }
-        };
+            return autoPtr<solidParticle>(new solidParticle(is));
+        }
 
 
     // Member Functions

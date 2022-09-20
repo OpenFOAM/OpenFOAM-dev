@@ -140,12 +140,7 @@ public:
         );
 
         //- Construct from Istream
-        findCellParticle
-        (
-            const polyMesh& mesh,
-            Istream& is,
-            bool readFields = true
-        );
+        findCellParticle(Istream& is, bool readFields = true);
 
         //- Construct and return a clone
         autoPtr<particle> clone() const
@@ -153,27 +148,11 @@ public:
             return autoPtr<particle>(new findCellParticle(*this));
         }
 
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
+        //- Construct from Istream and return
+        static autoPtr<findCellParticle> New(Istream& is)
         {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<findCellParticle> operator()(Istream& is) const
-            {
-                return autoPtr<findCellParticle>
-                (
-                    new findCellParticle(mesh_, is, true)
-                );
-            }
-        };
+            return autoPtr<findCellParticle>(new findCellParticle(is));
+        }
 
 
     // Member Functions

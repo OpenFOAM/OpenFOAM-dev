@@ -145,14 +145,9 @@ Foam::streamlinesParticle::streamlinesParticle
 {}
 
 
-Foam::streamlinesParticle::streamlinesParticle
-(
-    const polyMesh& mesh,
-    Istream& is,
-    bool readFields
-)
+Foam::streamlinesParticle::streamlinesParticle(Istream& is, bool readFields)
 :
-    particle(mesh, is, readFields)
+    particle(is, readFields)
 {
     if (readFields)
     {
@@ -212,7 +207,7 @@ bool Foam::streamlinesParticle::move
     td.keepParticle = true;
     td.sendToProc = -1;
 
-    const scalar maxDt = mesh().bounds().mag();
+    const scalar maxDt = td.mesh.bounds().mag();
 
     while (td.keepParticle && td.sendToProc == -1 && lifeTime_ > 0)
     {
@@ -229,11 +224,11 @@ bool Foam::streamlinesParticle::move
             sampledPositions_.append
             (
                 td.trackOutside_
-              ? transform_.invTransformPosition(position())
-              : position()
+              ? transform_.invTransformPosition(position(td.mesh))
+              : position(td.mesh)
             );
             sampledAges_.append(age_);
-            vector U = interpolateFields(td, position(), cell(), face());
+            vector U = interpolateFields(td, position(td.mesh), cell(), face());
 
             if (!td.trackForward_)
             {
@@ -260,7 +255,7 @@ bool Foam::streamlinesParticle::move
             {
                 // Sub-cycling. Cross the cell in nSubCycle steps.
                 particle copy(*this);
-                copy.trackToFace(maxDt*U, 1);
+                copy.trackToFace(td.mesh, maxDt*U, 1);
                 dt *= (copy.stepFraction() - stepFraction())/td.nSubCycle_;
             }
             else if (subIter == td.nSubCycle_ - 1)
@@ -289,7 +284,7 @@ bool Foam::streamlinesParticle::move
             if (debug)
             {
                 Pout<< "streamlinesParticle: Removing stagnant particle:"
-                    << position() << " sampled positions:"
+                    << position(td.mesh) << " sampled positions:"
                     << sampledPositions_.size() << endl;
             }
             td.keepParticle = false;
@@ -300,17 +295,17 @@ bool Foam::streamlinesParticle::move
             sampledPositions_.append
             (
                 td.trackOutside_
-              ? transform_.invTransformPosition(position())
-              : position()
+              ? transform_.invTransformPosition(position(td.mesh))
+              : position(td.mesh)
             );
             sampledAges_.append(age_);
-            interpolateFields(td, position(), cell(), face());
+            interpolateFields(td, position(td.mesh), cell(), face());
 
             if (debug)
             {
-                Pout<< "streamlinesParticle: Removing particle:" << position()
-                    << " sampled positions:" << sampledPositions_.size()
-                    << endl;
+                Pout<< "streamlinesParticle: Removing particle:"
+                    << position(td.mesh) << " sampled positions:"
+                    << sampledPositions_.size() << endl;
             }
         }
 
@@ -362,7 +357,10 @@ void Foam::streamlinesParticle::hitCyclicPatch
 )
 {
     const cyclicPolyPatch& cpp =
-        static_cast<const cyclicPolyPatch&>(mesh().boundaryMesh()[patch()]);
+        static_cast<const cyclicPolyPatch&>
+        (
+            td.mesh.boundaryMesh()[patch(td.mesh)]
+        );
 
     // End this track
     if (!td.trackOutside_ && cpp.transform().transformsPosition())
@@ -424,7 +422,10 @@ void Foam::streamlinesParticle::hitProcessorPatch
 )
 {
     const processorPolyPatch& ppp =
-        static_cast<const processorPolyPatch&>(mesh().boundaryMesh()[patch()]);
+        static_cast<const processorPolyPatch&>
+        (
+            td.mesh.boundaryMesh()[patch(td.mesh)]
+        );
 
     // End this track
     if (!td.trackOutside_ && ppp.transform().transformsPosition())

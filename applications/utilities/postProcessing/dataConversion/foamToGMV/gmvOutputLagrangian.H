@@ -1,21 +1,23 @@
 gmvFile << "tracers " << particles.size() << nl;
-forAllConstIter(Cloud<passiveParticle>, particles, iter)
-{
-    gmvFile << iter().position().x() << ' ';
-}
-gmvFile << nl;
 
-forAllConstIter(Cloud<passiveParticle>, particles, iter)
 {
-    gmvFile << iter().position().y() << ' ';
-}
-gmvFile << nl;
+    pointField positions(particles.size());
 
-forAllConstIter(Cloud<passiveParticle>, particles, iter)
-{
-    gmvFile << iter().position().z() << ' ';
+    label particlei = 0;
+    forAllConstIter(Cloud<passiveParticle>, particles, iter)
+    {
+        positions[particlei ++] = iter().position(mesh);
+    }
+
+    for (i = 0; i < pTraits<point>::nComponents; i ++)
+    {
+        forAll(positions, particlei)
+        {
+            gmvFile << component(positions[particlei], i) << ' ';
+        }
+        gmvFile << nl;
+    }
 }
-gmvFile << nl;
 
 forAll(lagrangianScalarNames, i)
 {
@@ -44,8 +46,6 @@ forAll(lagrangianScalarNames, i)
         }
         gmvFile << nl;
     }
-
-
 }
 
 forAll(lagrangianVectorNames, i)

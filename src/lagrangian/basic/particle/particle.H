@@ -104,6 +104,9 @@ public:
 
         // Public data
 
+            //- Reference to the mesh
+            const polyMesh& mesh;
+
             //- Flag to indicate whether to keep particle (false = delete)
             bool keepParticle;
 
@@ -125,6 +128,7 @@ public:
         template <class TrackCloudType>
         trackingData(const TrackCloudType& cloud)
         :
+            mesh(cloud.pMesh()),
             keepParticle(false),
             sendToProc(-1),
             sendFromPatch(-1),
@@ -137,9 +141,6 @@ public:
 private:
 
     // Private Data
-
-        //- Reference to the polyMesh database
-        const polyMesh& mesh_;
 
         //- Coordinates of particle
         barycentric coordinates_;
@@ -200,6 +201,7 @@ private:
             //- Get the vertices of the current tet
             inline void stationaryTetGeometry
             (
+                const polyMesh& mesh,
                 vector& centre,
                 vector& base,
                 vector& vertex1,
@@ -211,7 +213,10 @@ private:
             //  cartesian position in the global coordinate system. The
             //  conversion is x = A & y, where x is the cartesian position, y is
             //  the barycentric position and A is the transformation tensor.
-            inline barycentricTensor stationaryTetTransform() const;
+            inline barycentricTensor stationaryTetTransform
+            (
+                const polyMesh& mesh
+            ) const;
 
             //- Get the reverse transform associated with the current tet. The
             //  conversion is detA*y = (x - centre) & T. The variables x, y and
@@ -222,6 +227,7 @@ private:
             //  degenerate tetrahedra.
             void stationaryTetReverseTransform
             (
+                const polyMesh& mesh,
                 vector& centre,
                 scalar& detA,
                 barycentricTensor& T
@@ -232,6 +238,7 @@ private:
             //  second is a linear coefficient of the track fraction.
             inline void movingTetGeometry
             (
+                const polyMesh& mesh,
                 const scalar endStepFraction,
                 Pair<vector>& centre,
                 Pair<vector>& base,
@@ -245,6 +252,7 @@ private:
             //  returned for each component.
             inline Pair<barycentricTensor> movingTetTransform
             (
+                const polyMesh& mesh,
                 const scalar endStepFraction
             ) const;
 
@@ -256,6 +264,7 @@ private:
             //  tensor is quadratic.
             void movingTetReverseTransform
             (
+                const polyMesh& mesh,
                 const scalar endStepFraction,
                 Pair<vector>& centre,
                 FixedList<scalar, 4>& detA,
@@ -281,13 +290,13 @@ private:
         // Topology changes
 
             //- Change tet within a cell. Called after a triangle is hit.
-            void changeTet(const label tetTriI);
+            void changeTet(const polyMesh& mesh, const label tetTriI);
 
             //- Change tet face within a cell. Called by changeTet.
-            void changeFace(const label tetTriI);
+            void changeFace(const polyMesh& mesh, const label tetTriI);
 
             //- Change cell. Called when the particle hits an internal face.
-            void changeCell();
+            void changeCell(const polyMesh& mesh);
 
 
         // Geometry changes
@@ -295,6 +304,7 @@ private:
             //- Locate the particle at the given position
             void locate
             (
+                const polyMesh& mesh,
                 const vector& position,
                 label celli,
                 const bool boundaryFail,
@@ -400,38 +410,22 @@ public:
         );
 
         //- Construct from Istream
-        particle(const polyMesh& mesh, Istream&, bool readFields = true);
+        particle(Istream&, bool readFields = true);
 
         //- Construct as a copy
         particle(const particle& p);
 
-        //- Construct as a copy with references to a new mesh
-        particle(const particle& p, const polyMesh& mesh);
-
-        //- Construct a clone
+        //- Construct and return a clone
         virtual autoPtr<particle> clone() const
         {
             return autoPtr<particle>(new particle(*this));
         }
 
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
-        class iNew
+        //- Construct from Istream and return
+        static autoPtr<particle> New(Istream& is)
         {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<particle> operator()(Istream& is) const
-            {
-                return autoPtr<particle>(new particle(mesh_, is, true));
-            }
-        };
+            return autoPtr<particle>(new particle(is));
+        }
 
 
     //- Destructor
@@ -445,9 +439,6 @@ public:
 
             //- Get unique particle creation id
             inline label getNewParticleID() const;
-
-            //- Return the mesh database
-            inline const polyMesh& mesh() const;
 
             //- Return current particle coordinates
             inline const barycentric& coordinates() const;
@@ -490,37 +481,40 @@ public:
             //  return Pair<scalar>(0, 1), unless sub-cycling is in effect, in
             //  which case the values will reflect the span of the sub-cycle
             //  within the time-step.
-            inline Pair<scalar> stepFractionSpan() const;
+            inline Pair<scalar> stepFractionSpan(const polyMesh& mesh) const;
 
             //- Return the current fraction within the timestep. This differs
             //  from the stored step fraction due to sub-cycling.
-            inline scalar currentTimeFraction() const;
+            inline scalar currentTimeFraction(const polyMesh& mesh) const;
 
             //- Return the indices of the current tet that the
             //  particle occupies.
-            inline tetIndices currentTetIndices() const;
+            inline tetIndices currentTetIndices(const polyMesh& mesh) const;
 
             //- Return the current tet transformation tensor
-            inline barycentricTensor currentTetTransform() const;
+            inline barycentricTensor currentTetTransform
+            (
+                const polyMesh& mesh
+            ) const;
 
             //- Return the normal of the tri on tetFacei_ for the
             //  current tet.
-            inline vector normal() const;
+            inline vector normal(const polyMesh& mesh) const;
 
             //- Is the particle on a face?
             inline bool onFace() const;
 
             //- Is the particle on an internal face?
-            inline bool onInternalFace() const;
+            inline bool onInternalFace(const polyMesh& mesh) const;
 
             //- Is the particle on a boundary face?
-            inline bool onBoundaryFace() const;
+            inline bool onBoundaryFace(const polyMesh& mesh) const;
 
             //- Return the index of patch that the particle is on
-            inline label patch() const;
+            inline label patch(const polyMesh& mesh) const;
 
             //- Return current particle position
-            inline vector position() const;
+            inline vector position(const polyMesh& mesh) const;
 
 
     // Track
@@ -538,6 +532,7 @@ public:
         //  returned.
         scalar track
         (
+            const polyMesh& mesh,
             const vector& displacement,
             const scalar fraction
         );
@@ -545,6 +540,7 @@ public:
         //- As particle::track, but stops when a new cell is reached.
         scalar trackToCell
         (
+            const polyMesh& mesh,
             const vector& displacement,
             const scalar fraction
         );
@@ -552,6 +548,7 @@ public:
         //- As particle::track, but stops when a face is hit.
         scalar trackToFace
         (
+            const polyMesh& mesh,
             const vector& displacement,
             const scalar fraction
         );
@@ -561,6 +558,7 @@ public:
         //  or -1 if the end position was reached.
         scalar trackToTri
         (
+            const polyMesh& mesh,
             const vector& displacement,
             const scalar fraction,
             label& tetTriI
@@ -569,6 +567,7 @@ public:
         //- As particle::trackToTri, but for stationary meshes
         scalar trackToStationaryTri
         (
+            const polyMesh& mesh,
             const vector& displacement,
             const scalar fraction,
             label& tetTriI
@@ -577,6 +576,7 @@ public:
         //- As particle::trackToTri, but for moving meshes
         scalar trackToMovingTri
         (
+            const polyMesh& mesh,
             const vector& displacement,
             const scalar fraction,
             label& tetTriI
@@ -607,13 +607,18 @@ public:
         //- Get the displacement from the mesh centre. Used to correct the
         //  particle position in cases with reduced dimensionality. Returns a
         //  zero vector for three-dimensional cases.
-        vector deviationFromMeshCentre() const;
+        vector deviationFromMeshCentre(const polyMesh& mesh) const;
 
 
     // Patch data
 
         //- Get the normal and displacement of the current patch location
-        inline void patchData(vector& normal, vector& displacement) const;
+        inline void patchData
+        (
+            const polyMesh& mesh,
+            vector& normal,
+            vector& displacement
+        ) const;
 
 
     // Transformations
@@ -648,6 +653,7 @@ public:
         //  topology and stores the cartesian position.
         void prepareForNonConformalCyclicTransfer
         (
+            const polyMesh& mesh,
             const label sendToPatch,
             const label sendToPatchFace
         );
@@ -655,7 +661,11 @@ public:
         //- Make changes following a transfer across a non conformal cyclic
         //  boundary. Locates the particle using the stored face index and
         //  cartesian position.
-        void correctAfterNonConformalCyclicTransfer(const label sendToPatch);
+        void correctAfterNonConformalCyclicTransfer
+        (
+            const polyMesh& mesh,
+            const label sendToPatch
+        );
 
 
     // Interaction list referral
@@ -664,13 +674,18 @@ public:
         //  particle can be referred.
         void prepareForInteractionListReferral
         (
+            const polyMesh& mesh,
             const transformer& transform
         );
 
         //- Correct the topology after referral. Locates the particle relative
         //  to a nearby cell/tet. The particle may end up outside this cell/tet
         //  and cannot therefore be tracked.
-        void correctAfterInteractionListReferral(const label celli);
+        void correctAfterInteractionListReferral
+        (
+            const polyMesh& mesh,
+            const label celli
+        );
 
 
     // Decompose and reconstruct
@@ -679,6 +694,7 @@ public:
         //  to or from the given mesh.
         label procTetPt
         (
+            const polyMesh& mesh,
             const polyMesh& procMesh,
             const label procCell,
             const label procTetFace
@@ -687,8 +703,13 @@ public:
 
     // Mapping
 
-        //- Map after a topology change
-        void autoMap(const vector& position, const polyTopoChangeMap& map);
+        //- Map after a mesh change
+        void autoMap
+        (
+            const polyMesh& mesh,
+            const point& position,
+            const polyTopoChangeMap& map
+        );
 
 
     // I-O

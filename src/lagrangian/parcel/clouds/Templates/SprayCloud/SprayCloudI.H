@@ -80,6 +80,8 @@ inline Foam::scalar Foam::SprayCloud<CloudType>::penetration
             << exit(FatalError);
     }
 
+    const polyMesh& mesh = this->mesh();
+
     scalar distance = 0.0;
 
     const label nParcel = this->size();
@@ -107,7 +109,7 @@ inline Foam::scalar Foam::SprayCloud<CloudType>::penetration
     {
         const parcelType& p = iter();
         scalar m = p.nParticle()*p.mass();
-        scalar d = mag(p.position() - p.position0());
+        scalar d = mag(p.position(mesh) - p.position0());
         mSum += m;
 
         mass[i] = m;

@@ -135,7 +135,7 @@ bool Foam::molecule::move
             }
         }
 
-        setSitePositions(constProps);
+        setSitePositions(td.mesh, constProps);
     }
     else if (td.part() == trackingData::tpVelocityHalfStep1)
     {
@@ -213,9 +213,15 @@ void Foam::molecule::transformProperties(const transformer& transform)
 }
 
 
-void Foam::molecule::setSitePositions(const constantProperties& constProps)
+void Foam::molecule::setSitePositions
+(
+    const polyMesh& mesh,
+    const constantProperties& constProps
+)
 {
-    sitePositions_ = position() + (Q_ & constProps.siteReferencePositions());
+    sitePositions_ =
+        position(mesh)
+      + (Q_ & constProps.siteReferencePositions());
 }
 
 
@@ -227,9 +233,9 @@ void Foam::molecule::setSiteSizes(label size)
 }
 
 
-void Foam::molecule::hitWallPatch(moleculeCloud&, trackingData&)
+void Foam::molecule::hitWallPatch(moleculeCloud&, trackingData& td)
 {
-    const vector nw = normal();
+    const vector nw = normal(td.mesh);
     const scalar vn = v_ & nw;
 
     // Specular reflection

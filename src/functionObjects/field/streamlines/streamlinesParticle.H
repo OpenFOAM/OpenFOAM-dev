@@ -205,7 +205,7 @@ public:
         //- Construct from components
         streamlinesParticle
         (
-            const polyMesh& c,
+            const polyMesh& mesh,
             const vector& position,
             const label celli,
             const label lifeTime,
@@ -213,12 +213,7 @@ public:
         );
 
         //- Construct from Istream
-        streamlinesParticle
-        (
-            const polyMesh& c,
-            Istream& is,
-            bool readFields = true
-        );
+        streamlinesParticle(Istream& is, bool readFields = true);
 
         //- Construct copy
         streamlinesParticle(const streamlinesParticle& p);
@@ -229,26 +224,11 @@ public:
             return autoPtr<particle>(new streamlinesParticle(*this));
         }
 
-        //- Factory class to read-construct particles used for parallel transfer
-        class iNew
+        //- Construct from Istream and return
+        static autoPtr<streamlinesParticle> New(Istream& is)
         {
-            const polyMesh& mesh_;
-
-        public:
-
-            iNew(const polyMesh& mesh)
-            :
-                mesh_(mesh)
-            {}
-
-            autoPtr<streamlinesParticle> operator()(Istream& is) const
-            {
-                return autoPtr<streamlinesParticle>
-                (
-                    new streamlinesParticle(mesh_, is, true)
-                );
-            }
-        };
+            return autoPtr<streamlinesParticle>(new streamlinesParticle(is));
+        }
 
 
     // Member Functions

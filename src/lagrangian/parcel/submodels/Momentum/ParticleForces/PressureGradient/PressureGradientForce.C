@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,8 +128,12 @@ Foam::forceSuSp Foam::PressureGradientForce<CloudType>::calcCoupled
 {
     forceSuSp value(Zero, 0.0);
 
-    vector DUcDt =
-        DUcDtInterp().interpolate(p.coordinates(), p.currentTetIndices());
+    const vector DUcDt =
+        DUcDtInterp().interpolate
+        (
+            p.coordinates(),
+            p.currentTetIndices(td.mesh)
+        );
 
     value.Su() = mass*td.rhoc()/p.rho()*DUcDt;
 

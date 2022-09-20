@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "SprayParcel.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -115,7 +117,7 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
 :
     ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
     d0_(this->d()),
-    position0_(this->position()),
+    position0_(this->position(mesh)),
     sigma_(0.0),
     mu_(0.0),
     liquidCore_(0.0),
@@ -140,7 +142,7 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
 :
     ParcelType(mesh, position, celli),
     d0_(this->d()),
-    position0_(this->position()),
+    position0_(this->position(mesh)),
     sigma_(0.0),
     mu_(0.0),
     liquidCore_(0.0),

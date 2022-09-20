@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,7 +166,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
     forAllIter(typename CloudType, this->owner(), iter)
     {
         typename CloudType::parcelType& p = iter();
-        const tetIndices tetIs(p.currentTetIndices());
+        const tetIndices tetIs(p.currentTetIndices(mesh));
 
         const scalar x = exponentAverage.interpolate(p.coordinates(), tetIs);
 
@@ -201,7 +201,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
     forAllIter(typename CloudType, this->owner(), iter)
     {
         typename CloudType::parcelType& p = iter();
-        const tetIndices tetIs(p.currentTetIndices());
+        const tetIndices tetIs(p.currentTetIndices(mesh));
         uTildeAverage.add(p.coordinates(), tetIs, p.nParticle()*p.mass()*p.U());
     }
     uTildeAverage.average(massAverage);
@@ -224,7 +224,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
     forAllIter(typename CloudType, this->owner(), iter)
     {
         typename CloudType::parcelType& p = iter();
-        const tetIndices tetIs(p.currentTetIndices());
+        const tetIndices tetIs(p.currentTetIndices(mesh));
         const vector uTilde = uTildeAverage.interpolate(p.coordinates(), tetIs);
         uTildeSqrAverage.add
         (
@@ -239,7 +239,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
     forAllIter(typename CloudType, this->owner(), iter)
     {
         typename CloudType::parcelType& p = iter();
-        const tetIndices tetIs(p.currentTetIndices());
+        const tetIndices tetIs(p.currentTetIndices(mesh));
 
         const vector u = uAverage.interpolate(p.coordinates(), tetIs);
         const scalar uRms =
