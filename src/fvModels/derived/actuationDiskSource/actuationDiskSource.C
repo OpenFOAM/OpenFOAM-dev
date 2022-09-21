@@ -62,7 +62,7 @@ void Foam::fv::actuationDiskSource::readCoeffs()
     diskDir_ = coeffs().lookup<vector>("diskDir");
     if (mag(diskDir_) < vSmall)
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(coeffs())
            << "disk direction vector is approximately zero"
            << exit(FatalIOError);
     }
@@ -71,7 +71,7 @@ void Foam::fv::actuationDiskSource::readCoeffs()
     Ct_ = coeffs().lookup<scalar>("Ct");
     if (Cp_ <= vSmall || Ct_ <= vSmall)
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(coeffs())
            << "Cp and Ct must be greater than zero"
            << exit(FatalIOError);
     }
@@ -79,7 +79,7 @@ void Foam::fv::actuationDiskSource::readCoeffs()
     diskArea_ = coeffs().lookup<scalar>("diskArea");
     if (magSqr(diskArea_) <= vSmall)
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(coeffs())
            << "diskArea is approximately zero"
            << exit(FatalIOError);
     }
@@ -88,7 +88,7 @@ void Foam::fv::actuationDiskSource::readCoeffs()
     upstreamCellId_ = mesh().findCell(upstreamPoint_);
     if (returnReduce(upstreamCellId_, maxOp<label>()) == -1)
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(coeffs())
            << "upstream location " << upstreamPoint_  << " not found in mesh"
            << exit(FatalIOError);
     }
