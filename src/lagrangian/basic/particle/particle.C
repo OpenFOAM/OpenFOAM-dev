@@ -1268,18 +1268,18 @@ Foam::label Foam::particle::procTetPt
 }
 
 
-void Foam::particle::autoMap
+void Foam::particle::map
 (
     const polyMesh& mesh,
     const vector& position,
-    const polyTopoChangeMap& map
+    const label celli
 )
 {
     locate
     (
         mesh,
         position,
-        map.reverseCellMap()[celli_],
+        celli,
         true,
         "Particle mapped to a location outside of the mesh."
     );

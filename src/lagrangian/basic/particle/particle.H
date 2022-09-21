@@ -704,11 +704,11 @@ public:
     // Mapping
 
         //- Map after a mesh change
-        void autoMap
+        void map
         (
             const polyMesh& mesh,
             const point& position,
-            const polyTopoChangeMap& map
+            const label celli
         );
 
 

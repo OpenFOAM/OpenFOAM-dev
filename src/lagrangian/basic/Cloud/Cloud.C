@@ -36,6 +36,29 @@ License
 #include "cyclicAMIPolyPatch.H"
 #include "nonConformalCyclicPolyPatch.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+template<class Type>
+struct IDLListAppendEqOp
+{
+    void operator()(IDLList<Type>& x, const IDLList<Type>& y) const
+    {
+        if (y.size())
+        {
+            forAllConstIter(typename IDLList<Type>, y, iter)
+            {
+                x.append(new Type(iter()));
+            }
+        }
+    }
+};
+
+}
+
+
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class ParticleType>
@@ -411,6 +434,12 @@ void Foam::Cloud<ParticleType>::move
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
 {
+    // Ask for the tetBasePtIs to trigger all processors to build
+    // them, otherwise, if some processors have no particles then
+    // there is a comms mismatch.
+    pMesh_.tetBasePtIs();
+    pMesh_.oldCellCentres();
+
     if (!globalPositionsPtr_.valid())
     {
         FatalErrorInFunction
@@ -419,19 +448,13 @@ void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
             << exit(FatalError);
     }
 
-    // Ask for the tetBasePtIs to trigger all processors to build
-    // them, otherwise, if some processors have no particles then
-    // there is a comms mismatch.
-    pMesh_.tetBasePtIs();
-    pMesh_.oldCellCentres();
-
     const vectorField& positions = globalPositionsPtr_();
 
-    label i = 0;
+    label particlei = 0;
     forAllIter(typename Cloud<ParticleType>, *this, iter)
     {
-        iter().autoMap(pMesh_, positions[i], map);
-        ++ i;
+        const label celli = map.reverseCellMap()[iter().cell()];
+        iter().map(pMesh_, positions[particlei++], celli);
     }
 }
 
@@ -446,7 +469,100 @@ void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::distribute(const polyDistributionMap& map)
 {
-    NotImplemented;
+    // Ask for the tetBasePtIs to trigger all processors to build
+    // them, otherwise, if some processors have no particles then
+    // there is a comms mismatch.
+    pMesh_.tetBasePtIs();
+    pMesh_.oldCellCentres();
+
+    // Update cached mesh indexing
+    patchNbrProc_ = patchNbrProc(pMesh_);
+    patchNbrProcPatch_ = patchNbrProcPatch(pMesh_);
+    patchNonConformalCyclicPatches_ = patchNonConformalCyclicPatches(pMesh_);
+
+    if (!globalPositionsPtr_.valid())
+    {
+        FatalErrorInFunction
+            << "Global positions are not available. "
+            << "Cloud::storeGlobalPositions has not been called."
+            << exit(FatalError);
+    }
+
+    const vectorField& positions = globalPositionsPtr_();
+
+    // Distribute the global positions
+    List<List<point>> cellParticlePositions(map.nOldCells());
+    {
+        labelList cellParticleis(map.nOldCells(), 0);
+        forAllIter(typename Cloud<ParticleType>, *this, iter)
+        {
+            cellParticleis[iter().cell()] ++;
+        }
+        forAll(cellParticlePositions, celli)
+        {
+            cellParticlePositions[celli].resize(cellParticleis[celli]);
+        }
+
+        label particlei = 0;
+        cellParticleis = 0;
+        forAllIter(typename Cloud<ParticleType>, *this, iter)
+        {
+            const label celli = iter().cell();
+            label& cellParticlei = cellParticleis[celli];
+
+            cellParticlePositions[celli][cellParticlei ++] =
+                positions[particlei ++];
+        }
+    }
+    distributionMapBase::distribute
+    (
+        Pstream::commsTypes::nonBlocking,
+        List<labelPair>(),
+        pMesh_.nCells(),
+        map.cellMap().subMap(),
+        false,
+        map.cellMap().constructMap(),
+        false,
+        cellParticlePositions,
+        ListAppendEqOp<point>(),
+        flipOp(),
+        List<point>()
+    );
+
+    // Distribute the particles
+    List<IDLList<ParticleType>> cellParticles(map.nOldCells());
+    forAllIter(typename Cloud<ParticleType>, *this, iter)
+    {
+        cellParticles[iter().cell()].append(this->remove(iter));
+    }
+    distributionMapBase::distribute
+    (
+        Pstream::commsTypes::nonBlocking,
+        List<labelPair>(),
+        pMesh_.nCells(),
+        map.cellMap().subMap(),
+        false,
+        map.cellMap().constructMap(),
+        false,
+        cellParticles,
+        IDLListAppendEqOp<ParticleType>(),
+        flipOp(),
+        IDLList<ParticleType>()
+    );
+
+    // Locate the particles within the new mesh
+    forAll(cellParticles, celli)
+    {
+        label cellParticlei = 0;
+        forAllIter(typename IDLList<ParticleType>, cellParticles[celli], iter)
+        {
+            const point& pos = cellParticlePositions[celli][cellParticlei++];
+
+            iter().map(pMesh_, pos, celli);
+
+            this->append(cellParticles[celli].remove(iter));
+        }
+    }
 }
 
 
@@ -460,7 +576,7 @@ void Foam::Cloud<ParticleType>::writePositions() const
 
     forAllConstIter(typename Cloud<ParticleType>, *this, pIter)
     {
-        const point& pos = pIter().position(pMesh_);
+        const point pos = pIter().position(pMesh_);
 
         pObj<< "v " << pos.x() << " " << pos.y() << " " << pos.z() << nl;
     }
@@ -481,11 +597,10 @@ void Foam::Cloud<ParticleType>::storeGlobalPositions() const
 
     vectorField& positions = globalPositionsPtr_();
 
-    label i = 0;
+    label particlei = 0;
     forAllConstIter(typename Cloud<ParticleType>, *this, iter)
     {
-        positions[i] = iter().position(pMesh_);
-        ++ i;
+        positions[particlei++] = iter().position(pMesh_);
     }
 }
 

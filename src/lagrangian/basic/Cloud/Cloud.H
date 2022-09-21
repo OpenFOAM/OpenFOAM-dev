@@ -79,14 +79,14 @@ class Cloud
         const polyMesh& pMesh_;
 
         //- Map from patch index to the neighbouring processor index
-        const labelList patchNbrProc_;
+        labelList patchNbrProc_;
 
         //- Map from patch index to the corresponding patch index on the
         //  neighbouring processor
-        const labelList patchNbrProcPatch_;
+        labelList patchNbrProcPatch_;
 
         //- Map from patch index to connected non-conformal cyclics
-        const labelListList patchNonConformalCyclicPatches_;
+        labelListList patchNonConformalCyclicPatches_;
 
         //- Temporary storage for the global particle positions
         mutable autoPtr<vectorField> globalPositionsPtr_;
