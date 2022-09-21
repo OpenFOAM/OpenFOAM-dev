@@ -95,8 +95,9 @@ public:
 
         // Mapping
 
-            //- Remap the particles to the correct cells following mesh change
-            virtual void autoMap(const polyTopoChangeMap&);
+            //- Update following mesh change
+            virtual void topoChange();
+
 
         //- Introduce particles
         virtual void inflow();

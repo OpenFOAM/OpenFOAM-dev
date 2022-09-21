@@ -1084,16 +1084,44 @@ void Foam::DSMCCloud<ParcelType>::dumpParticlePositions() const
 
 
 template<class ParcelType>
-void Foam::DSMCCloud<ParcelType>::autoMap(const polyTopoChangeMap& mapper)
+void Foam::DSMCCloud<ParcelType>::topoChange(const polyTopoChangeMap& map)
 {
-    Cloud<ParcelType>::autoMap(mapper);
+    Cloud<ParcelType>::topoChange(map);
 
     // Update the cell occupancy field
     cellOccupancy_.setSize(mesh_.nCells());
     buildCellOccupancy();
 
     // Update the inflow BCs
-    this->inflowBoundary().autoMap(mapper);
+    this->inflowBoundary().topoChange();
+}
+
+
+template<class ParcelType>
+void Foam::DSMCCloud<ParcelType>::mapMesh(const polyMeshMap& map)
+{
+    Cloud<ParcelType>::mapMesh(map);
+
+    // Update the cell occupancy field
+    cellOccupancy_.setSize(mesh_.nCells());
+    buildCellOccupancy();
+
+    // Update the inflow BCs
+    this->inflowBoundary().topoChange();
+}
+
+
+template<class ParcelType>
+void Foam::DSMCCloud<ParcelType>::distribute(const polyDistributionMap& map)
+{
+    Cloud<ParcelType>::distribute(map);
+
+    // Update the cell occupancy field
+    cellOccupancy_.setSize(mesh_.nCells());
+    buildCellOccupancy();
+
+    // Update the inflow BCs
+    this->inflowBoundary().topoChange();
 }
 
 

@@ -35,7 +35,7 @@ Description
 #include "fvCFD.H"
 #include "viscosityModel.H"
 #include "incompressibleMomentumTransportModels.H"
-#include "parcelCloudList.H"
+#include "parcelClouds.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

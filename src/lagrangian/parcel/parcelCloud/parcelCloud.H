@@ -133,15 +133,30 @@ public:
 
     // Member Functions
 
-        //- Call this before a topology change. Stores the particles global
-        //  positions in the database for use during mapping.
-        virtual void storeGlobalPositions() = 0;
+        // Mesh changes
 
-        //- Redistribute or update using the given distribution map
-        virtual void distribute(const polyDistributionMap& map)
-        {
-            NotImplemented;
-        }
+            //- Call this before a topology change. Stores the particles global
+            //  positions in the database for use during mapping.
+            virtual void storeGlobalPositions() = 0;
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&)
+            {
+                NotImplemented;
+            }
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&)
+            {
+                NotImplemented;
+            }
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap& map)
+            {
+                NotImplemented;
+            }
+
 
         // Evolution
 

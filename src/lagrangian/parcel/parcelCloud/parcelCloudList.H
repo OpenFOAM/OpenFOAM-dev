@@ -26,8 +26,11 @@ Class
 
 Description
     List of parcel clouds, with the same interface as an individual parcel
-    cloud. This is the object that should be constructed by a solver in order
-    to support the coupled simulation of multiple clouds.
+    cloud. This is the object that should be constructed by an fvModel, or any
+    system that can call this class' mesh change functions. A solver should
+    *not* construct this object, as that would not provide a mechanism for the
+    mesh change functions to be executed. A solver should construct a
+    parcelClouds object instead.
 
 SourceFiles
     parcelCloudList.C
@@ -52,30 +55,57 @@ class parcelCloudList
 {
 private:
 
+    // Private Static Member Functions
+
+        //- Get the cloud names for this case
+        static wordList cloudNames(const objectRegistry& db);
+
+
     // Private data
 
         //- Reference to the mesh
         const fvMesh& mesh_;
 
 
-    // Private member functions
-
-        //- Initialise the pointer list of clouds
-        template <class ... Args>
-        void initialise(const Args& ... args);
-
-
 public:
 
     // Static Data Members
 
-        //- The name of the clouds
-        static const word cloudsName;
+        //- The default cloud name
+        static const word defaultCloudName;
+
+        //- The default cloud names (i.e., a list of length one with the
+        //  defaultCloudName as its value)
+        static const wordList defaultCloudNames;
+
+        //- The name of the clouds file in which multiple cloud names are
+        //  specified
+        static const word cloudNamesName;
 
 
     // Constructors
 
-        //- Construct with given carrier fields
+        //- Construct specified clouds with given carrier fields
+        parcelCloudList
+        (
+            const wordList& cloudNames,
+            const volScalarField& rho,
+            const volVectorField& U,
+            const volScalarField& mu,
+            const dimensionedVector& g
+        );
+
+        //- Construct specified clouds with given carrier fields and thermo
+        parcelCloudList
+        (
+            const wordList& cloudNames,
+            const volScalarField& rho,
+            const volVectorField& U,
+            const dimensionedVector& g,
+            const fluidThermo& carrierThermo
+        );
+
+        //- Construct detected clouds with given carrier fields
         parcelCloudList
         (
             const volScalarField& rho,
@@ -84,7 +114,7 @@ public:
             const dimensionedVector& g
         );
 
-        //- Construct with given carrier fields and thermo
+        //- Construct detected clouds with given carrier fields and thermo
         parcelCloudList
         (
             const volScalarField& rho,
@@ -172,12 +202,20 @@ public:
             void evolve();
 
 
-        //- Call this before a topology change. Stores the particles global
-        //  positions in the database for use during mapping.
-        void storeGlobalPositions();
+        // Mesh changes
 
-        //- Redistribute or update using the given distribution map
-        void distribute(const polyDistributionMap&);
+            //- Call this before a topology change. Stores the particles global
+            //  positions in the database for use during mapping.
+            void storeGlobalPositions();
+
+            //- Update topology using the given map
+            void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            void distribute(const polyDistributionMap&);
 
 
     // Member Operators

@@ -247,18 +247,6 @@ void Foam::ReactingMultiphaseCloud<CloudType>::evolve()
 
 
 template<class CloudType>
-void Foam::ReactingMultiphaseCloud<CloudType>::autoMap
-(
-    const polyTopoChangeMap& mapper
-)
-{
-    Cloud<parcelType>::autoMap(mapper);
-
-    this->topoChange();
-}
-
-
-template<class CloudType>
 void Foam::ReactingMultiphaseCloud<CloudType>::info()
 {
     CloudType::info();

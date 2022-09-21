@@ -23,6 +23,7 @@ clouds
 {
     type    clouds;
     libs    ("liblagrangianParcel.so" "liblagrangianParcelTurbulence.so");
+    clouds  (coalCloud limestoneCloud);
 }
 
 radiation

@@ -34,7 +34,7 @@ Description
 #include "fvCFD.H"
 #include "fluidThermo.H"
 #include "compressibleMomentumTransportModels.H"
-#include "parcelCloudList.H"
+#include "parcelClouds.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

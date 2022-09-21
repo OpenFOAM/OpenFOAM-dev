@@ -54,7 +54,7 @@ volScalarField mu
 );
 
 Info<< "Constructing clouds" << endl;
-parcelCloudList clouds(rhoInf, U, mu, g);
+parcelClouds& clouds = parcelClouds::New(mesh, rhoInf, U, mu, g);
 
 typeIOobject<volVectorField> Hheader
 (

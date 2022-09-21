@@ -478,15 +478,6 @@ void Foam::ThermoCloud<CloudType>::evolve()
 
 
 template<class CloudType>
-void Foam::ThermoCloud<CloudType>::autoMap(const polyTopoChangeMap& mapper)
-{
-    Cloud<parcelType>::autoMap(mapper);
-
-    this->topoChange();
-}
-
-
-template<class CloudType>
 void Foam::ThermoCloud<CloudType>::info()
 {
     CloudType::info();

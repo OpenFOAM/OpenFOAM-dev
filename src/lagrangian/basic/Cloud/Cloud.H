@@ -255,9 +255,17 @@ public:
                 const scalar trackTime
             );
 
-            //- Remap the cells of particles corresponding to the
-            //  mesh topology change
-            void autoMap(const polyTopoChangeMap&);
+
+        // Mapping
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
 
 
         // Read

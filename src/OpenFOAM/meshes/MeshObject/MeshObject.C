@@ -121,7 +121,7 @@ Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
 {
     if (found(mesh))
     {
-        return mesh.thisDb().objectRegistry::template lookupObject<Type>
+        return mesh.thisDb().objectRegistry::template lookupObjectRef<Type>
         (
             Type::typeName
         );

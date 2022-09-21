@@ -30,61 +30,51 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::word Foam::parcelCloudList::cloudsName("clouds");
+const Foam::word Foam::parcelCloudList::defaultCloudName("cloud");
+
+const Foam::wordList Foam::parcelCloudList::defaultCloudNames(1, "cloud");
+
+const Foam::word Foam::parcelCloudList::cloudNamesName("clouds");
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * Private Static Member Functions * * * * * * * * * * * //
 
-template<class ... Args>
-void Foam::parcelCloudList::initialise
-(
-    const Args& ... args
-)
+Foam::wordList Foam::parcelCloudList::cloudNames(const objectRegistry& db)
 {
-    typeIOobject<wordGlobalIOList> cloudsIO
+    typeIOobject<wordGlobalIOList> cloudNamesIO
     (
-        cloudsName,
-        mesh_.time().constant(),
-        mesh_,
+        cloudNamesName,
+        db.time().constant(),
+        db,
         IOobject::MUST_READ,
         IOobject::NO_WRITE
     );
 
-    if (cloudsIO.headerOk())
+    if (cloudNamesIO.headerOk())
     {
-        wordGlobalIOList cloudNames(cloudsIO);
-
-        this->setSize(cloudNames.size());
-
-        forAll(cloudNames, i)
-        {
-            this->set(i, parcelCloud::New(cloudNames[i], args ...));
-        }
+        return wordGlobalIOList(cloudNamesIO);
     }
-    else
+
+    typeIOobject<IOdictionary> cloudIO
+    (
+        defaultCloudName + "Properties",
+        db.time().constant(),
+        db,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE
+    );
+
+    if (cloudIO.headerOk())
     {
-        typeIOobject<IOdictionary> cloudIO
-        (
-            "cloudProperties",
-            mesh_.time().constant(),
-            mesh_,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE
-        );
-
-        if (cloudIO.headerOk())
-        {
-            this->setSize(1);
-
-            this->set(0, parcelCloud::New("cloud", args ...));
-        }
-        else
-        {
-            Info<< "Clouds not active: Neither "
-                << cloudsIO.relativeObjectPath()
-                << " nor " << cloudIO.relativeObjectPath() << " found" << endl;
-        }
+        return wordList(1, defaultCloudName);
     }
+
+    FatalErrorInFunction
+        << "Cloud properties were not found in either "
+        << cloudNamesIO.relativeObjectPath() << " or "
+        << cloudIO.relativeObjectPath() << exit(FatalError);
+
+    return wordList::null();
 }
 
 
@@ -92,6 +82,7 @@ void Foam::parcelCloudList::initialise
 
 Foam::parcelCloudList::parcelCloudList
 (
+    const wordList& cloudNames,
     const volScalarField& rho,
     const volVectorField& U,
     const volScalarField& mu,
@@ -101,8 +92,46 @@ Foam::parcelCloudList::parcelCloudList
     PtrList<parcelCloud>(),
     mesh_(rho.mesh())
 {
-    initialise(rho, U, mu, g);
+    this->setSize(cloudNames.size());
+
+    forAll(cloudNames, i)
+    {
+        this->set(i, parcelCloud::New(cloudNames[i], rho, U, mu, g));
+    }
 }
+
+
+Foam::parcelCloudList::parcelCloudList
+(
+    const wordList& cloudNames,
+    const volScalarField& rho,
+    const volVectorField& U,
+    const dimensionedVector& g,
+    const fluidThermo& carrierThermo
+)
+:
+    PtrList<parcelCloud>(),
+    mesh_(rho.mesh())
+{
+    this->setSize(cloudNames.size());
+
+    forAll(cloudNames, i)
+    {
+        this->set(i, parcelCloud::New(cloudNames[i], rho, U, g, carrierThermo));
+    }
+}
+
+
+Foam::parcelCloudList::parcelCloudList
+(
+    const volScalarField& rho,
+    const volVectorField& U,
+    const volScalarField& mu,
+    const dimensionedVector& g
+)
+:
+    parcelCloudList(cloudNames(rho.mesh()), rho, U, mu, g)
+{}
 
 
 Foam::parcelCloudList::parcelCloudList
@@ -113,11 +142,8 @@ Foam::parcelCloudList::parcelCloudList
     const fluidThermo& carrierThermo
 )
 :
-    PtrList<parcelCloud>(),
-    mesh_(rho.mesh())
-{
-    initialise(rho, U, g, carrierThermo);
-}
+    parcelCloudList(cloudNames(rho.mesh()), rho, U, g, carrierThermo)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -134,7 +160,7 @@ const Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::theta() const
     (
         volScalarField::New
         (
-            cloudsName + ":theta",
+            cloudNamesName + ":theta",
             mesh_,
             dimensionedScalar(dimless, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -168,7 +194,7 @@ Foam::tmp<Foam::volVectorField::Internal> Foam::parcelCloudList::UTrans() const
     (
         volVectorField::Internal::New
         (
-            cloudsName + ":UTrans",
+            cloudNamesName + ":UTrans",
             mesh_,
             dimensionedVector(dimMass*dimVelocity, Zero)
         )
@@ -187,7 +213,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::UCoeff() const
     (
         volScalarField::Internal::New
         (
-            cloudsName + ":UCoeff",
+            cloudNamesName + ":UCoeff",
             mesh_,
             dimensionedScalar(dimMass, Zero)
         )
@@ -220,7 +246,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::hsTrans() const
     (
         volScalarField::Internal::New
         (
-            cloudsName + ":hsTrans",
+            cloudNamesName + ":hsTrans",
             mesh_,
             dimensionedScalar(dimEnergy, Zero)
         )
@@ -239,7 +265,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::hsCoeff() const
     (
         volScalarField::Internal::New
         (
-            cloudsName + ":hsCoeff",
+            cloudNamesName + ":hsCoeff",
             mesh_,
             dimensionedScalar(dimEnergy/dimTemperature, Zero)
         )
@@ -258,7 +284,7 @@ Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::Ep() const
     (
         volScalarField::New
         (
-            cloudsName + ":radiation:Ep",
+            cloudNamesName + ":radiation:Ep",
             mesh_,
             dimensionedScalar(dimMass/dimLength/pow3(dimTime), Zero)
         )
@@ -277,7 +303,7 @@ Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::ap() const
     (
         volScalarField::New
         (
-            cloudsName + ":radiation:ap",
+            cloudNamesName + ":radiation:ap",
             mesh_,
             dimensionedScalar(dimless/dimLength, 0)
         )
@@ -297,7 +323,7 @@ Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::sigmap() const
     (
         volScalarField::New
         (
-            cloudsName + ":radiation:sigmap",
+            cloudNamesName + ":radiation:sigmap",
             mesh_,
             dimensionedScalar(dimless/dimLength, 0)
         )
@@ -345,7 +371,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::Srho() const
     (
         volScalarField::Internal::New
         (
-            cloudsName + ":Srho",
+            cloudNamesName + ":Srho",
             mesh_,
             dimensionedScalar(dimDensity/dimTime, Zero)
         )
@@ -381,6 +407,24 @@ void Foam::parcelCloudList::storeGlobalPositions()
     forAll(*this, i)
     {
         operator[](i).storeGlobalPositions();
+    }
+}
+
+
+void Foam::parcelCloudList::topoChange(const polyTopoChangeMap& map)
+{
+    forAll(*this, i)
+    {
+        operator[](i).topoChange(map);
+    }
+}
+
+
+void Foam::parcelCloudList::mapMesh(const polyMeshMap& map)
+{
+    forAll(*this, i)
+    {
+        operator[](i).mapMesh(map);
     }
 }
 

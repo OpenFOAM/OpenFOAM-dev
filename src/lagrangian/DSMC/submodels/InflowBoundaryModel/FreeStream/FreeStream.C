@@ -116,7 +116,7 @@ Foam::FreeStream<CloudType>::~FreeStream()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::FreeStream<CloudType>::autoMap(const polyTopoChangeMap& mapper)
+void Foam::FreeStream<CloudType>::topoChange()
 {
     CloudType& cloud(this->owner());
     const polyMesh& mesh(cloud.mesh());

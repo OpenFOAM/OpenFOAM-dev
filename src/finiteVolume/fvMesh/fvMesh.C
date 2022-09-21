@@ -44,7 +44,6 @@ License
 #include "pointMesh.H"
 #include "pointMeshMapper.H"
 #include "MapPointField.H"
-#include "mapClouds.H"
 #include "MeshObject.H"
 #include "HashPtrTable.H"
 #include "CompactListList.H"
@@ -1039,9 +1038,6 @@ void Foam::fvMesh::mapFields(const polyTopoChangeMap& map)
             (mapper);
         FOR_ALL_FIELD_TYPES(mapPointFieldType);
     }
-
-    // Map all the clouds in the objectRegistry
-    mapClouds(*this, map);
 }
 
 

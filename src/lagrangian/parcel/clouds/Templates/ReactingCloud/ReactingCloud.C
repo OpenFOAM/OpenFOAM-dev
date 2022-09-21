@@ -309,15 +309,6 @@ void Foam::ReactingCloud<CloudType>::evolve()
 
 
 template<class CloudType>
-void Foam::ReactingCloud<CloudType>::autoMap(const polyTopoChangeMap& mapper)
-{
-    Cloud<parcelType>::autoMap(mapper);
-
-    this->topoChange();
-}
-
-
-template<class CloudType>
 void Foam::ReactingCloud<CloudType>::info()
 {
     CloudType::info();

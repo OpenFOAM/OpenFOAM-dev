@@ -28,6 +28,8 @@ License
 #include "globalMeshData.H"
 #include "PstreamCombineReduceOps.H"
 #include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "Time.H"
 #include "OFstream.H"
 #include "wallPolyPatch.H"
@@ -411,7 +413,7 @@ void Foam::Cloud<ParticleType>::move
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::autoMap(const polyTopoChangeMap& mapper)
+void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
 {
     if (!globalPositionsPtr_.valid())
     {
@@ -432,9 +434,23 @@ void Foam::Cloud<ParticleType>::autoMap(const polyTopoChangeMap& mapper)
     label i = 0;
     forAllIter(typename Cloud<ParticleType>, *this, iter)
     {
-        iter().autoMap(positions[i], mapper);
+        iter().autoMap(positions[i], map);
         ++ i;
     }
+}
+
+
+template<class ParticleType>
+void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
+{
+    NotImplemented;
+}
+
+
+template<class ParticleType>
+void Foam::Cloud<ParticleType>::distribute(const polyDistributionMap& map)
+{
+    NotImplemented;
 }
 
 
@@ -460,10 +476,10 @@ void Foam::Cloud<ParticleType>::writePositions() const
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::storeGlobalPositions() const
 {
-    // Store the global positions for later use by autoMap. It would be
-    // preferable not to need this. If the polyTopoChangeMap object passed to
-    // autoMap had a copy of the old mesh then the global positions could be
-    // recovered within autoMap, and this pre-processing would not be necessary.
+    // Store the global positions for later use by mapping functions. It would
+    // be preferable not to need this. If the objects passed to had a copy of
+    // the old mesh then the global positions could be recovered within the
+    // mapping functions, and this pre-processing would not be necessary.
 
     globalPositionsPtr_.reset(new vectorField(this->size()));
 

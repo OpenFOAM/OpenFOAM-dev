@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,77 +23,74 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "InflowBoundaryModel.H"
+#include "parcelClouds.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CloudType>
-Foam::InflowBoundaryModel<CloudType>::InflowBoundaryModel(CloudType& owner)
+Foam::parcelClouds::parcelClouds
+(
+    const fvMesh& mesh,
+    const volScalarField& rho,
+    const volVectorField& U,
+    const volScalarField& mu,
+    const dimensionedVector& g
+)
 :
-    dict_(dictionary::null),
-    owner_(owner),
-    coeffDict_(dictionary::null)
+    MeshObject<fvMesh, UpdateableMeshObject, parcelClouds>(mesh),
+    parcelCloudList(rho, U, mu, g)
 {}
 
 
-template<class CloudType>
-Foam::InflowBoundaryModel<CloudType>::InflowBoundaryModel
+Foam::parcelClouds::parcelClouds
 (
-    const dictionary& dict,
-    CloudType& owner,
-    const word& type
+    const fvMesh& mesh,
+    const volScalarField& rho,
+    const volVectorField& U,
+    const dimensionedVector& g,
+    const fluidThermo& carrierThermo
 )
 :
-    dict_(dict),
-    owner_(owner),
-    coeffDict_(dict.subDict(type + "Coeffs"))
+    MeshObject<fvMesh, UpdateableMeshObject, parcelClouds>(mesh),
+    parcelCloudList(rho, U, g, carrierThermo)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CloudType>
-Foam::InflowBoundaryModel<CloudType>::~InflowBoundaryModel()
+Foam::parcelClouds::~parcelClouds()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class CloudType>
-const CloudType& Foam::InflowBoundaryModel<CloudType>::owner() const
+void Foam::parcelClouds::preUpdateMesh()
 {
-    return owner_;
+    parcelCloudList::storeGlobalPositions();
 }
 
 
-template<class CloudType>
-CloudType& Foam::InflowBoundaryModel<CloudType>::owner()
+bool Foam::parcelClouds::movePoints()
 {
-    return owner_;
+    return true;
 }
 
 
-template<class CloudType>
-const Foam::dictionary& Foam::InflowBoundaryModel<CloudType>::dict() const
+void Foam::parcelClouds::topoChange(const polyTopoChangeMap& map)
 {
-    return dict_;
+    parcelCloudList::topoChange(map);
 }
 
 
-template<class CloudType>
-const Foam::dictionary& Foam::InflowBoundaryModel<CloudType>::coeffDict() const
+void Foam::parcelClouds::mapMesh(const polyMeshMap& map)
 {
-    return coeffDict_;
+    parcelCloudList::mapMesh(map);
 }
 
 
-template<class CloudType>
-void Foam::InflowBoundaryModel<CloudType>::topoChange()
-{}
+void Foam::parcelClouds::distribute(const polyDistributionMap& map)
+{
+    parcelCloudList::distribute(map);
+}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "InflowBoundaryModelNew.C"
 
 // ************************************************************************* //

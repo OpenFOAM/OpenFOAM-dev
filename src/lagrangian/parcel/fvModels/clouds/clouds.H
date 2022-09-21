@@ -117,6 +117,9 @@ class clouds
         //- Viscosity field. Valid only if the carrier does not have thermo.
         tmp<volScalarField> tMu_;
 
+        //- Names of the clouds
+        const wordList cloudNames_;
+
         //- Name of the density field
         const word rhoName_;
 

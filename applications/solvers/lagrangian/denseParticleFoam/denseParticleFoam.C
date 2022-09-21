@@ -83,7 +83,7 @@ namespace Foam
 #include "CorrectPhi.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
-#include "parcelCloudList.H"
+#include "parcelClouds.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

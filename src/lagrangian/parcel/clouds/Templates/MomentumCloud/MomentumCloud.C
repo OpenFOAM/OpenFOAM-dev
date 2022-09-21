@@ -744,20 +744,41 @@ void Foam::MomentumCloud<CloudType>::patchData
 
 
 template<class CloudType>
-void Foam::MomentumCloud<CloudType>::topoChange()
+void Foam::MomentumCloud<CloudType>::topoChange(const polyTopoChangeMap& map)
 {
+    Cloud<parcelType>::topoChange(map);
+
     updateCellOccupancy();
+
     injectors_.topoChange();
+
     cellLengthScale_ = mag(cbrt(this->mesh().V()));
 }
 
 
 template<class CloudType>
-void Foam::MomentumCloud<CloudType>::autoMap(const polyTopoChangeMap& mapper)
+void Foam::MomentumCloud<CloudType>::mapMesh(const polyMeshMap& map)
 {
-    Cloud<parcelType>::autoMap(mapper);
+    Cloud<parcelType>::mapMesh(map);
 
-    topoChange();
+    updateCellOccupancy();
+
+    injectors_.topoChange();
+
+    cellLengthScale_ = mag(cbrt(this->mesh().V()));
+}
+
+
+template<class CloudType>
+void Foam::MomentumCloud<CloudType>::distribute(const polyDistributionMap& map)
+{
+    Cloud<parcelType>::distribute(map);
+
+    updateCellOccupancy();
+
+    injectors_.topoChange();
+
+    cellLengthScale_ = mag(cbrt(this->mesh().V()));
 }
 
 

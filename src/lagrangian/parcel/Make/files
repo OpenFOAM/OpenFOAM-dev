@@ -13,7 +13,8 @@ parcelThermo/parcelThermo.C
 parcelCloud/parcelCloudBase.C
 parcelCloud/parcelCloud.C
 parcelCloud/parcelCloudNew.C
-parcelCloudList/parcelCloudList.C
+parcelCloud/parcelCloudList.C
+parcelCloud/parcelClouds.C
 
 # cloud names
 $(CLOUDS)/Templates/MomentumCloud/MomentumCloudName.C

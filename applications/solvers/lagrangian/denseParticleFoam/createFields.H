@@ -122,7 +122,7 @@ volScalarField alphac
 );
 
 Info<< "Constructing clouds" << endl;
-parcelCloudList clouds(rhoc, Uc, muc, g);
+parcelClouds& clouds = parcelClouds::New(mesh, rhoc, Uc, muc, g);
 
 // Particle fraction upper limit
 scalar alphacMin

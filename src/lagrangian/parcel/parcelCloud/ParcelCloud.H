@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,12 +58,32 @@ public:
 
     // Member Functions
 
-        //- Call this before a topology change. Stores the particles global
-        //  positions in the database for use during mapping.
-        virtual void storeGlobalPositions()
-        {
-            CloudType::storeGlobalPositions();
-        }
+        // Mesh changes
+
+            //- Call this before a topology change. Stores the particles global
+            //  positions in the database for use during mapping.
+            virtual void storeGlobalPositions()
+            {
+                CloudType::storeGlobalPositions();
+            }
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap& map)
+            {
+                CloudType::topoChange(map);
+            }
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap& map)
+            {
+                CloudType::mapMesh(map);
+            }
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap& map)
+            {
+                CloudType::distribute(map);
+            }
 
 
         // Evolution

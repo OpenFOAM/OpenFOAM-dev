@@ -611,12 +611,14 @@ public:
 
         // Mapping
 
-            //- Update mesh
-            void topoChange();
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
 
-            //- Remap the cells of particles corresponding to the
-            //  mesh topology change with a default tracking data object
-            virtual void autoMap(const polyTopoChangeMap&);
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
 
 
         // I-O

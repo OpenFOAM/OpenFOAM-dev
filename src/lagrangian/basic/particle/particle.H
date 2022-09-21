@@ -688,7 +688,7 @@ public:
     // Mapping
 
         //- Map after a topology change
-        void autoMap(const vector& position, const polyTopoChangeMap& mapper);
+        void autoMap(const vector& position, const polyTopoChangeMap& map);
 
 
     // I-O

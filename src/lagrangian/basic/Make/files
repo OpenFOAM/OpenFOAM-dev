@@ -1,6 +1,10 @@
 particle/particle.C
 particle/particleIO.C
+
 IOPosition/IOPositionName.C
+
+cloud/cloud.C
+
 passiveParticle/passiveParticleCloud.C
 indexedParticle/indexedParticleCloud.C
 

@@ -64,7 +64,19 @@ Foam::cloud::~cloud()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::cloud::autoMap(const polyTopoChangeMap&)
+void Foam::cloud::topoChange(const polyTopoChangeMap&)
+{
+    NotImplemented;
+}
+
+
+void Foam::cloud::mapMesh(const polyMeshMap&)
+{
+    NotImplemented;
+}
+
+
+void Foam::cloud::distribute(const polyDistributionMap&)
 {
     NotImplemented;
 }

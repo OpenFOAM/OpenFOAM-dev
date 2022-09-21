@@ -119,6 +119,14 @@ Foam::fv::clouds::clouds
             new volScalarField("mu", tRho_()*tCarrierViscosity_().nu())
         )
     ),
+    cloudNames_
+    (
+        dict.lookupOrDefault<wordList>
+        (
+            "clouds",
+            parcelCloudList::defaultCloudNames
+        )
+    ),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     UName_(dict.lookupOrDefault<word>("U", "U")),
     cloudsPtr_
@@ -126,6 +134,7 @@ Foam::fv::clouds::clouds
         carrierHasThermo_
       ? new parcelCloudList
         (
+            cloudNames_,
             mesh.lookupObject<volScalarField>(rhoName_),
             mesh.lookupObject<volVectorField>(UName_),
             g_,
@@ -133,6 +142,7 @@ Foam::fv::clouds::clouds
         )
       : new parcelCloudList
         (
+            cloudNames_,
             tRho_(),
             mesh.lookupObject<volVectorField>(UName_),
             tMu_(),
@@ -330,12 +340,16 @@ void Foam::fv::clouds::preUpdateMesh()
 }
 
 
-void Foam::fv::clouds::topoChange(const polyTopoChangeMap&)
-{}
+void Foam::fv::clouds::topoChange(const polyTopoChangeMap& map)
+{
+    cloudsPtr_().topoChange(map);
+}
 
 
 void Foam::fv::clouds::mapMesh(const polyMeshMap& map)
-{}
+{
+    cloudsPtr_().mapMesh(map);
+}
 
 
 void Foam::fv::clouds::distribute(const polyDistributionMap& map)
