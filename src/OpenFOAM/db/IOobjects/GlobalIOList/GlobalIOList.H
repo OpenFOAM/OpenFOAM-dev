@@ -142,6 +142,14 @@ public:
 };
 
 
+//- Trait for obtaining global status
+template<class Type>
+struct typeGlobal<GlobalIOList<Type>>
+{
+    static const bool global = true;
+};
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

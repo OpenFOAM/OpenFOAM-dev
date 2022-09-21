@@ -156,7 +156,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<>
-inline bool typeGlobal
+struct typeGlobal
 <
     MeshObject
     <
@@ -164,10 +164,10 @@ inline bool typeGlobal
         GeometricMeshObject,
         coordinateSystems::coordinateSystems
     >
->()
+>
 {
-    return true;
-}
+    static const bool global = true;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,14 +196,15 @@ int main(int argc, char *argv[])
         if (dictIO.headerOk())
         {
             Info<< "Refining according to "
-                << dictIO.path(typeGlobalFile<IOdictionary>()) << nl << endl;
+                << dictIO.path(typeGlobalFile<IOdictionary>::global)
+                << nl << endl;
             refineDict = IOdictionary(dictIO);
         }
         else
         {
             FatalErrorInFunction
                 << "Cannot open specified refinement dictionary "
-                << dictIO.path(typeGlobalFile<IOdictionary>())
+                << dictIO.path(typeGlobalFile<IOdictionary>::global)
                 << exit(FatalError);
         }
     }
@@ -212,14 +213,15 @@ int main(int argc, char *argv[])
         if (dictIO.headerOk())
         {
             Info<< "Refining according to "
-                << dictIO.path(typeGlobalFile<IOdictionary>()) << nl << endl;
+                << dictIO.path(typeGlobalFile<IOdictionary>::global)
+                << nl << endl;
             refineDict = IOdictionary(dictIO);
         }
         else
         {
             Info<< "Refinement dictionary "
-                << dictIO.path(typeGlobalFile<IOdictionary>()) << " not found"
-                << nl << endl;
+                << dictIO.path(typeGlobalFile<IOdictionary>::global)
+                << " not found" << nl << endl;
         }
     }
 
