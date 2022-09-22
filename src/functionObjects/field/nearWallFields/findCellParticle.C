@@ -163,19 +163,6 @@ void Foam::findCellParticle::hitCyclicPatch
 }
 
 
-void Foam::findCellParticle::hitCyclicAMIPatch
-(
-    const vector&,
-    const scalar,
-    Cloud<findCellParticle>&,
-    trackingData& td
-)
-{
-    // Remove particle
-    td.keepParticle = false;
-}
-
-
 void Foam::findCellParticle::hitProcessorPatch
 (
     Cloud<findCellParticle>& cloud,

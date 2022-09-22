@@ -215,31 +215,6 @@ triSurface/triSurfaceTools/pointToPointPlanarInterpolation.C
 
 twoDPointCorrector/twoDPointCorrector.C
 
-AMI=AMIInterpolation
-$(AMI)/AMIInterpolation/AMIInterpolation.C
-$(AMI)/AMIInterpolation/AMIInterpolationParallelOps.C
-$(AMI)/faceAreaIntersect/faceAreaIntersect.C
-
-AMIGAMG=$(AMI)/GAMG
-$(AMIGAMG)/interfaces/cyclicAMIGAMGInterface/cyclicAMIGAMGInterface.C
-$(AMIGAMG)/interfaceFields/cyclicAMIGAMGInterfaceField/cyclicAMIGAMGInterfaceField.C
-
-AMIMethod=$(AMI)/AMIInterpolation/AMIMethod
-$(AMIMethod)/AMIMethod/AMIMethod.C
-$(AMIMethod)/AMIMethod/AMIMethodNew.C
-$(AMIMethod)/directAMI/directAMI.C
-$(AMIMethod)/faceAreaWeightAMI/faceAreaWeightAMI.C
-$(AMIMethod)/mapNearestAMI/mapNearestAMI.C
-$(AMIMethod)/partialFaceAreaWeightAMI/partialFaceAreaWeightAMI.C
-$(AMIMethod)/sweptFaceAreaWeightAMI/sweptFaceAreaWeightAMI.C
-
-AMICycPatches=$(AMI)/patches/cyclicAMI
-$(AMICycPatches)/cyclicAMILduInterfaceField/cyclicAMILduInterface.C
-$(AMICycPatches)/cyclicAMILduInterfaceField/cyclicAMILduInterfaceField.C
-$(AMICycPatches)/cyclicAMIPolyPatch/cyclicAMIPolyPatch.C
-$(AMICycPatches)/cyclicAMIPointPatch/cyclicAMIPointPatch.C
-$(AMICycPatches)/cyclicAMIPointPatchField/cyclicAMIPointPatchFields.C
-
 patchToPatch/patchToPatch/patchToPatch.C
 patchToPatch/patchToPatch/patchToPatchParallelOps.C
 patchToPatch/matching/matchingPatchToPatch.C

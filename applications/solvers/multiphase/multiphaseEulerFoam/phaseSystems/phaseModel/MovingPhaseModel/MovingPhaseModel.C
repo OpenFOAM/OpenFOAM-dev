@@ -300,19 +300,6 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correctUf()
                /mesh.magSf()
               - (n & Uf_())
             );
-
-        surfaceVectorField::Boundary& UfBf = Uf_.ref().boundaryFieldRef();
-        const volVectorField::Boundary& UBf = U_.boundaryField();
-
-        forAll(mesh.boundary(), patchi)
-        {
-            // Remove the flux correction on AMI patches to compensate for
-            // AMI non-conservation error
-            if (isA<cyclicAMIFvPatch>(mesh.boundary()[patchi]))
-            {
-                UfBf[patchi] = UBf[patchi];
-            }
-        }
     }
 }
 

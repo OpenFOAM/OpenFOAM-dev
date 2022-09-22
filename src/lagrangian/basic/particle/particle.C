@@ -27,6 +27,7 @@ License
 #include "polyTopoChangeMap.H"
 #include "transform.H"
 #include "treeDataCell.H"
+#include "indexedOctree.H"
 #include "cubicEqn.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

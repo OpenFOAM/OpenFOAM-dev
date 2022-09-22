@@ -191,19 +191,6 @@ void Foam::trackedParticle::hitCyclicPatch
 }
 
 
-void Foam::trackedParticle::hitCyclicAMIPatch
-(
-    const vector&,
-    const scalar,
-    Cloud<trackedParticle>&,
-    trackingData& td
-)
-{
-    // Remove particle
-    td.keepParticle = false;
-}
-
-
 void Foam::trackedParticle::hitWallPatch
 (
     Cloud<trackedParticle>&,

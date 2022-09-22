@@ -11,11 +11,6 @@ cyclic
     type  cyclic;
 }
 
-cyclicAMI
-{
-    type  cyclicAMI;
-}
-
 cyclicSlip
 {
     type  cyclicSlip;
@@ -32,12 +27,6 @@ nonConformalError
     type  nonConformalError;
 }
 
-nonConformalProcessorCyclic
-{
-    type  nonConformalProcessorCyclic;
-    value $internalField;
-}
-
 empty
 {
     type  empty;
@@ -52,6 +41,12 @@ processor
 processorCyclic
 {
     type  processorCyclic;
+    value $internalField;
+}
+
+nonConformalProcessorCyclic
+{
+    type  nonConformalProcessorCyclic;
     value $internalField;
 }
 

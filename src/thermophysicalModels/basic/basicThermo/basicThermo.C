@@ -31,9 +31,7 @@ License
 #include "mixedEnergyFvPatchScalarField.H"
 #include "mixedEnergyCalculatedTemperatureFvPatchScalarField.H"
 #include "fixedJumpFvPatchFields.H"
-#include "fixedJumpAMIFvPatchFields.H"
 #include "energyJumpFvPatchScalarField.H"
-#include "energyJumpAMIFvPatchScalarField.H"
 
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -209,16 +207,6 @@ Foam::wordList Foam::basicThermo::heBoundaryBaseTypes()
         {
             hbt[patchi] = tbf[patchi].patch().type();
         }
-        else if (isA<fixedJumpAMIFvPatchScalarField>(tbf[patchi]))
-        {
-            const fixedJumpAMIFvPatchScalarField& pf =
-                dynamic_cast<const fixedJumpAMIFvPatchScalarField&>
-                (
-                    tbf[patchi]
-                );
-
-            hbt[patchi] = pf.interfaceFieldType();
-        }
     }
 
     return hbt;
@@ -263,10 +251,6 @@ Foam::wordList Foam::basicThermo::heBoundaryTypes()
         else if (isA<fixedJumpFvPatchScalarField>(tbf[patchi]))
         {
             hbt[patchi] = energyJumpFvPatchScalarField::typeName;
-        }
-        else if (isA<fixedJumpAMIFvPatchScalarField>(tbf[patchi]))
-        {
-            hbt[patchi] = energyJumpAMIFvPatchScalarField::typeName;
         }
     }
 

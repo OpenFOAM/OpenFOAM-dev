@@ -27,7 +27,6 @@ License
 #include "polyMesh.H"
 #include "processorPolyPatch.H"
 #include "cyclicPolyPatch.H"
-#include "cyclicAMIPolyPatch.H"
 #include "OPstream.H"
 #include "IPstream.H"
 #include "PstreamReduceOps.H"
@@ -537,203 +536,6 @@ void Foam::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
 
 
 template<class Type, class TrackingData>
-void Foam::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
-{
-    // Define combine operator for AMIInterpolation
-
-    class combine
-    {
-        FaceCellWave<Type, TrackingData>& solver_;
-
-        const cyclicAMIPolyPatch& patch_;
-
-        public:
-
-            combine
-            (
-                FaceCellWave<Type, TrackingData>& solver,
-                const cyclicAMIPolyPatch& patch
-            )
-            :
-                solver_(solver),
-                patch_(patch)
-            {}
-
-            void operator()
-            (
-                Type& x,
-                const label facei,
-                const Type& y,
-                const scalar weight
-            ) const
-            {
-                if (y.valid(solver_.data()))
-                {
-                    label meshFacei = -1;
-
-                    if (patch_.owner())
-                    {
-                        meshFacei = patch_.start() + facei;
-                    }
-                    else
-                    {
-                        meshFacei = patch_.nbrPatch().start() + facei;
-                    }
-
-                    x.updateFace
-                    (
-                        solver_.mesh(),
-                        meshFacei,
-                        y,
-                        solver_.propagationTol(),
-                        solver_.data()
-                    );
-                }
-            }
-    };
-
-    // Transfer information across cyclicAMI halves.
-
-    forAll(mesh_.boundaryMesh(), patchi)
-    {
-        const polyPatch& patch = mesh_.boundaryMesh()[patchi];
-
-        if (isA<cyclicAMIPolyPatch>(patch))
-        {
-            const cyclicAMIPolyPatch& cycPatch =
-                refCast<const cyclicAMIPolyPatch>(patch);
-            const cyclicAMIPolyPatch& nbrPatch = cycPatch.nbrPatch();
-
-            // Create a combine operator to transfer sendInfo from nbrPatch
-            // to cycPatch
-            combine cmb(*this, cycPatch);
-
-            // Get nbrPatch data (so not just changed faces)
-            List<Type> sendInfo(nbrPatch.patchSlice(allFaceInfo_));
-
-            // Construct default values, if necessary
-            List<Type> defVals;
-            if (cycPatch.applyLowWeightCorrection())
-            {
-                defVals = cycPatch.patchInternalList(allCellInfo_);
-            }
-
-            // Interpolate from nbrPatch to cycPatch, applying AMI
-            // transforms as necessary
-            List<Type> receiveInfo;
-            if (cycPatch.owner())
-            {
-                forAll(cycPatch.AMIs(), i)
-                {
-                    if (cycPatch.AMITransforms()[i].transformsPosition())
-                    {
-                        List<Type> sendInfoT(sendInfo);
-                        transform
-                        (
-                            nbrPatch,
-                            nbrPatch.size(),
-                            identity(nbrPatch.size()),
-                            cycPatch.AMITransforms()[i],
-                            sendInfo
-                        );
-                        cycPatch.AMIs()[i].interpolateToSource
-                        (
-                            sendInfoT,
-                            cmb,
-                            receiveInfo,
-                            defVals
-                        );
-                    }
-                    else
-                    {
-                        cycPatch.AMIs()[i].interpolateToSource
-                        (
-                            sendInfo,
-                            cmb,
-                            receiveInfo,
-                            defVals
-                        );
-                    }
-                }
-            }
-            else
-            {
-                forAll(nbrPatch.AMIs(), i)
-                {
-                    if (nbrPatch.AMITransforms()[i].transformsPosition())
-                    {
-                        List<Type> sendInfoT(sendInfo);
-                        transform
-                        (
-                            nbrPatch,
-                            nbrPatch.size(),
-                            identity(nbrPatch.size()),
-                            nbrPatch.AMITransforms()[i],
-                            sendInfo
-                        );
-                        cycPatch.nbrPatch().AMIs()[i].interpolateToTarget
-                        (
-                            sendInfoT,
-                            cmb,
-                            receiveInfo,
-                            defVals
-                        );
-                    }
-                    else
-                    {
-                        cycPatch.nbrPatch().AMIs()[i].interpolateToTarget
-                        (
-                            sendInfo,
-                            cmb,
-                            receiveInfo,
-                            defVals
-                        );
-                    }
-                }
-            }
-
-            // Shuffle up to remove invalid info
-            DynamicList<label> receiveFaces(cycPatch.size());
-            forAll(receiveInfo, patchFacei)
-            {
-                if (receiveInfo[patchFacei].valid(td_))
-                {
-                    if (receiveFaces.size() != patchFacei)
-                    {
-                        receiveInfo[receiveFaces.size()] =
-                            receiveInfo[patchFacei];
-                    }
-                    receiveFaces.append(patchFacei);
-                }
-            }
-
-            // Transform info across the interface
-            if (cycPatch.transform().transformsPosition())
-            {
-                transform
-                (
-                    cycPatch,
-                    receiveFaces.size(),
-                    receiveFaces,
-                    cycPatch.transform(),
-                    receiveInfo
-                );
-            }
-
-            // Merge into global storage
-            mergeFaceInfo
-            (
-                cycPatch,
-                receiveFaces.size(),
-                receiveFaces,
-                receiveInfo
-            );
-        }
-    }
-}
-
-
-template<class Type, class TrackingData>
 void Foam::FaceCellWave<Type, TrackingData>::handleExplicitConnections()
 {
     // Collect changed information
@@ -827,10 +629,6 @@ Foam::FaceCellWave<Type, TrackingData>::FaceCellWave
     changedCell_(mesh_.nCells(), false),
     changedCells_(mesh_.nCells()),
     hasCyclicPatches_(hasPatch<cyclicPolyPatch>()),
-    hasCyclicAMIPatches_
-    (
-        returnReduce(hasPatch<cyclicAMIPolyPatch>(), orOp<bool>())
-    ),
     nEvals_(0),
     nUnvisitedCells_(mesh_.nCells()),
     nUnvisitedFaces_(mesh_.nFaces())
@@ -875,10 +673,6 @@ Foam::FaceCellWave<Type, TrackingData>::FaceCellWave
     changedCell_(mesh_.nCells(), false),
     changedCells_(mesh_.nCells()),
     hasCyclicPatches_(hasPatch<cyclicPolyPatch>()),
-    hasCyclicAMIPatches_
-    (
-        returnReduce(hasPatch<cyclicAMIPolyPatch>(), orOp<bool>())
-    ),
     nEvals_(0),
     nUnvisitedCells_(mesh_.nCells()),
     nUnvisitedFaces_(mesh_.nFaces())
@@ -922,7 +716,6 @@ Foam::FaceCellWave<Type, TrackingData>::FaceCellWave
 (
     const polyMesh& mesh,
     const labelPairList& explicitConnections,
-    const bool handleCyclicAMI,
     const labelList& changedFaces,
     const List<Type>& changedFacesInfo,
     UList<Type>& allFaceInfo,
@@ -941,11 +734,6 @@ Foam::FaceCellWave<Type, TrackingData>::FaceCellWave
     changedCell_(mesh_.nCells(), false),
     changedCells_(mesh_.nCells()),
     hasCyclicPatches_(hasPatch<cyclicPolyPatch>()),
-    hasCyclicAMIPatches_
-    (
-        handleCyclicAMI
-     && returnReduce(hasPatch<cyclicAMIPolyPatch>(), orOp<bool>())
-    ),
     nEvals_(0),
     nUnvisitedCells_(mesh_.nCells()),
     nUnvisitedFaces_(mesh_.nFaces())
@@ -1138,11 +926,6 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::cellToFace()
         handleCyclicPatches();
     }
 
-    if (hasCyclicAMIPatches_)
-    {
-        handleAMICyclicPatches();
-    }
-
     if (Pstream::parRun())
     {
         // Transfer changed faces from neighbouring processors.
@@ -1171,11 +954,6 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::iterate(const label maxIter)
     {
         // Transfer changed faces across cyclic halves
         handleCyclicPatches();
-    }
-
-    if (hasCyclicAMIPatches_)
-    {
-        handleAMICyclicPatches();
     }
 
     if (Pstream::parRun())

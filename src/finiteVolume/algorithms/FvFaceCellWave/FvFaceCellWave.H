@@ -122,9 +122,6 @@ protected:
         //- Contains cyclics
         const bool hasCyclicPatches_;
 
-        //- Contains cyclicAMI
-        const bool hasCyclicAMIPatches_;
-
 
     // Protected member functions
 
@@ -214,9 +211,6 @@ protected:
 
             //- Merge data from across cyclics
             void handleCyclicPatches();
-
-            //- Merge data from across AMI cyclics
-            void handleCyclicAMIPatches();
 
 
 public:

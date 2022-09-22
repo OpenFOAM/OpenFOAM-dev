@@ -41,6 +41,7 @@ Description
 #include "dimensionedTypes.H"
 #include "fvMesh.H"
 #include "fluidThermo.H"
+#include "globalIndex.H"
 #include "Cloud.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

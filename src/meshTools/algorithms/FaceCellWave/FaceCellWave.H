@@ -121,9 +121,6 @@ protected:
         //- Contains cyclics
         const bool hasCyclicPatches_;
 
-        //- Contains cyclicAMI
-        const bool hasCyclicAMIPatches_;
-
         //- Number of evaluations
         label nEvals_;
 
@@ -213,9 +210,6 @@ protected:
             //- Merge data from across cyclics
             void handleCyclicPatches();
 
-            //- Merge data from across AMI cyclics
-            void handleAMICyclicPatches();
-
             //- Merge data across explicitly provided local connections (usually
             //  baffles)
             void handleExplicitConnections();
@@ -278,7 +272,6 @@ public:
         (
             const polyMesh&,
             const labelPairList& explicitConnections,
-            const bool handleCyclicAMI,
             const labelList& initialChangedFaces,
             const List<Type>& changedFacesInfo,
             UList<Type>& allFaceInfo,

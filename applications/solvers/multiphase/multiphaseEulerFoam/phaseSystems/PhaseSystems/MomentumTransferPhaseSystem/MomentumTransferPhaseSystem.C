@@ -1082,11 +1082,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
         forAll(this->mesh_.boundary(), patchi)
         {
             // Set ddtPhiCorr to 0 on non-coupled boundaries
-            if
-            (
-                !this->mesh_.boundary()[patchi].coupled()
-             || isA<cyclicAMIFvPatch>(this->mesh_.boundary()[patchi])
-            )
+            if (!this->mesh_.boundary()[patchi].coupled())
             {
                 phiCorrCoeffBf[patchi] = 0;
             }

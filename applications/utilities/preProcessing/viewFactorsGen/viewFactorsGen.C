@@ -44,7 +44,6 @@ Description
 #include "surfaceFields.H"
 #include "fixedValueFvPatchFields.H"
 #include "distributedTriSurfaceMesh.H"
-#include "cyclicAMIPolyPatch.H"
 #include "symmetryPolyPatch.H"
 #include "symmetryPlanePolyPatch.H"
 #include "wedgePolyPatch.H"

@@ -201,15 +201,6 @@ public:
             //- Overridable function to handle the particle hitting a cyclic
             void hitCyclicPatch(Cloud<findCellParticle>&, trackingData&);
 
-            //- Overridable function to handle the particle hitting a cyclicAMI
-            void hitCyclicAMIPatch
-            (
-                const vector&,
-                const scalar,
-                Cloud<findCellParticle>&,
-                trackingData&
-            );
-
             //- Overridable function to handle the particle hitting a
             //- processorPatch
             void hitProcessorPatch(Cloud<findCellParticle>&, trackingData&);

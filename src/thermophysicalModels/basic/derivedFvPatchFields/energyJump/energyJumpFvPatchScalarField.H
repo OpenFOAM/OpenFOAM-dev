@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::cyclicAMIFvsPatchField
+    Foam::energyJumpFvPatchScalarField
 
 Description
-    Foam::cyclicAMIFvsPatchField
+    This boundary condition provides an energy jump condition across a pair
+    of coupled patches.  It is not applied directly, but is employed on-the-fly
+    when converting temperature boundary conditions into energy.
+
+See also
+    Foam::fixedJumpFvPatchField
 
 SourceFiles
-    cyclicAMIFvsPatchField.C
+    energyJumpFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cyclicAMIFvsPatchField_H
-#define cyclicAMIFvsPatchField_H
+#ifndef energyJumpFvPatchScalarField_H
+#define energyJumpFvPatchScalarField_H
 
-#include "coupledFvsPatchField.H"
-#include "cyclicAMIFvPatch.H"
+#include "fixedJumpFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,101 +48,87 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class cyclicAMIFvsPatchField Declaration
+                Class energyJumpFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class cyclicAMIFvsPatchField
+class energyJumpFvPatchScalarField
 :
-    public coupledFvsPatchField<Type>
+    public fixedJumpFvPatchField<scalar>
 {
-    // Private Data
-
-        //- Local reference cast into the cyclic patch
-        const cyclicAMIFvPatch& cyclicAMIPatch_;
-
 
 public:
 
     //- Runtime type information
-    TypeName(cyclicAMIFvPatch::typeName_());
-
+    TypeName("energyJump");
 
     // Constructors
 
         //- Construct from patch and internal field
-        cyclicAMIFvsPatchField
+        energyJumpFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&
+            const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        cyclicAMIFvsPatchField
+        energyJumpFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
+            const DimensionedField<scalar, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given cyclicAMIFvsPatchField onto a new patch
-        cyclicAMIFvsPatchField
+        //- Construct by mapping given energyJumpFvPatchScalarField onto a
+        //  new patch
+        energyJumpFvPatchScalarField
         (
-            const cyclicAMIFvsPatchField<Type>&,
+            const energyJumpFvPatchScalarField&,
             const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
+            const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        cyclicAMIFvsPatchField(const cyclicAMIFvsPatchField<Type>&) = delete;
+        energyJumpFvPatchScalarField
+        (
+            const energyJumpFvPatchScalarField&
+        ) = delete;
 
         //- Copy constructor setting internal field reference
-        cyclicAMIFvsPatchField
+        energyJumpFvPatchScalarField
         (
-            const cyclicAMIFvsPatchField<Type>&,
-            const DimensionedField<Type, surfaceMesh>&
+            const energyJumpFvPatchScalarField&,
+            const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type>> clone
+        virtual tmp<fvPatchField<scalar>> clone
         (
-            const DimensionedField<Type, surfaceMesh>& iF
+            const DimensionedField<scalar, volMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type>>
+            return tmp<fvPatchField<scalar>>
             (
-                new cyclicAMIFvsPatchField<Type>(*this, iF)
+                new energyJumpFvPatchScalarField(*this, iF)
             );
         }
 
+
     // Member Functions
-
-        // Access
-
-            //- Return true if running parallel
-            virtual bool coupled() const;
-
 
         // Evaluation functions
 
-            //- Return patchField on the opposite patch of a coupled patch
-            virtual tmp<Field<Type>> patchNeighbourField
-            (
-                const Pstream::commsTypes commsType
-            ) const;
-};
+            //- Update the coefficients
+            virtual void updateCoeffs();
 
+
+        //- Write
+        virtual void write(Ostream&) const;
+};
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "cyclicAMIFvsPatchField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

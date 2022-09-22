@@ -23,18 +23,6 @@ namespace Foam
     //- Check 0th vertex on coupled faces
     bool checkCoupledPoints(const polyMesh&, const bool report, labelHashSet*);
 
-    //- Write out the weights-sums on all the AMI patches
-    void writeAMIWeightsSums(const polyMesh&);
-
-    //- Write out the weights-sum on the given AMI patch
-    void writeAMIWeightsSum
-    (
-        const polyMesh&,
-        const primitivePatch&,
-        const scalarField&,
-        const fileName&
-    );
-
     label checkGeometry
     (
         const polyMesh& mesh,

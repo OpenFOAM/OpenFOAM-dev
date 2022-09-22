@@ -26,7 +26,6 @@ License
 #include "FvFaceCellWave.H"
 #include "processorFvPatch.H"
 #include "cyclicFvPatch.H"
-#include "cyclicAMIFvPatch.H"
 #include "CompactListList.H"
 #include "OPstream.H"
 #include "IPstream.H"
@@ -528,194 +527,6 @@ Foam::FvFaceCellWave<Type, TrackingData>::handleCyclicPatches()
 }
 
 
-template<class Type, class TrackingData>
-void
-Foam::FvFaceCellWave<Type, TrackingData>::handleCyclicAMIPatches()
-{
-    // Define combine operator for AMIInterpolation
-
-    class combine
-    {
-        FvFaceCellWave<Type, TrackingData>& solver_;
-
-        const cyclicAMIFvPatch& patch_;
-
-        public:
-
-            combine
-            (
-                FvFaceCellWave<Type, TrackingData>& solver,
-                const cyclicAMIFvPatch& patch
-            )
-            :
-                solver_(solver),
-                patch_(patch)
-            {}
-
-            void operator()
-            (
-                Type& x,
-                const label patchFacei,
-                const Type& y,
-                const scalar weight
-            ) const
-            {
-                if (y.valid(solver_.data()))
-                {
-                    x.updateFace
-                    (
-                        solver_.mesh(),
-                        {patch_.index(), patchFacei},
-                        y,
-                        solver_.propagationTol(),
-                        solver_.data()
-                    );
-                }
-            }
-    };
-
-
-    // Transfer information across cyclicAMI halves.
-
-    forAll(mesh_.boundaryMesh(), patchi)
-    {
-        const fvPatch& patch = mesh_.boundary()[patchi];
-
-        if (isA<cyclicAMIFvPatch>(patch))
-        {
-            const cyclicAMIFvPatch& cycPatch =
-                refCast<const cyclicAMIFvPatch>(patch);
-            const cyclicAMIFvPatch& nbrPatch = cycPatch.nbrPatch();
-
-            // Create a combine operator to transfer sendInfo from nbrPatch
-            // to cycPatch
-            combine cmb(*this, cycPatch);
-
-            // Get nbrPatch data (so not just changed faces)
-            List<Type> sendInfo(patchFaceInfo_[nbrPatch.index()]);
-
-            // Construct default values, if necessary
-            List<Type> defVals;
-            if (cycPatch.applyLowWeightCorrection())
-            {
-                defVals = cycPatch.patch().patchInternalList(cellInfo_);
-            }
-
-            // Interpolate from nbrPatch to cycPatch, applying AMI
-            // transforms as necessary
-            List<Type> receiveInfo;
-            if (cycPatch.owner())
-            {
-                forAll(cycPatch.AMIs(), i)
-                {
-                    if (cycPatch.AMITransforms()[i].transformsPosition())
-                    {
-                        List<Type> sendInfoT(sendInfo);
-                        transform
-                        (
-                            nbrPatch,
-                            nbrPatch.size(),
-                            identity(nbrPatch.size()),
-                            cycPatch.AMITransforms()[i],
-                            sendInfo
-                        );
-                        cycPatch.AMIs()[i].interpolateToSource
-                        (
-                            sendInfoT,
-                            cmb,
-                            receiveInfo,
-                            defVals
-                        );
-                    }
-                    else
-                    {
-                        cycPatch.AMIs()[i].interpolateToSource
-                        (
-                            sendInfo,
-                            cmb,
-                            receiveInfo,
-                            defVals
-                        );
-                    }
-                }
-            }
-            else
-            {
-                forAll(nbrPatch.AMIs(), i)
-                {
-                    if (nbrPatch.AMITransforms()[i].transformsPosition())
-                    {
-                        List<Type> sendInfoT(sendInfo);
-                        transform
-                        (
-                            nbrPatch,
-                            nbrPatch.size(),
-                            identity(nbrPatch.size()),
-                            nbrPatch.AMITransforms()[i],
-                            sendInfo
-                        );
-                        cycPatch.nbrPatch().AMIs()[i].interpolateToTarget
-                        (
-                            sendInfoT,
-                            cmb,
-                            receiveInfo,
-                            defVals
-                        );
-                    }
-                    else
-                    {
-                        cycPatch.nbrPatch().AMIs()[i].interpolateToTarget
-                        (
-                            sendInfo,
-                            cmb,
-                            receiveInfo,
-                            defVals
-                        );
-                    }
-                }
-            }
-
-            // Shuffle up to remove invalid info
-            DynamicList<label> receiveFaces(cycPatch.size());
-            forAll(receiveInfo, patchFacei)
-            {
-                if (receiveInfo[patchFacei].valid(td_))
-                {
-                    if (receiveFaces.size() != patchFacei)
-                    {
-                        receiveInfo[receiveFaces.size()] =
-                            receiveInfo[patchFacei];
-                    }
-                    receiveFaces.append(patchFacei);
-                }
-            }
-
-            // Transform info across the interface
-            if (cycPatch.transform().transformsPosition())
-            {
-                transform
-                (
-                    cycPatch,
-                    receiveFaces.size(),
-                    receiveFaces,
-                    cycPatch.transform(),
-                    receiveInfo
-                );
-            }
-
-            // Merge into global storage
-            mergeFaceInfo
-            (
-                cycPatch,
-                receiveFaces.size(),
-                receiveFaces,
-                receiveInfo
-            );
-        }
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type, class TrackingData>
@@ -753,8 +564,7 @@ Foam::FvFaceCellWave<Type, TrackingData>::FvFaceCellWave
     ),
     changedPatchAndFaces_(mesh_.nInternalFaces()),
     changedCells_(mesh_.nCells()),
-    hasCyclicPatches_(hasPatch<cyclicFvPatch>()),
-    hasCyclicAMIPatches_(hasPatch<cyclicAMIFvPatch>())
+    hasCyclicPatches_(hasPatch<cyclicFvPatch>())
 {
     if
     (
@@ -996,12 +806,6 @@ Foam::label Foam::FvFaceCellWave<Type, TrackingData>::cellToFace()
         handleCyclicPatches();
     }
 
-    if (hasCyclicAMIPatches_)
-    {
-        // Transfer changed faces across cyclicAMIs
-        handleCyclicAMIPatches();
-    }
-
     if (Pstream::parRun())
     {
         // Transfer changed faces from neighbouring processors.
@@ -1028,12 +832,6 @@ Foam::label Foam::FvFaceCellWave<Type, TrackingData>::iterate
     {
         // Transfer changed faces across cyclics
         handleCyclicPatches();
-    }
-
-    if (hasCyclicAMIPatches_)
-    {
-        // Transfer changed faces across cyclicAMIs
-        handleCyclicAMIPatches();
     }
 
     if (Pstream::parRun())

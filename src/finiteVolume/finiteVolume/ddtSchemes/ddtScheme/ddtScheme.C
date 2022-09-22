@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,6 @@ License
 #include "HashTable.H"
 #include "surfaceInterpolate.H"
 #include "fvMatrix.H"
-#include "cyclicAMIFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -182,13 +181,9 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 
     forAll(U.boundaryField(), patchi)
     {
-        if
-        (
-            !U.boundaryField()[patchi].coupled()
-         || isA<cyclicAMIFvPatch>(mesh().boundary()[patchi])
-        )
+        if (!U.boundaryField()[patchi].coupled())
         {
-            ccbf[patchi] = 0.0;
+            ccbf[patchi] = 0;
         }
     }
 

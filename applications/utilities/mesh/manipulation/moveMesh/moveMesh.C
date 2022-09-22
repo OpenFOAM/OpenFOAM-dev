@@ -37,7 +37,6 @@ Description
 #include "fvMesh.H"
 #include "pimpleControl.H"
 #include "vtkSurfaceWriter.H"
-#include "cyclicAMIPolyPatch.H"
 #include "PatchTools.H"
 #include "checkGeometry.H"
 
@@ -48,12 +47,6 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     #include "addRegionOption.H"
-    argList::addBoolOption
-    (
-        "checkAMI",
-        "check AMI weights"
-    );
-
     #include "setRootCase.H"
     #include "createTime.H"
 
@@ -84,13 +77,6 @@ int main(int argc, char *argv[])
         )
     );
 
-    const bool checkAMI  = args.optionFound("checkAMI");
-
-    if (checkAMI)
-    {
-        Info<< "Writing VTK files with weights of AMI patches." << nl << endl;
-    }
-
     pimpleControl pimple(mesh);
 
     while (runTime.run())
@@ -112,11 +98,6 @@ int main(int argc, char *argv[])
         }
 
         mesh.checkMesh(true);
-
-        if (checkAMI)
-        {
-            writeAMIWeightsSums(mesh);
-        }
 
         runTime.write();
 

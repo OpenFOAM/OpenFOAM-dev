@@ -2077,13 +2077,10 @@ void Foam::meshRefinement::selectSeparatedCoupledFaces(boolList& selected) const
 
     forAll(patches, patchi)
     {
-        // Check all coupled. Avoid using .coupled() so we also pick up AMI.
         if (isA<coupledPolyPatch>(patches[patchi]))
         {
-            const coupledPolyPatch& cpp = refCast<const coupledPolyPatch>
-            (
-                patches[patchi]
-            );
+            const coupledPolyPatch& cpp =
+                refCast<const coupledPolyPatch>(patches[patchi]);
 
             if (cpp.transform().transformsPosition())
             {

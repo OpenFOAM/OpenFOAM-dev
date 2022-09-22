@@ -204,15 +204,6 @@ public:
             //- Hit a cyclic patch. Ends the track.
             void hitCyclicPatch(sampledSetCloud&, trackingData&);
 
-            //- Hit a cyclicAMI patch. Ends the track.
-            void hitCyclicAMIPatch
-            (
-                const vector&,
-                const scalar,
-                sampledSetCloud&,
-                trackingData&
-            );
-
             //- Hit a processor patch. Transfers the particle if there is no
             //  transformation. Ends the track if there is a transformation.
             void hitProcessorPatch(sampledSetCloud&, trackingData&);

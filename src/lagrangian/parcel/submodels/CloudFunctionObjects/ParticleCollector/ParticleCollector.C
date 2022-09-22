@@ -31,6 +31,7 @@ License
 #include "triangle.H"
 #include "cloud.H"
 #include "axesRotation.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

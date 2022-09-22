@@ -13,7 +13,6 @@
 #include "setWriter.H"
 
 #include "checkTools.H"
-#include "cyclicAMIPolyPatch.H"
 #include "Time.H"
 
 // Find wedge with opposite orientation. Note: does not actually check that
@@ -475,107 +474,6 @@ bool Foam::checkCoupledPoints
         }
 
         return false;
-    }
-}
-
-
-void Foam::writeAMIWeightsSum
-(
-    const polyMesh& mesh,
-    const primitivePatch& patch,
-    const scalarField& wghtSum,
-    const fileName& file
-)
-{
-    // Collect geometry
-    labelList pointToGlobal;
-    labelList uniqueMeshPointLabels;
-    autoPtr<globalIndex> globalPoints;
-    autoPtr<globalIndex> globalFaces;
-    faceList mergedFaces;
-    pointField mergedPoints;
-    Foam::PatchTools::gatherAndMerge
-    (
-        mesh,
-        patch.localFaces(),
-        patch.meshPoints(),
-        patch.meshPointMap(),
-
-        pointToGlobal,
-        uniqueMeshPointLabels,
-        globalPoints,
-        globalFaces,
-
-        mergedFaces,
-        mergedPoints
-    );
-
-    // Collect field
-    scalarField mergedWeights;
-    globalFaces().gather
-    (
-        UPstream::worldComm,
-        labelList(UPstream::procID(UPstream::worldComm)),
-        wghtSum,
-        mergedWeights
-    );
-
-    // Write the surface
-    if (Pstream::master())
-    {
-        vtkSurfaceWriter
-        (
-            mesh.time().writeFormat(),
-            mesh.time().writeCompression()
-        ).write
-        (
-            file.path(),
-            "weightsSum_" + file.name(),
-            mergedPoints,
-            mergedFaces,
-            false,
-            "weightsSum",
-            mergedWeights
-        );
-    }
-}
-
-
-void Foam::writeAMIWeightsSums(const polyMesh& mesh)
-{
-    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
-
-    const word tmName(mesh.time().timeName());
-
-    forAll(pbm, patchi)
-    {
-        if (isA<cyclicAMIPolyPatch>(pbm[patchi]))
-        {
-            const cyclicAMIPolyPatch& cpp =
-                refCast<const cyclicAMIPolyPatch>(pbm[patchi]);
-
-            if (cpp.owner())
-            {
-                Info<< "Calculating AMI weights between owner patch: "
-                    << cpp.name() << " and neighbour patch: "
-                    << cpp.nbrPatch().name() << endl;
-
-                writeAMIWeightsSum
-                (
-                    mesh,
-                    cpp,
-                    cpp.weightsSum(),
-                    fileName("postProcessing") / "src_" + tmName
-                );
-                writeAMIWeightsSum
-                (
-                    mesh,
-                    cpp.nbrPatch(),
-                    cpp.nbrWeightsSum(),
-                    fileName("postProcessing") / "tgt_" + tmName
-                );
-            }
-        }
     }
 }
 
@@ -1042,11 +940,6 @@ Foam::label Foam::checkGeometry
                 mergeAndWrite(surfWriter(), faces);
             }
         }
-    }
-
-    if (allGeometry)
-    {
-        writeAMIWeightsSums(mesh);
     }
 
     return noFailedChecks;

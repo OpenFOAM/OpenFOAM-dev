@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -300,11 +300,6 @@ Foam::label Foam::OppositeFaceCellWave<Type, TrackingData>::cellToFace()
     {
         // Transfer changed faces across cyclic halves
         this->handleCyclicPatches();
-    }
-
-    if (this->hasCyclicAMIPatches_)
-    {
-        this->handleAMICyclicPatches();
     }
 
     if (Pstream::parRun())

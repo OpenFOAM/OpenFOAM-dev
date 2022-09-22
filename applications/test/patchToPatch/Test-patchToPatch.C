@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "AMIInterpolation.H"
 #include "cpuTime.H"
 #include "patchToPatch.H"
 #include "polyMesh.H"
@@ -50,13 +49,6 @@ int main(int argc, char *argv[])
     const word& method = args[3];
 
     cpuTime time;
-
-    /*
-    AMIInterpolation(srcPatch, tgtPatch, faceAreaIntersect::tmMesh);
-
-    Info<< nl << "AMI" << ": Completed in "
-        << time.cpuTimeIncrement() << " s" << nl << endl;
-    */
 
     patchToPatch::New(method, false)->update
     (

@@ -154,8 +154,6 @@ Foam::Cloud<ParticleType>::Cloud
     patchNonConformalCyclicPatches_(patchNonConformalCyclicPatches(pMesh)),
     globalPositionsPtr_()
 {
-    checkPatches();
-
     pMesh_.tetBasePtIs();
     pMesh_.oldCellCentres();
 

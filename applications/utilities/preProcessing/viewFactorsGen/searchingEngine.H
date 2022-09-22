@@ -27,12 +27,7 @@ labelHashSet includePatches;
 forAll(patches, patchi)
 {
     const polyPatch& pp = patches[patchi];
-    if
-    (
-        !pp.coupled()
-     && !isA<cyclicAMIPolyPatch>(pp)
-     && !isA<emptyPolyPatch>(pp)
-    )
+    if (!pp.coupled() && !isA<emptyPolyPatch>(pp))
     {
         includePatches.insert(patchi);
     }

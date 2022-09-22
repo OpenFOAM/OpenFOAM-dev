@@ -373,22 +373,6 @@ void Foam::streamlinesParticle::hitCyclicPatch
 }
 
 
-void Foam::streamlinesParticle::hitCyclicAMIPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    streamlinesCloud& cloud,
-    trackingData& td
-)
-{
-    // End this track
-    endTrack(td);
-
-    // Move across the cyclic
-    particle::hitCyclicAMIPatch(displacement, fraction, cloud, td);
-}
-
-
 bool Foam::streamlinesParticle::hitNonConformalCyclicPatch
 (
     const vector& displacement,

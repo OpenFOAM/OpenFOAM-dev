@@ -27,7 +27,6 @@ License
 #include "IOPosition.H"
 
 #include "cyclicPolyPatch.H"
-#include "cyclicAMIPolyPatch.H"
 #include "nonConformalCyclicPolyPatch.H"
 #include "processorPolyPatch.H"
 #include "symmetryPlanePolyPatch.H"
@@ -170,10 +169,6 @@ void Foam::particle::hitFace
             {
                 p.hitCyclicPatch(cloud, ttd);
             }
-            else if (isA<cyclicAMIPolyPatch>(patch))
-            {
-                p.hitCyclicAMIPatch(displacement, fraction, cloud, ttd);
-            }
             else if (isA<processorPolyPatch>(patch))
             {
                 p.hitProcessorPatch(cloud, ttd);
@@ -274,122 +269,6 @@ void Foam::particle::hitCyclicPatch(TrackCloudType&, trackingData& td)
     if (receiveCpp.transform().transformsPosition())
     {
         transformProperties(receiveCpp.transform());
-    }
-}
-
-
-template<class TrackCloudType>
-void Foam::particle::hitCyclicAMIPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    TrackCloudType& cloud,
-    trackingData& td
-)
-{
-    const cyclicAMIPolyPatch& cpp =
-        static_cast<const cyclicAMIPolyPatch&>
-        (
-            td.mesh.boundaryMesh()[patch(td.mesh)]
-        );
-    const cyclicAMIPolyPatch& receiveCpp = cpp.nbrPatch();
-
-    if (debug)
-    {
-        Info<< "Particle " << origId() << " crossing AMI from " << cpp.name()
-            << " to " << receiveCpp.name() << endl << endl;
-    }
-
-    // Get the send patch data
-    vector sendNormal, sendDisplacement;
-    patchData(td.mesh, sendNormal, sendDisplacement);
-
-    vector pos = position(td.mesh);
-
-    const labelPair receiveIs =
-        cpp.pointAMIAndFace
-        (
-            cpp.whichFace(facei_),
-            displacement - fraction*sendDisplacement,
-            pos
-        );
-    const label receiveAMIi = receiveIs.first();
-    const label receiveFacei = receiveIs.second();
-
-    // If the receiving face could not be found then issue a warning and remove
-    // the particle
-    if (receiveFacei < 0)
-    {
-        td.keepParticle = false;
-        WarningInFunction
-            << "Particle transfer from " << cyclicAMIPolyPatch::typeName
-            << " patches " << cpp.name() << " to " << receiveCpp.name()
-            << " failed at position " << pos << " and with displacement "
-            << (displacement - fraction*sendDisplacement) << nl
-            << "    A receiving face could not be found" << nl
-            << "    The particle has been removed" << nl << endl;
-        return;
-    }
-
-    // Set the topology
-    facei_ = tetFacei_ = receiveFacei + receiveCpp.start();
-
-    // Locate the particle on the receiving side
-    locate
-    (
-        td.mesh,
-        pos,
-        td.mesh.faceOwner()[facei_],
-        false,
-        "Particle crossed between " + cyclicAMIPolyPatch::typeName +
-        " patches " + cpp.name() + " and " + receiveCpp.name() +
-        " to a location outside of the mesh."
-    );
-
-    // The particle must remain associated with a face for the tracking to
-    // register as incomplete
-    facei_ = tetFacei_;
-
-    // Transform the properties
-    vector displacementT = displacement;
-
-    const transformer AMITransform =
-        receiveCpp.owner()
-      ? receiveCpp.AMITransforms()[receiveAMIi]
-      : inv(cpp.AMITransforms()[receiveAMIi]);
-
-    if (AMITransform.transformsPosition())
-    {
-        transformProperties(AMITransform);
-        displacementT = AMITransform.transform(displacementT);
-    }
-
-    if (receiveCpp.transform().transformsPosition())
-    {
-        transformProperties(receiveCpp.transform());
-        displacementT = receiveCpp.transform().transform(displacementT);
-    }
-
-    // If on a boundary and the displacement points into the receiving face
-    // then issue a warning and remove the particle
-    if (onBoundaryFace(td.mesh))
-    {
-        vector receiveNormal, receiveDisplacement;
-        patchData(td.mesh, receiveNormal, receiveDisplacement);
-
-        if (((displacementT - fraction*receiveDisplacement)&receiveNormal) > 0)
-        {
-            td.keepParticle = false;
-            WarningInFunction
-                << "Particle transfer from " << cyclicAMIPolyPatch::typeName
-                << " patches " << cpp.name() << " to " << receiveCpp.name()
-                << " failed at position " << pos << " and with displacement "
-                << (displacementT - fraction*receiveDisplacement) << nl
-                << "    The displacement points into both the source and "
-                << "receiving faces, so the tracking cannot proceed" << nl
-                << "    The particle has been removed" << nl << endl;
-            return;
-        }
     }
 }
 

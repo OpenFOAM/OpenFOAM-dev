@@ -339,13 +339,9 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
 
     forAll(U.boundaryField(), patchi)
     {
-        if
-        (
-            U.boundaryField()[patchi].fixesValue()
-         || isA<cyclicAMIFvPatch>(mesh().boundary()[patchi])
-        )
+        if (U.boundaryField()[patchi].fixesValue())
         {
-            ccbf[patchi] = 0.0;
+            ccbf[patchi] = 0;
         }
     }
 

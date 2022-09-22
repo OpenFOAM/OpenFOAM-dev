@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,30 +24,30 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "addToRunTimeSelectionTable.H"
-#include "energyJumpAMIFvPatchScalarField.H"
-#include "fixedJumpAMIFvPatchFields.H"
+#include "energyJumpFvPatchScalarField.H"
+#include "fixedJumpFvPatchFields.H"
 #include "basicThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
+Foam::energyJumpFvPatchScalarField::energyJumpFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedJumpAMIFvPatchField<scalar>(p, iF)
+    fixedJumpFvPatchField<scalar>(p, iF)
 {}
 
 
-Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
+Foam::energyJumpFvPatchScalarField::energyJumpFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )
 :
-    fixedJumpAMIFvPatchField<scalar>(p, iF)
+    fixedJumpFvPatchField<scalar>(p, iF)
 {
     if (dict.found("value"))
     {
@@ -63,50 +63,50 @@ Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
 }
 
 
-Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
+Foam::energyJumpFvPatchScalarField::energyJumpFvPatchScalarField
 (
-    const energyJumpAMIFvPatchScalarField& ptf,
+    const energyJumpFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedJumpAMIFvPatchField<scalar>(ptf, p, iF, mapper)
+    fixedJumpFvPatchField<scalar>(ptf, p, iF, mapper)
 {}
 
 
-Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
+Foam::energyJumpFvPatchScalarField::energyJumpFvPatchScalarField
 (
-    const energyJumpAMIFvPatchScalarField& ptf,
+    const energyJumpFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedJumpAMIFvPatchField<scalar>(ptf, iF)
+    fixedJumpFvPatchField<scalar>(ptf, iF)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::energyJumpAMIFvPatchScalarField::updateCoeffs()
+void Foam::energyJumpFvPatchScalarField::updateCoeffs()
 {
     if (this->updated())
     {
         return;
     }
 
-    if (this->cyclicAMIPatch().owner())
+    if (this->cyclicPatch().owner())
     {
         const basicThermo& thermo = basicThermo::lookupThermo(*this);
         label patchID = patch().index();
 
-        const fixedJumpAMIFvPatchScalarField& TbPatch =
-            refCast<const fixedJumpAMIFvPatchScalarField>
+        const fixedJumpFvPatchScalarField& TbPatch =
+            refCast<const fixedJumpFvPatchScalarField>
             (
                 thermo.T().boundaryField()[patchID]
             );
 
-        fixedJumpAMIFvPatchScalarField& Tbp =
-            const_cast<fixedJumpAMIFvPatchScalarField&>(TbPatch);
+        fixedJumpFvPatchScalarField& Tbp =
+            const_cast<fixedJumpFvPatchScalarField&>(TbPatch);
 
         // force update of jump
         Tbp.updateCoeffs();
@@ -116,13 +116,13 @@ void Foam::energyJumpAMIFvPatchScalarField::updateCoeffs()
         jump_ = thermo.he(Tbp.jump(), faceCells);
     }
 
-    fixedJumpAMIFvPatchField<scalar>::updateCoeffs();
+    fixedJumpFvPatchField<scalar>::updateCoeffs();
 }
 
 
-void Foam::energyJumpAMIFvPatchScalarField::write(Ostream& os) const
+void Foam::energyJumpFvPatchScalarField::write(Ostream& os) const
 {
-    fixedJumpAMIFvPatchField<scalar>::write(os);
+    fixedJumpFvPatchField<scalar>::write(os);
     writeEntry(os, "value", *this);
 }
 
@@ -134,7 +134,7 @@ namespace Foam
    makePatchTypeField
    (
        fvPatchScalarField,
-       energyJumpAMIFvPatchScalarField
+       energyJumpFvPatchScalarField
    );
 }
 

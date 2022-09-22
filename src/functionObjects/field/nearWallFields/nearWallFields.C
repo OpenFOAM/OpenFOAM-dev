@@ -27,6 +27,7 @@ License
 #include "wordReList.H"
 #include "findCellParticle.H"
 #include "OBJstream.H"
+#include "globalIndex.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

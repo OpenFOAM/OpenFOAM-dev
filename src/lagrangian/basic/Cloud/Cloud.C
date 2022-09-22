@@ -33,7 +33,6 @@ License
 #include "Time.H"
 #include "OFstream.H"
 #include "wallPolyPatch.H"
-#include "cyclicAMIPolyPatch.H"
 #include "nonConformalCyclicPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,32 +59,6 @@ struct IDLListAppendEqOp
 
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
-template<class ParticleType>
-void Foam::Cloud<ParticleType>::checkPatches() const
-{
-    const polyBoundaryMesh& pbm = pMesh_.boundaryMesh();
-    bool ok = true;
-    forAll(pbm, patchi)
-    {
-        if (isA<cyclicAMIPolyPatch>(pbm[patchi]))
-        {
-            const cyclicAMIPolyPatch& cami =
-                refCast<const cyclicAMIPolyPatch>(pbm[patchi]);
-
-            ok = ok && cami.singlePatchProc() != -1;
-        }
-    }
-
-    if (!ok)
-    {
-        FatalErrorInFunction
-            << "Particle tracking across AMI patches is only currently "
-            << "supported for cases where the AMI patches reside on a "
-            << "single processor" << abort(FatalError);
-    }
-}
-
 
 template<class ParticleType>
 Foam::labelList Foam::Cloud<ParticleType>::patchNbrProc
@@ -224,8 +197,6 @@ Foam::Cloud<ParticleType>::Cloud
     patchNonConformalCyclicPatches_(patchNonConformalCyclicPatches(pMesh)),
     globalPositionsPtr_()
 {
-    checkPatches();
-
     // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
     // build them, otherwise, if some processors have no particles then there
     // is a comms mismatch.

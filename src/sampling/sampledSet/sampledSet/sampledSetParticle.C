@@ -215,18 +215,6 @@ void Foam::sampledSetParticle::hitCyclicPatch
 }
 
 
-void Foam::sampledSetParticle::hitCyclicAMIPatch
-(
-    const vector& displacement,
-    const scalar fraction,
-    sampledSetCloud& cloud,
-    trackingData& td
-)
-{
-    seti_ = labelMax;
-}
-
-
 void Foam::sampledSetParticle::hitProcessorPatch
 (
     sampledSetCloud& cloud,
