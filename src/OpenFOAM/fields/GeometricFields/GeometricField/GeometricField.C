@@ -1274,18 +1274,23 @@ bool Foam::GeometricField<Type, PatchField, GeoMesh>::needReference() const
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::relax(const scalar alpha)
 {
-    if (debug)
+    if (alpha < 1)
     {
-        InfoInFunction
-           << "Relaxing" << endl << this->info() << " by " << alpha << endl;
-    }
+        if (debug)
+        {
+            InfoInFunction
+                << "Relaxing" << endl << this->info()
+                << " by " << alpha << endl;
+        }
 
-    operator==(prevIter() + alpha*(*this - prevIter()));
+        operator==(prevIter() + alpha*(*this - prevIter()));
+    }
 }
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::GeometricField<Type, PatchField, GeoMesh>::relax()
+Foam::scalar
+Foam::GeometricField<Type, PatchField, GeoMesh>::relaxationFactor() const
 {
     if
     (
@@ -1297,18 +1302,61 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::relax()
      && this->mesh().solution().relaxField(this->name() + "Final")
     )
     {
-        relax
+        return this->mesh().solution().fieldRelaxationFactor
         (
-            this->mesh().solution().fieldRelaxationFactor
-            (
-                this->name() + "Final"
-            )
+            this->name() + "Final"
         );
     }
     else if (this->mesh().solution().relaxField(this->name()))
     {
-        relax(this->mesh().solution().fieldRelaxationFactor(this->name()));
+        return this->mesh().solution().fieldRelaxationFactor(this->name());
     }
+    else
+    {
+        return 1;
+    }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::relax()
+{
+    relax(relaxationFactor());
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::relax
+(
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
+    const scalar alpha
+)
+{
+    if (alpha < 1)
+    {
+        if (debug)
+        {
+            InfoInFunction
+                << "Relaxing" << endl << this->info()
+                << " by " << alpha << endl;
+        }
+
+        operator==(*this + alpha*(tgf - *this));
+    }
+    else
+    {
+        operator==(tgf);
+    }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::relax
+(
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
+)
+{
+    relax(tgf, relaxationFactor());
 }
 
 

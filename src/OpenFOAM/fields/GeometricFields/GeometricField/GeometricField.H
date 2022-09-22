@@ -462,14 +462,30 @@ public:
         tmp<GeometricField<Type, PatchField, GeoMesh>> T() const;
 
         //- Relax field (for steady-state solution).
-        //  alpha = 1 : no relaxation
-        //  alpha < 1 : relaxation
-        //  alpha = 0 : do nothing
+        //  alpha >= 1 : no relaxation
+        //  alpha < 1  : relaxation
         void relax(const scalar alpha);
 
-        //- Relax field (for steady-state solution).
-        //  alpha is read from controlDict
+        //- Return the field relaxation factor read from fvSolution
+        //  or 1 if not specified
+        scalar relaxationFactor() const;
+
+        //- Relax current field with respect to the cached previous iteration.
+        //  Relaxation factor is read from fvSolution
         void relax();
+
+        //- Relax given field with respect to the current field
+        //  and reset the field to the result
+        void relax
+        (
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const scalar alpha
+        );
+
+        //- Relax given field with respect to the current field
+        //  and reset the field to the result
+        //  Relaxation factor is read from fvSolution
+        void relax(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
 
         //- Select the final iteration parameters if `final' is true
         //  by returning the field name + "Final"

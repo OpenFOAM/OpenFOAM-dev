@@ -102,8 +102,9 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
            *fvc::relative(phiHbyA, rho, U)
         );
 
-        const fvScalarMatrix divPhidp(fvm::div(phid, p));
-        phiHbyA -= divPhidp.flux();
+        // Subtract the compressible part
+        // The resulting flux will be zero for a perfect gas
+        phiHbyA -= fvc::interpolate(psi*p)*phiHbyA/fvc::interpolate(rho);
 
         if (pimple.consistent())
         {
@@ -120,7 +121,7 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
         fvScalarMatrix p_rghDDtEqn
         (
             fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
-          + fvc::div(phiHbyA) + divPhidp
+          + fvc::div(phiHbyA) + fvm::div(phid, p)
          ==
             fvModels().source(psi, p_rgh, rho.name())
         );
@@ -183,6 +184,21 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
 
     phi = phiHbyA + p_rghEqn.flux();
 
+    // Calculate and relax the net pressure-buoyancy force
+    netForce.ref().relax
+    (
+        fvc::reconstruct((ghGradRhof + p_rghEqn.flux()/rhorAAtUf)),
+        p_rgh.relaxationFactor()
+    );
+
+    // Correct the momentum source with the pressure gradient flux
+    // calculated from the relaxed pressure
+    U = HbyA + rAAtU*netForce();
+    U.correctBoundaryConditions();
+    fvConstraints().constrain(U);
+
+    K = 0.5*magSqr(U);
+
     if (!mesh.schemes().steady())
     {
         p = p_rgh + rho*gh + pRef;
@@ -202,18 +218,7 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
 
     continuityErrors();
 
-    // Explicitly relax pressure for momentum corrector
-    p_rgh.relax();
-
     p = p_rgh + rho*gh + pRef;
-
-    // Correct the momentum source with the pressure gradient flux
-    // calculated from the relaxed pressure
-    U = HbyA + rAAtU*fvc::reconstruct((ghGradRhof + p_rghEqn.flux()/rhorAAtUf));
-    U.correctBoundaryConditions();
-    fvConstraints().constrain(U);
-
-    K = 0.5*magSqr(U);
 
     if (mesh.schemes().steady())
     {
@@ -233,6 +238,9 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
         p_rgh = p - rho*gh - pRef;
         p_rgh.correctBoundaryConditions();
     }
+
+    // Optionally relax pressure for the thermophysics
+    p.relax();
 
     if (mesh.schemes().steady() || pimple.simpleRho() || adjustMass)
     {

@@ -170,6 +170,21 @@ Foam::solvers::isothermalFluid::isothermalFluid
             thermo,
             pimple.dict()
         );
+
+        netForce = new volVectorField
+        (
+            IOobject
+            (
+                "netForce",
+                runTime.timeName(),
+                mesh
+            ),
+            fvc::reconstruct
+            (
+                (-buoyancy->ghf*fvc::snGrad(rho) - fvc::snGrad(p_rgh))
+               *mesh.magSf()
+            )
+        );
     }
 
     if (mesh.dynamic())

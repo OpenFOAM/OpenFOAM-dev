@@ -147,6 +147,10 @@ protected:
 
     // Cached temporary fields
 
+        //- Momentum equation net force source term
+        //  Used for buoyant simulations only
+        tmp<volVectorField> netForce;
+
         //- Pointer to the surface momentum field
         //  used to recreate the flux after mesh-change
         autoPtr<surfaceVectorField> rhoUf;
