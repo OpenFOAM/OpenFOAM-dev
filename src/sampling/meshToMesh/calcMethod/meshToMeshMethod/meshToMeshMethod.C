@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "HashTable.H"
 #include "meshToMeshMethod.H"
-#include "tetOverlapVolume.H"
 #include "OFstream.H"
 #include "Time.H"
 #include "treeBoundBox.H"
@@ -37,7 +37,6 @@ namespace Foam
     defineRunTimeSelectionTable(meshToMeshMethod, components);
 }
 
-Foam::scalar Foam::meshToMeshMethod::tolerance_ = 1e-6;
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -71,53 +70,6 @@ Foam::labelList Foam::meshToMeshMethod::maskCells() const
     }
 
     return move(cells);
-}
-
-
-bool Foam::meshToMeshMethod::intersect
-(
-    const label srcCelli,
-    const label tgtCelli
-) const
-{
-    scalar threshold = tolerance_*src_.cellVolumes()[srcCelli];
-
-    tetOverlapVolume overlapEngine;
-
-    treeBoundBox bbTgtCell(tgt_.points(), tgt_.cellPoints()[tgtCelli]);
-
-    return overlapEngine.cellCellOverlapMinDecomp
-    (
-        src_,
-        srcCelli,
-        tgt_,
-        tgtCelli,
-        bbTgtCell,
-        threshold
-    );
-}
-
-
-Foam::scalar Foam::meshToMeshMethod::interVol
-(
-    const label srcCelli,
-    const label tgtCelli
-) const
-{
-    tetOverlapVolume overlapEngine;
-
-    treeBoundBox bbTgtCell(tgt_.points(), tgt_.cellPoints()[tgtCelli]);
-
-    scalar vol = overlapEngine.cellCellOverlapVolumeMinDecomp
-    (
-        src_,
-        srcCelli,
-        tgt_,
-        tgtCelli,
-        bbTgtCell
-    );
-
-    return vol;
 }
 
 
@@ -161,56 +113,9 @@ bool Foam::meshToMeshMethod::initialise
     tgtToSrcAddr.setSize(tgt_.nCells());
     tgtToSrcWght.setSize(tgt_.nCells());
 
-    if (!src_.nCells())
-    {
-        return false;
-    }
-    else if (!tgt_.nCells())
-    {
-        if (debug)
-        {
-            Pout<< "mesh interpolation: hhave " << src_.nCells() << " source "
-                << " cells but no target cells" << endl;
-        }
-
-        return false;
-    }
-
-    return true;
+    return src_.nCells() && tgt_.nCells();
 }
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::meshToMeshMethod::meshToMeshMethod
-(
-    const polyMesh& src,
-    const polyMesh& tgt
-)
-:
-    src_(src),
-    tgt_(tgt),
-    V_(0.0)
-{
-    if (!src_.nCells() || !tgt_.nCells())
-    {
-        if (debug)
-        {
-            Pout<< "mesh interpolation: cells not on processor: Source cells = "
-                << src_.nCells() << ", target cells = " << tgt_.nCells()
-                << endl;
-        }
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::meshToMeshMethod::~meshToMeshMethod()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::meshToMeshMethod::writeConnectivity
 (
@@ -255,6 +160,25 @@ void Foam::meshToMeshMethod::writeConnectivity
         }
     }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::meshToMeshMethod::meshToMeshMethod
+(
+    const polyMesh& src,
+    const polyMesh& tgt
+)
+:
+    src_(src),
+    tgt_(tgt)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::meshToMeshMethod::~meshToMeshMethod()
+{}
 
 
 // ************************************************************************* //

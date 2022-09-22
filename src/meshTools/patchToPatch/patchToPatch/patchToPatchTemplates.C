@@ -65,21 +65,21 @@ Foam::tmp<Foam::Field<Type>> Foam::patchToPatch::interpolate
     Field<Type>& fld = tFld.ref();
 
     // Compute the result as a weighted sum
-    forAll(localOtherFaces, tgtFacei)
+    forAll(localOtherFaces, facei)
     {
         scalar sumW = 0;
         Type sumWF = Zero;
 
-        forAll(localOtherFaces[tgtFacei], i)
+        forAll(localOtherFaces[facei], i)
         {
-            const scalar w = weights[tgtFacei][i];
+            const scalar w = weights[facei][i];
             sumW += w;
-            sumWF += w*localOtherFld[localOtherFaces[tgtFacei][i]];
+            sumWF += w*localOtherFld[localOtherFaces[facei][i]];
         }
 
-        if (localOtherFaces[tgtFacei].size())
+        if (localOtherFaces[facei].size())
         {
-            fld[tgtFacei] = sumWF/sumW;
+            fld[facei] = sumWF/sumW;
         }
     }
 
@@ -111,19 +111,19 @@ Foam::tmp<Foam::Field<Type>> Foam::patchToPatch::interpolate
     Field<Type>& fld = tFld.ref();
 
     // Compute the result as a weighted sum
-    forAll(localOtherFaces, tgtFacei)
+    forAll(localOtherFaces, facei)
     {
         scalar sumW = 0;
         Type sumWF = Zero;
 
-        forAll(localOtherFaces[tgtFacei], i)
+        forAll(localOtherFaces[facei], i)
         {
-            const scalar w = weights[tgtFacei][i];
+            const scalar w = weights[facei][i];
             sumW += w;
-            sumWF += w*localOtherFld[localOtherFaces[tgtFacei][i]];
+            sumWF += w*localOtherFld[localOtherFaces[facei][i]];
         }
 
-        fld[tgtFacei] = sumWF + (1 - sumW)*leftOverFld[tgtFacei];
+        fld[facei] = sumWF + (1 - sumW)*leftOverFld[facei];
     }
 
     return tFld;
@@ -198,4 +198,6 @@ Foam::tmp<Foam::Field<Type>> Foam::patchToPatch::tgtToSrc
             leftOverSrcFld
         );
 }
+
+
 // ************************************************************************* //

@@ -30,38 +30,6 @@ License
 #include "calculatedFvPatchField.H"
 #include "patchToPatchFvPatchFieldMapper.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    //- Helper class for list
-    template<class Type>
-    class ListPlusEqOp
-    {
-        public:
-        void operator()(List<Type>& x, const List<Type> y) const
-        {
-            if (y.size())
-            {
-                if (x.size())
-                {
-                    label sz = x.size();
-                    x.setSize(sz + y.size());
-                    forAll(y, i)
-                    {
-                        x[sz++] = y[i];
-                    }
-                }
-                else
-                {
-                    x = y;
-                }
-            }
-        }
-    };
-}
-
-
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -159,16 +127,6 @@ Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapSrcToTgt
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapSrcToTgt
-(
-    const tmp<Field<Type>>& tsrcField
-) const
-{
-    return mapSrcToTgt(tsrcField());
-}
-
-
-template<class Type>
 void Foam::meshToMesh::mapTgtToSrc
 (
     const UList<Type>& tgtField,
@@ -245,16 +203,6 @@ Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapTgtToSrc
     mapTgtToSrc(tgtField, tresult.ref());
 
     return tresult;
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::meshToMesh::mapTgtToSrc
-(
-    const tmp<Field<Type>>& ttgtField
-) const
-{
-    return mapTgtToSrc(ttgtField());
 }
 
 
@@ -390,160 +338,6 @@ Foam::meshToMesh::mapSrcToTgt
     mapSrcToTgt(field, tresult.ref());
 
     return tresult;
-}
-
-
-template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
-Foam::meshToMesh::mapSrcToTgt
-(
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfield
-) const
-{
-    return mapSrcToTgt(tfield());
-}
-
-
-template<class Type>
-void Foam::meshToMesh::mapTgtToSrc
-(
-    const GeometricField<Type, fvPatchField, volMesh>& field,
-    GeometricField<Type, fvPatchField, volMesh>& result
-) const
-{
-    mapTgtToSrc(field, result.primitiveFieldRef());
-
-    forAll(patchToPatches(), i)
-    {
-        label srcPatchi = srcPatchID_[i];
-        label tgtPatchi = tgtPatchID_[i];
-
-        fvPatchField<Type>& srcField = result.boundaryFieldRef()[srcPatchi];
-        const fvPatchField<Type>& tgtField = field.boundaryField()[tgtPatchi];
-
-        // Clone and map (since rmap does not do general mapping)
-        tmp<fvPatchField<Type>> tnewSrc
-        (
-            fvPatchField<Type>::New
-            (
-                tgtField,
-                srcField.patch(),
-                result(),
-                patchToPatchFvPatchFieldMapper(patchToPatches()[i], false)
-            )
-        );
-
-        // Transfer all mapped quantities (value and e.g. gradient) onto
-        // srcField. Value will get overwritten below
-        srcField.rmap(tnewSrc(), identity(srcField.size()));
-    }
-
-    forAll(cuttingPatches_, i)
-    {
-        label patchi = cuttingPatches_[i];
-        fvPatchField<Type>& pf = result.boundaryFieldRef()[patchi];
-        pf == pf.patchInternalField();
-    }
-}
-
-
-template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
-Foam::meshToMesh::mapTgtToSrc
-(
-    const GeometricField<Type, fvPatchField, volMesh>& field
-) const
-{
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
-    const fvMesh& srcMesh = static_cast<const fvMesh&>(srcRegion_);
-
-    const fvBoundaryMesh& srcBm = srcMesh.boundary();
-    const typename fieldType::Boundary& tgtBfld =
-        field.boundaryField();
-
-    PtrList<fvPatchField<Type>> srcPatchFields(srcBm.size());
-
-    // construct src boundary patch types as copy of 'field' boundary types
-    // note: this will provide place holders for fields with additional
-    // entries, but these values will need to be reset
-    forAll(srcPatchID_, i)
-    {
-        label srcPatchi = srcPatchID_[i];
-        label tgtPatchi = tgtPatchID_[i];
-
-        if (!srcPatchFields.set(tgtPatchi))
-        {
-            srcPatchFields.set
-            (
-                srcPatchi,
-                fvPatchField<Type>::New
-                (
-                    tgtBfld[srcPatchi],
-                    srcMesh.boundary()[tgtPatchi],
-                    DimensionedField<Type, volMesh>::null(),
-                    directFvPatchFieldMapper
-                    (
-                        labelList(srcMesh.boundary()[srcPatchi].size(), -1)
-                    )
-                )
-            );
-        }
-    }
-
-    // Any unset srcPatchFields become calculated
-    forAll(srcPatchFields, srcPatchi)
-    {
-        if (!srcPatchFields.set(srcPatchi))
-        {
-            // Note: use factory New method instead of direct generation of
-            //       calculated so we keep constraints
-            srcPatchFields.set
-            (
-                srcPatchi,
-                fvPatchField<Type>::New
-                (
-                    calculatedFvPatchField<Type>::typeName,
-                    srcMesh.boundary()[srcPatchi],
-                    DimensionedField<Type, volMesh>::null()
-                )
-            );
-        }
-    }
-
-    tmp<fieldType> tresult
-    (
-        new fieldType
-        (
-            IOobject
-            (
-                typedName("interpolate(" + field.name() + ")"),
-                srcMesh.time().timeName(),
-                srcMesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            srcMesh,
-            field.dimensions(),
-            Field<Type>(srcMesh.nCells(), Zero),
-            srcPatchFields
-        )
-    );
-
-    mapTgtToSrc(field, tresult.ref());
-
-    return tresult;
-}
-
-
-template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
-Foam::meshToMesh::mapTgtToSrc
-(
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfield
-) const
-{
-    return mapTgtToSrc(tfield());
 }
 
 

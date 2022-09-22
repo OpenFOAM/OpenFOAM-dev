@@ -56,13 +56,13 @@ class mapNearestMethod
 :
     public meshToMeshMethod
 {
-protected:
+private:
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- Find indices of overlapping cells in src and tgt meshes - returns
         //  true if found a matching pair
-        virtual bool findInitialSeeds
+        bool findInitialSeeds
         (
             const labelList& srcCellIDs,
             const boolList& mapFlag,
@@ -72,7 +72,7 @@ protected:
         ) const;
 
         //- Calculate the mesh-to-mesh addressing and weights
-        virtual void calculateAddressing
+        scalar calculateAddressing
         (
             labelListList& srcToTgtCellAddr,
             scalarListList& srcToTgtCellWght,
@@ -86,7 +86,7 @@ protected:
         );
 
         //- Find the nearest cell on mesh2 for cell1 on mesh1
-        virtual void findNearestCell
+        void findNearestCell
         (
             const polyMesh& mesh1,
             const polyMesh& mesh2,
@@ -95,7 +95,7 @@ protected:
         ) const;
 
         //- Set the next cells for the marching front algorithm
-        virtual void setNextNearestCells
+        void setNextNearestCells
         (
             label& startSeedI,
             label& srcCelli,
@@ -105,7 +105,7 @@ protected:
         ) const;
 
         //- Find a source cell mapped to target cell tgtCelli
-        virtual label findMappedSrcCell
+        label findMappedSrcCell
         (
             const label tgtCelli,
             const List<DynamicList<label>>& tgtToSrc
@@ -117,13 +117,11 @@ public:
     //- Run-time type information
     TypeName("mapNearest");
 
+
     // Constructors
 
         //- Construct from source and target meshes
         mapNearestMethod(const polyMesh& src, const polyMesh& tgt);
-
-        //- Disallow default bitwise copy construction
-        mapNearestMethod(const mapNearestMethod&) = delete;
 
 
     //- Destructor
@@ -132,26 +130,25 @@ public:
 
     // Member Functions
 
-        //- Return the corresponding patchToPatch method for patch
-        //  interpolation
+        //- Get the corresponding patchToPatch method
         virtual const word& patchToPatchMethod() const;
 
-        // Evaluate
+        //- Calculate addressing and weights
+        virtual scalar calculate
+        (
+            labelListList& srcToTgtAddr,
+            scalarListList& srcToTgtWght,
+            labelListList& tgtToTgtAddr,
+            scalarListList& tgtToTgtWght
+        );
 
-            //- Calculate addressing and weights
-            virtual void calculate
-            (
-                labelListList& srcToTgtAddr,
-                scalarListList& srcToTgtWght,
-                labelListList& tgtToTgtAddr,
-                scalarListList& tgtToTgtWght
-            );
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const mapNearestMethod&) = delete;
+        //- Normalise the weights for a given mesh
+        virtual void normalise
+        (
+            const polyMesh& srcMesh,
+            labelListList& srcToTgtAddr,
+            scalarListList& srcToTgtWght
+        ) const;
 };
 
 

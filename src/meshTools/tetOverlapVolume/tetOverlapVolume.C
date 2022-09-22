@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,6 +127,79 @@ Foam::treeBoundBox Foam::tetOverlapVolume::pyrBb
 
 
 // * * * * * * * * * * * Public Member Functions  * * * * * * * * * * * * * //
+
+Foam::labelList Foam::tetOverlapVolume::overlappingCells
+(
+    const polyMesh& fromMesh,
+    const polyMesh& toMesh,
+    const label iTo
+) const
+{
+    const indexedOctree<treeDataCell>& treeA = fromMesh.cellTree();
+
+    treeBoundBox bbB(toMesh.points(), toMesh.cellPoints()[iTo]);
+
+    return treeA.findBox(bbB);
+}
+
+
+Foam::scalar Foam::tetOverlapVolume::cellVolumeMinDecomp
+(
+    const primitiveMesh& mesh,
+    const label cellI
+) const
+{
+    const cell& cFaces = mesh.cells()[cellI];
+    const point& cc = mesh.cellCentres()[cellI];
+
+    scalar vol = 0.0;
+
+    forAll(cFaces, cF)
+    {
+        label faceI = cFaces[cF];
+
+        const face& f = mesh.faces()[faceI];
+
+        bool own = (mesh.faceOwner()[faceI] == cellI);
+
+        label tetBasePtI = 0;
+
+        const point& tetBasePt = mesh.points()[f[tetBasePtI]];
+
+        for (label tetPtI = 1; tetPtI < f.size() - 1; tetPtI++)
+        {
+            label facePtI = (tetPtI + tetBasePtI) % f.size();
+            label otherFacePtI = f.fcIndex(facePtI);
+
+            label pt0I = -1;
+            label pt1I = -1;
+
+            if (own)
+            {
+                pt0I = f[facePtI];
+                pt1I = f[otherFacePtI];
+            }
+            else
+            {
+                pt0I = f[otherFacePtI];
+                pt1I = f[facePtI];
+            }
+
+            const tetPointRef tet
+            (
+                cc,
+                tetBasePt,
+                mesh.points()[pt0I],
+                mesh.points()[pt1I]
+            );
+
+            vol += tet.mag();
+        }
+    }
+
+    return vol;
+}
+
 
 bool Foam::tetOverlapVolume::cellCellOverlapMinDecomp
 (
@@ -376,21 +449,6 @@ Foam::scalar Foam::tetOverlapVolume::cellCellOverlapVolumeMinDecomp
     }
 
     return vol;
-}
-
-
-Foam::labelList Foam::tetOverlapVolume::overlappingCells
-(
-    const polyMesh& fromMesh,
-    const polyMesh& toMesh,
-    const label iTo
-) const
-{
-    const indexedOctree<treeDataCell>& treeA = fromMesh.cellTree();
-
-    treeBoundBox bbB(toMesh.points(), toMesh.cellPoints()[iTo]);
-
-    return treeA.findBox(bbB);
 }
 
 

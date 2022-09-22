@@ -93,9 +93,6 @@ class meshToMesh
         //- Target to source cell interpolation weights
         scalarListList tgtToSrcCellWght_;
 
-        //- Cell total volume in overlap region [m^3]
-        scalar V_;
-
         //- Index of processor that holds all of both sides. -1 in all other
         //  cases
         label singleMeshProc_;
@@ -113,28 +110,8 @@ class meshToMesh
         template<class Type>
         void add(UList<Type>& fld, const label offset) const;
 
-        //- Return src cell IDs for the overlap region
-        labelList maskCells(const polyMesh& src, const polyMesh& tgt) const;
-
-        //- Normalise the interpolation weights
-        void normaliseWeights
-        (
-            const word& descriptor,
-            const labelListList& addr,
-            scalarListList& wght
-        ) const;
-
-        //- Calculate the addressing between overlapping regions of src and tgt
-        //  meshes. Returns the patchToPatchType.
-        word calcAddressing
-        (
-            const word& methodName,
-            const polyMesh& src,
-            const polyMesh& tgt
-        );
-
-        //- Calculate. Returns the patchToPatchType.
-        word calculate(const word& methodName);
+        //- Calculate the internal mesh overlap. Returns the overlap volume.
+        scalar calculate(const word& methodName);
 
         //- Calculate patch overlap
         void calculatePatchToPatches(const word& patchToPatchType);
@@ -269,17 +246,13 @@ public:
             //- Return const access to the target to source cell weights
             inline const scalarListList& tgtToSrcCellWght() const;
 
-            //- Return const access to the overlap volume
-            inline scalar V() const;
-
 
         // Evaluation
 
             // Source-to-target field mapping
 
-                //- Map field from src to tgt mesh with defined operation
-                //  Values passed in via 'result' are used to initialise the
-                //  return value
+                //- Map field from src to tgt mesh. Values passed in via
+                //  'result' are used to initialise the return value.
                 template<class Type>
                 void mapSrcToTgt
                 (
@@ -287,25 +260,16 @@ public:
                     List<Type>& result
                 ) const;
 
-                //- Return the src field mapped to the tgt mesh with a defined
-                //  operation.  Initial values of the result are set to zero
+                //- Return the src field mapped to the tgt mesh. Initial values
+                //  of the result are set to zero.
                 template<class Type>
                 tmp<Field<Type>> mapSrcToTgt(const Field<Type>& srcFld) const;
-
-                //- Convenience function to map a tmp field to the tgt mesh
-                //  with a defined operation
-                template<class Type>
-                tmp<Field<Type>> mapSrcToTgt
-                (
-                    const tmp<Field<Type>>& tsrcFld
-                ) const;
 
 
             // Target-to-source field mapping
 
-                //- Map field from tgt to src mesh with defined operation
-                //  Values passed in via 'result' are used to initialise the
-                //  return value
+                //- Map field from tgt to src mesh. Values passed in via
+                //  'result' are used to initialise the return value.
                 template<class Type>
                 void mapTgtToSrc
                 (
@@ -313,18 +277,10 @@ public:
                     List<Type>& result
                 ) const;
 
-                //- Return the tgt field mapped to the src mesh with a defined
-                //  operation.  Initial values of the result are set to zero
+                //- Return the tgt field mapped to the src mesh. Initial values
+                //  of the result are set to zero.
                 template<class Type>
                 tmp<Field<Type>> mapTgtToSrc(const Field<Type>& tgtFld) const;
-
-                //- Convenience function to map a tmp field to the src mesh
-                //  with a defined operation
-                template<class Type>
-                tmp<Field<Type>> mapTgtToSrc
-                (
-                    const tmp<Field<Type>>& ttgtFld
-                ) const;
 
 
             // Source-to-target volume field mapping
@@ -345,45 +301,6 @@ public:
                 tmp<GeometricField<Type, fvPatchField, volMesh>> mapSrcToTgt
                 (
                     const GeometricField<Type, fvPatchField, volMesh>& field
-                ) const;
-
-                //- Interpolate a tmp field with a defined operation.  The
-                //  initial values of the result are set to zero
-                template<class Type>
-                tmp<GeometricField<Type, fvPatchField, volMesh>> mapSrcToTgt
-                (
-                    const tmp<GeometricField<Type, fvPatchField, volMesh>>&
-                        tfield
-                ) const;
-
-
-            // Target-to-source volume field mapping
-
-                //- Interpolate a field with a defined operation.  Values
-                //  passed in via 'result' are used to initialise the return
-                //  value
-                template<class Type>
-                void mapTgtToSrc
-                (
-                    const GeometricField<Type, fvPatchField, volMesh>& field,
-                    GeometricField<Type, fvPatchField, volMesh>& result
-                ) const;
-
-                //- Interpolate a field with a defined operation.  The initial
-                //  values of the result are set to zero
-                template<class Type>
-                tmp<GeometricField<Type, fvPatchField, volMesh>> mapTgtToSrc
-                (
-                    const GeometricField<Type, fvPatchField, volMesh>& field
-                ) const;
-
-                //- Interpolate a tmp field with a defined operation.  The
-                //  initial values of the result are set to zero
-                template<class Type>
-                tmp<GeometricField<Type, fvPatchField, volMesh>> mapTgtToSrc
-                (
-                    const tmp<GeometricField<Type, fvPatchField, volMesh>>&
-                        tfield
                 ) const;
 
 

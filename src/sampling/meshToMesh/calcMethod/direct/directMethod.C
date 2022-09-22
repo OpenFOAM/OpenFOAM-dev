@@ -37,7 +37,8 @@ namespace Foam
     addToRunTimeSelectionTable(meshToMeshMethod, directMethod, components);
 }
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 bool Foam::directMethod::intersect
 (
@@ -95,7 +96,7 @@ bool Foam::directMethod::findInitialSeeds
 }
 
 
-void Foam::directMethod::calculateAddressing
+Foam::scalar Foam::directMethod::calculateAddressing
 (
     labelListList& srcToTgtCellAddr,
     scalarListList& srcToTgtCellWght,
@@ -108,6 +109,8 @@ void Foam::directMethod::calculateAddressing
     label& startSeedI
 )
 {
+    scalar V = 0;
+
     // store a list of src cells already mapped
     labelList srcTgtSeed(src_.nCells(), -1);
 
@@ -132,7 +135,7 @@ void Foam::directMethod::calculateAddressing
         mapFlag[srcCelli] = false;
 
         // accumulate intersection volume
-        V_ += srcVc[srcCelli];
+        V += srcVc[srcCelli];
 
         // find new source seed cell
         appendToDirectSeeds
@@ -158,6 +161,8 @@ void Foam::directMethod::calculateAddressing
         tgtToSrcCellWght[i] = scalarList(tgtToSrc[i].size(), tgtVc[i]);
         tgtToSrcCellAddr[i].transfer(tgtToSrc[i]);
     }
+
+    return V;
 }
 
 
@@ -244,7 +249,7 @@ const Foam::word& Foam::directMethod::patchToPatchMethod() const
 }
 
 
-void Foam::directMethod::calculate
+Foam::scalar Foam::directMethod::calculate
 (
     labelListList& srcToTgtAddr,
     scalarListList& srcToTgtWght,
@@ -262,7 +267,7 @@ void Foam::directMethod::calculate
 
     if (!ok)
     {
-        return;
+        return 0;
     }
 
     // (potentially) participating source mesh cells
@@ -289,25 +294,49 @@ void Foam::directMethod::calculate
 
     if (startWalk)
     {
-        calculateAddressing
-        (
-            srcToTgtAddr,
-            srcToTgtWght,
-            tgtToSrcAddr,
-            tgtToSrcWght,
-            srcSeedI,
-            tgtSeedI,
-            srcCellIDs,
-            mapFlag,
-            startSeedI
-        );
+        const scalar V =
+            calculateAddressing
+            (
+                srcToTgtAddr,
+                srcToTgtWght,
+                tgtToSrcAddr,
+                tgtToSrcWght,
+                srcSeedI,
+                tgtSeedI,
+                srcCellIDs,
+                mapFlag,
+                startSeedI
+            );
+
+        if (debug > 1)
+        {
+            writeConnectivity(src_, tgt_, srcToTgtAddr);
+        }
+
+        return V;
     }
     else
     {
-        // if meshes are collocated, after inflating the source mesh bounding
-        // box tgt mesh cells may be transferred, but may still not overlap
-        // with the source mesh
-        return;
+        return 0;
+    }
+}
+
+
+void Foam::directMethod::normalise
+(
+    const polyMesh& srcMesh,
+    labelListList& srcToTgtAddr,
+    scalarListList& srcToTgtWght
+) const
+{
+    forAll(srcToTgtWght, srcCelli)
+    {
+        if (srcToTgtWght[srcCelli].size() > 1)
+        {
+            srcToTgtAddr[srcCelli].resize(1);
+            srcToTgtWght[srcCelli].resize(1);
+            srcToTgtWght[srcCelli][0] = 1;
+        }
     }
 }
 

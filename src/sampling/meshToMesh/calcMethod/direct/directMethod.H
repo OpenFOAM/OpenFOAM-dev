@@ -52,12 +52,12 @@ class directMethod
 :
     public meshToMeshMethod
 {
-protected:
+private:
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- Return the true if cells intersect
-        virtual bool intersect
+        bool intersect
         (
             const label srcCelli,
             const label tgtCelli
@@ -65,7 +65,7 @@ protected:
 
         //- Find indices of overlapping cells in src and tgt meshes - returns
         //  true if found a matching pair
-        virtual bool findInitialSeeds
+        bool findInitialSeeds
         (
             const labelList& srcCellIDs,
             const boolList& mapFlag,
@@ -75,7 +75,7 @@ protected:
         ) const;
 
         //- Calculate the mesh-to-mesh addressing and weights
-        virtual void calculateAddressing
+        scalar calculateAddressing
         (
             labelListList& srcToTgtCellAddr,
             scalarListList& srcToTgtCellWght,
@@ -89,7 +89,7 @@ protected:
         );
 
         //- Append to list of src mesh seed indices
-        virtual void appendToDirectSeeds
+        void appendToDirectSeeds
         (
             boolList& mapFlag,
             labelList& srcTgtSeed,
@@ -104,13 +104,11 @@ public:
     //- Run-time type information
     TypeName("direct");
 
+
     // Constructors
 
         //- Construct from source and target meshes
         directMethod(const polyMesh& src, const polyMesh& tgt);
-
-        //- Disallow default bitwise copy construction
-        directMethod(const directMethod&) = delete;
 
 
     //- Destructor
@@ -119,26 +117,25 @@ public:
 
     // Member Functions
 
-        //- Return the corresponding patchToPatch method for patch
-        //  interpolation
+        //- Get the corresponding patchToPatch method
         virtual const word& patchToPatchMethod() const;
 
-        // Evaluate
+        //- Calculate addressing and weights
+        virtual scalar calculate
+        (
+            labelListList& srcToTgtAddr,
+            scalarListList& srcToTgtWght,
+            labelListList& tgtToTgtAddr,
+            scalarListList& tgtToTgtWght
+        );
 
-            //- Calculate addressing and weights
-            virtual void calculate
-            (
-                labelListList& srcToTgtAddr,
-                scalarListList& srcToTgtWght,
-                labelListList& tgtToTgtAddr,
-                scalarListList& tgtToTgtWght
-            );
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const directMethod&) = delete;
+        //- Normalise the weights for a given mesh
+        virtual void normalise
+        (
+            const polyMesh& srcMesh,
+            labelListList& srcToTgtAddr,
+            scalarListList& srcToTgtWght
+        ) const;
 };
 
 

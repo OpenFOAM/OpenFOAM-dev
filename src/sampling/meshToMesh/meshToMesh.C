@@ -24,10 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "meshToMesh.H"
-#include "Time.H"
 #include "globalIndex.H"
 #include "meshToMeshMethod.H"
+#include "PatchTools.H"
 #include "processorPolyPatch.H"
+#include "Time.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -39,107 +40,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::labelList Foam::meshToMesh::maskCells
-(
-    const polyMesh& src,
-    const polyMesh& tgt
-) const
-{
-    boundBox intersectBb
-    (
-        max(src.bounds().min(), tgt.bounds().min()),
-        min(src.bounds().max(), tgt.bounds().max())
-    );
-
-    intersectBb.inflate(0.01);
-
-    const cellList& srcCells = src.cells();
-    const faceList& srcFaces = src.faces();
-    const pointField& srcPts = src.points();
-
-    DynamicList<label> cells(src.size());
-    forAll(srcCells, srcI)
-    {
-        boundBox cellBb(srcCells[srcI].points(srcFaces, srcPts), false);
-        if (intersectBb.overlaps(cellBb))
-        {
-            cells.append(srcI);
-        }
-    }
-
-    if (debug)
-    {
-        Pout<< "participating source mesh cells: " << cells.size() << endl;
-    }
-
-    return move(cells);
-}
-
-
-void Foam::meshToMesh::normaliseWeights
-(
-    const word& descriptor,
-    const labelListList& addr,
-    scalarListList& wght
-) const
-{
-    const label nCell = returnReduce(wght.size(), sumOp<label>());
-
-    if (nCell > 0)
-    {
-        forAll(wght, celli)
-        {
-            scalarList& w = wght[celli];
-            scalar s = sum(w);
-
-            forAll(w, i)
-            {
-                // note: normalise by s instead of cell volume since
-                // 1-to-1 methods duplicate contributions in parallel
-                w[i] /= s;
-            }
-        }
-    }
-}
-
-
-Foam::word Foam::meshToMesh::calcAddressing
-(
-    const word& methodName,
-    const polyMesh& src,
-    const polyMesh& tgt
-)
-{
-    autoPtr<meshToMeshMethod> methodPtr
-    (
-        meshToMeshMethod::New
-        (
-            methodName,
-            src,
-            tgt
-        )
-    );
-
-    methodPtr->calculate
-    (
-        srcToTgtCellAddr_,
-        srcToTgtCellWght_,
-        tgtToSrcCellAddr_,
-        tgtToSrcCellWght_
-    );
-
-    V_ = methodPtr->V();
-
-    if (debug)
-    {
-        methodPtr->writeConnectivity(src, tgt, srcToTgtCellAddr_);
-    }
-
-    return methodPtr->patchToPatchMethod();
-}
-
-
-Foam::word Foam::meshToMesh::calculate(const word& methodName)
+Foam::scalar Foam::meshToMesh::calculate(const word& methodName)
 {
     Info<< "Creating mesh-to-mesh addressing for " << srcRegion_.name()
         << " and " << tgtRegion_.name() << " regions using "
@@ -147,7 +48,9 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
 
     singleMeshProc_ = calcDistribution(srcRegion_, tgtRegion_);
 
-    word patchToPatchType;
+    autoPtr<meshToMeshMethod> methodPtr;
+
+    scalar V = 0;
 
     if (singleMeshProc_ == -1)
     {
@@ -160,13 +63,11 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
         // cover all of the src mesh
         autoPtr<distributionMap> mapPtr = calcProcMap(srcRegion_, tgtRegion_);
         const distributionMap& map = mapPtr();
-
         pointField newTgtPoints;
         faceList newTgtFaces;
         labelList newTgtFaceOwners;
         labelList newTgtFaceNeighbours;
         labelList newTgtCellIDs;
-
         distributeAndMergeCells
         (
             map,
@@ -178,7 +79,6 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
             newTgtFaceNeighbours,
             newTgtCellIDs
         );
-
 
         // create a new target mesh
         polyMesh newTgt
@@ -194,10 +94,10 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
             move(newTgtFaces),
             move(newTgtFaceOwners),
             move(newTgtFaceNeighbours),
-            false                                   // no parallel comms
+            false
         );
 
-        // create some dummy patch info
+        // create some dummy patch info and add to the new target mesh
         List<polyPatch*> patches(1);
         patches[0] = new polyPatch
         (
@@ -208,7 +108,6 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
             newTgt.boundaryMesh(),
             word::null
         );
-
         newTgt.addPatches(patches);
 
         // force calculation of tet-base points used for point-in-cell
@@ -229,7 +128,15 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
             }
         }
 
-        patchToPatchType = calcAddressing(methodName, srcRegion_, newTgt);
+        // Do the intersection
+        methodPtr = meshToMeshMethod::New(methodName, srcRegion_, newTgt);
+        V = methodPtr->calculate
+            (
+                srcToTgtCellAddr_,
+                srcToTgtCellWght_,
+                tgtToSrcCellAddr_,
+                tgtToSrcCellWght_
+            );
 
         // per source cell the target cell address in newTgt mesh
         forAll(srcToTgtCellAddr_, i)
@@ -251,7 +158,7 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
             }
         }
 
-        // set up as a reverse distribute
+        // send the connectivity back to the target
         distributionMapBase::distribute
         (
             Pstream::commsTypes::nonBlocking,
@@ -262,12 +169,10 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
             map.subMap(),
             false,
             tgtToSrcCellAddr_,
-            ListPlusEqOp<label>(),
+            ListAppendEqOp<label>(),
             flipOp(),
             labelList()
         );
-
-        // set up as a reverse distribute
         distributionMapBase::distribute
         (
             Pstream::commsTypes::nonBlocking,
@@ -278,22 +183,21 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
             map.subMap(),
             false,
             tgtToSrcCellWght_,
-            ListPlusEqOp<scalar>(),
+            ListAppendEqOp<scalar>(),
             flipOp(),
             scalarList()
         );
 
         // weights normalisation
-        normaliseWeights
+        methodPtr->normalise
         (
-            "source",
+            srcRegion_,
             srcToTgtCellAddr_,
             srcToTgtCellWght_
         );
-
-        normaliseWeights
+        methodPtr->normalise
         (
-            "target",
+            tgtRegion_,
             tgtToSrcCellAddr_,
             tgtToSrcCellWght_
         );
@@ -310,34 +214,42 @@ Foam::word Foam::meshToMesh::calculate(const word& methodName)
         );
 
         // collect volume intersection contributions
-        reduce(V_, sumOp<scalar>());
+        reduce(V, sumOp<scalar>());
     }
     else
     {
-        patchToPatchType = calcAddressing(methodName, srcRegion_, tgtRegion_);
+        // Do the intersection
+        methodPtr = meshToMeshMethod::New(methodName, srcRegion_, tgtRegion_);
+        V = methodPtr->calculate
+            (
+                srcToTgtCellAddr_,
+                srcToTgtCellWght_,
+                tgtToSrcCellAddr_,
+                tgtToSrcCellWght_
+            );
 
-        normaliseWeights
+        // Normalise the weights
+        methodPtr->normalise
         (
-            "source",
+            srcRegion_,
             srcToTgtCellAddr_,
             srcToTgtCellWght_
         );
-
-        normaliseWeights
+        methodPtr->normalise
         (
-            "target",
+            tgtRegion_,
             tgtToSrcCellAddr_,
             tgtToSrcCellWght_
         );
     }
 
-    Info<< "    Overlap volume: " << V_ << endl;
+    Info<< "    Overlap volume: " << V << endl;
 
-    return patchToPatchType;
+    return V;
 }
 
 
-void Foam::meshToMesh::calculatePatchToPatches(const word& patchToPatchType)
+void Foam::meshToMesh::calculatePatchToPatches(const word& methodName)
 {
     if (!patchToPatches_.empty())
     {
@@ -345,6 +257,14 @@ void Foam::meshToMesh::calculatePatchToPatches(const word& patchToPatchType)
             << "patchToPatches already calculated"
             << exit(FatalError);
     }
+
+    const word& patchToPatchType =
+        meshToMeshMethod::New
+        (
+            methodName,
+            NullObjectRef<polyMesh>(),
+            NullObjectRef<polyMesh>()
+        )->patchToPatchMethod();
 
     patchToPatches_.setSize(srcPatchID_.size());
 
@@ -364,7 +284,12 @@ void Foam::meshToMesh::calculatePatchToPatches(const word& patchToPatchType)
 
         patchToPatches_.set(i, patchToPatch::New(patchToPatchType, true));
 
-        patchToPatches_[i].update(srcPP, srcPP.pointNormals(), tgtPP);
+        patchToPatches_[i].update
+        (
+            srcPP,
+            PatchTools::pointNormals(srcRegion_, srcPP),
+            tgtPP
+        );
 
         Info<< decrIndent;
     }
@@ -417,10 +342,10 @@ void Foam::meshToMesh::constructNoCuttingPatches
     }
 
     // calculate volume addressing and weights
-    const word patchToPatchType = calculate(methodName);
+    calculate(methodName);
 
     // calculate patch addressing and weights
-    calculatePatchToPatches(patchToPatchType);
+    calculatePatchToPatches(methodName);
 }
 
 
@@ -449,10 +374,10 @@ void Foam::meshToMesh::constructFromCuttingPatches
     }
 
     // calculate volume addressing and weights
-    const word patchToPatchType = calculate(methodName);
+    calculate(methodName);
 
     // calculate patch addressing and weights
-    calculatePatchToPatches(patchToPatchType);
+    calculatePatchToPatches(methodName);
 
     // set IDs of cutting patches on target mesh
     cuttingPatches_.setSize(cuttingPatches.size());
@@ -484,7 +409,6 @@ Foam::meshToMesh::meshToMesh
     tgtToSrcCellAddr_(),
     srcToTgtCellWght_(),
     tgtToSrcCellWght_(),
-    V_(0.0),
     singleMeshProc_(-1),
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
@@ -512,7 +436,6 @@ Foam::meshToMesh::meshToMesh
     tgtToSrcCellAddr_(),
     srcToTgtCellWght_(),
     tgtToSrcCellWght_(),
-    V_(0.0),
     singleMeshProc_(-1),
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr)
