@@ -9,20 +9,14 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      mapFieldsDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// List of pairs of source/target patches for mapping
-patchMap
-(
-);
+patchMap        ();
 
-// List of target patches cutting the source domain (these need to be
-// handled specially e.g. interpolated from internal values)
-cuttingPatches
-(
-);
+cuttingPatches  ();
+
 
 // ************************************************************************* //

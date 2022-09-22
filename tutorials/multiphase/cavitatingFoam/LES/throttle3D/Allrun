@@ -28,8 +28,10 @@ refineMeshByCellSet()
 runApplication blockMesh
 refineMeshByCellSet 1 2 3
 
-#echo "mapping fields from 2D throttle case"
-#runApplication mapFields ../throttle -sourceTime latestTime
+if [ -n "$(foamListTimes -case ../throttle)" ]
+then
+    runApplication mapFields ../throttle -sourceTime latestTime
+fi
 
 runApplication decomposePar
 runParallel $application
