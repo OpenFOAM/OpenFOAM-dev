@@ -38,7 +38,7 @@ See also
 #ifndef nonConformalCyclicPointPatch_H
 #define nonConformalCyclicPointPatch_H
 
-#include "facePointPatch.H"
+#include "cyclicPointPatch.H"
 #include "nonConformalCyclicPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -52,7 +52,7 @@ namespace Foam
 
 class nonConformalCyclicPointPatch
 :
-    public facePointPatch
+    public cyclicPointPatch
 {
 
 public:
@@ -70,7 +70,7 @@ public:
             const pointBoundaryMesh& bm
         )
         :
-            facePointPatch(patch, bm)
+            cyclicPointPatch(patch, bm)
         {}
 };
 
