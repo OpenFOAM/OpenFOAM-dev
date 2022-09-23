@@ -222,6 +222,7 @@ void Foam::patchToPatches::nearest::rDistributeTgt
     rDistributeListList(tgtPatch.size(), tgtMapPtr_(), tgtDistances);
 
     // If there is more than one address, remove all but the closest
+    tgtDistances_.resize(tgtLocalSrcFaces_.size());
     forAll(tgtLocalSrcFaces_, tgtFacei)
     {
         if (tgtLocalSrcFaces_[tgtFacei].size() > 1)
