@@ -92,11 +92,15 @@ class rays
             const label tgtFacei
         );
 
-        //- Subset the local target patch so that only parts that actually
-        //  intersect the source remain
-        virtual labelList trimLocalTgt
+        //- Finalise the intersection locally. Trims the local target patch
+        //  so that only parts that actually intersect the source remain.
+        //  Returns new-to-old map for trimming target-associated data.
+        virtual labelList finaliseLocal
         (
-            const primitiveOldTimePatch& localTgtPatch
+            const primitiveOldTimePatch& srcPatch,
+            const vectorField& srcPointNormals,
+            const vectorField& srcPointNormals0,
+            const primitiveOldTimePatch& tgtPatch
         );
 
         //- Distribute the source patch so that any information needed by

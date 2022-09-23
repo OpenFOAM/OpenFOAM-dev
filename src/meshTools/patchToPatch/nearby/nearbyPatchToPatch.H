@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchToPatches::nearest
+    Foam::patchToPatches::nearby
 
 Description
     Class to generate patchToPatch coupling geometry. Couples a face to the
-    single nearest opposite face only.
+    single nearby opposite face only.
 
 SourceFiles
-    nearest.C
+    nearby.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef nearestPatchToPatch_H
-#define nearestPatchToPatch_H
+#ifndef nearbyPatchToPatch_H
+#define nearbyPatchToPatch_H
 
-#include "nearbyPatchToPatch.H"
+#include "patchToPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,25 +46,33 @@ namespace patchToPatches
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class nearest Declaration
+                          Class nearby Declaration
 \*---------------------------------------------------------------------------*/
 
-class nearest
+class nearby
 :
-    public nearby
+    public patchToPatch
 {
 protected:
 
     // Private Member Data
 
-        //- For each source face, the distance to its coupled target face
-        List<scalar> srcDistances_;
+        //- For each source face, the bounding sphere
+        List<Tuple2<point, scalar>> srcSpheres_;
 
-        //- For each target face, the distance to its coupled source face
-        List<scalar> tgtDistances_;
+        //- For each target face, the bounding sphere
+        List<Tuple2<point, scalar>> tgtSpheres_;
 
 
     // Private Member Functions
+
+        //- Get the bound box for a source face
+        virtual treeBoundBox srcBox
+        (
+            const face& srcFace,
+            const pointField& srcPoints,
+            const vectorField& srcPointNormals
+        ) const;
 
         //- Intersect two faces
         virtual bool intersectFaces
@@ -86,53 +94,21 @@ protected:
             const primitiveOldTimePatch& tgtPatch
         );
 
-        //- Finalise the intersection locally. Trims the local target patch
-        //  so that only parts that actually intersect the source remain.
-        //  Returns new-to-old map for trimming target-associated data.
-        virtual labelList finaliseLocal
-        (
-            const primitiveOldTimePatch& srcPatch,
-            const vectorField& srcPointNormals,
-            const vectorField& srcPointNormals0,
-            const primitiveOldTimePatch& tgtPatch
-        );
-
-        //- Send data that resulted from an intersection between the source
-        //  patch and a distributed source-local-target patch back to the
-        //  original target processes
-        virtual void rDistributeTgt(const primitiveOldTimePatch& tgtPatch);
-
-        //- Finalise the intersection
-        virtual label finalise
-        (
-            const primitiveOldTimePatch& srcPatch,
-            const vectorField& srcPointNormals,
-            const vectorField& srcPointNormals0,
-            const primitiveOldTimePatch& tgtPatch,
-            const transformer& tgtToSrc
-        );
-
-        //- For each source face, the coupled target weights
-        virtual tmpNrc<List<DynamicList<scalar>>> srcWeights() const;
-
-        //- For each target face, the coupled source weights
-        virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights() const;
-
 
 public:
 
     //- Runtime type information
-    TypeName("nearest");
+    TypeName("nearby");
 
 
     // Constructors
 
         //- Construct from components
-        nearest(const bool reverse);
+        nearby(const bool reverse);
 
 
     //- Destructor
-    ~nearest();
+    ~nearby();
 };
 
 

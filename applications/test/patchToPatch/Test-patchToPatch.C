@@ -39,18 +39,66 @@ int main(int argc, char *argv[])
     argList::validArgs.append("source");
     argList::validArgs.append("target");
     argList::validArgs.append("method");
+    argList::validArgs.append("reverse");
+
+    argList::addOption("sourceCase", "dir", "The case with the source patch");
 
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createPolyMesh.H"
 
-    const polyPatch& srcPatch = mesh.boundaryMesh()[args[1]];
-    const polyPatch& tgtPatch = mesh.boundaryMesh()[args[2]];
+    // Optionally read a different mesh for the source
+    autoPtr<Time> srcRunTimePtr;
+    autoPtr<polyMesh> srcMeshPtr;
+    if (args.optionFound("sourceCase"))
+    {
+        const string tgtCase = getEnv("FOAM_CASE");
+        const string tgtCaseName = getEnv("FOAM_CASENAME");
+
+        fileName sourceCase = args["sourceCase"];
+        sourceCase.clean();
+        const fileName sourceCaseName =
+            Pstream::parRun()
+          ? fileName(sourceCase.name())/args.caseName().name()
+          : fileName(sourceCase.name());
+
+        setEnv("FOAM_CASE", sourceCase, true);
+        setEnv("FOAM_CASENAME", sourceCase.name(), true);
+
+        srcRunTimePtr.set
+        (
+            new Time(sourceCase.path(), sourceCaseName)
+        );
+
+        setEnv("FOAM_CASE", tgtCase, true);
+        setEnv("FOAM_CASENAME", tgtCaseName, true);
+
+        srcMeshPtr.set
+        (
+            new polyMesh
+            (
+                Foam::IOobject
+                (
+                    Foam::polyMesh::defaultRegion,
+                    srcRunTimePtr->timeName(),
+                    srcRunTimePtr(),
+                    Foam::IOobject::MUST_READ
+                )
+            )
+        );
+    }
+
+    const polyMesh& srcMesh = srcMeshPtr.valid() ? srcMeshPtr() : mesh;
+    const polyMesh& tgtMesh = mesh;
+
+    const polyPatch& srcPatch = srcMesh.boundaryMesh()[args[1]];
+    const polyPatch& tgtPatch = tgtMesh.boundaryMesh()[args[2]];
     const word& method = args[3];
+    const bool reverse = args.argRead<bool>(4);
 
     cpuTime time;
 
-    patchToPatch::New(method, false)->update
+    patchToPatch::New(method, reverse)->update
     (
         srcPatch,
         srcPatch.pointNormals(),

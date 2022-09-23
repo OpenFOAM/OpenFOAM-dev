@@ -39,31 +39,15 @@ namespace patchToPatches
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * Private Static Member Functions * * * * * * * * * * //
 
-Foam::treeBoundBox Foam::patchToPatches::inverseDistance::srcBox
+bool Foam::patchToPatches::inverseDistance::rayHitsFace
 (
-    const face& srcFace,
-    const pointField& srcPoints,
-    const vectorField& srcPointNormals
-) const
-{
-    const treeBoundBox bb(srcPoints, srcFace);
-
-    const point c = bb.midpoint();
-    const scalar l = bb.maxDim();
-
-    return treeBoundBox(c - l*vector::one, c + l*vector::one);
-}
-
-
-bool Foam::patchToPatches::inverseDistance::inside
-(
-    const face& f,
-    const pointField& ps,
     const point& p,
-    const vector& r
-) const
+    const vector& r,
+    const face& f,
+    const pointField& ps
+)
 {
     using namespace constant::mathematical;
 
@@ -75,100 +59,23 @@ bool Foam::patchToPatches::inverseDistance::inside
     {
         const vector& a = T & (ps[f[i]] - p);
         const vector& b = T & (ps[f[f.fcIndex(i)]] - p);
-        const scalar magAB = sqrt(magSqr(a)*magSqr(b));
-        angle +=
-            (reverse() ? +1 : -1)
-           *sign(r & (a ^ b))
-           *acos(min(max(-1, (a & b)/magAB), +1));
+
+        const scalar meanMagSqrAB = (magSqr(a) + magSqr(b))/2;
+        const scalar geometricMeanMagSqrAB = sqrt(magSqr(a)*magSqr(b));
+
+        // This indicates that we have hit a point to within round off error
+        if (geometricMeanMagSqrAB < small*meanMagSqrAB) return true;
+
+        angle -=
+            sign(r & (a ^ b))
+           *acos(min(max(-1, (a & b)/geometricMeanMagSqrAB), +1));
     }
 
     return pi < angle && angle < 3*pi;
 }
 
 
-bool Foam::patchToPatches::inverseDistance::intersectFaces
-(
-    const primitivePatch& patch,
-    const primitivePatch& otherPatch,
-    const label facei,
-    const label otherFacei,
-    DynamicList<label>& faceOtherFaces,
-    DynamicList<scalar>& faceWeights
-) const
-{
-    const face& f = otherPatch[otherFacei];
-    const pointField& ps = otherPatch.points();
-
-    const point& p = patch.faceCentres()[facei];
-    const vector& r = patch.faceNormals()[facei];
-
-    bool intersectsOther = inside(f, ps, p, r);
-
-    if (!intersectsOther)
-    {
-        forAll(otherPatch.faceFaces()[otherFacei], otherFaceFacei)
-        {
-            const label otherFacej =
-                otherPatch.faceFaces()[otherFacei][otherFaceFacei];
-
-            const face& g = otherPatch[otherFacej];
-
-            if (inside(g, ps, p, r))
-            {
-                intersectsOther = true;
-                break;
-            }
-        }
-    }
-
-    if (intersectsOther)
-    {
-        faceOtherFaces.append(otherFacei);
-        faceWeights.append
-        (
-            1/max(mag(p - otherPatch.faceCentres()[otherFacei]), vSmall)
-        );
-    }
-
-    return intersectsOther;
-}
-
-
-bool Foam::patchToPatches::inverseDistance::intersectFaces
-(
-    const primitiveOldTimePatch& srcPatch,
-    const vectorField& srcPointNormals,
-    const vectorField& srcPointNormals0,
-    const primitiveOldTimePatch& tgtPatch,
-    const label srcFacei,
-    const label tgtFacei
-)
-{
-    const bool srcCouples =
-        intersectFaces
-        (
-            srcPatch,
-            tgtPatch,
-            srcFacei,
-            tgtFacei,
-            srcLocalTgtFaces_[srcFacei],
-            srcWeights_[srcFacei]
-        );
-
-    const bool tgtCouples =
-        intersectFaces
-        (
-            tgtPatch,
-            srcPatch,
-            tgtFacei,
-            srcFacei,
-            tgtLocalSrcFaces_[tgtFacei],
-            tgtWeights_[tgtFacei]
-        );
-
-    return srcCouples || tgtCouples;
-}
-
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::patchToPatches::inverseDistance::initialise
 (
@@ -178,7 +85,7 @@ void Foam::patchToPatches::inverseDistance::initialise
     const primitiveOldTimePatch& tgtPatch
 )
 {
-    patchToPatch::initialise
+    nearby::initialise
     (
         srcPatch,
         srcPointNormals,
@@ -187,17 +94,122 @@ void Foam::patchToPatches::inverseDistance::initialise
     );
 
     srcWeights_.resize(srcPatch.size());
+    forAll(srcWeights_, i)
+    {
+        srcWeights_[i].clear();
+    }
+
     tgtWeights_.resize(tgtPatch.size());
+    forAll(tgtWeights_, i)
+    {
+        tgtWeights_[i].clear();
+    }
 }
 
 
-Foam::labelList Foam::patchToPatches::inverseDistance::trimLocalTgt
+void Foam::patchToPatches::inverseDistance::generateWeights
 (
-    const primitiveOldTimePatch& localTgtPatch
+    const primitiveOldTimePatch& srcPatch,
+    const primitiveOldTimePatch& tgtPatch
 )
 {
+    auto generate = []
+    (
+        const primitiveOldTimePatch& patch,
+        const primitiveOldTimePatch& otherPatch,
+        const bool reverse,
+        List<DynamicList<label>>& otherFaces,
+        List<DynamicList<scalar>>& weights
+    )
+    {
+        forAll(otherFaces, facei)
+        {
+            if (otherFaces[facei].empty()) continue;
+
+            label otherFacei = -1;
+
+            // Find the other face that "contains" this face's centre
+            forAll(otherFaces[facei], i)
+            {
+                if
+                (
+                    rayHitsFace
+                    (
+                        patch.faceCentres()[facei],
+                        (reverse ? -1 : +1)*patch.faceNormals()[facei],
+                        otherPatch[otherFaces[facei][i]],
+                        otherPatch.points()
+                    )
+                )
+                {
+                    otherFacei = otherFaces[facei][i];
+                    break;
+                }
+            }
+
+            const point& c = patch.faceCentres()[facei];
+
+            // If the above failed, find the closest
+            if (otherFacei == -1)
+            {
+                scalar minDistSqr = vGreat;
+
+                forAll(otherFaces[facei], i)
+                {
+                    const point& otherC =
+                        otherPatch.faceCentres()[otherFaces[facei][i]];
+                    const scalar distSqr = magSqr(c - otherC);
+                    if (distSqr < minDistSqr)
+                    {
+                        minDistSqr = distSqr;
+                        otherFacei = otherFaces[facei][i];
+                    }
+                }
+            }
+
+            // Remove all faces
+            otherFaces[facei].clear();
+
+            // Add the found face and all its neighbours
+            const point& otherC = otherPatch.faceCentres()[otherFacei];
+            otherFaces[facei].append(otherFacei);
+            weights[facei].append(1/(mag(c - otherC) + rootVSmall));
+
+            forAll(otherPatch.faceFaces()[otherFacei], i)
+            {
+                const label otherFacej = otherPatch.faceFaces()[otherFacei][i];
+
+                const point& otherC = otherPatch.faceCentres()[otherFacej];
+                otherFaces[facei].append(otherFacej);
+                weights[facei].append(1/(mag(c - otherC) + rootVSmall));
+            }
+        }
+    };
+
+    generate(srcPatch, tgtPatch, reverse_, srcLocalTgtFaces_, srcWeights_);
+    generate(tgtPatch, srcPatch, reverse_, tgtLocalSrcFaces_, tgtWeights_);
+}
+
+
+Foam::labelList Foam::patchToPatches::inverseDistance::finaliseLocal
+(
+    const primitiveOldTimePatch& srcPatch,
+    const vectorField& srcPointNormals,
+    const vectorField& srcPointNormals0,
+    const primitiveOldTimePatch& tgtPatch
+)
+{
+    // Transfer weight addressing into actual addressing
+    generateWeights(srcPatch, tgtPatch);
+
     const labelList newToOldLocalTgtFace =
-        patchToPatch::trimLocalTgt(localTgtPatch);
+        nearby::finaliseLocal
+        (
+            srcPatch,
+            srcPointNormals,
+            srcPointNormals0,
+            tgtPatch
+        );
 
     tgtWeights_ = List<DynamicList<scalar>>(tgtWeights_, newToOldLocalTgtFace);
 
@@ -210,8 +222,10 @@ void Foam::patchToPatches::inverseDistance::rDistributeTgt
     const primitiveOldTimePatch& tgtPatch
 )
 {
-    patchToPatch::rDistributeTgt(tgtPatch);
+    // Let the base class reverse distribute the addressing
+    nearby::rDistributeTgt(tgtPatch);
 
+    // Reverse distribute the weights
     patchToPatchTools::rDistributeListList
     (
         tgtPatch.size(),
@@ -240,20 +254,25 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
             tgtToSrc
         );
 
+    // Transfer weight addressing into actual addressing (if not done in the
+    // finaliseLocal method above)
+    if (isSingleProcess())
+    {
+        generateWeights(srcPatch, tgtPatch);
+    }
+
+    // Normalise the weights
     forAll(srcWeights_, srcFacei)
     {
         const scalar w = sum(srcWeights_[srcFacei]);
-
         forAll(srcWeights_[srcFacei], i)
         {
             srcWeights_[srcFacei][i] /= max(w, vSmall);
         }
     }
-
     forAll(tgtWeights_, tgtFacei)
     {
         const scalar w = sum(tgtWeights_[tgtFacei]);
-
         forAll(tgtWeights_[tgtFacei], i)
         {
             tgtWeights_[tgtFacei][i] /= max(w, vSmall);
@@ -279,8 +298,10 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
             return result;
         };
 
-        Info<< "Number of source faces by number of target connections = "
+        Info<< indent
+            << "Number of source faces by number of target connections = "
             << histogram(srcLocalTgtFaces_) << nl
+            << indent
             << "Number of target faces by number of source connections = "
             << histogram(tgtLocalSrcFaces_) << endl;
     }
@@ -307,7 +328,7 @@ Foam::patchToPatches::inverseDistance::tgtWeights() const
 
 Foam::patchToPatches::inverseDistance::inverseDistance(const bool reverse)
 :
-    patchToPatch(reverse),
+    nearby(reverse),
     srcWeights_(),
     tgtWeights_()
 {}

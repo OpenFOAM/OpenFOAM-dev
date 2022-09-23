@@ -657,13 +657,16 @@ void Foam::patchToPatch::initialise
 }
 
 
-Foam::labelList Foam::patchToPatch::trimLocalTgt
+Foam::labelList Foam::patchToPatch::finaliseLocal
 (
-    const primitiveOldTimePatch& localTgtPatch
+    const primitiveOldTimePatch& srcPatch,
+    const vectorField& srcPointNormals,
+    const vectorField& srcPointNormals0,
+    const primitiveOldTimePatch& tgtPatch
 )
 {
     // Determine which local target faces are actually used
-    boolList oldLocalTgtFaceIsUsed(localTgtPatch.size(), false);
+    boolList oldLocalTgtFaceIsUsed(tgtPatch.size(), false);
     forAll(srcLocalTgtFaces_, srcFacei)
     {
         forAll(srcLocalTgtFaces_[srcFacei], i)
@@ -961,7 +964,13 @@ void Foam::patchToPatch::update
         }
 
         // Trim the local target patch
-        trimLocalTgt(localTTgtPatch);
+        finaliseLocal
+        (
+            srcPatch,
+            srcPointNormals,
+            srcPointNormals,
+            localTTgtPatch
+        );
 
         // Distribute the source patch
         srcMapPtr_ =

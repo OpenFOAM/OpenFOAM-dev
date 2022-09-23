@@ -86,21 +86,30 @@ bool Foam::patchToPatches::rays::intersectFaces
 }
 
 
-Foam::labelList Foam::patchToPatches::rays::trimLocalTgt
+Foam::labelList Foam::patchToPatches::rays::finaliseLocal
 (
-    const primitiveOldTimePatch& localTgtPatch
+    const primitiveOldTimePatch& srcPatch,
+    const vectorField& srcPointNormals,
+    const vectorField& srcPointNormals0,
+    const primitiveOldTimePatch& tgtPatch
 )
 {
     const labelList newToOldLocalTgtFace =
-        patchToPatch::trimLocalTgt(localTgtPatch);
+        patchToPatch::finaliseLocal
+        (
+            srcPatch,
+            srcPointNormals,
+            srcPointNormals0,
+            tgtPatch
+        );
 
     localTgtPatchPtr_.reset
     (
         new PrimitiveOldTimePatch<faceList, pointField>
         (
-            faceList(localTgtPatch, newToOldLocalTgtFace),
-            localTgtPatch.points(),
-            localTgtPatch.points0()
+            faceList(tgtPatch, newToOldLocalTgtFace),
+            tgtPatch.points(),
+            tgtPatch.points0()
         )
     );
 

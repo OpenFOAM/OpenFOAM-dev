@@ -265,11 +265,11 @@ void Foam::meshToMesh::constructNoCuttingPatches
         srcToTgtPatchIDs_.transfer(srcToTgtPatchIDs);
     }
 
-    // calculate cell addressing and weights
-    calculateCellToCells(methodName);
-
     // calculate patch addressing and weights
     calculatePatchToPatches(methodName);
+
+    // calculate cell addressing and weights
+    calculateCellToCells(methodName);
 }
 
 
@@ -295,11 +295,11 @@ void Foam::meshToMesh::constructFromCuttingPatches
             );
     }
 
-    // calculate cell addressing and weights
-    calculateCellToCells(methodName);
-
     // calculate patch addressing and weights
     calculatePatchToPatches(methodName);
+
+    // calculate cell addressing and weights
+    calculateCellToCells(methodName);
 
     // set IDs of cutting patches on target mesh
     tgtCuttingPatchIDs_.setSize(tgtCuttingPatches.size());

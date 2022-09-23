@@ -25,6 +25,11 @@ License
 
 #include "nearestPatchToPatch.H"
 #include "addToRunTimeSelectionTable.H"
+#include "boundSphere.H"
+#include "OFstream.H"
+#include "OBJstream.H"
+#include "vtkWritePolyData.H"
+#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -40,105 +45,6 @@ namespace patchToPatches
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::treeBoundBox Foam::patchToPatches::nearest::srcBox
-(
-    const face& srcFace,
-    const pointField& srcPoints,
-    const vectorField& srcPointNormals
-) const
-{
-    const treeBoundBox bb(srcPoints, srcFace);
-
-    const point c = bb.midpoint();
-    const scalar l = bb.maxDim();
-
-    return treeBoundBox(c - l*vector::one, c + l*vector::one);
-}
-
-
-bool Foam::patchToPatches::nearest::intersectFaces
-(
-    const primitivePatch& patch,
-    const primitivePatch& otherPatch,
-    const label facei,
-    const label otherFacei,
-    DynamicList<label>& faceOtherFaces,
-    scalar& faceDistance
-) const
-{
-    auto closest = [&patch,&otherPatch]
-    (
-        const label facei,
-        const label otherFacei
-    )
-    {
-        const point& c = patch.faceCentres()[facei];
-        const point& otherC = otherPatch.faceCentres()[otherFacei];
-        const scalar distSqr = magSqr(c - otherC);
-
-        forAll(otherPatch.faceEdges()[otherFacei], otherFaceEdgei)
-        {
-            const label otherEdgei =
-                otherPatch.faceEdges()[otherFacei][otherFaceEdgei];
-
-            point otherNbrC;
-
-            if (otherPatch.edgeFaces()[otherEdgei].size() == 2)
-            {
-                const label facej =
-                    otherPatch.edgeFaces()[otherEdgei]
-                    [otherPatch.edgeFaces()[otherEdgei][0] == otherFacei];
-
-                otherNbrC = otherPatch.faceCentres()[facej];
-            }
-            else
-            {
-                const edge& e = otherPatch.edges()[otherEdgei];
-                const point& p = otherPatch.localPoints()[e[0]];
-                const vector dp = e.vec(otherPatch.localPoints());
-                const vector n = otherPatch.faceNormals()[otherFacei] ^ dp;
-
-                otherNbrC = p + ((tensor::I - 2*sqr(n)) & (otherC - p));
-            }
-
-            if (magSqr(c - otherNbrC) < distSqr)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    };
-
-    if (closest(facei, otherFacei))
-    {
-        const point& c = patch.faceCentres()[facei];
-        const point& otherC = otherPatch.faceCentres()[otherFacei];
-        const scalar distSqr = magSqr(c - otherC);
-
-        if (faceOtherFaces.empty() || faceDistance > distSqr)
-        {
-            faceOtherFaces.clear();
-            faceOtherFaces.append(otherFacei);
-            faceDistance = distSqr;
-        }
-
-        return true;
-    }
-
-    const labelList& otherFaceFaces = otherPatch.faceFaces()[otherFacei];
-    forAll(otherFaceFaces, otherFaceFacei)
-    {
-        if (closest(facei, otherFaceFaces[otherFaceFacei]))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-
 bool Foam::patchToPatches::nearest::intersectFaces
 (
     const primitiveOldTimePatch& srcPatch,
@@ -149,30 +55,52 @@ bool Foam::patchToPatches::nearest::intersectFaces
     const label tgtFacei
 )
 {
-    const bool srcCouples =
-        intersectFaces
+    if
+    (
+        nearby::intersectFaces
         (
             srcPatch,
+            srcPointNormals,
+            srcPointNormals0,
             tgtPatch,
             srcFacei,
-            tgtFacei,
-            srcLocalTgtFaces_[srcFacei],
-            srcDistances_[srcFacei]
-        );
+            tgtFacei
+        )
+    )
+    {
+        const scalar dSqr =
+            magSqr
+            (
+                srcPatch.faceCentres()[srcFacei]
+              - tgtPatch.faceCentres()[tgtFacei]
+            );
 
-    const bool tgtCouples =
-        intersectFaces
-        (
-            tgtPatch,
-            srcPatch,
-            tgtFacei,
-            srcFacei,
-            tgtLocalSrcFaces_[tgtFacei],
-            tgtDistances_[tgtFacei]
-        );
+        if (dSqr < srcDistances_[srcFacei])
+        {
+            srcDistances_[srcFacei] = dSqr;
+            Swap
+            (
+                srcLocalTgtFaces_[srcFacei].first(),
+                srcLocalTgtFaces_[srcFacei].last()
+            );
+        }
 
-    return srcCouples || tgtCouples;
+        if (dSqr < tgtDistances_[tgtFacei])
+        {
+            tgtDistances_[tgtFacei] = dSqr;
+            Swap
+            (
+                tgtLocalSrcFaces_[tgtFacei].first(),
+                tgtLocalSrcFaces_[tgtFacei].last()
+            );
+        }
 
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
@@ -184,7 +112,7 @@ void Foam::patchToPatches::nearest::initialise
     const primitiveOldTimePatch& tgtPatch
 )
 {
-    patchToPatch::initialise
+    nearby::initialise
     (
         srcPatch,
         srcPointNormals,
@@ -200,13 +128,22 @@ void Foam::patchToPatches::nearest::initialise
 }
 
 
-Foam::labelList Foam::patchToPatches::nearest::trimLocalTgt
+Foam::labelList Foam::patchToPatches::nearest::finaliseLocal
 (
-    const primitiveOldTimePatch& localTgtPatch
+    const primitiveOldTimePatch& srcPatch,
+    const vectorField& srcPointNormals,
+    const vectorField& srcPointNormals0,
+    const primitiveOldTimePatch& tgtPatch
 )
 {
     const labelList newToOldLocalTgtFace =
-        patchToPatch::trimLocalTgt(localTgtPatch);
+        nearby::finaliseLocal
+        (
+            srcPatch,
+            srcPointNormals,
+            srcPointNormals0,
+            tgtPatch
+        );
 
     tgtDistances_ = List<scalar>(tgtDistances_, newToOldLocalTgtFace);
 
@@ -219,6 +156,22 @@ void Foam::patchToPatches::nearest::rDistributeTgt
     const primitiveOldTimePatch& tgtPatch
 )
 {
+    // Keep only the closest opposing face
+    forAll(srcLocalTgtFaces_, srcFacei)
+    {
+        srcLocalTgtFaces_[srcFacei].resize
+        (
+            min(srcLocalTgtFaces_[srcFacei].size(), 1)
+        );
+    }
+    forAll(tgtLocalSrcFaces_, tgtFacei)
+    {
+        tgtLocalSrcFaces_[tgtFacei].resize
+        (
+            min(tgtLocalSrcFaces_[tgtFacei].size(), 1)
+        );
+    }
+
     // Create a list-list of distances to match the addressing
     List<List<scalar>> tgtDistances(tgtLocalSrcFaces_.size());
     forAll(tgtLocalSrcFaces_, tgtFacei)
@@ -230,7 +183,7 @@ void Foam::patchToPatches::nearest::rDistributeTgt
     }
 
     // Let the base class reverse distribute the addressing
-    patchToPatch::rDistributeTgt(tgtPatch);
+    nearby::rDistributeTgt(tgtPatch);
 
     // Reverse distribute the distances
     patchToPatchTools::rDistributeListList
@@ -256,6 +209,132 @@ void Foam::patchToPatches::nearest::rDistributeTgt
             tgtDistances_[tgtFacei] = tgtDistances[tgtFacei][i];
         }
     }
+}
+
+
+Foam::label Foam::patchToPatches::nearest::finalise
+(
+    const primitiveOldTimePatch& srcPatch,
+    const vectorField& srcPointNormals,
+    const vectorField& srcPointNormals0,
+    const primitiveOldTimePatch& tgtPatch,
+    const transformer& tgtToSrc
+)
+{
+    // Keep only the closest opposing face
+    forAll(srcLocalTgtFaces_, srcFacei)
+    {
+        srcLocalTgtFaces_[srcFacei].resize
+        (
+            min(srcLocalTgtFaces_[srcFacei].size(), 1)
+        );
+    }
+    forAll(tgtLocalSrcFaces_, tgtFacei)
+    {
+        tgtLocalSrcFaces_[tgtFacei].resize
+        (
+            min(tgtLocalSrcFaces_[tgtFacei].size(), 1)
+        );
+    }
+
+    const label nCouples =
+        nearby::finalise
+        (
+            srcPatch,
+            srcPointNormals,
+            srcPointNormals0,
+            tgtPatch,
+            tgtToSrc
+        );
+
+    if (debug)
+    {
+        auto countNonEmpty = [](const List<DynamicList<label>>& ll)
+        {
+            label result = 0;
+
+            forAll(ll, i)
+            {
+                result += !ll[i].empty();
+            }
+
+            return returnReduce(result, sumOp<label>());
+        };
+
+        Info<< indent
+            << "Coupled " << countNonEmpty(srcLocalTgtFaces_)
+            << "/" << returnReduce(srcLocalTgtFaces_.size(), sumOp<label>())
+            << " source faces and " << countNonEmpty(tgtLocalSrcFaces_)
+            << "/" << returnReduce(tgtLocalSrcFaces_.size(), sumOp<label>())
+            << " target faces" << endl;
+    }
+
+    if (debug && !Pstream::parRun())
+    {
+        auto writeConnections = []
+        (
+            const primitivePatch& patch,
+            const primitivePatch& otherPatch,
+            const bool isSrc,
+            const List<DynamicList<label>>& faceLocalOtherFaces
+        )
+        {
+            const word name =
+                typeName + "_" + (isSrc ? "src" : "tgt") + "Connections";
+
+            OBJstream obj(name + ".obj");
+
+            forAll(faceLocalOtherFaces, facei)
+            {
+                const point& p = patch.faceCentres()[facei];
+                forAll(faceLocalOtherFaces[facei], i)
+                {
+                    const label otherFacei = faceLocalOtherFaces[facei][i];
+                    const point& q = otherPatch.faceCentres()[otherFacei];
+                    obj.write(linePointRef(p, q));
+                }
+            }
+        };
+
+        writeConnections(srcPatch, tgtPatch, true, srcLocalTgtFaces_);
+        writeConnections(tgtPatch, srcPatch, false, tgtLocalSrcFaces_);
+
+        auto writeNotConnected = []
+        (
+            const primitivePatch& patch,
+            const List<DynamicList<label>>& faceLocalOtherFaces,
+            const bool isSrc
+        )
+        {
+            DynamicList<label> unconnected;
+            forAll(faceLocalOtherFaces, facei)
+            {
+                if (faceLocalOtherFaces[facei].empty())
+                {
+                    unconnected.append(facei);
+                }
+            }
+
+            const word name =
+                typeName + "_" + (isSrc ? "src" : "tgt") + "NotConnected";
+
+            vtkWritePolyData::write
+            (
+                name + ".vtk",
+                name,
+                false,
+                patch.localPoints(),
+                labelList(),
+                labelListList(),
+                UIndirectList<face>(patch.localFaces(), unconnected)
+            );
+        };
+
+        writeNotConnected(srcPatch, srcLocalTgtFaces_, true);
+        writeNotConnected(tgtPatch, tgtLocalSrcFaces_, false);
+    }
+
+    return nCouples;
 }
 
 
@@ -307,7 +386,9 @@ Foam::patchToPatches::nearest::tgtWeights() const
 
 Foam::patchToPatches::nearest::nearest(const bool reverse)
 :
-    patchToPatch(reverse)
+    nearby(reverse),
+    srcDistances_(),
+    tgtDistances_()
 {}
 
 

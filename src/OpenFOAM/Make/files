@@ -715,16 +715,12 @@ $(interpolationWeights)/interpolationWeights/interpolationWeights.C
 $(interpolationWeights)/linearInterpolationWeights/linearInterpolationWeights.C
 $(interpolationWeights)/splineInterpolationWeights/splineInterpolationWeights.C
 
-
-
 algorithms/indexedOctree/indexedOctreeName.C
 algorithms/indexedOctree/treeDataCell.C
 algorithms/indexedOctree/volumeType.C
-algorithms/polygonTriangulate/polygonTriangulate.C
-
-
 algorithms/dynamicIndexedOctree/dynamicIndexedOctreeName.C
 algorithms/dynamicIndexedOctree/dynamicTreeDataPoint.C
+algorithms/polygonTriangulate/polygonTriangulate.C
 
 meshes/data/data.C
 meshes/Residuals/residuals.C
