@@ -293,7 +293,7 @@ Foam::RASModels::kineticTheoryModel::sigma() const
         volSymmTensorField::New
         (
             IOobject::groupName("R", U_.group()),
-          - (nut_)*dev(twoSymm(fvc::grad(U_)))
+          - (nut_ + nuFric_)*dev(twoSymm(fvc::grad(U_)))
           - (lambda_*fvc::div(phi_))*symmTensor::I
         )
     );
@@ -371,7 +371,7 @@ Foam::RASModels::kineticTheoryModel::devTau() const
         volSymmTensorField::New
         (
             IOobject::groupName("devTau", U_.group()),
-          - (rho_*nut_)
+          - (rho_*(nut_ + nuFric_))
            *dev(twoSymm(fvc::grad(U_)))
           - ((rho_*lambda_)*fvc::div(phi_))*symmTensor::I
         )
@@ -387,10 +387,10 @@ Foam::RASModels::kineticTheoryModel::divDevTau
 {
     return
     (
-      - fvm::laplacian(rho_*nut_, U)
+      - fvm::laplacian(rho_*(nut_ + nuFric_), U)
       - fvc::div
         (
-            (rho_*nut_)*dev2(T(fvc::grad(U)))
+            (rho_*(nut_ + nuFric_))*dev2(T(fvc::grad(U)))
           + ((rho_*lambda_)*fvc::div(phi_))
            *dimensioned<symmTensor>("I", dimless, symmTensor::I),
             "divDevTau(" + U_.name() + ')'
@@ -615,9 +615,6 @@ void Foam::RASModels::kineticTheoryModel::correct()
             ),
             maxNut_ - nut_
         );
-
-        // Add frictional viscosity
-        nut_ += nuFric_;
     }
 
     if (debug)
