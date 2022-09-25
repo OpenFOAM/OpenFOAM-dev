@@ -55,6 +55,7 @@ Usage
         D            | Darcy coefficient       | yes         |
         I            | inertial coefficient    | yes         |
         length       | porous media length in the flow direction | yes |
+        relaxation   | Relaxation factor for pressure jump       | no  | 1
     \endtable
 
     Example of the boundary condition specification:
@@ -67,6 +68,7 @@ Usage
         D               0.001;
         I               1000000;
         length          0.1;
+        relaxation      0.2;
         value           uniform 0;
     }
     \endverbatim
@@ -113,6 +115,12 @@ class porousBafflePressureFvPatchField
 
         //- Porous media length
         scalar length_;
+
+        //- Relaxation for pressure jump
+        scalar relaxation_;
+
+        //- Previous iteration "jump" field for relaxation
+        scalarField jump0_;
 
 
 public:

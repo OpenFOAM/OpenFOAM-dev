@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,9 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
     rhoName_("rho"),
     D_(0),
     I_(0),
-    length_(0)
+    length_(0),
+    relaxation_(1),
+    jump0_(jump_)
 {}
 
 
@@ -57,7 +59,9 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     D_(dict.lookup<scalar>("D")),
     I_(dict.lookup<scalar>("I")),
-    length_(dict.lookup<scalar>("length"))
+    length_(dict.lookup<scalar>("length")),
+    relaxation_(dict.lookupOrDefault<scalar>("relaxation", 1)),
+    jump0_(jump_)
 {
     fvPatchField<scalar>::operator=
     (
@@ -79,7 +83,9 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
     rhoName_(ptf.rhoName_),
     D_(ptf.D_),
     I_(ptf.I_),
-    length_(ptf.length_)
+    length_(ptf.length_),
+    relaxation_(ptf.relaxation_),
+    jump0_(ptf.jump_)
 {}
 
 
@@ -94,7 +100,9 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
     rhoName_(ptf.rhoName_),
     D_(ptf.D_),
     I_(ptf.I_),
-    length_(ptf.length_)
+    length_(ptf.length_),
+    relaxation_(ptf.relaxation_),
+    jump0_(ptf.jump_)
 {}
 
 
@@ -120,7 +128,7 @@ void Foam::porousBafflePressureFvPatchField::updateCoeffs()
         Un /= patch().lookupPatchField<volScalarField, scalar>(rhoName_);
     }
 
-    scalarField magUn(mag(Un));
+    const scalarField magUn(mag(Un));
 
     const momentumTransportModel& turbModel =
         db().lookupObject<momentumTransportModel>
@@ -143,6 +151,13 @@ void Foam::porousBafflePressureFvPatchField::updateCoeffs()
     {
         jump_ *= patch().lookupPatchField<volScalarField, scalar>(rhoName_);
     }
+
+    if (relaxation_ < 1)
+    {
+        jump_ += (1 - relaxation_)*(jump0_ - jump_);
+    }
+
+    jump0_ = jump_;
 
     if (debug)
     {
@@ -168,6 +183,7 @@ void Foam::porousBafflePressureFvPatchField::write(Ostream& os) const
     writeEntry(os, "D", D_);
     writeEntry(os, "I", I_);
     writeEntry(os, "length", length_);
+    writeEntryIfDifferent(os, "relaxation", scalar(1), relaxation_);
 }
 
 
