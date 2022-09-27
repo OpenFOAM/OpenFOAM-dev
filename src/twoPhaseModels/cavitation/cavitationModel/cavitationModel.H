@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::twoPhaseChangeModel
+    Foam::cavitationModel
 
 Description
+    Abstract base class for cavitation models
 
 SourceFiles
-    twoPhaseChangeModel.C
-    phaseChangeModelNew.C
+    cavitationModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef twoPhaseChangeModel_H
-#define twoPhaseChangeModel_H
+#ifndef cavitationModel_H
+#define cavitationModel_H
 
 #include "immiscibleIncompressibleTwoPhaseMixture.H"
 #include "fvMatricesFwd.H"
@@ -45,40 +45,26 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class twoPhaseChangeModel Declaration
+                                 Class cavitationModel
 \*---------------------------------------------------------------------------*/
 
-class twoPhaseChangeModel
-:
-    public IOdictionary
+class cavitationModel
 {
-    // Private Member Functions
-
-        //- Construct the base IO object
-        IOobject createIOobject
-        (
-            const immiscibleIncompressibleTwoPhaseMixture& mixture
-        ) const;
-
-
 protected:
 
     // Protected data
 
-        //- Reference to the two-phase mixture
+        //- Mixture properties
         const immiscibleIncompressibleTwoPhaseMixture& mixture_;
 
-        //- Model coefficient dictionary
-        dictionary twoPhaseChangeModelCoeffs_;
+        //- Saturation vapour pressure
+        dimensionedScalar pSat_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("phaseChangeModel");
-
-    //- Default phaseChangeProperties dictionary name
-    static const word phaseChangePropertiesName;
+    TypeName("cavitationModel");
 
 
     // Declare run-time constructor selection table
@@ -86,79 +72,61 @@ public:
         declareRunTimeSelectionTable
         (
             autoPtr,
-            twoPhaseChangeModel,
+            cavitationModel,
             dictionary,
             (
+                const dictionary& dict,
                 const immiscibleIncompressibleTwoPhaseMixture& mixture
             ),
-            (mixture)
+            (dict, mixture)
         );
 
 
     // Constructors
 
-        //- Construct from dictionary
-        twoPhaseChangeModel
+        //- Construct for mixture
+        cavitationModel
         (
-            const word& type,
+            const dictionary& dict,
             const immiscibleIncompressibleTwoPhaseMixture& mixture
         );
 
-        //- Disallow default bitwise copy construction
-        twoPhaseChangeModel(const twoPhaseChangeModel&);
 
-
-    // Selectors
-
-        //- Return a reference to the selected phaseChange model
-        static autoPtr<twoPhaseChangeModel> New
-        (
-            const immiscibleIncompressibleTwoPhaseMixture& mixture
-        );
+    // Selector
+    static autoPtr<cavitationModel> New
+    (
+        const dictionary& dict,
+        const immiscibleIncompressibleTwoPhaseMixture& mixture
+    );
 
 
     //- Destructor
-    virtual ~twoPhaseChangeModel()
+    virtual ~cavitationModel()
     {}
 
 
     // Member Functions
 
-        //- Return the phase-change explicit and implicit sources
-        //  for the phase-fraction equation
-        virtual Pair<tmp<volScalarField::Internal>> Salpha
-        (
-            volScalarField& alpha
-        ) const = 0;
+        //- Return const-access to the saturation vapour pressure
+        const dimensionedScalar& pSat() const
+        {
+            return pSat_;
+        }
 
-        //- Return the phase-change source matrix
-        //  for the p_rgh pressure equation
-        virtual tmp<fvScalarMatrix> Sp_rgh
-        (
-            const volScalarField& rho,
-            const volScalarField& gh,
-            volScalarField& p_rgh
-        ) const = 0;
+        //- Return the mass condensation and vaporisation rates as a
+        //  coefficient to multiply (1 - alphal) for the condensation rate
+        //  and a coefficient to multiply  alphal for the vaporisation rate
+        virtual Pair<tmp<volScalarField::Internal>> mDotAlphal() const = 0;
 
-        //- Return the phase-change source matrix for the momentum equation
-        virtual tmp<fvVectorMatrix> SU
-        (
-            const volScalarField& rho,
-            const surfaceScalarField& rhoPhi,
-            volVectorField& U
-        ) const = 0;
+        //- Return the mass condensation and vaporisation rates as coefficients
+        //  to multiply (p - pSat)
+        virtual Pair<tmp<volScalarField::Internal>> mDotP() const = 0;
 
-        //- Correct the phaseChange model
+        //- Correct the cavitation model
         virtual void correct() = 0;
 
         //- Read the phaseProperties dictionary and update
-        virtual bool read() = 0;
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const twoPhaseChangeModel&) = delete;
+        virtual bool read(const dictionary& dict) = 0;
 };
 
 

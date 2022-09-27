@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,54 +22,81 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::twoPhaseChangeModels::noPhaseChange
+    Foam::cavitationModels::Kunz
 
 Description
-    Dummy phase change model for 'no phase change'
+    Kunz cavitation model slightly modified so that the condensation term
+    is switched off when the pressure is less than the saturation vapour
+    pressure.  This change allows the condensation term to be formulated as
+    a coefficient multiplying (p - p_sat) so that it can be included as an
+    implicit term in the pressure equation.
+
+    Reference:
+    \verbatim
+        Kunz, R.F., Boger, D.A., Stinebring, D.R., Chyczewski, Lindau. J.W.,
+        Gibeling, H.J., Venkateswaran, S., Govindan, T.R.,
+        "A Preconditioned Implicit Method for Two-Phase Flows with Application
+         to Cavitation Prediction,"
+        Computers and Fluids,
+        29(8):849-875, 2000.
+    \endverbatim
 
 SourceFiles
-    noPhaseChange.C
+    Kunz.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef noPhaseChange_H
-#define noPhaseChange_H
+#ifndef Kunz_H
+#define Kunz_H
 
-#include "twoPhaseChangeModel.H"
+#include "cavitationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace twoPhaseChangeModels
+namespace cavitationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                                 Class noPhaseChange
+                                 Class Kunz
 \*---------------------------------------------------------------------------*/
 
-class noPhaseChange
+class Kunz
 :
-    public twoPhaseChangeModel
+    public cavitationModel
 {
+    // Private Data
+
+        dimensionedScalar UInf_;
+        dimensionedScalar tInf_;
+        dimensionedScalar Cc_;
+        dimensionedScalar Cv_;
+
+        dimensionedScalar p0_;
+
+        dimensionedScalar mcCoeff_;
+        dimensionedScalar mvCoeff_;
+
 
 public:
 
     //- Runtime type information
-    TypeName("none");
+    TypeName("Kunz");
 
 
     // Constructors
 
         //- Construct for mixture
-        noPhaseChange
+        Kunz
         (
+            const dictionary& dict,
             const immiscibleIncompressibleTwoPhaseMixture& mixture
         );
 
 
     //- Destructor
-    virtual ~noPhaseChange()
+    virtual ~Kunz()
     {}
 
 
@@ -78,47 +105,23 @@ public:
         //- Return the mass condensation and vaporisation rates as a
         //  coefficient to multiply (1 - alphal) for the condensation rate
         //  and a coefficient to multiply  alphal for the vaporisation rate
-        virtual Pair<tmp<volScalarField>> mDotAlphal() const;
+        virtual Pair<tmp<volScalarField::Internal>> mDotAlphal() const;
 
         //- Return the mass condensation and vaporisation rates as coefficients
         //  to multiply (p - pSat)
-        virtual Pair<tmp<volScalarField>> mDotP() const;
+        virtual Pair<tmp<volScalarField::Internal>> mDotP() const;
 
-        //- Return unallocated explicit and implicit sources
-        //  for the phase-fraction equation
-        virtual Pair<tmp<volScalarField::Internal>> Salpha
-        (
-            volScalarField&
-        ) const;
-
-        //- Return the zero source matrix
-        //  for the p_rgh pressure equation
-        virtual tmp<fvScalarMatrix> Sp_rgh
-        (
-            const volScalarField& rho,
-            const volScalarField& gh,
-            volScalarField& p_rgh
-        ) const;
-
-        //- Return the zero source matrix for the momentum equation
-        virtual tmp<fvVectorMatrix> SU
-        (
-            const volScalarField& rho,
-            const surfaceScalarField& rhoPhi,
-            volVectorField& U
-        ) const;
-
-        //- Correct the noPhaseChange phaseChange model
+        //- Correct the Kunz phaseChange model
         virtual void correct();
 
         //- Read the phaseProperties dictionary and update
-        virtual bool read();
+        virtual bool read(const dictionary& dict);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace twoPhaseChangeModels
+} // End namespace cavitationModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

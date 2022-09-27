@@ -6,6 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 wmake $targetType incompressibleInterPhaseTransportModel
 wmake $targetType VoFTurbulenceDamping
+wmake $targetType VoFCavitation
 
 wmake $targetType
 wmake $targetType interMixingFoam

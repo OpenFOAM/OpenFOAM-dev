@@ -40,7 +40,6 @@ Description
 #include "CrankNicolsonDdtScheme.H"
 #include "subCycle.H"
 #include "immiscibleIncompressibleTwoPhaseMixture.H"
-#include "noPhaseChange.H"
 #include "incompressibleInterPhaseTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
@@ -99,7 +98,7 @@ int main(int argc, char *argv[])
         if
         (
             correctPhi
-         && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
+         && fvModels.addsSupToField(alpha1.name())
          && mesh.topoChanged()
         )
         {
@@ -133,7 +132,7 @@ int main(int argc, char *argv[])
                 if
                 (
                     correctPhi
-                 && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
+                 && fvModels.addsSupToField(alpha1.name())
                  && !divU.valid()
                 )
                 {

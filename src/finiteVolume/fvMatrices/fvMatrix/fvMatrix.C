@@ -812,7 +812,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::A() const
     (
         volScalarField::New
         (
-            "A("+psi_.name()+')',
+            "A(" + psi_.name() + ')',
             psi_.mesh(),
             dimensions_/psi_.dimensions()/dimVol,
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -827,6 +827,42 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::A() const
 
 
 template<class Type>
+Foam::tmp<Foam::volScalarField::Internal> Foam::fvMatrix<Type>::Su() const
+{
+    tmp<volScalarField::Internal> tSu
+    (
+        volScalarField::Internal::New
+        (
+            "Su(" +psi_.name() + ')',
+            psi_.mesh(),
+            dimensions_/dimVol,
+            -source()/psi_.mesh().V()
+        )
+    );
+
+    return tSu;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::volScalarField::Internal> Foam::fvMatrix<Type>::Sp() const
+{
+    tmp<volScalarField::Internal> tSp
+    (
+        volScalarField::Internal::New
+        (
+            "Sp(" + psi_.name() + ')',
+            psi_.mesh(),
+            dimensions_/psi_.dimensions()/dimVol,
+            diag()/psi_.mesh().V()
+        )
+    );
+
+    return tSp;
+}
+
+
+template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvMatrix<Type>::H() const
 {
@@ -834,7 +870,7 @@ Foam::fvMatrix<Type>::H() const
     (
         GeometricField<Type, fvPatchField, volMesh>::New
         (
-            "H("+psi_.name()+')',
+            "H(" + psi_.name() + ')',
             psi_.mesh(),
             dimensions_/dimVol,
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -940,7 +976,7 @@ flux() const
     (
         GeometricField<Type, fvsPatchField, surfaceMesh>::New
         (
-            "flux("+psi_.name()+')',
+            "flux(" + psi_.name() + ')',
             psi_.mesh(),
             dimensions()
         )

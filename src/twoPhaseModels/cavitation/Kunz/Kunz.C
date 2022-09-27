@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,38 +23,39 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Merkle.H"
+#include "Kunz.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace twoPhaseChangeModels
+namespace cavitationModels
 {
-    defineTypeNameAndDebug(Merkle, 0);
-    addToRunTimeSelectionTable(cavitationModel, Merkle, dictionary);
+    defineTypeNameAndDebug(Kunz, 0);
+    addToRunTimeSelectionTable(cavitationModel, Kunz, dictionary);
 }
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseChangeModels::Merkle::Merkle
+Foam::cavitationModels::Kunz::Kunz
 (
+    const dictionary& dict,
     const immiscibleIncompressibleTwoPhaseMixture& mixture
 )
 :
-    cavitationModel(typeName, mixture),
+    cavitationModel(dict, mixture),
 
-    UInf_("UInf", dimVelocity, twoPhaseChangeModelCoeffs_),
-    tInf_("tInf", dimTime, twoPhaseChangeModelCoeffs_),
-    Cc_("Cc", dimless, twoPhaseChangeModelCoeffs_),
-    Cv_("Cv", dimless, twoPhaseChangeModelCoeffs_),
+    UInf_("UInf", dimVelocity, dict),
+    tInf_("tInf", dimTime, dict),
+    Cc_("Cc", dimless, dict),
+    Cv_("Cv", dimless, dict),
 
     p0_("0", pSat().dimensions(), 0.0),
 
-    mcCoeff_(Cc_/(0.5*sqr(UInf_)*tInf_)),
-    mvCoeff_(Cv_*mixture_.rho1()/(0.5*sqr(UInf_)*tInf_*mixture_.rho2()))
+    mcCoeff_(Cc_*mixture_.rho2()/tInf_),
+    mvCoeff_(Cv_*mixture_.rho2()/(0.5*mixture_.rho1()*sqr(UInf_)*tInf_))
 {
     correct();
 }
@@ -62,58 +63,63 @@ Foam::twoPhaseChangeModels::Merkle::Merkle
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::Pair<Foam::tmp<Foam::volScalarField>>
-Foam::twoPhaseChangeModels::Merkle::mDotAlphal() const
+Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::cavitationModels::Kunz::mDotAlphal() const
 {
-    const volScalarField& p =
+    const volScalarField::Internal& p =
         mixture_.U().db().lookupObject<volScalarField>("p");
 
-    return Pair<tmp<volScalarField>>
+    const volScalarField::Internal limitedAlpha1
     (
-        mcCoeff_*max(p - pSat(), p0_),
+        min(max(mixture_.alpha1()(), scalar(0)), scalar(1))
+    );
+
+    return Pair<tmp<volScalarField::Internal>>
+    (
+        mcCoeff_*sqr(limitedAlpha1)
+       *max(p - pSat(), p0_)/max(p - pSat(), 0.01*pSat()),
+
         mvCoeff_*min(p - pSat(), p0_)
     );
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField>>
-Foam::twoPhaseChangeModels::Merkle::mDotP() const
+Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::cavitationModels::Kunz::mDotP() const
 {
-    const volScalarField& p =
+    const volScalarField::Internal& p =
         mixture_.U().db().lookupObject<volScalarField>("p");
 
-    const volScalarField limitedAlpha1
+    const volScalarField::Internal limitedAlpha1
     (
-        min(max(mixture_.alpha1(), scalar(0)), scalar(1))
+        min(max(mixture_.alpha1()(), scalar(0)), scalar(1))
     );
 
-    return Pair<tmp<volScalarField>>
+    return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*(1.0 - limitedAlpha1)*pos0(p - pSat()),
+        mcCoeff_*sqr(limitedAlpha1)*(1.0 - limitedAlpha1)
+       *pos0(p - pSat())/max(p - pSat(), 0.01*pSat()),
+
         (-mvCoeff_)*limitedAlpha1*neg(p - pSat())
     );
 }
 
 
-void Foam::twoPhaseChangeModels::Merkle::correct()
-{
-    cavitationModel::correct();
-}
+void Foam::cavitationModels::Kunz::correct()
+{}
 
 
-bool Foam::twoPhaseChangeModels::Merkle::read()
+bool Foam::cavitationModels::Kunz::read(const dictionary& dict)
 {
-    if (cavitationModel::read())
+    if (cavitationModel::read(dict))
     {
-        twoPhaseChangeModelCoeffs_ = optionalSubDict(type() + "Coeffs");
+        dict.lookup("UInf") >> UInf_;
+        dict.lookup("tInf") >> tInf_;
+        dict.lookup("Cc") >> Cc_;
+        dict.lookup("Cv") >> Cv_;
 
-        twoPhaseChangeModelCoeffs_.lookup("UInf") >> UInf_;
-        twoPhaseChangeModelCoeffs_.lookup("tInf") >> tInf_;
-        twoPhaseChangeModelCoeffs_.lookup("Cc") >> Cc_;
-        twoPhaseChangeModelCoeffs_.lookup("Cv") >> Cv_;
-
-        mcCoeff_ = Cc_/(0.5*sqr(UInf_)*tInf_);
-        mvCoeff_ = Cv_*mixture_.rho1()/(0.5*sqr(UInf_)*tInf_*mixture_.rho2());
+        mcCoeff_ = Cc_*mixture_.rho2()/tInf_;
+        mvCoeff_ = Cv_*mixture_.rho2()/(0.5*mixture_.rho1()*sqr(UInf_)*tInf_);
 
         return true;
     }

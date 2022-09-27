@@ -3,6 +3,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 wclean libso incompressibleInterPhaseTransportModel
 wclean libso VoFTurbulenceDamping
+wclean libso VoFCavitation
 
 wclean
 wclean interMixingFoam

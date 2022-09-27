@@ -31,13 +31,6 @@ License
 #include "fvcGrad.H"
 #include "fvcSnGrad.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    defineTypeNameAndDebug(interfaceProperties, 0);
-}
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -191,7 +184,7 @@ Foam::interfaceProperties::interfaceProperties
     (
         IOobject
         (
-            typedName("interfaceProperties"),
+            "interfaceProperties:K",
             alpha1_.time().timeName(),
             alpha1_.mesh()
         ),

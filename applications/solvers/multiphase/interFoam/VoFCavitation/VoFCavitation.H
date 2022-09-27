@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,59 +22,64 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::VoFTurbulenceDamping
+    Foam::fv::VoFCavitation
 
 Description
-    Free-surface turbulence damping function
-
-    Adds an extra source term to the mixture or phase epsilon or omega
-    equation to reduce turbulence generated near a free-surface.  The
-    implementation is based on
-
-    Reference:
-    \verbatim
-        Frederix, E. M. A., Mathur, A., Dovizio, D., Geurts, B. J.,
-        & Komen, E. M. J. (2018).
-        Reynolds-averaged modeling of turbulence damping
-        near a large-scale interface in two-phase flow.
-        Nuclear engineering and design, 333, 122-130.
-    \endverbatim
-
-    but with an improved formulation for the coefficient \c A appropriate for
-    unstructured meshes including those with split-cell refinement patterns.
-    However the dimensioned length-scale coefficient \c delta remains and must
-    be set appropriately for the case by performing test runs and comparing with
-    known results.  Clearly this model is far from general and more research is
-    needed in order that \c delta can be obtained directly from the interface
-    flow and turbulence conditions.
+    Cavitation fvModel
 
 Usage
     Example usage:
     \verbatim
-    VoFTurbulenceDamping
+    VoFCavitation
     {
-        type    VoFTurbulenceDamping;
+        type    VoFCavitation;
 
-        libs    ("libVoFTurbulenceDamping.so");
+        libs    ("libVoFCavitation.so");
 
-        // Interface turbulence damping length scale
-        // This is a required input as described in section 3.3 of the paper
-        delta   1e-4;
+        model   SchnerrSauer;
 
-        // phase   water; // Optional phase name
+        KunzCoeffs
+        {
+            pSat    2300;   // Saturation pressure
+
+            UInf    20.0;
+            tInf    0.005; // L = 0.1 m
+            Cc      1000;
+            Cv      1000;
+        }
+
+        MerkleCoeffs
+        {
+            pSat    2300;   // Saturation pressure
+
+            UInf    20.0;
+            tInf    0.005;  // L = 0.1 m
+            Cc      80;
+            Cv      1e-03;
+        }
+
+        SchnerrSauerCoeffs
+        {
+            pSat    2300;   // Saturation pressure
+
+            n       1.6e+13;
+            dNuc    2.0e-06;
+            Cc      1;
+            Cv      1;
+        }
     }
     \endverbatim
 
 SourceFiles
-    VoFTurbulenceDamping.C
+    VoFCavitation.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef VoFTurbulenceDamping_H
-#define VoFTurbulenceDamping_H
+#ifndef VoFCavitation_H
+#define VoFCavitation_H
 
 #include "fvModel.H"
-#include "volFields.H"
+#include "cavitationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -89,51 +94,34 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class VoFTurbulenceDamping Declaration
+                      Class VoFCavitation Declaration
 \*---------------------------------------------------------------------------*/
 
-class VoFTurbulenceDamping
+class VoFCavitation
 :
     public fvModel
 {
     // Private Data
 
-        //- The name of the VoF phase
-        word phaseName_;
-
-        //- Field name
-        word fieldName_;
-
-        //- Interface turbulence damping length scale
-        //  This is a required input as described in section 3.3 of the paper
-        dimensionedScalar delta_;
-
         //- Reference to the mixture properties
         const immiscibleIncompressibleTwoPhaseMixture& mixture_;
 
-        //- Reference to the interface properties
-        const interfaceProperties& interface_;
+        autoPtr<cavitationModel> cavitation_;
 
-        //- Reference to the mixture turbulence model
-        const incompressibleMomentumTransportModel& turbulence_;
-
-        // Turbulence model coefficients
-
-            dimensionedScalar C2_;
-            dimensionedScalar betaStar_;
-            dimensionedScalar beta_;
+        //- The name of the VoF phase-fraction
+        word alphaName_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("VoFTurbulenceDamping");
+    TypeName("VoFCavitation");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        VoFTurbulenceDamping
+        VoFCavitation
         (
             const word& sourceName,
             const word& modelType,
@@ -142,9 +130,9 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        VoFTurbulenceDamping
+        VoFCavitation
         (
-            const VoFTurbulenceDamping&
+            const VoFCavitation&
         ) = delete;
 
 
@@ -154,19 +142,26 @@ public:
         //  to the transport equation
         virtual wordList addSupFields() const;
 
-        //- Add explicit contribution to epsilon or omega equation
+        //- Add implicit/explicit contributions to VoF phase-fraction equation
         virtual void addSup
         (
             fvMatrix<scalar>& eqn,
             const word& fieldName
         ) const;
 
-        //- Add explicit contribution to phase epsilon or omega equation
+        //- Add implicit/explicit contributions to p_rgh equation
         virtual void addSup
         (
-            const volScalarField& alpha,
-            const volScalarField& rho,
+            const volScalarField& psi,
             fvMatrix<scalar>& eqn,
+            const word& fieldName
+        ) const;
+
+        //- Add contribution to U equation
+        virtual void addSup
+        (
+            const volScalarField& rho,
+            fvMatrix<vector>& eqn,
             const word& fieldName
         ) const;
 
@@ -186,10 +181,14 @@ public:
             virtual bool movePoints();
 
 
+        //- Correct the cavitation model
+        virtual void correct();
+
+
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const VoFTurbulenceDamping&) = delete;
+        void operator=(const VoFCavitation&) = delete;
 };
 
 

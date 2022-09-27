@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,83 +23,38 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "twoPhaseChangeModel.H"
+#include "cavitationModel.H"
+#include "fvmSup.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(twoPhaseChangeModel, 0);
-    defineRunTimeSelectionTable(twoPhaseChangeModel, dictionary);
-}
-
-const Foam::word Foam::twoPhaseChangeModel::phaseChangePropertiesName
-(
-    "phaseChangeProperties"
-);
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::IOobject Foam::twoPhaseChangeModel::createIOobject
-(
-    const immiscibleIncompressibleTwoPhaseMixture& mixture
-) const
-{
-    typeIOobject<IOdictionary> io
-    (
-        phaseChangePropertiesName,
-        mixture.U().mesh().time().constant(),
-        mixture.U().mesh(),
-        IOobject::MUST_READ,
-        IOobject::NO_WRITE
-    );
-
-    if (io.headerOk())
-    {
-        io.readOpt() = IOobject::MUST_READ_IF_MODIFIED;
-        return io;
-    }
-    else
-    {
-        io.readOpt() = IOobject::NO_READ;
-        return io;
-    }
+    defineTypeNameAndDebug(cavitationModel, 0);
+    defineRunTimeSelectionTable(cavitationModel, dictionary);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseChangeModel::twoPhaseChangeModel
+Foam::cavitationModel::cavitationModel
 (
-    const word& type,
+    const dictionary& dict,
     const immiscibleIncompressibleTwoPhaseMixture& mixture
 )
 :
-    IOdictionary(createIOobject(mixture)),
     mixture_(mixture),
-    twoPhaseChangeModelCoeffs_(optionalSubDict(type + "Coeffs"))
+    pSat_("pSat", dimPressure, dict.lookup("pSat"))
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::twoPhaseChangeModel::correct()
-{}
-
-
-bool Foam::twoPhaseChangeModel::read()
+bool Foam::cavitationModel::read(const dictionary& dict)
 {
-    if (regIOobject::read())
-    {
-        twoPhaseChangeModelCoeffs_ = optionalSubDict(type() + "Coeffs");
+    dict.lookup("pSat") >> pSat_;
 
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return true;
 }
 
 

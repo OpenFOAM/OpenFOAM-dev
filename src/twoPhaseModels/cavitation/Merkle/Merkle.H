@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,26 +22,26 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::twoPhaseChangeModels::SchnerrSauer
+    Foam::cavitationModels::Merkle
 
 Description
-    SchnerrSauer cavitation model.
+    Merkle cavitation model.
 
     Reference:
     \verbatim
-        Schnerr, G. H., And Sauer, J.,
-        "Physical and Numerical Modeling of Unsteady Cavitation Dynamics",
-        Proc. 4th International Conference on Multiphase Flow,
-        New Orleans, U.S.A., 2001.
-    \endverbatim
+        C. L. Merkle, J. Feng, and P. E. O. Buelow,
+        "Computational modeling of the dynamics of sheet cavitation",
+        in Proceedings Third International Symposium on Cavitation
+        Grenoble, France 1998.
+   \endverbatim
 
 SourceFiles
-    SchnerrSauer.C
+    Merkle.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef SchnerrSauer_H
-#define SchnerrSauer_H
+#ifndef Merkle_H
+#define Merkle_H
 
 #include "cavitationModel.H"
 
@@ -49,60 +49,48 @@ SourceFiles
 
 namespace Foam
 {
-namespace twoPhaseChangeModels
+namespace cavitationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                              Class SchnerrSauer
+                                 Class Merkle
 \*---------------------------------------------------------------------------*/
 
-class SchnerrSauer
+class Merkle
 :
     public cavitationModel
 {
     // Private Data
 
-        //- Bubble number density
-        dimensionedScalar n_;
-
-        //- Nucleation site diameter
-        dimensionedScalar dNuc_;
-
-        //- Condensation rate coefficient
+        dimensionedScalar UInf_;
+        dimensionedScalar tInf_;
         dimensionedScalar Cc_;
-
-        //- Vapourisation rate coefficient
         dimensionedScalar Cv_;
 
         dimensionedScalar p0_;
 
-        //- Nucleation site volume-fraction
-        dimensionedScalar alphaNuc() const;
-
-        //- Reciprocal bubble radius
-        tmp<volScalarField>rRb(const volScalarField& limitedAlpha1) const;
-
-        //- Part of the condensation and vapourisation rates
-        tmp<volScalarField> pCoeff(const volScalarField& p) const;
+        dimensionedScalar mcCoeff_;
+        dimensionedScalar mvCoeff_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("SchnerrSauer");
+    TypeName("Merkle");
 
 
     // Constructors
 
         //- Construct for mixture
-        SchnerrSauer
+        Merkle
         (
+            const dictionary& dict,
             const immiscibleIncompressibleTwoPhaseMixture& mixture
         );
 
 
     //- Destructor
-    virtual ~SchnerrSauer()
+    virtual ~Merkle()
     {}
 
 
@@ -111,23 +99,23 @@ public:
         //- Return the mass condensation and vaporisation rates as a
         //  coefficient to multiply (1 - alphal) for the condensation rate
         //  and a coefficient to multiply  alphal for the vaporisation rate
-        virtual Pair<tmp<volScalarField>> mDotAlphal() const;
+        virtual Pair<tmp<volScalarField::Internal>> mDotAlphal() const;
 
         //- Return the mass condensation and vaporisation rates as coefficients
         //  to multiply (p - pSat)
-        virtual Pair<tmp<volScalarField>> mDotP() const;
+        virtual Pair<tmp<volScalarField::Internal>> mDotP() const;
 
-        //- Correct the SchnerrSauer phaseChange model
+        //- Correct the Merkle phaseChange model
         virtual void correct();
 
         //- Read the phaseProperties dictionary and update
-        virtual bool read();
+        virtual bool read(const dictionary& dict);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace twoPhaseChangeModels
+} // End namespace cavitationModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -103,7 +103,7 @@ Foam::autoPtr<Foam::relativeVelocityModel> Foam::relativeVelocityModel::New
     const uniformDimensionedVectorField& g
 )
 {
-    word modelType(dict.lookup(typeName));
+    const word modelType(dict.lookup(typeName));
 
     Info<< "Selecting relative velocity model " << modelType << endl;
 

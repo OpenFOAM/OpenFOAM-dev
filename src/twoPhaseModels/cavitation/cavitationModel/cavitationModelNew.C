@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,45 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "noPhaseChange.H"
+#include "cavitationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::twoPhaseChangeModel> Foam::twoPhaseChangeModel::New
+Foam::autoPtr<Foam::cavitationModel> Foam::cavitationModel::New
 (
+    const dictionary& dict,
     const immiscibleIncompressibleTwoPhaseMixture& mixture
 )
 {
-    typeIOobject<IOdictionary> twoPhaseChangeModelIO
-    (
-        IOobject
-        (
-            phaseChangePropertiesName,
-            mixture.U().time().constant(),
-            mixture.U().db(),
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE,
-            false
-        )
-    );
+    const word modelType(dict.lookup("model"));
 
-    word modelType(twoPhaseChangeModels::noPhaseChange::typeName);
-
-    if (twoPhaseChangeModelIO.headerOk())
-    {
-        IOdictionary(twoPhaseChangeModelIO).lookup
-        (
-            twoPhaseChangeModel::typeName
-        ) >> modelType;
-    }
-    else
-    {
-        Info<< "No phase change: "
-            << twoPhaseChangeModelIO.name()
-            << " not found" << endl;
-    }
-
-    Info<< "Selecting phaseChange model " << modelType << endl;
+    Info<< "Selecting cavitation model " << modelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -69,14 +43,17 @@ Foam::autoPtr<Foam::twoPhaseChangeModel> Foam::twoPhaseChangeModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown " << twoPhaseChangeModel::typeName<< " type "
+            << "Unknown cavitation model "
             << modelType << nl << nl
-            << "Valid  twoPhaseChangeModels are : " << endl
+            << "Valid  cavitationModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 
-    return autoPtr<twoPhaseChangeModel>(cstrIter()(mixture));
+    return autoPtr<cavitationModel>
+    (
+        cstrIter()(dict.optionalSubDict(modelType + "Coeffs"), mixture)
+    );
 }
 
 

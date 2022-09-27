@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-namespace twoPhaseChangeModels
+namespace cavitationModels
 {
     defineTypeNameAndDebug(SchnerrSauer, 0);
     addToRunTimeSelectionTable
@@ -46,17 +46,18 @@ namespace twoPhaseChangeModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::twoPhaseChangeModels::SchnerrSauer::SchnerrSauer
+Foam::cavitationModels::SchnerrSauer::SchnerrSauer
 (
+    const dictionary& dict,
     const immiscibleIncompressibleTwoPhaseMixture& mixture
 )
 :
-    cavitationModel(typeName, mixture),
+    cavitationModel(dict, mixture),
 
-    n_("n", dimless/dimVolume, twoPhaseChangeModelCoeffs_),
-    dNuc_("dNuc", dimLength, twoPhaseChangeModelCoeffs_),
-    Cc_("Cc", dimless, twoPhaseChangeModelCoeffs_),
-    Cv_("Cv", dimless, twoPhaseChangeModelCoeffs_),
+    n_("n", dimless/dimVolume, dict),
+    dNuc_("dNuc", dimLength, dict),
+    Cc_("Cc", dimless, dict),
+    Cv_("Cv", dimless, dict),
 
     p0_("0", pSat().dimensions(), 0.0)
 {
@@ -66,10 +67,10 @@ Foam::twoPhaseChangeModels::SchnerrSauer::SchnerrSauer
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::twoPhaseChangeModels::SchnerrSauer::rRb
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::cavitationModels::SchnerrSauer::rRb
 (
-    const volScalarField& limitedAlpha1
+    const volScalarField::Internal& limitedAlpha1
 ) const
 {
     return pow
@@ -82,25 +83,25 @@ Foam::twoPhaseChangeModels::SchnerrSauer::rRb
 
 
 Foam::dimensionedScalar
-Foam::twoPhaseChangeModels::SchnerrSauer::alphaNuc() const
+Foam::cavitationModels::SchnerrSauer::alphaNuc() const
 {
     dimensionedScalar Vnuc = n_*constant::mathematical::pi*pow3(dNuc_)/6;
     return Vnuc/(1 + Vnuc);
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::twoPhaseChangeModels::SchnerrSauer::pCoeff
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::cavitationModels::SchnerrSauer::pCoeff
 (
-    const volScalarField& p
+    const volScalarField::Internal& p
 ) const
 {
-    const volScalarField limitedAlpha1
+    const volScalarField::Internal limitedAlpha1
     (
-        min(max(mixture_.alpha1(), scalar(0)), scalar(1))
+        min(max(mixture_.alpha1()(), scalar(0)), scalar(1))
     );
 
-    const volScalarField rho
+    const volScalarField::Internal rho
     (
         limitedAlpha1*mixture_.rho1()
       + (scalar(1) - limitedAlpha1)*mixture_.rho2()
@@ -112,20 +113,20 @@ Foam::twoPhaseChangeModels::SchnerrSauer::pCoeff
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField>>
-Foam::twoPhaseChangeModels::SchnerrSauer::mDotAlphal() const
+Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::cavitationModels::SchnerrSauer::mDotAlphal() const
 {
-    const volScalarField& p =
+    const volScalarField::Internal& p =
         mixture_.U().db().lookupObject<volScalarField>("p");
 
-    const volScalarField pCoeff(this->pCoeff(p));
+    const volScalarField::Internal pCoeff(this->pCoeff(p));
 
-    const volScalarField limitedAlpha1
+    const volScalarField::Internal limitedAlpha1
     (
-        min(max(mixture_.alpha1(), scalar(0)), scalar(1))
+        min(max(mixture_.alpha1()(), scalar(0)), scalar(1))
     );
 
-    return Pair<tmp<volScalarField>>
+    return Pair<tmp<volScalarField::Internal>>
     (
         Cc_*limitedAlpha1*pCoeff*max(p - pSat(), p0_),
 
@@ -134,22 +135,22 @@ Foam::twoPhaseChangeModels::SchnerrSauer::mDotAlphal() const
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField>>
-Foam::twoPhaseChangeModels::SchnerrSauer::mDotP() const
+Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::cavitationModels::SchnerrSauer::mDotP() const
 {
-    const volScalarField& p =
+    const volScalarField::Internal& p =
         mixture_.U().db().lookupObject<volScalarField>("p");
 
-    const volScalarField pCoeff(this->pCoeff(p));
+    const volScalarField::Internal pCoeff(this->pCoeff(p));
 
-    const volScalarField limitedAlpha1
+    const volScalarField::Internal limitedAlpha1
     (
-        min(max(mixture_.alpha1(), scalar(0)), scalar(1))
+        min(max(mixture_.alpha1()(), scalar(0)), scalar(1))
     );
 
-    const volScalarField apCoeff(limitedAlpha1*pCoeff);
+    const volScalarField::Internal apCoeff(limitedAlpha1*pCoeff);
 
-    return Pair<tmp<volScalarField>>
+    return Pair<tmp<volScalarField::Internal>>
     (
         Cc_*(1.0 - limitedAlpha1)*pos0(p - pSat())*apCoeff,
 
@@ -158,22 +159,18 @@ Foam::twoPhaseChangeModels::SchnerrSauer::mDotP() const
 }
 
 
-void Foam::twoPhaseChangeModels::SchnerrSauer::correct()
-{
-    cavitationModel::correct();
-}
+void Foam::cavitationModels::SchnerrSauer::correct()
+{}
 
 
-bool Foam::twoPhaseChangeModels::SchnerrSauer::read()
+bool Foam::cavitationModels::SchnerrSauer::read(const dictionary& dict)
 {
-    if (cavitationModel::read())
+    if (cavitationModel::read(dict))
     {
-        twoPhaseChangeModelCoeffs_ = optionalSubDict(type() + "Coeffs");
-
-        twoPhaseChangeModelCoeffs_.lookup("n") >> n_;
-        twoPhaseChangeModelCoeffs_.lookup("dNuc") >> dNuc_;
-        twoPhaseChangeModelCoeffs_.lookup("Cc") >> Cc_;
-        twoPhaseChangeModelCoeffs_.lookup("Cv") >> Cv_;
+        dict.lookup("n") >> n_;
+        dict.lookup("dNuc") >> dNuc_;
+        dict.lookup("Cc") >> Cc_;
+        dict.lookup("Cv") >> Cv_;
 
         return true;
     }

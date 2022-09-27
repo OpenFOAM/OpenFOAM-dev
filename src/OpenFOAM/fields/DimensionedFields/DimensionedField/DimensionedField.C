@@ -269,6 +269,40 @@ DimensionedField<Type, GeoMesh>::New
 (
     const word& name,
     const Mesh& mesh,
+    const dimensionSet& ds,
+    const Field<Type>& field
+)
+{
+    const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
+
+    return tmp<DimensionedField<Type, GeoMesh>>
+    (
+        new DimensionedField<Type, GeoMesh>
+        (
+            IOobject
+            (
+                name,
+                mesh.thisDb().time().timeName(),
+                mesh.thisDb(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                cacheTmp
+            ),
+            mesh,
+            ds,
+            field
+        ),
+        cacheTmp
+    );
+}
+
+
+template<class Type, class GeoMesh>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
+DimensionedField<Type, GeoMesh>::New
+(
+    const word& name,
+    const Mesh& mesh,
     const dimensionSet& ds
 )
 {

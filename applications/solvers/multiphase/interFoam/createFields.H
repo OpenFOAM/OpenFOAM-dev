@@ -34,11 +34,6 @@ volVectorField U
 Info<< "Reading phaseProperties\n" << endl;
 immiscibleIncompressibleTwoPhaseMixture mixture(U, phi);
 
-autoPtr<twoPhaseChangeModel> phaseChangePtr
-(
-    twoPhaseChangeModel::New(mixture)
-);
-
 
 // Need to store rho for ddt(rho, U)
 volScalarField rho

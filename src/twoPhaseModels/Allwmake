@@ -9,6 +9,6 @@ wmake $targetType interfaceProperties
 wmake $targetType twoPhaseProperties
 wmake $targetType incompressibleTwoPhaseMixture
 wmake $targetType immiscibleIncompressibleTwoPhaseMixture
-wmake $targetType twoPhaseChange
+wmake $targetType cavitation
 
 #------------------------------------------------------------------------------

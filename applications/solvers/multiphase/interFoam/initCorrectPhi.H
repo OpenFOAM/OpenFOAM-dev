@@ -1,7 +1,7 @@
 if
 (
     !runTime.restart()
- || isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
+ || !fvModels.addsSupToField(alpha1.name())
 )
 {
     if (correctPhi)

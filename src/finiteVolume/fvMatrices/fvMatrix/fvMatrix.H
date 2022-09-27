@@ -288,6 +288,14 @@ public:
 
         // Access
 
+            GeometricField<Type, fvPatchField, volMesh>& psi()
+            {
+                return const_cast<GeometricField<Type, fvPatchField, volMesh>&>
+                (
+                    psi_
+                );
+            }
+
             const GeometricField<Type, fvPatchField, volMesh>& psi() const
             {
                 return psi_;
@@ -434,6 +442,12 @@ public:
 
             //- Return the central coefficient
             tmp<volScalarField> A() const;
+
+            //- Return the explicit source
+            tmp<volScalarField::Internal> Su() const;
+
+            //- Return the implicit source
+            tmp<volScalarField::Internal> Sp() const;
 
             //- Return the H operation source
             tmp<GeometricField<Type, fvPatchField, volMesh>> H() const;

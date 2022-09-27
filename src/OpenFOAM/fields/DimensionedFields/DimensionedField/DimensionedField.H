@@ -229,6 +229,17 @@ public:
         //- Clone
         tmp<DimensionedField<Type, GeoMesh>> clone() const;
 
+        //- Return a temporary field constructed from name, mesh,
+        //  dimensionSet and field
+        static tmp<DimensionedField<Type, GeoMesh>> New
+        (
+            const word& name,
+            const Mesh& mesh,
+            const dimensionSet&,
+            const Field<Type>&
+
+        );
+
         //- Return a temporary field constructed from name, mesh
         //  and dimensionSet
         static tmp<DimensionedField<Type, GeoMesh>> New

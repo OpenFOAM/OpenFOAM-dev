@@ -68,7 +68,7 @@ Foam::fv::VoFTurbulenceDamping::VoFTurbulenceDamping
             "phaseProperties"
         )
     ),
-    interface_(refCast<const interfaceProperties>(mixture_)),
+    interface_(mixture_),
     turbulence_
     (
         mesh.lookupObject<compressibleMomentumTransportModel>

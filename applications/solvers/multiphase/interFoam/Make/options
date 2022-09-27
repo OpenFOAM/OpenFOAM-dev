@@ -5,7 +5,6 @@ EXE_INC = \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/incompressibleTwoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/immiscibleIncompressibleTwoPhaseMixture/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/twoPhaseChange/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseIncompressible/lnInclude \
@@ -16,7 +15,6 @@ EXE_INC = \
 
 EXE_LIBS = \
     -limmiscibleIncompressibleTwoPhaseMixture \
-    -ltwoPhaseChangeModels \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lincompressibleInterPhaseTransportModel \
