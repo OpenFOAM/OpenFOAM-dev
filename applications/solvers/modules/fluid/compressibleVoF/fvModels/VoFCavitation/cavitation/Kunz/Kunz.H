@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::cavitationModels::Kunz
+    Foam::compressible::cavitationModels::Kunz
 
 Description
     Kunz cavitation model slightly modified so that the condensation term
@@ -55,6 +55,8 @@ SourceFiles
 
 namespace Foam
 {
+namespace compressible
+{
 namespace cavitationModels
 {
 
@@ -75,9 +77,6 @@ class Kunz
 
         dimensionedScalar p0_;
 
-        dimensionedScalar mcCoeff_;
-        dimensionedScalar mvCoeff_;
-
 
 public:
 
@@ -91,7 +90,7 @@ public:
         Kunz
         (
             const dictionary& dict,
-            const immiscibleIncompressibleTwoPhaseMixture& mixture
+            const compressibleTwoPhaseMixture& mixture
         );
 
 
@@ -122,6 +121,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace cavitationModels
+} // End namespace compressible
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

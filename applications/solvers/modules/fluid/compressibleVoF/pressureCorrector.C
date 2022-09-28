@@ -83,7 +83,19 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
         constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
         // Cache the phase change pressure source
-        fvScalarMatrix Sp_rgh(phaseChange.Sp_rgh(rho, buoyancy.gh, p_rgh));
+        fvScalarMatrix Sp_rgh
+        (
+            fvModels().source
+            (
+                volScalarField::New
+                (
+                    "1",
+                    mesh,
+                    dimensionedScalar(dimless/dimPressure, 1)
+                ),
+                p_rgh
+            )
+        );
 
         // Make the fluxes relative to the mesh motion
         fvc::makeRelative(phiHbyA, U);

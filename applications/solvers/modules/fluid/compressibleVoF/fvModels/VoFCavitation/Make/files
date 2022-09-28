@@ -1,0 +1,9 @@
+cavitation/cavitationModel/cavitationModel.C
+cavitation/cavitationModel/cavitationModelNew.C
+cavitation/Kunz/Kunz.C
+cavitation/Merkle/Merkle.C
+cavitation/SchnerrSauer/SchnerrSauer.C
+
+VoFCavitation.C
+
+LIB = $(FOAM_LIBBIN)/libcompressibleVoFCavitation

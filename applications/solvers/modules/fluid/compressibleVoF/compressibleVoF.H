@@ -59,7 +59,6 @@ See also
 
 #include "fluidSolver.H"
 #include "compressibleInterPhaseTransportModel.H"
-#include "twoPhaseChangeModel.H"
 #include "buoyancy.H"
 #include "pressureReference.H"
 
@@ -146,10 +145,6 @@ protected:
 
         //- Momentum transport model
         compressibleInterPhaseTransportModel turbulence;
-
-        autoPtr<compressible::twoPhaseChangeModel> phaseChangePtr;
-
-        compressible::twoPhaseChangeModel& phaseChange;
 
 
     // Optional models

@@ -22,32 +22,26 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::cavitationModels::Kunz
+    Foam::compressible::cavitationModels::Merkle
 
 Description
-    Kunz cavitation model slightly modified so that the condensation term
-    is switched off when the pressure is less than the saturation vapour
-    pressure.  This change allows the condensation term to be formulated as
-    a coefficient multiplying (p - p_sat) so that it can be included as an
-    implicit term in the pressure equation.
+    Merkle cavitation model.
 
     Reference:
     \verbatim
-        Kunz, R.F., Boger, D.A., Stinebring, D.R., Chyczewski, Lindau. J.W.,
-        Gibeling, H.J., Venkateswaran, S., Govindan, T.R.,
-        "A Preconditioned Implicit Method for Two-Phase Flows with Application
-         to Cavitation Prediction,"
-        Computers and Fluids,
-        29(8):849-875, 2000.
-    \endverbatim
+        C. L. Merkle, J. Feng, and P. E. O. Buelow,
+        "Computational modeling of the dynamics of sheet cavitation",
+        in Proceedings Third International Symposium on Cavitation
+        Grenoble, France 1998.
+   \endverbatim
 
 SourceFiles
-    Kunz.C
+    Merkle.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Kunz_H
-#define Kunz_H
+#ifndef Merkle_H
+#define Merkle_H
 
 #include "cavitationModel.H"
 
@@ -55,14 +49,16 @@ SourceFiles
 
 namespace Foam
 {
+namespace compressible
+{
 namespace cavitationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                                 Class Kunz
+                                 Class Merkle
 \*---------------------------------------------------------------------------*/
 
-class Kunz
+class Merkle
 :
     public cavitationModel
 {
@@ -76,27 +72,26 @@ class Kunz
         dimensionedScalar p0_;
 
         dimensionedScalar mcCoeff_;
-        dimensionedScalar mvCoeff_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("Kunz");
+    TypeName("Merkle");
 
 
     // Constructors
 
         //- Construct for mixture
-        Kunz
+        Merkle
         (
             const dictionary& dict,
-            const immiscibleIncompressibleTwoPhaseMixture& mixture
+            const compressibleTwoPhaseMixture& mixture
         );
 
 
     //- Destructor
-    virtual ~Kunz()
+    virtual ~Merkle()
     {}
 
 
@@ -111,7 +106,7 @@ public:
         //  to multiply (p - pSat)
         virtual Pair<tmp<volScalarField::Internal>> mDotP() const;
 
-        //- Correct the Kunz phaseChange model
+        //- Correct the Merkle phaseChange model
         virtual void correct();
 
         //- Read the dictionary and update
@@ -122,6 +117,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace cavitationModels
+} // End namespace compressible
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

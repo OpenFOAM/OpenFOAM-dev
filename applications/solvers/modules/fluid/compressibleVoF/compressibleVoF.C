@@ -188,13 +188,6 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         mixture
     ),
 
-    phaseChangePtr
-    (
-        compressible::twoPhaseChangeModel::New(mixture)
-    ),
-
-    phaseChange(*phaseChangePtr),
-
     MRF(mesh)
 {
     // Read the controls

@@ -1,0 +1,19 @@
+EXE_INC = \
+    -I../../compressibleTwoPhaseMixture \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lcompressibleTwoPhaseMixture \
+    -lfluidThermophysicalModels \
+    -lspecie \
+    -lphysicalProperties \
+    -ltwoPhaseMixture \
+    -ltwoPhaseProperties \
+    -linterfaceProperties \
+    -lfiniteVolume \
+    -lmeshTools

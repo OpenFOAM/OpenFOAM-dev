@@ -127,7 +127,7 @@ public:
         //- Correct the SchnerrSauer phaseChange model
         virtual void correct();
 
-        //- Read the phaseProperties dictionary and update
+        //- Read the dictionary and update
         virtual bool read(const dictionary& dict);
 };
 

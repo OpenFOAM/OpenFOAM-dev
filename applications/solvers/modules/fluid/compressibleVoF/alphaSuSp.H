@@ -18,16 +18,13 @@ tmp<volScalarField::Internal> Su
     )
 );
 
-// Phase change alpha1 source
-Pair<tmp<volScalarField::Internal>> phaseChangeS
-(
-    phaseChange.Salpha(alpha1)
-);
-
-if (phaseChangeS[0].valid())
+if (fvModels().addsSupToField(alpha1.name()))
 {
-    Su = phaseChangeS[0];
-    Sp = phaseChangeS[1];
+    // Phase change alpha1 source
+    const fvScalarMatrix alphaSup(fvModels().source(alpha1));
+
+    Su = alphaSup.Su();
+    Sp = alphaSup.Sp();
 }
 
 volScalarField::Internal& SpRef = Sp.ref();

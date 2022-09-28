@@ -125,7 +125,7 @@ public:
         //- Correct the cavitation model
         virtual void correct() = 0;
 
-        //- Read the phaseProperties dictionary and update
+        //- Read the dictionary and update
         virtual bool read(const dictionary& dict) = 0;
 };
 
