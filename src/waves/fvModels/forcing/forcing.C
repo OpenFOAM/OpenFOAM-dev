@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "damping.H"
+#include "forcing.H"
 #include "fvMatrix.H"
 #include "zeroGradientFvPatchField.H"
 
@@ -33,17 +33,15 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(damping, 0);
+    defineTypeNameAndDebug(forcing, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::fv::damping::readCoeffs()
+void Foam::fv::forcing::readCoeffs()
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
-
     lambda_ =
         dimensionedScalar
         (
@@ -112,13 +110,13 @@ void Foam::fv::damping::readCoeffs()
             << "The scaling specification is incomplete. \"scale\", "
             << "\"origin\" and \"direction\" (or \"origins\" and "
             << "\"directions\"), must all be specified in order to scale "
-            << "the damping. The damping will be applied uniformly across "
+            << "the forcing. The forcing will be applied uniformly across "
             << "the cell set." << endl << endl;
     }
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::damping::forceCoeff() const
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff() const
 {
     tmp<volScalarField::Internal> tforceCoeff
     (
@@ -171,7 +169,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::damping::forceCoeff() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::damping::damping
+Foam::fv::forcing::forcing
 (
     const word& name,
     const word& modelType,
@@ -180,7 +178,6 @@ Foam::fv::damping::damping
 )
 :
     fvModel(name, modelType, dict, mesh),
-    UName_(word::null),
     lambda_("lambda", dimless/dimTime, NaN),
     scale_(nullptr),
     origins_(),
@@ -192,13 +189,7 @@ Foam::fv::damping::damping
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::damping::addSupFields() const
-{
-    return wordList(1, UName_);
-}
-
-
-bool Foam::fv::damping::read(const dictionary& dict)
+bool Foam::fv::forcing::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {

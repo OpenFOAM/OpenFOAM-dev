@@ -1,0 +1,60 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+forcing
+{
+    type            waveForcing;
+
+    libs            ("libwaves.so");
+
+    liquidPhase     water;
+
+    origin          (600 0 0);
+    direction       (-1 0 0);
+
+    scale
+    {
+        type        halfCosineRamp;
+        start       0;
+        duration    300;
+    }
+
+    lambda          0.5;
+}
+
+damping
+{
+    type            isotropicDamping;
+
+    libs            ("libwaves.so");
+
+    origin          (1200 0 0);
+    direction       (1 0 0);
+
+    scale
+    {
+        type        halfCosineRamp;
+        start       0;
+        duration    600;
+    }
+
+    lambda          0.5;
+
+    value           (2 0 0);
+}
+
+
+//************************************************************************* //

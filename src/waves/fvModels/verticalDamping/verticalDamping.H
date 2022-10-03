@@ -25,7 +25,7 @@ Class
     Foam::fv::verticalDamping
 
 Description
-    This fvModel applies an explicit damping force to components of the vector
+    This fvModel applies an explicit forcing force to components of the vector
     field in the direction of gravity. Its intended purpose is to damp the
     vertical motions of an interface in the region approaching an outlet so that
     no reflections are generated.
@@ -44,8 +44,8 @@ Description
         \f]
 
     The coefficient \f$\lambda\f$ should be set based on the desired level of
-    damping and the residence time of a perturbation through the damping zone.
-    For example, if waves moving at 2 [m/s] are travelling through a damping
+    forcing and the residence time of a perturbation through the forcing zone.
+    For example, if waves moving at 2 [m/s] are travelling through a forcing
     zone 8 [m] in length, then the residence time is 4 [s]. If it is deemed
     necessary to damp for 5 time-scales, then \f$\lambda\f$ should be set to
     equal 5/(4 [s]) = 1.2 [1/s].
@@ -56,6 +56,8 @@ Usage
     verticalDamping1
     {
         type            verticalDamping;
+
+        libs            ("libwaves.so");
 
         // Define the line along which to apply the graduation
         origin          (1200 0 0);
@@ -80,7 +82,7 @@ Usage
     \endverbatim
 
 See also
-    Foam::fv::damping
+    Foam::fv::forcing
     Foam::fv::isotropicDamping
 
 SourceFiles
@@ -91,7 +93,7 @@ SourceFiles
 #ifndef verticalDamping_H
 #define verticalDamping_H
 
-#include "damping.H"
+#include "forcing.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -106,8 +108,14 @@ namespace fv
 
 class verticalDamping
 :
-    public damping
+    public forcing
 {
+    // Private Data
+
+        //- Name of the velocity field
+        word UName_;
+
+
     // Private Member Functions
 
         //- Source term to momentum equation
@@ -143,7 +151,14 @@ public:
 
     // Member Functions
 
-         // Add explicit and implicit contributions
+        // Checks
+
+            //- Return the list of fields for which the fvModel adds source term
+            //  to the transport equation
+            virtual wordList addSupFields() const;
+
+
+        // Add explicit and implicit contributions
 
             //- Source term to momentum equation
             virtual void addSup

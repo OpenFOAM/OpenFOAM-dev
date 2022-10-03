@@ -13,4 +13,9 @@ derivedFvPatchFields/waveAlpha/waveAlphaFvPatchScalarField.C
 derivedFvPatchFields/waveInletOutlet/waveInletOutletFvPatchFields.C
 derivedFvPatchFields/waveVelocity/waveVelocityFvPatchVectorField.C
 
+fvModels/forcing/forcing.C
+fvModels/isotropicDamping/isotropicDamping.C
+fvModels/verticalDamping/verticalDamping.C
+fvModels/waveForcing/waveForcing.C
+
 LIB = $(FOAM_LIBBIN)/libwaves

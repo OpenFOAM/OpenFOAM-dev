@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "verticalDamping.H"
+#include "isotropicDamping.H"
 #include "fvMatrix.H"
-#include "uniformDimensionedFields.H"
+#include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,32 +34,40 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(verticalDamping, 0);
-    addToRunTimeSelectionTable(fvModel, verticalDamping, dictionary);
+    defineTypeNameAndDebug(isotropicDamping, 0);
+    addToRunTimeSelectionTable(fvModel, isotropicDamping, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::verticalDamping::add
+void Foam::fv::isotropicDamping::readCoeffs()
+{
+    value_ =
+        dimensionedVector
+        (
+            value_.name(),
+            value_.dimensions(),
+            coeffs().lookup(value_.name())
+        );
+}
+
+
+void Foam::fv::isotropicDamping::add
 (
-    const volVectorField& alphaRhoU,
+    const volScalarField::Internal& forceCoeff,
     fvMatrix<vector>& eqn
 ) const
 {
-    const uniformDimensionedVectorField& g =
-        mesh().lookupObject<uniformDimensionedVectorField>("g");
-
-    const dimensionedSymmTensor gg(sqr(g)/magSqr(g));
-
-    eqn -= forceCoeff()*(gg & alphaRhoU());
+    eqn -= fvm::Sp(forceCoeff, eqn.psi());
+    eqn += forceCoeff*value_;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::verticalDamping::verticalDamping
+Foam::fv::isotropicDamping::isotropicDamping
 (
     const word& name,
     const word& modelType,
@@ -67,34 +75,44 @@ Foam::fv::verticalDamping::verticalDamping
     const fvMesh& mesh
 )
 :
-    damping(name, modelType, dict, mesh)
-{}
+    forcing(name, modelType, dict, mesh),
+    UName_(coeffs().lookupOrDefault<word>("U", "U")),
+    value_("value", dimVelocity, vector::uniform(NaN))
+{
+    readCoeffs();
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::verticalDamping::addSup
+Foam::wordList Foam::fv::isotropicDamping::addSupFields() const
+{
+    return wordList(1, UName_);
+}
+
+
+void Foam::fv::isotropicDamping::addSup
 (
     fvMatrix<vector>& eqn,
     const word& fieldName
 ) const
 {
-    add(eqn.psi(), eqn);
+    add(this->forceCoeff(), eqn);
 }
 
 
-void Foam::fv::verticalDamping::addSup
+void Foam::fv::isotropicDamping::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const word& fieldName
 ) const
 {
-    add(rho*eqn.psi(), eqn);
+    add(rho*forceCoeff(), eqn);
 }
 
 
-void Foam::fv::verticalDamping::addSup
+void Foam::fv::isotropicDamping::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -102,26 +120,40 @@ void Foam::fv::verticalDamping::addSup
     const word& fieldName
 ) const
 {
-    add(alpha*rho*eqn.psi(), eqn);
+    add(alpha()*rho()*this->forceCoeff(), eqn);
 }
 
 
-bool Foam::fv::verticalDamping::movePoints()
+bool Foam::fv::isotropicDamping::movePoints()
 {
     return true;
 }
 
 
-void Foam::fv::verticalDamping::topoChange(const polyTopoChangeMap&)
+void Foam::fv::isotropicDamping::topoChange(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::verticalDamping::mapMesh(const polyMeshMap& map)
+void Foam::fv::isotropicDamping::mapMesh(const polyMeshMap& map)
 {}
 
 
-void Foam::fv::verticalDamping::distribute(const polyDistributionMap&)
+void Foam::fv::isotropicDamping::distribute(const polyDistributionMap&)
 {}
+
+
+bool Foam::fv::isotropicDamping::read(const dictionary& dict)
+{
+    if (forcing::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 
 // ************************************************************************* //

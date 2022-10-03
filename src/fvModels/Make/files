@@ -19,9 +19,6 @@ derived/solidificationMeltingSource/solidificationMeltingSource.C
 derived/sixDoFAccelerationSource/sixDoFAccelerationSource.C
 derived/buoyancyForce/buoyancyForce.C
 derived/buoyancyEnergy/buoyancyEnergy.C
-derived/damping/damping/damping.C
-derived/damping/isotropicDamping/isotropicDamping.C
-derived/damping/verticalDamping/verticalDamping.C
 derived/phaseLimitStabilisation/phaseLimitStabilisation.C
 derived/accelerationSource/accelerationSource.C
 derived/volumeFractionSource/volumeFractionSource.C

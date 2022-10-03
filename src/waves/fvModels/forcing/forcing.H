@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::damping
+    Foam::fv::forcing
 
 Description
-    Base fvModel for damping functions.
+    Base fvModel for forcing functions.
 
 See also
     Foam::fv::isotropicDamping
     Foam::fv::verticalDamping
 
 SourceFiles
-    damping.C
+    forcing.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef damping_H
-#define damping_H
+#ifndef forcing_H
+#define forcing_H
 
 #include "fvModel.H"
 #include "Function1.H"
@@ -51,19 +51,16 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class damping Declaration
+                           Class forcing Declaration
 \*---------------------------------------------------------------------------*/
 
-class damping
+class forcing
 :
     public fvModel
 {
 protected:
 
     // Protected Data
-
-        //- Name of the velocity field
-        word UName_;
 
         //- Damping coefficient [1/s]
         dimensionedScalar lambda_;
@@ -90,13 +87,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("damping");
+    TypeName("forcing");
 
 
     // Constructors
 
         //- Construct from components
-        damping
+        forcing
         (
             const word& name,
             const word& modelType,
@@ -106,18 +103,11 @@ public:
 
 
     //- Destructor
-    virtual ~damping()
+    virtual ~forcing()
     {}
 
 
     // Member Functions
-
-        // Checks
-
-            //- Return the list of fields for which the fvModel adds source term
-            //  to the transport equation
-            virtual wordList addSupFields() const;
-
 
         // IO
 

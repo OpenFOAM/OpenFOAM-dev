@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,62 +22,63 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::isotropicDamping
+    Foam::fv::waveForcing
 
 Description
-    This fvModel applies an implicit damping force to all components of the
-    vector field to relax the field towards a specified uniform value.  Its
-    intended purpose is to damp the motions of an interface in the region
-    approaching an outlet so that no reflections are generated.
+    This fvModel applies forcing to the liquid phase-fraction field and all
+    components of the vector field to relax the fields towards those
+    calculated from the current wave distribution.
 
-    The damping force coefficient \f$\lambda\f$ should be set based on the
-    desired level of damping and the residence time of a perturbation through
-    the damping zone.  For example, if waves moving at 2 [m/s] are travelling
-    through a damping zone 8 [m] in length, then the residence time is 4 [s]. If
-    it is deemed necessary to damp for 5 time-scales, then \f$\lambda\f$ should
+    The forcing force coefficient \f$\lambda\f$ should be set based on the
+    desired level of forcing and the residence time the waves through the
+    forcing zone.  For example, if waves moving at 2 [m/s] are travelling
+    through a forcing zone 8 [m] in length, then the residence time is 4 [s]. If
+    it is deemed necessary to force for 5 time-scales, then \f$\lambda\f$ should
     be set to equal 5/(4 [s]) = 1.2 [1/s].
 
 Usage
     Example usage:
     \verbatim
-    isotropicDamping1
+    waveForcing1
     {
-        type            isotropicDamping;
+        type            waveForcing;
+
+        libs            ("libwaves.so");
+
+        liquidPhase     water;
 
         // Define the line along which to apply the graduation
-        origin          (1200 0 0);
-        direction       (1 0 0);
+        origin          (600 0 0);
+        direction       (-1 0 0);
 
         // // Or, define multiple lines
-        // origins         ((1200 0 0) (1200 -300 0) (1200 300 0));
-        // directions      ((1 0 0) (0 -1 0) (0 1 0));
+        // origins         ((600 0 0) (600 -300 0) (600 300 0));
+        // directions      ((-1 0 0) (0 1 0) (0 -1 0));
 
         scale
         {
             type        halfCosineRamp;
             start       0;
-            duration    600;
+            duration    300;
         }
 
-        value           (2 0 0);            // Value towards which the field is
-                                            // relaxed
-        lambda          [0 0 -1 0 0 0 0] 1; // Damping coefficient
+        lambda          0.5; // Forcing coefficient
     }
     \endverbatim
 
 See also
-    Foam::fv::damping
-    Foam::fv::verticalDamping
+    Foam::fv::forcing
 
 SourceFiles
-    isotropicDamping.C
+    waveForcing.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef isotropicDamping_H
-#define isotropicDamping_H
+#ifndef waveForcing_H
+#define waveForcing_H
 
-#include "damping.H"
+#include "forcing.H"
+#include "waveSuperposition.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,42 +88,47 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class isotropicDamping Declaration
+                      Class waveForcing Declaration
 \*---------------------------------------------------------------------------*/
 
-class isotropicDamping
+class waveForcing
 :
-    public damping
+    public forcing
 {
     // Private Data
 
-        //- Reference value
-        dimensionedVector value_;
+        //- Reference to the waves
+        const waveSuperposition& waves_;
 
+        //- Name of the liquid phase
+        const word liquidPhaseName_;
 
-    // Private Member Functions
+        //- Name of the liquid phase-fraction field
+        const word alphaName_;
 
-        //- Non-virtual read
-        void readCoeffs();
+        //- Name of the velocity field
+        const word UName_;
 
-        //- Source term to momentum equation
-        void add
-        (
-            const volScalarField::Internal& forceCoeff,
-            fvMatrix<vector>& eqn
-        ) const;
+        //- Phase-fraction field calculated from the current wave form
+        tmp<volScalarField::Internal> alphaWaves_;
+
+        //- Velocity field calculated from the current wave form
+        tmp<volVectorField::Internal> Uwaves_;
+
+        //- Forcing coefficient field
+        tmp<volScalarField::Internal> forceCoeff_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("isotropicDamping");
+    TypeName("waveForcing");
 
 
     // Constructors
 
         //- Construct from components
-        isotropicDamping
+        waveForcing
         (
             const word& name,
             const word& modelType,
@@ -132,33 +138,31 @@ public:
 
 
     //- Destructor
-    virtual ~isotropicDamping()
+    virtual ~waveForcing()
     {}
 
 
     // Member Functions
 
-         // Add explicit and implicit contributions
+        // Checks
+
+            //- Return the list of fields for which the fvModel adds source term
+            //  to the transport equation
+            virtual wordList addSupFields() const;
+
+
+        // Add explicit and implicit contributions
+
+            //- Source term to VoF phase-fraction equation
+            virtual void addSup
+            (
+                fvMatrix<scalar>& eqn,
+                const word& fieldName
+            ) const;
 
             //- Source term to momentum equation
             virtual void addSup
             (
-                fvMatrix<vector>& eqn,
-                const word& fieldName
-            ) const;
-
-            //- Source term to compressible momentum equation
-            virtual void addSup
-            (
-                const volScalarField& rho,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
-            ) const;
-
-            //- Source term to phase momentum equation
-            virtual void addSup
-            (
-                const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
                 const word& fieldName
@@ -180,10 +184,8 @@ public:
             virtual void distribute(const polyDistributionMap&);
 
 
-        // IO
-
-            //- Read dictionary
-            virtual bool read(const dictionary& dict);
+        //- Correct the wave forcing coefficients
+        virtual void correct();
 };
 
 

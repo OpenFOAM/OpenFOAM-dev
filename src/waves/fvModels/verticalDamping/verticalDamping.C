@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "isotropicDamping.H"
+#include "verticalDamping.H"
 #include "fvMatrix.H"
-#include "fvmSup.H"
+#include "uniformDimensionedFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,40 +34,32 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(isotropicDamping, 0);
-    addToRunTimeSelectionTable(fvModel, isotropicDamping, dictionary);
+    defineTypeNameAndDebug(verticalDamping, 0);
+    addToRunTimeSelectionTable(fvModel, verticalDamping, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::isotropicDamping::readCoeffs()
-{
-    value_ =
-        dimensionedVector
-        (
-            value_.name(),
-            value_.dimensions(),
-            coeffs().lookup(value_.name())
-        );
-}
-
-
-void Foam::fv::isotropicDamping::add
+void Foam::fv::verticalDamping::add
 (
-    const volScalarField::Internal& forceCoeff,
+    const volVectorField& alphaRhoU,
     fvMatrix<vector>& eqn
 ) const
 {
-    eqn -= fvm::Sp(forceCoeff, eqn.psi());
-    eqn += forceCoeff*value_;
+    const uniformDimensionedVectorField& g =
+        mesh().lookupObject<uniformDimensionedVectorField>("g");
+
+    const dimensionedSymmTensor gg(sqr(g)/magSqr(g));
+
+    eqn -= forceCoeff()*(gg & alphaRhoU());
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::isotropicDamping::isotropicDamping
+Foam::fv::verticalDamping::verticalDamping
 (
     const word& name,
     const word& modelType,
@@ -75,37 +67,41 @@ Foam::fv::isotropicDamping::isotropicDamping
     const fvMesh& mesh
 )
 :
-    damping(name, modelType, dict, mesh),
-    value_("value", dimVelocity, vector::uniform(NaN))
-{
-    readCoeffs();
-}
+    forcing(name, modelType, dict, mesh),
+    UName_(coeffs().lookupOrDefault<word>("U", "U"))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::isotropicDamping::addSup
+Foam::wordList Foam::fv::verticalDamping::addSupFields() const
+{
+    return wordList(1, UName_);
+}
+
+
+void Foam::fv::verticalDamping::addSup
 (
     fvMatrix<vector>& eqn,
     const word& fieldName
 ) const
 {
-    add(this->forceCoeff(), eqn);
+    add(eqn.psi(), eqn);
 }
 
 
-void Foam::fv::isotropicDamping::addSup
+void Foam::fv::verticalDamping::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const word& fieldName
 ) const
 {
-    add(rho*forceCoeff(), eqn);
+    add(rho*eqn.psi(), eqn);
 }
 
 
-void Foam::fv::isotropicDamping::addSup
+void Foam::fv::verticalDamping::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -113,40 +109,26 @@ void Foam::fv::isotropicDamping::addSup
     const word& fieldName
 ) const
 {
-    add(alpha()*rho()*this->forceCoeff(), eqn);
+    add(alpha*rho*eqn.psi(), eqn);
 }
 
 
-bool Foam::fv::isotropicDamping::movePoints()
+bool Foam::fv::verticalDamping::movePoints()
 {
     return true;
 }
 
 
-void Foam::fv::isotropicDamping::topoChange(const polyTopoChangeMap&)
+void Foam::fv::verticalDamping::topoChange(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fv::isotropicDamping::mapMesh(const polyMeshMap& map)
+void Foam::fv::verticalDamping::mapMesh(const polyMeshMap& map)
 {}
 
 
-void Foam::fv::isotropicDamping::distribute(const polyDistributionMap&)
+void Foam::fv::verticalDamping::distribute(const polyDistributionMap&)
 {}
-
-
-bool Foam::fv::isotropicDamping::read(const dictionary& dict)
-{
-    if (damping::read(dict))
-    {
-        readCoeffs();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
 
 
 // ************************************************************************* //
