@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,50 +45,49 @@ namespace Foam
 
 #define EqOp(opName, op)                                                       \
                                                                                \
-template<class T1, class T2>                                                   \
-class opName##Op2                                                              \
-{                                                                              \
-public:                                                                        \
-                                                                               \
-    void operator()(T1& x, const T2& y) const                                  \
+    template<class T1, class T2>                                               \
+    class opName##Op2                                                          \
     {                                                                          \
-        op;                                                                    \
-    }                                                                          \
-};                                                                             \
+    public:                                                                    \
                                                                                \
-template<class T>                                                              \
-class opName##Op                                                               \
-{                                                                              \
-public:                                                                        \
+        void operator()(T1& x, const T2& y) const                              \
+        {                                                                      \
+            op;                                                                \
+        }                                                                      \
+    };                                                                         \
                                                                                \
-    void operator()(T& x, const T& y) const                                    \
+    template<class T>                                                          \
+    class opName##Op                                                           \
     {                                                                          \
-        op;                                                                    \
-    }                                                                          \
-};
+    public:                                                                    \
+                                                                               \
+        void operator()(T& x, const T& y) const                                \
+        {                                                                      \
+            op;                                                                \
+        }                                                                      \
+    };
 
 EqOp(eq, x = y)
+EqOp(eqNeg, x = -y)
+EqOp(eqSqr, x = sqr(y))
+EqOp(eqMag, x = mag(y))
+
 EqOp(plusEq, x += y)
 EqOp(minusEq, x -= y)
 EqOp(multiplyEq, x *= y)
 EqOp(divideEq, x /= y)
-EqOp(eqSqr, x = sqr(y))
-EqOp(eqMag, x = mag(y))
 EqOp(plusEqMagSqr, x += magSqr(y))
 EqOp(maxEq, x = max(x, y))
 EqOp(minEq, x = min(x, y))
-EqOp(minMagSqrEq, x = (magSqr(x)<=magSqr(y) ? x : y))
-EqOp(maxMagSqrEq, x = (magSqr(x)>=magSqr(y) ? x : y))
+EqOp(minMagSqrEq, x = (magSqr(x) <= magSqr(y) ? x : y))
+EqOp(maxMagSqrEq, x = (magSqr(x) >= magSqr(y) ? x : y))
 EqOp(andEq, x = (x && y))
-EqOp(orEq, x  = (x || y))
+EqOp(orEq, x = (x || y))
 EqOp(notEq, x = (x != y))
-
-EqOp(eqMinus, x = -y)
 
 EqOp(nopEq, (void)x)
 
 #undef EqOp
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -133,36 +132,7 @@ EqOp(nopEq, (void)x)
         }                                                                      \
     };
 
-
-#define weightedOp(opName, op)                                                 \
-                                                                               \
-    template<class Type, class CombineOp>                                      \
-    class opName##WeightedOp                                                   \
-    {                                                                          \
-        const CombineOp& cop_;                                                 \
-                                                                               \
-        public:                                                                \
-                                                                               \
-            opName##WeightedOp(const CombineOp& cop)                           \
-            :                                                                  \
-                cop_(cop)                                                      \
-            {}                                                                 \
-                                                                               \
-            void operator()                                                    \
-            (                                                                  \
-                Type& x,                                                       \
-                const label index,                                             \
-                const Type& y,                                                 \
-                const scalar weight                                            \
-            ) const                                                            \
-            {                                                                  \
-                cop_(x, op);                                                   \
-            }                                                                  \
-    };                                                                         \
-
-
 Op(sum, x + y)
-
 Op(plus, x + y)
 Op(minus, x - y)
 Op(multiply, x * y)
@@ -173,22 +143,19 @@ Op(cmptDivide, cmptDivide(x, y))
 Op(stabilise, stabilise(x, y))
 Op(max, max(x, y))
 Op(min, min(x, y))
-Op(minMagSqr, (magSqr(x)<=magSqr(y) ? x : y))
-Op(maxMagSqr, (magSqr(x)>=magSqr(y) ? x : y))
+Op(minMagSqr, (magSqr(x) <= magSqr(y) ? x : y))
+Op(maxMagSqr, (magSqr(x) >= magSqr(y) ? x : y))
 Op(minMod, minMod(x, y))
 Op(and, x && y)
 Op(or, x || y)
 Op(not, x != y)
-Op(eqEq, x == y)
+Op(equal, x == y)
 Op(less, x < y)
 Op(lessEq, x <= y)
 Op(greater, x > y)
 Op(greaterEq, x >= y)
 
-weightedOp(multiply, (weight*y))
-
 #undef Op
-#undef weightedOp
 #undef WARNRETURN
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
