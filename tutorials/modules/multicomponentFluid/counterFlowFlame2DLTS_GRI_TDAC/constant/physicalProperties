@@ -27,6 +27,6 @@ thermoType
 
 defaultSpecie N2;
 
-#include "thermo.compressibleGasGRI"
+#include "thermo"
 
 // ************************************************************************* //
