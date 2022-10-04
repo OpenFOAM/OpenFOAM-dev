@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::kappa
 {
     const scalar sqrtPi = sqrt(constant::mathematical::pi);
 
-    volScalarField lamda
+    volScalarField lambda
     (
         scalar(1) + da/(6*sqrt(2.0)*(alpha1 + 1e-5))/L_
     );
@@ -93,10 +93,10 @@ Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::kappa
         2*sqr(alpha1)*g0*(1 + e)/sqrtPi
       + (9.0/8.0)*sqrtPi*g0*0.25*sqr(1 + e)*(2*e - 1)*sqr(alpha1)
        /(49.0/16.0 - 33*e/16.0)
-      + (15.0/16.0)*sqrtPi*alpha1*(0.5*sqr(e) + 0.25*e - 0.75 + lamda)
-       /((49.0/16.0 - 33*e/16.0)*lamda)
+      + (15.0/16.0)*sqrtPi*alpha1*(0.5*sqr(e) + 0.25*e - 0.75 + lambda)
+       /((49.0/16.0 - 33*e/16.0)*lambda)
       + (25.0/64.0)*sqrtPi
-       /((1 + e)*(49.0/16.0 - 33*e/16.0)*lamda*g0)
+       /((1 + e)*(49.0/16.0 - 33*e/16.0)*lambda*g0)
     );
 }
 

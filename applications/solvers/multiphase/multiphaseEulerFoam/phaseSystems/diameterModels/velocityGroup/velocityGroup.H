@@ -31,7 +31,7 @@ Description
     distribution by means of coalescence, breakup, drift and nucleation.
 
 Usage
-    Excerpt from an examplary phaseProperties dictionary:
+    Excerpt from an exemplary phaseProperties dictionary:
     \verbatim
     diameterModel   velocityGroup;
 

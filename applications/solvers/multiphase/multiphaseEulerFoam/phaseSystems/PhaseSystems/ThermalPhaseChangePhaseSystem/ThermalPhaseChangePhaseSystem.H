@@ -29,7 +29,7 @@ Description
     phases according the interfacial temperature approximated by the saturation
     temperature.
 
-    Based on the implemnetaion described in:
+    Based on the implementation described in:
 
     \verbatim
         Peltola, J., Pättikangas, T., Bainbridge, W., Lehnigk, R., Schlegel, F.

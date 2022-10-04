@@ -116,7 +116,7 @@ Description
     \endverbatim
 
 Usage
-    Excerpt from an examplary phaseProperties dictionary:
+    Excerpt from an exemplary phaseProperties dictionary:
     \verbatim
     type populationBalanceMultiphaseSystem;
 
