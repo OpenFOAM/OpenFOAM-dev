@@ -23,7 +23,7 @@ forcing
     liquidPhase     water;
 
     origin          (600 0 0);
-    direction       (-1 0 0);
+    direction       (1 0 0);
 
     scale
     {
@@ -41,8 +41,8 @@ damping
 
     libs            ("libwaves.so");
 
-    origin          (1200 0 0);
-    direction       (1 0 0);
+    origin          (0 0 0);
+    direction       (-1 0 0);
 
     scale
     {

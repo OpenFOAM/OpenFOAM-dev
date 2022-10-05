@@ -9,27 +9,31 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      waveProperties;
+    location    "system";
+    object      extrudeMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-origin          (0 0 0);
+constructFrom   mesh;
 
-direction       (1 0 0);
+sourceCase      ".";
 
-waves
-(
-    Airy
-    {
-        length      300;
-        amplitude   2.5;
-        phase       0;
-        angle       0;
-    }
-);
+sourcePatches   (left);
 
-UMean           (2 0 0);
+flipNormals     false;
+
+nLayers         25;
+
+expansionRatio  1.09;
+
+extrudeModel    linearNormal;
+
+linearNormalCoeffs
+{
+    thickness       1500;
+}
+
+mergeFaces      false;
 
 
 // ************************************************************************* //
