@@ -116,54 +116,60 @@ void Foam::fv::forcing::readCoeffs()
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff() const
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::scale() const
 {
-    tmp<volScalarField::Internal> tforceCoeff
+    tmp<volScalarField::Internal> tscale
     (
-        new volScalarField::Internal
+        volScalarField::Internal::New
         (
-            IOobject
-            (
-                typedName("forceCoeff"),
-                mesh().time().timeName(),
-                mesh()
-            ),
+            typedName("scale"),
             mesh(),
-            dimensionedScalar(lambda_.dimensions(), scale_.valid() ? 0 : 1)
+            dimensionedScalar(dimless, scale_.valid() ? 0 : 1)
         )
     );
-    scalarField& forceCoeff = tforceCoeff.ref();
+
+    scalarField& scale = tscale.ref();
 
     forAll(origins_, i)
     {
         const vectorField& c = mesh().cellCentres();
         const scalarField x((c - origins_[i]) & directions_[i]);
-        forceCoeff = max(forceCoeff, scale_->value(x));
+        scale = max(scale, scale_->value(x));
     }
-
-    forceCoeff *= lambda_.value();
 
     // Write out the force coefficient for debugging
     if (debug && mesh().time().writeTime())
     {
-        volScalarField vForceCoeff
-        (
-            IOobject
-            (
-                typedName("forceCoeff"),
-                mesh().time().timeName(),
-                mesh()
-            ),
-            mesh(),
-            lambda_.dimensions(),
-            zeroGradientFvPatchField<scalar>::typeName
-        );
-        vForceCoeff.primitiveFieldRef() = forceCoeff;
-        vForceCoeff.correctBoundaryConditions();
-        vForceCoeff.write();
+        tscale->write();
+    }
+
+    return tscale;
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff
+(
+    const volScalarField::Internal& scale
+) const
+{
+    tmp<volScalarField::Internal> tforceCoeff
+    (
+        volScalarField::Internal::New(typedName("forceCoeff"), lambda_*scale)
+    );
+
+    // Write out the force coefficient for debugging
+    if (debug && mesh().time().writeTime())
+    {
+        tforceCoeff->write();
     }
 
     return tforceCoeff;
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff() const
+{
+    return forceCoeff(scale());
 }
 
 

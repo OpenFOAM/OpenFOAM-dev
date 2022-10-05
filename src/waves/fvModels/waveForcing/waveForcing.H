@@ -115,8 +115,8 @@ class waveForcing
         //- Velocity field calculated from the current wave form
         tmp<volVectorField::Internal> Uwaves_;
 
-        //- Forcing coefficient field
-        tmp<volScalarField::Internal> forceCoeff_;
+        //- Forcing coefficient scale field
+        tmp<volScalarField::Internal> scale_;
 
 
 public:

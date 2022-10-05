@@ -29,6 +29,9 @@ License
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "fvcDdt.H"
+#include "fvcDiv.H"
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -56,7 +59,7 @@ Foam::fv::waveForcing::waveForcing
     liquidPhaseName_(coeffs().lookup<word>("liquidPhase")),
     alphaName_(IOobject::groupName("alpha", liquidPhaseName_)),
     UName_(coeffs().lookupOrDefault<word>("U", "U")),
-    forceCoeff_(this->forceCoeff())
+    scale_(this->scale())
 {}
 
 
@@ -76,8 +79,10 @@ void Foam::fv::waveForcing::addSup
 {
     if (fieldName == alphaName_)
     {
-        eqn -= fvm::Sp(forceCoeff_(), eqn.psi());
-        eqn += forceCoeff_()*alphaWaves_();
+        const volScalarField::Internal forceCoeff(this->forceCoeff(scale_));
+
+        eqn -= fvm::Sp(forceCoeff, eqn.psi());
+        eqn += forceCoeff*alphaWaves_();
     }
 }
 
@@ -91,34 +96,45 @@ void Foam::fv::waveForcing::addSup
 {
     if (fieldName == UName_)
     {
-        eqn -= fvm::Sp(rho*forceCoeff_(), eqn.psi());
-        eqn += rho*forceCoeff_()*Uwaves_();
+        const volScalarField::Internal forceCoeff(rho*this->forceCoeff(scale_));
+
+        eqn -= fvm::Sp(forceCoeff, eqn.psi());
+        eqn += forceCoeff*Uwaves_();
+
+        const surfaceScalarField& rhoPhi =
+            mesh().lookupObject<surfaceScalarField>("rhoPhi");
+
+        eqn += fvm::Sp
+        (
+            scale()*(fvc::ddt(rho)()() + fvc::div(rhoPhi)()()),
+            eqn.psi()
+        );
     }
 }
 
 
 bool Foam::fv::waveForcing::movePoints()
 {
-    forceCoeff_ = this->forceCoeff();
+    scale_ = this->scale();
     return true;
 }
 
 
 void Foam::fv::waveForcing::topoChange(const polyTopoChangeMap&)
 {
-    forceCoeff_ = this->forceCoeff();
+    scale_ = this->scale();
 }
 
 
 void Foam::fv::waveForcing::mapMesh(const polyMeshMap& map)
 {
-    forceCoeff_ = this->forceCoeff();
+    scale_ = this->scale();
 }
 
 
 void Foam::fv::waveForcing::distribute(const polyDistributionMap&)
 {
-    forceCoeff_ = this->forceCoeff();
+    scale_ = this->scale();
 }
 
 

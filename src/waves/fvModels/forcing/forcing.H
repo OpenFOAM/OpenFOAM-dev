@@ -80,6 +80,15 @@ protected:
         //- Non-virtual read
         void readCoeffs();
 
+        //- Return the scale distribution
+        tmp<volScalarField::Internal> scale() const;
+
+        //- Return the force coefficient given the scale distribution
+        tmp<volScalarField::Internal> forceCoeff
+        (
+            const volScalarField::Internal& scale
+        ) const;
+
         //- Return the force coefficient
         tmp<volScalarField::Internal> forceCoeff() const;
 
