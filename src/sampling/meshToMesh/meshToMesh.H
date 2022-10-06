@@ -165,13 +165,13 @@ class meshToMesh
             (
                 const distributionMap& map,
                 const polyMesh& tgtMesh,
-                const globalIndex& globalI,
+                const globalIndex& globalTgtCells,
                 List<pointField>& points,
                 List<label>& nInternalFaces,
                 List<faceList>& faces,
                 List<labelList>& faceOwner,
                 List<labelList>& faceNeighbour,
-                List<labelList>& cellIDs,
+                List<labelList>& globalCellIDs,
                 List<labelList>& nbrProcIDs,
                 List<labelList>& procLocalFaceIDs
             ) const;
@@ -180,8 +180,8 @@ class meshToMesh
             void distributeAndMergeCells
             (
                 const distributionMap& map,
-                const polyMesh& tgt,
-                const globalIndex& globalI,
+                const polyMesh& tgtMesh,
+                const globalIndex& globalTgtCells,
                 pointField& tgtPoints,
                 faceList& tgtFaces,
                 labelList& tgtFaceOwners,

@@ -63,37 +63,40 @@ Foam::scalar Foam::meshToMesh::calculate(const word& methodName)
         // cover all of the src mesh
         autoPtr<distributionMap> mapPtr = calcProcMap(srcRegion_, tgtRegion_);
         const distributionMap& map = mapPtr();
-        pointField newTgtPoints;
-        faceList newTgtFaces;
-        labelList newTgtFaceOwners;
-        labelList newTgtFaceNeighbours;
-        labelList newTgtCellIDs;
+
+        // Distribute the target geometry to create local-target geometry
+        // (i.e., local to the source)
+        pointField localTgtPoints;
+        faceList localTgtFaces;
+        labelList localTgtFaceOwners;
+        labelList localTgtFaceNeighbours;
+        labelList localTgtGlobalCellIDs;
         distributeAndMergeCells
         (
             map,
             tgtRegion_,
             globalTgtCells,
-            newTgtPoints,
-            newTgtFaces,
-            newTgtFaceOwners,
-            newTgtFaceNeighbours,
-            newTgtCellIDs
+            localTgtPoints,
+            localTgtFaces,
+            localTgtFaceOwners,
+            localTgtFaceNeighbours,
+            localTgtGlobalCellIDs
         );
 
         // create a new target mesh
-        polyMesh newTgt
+        polyMesh localTgtMesh
         (
             IOobject
             (
-                "newTgt." + Foam::name(Pstream::myProcNo()),
+                "localTgt",
                 tgtRegion_.time().timeName(),
                 tgtRegion_.time(),
                 IOobject::NO_READ
             ),
-            move(newTgtPoints),
-            move(newTgtFaces),
-            move(newTgtFaceOwners),
-            move(newTgtFaceNeighbours),
+            move(localTgtPoints),
+            move(localTgtFaces),
+            move(localTgtFaceOwners),
+            move(localTgtFaceNeighbours),
             false
         );
 
@@ -102,34 +105,35 @@ Foam::scalar Foam::meshToMesh::calculate(const word& methodName)
         patches[0] = new polyPatch
         (
             "defaultFaces",
-            newTgt.nFaces() - newTgt.nInternalFaces(),
-            newTgt.nInternalFaces(),
+            localTgtMesh.nFaces() - localTgtMesh.nInternalFaces(),
+            localTgtMesh.nInternalFaces(),
             0,
-            newTgt.boundaryMesh(),
+            localTgtMesh.boundaryMesh(),
             word::null
         );
-        newTgt.addPatches(patches);
+        localTgtMesh.addPatches(patches);
 
         // force calculation of tet-base points used for point-in-cell
-        (void)newTgt.tetBasePtIs();
+        (void)localTgtMesh.tetBasePtIs();
 
         if (debug)
         {
-            Pout<< "Created newTgt mesh:" << nl
-                << " old cells = " << tgtRegion_.nCells()
-                << ", new cells = " << newTgt.nCells() << nl
-                << " old faces = " << tgtRegion_.nFaces()
-                << ", new faces = " << newTgt.nFaces() << endl;
+            Pout<< "Created local target mesh:" << nl
+                << " cells = " << tgtRegion_.nCells()
+                << ", local cells = " << localTgtMesh.nCells() << nl
+                << " faces = " << tgtRegion_.nFaces()
+                << ", local faces = " << localTgtMesh.nFaces() << endl;
 
             if (debug > 1)
             {
-                Pout<< "Writing newTgt mesh: " << newTgt.name() << endl;
-                newTgt.write();
+                Pout<< "Writing local target mesh: "
+                    << localTgtMesh.name() << endl;
+                localTgtMesh.write();
             }
         }
 
         // Do the intersection
-        methodPtr = meshToMeshMethod::New(methodName, srcRegion_, newTgt);
+        methodPtr = meshToMeshMethod::New(methodName, srcRegion_, localTgtMesh);
         V = methodPtr->calculate
             (
                 srcToTgtCellAddr_,
@@ -138,17 +142,17 @@ Foam::scalar Foam::meshToMesh::calculate(const word& methodName)
                 tgtToSrcCellWght_
             );
 
-        // per source cell the target cell address in newTgt mesh
+        // per source cell the target cell address in localTgtMesh mesh
         forAll(srcToTgtCellAddr_, i)
         {
             labelList& addressing = srcToTgtCellAddr_[i];
             forAll(addressing, addrI)
             {
-                addressing[addrI] = newTgtCellIDs[addressing[addrI]];
+                addressing[addrI] = localTgtGlobalCellIDs[addressing[addrI]];
             }
         }
 
-        // convert target addresses in newTgtMesh into global cell numbering
+        // convert target addresses in localTgtMesh into global cell numbering
         forAll(tgtToSrcCellAddr_, i)
         {
             labelList& addressing = tgtToSrcCellAddr_[i];

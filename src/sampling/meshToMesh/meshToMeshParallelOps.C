@@ -258,13 +258,13 @@ void Foam::meshToMesh::distributeCells
 (
     const distributionMap& map,
     const polyMesh& tgtMesh,
-    const globalIndex& globalI,
+    const globalIndex& globalTgtCells,
     List<pointField>& points,
     List<label>& nInternalFaces,
     List<faceList>& faces,
     List<labelList>& faceOwner,
     List<labelList>& faceNeighbour,
-    List<labelList>& cellIDs,
+    List<labelList>& globalCellIDs,
     List<labelList>& nbrProcIDs,
     List<labelList>& procLocalFaceIDs
 ) const
@@ -276,7 +276,7 @@ void Foam::meshToMesh::distributeCells
     faces.setSize(Pstream::nProcs());
     faceOwner.setSize(Pstream::nProcs());
     faceNeighbour.setSize(Pstream::nProcs());
-    cellIDs.setSize(Pstream::nProcs());
+    globalCellIDs.setSize(Pstream::nProcs());
 
     nbrProcIDs.setSize(Pstream::nProcs());;
     procLocalFaceIDs.setSize(Pstream::nProcs());;
@@ -420,11 +420,11 @@ void Foam::meshToMesh::distributeCells
                 {
                     Pout<< "tgtProc:" << Pstream::myProcNo()
                         << " sending tgt cell " << sendElems[i]
-                        << "[" << globalI.toGlobal(sendElems[i]) << "]"
+                        << "[" << globalTgtCells.toGlobal(sendElems[i]) << "]"
                         << " to srcProc " << domain << endl;
                 }
 
-                globalElems[i] = globalI.toGlobal(sendElems[i]);
+                globalElems[i] = globalTgtCells.toGlobal(sendElems[i]);
             }
 
             // pass data
@@ -436,7 +436,7 @@ void Foam::meshToMesh::distributeCells
                 faces[Pstream::myProcNo()] = subFaces;
                 faceOwner[Pstream::myProcNo()] = subFaceOwner;
                 faceNeighbour[Pstream::myProcNo()] = subFaceNeighbour;
-                cellIDs[Pstream::myProcNo()] = globalElems;
+                globalCellIDs[Pstream::myProcNo()] = globalElems;
                 nbrProcIDs[Pstream::myProcNo()] = subNbrProcIDs;
                 procLocalFaceIDs[Pstream::myProcNo()] = subProcLocalFaceIDs;
             }
@@ -475,7 +475,7 @@ void Foam::meshToMesh::distributeCells
                 >> faces[domain]
                 >> faceOwner[domain]
                 >> faceNeighbour[domain]
-                >> cellIDs[domain]
+                >> globalCellIDs[domain]
                 >> nbrProcIDs[domain]
                 >> procLocalFaceIDs[domain];
         }
@@ -488,7 +488,7 @@ void Foam::meshToMesh::distributeCells
                 << ", nInternalFaces=" << nInternalFaces[domain]
                 << ", faceOwn=" << faceOwner[domain].size()
                 << ", faceNbr=" << faceNeighbour[domain].size()
-                << ", cellIDs=" << cellIDs[domain].size() << endl;
+                << ", globalCellIDs=" << globalCellIDs[domain].size() << endl;
         }
     }
 }
@@ -498,12 +498,12 @@ void Foam::meshToMesh::distributeAndMergeCells
 (
     const distributionMap& map,
     const polyMesh& tgt,
-    const globalIndex& globalI,
+    const globalIndex& globalTgtCells,
     pointField& tgtPoints,
     faceList& tgtFaces,
     labelList& tgtFaceOwners,
     labelList& tgtFaceNeighbours,
-    labelList& tgtCellIDs
+    labelList& tgtGlobalCellIDs
 ) const
 {
     // Exchange per-processor data
@@ -512,7 +512,7 @@ void Foam::meshToMesh::distributeAndMergeCells
     List<faceList> allFaces;
     List<labelList> allFaceOwners;
     List<labelList> allFaceNeighbours;
-    List<labelList> allTgtCellIDs;
+    List<labelList> allGlobalCellIDs;
 
     // Per target mesh face the neighbouring proc and index in
     // processor patch (all -1 for normal boundary face)
@@ -523,13 +523,13 @@ void Foam::meshToMesh::distributeAndMergeCells
     (
         map,
         tgt,
-        globalI,
+        globalTgtCells,
         allPoints,
         allNInternalFaces,
         allFaces,
         allFaceOwners,
         allFaceNeighbours,
-        allTgtCellIDs,
+        allGlobalCellIDs,
         allNbrProcIDs,
         allProcLocalFaceIDs
     );
@@ -570,10 +570,10 @@ void Foam::meshToMesh::distributeAndMergeCells
     // Starting offset for cells
     label nCells = 0;
     labelList cellOffset(Pstream::nProcs(), 0);
-    forAll(allTgtCellIDs, proci)
+    forAll(allGlobalCellIDs, proci)
     {
         cellOffset[proci] = nCells;
-        nCells += allTgtCellIDs[proci].size();
+        nCells += allGlobalCellIDs[proci].size();
     }
 
     // Count any coupled faces
@@ -636,7 +636,7 @@ void Foam::meshToMesh::distributeAndMergeCells
     tgtFaces.setSize(nFacesTotal);
     tgtFaceOwners.setSize(nFacesTotal);
     tgtFaceNeighbours.setSize(nFacesTotal);
-    tgtCellIDs.setSize(nCells);
+    tgtGlobalCellIDs.setSize(nCells);
 
     // Insert points
     forAll(allPoints, proci)
@@ -646,12 +646,12 @@ void Foam::meshToMesh::distributeAndMergeCells
     }
 
     // Insert cellIDs
-    forAll(allTgtCellIDs, proci)
+    forAll(allGlobalCellIDs, proci)
     {
-        const labelList& cellIDs = allTgtCellIDs[proci];
-        SubList<label>(tgtCellIDs, cellIDs.size(), cellOffset[proci]) = cellIDs;
+        const labelList& cellIDs = allGlobalCellIDs[proci];
+        SubList<label>(tgtGlobalCellIDs, cellIDs.size(), cellOffset[proci]) =
+            cellIDs;
     }
-
 
     // Insert internal faces (from internal faces)
     forAll(allFaces, proci)
@@ -692,7 +692,6 @@ void Foam::meshToMesh::distributeAndMergeCells
 
         internalFaceOffset[proci] += allNInternalFaces[proci];
     }
-
 
     // Insert internal faces (from coupled face-pairs)
     forAll(allNbrProcIDs, proci)
