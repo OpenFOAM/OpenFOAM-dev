@@ -119,13 +119,14 @@ void Foam::fv::interRegionHeatTransfer::addSup
 
     const volScalarField& T =
         mesh().lookupObject<volScalarField>(TName_);
-    const volScalarField& Tnbr =
-        nbrMesh().lookupObject<volScalarField>(TNbrName_);
 
-    tmp<volScalarField> tTnbrMapped =
-        volScalarField::New(TName_ + "nbrMapped", T);
-    interpolate(Tnbr, tTnbrMapped->primitiveFieldRef());
-    volScalarField& TnbrMapped = tTnbrMapped.ref();
+    tmp<volScalarField> tTnbr = volScalarField::New(TNbrName_, T);
+    interpolate
+    (
+        nbrMesh().lookupObject<volScalarField>(TNbrName_),
+        tTnbr->primitiveFieldRef()
+    );
+    const volScalarField& Tnbr = tTnbr();
 
     // Get the heat transfer coefficient field
     tmp<volScalarField> tHtcAoV;
@@ -177,17 +178,17 @@ void Foam::fv::interRegionHeatTransfer::addSup
             const volScalarField htcAoVByCpv(htcAoV/thermo.Cpv());
 
             eqn +=
-                htcAoV*(TnbrMapped - T)
+                htcAoV*(Tnbr - T)
               + htcAoVByCpv*he - fvm::Sp(htcAoVByCpv, he);
         }
         else if (he.dimensions() == dimTemperature)
         {
-            eqn += htcAoV*TnbrMapped - fvm::Sp(htcAoV, he);
+            eqn += htcAoV*Tnbr - fvm::Sp(htcAoV, he);
         }
     }
     else
     {
-        eqn += htcAoV*(TnbrMapped - T);
+        eqn += htcAoV*(Tnbr - T);
     }
 }
 
@@ -214,23 +215,30 @@ void Foam::fv::interRegionHeatTransfer::correct()
 
 bool Foam::fv::interRegionHeatTransfer::movePoints()
 {
+    NotImplemented;
     return true;
 }
 
 
 void Foam::fv::interRegionHeatTransfer::topoChange(const polyTopoChangeMap&)
-{}
+{
+    NotImplemented;
+}
 
 
-void Foam::fv::interRegionHeatTransfer::mapMesh(const polyMeshMap& map)
-{}
+void Foam::fv::interRegionHeatTransfer::mapMesh(const polyMeshMap&)
+{
+    NotImplemented;
+}
 
 
 void Foam::fv::interRegionHeatTransfer::distribute
 (
     const polyDistributionMap&
 )
-{}
+{
+    NotImplemented;
+}
 
 
 bool Foam::fv::interRegionHeatTransfer::read(const dictionary& dict)

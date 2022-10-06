@@ -81,7 +81,7 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 
     const fvMesh& nbrMesh = mesh.time().lookupObject<fvMesh>(nbrRegionName());
 
-    meshInterp().mapTgtToSrc(scalarField(nbrMesh.nCells(), 1), filter_);
+    interpolate(scalarField(nbrMesh.nCells(), 1), filter_);
 
     const word zoneName(name + ":porous");
 
@@ -165,6 +165,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 
 bool Foam::fv::interRegionExplicitPorositySource::movePoints()
 {
+    NotImplemented;
     return true;
 }
 
@@ -173,21 +174,27 @@ void Foam::fv::interRegionExplicitPorositySource::topoChange
 (
     const polyTopoChangeMap&
 )
-{}
+{
+    NotImplemented;
+}
 
 
 void Foam::fv::interRegionExplicitPorositySource::mapMesh
 (
-    const polyMeshMap& map
+    const polyMeshMap&
 )
-{}
+{
+    NotImplemented;
+}
 
 
 void Foam::fv::interRegionExplicitPorositySource::distribute
 (
     const polyDistributionMap&
 )
-{}
+{
+    NotImplemented;
+}
 
 
 bool Foam::fv::interRegionExplicitPorositySource::read(const dictionary& dict)

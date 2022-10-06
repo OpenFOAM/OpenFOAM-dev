@@ -95,17 +95,29 @@ Foam::fv::heatTransferModels::function2::~function2()
 
 void Foam::fv::heatTransferModels::function2::correct()
 {
-    const fvMesh& mesh = model_.mesh();
-    const fvMesh& nbrMesh = model_.nbrMesh();
+    const scalarField UMag
+    (
+        mag
+        (
+            model_.mesh()
+           .lookupObject<volVectorField>(UName_)
+           .primitiveField()
+        )
+    );
+    const scalarField UMagNbr
+    (
+        model_.interpolate
+        (
+            mag
+            (
+                model_.nbrMesh()
+               .lookupObject<volVectorField>(UNbrName_)
+               .primitiveField()
+            )()
+        )
+    );
 
-    const volVectorField& U = mesh.lookupObject<volVectorField>(UName_);
-
-    const volVectorField& UNbr =
-        nbrMesh.lookupObject<volVectorField>(UNbrName_);
-    const scalarField UMagNbr(mag(UNbr));
-    const scalarField UMagNbrMapped(model_.interpolate(UMagNbr));
-
-    htc_.primitiveFieldRef() = htcFunc_->value(mag(U()), UMagNbrMapped);
+    htc_.primitiveFieldRef() = htcFunc_->value(UMag, UMagNbr);
     htc_.correctBoundaryConditions();
 }
 

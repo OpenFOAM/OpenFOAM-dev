@@ -31,7 +31,6 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::fv::interRegionModel::interpolate
 (
-    const interRegionModel& nbrModel,
     const Field<Type>& field
 ) const
 {
@@ -41,26 +40,14 @@ Foam::fv::interRegionModel::interpolate
     }
     else
     {
-        return (nbrModel.meshInterp().mapSrcToTgt(field));
+        return nbrModel().meshInterp().mapSrcToTgt(field);
     }
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::fv::interRegionModel::interpolate
-(
-    const Field<Type>& field
-) const
-{
-    return interpolate(nbrModel(), field);
 }
 
 
 template<class Type>
 void Foam::fv::interRegionModel::interpolate
 (
-    const interRegionModel& nbrModel,
     const Field<Type>& field,
     Field<Type>& result
 ) const
@@ -71,19 +58,8 @@ void Foam::fv::interRegionModel::interpolate
     }
     else
     {
-        nbrModel.meshInterp().mapSrcToTgt(field, result);
+        nbrModel().meshInterp().mapSrcToTgt(field, result);
     }
-}
-
-
-template<class Type>
-void Foam::fv::interRegionModel::interpolate
-(
-    const Field<Type>& field,
-    Field<Type>& result
-) const
-{
-    return interpolate(nbrModel(), field, result);
 }
 
 
