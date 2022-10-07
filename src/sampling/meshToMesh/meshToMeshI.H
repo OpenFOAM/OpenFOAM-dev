@@ -67,12 +67,6 @@ Foam::meshToMesh::tgtToSrcCellWght() const
 }
 
 
-inline Foam::scalar Foam::meshToMesh::V() const
-{
-    return V_;
-}
-
-
 inline const Foam::PtrList<Foam::patchToPatch>&
 Foam::meshToMesh::patchToPatches() const
 {

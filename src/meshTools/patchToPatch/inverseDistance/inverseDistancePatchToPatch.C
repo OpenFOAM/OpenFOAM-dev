@@ -76,7 +76,10 @@ bool Foam::patchToPatches::inverseDistance::inside
         const vector& a = T & (ps[f[i]] - p);
         const vector& b = T & (ps[f[f.fcIndex(i)]] - p);
         const scalar magAB = sqrt(magSqr(a)*magSqr(b));
-        angle -= sign(r & (a ^ b))*acos((a & b)/magAB);
+        angle +=
+            (reverse() ? +1 : -1)
+           *sign(r & (a ^ b))
+           *acos(min(max(-1, (a & b)/magAB), +1));
     }
 
     return pi < angle && angle < 3*pi;
@@ -236,6 +239,31 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
         {
             tgtWeights_[tgtFacei][i] /= max(w, vSmall);
         }
+    }
+
+    if (debug)
+    {
+        auto histogram = [](const List<DynamicList<label>>& ll)
+        {
+            labelList result;
+            forAll(ll, i)
+            {
+                result.setSize(max(result.size(), ll[i].size() + 1), 0);
+                result[ll[i].size()] ++;
+            }
+
+            result.resize(returnReduce(result.size(), maxOp<label>()), 0);
+
+            Pstream::listCombineGather(result, plusEqOp<label>());
+            Pstream::listCombineScatter(result);
+
+            return result;
+        };
+
+        Info<< "Number of source faces by number of target connections = "
+            << histogram(srcLocalTgtFaces_) << nl
+            << "Number of target faces by number of source connections = "
+            << histogram(tgtLocalSrcFaces_) << endl;
     }
 
     return nCouples;

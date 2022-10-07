@@ -48,6 +48,11 @@ namespace Foam
 
 class meshToMeshMethod
 {
+    // Private static data
+
+        //- Map from mesh-to-mesh method to patch-to-patch method
+        static HashTable<word> meshToMeshToPatchToPatchMethod_;
+
 
 protected:
 
@@ -59,34 +64,14 @@ protected:
         //- Reference to the target mesh
         const polyMesh& tgt_;
 
-        //- Cell total volume in overlap region [m^3]
-        scalar V_;
-
-        //- Tolerance used in volume overlap calculations
-        static scalar tolerance_;
-
 
     // Protected Member Functions
 
         //- Return src cell IDs for the overlap region
         labelList maskCells() const;
 
-        //- Return the true if cells intersect
-        virtual bool intersect
-        (
-            const label srcCelli,
-            const label tgtCelli
-        ) const;
-
-        //- Return the intersection volume between two cells
-        virtual scalar interVol
-        (
-            const label srcCelli,
-            const label tgtCelli
-        ) const;
-
         //- Append target cell neighbour cells to cellIDs list
-        virtual void appendNbrCells
+        void appendNbrCells
         (
             const label tgtCelli,
             const polyMesh& mesh,
@@ -94,7 +79,9 @@ protected:
             DynamicList<label>& nbrTgtCellIDs
         ) const;
 
-        virtual bool initialise
+        //- Initialise the arrays used to store the intersection result. Return
+        //  whether or not an intersection is possible.
+        bool initialise
         (
             labelListList& srcToTgtAddr,
             scalarListList& srcToTgtWght,
@@ -102,11 +89,20 @@ protected:
             scalarListList& tgtToTgtWght
         ) const;
 
+        //- Write the connectivity for debugging
+        void writeConnectivity
+        (
+            const polyMesh& mesh1,
+            const polyMesh& mesh2,
+            const labelListList& mesh1ToMesh2Addr
+        ) const;
+
 
 public:
 
     //- Run-time type information
     TypeName("meshToMeshMethod");
+
 
     //- Declare runtime constructor selection table
     declareRunTimeSelectionTable
@@ -120,6 +116,7 @@ public:
         ),
         (src, tgt)
     );
+
 
     // Constructors
 
@@ -145,14 +142,14 @@ public:
 
     // Member Functions
 
-        //- Return the corresponding patchToPatch method for patch
-        //  interpolation
+        //- Get the corresponding patch-to-patch method
         virtual const word& patchToPatchMethod() const = 0;
+
 
         // Evaluate
 
             //- Calculate addressing and weights
-            virtual void calculate
+            virtual scalar calculate
             (
                 labelListList& srcToTgtAddr,
                 scalarListList& srcToTgtWght,
@@ -160,28 +157,28 @@ public:
                 scalarListList& tgtToTgtWght
             ) = 0;
 
+            //- Normalise the weights for a given mesh
+            virtual void normalise
+            (
+                const polyMesh& srcMesh,
+                labelListList& srcToTgtAddr,
+                scalarListList& srcToTgtWght
+            ) const = 0;
+
 
         // Access
 
             //- Return const access to the source mesh
-            inline const polyMesh& src() const;
+            inline const polyMesh& src() const
+            {
+                return src_;
+            }
 
             //- Return const access to the target mesh
-            inline const polyMesh& tgt() const;
-
-            //- Return const access to the overlap volume
-            inline scalar V() const;
-
-
-        // Check
-
-            //- Write the connectivity (debugging)
-            void writeConnectivity
-            (
-                const polyMesh& mesh1,
-                const polyMesh& mesh2,
-                const labelListList& mesh1ToMesh2Addr
-            ) const;
+            inline const polyMesh& tgt() const
+            {
+                return tgt_;
+            }
 
 
     // Member Operators
@@ -194,10 +191,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "meshToMeshMethodI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

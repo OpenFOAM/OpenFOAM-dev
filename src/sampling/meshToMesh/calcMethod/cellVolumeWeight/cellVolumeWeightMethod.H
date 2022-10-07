@@ -52,9 +52,21 @@ class cellVolumeWeightMethod
 :
     public meshToMeshMethod
 {
-protected:
+private:
 
-    // Protected Member Functions
+    // Private static data
+
+        //- Tolerance used in volume overlap calculations
+        static const scalar tolerance_;
+
+
+    // Private Member Functions
+
+        //- Return the true if cells intersect
+        bool intersect(const label srcCelli, const label tgtCelli) const;
+
+        //- Return the intersection volume between two cells
+        scalar interVol(const label srcCelli, const label tgtCelli) const;
 
         //- Find indices of overlapping cells in src and tgt meshes - returns
         //  true if found a matching pair
@@ -68,7 +80,7 @@ protected:
         ) const;
 
         //- Calculate the mesh-to-mesh addressing and weights
-        void calculateAddressing
+        scalar calculateAddressing
         (
             labelListList& srcToTgtCellAddr,
             scalarListList& srcToTgtCellWght,
@@ -99,13 +111,11 @@ public:
     //- Run-time type information
     TypeName("cellVolumeWeight");
 
+
     // Constructors
 
         //- Construct from source and target meshes
         cellVolumeWeightMethod(const polyMesh& src, const polyMesh& tgt);
-
-        //- Disallow default bitwise copy construction
-        cellVolumeWeightMethod(const cellVolumeWeightMethod&) = delete;
 
 
     //- Destructor
@@ -114,26 +124,25 @@ public:
 
     // Member Functions
 
-        //- Return the corresponding patchToPatch method for patch
-        //  interpolation
+        //- Get the corresponding patchToPatch method
         virtual const word& patchToPatchMethod() const;
 
-        // Evaluate
+        //- Calculate addressing and weights
+        virtual scalar calculate
+        (
+            labelListList& srcToTgtAddr,
+            scalarListList& srcToTgtWght,
+            labelListList& tgtToTgtAddr,
+            scalarListList& tgtToTgtWght
+        );
 
-            //- Calculate addressing and weights
-            virtual void calculate
-            (
-                labelListList& srcToTgtAddr,
-                scalarListList& srcToTgtWght,
-                labelListList& tgtToTgtAddr,
-                scalarListList& tgtToTgtWght
-            );
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellVolumeWeightMethod&) = delete;
+        //- Normalise the weights for a given mesh
+        virtual void normalise
+        (
+            const polyMesh& srcMesh,
+            labelListList& srcToTgtAddr,
+            scalarListList& srcToTgtWght
+        ) const;
 };
 
 

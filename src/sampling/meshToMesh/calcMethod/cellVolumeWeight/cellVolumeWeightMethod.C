@@ -27,6 +27,7 @@ License
 #include "intersectionPatchToPatch.H"
 #include "indexedOctree.H"
 #include "treeDataCell.H"
+#include "tetOverlapVolume.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -42,7 +43,58 @@ namespace Foam
     );
 }
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+const Foam::scalar Foam::cellVolumeWeightMethod::tolerance_ = 1e-6;
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::cellVolumeWeightMethod::intersect
+(
+    const label srcCelli,
+    const label tgtCelli
+) const
+{
+    scalar threshold = tolerance_*src_.cellVolumes()[srcCelli];
+
+    tetOverlapVolume overlapEngine;
+
+    treeBoundBox bbTgtCell(tgt_.points(), tgt_.cellPoints()[tgtCelli]);
+
+    return overlapEngine.cellCellOverlapMinDecomp
+    (
+        src_,
+        srcCelli,
+        tgt_,
+        tgtCelli,
+        bbTgtCell,
+        threshold
+    );
+}
+
+
+Foam::scalar Foam::cellVolumeWeightMethod::interVol
+(
+    const label srcCelli,
+    const label tgtCelli
+) const
+{
+    tetOverlapVolume overlapEngine;
+
+    treeBoundBox bbTgtCell(tgt_.points(), tgt_.cellPoints()[tgtCelli]);
+
+    scalar vol = overlapEngine.cellCellOverlapVolumeMinDecomp
+    (
+        src_,
+        srcCelli,
+        tgt_,
+        tgtCelli,
+        bbTgtCell
+    );
+
+    return vol;
+}
+
 
 bool Foam::cellVolumeWeightMethod::findInitialSeeds
 (
@@ -95,7 +147,7 @@ bool Foam::cellVolumeWeightMethod::findInitialSeeds
 }
 
 
-void Foam::cellVolumeWeightMethod::calculateAddressing
+Foam::scalar Foam::cellVolumeWeightMethod::calculateAddressing
 (
     labelListList& srcToTgtCellAddr,
     scalarListList& srcToTgtCellWght,
@@ -108,6 +160,8 @@ void Foam::cellVolumeWeightMethod::calculateAddressing
     label& startSeedI
 )
 {
+    scalar V = 0;
+
     label srcCelli = srcSeedI;
     label tgtCelli = tgtSeedI;
 
@@ -158,7 +212,7 @@ void Foam::cellVolumeWeightMethod::calculateAddressing
                 appendNbrCells(tgtCelli, tgt_, visitedTgtCells, nbrTgtCells);
 
                 // accumulate intersection volume
-                V_ += vol;
+                V += vol;
             }
         }
         while (!nbrTgtCells.empty());
@@ -191,6 +245,8 @@ void Foam::cellVolumeWeightMethod::calculateAddressing
         tgtToSrcCellAddr[i].transfer(tgtToSrcAddr[i]);
         tgtToSrcCellWght[i].transfer(tgtToSrcWght[i]);
     }
+
+    return V;
 }
 
 
@@ -322,7 +378,7 @@ const Foam::word& Foam::cellVolumeWeightMethod::patchToPatchMethod() const
 }
 
 
-void Foam::cellVolumeWeightMethod::calculate
+Foam::scalar Foam::cellVolumeWeightMethod::calculate
 (
     labelListList& srcToTgtAddr,
     scalarListList& srcToTgtWght,
@@ -340,7 +396,7 @@ void Foam::cellVolumeWeightMethod::calculate
 
     if (!ok)
     {
-        return;
+        return 0;
     }
 
     // (potentially) participating source mesh cells
@@ -367,25 +423,51 @@ void Foam::cellVolumeWeightMethod::calculate
 
     if (startWalk)
     {
-        calculateAddressing
-        (
-            srcToTgtAddr,
-            srcToTgtWght,
-            tgtToSrcAddr,
-            tgtToSrcWght,
-            srcSeedI,
-            tgtSeedI,
-            srcCellIDs,
-            mapFlag,
-            startSeedI
-        );
+        const scalar V =
+            calculateAddressing
+            (
+                srcToTgtAddr,
+                srcToTgtWght,
+                tgtToSrcAddr,
+                tgtToSrcWght,
+                srcSeedI,
+                tgtSeedI,
+                srcCellIDs,
+                mapFlag,
+                startSeedI
+            );
+
+        if (debug > 1)
+        {
+            writeConnectivity(src_, tgt_, srcToTgtAddr);
+        }
+
+        return V;
     }
     else
     {
-        // if meshes are collocated, after inflating the source mesh bounding
-        // box tgt mesh cells may be transferred, but may still not overlap
-        // with the source mesh
-        return;
+        return 0;
+    }
+}
+
+
+void Foam::cellVolumeWeightMethod::normalise
+(
+    const polyMesh& srcMesh,
+    labelListList& srcToTgtAddr,
+    scalarListList& srcToTgtWght
+) const
+{
+    tetOverlapVolume overlapEngine;
+
+    forAll(srcToTgtWght, srcCelli)
+    {
+        const scalar v = overlapEngine.cellVolumeMinDecomp(srcMesh, srcCelli);
+
+        forAll(srcToTgtWght[srcCelli], i)
+        {
+            srcToTgtWght[srcCelli][i] /= v;
+        }
     }
 }
 

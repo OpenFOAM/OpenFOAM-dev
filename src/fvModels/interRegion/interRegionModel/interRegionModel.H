@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,31 +126,14 @@ public:
 
         // Interpolation
 
-            //- Interpolate field with nbrModel specified
-            template<class Type>
-            tmp<Field<Type>> interpolate
-            (
-                const interRegionModel& nbrModel,
-                const Field<Type>& field
-            ) const;
-
-            //- Interpolate field without nbrModel specified
+            //- Interpolate field
             template<class Type>
             tmp<Field<Type>> interpolate
             (
                 const Field<Type>& field
             ) const;
 
-            //- Interpolate field with nbrModel specified
-            template<class Type>
-            void interpolate
-            (
-                const interRegionModel& nbrModel,
-                const Field<Type>& field,
-                Field<Type>& result
-            ) const;
-
-            //- Interpolate field without nbrModel specified
+            //- Interpolate field
             template<class Type>
             void interpolate
             (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,6 +138,13 @@ public:
             const label cellBI
         ) const;
 
+        //- Calculates the cell volume
+        scalar cellVolumeMinDecomp
+        (
+            const primitiveMesh& mesh,
+            const label celli
+        ) const;
+
         //- Return true if olverlap volume is greater than threshold
         bool cellCellOverlapMinDecomp
         (
@@ -154,7 +161,6 @@ public:
         (
             const primitiveMesh& meshA,
             const label cellAI,
-
             const primitiveMesh& meshB,
             const label cellBI,
             const treeBoundBox& cellBbB
