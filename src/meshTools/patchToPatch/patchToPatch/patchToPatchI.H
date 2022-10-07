@@ -102,7 +102,7 @@ inline bool Foam::patchToPatch::isSingleProcess() const
 }
 
 
-inline Foam::List<Foam::List<Foam::patchToPatch::procFace>>
+inline Foam::List<Foam::List<Foam::remote>>
 Foam::patchToPatch::srcTgtProcFaces() const
 {
     return
@@ -112,7 +112,7 @@ Foam::patchToPatch::srcTgtProcFaces() const
 }
 
 
-inline Foam::List<Foam::List<Foam::patchToPatch::procFace>>
+inline Foam::List<Foam::List<Foam::remote>>
 Foam::patchToPatch::tgtSrcProcFaces() const
 {
     return

@@ -161,14 +161,14 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::List<Foam::List<Foam::patchToPatch::procFace>>
+Foam::List<Foam::List<Foam::remote>>
 Foam::patchToPatch::localFacesToProcFaces
 (
     const List<DynamicList<label>>& localFaces,
-    const List<procFace>& map
+    const List<remote>& map
 )
 {
-    List<List<procFace>> result(localFaces.size());
+    List<List<remote>> result(localFaces.size());
 
     forAll(localFaces, thisFacei)
     {
@@ -178,7 +178,7 @@ Foam::patchToPatch::localFacesToProcFaces
         {
             result[thisFacei][i] =
                 isNull(map)
-              ? procFace({Pstream::myProcNo(), localFaces[thisFacei][i]})
+              ? remote({Pstream::myProcNo(), localFaces[thisFacei][i]})
               : map[localFaces[thisFacei][i]];
         }
     }
@@ -190,8 +190,8 @@ Foam::patchToPatch::localFacesToProcFaces
 Foam::List<Foam::DynamicList<Foam::label>>
 Foam::patchToPatch::procFacesToLocalFaces
 (
-    const List<List<procFace>>& procFaces,
-    const HashTable<label, procFace, Hash<procFace>>& map
+    const List<List<remote>>& procFaces,
+    const HashTable<label, remote, Hash<remote>>& map
 )
 {
     List<DynamicList<label>> result(procFaces.size());
@@ -204,7 +204,7 @@ Foam::patchToPatch::procFacesToLocalFaces
         {
             result[tgtFacei][i] =
                 isNull(map)
-              ? procFaces[tgtFacei][i].facei
+              ? procFaces[tgtFacei][i].elementi
               : map[procFaces[tgtFacei][i]];
         }
     }
@@ -816,7 +816,7 @@ Foam::labelList Foam::patchToPatch::subsetLocalTgt
     tgtLocalSrcFaces_ =
         List<DynamicList<label>>(tgtLocalSrcFaces_, newToOldLocalTgtFace);
     localTgtProcFacesPtr_() =
-        List<procFace>(localTgtProcFacesPtr_(), newToOldLocalTgtFace);
+        List<remote>(localTgtProcFacesPtr_(), newToOldLocalTgtFace);
 
     return newToOldLocalTgtFace;
 }
@@ -834,7 +834,7 @@ void Foam::patchToPatch::distributeSrc
 void Foam::patchToPatch::rDistributeTgt(const primitiveOldTimePatch& tgtPatch)
 {
     // Create a map from source procFace to local source face
-    HashTable<label, procFace, Hash<procFace>> srcProcFaceToLocal;
+    HashTable<label, remote, Hash<remote>> srcProcFaceToLocal;
     forAll(localSrcProcFacesPtr_(), localSrcFacei)
     {
         srcProcFaceToLocal.insert
@@ -846,7 +846,7 @@ void Foam::patchToPatch::rDistributeTgt(const primitiveOldTimePatch& tgtPatch)
 
     // Collect the source procFaces on the target and convert to local
     // source face addressing
-    List<List<procFace>> tgtSrcProcFaces =
+    List<List<remote>> tgtSrcProcFaces =
         localFacesToProcFaces(tgtLocalSrcFaces_);
 
     rDistributeListList(tgtPatch.size(), tgtMapPtr_(), tgtSrcProcFaces);
@@ -892,8 +892,8 @@ Foam::patchToPatch::patchToPatch(const bool reverse)
     tgtLocalSrcFaces_(),
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr),
-    localSrcProcFacesPtr_(new List<procFace>()),
-    localTgtProcFacesPtr_(new List<procFace>())
+    localSrcProcFacesPtr_(new List<remote>()),
+    localTgtProcFacesPtr_(new List<remote>())
 {}
 
 

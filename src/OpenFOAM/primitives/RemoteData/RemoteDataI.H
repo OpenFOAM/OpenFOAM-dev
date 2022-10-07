@@ -30,8 +30,7 @@ License
 template<class Type>
 inline Foam::RemoteData<Type>::RemoteData()
 :
-    proci(-1),
-    elementi(-1),
+    remote(),
     data()
 {}
 
@@ -44,8 +43,7 @@ inline Foam::RemoteData<Type>::RemoteData
     const Type& d
 )
 :
-    proci(p),
-    elementi(e),
+    remote(p, e),
     data(d)
 {}
 
@@ -111,9 +109,8 @@ inline bool Foam::operator==
 )
 {
     return
-        a.proci == b.proci
-        && a.elementi == b.elementi
-        && a.data == b.data;
+        static_cast<const remote&>(a) == static_cast<const remote&>(b)
+     && a.data == b.data;
 }
 
 
@@ -133,17 +130,14 @@ inline bool Foam::operator!=
 template<class Type>
 inline Foam::Ostream& Foam::operator<<(Ostream& os, const RemoteData<Type>& p)
 {
-    return os
-        << p.proci << token::SPACE
-        << p.elementi << token::SPACE
-        << p.data;
+    return os << static_cast<const remote&>(p) << token::SPACE << p.data;
 }
 
 
 template<class Type>
 inline Foam::Istream& Foam::operator>>(Istream& is, RemoteData<Type>& p)
 {
-    return is >> p.proci >> p.elementi >> p.data;
+    return is >> static_cast<remote&>(p) >> p.data;
 }
 
 

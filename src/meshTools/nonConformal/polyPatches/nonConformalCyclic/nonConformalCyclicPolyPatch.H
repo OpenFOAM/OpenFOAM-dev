@@ -227,7 +227,7 @@ public:
         const patchToPatches::rays& rays() const;
 
         //- Compute a ray intersection across the coupling
-        patchToPatch::procFace ray
+        remote ray
         (
             const scalar fraction,
             const label origFacei,

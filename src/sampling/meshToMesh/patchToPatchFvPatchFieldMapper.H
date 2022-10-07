@@ -93,7 +93,7 @@ public:
             size_(-1),
             hasUnmapped_(false)
         {
-            const List<List<patchToPatch::procFace>> procFaces =
+            const List<List<remote>> procFaces =
                 forward_ ? pToP_.tgtSrcProcFaces() : pToP_.srcTgtProcFaces();
 
             size_ = procFaces.size();

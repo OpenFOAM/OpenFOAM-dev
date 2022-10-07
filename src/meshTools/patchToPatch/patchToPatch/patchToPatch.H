@@ -39,6 +39,7 @@ SourceFiles
 #include "distributionMap.H"
 #include "primitivePatch.H"
 #include "primitiveOldTimePatch.H"
+#include "remote.H"
 #include "runTimeSelectionTables.H"
 #include "treeBoundBox.H"
 
@@ -53,45 +54,6 @@ namespace Foam
 
 class patchToPatch
 {
-public:
-
-    // Public Structures
-
-        //- Structure to conveniently store processor and face indices
-        struct procFace
-        {
-            //- The processor index
-            label proci;
-
-            //- The face index
-            label facei;
-
-            //- Equality comparison
-            friend bool operator==(const procFace& a, const procFace& b)
-            {
-                return a.proci == b.proci && a.facei == b.facei;
-            }
-
-            //- Inequality comparison
-            friend bool operator!=(const procFace& a, const procFace& b)
-            {
-                return !(a == b);
-            }
-
-            //- Output stream operator
-            friend Ostream& operator<<(Ostream& os, const procFace& p)
-            {
-                return os << p.proci << token::SPACE << p.facei;
-            }
-
-            //- Input stream operator
-            friend Istream& operator>>(Istream& is, procFace& p)
-            {
-                return is >> p.proci >> p.facei;
-            }
-        };
-
-
 protected:
 
     // Private Data
@@ -118,11 +80,11 @@ protected:
 
         //- When running in parallel, a map from local source face index to
         //  source processor and face index
-        autoPtr<List<procFace>> localSrcProcFacesPtr_;
+        autoPtr<List<remote>> localSrcProcFacesPtr_;
 
         //- When running in parallel, a map from local target face index to
         //  target processor and face index
-        autoPtr<List<procFace>> localTgtProcFacesPtr_;
+        autoPtr<List<remote>> localTgtProcFacesPtr_;
 
 
     // Private Member Functions
@@ -156,17 +118,17 @@ protected:
             );
 
             //- Map local faces to proc faces
-            static List<List<procFace>> localFacesToProcFaces
+            static List<List<remote>> localFacesToProcFaces
             (
                 const List<DynamicList<label>>& localFaces,
-                const List<procFace>& map = NullObjectRef<List<procFace>>()
+                const List<remote>& map = NullObjectRef<List<remote>>()
             );
 
             //- Map proc faces to local faces
             static List<DynamicList<label>> procFacesToLocalFaces
             (
-                const List<List<procFace>>& procFaces,
-                const HashTable<label, procFace, Hash<procFace>>& map
+                const List<List<remote>>& procFaces,
+                const HashTable<label, remote, Hash<remote>>& map
             );
 
 
@@ -301,7 +263,7 @@ protected:
             (
                 const distributionMap& map,
                 const primitiveOldTimePatch& patch,
-                List<procFace>& localProcFaces
+                List<remote>& localProcFaces
             ) const;
 
             //- As above, but when you want the proc-faces without the
@@ -309,7 +271,7 @@ protected:
             void distributePatch
             (
                 const distributionMap& map,
-                List<procFace>& localProcFaces
+                List<remote>& localProcFaces
             ) const;
 
 
@@ -441,10 +403,10 @@ public:
             inline bool isSingleProcess() const;
 
             //- For each source face, the coupled target procs and faces
-            inline List<List<procFace>> srcTgtProcFaces() const;
+            inline List<List<remote>> srcTgtProcFaces() const;
 
             //- For each target face, the coupled source procs and faces
-            inline List<List<procFace>> tgtSrcProcFaces() const;
+            inline List<List<remote>> tgtSrcProcFaces() const;
 
 
         // Interpolation

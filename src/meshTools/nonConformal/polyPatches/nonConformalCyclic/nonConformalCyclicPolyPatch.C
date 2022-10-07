@@ -318,7 +318,7 @@ Foam::nonConformalCyclicPolyPatch::rays() const
 }
 
 
-Foam::patchToPatch::procFace Foam::nonConformalCyclicPolyPatch::ray
+Foam::remote Foam::nonConformalCyclicPolyPatch::ray
 (
     const scalar fraction,
     const label origFacei,

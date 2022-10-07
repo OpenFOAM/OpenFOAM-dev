@@ -120,7 +120,7 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclic
     // non-conformal interfaces are ordered.
     auto procFacesToIndices = []
     (
-        const List<List<patchToPatch::procFace>>& faceOtherProcFaces,
+        const List<List<remote>>& faceOtherProcFaces,
         const bool owner
     )
     {
@@ -130,8 +130,7 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclic
         {
             forAll(faceOtherProcFaces[facei], i)
             {
-                const patchToPatch::procFace& otherProcFacei =
-                    faceOtherProcFaces[facei][i];
+                const remote& otherProcFacei = faceOtherProcFaces[facei][i];
 
                 is[otherProcFacei.proci] ++;
             }
@@ -150,13 +149,12 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclic
         {
             forAll(faceOtherProcFaces[facei], i)
             {
-                const patchToPatch::procFace& otherProcFacei =
-                    faceOtherProcFaces[facei][i];
+                const remote& otherProcFacei = faceOtherProcFaces[facei][i];
 
                 FixedList<label, 3>& index =
                     indices[otherProcFacei.proci][is[otherProcFacei.proci] ++];
 
-                index = {facei, otherProcFacei.facei, i};
+                index = {facei, otherProcFacei.elementi, i};
 
                 if (!owner) Swap(index[0], index[1]);
             }

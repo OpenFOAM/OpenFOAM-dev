@@ -295,7 +295,7 @@ bool Foam::particle::hitNonConformalCyclicPatch
 
     // Project the particle through the non-conformal patch
     point receivePos;
-    const patchToPatch::procFace receiveProcFace =
+    const remote receiveProcFace =
         nccpp.ray
         (
             stepFractionSpan(td.mesh)[0]
@@ -318,7 +318,7 @@ bool Foam::particle::hitNonConformalCyclicPatch
         td.sendFromPatch = nccpp.index();
         td.sendToProc = receiveProcFace.proci;
         td.sendToPatch = nccpp.nbrPatchID();
-        td.sendToPatchFace = receiveProcFace.facei;
+        td.sendToPatchFace = receiveProcFace.elementi;
 
         return true;
     }
@@ -328,7 +328,7 @@ bool Foam::particle::hitNonConformalCyclicPatch
     (
         td.mesh,
         nccpp.index(),
-        receiveProcFace.facei
+        receiveProcFace.elementi
     );
     correctAfterNonConformalCyclicTransfer
     (

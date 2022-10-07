@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RemoteData
+    Foam::remote
 
 Description
-    Struct for keeping processor, element (cell, face, point) and a piece of
-    data. Used for finding minimum values across multiple processes.
+    Struct for keeping processor, element (cell, face, point) index.
 
 SourceFiles
-    RemoteDataI.H
+    remoteI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RemoteData_H
-#define RemoteData_H
+#ifndef remote_H
+#define remote_H
 
-#include "remote.H"
+#include "Istream.H"
+#include "Ostream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,108 +44,57 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-template<class Type>
-class RemoteData;
-template<class Type>
-inline bool operator==(const RemoteData<Type>&, const RemoteData<Type>&);
-template<class Type>
-inline bool operator!=(const RemoteData<Type>&, const RemoteData<Type>&);
-template<class Type>
-inline Istream& operator>>(Istream&, RemoteData<Type>&);
-template<class Type>
-inline Ostream& operator<<(Ostream&, const RemoteData<Type>&);
+class remote;
+inline bool operator==(const remote&, const remote&);
+inline bool operator!=(const remote&, const remote&);
+inline Istream& operator>>(Istream&, remote&);
+inline Ostream& operator<<(Ostream&, const remote&);
 
 /*---------------------------------------------------------------------------*\
-                          Class RemoteData Declaration
+                          Class remote Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class RemoteData
-:
-    public remote
+class remote
 {
 public:
 
     // Public Data
 
-        //- Data
-        Type data;
+        //- Processor index
+        label proci;
+
+        //- Element index
+        label elementi;
 
 
     // Constructors
 
         //- Construct null
-        inline RemoteData();
+        inline remote();
 
         //- Construct from components
-        inline RemoteData(const label, const label, const Type&);
+        inline remote(const label, const label);
 
         //- Construct from stream
-        inline RemoteData(Istream& is);
-
-
-    // Public Classes
-
-        //- Operator to take smallest valid value
-        struct smallestEqOp
-        {
-            inline void operator()
-            (
-                RemoteData<Type>& x,
-                const RemoteData<Type>& y
-            ) const;
-        };
-
-        //- Operator to take smallest first valid value
-        struct smallestFirstEqOp
-        {
-            inline void operator()
-            (
-                RemoteData<Type>& x,
-                const RemoteData<Type>& y
-            ) const;
-        };
+        inline remote(Istream& is);
 
 
     // Friend Operators
 
         //- Equality comparison
-        friend bool operator== <Type>
-        (
-            const RemoteData<Type>& a,
-            const RemoteData<Type>& b
-        );
+        friend bool operator==(const remote& a, const remote& b);
 
         //- Inequality comparison
-        friend bool operator!= <Type>
-        (
-            const RemoteData<Type>& a,
-            const RemoteData<Type>& b
-        );
+        friend bool operator!=(const remote& a, const remote& b);
 
 
     // IOstream Operators
 
         //- Write to stream
-        friend Ostream& operator<< <Type>
-        (
-            Ostream& os,
-            const RemoteData<Type>& p
-        );
+        friend Ostream& operator<<(Ostream& os, const remote& p);
 
         //- Read from stream
-        friend Istream& operator>> <Type>
-        (
-            Istream& is,
-            RemoteData<Type>& p
-        );
-};
-
-
-template<class Type>
-struct pTraits<RemoteData<Type>>
-{
-    typedef RemoteData<Type> cmptType;
+        friend Istream& operator>>(Istream& is, remote& p);
 };
 
 
@@ -155,7 +104,7 @@ struct pTraits<RemoteData<Type>>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "RemoteDataI.H"
+#include "remoteI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

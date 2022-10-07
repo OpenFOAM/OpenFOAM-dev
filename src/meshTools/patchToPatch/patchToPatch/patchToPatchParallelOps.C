@@ -222,7 +222,7 @@ Foam::patchToPatch::distributePatch
 (
     const distributionMap& map,
     const primitiveOldTimePatch& patch,
-    List<procFace>& localProcFaces
+    List<remote>& localProcFaces
 ) const
 {
     static const label thisProci = Pstream::myProcNo();
@@ -387,7 +387,7 @@ Foam::patchToPatch::distributePatch
 void Foam::patchToPatch::distributePatch
 (
     const distributionMap& map,
-    List<procFace>& localProcFaces
+    List<remote>& localProcFaces
 ) const
 {
     static const label thisProci = Pstream::myProcNo();

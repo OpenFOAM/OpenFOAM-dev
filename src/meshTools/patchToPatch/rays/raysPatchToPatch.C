@@ -165,12 +165,12 @@ Foam::label Foam::patchToPatches::rays::finalise
 }
 
 
-Foam::patchToPatch::procFace Foam::patchToPatches::rays::ray
+Foam::remote Foam::patchToPatches::rays::ray
 (
     const primitiveOldTimePatch& outPatch,
     const autoPtr<PrimitiveOldTimePatch<faceList, pointField>>&
         localOutPatchPtr,
-    const autoPtr<List<procFace>>& localOutProcFacesPtr,
+    const autoPtr<List<remote>>& localOutProcFacesPtr,
     const List<DynamicList<label>>& inLocalOutFaces,
     const scalar fraction,
     const label inFacei,
@@ -213,12 +213,12 @@ Foam::patchToPatch::procFace Foam::patchToPatches::rays::ray
 
             return
                 isSingleProcess()
-              ? procFace({Pstream::myProcNo(), localOutFacei})
+              ? remote({Pstream::myProcNo(), localOutFacei})
               : localOutProcFacesPtr()[localOutFacei];
         }
     }
 
-    return procFace({-1, -1});
+    return remote({-1, -1});
 }
 
 
@@ -257,7 +257,7 @@ Foam::patchToPatches::rays::~rays()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::patchToPatch::procFace Foam::patchToPatches::rays::srcToTgtRay
+Foam::remote Foam::patchToPatches::rays::srcToTgtRay
 (
     const primitiveOldTimePatch& tgtPatch,
     const scalar fraction,
@@ -283,7 +283,7 @@ Foam::patchToPatch::procFace Foam::patchToPatches::rays::srcToTgtRay
 }
 
 
-Foam::patchToPatch::procFace Foam::patchToPatches::rays::tgtToSrcRay
+Foam::remote Foam::patchToPatches::rays::tgtToSrcRay
 (
     const primitiveOldTimePatch& srcPatch,
     const scalar fraction,
