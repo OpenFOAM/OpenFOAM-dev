@@ -86,56 +86,40 @@ bool Foam::patchToPatches::rays::intersectFaces
 }
 
 
-Foam::tmpNrc<Foam::PrimitiveOldTimePatch<Foam::faceList, Foam::pointField>>
-Foam::patchToPatches::rays::distributeTgt
+Foam::labelList Foam::patchToPatches::rays::subsetLocalTgt
 (
-    const primitiveOldTimePatch& srcPatch,
-    const vectorField& srcPointNormals,
-    const vectorField& srcPointNormals0,
-    const primitiveOldTimePatch& tgtPatch
+    const primitiveOldTimePatch& localTgtPatch
 )
 {
-    // Intercept generation of the local patch. Store it. Return a const
-    // reference tmp instead of a pointer.
+    const labelList newToOldLocalTgtFace =
+        patchToPatch::subsetLocalTgt(localTgtPatch);
 
-    tmpNrc<PrimitiveOldTimePatch<faceList, pointField>> localTgtPatchPtr =
-        patchToPatch::distributeTgt
+    localTgtPatchPtr_.reset
+    (
+        new PrimitiveOldTimePatch<faceList, pointField>
         (
-            srcPatch,
-            srcPointNormals,
-            srcPointNormals0,
-            tgtPatch
-        );
+            faceList(localTgtPatch, newToOldLocalTgtFace),
+            localTgtPatch.points(),
+            localTgtPatch.points0()
+        )
+    );
 
-    localTgtPatchPtr_.reset(localTgtPatchPtr.ptr());
-
-    return
-        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
-        (
-            localTgtPatchPtr_()
-        );
+    return newToOldLocalTgtFace;
 }
 
 
-Foam::tmpNrc<Foam::PrimitiveOldTimePatch<Foam::faceList, Foam::pointField>>
-Foam::patchToPatches::rays::distributeSrc
+void Foam::patchToPatches::rays::distributeSrc
 (
     const primitiveOldTimePatch& srcPatch
 )
 {
-    // Intercept generation of the local patch. Store it. Return a const
-    // reference tmp instead of a pointer.
-
-    tmpNrc<PrimitiveOldTimePatch<faceList, pointField>> localSrcPatchPtr =
-        patchToPatch::distributeSrc(srcPatch);
-
-    localSrcPatchPtr_.reset(localSrcPatchPtr.ptr());
-
-    return
-        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
+    localSrcPatchPtr_.reset
+    (
+        new PrimitiveOldTimePatch<faceList, pointField>
         (
-            localSrcPatchPtr_()
-        );
+            distributePatch(srcMapPtr_(), srcPatch, localSrcProcFacesPtr_())
+        )
+    );
 }
 
 

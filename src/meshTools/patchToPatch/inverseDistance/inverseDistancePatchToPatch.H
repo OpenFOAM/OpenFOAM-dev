@@ -114,9 +114,16 @@ class inverseDistance
             const primitiveOldTimePatch& tgtPatch
         );
 
+        //- Subset the local target patch so that only parts that actually
+        //  intersect the source remain
+        virtual labelList subsetLocalTgt
+        (
+            const primitiveOldTimePatch& localTgtPatch
+        );
+
         //- Send data that resulted from an intersection between the source
         //  patch and a distributed source-local-target patch back to the
-        //  original target processes.
+        //  original target processes
         virtual void rDistributeTgt(const primitiveOldTimePatch& tgtPatch);
 
         //- Finalise the intersection

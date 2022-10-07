@@ -304,6 +304,14 @@ protected:
                 List<procFace>& localProcFaces
             ) const;
 
+            //- As above, but when you want the proc-faces without the
+            //  associated patch geometry
+            void distributePatch
+            (
+                const distributionMap& map,
+                List<procFace>& localProcFaces
+            ) const;
+
 
         // Hooks
 
@@ -316,33 +324,20 @@ protected:
                 const primitiveOldTimePatch& tgtPatch
             );
 
-            //- Distribute the target patch so that enough is locally available
-            //  for its intersection with the source patch can be computed.
-            //  Happens before intersection. Bound boxes are used to determine
-            //  what is needed where. Return the resulting local patch and
-            //  internally set the target map.
-            virtual
-            tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
-            distributeTgt
+            //- Subset the local target patch so that only parts that actually
+            //  intersect the source remain
+            virtual labelList subsetLocalTgt
             (
-                const primitiveOldTimePatch& srcPatch,
-                const vectorField& srcPointNormals,
-                const vectorField& srcPointNormals0,
-                const primitiveOldTimePatch& tgtPatch
+                const primitiveOldTimePatch& localTgtPatch
             );
 
-            //- Distribute the source patch so that everything the target
-            //  intersects is locally available. Happens after intersection.
-            //  The intersection addressing is used to determine what is needed
-            //  where. Return the resulting local patch and internally set the
-            //  source map.
-            virtual
-            tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
-            distributeSrc(const primitiveOldTimePatch& srcPatch);
+            //- Distribute the source patch so that any information needed by
+            //  the target is locally available
+            virtual void distributeSrc(const primitiveOldTimePatch& srcPatch);
 
             //- Send data that resulted from an intersection between the source
             //  patch and a distributed source-local-target patch back to the
-            //  original target processes.
+            //  original target processes
             virtual void rDistributeTgt(const primitiveOldTimePatch& tgtPatch);
 
             //- Finalising

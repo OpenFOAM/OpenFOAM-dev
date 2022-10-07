@@ -78,6 +78,75 @@ namespace Foam
     {
         return treeBoundBox(min(a.min(), b.min()), max(a.max(), b.max()));
     }
+
+    void subsetDistributionMap
+    (
+        const boolList& oldIsUsed,
+        distributionMap& map,
+        labelList& oldToNew,
+        labelList& newToOld
+    )
+    {
+        // Create re-indexing
+        oldToNew.resize(map.constructSize());
+        newToOld.resize(count(oldIsUsed, true));
+        oldToNew = -1;
+        newToOld = -1;
+        {
+            label newi = 0;
+            forAll(oldIsUsed, oldi)
+            {
+                if (oldIsUsed[oldi])
+                {
+                    oldToNew[oldi] = newi;
+                    newToOld[newi] = oldi;
+                    ++ newi;
+                }
+            }
+        }
+
+        // Per-processor used list for construction
+        List<boolList> allOldIsUsed(Pstream::nProcs());
+        forAll(map.constructMap(), proci)
+        {
+            allOldIsUsed[proci] =
+                UIndirectList<bool>(oldIsUsed, map.constructMap()[proci]);
+        }
+
+        // Communicate to form a per-processor used list for subsetting
+        List<boolList> allSubOldIsUsed(Pstream::nProcs());
+        Pstream::exchange<boolList, bool>(allOldIsUsed, allSubOldIsUsed);
+
+        // Subset the sub map
+        forAll(map.subMap(), proci)
+        {
+            label newi = 0;
+            forAll(map.subMap()[proci], oldi)
+            {
+                if (allSubOldIsUsed[proci][oldi])
+                {
+                    map.subMap()[proci][newi ++] =
+                        map.subMap()[proci][oldi];
+                }
+            }
+            map.subMap()[proci].resize(newi);
+        }
+
+        // Subset and renumber the construct map
+        forAll(map.constructMap(), proci)
+        {
+            label newi = 0;
+            forAll(map.constructMap()[proci], oldi)
+            {
+                if (allOldIsUsed[proci][oldi])
+                {
+                    map.constructMap()[proci][newi ++] =
+                        oldToNew[map.constructMap()[proci][oldi]];
+                }
+            }
+            map.constructMap()[proci].resize(newi);
+        }
+    }
 }
 
 
@@ -708,71 +777,61 @@ void Foam::patchToPatch::initialise
 }
 
 
-Foam::tmpNrc<Foam::PrimitiveOldTimePatch<Foam::faceList, Foam::pointField>>
-Foam::patchToPatch::distributeTgt
+Foam::labelList Foam::patchToPatch::subsetLocalTgt
 (
-    const primitiveOldTimePatch& srcPatch,
-    const vectorField& srcPointNormals,
-    const vectorField& srcPointNormals0,
-    const primitiveOldTimePatch& tgtPatch
+    const primitiveOldTimePatch& localTgtPatch
 )
 {
-    tgtMapPtr_ =
-        patchDistributionMap
-        (
-            tgtPatchSendFaces
-            (
-                srcPatch,
-                srcPointNormals,
-                srcPointNormals0,
-                tgtPatch
-            )
-        );
-
-    if (localTgtProcFacesPtr_.empty())
+    // Determine which local target faces are actually used
+    boolList oldLocalTgtFaceIsUsed(localTgtPatch.size(), false);
+    forAll(srcLocalTgtFaces_, srcFacei)
     {
-        localTgtProcFacesPtr_.set(new List<procFace>());
+        forAll(srcLocalTgtFaces_[srcFacei], i)
+        {
+            oldLocalTgtFaceIsUsed[srcLocalTgtFaces_[srcFacei][i]] = true;
+        }
     }
 
-    return
-        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
-        (
-            new PrimitiveOldTimePatch<faceList, pointField>
-            (
-                distributePatch(tgtMapPtr_(), tgtPatch, localTgtProcFacesPtr_())
-            )
-        );
+    // Subset the target map
+    labelList oldToNewLocalTgtFace, newToOldLocalTgtFace;
+    subsetDistributionMap
+    (
+        oldLocalTgtFaceIsUsed,
+        tgtMapPtr_(),
+        oldToNewLocalTgtFace,
+        newToOldLocalTgtFace
+    );
+
+    // Renumber the addressing
+    forAll(srcLocalTgtFaces_, srcFacei)
+    {
+        forAll(srcLocalTgtFaces_[srcFacei], i)
+        {
+            srcLocalTgtFaces_[srcFacei][i] =
+                oldToNewLocalTgtFace[srcLocalTgtFaces_[srcFacei][i]];
+        }
+    }
+
+    // Subset the local target faces
+    tgtLocalSrcFaces_ =
+        List<DynamicList<label>>(tgtLocalSrcFaces_, newToOldLocalTgtFace);
+    localTgtProcFacesPtr_() =
+        List<procFace>(localTgtProcFacesPtr_(), newToOldLocalTgtFace);
+
+    return newToOldLocalTgtFace;
 }
 
 
-Foam::tmpNrc<Foam::PrimitiveOldTimePatch<Foam::faceList, Foam::pointField>>
-Foam::patchToPatch::distributeSrc
+void Foam::patchToPatch::distributeSrc
 (
     const primitiveOldTimePatch& srcPatch
 )
 {
-    srcMapPtr_ = patchDistributionMap(srcPatchSendFaces());
-
-    if (localSrcProcFacesPtr_.empty())
-    {
-        localSrcProcFacesPtr_.set(new List<procFace>());
-    }
-
-    return
-        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
-        (
-            new PrimitiveOldTimePatch<faceList, pointField>
-            (
-                distributePatch(srcMapPtr_(), srcPatch, localSrcProcFacesPtr_())
-            )
-        );
+    distributePatch(srcMapPtr_(), localSrcProcFacesPtr_());
 }
 
 
-void Foam::patchToPatch::rDistributeTgt
-(
-    const primitiveOldTimePatch& tgtPatch
-)
+void Foam::patchToPatch::rDistributeTgt(const primitiveOldTimePatch& tgtPatch)
 {
     // Create a map from source procFace to local source face
     HashTable<label, procFace, Hash<procFace>> srcProcFaceToLocal;
@@ -833,8 +892,8 @@ Foam::patchToPatch::patchToPatch(const bool reverse)
     tgtLocalSrcFaces_(),
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr),
-    localSrcProcFacesPtr_(nullptr),
-    localTgtProcFacesPtr_(nullptr)
+    localSrcProcFacesPtr_(new List<procFace>()),
+    localTgtProcFacesPtr_(new List<procFace>())
 {}
 
 
@@ -963,14 +1022,33 @@ void Foam::patchToPatch::update
     }
     else
     {
-        // Distribute the target
-        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>> localTTgtPatchPtr =
-            distributeTgt
+        // Distribute the target patch so that everything is locally available
+        // to the source. This is done based on bound boxes, so quite a lot of
+        // faces will get distributed that ultimately are not used. These will
+        // be filtered out after the intersection has been completed.
+        tgtMapPtr_ =
+            patchDistributionMap
             (
-                srcPatch,
-                srcPointNormals,
-                srcPointNormals0,
-                tTgtPatch
+                tgtPatchSendFaces
+                (
+                    srcPatch,
+                    srcPointNormals,
+                    srcPointNormals0,
+                    tTgtPatch
+                )
+            );
+        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>> localTTgtPatchPtr =
+            tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
+            (
+                new PrimitiveOldTimePatch<faceList, pointField>
+                (
+                    distributePatch
+                    (
+                        tgtMapPtr_(),
+                        tTgtPatch,
+                        localTgtProcFacesPtr_()
+                    )
+                )
             );
 
         // Massage target patch into form that can be used by the serial
@@ -1004,9 +1082,12 @@ void Foam::patchToPatch::update
             );
         }
 
-        // Distribute the source
-        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>> localSrcPatchPtr =
-            distributeSrc(srcPatch);
+        // Subset the local target patch
+        subsetLocalTgt(localTTgtPatch);
+
+        // Distribute the source patch
+        srcMapPtr_ = patchDistributionMap(srcPatchSendFaces());
+        distributeSrc(srcPatch);
 
         // Reverse distribute coupling data back to the target
         rDistributeTgt(tgtPatch);

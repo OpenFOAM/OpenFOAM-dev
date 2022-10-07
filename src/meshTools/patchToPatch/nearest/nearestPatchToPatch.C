@@ -200,6 +200,20 @@ void Foam::patchToPatches::nearest::initialise
 }
 
 
+Foam::labelList Foam::patchToPatches::nearest::subsetLocalTgt
+(
+    const primitiveOldTimePatch& localTgtPatch
+)
+{
+    const labelList newToOldLocalTgtFace =
+        patchToPatch::subsetLocalTgt(localTgtPatch);
+
+    tgtDistances_ = List<scalar>(tgtDistances_, newToOldLocalTgtFace);
+
+    return newToOldLocalTgtFace;
+}
+
+
 void Foam::patchToPatches::nearest::rDistributeTgt
 (
     const primitiveOldTimePatch& tgtPatch

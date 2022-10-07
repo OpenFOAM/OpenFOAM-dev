@@ -92,23 +92,16 @@ class rays
             const label tgtFacei
         );
 
-        //- Distribute the target patch so that enough is locally available
-        //  for its intersection with the source patch can be computed
-        virtual
-        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
-        distributeTgt
+        //- Subset the local target patch so that only parts that actually
+        //  intersect the source remain
+        virtual labelList subsetLocalTgt
         (
-            const primitiveOldTimePatch& srcPatch,
-            const vectorField& srcPointNormals,
-            const vectorField& srcPointNormals0,
-            const primitiveOldTimePatch& tgtPatch
+            const primitiveOldTimePatch& localTgtPatch
         );
 
-        //- Distribute the source patch so that everything the target
-        //  intersects is locally available. Happens after intersection.
-        virtual
-        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
-        distributeSrc(const primitiveOldTimePatch& srcPatch);
+        //- Distribute the source patch so that any information needed by
+        //  the target is locally available
+        virtual void distributeSrc(const primitiveOldTimePatch& srcPatch);
 
         //- Finalising
         virtual label finalise

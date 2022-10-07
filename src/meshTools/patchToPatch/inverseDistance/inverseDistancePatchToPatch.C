@@ -191,6 +191,20 @@ void Foam::patchToPatches::inverseDistance::initialise
 }
 
 
+Foam::labelList Foam::patchToPatches::inverseDistance::subsetLocalTgt
+(
+    const primitiveOldTimePatch& localTgtPatch
+)
+{
+    const labelList newToOldLocalTgtFace =
+        patchToPatch::subsetLocalTgt(localTgtPatch);
+
+    tgtWeights_ = List<DynamicList<scalar>>(tgtWeights_, newToOldLocalTgtFace);
+
+    return newToOldLocalTgtFace;
+}
+
+
 void Foam::patchToPatches::inverseDistance::rDistributeTgt
 (
     const primitiveOldTimePatch& tgtPatch

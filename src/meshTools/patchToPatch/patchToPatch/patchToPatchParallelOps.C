@@ -238,19 +238,19 @@ Foam::patchToPatch::distributePatch
         // Send
         for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {
-            const labelList& sendTgtFaces = map.subMap()[proci];
+            const labelList& sendFaceis = map.subMap()[proci];
 
-            if (proci != thisProci && sendTgtFaces.size())
+            if (proci != thisProci && sendFaceis.size())
             {
                 uindirectPrimitiveOldTimePatch subPatch
                 (
-                    UIndirectList<face>(patch, sendTgtFaces),
+                    UIndirectList<face>(patch, sendFaceis),
                     patch.points(),
                     patch.points0()
                 );
 
                 UOPstream(proci, pBufs)()
-                    << sendTgtFaces
+                    << sendFaceis
                     << subPatch.localFaces()
                     << subPatch.localPoints()
                     << (patch.has0() ? subPatch.localPoints0() : pointField());
@@ -261,16 +261,16 @@ Foam::patchToPatch::distributePatch
 
         // Map local data
         {
-            const labelList& sendTgtFaces = map.subMap()[thisProci];
+            const labelList& sendFaceis = map.subMap()[thisProci];
 
             uindirectPrimitiveOldTimePatch subPatch
             (
-                UIndirectList<face>(patch, sendTgtFaces),
+                UIndirectList<face>(patch, sendFaceis),
                 patch.points(),
                 patch.points0()
             );
 
-            procLocalFaceis[thisProci] = sendTgtFaces;
+            procLocalFaceis[thisProci] = sendFaceis;
             procLocalFaces[thisProci] = subPatch.localFaces();
             procLocalPoints[thisProci] = subPatch.localPoints();
             if (patch.has0())
@@ -282,9 +282,7 @@ Foam::patchToPatch::distributePatch
         // Receive remote data
         for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {
-            const labelList& receiveNewTgtFaces = map.constructMap()[proci];
-
-            if (proci != thisProci && receiveNewTgtFaces.size())
+            if (proci != thisProci && map.constructMap()[proci].size())
             {
                 UIPstream(proci, pBufs)()
                     >> procLocalFaceis[proci]
@@ -296,9 +294,9 @@ Foam::patchToPatch::distributePatch
     }
 
     // Allocate
-    faceList localTgtFaces;
-    pointField localTgtPoints;
-    pointField localTgtPoints0;
+    faceList localFaces;
+    pointField localPoints;
+    pointField localPoints0;
     {
         label nLocalFaces = 0, nLocalPoints = 0;
         forAll(procLocalFaceis, proci)
@@ -307,16 +305,16 @@ Foam::patchToPatch::distributePatch
             nLocalPoints += procLocalPoints[proci].size();
         }
         localProcFaces.setSize(nLocalFaces);
-        localTgtFaces.setSize(nLocalFaces);
-        localTgtPoints.setSize(nLocalPoints);
+        localFaces.setSize(nLocalFaces);
+        localPoints.setSize(nLocalPoints);
         if (patch.has0())
         {
-            localTgtPoints0.setSize(nLocalPoints);
+            localPoints0.setSize(nLocalPoints);
         }
     }
 
     // Renumber and flatten
-    label localTgtFacei = 0, localTgtPointi = 0;
+    label localFacei = 0, localPointi = 0;
 
     // Local data first
     {
@@ -324,21 +322,21 @@ Foam::patchToPatch::distributePatch
         const faceList& fs = procLocalFaces[thisProci];
         forAll(fis, i)
         {
-            localProcFaces[localTgtFacei] = {thisProci, fis[i]};
-            localTgtFaces[localTgtFacei] = face(fs[i] + localTgtPointi);
-            localTgtFacei ++;
+            localProcFaces[localFacei] = {thisProci, fis[i]};
+            localFaces[localFacei] = face(fs[i] + localPointi);
+            localFacei ++;
         }
 
         const pointField& ps = procLocalPoints[thisProci];
         const pointField& ps0 = procLocalPoints0[thisProci];
         forAll(ps, i)
         {
-            localTgtPoints[localTgtPointi] = ps[i];
+            localPoints[localPointi] = ps[i];
             if (patch.has0())
             {
-                localTgtPoints0[localTgtPointi] = ps0[i];
+                localPoints0[localPointi] = ps0[i];
             }
-            localTgtPointi ++;
+            localPointi ++;
         }
     }
 
@@ -351,21 +349,21 @@ Foam::patchToPatch::distributePatch
             const faceList& fs = procLocalFaces[proci];
             forAll(fis, i)
             {
-                localProcFaces[localTgtFacei] = {proci, fis[i]};
-                localTgtFaces[localTgtFacei] = face(fs[i] + localTgtPointi);
-                localTgtFacei ++;
+                localProcFaces[localFacei] = {proci, fis[i]};
+                localFaces[localFacei] = face(fs[i] + localPointi);
+                localFacei ++;
             }
 
             const pointField& ps = procLocalPoints[proci];
             const pointField& ps0 = procLocalPoints0[proci];
             forAll(ps, i)
             {
-                localTgtPoints[localTgtPointi] = ps[i];
+                localPoints[localPointi] = ps[i];
                 if (patch.has0())
                 {
-                    localTgtPoints0[localTgtPointi] = ps0[i];
+                    localPoints0[localPointi] = ps0[i];
                 }
-                localTgtPointi ++;
+                localPointi ++;
             }
         }
     }
@@ -374,15 +372,97 @@ Foam::patchToPatch::distributePatch
         patch.has0()
       ? PrimitiveOldTimePatch<faceList, pointField>
         (
-            localTgtFaces,
-            localTgtPoints,
-            localTgtPoints0
+            localFaces,
+            localPoints,
+            localPoints0
         )
       : PrimitiveOldTimePatch<faceList, pointField>
         (
-            localTgtFaces,
-            localTgtPoints
+            localFaces,
+            localPoints
         );
+}
+
+
+void Foam::patchToPatch::distributePatch
+(
+    const distributionMap& map,
+    List<procFace>& localProcFaces
+) const
+{
+    static const label thisProci = Pstream::myProcNo();
+
+    // Exchange per-processor data
+    List<labelList> procLocalFaceis(Pstream::nProcs());
+    {
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
+
+        // Send
+        for (label proci = 0; proci < Pstream::nProcs(); proci++)
+        {
+            const labelList& sendFaceis = map.subMap()[proci];
+
+            if (proci != thisProci && sendFaceis.size())
+            {
+                UOPstream(proci, pBufs)() << sendFaceis;
+            }
+        }
+
+        pBufs.finishedSends();
+
+        // Map local data
+        {
+            const labelList& sendFaceis = map.subMap()[thisProci];
+
+            procLocalFaceis[thisProci] = sendFaceis;
+        }
+
+        // Receive remote data
+        for (label proci = 0; proci < Pstream::nProcs(); proci++)
+        {
+            if (proci != thisProci && map.constructMap()[proci].size())
+            {
+                UIPstream(proci, pBufs)() >> procLocalFaceis[proci];
+            }
+        }
+    }
+
+    // Allocate
+    {
+        label nLocalFaces = 0;
+        forAll(procLocalFaceis, proci)
+        {
+            nLocalFaces += procLocalFaceis[proci].size();
+        }
+        localProcFaces.setSize(nLocalFaces);
+    }
+
+    // Renumber and flatten
+    label localFacei = 0;
+
+    // Local data first
+    {
+        const labelList& fis = procLocalFaceis[thisProci];
+        forAll(fis, i)
+        {
+            localProcFaces[localFacei] = {thisProci, fis[i]};
+            localFacei ++;
+        }
+    }
+
+    // Remote data after
+    forAll(procLocalFaceis, proci)
+    {
+        if (proci != thisProci)
+        {
+            const labelList& fis = procLocalFaceis[proci];
+            forAll(fis, i)
+            {
+                localProcFaces[localFacei] = {proci, fis[i]};
+                localFacei ++;
+            }
+        }
+    }
 }
 
 
