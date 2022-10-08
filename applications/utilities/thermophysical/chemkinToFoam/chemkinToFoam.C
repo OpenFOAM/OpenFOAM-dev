@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,9 +44,6 @@ int main(int argc, char *argv[])
 {
     #include "removeCaseOptions.H"
 
-    // Increase the precision of the output for JANAF coefficients
-    Ostream::defaultPrecision(10);
-
     argList::validArgs.append("CHEMKIN file");
     argList::validArgs.append("CHEMKIN thermodynamics file");
     argList::validArgs.append("CHEMKIN transport file");
@@ -59,7 +56,20 @@ int main(int argc, char *argv[])
         "read Chemkin thermo file in new format"
     );
 
+    argList::addOption
+    (
+        "precision",
+        "label",
+        "set the write precision"
+    );
+
     argList args(argc, argv);
+
+    label precision = 10;
+    args.optionReadIfPresent("precision", precision);
+
+    // Increase the precision of the output for JANAF coefficients
+    Ostream::defaultPrecision(precision);
 
     bool newFormat = args.optionFound("newFormat");
 
