@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,6 +96,9 @@ protected:
         //- Reference to the region objectRegistry
         const objectRegistry& writeObr_;
 
+        //- False switch to which log_ defaults
+        static const Switch logFalse;
+
         //- Reference to the inheriting function object's log variable
         const Switch& log_;
 
@@ -131,7 +134,7 @@ public:
         writeObjectsBase
         (
             const objectRegistry& obr,
-            const Switch& logRef
+            const Switch& logRef = logFalse
         );
 
         //- Disallow default bitwise copy construction
