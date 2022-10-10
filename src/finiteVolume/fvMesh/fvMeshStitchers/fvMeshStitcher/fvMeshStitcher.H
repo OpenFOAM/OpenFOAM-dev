@@ -174,14 +174,6 @@ private:
 
         // Field Mapping
 
-            //- Store old times for all fields of a given type and class
-            template<class Type, template<class> class GeoField>
-            void storeOldTimeFields();
-
-            //- Store old times for all fields of a given class
-            template<template<class> class GeoField>
-            void storeOldTimeFields();
-
             //- Resize the patch fields of a given type and class to match the
             //  mesh
             template<class Type, template<class> class GeoField>

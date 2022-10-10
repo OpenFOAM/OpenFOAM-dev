@@ -254,6 +254,22 @@ void Foam::fvMesh::storeOldVol(const scalarField& V)
 }
 
 
+void Foam::fvMesh::storeOldTimeFields()
+{
+    storeOldTimeFields<PointField>();
+    storeOldTimeFields<VolField>();
+    storeOldTimeFields<SurfaceField>();
+}
+
+
+void Foam::fvMesh::nullOldestTimeFields()
+{
+    nullOldestTimeFields<PointField>();
+    nullOldestTimeFields<VolField>();
+    nullOldestTimeFields<SurfaceField>();
+}
+
+
 void Foam::fvMesh::clearOut()
 {
     clearGeom();
@@ -584,6 +600,16 @@ bool Foam::fvMesh::update()
 {
     if (!conformal()) stitcher_->disconnect(true, true);
 
+    if
+    (
+        stitcher_->stitches()
+     || topoChanger_->dynamic()
+     || distributor_->dynamic()
+    )
+    {
+        nullOldestTimeFields();
+    }
+
     const bool hasV00 = V00Ptr_;
     deleteDemandDrivenData(V00Ptr_);
 
@@ -624,6 +650,15 @@ bool Foam::fvMesh::update()
 bool Foam::fvMesh::move()
 {
     if (!conformal()) stitcher_->disconnect(true, true);
+
+    if (curTimeIndex_ < time().timeIndex() && stitcher_->stitches())
+    {
+        // Store all old-time fields. If we don't do this then we risk
+        // triggering a store in the middle of mapping and potentially
+        // overwriting a mapped old-time field with a not-yet-mapped new-time
+        // field.
+        storeOldTimeFields();
+    }
 
     // Do not set moving false
     // Once the mesh starts moving it is considered to be moving

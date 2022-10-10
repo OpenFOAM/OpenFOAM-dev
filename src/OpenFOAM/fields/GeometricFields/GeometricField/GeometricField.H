@@ -130,6 +130,12 @@ private:
         //- Read the field - create the field dictionary on-the-fly
         void readFields();
 
+        //- Store the old-time field
+        void storeOldTime() const;
+
+        //- Find oldest time and set to nullObject
+        void nullOldestTimeFound();
+
 
 public:
 
@@ -407,9 +413,6 @@ public:
         //- Store the old-time fields
         void storeOldTimes() const;
 
-        //- Store the old-time field
-        void storeOldTime() const;
-
         //- Return the number of old time fields stored
         label nOldTimes() const;
 
@@ -438,6 +441,14 @@ public:
 
         //- Delete old time and previous iteration fields
         void clearOldTimes();
+
+        //- Set oldest time field pointer to nullObjectPtr
+        //  to remove the oldest time field while maintaining a tag
+        //  so that it is reinstated on the next call to oldTime().
+        //
+        //  This is used to temporarily remove the oldest-time field
+        //  prior to mesh topology change.
+        void nullOldestTime();
 
         //- Correct boundary field
         void correctBoundaryConditions();

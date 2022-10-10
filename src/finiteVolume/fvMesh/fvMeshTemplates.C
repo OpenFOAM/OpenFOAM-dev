@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,70 @@ typename Foam::pTraits<Type>::labelType Foam::fvMesh::validComponents() const
             pTraits<Type>::rank>::type
         >::zero
     );
+}
+
+
+template<class Type, template<class> class GeoField>
+Foam::UPtrList<GeoField<Type>> Foam::fvMesh::curFields()
+{
+    HashTable<GeoField<Type>*> fields(lookupClass<GeoField<Type>>());
+    UPtrList<GeoField<Type>> curFields(fields.size());
+
+    label i = 0;
+    forAllIter(typename HashTable<GeoField<Type>*>, fields, iter)
+    {
+        if (!iter()->isOldTime())
+        {
+            curFields.set(i++, iter());
+        }
+    }
+    curFields.setSize(i);
+
+    return curFields;
+}
+
+
+template<class Type, template<class> class GeoField>
+void Foam::fvMesh::storeOldTimeFields()
+{
+    UPtrList<GeoField<Type>> curFields(this->curFields<Type, GeoField>());
+
+    forAll(curFields, i)
+    {
+        curFields[i].storeOldTimes();
+    }
+}
+
+
+template<template<class> class GeoField>
+void Foam::fvMesh::storeOldTimeFields()
+{
+    #define StoreOldTimeFields(Type, nullArg) \
+        storeOldTimeFields<Type, GeoField>();
+    FOR_ALL_FIELD_TYPES(StoreOldTimeFields);
+    #undef StoreOldTimeFields
+}
+
+
+template<class Type, template<class> class GeoField>
+void Foam::fvMesh::nullOldestTimeFields()
+{
+    UPtrList<GeoField<Type>> curFields(this->curFields<Type, GeoField>());
+
+    forAll(curFields, i)
+    {
+        curFields[i].nullOldestTime();
+    }
+}
+
+
+template<template<class> class GeoField>
+void Foam::fvMesh::nullOldestTimeFields()
+{
+    #define nullOldestTimeFields(Type, nullArg) \
+        nullOldestTimeFields<Type, GeoField>();
+    FOR_ALL_FIELD_TYPES(nullOldestTimeFields);
+    #undef nullOldestTimeFields
 }
 
 

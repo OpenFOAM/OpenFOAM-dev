@@ -231,6 +231,36 @@ private:
             //- Preserve old volume(s)
             void storeOldVol(const scalarField&);
 
+            //- Return the list of current fields of type GeoField<Type>
+            //  i.e. fields that are not old-time or old-old-time etc.
+            template<class Type, template<class> class GeoField>
+            UPtrList<GeoField<Type>> curFields();
+
+            //- Store old times fields for all fields of a given type and class
+            template<class Type, template<class> class GeoField>
+            void storeOldTimeFields();
+
+            //- Store old times fields for all fields of a given class
+            template<template<class> class GeoField>
+            void storeOldTimeFields();
+
+            //- Store old times fields for all fields
+            //  Used prior to field mapping following mesh-motion
+            //  and NCC stitching
+            void storeOldTimeFields();
+
+            //- Null oldest time field for all fields of a given type and class
+            template<class Type, template<class> class GeoField>
+            void nullOldestTimeFields();
+
+            //- Null oldest time field for all fields of a given class
+            template<template<class> class GeoField>
+            void nullOldestTimeFields();
+
+            //- Null oldest time field for all fields
+            //  Used prior to field mapping following mesh topology change
+            void nullOldestTimeFields();
+
 
        // Make topological data
 

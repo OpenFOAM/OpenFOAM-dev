@@ -1369,12 +1369,6 @@ bool Foam::fvMeshStitcher::connect
     // Make the mesh non-conformal
     mesh_.unconform(polyFacesBf, Sf, Cf);
 
-    // Store all old-time fields. If we don't do this then we risk triggering a
-    // store in the middle of mapping and potentially overwriting a mapped
-    // old-time field with a not-yet-mapped new-time field.
-    storeOldTimeFields<VolField>();
-    storeOldTimeFields<SurfaceField>();
-
     // Resize all the affected patch fields
     resizePatchFields<VolField>();
     resizePatchFields<SurfaceField>();

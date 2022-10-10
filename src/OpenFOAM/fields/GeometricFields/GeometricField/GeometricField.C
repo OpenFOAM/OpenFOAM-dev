@@ -1069,21 +1069,29 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::storeOldTime() const
 {
     if (field0Ptr_)
     {
-        field0Ptr_->storeOldTime();
-
-        if (debug)
+        if (notNull(field0Ptr_))
         {
-            InfoInFunction
-                << "Storing old time field for field" << endl
-                << this->info() << endl;
+            field0Ptr_->storeOldTime();
+
+            if (debug)
+            {
+                InfoInFunction
+                    << "Storing old time field for field" << endl
+                    << this->info() << endl;
+            }
+
+            *field0Ptr_ == *this;
+            field0Ptr_->timeIndex_ = timeIndex_;
+
+            if (field0Ptr_->field0Ptr_)
+            {
+                field0Ptr_->writeOpt() = this->writeOpt();
+            }
         }
-
-        *field0Ptr_ == *this;
-        field0Ptr_->timeIndex_ = timeIndex_;
-
-        if (field0Ptr_->field0Ptr_)
+        else
         {
-            field0Ptr_->writeOpt() = this->writeOpt();
+            // Reinstate old-time field
+            oldTime();
         }
     }
 }
@@ -1094,7 +1102,14 @@ Foam::label Foam::GeometricField<Type, PatchField, GeoMesh>::nOldTimes() const
 {
     if (field0Ptr_)
     {
-        return field0Ptr_->nOldTimes() + 1;
+        if (isNull(field0Ptr_))
+        {
+            return 1;
+        }
+        else
+        {
+            return field0Ptr_->nOldTimes() + 1;
+        }
     }
     else
     {
@@ -1107,8 +1122,12 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 const Foam::GeometricField<Type, PatchField, GeoMesh>&
 Foam::GeometricField<Type, PatchField, GeoMesh>::oldTime() const
 {
-    if (!field0Ptr_)
+    if (!field0Ptr_ || isNull(field0Ptr_))
     {
+        // Set field0Ptr_ null to ensure the old-time field constructor
+        // does not construct the old-old-time field
+        field0Ptr_ = nullptr;
+
         field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
         (
             IOobject
@@ -1218,8 +1237,43 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::prevIter() const
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::clearOldTimes()
 {
-    deleteDemandDrivenData(field0Ptr_);
+    if (field0Ptr_ && notNull(field0Ptr_))
+    {
+        deleteDemandDrivenData(field0Ptr_);
+    }
+
     deleteDemandDrivenData(fieldPrevIterPtr_);
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::nullOldestTime()
+{
+    // Check that the field is not an old-time field
+    if (!isOldTime())
+    {
+        // Search for the oldest old-time field and set to nullObject
+        nullOldestTimeFound();
+    }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::nullOldestTimeFound()
+{
+    if (field0Ptr_ && notNull(field0Ptr_))
+    {
+        if (field0Ptr_->field0Ptr_)
+        {
+            field0Ptr_->nullOldestTimeFound();
+        }
+        else
+        {
+            deleteDemandDrivenData(field0Ptr_);
+            field0Ptr_ =
+                NullObjectPtr<GeometricField<Type, PatchField, GeoMesh>>();
+        }
+    }
 }
 
 

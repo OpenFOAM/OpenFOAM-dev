@@ -41,27 +41,6 @@ Description
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type, template<class> class GeoField>
-void Foam::fvMeshStitcher::storeOldTimeFields()
-{
-    HashTable<GeoField<Type>*> fields(mesh_.lookupClass<GeoField<Type>>());
-    forAllIter(typename HashTable<GeoField<Type>*>, fields, iter)
-    {
-        iter()->storeOldTimes();
-    }
-}
-
-
-template<template<class> class GeoField>
-void Foam::fvMeshStitcher::storeOldTimeFields()
-{
-    #define StoreOldTimeFields(Type, nullArg) \
-        storeOldTimeFields<Type, GeoField>();
-    FOR_ALL_FIELD_TYPES(StoreOldTimeFields);
-    #undef StoreOldTimeFields
-}
-
-
-template<class Type, template<class> class GeoField>
 void Foam::fvMeshStitcher::resizePatchFields()
 {
     struct fvPatchFieldSetSizer

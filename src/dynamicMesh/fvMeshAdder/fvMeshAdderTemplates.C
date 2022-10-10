@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -269,30 +269,6 @@ void Foam::fvMeshAdder::MapVolFields
         <GeometricField<Type, fvPatchField, volMesh>>
         ()
     );
-
-    // It is necessary to enforce that all old-time fields are stored
-    // before the mapping is performed.  Otherwise, if the
-    // old-time-level field is mapped before the field itself, sizes
-    // will not match.
-
-    for
-    (
-        typename HashTable<const GeometricField<Type, fvPatchField, volMesh>*>::
-            iterator fieldIter = fields.begin();
-        fieldIter != fields.end();
-        ++fieldIter
-    )
-    {
-        if (debug)
-        {
-            Pout<< "MapVolFields : Storing old time for " << fieldIter()->name()
-                << endl;
-        }
-
-        const_cast<GeometricField<Type, fvPatchField, volMesh>*>(fieldIter())
-            ->storeOldTimes();
-    }
-
 
     for
     (
@@ -589,29 +565,6 @@ void Foam::fvMeshAdder::MapSurfaceFields
         meshToAdd.objectRegistry::lookupClass<fldType>()
     );
 
-    // It is necessary to enforce that all old-time fields are stored
-    // before the mapping is performed.  Otherwise, if the
-    // old-time-level field is mapped before the field itself, sizes
-    // will not match.
-
-    for
-    (
-        typename HashTable<const fldType*>::
-            iterator fieldIter = fields.begin();
-        fieldIter != fields.end();
-        ++fieldIter
-    )
-    {
-        if (debug)
-        {
-            Pout<< "MapSurfaceFields : Storing old time for "
-                << fieldIter()->name() << endl;
-        }
-
-        const_cast<fldType*>(fieldIter())->storeOldTimes();
-    }
-
-
     for
     (
         typename HashTable<const fldType*>::
@@ -907,29 +860,6 @@ void Foam::fvMeshAdder::MapPointFields
 
     HashTable<const fldType*> fields(mesh.thisDb().lookupClass<fldType>());
     HashTable<const fldType*> fieldsToAdd(meshToAdd.lookupClass<fldType>());
-
-    // It is necessary to enforce that all old-time fields are stored
-    // before the mapping is performed.  Otherwise, if the
-    // old-time-level field is mapped before the field itself, sizes
-    // will not match.
-
-    for
-    (
-        typename HashTable<const fldType*>::
-            iterator fieldIter = fields.begin();
-        fieldIter != fields.end();
-        ++fieldIter
-    )
-    {
-        if (debug)
-        {
-            Pout<< "MapPointFields : Storing old time for "
-                << fieldIter()->name() << endl;
-        }
-
-        const_cast<fldType*>(fieldIter())->storeOldTimes();
-    }
-
 
     for
     (
