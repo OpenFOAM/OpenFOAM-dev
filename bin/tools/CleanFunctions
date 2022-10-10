@@ -48,9 +48,9 @@ cleanCase()
     do
         rm -rf $d/polyMesh     $d/*/polyMesh \
                $d/fvMesh       $d/*/fvMesh \
-               $d/cellToRegion $d/*/cellToRegion \
+               $d/cellToRegion* $d/*/cellToRegion* \
                $d/cellLevel*   $d/pointLevel* \
-               $d/cellProc
+               $d/cellProc*
     done
 
     [ -d system ] && [ -d dynamicCode ] && rm -rf dynamicCode
