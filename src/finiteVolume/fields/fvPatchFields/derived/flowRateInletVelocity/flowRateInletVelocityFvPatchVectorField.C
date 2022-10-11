@@ -50,6 +50,20 @@ void Foam::flowRateInletVelocityFvPatchVectorField::setWallDist()
 }
 
 
+Foam::tmp<Foam::scalarField>
+Foam::flowRateInletVelocityFvPatchVectorField::profile()
+{
+    if (profile_.valid())
+    {
+        return profile_->value(y_);
+    }
+    else
+    {
+        return tmp<scalarField>(new scalarField(size(), scalar(1)));
+    }
+}
+
+
 template<class ScaleType, class AlphaType, class RhoType>
 void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
 (
@@ -109,6 +123,14 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
 }
 
 
+bool Foam::flowRateInletVelocityFvPatchVectorField::canEvaluate()
+{
+    return
+        Pstream::parRun()
+     || !patch().boundaryMesh().mesh().time().processorCase();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::flowRateInletVelocityFvPatchVectorField::
@@ -126,7 +148,8 @@ flowRateInletVelocityFvPatchVectorField
     rhoName_("rho"),
     rhoInlet_(0),
     alphaName_(word::null),
-    area_(0)
+    y_(),
+    area_(NaN)
 {}
 
 
@@ -175,10 +198,12 @@ flowRateInletVelocityFvPatchVectorField
         profile_ = Function1<scalar>::New("profile", dict);
     }
 
-    setWallDist();
+    if (canEvaluate())
+    {
+        setWallDist();
+    }
 
-    // Value field require if mass based
-    if (dict.found("value"))
+    if (!canEvaluate() || dict.found("value"))
     {
         fvPatchField<vector>::operator=
         (
@@ -209,8 +234,8 @@ flowRateInletVelocityFvPatchVectorField
     rhoName_(ptf.rhoName_),
     rhoInlet_(ptf.rhoInlet_),
     alphaName_(ptf.alphaName_),
-    y_(mapper(ptf.y_)),
-    area_(ptf.area_)
+    y_(),
+    area_(NaN)
 {}
 
 
@@ -242,7 +267,11 @@ void Foam::flowRateInletVelocityFvPatchVectorField::autoMap
 )
 {
     fixedValueFvPatchVectorField::autoMap(m);
-    setWallDist();
+
+    if (canEvaluate())
+    {
+        setWallDist();
+    }
 }
 
 
@@ -257,7 +286,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::rmap
     const flowRateInletVelocityFvPatchVectorField& tiptf =
         refCast<const flowRateInletVelocityFvPatchVectorField>(ptf);
 
-    if (profile_.valid())
+    if (profile_.valid() && canEvaluate())
     {
         y_.rmap(tiptf.y_, addr);
     }
@@ -274,23 +303,9 @@ void Foam::flowRateInletVelocityFvPatchVectorField::reset
     const flowRateInletVelocityFvPatchVectorField& tiptf =
         refCast<const flowRateInletVelocityFvPatchVectorField>(ptf);
 
-    if (profile_.valid())
+    if (profile_.valid() && canEvaluate())
     {
         y_.reset(tiptf.y_);
-    }
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::flowRateInletVelocityFvPatchVectorField::profile()
-{
-    if (profile_.valid())
-    {
-        return profile_->value(y_);
-    }
-    else
-    {
-        return tmp<scalarField>(new scalarField(size(), scalar(1)));
     }
 }
 
@@ -300,6 +315,13 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
     if (updated())
     {
         return;
+    }
+
+    if (!canEvaluate())
+    {
+        FatalErrorInFunction
+            << "Cannot evaluate flow rate on a non-parallel processor case"
+            << exit(FatalError);
     }
 
     if (alphaName_ != word::null)
