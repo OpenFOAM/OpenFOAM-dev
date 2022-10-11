@@ -166,6 +166,9 @@ class flowRateInletVelocityFvPatchVectorField
         //- Set the wall distance field y_
         void setWallDist();
 
+        //- Return the normalised velocity profile
+        virtual tmp<scalarField> profile();
+
         //- Update the patch values given the appropriate volume fraction and
         //  density types and values
         template<class ScaleType, class AlphaType, class RhoType>
@@ -180,6 +183,10 @@ class flowRateInletVelocityFvPatchVectorField
         //  and values
         template<class AlphaType>
         void updateValues(const AlphaType& alpha);
+
+        //- Return whether the flow rate can be evaluated on this case (i.e.,
+        //  is not a non-parallel processor case)
+        bool canEvaluate();
 
 
 public:
@@ -255,9 +262,6 @@ public:
         //- Reset the fvPatchField to the given fvPatchField
         //  Used for mesh to mesh mapping
         virtual void reset(const fvPatchVectorField&);
-
-        //- Return the normalised velocity profile
-        virtual tmp<scalarField> profile();
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
