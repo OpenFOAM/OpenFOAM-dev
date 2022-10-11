@@ -1131,21 +1131,24 @@ Foam::fvMeshStitcher::openness() const
 
 
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
-Foam::fvMeshStitcher::volumeConservationError
-(
-    const surfaceScalarField& meshPhi
-) const
+Foam::fvMeshStitcher::volumeConservationError(const label n) const
 {
-    return
-        fvc::surfaceIntegrate(meshPhi*mesh_.time().deltaT())()
-      - (mesh_.V() - mesh_.V0())/mesh_.V();
-}
+    if (0 > n || n > 1)
+    {
+        FatalErrorInFunction
+            << "Can only compute volume conservation error for this time, or "
+            << "the previous time" << exit(FatalError);
+    }
 
+    const surfaceScalarField& phi = mesh_.phi().oldTime(n);
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
-Foam::fvMeshStitcher::volumeConservationError() const
-{
-    return volumeConservationError(mesh_.phi());
+    const dimensionedScalar deltaT =
+        n == 0 ? mesh_.time().deltaT() : mesh_.time().deltaT0();
+
+    const volScalarField::Internal& V = n == 0 ? mesh_.V() : mesh_.V0();
+    const volScalarField::Internal& V0 = n == 0 ? mesh_.V0() : mesh_.V00();
+
+    return fvc::surfaceIntegrate(phi*deltaT)() - (V - V0)/mesh_.V();
 }
 
 
@@ -1216,8 +1219,17 @@ bool Foam::fvMeshStitcher::disconnect
         preConformSurfaceFields();
     }
 
-    // Undo all non-conformal changes and clear all geometry and topology
-    mesh_.conform();
+    // Conform the mesh
+    if (mesh_.moving())
+    {
+        surfaceScalarField phi(mesh_.phi());
+        conformCorrectMeshPhi(phi);
+        mesh_.conform(phi);
+    }
+    else
+    {
+        mesh_.conform();
+    }
 
     // Resize all the affected patch fields
     resizePatchFields<VolField>();
@@ -1232,13 +1244,16 @@ bool Foam::fvMeshStitcher::disconnect
         Info<< indent << "Cell min/avg/max openness = "
             << gMin(o) << '/' << gAverage(o) << '/' << gMax(o) << endl;
 
-        if (mesh_.moving())
+        for (label i = 0; mesh_.moving() && i <= mesh_.phi().nOldTimes(); ++ i)
         {
-            const volScalarField::Internal vce(volumeConservationError());
-            Info<< indent << "Cell min/avg/max volume conservation error = "
+            const volScalarField::Internal vce(volumeConservationError(i));
+            Info<< indent << "Cell min/avg/max ";
+            for (label j = 0; j < i; ++ j) Info<< "old-";
+            Info<< (i ? "time " : "") << "volume conservation error = "
                 << gMin(vce) << '/' << gAverage(vce) << '/' << gMax(vce)
                 << endl;
         }
+
     }
 
     if (coupled && geometric)
@@ -1363,21 +1378,24 @@ bool Foam::fvMeshStitcher::connect
     // necessary to correct the mesh fluxes
     if (mesh_.moving())
     {
-        initCorrectMeshPhi(polyFacesBf, Sf, Cf);
+        createNonConformalCorrectMeshPhiGeometry(polyFacesBf, Sf, Cf);
     }
 
     // Make the mesh non-conformal
-    mesh_.unconform(polyFacesBf, Sf, Cf);
+    if (mesh_.moving())
+    {
+        surfaceScalarField phi(mesh_.phi());
+        unconformCorrectMeshPhi(polyFacesBf, Sf, Cf, phi);
+        mesh_.unconform(polyFacesBf, Sf, Cf, phi);
+    }
+    else
+    {
+        mesh_.unconform(polyFacesBf, Sf, Cf);
+    }
 
     // Resize all the affected patch fields
     resizePatchFields<VolField>();
     resizePatchFields<SurfaceField>();
-
-    // If the mesh is moving then correct the mesh fluxes
-    if (mesh_.moving())
-    {
-        correctMeshPhi(polyFacesBf, Sf, Cf);
-    }
 
     if (changing)
     {
@@ -1406,10 +1424,12 @@ bool Foam::fvMeshStitcher::connect
         Info<< indent << "Cell min/avg/max openness = "
             << gMin(o) << '/' << gAverage(o) << '/' << gMax(o) << endl;
 
-        if (mesh_.moving())
+        for (label i = 0; mesh_.moving() && i <= mesh_.phi().nOldTimes(); ++ i)
         {
-            const volScalarField::Internal vce(volumeConservationError());
-            Info<< indent << "Cell min/avg/max volume conservation error = "
+            const volScalarField::Internal vce(volumeConservationError(i));
+            Info<< indent << "Cell min/avg/max ";
+            for (label j = 0; j < i; ++ j) Info<< "old-";
+            Info<< (i ? "time " : "") << "volume conservation error = "
                 << gMin(vce) << '/' << gAverage(vce) << '/' << gMax(vce)
                 << endl;
         }

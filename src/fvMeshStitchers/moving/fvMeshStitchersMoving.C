@@ -128,7 +128,44 @@ namespace fvMeshStitchers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fvMeshStitchers::moving::initCorrectMeshPhi
+void Foam::fvMeshStitchers::moving::conformCorrectMeshPhi
+(
+    surfaceScalarField& phi
+)
+{
+    // Add the non-conformal parts of the mesh flux into the original faces
+    surfaceScalarField::Boundary& phiBf = phi.boundaryFieldRef();
+    forAll(phiBf, nccPatchi)
+    {
+        if (isA<nonConformalFvPatch>(phiBf[nccPatchi].patch()))
+        {
+            const nonConformalFvPatch& ncFvp =
+                refCast<const nonConformalFvPatch>(phiBf[nccPatchi].patch());
+
+            const label origPatchi = ncFvp.origPatchID();
+            const fvPatch& origFvp = ncFvp.origPatch();
+
+            const labelList nccOrigPatchFace =
+                ncFvp.polyFaces() - origFvp.start();
+
+            for (label i = 0; i <= phi.nOldTimes(); ++ i)
+            {
+                phi.oldTime(i).boundaryFieldRef()[origPatchi] +=
+                    fieldRMapSum
+                    (
+                        phi.oldTime(i).boundaryField()[nccPatchi],
+                        origFvp.size(),
+                        nccOrigPatchFace
+                    );
+
+                phi.oldTime(i).boundaryFieldRef()[nccPatchi] = 0;
+            }
+        }
+    }
+}
+
+
+void Foam::fvMeshStitchers::moving::createNonConformalCorrectMeshPhiGeometry
 (
     surfaceLabelField::Boundary& polyFacesBf,
     surfaceVectorField& SfSf,
@@ -251,7 +288,7 @@ Foam::labelHashSet Foam::fvMeshStitchers::moving::ownerCoupledCellSet()
 }
 
 
-void Foam::fvMeshStitchers::moving::internalFaceCorrectMeshPhi
+void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
 (
     surfaceScalarField& phi
 )
@@ -809,7 +846,7 @@ void Foam::fvMeshStitchers::moving::internalFaceCorrectMeshPhi
 }
 
 
-void Foam::fvMeshStitchers::moving::errorFaceCorrectMeshPhi
+void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
 (
     const surfaceLabelField::Boundary& polyFacesBf,
     surfaceVectorField& SfSf,
@@ -823,15 +860,25 @@ void Foam::fvMeshStitchers::moving::errorFaceCorrectMeshPhi
 
     // Synchronise the mesh fluxes on both sides of coupled patches. Store
     // the change made to the mesh flux as an error.
-    tmp<surfaceScalarField::Boundary> tphib =
-        synchronisedBoundaryField<scalar>(phi.boundaryField());
-    surfaceScalarField::Boundary phiErrorb
-    (
-        surfaceScalarField::Internal::null(),
-        phi.boundaryField()
-    );
-    phiErrorb = phi.boundaryField() - tphib();
-    phi.boundaryFieldRef() = tphib;
+    PtrList<surfaceScalarField::Boundary> phiErrorbs(phi.nOldTimes() + 1);
+    for (label i = 0; i <= phi.nOldTimes(); ++ i)
+    {
+        tmp<surfaceScalarField::Boundary> tphib =
+            synchronisedBoundaryField<scalar>(phi.oldTime(i).boundaryField());
+
+        phiErrorbs.set
+        (
+            i,
+            new surfaceScalarField::Boundary
+            (
+                surfaceScalarField::Internal::null(),
+                phi.oldTime(i).boundaryField()
+            )
+        );
+        phiErrorbs[i] = phi.oldTime(i).boundaryField() - tphib();
+
+        phi.oldTime(i).boundaryFieldRef() = tphib;
+    }
 
     // Add the mesh flux error into the error patch so that the mesh fluxes
     // and volume changes still match
@@ -857,12 +904,15 @@ void Foam::fvMeshStitchers::moving::errorFaceCorrectMeshPhi
                 const label errorPatchFacei0 = 2*origPatchFacei;
                 const label errorPatchFacei1 = 2*origPatchFacei + 1;
 
-                fvsPatchField<scalar>& phip =
-                    phi.boundaryFieldRef()[errorPatchi];
-                phip[errorPatchFacei0] +=
-                    phiErrorb[nccPatchi][nccPatchFacei]/2;
-                phip[errorPatchFacei1] +=
-                    phiErrorb[nccPatchi][nccPatchFacei]/2;
+                for (label i = 0; i <= phi.nOldTimes(); ++ i)
+                {
+                    fvsPatchField<scalar>& phip =
+                        phi.oldTime(i).boundaryFieldRef()[errorPatchi];
+                    phip[errorPatchFacei0] +=
+                        phiErrorbs[i][nccPatchi][nccPatchFacei]/2;
+                    phip[errorPatchFacei1] +=
+                        phiErrorbs[i][nccPatchi][nccPatchFacei]/2;
+                }
             }
         }
     }
@@ -986,35 +1036,45 @@ void Foam::fvMeshStitchers::moving::errorFaceCorrectMeshPhi
 }
 
 
-void Foam::fvMeshStitchers::moving::correctMeshPhi
+void Foam::fvMeshStitchers::moving::unconformCorrectMeshPhi
 (
-    const surfaceLabelField::Boundary& polyFacesBf,
+    const SurfaceFieldBoundary<label>& polyFacesBf,
     surfaceVectorField& SfSf,
-    surfaceVectorField& CfSf
+    surfaceVectorField& CfSf,
+    surfaceScalarField& phi
 )
 {
-    // Make a copy of the mesh flux
-    surfaceScalarField phi(mesh().phi());
+    // !!! At present, the correction procedures that follow require the mesh
+    // to be unconformed to its final topological state. This means we have to
+    // call fvMesh::unconform twice; once to change the topology to allow for
+    // calculation of the error areas and mesh flux corrections, and once again
+    // to actually apply these error areas and mesh flux corrections. This is
+    // OK for now (the operation is relatively quick), but ideally everything
+    // would just be calculated in advance and applied to the mesh in one go,
+    // and this function would only modify its arguments and leave calling
+    // fvMesh::unconform to the base class.
+    mesh().unconform(polyFacesBf, SfSf, CfSf);
+    resizeFieldPatchFields(polyFacesBf, phi);
 
     // Set mesh fluxes on the original and cyclic faces as a proportion of
     // the area taken from the old original faces
-    phi.boundaryFieldRef() =
-        nonConformalBoundaryField<scalar>
-        (
-            phi.boundaryField(),
-            phi.boundaryField()
-        );
-
-    // Do the same for the old time flux
-    phi.oldTime().boundaryFieldRef() =
-        nonConformalBoundaryField<scalar>
-        (
-            phi.oldTime().boundaryField(),
-            phi.oldTime().boundaryField()
-        );
+    for (label i = 0; i <= phi.nOldTimes(); ++ i)
+    {
+        phi.oldTime(i).boundaryFieldRef() =
+            nonConformalBoundaryField<scalar>
+            (
+                phi.oldTime(i).boundaryField(),
+                phi.oldTime(i).boundaryField()
+            );
+    }
 
     // Correct the mesh flux error by modifying values on the internal
-    // faces that are edge-connected to the owner orig patches
+    // faces that are edge-connected to the owner orig patches.
+    //
+    // !!! This only corrects the new-time flux. For smooth operation with
+    // second order time schemes on wonky meshes, this will probably need to
+    // correct old time mesh fluxes, too.
+    //
     if
     (
         mesh().foundObject<solutionControl>(solutionControl::typeName)
@@ -1022,15 +1082,12 @@ void Foam::fvMeshStitchers::moving::correctMeshPhi
        .dict().lookup<Switch>("correctMeshPhi")
     )
     {
-        internalFaceCorrectMeshPhi(phi);
+        unconformInternalFaceCorrectMeshPhi(phi);
     }
 
     // Correct the mesh flux error by adding flux and area to the error
     // patch faces
-    errorFaceCorrectMeshPhi(polyFacesBf, SfSf, CfSf, phi);
-
-    // Update the mesh properties
-    mesh().unconform(polyFacesBf, SfSf, CfSf, phi);
+    unconformErrorFaceCorrectMeshPhi(polyFacesBf, SfSf, CfSf, phi);
 }
 
 

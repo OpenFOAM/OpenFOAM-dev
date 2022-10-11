@@ -60,20 +60,24 @@ class stationary
             return false;
         }
 
+        //- Correct the mesh fluxes following a conform operation
+        virtual void conformCorrectMeshPhi(surfaceScalarField& phi);
+
         //- Initialise correction of the mesh fluxes
-        virtual void initCorrectMeshPhi
+        virtual void createNonConformalCorrectMeshPhiGeometry
         (
             SurfaceFieldBoundary<label>& polyFacesBf,
             surfaceVectorField& SfSf,
             surfaceVectorField& CfSf
         );
 
-        //- Correct the mesh fluxes
-        virtual void correctMeshPhi
+        //- Correct the mesh fluxes following an unconform operation
+        virtual void unconformCorrectMeshPhi
         (
             const SurfaceFieldBoundary<label>& polyFacesBf,
             surfaceVectorField& SfSf,
-            surfaceVectorField& CfSf
+            surfaceVectorField& CfSf,
+            surfaceScalarField& phi
         );
 
 

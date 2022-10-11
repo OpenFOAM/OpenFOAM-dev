@@ -562,7 +562,11 @@ public:
             virtual tmp<scalarField> movePoints(const pointField&);
 
             //- Conform the fvMesh to the polyMesh
-            void conform();
+            void conform
+            (
+                const surfaceScalarField& phi =
+                    NullObjectRef<surfaceScalarField>()
+            );
 
             //- Unconform the fvMesh from the polyMesh
             void unconform

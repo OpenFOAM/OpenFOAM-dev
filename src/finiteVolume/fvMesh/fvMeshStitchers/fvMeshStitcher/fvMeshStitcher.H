@@ -155,20 +155,24 @@ private:
             //- Return whether or not this stitcher supports a changing mesh
             virtual bool changing() const = 0;
 
+            //- Correct the mesh fluxes following a conform operation
+            virtual void conformCorrectMeshPhi(surfaceScalarField& phi) = 0;
+
             //- Initialise correction of the mesh fluxes
-            virtual void initCorrectMeshPhi
+            virtual void createNonConformalCorrectMeshPhiGeometry
             (
                 SurfaceFieldBoundary<label>& polyFacesBf,
                 surfaceVectorField& SfSf,
                 surfaceVectorField& CfSf
             ) = 0;
 
-            //- Correct the mesh fluxes
-            virtual void correctMeshPhi
+            //- Correct the mesh fluxes following an unconform operation
+            virtual void unconformCorrectMeshPhi
             (
                 const SurfaceFieldBoundary<label>& polyFacesBf,
                 surfaceVectorField& SfSf,
-                surfaceVectorField& CfSf
+                surfaceVectorField& CfSf,
+                surfaceScalarField& phi
             ) = 0;
 
 
@@ -221,6 +225,22 @@ protected:
     // Protected Member Functions
 
         // Field Mapping
+
+            //- Resize the patch field of a given field to match the mesh
+            template<class GeoBoundaryField>
+            void resizeBoundaryFieldPatchFields
+            (
+                const SurfaceFieldBoundary<label>& polyFacesBf,
+                GeoBoundaryField& fieldBf
+            );
+
+            //- Resize the patch field of a given field to match the mesh
+            template<class GeoField>
+            void resizeFieldPatchFields
+            (
+                const SurfaceFieldBoundary<label>& polyFacesBf,
+                GeoField& field
+            );
 
             //- Reverse-map sum the values of a field
             template<class Type>
@@ -299,15 +319,11 @@ protected:
             //- Return the non-dimensional cell openness for debugging/checking
             tmp<DimensionedField<scalar, volMesh>> openness() const;
 
-            //- Return the non-dimensional cell openness for debugging/checking
+            //- Return the non-dimensional old-time volume conservation error
+            //  for a specified old-time index for debugging/checking
             tmp<DimensionedField<scalar, volMesh>> volumeConservationError
             (
-                const surfaceScalarField& meshPhi
-            ) const;
-
-            //- Return the non-dimensional cell openness for debugging/checking
-            tmp<DimensionedField<scalar, volMesh>> volumeConservationError
-            (
+                const label n
             ) const;
 
 

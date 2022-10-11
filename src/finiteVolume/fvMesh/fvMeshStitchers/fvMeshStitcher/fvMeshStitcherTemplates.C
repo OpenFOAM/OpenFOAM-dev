@@ -320,6 +320,54 @@ inline void Foam::fvMeshStitcher::postNonConformSurfaceVelocities()
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+template<class GeoBoundaryField>
+void Foam::fvMeshStitcher::resizeBoundaryFieldPatchFields
+(
+    const SurfaceFieldBoundary<label>& polyFacesBf,
+    GeoBoundaryField& fieldBf
+)
+{
+    struct fvPatchFieldSetSizer
+    :
+        public fvPatchFieldMapper,
+        public setSizeFieldMapper
+    {
+        fvPatchFieldSetSizer(const label size)
+        :
+            setSizeFieldMapper(size)
+        {}
+    };
+
+    forAll(polyFacesBf, nccPatchi)
+    {
+        if (isA<nonConformalFvPatch>(polyFacesBf[nccPatchi].patch()))
+        {
+            fieldBf[nccPatchi].autoMap
+            (
+                fvPatchFieldSetSizer(polyFacesBf[nccPatchi].size())
+            );
+        }
+    }
+}
+
+template<class GeoField>
+void Foam::fvMeshStitcher::resizeFieldPatchFields
+(
+    const SurfaceFieldBoundary<label>& polyFacesBf,
+    GeoField& field
+)
+{
+    for (label i = 0; i <= field.nOldTimes(); ++ i)
+    {
+        resizeBoundaryFieldPatchFields
+        (
+            polyFacesBf,
+            field.oldTime(i).boundaryFieldRef()
+        );
+    }
+}
+
+
 template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::fvMeshStitcher::fieldRMapSum
 (

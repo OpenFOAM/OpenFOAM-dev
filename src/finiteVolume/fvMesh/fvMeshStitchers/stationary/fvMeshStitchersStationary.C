@@ -40,7 +40,16 @@ namespace fvMeshStitchers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fvMeshStitchers::stationary::initCorrectMeshPhi
+void Foam::fvMeshStitchers::stationary::conformCorrectMeshPhi
+(
+    surfaceScalarField& phi
+)
+{
+    NotImplemented;
+}
+
+
+void Foam::fvMeshStitchers::stationary::createNonConformalCorrectMeshPhiGeometry
 (
     surfaceLabelField::Boundary& polyFacesBf,
     surfaceVectorField& SfSf,
@@ -51,11 +60,12 @@ void Foam::fvMeshStitchers::stationary::initCorrectMeshPhi
 }
 
 
-void Foam::fvMeshStitchers::stationary::correctMeshPhi
+void Foam::fvMeshStitchers::stationary::unconformCorrectMeshPhi
 (
     const surfaceLabelField::Boundary& polyFacesBf,
     surfaceVectorField& SfSf,
-    surfaceVectorField& CfSf
+    surfaceVectorField& CfSf,
+    surfaceScalarField& phi
 )
 {
     NotImplemented;

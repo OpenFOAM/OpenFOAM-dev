@@ -60,11 +60,14 @@ class moving
             return true;
         }
 
+        //- Correct the mesh fluxes following a conform operation
+        virtual void conformCorrectMeshPhi(surfaceScalarField& phi);
+
         //- Initialise correction of the mesh fluxes. Create two error faces
         //  for every original face. These are initialised to have small
         //  opposing areas for stabilisation purposes. They will later be
-        //  enlarged and given mesh fluxes by errorFaceCorrectMeshPhi.
-        virtual void initCorrectMeshPhi
+        //  enlarged and given mesh fluxes by unconformErrorFaceCorrectMeshPhi.
+        virtual void createNonConformalCorrectMeshPhiGeometry
         (
             SurfaceFieldBoundary<label>& polyFacesBf,
             surfaceVectorField& SfSf,
@@ -76,21 +79,22 @@ class moving
         //  corrected.
         labelHashSet ownerCoupledCellSet();
 
-        // Correct the mismatch in mesh flux across non-conformal couplings by
-        // synchronising as much as possible without affecting the total volume
-        // change. Synchronise asymmetrically, so that the owner patch takes
-        // the neighbour value. Doing this creates a volume conservation error
-        // in the owner-adjacent cells. Remove this by solving for a potential
-        // to correct the mesh fluxes across the faces that are edge-connected
-        // to the owner patches.
+        //- Correct the mismatch in mesh flux across non-conformal couplings by
+        //  synchronising as much as possible without affecting the total
+        //  volume change. Synchronise asymmetrically, so that the owner patch
+        //  takes the neighbour value. Doing this creates a volume conservation
+        //  error in the owner-adjacent cells. Remove this by solving for a
+        //  potential to correct the mesh fluxes across the faces that are
+        //  edge-connected to the owner patches.
         //
-        // This process creates a very smooth and well behaved result. It
-        // cannot fully correct the mesh flux mismatch if the error does not
-        // globally conserve volume. In that case, errorFaceCorrectMeshPhi is
-        // also needed. Doing this correction first, however, vastly reduces
-        // the noise introduced by errorFaceCorrectMeshPhi.
+        //  This process creates a very smooth and well behaved result. It
+        //  cannot fully correct the mesh flux mismatch if the error does not
+        //  globally conserve volume. In that case,
+        //  unconformErrorFaceCorrectMeshPhi is also needed. Doing this
+        //  correction first, however, vastly reduces the noise introduced by
+        //  unconformErrorFaceCorrectMeshPhi.
         //
-        void internalFaceCorrectMeshPhi(surfaceScalarField& phi);
+        void unconformInternalFaceCorrectMeshPhi(surfaceScalarField& phi);
 
         //- Correct the mismatch in the mesh flux by synchronising
         //  symmetrically across across non-conformal couplings. Compensate for
@@ -99,10 +103,10 @@ class moving
         //
         //  This correction procedure can result in significant noise being
         //  introduced to the system. This is compensated by doing
-        //  internalFaceCorrectMeshPhi first, which acts to smooth and reduce
-        //  (and sometimes remove entirely) changes to the error faces.
+        //  unconformInternalFaceCorrectMeshPhi first, which acts to smooth and
+        //  reduce (and sometimes remove entirely) changes to the error faces.
         //
-        void errorFaceCorrectMeshPhi
+        void unconformErrorFaceCorrectMeshPhi
         (
             const SurfaceFieldBoundary<label>& polyFacesBf,
             surfaceVectorField& SfSf,
@@ -110,12 +114,13 @@ class moving
             surfaceScalarField& phi
         );
 
-        //- Correct the mesh fluxes
-        virtual void correctMeshPhi
+        //- Correct the mesh fluxes following an unconform operation
+        virtual void unconformCorrectMeshPhi
         (
             const SurfaceFieldBoundary<label>& polyFacesBf,
             surfaceVectorField& SfSf,
-            surfaceVectorField& CfSf
+            surfaceVectorField& CfSf,
+            surfaceScalarField& phi
         );
 
 
