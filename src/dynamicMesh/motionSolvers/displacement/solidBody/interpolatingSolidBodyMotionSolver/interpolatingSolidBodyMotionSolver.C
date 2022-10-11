@@ -135,7 +135,6 @@ Foam::interpolatingSolidBodyMotionSolver::curPoints() const
     tmp<pointField> tpoints(new pointField(points0));
     pointField& points = tpoints.ref();
 
-    Info << points.size() << " " << scale_.size() << endl;
     forAll(points, pointi)
     {
         // Move non-stationary points
@@ -174,7 +173,6 @@ void Foam::interpolatingSolidBodyMotionSolver::topoChange
 
 void Foam::interpolatingSolidBodyMotionSolver::mapMesh(const polyMeshMap& map)
 {
-    InfoInFunction << endl;
     points0MotionSolver::mapMesh(map);
 
     // scale is resized by the meshToMesh mapper
