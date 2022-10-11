@@ -128,12 +128,37 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
         return;
     }
 
+    if (!db().foundObject<volVectorField>(zetaName_))
+    {
+        Info << "Creating field " << zetaName_ << endl;
+
+        tmp<volVectorField> tzeta
+        (
+            new volVectorField
+            (
+                IOobject
+                (
+                    "zeta",
+                    db().time().timeName(),
+                    db(),
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::AUTO_WRITE
+                ),
+                patch().boundaryMesh().mesh(),
+                dimensionedVector(dimLength, Zero)
+            )
+        );
+
+        regIOobject::store(tzeta.ptr());
+    }
+
+    // Retrieve non-const access to zeta field from the database
+    volVectorField& zeta = db().lookupObjectRef<volVectorField>(zetaName_);
+
     const label patchi = patch().index();
 
     const scalar dt = db().time().deltaTValue();
 
-    // Retrieve non-const access to zeta field from the database
-    volVectorField& zeta = db().lookupObjectRef<volVectorField>(zetaName_);
     vectorField& zetap = zeta.boundaryFieldRef()[patchi];
 
     // Lookup d/dt scheme from database for zeta
@@ -159,6 +184,8 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
     }
 
     const volVectorField& zeta0 = zeta.oldTime();
+
+    Info << zeta0 << endl;
 
     switch (ddtScheme)
     {

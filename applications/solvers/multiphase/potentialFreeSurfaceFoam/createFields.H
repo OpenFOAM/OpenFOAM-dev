@@ -38,21 +38,6 @@ autoPtr<incompressible::momentumTransportModel> turbulence
 
 #include "readGravitationalAcceleration.H"
 
-Info<< "Creating field zeta\n" << endl;
-volVectorField zeta
-(
-    IOobject
-    (
-        "zeta",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-    mesh,
-    dimensionedVector(dimLength, Zero)
-);
-
 Info<< "Creating field p_gh\n" << endl;
 volScalarField p_gh
 (

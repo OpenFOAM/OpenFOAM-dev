@@ -36,22 +36,27 @@ boundaryField
         normalVelocity
         {
             type            uniformFixedValue;
-            uniformValue    scale;
-            uniformValueCoeffs
+
+            uniformValue
             {
-                scale           linearRamp;
-                scaleCoeffs
+                type               scale;
+
+                scale
                 {
+                    type           linearRamp;
+
                     start           0;
                     duration        10;
                 }
-                value           sine;
-                valueCoeffs
+
+                value
                 {
-                    amplitude       constant (0 0.025 0);
+                    type            sine;
+
+                    amplitude       (0 0.025 0);
                     frequency       1;
                     start           0;
-                    level           constant (0 0 0);
+                    level           (0 0 0);
                 }
             }
             value           uniform (0 0 0);
