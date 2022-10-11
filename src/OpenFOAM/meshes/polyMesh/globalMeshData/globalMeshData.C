@@ -37,20 +37,9 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(globalMeshData, 0);
+    defineTypeNameAndDebug(globalMeshData, 0);
 
-const scalar globalMeshData::matchTol_ = 1e-8;
-
-template<>
-class minEqOp<labelPair>
-{
-public:
-    void operator()(labelPair& x, const labelPair& y) const
-    {
-        x[0] = min(x[0], y[0]);
-        x[1] = min(x[1], y[1]);
-    }
-};
+    const scalar globalMeshData::matchTol_ = 1e-8;
 }
 
 
@@ -1115,114 +1104,44 @@ void Foam::globalMeshData::calcGlobalEdgeOrientation() const
             << " calculating edge orientation w.r.t. master edge." << endl;
     }
 
+    // 1. Determine the master point for every coupled point
+    const distributionMap& pointsMap = globalPointSlavesMap();
     const globalIndex& globalPoints = globalPointNumbering();
 
-    // 1. Determine master point
-    labelList masterPoint;
+    labelList masterPoint(pointsMap.constructSize(), labelMax);
+    for (label pointi = 0; pointi < coupledPatch().nPoints(); pointi++)
     {
-        const distributionMap& map = globalPointSlavesMap();
-
-        masterPoint.setSize(map.constructSize());
-        masterPoint = labelMax;
-
-        for (label pointi = 0; pointi < coupledPatch().nPoints(); pointi++)
-        {
-            masterPoint[pointi] = globalPoints.toGlobal(pointi);
-        }
-        syncData
-        (
-            masterPoint,
-            globalPointSlaves(),
-            globalPointTransformedSlaves(),
-            map,
-            minEqOp<label>()
-        );
+        masterPoint[pointi] = globalPoints.toGlobal(pointi);
     }
 
-    // Now all points should know who is master by comparing their global
-    // pointID with the masterPointID. We now can use this information
-    // to find the orientation of the master edge.
+    syncData
+    (
+        masterPoint,
+        globalPointSlaves(),
+        globalPointTransformedSlaves(),
+        pointsMap,
+        minEqOp<label>()
+    );
 
+    // 2. Now we define the master edge to be the one in which the master
+    // points are in order. So, the edge orientation can be easily obtained by
+    // comparing the master point indices.
+    globalEdgeOrientationPtr_.reset
+    (
+        new PackedBoolList(coupledPatch().nEdges())
+    );
+    PackedBoolList& globalEdgeOrientation = globalEdgeOrientationPtr_();
+
+    forAll(coupledPatch().edges(), edgeI)
     {
-        const distributionMap& map = globalEdgeSlavesMap();
-        const labelListList& slaves = globalEdgeSlaves();
-        const labelListList& transformedSlaves = globalEdgeTransformedSlaves();
-
-        // Distribute orientation of master edge (in masterPoint numbering)
-        labelPairList masterEdgeVerts(map.constructSize());
-        masterEdgeVerts = labelPair(labelMax, labelMax);
-
-        for (label edgeI = 0; edgeI < coupledPatch().nEdges(); edgeI++)
-        {
-            if
-            (
-                (
-                    slaves[edgeI].size()
-                  + transformedSlaves[edgeI].size()
-                )
-              > 0
-            )
-            {
-                // I am master. Fill in my masterPoint equivalent.
-
-                const edge& e = coupledPatch().edges()[edgeI];
-                masterEdgeVerts[edgeI] = labelPair
-                (
-                    masterPoint[e[0]],
-                    masterPoint[e[1]]
-                );
-            }
-        }
-        syncData
-        (
-            masterEdgeVerts,
-            slaves,
-            transformedSlaves,
-            map,
-            minEqOp<labelPair>()
-        );
-
-        // Now check my edges on how they relate to the master's edgeVerts
-        globalEdgeOrientationPtr_.reset
-        (
-            new PackedBoolList(coupledPatch().nEdges())
-        );
-        PackedBoolList& globalEdgeOrientation = globalEdgeOrientationPtr_();
-
-        forAll(coupledPatch().edges(), edgeI)
-        {
-            const edge& e = coupledPatch().edges()[edgeI];
-            const labelPair masterE
-            (
-                masterPoint[e[0]],
-                masterPoint[e[1]]
-            );
-
-            label stat = labelPair::compare
-            (
-                masterE,
-                masterEdgeVerts[edgeI]
-            );
-            if (stat == 0)
-            {
-                FatalErrorInFunction
-                    << "problem : my edge:" << e
-                    << " in master points:" << masterE
-                    << " v.s. masterEdgeVerts:" << masterEdgeVerts[edgeI]
-                    << exit(FatalError);
-            }
-            else
-            {
-                globalEdgeOrientation[edgeI] = (stat == 1);
-            }
-        }
+        const edge& e = coupledPatch().edges()[edgeI];
+        globalEdgeOrientation[edgeI] = masterPoint[e[0]] < masterPoint[e[1]];
     }
 
     if (debug)
     {
         Pout<< "globalMeshData::calcGlobalEdgeOrientation() :"
-            << " finished calculating edge orientation."
-            << endl;
+            << " finished calculating edge orientation." << endl;
     }
 }
 
