@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [1 -1 -2 0 0 0 0];
 
 internalField   uniform 0;
 
@@ -25,12 +25,12 @@ boundaryField
         type            calculated;
         value           uniform 0;
     }
-    ".*Wall"
+    walls
     {
         type            calculated;
         value           uniform 0;
     }
-    "floatingObject.*"
+    floatingObject
     {
         type            calculated;
         value           uniform 0;

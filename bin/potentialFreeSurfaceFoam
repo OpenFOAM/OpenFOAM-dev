@@ -23,24 +23,26 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     pimpleFoam
+#     potentialFreeSurfaceFoam
 #
 # Description
-#     Script to inform the user that pimpleFoam has been superseded
-#     and replaced by the more general incompressibleFluid solver module
-#     executed by the foamRun application.
+#     Script to inform the user that potentialFreeSurfaceFoam has been
+#     superseded and replaced by the more general isothermalFluid solver
+#     module executed by the foamRun application.
 #
 #------------------------------------------------------------------------------
 
 cat <<EOF
 
-pimpleFoam has been superseded and replaced by the more general
-incompressibleFluid solver module executed by the foamRun application:
+potentialFreeSurfaceFoam has been superseded and replaced by the more general
+isothermalFluid solver module executed by the foamRun application:
 
-    foamRun -solver incompressibleFluid
+    foamRun -solver isothermalFluid
+
+For examples of how to upgrade potentialFreeSurfaceFoam to isothermalFluid see
+modules/isothermalFluid tutorail cases potentialFreeSurfaceMovingOscillatingBox
+and potentialFreeSurfaceOscillatingBox
 
 EOF
-
-exec env foamRun -solver incompressibleFluid "$@"
 
 #------------------------------------------------------------------------------

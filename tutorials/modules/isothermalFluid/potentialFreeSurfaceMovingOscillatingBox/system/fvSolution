@@ -16,26 +16,45 @@ FoamFile
 
 solvers
 {
-    p_gh
+    "cellDisplacement.*"
     {
         solver          GAMG;
-        tolerance       1e-7;
-        relTol          0.1;
-        smoother        DICGaussSeidel;
+        tolerance       1e-5;
+        relTol          0;
+        smoother        GaussSeidel;
+    }
+
+    "pcorr.*"
+    {
+        solver          GAMG;
+        tolerance       1e-2;
+        relTol          0;
+        smoother        GaussSeidel;
         maxIter         100;
     }
 
-    p_ghFinal
+    "rho.*"
     {
-        $p_gh;
+        solver          diagonal;
+    }
+
+    p_rgh
+    {
+        $pcorr;
         tolerance       1e-7;
+        relTol          0.1;
+    }
+
+    p_rghFinal
+    {
+        $p_rgh;
         relTol          0;
     }
 
     U
     {
         solver          smoothSolver;
-        smoother        GaussSeidel;
+        smoother        symGaussSeidel;
         tolerance       1e-7;
         relTol          0.1;
     }
@@ -43,13 +62,13 @@ solvers
     UFinal
     {
         $U;
-        tolerance       1e-7;
         relTol          0;
     }
 }
 
 PIMPLE
 {
+    correctPhi          yes;
     momentumPredictor   no;
     nOuterCorrectors    1;
     nCorrectors         2;

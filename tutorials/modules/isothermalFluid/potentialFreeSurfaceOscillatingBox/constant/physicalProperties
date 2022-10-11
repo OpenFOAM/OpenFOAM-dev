@@ -9,13 +9,43 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "constant";
     object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-viscosityModel  constant;
+thermoType
+{
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          eConst;
+    equationOfState rhoConst;
+    specie          specie;
+    energy          sensibleInternalEnergy;
+}
 
-nu              [0 2 -1 0 0 0 0] 1e-06;
+mixture
+{
+    specie
+    {
+        molWeight       18;
+    }
+    equationOfState
+    {
+        rho             1000;
+    }
+    thermodynamics
+    {
+        Cv              4184;
+        Hf              0;
+    }
+    transport
+    {
+        mu              1e-3;
+        Pr              1;
+    }
+}
 
 
 // ************************************************************************* //

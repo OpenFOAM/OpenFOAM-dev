@@ -10,11 +10,11 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      p_gh;
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [1 -1 -2 0 0 0 0];
 
 internalField   uniform 0;
 
@@ -22,18 +22,22 @@ boundaryField
 {
     freeSurface
     {
-        type            waveSurfacePressure;
+        type            calculated;
         value           uniform 0;
     }
+
     ".*Wall"
     {
-        type            zeroGradient;
-    }
-    "floatingObject.*"
-    {
-        type            fixedFluxPressure;
+        type            calculated;
         value           uniform 0;
     }
+
+    "floatingObject.*"
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+
     frontAndBack
     {
         type            empty;

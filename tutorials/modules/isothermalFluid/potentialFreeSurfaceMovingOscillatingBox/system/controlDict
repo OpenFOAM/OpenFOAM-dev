@@ -14,7 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     potentialFreeSurfaceFoam;
+application     foamRun;
+
+solver          isothermalFluid;
 
 startFrom       startTime;
 
