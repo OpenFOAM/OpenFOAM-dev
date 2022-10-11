@@ -29,7 +29,7 @@ License
 #include "surfaceInterpolate.H"
 #include "pointFields.H"
 #include "meshToMeshAdjustTimeStepFunctionObject.H"
-#include "meshToMesh.H"
+#include "fvMeshToFvMesh.H"
 #include "cellVolumeWeightMethod.H"
 #include "surfaceToVolVelocity.H"
 #include "MeshToMeshMapGeometricFields.H"
@@ -154,7 +154,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             fvMesh::stitchType::none
         );
 
-        autoPtr<Foam::meshToMesh> mapper;
+        autoPtr<Foam::fvMeshToFvMesh> mapper;
 
         // Create mesh-to-mesh mapper with support for cuttingPatches
         // if specified
@@ -182,7 +182,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
                 }
             }
 
-            mapper = new Foam::meshToMesh
+            mapper = new Foam::fvMeshToFvMesh
             (
                 mesh(),
                 newMesh,
@@ -193,7 +193,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         }
         else
         {
-            mapper = new Foam::meshToMesh
+            mapper = new Foam::fvMeshToFvMesh
             (
                 mesh(),
                 newMesh,
@@ -207,25 +207,27 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
 
         // Map all the volFields in the objectRegistry
         #define mapVolFieldType(Type, nullArg)                                 \
-            MeshToMeshMapVolFields<Type>(mapper);
+            MeshToMeshMapVolFields<Type>(mesh(), mapper);
         FOR_ALL_FIELD_TYPES(mapVolFieldType);
 
         // Set all the surfaceFields in the objectRegistry to NaN
         #define NaNSurfaceFieldType(Type, nullArg)                             \
             NaNGeometricFields                                                 \
-            <Type, fvsPatchField, surfaceMesh, fvPatchFieldMapper>(mapper);
+            <Type, fvsPatchField, surfaceMesh, fvPatchFieldMapper>             \
+            (mesh(), mapper);
         FOR_ALL_FIELD_TYPES(NaNSurfaceFieldType);
 
         // Set all the pointFields in the objectRegistry to NaN
         #define NaNPointFieldType(Type, nullArg)                               \
             NaNGeometricFields                                                 \
-            <Type, pointPatchField, pointMesh, pointPatchFieldMapper>(mapper);
+            <Type, pointPatchField, pointMesh, pointPatchFieldMapper>          \
+            (mesh(), mapper);
         FOR_ALL_FIELD_TYPES(NaNPointFieldType);
 
         // Interpolate U's to Uf's
         interpolateUfs();
 
-        polyMeshMap map(mesh());
+        polyMeshMap map(mesh(), mapper());
         mesh().mapMesh(map);
     }
 

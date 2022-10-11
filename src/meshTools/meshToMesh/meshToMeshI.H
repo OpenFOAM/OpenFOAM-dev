@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,54 +23,54 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mapMeshes_H
-#define mapMeshes_H
-
 #include "meshToMesh.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-namespace Foam
+inline const Foam::List<Foam::labelPair>&
+Foam::meshToMesh::srcToTgtPatchIDs() const
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-void mapMesh
-(
-    const meshToMesh& interp,
-    const HashSet<word>& selectedFields,
-    const bool noLagrangian
-);
+    return srcToTgtPatchIDs_;
+}
 
 
-void mapConsistentMesh
-(
-    const fvMesh& meshSource,
-    const fvMesh& meshTarget,
-    const word& mapMethod,
-    const HashSet<word>& selectedFields,
-    const bool noLagrangian
-);
+inline const Foam::PtrList<Foam::patchToPatch>&
+Foam::meshToMesh::srcToTgtPatchToPatches() const
+{
+    return srcToTgtPatchToPatches_;
+}
 
 
-void mapSubMesh
-(
-    const fvMesh& meshSource,
-    const fvMesh& meshTarget,
-    const HashTable<word>& patchMap,
-    const wordList& cuttingPatches,
-    const word& mapMethod,
-    const HashSet<word>& selectedFields,
-    const bool noLagrangian
-);
+inline const Foam::labelList& Foam::meshToMesh::tgtCuttingPatchIDs() const
+{
+    return tgtCuttingPatchIDs_;
+}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-} // End namespace Foam
+inline const Foam::polyMesh& Foam::meshToMesh::srcMesh() const
+{
+    return srcMesh_;
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#endif
+inline const Foam::polyMesh& Foam::meshToMesh::tgtMesh() const
+{
+    return tgtMesh_;
+}
+
+
+inline Foam::label Foam::meshToMesh::singleProcess() const
+{
+    return singleProcess_;
+}
+
+
+inline bool Foam::meshToMesh::isSingleProcess() const
+{
+    return singleProcess_ != -1;
+}
+
 
 // ************************************************************************* //

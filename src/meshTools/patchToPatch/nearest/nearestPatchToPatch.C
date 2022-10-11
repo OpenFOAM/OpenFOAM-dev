@@ -200,13 +200,13 @@ void Foam::patchToPatches::nearest::initialise
 }
 
 
-Foam::labelList Foam::patchToPatches::nearest::subsetLocalTgt
+Foam::labelList Foam::patchToPatches::nearest::trimLocalTgt
 (
     const primitiveOldTimePatch& localTgtPatch
 )
 {
     const labelList newToOldLocalTgtFace =
-        patchToPatch::subsetLocalTgt(localTgtPatch);
+        patchToPatch::trimLocalTgt(localTgtPatch);
 
     tgtDistances_ = List<scalar>(tgtDistances_, newToOldLocalTgtFace);
 
@@ -233,7 +233,12 @@ void Foam::patchToPatches::nearest::rDistributeTgt
     patchToPatch::rDistributeTgt(tgtPatch);
 
     // Reverse distribute the distances
-    rDistributeListList(tgtPatch.size(), tgtMapPtr_(), tgtDistances);
+    patchToPatchTools::rDistributeListList
+    (
+        tgtPatch.size(),
+        tgtMapPtr_(),
+        tgtDistances
+    );
 
     // If there is more than one address, remove all but the closest
     tgtDistances_.resize(tgtLocalSrcFaces_.size());

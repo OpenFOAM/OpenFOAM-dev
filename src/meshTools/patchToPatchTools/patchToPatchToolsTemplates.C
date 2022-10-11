@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,36 +21,65 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-InNamespace
-    Foam
-
-Description
-    Maps lagrangian positions and fields
-
-SourceFiles
-    mapLagrangian.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef mapLagrangian_H
-#define mapLagrangian_H
-
-#include "meshToMesh.H"
+#include "patchToPatchTools.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
+template<class SubListA, class SubListB>
+void Foam::patchToPatchTools::transferListList
+(
+    List<SubListA>& a,
+    List<SubListB>& b
+)
 {
+    a.resize(b.size());
+    forAll(a, i)
+    {
+        a[i].transfer(b[i]);
+    }
+}
 
-//- Maps lagrangian positions and fields
-void mapLagrangian(const meshToMesh& interp);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type>
+void Foam::patchToPatchTools::rDistributeListList
+(
+    const label size,
+    const distributionMap& map,
+    List<List<Type>>& data
+)
+{
+    distributionMapBase::distribute
+    (
+        Pstream::commsTypes::nonBlocking,
+        List<labelPair>(),
+        size,
+        map.constructMap(),
+        false,
+        map.subMap(),
+        false,
+        data,
+        ListAppendEqOp<Type>(),
+        flipOp(),
+        List<Type>()
+    );
+}
 
-} // End namespace Foam
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type>
+void Foam::patchToPatchTools::rDistributeListList
+(
+    const label size,
+    const distributionMap& map,
+    List<DynamicList<Type>>& data
+)
+{
+    List<List<Type>> tData;
+    transferListList(tData, data);
+    rDistributeListList(size, map, tData);
+    transferListList(data, tData);
+}
 
-#endif
 
 // ************************************************************************* //

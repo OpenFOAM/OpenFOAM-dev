@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,57 +21,40 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+InNamespace
+    Foam
+
+Description
+    Maps geometric fields
+
+SourceFiles
+    mapGeometricFields.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "meshToMesh.H"
+#ifndef mapGeometricFields_H
+#define mapGeometricFields_H
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+#include "fvMesh.H"
 
-inline const Foam::polyMesh& Foam::meshToMesh::srcRegion() const
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
 {
-    return srcRegion_;
-}
 
+class fvMeshToFvMesh;
 
-inline const Foam::polyMesh& Foam::meshToMesh::tgtRegion() const
-{
-    return tgtRegion_;
-}
+void mapGeometricFields
+(
+    const fvMeshToFvMesh& interp,
+    const HashSet<word>& selectedFields,
+    const bool noLagrangian
+);
 
+} // End namespace Foam
 
-inline const Foam::labelListList&
-Foam::meshToMesh::srcToTgtCellAddr() const
-{
-    return srcToTgtCellAddr_;
-}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
-inline const Foam::labelListList&
-Foam::meshToMesh::tgtToSrcCellAddr() const
-{
-    return tgtToSrcCellAddr_;
-}
-
-
-inline const Foam::scalarListList&
-Foam::meshToMesh::srcToTgtCellWght() const
-{
-    return srcToTgtCellWght_;
-}
-
-
-inline const Foam::scalarListList&
-Foam::meshToMesh::tgtToSrcCellWght() const
-{
-    return tgtToSrcCellWght_;
-}
-
-
-inline const Foam::PtrList<Foam::patchToPatch>&
-Foam::meshToMesh::patchToPatches() const
-{
-    return patchToPatches_;
-}
-
+#endif
 
 // ************************************************************************* //

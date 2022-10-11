@@ -542,13 +542,13 @@ void Foam::patchToPatches::intersection::initialise
 }
 
 
-Foam::labelList Foam::patchToPatches::intersection::subsetLocalTgt
+Foam::labelList Foam::patchToPatches::intersection::trimLocalTgt
 (
     const primitiveOldTimePatch& localTgtPatch
 )
 {
     const labelList newToOldLocalTgtFace =
-        patchToPatch::subsetLocalTgt(localTgtPatch);
+        patchToPatch::trimLocalTgt(localTgtPatch);
 
     tgtCouples_ = List<DynamicList<couple>>(tgtCouples_, newToOldLocalTgtFace);
 
@@ -563,7 +563,12 @@ void Foam::patchToPatches::intersection::rDistributeTgt
 {
     patchToPatch::rDistributeTgt(tgtPatch);
 
-    rDistributeListList(tgtPatch.size(), tgtMapPtr_(), tgtCouples_);
+    patchToPatchTools::rDistributeListList
+    (
+        tgtPatch.size(),
+        tgtMapPtr_(),
+        tgtCouples_
+    );
 }
 
 

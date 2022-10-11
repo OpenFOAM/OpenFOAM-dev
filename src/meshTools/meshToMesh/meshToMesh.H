@@ -45,7 +45,6 @@ SourceFiles
 #include "polyMesh.H"
 #include "boundBox.H"
 #include "distributionMap.H"
-#include "volFieldsFwd.H"
 #include "NamedEnum.H"
 #include "patchToPatch.H"
 
@@ -63,57 +62,65 @@ class meshToMesh
     // Private Data
 
         //- Reference to the source mesh
-        const polyMesh& srcRegion_;
+        const polyMesh& srcMesh_;
 
         //- Reference to the target mesh
-        const polyMesh& tgtRegion_;
+        const polyMesh& tgtMesh_;
 
-        //- List of target patch IDs per source patch (local index)
-        List<label> srcPatchID_;
-
-        //- List of source patch IDs per target patch (local index)
-        List<label> tgtPatchID_;
+        //- List of corresponding source and target patches that are to be
+        //  mapped to each other
+        List<labelPair> srcToTgtPatchIDs_;
 
         //- List of patchToPatch interpolation engines between source and
         //  target patches
-        PtrList<patchToPatch> patchToPatches_;
+        PtrList<patchToPatch> srcToTgtPatchToPatches_;
 
         //- Cutting patches whose values are set using a zero-gradient condition
-        List<label> cuttingPatches_;
+        labelList tgtCuttingPatchIDs_;
 
-        //- Source to target cell addressing
-        labelListList srcToTgtCellAddr_;
+        //- For each source cell, the coupled local target cells
+        labelListList srcLocalTgtCells_;
 
-        //- Target to source cell addressing
-        labelListList tgtToSrcCellAddr_;
+        //- For each target cell, the coupled local source cells
+        labelListList tgtLocalSrcCells_;
 
-        //- Source to target cell interpolation weights
-        scalarListList srcToTgtCellWght_;
+        //- For each source cell, the coupled target weights
+        scalarListList srcWeights_;
 
-        //- Target to source cell interpolation weights
-        scalarListList tgtToSrcCellWght_;
+        //- For each target cell, the coupled source weights
+        scalarListList tgtWeights_;
 
-        //- Index of processor that holds all of both sides. -1 in all other
-        //  cases
-        label singleMeshProc_;
+        //- Index of processor that holds all of both sides, or -1
+        label singleProcess_;
 
-        //- Source map pointer - parallel running only
+        //- Map from source patch cells to target-local source patch cells
         autoPtr<distributionMap> srcMapPtr_;
 
-        //- Target map pointer - parallel running only
+        //- Map from target patch cells to source-local target patch cells
         autoPtr<distributionMap> tgtMapPtr_;
+
+        //- When running in parallel, a map from local source cell index to
+        //  source processor and cell index
+        autoPtr<List<remote>> localSrcProcCellsPtr_;
+
+        //- When running in parallel, a map from local target cell index to
+        //  target processor and cell index
+        autoPtr<List<remote>> localTgtProcCellsPtr_;
+
+        //- The target mesh, distributed locally to the source
+        autoPtr<polyMesh> localTgtMeshPtr_;
 
 
     // Private Member Functions
 
         //- Helper function to add a constant offset to a list
         template<class Type>
-        void add(UList<Type>& fld, const label offset) const;
+        static void add(UList<Type>& fld, const label offset);
 
-        //- Calculate the internal mesh overlap. Returns the overlap volume.
-        scalar calculate(const word& methodName);
+        //- Calculate the cell intersections. Returns the overlap volume.
+        scalar calculateCellToCells(const word& methodName);
 
-        //- Calculate patch overlap
+        //- Calculate patch intersections
         void calculatePatchToPatches(const word& patchToPatchType);
 
         //- Constructor helper
@@ -128,72 +135,56 @@ class meshToMesh
         (
             const word& methodName,
             const HashTable<word>& patchMap,
-            const wordList& cuttingPatches
+            const wordList& tgtCuttingPatches
         );
-
-        //- Return the list of patchToPatch interpolation engines between
-        //  source and target patches
-        inline const PtrList<patchToPatch>& patchToPatches() const;
 
 
         // Parallel operations
 
-            //- Determine whether the meshes are split across multiple pocessors
-            label calcDistribution
+            //- Determine which target cells need to be sent to the source.
+            //  This is done before intersection. Bound boxes are used to
+            //  estimate what cells will intersect.
+            labelListList tgtMeshSendCells
             (
-                const polyMesh& src,
-                const polyMesh& tgt
+                const polyMesh& srcMesh,
+                const polyMesh& tgtMesh
             ) const;
 
-            //- Determine which processor bounding-boxes overlap
-            label calcOverlappingProcs
-            (
-                const List<boundBox>& procBb,
-                const boundBox& bb,
-                boolList& overlaps
-            ) const;
-
-            //- Calculate the mapping between processors
-            autoPtr<distributionMap> calcProcMap
-            (
-                const polyMesh& src,
-                const polyMesh& tgt
-            ) const;
-
-            //- Distribute mesh info from 'my' processor to others
-            void distributeCells
+            //- Distribute a mesh given its distribution map
+            static List<remote> distributeMesh
             (
                 const distributionMap& map,
-                const polyMesh& tgtMesh,
-                const globalIndex& globalTgtCells,
-                List<pointField>& points,
-                List<label>& nInternalFaces,
-                List<faceList>& faces,
-                List<labelList>& faceOwner,
-                List<labelList>& faceNeighbour,
-                List<labelList>& globalCellIDs,
-                List<labelList>& nbrProcIDs,
-                List<labelList>& procLocalFaceIDs
-            ) const;
+                const polyMesh& mesh,
+                autoPtr<polyMesh>& localMeshPtr
+            );
 
-            //- Collect pieces of tgt mesh from other processors and restructure
-            void distributeAndMergeCells
-            (
-                const distributionMap& map,
-                const polyMesh& tgtMesh,
-                const globalIndex& globalTgtCells,
-                pointField& tgtPoints,
-                faceList& tgtFaces,
-                labelList& tgtFaceOwners,
-                labelList& tgtFaceNeighbours,
-                labelList& tgtCellIDs
-            ) const;
+            //- Trim the local target addressing and mesh so that communication
+            //  from the target to the source is optimised
+            void trimLocalTgt();
+
+
+protected:
+
+    // Protected Member Functions
+
+        // Access
+
+            //- Return the source patch indices
+            inline const List<labelPair>& srcToTgtPatchIDs() const;
+
+            //- Return the list of patchToPatch interpolation engines between
+            //  source and target patches
+            inline const PtrList<patchToPatch>& srcToTgtPatchToPatches() const;
+
+            //- Return the cutting patch indices
+            inline const labelList& tgtCuttingPatchIDs() const;
 
 
 public:
 
     //- Run-time type information
     TypeName("meshToMesh");
+
 
     // Constructors
 
@@ -229,22 +220,17 @@ public:
         // Access
 
             //- Return const access to the source mesh
-            inline const polyMesh& srcRegion() const;
+            inline const polyMesh& srcMesh() const;
 
             //- Return const access to the target mesh
-            inline const polyMesh& tgtRegion() const;
+            inline const polyMesh& tgtMesh() const;
 
-            //- Return const access to the source to target cell addressing
-            inline const labelListList& srcToTgtCellAddr() const;
+            //- Index of the processor holding all cells of the meshToMesh,
+            //  or -1 if spread across multiple processors
+            inline label singleProcess() const;
 
-            //- Return const access to the target to source cell addressing
-            inline const labelListList& tgtToSrcCellAddr() const;
-
-            //- Return const access to the source to target cell weights
-            inline const scalarListList& srcToTgtCellWght() const;
-
-            //- Return const access to the target to source cell weights
-            inline const scalarListList& tgtToSrcCellWght() const;
+            //- Is this intersection on a single process?
+            inline bool isSingleProcess() const;
 
 
         // Evaluation
@@ -283,24 +269,18 @@ public:
                 tmp<Field<Type>> mapTgtToSrc(const Field<Type>& tgtFld) const;
 
 
-            // Source-to-target volume field mapping
+            // Source-to-target point finding
 
-                //- Interpolate a field with a defined operation.  Values
-                //  passed in via 'result' are used to initialise the return
-                //  value
-                template<class Type>
-                void mapSrcToTgt
+                //- Find the target processor and cell associated with a point
+                //  in a source cell. Note that this will only work with
+                //  methods that fill a cell's stencil with everything that
+                //  overlaps that cell. At present this is just
+                //  cellVolumeWeightMethod, but we might add a cheaper
+                //  bound-box based method like patchToPatches::rays in future.
+                remote srcToTgtPoint
                 (
-                    const GeometricField<Type, fvPatchField, volMesh>& field,
-                    GeometricField<Type, fvPatchField, volMesh>& result
-                ) const;
-
-                //- Interpolate a field with a defined operation.  The initial
-                //  values of the result are set to zero
-                template<class Type>
-                tmp<GeometricField<Type, fvPatchField, volMesh>> mapSrcToTgt
-                (
-                    const GeometricField<Type, fvPatchField, volMesh>& field
+                    const label srcCelli,
+                    const point& p
                 ) const;
 
 

@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MapVolFields_H
-#define MapVolFields_H
-
-#include "GeometricField.H"
-#include "meshToMesh.H"
+#include "mapGeometricFields.H"
+#include "fvMeshToFvMesh.H"
+#include "surfaceMesh.H"
+#include "pointMesh.H"
 #include "IOobjectList.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -118,19 +118,17 @@ void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
 
 
 template<class Type>
-void MapVolFields
+void mapVolTypeFields
 (
     const IOobjectList& objects,
     const HashSet<word>& selectedFields,
-    const meshToMesh& interp
+    const fvMeshToFvMesh& interp
 )
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
+    const fvMesh& srcMesh = static_cast<const fvMesh&>(interp.srcMesh());
+    const fvMesh& tgtMesh = static_cast<const fvMesh&>(interp.tgtMesh());
 
-    const fvMesh& meshSource = static_cast<const fvMesh&>(interp.srcRegion());
-    const fvMesh& meshTarget = static_cast<const fvMesh&>(interp.tgtRegion());
-
-    IOobjectList fields = objects.lookupClass(fieldType::typeName);
+    IOobjectList fields = objects.lookupClass(VolField<Type>::typeName);
 
     forAllIter(IOobjectList, fields, fieldIter)
     {
@@ -138,13 +136,13 @@ void MapVolFields
 
         if (selectedFields.empty() || selectedFields.found(fieldName))
         {
-            const fieldType fieldSource(*fieldIter(), meshSource);
+            const VolField<Type> fieldSource(*fieldIter(), srcMesh);
 
-            typeIOobject<fieldType> targetIO
+            typeIOobject<VolField<Type>> targetIO
             (
                 fieldName,
-                meshTarget.time().timeName(),
-                meshTarget,
+                tgtMesh.time().timeName(),
+                tgtMesh,
                 IOobject::MUST_READ
             );
 
@@ -152,7 +150,7 @@ void MapVolFields
             {
                 Info<< "    interpolating onto existing field "
                     << fieldName << endl;
-                fieldType fieldTarget(targetIO, meshTarget);
+                VolField<Type> fieldTarget(targetIO, tgtMesh);
 
                 interp.mapSrcToTgt(fieldSource, fieldTarget);
 
@@ -167,9 +165,12 @@ void MapVolFields
 
                 targetIO.readOpt() = IOobject::NO_READ;
 
-                tmp<fieldType> tfieldTarget(interp.mapSrcToTgt(fieldSource));
+                tmp<VolField<Type>> tfieldTarget
+                (
+                    interp.mapSrcToTgt(fieldSource)
+                );
 
-                fieldType fieldTarget(targetIO, tfieldTarget);
+                VolField<Type> fieldTarget(targetIO, tfieldTarget);
 
                 evaluateConstraintTypes(fieldTarget);
 
@@ -180,12 +181,60 @@ void MapVolFields
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type, template<class> class GeoField>
+void unMappedTypeFields(const IOobjectList& objects)
+{
+    IOobjectList fields = objects.lookupClass(GeoField<Type>::typeName);
+
+    forAllConstIter(IOobjectList, fields, fieldIter)
+    {
+        mvBak(fieldIter()->objectPath(false), "unmapped");
+    }
+}
 
 } // End namespace Foam
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#endif
+void Foam::mapGeometricFields
+(
+    const fvMeshToFvMesh& interp,
+    const HashSet<word>& selectedFields,
+    const bool noLagrangian
+)
+{
+    const polyMesh& srcMesh = interp.srcMesh();
+    const polyMesh& tgtMesh = interp.tgtMesh();
+
+    {
+        // Search for list of source objects for this time
+        IOobjectList objects(srcMesh, srcMesh.time().timeName());
+
+        // Map the fields
+        #define MapVolTypeFields(Type, nullArg)                                \
+            mapVolTypeFields<Type>                                             \
+            (                                                                  \
+                objects,                                                       \
+                selectedFields,                                                \
+                interp                                                         \
+            );
+        FOR_ALL_FIELD_TYPES(MapVolTypeFields);
+        #undef MapVolTypeFields
+    }
+
+    {
+        // Search for list of target objects for this time
+        IOobjectList objects(tgtMesh, tgtMesh.time().timeName());
+
+        // Mark surface and point fields as unmapped
+        #define UnMappedTypeFields(Type, GeoField)                             \
+            unMappedTypeFields<Type, GeoField>(objects);
+        FOR_ALL_FIELD_TYPES(UnMappedTypeFields, SurfaceField);
+        FOR_ALL_FIELD_TYPES(UnMappedTypeFields, PointField);
+        #undef UnMappedTypeFields
+    }
+}
+
 
 // ************************************************************************* //

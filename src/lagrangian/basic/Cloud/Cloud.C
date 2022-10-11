@@ -26,6 +26,7 @@ License
 #include "Cloud.H"
 #include "processorPolyPatch.H"
 #include "globalMeshData.H"
+#include "meshToMesh.H"
 #include "PstreamCombineReduceOps.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
@@ -433,7 +434,109 @@ void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
 {
-    NotImplemented;
+    // Ask for the tetBasePtIs to trigger all processors to build
+    // them, otherwise, if some processors have no particles then
+    // there is a comms mismatch.
+    pMesh_.tetBasePtIs();
+    pMesh_.oldCellCentres();
+
+    // Update cached mesh indexing
+    patchNbrProc_ = patchNbrProc(pMesh_);
+    patchNbrProcPatch_ = patchNbrProcPatch(pMesh_);
+    patchNonConformalCyclicPatches_ = patchNonConformalCyclicPatches(pMesh_);
+
+    if (!globalPositionsPtr_.valid())
+    {
+        FatalErrorInFunction
+            << "Global positions are not available. "
+            << "Cloud::storeGlobalPositions has not been called."
+            << exit(FatalError);
+    }
+
+    const vectorField& positions = globalPositionsPtr_();
+
+    // Loop the particles. Map those that remain on this processor, and
+    // transfer others into send arrays.
+    List<DynamicList<label>> sendCellIndices(Pstream::nProcs());
+    List<DynamicList<point>> sendPositions(Pstream::nProcs());
+    List<IDLList<ParticleType>> sendParticles(Pstream::nProcs());
+    {
+        label particlei = 0;
+        forAllIter(typename Cloud<ParticleType>, *this, iter)
+        {
+            const point& pos = positions[particlei ++];
+
+            const remote tgtProcCell =
+                map.mapper().srcToTgtPoint(iter().cell(), pos);
+
+            if (tgtProcCell == remote())
+            {
+                WarningInFunction
+                    << "Particle at " << pos << " mapped to a location outside "
+                    << "of the new mesh. This particle will be removed." << nl;
+            }
+            else if (tgtProcCell.proci == Pstream::myProcNo())
+            {
+                iter().map(pMesh_, pos, tgtProcCell.elementi);
+            }
+            else
+            {
+                sendCellIndices[tgtProcCell.proci].append(tgtProcCell.elementi);
+                sendPositions[tgtProcCell.proci].append(pos);
+                sendParticles[tgtProcCell.proci].append(this->remove(iter));
+            }
+        }
+    }
+
+    // If serial then there is nothing more to do
+    if (!Pstream::parRun())
+    {
+        return;
+    }
+
+    // Create transfer buffers
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
+
+    // Stream into send buffers
+    forAll(sendParticles, proci)
+    {
+        if (sendParticles[proci].size())
+        {
+            UOPstream particleStream(proci, pBufs);
+
+            particleStream
+                << sendCellIndices[proci]
+                << sendPositions[proci]
+                << sendParticles[proci];
+        }
+    }
+
+    // Finish sending
+    labelList receiveSizes(Pstream::nProcs());
+    pBufs.finishedSends(receiveSizes);
+
+    // Retrieve from receive buffers and map into the new mesh
+    forAll(sendParticles, proci)
+    {
+        if (receiveSizes[proci])
+        {
+            UIPstream particleStream(proci, pBufs);
+
+            const labelList receiveCellIndices(particleStream);
+            const List<point> receivePositions(particleStream);
+            IDLList<ParticleType> receiveParticles(particleStream);
+
+            label particlei = 0;
+            forAllIter(typename Cloud<ParticleType>, receiveParticles, iter)
+            {
+                const label celli = receiveCellIndices[particlei];
+                const vector& pos = receivePositions[particlei ++];
+
+                iter().map(pMesh_, pos, celli);
+                this->append(receiveParticles.remove(iter));
+            }
+        }
+    }
 }
 
 

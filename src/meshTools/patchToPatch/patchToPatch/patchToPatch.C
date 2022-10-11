@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "patchToPatch.H"
+#include "patchToPatchTools.H"
 #include "cpuTime.H"
 #include "distributionMap.H"
 #include "globalIndex.H"
@@ -78,75 +79,6 @@ namespace Foam
     {
         return treeBoundBox(min(a.min(), b.min()), max(a.max(), b.max()));
     }
-
-    void subsetDistributionMap
-    (
-        const boolList& oldIsUsed,
-        distributionMap& map,
-        labelList& oldToNew,
-        labelList& newToOld
-    )
-    {
-        // Create re-indexing
-        oldToNew.resize(map.constructSize());
-        newToOld.resize(count(oldIsUsed, true));
-        oldToNew = -1;
-        newToOld = -1;
-        {
-            label newi = 0;
-            forAll(oldIsUsed, oldi)
-            {
-                if (oldIsUsed[oldi])
-                {
-                    oldToNew[oldi] = newi;
-                    newToOld[newi] = oldi;
-                    ++ newi;
-                }
-            }
-        }
-
-        // Per-processor used list for construction
-        List<boolList> allOldIsUsed(Pstream::nProcs());
-        forAll(map.constructMap(), proci)
-        {
-            allOldIsUsed[proci] =
-                UIndirectList<bool>(oldIsUsed, map.constructMap()[proci]);
-        }
-
-        // Communicate to form a per-processor used list for subsetting
-        List<boolList> allSubOldIsUsed(Pstream::nProcs());
-        Pstream::exchange<boolList, bool>(allOldIsUsed, allSubOldIsUsed);
-
-        // Subset the sub map
-        forAll(map.subMap(), proci)
-        {
-            label newi = 0;
-            forAll(map.subMap()[proci], oldi)
-            {
-                if (allSubOldIsUsed[proci][oldi])
-                {
-                    map.subMap()[proci][newi ++] =
-                        map.subMap()[proci][oldi];
-                }
-            }
-            map.subMap()[proci].resize(newi);
-        }
-
-        // Subset and renumber the construct map
-        forAll(map.constructMap(), proci)
-        {
-            label newi = 0;
-            forAll(map.constructMap()[proci], oldi)
-            {
-                if (allOldIsUsed[proci][oldi])
-                {
-                    map.constructMap()[proci][newi ++] =
-                        oldToNew[map.constructMap()[proci][oldi]];
-                }
-            }
-            map.constructMap()[proci].resize(newi);
-        }
-    }
 }
 
 
@@ -160,58 +92,6 @@ namespace Foam
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::List<Foam::List<Foam::remote>>
-Foam::patchToPatch::localFacesToProcFaces
-(
-    const List<DynamicList<label>>& localFaces,
-    const List<remote>& map
-)
-{
-    List<List<remote>> result(localFaces.size());
-
-    forAll(localFaces, thisFacei)
-    {
-        result[thisFacei].resize(localFaces[thisFacei].size());
-
-        forAll(localFaces[thisFacei], i)
-        {
-            result[thisFacei][i] =
-                isNull(map)
-              ? remote({Pstream::myProcNo(), localFaces[thisFacei][i]})
-              : map[localFaces[thisFacei][i]];
-        }
-    }
-
-    return result;
-}
-
-
-Foam::List<Foam::DynamicList<Foam::label>>
-Foam::patchToPatch::procFacesToLocalFaces
-(
-    const List<List<remote>>& procFaces,
-    const HashTable<label, remote, Hash<remote>>& map
-)
-{
-    List<DynamicList<label>> result(procFaces.size());
-
-    forAll(procFaces, tgtFacei)
-    {
-        result[tgtFacei].resize(procFaces[tgtFacei].size());
-
-        forAll(procFaces[tgtFacei], i)
-        {
-            result[tgtFacei][i] =
-                isNull(map)
-              ? procFaces[tgtFacei][i].elementi
-              : map[procFaces[tgtFacei][i]];
-        }
-    }
-
-    return result;
-}
-
 
 Foam::treeBoundBox Foam::patchToPatch::srcBox
 (
@@ -777,7 +657,7 @@ void Foam::patchToPatch::initialise
 }
 
 
-Foam::labelList Foam::patchToPatch::subsetLocalTgt
+Foam::labelList Foam::patchToPatch::trimLocalTgt
 (
     const primitiveOldTimePatch& localTgtPatch
 )
@@ -792,9 +672,9 @@ Foam::labelList Foam::patchToPatch::subsetLocalTgt
         }
     }
 
-    // Subset the target map
+    // Trim the target map
     labelList oldToNewLocalTgtFace, newToOldLocalTgtFace;
-    subsetDistributionMap
+    patchToPatchTools::trimDistributionMap
     (
         oldLocalTgtFaceIsUsed,
         tgtMapPtr_(),
@@ -812,7 +692,7 @@ Foam::labelList Foam::patchToPatch::subsetLocalTgt
         }
     }
 
-    // Subset the local target faces
+    // Trim the local target faces
     tgtLocalSrcFaces_ =
         List<DynamicList<label>>(tgtLocalSrcFaces_, newToOldLocalTgtFace);
     localTgtProcFacesPtr_() =
@@ -827,32 +707,25 @@ void Foam::patchToPatch::distributeSrc
     const primitiveOldTimePatch& srcPatch
 )
 {
-    distributePatch(srcMapPtr_(), localSrcProcFacesPtr_());
+    localSrcProcFacesPtr_.reset
+    (
+        new List<remote>
+        (
+            patchToPatchTools::distributeAddressing(srcMapPtr_())
+        )
+    );
 }
 
 
 void Foam::patchToPatch::rDistributeTgt(const primitiveOldTimePatch& tgtPatch)
 {
-    // Create a map from source procFace to local source face
-    HashTable<label, remote, Hash<remote>> srcProcFaceToLocal;
-    forAll(localSrcProcFacesPtr_(), localSrcFacei)
-    {
-        srcProcFaceToLocal.insert
-        (
-            localSrcProcFacesPtr_()[localSrcFacei],
-            localSrcFacei
-        );
-    }
-
-    // Collect the source procFaces on the target and convert to local
-    // source face addressing
-    List<List<remote>> tgtSrcProcFaces =
-        localFacesToProcFaces(tgtLocalSrcFaces_);
-
-    rDistributeListList(tgtPatch.size(), tgtMapPtr_(), tgtSrcProcFaces);
-
-    tgtLocalSrcFaces_ =
-        procFacesToLocalFaces(tgtSrcProcFaces, srcProcFaceToLocal);
+    patchToPatchTools::rDistributeTgtAddressing
+    (
+        tgtPatch.size(),
+        tgtMapPtr_(),
+        localSrcProcFacesPtr_(),
+        tgtLocalSrcFaces_
+    );
 }
 
 
@@ -892,8 +765,8 @@ Foam::patchToPatch::patchToPatch(const bool reverse)
     tgtLocalSrcFaces_(),
     srcMapPtr_(nullptr),
     tgtMapPtr_(nullptr),
-    localSrcProcFacesPtr_(new List<remote>()),
-    localTgtProcFacesPtr_(new List<remote>())
+    localSrcProcFacesPtr_(nullptr),
+    localTgtProcFacesPtr_(nullptr)
 {}
 
 
@@ -997,7 +870,12 @@ void Foam::patchToPatch::update
         << " target faces" << incrIndent << endl;
 
     // Determine if patches are present on multiple processors
-    calcSingleProcess(srcPatch, tTgtPatch);
+    singleProcess_ =
+        patchToPatchTools::singleProcess
+        (
+            srcPatch.size(),
+            tTgtPatch.size()
+        );
 
     // Do intersection in serial or parallel as appropriate
     if (isSingleProcess())
@@ -1027,7 +905,7 @@ void Foam::patchToPatch::update
         // faces will get distributed that ultimately are not used. These will
         // be filtered out after the intersection has been completed.
         tgtMapPtr_ =
-            patchDistributionMap
+            patchToPatchTools::constructDistributionMap
             (
                 tgtPatchSendFaces
                 (
@@ -1037,19 +915,19 @@ void Foam::patchToPatch::update
                     tTgtPatch
                 )
             );
-        tmpNrc<PrimitiveOldTimePatch<faceList, pointField>> localTTgtPatchPtr =
-            tmpNrc<PrimitiveOldTimePatch<faceList, pointField>>
+        autoPtr<PrimitiveOldTimePatch<faceList, pointField>> localTTgtPatchPtr;
+        localTgtProcFacesPtr_.reset
+        (
+            new List<remote>
             (
-                new PrimitiveOldTimePatch<faceList, pointField>
+                distributePatch
                 (
-                    distributePatch
-                    (
-                        tgtMapPtr_(),
-                        tTgtPatch,
-                        localTgtProcFacesPtr_()
-                    )
+                    tgtMapPtr_(),
+                    tTgtPatch,
+                    localTTgtPatchPtr
                 )
-            );
+            )
+        );
 
         // Massage target patch into form that can be used by the serial
         // intersection interface
@@ -1082,11 +960,19 @@ void Foam::patchToPatch::update
             );
         }
 
-        // Subset the local target patch
-        subsetLocalTgt(localTTgtPatch);
+        // Trim the local target patch
+        trimLocalTgt(localTTgtPatch);
 
         // Distribute the source patch
-        srcMapPtr_ = patchDistributionMap(srcPatchSendFaces());
+        srcMapPtr_ =
+            patchToPatchTools::constructDistributionMap
+            (
+                patchToPatchTools::procSendIndices
+                (
+                    tgtLocalSrcFaces_,
+                    localTgtProcFacesPtr_()
+                )
+            );
         distributeSrc(srcPatch);
 
         // Reverse distribute coupling data back to the target

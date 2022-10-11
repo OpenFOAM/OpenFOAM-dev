@@ -22,73 +22,85 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::polyMeshMap
+    Foam::fvMeshToFvMesh
 
 Description
-    Class containing mesh-to-mesh mapping information.
 
 SourceFiles
-    polyMeshMap.C
+    fvMeshToFvMeshTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef polyMeshMap_H
-#define polyMeshMap_H
+#ifndef fvMeshToFvMesh_H
+#define fvMeshToFvMesh_H
 
-#include "polyMesh.H"
+#include "meshToMesh.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class meshToMesh;
-
 /*---------------------------------------------------------------------------*\
-                       Class polyMeshMap Declaration
+                          Class fvMeshToFvMesh Declaration
 \*---------------------------------------------------------------------------*/
 
-class polyMeshMap
+class fvMeshToFvMesh
+:
+    public meshToMesh
 {
-    // Private Data
-
-        //- Reference to polyMesh
-        const polyMesh& mesh_;
-
-        //- Reference to the meshToMesh mapper
-        const meshToMesh& mapper_;
-
-
 public:
+
+    //- Run-time type information
+    TypeName("fvMeshToFvMesh");
+
 
     // Constructors
 
-        //- Construct for mesh
-        polyMeshMap(const polyMesh& mesh, const meshToMesh& mapper);
+        //- Inherit base class' constructors
+        using meshToMesh::meshToMesh;
 
-        //- Disallow default bitwise copy construction
-        polyMeshMap(const polyMeshMap&) = delete;
+
+    //- Destructor
+    virtual ~fvMeshToFvMesh();
 
 
     // Member Functions
 
-        //- Return polyMesh
-        const polyMesh& mesh() const
-        {
-            return mesh_;
-        }
+        // Evaluation
 
-        //- Return meshToMesh mapper
-        const meshToMesh& mapper() const
-        {
-            return mapper_;
-        }
+            // Source-to-target volume field mapping
+
+                //- Interpolate a field with a defined operation. Values
+                //  passed in via 'result' are used to initialise the return
+                //  value.
+                template<class Type>
+                void mapSrcToTgt
+                (
+                    const GeometricField<Type, fvPatchField, volMesh>& field,
+                    GeometricField<Type, fvPatchField, volMesh>& result
+                ) const;
+
+                //- Interpolate a field with a defined operation. The initial
+                //  values of the result are set to zero.
+                template<class Type>
+                tmp<GeometricField<Type, fvPatchField, volMesh>> mapSrcToTgt
+                (
+                    const GeometricField<Type, fvPatchField, volMesh>& field
+                ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "fvMeshToFvMeshTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

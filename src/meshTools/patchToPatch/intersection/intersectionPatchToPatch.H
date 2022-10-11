@@ -328,9 +328,9 @@ private:
             const primitiveOldTimePatch& tgtPatch
         );
 
-        //- Subset the local target patch so that only parts that actually
+        //- Trim the local target patch so that only parts that actually
         //  intersect the source remain
-        virtual labelList subsetLocalTgt
+        virtual labelList trimLocalTgt
         (
             const primitiveOldTimePatch& localTgtPatch
         );

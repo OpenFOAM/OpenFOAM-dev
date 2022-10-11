@@ -512,4 +512,7 @@ $(faceSources)/patchFluxToFace/patchFluxToFace.C
 solver/solver.C
 solver/solverNew.C
 
+fvMeshToFvMesh/fvMeshToFvMesh.C
+fvMeshToFvMesh/patchToPatchFvPatchFieldMapper.C
+
 LIB = $(FOAM_LIBBIN)/libfiniteVolume

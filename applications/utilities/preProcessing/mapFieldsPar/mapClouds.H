@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,34 +21,30 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+InNamespace
+    Foam
+
+Description
+    Maps Lagrangian clouds
+
+SourceFiles
+    mapClouds.C
+
 \*---------------------------------------------------------------------------*/
 
-#ifndef UnMapped_H
-#define UnMapped_H
-
-#include "IOobjectList.H"
-#include "OSspecific.H"
+#ifndef mapClouds_H
+#define mapClouds_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-template<class Type>
-void UnMapped(const IOobjectList& objects)
-{
-    IOobjectList fields = objects.lookupClass(Type::typeName);
+class fvMeshToFvMesh;
 
-    forAllConstIter(IOobjectList, fields, fieldIter)
-    {
-        mvBak(fieldIter()->objectPath(false), "unmapped");
-    }
+void mapClouds(const fvMeshToFvMesh& interp);
+
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -27,9 +27,14 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::polyMeshMap::polyMeshMap(const polyMesh& mesh)
+Foam::polyMeshMap::polyMeshMap
+(
+    const polyMesh& mesh,
+    const meshToMesh& mapper
+)
 :
-    mesh_(mesh)
+    mesh_(mesh),
+    mapper_(mapper)
 {}
 
 

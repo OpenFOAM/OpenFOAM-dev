@@ -215,6 +215,8 @@ triSurface/triSurfaceTools/pointToPointPlanarInterpolation.C
 
 twoDPointCorrector/twoDPointCorrector.C
 
+patchToPatchTools/patchToPatchTools.C
+
 patchToPatch/patchToPatch/patchToPatch.C
 patchToPatch/patchToPatch/patchToPatchParallelOps.C
 patchToPatch/matching/matchingPatchToPatch.C
@@ -222,6 +224,14 @@ patchToPatch/nearest/nearestPatchToPatch.C
 patchToPatch/inverseDistance/inverseDistancePatchToPatch.C
 patchToPatch/intersection/intersectionPatchToPatch.C
 patchToPatch/rays/raysPatchToPatch.C
+
+meshToMesh/meshToMesh.C
+meshToMesh/meshToMeshParallelOps.C
+meshToMesh/calcMethod/meshToMeshMethod/meshToMeshMethod.C
+meshToMesh/calcMethod/meshToMeshMethod/meshToMeshMethodNew.C
+meshToMesh/calcMethod/cellVolumeWeight/cellVolumeWeightMethod.C
+meshToMesh/calcMethod/direct/directMethod.C
+meshToMesh/calcMethod/mapNearest/mapNearestMethod.C
 
 mappedPatches/mappedPatchBase/mappedPatchBase.C
 mappedPatches/mappedPolyPatch/mappedPolyPatch.C

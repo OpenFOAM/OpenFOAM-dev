@@ -35,7 +35,7 @@ Description
 #define MeshToMeshMapGeometricFields_H
 
 #include "polyMesh.H"
-#include "meshToMesh.H"
+#include "fvMeshToFvMesh.H"
 #include "fvPatchFieldMapper.H"
 #include "pointPatchFieldMapper.H"
 #include "setSizeFieldMapper.H"
@@ -131,12 +131,13 @@ void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
 template<class Type>
 void MeshToMeshMapVolFields
 (
-    const meshToMesh& mapper
+    const fvMesh& mesh,
+    const fvMeshToFvMesh& mapper
 )
 {
     HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fields
     (
-        mapper.srcRegion().objectRegistry::template
+        mesh.objectRegistry::template
             lookupClass<GeometricField<Type, fvPatchField, volMesh>>()
     );
 
@@ -158,7 +159,7 @@ void MeshToMeshMapVolFields
 
     fields =
     (
-        mapper.srcRegion().objectRegistry::template
+        mesh.objectRegistry::template
             lookupClass<GeometricField<Type, fvPatchField, volMesh>>()
     );
 
@@ -174,7 +175,7 @@ void MeshToMeshMapVolFields
             const_cast<GeometricField<Type, fvPatchField, volMesh>&>
             (*fieldIter());
 
-        if (meshToMesh::debug)
+        if (fvMeshToFvMesh::debug)
         {
             Info<< "Mapping " << field.typeName << ' ' << field.name()
                 << endl;
@@ -196,7 +197,8 @@ template
 >
 void NaNGeometricFields
 (
-    const meshToMesh& mapper
+    const fvMesh& mesh,
+    const fvMeshToFvMesh& mapper
 )
 {
     typedef GeometricField<Type, PatchField, GeoMesh> Gfield;
@@ -215,12 +217,12 @@ void NaNGeometricFields
             patchFieldResizeMapper(const label size)
             :
                 setSizeFieldMapper(size)
-        {}
+            {}
     };
 
     HashTable<const Gfield*> fields
     (
-        mapper.srcRegion().objectRegistry::template lookupClass<Gfield>()
+        mesh.objectRegistry::template lookupClass<Gfield>()
     );
 
     // Deleted old time fields
@@ -236,8 +238,7 @@ void NaNGeometricFields
         field.clearOldTimes();
     }
 
-    fields =
-        mapper.srcRegion().objectRegistry::template lookupClass<Gfield>();
+    fields = mesh.objectRegistry::template lookupClass<Gfield>();
 
     Type NaN;
 
@@ -255,7 +256,7 @@ void NaNGeometricFields
     {
         Gfield& field = const_cast<Gfield&>(*fieldIter());
 
-        if (meshToMesh::debug)
+        if (fvMeshToFvMesh::debug)
         {
             Info<< "Setting to NaN " << field.typeName << ' ' << field.name()
                 << endl;

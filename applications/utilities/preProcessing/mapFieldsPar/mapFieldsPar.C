@@ -31,10 +31,83 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "mapMeshes.H"
+#include "fvMeshToFvMesh.H"
+#include "mapGeometricFields.H"
+#include "mapClouds.H"
 #include "cellVolumeWeightMethod.H"
 
 using namespace Foam;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+void mapConsistentMesh
+(
+    const fvMesh& srcMesh,
+    const fvMesh& tgtMesh,
+    const word& mapMethod,
+    const HashSet<word>& selectedFields,
+    const bool noLagrangian
+)
+{
+    Info<< nl << "Consistently creating and mapping fields for time "
+        << srcMesh.time().timeName() << nl << endl;
+
+    fvMeshToFvMesh interp(srcMesh, tgtMesh, mapMethod);
+
+    Info<< nl << "Mapping geometric fields" << endl;
+
+    mapGeometricFields
+    (
+        interp,
+        selectedFields,
+        noLagrangian
+    );
+
+    if (!noLagrangian)
+    {
+        mapClouds(interp);
+    }
+}
+
+
+void mapSubMesh
+(
+    const fvMesh& srcMesh,
+    const fvMesh& tgtMesh,
+    const HashTable<word>& patchMap,
+    const wordList& cuttingPatches,
+    const word& mapMethod,
+    const HashSet<word>& selectedFields,
+    const bool noLagrangian
+)
+{
+    Info<< nl << "Creating and mapping fields for time "
+        << srcMesh.time().timeName() << nl << endl;
+
+    fvMeshToFvMesh interp
+    (
+        srcMesh,
+        tgtMesh,
+        mapMethod,
+        patchMap,
+        cuttingPatches
+    );
+
+    Info<< nl << "Mapping geometric fields" << endl;
+
+    mapGeometricFields
+    (
+        interp,
+        selectedFields,
+        noLagrangian
+    );
+
+    if (!noLagrangian)
+    {
+        mapClouds(interp);
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -162,7 +235,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nCreate meshes\n" << endl;
 
-    fvMesh meshSource
+    fvMesh srcMesh
     (
         IOobject
         (
@@ -173,7 +246,7 @@ int main(int argc, char *argv[])
         false
     );
 
-    fvMesh meshTarget
+    fvMesh tgtMesh
     (
         IOobject
         (
@@ -184,15 +257,18 @@ int main(int argc, char *argv[])
         false
     );
 
-    Info<< "Source mesh size: " << meshSource.nCells() << tab
-        << "Target mesh size: " << meshTarget.nCells() << nl << endl;
+    Info<< "Source mesh size: "
+        << returnReduce(srcMesh.nCells(), sumOp<label>())
+        << ", Target mesh size: "
+        << returnReduce(tgtMesh.nCells(), sumOp<label>())
+        << endl;
 
     if (consistent)
     {
         mapConsistentMesh
         (
-            meshSource,
-            meshTarget,
+            srcMesh,
+            tgtMesh,
             mapMethod,
             selectedFields,
             noLagrangian
@@ -202,8 +278,8 @@ int main(int argc, char *argv[])
     {
         mapSubMesh
         (
-            meshSource,
-            meshTarget,
+            srcMesh,
+            tgtMesh,
             patchMap,
             cuttingPatches,
             mapMethod,
