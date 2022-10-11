@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,14 +29,6 @@ License
 #include "includeEntry.H"
 #include "inputModeEntry.H"
 #include "stringOps.H"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-const Foam::word Foam::functionEntries::inputSyntaxEntry::typeName
-(
-    Foam::functionEntries::inputSyntaxEntry::typeName_()
-);
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
