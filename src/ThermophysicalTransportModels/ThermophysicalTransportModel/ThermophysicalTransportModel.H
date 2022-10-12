@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,13 +118,13 @@ public:
 
     // Member Functions
 
-        //- Access function to incompressible transport model
+        //- Access function to momentum transport model
         const momentumTransportModel& momentumTransport() const
         {
             return momentumTransport_;
         }
 
-        //- Access function to incompressible transport model
+        //- Access function to the fluid thermophysical properties
         virtual const thermoModel& thermo() const
         {
             return thermo_;

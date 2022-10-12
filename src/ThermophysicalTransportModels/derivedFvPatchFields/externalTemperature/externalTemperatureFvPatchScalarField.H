@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::externalWallHeatFluxTemperatureFvPatchScalarField
+    Foam::externalTemperatureFvPatchScalarField
 
 Description
     This boundary condition applies a heat flux condition to temperature
@@ -71,7 +71,7 @@ Usage
     \verbatim
     <patchName>
     {
-        type            externalWallHeatFluxTemperature;
+        type            externalTemperature;
 
         Ta              constant 300.0;
         h               uniform 10.0;
@@ -87,12 +87,12 @@ See also
     Foam::mixedFvPatchScalarField
 
 SourceFiles
-    externalWallHeatFluxTemperatureFvPatchScalarField.C
+    externalTemperatureFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef externalWallHeatFluxTemperatureFvPatchScalarField_H
-#define externalWallHeatFluxTemperatureFvPatchScalarField_H
+#ifndef externalTemperatureFvPatchScalarField_H
+#define externalTemperatureFvPatchScalarField_H
 
 #include "mixedFvPatchFields.H"
 #include "temperatureCoupledBase.H"
@@ -104,10 +104,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-      Class externalWallHeatFluxTemperatureFvPatchScalarField Declaration
+           Class externalTemperatureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class externalWallHeatFluxTemperatureFvPatchScalarField
+class externalTemperatureFvPatchScalarField
 :
     public mixedFvPatchScalarField,
     public temperatureCoupledBase
@@ -172,20 +172,20 @@ class externalWallHeatFluxTemperatureFvPatchScalarField
 public:
 
     //- Runtime type information
-    TypeName("externalWallHeatFluxTemperature");
+    TypeName("externalTemperature");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        externalWallHeatFluxTemperatureFvPatchScalarField
+        externalTemperatureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        externalWallHeatFluxTemperatureFvPatchScalarField
+        externalTemperatureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -193,26 +193,26 @@ public:
         );
 
         //- Construct by mapping given
-        //  externalWallHeatFluxTemperatureFvPatchScalarField
+        //  externalTemperatureFvPatchScalarField
         //  onto a new patch
-        externalWallHeatFluxTemperatureFvPatchScalarField
+        externalTemperatureFvPatchScalarField
         (
-            const externalWallHeatFluxTemperatureFvPatchScalarField&,
+            const externalTemperatureFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        externalWallHeatFluxTemperatureFvPatchScalarField
+        externalTemperatureFvPatchScalarField
         (
-            const externalWallHeatFluxTemperatureFvPatchScalarField&
+            const externalTemperatureFvPatchScalarField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        externalWallHeatFluxTemperatureFvPatchScalarField
+        externalTemperatureFvPatchScalarField
         (
-            const externalWallHeatFluxTemperatureFvPatchScalarField&,
+            const externalTemperatureFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -224,7 +224,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new externalWallHeatFluxTemperatureFvPatchScalarField(*this, iF)
+                new externalTemperatureFvPatchScalarField(*this, iF)
             );
         }
 

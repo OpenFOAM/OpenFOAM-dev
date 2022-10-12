@@ -27,18 +27,18 @@ boundaryField
         type            fixedValue;
         value           $internalField;
     }
+
     outlet
     {
         type            inletOutlet;
         value           $internalField;
         inletValue      $internalField;
     }
+
     gas_to_solid
     {
-        type            compressible::turbulentTemperatureRadCoupledMixed;
+        type            coupledTemperature;
         value           $internalField;
-        Tnbr            T;
-        qrNbr           none;
         qr              qr;
     }
 }

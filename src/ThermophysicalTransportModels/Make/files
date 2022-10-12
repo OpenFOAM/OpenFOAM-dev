@@ -1,12 +1,11 @@
 thermophysicalTransportModel/thermophysicalTransportModel.C
 
 BCs = derivedFvPatchFields
+$(BCs)/externalTemperature/externalTemperatureFvPatchScalarField.C
 $(BCs)/temperatureCoupledBase/temperatureCoupledBase.C
-$(BCs)/turbulentTemperatureCoupledBaffleMixed/turbulentTemperatureCoupledBaffleMixedFvPatchScalarField.C
+$(BCs)/coupledTemperature/coupledTemperatureFvPatchScalarField.C
 $(BCs)/thermalBaffle1D/thermalBaffle1DFvPatchScalarFields.C
 $(BCs)/totalFlowRateAdvectiveDiffusive/totalFlowRateAdvectiveDiffusiveFvPatchScalarField.C
-$(BCs)/turbulentTemperatureRadCoupledMixed/turbulentTemperatureRadCoupledMixedFvPatchScalarField.C
-$(BCs)/externalWallHeatFluxTemperature/externalWallHeatFluxTemperatureFvPatchScalarField.C
 $(BCs)/externalCoupledTemperatureMixed/externalCoupledTemperatureMixedFvPatchScalarField.C
 $(BCs)/convectiveHeatTransfer/convectiveHeatTransferFvPatchScalarField.C
 $(BCs)/alphatWallFunctions/alphatWallFunction/alphatWallFunctionFvPatchScalarField.C

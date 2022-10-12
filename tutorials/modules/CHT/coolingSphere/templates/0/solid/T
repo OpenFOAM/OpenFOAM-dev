@@ -23,11 +23,11 @@ boundaryField
 {
     wall
     {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        type            coupledTemperature;
         value           $internalField;
         kappa           kappa;
-        Tnbr            T;
     }
 }
+
 
 // ************************************************************************* //

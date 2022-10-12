@@ -29,9 +29,8 @@ boundaryField
 
     "fluid_to_baffle3D_.*"
     {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        type            coupledTemperature;
         kappa           kappa;
-        Tnbr            T;
         value           $internalField;
     }
 

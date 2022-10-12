@@ -24,18 +24,17 @@ boundaryField
 
     external
     {
-        type            externalWallHeatFluxTemperature;
+        type            externalTemperature;
         h               uniform 1e3;
         Ta              $internalField;
         value           $internalField;
     }
+
     solid_to_gas
     {
-        type            compressible::turbulentTemperatureRadCoupledMixed;
+        type            coupledTemperature;
         value           $internalField;
-        Tnbr            T;
         qrNbr           qr;
-        qr              none;
     }
 }
 

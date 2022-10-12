@@ -23,23 +23,16 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "turbulentTemperatureCoupledBaffleMixedFvPatchScalarField.H"
+#include "coupledTemperatureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "mappedPatchBase.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace compressible
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
+Foam::coupledTemperatureFvPatchScalarField::
+coupledTemperatureFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
@@ -48,6 +41,8 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
     mixedFvPatchScalarField(p, iF),
     temperatureCoupledBase(patch()),
     TnbrName_("undefined-Tnbr"),
+    qrNbrName_("undefined-qrNbr"),
+    qrName_("undefined-qr"),
     thicknessLayers_(0),
     kappaLayers_(0),
     qs_(p.size()),
@@ -59,8 +54,8 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 }
 
 
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
+Foam::coupledTemperatureFvPatchScalarField::
+coupledTemperatureFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -69,7 +64,9 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF),
     temperatureCoupledBase(patch(), dict),
-    TnbrName_(dict.lookup("Tnbr")),
+    TnbrName_(dict.lookupOrDefault<word>("Tnbr", "T")),
+    qrNbrName_(dict.lookupOrDefault<word>("qrNbr", "none")),
+    qrName_(dict.lookupOrDefault<word>("qr", "none")),
     thicknessLayers_(0),
     kappaLayers_(0),
     qs_(p.size(), 0),
@@ -140,45 +137,49 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 }
 
 
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
+Foam::coupledTemperatureFvPatchScalarField::
+coupledTemperatureFvPatchScalarField
 (
-    const turbulentTemperatureCoupledBaffleMixedFvPatchScalarField& ptf,
+    const coupledTemperatureFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    mixedFvPatchScalarField(ptf, p, iF, mapper),
-    temperatureCoupledBase(patch(), ptf),
-    TnbrName_(ptf.TnbrName_),
-    thicknessLayers_(ptf.thicknessLayers_),
-    kappaLayers_(ptf.kappaLayers_),
-    qs_(mapper(ptf.qs_)),
-    contactRes_(ptf.contactRes_)
+    mixedFvPatchScalarField(psf, p, iF, mapper),
+    temperatureCoupledBase(patch(), psf),
+    TnbrName_(psf.TnbrName_),
+    qrNbrName_(psf.qrNbrName_),
+    qrName_(psf.qrName_),
+    thicknessLayers_(psf.thicknessLayers_),
+    kappaLayers_(psf.kappaLayers_),
+    qs_(mapper(psf.qs_)),
+    contactRes_(psf.contactRes_)
 {}
 
 
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
+Foam::coupledTemperatureFvPatchScalarField::
+coupledTemperatureFvPatchScalarField
 (
-    const turbulentTemperatureCoupledBaffleMixedFvPatchScalarField& ptf,
+    const coupledTemperatureFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    mixedFvPatchScalarField(ptf, iF),
-    temperatureCoupledBase(patch(), ptf),
-    TnbrName_(ptf.TnbrName_),
-    thicknessLayers_(ptf.thicknessLayers_),
-    kappaLayers_(ptf.kappaLayers_),
-    qs_(ptf.qs_),
-    contactRes_(ptf.contactRes_)
+    mixedFvPatchScalarField(psf, iF),
+    temperatureCoupledBase(patch(), psf),
+    TnbrName_(psf.TnbrName_),
+    qrNbrName_(psf.qrNbrName_),
+    qrName_(psf.qrName_),
+    thicknessLayers_(psf.thicknessLayers_),
+    kappaLayers_(psf.kappaLayers_),
+    qs_(psf.qs_),
+    contactRes_(psf.contactRes_)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
+void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
 {
     if (updated())
     {
@@ -193,64 +194,85 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
     // Get the coupling information from the mappedPatchBase
     const mappedPatchBase& mpp =
         refCast<const mappedPatchBase>(patch().patch());
-    const polyMesh& nbrMesh = mpp.nbrMesh();
-    const label nbrPatchi = mpp.nbrPolyPatch().index();
-    const fvPatch& nbrPatch =
-        refCast<const fvMesh>(nbrMesh).boundary()[nbrPatchi];
+    const label patchiNbr = mpp.nbrPolyPatch().index();
+    const fvPatch& patchNbr =
+        refCast<const fvMesh>(mpp.nbrMesh()).boundary()[patchiNbr];
 
     // Calculate the temperature by harmonic averaging
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    typedef turbulentTemperatureCoupledBaffleMixedFvPatchScalarField thisType;
+    typedef coupledTemperatureFvPatchScalarField thisType;
 
-    const fvPatchScalarField& nbrTp =
-        nbrPatch.lookupPatchField<volScalarField, scalar>(TnbrName_);
+    const fvPatchScalarField& TpNbr =
+        patchNbr.lookupPatchField<volScalarField, scalar>(TnbrName_);
 
-    if (!isA<thisType>(nbrTp))
+    if (!isA<thisType>(TpNbr))
     {
         FatalErrorInFunction
             << "Patch field for " << internalField().name() << " on "
             << patch().name() << " is of type " << thisType::typeName
             << endl << "The neighbouring patch field " << TnbrName_ << " on "
-            << nbrPatch.name() << " is required to be the same, but is "
-            << "currently of type " << nbrTp.type() << exit(FatalError);
+            << patchNbr.name() << " is required to be the same, but is "
+            << "currently of type " << TpNbr.type() << exit(FatalError);
     }
 
-    const scalarField myKDelta(kappa(*this)*patch().deltaCoeffs());
+    const thisType& coupledTemperatureNbr = refCast<const thisType>(TpNbr);
 
-    const thisType& nbrField = refCast<const thisType>(nbrTp);
-
-    const scalarField nbrIntFld
+    const scalarField TcNbr
     (
         contactRes_ == 0
-      ? mpp.distribute(nbrField.patchInternalField())
-      : mpp.distribute(nbrField)
+      ? mpp.distribute(coupledTemperatureNbr.patchInternalField())
+      : mpp.distribute(coupledTemperatureNbr)
     );
-    const scalarField nbrKDelta
+
+    const scalarField KDelta(kappa(*this)*patch().deltaCoeffs());
+
+    const scalarField KDeltaNbr
     (
         contactRes_ == 0
-      ? mpp.distribute(nbrField.kappa(nbrField)*nbrPatch.deltaCoeffs())
-      : tmp<scalarField>(new scalarField(contactRes_, nbrField.size()))
+      ? mpp.distribute(coupledTemperatureNbr.kappa(coupledTemperatureNbr)
+       *patchNbr.deltaCoeffs())
+      : tmp<scalarField>(new scalarField(size(), contactRes_))
+    );
+
+    const scalarField qr
+    (
+        qrName_ != "none"
+      ? static_cast<const scalarField&>
+        (
+            patch().lookupPatchField<volScalarField, scalar>(qrName_)
+        )
+      : scalarField(size(), 0)
+    );
+
+    const scalarField qrNbr
+    (
+        qrNbrName_ != "none"
+      ? mpp.distribute
+        (
+            patchNbr.lookupPatchField<volScalarField, scalar>(qrNbrName_)
+        )
+      : tmp<scalarField>(new scalarField(size(), 0))
     );
 
     // Both sides agree on
-    // - temperature : (myKDelta*fld + nbrKDelta*nbrFld)/(myKDelta+nbrKDelta)
+    // - temperature : (KDelta*fld + KDeltaNbr*nbrFld)/(KDelta + KDeltaNbr)
     // - gradient    : (temperature-fld)*delta
     // We've got a degree of freedom in how to implement this in a mixed bc.
     // (what gradient, what fixedValue and mixing coefficient)
     // Two reasonable choices:
     // 1. specify above temperature on one side (preferentially the high side)
     //    and above gradient on the other. So this will switch between pure
-    //    fixedvalue and pure fixedgradient
+    //    fixedValue and pure fixedGradient
     // 2. specify gradient and temperature such that the equations are the
     //    same on both sides. This leads to the choice of
     //    - refGradient = qs_/kappa;
     //    - refValue = neighbour value
-    //    - mixFraction = nbrKDelta / (nbrKDelta + myKDelta)
+    //    - mixFraction = KDeltaNbr / (KDeltaNbr + KDelta)
 
-    this->refValue() = nbrIntFld;
-    this->refGrad() = qs_/kappa(*this);
-    this->valueFraction() = nbrKDelta/(nbrKDelta + myKDelta);
+    this->valueFraction() = KDeltaNbr/(KDeltaNbr + KDelta);
+    this->refValue() = TcNbr;
+    this->refGrad() = (qs_ + qr + qrNbr)/kappa(*this);
 
     mixedFvPatchScalarField::updateCoeffs();
 
@@ -261,8 +283,8 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
             << this->internalField().name() << " <- "
-            << nbrMesh.name() << ':'
-            << nbrPatch.name() << ':'
+            << mpp.nbrMesh().name() << ':'
+            << patchNbr.name() << ':'
             << this->internalField().name() << " :"
             << " heat transfer rate:" << Q
             << " walltemperature "
@@ -277,13 +299,15 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
 }
 
 
-void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::write
+void Foam::coupledTemperatureFvPatchScalarField::write
 (
     Ostream& os
 ) const
 {
     mixedFvPatchScalarField::write(os);
     writeEntry(os, "Tnbr", TnbrName_);
+    writeEntry(os, "qrNbr", qrNbrName_);
+    writeEntry(os, "qr", qrName_);
     writeEntry(os, "thicknessLayers", thicknessLayers_);
     writeEntry(os, "kappaLayers", kappaLayers_);
 
@@ -293,17 +317,70 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::write
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makePatchTypeField
-(
-    fvPatchScalarField,
-    turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
-);
+namespace Foam
+{
+    makePatchTypeField
+    (
+        fvPatchScalarField,
+        coupledTemperatureFvPatchScalarField
+    );
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        fvPatchScalarField,
+        coupledTemperatureFvPatchScalarField,
+        patch,
+        turbulentTemperatureCoupledBaffleMixed,
+        "compressible::turbulentTemperatureCoupledBaffleMixed"
+    );
 
-} // End namespace compressible
-} // End namespace Foam
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        fvPatchScalarField,
+        coupledTemperatureFvPatchScalarField,
+        patchMapper,
+        turbulentTemperatureCoupledBaffleMixed,
+        "compressible::turbulentTemperatureCoupledBaffleMixed"
+    );
+
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        fvPatchScalarField,
+        coupledTemperatureFvPatchScalarField,
+        dictionary,
+        turbulentTemperatureCoupledBaffleMixed,
+        "compressible::turbulentTemperatureCoupledBaffleMixed"
+    );
+
+
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        fvPatchScalarField,
+        coupledTemperatureFvPatchScalarField,
+        patch,
+        turbulentTemperatureRadCoupledMixed,
+        "compressible::turbulentTemperatureRadCoupledMixed"
+    );
+
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        fvPatchScalarField,
+        coupledTemperatureFvPatchScalarField,
+        patchMapper,
+        turbulentTemperatureRadCoupledMixed,
+        "compressible::turbulentTemperatureRadCoupledMixed"
+    );
+
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        fvPatchScalarField,
+        coupledTemperatureFvPatchScalarField,
+        dictionary,
+        turbulentTemperatureRadCoupledMixed,
+        "compressible::turbulentTemperatureRadCoupledMixed"
+    );
+}
 
 
 // ************************************************************************* //

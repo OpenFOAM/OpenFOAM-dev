@@ -74,6 +74,17 @@ namespace Foam
         (#baseType, baseType::typeName_(), #lookup, STR(LIB_NAME))
 
 
+//- Add backward-compatibility duplicate of thisType, replacing oldType,
+//  to hash-table of functions with 'lookup' as the key
+#define addBackwardCompatibleToRunTimeSelectionTable\
+(baseType,thisType,argNames,oldType,lookup)                                    \
+                                                                               \
+    /* Add the thisType constructor function to the table, find by lookup */   \
+    baseType::add##argNames##ConstructorToTable<thisType>                      \
+        add_##oldType##_##thisType##argNames##ConstructorTo##baseType##Table_  \
+        (lookup);
+
+
 //- Add to hash-table of functions with typename as the key
 #define addRemovableToRunTimeSelectionTable\
 (baseType,thisType,argNames)                                                   \

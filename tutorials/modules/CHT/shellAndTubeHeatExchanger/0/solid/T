@@ -28,15 +28,13 @@ boundaryField
     }
     solid_to_shell
     {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        type            coupledTemperature;
         value           $internalField;
-        Tnbr            T;
     }
     solid_to_tube
     {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        type            coupledTemperature;
         value           $internalField;
-        Tnbr            T;
     }
 }
 

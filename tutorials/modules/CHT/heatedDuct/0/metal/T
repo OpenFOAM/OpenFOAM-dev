@@ -28,16 +28,15 @@ boundaryField
     }
     metal_to_fluid
     {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        type            coupledTemperature;
         value           $internalField;
-        Tnbr            T;
     }
     metal_to_heater
     {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        type            coupledTemperature;
         value           $internalField;
-        Tnbr            T;
     }
 }
+
 
 // ************************************************************************* //

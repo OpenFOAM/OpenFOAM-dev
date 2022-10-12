@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,8 +50,8 @@ Usage
     {
         type            compressible::turbulentTemperatureRadCoupledMixed;
         Tnbr            T;
-        qrNbr           qr; // or none. Name of qr field on neighbour region
-        qr              qr; // or none. Name of qr field on local region
+        qrNbr           qr; // Name of qr field on neighbour region
+        qr              qr; // Name of qr field on local region
         thicknessLayers (0.1 0.2 0.3 0.4);
         kappaLayers     (1 2 3 4);
         value           uniform 300;
@@ -136,7 +136,7 @@ public:
         );
 
         //- Construct by mapping given
-        //  turbulentTemperatureCoupledBaffleMixedFvPatchScalarField onto a
+        //  coupledTemperatureFvPatchScalarField onto a
         //  new patch
         turbulentTemperatureRadCoupledMixedFvPatchScalarField
         (
