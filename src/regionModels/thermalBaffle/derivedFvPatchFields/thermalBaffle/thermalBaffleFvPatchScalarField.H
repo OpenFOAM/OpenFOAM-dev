@@ -147,13 +147,11 @@ SourceFiles
 
 #include "thermalBaffle.H"
 #include "extrudePatchMesh.H"
-#include "turbulentTemperatureRadCoupledMixedFvPatchScalarField.H"
+#include "coupledTemperatureFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
-{
-namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
@@ -162,7 +160,7 @@ namespace compressible
 
 class thermalBaffleFvPatchScalarField
 :
-    public turbulentTemperatureRadCoupledMixedFvPatchScalarField
+    public coupledTemperatureFvPatchScalarField
 {
     // Private Data
 
@@ -280,7 +278,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace compressible
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

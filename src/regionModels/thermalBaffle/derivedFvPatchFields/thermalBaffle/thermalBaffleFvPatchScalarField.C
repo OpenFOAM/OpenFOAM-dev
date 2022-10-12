@@ -28,22 +28,15 @@ License
 #include "symmetryPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace compressible
-{
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * /
 
-bool thermalBaffleFvPatchScalarField::primary() const
+bool Foam::thermalBaffleFvPatchScalarField::primary() const
 {
     return patch().boundaryMesh().mesh().name() == polyMesh::defaultRegion;
 }
 
 
-bool thermalBaffleFvPatchScalarField::owner() const
+bool Foam::thermalBaffleFvPatchScalarField::owner() const
 {
     return
         primary()
@@ -51,7 +44,7 @@ bool thermalBaffleFvPatchScalarField::owner() const
 }
 
 
-void thermalBaffleFvPatchScalarField::checkPatches() const
+void Foam::thermalBaffleFvPatchScalarField::checkPatches() const
 {
     if (!primary()) return;
 
@@ -127,7 +120,7 @@ void thermalBaffleFvPatchScalarField::checkPatches() const
 }
 
 
-void thermalBaffleFvPatchScalarField::checkPatchFields() const
+void Foam::thermalBaffleFvPatchScalarField::checkPatchFields() const
 {
     if (!primary()) return;
 
@@ -166,8 +159,8 @@ void thermalBaffleFvPatchScalarField::checkPatchFields() const
 }
 
 
-autoPtr<extrudePatchMesh>
-thermalBaffleFvPatchScalarField::initBaffleMesh() const
+Foam::autoPtr<Foam::extrudePatchMesh>
+Foam::thermalBaffleFvPatchScalarField::initBaffleMesh() const
 {
     if (!owner())
     {
@@ -244,8 +237,8 @@ thermalBaffleFvPatchScalarField::initBaffleMesh() const
 }
 
 
-autoPtr<regionModels::thermalBaffle>
-thermalBaffleFvPatchScalarField::initBaffle() const
+Foam::autoPtr<Foam::regionModels::thermalBaffle>
+Foam::thermalBaffleFvPatchScalarField::initBaffle() const
 {
     if (!owner())
     {
@@ -273,13 +266,13 @@ thermalBaffleFvPatchScalarField::initBaffle() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
+Foam::thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    turbulentTemperatureRadCoupledMixedFvPatchScalarField(p, iF),
+    coupledTemperatureFvPatchScalarField(p, iF),
     dict_(dictionary::null),
     nbrPatch_(word::null),
     baffleMeshPtr_(),
@@ -287,14 +280,14 @@ thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 {}
 
 
-thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
+Foam::thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )
 :
-    turbulentTemperatureRadCoupledMixedFvPatchScalarField(p, iF, dict),
+    coupledTemperatureFvPatchScalarField(p, iF, dict),
     dict_(dict),
     nbrPatch_(primary() ? dict.lookup<word>("neighbourPatch") : word::null),
     baffleMeshPtr_(owner() ? initBaffleMesh().ptr() : nullptr),
@@ -302,7 +295,7 @@ thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 {}
 
 
-thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
+Foam::thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 (
     const thermalBaffleFvPatchScalarField& ptf,
     const fvPatch& p,
@@ -310,7 +303,7 @@ thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    turbulentTemperatureRadCoupledMixedFvPatchScalarField
+    coupledTemperatureFvPatchScalarField
     (
         ptf,
         p,
@@ -323,13 +316,13 @@ thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 {}
 
 
-thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
+Foam::thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 (
     const thermalBaffleFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    turbulentTemperatureRadCoupledMixedFvPatchScalarField(ptf, iF),
+    coupledTemperatureFvPatchScalarField(ptf, iF),
     dict_(ptf.dict_),
     baffleMeshPtr_(),
     bafflePtr_()
@@ -338,35 +331,35 @@ thermalBaffleFvPatchScalarField::thermalBaffleFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void thermalBaffleFvPatchScalarField::autoMap
+void Foam::thermalBaffleFvPatchScalarField::autoMap
 (
     const fvPatchFieldMapper& m
 )
 {
-    turbulentTemperatureRadCoupledMixedFvPatchScalarField::autoMap(m);
+    coupledTemperatureFvPatchScalarField::autoMap(m);
 }
 
 
-void thermalBaffleFvPatchScalarField::rmap
+void Foam::thermalBaffleFvPatchScalarField::rmap
 (
     const fvPatchScalarField& ptf,
     const labelList& addr
 )
 {
-    turbulentTemperatureRadCoupledMixedFvPatchScalarField::rmap(ptf, addr);
+    coupledTemperatureFvPatchScalarField::rmap(ptf, addr);
 }
 
 
-void thermalBaffleFvPatchScalarField::reset
+void Foam::thermalBaffleFvPatchScalarField::reset
 (
     const fvPatchScalarField& ptf
 )
 {
-    turbulentTemperatureRadCoupledMixedFvPatchScalarField::reset(ptf);
+    coupledTemperatureFvPatchScalarField::reset(ptf);
 }
 
 
-void thermalBaffleFvPatchScalarField::updateCoeffs()
+void Foam::thermalBaffleFvPatchScalarField::updateCoeffs()
 {
     if (this->updated())
     {
@@ -380,13 +373,13 @@ void thermalBaffleFvPatchScalarField::updateCoeffs()
         bafflePtr_->evolve();
     }
 
-    turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs();
+    coupledTemperatureFvPatchScalarField::updateCoeffs();
 }
 
 
-void thermalBaffleFvPatchScalarField::write(Ostream& os) const
+void Foam::thermalBaffleFvPatchScalarField::write(Ostream& os) const
 {
-    turbulentTemperatureRadCoupledMixedFvPatchScalarField::write(os);
+    coupledTemperatureFvPatchScalarField::write(os);
 
     if (owner())
     {
@@ -404,16 +397,14 @@ void thermalBaffleFvPatchScalarField::write(Ostream& os) const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makePatchTypeField
-(
-    fvPatchScalarField,
-    thermalBaffleFvPatchScalarField
-);
+namespace Foam
+{
+    makePatchTypeField
+    (
+        fvPatchScalarField,
+        thermalBaffleFvPatchScalarField
+    );
+}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace compressible
-} // End namespace Foam
 
 // ************************************************************************* //
