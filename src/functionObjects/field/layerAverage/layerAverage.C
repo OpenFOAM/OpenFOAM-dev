@@ -33,6 +33,7 @@ License
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
 #include "polyDistributionMap.H"
+#include "OSspecific.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -310,17 +311,18 @@ bool Foam::functionObjects::layerAverage::write()
         #undef CollapseTypeFields
     }
 
-    // Output directory
-    fileName outputPath =
-        mesh_.time().globalPath()/writeFile::outputPrefix/name();
-    if (mesh_.name() != fvMesh::defaultRegion)
-    {
-        outputPath = outputPath/mesh_.name();
-    }
-
     // Write
     if (Pstream::master() && layerCentre_.size())
     {
+        // Make output directory
+        const fileName outputPath =
+            mesh_.time().globalPath()
+           /writeFile::outputPrefix
+           /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
+           /name()
+           /mesh_.time().timeName();
+        mkDir(outputPath);
+
         scalarField layerDistance(layerCentre_.size(), 0);
         for (label i = 1; i < layerCentre_.size(); ++ i)
         {
@@ -330,7 +332,7 @@ bool Foam::functionObjects::layerAverage::write()
 
         formatter_->write
         (
-            outputPath/mesh_.time().timeName(),
+            outputPath,
             typeName,
             coordSet
             (

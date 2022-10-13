@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -364,11 +364,10 @@ void Foam::mergeAndWrite
 
     fileName outputDir
     (
-        set.time().path()
-      / (Pstream::parRun() ? ".." : "")
-      / "postProcessing"
-      / mesh.pointsInstance()
-      / set.name()
+        set.time().globalPath()
+       /functionObjects::writeFile::outputPrefix
+       /mesh.pointsInstance()
+       /set.name()
     );
     outputDir.clean();
 
