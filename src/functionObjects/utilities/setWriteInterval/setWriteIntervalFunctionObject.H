@@ -27,6 +27,10 @@ Class
 Description
     Updates the writeInterval as a Function1 of time.
 
+    If the case is running with userTime specified in controlDict then the write
+    interval values returned by the Function1 are assumed to be in user-time
+    rather than real-time.
+
     Examples of function object specification:
     \verbatim
     setWriteInterval

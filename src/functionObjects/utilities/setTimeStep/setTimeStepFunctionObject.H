@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,10 @@ Class
 
 Description
     Updates the time step as a Function1 of time.
+
+    If the case is running with userTime specified in controlDict then the
+    time-step values returned by the Function1 are assumed to be in user-time
+    rather than real-time.
 
     Makes no attempt to cooperate with other timeStep controllers (i.e., solver
     courant number control or other functionObjects). In general any value set

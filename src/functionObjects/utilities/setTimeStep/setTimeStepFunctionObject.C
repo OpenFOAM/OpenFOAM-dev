@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ bool Foam::functionObjects::setTimeStepFunctionObject::execute()
     {
         const_cast<Time&>(time_).setDeltaT
         (
-            timeStepPtr_().value(time_.userTimeValue())
+            time_.userTimeToTime(timeStepPtr_().value(time_.userTimeValue()))
         );
     }
 
