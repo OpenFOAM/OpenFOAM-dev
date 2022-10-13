@@ -27,6 +27,7 @@ License
 #include "volFields.H"
 #include "polyTopoChangeMap.H"
 #include "OSspecific.H"
+#include "writeFile.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -191,17 +192,12 @@ Foam::label Foam::probes::prepare()
                 << endl;
         }
 
-
-        fileName probeDir;
-        fileName probeSubDir = name();
-
-        if (mesh_.name() != polyMesh::defaultRegion)
-        {
-            probeSubDir = probeSubDir/mesh_.name();
-        }
-        probeSubDir = "postProcessing"/probeSubDir/mesh_.time().timeName();
-
-        probeDir = mesh_.time().globalPath()/probeSubDir;
+        const fileName probeDir =
+            mesh_.time().globalPath()
+           /functionObjects::writeFile::outputPrefix
+           /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
+           /name()
+           /mesh_.time().timeName();
 
         // ignore known fields, close streams for fields that no longer exist
         forAllIter(HashPtrTable<OFstream>, probeFilePtrs_, iter)

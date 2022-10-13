@@ -165,21 +165,19 @@ Foam::functionObjects::sampledSurfaces::sampledSurfaces
 :
     fvMeshFunctionObject(name, t, dict),
     PtrList<sampledSurface>(),
-    outputPath_(fileName::null),
+    outputPath_
+    (
+        mesh_.time().globalPath()
+       /writeFile::outputPrefix
+       /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
+       /name
+    ),
     fields_(),
     interpolationScheme_(word::null),
     writeEmpty_(false),
     mergeList_(),
     formatter_(nullptr)
 {
-    outputPath_ =
-        mesh_.time().globalPath()/functionObjects::writeFile::outputPrefix/name;
-
-    if (mesh_.name() != fvMesh::defaultRegion)
-    {
-        outputPath_ = outputPath_/mesh_.name();
-    }
-
     read(dict);
 }
 

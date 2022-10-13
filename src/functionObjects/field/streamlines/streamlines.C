@@ -533,15 +533,12 @@ bool Foam::functionObjects::streamlines::write()
     if (Pstream::master() && allPositions.size())
     {
         // Make output directory
-        fileName outputPath
-        (
-            mesh_.time().globalPath()/writeFile::outputPrefix/name()
-        );
-        if (mesh_.name() != fvMesh::defaultRegion)
-        {
-            outputPath = outputPath/mesh_.name();
-        }
-        outputPath = outputPath/mesh_.time().timeName();
+        const fileName outputPath =
+            mesh_.time().globalPath()
+           /writeFile::outputPrefix
+           /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
+           /name()
+           /mesh_.time().timeName();
         mkDir(outputPath);
 
         // Pass data to the formatter to write
