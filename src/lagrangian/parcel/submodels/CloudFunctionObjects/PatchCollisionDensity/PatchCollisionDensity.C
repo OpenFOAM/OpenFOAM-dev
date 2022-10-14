@@ -28,6 +28,9 @@ License
 #include "stringListOps.H"
 #include "ListOps.H"
 #include "ListListOps.H"
+#include "nonConformalFvPatch.H"
+#include "fvPatchFieldMapper.H"
+#include "setSizeFieldMapper.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -229,6 +232,49 @@ Foam::PatchCollisionDensity<CloudType>::~PatchCollisionDensity()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class CloudType>
+void Foam::PatchCollisionDensity<CloudType>::preEvolve()
+{
+    CloudFunctionObject<CloudType>::preEvolve();
+
+    const fvMesh& mesh = this->owner().mesh();
+
+    struct fvPatchFieldSetSizer
+    :
+        public fvPatchFieldMapper,
+        public setSizeFieldMapper
+    {
+        fvPatchFieldSetSizer(const label size)
+        :
+            setSizeFieldMapper(size)
+        {}
+    };
+
+    if (!mesh.conformal())
+    {
+        forAll(mesh.boundary(), patchi)
+        {
+            const fvPatch& fvp = mesh.boundary()[patchi];
+
+            if (isA<nonConformalFvPatch>(fvp))
+            {
+                const fvPatchFieldSetSizer mapper(fvp.size());
+
+                numberCollisionDensity_[patchi].autoMap(mapper);
+                numberCollisionDensity0_[patchi].autoMap(mapper);
+                massCollisionDensity_[patchi].autoMap(mapper);
+                massCollisionDensity0_[patchi].autoMap(mapper);
+
+                numberCollisionDensity_[patchi] == 0;
+                numberCollisionDensity0_[patchi] == 0;
+                massCollisionDensity_[patchi] == 0;
+                massCollisionDensity0_[patchi] == 0;
+            }
+        }
+    }
+}
+
 
 template<class CloudType>
 void Foam::PatchCollisionDensity<CloudType>::postPatch
