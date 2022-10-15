@@ -45,6 +45,7 @@ Description
 #include "fvCFD.H"
 #include "viscosityModel.H"
 #include "incompressibleMomentumTransportModel.H"
+#include "OFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
