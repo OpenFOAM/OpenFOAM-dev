@@ -99,7 +99,7 @@ Usage
         alpha1e    | Max eutectic melt fraction [0-1[    | no       | 0
         L          | Latent heat of fusion [J/kg]        | yes      |
         relax      | Relaxation coefficient [0-1]        | no       | 0.9
-        thermoMode | Thermo mode [thermo|lookup]         | yes      |
+        thermoMode | Thermo mode [thermo or lookup]      | yes      |
         rhoRef     | Reference (solid) density [kg/m^3]  | yes      |
         rho        | Name of density field               | no       | rho
         T          | Name of temperature field           | no       | T
