@@ -93,7 +93,7 @@ Foam::mappedPatchBase::reverseDistribute(const Field<Type>& fld) const
         Field<Type> nbrFld(fld);
         mapPtr_->reverseDistribute(nbrPatchFaceIndices_.size(), nbrFld);
         tmp<Field<Type>> tResult(new Field<Type>(nbrPolyPatch().size()));
-        UIndirectList<Type>(tResult.ref(), nbrPatchFaceIndices_) = nbrFld;
+        tResult.ref().rmap(nbrFld, nbrPatchFaceIndices_);
         return transform_.transform().invTransform(tResult);
     }
     else
