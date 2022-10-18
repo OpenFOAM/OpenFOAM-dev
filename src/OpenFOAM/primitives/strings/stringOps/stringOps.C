@@ -946,4 +946,60 @@ Foam::string& Foam::stringOps::inplaceTrim(string& s)
 }
 
 
+Foam::string Foam::stringOps::breakIntoIndentedLines
+(
+    const string& message,
+    const string::size_type nLength,
+    const string::size_type nIndent
+)
+{
+    const string indent(nIndent, token::SPACE);
+
+    string result;
+
+    word::size_type i0 = 0, i1 = 0;
+    while (true)
+    {
+        const word::size_type iNewLine =
+            message.find_first_of(token::NL, i1);
+        const word::size_type iSpace =
+            message.find_first_of(token::SPACE, i1);
+
+        // New line next
+        if
+        (
+            iNewLine != string::npos
+         && (iSpace == string::npos || iNewLine < iSpace)
+        )
+        {
+            result += indent + message.substr(i0, iNewLine - i0) + '\n';
+            i0 = i1 = iNewLine + 1;
+        }
+
+        // Space next
+        else if (iSpace != string::npos)
+        {
+            if (iSpace - i0 > nLength - nIndent)
+            {
+                result += indent + message.substr(i0, i1 - i0) + '\n';
+                i0 = i1;
+            }
+            else
+            {
+                i1 = iSpace + 1;
+            }
+        }
+
+        // End of string
+        else
+        {
+            result += indent + message.substr(i0);
+            break;
+        }
+    }
+
+    return result;
+}
+
+
 // ************************************************************************* //

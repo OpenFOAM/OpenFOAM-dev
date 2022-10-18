@@ -40,7 +40,7 @@ namespace Foam
 {
     defineTypeNameAndDebug(mappedPatchBase, 0);
 
-    const scalar mappedPatchBase::matchTol_ = 1e-4;
+    const scalar mappedPatchBase::defaultMatchTol_ = 1e-4;
 }
 
 
@@ -86,7 +86,7 @@ void Foam::mappedPatchBase::calcMapping() const
             nbrPatchIsMapped()
           ? nbrMappedPatch().transform_
           : cyclicTransform(false),
-            mappedPatchBase::matchTol_,
+            matchTol_,
             true
         );
 
@@ -327,7 +327,8 @@ Foam::mappedPatchBase::mappedPatchBase
     nbrPatchFaceIndices_(),
     patchToPatchIsUsed_(false),
     patchToPatchIsValid_(false),
-    patchToPatchPtr_(nullptr)
+    patchToPatchPtr_(nullptr),
+    matchTol_(defaultMatchTol_)
 {}
 
 
@@ -348,7 +349,8 @@ Foam::mappedPatchBase::mappedPatchBase
     nbrPatchFaceIndices_(),
     patchToPatchIsUsed_(false),
     patchToPatchIsValid_(false),
-    patchToPatchPtr_(nullptr)
+    patchToPatchPtr_(nullptr),
+    matchTol_(defaultMatchTol_)
 {}
 
 
@@ -396,7 +398,8 @@ Foam::mappedPatchBase::mappedPatchBase
             false
         ).ptr()
       : nullptr
-    )
+    ),
+    matchTol_(dict.lookupOrDefault("matchTolerance", defaultMatchTol_))
 {
     if (!coupleGroup_.valid() && nbrRegionName_.empty())
     {
@@ -425,7 +428,8 @@ Foam::mappedPatchBase::mappedPatchBase
         patchToPatchIsUsed_
       ? patchToPatch::New(mpb.patchToPatchPtr_->type(), false).ptr()
       : nullptr
-    )
+    ),
+    matchTol_(mpb.matchTol_)
 {}
 
 
@@ -495,6 +499,8 @@ void Foam::mappedPatchBase::write(Ostream& os) const
     {
         writeEntry(os, "method", patchToPatchPtr_->type());
     }
+
+    writeEntryIfDifferent(os, "matchTolerance", defaultMatchTol_, matchTol_);
 }
 
 

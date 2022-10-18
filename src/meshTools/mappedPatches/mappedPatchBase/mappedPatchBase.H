@@ -106,8 +106,11 @@ protected:
         //- Patch-to-patch intersection engine (if using patch-to-patch)
         mutable autoPtr<patchToPatch> patchToPatchPtr_;
 
+        //- Default Matching tolerance
+        static const scalar defaultMatchTol_;
+
         //- Matching tolerance
-        static const scalar matchTol_;
+        const scalar matchTol_;
 
 
     // Protected Member Functions

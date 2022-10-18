@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -290,6 +290,15 @@ namespace stringOps
 
     //- Trim leading and trailing whitespace inplace
     string& inplaceTrim(string&);
+
+
+    //- Break a string up into indented lines
+    string breakIntoIndentedLines
+    (
+        const string& str,
+        const string::size_type nLength = 80,
+        const string::size_type nIndent = 0
+    );
 
 
 } // End namespace stringOps

@@ -26,6 +26,7 @@ License
 #include "cyclicTransform.H"
 #include "unitConversion.H"
 #include "IOmanip.H"
+#include "stringOps.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -512,19 +513,25 @@ Foam::cyclicTransform::cyclicTransform
 
     if (ctrNbrCtrTDistance > lengthScale*matchTolerance)
     {
-        FatalErrorInFunction
-            << "The distance between the centre of patch " << name
-            << " and the transformed centre of patch " << nbrName << " is "
-            << ctrNbrCtrTDistance << "."
-            << nl
-            << "This is greater than the match tolerance of "
-            << lengthScale*matchTolerance << " for the patch."
-            << nl
+        OStringStream str;
+
+        str << nl
+            << "Patches " << name << " and " << nbrName << " are potentially "
+            << "not geometrically similar enough to be coupled." << nl << nl
+            << "The distance between the transformed centres of these patches "
+            << "is " << ctrNbrCtrTDistance << ", which is greater than the "
+            << "patch length scale (" << lengthScale << ") multiplied by the "
+            << "match tolerance (" << matchTolerance << ")." << nl << nl
             << "Check that the patches are geometrically similar and that any "
-            << "transformations defined between them are correct"
-            << nl
-            << "It might be possible to fix this problem by increasing the "
-            << "\"matchTolerance\" setting for this patch in the boundary "
+            << "transformations defined between them are correct." << nl << nl
+            << "If the patches and their transformations are defined correctly "
+            << "but small irregularities in the mesh mean this geometric test "
+            << "is failing, then it might be appropriate to relax the failure "
+            << "criteria by increasing the \"matchTolerance\" setting for "
+            << "these patches in the \"polyMesh/boundary\" file.";
+
+        FatalErrorInFunction
+            << stringOps::breakIntoIndentedLines(str.str(), 80, 4).c_str()
             << exit(FatalError);
     }
 }
