@@ -31,7 +31,7 @@ Description
 Usage
     \table
         Property     | Description                | Required | Default value
-        fieldName    | name of field to be mapped | no       | this field name
+        field        | name of field to be mapped | no       | this field name
         setAverage   | set the average value?     | no       | yes if average \\
                                                                is specified, \\
                                                                no otherwise
@@ -42,8 +42,8 @@ Usage
     \verbatim
     <patchName>
     {
-        type            mapped;
-        fieldName       T;
+        type            mappedValue;
+        field           T;
         average         300;
         value           uniform 300;
     }
