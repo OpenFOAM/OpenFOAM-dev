@@ -246,12 +246,25 @@ bool Foam::functionObjectList::readFunctionObject
 
     if (path == fileName::null)
     {
-        FatalIOErrorInFunction(functionsDict)
-            << "Cannot find functionObject configuration file "
-            << funcType << nl << nl
-            << "Available configured functionObjects:"
-            << list()
-            << exit(FatalIOError);
+        if (funcType == word::null)
+        {
+            FatalIOErrorInFunction(functionsDict)
+                << "functionObject configuration file name not specified"
+                << nl << nl
+                << "Available configured functionObjects:"
+                << list()
+                << exit(FatalIOError);
+        }
+        else
+        {
+            FatalIOErrorInFunction(functionsDict)
+                << "Cannot find functionObject configuration file "
+                << funcType << nl << nl
+                << "Available configured functionObjects:"
+                << list()
+                << exit(FatalIOError);
+        }
+
         return false;
     }
 

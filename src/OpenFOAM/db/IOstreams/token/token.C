@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,9 +42,8 @@ namespace Foam
 
 void Foam::token::parseError(const char* expected) const
 {
-    FatalIOError
-        << "Parse error, expected a " << expected
-        << ", found \n    " << info() << endl;
+    cerr<< "Parse error, expected a " << expected
+        << ", found \n    " << info() << std::endl;
 }
 
 
