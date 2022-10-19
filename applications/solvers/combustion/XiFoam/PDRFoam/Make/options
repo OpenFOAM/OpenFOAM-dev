@@ -41,7 +41,7 @@ EXE_LIBS = \
     -lspecie \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
-    -lthermophysicalTransportModels \
+    -lcoupledThermophysicalTransportModels \
     -llaminarFlameSpeedModels \
     -lfiniteVolume \
     -lfvModels \

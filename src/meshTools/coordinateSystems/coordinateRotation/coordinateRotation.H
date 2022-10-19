@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,12 @@ protected:
 
     // Protected member functions
 
-        //- Transform principal
-        symmTensor transformPrincipal(const tensor&, const vector&) const;
+        //- Transform the vector as if it is a diagonal tensor
+        symmTensor transformVectorDiagTensor
+        (
+            const tensor&,
+            const vector&
+        ) const;
 
 
 public:
@@ -162,35 +166,43 @@ public:
         }
 
         //- Transform vector using transformation tensor
-        virtual vector transform(const vector& st) const = 0;
+        virtual vector transform(const vector& v) const = 0;
 
         //- Transform vectorField using transformation tensor field
-        virtual tmp<vectorField> transform(const vectorField& st) const = 0;
+        virtual tmp<vectorField> transform(const vectorField& vf) const = 0;
 
         //- Inverse transform vector using transformation tensor
-        virtual vector invTransform(const vector& st) const = 0;
+        virtual vector invTransform(const vector& v) const = 0;
 
         //- Inverse transform vectorField using transformation tensor field
-        virtual tmp<vectorField> invTransform(const vectorField& st) const = 0;
+        virtual tmp<vectorField> invTransform(const vectorField& vf) const = 0;
 
         //- Transform tensor using transformation tensorField
-        virtual tensor transformTensor(const tensor& st) const = 0;
-
-        //- Transform tensor field using transformation tensorField
-        virtual tmp<tensorField> transformTensor
+        virtual tensor transform
         (
-            const tensorField& st
+            const vector& p,
+            const tensor& t
         ) const = 0;
 
-        //- Transform vector using transformation tensor and return
-        //  symmetrical tensor
-        virtual symmTensor transformVector(const vector& st) const = 0;
-
-        //- Transform vectorField using transformation tensorField and return
-        //  symmetrical tensorField
-        virtual tmp<symmTensorField> transformVector
+        //- Transform tensor field using transformation tensorField
+        virtual tmp<tensorField> transform
         (
-            const vectorField& st
+            const tensorField& tf
+        ) const = 0;
+
+        //- Transform diagTensor masquerading as a vector using transformation
+        //  tensor and return symmTensor
+        virtual symmTensor transformDiagTensor
+        (
+            const vector& p,
+            const vector& v
+        ) const = 0;
+
+        //- Transform diagTensorField masquerading as a vectorField
+        //  using transformation tensorField and return symmTensorField
+        virtual tmp<symmTensorField> transformDiagTensor
+        (
+            const vectorField& vf
         ) const = 0;
 
 

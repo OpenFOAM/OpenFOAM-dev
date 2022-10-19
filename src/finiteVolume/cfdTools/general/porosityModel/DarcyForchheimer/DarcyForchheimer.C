@@ -89,7 +89,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
             D_[zoneI][0].yy() = dXYZ_.value().y();
             D_[zoneI][0].zz() = dXYZ_.value().z();
 
-            D_[zoneI][0] = coordSys_.R().transformTensor(D_[zoneI][0]);
+            D_[zoneI][0] = coordSys_.R().transform(Zero, D_[zoneI][0]);
 
             // leading 0.5 is from 1/2*rho
             F_[zoneI][0] = Zero;
@@ -97,7 +97,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
             F_[zoneI][0].yy() = 0.5*fXYZ_.value().y();
             F_[zoneI][0].zz() = 0.5*fXYZ_.value().z();
 
-            F_[zoneI][0] = coordSys_.R().transformTensor(F_[zoneI][0]);
+            F_[zoneI][0] = coordSys_.R().transform(Zero, F_[zoneI][0]);
         }
     }
     else
@@ -128,8 +128,8 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
                 UIndirectList<vector>(mesh_.C(), cells)()
             );
 
-            D_[zoneI] = R.transformTensor(D_[zoneI]);
-            F_[zoneI] = R.transformTensor(F_[zoneI]);
+            D_[zoneI] = R.transform(D_[zoneI]);
+            F_[zoneI] = R.transform(F_[zoneI]);
         }
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,9 +56,6 @@ class heSolidThermo
         //- Calculate the thermo variables
         void calculate();
 
-        //- Return the anisotropic Kappa in the local coordinate system
-        tmp<volSymmTensorField> KappaLocal() const;
-
 
 public:
 
@@ -102,16 +99,6 @@ public:
 
         //- Anisotropic thermal conductivity [W/m/K]
         virtual tmp<vectorField> Kappa(const label patchi) const;
-
-        //- Anisotropic thermal conductivity for patch
-        //  in the local coordinate system [W/m/K]
-        virtual tmp<symmTensorField> KappaLocal(const label patchi) const;
-
-        //- Return the heat flux [W/m^2]
-        virtual tmp<surfaceScalarField> q() const;
-
-        //- Return the source term for the energy equation
-        virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
 
     // Member Operators

@@ -28,7 +28,7 @@ LIB_LIBS = \
     -lmulticomponentThermophysicalModels \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
-    -lthermophysicalTransportModels \
+    -lcoupledThermophysicalTransportModels \
     -lfluidMulticomponentThermophysicalTransportModels \
     -lfiniteVolume \
     -lfvModels \

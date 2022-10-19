@@ -307,7 +307,7 @@ protected:
             //- Is the mesh moving
             bool moving_;
 
-            //- Is the mesh topology changing
+            //- Has the mesh topology changed
             bool topoChanged_;
 
 
@@ -528,7 +528,7 @@ public:
                 return moving_;
             }
 
-            //- Is mesh topology changing
+            //- Has the mesh topology changed
             bool topoChanged() const
             {
                 return topoChanged_;

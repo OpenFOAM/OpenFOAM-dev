@@ -53,7 +53,7 @@ Foam::heThermo<BasicThermo, MixtureType>::volScalarFieldProperty
         volScalarField::New
         (
             IOobject::groupName(psiName, this->group()),
-            this->T_.mesh(),
+            this->mesh(),
             psiDim
         )
     );

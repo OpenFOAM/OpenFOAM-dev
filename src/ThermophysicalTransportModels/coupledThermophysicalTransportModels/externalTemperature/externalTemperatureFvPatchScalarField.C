@@ -24,12 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "externalTemperatureFvPatchScalarField.H"
+#include "patchKappa.H"
 #include "volFields.H"
 #include "physicoChemicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
 using Foam::constant::physicoChemical::sigma;
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -41,7 +41,6 @@ externalTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch()),
     haveQ_(false),
     Q_(NaN),
     haveq_(false),
@@ -72,7 +71,6 @@ externalTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch(), dict),
     haveQ_(dict.found("Q")),
     Q_(haveQ_ ? dict.lookup<scalar>("Q") : NaN),
     haveq_(dict.found("q")),
@@ -146,7 +144,6 @@ externalTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper),
-    temperatureCoupledBase(patch(), ptf),
     haveQ_(ptf.haveQ_),
     Q_(ptf.Q_),
     haveq_(ptf.haveq_),
@@ -177,7 +174,6 @@ externalTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(tppsf, iF),
-    temperatureCoupledBase(patch(), tppsf),
     haveQ_(tppsf.haveQ_),
     Q_(tppsf.Q_),
     haveq_(tppsf.haveq_),
@@ -311,10 +307,12 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
         qTot += q_;
     }
 
+    const scalarField kappa(patchKappa(patch()).kappa());
+
     // Evaluate
     if (!haveh_)
     {
-        refGrad() = qTot/kappa(*this);
+        refGrad() = qTot/kappa;
         refValue() = Tp;
         valueFraction() = 0;
     }
@@ -356,7 +354,7 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
 
         const scalarField kappaDeltaCoeffs
         (
-            this->kappa(*this)*patch().deltaCoeffs()
+            kappa*patch().deltaCoeffs()
         );
 
         refGrad() = 0;
@@ -386,7 +384,7 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
 
     if (debug)
     {
-        const scalar Q = gSum(kappa(*this)*patch().magSf()*snGrad());
+        const scalar Q = gSum(kappa*patch().magSf()*snGrad());
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
@@ -407,8 +405,6 @@ void Foam::externalTemperatureFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-
-    temperatureCoupledBase::write(os);
 
     if (haveQ_)
     {

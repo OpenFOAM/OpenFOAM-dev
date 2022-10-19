@@ -74,7 +74,7 @@ protected:
 
     // Protected data
 
-        //- Reference to the mesh database
+        //- Reference to the mesh
         const fvMesh& mesh_;
 
         //- Reference to the thermo
@@ -140,7 +140,7 @@ public:
 
     // Member Functions
 
-        //- Return const access to the mesh database
+        //- Return const access to the mesh
         inline const fvMesh& mesh() const;
 
         //- Return const access to the thermo

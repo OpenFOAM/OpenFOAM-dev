@@ -1,0 +1,5 @@
+solidThermophysicalTransportModel/solidThermophysicalTransportModel.C
+isotropic/isotropic.C
+anisotropic/anisotropic.C
+
+LIB = $(FOAM_LIBBIN)/libsolidThermophysicalTransportModels

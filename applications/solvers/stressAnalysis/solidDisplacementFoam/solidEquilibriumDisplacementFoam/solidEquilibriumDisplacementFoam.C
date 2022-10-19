@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,7 @@ Application
 
 Description
     Steady-state segregated finite-volume solver of linear-elastic,
-    small-strain deformation of a solid body, with optional thermal
-    diffusion and thermal stresses.
+    small-strain deformation of a solid body.
 
     Simple linear elasticity structural analysis code.
     Solves for the displacement vector field D, also generating the
@@ -37,6 +36,7 @@ Description
 
 #include "fvCFD.H"
 #include "solidDisplacementThermo.H"
+#include "solidThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

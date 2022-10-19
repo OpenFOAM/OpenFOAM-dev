@@ -146,7 +146,7 @@ public:
             return coeffDict_;
         }
 
-        //- Effective thermal turbulent diffusivity for temperature
+        //- Effective thermal turbulent conductivity
         //  of mixture [W/m/K]
         virtual tmp<volScalarField> kappaEff() const
         {
@@ -157,7 +157,7 @@ public:
             );
         }
 
-        //- Effective thermal turbulent diffusivity for temperature
+        //- Effective thermal turbulent conductivity
         //  of mixture for patch [W/m/K]
         virtual tmp<scalarField> kappaEff(const label patchi) const
         {

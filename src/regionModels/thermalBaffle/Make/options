@@ -5,8 +5,8 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/radiationModels/lnInclude \
-    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/solidThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/mesh/extrudeModel/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
@@ -16,8 +16,8 @@ LIB_LIBS = \
     -lregionModels \
     -lsolidThermo \
     -lmomentumTransportModels \
-    -lcompressibleMomentumTransportModels \
-    -lthermophysicalTransportModels \
+    -lsolidThermophysicalTransportModels \
+    -lcoupledThermophysicalTransportModels \
     -lradiationModels \
     -ldynamicMesh \
     -lfiniteVolume \

@@ -1,9 +1,6 @@
 thermophysicalTransportModel/thermophysicalTransportModel.C
 
 BCs = derivedFvPatchFields
-$(BCs)/externalTemperature/externalTemperatureFvPatchScalarField.C
-$(BCs)/temperatureCoupledBase/temperatureCoupledBase.C
-$(BCs)/coupledTemperature/coupledTemperatureFvPatchScalarField.C
 $(BCs)/thermalBaffle1D/thermalBaffle1DFvPatchScalarFields.C
 $(BCs)/totalFlowRateAdvectiveDiffusive/totalFlowRateAdvectiveDiffusiveFvPatchScalarField.C
 $(BCs)/externalCoupledTemperatureMixed/externalCoupledTemperatureMixedFvPatchScalarField.C

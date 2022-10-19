@@ -76,9 +76,6 @@ void Foam::solvers::solid::correctDiNum()
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solvers::solid::solid(fvMesh& mesh)
@@ -89,6 +86,8 @@ Foam::solvers::solid::solid(fvMesh& mesh)
     thermo(pThermo()),
 
     T(thermo.T()),
+
+    thermophysicalTransport(solidThermophysicalTransportModel::New(thermo)),
 
     DiNum(0)
 {
@@ -174,7 +173,7 @@ void Foam::solvers::solid::thermophysicalPredictor()
         fvScalarMatrix eEqn
         (
             fvm::ddt(rho, e)
-          + thermo.divq(e)
+          + thermophysicalTransport->divq(e)
           ==
             fvModels().source(rho, e)
         );

@@ -18,5 +18,5 @@ EXE_LIBS = \
     -lrhoCentralFoam \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
-    -lthermophysicalTransportModels \
+    -lcoupledThermophysicalTransportModels \
     -lmeshTools

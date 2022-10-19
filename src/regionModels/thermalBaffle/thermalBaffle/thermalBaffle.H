@@ -36,10 +36,10 @@ SourceFiles
 #ifndef thermalBaffle_H
 #define thermalBaffle_H
 
-#include "radiationModel.H"
 #include "regionModel.H"
 #include "solidThermo.H"
-#include "volFieldsFwd.H"
+#include "solidThermophysicalTransportModel.H"
+#include "radiationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,7 +59,7 @@ class thermalBaffle
     // Private Member Functions
 
         //- Calculate the baffle mesh thickness
-        tmp<volScalarField::Internal> calcDelta() const;
+        tmp<volScalarField::Internal> calcThickness() const;
 
 
 protected:
@@ -68,10 +68,7 @@ protected:
 
         // Geometric parameters
 
-            //- Baffle mesh thickness
-            volScalarField::Internal delta_;
-
-            //- Baffle physical thickness
+            //- Baffle thickness
             volScalarField::Internal thickness_;
 
 
@@ -86,8 +83,11 @@ protected:
             //- Solid thermo
             autoPtr<solidThermo> thermo_;
 
-            //- Enthalpy/internal energy
-            volScalarField& he_;
+
+        // Thermophysical transport
+
+            //- Pointer to the solid thermophysical transport model
+            autoPtr<solidThermophysicalTransportModel> thermophysicalTransport_;
 
 
         // Source term fields
@@ -152,24 +152,6 @@ public:
 
             //- Return const reference to the solidThermo
             const solidThermo& thermo() const;
-
-
-            // Fields
-
-                //- Return the film specific heat capacity [J/kg/K]
-                const tmp<volScalarField> Cp() const;
-
-                //- Return solid absorptivity [1/m]
-                const volScalarField& kappaRad() const;
-
-                //- Return temperature [K]
-                const volScalarField& T() const;
-
-                //- Return density [Kg/m^3]
-                const volScalarField& rho() const;
-
-                //- Return thermal conductivity [W/m/K]
-                const volScalarField& kappa() const;
 
 
         // Evolution

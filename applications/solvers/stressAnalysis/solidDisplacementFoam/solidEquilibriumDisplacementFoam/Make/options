@@ -6,6 +6,7 @@ EXE_INC = \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/solidThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
@@ -13,4 +14,5 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lsolidThermo \
     -lsolidDisplacementThermo \
+    -lsolidThermophysicalTransportModels \
     -lmeshTools

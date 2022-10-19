@@ -61,7 +61,7 @@ class solidDisplacementThermo
         //- Heat capacity at constant pressure [J/kg/K]
         volScalarField Cp_;
 
-        //- Thermal diffusivity for temperature [W/m/K]
+        //- Thermal conductivity [W/m/K]
         volScalarField kappa_;
 
         //- Youngs modulus [Pa]
@@ -176,7 +176,7 @@ public:
 
         // Access to transport state variables
 
-            //- Thermal diffusivity for temperature of mixture [W/m/K]
+            //- Thermal conductivity of mixture [W/m/K]
             virtual const volScalarField& kappa() const;
 
 
@@ -314,7 +314,7 @@ public:
             //- Thermal diffusivity for energy of mixture for patch [kg/m/s]
             virtual tmp<scalarField> alphahe(const label patchi) const;
 
-            //- Effective thermal turbulent diffusivity for temperature
+            //- Effective thermal turbulent conductivity
             //  of mixture [W/m/K]
             virtual tmp<volScalarField> kappaEff
             (
@@ -327,7 +327,7 @@ public:
                 const volScalarField& alphat
             ) const;
 
-            //- Effective thermal turbulent diffusivity for temperature
+            //- Effective thermal turbulent conductivity
             //  of mixture for patch [W/m/K]
             virtual tmp<scalarField> kappaEff
             (

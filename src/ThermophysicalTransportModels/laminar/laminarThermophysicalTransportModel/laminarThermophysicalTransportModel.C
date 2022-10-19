@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,9 +32,7 @@ template<class BasicThermophysicalTransportModel>
 void Foam::laminarThermophysicalTransportModel
 <
     BasicThermophysicalTransportModel
->::printCoeffs
-(
-    const word& type)
+>::printCoeffs(const word& type)
 {
     if (printCoeffs_)
     {

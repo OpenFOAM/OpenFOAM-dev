@@ -47,7 +47,7 @@ defineTypeNameAndDebug(thermalBaffle, 0);
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-tmp<volScalarField::Internal> thermalBaffle::calcDelta() const
+tmp<volScalarField::Internal> thermalBaffle::calcThickness() const
 {
     if (intCoupledPatchIDs_.size() != 2)
     {
@@ -131,7 +131,7 @@ tmp<volScalarField::Internal> thermalBaffle::calcDelta() const
     );
 
     // Unpack distances into a dimensioned field and return
-    tmp<volScalarField::Internal> tDelta
+    tmp<volScalarField::Internal> tThickness
     (
         new volScalarField::Internal
         (
@@ -148,7 +148,7 @@ tmp<volScalarField::Internal> thermalBaffle::calcDelta() const
             dimLength
         )
     );
-    volScalarField::Internal& delta = tDelta.ref();
+    volScalarField::Internal& thickness = tThickness.ref();
 
     forAll(cellInfoDeltas, celli)
     {
@@ -162,10 +162,10 @@ tmp<volScalarField::Internal> thermalBaffle::calcDelta() const
                 << exit(FatalError);
         }
 
-        delta[celli] = cellInfoDeltas[celli].data();
+        thickness[celli] = cellInfoDeltas[celli].data();
     }
 
-    return tDelta;
+    return tThickness;
 }
 
 
@@ -189,39 +189,16 @@ void thermalBaffle::solveEnergy()
 {
     DebugInFunction << endl;
 
-    // Modify thermo density and diffusivity to take into account the thickness
-    volScalarField dByT
-    (
-        volScalarField::New
-        (
-            "dByT",
-            regionMesh(),
-            dimless,
-            extrapolatedCalculatedFvPatchField<scalar>::typeName
-        )
-    );
-    dByT.ref() = delta_/thickness_;
-    dByT.correctBoundaryConditions();
-    const volScalarField rho("rho", thermo_->rho()*dByT);
-    const volScalarField alphahe("alphahe", thermo_->alphahe()*dByT);
+    volScalarField& e = thermo_->he();
+    const volScalarField& rho = thermo_->rho();
 
     fvScalarMatrix hEqn
     (
-        fvm::ddt(rho, he_)
-      - fvm::laplacian(alphahe, he_)
+        fvm::ddt(rho, e)
+      + thermophysicalTransport_->divq(e)
      ==
         Q_ + Qs_/thickness_
     );
-
-    if (regionMesh().moving())
-    {
-        surfaceScalarField phiMesh
-        (
-            fvc::interpolate(rho*he_)*regionMesh().phi()
-        );
-
-        hEqn -= fvc::div(phiMesh);
-    }
 
     hEqn.relax();
     hEqn.solve();
@@ -243,22 +220,10 @@ thermalBaffle::thermalBaffle
 )
 :
     regionModel(mesh, "thermalBaffle", modelType, dict, true),
-    delta_(calcDelta()),
-    thickness_
-    (
-        IOobject
-        (
-            "thickness",
-            regionMesh().pointsInstance(),
-            regionMesh(),
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE
-        ),
-        delta_
-    ),
+    thickness_(calcThickness()),
     nNonOrthCorr_(solution().lookup<label>("nNonOrthCorr")),
     thermo_(solidThermo::New(regionMesh())),
-    he_(thermo_->he()),
+    thermophysicalTransport_(solidThermophysicalTransportModel::New(thermo())),
     Qs_
     (
         IOobject
@@ -319,36 +284,6 @@ void thermalBaffle::evolveRegion()
 }
 
 
-const tmp<volScalarField> thermalBaffle::Cp() const
-{
-    return thermo_->Cp();
-}
-
-
-const volScalarField& thermalBaffle::kappaRad() const
-{
-    return radiation_->absorptionEmission().a();
-}
-
-
-const volScalarField& thermalBaffle::rho() const
-{
-    return thermo_->rho();
-}
-
-
-const volScalarField& thermalBaffle::kappa() const
-{
-    return thermo_->kappa();
-}
-
-
-const volScalarField& thermalBaffle::T() const
-{
-    return thermo_->T();
-}
-
-
 const solidThermo& thermalBaffle::thermo() const
 {
     return thermo_;
@@ -362,7 +297,7 @@ void thermalBaffle::info()
     forAll(coupledPatches, i)
     {
         const label patchi = coupledPatches[i];
-        const fvPatchScalarField& phe = he_.boundaryField()[patchi];
+        const fvPatchScalarField& phe = thermo_->he().boundaryField()[patchi];
         const word patchName = regionMesh().boundary()[patchi].name();
 
         Info<< indent << "Q : " << patchName << indent

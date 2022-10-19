@@ -2,6 +2,13 @@ Info<< "Reading thermophysical properties\n" << endl;
 
 solidDisplacementThermo thermo(mesh);
 
+autoPtr<solidThermophysicalTransportModel> thermophysicalTransport;
+
+if (thermo.thermalStress())
+{
+    thermophysicalTransport = solidThermophysicalTransportModel::New(thermo);
+}
+
 const volScalarField& E(thermo.E());
 const volScalarField& nu(thermo.nu());
 

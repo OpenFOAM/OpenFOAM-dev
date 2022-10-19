@@ -121,7 +121,7 @@ public:
         //- Isotropic thermal conductivity [W/m/K]
         inline scalar kappa(const scalar p, const scalar T) const;
 
-        //- Un-isotropic thermal conductivity [W/m/K]
+        //- Anisotropic thermal conductivity [W/m/K]
         inline vector Kappa(const scalar p, const scalar T) const;
 
          //- Dynamic viscosity [kg/m/s]

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,9 @@ unityLewisEddyDiffusivity
         thermo,
         false
     )
-{}
+{
+    this->printCoeffs(typeName);
+}
 
 
 template<class TurbulenceThermophysicalTransportModel>
@@ -116,7 +118,12 @@ unityLewisEddyDiffusivity
         ),
         momentumTransport.mesh()
     )
-{}
+{
+    if (type == typeName)
+    {
+        this->printCoeffs(type);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

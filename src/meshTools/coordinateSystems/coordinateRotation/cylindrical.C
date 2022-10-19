@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,7 +204,7 @@ Foam::vector Foam::cylindrical::invTransform
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
+Foam::tmp<Foam::tensorField> Foam::cylindrical::transform
 (
     const tensorField& tf
 ) const
@@ -219,17 +219,18 @@ Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
 }
 
 
-Foam::tensor Foam::cylindrical::transformTensor
+Foam::tensor Foam::cylindrical::transform
 (
+    const vector& p,
     const tensor& t
 ) const
 {
-    NotImplemented;
-    return Zero;
+    const tensor R(this->R(p));
+    return (R & t & R.T());
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::cylindrical::transformVector
+Foam::tmp<Foam::symmTensorField> Foam::cylindrical::transformDiagTensor
 (
     const vectorField& vf
 ) const
@@ -247,19 +248,19 @@ Foam::tmp<Foam::symmTensorField> Foam::cylindrical::transformVector
     const tensorField& R = Rptr_();
     forAll(fld, i)
     {
-        fld[i] = transformPrincipal(R[i], vf[i]);
+        fld[i] = transformVectorDiagTensor(R[i], vf[i]);
     }
     return tfld;
 }
 
 
-Foam::symmTensor Foam::cylindrical::transformVector
+Foam::symmTensor Foam::cylindrical::transformDiagTensor
 (
+    const vector& p,
     const vector& v
 ) const
 {
-    NotImplemented;
-    return Zero;
+    return transformVectorDiagTensor(R(p), v);
 }
 
 

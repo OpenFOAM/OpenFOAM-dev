@@ -39,7 +39,7 @@ Description
     and qs is the optional source heat flux.
 
     The thermal conductivity \c kappa can either be retrieved from various
-    possible sources, as detailed in the class temperatureCoupledBase.
+    possible sources, as detailed in the class patchKappa.
 
 Usage
     \table
@@ -72,7 +72,7 @@ Usage
     should be specified, not both.
 
 See also
-    Foam::temperatureCoupledBase
+    Foam::patchKappa
 
 SourceFiles
     coupledTemperatureFvPatchScalarField.C
@@ -83,7 +83,6 @@ SourceFiles
 #define coupledTemperatureFvPatchScalarField_H
 
 #include "mixedFvPatchFields.H"
-#include "temperatureCoupledBase.H"
 #include "scalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -97,8 +96,7 @@ namespace Foam
 
 class coupledTemperatureFvPatchScalarField
 :
-    public mixedFvPatchScalarField,
-    public temperatureCoupledBase
+    public mixedFvPatchScalarField
 {
     // Private Data
 

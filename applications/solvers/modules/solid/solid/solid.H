@@ -38,7 +38,7 @@ SourceFiles
 #define solid_H
 
 #include "solver.H"
-#include "solidThermo.H"
+#include "solidThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,6 +72,12 @@ protected:
         solidThermo& thermo;
 
         volScalarField& T;
+
+
+    // Thermophysical transport
+
+        //- Pointer to the solid thermophysical transport model
+        autoPtr<solidThermophysicalTransportModel> thermophysicalTransport;
 
 
     // Time-step controls

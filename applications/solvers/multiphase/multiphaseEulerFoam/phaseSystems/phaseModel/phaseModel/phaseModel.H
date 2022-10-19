@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -349,7 +349,7 @@ public:
 
         // Transport
 
-            //- Effective thermal turbulent diffusivity for temperature
+            //- Effective thermal turbulent conductivity
             //  of mixture for patch [W/m/K]
             virtual tmp<scalarField> kappaEff(const label patchi) const = 0;
 

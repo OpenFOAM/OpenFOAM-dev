@@ -31,8 +31,7 @@ gradSchemes
 
 laplacianSchemes
 {
-    default             none;
-    laplacian(alphahe,e)  Gauss linear uncorrected;
+    default         Gauss linear uncorrected;
 }
 
 

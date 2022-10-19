@@ -268,6 +268,8 @@ Foam::basicThermo::implementation::implementation
 :
     physicalProperties(mesh, phaseName),
 
+    mesh_(mesh),
+
     phaseName_(phaseName),
 
     T_

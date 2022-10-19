@@ -135,14 +135,14 @@ public:
             return alphat()().boundaryField()[patchi];
         }
 
-        //- Effective thermal turbulent diffusivity for temperature
+        //- Effective thermal turbulent conductivity
         //  of mixture [W/m/K]
         virtual tmp<volScalarField> kappaEff() const
         {
             return this->thermo().kappa() + this->thermo().Cp()*alphat();
         }
 
-        //- Effective thermal turbulent diffusivity for temperature
+        //- Effective thermal turbulent conductivity
         //  of mixture for patch [W/m/K]
         virtual tmp<scalarField> kappaEff(const label patchi) const
         {

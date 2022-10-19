@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,37 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "temperatureCoupledBase.H"
-#include "fluidThermo.H"
-#include "solidThermo.H"
+#include "patchKappa.H"
 #include "thermophysicalTransportModel.H"
+#include "solidThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::temperatureCoupledBase::temperatureCoupledBase
-(
-    const fvPatch& patch
-)
-:
-    patch_(patch)
-{}
-
-
-Foam::temperatureCoupledBase::temperatureCoupledBase
-(
-    const fvPatch& patch,
-    const dictionary& dict
-)
-:
-    patch_(patch)
-{}
-
-
-Foam::temperatureCoupledBase::temperatureCoupledBase
-(
-    const fvPatch& patch,
-    const temperatureCoupledBase& base
-)
+Foam::patchKappa::patchKappa(const fvPatch& patch)
 :
     patch_(patch)
 {}
@@ -61,62 +37,63 @@ Foam::temperatureCoupledBase::temperatureCoupledBase
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
-(
-    const fvPatchScalarField& Tp
-) const
+Foam::tmp<Foam::scalarField> Foam::patchKappa::kappa() const
 {
     const fvMesh& mesh = patch_.boundaryMesh().mesh();
     const label patchi = patch_.index();
 
-    const word& phase(Tp.internalField().group());
-
-    const word ttmName
+    if
     (
-        IOobject::groupName
+        mesh.foundObject<thermophysicalTransportModel>
         (
-            thermophysicalTransportModel::typeName,
-            phase
+            thermophysicalTransportModel::typeName
         )
-    );
-
-    if (mesh.foundObject<thermophysicalTransportModel>(ttmName))
+    )
     {
         const thermophysicalTransportModel& ttm =
-            mesh.lookupObject<thermophysicalTransportModel>(ttmName);
+           mesh.lookupObject<thermophysicalTransportModel>
+           (
+               thermophysicalTransportModel::typeName
+           );
 
         return ttm.kappaEff(patchi);
     }
-    else if (mesh.foundObject<solidThermo>(physicalProperties::typeName))
+    else if
+    (
+        mesh.foundObject<solidThermophysicalTransportModel>
+        (
+            solidThermophysicalTransportModel::typeName
+        )
+    )
     {
-        const solidThermo& thermo =
-            mesh.lookupObject<solidThermo>(physicalProperties::typeName);
+        const solidThermophysicalTransportModel& sttm =
+            mesh.lookupObject<solidThermophysicalTransportModel>
+            (
+                solidThermophysicalTransportModel::typeName
+            );
 
-        if (!thermo.isotropic())
+        if (!sttm.thermo().isotropic())
         {
-            const symmTensorField kappa(thermo.KappaLocal(patchi));
+            const symmTensorField kappa(sttm.Kappa(patchi));
             const vectorField n(patch_.nf());
 
             return n & kappa & n;
         }
         else
         {
-            return thermo.kappa().boundaryField()[patchi];
+            return sttm.kappa(patchi);
         }
     }
     else
     {
         FatalErrorInFunction
-            << "Cannot find a fluidThermo or solidThermo instance"
+            << "Cannot find a thermophysicalTransportModel "
+               "or solidThermophysicalTransportModel instance"
             << exit(FatalError);
 
         return scalarField::null();
     }
 }
-
-
-void Foam::temperatureCoupledBase::write(Ostream& os) const
-{}
 
 
 // ************************************************************************* //

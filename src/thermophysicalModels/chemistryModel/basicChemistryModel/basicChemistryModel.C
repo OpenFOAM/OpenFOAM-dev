@@ -70,13 +70,13 @@ Foam::basicChemistryModel::basicChemistryModel
         IOobject
         (
             thermo.phasePropertyName("chemistryProperties"),
-            thermo.T().mesh().time().constant(),
-            thermo.T().mesh(),
+            thermo.mesh().time().constant(),
+            thermo.mesh(),
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
     ),
-    mesh_(thermo.T().mesh()),
+    mesh_(thermo.mesh()),
     thermo_(thermo),
     chemistry_(lookup("chemistry")),
     deltaTChemIni_(lookup<scalar>("initialChemicalTimeStep")),

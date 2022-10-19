@@ -72,7 +72,7 @@ Foam::laminarFlameSpeedModels::constant::operator()() const
     return volScalarField::New
     (
         "Su0",
-        psiuMulticomponentThermo_.T().mesh(),
+        psiuMulticomponentThermo_.mesh(),
         Su_
     );
 }

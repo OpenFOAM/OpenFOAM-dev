@@ -24,10 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coupledTemperatureFvPatchScalarField.H"
-#include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "patchKappa.H"
 #include "volFields.H"
+#include "fvPatchFieldMapper.H"
 #include "mappedPatchBase.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -39,7 +40,6 @@ coupledTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch()),
     TnbrName_("undefined-Tnbr"),
     qrNbrName_("undefined-qrNbr"),
     qrName_("undefined-qr"),
@@ -63,7 +63,6 @@ coupledTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch(), dict),
     TnbrName_(dict.lookupOrDefault<word>("Tnbr", "T")),
     qrNbrName_(dict.lookupOrDefault<word>("qrNbr", "none")),
     qrName_(dict.lookupOrDefault<word>("qr", "none")),
@@ -147,7 +146,6 @@ coupledTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(psf, p, iF, mapper),
-    temperatureCoupledBase(patch(), psf),
     TnbrName_(psf.TnbrName_),
     qrNbrName_(psf.qrNbrName_),
     qrName_(psf.qrName_),
@@ -166,7 +164,6 @@ coupledTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(psf, iF),
-    temperatureCoupledBase(patch(), psf),
     TnbrName_(psf.TnbrName_),
     qrNbrName_(psf.qrNbrName_),
     qrName_(psf.qrName_),
@@ -225,12 +222,14 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
       : mpp.distribute(coupledTemperatureNbr)
     );
 
-    const scalarField KDelta(kappa(*this)*patch().deltaCoeffs());
+    const scalarField kappa(patchKappa(patch()).kappa());
+
+    const scalarField KDelta(kappa*patch().deltaCoeffs());
 
     const scalarField KDeltaNbr
     (
         contactRes_ == 0
-      ? mpp.distribute(coupledTemperatureNbr.kappa(coupledTemperatureNbr)
+      ? mpp.distribute(patchKappa(patchNbr).kappa()
        *patchNbr.deltaCoeffs())
       : tmp<scalarField>(new scalarField(size(), contactRes_))
     );
@@ -272,13 +271,13 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
 
     this->valueFraction() = KDeltaNbr/(KDeltaNbr + KDelta);
     this->refValue() = TcNbr;
-    this->refGrad() = (qs_ + qr + qrNbr)/kappa(*this);
+    this->refGrad() = (qs_ + qr + qrNbr)/kappa;
 
     mixedFvPatchScalarField::updateCoeffs();
 
     if (debug)
     {
-        scalar Q = gSum(kappa(*this)*patch().magSf()*snGrad());
+        scalar Q = gSum(kappa*patch().magSf()*snGrad());
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
@@ -310,8 +309,6 @@ void Foam::coupledTemperatureFvPatchScalarField::write
     writeEntry(os, "qr", qrName_);
     writeEntry(os, "thicknessLayers", thicknessLayers_);
     writeEntry(os, "kappaLayers", kappaLayers_);
-
-    temperatureCoupledBase::write(os);
 }
 
 

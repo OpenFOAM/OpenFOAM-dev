@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,13 +144,13 @@ void Foam::porosityModels::fixedCoeff::calcTransformModelData()
             alpha_[zoneI][0].xx() = alphaXYZ_.value().x();
             alpha_[zoneI][0].yy() = alphaXYZ_.value().y();
             alpha_[zoneI][0].zz() = alphaXYZ_.value().z();
-            alpha_[zoneI][0] = coordSys_.R().transformTensor(alpha_[zoneI][0]);
+            alpha_[zoneI][0] = coordSys_.R().transform(Zero, alpha_[zoneI][0]);
 
             beta_[zoneI][0] = Zero;
             beta_[zoneI][0].xx() = betaXYZ_.value().x();
             beta_[zoneI][0].yy() = betaXYZ_.value().y();
             beta_[zoneI][0].zz() = betaXYZ_.value().z();
-            beta_[zoneI][0] = coordSys_.R().transformTensor(beta_[zoneI][0]);
+            beta_[zoneI][0] = coordSys_.R().transform(Zero, beta_[zoneI][0]);
         }
     }
     else
@@ -180,8 +180,8 @@ void Foam::porosityModels::fixedCoeff::calcTransformModelData()
                 UIndirectList<vector>(mesh_.C(), cells)()
             );
 
-            alpha_[zoneI] = R.transformTensor(alpha_[zoneI]);
-            beta_[zoneI] = R.transformTensor(beta_[zoneI]);
+            alpha_[zoneI] = R.transform(alpha_[zoneI]);
+            beta_[zoneI] = R.transform(beta_[zoneI]);
         }
     }
 }

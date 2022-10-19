@@ -17,7 +17,7 @@ LIB_LIBS = \
     -lfluidThermophysicalModels \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
-    -lthermophysicalTransportModels \
+    -lcoupledThermophysicalTransportModels \
     -lfiniteVolume \
     -lmeshTools \
     -lsampling \

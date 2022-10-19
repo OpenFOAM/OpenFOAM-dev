@@ -17,7 +17,7 @@ EXE_LIBS = \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
     -lthermophysicalTransportModels \
-    -lfluidThermophysicalModels \
+    -lcoupledThermophysicalTransportModels \
     -lmulticomponentThermophysicalModels \
     -lspecie \
     -llaminarFlameSpeedModels \

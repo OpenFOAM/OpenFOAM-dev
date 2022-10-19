@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,92 +22,86 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::temperatureCoupledBase
+    Foam::solidThermophysicalTransportModels::isotropic
 
 Description
-    Common functions used in temperature coupled boundaries.
+    Solid thermophysical transport model for isotropic thermal conductivity
 
-    The thermal conductivity \c kappa is obtained from the region fluidThermo
-    or solidThermo as appropriate.
-
-    For turbulent fluid regions \c kappa is obtained from the
-    thermophysicalTransportModel \c kappaEff.
-
-    For solid regions kappa may be obtained from the anisotropic alpha field
-    by specifying the optional \c alphaAni field name.
-
-    \par Keywords provided by this class:
-      \table
-        Property | Description                     | Required | Default value
-        alphaAni | Name of the non-isotropic alpha | no  |
-      \endtable
+    This is the default transport model for solids and selected automatically if
+    the thermophysicalTransport dictionary is not present in the constant or
+    region directory.
 
 SourceFiles
-    temperatureCoupledBase.C
+    isotropic.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef temperatureCoupledBase_H
-#define temperatureCoupledBase_H
+#ifndef isotropic_H
+#define isotropic_H
 
-#include "scalarField.H"
-#include "NamedEnum.H"
-#include "fvPatch.H"
+#include "solidThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace solidThermophysicalTransportModels
+{
 
 /*---------------------------------------------------------------------------*\
-                   Class temperatureCoupledBase Declaration
+                           Class isotropic Declaration
 \*---------------------------------------------------------------------------*/
 
-class temperatureCoupledBase
+class isotropic
+:
+    public solidThermophysicalTransportModel
 {
-    // Private data
-
-        //- Underlying patch
-        const fvPatch& patch_;
-
 
 public:
 
+    //- Runtime type information
+    TypeName("isotropic");
+
+
     // Constructors
 
-        //- Construct from patch
-        temperatureCoupledBase
-        (
-            const fvPatch& patch
-        );
+        //- Construct from solid thermophysical properties
+        isotropic(const solidThermo& thermo);
 
-        //- Construct from patch and dictionary
-        temperatureCoupledBase
-        (
-            const fvPatch& patch,
-            const dictionary& dict
-        );
 
-         //- Construct from patch and temperatureCoupledBase
-        temperatureCoupledBase
-        (
-            const fvPatch& patch,
-            const temperatureCoupledBase& base
-        );
+    //- Destructor
+    virtual ~isotropic()
+    {}
 
 
     // Member Functions
 
-        //- Given patch temperature calculate corresponding K field
-        tmp<scalarField> kappa(const fvPatchScalarField& Tp) const;
+        //- Const access to the coefficients dictionary
+        virtual const dictionary& coeffDict() const;
 
-        //- Write
-        void write(Ostream&) const;
+        //- Read thermophysicalTransport dictionary
+        virtual bool read();
+
+        //- Thermal conductivity [W/m/K]
+        virtual tmp<volSymmTensorField> Kappa() const;
+
+        //- Thermal conductivity for patch [W/m/K]
+        virtual tmp<symmTensorField> Kappa(const label patchi) const;
+
+        //- Return the heat flux [W/m^2]
+        virtual tmp<surfaceScalarField> q() const;
+
+        //- Return the source term for the energy equation
+        virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
+
+        //- Correct the isotropic viscosity
+        virtual void correct();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace solidThermophysicalTransportModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

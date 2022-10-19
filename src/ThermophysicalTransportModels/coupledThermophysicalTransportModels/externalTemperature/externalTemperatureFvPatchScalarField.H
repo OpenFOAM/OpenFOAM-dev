@@ -46,8 +46,9 @@ Description
     resistances can be specified through thicknessLayers and kappaLayers
     entries.
 
-    The thermal conductivity \c kappa can either be retrieved from various
-    possible sources, as detailed in the class temperatureCoupledBase.
+    The patch thermal conductivity \c kappa is obtained from the
+    Foam::patchKappa base class so that this boundary condition can be applied
+    directly to either fluid or solid regions.
 
     The ambient temperature Ta is specified as a Foam::Function1 of time but
     uniform is space.
@@ -83,7 +84,7 @@ Usage
     \endverbatim
 
 See also
-    Foam::temperatureCoupledBase
+    Foam::patchKappa
     Foam::mixedFvPatchScalarField
 
 SourceFiles
@@ -95,7 +96,6 @@ SourceFiles
 #define externalTemperatureFvPatchScalarField_H
 
 #include "mixedFvPatchFields.H"
-#include "temperatureCoupledBase.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -109,8 +109,7 @@ namespace Foam
 
 class externalTemperatureFvPatchScalarField
 :
-    public mixedFvPatchScalarField,
-    public temperatureCoupledBase
+    public mixedFvPatchScalarField
 {
     // Private Data
 

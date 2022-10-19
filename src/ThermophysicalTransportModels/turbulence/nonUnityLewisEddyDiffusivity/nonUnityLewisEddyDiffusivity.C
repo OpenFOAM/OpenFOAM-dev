@@ -56,7 +56,9 @@ nonUnityLewisEddyDiffusivity
     ),
 
     Sct_("Sct", dimless, this->coeffDict_)
-{}
+{
+    this->printCoeffs(typeName);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

@@ -39,8 +39,8 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
         IOobject
         (
             thermo.phasePropertyName("chemistryProperties"),
-            thermo.T().mesh().time().constant(),
-            thermo.T().mesh(),
+            thermo.mesh().time().constant(),
+            thermo.mesh(),
             IOobject::MUST_READ,
             IOobject::NO_WRITE,
             false

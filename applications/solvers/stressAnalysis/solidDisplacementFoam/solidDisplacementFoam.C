@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,7 @@ Description
 
 #include "fvCFD.H"
 #include "solidDisplacementThermo.H"
+#include "solidThermophysicalTransportModel.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
                 fvScalarMatrix TEqn
                 (
                     fvm::ddt(rho, Cp, T)
-                  + thermo.divq(T)
+                  + thermophysicalTransport->divq(T)
                  ==
                     fvModels.source(rho*Cp, T)
                 );

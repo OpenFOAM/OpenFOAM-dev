@@ -81,7 +81,7 @@ Foam::chemistryModel<ThermoType>::chemistryModel
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                thermo.T().mesh(),
+                thermo.mesh(),
                 dimensionedScalar(dimMass/dimVolume/dimTime, 0)
             )
         );

@@ -25,6 +25,7 @@ License
 
 #include "wallHeatFlux.H"
 #include "thermophysicalTransportModel.H"
+#include "solidThermophysicalTransportModel.H"
 #include "solidThermo.H"
 #include "surfaceInterpolate.H"
 #include "fvcGrad.H"
@@ -219,12 +220,21 @@ bool Foam::functionObjects::wallHeatFlux::execute()
 
         return store(fieldName, calcWallHeatFlux(ttm.q()));
     }
-    else if (foundObject<solidThermo>(physicalProperties::typeName))
+    else if
+    (
+        foundObject<solidThermophysicalTransportModel>
+        (
+            solidThermophysicalTransportModel::typeName
+        )
+    )
     {
-        const solidThermo& thermo =
-            lookupObject<solidThermo>(physicalProperties::typeName);
+        const solidThermophysicalTransportModel& sttm =
+            lookupObject<solidThermophysicalTransportModel>
+            (
+                solidThermophysicalTransportModel::typeName
+            );
 
-        return store(fieldName, calcWallHeatFlux(thermo.q()));
+        return store(fieldName, calcWallHeatFlux(sttm.q()));
     }
     else
     {
