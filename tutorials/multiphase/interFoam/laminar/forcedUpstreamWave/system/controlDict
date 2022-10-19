@@ -63,4 +63,10 @@ functions
     }
 }
 
+DebugSwitches
+{
+    // Write the forcing and damping scale and force fields
+    forcing   1;
+}
+
 // ************************************************************************* //
