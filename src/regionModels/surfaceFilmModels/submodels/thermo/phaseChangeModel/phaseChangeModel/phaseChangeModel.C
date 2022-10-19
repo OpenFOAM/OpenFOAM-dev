@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -43,7 +43,7 @@ defineRunTimeSelectionTable(phaseChangeModel, dictionary);
 
 phaseChangeModel::phaseChangeModel
 (
-    surfaceFilmRegionModel& film
+    surfaceFilm& film
 )
 :
     filmSubModelBase(film),
@@ -55,7 +55,7 @@ phaseChangeModel::phaseChangeModel
 phaseChangeModel::phaseChangeModel
 (
     const word& modelType,
-    surfaceFilmRegionModel& film,
+    surfaceFilm& film,
     const dictionary& dict
 )
 :
@@ -121,7 +121,7 @@ void phaseChangeModel::info(Ostream& os) const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // end namespace surfaceFilmModels
+} // end namespace surfaceFilmSubModels
 } // end namespace regionModels
 } // end namespace Foam
 

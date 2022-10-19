@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,17 @@ License
 
 #include "NoSurfaceFilm.H"
 #include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class CloudType>
+Foam::UPtrList<Foam::regionModels::surfaceFilm>&
+Foam::NoSurfaceFilm<CloudType>::surfaceFilmPtrs() const
+{
+    static UPtrList<regionModels::surfaceFilm> null;
+    return null;
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

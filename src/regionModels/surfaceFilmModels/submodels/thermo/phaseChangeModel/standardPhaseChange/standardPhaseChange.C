@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "standardPhaseChange.H"
-#include "thermoSingleLayer.H"
+#include "thermoSurfaceFilm.H"
 #include "liquidThermo.H"
 #include "basicSpecieMixture.H"
 #include "zeroField.H"
@@ -37,7 +37,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -74,7 +74,7 @@ scalar standardPhaseChange::Sh
 
 standardPhaseChange::standardPhaseChange
 (
-    surfaceFilmRegionModel& film,
+    surfaceFilm& film,
     const dictionary& dict
 )
 :
@@ -104,7 +104,7 @@ void standardPhaseChange::correctModel
     YInfType YInf
 )
 {
-    const thermoSingleLayer& film = filmType<thermoSingleLayer>();
+    const thermoSurfaceFilm& film = filmType<thermoSurfaceFilm>();
 
     // Set local liquidThermo properties
     const liquidProperties& liquidThermo =
@@ -222,7 +222,7 @@ void standardPhaseChange::correctModel
     }
     else
     {
-        const thermoSingleLayer& film = filmType<thermoSingleLayer>();
+        const thermoSurfaceFilm& film = filmType<thermoSurfaceFilm>();
         const scalarField& YInf = film.YPrimary()[vapId()];
 
         correctModel(dt, availableMass, dMass, dEnergy, YInf);
@@ -232,7 +232,7 @@ void standardPhaseChange::correctModel
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

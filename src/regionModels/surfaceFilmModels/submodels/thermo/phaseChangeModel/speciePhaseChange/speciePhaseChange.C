@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "speciePhaseChange.H"
-#include "thermoSingleLayer.H"
+#include "thermoSurfaceFilm.H"
 #include "fluidThermo.H"
 #include "basicSpecieMixture.H"
 #include "liquidThermo.H"
@@ -36,7 +36,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,7 +49,7 @@ defineTypeNameAndDebug(speciePhaseChange, 0);
 speciePhaseChange::speciePhaseChange
 (
     const word& modelType,
-    surfaceFilmRegionModel& film,
+    surfaceFilm& film,
     const dictionary& dict
 )
 :
@@ -67,7 +67,7 @@ speciePhaseChange::~speciePhaseChange()
 
 Foam::label speciePhaseChange::vapId() const
 {
-    const thermoSingleLayer& film = filmType<thermoSingleLayer>();
+    const thermoSurfaceFilm& film = filmType<thermoSurfaceFilm>();
 
     // Set local liquidThermo properties
     const liquidProperties& liquidThermo =
@@ -83,7 +83,7 @@ Foam::label speciePhaseChange::vapId() const
 
 Foam::scalar speciePhaseChange::Wvap() const
 {
-    const thermoSingleLayer& film = filmType<thermoSingleLayer>();
+    const thermoSurfaceFilm& film = filmType<thermoSurfaceFilm>();
 
     const basicSpecieMixture& primarySpecieThermo =
         refCast<const basicSpecieMixture>(film.primaryThermo());
@@ -94,7 +94,7 @@ Foam::scalar speciePhaseChange::Wvap() const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

@@ -25,7 +25,7 @@ License
 
 #include "VoFPatchTransfer.H"
 #include "compressibleTwoPhaseMixture.H"
-#include "thermoSingleLayer.H"
+#include "thermoSurfaceFilm.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -34,7 +34,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -46,7 +46,7 @@ addToRunTimeSelectionTable(transferModel, VoFPatchTransfer, dictionary);
 
 VoFPatchTransfer::VoFPatchTransfer
 (
-    surfaceFilmRegionModel& film,
+    surfaceFilm& film,
     const dictionary& dict
 )
 :
@@ -146,7 +146,7 @@ void VoFPatchTransfer::correct
     // Do not correct if no patches selected
     if (!patchIDs_.size()) return;
 
-    const thermoSingleLayer& film = filmType<thermoSingleLayer>();
+    const thermoSurfaceFilm& film = filmType<thermoSurfaceFilm>();
 
     const scalarField& delta = film.delta();
     const scalarField& rho = film.rho();
@@ -338,7 +338,7 @@ void VoFPatchTransfer::patchTransferredMassTotals
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

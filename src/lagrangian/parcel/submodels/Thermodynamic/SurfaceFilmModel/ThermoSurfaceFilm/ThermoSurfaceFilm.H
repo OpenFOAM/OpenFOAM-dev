@@ -57,39 +57,36 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
+                       Class ThermoSurfaceFilmBase Declaration
+\*---------------------------------------------------------------------------*/
+
+class ThermoSurfaceFilmBase
+{
+public:
+
+    //- Interaction types
+    enum class interactionType
+    {
+        absorb,
+        bounce,
+        splashBai
+    };
+
+    //- Interaction type names
+    static const NamedEnum<interactionType, 3> interactionTypeNames_;
+};
+
+
+/*---------------------------------------------------------------------------*\
                       Class ThermoSurfaceFilm Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>
 class ThermoSurfaceFilm
 :
-    public SurfaceFilmModel<CloudType>
+    public SurfaceFilmModel<CloudType>,
+    public ThermoSurfaceFilmBase
 {
-public:
-
-    // Public data
-
-        //  Interaction type enumerations
-        enum interactionType
-        {
-            itAbsorb,
-            itBounce,
-            itSplashBai
-        };
-
-        //- Word descriptions of interaction type names
-        static wordList interactionTypeNames_;
-
-
-    // Public Member Functions
-
-        // Return interaction type enum from word
-        interactionType interactionTypeEnum(const word& it) const;
-
-        // Return word from interaction type enum
-        word interactionTypeStr(const interactionType& it) const;
-
-
 protected:
 
     // Protected data
@@ -99,6 +96,15 @@ protected:
 
         //- Reference to the cloud random number generator
         Random& rndGen_;
+
+
+        // Film models
+
+            //- Names of the surface films
+            const wordList surfaceFilmNames_;
+
+            //- Pointers to the surface films
+            mutable UPtrList<regionModels::surfaceFilm> surfaceFilms_;
 
 
         // Cached injector fields per film patch
@@ -162,7 +168,7 @@ protected:
             //- Absorb parcel into film
             void absorbInteraction
             (
-                regionModels::surfaceFilmModels::surfaceFilmRegionModel&,
+                regionModels::surfaceFilm&,
                 const parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -182,7 +188,7 @@ protected:
             //- Parcel interaction with dry surface
             void drySplashInteraction
             (
-                regionModels::surfaceFilmModels::surfaceFilmRegionModel&,
+                regionModels::surfaceFilm&,
                 const parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -192,7 +198,7 @@ protected:
             //- Parcel interaction with wetted surface
             void wetSplashInteraction
             (
-                regionModels::surfaceFilmModels::surfaceFilmRegionModel&,
+                regionModels::surfaceFilm&,
                 parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -202,7 +208,7 @@ protected:
             //- Bai parcel splash interaction model
             void splashInteraction
             (
-                regionModels::surfaceFilmModels::surfaceFilmRegionModel&,
+                regionModels::surfaceFilm&,
                 const parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -214,23 +220,23 @@ protected:
             );
 
 
-        // Injection from sheet (ejection) helper functions
+        //- Return pointers to the films
+        virtual UPtrList<regionModels::surfaceFilm>& surfaceFilmPtrs() const;
 
-            //- Cache the film fields in preparation for injection
-            virtual void cacheFilmFields
-            (
-                const label filmPatchi,
-                const label primaryPatchi,
-                const regionModels::surfaceFilmModels::surfaceFilmRegionModel&
-                    filmModel
-            );
+        //- Cache the film fields in preparation for injection
+        virtual void cacheFilmFields
+        (
+            const label filmPatchi,
+            const label primaryPatchi,
+            const regionModels::surfaceFilm& filmModel
+        );
 
-            //- Set the individual parcel properties
-            virtual void setParcelProperties
-            (
-                parcelType& p,
-                const label filmFacei
-            ) const;
+        //- Set the individual parcel properties
+        virtual void setParcelProperties
+        (
+            parcelType& p,
+            const label filmFacei
+        ) const;
 
 
 public:

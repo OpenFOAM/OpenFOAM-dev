@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,9 @@ class alphatFilmWallFunctionFvPatchScalarField
 protected:
 
     // Protected data
+
+        //- The name of the film
+        const word filmName_;
 
         //- B Coefficient (default = 5.5)
         scalar B_;

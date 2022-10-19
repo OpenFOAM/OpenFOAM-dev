@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,9 @@ class inclinedFilmNusseltHeightFvPatchScalarField
     public fixedValueFvPatchScalarField
 {
     // Private Data
+
+        //- The name of the film
+        const word filmName_;
 
         //- Mean mass flow rate per unit length [kg/s/m]
         autoPtr<Function1<scalar>> GammaMean_;

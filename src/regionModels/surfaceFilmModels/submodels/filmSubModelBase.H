@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::filmSubModelBase
+    Foam::regionModels::surfaceFilmSubModels::filmSubModelBase
 
 Description
     Base class for surface film sub-models
@@ -36,7 +36,7 @@ SourceFiles
 #ifndef filmSubModelBase_H
 #define filmSubModelBase_H
 
-#include "surfaceFilmRegionModel.H"
+#include "surfaceFilm.H"
 #include "subModelBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -45,7 +45,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -61,7 +61,7 @@ protected:
     // Protected data
 
         //- Reference to the film surface film model
-        surfaceFilmRegionModel& filmModel_;
+        surfaceFilm& filmModel_;
 
 
 public:
@@ -69,12 +69,12 @@ public:
     // Constructors
 
         //- Construct null
-        filmSubModelBase(surfaceFilmRegionModel& film);
+        filmSubModelBase(surfaceFilm& film);
 
         //- Construct from film film without name
         filmSubModelBase
         (
-            surfaceFilmRegionModel& film,
+            surfaceFilm& film,
             const dictionary& dict,
             const word& baseName,
             const word& modelType,
@@ -85,7 +85,7 @@ public:
         filmSubModelBase
         (
             const word& modelName,
-            surfaceFilmRegionModel& film,
+            surfaceFilm& film,
             const dictionary& dict,
             const word& baseName,
             const word& modelType
@@ -104,10 +104,10 @@ public:
             virtual bool writeTime() const;
 
             //- Return const access to the film surface film model
-            inline const surfaceFilmRegionModel& film() const;
+            inline const surfaceFilm& film() const;
 
             //- Return the reference to the film surface film model
-            inline surfaceFilmRegionModel& film();
+            inline surfaceFilm& film();
 
             template<class FilmType>
             inline const FilmType& filmType() const;
@@ -116,7 +116,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

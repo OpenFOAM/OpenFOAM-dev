@@ -33,7 +33,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -51,7 +51,7 @@ addToRunTimeSelectionTable
 
 noRadiation::noRadiation
 (
-    surfaceFilmRegionModel& film,
+    surfaceFilm& film,
     const dictionary& dict
 )
 :
@@ -84,7 +84,7 @@ tmp<volScalarField::Internal> noRadiation::Shs()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

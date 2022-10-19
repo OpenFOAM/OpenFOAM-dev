@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "inclinedFilmNusseltInletVelocityFvPatchVectorField.H"
 #include "volFields.H"
-#include "kinematicSingleLayer.H"
+#include "momentumSurfaceFilm.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -38,6 +38,7 @@ inclinedFilmNusseltInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
+    filmName_(regionModels::surfaceFilm::typeName),
     GammaMean_(),
     a_(),
     omega_()
@@ -53,6 +54,14 @@ inclinedFilmNusseltInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF, dict),
+    filmName_
+    (
+        dict.lookupOrDefault<word>
+        (
+            "film",
+            regionModels::surfaceFilm::typeName
+        )
+    ),
     GammaMean_(Function1<scalar>::New("GammaMean", dict)),
     a_(Function1<scalar>::New("a", dict)),
     omega_(Function1<scalar>::New("omega", dict))
@@ -69,6 +78,7 @@ inclinedFilmNusseltInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
+    filmName_(ptf.filmName_),
     GammaMean_(ptf.GammaMean_().clone().ptr()),
     a_(ptf.a_().clone().ptr()),
     omega_(ptf.omega_().clone().ptr())
@@ -83,6 +93,7 @@ inclinedFilmNusseltInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(fmfrpvf, iF),
+    filmName_(fmfrpvf.filmName_),
     GammaMean_(fmfrpvf.GammaMean_().clone().ptr()),
     a_(fmfrpvf.a_().clone().ptr()),
     omega_(fmfrpvf.omega_().clone().ptr())
@@ -102,17 +113,11 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::updateCoeffs()
 
     // Retrieve the film region from the database
 
-    const regionModels::regionModel& region =
-        db().time().lookupObject<regionModels::regionModel>
+    const regionModels::momentumSurfaceFilm& film =
+        db().time().lookupObject<regionModels::momentumSurfaceFilm>
         (
-            "surfaceFilmProperties"
+            filmName_ + "Properties"
         );
-
-    const regionModels::surfaceFilmModels::kinematicSingleLayer& film =
-        dynamic_cast
-        <
-            const regionModels::surfaceFilmModels::kinematicSingleLayer&
-        >(region);
 
     // Calculate the vector tangential to the patch
     // note: normal pointing into the domain
@@ -177,6 +182,13 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchVectorField::write(os);
+    writeEntryIfDifferent
+    (
+        os,
+        "film",
+        regionModels::surfaceFilm::typeName,
+        filmName_
+    );
     writeEntry(os, GammaMean_());
     writeEntry(os, a_());
     writeEntry(os, omega_());

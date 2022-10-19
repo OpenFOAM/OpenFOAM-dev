@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::speciePhaseChange
+    Foam::regionModels::surfaceFilmSubModels::speciePhaseChange
 
 Description
     Specie phase change model abstract base class
@@ -36,7 +36,7 @@ SourceFiles
 #define speciePhaseChange_H
 
 #include "phaseChangeModel.H"
-#include "thermoSingleLayer.H"
+#include "thermoSurfaceFilm.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,7 +44,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -68,7 +68,7 @@ public:
         speciePhaseChange
         (
             const word& modelType,
-            surfaceFilmRegionModel& film,
+            surfaceFilm& film,
             const dictionary& dict
         );
 
@@ -96,7 +96,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

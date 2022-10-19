@@ -1,4 +1,4 @@
 regionModel/regionModel.C
-singleLayerRegion/singleLayerRegion.C
+singleLayerRegionModel/singleLayerRegionModel.C
 
 LIB = $(FOAM_LIBBIN)/libregionModels

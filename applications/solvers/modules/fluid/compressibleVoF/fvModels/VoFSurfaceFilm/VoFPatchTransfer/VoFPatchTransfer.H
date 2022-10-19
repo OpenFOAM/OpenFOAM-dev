@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::VoFPatchTransfer
+    Foam::regionModels::surfaceFilmSubModels::VoFPatchTransfer
 
 Description
     Transfer mass between the film and the VoF in the continuous phase.
@@ -43,7 +43,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -89,7 +89,7 @@ public:
     // Constructors
 
         //- Construct from surface film model
-        VoFPatchTransfer(surfaceFilmRegionModel& film, const dictionary& dict);
+        VoFPatchTransfer(surfaceFilm& film, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         VoFPatchTransfer(const VoFPatchTransfer&) = delete;
@@ -135,7 +135,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

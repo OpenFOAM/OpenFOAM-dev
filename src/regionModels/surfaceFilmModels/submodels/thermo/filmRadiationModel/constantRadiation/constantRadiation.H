@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::constantRadiation
+    Foam::regionModels::surfaceFilmSubModels::constantRadiation
 
 Description
     Film constant radiation model.  The constant radiative flux is specified
@@ -47,7 +47,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -87,7 +87,7 @@ public:
         //- Construct from surface film model and dictionary
         constantRadiation
         (
-            surfaceFilmRegionModel& film,
+            surfaceFilm& film,
             const dictionary& dict
         );
 
@@ -120,7 +120,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

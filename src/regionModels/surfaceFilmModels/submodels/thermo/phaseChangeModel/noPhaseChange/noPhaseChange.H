@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::noPhaseChange
+    Foam::regionModels::surfaceFilmSubModels::noPhaseChange
 
 Description
     Dummy phase change model for 'none'
@@ -43,7 +43,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -63,7 +63,7 @@ public:
     // Constructors
 
         //- Construct from surface film model
-        noPhaseChange(surfaceFilmRegionModel& film, const dictionary& dict);
+        noPhaseChange(surfaceFilm& film, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         noPhaseChange(const noPhaseChange&) = delete;
@@ -105,7 +105,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

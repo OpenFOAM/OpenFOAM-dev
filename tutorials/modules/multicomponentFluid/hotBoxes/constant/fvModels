@@ -20,9 +20,9 @@ clouds
     libs    ("liblagrangianParcel.so");
 }
 
-surfaceFilm
+surfaceFilms
 {
-    type    surfaceFilm;
+    type    surfaceFilms;
     libs    ("libsurfaceFilmModels.so");
 }
 

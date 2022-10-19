@@ -46,7 +46,7 @@ SourceFiles
 #define VoFSurfaceFilm_H
 
 #include "fvModel.H"
-#include "thermoSingleLayer.H"
+#include "thermoSurfaceFilm.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +66,7 @@ class VoFSurfaceFilm
     // Private Data
 
         //- The surface film model
-        regionModels::surfaceFilmModels::thermoSingleLayer surfaceFilm_;
+        regionModels::thermoSurfaceFilm surfaceFilm_;
 
         //- Current time index (used for updating)
         mutable label curTimeIndex_;

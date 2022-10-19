@@ -14,9 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-surfaceFilm
+surfaceFilms
 {
-    type    surfaceFilm;
+    type    surfaceFilms;
     libs    ("libsurfaceFilmModels.so");
 }
 

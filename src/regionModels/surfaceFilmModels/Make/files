@@ -1,46 +1,45 @@
 # Surface film models
-surfaceFilmRegionModel/surfaceFilmRegionModel.C
-kinematicSingleLayer/kinematicSingleLayer.C
-thermoSingleLayer/thermoSingleLayer.C
-
+surfaceFilm/surfaceFilm.C
+momentumSurfaceFilm/momentumSurfaceFilm.C
+thermoSurfaceFilm/thermoSurfaceFilm.C
 
 # Sub-models
 submodels/filmSubModelBase.C
 
-KINEMATICMODELS=submodels/kinematic
-$(KINEMATICMODELS)/force/force/force.C
-$(KINEMATICMODELS)/force/force/forceNew.C
-$(KINEMATICMODELS)/force/forceList/forceList.C
-$(KINEMATICMODELS)/force/contactAngleForces/contactAngleForce/contactAngleForce.C
-$(KINEMATICMODELS)/force/contactAngleForces/distribution/distributionContactAngleForce.C
-$(KINEMATICMODELS)/force/contactAngleForces/temperatureDependent/temperatureDependentContactAngleForce.C
-$(KINEMATICMODELS)/force/contactAngleForces/perturbedTemperatureDependent/perturbedTemperatureDependentContactAngleForce.C
-$(KINEMATICMODELS)/force/thermocapillaryForce/thermocapillaryForce.C
+MOMENTUMMODELS=submodels/momentum
+$(MOMENTUMMODELS)/force/force/force.C
+$(MOMENTUMMODELS)/force/force/forceNew.C
+$(MOMENTUMMODELS)/force/forceList/forceList.C
+$(MOMENTUMMODELS)/force/contactAngleForces/contactAngleForce/contactAngleForce.C
+$(MOMENTUMMODELS)/force/contactAngleForces/distribution/distributionContactAngleForce.C
+$(MOMENTUMMODELS)/force/contactAngleForces/temperatureDependent/temperatureDependentContactAngleForce.C
+$(MOMENTUMMODELS)/force/contactAngleForces/perturbedTemperatureDependent/perturbedTemperatureDependentContactAngleForce.C
+$(MOMENTUMMODELS)/force/thermocapillaryForce/thermocapillaryForce.C
 
-$(KINEMATICMODELS)/ejectionModel/ejectionModel/ejectionModel.C
-$(KINEMATICMODELS)/ejectionModel/ejectionModel/ejectionModelNew.C
-$(KINEMATICMODELS)/ejectionModel/ejectionModelList/ejectionModelList.C
-$(KINEMATICMODELS)/ejectionModel/drippingEjection/drippingEjection.C
-$(KINEMATICMODELS)/ejectionModel/BrunDrippingEjection/BrunDrippingEjection.C
-$(KINEMATICMODELS)/ejectionModel/patchEjection/patchEjection.C
-$(KINEMATICMODELS)/ejectionModel/curvatureSeparation/curvatureSeparation.C
+$(MOMENTUMMODELS)/ejectionModel/ejectionModel/ejectionModel.C
+$(MOMENTUMMODELS)/ejectionModel/ejectionModel/ejectionModelNew.C
+$(MOMENTUMMODELS)/ejectionModel/ejectionModelList/ejectionModelList.C
+$(MOMENTUMMODELS)/ejectionModel/drippingEjection/drippingEjection.C
+$(MOMENTUMMODELS)/ejectionModel/BrunDrippingEjection/BrunDrippingEjection.C
+$(MOMENTUMMODELS)/ejectionModel/patchEjection/patchEjection.C
+$(MOMENTUMMODELS)/ejectionModel/curvatureSeparation/curvatureSeparation.C
 
-$(KINEMATICMODELS)/transferModels/transferModel/transferModel.C
-$(KINEMATICMODELS)/transferModels/transferModel/transferModelNew.C
-$(KINEMATICMODELS)/transferModels/transferModelList/transferModelList.C
+$(MOMENTUMMODELS)/transferModels/transferModel/transferModel.C
+$(MOMENTUMMODELS)/transferModels/transferModel/transferModelNew.C
+$(MOMENTUMMODELS)/transferModels/transferModelList/transferModelList.C
 
-$(KINEMATICMODELS)/filmMomentumTransportModel/filmMomentumTransportModel/filmMomentumTransportModel.C
-$(KINEMATICMODELS)/filmMomentumTransportModel/filmMomentumTransportModel/filmMomentumTransportModelNew.C
-$(KINEMATICMODELS)/filmMomentumTransportModel/laminar/laminar.C
+$(MOMENTUMMODELS)/filmMomentumTransportModel/filmMomentumTransportModel/filmMomentumTransportModel.C
+$(MOMENTUMMODELS)/filmMomentumTransportModel/filmMomentumTransportModel/filmMomentumTransportModelNew.C
+$(MOMENTUMMODELS)/filmMomentumTransportModel/laminar/laminar.C
 
-$(KINEMATICMODELS)/filmViscosityModel/filmViscosityModel/filmViscosityModel.C
-$(KINEMATICMODELS)/filmViscosityModel/filmViscosityModel/filmViscosityModelNew.C
-$(KINEMATICMODELS)/filmViscosityModel/constant/constantViscosity.C
-$(KINEMATICMODELS)/filmViscosityModel/Newtonian/NewtonianViscosity.C
-$(KINEMATICMODELS)/filmViscosityModel/thixotropic/thixotropicViscosity.C
-$(KINEMATICMODELS)/filmViscosityModel/Arrhenius/ArrheniusViscosity.C
-$(KINEMATICMODELS)/filmViscosityModel/function1/function1Viscosity.C
-$(KINEMATICMODELS)/filmViscosityModel/waxSolvent/waxSolventViscosity.C
+$(MOMENTUMMODELS)/filmViscosityModel/filmViscosityModel/filmViscosityModel.C
+$(MOMENTUMMODELS)/filmViscosityModel/filmViscosityModel/filmViscosityModelNew.C
+$(MOMENTUMMODELS)/filmViscosityModel/constant/constantViscosity.C
+$(MOMENTUMMODELS)/filmViscosityModel/Newtonian/NewtonianViscosity.C
+$(MOMENTUMMODELS)/filmViscosityModel/thixotropic/thixotropicViscosity.C
+$(MOMENTUMMODELS)/filmViscosityModel/Arrhenius/ArrheniusViscosity.C
+$(MOMENTUMMODELS)/filmViscosityModel/function1/function1Viscosity.C
+$(MOMENTUMMODELS)/filmViscosityModel/waxSolvent/waxSolventViscosity.C
 
 THERMOMODELS=submodels/thermo
 $(THERMOMODELS)/phaseChangeModel/phaseChangeModel/phaseChangeModel.C
@@ -63,7 +62,6 @@ $(THERMOMODELS)/filmRadiationModel/constantRadiation/constantRadiation.C
 $(THERMOMODELS)/filmRadiationModel/primaryRadiation/primaryRadiation.C
 $(THERMOMODELS)/filmRadiationModel/standardRadiation/standardRadiation.C
 
-
 # Boundary conditions
 PATCHFIELDS=derivedFvPatchFields
 $(PATCHFIELDS)/filmHeightInletVelocity/filmHeightInletVelocityFvPatchVectorField.C
@@ -72,6 +70,7 @@ $(PATCHFIELDS)/inclinedFilmNusseltInletVelocity/inclinedFilmNusseltInletVelocity
 $(PATCHFIELDS)/wallFunctions/nutkFilmWallFunction/nutkFilmWallFunctionFvPatchScalarField.C
 $(PATCHFIELDS)/wallFunctions/alphatFilmWallFunction/alphatFilmWallFunctionFvPatchScalarField.C
 
-fvModels/surfaceFilm/surfaceFilm.C
+# fvModel
+fvModels/surfaceFilms/surfaceFilms.C
 
 LIB = $(FOAM_LIBBIN)/libsurfaceFilmModels

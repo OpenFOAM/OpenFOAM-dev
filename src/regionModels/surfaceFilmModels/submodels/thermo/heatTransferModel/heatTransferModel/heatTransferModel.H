@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::heatTransferModel
+    Foam::regionModels::surfaceFilmSubModels::heatTransferModel
 
 Description
     Base class for film heat transfer models
@@ -45,7 +45,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -70,7 +70,7 @@ public:
              heatTransferModel,
              dictionary,
              (
-                 surfaceFilmRegionModel& film,
+                 surfaceFilm& film,
                  const dictionary& dict
              ),
              (film, dict)
@@ -80,13 +80,13 @@ public:
     // Constructors
 
         //- Construct null
-        heatTransferModel(surfaceFilmRegionModel& film);
+        heatTransferModel(surfaceFilm& film);
 
         //- Construct from type name, dictionary and surface film model
         heatTransferModel
         (
             const word& modelType,
-            surfaceFilmRegionModel& film,
+            surfaceFilm& film,
             const dictionary& dict
         );
 
@@ -99,7 +99,7 @@ public:
         //- Return a reference to the selected phase change model
         static autoPtr<heatTransferModel> New
         (
-            surfaceFilmRegionModel& film,
+            surfaceFilm& film,
             const dictionary& dict
         );
 
@@ -128,7 +128,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

@@ -40,6 +40,8 @@ SourceFiles
 #include "autoPtr.H"
 #include "runTimeSelectionTables.H"
 #include "CloudSubModelBase.H"
+#include "surfaceMesh.H"
+#include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,10 +51,7 @@ namespace Foam
 // Forward declaration of classes
 namespace regionModels
 {
-    namespace surfaceFilmModels
-    {
-        class surfaceFilmRegionModel;
-    }
+    class surfaceFilm;
 }
 
 /*---------------------------------------------------------------------------*\
@@ -109,12 +108,16 @@ protected:
 
     // Protected functions
 
+        //- Return pointers to the films
+        virtual UPtrList<regionModels::surfaceFilm>&
+            surfaceFilmPtrs() const = 0;
+
         //- Cache the film fields in preparation for injection
         virtual void cacheFilmFields
         (
             const label filmPatchi,
             const label primaryPatchi,
-            const regionModels::surfaceFilmModels::surfaceFilmRegionModel&
+            const regionModels::surfaceFilm&
         );
 
         //- Set the individual parcel properties
@@ -128,7 +131,7 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("surfaceFilmModel");
+    TypeName("surfaceFilm");
 
     //- Declare runtime constructor selection table
     declareRunTimeSelectionTable

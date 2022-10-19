@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "waxSolventEvaporation.H"
-#include "thermoSingleLayer.H"
+#include "thermoSurfaceFilm.H"
 #include "liquidThermo.H"
 #include "basicSpecieMixture.H"
 
@@ -41,7 +41,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -78,7 +78,7 @@ scalar waxSolventEvaporation::Sh
 
 waxSolventEvaporation::waxSolventEvaporation
 (
-    surfaceFilmRegionModel& film,
+    surfaceFilm& film,
     const dictionary& dict
 )
 :
@@ -155,7 +155,7 @@ void waxSolventEvaporation::correctModel
     YInfType YInf
 )
 {
-    const thermoSingleLayer& film = filmType<thermoSingleLayer>();
+    const thermoSurfaceFilm& film = filmType<thermoSurfaceFilm>();
 
     const volScalarField& alpha = film.alpha();
     const volScalarField& delta = film.delta();
@@ -403,7 +403,7 @@ void waxSolventEvaporation::correctModel
     }
     else
     {
-        const thermoSingleLayer& film = filmType<thermoSingleLayer>();
+        const thermoSurfaceFilm& film = filmType<thermoSurfaceFilm>();
         const scalarField& YInf = film.YPrimary()[vapId()];
 
         correctModel(dt, availableMass, dMass, dEnergy, YInf);
@@ -413,7 +413,7 @@ void waxSolventEvaporation::correctModel
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

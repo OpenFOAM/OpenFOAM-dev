@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::solidification
+    Foam::regionModels::surfaceFilmSubModels::solidification
 
 Description
     Solidification phase change model where all film mass is converted when the
@@ -45,7 +45,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -87,7 +87,7 @@ public:
     // Constructors
 
         //- Construct from surface film model
-        solidification(surfaceFilmRegionModel& film, const dictionary& dict);
+        solidification(surfaceFilm& film, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         solidification(const solidification&) = delete;
@@ -120,7 +120,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

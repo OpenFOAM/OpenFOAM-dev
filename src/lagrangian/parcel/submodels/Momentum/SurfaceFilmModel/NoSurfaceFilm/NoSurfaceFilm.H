@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,6 +57,12 @@ protected:
 
         //- Convenience typedef for parcel type
         typedef typename CloudType::parcelType parcelType;
+
+
+    // Protected Member Functions
+
+        //- Return pointers to the films
+        virtual UPtrList<regionModels::surfaceFilm>& surfaceFilmPtrs() const;
 
 
 public:

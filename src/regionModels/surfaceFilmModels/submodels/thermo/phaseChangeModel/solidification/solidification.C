@@ -25,7 +25,7 @@ License
 
 #include "solidification.H"
 #include "addToRunTimeSelectionTable.H"
-#include "thermoSingleLayer.H"
+#include "thermoSurfaceFilm.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -33,7 +33,7 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
+namespace surfaceFilmSubModels
 {
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -51,7 +51,7 @@ addToRunTimeSelectionTable
 
 solidification::solidification
 (
-    surfaceFilmRegionModel& film,
+    surfaceFilm& film,
     const dictionary& dict
 )
 :
@@ -116,7 +116,7 @@ void solidification::correctModel
     scalarField& dEnergy
 )
 {
-    const thermoSingleLayer& film = filmType<thermoSingleLayer>();
+    const thermoSurfaceFilm& film = filmType<thermoSurfaceFilm>();
 
     const scalarField& T = film.thermo().T();
     const scalarField& he = film.thermo().he();
@@ -155,7 +155,7 @@ void solidification::correctModel
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
+} // End namespace surfaceFilmSubModels
 } // End namespace regionModels
 } // End namespace Foam
 

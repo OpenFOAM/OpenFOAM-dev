@@ -25,7 +25,7 @@ License
 
 #include "alphatFilmWallFunctionFvPatchScalarField.H"
 #include "thermophysicalTransportModel.H"
-#include "surfaceFilmRegionModel.H"
+#include "surfaceFilm.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -51,6 +51,7 @@ alphatFilmWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
+    filmName_(regionModels::surfaceFilm::typeName),
     B_(5.5),
     yPlusCrit_(11.05),
     Cmu_(0.09),
@@ -68,6 +69,14 @@ alphatFilmWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
+    filmName_
+    (
+        dict.lookupOrDefault<word>
+        (
+            "film",
+            regionModels::surfaceFilm::typeName
+        )
+    ),
     B_(dict.lookupOrDefault("B", 5.5)),
     yPlusCrit_(dict.lookupOrDefault("yPlusCrit", 11.05)),
     Cmu_(dict.lookupOrDefault("Cmu", 0.09)),
@@ -86,6 +95,7 @@ alphatFilmWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
+    filmName_(ptf.filmName_),
     B_(ptf.B_),
     yPlusCrit_(ptf.yPlusCrit_),
     Cmu_(ptf.Cmu_),
@@ -102,6 +112,7 @@ alphatFilmWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(fwfpsf, iF),
+    filmName_(fwfpsf.filmName_),
     B_(fwfpsf.B_),
     yPlusCrit_(fwfpsf.yPlusCrit_),
     Cmu_(fwfpsf.Cmu_),
@@ -119,7 +130,7 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    typedef regionModels::surfaceFilmModels::surfaceFilmRegionModel modelType;
+    typedef regionModels::surfaceFilm modelType;
 
     // Since we're inside initEvaluate/evaluate there might be processor
     // comms underway. Change the tag we use.
@@ -127,7 +138,7 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
     UPstream::msgType() = oldTag+1;
 
     bool foundFilm =
-        db().time().foundObject<modelType>("surfaceFilmProperties");
+        db().time().foundObject<modelType>(filmName_ + "Properties");
 
     if (!foundFilm)
     {
@@ -139,7 +150,7 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
 
     // Retrieve phase change mass from surface film model
     const modelType& filmModel =
-        db().time().lookupObject<modelType>("surfaceFilmProperties");
+        db().time().lookupObject<modelType>(filmName_ + "Properties");
 
     const label filmPatchi = filmModel.regionPatchID(patchi);
 
@@ -223,6 +234,13 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
 void alphatFilmWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
+    writeEntryIfDifferent
+    (
+        os,
+        "film",
+        regionModels::surfaceFilm::typeName,
+        filmName_
+    );
     writeEntry(os, "B", B_);
     writeEntry(os, "yPlusCrit", yPlusCrit_);
     writeEntry(os, "Cmu", Cmu_);
