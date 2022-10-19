@@ -41,7 +41,7 @@ Foam::SurfaceFilmModel<CloudType>::SurfaceFilmModel(CloudType& owner)
     diameterParcelPatch_(0),
     UFilmPatch_(0),
     rhoFilmPatch_(0),
-    deltaFilmPatch_(0),
+    deltaFilmPatch_(owner.mesh().boundary().size()),
     nParcelsTransferred_(0),
     nParcelsInjected_(0)
 {}
