@@ -83,16 +83,17 @@ void Foam::solvers::isothermalFluid::correctPressure()
 
     if (pimple.transonic())
     {
+        const surfaceScalarField phiHbyArel(fvc::relative(phiHbyA, rho, U));
+
         const surfaceScalarField phid
         (
             "phid",
-            (fvc::interpolate(psi)/fvc::interpolate(rho))
-           *fvc::relative(phiHbyA, rho, U)
+            (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyArel
         );
 
         // Subtract the compressible part
         // The resulting flux will be zero for a perfect gas
-        phiHbyA -= fvc::interpolate(psi*p)*phiHbyA/fvc::interpolate(rho);
+        phiHbyA -= fvc::interpolate(psi*p)*phiHbyArel/fvc::interpolate(rho);
 
         if (pimple.consistent())
         {
