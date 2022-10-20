@@ -23,8 +23,6 @@ regionSolvers
     tube            fluid;
 }
 
-libs            ("libcoupledThermophysicalTransportModels.so");
-
 startFrom       startTime;
 
 startTime       0;

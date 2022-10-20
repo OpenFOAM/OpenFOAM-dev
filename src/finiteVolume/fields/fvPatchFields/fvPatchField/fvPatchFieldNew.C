@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,6 +113,13 @@ Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
             << endl;
     }
 
+    libs.open
+    (
+        dict,
+        "libs",
+        dictionaryConstructorTablePtr_
+    );
+
     typename dictionaryConstructorTable::iterator cstrIter
         = dictionaryConstructorTablePtr_->find(patchFieldType);
 
@@ -161,7 +168,14 @@ Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
         }
     }
 
-    return cstrIter()(p, iF, dict);
+    tmp<fvPatchField<Type>> ptf(cstrIter()(p, iF, dict));
+
+    if (dict.found("libs"))
+    {
+        dict.lookup("libs") >> ptf.ref().libs_;
+    }
+
+    return ptf;
 }
 
 

@@ -179,7 +179,6 @@ Foam::mixedFvPatchField<Type>::valueInternalCoeffs
 ) const
 {
     return Type(pTraits<Type>::one)*(1.0 - valueFraction_);
-
 }
 
 

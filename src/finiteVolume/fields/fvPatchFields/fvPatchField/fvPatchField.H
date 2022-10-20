@@ -46,6 +46,7 @@ SourceFiles
 
 #include "fvPatch.H"
 #include "DimensionedField.H"
+#include "fileNameList.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -86,6 +87,9 @@ class fvPatchField
     public Field<Type>
 {
     // Private Data
+
+        //- Optional list of libraries required for this boundary condition
+        fileNameList libs_;
 
         //- Reference to patch
         const fvPatch& patch_;
