@@ -149,8 +149,7 @@ public:
         tmp<GeometricField<Type, fvPatchField, volMesh>>
         decomposeField
         (
-            const GeometricField<Type, fvPatchField, volMesh>& field,
-            const bool allowUnknownPatchFields = false
+            const GeometricField<Type, fvPatchField, volMesh>& field
         ) const;
 
         //- Decompose surface field

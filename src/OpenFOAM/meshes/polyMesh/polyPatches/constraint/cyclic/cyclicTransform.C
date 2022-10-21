@@ -514,9 +514,7 @@ Foam::cyclicTransform::cyclicTransform
     if (ctrNbrCtrTDistance > lengthScale*matchTolerance)
     {
         OStringStream str;
-
-        str << nl
-            << "Patches " << name << " and " << nbrName << " are potentially "
+        str << "Patches " << name << " and " << nbrName << " are potentially "
             << "not geometrically similar enough to be coupled." << nl << nl
             << "The distance between the transformed centres of these patches "
             << "is " << ctrNbrCtrTDistance << ", which is greater than the "
@@ -529,9 +527,8 @@ Foam::cyclicTransform::cyclicTransform
             << "is failing, then it might be appropriate to relax the failure "
             << "criteria by increasing the \"matchTolerance\" setting for "
             << "these patches in the \"polyMesh/boundary\" file.";
-
         FatalErrorInFunction
-            << stringOps::breakIntoIndentedLines(str.str(), 80, 4).c_str()
+            << nl << stringOps::breakIntoIndentedLines(str.str()).c_str()
             << exit(FatalError);
     }
 }

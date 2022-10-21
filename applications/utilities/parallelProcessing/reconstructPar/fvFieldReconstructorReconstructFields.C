@@ -31,6 +31,7 @@ License
 #include "emptyFvPatchField.H"
 #include "emptyFvsPatchField.H"
 #include "processorCyclicFvPatch.H"
+#include "stringOps.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -210,6 +211,23 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
                             DimensionedField<Type, volMesh>::null()
                         )
                     );
+                }
+
+                if (patchFields[completePatchi].overridesConstraint())
+                {
+                    OStringStream str;
+                    str << "\nThe field \"" << procFields[0].name()
+                        << "\" on cyclic patch \""
+                        << patchFields[completePatchi].patch().name()
+                        << "\" cannot be reconstructed as it is not a cyclic "
+                        << "patch field. A \"patchType cyclic;\" setting has "
+                        << "been used to override the cyclic patch type.\n\n"
+                        << "Cyclic patches like this with non-cyclic boundary "
+                        << "conditions should be confined to a single "
+                        << "processor using decomposition constraints.";
+                    FatalErrorInFunction
+                        << stringOps::breakIntoIndentedLines(str.str()).c_str()
+                        << exit(FatalError);
                 }
 
                 patchFields[completePatchi].rmap

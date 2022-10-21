@@ -29,6 +29,7 @@ License
 #include "processorCyclicFvPatchField.H"
 #include "processorCyclicFvsPatchField.H"
 #include "emptyFvPatchFields.H"
+#include "stringOps.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -85,8 +86,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvFieldDecomposer::decomposeField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& field,
-    const bool allowUnknownPatchFields
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     // Create dummy patch fields
@@ -153,6 +153,23 @@ Foam::fvFieldDecomposer::decomposeField
         }
         else if (isA<processorCyclicFvPatch>(procPatch))
         {
+            if (field.boundaryField()[completePatchi].overridesConstraint())
+            {
+                OStringStream str;
+                str << "\nThe field \"" << field.name()
+                    << "\" on cyclic patch \""
+                    << field.boundaryField()[completePatchi].patch().name()
+                    << "\" cannot be decomposed as it is not a cyclic "
+                    << "patch field. A \"patchType cyclic;\" setting has "
+                    << "been used to override the cyclic patch type.\n\n"
+                    << "Cyclic patches like this with non-cyclic boundary "
+                    << "conditions should be confined to a single "
+                    << "processor using decomposition constraints.";
+                FatalErrorInFunction
+                    << stringOps::breakIntoIndentedLines(str.str()).c_str()
+                    << exit(FatalError);
+            }
+
             const label nbrCompletePatchi =
                 refCast<const processorCyclicFvPatch>(procPatch)
                .referPatch().nbrPatchID();
@@ -190,18 +207,6 @@ Foam::fvFieldDecomposer::decomposeField
                         field.primitiveField(),
                         faceAddressingBf_[procPatchi]
                     )
-                )
-            );
-        }
-        else if (allowUnknownPatchFields)
-        {
-            bf.set
-            (
-                procPatchi,
-                new emptyFvPatchField<Type>
-                (
-                    procPatch,
-                    resF()
                 )
             );
         }
