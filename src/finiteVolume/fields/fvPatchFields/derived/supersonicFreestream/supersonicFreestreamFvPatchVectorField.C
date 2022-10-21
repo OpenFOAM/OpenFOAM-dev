@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ supersonicFreestreamFvPatchVectorField
     const dictionary& dict
 )
 :
-    mixedFvPatchVectorField(p, iF),
+    mixedFvPatchVectorField(p, iF, dict, false),
     TName_(dict.lookupOrDefault<word>("T", "T")),
     pName_(dict.lookupOrDefault<word>("p", "p")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),

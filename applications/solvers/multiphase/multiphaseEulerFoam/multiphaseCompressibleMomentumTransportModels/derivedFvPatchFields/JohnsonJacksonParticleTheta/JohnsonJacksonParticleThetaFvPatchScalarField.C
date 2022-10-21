@@ -61,7 +61,7 @@ JohnsonJacksonParticleThetaFvPatchScalarField
     const dictionary& dict
 )
 :
-    mixedFvPatchScalarField(p, iF),
+    mixedFvPatchScalarField(p, iF, dict, false),
     restitutionCoefficient_
     (
         "restitutionCoefficient",

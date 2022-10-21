@@ -168,14 +168,7 @@ Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
         }
     }
 
-    tmp<fvPatchField<Type>> ptf(cstrIter()(p, iF, dict));
-
-    if (dict.found("libs"))
-    {
-        dict.lookup("libs") >> ptf.ref().libs_;
-    }
-
-    return ptf;
+    return cstrIter()(p, iF, dict);
 }
 
 

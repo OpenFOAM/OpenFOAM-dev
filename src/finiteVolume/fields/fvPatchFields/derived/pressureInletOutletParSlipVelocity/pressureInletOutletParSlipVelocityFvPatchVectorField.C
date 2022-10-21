@@ -57,7 +57,7 @@ pressureInletOutletParSlipVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    mixedFvPatchVectorField(p, iF),
+    mixedFvPatchVectorField(p, iF, dict, false),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {

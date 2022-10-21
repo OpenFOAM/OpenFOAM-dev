@@ -54,7 +54,7 @@ transonicEntrainmentPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    mixedFvPatchScalarField(p, iF),
+    mixedFvPatchScalarField(p, iF, dict, false),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),

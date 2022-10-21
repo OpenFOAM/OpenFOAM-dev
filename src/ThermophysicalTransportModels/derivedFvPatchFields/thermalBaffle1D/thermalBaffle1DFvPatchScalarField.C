@@ -68,7 +68,7 @@ thermalBaffle1DFvPatchScalarField
     const dictionary& dict
 )
 :
-    mixedFvPatchScalarField(p, iF),
+    mixedFvPatchScalarField(p, iF, dict, false),
     TName_("T"),
     baffleActivated_(dict.lookupOrDefault<bool>("baffleActivated", true)),
     thickness_(),

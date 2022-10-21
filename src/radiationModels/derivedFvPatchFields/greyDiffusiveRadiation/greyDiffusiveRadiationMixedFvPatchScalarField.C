@@ -61,7 +61,7 @@ greyDiffusiveRadiationMixedFvPatchScalarField
     const dictionary& dict
 )
 :
-    mixedFvPatchScalarField(p, iF),
+    mixedFvPatchScalarField(p, iF, dict, false),
     radiationCoupledBase(p, dict),
     TName_(dict.lookupOrDefault<word>("T", "T"))
 {

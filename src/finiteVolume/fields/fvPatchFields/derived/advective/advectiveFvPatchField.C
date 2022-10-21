@@ -62,7 +62,7 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     const dictionary& dict
 )
 :
-    mixedFvPatchField<Type>(p, iF),
+    mixedFvPatchField<Type>(p, iF, dict, false),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     fieldInf_(Zero),

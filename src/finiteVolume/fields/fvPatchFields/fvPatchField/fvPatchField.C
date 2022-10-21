@@ -72,6 +72,7 @@ Foam::fvPatchField<Type>::fvPatchField
 )
 :
     Field<Type>(p.size()),
+    libs_(dict.lookupOrDefault("libs", fileNameList::null())),
     patch_(p),
     internalField_(iF),
     updated_(false),

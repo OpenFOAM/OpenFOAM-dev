@@ -51,7 +51,7 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
     const dictionary& dict
 )
 :
-    mixedFvPatchField<Type>(p, iF),
+    mixedFvPatchField<Type>(p, iF, dict, false),
     phiName_(dict.lookupOrDefault<word>("phi", "phi"))
 {
     this->refValue() = Field<Type>("inletValue", dict, p.size());

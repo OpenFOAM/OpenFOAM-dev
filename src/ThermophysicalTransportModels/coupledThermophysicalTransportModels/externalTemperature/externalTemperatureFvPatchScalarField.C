@@ -70,7 +70,7 @@ externalTemperatureFvPatchScalarField
     const dictionary& dict
 )
 :
-    mixedFvPatchScalarField(p, iF),
+    mixedFvPatchScalarField(p, iF, dict, false),
     haveQ_(dict.found("Q")),
     Q_(haveQ_ ? dict.lookup<scalar>("Q") : NaN),
     haveq_(dict.found("q")),

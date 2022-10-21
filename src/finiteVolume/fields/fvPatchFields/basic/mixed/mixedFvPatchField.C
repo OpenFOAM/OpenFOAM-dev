@@ -46,15 +46,52 @@ Foam::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool valuesRequired
 )
 :
     fvPatchField<Type>(p, iF, dict, false),
-    refValue_("refValue", dict, p.size()),
-    refGrad_("refGradient", dict, p.size()),
-    valueFraction_("valueFraction", dict, p.size())
+    refValue_(p.size()),
+    refGrad_(p.size()),
+    valueFraction_(p.size())
 {
-    evaluate();
+    if (valuesRequired)
+    {
+        if (dict.found("refValue"))
+        {
+            refValue_ = Field<Type>("refValue", dict, p.size());
+        }
+        else
+        {
+            FatalIOErrorInFunction(dict)
+                << "Essential entry 'refValue' missing"
+                << exit(FatalIOError);
+        }
+
+        if (dict.found("refGradient"))
+        {
+            refGrad_ = Field<Type>("refGradient", dict, p.size());
+        }
+        else
+        {
+            FatalIOErrorInFunction(dict)
+                << "Essential entry 'refGradient' missing"
+                << exit(FatalIOError);
+        }
+
+        if (dict.found("valueFraction"))
+        {
+            valueFraction_ = Field<scalar>("valueFraction", dict, p.size());
+        }
+        else
+        {
+            FatalIOErrorInFunction(dict)
+                << "Essential entry 'valueFraction' missing"
+                << exit(FatalIOError);
+        }
+
+        evaluate();
+    }
 }
 
 

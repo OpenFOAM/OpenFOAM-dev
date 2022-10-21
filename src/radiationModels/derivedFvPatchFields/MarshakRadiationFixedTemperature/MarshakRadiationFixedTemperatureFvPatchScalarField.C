@@ -57,7 +57,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
     const dictionary& dict
 )
 :
-    mixedFvPatchScalarField(p, iF),
+    mixedFvPatchScalarField(p, iF, dict, false),
     radiationCoupledBase(p, dict),
     Trad_("Trad", dict, p.size())
 {

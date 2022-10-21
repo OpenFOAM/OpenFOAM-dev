@@ -56,7 +56,7 @@ totalFlowRateAdvectiveDiffusiveFvPatchScalarField
     const dictionary& dict
 )
 :
-    mixedFvPatchField<scalar>(p, iF),
+    mixedFvPatchField<scalar>(p, iF, dict, false),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "none")),
     massFluxFraction_(dict.lookupOrDefault<scalar>("massFluxFraction", 1.0))
