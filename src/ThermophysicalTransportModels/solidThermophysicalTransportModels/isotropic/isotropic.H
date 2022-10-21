@@ -82,12 +82,6 @@ public:
         //- Read thermophysicalTransport dictionary
         virtual bool read();
 
-        //- Thermal conductivity [W/m/K]
-        virtual tmp<volSymmTensorField> Kappa() const;
-
-        //- Thermal conductivity for patch [W/m/K]
-        virtual tmp<symmTensorField> Kappa(const label patchi) const;
-
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const;
 

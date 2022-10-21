@@ -144,12 +144,6 @@ public:
         //- Thermal conductivity for patch [W/m/K]
         virtual tmp<scalarField> kappa(const label patchi) const;
 
-        //- Thermal conductivity [W/m/K]
-        virtual tmp<volSymmTensorField> Kappa() const = 0;
-
-        //- Thermal conductivity for patch [W/m/K]
-        virtual tmp<symmTensorField> Kappa(const label patchi) const = 0;
-
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const = 0;
 

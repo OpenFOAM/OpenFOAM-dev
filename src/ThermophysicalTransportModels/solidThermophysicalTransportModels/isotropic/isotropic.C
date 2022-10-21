@@ -72,25 +72,6 @@ bool Foam::solidThermophysicalTransportModels::isotropic::read()
 }
 
 
-Foam::tmp<Foam::volSymmTensorField>
-Foam::solidThermophysicalTransportModels::isotropic::Kappa() const
-{
-    NotImplemented;
-    return volSymmTensorField::null();
-}
-
-
-Foam::tmp<Foam::symmTensorField>
-Foam::solidThermophysicalTransportModels::isotropic::Kappa
-(
-    const label patchi
-) const
-{
-    NotImplemented;
-    return symmTensorField::null();
-}
-
-
 Foam::tmp<Foam::surfaceScalarField>
 Foam::solidThermophysicalTransportModels::isotropic::q() const
 {

@@ -120,6 +120,12 @@ class anisotropic
         //- Find all the patch faces adjacent to zones
         void setZonesPatchFaces() const;
 
+        //- Thermal conductivity [W/m/K]
+        tmp<volSymmTensorField> Kappa() const;
+
+        //- Thermal conductivity for patch [W/m/K]
+        tmp<symmTensorField> Kappa(const label patchi) const;
+
 
 public:
 
@@ -144,10 +150,10 @@ public:
         virtual bool read();
 
         //- Thermal conductivity [W/m/K]
-        virtual tmp<volSymmTensorField> Kappa() const;
+        virtual tmp<volScalarField> kappa() const;
 
         //- Thermal conductivity for patch [W/m/K]
-        virtual tmp<symmTensorField> Kappa(const label patchi) const;
+        virtual tmp<scalarField> kappa(const label patchi) const;
 
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const;

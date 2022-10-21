@@ -294,6 +294,25 @@ Foam::solidThermophysicalTransportModels::anisotropic::Kappa
 }
 
 
+Foam::tmp<Foam::volScalarField>
+Foam::solidThermophysicalTransportModels::anisotropic::kappa() const
+{
+    NotImplemented;
+    return tmp<volScalarField>(nullptr);
+}
+
+
+Foam::tmp<Foam::scalarField>
+Foam::solidThermophysicalTransportModels::anisotropic::kappa
+(
+    const label patchi
+) const
+{
+    const vectorField n(thermo().mesh().boundary()[patchi].nf());
+    return n & Kappa(patchi) & n;
+}
+
+
 Foam::tmp<Foam::surfaceScalarField>
 Foam::solidThermophysicalTransportModels::anisotropic::q() const
 {

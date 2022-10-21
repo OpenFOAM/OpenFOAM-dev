@@ -72,17 +72,7 @@ Foam::tmp<Foam::scalarField> Foam::patchKappa::kappa() const
                 solidThermophysicalTransportModel::typeName
             );
 
-        if (!sttm.thermo().isotropic())
-        {
-            const symmTensorField kappa(sttm.Kappa(patchi));
-            const vectorField n(patch_.nf());
-
-            return n & kappa & n;
-        }
-        else
-        {
-            return sttm.kappa(patchi);
-        }
+        return sttm.kappa(patchi);
     }
     else
     {
