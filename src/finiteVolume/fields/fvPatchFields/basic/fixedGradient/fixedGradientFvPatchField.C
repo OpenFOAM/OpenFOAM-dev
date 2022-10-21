@@ -89,7 +89,7 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
         {
             gradient_ = Zero;
         }
-        mapper(gradient_, ptf);
+        mapper(gradient_, ptf.gradient_);
     }
 }
 
