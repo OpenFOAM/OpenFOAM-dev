@@ -50,7 +50,7 @@ argList::addBoolOption
 );
 #endif
 
-#ifdef fluidThermophysicalTransportModel_H
+#ifdef fluidThermoThermophysicalTransportModel_H
 argList::addBoolOption
 (
     "listThermophysicalTransportModels",

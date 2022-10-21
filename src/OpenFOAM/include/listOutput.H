@@ -99,27 +99,29 @@ if (args.optionFound("listMomentumTransportModels"))
 }
 #endif
 
-#ifdef fluidThermophysicalTransportModel_H
+#ifdef fluidThermoThermophysicalTransportModel_H
 if (args.optionFound("listThermophysicalTransportModels"))
 {
     Info<< "Turbulence models"
-        << fluidThermophysicalTransportModel::
+        << fluidThermoThermophysicalTransportModel::
            dictionaryConstructorTablePtr_->sortedToc()
         << endl;
 
     Info<< "Laminar models"
         << laminarThermophysicalTransportModel
-           <fluidThermophysicalTransportModel>::
+           <fluidThermoThermophysicalTransportModel>::
            dictionaryConstructorTablePtr_->sortedToc()
         << endl;
 
     Info<< "RAS models"
-        << RASThermophysicalTransportModel<fluidThermophysicalTransportModel>::
+        << RASThermophysicalTransportModel
+           <fluidThermoThermophysicalTransportModel>::
            dictionaryConstructorTablePtr_->sortedToc()
         << endl;
 
     Info<< "LES models"
-        << LESThermophysicalTransportModel<fluidThermophysicalTransportModel>::
+        << LESThermophysicalTransportModel
+           <fluidThermoThermophysicalTransportModel>::
            dictionaryConstructorTablePtr_->sortedToc()
         << endl;
     listOptions = true;

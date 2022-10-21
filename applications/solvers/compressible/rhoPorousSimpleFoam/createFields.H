@@ -60,9 +60,9 @@ autoPtr<compressible::momentumTransportModel> turbulence
 );
 
 Info<< "Creating thermophysical transport model\n" << endl;
-autoPtr<fluidThermophysicalTransportModel> thermophysicalTransport
+autoPtr<fluidThermoThermophysicalTransportModel> thermophysicalTransport
 (
-    fluidThermophysicalTransportModel::New(turbulence(), thermo)
+    fluidThermoThermophysicalTransportModel::New(turbulence(), thermo)
 );
 
 dimensionedScalar initialMass = fvc::domainIntegrate(rho);

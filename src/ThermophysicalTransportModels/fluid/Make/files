@@ -1,0 +1,11 @@
+#fluidThermophysicalTransportModel/fluidThermophysicalTransportModel.C
+
+BCs = derivedFvPatchFields
+$(BCs)/thermalBaffle1D/thermalBaffle1DFvPatchScalarFields.C
+$(BCs)/totalFlowRateAdvectiveDiffusive/totalFlowRateAdvectiveDiffusiveFvPatchScalarField.C
+$(BCs)/externalCoupledTemperatureMixed/externalCoupledTemperatureMixedFvPatchScalarField.C
+$(BCs)/convectiveHeatTransfer/convectiveHeatTransferFvPatchScalarField.C
+$(BCs)/alphatWallFunctions/alphatWallFunction/alphatWallFunctionFvPatchScalarField.C
+$(BCs)/alphatWallFunctions/alphatJayatillekeWallFunction/alphatJayatillekeWallFunctionFvPatchScalarField.C
+
+LIB = $(FOAM_LIBBIN)/libfluidThermophysicalTransportModel

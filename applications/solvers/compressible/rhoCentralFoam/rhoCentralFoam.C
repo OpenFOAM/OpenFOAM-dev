@@ -33,7 +33,7 @@ Description
 #include "fvCFD.H"
 #include "psiThermo.H"
 #include "compressibleMomentumTransportModels.H"
-#include "fluidThermophysicalTransportModel.H"
+#include "fluidThermoThermophysicalTransportModel.H"
 #include "fixedRhoFvPatchScalarField.H"
 #include "directionInterpolate.H"
 #include "localEulerDdtScheme.H"

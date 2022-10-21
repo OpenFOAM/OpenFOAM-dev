@@ -32,7 +32,7 @@ Description
 #include "fvCFD.H"
 #include "fluidThermo.H"
 #include "compressibleMomentumTransportModels.H"
-#include "fluidThermophysicalTransportModel.H"
+#include "fluidThermoThermophysicalTransportModel.H"
 #include "LESModel.H"
 #include "fvModels.H"
 #include "fvConstraints.H"

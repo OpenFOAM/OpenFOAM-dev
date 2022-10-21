@@ -52,7 +52,7 @@ Description
 #include "fvCFD.H"
 #include "psiuMulticomponentThermo.H"
 #include "compressibleMomentumTransportModels.H"
-#include "fluidThermophysicalTransportModel.H"
+#include "fluidThermoThermophysicalTransportModel.H"
 #include "laminarFlameSpeed.H"
 #include "ignition.H"
 #include "Switch.H"

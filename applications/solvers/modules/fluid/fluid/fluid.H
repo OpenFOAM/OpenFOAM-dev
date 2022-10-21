@@ -52,7 +52,7 @@ SourceFiles
 #define fluid_H
 
 #include "isothermalFluid.H"
-#include "fluidThermophysicalTransportModel.H"
+#include "fluidThermoThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,7 +74,8 @@ protected:
 
     // Thermophysical transport
 
-        autoPtr<fluidThermophysicalTransportModel> thermophysicalTransport;
+        autoPtr<fluidThermoThermophysicalTransportModel>
+            thermophysicalTransport;
 
 
 public:

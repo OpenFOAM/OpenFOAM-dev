@@ -46,7 +46,7 @@ Foam::solvers::fluid::fluid(fvMesh& mesh)
 
     thermophysicalTransport
     (
-        fluidThermophysicalTransportModel::New(turbulence(), thermo)
+        fluidThermoThermophysicalTransportModel::New(turbulence(), thermo)
     )
 {}
 
