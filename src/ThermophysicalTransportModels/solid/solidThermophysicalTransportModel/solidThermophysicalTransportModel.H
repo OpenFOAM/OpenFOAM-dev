@@ -25,8 +25,7 @@ Class
     Foam::solidThermophysicalTransportModel
 
 Description
-    Abstract base class for thermophysical transport models
-    (RAS, LES and laminar).
+    Abstract base class for solid thermophysical transport models
 
 SourceFiles
     solidThermophysicalTransportModel.C
@@ -36,6 +35,7 @@ SourceFiles
 #ifndef solidThermophysicalTransportModel_H
 #define solidThermophysicalTransportModel_H
 
+#include "thermophysicalTransportModel.H"
 #include "solidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -44,12 +44,12 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class solidThermophysicalTransportModel Declaration
+              Class solidThermophysicalTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class solidThermophysicalTransportModel
 :
-    public IOdictionary
+    public thermophysicalTransportModel
 {
 protected:
 
@@ -73,10 +73,6 @@ protected:
 
 public:
 
-    //- Runtime type information
-    TypeName("thermophysicalTransport");
-
-
     // Declare run-time constructor selection table
 
         declareRunTimeSelectionTable
@@ -99,12 +95,6 @@ public:
             const word& type,
             const solidThermo& thermo
         );
-
-        //- Disallow default bitwise copy construction
-        solidThermophysicalTransportModel
-        (
-            const solidThermophysicalTransportModel&
-        ) = delete;
 
 
     // Selectors
@@ -144,6 +134,20 @@ public:
         //- Thermal conductivity for patch [W/m/K]
         virtual tmp<scalarField> kappa(const label patchi) const;
 
+        //- Effective thermal conductivity
+        //  of mixture [W/m/K]
+        virtual tmp<volScalarField> kappaEff() const
+        {
+            return kappa();
+        }
+
+        //- Effective thermal conductivity
+        //  of mixture for patch [W/m/K]
+        virtual tmp<scalarField> kappaEff(const label patchi) const
+        {
+            return kappa(patchi);
+        }
+
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const = 0;
 
@@ -153,12 +157,6 @@ public:
         //- Solve the thermophysical transport model equations
         //  and correct the transport coefficients
         virtual void correct() = 0;
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidThermophysicalTransportModel&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,52 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "thermophysicalTransportModel.H"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    defineTypeNameAndDebug(thermophysicalTransportModel, 0);
-}
-
+#include "fluidThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::thermophysicalTransportModel::thermophysicalTransportModel
+Foam::fluidThermophysicalTransportModel::fluidThermophysicalTransportModel
 (
-    const fvMesh& mesh,
-    const word& group
+    const compressibleMomentumTransportModel& momentumTransport
 )
 :
-    IOdictionary
+    thermophysicalTransportModel
     (
-        IOobject
-        (
-            IOobject::groupName(typeName, group),
-            mesh.time().constant(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE
-        )
-    )
-{
-    // Add run-time re-reading of thermophysicalTransport dictionary
-    // after construction to avoid problems if the dictionary is not present
-    readOpt() = IOobject::MUST_READ_IF_MODIFIED;
-    addWatch();
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::thermophysicalTransportModel::read()
-{
-    return regIOobject::read();
-}
-
-
-void Foam::thermophysicalTransportModel::correct()
+        momentumTransport.mesh(),
+        momentumTransport.alphaRhoPhi().group()
+    ),
+    momentumTransportModel_(momentumTransport)
 {}
 
 

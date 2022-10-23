@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coupledTemperatureFvPatchScalarField.H"
-#include "patchKappa.H"
+#include "thermophysicalTransportModel.H"
 #include "volFields.H"
 #include "fvPatchFieldMapper.H"
 #include "mappedPatchBase.H"
@@ -222,15 +222,23 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
       : mpp.distribute(coupledTemperatureNbr)
     );
 
-    const scalarField kappa(patchKappa(patch()).kappa());
+    const scalarField kappa
+    (
+        patch().boundaryMesh().mesh()
+       .lookupType<thermophysicalTransportModel>().kappaEff(patch().index())
+    );
 
     const scalarField KDelta(kappa*patch().deltaCoeffs());
 
     const scalarField KDeltaNbr
     (
         contactRes_ == 0
-      ? mpp.distribute(patchKappa(patchNbr).kappa()
-       *patchNbr.deltaCoeffs())
+      ? mpp.distribute
+        (
+            patchNbr.boundaryMesh().mesh()
+           .lookupType<thermophysicalTransportModel>().kappaEff(patchiNbr)
+           *patchNbr.deltaCoeffs()
+        )
       : tmp<scalarField>(new scalarField(size(), contactRes_))
     );
 

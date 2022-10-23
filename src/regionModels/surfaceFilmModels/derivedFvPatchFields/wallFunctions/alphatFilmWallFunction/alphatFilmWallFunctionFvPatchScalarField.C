@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "alphatFilmWallFunctionFvPatchScalarField.H"
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "surfaceFilm.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
@@ -158,14 +158,10 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
     scalarField mDotFilmp = mDotFilm().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, mDotFilmp);
 
-    const thermophysicalTransportModel& ttm =
-        db().lookupObject<thermophysicalTransportModel>
+    const fluidThermophysicalTransportModel& ttm =
+        db().lookupType<fluidThermophysicalTransportModel>
         (
-            IOobject::groupName
-            (
-                thermophysicalTransportModel::typeName,
-                internalField().group()
-            )
+            internalField().group()
         );
 
     const compressibleMomentumTransportModel& turbModel =

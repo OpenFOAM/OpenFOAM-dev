@@ -1,4 +1,4 @@
-#fluidThermophysicalTransportModel/fluidThermophysicalTransportModel.C
+fluidThermophysicalTransportModel/fluidThermophysicalTransportModel.C
 
 BCs = derivedFvPatchFields
 $(BCs)/thermalBaffle1D/thermalBaffle1DFvPatchScalarFields.C

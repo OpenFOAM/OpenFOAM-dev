@@ -35,7 +35,7 @@ SourceFiles
 #ifndef ThermophysicalTransportModel_H
 #define ThermophysicalTransportModel_H
 
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,7 +50,7 @@ namespace Foam
 template<class MomentumTransportModel, class ThermoModel>
 class ThermophysicalTransportModel
 :
-    public thermophysicalTransportModel
+    public fluidThermophysicalTransportModel
 {
 
 public:

@@ -162,14 +162,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::liquidTurbulence() const
         const phaseModel& liquid = fluid.otherPhase(gas);
 
         liquidTurbulencePtr_ =
-           &U.db().lookupObject<momentumTransportModel>
-            (
-                IOobject::groupName
-                (
-                    momentumTransportModel::typeName,
-                    liquid.name()
-                )
-            );
+           &U.db().lookupType<momentumTransportModel>(liquid.name());
     }
 
     return *liquidTurbulencePtr_;

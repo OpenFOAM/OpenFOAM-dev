@@ -38,9 +38,6 @@ Description
     where KDelta is heat-transfer coefficient K*deltaCoeffs
     and qs is the optional source heat flux.
 
-    The thermal conductivity \c kappa can either be retrieved from various
-    possible sources, as detailed in the class patchKappa.
-
 Usage
     \table
         Property     | Description             | Required    | Default value
@@ -68,11 +65,12 @@ Usage
 
     Needs to be on underlying mapped(Wall)FvPatch.
 
+    The patch thermal conductivity \c kappa is obtained from the region
+    thermophysicalTransportModel so that this boundary condition can be applied
+    directly to either fluid or solid regions.
+
     Note that in order to provide an optional heat source either qs or Qs
     should be specified, not both.
-
-See also
-    Foam::patchKappa
 
 SourceFiles
     coupledTemperatureFvPatchScalarField.C

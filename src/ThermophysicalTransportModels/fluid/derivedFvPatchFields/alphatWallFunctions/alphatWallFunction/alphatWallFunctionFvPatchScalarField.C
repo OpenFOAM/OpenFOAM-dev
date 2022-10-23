@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "alphatWallFunctionFvPatchScalarField.H"
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -94,14 +94,10 @@ void alphatWallFunctionFvPatchScalarField::updateCoeffs()
 
     const label patchi = patch().index();
 
-    const thermophysicalTransportModel& ttm =
-        db().lookupObject<thermophysicalTransportModel>
+    const fluidThermophysicalTransportModel& ttm =
+        db().lookupType<fluidThermophysicalTransportModel>
         (
-            IOobject::groupName
-            (
-                thermophysicalTransportModel::typeName,
-                internalField().group()
-            )
+            internalField().group()
         );
 
     const compressibleMomentumTransportModel& turbModel =

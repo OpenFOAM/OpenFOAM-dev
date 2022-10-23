@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "adsorptionMassFractionFvPatchScalarField.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "basicSpecieMixture.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -98,11 +98,9 @@ Foam::adsorptionMassFractionFvPatchScalarField::calcPhiYp() const
     const scalarField Yc(patchInternalField());
 
     // Get the patch delta coefficients multiplied by the diffusivity
-    const thermophysicalTransportModel& ttm =
-        db().lookupObject<thermophysicalTransportModel>
-        (
-            thermophysicalTransportModel::typeName
-        );
+    const fluidThermophysicalTransportModel& ttm =
+        db().lookupType<fluidThermophysicalTransportModel>();
+
     const scalarField alphaEffDeltap
     (
         ttm.alphaEff(patch().index())*patch().deltaCoeffs()

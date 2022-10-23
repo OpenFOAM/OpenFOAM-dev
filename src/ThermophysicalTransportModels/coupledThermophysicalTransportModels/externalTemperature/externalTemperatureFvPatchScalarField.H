@@ -46,8 +46,8 @@ Description
     resistances can be specified through thicknessLayers and kappaLayers
     entries.
 
-    The patch thermal conductivity \c kappa is obtained from the
-    Foam::patchKappa base class so that this boundary condition can be applied
+    The patch thermal conductivity \c kappa is obtained from the region
+    thermophysicalTransportModel so that this boundary condition can be applied
     directly to either fluid or solid regions.
 
     The ambient temperature Ta is specified as a Foam::Function1 of time but

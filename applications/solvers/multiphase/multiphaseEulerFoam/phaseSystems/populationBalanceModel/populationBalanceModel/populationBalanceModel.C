@@ -1121,13 +1121,9 @@ const Foam::phaseCompressible::momentumTransportModel&
 Foam::diameterModels::populationBalanceModel::continuousTurbulence() const
 {
     return
-        mesh_.lookupObject<phaseCompressible::momentumTransportModel>
+        mesh_.lookupType<phaseCompressible::momentumTransportModel>
         (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                continuousPhase_.name()
-            )
+            continuousPhase_.name()
         );
 }
 

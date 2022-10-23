@@ -192,14 +192,7 @@ Foam::fv::interfaceTurbulenceDamping::interfaceTurbulenceDamping
     ),
     turbulence_
     (
-        mesh.lookupObject<phaseCompressible::momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                phaseName_
-            )
-        )
+        mesh.lookupType<phaseCompressible::momentumTransportModel>(phaseName_)
     ),
     C2_("C2", dimless, 0),
     betaStar_("betaStar", dimless, 0),

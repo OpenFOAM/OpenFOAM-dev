@@ -29,17 +29,11 @@ boundaryField
     solid_to_shell
     {
         type            coupledTemperature;
-
-        libs            ("libcoupledThermophysicalTransportModels.so");
-
         value           $internalField;
     }
     solid_to_tube
     {
         type            coupledTemperature;
-
-        libs            ("libcoupledThermophysicalTransportModels.so");
-
         value           $internalField;
     }
 }

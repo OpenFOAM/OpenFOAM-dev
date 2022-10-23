@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "variable.H"
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -114,11 +114,9 @@ Foam::fv::heatTransferModels::variable::~variable()
 
 void Foam::fv::heatTransferModels::variable::correct()
 {
-    const thermophysicalTransportModel& ttm =
-        mesh().lookupObject<thermophysicalTransportModel>
-        (
-            thermophysicalTransportModel::typeName
-        );
+    const fluidThermophysicalTransportModel& ttm =
+        mesh().lookupType<fluidThermophysicalTransportModel>();
+
     const compressibleMomentumTransportModel& mtm =
         ttm.momentumTransport();
 

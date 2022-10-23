@@ -28,7 +28,7 @@ License
 #include "fvmLaplacian.H"
 #include "fvcDiv.H"
 #include "surfaceInterpolate.H"
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -100,20 +100,14 @@ Foam::tmp<Foam::volScalarField> Foam::fv::volumeFractionSource::D
     if (phi.dimensions() == dimVolume/dimTime)
     {
         const momentumTransportModel& turbulence =
-            mesh().lookupObject<momentumTransportModel>
-            (
-                momentumTransportModel::typeName
-            );
+            mesh().lookupType<momentumTransportModel>();
 
         return turbulence.nuEff();
     }
     else if (phi.dimensions() == dimMass/dimTime)
     {
-        const thermophysicalTransportModel& ttm =
-            mesh().lookupObject<thermophysicalTransportModel>
-            (
-                thermophysicalTransportModel::typeName
-            );
+        const fluidThermophysicalTransportModel& ttm =
+            mesh().lookupType<fluidThermophysicalTransportModel>();
 
         return
             fieldName == ttm.thermo().T().name()
@@ -127,6 +121,7 @@ Foam::tmp<Foam::volScalarField> Foam::fv::volumeFractionSource::D
         FatalErrorInFunction
             << "Dimensions of " << phi.name() << " not recognised"
             << exit(FatalError);
+
         return tmp<volScalarField>(nullptr);
     }
 }

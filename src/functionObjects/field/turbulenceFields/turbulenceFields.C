@@ -25,7 +25,7 @@ License
 
 #include "turbulenceFields.H"
 #include "incompressibleMomentumTransportModel.H"
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -158,18 +158,10 @@ bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
 
 bool Foam::functionObjects::turbulenceFields::execute()
 {
-    const word modelName
-    (
-        IOobject::groupName(momentumTransportModel::typeName, phaseName_)
-    );
-
-    if (obr_.foundObject<thermophysicalTransportModel>(modelName))
+    if (obr_.foundObject<fluidThermophysicalTransportModel>(phaseName_))
     {
-        const thermophysicalTransportModel& ttm =
-            obr_.lookupObject<thermophysicalTransportModel>
-            (
-                thermophysicalTransportModel::typeName
-            );
+        const fluidThermophysicalTransportModel& ttm =
+            obr_.lookupType<fluidThermophysicalTransportModel>(phaseName_);
 
         const compressibleMomentumTransportModel& model =
             ttm.momentumTransport();
@@ -227,10 +219,10 @@ bool Foam::functionObjects::turbulenceFields::execute()
             }
         }
     }
-    else if (obr_.foundObject<compressibleMomentumTransportModel>(modelName))
+    else if (obr_.foundType<compressibleMomentumTransportModel>(phaseName_))
     {
         const compressibleMomentumTransportModel& model =
-            obr_.lookupObject<compressibleMomentumTransportModel>(modelName);
+            obr_.lookupType<compressibleMomentumTransportModel>(phaseName_);
 
         forAllConstIter(wordHashSet, fieldSet_, iter)
         {
@@ -282,14 +274,11 @@ bool Foam::functionObjects::turbulenceFields::execute()
     }
     else if
     (
-        obr_.foundObject<incompressible::momentumTransportModel>(modelName)
+        obr_.foundType<incompressible::momentumTransportModel>(phaseName_)
     )
     {
         const incompressible::momentumTransportModel& model =
-            obr_.lookupObject<incompressible::momentumTransportModel>
-            (
-                modelName
-            );
+            obr_.lookupType<incompressible::momentumTransportModel>(phaseName_);
 
         forAllConstIter(wordHashSet, fieldSet_, iter)
         {

@@ -131,14 +131,7 @@ void Foam::porousBafflePressureFvPatchField::updateCoeffs()
     const scalarField magUn(mag(Un));
 
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
 
     jump_ =
         -sign(Un)

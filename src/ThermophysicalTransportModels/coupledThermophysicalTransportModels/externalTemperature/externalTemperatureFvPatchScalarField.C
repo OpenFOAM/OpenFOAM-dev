@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "externalTemperatureFvPatchScalarField.H"
-#include "patchKappa.H"
+#include "thermophysicalTransportModel.H"
 #include "volFields.H"
 #include "physicoChemicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
@@ -307,7 +307,11 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
         qTot += q_;
     }
 
-    const scalarField kappa(patchKappa(patch()).kappa());
+    const scalarField kappa
+    (
+        patch().boundaryMesh().mesh()
+       .lookupType<thermophysicalTransportModel>().kappaEff(patch().index())
+    );
 
     // Evaluate
     if (!haveh_)

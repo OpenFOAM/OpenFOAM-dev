@@ -74,17 +74,9 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
     scalarField mDotFilmp = mDotFilm().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, mDotFilmp);
 
-
     // Retrieve RAS turbulence model
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
 
     const scalarField& y = turbModel.y()[patchi];
     const tmp<volScalarField> tk = turbModel.k();
@@ -129,14 +121,7 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::nut() const
     const label patchi = patch().index();
 
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
 
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magGradU(mag(Uw.snGrad()));
@@ -222,14 +207,7 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::yPlus() const
     const label patchi = patch().index();
 
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
 
     const scalarField& y = turbModel.y()[patchi];
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];

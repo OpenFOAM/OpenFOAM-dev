@@ -170,9 +170,9 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
 
     // Retrieve turbulence properties from model
     const phaseCompressible::momentumTransportModel& turbModel =
-        db().lookupObject<phaseCompressible::momentumTransportModel>
+        db().lookupType<phaseCompressible::momentumTransportModel>
         (
-            IOobject::groupName(momentumTransportModel::typeName, phase.name())
+            phase.name()
         );
 
     const nutWallFunctionFvPatchScalarField& nutw =

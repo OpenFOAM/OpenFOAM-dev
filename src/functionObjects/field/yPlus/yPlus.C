@@ -169,14 +169,7 @@ bool Foam::functionObjects::yPlus::execute()
     )
     {
         const momentumTransportModel& model =
-            mesh_.lookupObject<momentumTransportModel>
-            (
-                IOobject::groupName
-                (
-                    momentumTransportModel::typeName,
-                    phaseName_
-                )
-            );
+            mesh_.lookupType<momentumTransportModel>(phaseName_);
 
         word name(IOobject::groupName(type(), phaseName_));
 

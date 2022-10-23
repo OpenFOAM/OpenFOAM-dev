@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,14 +41,8 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::nut() const
     const label patchi = patch().index();
 
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
+
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magGradU(mag(Uw.snGrad()));
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
@@ -70,14 +64,8 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::calcUTau
     const label patchi = patch().index();
 
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
+
     const scalarField& y = turbModel.y()[patchi];
 
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
@@ -185,14 +173,8 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::yPlus() const
     const label patchi = patch().index();
 
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
+
     const scalarField& y = turbModel.y()[patchi];
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const tmp<scalarField> tnuw = turbModel.nu(patchi);

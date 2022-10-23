@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,13 +197,23 @@ public:
             template<class Type>
             HashTable<Type*> lookupClass(const bool strict = false);
 
-            //- Is the named Type found?
+            //- Is the named Type in registry
             template<class Type>
             bool foundObject(const word& name) const;
 
-            //- Lookup and return the object of the given Type
+            //- Lookup and return the object of the given Type and name
             template<class Type>
             const Type& lookupObject(const word& name) const;
+
+            //- Is the Type in registry
+            //  the name is derived from the type name and given group
+            template<class Type>
+            bool foundType(const word& group = word::null) const;
+
+            //- Lookup and return the object of the given Type
+            //  the name is derived from the type name and given group
+            template<class Type>
+            const Type& lookupType(const word& group = word::null) const;
 
             //- Lookup and return the object reference of the given Type
             template<class Type>

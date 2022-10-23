@@ -25,7 +25,7 @@ License
 
 #include "totalFlowRateAdvectiveDiffusiveFvPatchScalarField.H"
 #include "surfaceFields.H"
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -148,14 +148,10 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
 
     const label patchi = patch().index();
 
-    const thermophysicalTransportModel& ttm =
-        db().lookupObject<thermophysicalTransportModel>
+    const fluidThermophysicalTransportModel& ttm =
+        db().lookupType<fluidThermophysicalTransportModel>
         (
-            IOobject::groupName
-            (
-                thermophysicalTransportModel::typeName,
-                internalField().group()
-            )
+            internalField().group()
         );
 
     const fvsPatchField<scalar>& phip =

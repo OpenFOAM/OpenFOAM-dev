@@ -352,14 +352,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
     }
 
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
 
     setMaster();
 

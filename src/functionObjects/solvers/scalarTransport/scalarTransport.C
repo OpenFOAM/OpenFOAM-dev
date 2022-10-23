@@ -101,10 +101,7 @@ Foam::functionObjects::scalarTransport::D() const
     else
     {
         const momentumTransportModel& turbulence =
-            mesh_.lookupObject<momentumTransportModel>
-            (
-                momentumTransportModel::typeName
-            );
+            mesh_.lookupType<momentumTransportModel>();
 
         return alphal_*turbulence.nu() + alphat_*turbulence.nut();
     }

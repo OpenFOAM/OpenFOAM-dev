@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "externalCoupledTemperatureMixedFvPatchScalarField.H"
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "OFstream.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -114,42 +114,17 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
     // heat flux [W/m^2]
     scalarField qDot(this->patch().size(), 0.0);
 
-    static word ttmName
-    (
-        IOobject::groupName
+    const fluidThermophysicalTransportModel& ttm =
+        db().lookupType<fluidThermophysicalTransportModel>
         (
-            thermophysicalTransportModel::typeName,
             internalField().group()
-        )
-    );
+        );
 
-    static word thermoName(physicalProperties::typeName);
+    const basicThermo& thermo = ttm.thermo();
 
-    if (db().foundObject<thermophysicalTransportModel>(ttmName))
-    {
-        const thermophysicalTransportModel& ttm =
-            db().lookupObject<thermophysicalTransportModel>(ttmName);
+    const fvPatchScalarField& hep = thermo.he().boundaryField()[patchi];
 
-        const basicThermo& thermo = ttm.thermo();
-
-        const fvPatchScalarField& hep = thermo.he().boundaryField()[patchi];
-
-        qDot = ttm.alphaEff(patchi)*hep.snGrad();
-    }
-    else if (db().foundObject<basicThermo>(thermoName))
-    {
-        const basicThermo& thermo = db().lookupObject<basicThermo>(thermoName);
-
-        const fvPatchScalarField& hep = thermo.he().boundaryField()[patchi];
-
-        qDot = thermo.alphahe(patchi)*hep.snGrad();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Condition requires either compressible turbulence and/or "
-            << "thermo model to be available" << exit(FatalError);
-    }
+    qDot = ttm.alphaEff(patchi)*hep.snGrad();
 
     // patch temperature [K]
     const scalarField Tp(*this);

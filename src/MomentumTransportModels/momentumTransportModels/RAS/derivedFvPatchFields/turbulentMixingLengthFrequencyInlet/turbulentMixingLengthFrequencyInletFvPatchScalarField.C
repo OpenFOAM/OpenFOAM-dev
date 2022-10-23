@@ -114,15 +114,9 @@ void turbulentMixingLengthFrequencyInletFvPatchScalarField::updateCoeffs()
     }
 
     // Lookup Cmu corresponding to the turbulence model selected
+
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
 
     const scalar Cmu =
         turbModel.coeffDict().lookupOrDefault<scalar>("Cmu", 0.09);

@@ -37,7 +37,7 @@ ThermophysicalTransportModel
     const thermoModel& thermo
 )
 :
-    thermophysicalTransportModel(momentumTransport),
+    fluidThermophysicalTransportModel(momentumTransport),
     momentumTransport_(momentumTransport),
     thermo_(thermo)
 {}

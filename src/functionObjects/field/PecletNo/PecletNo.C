@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,10 +54,7 @@ bool Foam::functionObjects::PecletNo::calc()
     {
         tmp<volScalarField> nuEff
         (
-            mesh_.lookupObject<momentumTransportModel>
-            (
-                momentumTransportModel::typeName
-            ).nuEff()
+            mesh_.lookupType<momentumTransportModel>().nuEff()
         );
 
         const surfaceScalarField& phi =

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,6 +213,20 @@ const Type& Foam::objectRegistry::lookupObject(const word& name) const
     }
 
     return NullObjectRef<Type>();
+}
+
+
+template<class Type>
+bool Foam::objectRegistry::foundType(const word& group) const
+{
+    return foundObject<Type>(IOobject::groupName(Type::typeName, group));
+}
+
+
+template<class Type>
+const Type& Foam::objectRegistry::lookupType(const word& group) const
+{
+    return lookupObject<Type>(IOobject::groupName(Type::typeName, group));
 }
 
 

@@ -30,7 +30,6 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(solidThermophysicalTransportModel, 0);
     defineRunTimeSelectionTable(solidThermophysicalTransportModel, dictionary);
 }
 
@@ -55,27 +54,11 @@ Foam::solidThermophysicalTransportModel::solidThermophysicalTransportModel
     const solidThermo& thermo
 )
 :
-    IOdictionary
-    (
-        IOobject
-        (
-            typeName,
-            thermo.mesh().time().constant(),
-            thermo.mesh(),
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE
-        )
-    ),
-
+    thermophysicalTransportModel(thermo.mesh(), word::null),
     thermo_(thermo),
     printCoeffs_(lookupOrDefault<Switch>("printCoeffs", false)),
     coeffDict_(optionalSubDict(type + "Coeffs"))
-{
-    // Add run-time re-reading of thermophysicalTransport dictionary
-    // after construction to avoid problems if the dictionary is not present
-    readOpt() = IOobject::MUST_READ_IF_MODIFIED;
-    addWatch();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //

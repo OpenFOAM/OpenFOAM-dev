@@ -71,8 +71,7 @@ Foam::fv::VoFTurbulenceDamping::VoFTurbulenceDamping
     interface_(mixture_),
     turbulence_
     (
-        mesh.lookupObject<incompressibleMomentumTransportModel>
-        (IOobject::groupName(momentumTransportModel::typeName, phaseName_))
+        mesh.lookupType<incompressibleMomentumTransportModel>(phaseName_)
     ),
     C2_("C2", dimless, 0),
     betaStar_("betaStar", dimless, 0),

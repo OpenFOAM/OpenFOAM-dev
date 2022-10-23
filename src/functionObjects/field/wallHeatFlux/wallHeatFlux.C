@@ -25,8 +25,6 @@ License
 
 #include "wallHeatFlux.H"
 #include "thermophysicalTransportModel.H"
-#include "solidThermophysicalTransportModel.H"
-#include "solidThermo.H"
 #include "surfaceInterpolate.H"
 #include "fvcGrad.H"
 #include "wallPolyPatch.H"
@@ -220,26 +218,10 @@ bool Foam::functionObjects::wallHeatFlux::execute()
 
         return store(fieldName, calcWallHeatFlux(ttm.q()));
     }
-    else if
-    (
-        foundObject<solidThermophysicalTransportModel>
-        (
-            solidThermophysicalTransportModel::typeName
-        )
-    )
-    {
-        const solidThermophysicalTransportModel& sttm =
-            lookupObject<solidThermophysicalTransportModel>
-            (
-                solidThermophysicalTransportModel::typeName
-            );
-
-        return store(fieldName, calcWallHeatFlux(sttm.q()));
-    }
     else
     {
         FatalErrorInFunction
-            << "Unable to find compressible turbulence model in the "
+            << "Unable to find thermophysicalTransportModel in the "
             << "database" << exit(FatalError);
     }
 

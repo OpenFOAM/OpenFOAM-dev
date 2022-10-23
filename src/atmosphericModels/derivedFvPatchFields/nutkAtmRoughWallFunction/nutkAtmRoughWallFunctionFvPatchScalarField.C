@@ -41,14 +41,8 @@ tmp<scalarField> nutkAtmRoughWallFunctionFvPatchScalarField::nut() const
     const label patchi = patch().index();
 
     const momentumTransportModel& turbModel =
-        db().lookupObject<momentumTransportModel>
-        (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                internalField().group()
-            )
-        );
+        db().lookupType<momentumTransportModel>(internalField().group());
+
     const scalarField& y = turbModel.y()[patchi];
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();

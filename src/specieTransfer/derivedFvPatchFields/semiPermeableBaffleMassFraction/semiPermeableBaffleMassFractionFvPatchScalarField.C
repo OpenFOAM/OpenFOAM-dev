@@ -27,7 +27,7 @@ License
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "thermophysicalTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "basicSpecieMixture.H"
 #include "mappedPatchBase.H"
 #include "addToRunTimeSelectionTable.H"
@@ -126,15 +126,14 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     );
 
     // Get the patch delta coefficients multiplied by the diffusivity
-    const thermophysicalTransportModel& ttm =
-        db().lookupObject<thermophysicalTransportModel>
-        (
-            thermophysicalTransportModel::typeName
-        );
+    const fluidThermophysicalTransportModel& ttm =
+        db().lookupType<fluidThermophysicalTransportModel>();
+
     const scalarField alphaEffDeltap
     (
         ttm.alphaEff(patch().index())*patch().deltaCoeffs()
     );
+
     const scalarField nbrAlphaEffDeltap
     (
         mpp.distribute

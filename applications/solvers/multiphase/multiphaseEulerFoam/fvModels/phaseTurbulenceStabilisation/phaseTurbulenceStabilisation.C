@@ -93,13 +93,9 @@ void Foam::fv::phaseTurbulenceStabilisation::addSup
         if (movingPhases[phasei] != phase_)
         {
             const phaseCompressible::momentumTransportModel& turbulence =
-                mesh.lookupObject<phaseCompressible::momentumTransportModel>
+                mesh.lookupType<phaseCompressible::momentumTransportModel>
                 (
-                    IOobject::groupName
-                    (
-                        momentumTransportModel::typeName,
-                        phaseName_
-                    )
+                    phaseName_
                 );
 
             if (notNull(turbulence))
@@ -149,13 +145,9 @@ Foam::fv::phaseTurbulenceStabilisation::phaseTurbulenceStabilisation
     ),
     turbulence_
     (
-        mesh.lookupObject<phaseCompressible::momentumTransportModel>
+        mesh.lookupType<phaseCompressible::momentumTransportModel>
         (
-            IOobject::groupName
-            (
-                momentumTransportModel::typeName,
-                phaseName_
-            )
+            phaseName_
         )
     )
 {

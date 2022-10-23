@@ -337,22 +337,14 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             {
                 // Retrieve turbulence properties from models
                 const phaseCompressible::momentumTransportModel& turbModel
-                  = db().lookupObject<phaseCompressible::momentumTransportModel>
+                  = db().lookupType<phaseCompressible::momentumTransportModel>
                     (
-                        IOobject::groupName
-                        (
-                            momentumTransportModel::typeName,
-                            liquid.name()
-                        )
+                        liquid.name()
                     );
                 const phaseCompressible::momentumTransportModel& vaporTurbModel
-                  = db().lookupObject<phaseCompressible::momentumTransportModel>
+                  = db().lookupType<phaseCompressible::momentumTransportModel>
                     (
-                        IOobject::groupName
-                        (
-                            momentumTransportModel::typeName,
-                            vapor.name()
-                        )
+                        vapor.name()
                     );
 
                 const nutWallFunctionFvPatchScalarField& nutw =

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,17 +34,12 @@ Foam::tmp<Foam::volScalarField>
 Foam::DispersionRASModel<CloudType>::kModel() const
 {
     const objectRegistry& obr = this->owner().mesh();
-    const word turbName =
-        IOobject::groupName
-        (
-            momentumTransportModel::typeName,
-            this->owner().U().group()
-        );
 
-    if (obr.foundObject<momentumTransportModel>(turbName))
+    if (obr.foundType<momentumTransportModel>(this->owner().U().group()))
     {
         const momentumTransportModel& model =
-            obr.lookupObject<momentumTransportModel>(turbName);
+            obr.lookupType<momentumTransportModel>(this->owner().U().group());
+
         return model.k();
     }
     else
@@ -64,17 +59,12 @@ Foam::tmp<Foam::volScalarField>
 Foam::DispersionRASModel<CloudType>::epsilonModel() const
 {
     const objectRegistry& obr = this->owner().mesh();
-    const word turbName =
-        IOobject::groupName
-        (
-            momentumTransportModel::typeName,
-            this->owner().U().group()
-        );
 
-    if (obr.foundObject<momentumTransportModel>(turbName))
+    if (obr.foundType<momentumTransportModel>(this->owner().U().group()))
     {
         const momentumTransportModel& model =
-            obr.lookupObject<momentumTransportModel>(turbName);
+            obr.lookupType<momentumTransportModel>(this->owner().U().group());
+
         return model.epsilon();
     }
     else
