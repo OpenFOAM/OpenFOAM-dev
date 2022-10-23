@@ -135,10 +135,10 @@ void Foam::combustionModels::EDC::correct()
                 max(min(sqrt(nu[i]/(epsilon[i] + small))/tc[i], 10), 1e-10);
 
             const scalar ReT = sqr(k[i])/(nu[i]*epsilon[i] + small);
-            const scalar CtauI = min(C1_/(Da*sqrt(ReT + 1)), 2.1377);
+            const scalar CtauI = min(C1_/(Da*sqrt(ReT + 1)), Ctau_);
 
             const scalar CgammaI =
-                max(min(C2_*sqrt(Da*(ReT + 1)), 5), 0.4082);
+                max(min(C2_*sqrt(Da*(ReT + 1)), 5), Cgamma_);
 
             const scalar gammaL =
                 CgammaI*pow025(nu[i]*epsilon[i]/(sqr(k[i]) + small));
