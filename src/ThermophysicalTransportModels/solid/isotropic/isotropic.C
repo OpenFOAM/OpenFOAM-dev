@@ -83,6 +83,16 @@ Foam::solidThermophysicalTransportModels::isotropic::q() const
 }
 
 
+Foam::tmp<Foam::scalarField>
+Foam::solidThermophysicalTransportModels::isotropic::qCorr
+(
+    const label patchi
+) const
+{
+    return tmp<scalarField>(nullptr);
+}
+
+
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::solidThermophysicalTransportModels::isotropic::divq
 (

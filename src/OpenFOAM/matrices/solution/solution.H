@@ -53,10 +53,10 @@ class solution
     // Private Data
 
         //- Dictionary of temporary fields to cache
-        dictionary cache_;
+        mutable dictionary cache_;
 
         //- Switch for the caching mechanism
-        bool caching_;
+        mutable bool caching_;
 
         //- Dictionary of relaxation factors for all the fields
         dictionary fieldRelaxDict_;
@@ -110,6 +110,9 @@ public:
 
             //- Return true if the given field should be cached
             bool cache(const word& name) const;
+
+            //- Enable caching of the given field
+            void enableCache(const word& name) const;
 
             //- Helper for printing cache message
             template<class FieldType>

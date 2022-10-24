@@ -117,6 +117,10 @@ class anisotropic
         // List of patch faces adjacent to coordinate zones
         mutable labelListListList zonesPatchFaces_;
 
+        //- Alignment of Kappa for each patch
+        //  true is closely aligned, zero otherwise
+        boolList aligned_;
+
         //- Find all the patch faces adjacent to zones
         void setZonesPatchFaces() const;
 
@@ -157,6 +161,10 @@ public:
 
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const;
+
+        //- Return the patch heat flux correction [W/m^2]
+        //  For patch-aligned thermal conductivity qCorr is null
+        virtual tmp<scalarField> qCorr(const label patchi) const;
 
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;

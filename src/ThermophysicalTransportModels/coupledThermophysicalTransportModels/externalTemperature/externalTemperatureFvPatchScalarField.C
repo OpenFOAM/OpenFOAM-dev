@@ -307,11 +307,17 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
         qTot += q_;
     }
 
-    const scalarField kappa
-    (
+    const thermophysicalTransportModel& ttm =
         patch().boundaryMesh().mesh()
-       .lookupType<thermophysicalTransportModel>().kappaEff(patch().index())
-    );
+       .lookupType<thermophysicalTransportModel>();
+
+    const scalarField kappa(ttm.kappaEff(patch().index()));
+    tmp<scalarField> qCorr(ttm.qCorr(patch().index()));
+
+    if (qCorr.valid())
+    {
+        qTot -= qCorr;
+    }
 
     // Evaluate
     if (!haveh_)

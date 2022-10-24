@@ -41,4 +41,15 @@ Foam::fluidThermophysicalTransportModel::fluidThermophysicalTransportModel
 {}
 
 
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::scalarField> Foam::fluidThermophysicalTransportModel::qCorr
+(
+    const label patchi
+) const
+{
+    return tmp<scalarField>(nullptr);
+}
+
+
 // ************************************************************************* //

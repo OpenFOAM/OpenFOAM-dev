@@ -231,6 +231,21 @@ bool Foam::solution::cache(const word& name) const
 }
 
 
+void Foam::solution::enableCache(const word& name) const
+{
+    caching_ = true;
+
+    if (debug)
+    {
+        Info<< "Enable cache for " << name << endl;
+    }
+
+    cache_.add(name, true);
+
+    Info << cache_ << endl;
+}
+
+
 bool Foam::solution::relaxField(const word& name) const
 {
     if (debug)

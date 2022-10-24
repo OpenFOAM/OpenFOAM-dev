@@ -106,6 +106,10 @@ public:
             const label patchi
         ) const = 0;
 
+        //- Return the patch heat flux correction [W/m^2]
+        //  For isotropic or patch-aligned thermal conductivity qCorr is null
+        virtual tmp<scalarField> qCorr(const label patchi) const;
+
         //- Return the specie flux for the given specie mass-fraction [kg/m^2/s]
         virtual tmp<surfaceScalarField> j(const volScalarField& Yi) const = 0;
 

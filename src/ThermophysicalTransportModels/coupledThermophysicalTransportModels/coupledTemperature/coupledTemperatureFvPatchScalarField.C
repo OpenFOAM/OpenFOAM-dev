@@ -188,6 +188,8 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag + 1;
 
+    const label patchi = patch().index();
+
     // Get the coupling information from the mappedPatchBase
     const mappedPatchBase& mpp =
         refCast<const mappedPatchBase>(patch().patch());
@@ -222,11 +224,15 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
       : mpp.distribute(coupledTemperatureNbr)
     );
 
-    const scalarField kappa
-    (
+    const thermophysicalTransportModel& ttm =
         patch().boundaryMesh().mesh()
-       .lookupType<thermophysicalTransportModel>().kappaEff(patch().index())
-    );
+       .lookupType<thermophysicalTransportModel>();
+
+    const thermophysicalTransportModel& ttmNbr =
+        patchNbr.boundaryMesh().mesh()
+       .lookupType<thermophysicalTransportModel>();
+
+    const scalarField kappa(ttm.kappaEff(patchi));
 
     const scalarField KDelta(kappa*patch().deltaCoeffs());
 
@@ -235,36 +241,43 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
         contactRes_ == 0
       ? mpp.distribute
         (
-            patchNbr.boundaryMesh().mesh()
-           .lookupType<thermophysicalTransportModel>().kappaEff(patchiNbr)
-           *patchNbr.deltaCoeffs()
+            ttmNbr.kappaEff(patchiNbr)*patchNbr.deltaCoeffs()
         )
       : tmp<scalarField>(new scalarField(size(), contactRes_))
     );
 
-    const scalarField qr
-    (
-        qrName_ != "none"
-      ? static_cast<const scalarField&>
-        (
-            patch().lookupPatchField<volScalarField, scalar>(qrName_)
-        )
-      : scalarField(size(), 0)
-    );
+    scalarField qTot(qs_);
 
-    const scalarField qrNbr
-    (
-        qrNbrName_ != "none"
-      ? mpp.distribute
+    if (qrName_ != "none")
+    {
+        qTot += patch().lookupPatchField<volScalarField, scalar>(qrName_);
+    }
+
+    if (qrNbrName_ != "none")
+    {
+        qTot += mpp.distribute
         (
             patchNbr.lookupPatchField<volScalarField, scalar>(qrNbrName_)
-        )
-      : tmp<scalarField>(new scalarField(size(), 0))
-    );
+        );
+    }
+
+    tmp<scalarField> qCorr(ttm.qCorr(patchi));
+
+    if (qCorr.valid())
+    {
+        qTot -= qCorr;
+    }
+
+    tmp<scalarField> qCorrNbr(ttmNbr.qCorr(patchiNbr));
+
+    if (qCorrNbr.valid())
+    {
+        qTot -= mpp.distribute(qCorrNbr);
+    }
 
     // Both sides agree on
     // - temperature : (KDelta*fld + KDeltaNbr*nbrFld)/(KDelta + KDeltaNbr)
-    // - gradient    : (temperature-fld)*delta
+    // - gradient    : (temperature - fld)*delta
     // We've got a degree of freedom in how to implement this in a mixed bc.
     // (what gradient, what fixedValue and mixing coefficient)
     // Two reasonable choices:
@@ -273,13 +286,13 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
     //    fixedValue and pure fixedGradient
     // 2. specify gradient and temperature such that the equations are the
     //    same on both sides. This leads to the choice of
-    //    - refGradient = qs_/kappa;
+    //    - refGradient = qTot/kappa;
     //    - refValue = neighbour value
     //    - mixFraction = KDeltaNbr / (KDeltaNbr + KDelta)
 
     this->valueFraction() = KDeltaNbr/(KDeltaNbr + KDelta);
     this->refValue() = TcNbr;
-    this->refGrad() = (qs_ + qr + qrNbr)/kappa;
+    this->refGrad() = qTot/kappa;
 
     mixedFvPatchScalarField::updateCoeffs();
 
