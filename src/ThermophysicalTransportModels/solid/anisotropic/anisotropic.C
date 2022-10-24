@@ -164,15 +164,15 @@ Foam::solidThermophysicalTransportModels::anisotropic::anisotropic
                    *mag(nKappa - n*(nKappa & n))
                 )/gSum(mesh.magSf().boundaryField()[patchi]*mag(nKappa));
 
-            Info << alignmentFactor << endl;
-
             if (alignmentFactor > 1e-3)
             {
                 aligned_[patchi] = false;
                 aligned = false;
 
                 Info<< "    Kappa is not aligned with patch " << patchi
-                    << ", heat-flux correction will be applied." << endl;
+                    << " by an alignment factor of " << alignmentFactor
+                    << " (0=aligned, 1=unaligned)" << nl
+                    << "        heat-flux correction will be applied." << endl;
             }
         }
     }
