@@ -316,7 +316,7 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
 
     if (qCorr.valid())
     {
-        qTot -= qCorr;
+        qTot += qCorr;
     }
 
     // Evaluate

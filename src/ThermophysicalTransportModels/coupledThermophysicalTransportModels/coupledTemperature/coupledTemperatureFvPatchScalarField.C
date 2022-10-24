@@ -265,14 +265,14 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
 
     if (qCorr.valid())
     {
-        qTot -= qCorr;
+        qTot += qCorr;
     }
 
     tmp<scalarField> qCorrNbr(ttmNbr.qCorr(patchiNbr));
 
     if (qCorrNbr.valid())
     {
-        qTot -= mpp.distribute(qCorrNbr);
+        qTot += mpp.distribute(qCorrNbr);
     }
 
     // Both sides agree on

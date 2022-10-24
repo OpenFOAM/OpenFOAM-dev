@@ -241,8 +241,6 @@ void Foam::solution::enableCache(const word& name) const
     }
 
     cache_.add(name, true);
-
-    Info << cache_ << endl;
 }
 
 

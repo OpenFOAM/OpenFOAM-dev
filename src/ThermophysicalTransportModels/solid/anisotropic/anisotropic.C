@@ -151,21 +151,29 @@ Foam::solidThermophysicalTransportModels::anisotropic::anisotropic
 
     forAll(bMesh, patchi)
     {
-        const vectorField n(bMesh[patchi].nf());
-        const vectorField nKappa(n & Kappa(patchi));
-
-        // Calculate a patch alignment factor for Kappa
-        const scalar alignmentFactor =
-            gSum(mesh.Sf().boundaryField()[patchi] & (nKappa - n*(nKappa & n)))
-           /gSum(mesh.Sf().boundaryField()[patchi] & nKappa);
-
-        if (alignmentFactor > 1e-6)
+        if (bMesh[patchi].size())
         {
-            aligned_[patchi] = false;
-            aligned = false;
+            const vectorField n(bMesh[patchi].nf());
+            const vectorField nKappa(n & Kappa(patchi));
 
-            Info<< "    Kappa is not aligned with patch " << patchi
-                << ", heat-flux correction will be applied." << endl;
+            // Calculate a patch alignment factor for Kappa
+            const scalar alignmentFactor =
+                gSum
+                (
+                    mesh.magSf().boundaryField()[patchi]
+                   *mag(nKappa - n*(nKappa & n))
+                )/gSum(mesh.magSf().boundaryField()[patchi]*mag(nKappa));
+
+            Info << alignmentFactor << endl;
+
+            if (alignmentFactor > 1e-3)
+            {
+                aligned_[patchi] = false;
+                aligned = false;
+
+                Info<< "    Kappa is not aligned with patch " << patchi
+                    << ", heat-flux correction will be applied." << endl;
+            }
         }
     }
 
@@ -177,6 +185,8 @@ Foam::solidThermophysicalTransportModels::anisotropic::anisotropic
     }
 
     Info << endl;
+
+    mesh.schemes().setFluxRequired(thermo.T().name());
 
     this->printCoeffs(typeName);
 }
