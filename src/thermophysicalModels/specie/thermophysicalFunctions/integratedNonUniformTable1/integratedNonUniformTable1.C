@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,8 @@ Foam::Function1s::integratedNonUniformTable::integratedNonUniformTable
 
     for(label i = 0; i<intf_.size() - 1; i++)
     {
-        intf_[i + 1] = intf_[i] + intfdT(values()[i + 1].first());
-        intfByT_[i + 1] = intfByT_[i] + intfByTdT(values()[i + 1].first());
+        intf_[i + 1] = intfdT(values()[i + 1].first());
+        intfByT_[i + 1] = intfByTdT(values()[i + 1].first());
     }
 
     const scalar intfStd = intfdT(Tstd);
