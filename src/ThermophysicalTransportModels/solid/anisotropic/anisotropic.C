@@ -169,7 +169,8 @@ Foam::solidThermophysicalTransportModels::anisotropic::anisotropic
                 aligned_[patchi] = false;
                 aligned = false;
 
-                Info<< "    Kappa is not aligned with patch " << patchi
+                Info<< "    Kappa is not aligned with patch "
+                    << bMesh[patchi].name()
                     << " by an alignment factor of " << alignmentFactor
                     << " (0=aligned, 1=unaligned)" << nl
                     << "        heat-flux correction will be applied." << endl;
