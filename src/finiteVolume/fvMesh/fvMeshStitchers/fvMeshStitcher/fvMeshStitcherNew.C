@@ -30,44 +30,36 @@ License
 Foam::autoPtr<Foam::fvMeshStitcher> Foam::fvMeshStitcher::New
 (
     fvMesh& mesh,
-    const bool changing
+    bool changing
 )
 {
-    typeIOobject<IOdictionary> dictHeader
-    (
-        IOobject
-        (
-            "dynamicMeshDict",
-            mesh.time().constant(),
-            mesh.dbDir(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE,
-            false
-        )
-    );
-
-    if (changing && dictHeader.headerOk())
+    // Determine if the mesh is actually changing and load the
+    // fvMeshStitchers library if so
+    if (changing)
     {
-        IOdictionary dict(dictHeader);
-
-        forAllConstIter(dictionary, dict, iter)
-        {
-            if (!iter().isDict()) continue;
-
-            const dictionary& changerDict = iter().dict();
-
-            if (!changerDict.found("libs")) continue;
-
-            libs.open
+        typeIOobject<IOdictionary> dictHeader
+        (
+            IOobject
             (
-                changerDict,
-                "libs",
-                fvMeshConstructorTablePtr_
-            );
+                "dynamicMeshDict",
+                mesh.time().constant(),
+                mesh.dbDir(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::NO_WRITE,
+                false
+            )
+        );
+
+        changing = changing && dictHeader.headerOk();
+
+        if (changing)
+        {
+            libs.open("lib" + typeName + "s.so");
         }
     }
 
+    // Select a non-changing or changing stitcher as appropriate
     forAllConstIter
     (
         fvMeshConstructorTable,
@@ -77,12 +69,13 @@ Foam::autoPtr<Foam::fvMeshStitcher> Foam::fvMeshStitcher::New
     {
         autoPtr<fvMeshStitcher> stitcherPtr(cstrIter()(mesh));
 
-        if (stitcherPtr->changing() == (changing && dictHeader.headerOk()))
+        if (stitcherPtr->changing() == changing)
         {
             return stitcherPtr;
         }
     }
 
+    // Error if an appropriate stitcher was not found
     FatalErrorInFunction
         << typeName << " for " << (changing ? "" : "non-")
         << "changing mesh not found " << nl << nl

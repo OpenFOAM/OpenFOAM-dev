@@ -357,7 +357,7 @@ public:
     // Selectors
 
         //- Select, construct and return the fvMeshStitcher
-        static autoPtr<fvMeshStitcher> New(fvMesh&, const bool changing);
+        static autoPtr<fvMeshStitcher> New(fvMesh&, bool changing);
 
 
     //- Destructor
