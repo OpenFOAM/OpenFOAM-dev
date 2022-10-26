@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,6 @@ Description
 
 SourceFiles
     tetrahedronI.H
-    tetrahedron.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -189,28 +188,8 @@ public:
             //- Return true if point is inside tetrahedron
             inline bool inside(const point& pt) const;
 
-            //- Return (min)containment sphere, i.e. the smallest sphere with
-            //  all points inside. Returns pointHit with:
-            //  - hit         : if sphere is equal to circumsphere
-            //                  (biggest sphere)
-            //  - point       : centre of sphere
-            //  - distance    : radius of sphere
-            //  - eligiblemiss: false
-            // Tol (small compared to 1, e.g. 1e-9) is used to determine
-            // whether point is inside: mag(pt - ctr) < (1+tol)*radius.
-            pointHit containmentSphere(const scalar tol) const;
-
-            //- Fill buffer with shape function products
-            void gradNiSquared(scalarField& buffer) const;
-
-            void gradNiDotGradNj(scalarField& buffer) const;
-
-            void gradNiGradNi(tensorField& buffer) const;
-
-            void gradNiGradNj(tensorField& buffer) const;
-
             //- Calculate the bounding box
-            boundBox bounds() const;
+            inline boundBox bounds() const;
 
 
     // IOstream Operators
@@ -236,12 +215,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "tetrahedronI.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "tetrahedron.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

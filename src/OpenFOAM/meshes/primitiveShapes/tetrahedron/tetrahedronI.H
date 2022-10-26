@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -482,6 +482,18 @@ bool Foam::tetrahedron<Point, PointRef>::inside(const point& pt) const
     }
 
     return true;
+}
+
+
+template<class Point, class PointRef>
+Foam::boundBox Foam::tetrahedron<Point, PointRef>::bounds() const
+{
+    return
+        boundBox
+        (
+            min(a(), min(b(), min(c(), d()))),
+            max(a(), max(b(), max(c(), d())))
+        );
 }
 
 
