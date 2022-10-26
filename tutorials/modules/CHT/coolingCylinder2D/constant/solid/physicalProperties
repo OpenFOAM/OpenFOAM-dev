@@ -13,40 +13,25 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType
+thermoType          constSolidThermo;
+
+rho
 {
-    type            heSolidThermo;
-    mixture         pureMixture;
-    transport       constIsoSolid;
-    thermo          eConst;
-    equationOfState rhoConst;
-    specie          specie;
-    energy          sensibleInternalEnergy;
+    type        uniform;
+    value       8940;
 }
 
-mixture
+Cv
 {
-    specie
-    {
-        nMoles      1;
-        molWeight   63.5;   // [g/mol]
-    }
-
-    transport
-    {
-        kappa   380;        // [W/m/K]
-    }
-
-    thermodynamics
-    {
-        Hf      0;
-        Cv      385;        // [J/kg/K]
-    }
-
-    equationOfState
-    {
-        rho     8940;       // [kg/m^3]
-    }
+    type        uniform;
+    value       385;
 }
+
+kappa
+{
+    type        uniform;
+    value       380;
+}
+
 
 // ************************************************************************* //
