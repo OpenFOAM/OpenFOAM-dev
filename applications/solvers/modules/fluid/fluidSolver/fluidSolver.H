@@ -84,9 +84,6 @@ class fluidSolver
         //- Current maximum Courant number
         scalar CoNum;
 
-        //- Current mean Courant number
-        scalar meanCoNum;
-
 
     // Private Member Functions
 

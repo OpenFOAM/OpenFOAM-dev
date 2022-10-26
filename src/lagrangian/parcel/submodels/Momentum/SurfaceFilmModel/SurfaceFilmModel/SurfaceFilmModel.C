@@ -26,6 +26,7 @@ License
 #include "SurfaceFilmModel.H"
 #include "UPtrList.H"
 #include "surfaceFilm.H"
+#include "surfaceFields.H"
 #include "mathematicalConstants.H"
 
 using namespace Foam::constant;
