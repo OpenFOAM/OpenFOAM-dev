@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -616,24 +616,22 @@ namespace Foam
             forAll(surf, fi)
             {
                 const triPointRef& tri = surf[fi].tri(surf.points());
-                const point& triCentre = tri.circumCentre();
 
-                const scalar radiusSqr = min
-                (
-                    sqr(4*tri.circumRadius()),
-                    sqr(searchDistance)
-                );
+                const Tuple2<point, scalar> circle = tri.circumCircle();
+                const point& c = circle.first();
+                const scalar rSqr =
+                    min(sqr(4*circle.second()), sqr(searchDistance));
 
                 pointIndexHitList hitList;
 
-                feMesh.allNearestFeatureEdges(triCentre, radiusSqr, hitList);
+                feMesh.allNearestFeatureEdges(c, rSqr, hitList);
                 featureProximity[fi] = min
                 (
                     feMesh.minDisconnectedDist(hitList),
                     featureProximity[fi]
                 );
 
-                feMesh.allNearestFeaturePoints(triCentre, radiusSqr, hitList);
+                feMesh.allNearestFeaturePoints(c, rSqr, hitList);
                 featureProximity[fi] = min
                 (
                     minDist(hitList),

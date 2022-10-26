@@ -7,17 +7,20 @@ using namespace Foam;
 
 int main()
 {
-    triangle<point, point> tri
+    const triangle<point, point> tri
     (
         vector(0, 0, 0),
         vector(1, 0, 0),
         vector(1, 1, 0)
     );
 
-    Info<< "tri circumCentre = " << tri.circumCentre() << endl;
-    Info<< "tri circumRadius = " << tri.circumRadius() << endl;
+    const Tuple2<point, scalar> triCircle = tri.circumCircle();
 
-    tetrahedron<point, point> tet
+    Info<< "tri circumCentre = " << triCircle.first() << endl
+        << "tri circumRadius = " << triCircle.second() << endl
+        << "     tri quality = " << tri.quality() << endl;
+
+    const tetrahedron<point, point> tet
     (
         vector(1, 0, 0),
         vector(0, 1, 0),
@@ -25,16 +28,11 @@ int main()
         vector(0.5773502, 0.5773502, 0.5773502)
     );
 
-    Info<< "tet circumCentre = " << tet.circumCentre() << endl;
-    Info<< "tet circumRadius = " << tet.circumRadius() << endl;
+    const Tuple2<point, scalar> tetSphere = tet.circumSphere();
 
-    vector a(Sin);
-    vector b(Sin);
-    vector c(Sin);
-    vector d(Sin);
-
-    Info<< "tet circumRadius = "
-        << tetrahedron<point, point>(a, b, c, d).circumRadius() << endl;
+    Info<< "tet circumCentre = " << tetSphere.first() << endl
+        << "tet circumRadius = " << tetSphere.second() << endl
+        << "     tet quality = " << tet.quality() << endl;
 
     return 0;
 }

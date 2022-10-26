@@ -174,68 +174,42 @@ inline Foam::scalar Foam::tetrahedron<Point, PointRef>::mag() const
 
 
 template<class Point, class PointRef>
-inline Point Foam::tetrahedron<Point, PointRef>::circumCentre() const
+inline Foam::Tuple2<Point, Foam::scalar>
+Foam::tetrahedron<Point, PointRef>::circumSphere() const
 {
-    vector a = b_ - a_;
-    vector b = c_ - a_;
-    vector c = d_ - a_;
+    const vector a = b_ - a_;
+    const vector b = c_ - a_;
+    const vector c = d_ - a_;
 
-    scalar lambda = magSqr(c) - (a & c);
-    scalar mu = magSqr(b) - (a & b);
+    const vector ba = b ^ a;
+    const vector ca = c ^ a;
 
-    vector ba = b ^ a;
-    vector ca = c ^ a;
+    const scalar lambda = magSqr(c) - (a & c);
+    const scalar mu = magSqr(b) - (a & b);
 
-    vector num = lambda*ba - mu*ca;
-    scalar denom = (c & ba);
+    const vector num = lambda*ba - mu*ca;
+    const scalar denom = (c & ba);
 
     if (Foam::mag(denom) < rootVSmall)
     {
-        // Degenerate tetrahedron, returning centre instead of circumCentre.
-
-        return centre();
+        // Degenerate. Return a point far away.
+        static const scalar sqrt3 = sqrt(scalar(3));
+        return Tuple2<Point, scalar>(point::uniform(great), sqrt3*great);
     }
-
-    return a_ + 0.5*(a + num/denom);
-}
-
-
-template<class Point, class PointRef>
-inline Foam::scalar Foam::tetrahedron<Point, PointRef>::circumRadius() const
-{
-    vector a = b_ - a_;
-    vector b = c_ - a_;
-    vector c = d_ - a_;
-
-    scalar lambda = magSqr(c) - (a & c);
-    scalar mu = magSqr(b) - (a & b);
-
-    vector ba = b ^ a;
-    vector ca = c ^ a;
-
-    vector num = lambda*ba - mu*ca;
-    scalar denom = (c & ba);
-
-    if (Foam::mag(denom) < rootVSmall)
+    else
     {
-        // Degenerate tetrahedron, returning great for circumRadius.
-        return great;
+        const vector v = (a + num/denom)/2;
+        return Tuple2<Point, scalar>(a_ + v, Foam::mag(v));
     }
-
-    return Foam::mag(0.5*(a + num/denom));
 }
 
 
 template<class Point, class PointRef>
 inline Foam::scalar Foam::tetrahedron<Point, PointRef>::quality() const
 {
-    return
-        mag()
-       /(
-            8.0/(9.0*sqrt(3.0))
-           *pow3(min(circumRadius(), great))
-          + rootVSmall
-        );
+    const scalar r = circumSphere().second();
+    static const scalar sqrt3 = sqrt(scalar(3));
+    return mag()/((8.0/27.0)*sqrt3*pow3(min(r, great)) + rootVSmall);
 }
 
 
