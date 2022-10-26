@@ -37,7 +37,8 @@ boundaryField
     }
     hole
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 400;
     }
     frontAndBack
     {

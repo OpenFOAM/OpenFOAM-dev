@@ -16,7 +16,7 @@ FoamFile
 
 solvers
 {
-    "(D|T)"
+    "(D|e)"
     {
         solver          GAMG;
         tolerance       1e-06;

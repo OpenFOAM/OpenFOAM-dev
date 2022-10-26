@@ -32,7 +32,7 @@ E
     value       2e+11;
 }
 
-Cp
+Cv
 {
     type        uniform;
     value       434;

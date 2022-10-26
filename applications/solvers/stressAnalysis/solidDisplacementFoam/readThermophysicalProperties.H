@@ -12,8 +12,6 @@ if (thermo.thermalStress())
 const volScalarField& E(thermo.E());
 const volScalarField& nu(thermo.nu());
 
-const volScalarField Cp(thermo.Cp());
-
 Info<< "Calculating Lame's coefficients\n" << endl;
 
 const volScalarField mu(E/(2*(1 + nu)));

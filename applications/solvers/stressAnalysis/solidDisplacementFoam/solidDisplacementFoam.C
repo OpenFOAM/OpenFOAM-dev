@@ -73,20 +73,25 @@ int main(int argc, char *argv[])
 
             if (thermo.thermalStress())
             {
-                volScalarField& T = thermo.T();
-                fvScalarMatrix TEqn
+                volScalarField& e = thermo.he();
+
+                fvScalarMatrix eEqn
                 (
-                    fvm::ddt(rho, Cp, T)
-                  + thermophysicalTransport->divq(T)
+                    fvm::ddt(rho, e)
+                  + thermophysicalTransport->divq(e)
                  ==
-                    fvModels.source(rho*Cp, T)
+                    fvModels.source(rho, e)
                 );
 
-                fvConstraints.constrain(TEqn);
+                eEqn.relax();
 
-                TEqn.solve();
+                fvConstraints.constrain(eEqn);
 
-                fvConstraints.constrain(T);
+                eEqn.solve();
+
+                fvConstraints.constrain(e);
+
+                thermo.correct();
             }
 
             {
