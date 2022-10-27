@@ -75,8 +75,7 @@ Foam::volScalarField Foam::constSolidThermo::readProperty
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
             ),
-            mesh(),
-            dimensions
+            mesh()
         );
     }
     else
