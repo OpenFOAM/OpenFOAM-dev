@@ -29,7 +29,6 @@ boundaryField
     {
         type            waveTransmissive;
         field           p;
-        psi             thermo:psi;
         gamma           1.4;
         fieldInf        1;
         lInf            3;

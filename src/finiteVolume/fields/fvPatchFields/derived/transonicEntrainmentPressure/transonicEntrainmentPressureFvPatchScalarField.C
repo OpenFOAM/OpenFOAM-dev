@@ -38,7 +38,7 @@ transonicEntrainmentPressureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF),
     rhoName_("rho"),
-    psiName_("thermo:psi"),
+    psiName_("psi"),
     phiName_("phi"),
     gamma_(0),
     Mb_(0),
@@ -56,7 +56,7 @@ transonicEntrainmentPressureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF, dict, false),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
+    psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     gamma_(dict.lookup<scalar>("gamma")),
     Mb_(dict.lookupOrDefault<scalar>("Mb", 0.5)),
@@ -210,7 +210,7 @@ void Foam::transonicEntrainmentPressureFvPatchScalarField::write
 {
     fvPatchScalarField::write(os);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
+    writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntry(os, "Mb", Mb_);
     writeEntry(os, "gamma", gamma_);

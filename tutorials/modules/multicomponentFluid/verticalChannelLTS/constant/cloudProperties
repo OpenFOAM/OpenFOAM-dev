@@ -42,10 +42,10 @@ solution
     {
         rho             cell;
         U               cellPoint;
-        thermo:mu       cell;
+        mu              cell;
         T               cell;
         Cp              cell;
-        thermo:kappa    cell;
+        kappa           cell;
         p               cell;
     }
 

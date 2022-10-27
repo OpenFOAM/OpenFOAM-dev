@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
 :
     fixedValueFvPatchScalarField(p, iF),
     pName_("p"),
-    psiName_("thermo:psi")
+    psiName_("psi")
 {}
 
 
@@ -51,7 +51,7 @@ Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
 :
     fixedValueFvPatchScalarField(p, iF, dict),
     pName_(dict.lookupOrDefault<word>("p", "p")),
-    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi"))
+    psiName_(dict.lookupOrDefault<word>("psi", "psi"))
 {}
 
 
@@ -107,7 +107,7 @@ void Foam::fixedRhoFvPatchScalarField::write(Ostream& os) const
     fvPatchScalarField::write(os);
 
     writeEntryIfDifferent<word>(os, "p", "p", this->pName_);
-    writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
+    writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
     writeEntry(os, "value", *this);
 }
 

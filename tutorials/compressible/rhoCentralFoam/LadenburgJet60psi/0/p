@@ -1232,7 +1232,7 @@ boundaryField
     {
         type            waveTransmissive;
         field           p;
-        psi             thermo:psi;
+        psi             psi;
         gamma           1.4;
         fieldInf        101325;
         lInf            0.025;
@@ -1270,7 +1270,7 @@ boundaryField
     {
         type            totalPressure;
         rho             none;
-        psi             thermo:psi;
+        psi             psi;
         gamma           1.4;
         p0              uniform 101325;
         value           nonuniform List<scalar>

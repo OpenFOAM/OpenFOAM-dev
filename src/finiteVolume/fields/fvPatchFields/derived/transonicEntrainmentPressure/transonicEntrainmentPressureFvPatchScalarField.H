@@ -32,7 +32,7 @@ Usage
     \table
         Property     | Description                 | Required | Default value
         rho          | Density field name          | no       | rho
-        psi          | Compressibility field name  | no       | thermo:psi
+        psi          | Compressibility field name  | no       | psi
         gamma        | Heat capacity ratio (cp/Cv) | yes      |
         Mb           | Blending Mach No            | no       | 0.5
         phi          | Flux field name             | no       | phi
@@ -82,7 +82,7 @@ class transonicEntrainmentPressureFvPatchScalarField
         //- Name of density field field, default = "rho"
         const word rhoName_;
 
-        //- Name of compressibility field, default = "thermo:psi"
+        //- Name of compressibility field, default = "psi"
         const word psiName_;
 
         //- Name of the flux field

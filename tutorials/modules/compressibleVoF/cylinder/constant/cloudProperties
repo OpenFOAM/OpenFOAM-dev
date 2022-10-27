@@ -39,10 +39,10 @@ solution
     {
         thermo:rho.air  cell;
         U               cellPoint;
-        thermo:mu.air   cell;
+        mu.air          cell;
         T.air           cell;
         Cp.air          cell;
-        thermo:kappa.air cell;
+        kappa.air       cell;
         p               cell;
     }
 

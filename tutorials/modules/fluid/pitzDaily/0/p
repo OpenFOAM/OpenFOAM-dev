@@ -27,7 +27,6 @@ boundaryField
     outlet
     {
         type            waveTransmissive;
-        psi             thermo:psi;
         gamma           1.3;
         fieldInf        1e5;
         lInf            0.3;

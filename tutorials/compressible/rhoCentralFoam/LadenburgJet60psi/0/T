@@ -1240,7 +1240,6 @@ boundaryField
     freestream
     {
         type            totalTemperature;
-        psi             thermo:psi;
         gamma           1.4;
         T0              uniform 297;
         value           nonuniform List<scalar>

@@ -60,10 +60,10 @@ class maxwellSlipUFvPatchVectorField
         //- Density field name, default = "rho"
         word rhoName_;
 
-        //- Compressibility field name, default = "thermo:psi"
+        //- Compressibility field name, default = "psi"
         word psiName_;
 
-        //- Dynamic viscosity field name, default = "thermo:mu"
+        //- Dynamic viscosity field name, default = "mu"
         word muName_;
 
         //- tauMC field name, default = "tauMC"

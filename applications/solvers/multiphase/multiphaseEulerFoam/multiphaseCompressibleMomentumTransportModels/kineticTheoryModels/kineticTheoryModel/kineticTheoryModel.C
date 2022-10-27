@@ -167,7 +167,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         IOobject
         (
-            IOobject::groupName("lambda", phase_.name()),
+            IOobject::groupName(typedName("lambda"), phase_.name()),
             U.time().timeName(),
             U.mesh(),
             IOobject::NO_READ,
@@ -181,7 +181,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         IOobject
         (
-            IOobject::groupName("gs0", phase_.name()),
+            IOobject::groupName(typedName("gs0"), phase_.name()),
             U.time().timeName(),
             U.mesh(),
             IOobject::NO_READ,
@@ -195,7 +195,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         IOobject
         (
-            IOobject::groupName("kappa", phase_.name()),
+            IOobject::groupName(typedName("kappa"), phase_.name()),
             U.time().timeName(),
             U.mesh(),
             IOobject::NO_READ,
@@ -209,7 +209,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         IOobject
         (
-            IOobject::groupName("nuFric", phase_.name()),
+            IOobject::groupName(typedName("nuFric"), phase_.name()),
             U.time().timeName(),
             U.mesh(),
             IOobject::NO_READ,

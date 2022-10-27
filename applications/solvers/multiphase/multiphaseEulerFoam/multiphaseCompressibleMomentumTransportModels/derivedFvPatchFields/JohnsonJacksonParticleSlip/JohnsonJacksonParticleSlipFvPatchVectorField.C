@@ -25,7 +25,7 @@ License
 
 #include "JohnsonJacksonParticleSlipFvPatchVectorField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "phaseSystem.H"
+#include "kineticTheoryModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -144,7 +144,11 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
     (
         patch().lookupPatchField<volScalarField, scalar>
         (
-            IOobject::groupName("gs0", phase.name())
+            IOobject::groupName
+            (
+                Foam::typedName<RASModels::kineticTheoryModel>("gs0"),
+                phase.name()
+            )
         )
     );
 

@@ -36,10 +36,10 @@ solution
     interpolationSchemes
     {
         rho             cell;
-        thermo:mu       cell;
+        mu              cell;
         U               cellPoint;
         Cp              cell;
-        thermo:kappa    cell;
+        kappa           cell;
         p               cell;
         T               cell;
         G               cell;

@@ -38,7 +38,7 @@ Usage
         Property     | Description             | Required    | Default value
         T            | Temperature field name  | no          | T
         p            | Pressure field name     | no          | p
-        psi          | Compressibility field name | no       | thermo:psi
+        psi          | Compressibility field name | no       | psi
         UInf         | free-stream velocity    | yes         |
         pInf         | free-stream pressure    | yes         |
         TInf         | free-stream temperature | yes         |
@@ -93,7 +93,7 @@ class supersonicFreestreamFvPatchVectorField
         //- Name of pressure field, default = "p"
         word pName_;
 
-        //- Name of compressibility field field, default = "thermo:psi"
+        //- Name of compressibility field field, default = "psi"
         word psiName_;
 
         //- Velocity of the free stream

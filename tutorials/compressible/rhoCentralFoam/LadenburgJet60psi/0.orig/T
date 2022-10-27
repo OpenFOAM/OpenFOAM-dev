@@ -36,7 +36,6 @@ boundaryField
         value           uniform 297;
         T0              uniform 297;
         rho             none;
-        psi             thermo:psi;
         gamma           1.4;
     }
 

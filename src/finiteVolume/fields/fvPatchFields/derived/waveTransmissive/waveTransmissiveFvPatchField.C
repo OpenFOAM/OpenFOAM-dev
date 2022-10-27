@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 )
 :
     advectiveFvPatchField<Type>(p, iF),
-    psiName_("thermo:psi"),
+    psiName_("psi"),
     gamma_(0.0)
 {}
 
@@ -55,7 +55,7 @@ Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 )
 :
     advectiveFvPatchField<Type>(p, iF, dict),
-    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
+    psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     gamma_(dict.lookup<scalar>("gamma"))
 {}
 
@@ -131,7 +131,7 @@ void Foam::waveTransmissiveFvPatchField<Type>::write(Ostream& os) const
 
     writeEntryIfDifferent<word>(os, "phi", "phi", this->phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", this->rhoName_);
-    writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
+    writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
 
     writeEntry(os, "gamma", gamma_);
 

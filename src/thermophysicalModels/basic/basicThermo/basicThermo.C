@@ -289,7 +289,7 @@ Foam::basicThermo::implementation::implementation
     (
         IOobject
         (
-            phasePropertyName("thermo:kappa", phaseName),
+            phasePropertyName("kappa", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::READ_IF_PRESENT,

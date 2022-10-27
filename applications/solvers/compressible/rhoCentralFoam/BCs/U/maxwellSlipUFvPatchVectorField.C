@@ -41,8 +41,8 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     mixedFixedValueSlipFvPatchVectorField(p, iF),
     TName_("T"),
     rhoName_("rho"),
-    psiName_("thermo:psi"),
-    muName_("thermo:mu"),
+    psiName_("psi"),
+    muName_("mu"),
     tauMCName_("tauMC"),
     accommodationCoeff_(1.0),
     Uwall_(p.size(), vector(0.0, 0.0, 0.0)),
@@ -61,8 +61,8 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     mixedFixedValueSlipFvPatchVectorField(p, iF),
     TName_(dict.lookupOrDefault<word>("T", "T")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
-    muName_(dict.lookupOrDefault<word>("mu", "thermo:mu")),
+    psiName_(dict.lookupOrDefault<word>("psi", "psi")),
+    muName_(dict.lookupOrDefault<word>("mu", "mu")),
     tauMCName_(dict.lookupOrDefault<word>("tauMC", "tauMC")),
     accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff")),
     Uwall_("Uwall", dict, p.size()),
@@ -241,8 +241,8 @@ void Foam::maxwellSlipUFvPatchVectorField::write(Ostream& os) const
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "T", "T", TName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
-    writeEntryIfDifferent<word>(os, "mu", "thermo:mu", muName_);
+    writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
+    writeEntryIfDifferent<word>(os, "mu", "mu", muName_);
     writeEntryIfDifferent<word>(os, "tauMC", "tauMC", tauMCName_);
 
     writeEntry(os, "accommodationCoeff", accommodationCoeff_);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ Usage
     \table
         Property     | Description                | Required    | Default value
         p            | Pressure field name        | no          | p
-        psi          | Compressibility field name | no          | thermo:psi
+        psi          | Compressibility field name | no          | psi
     \endtable
 
     Example of the boundary condition specification:
@@ -84,7 +84,7 @@ class fixedRhoFvPatchScalarField
         //- Pressure field name, default = "p"
         word pName_;
 
-        //- Compressibility field name, default = "thermo:psi"
+        //- Compressibility field name, default = "psi"
         word psiName_;
 
 

@@ -41,8 +41,8 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
     mixedFvPatchScalarField(p, iF),
     UName_("U"),
     rhoName_("rho"),
-    psiName_("thermo:psi"),
-    muName_("thermo:mu"),
+    psiName_("psi"),
+    muName_("mu"),
     accommodationCoeff_(1.0),
     Twall_(p.size(), 0.0),
     gamma_(1.4)
@@ -63,8 +63,8 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
     mixedFvPatchScalarField(p, iF, dict, false),
     UName_(dict.lookupOrDefault<word>("U", "U")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
-    muName_(dict.lookupOrDefault<word>("mu", "thermo:mu")),
+    psiName_(dict.lookupOrDefault<word>("psi", "psi")),
+    muName_(dict.lookupOrDefault<word>("mu", "mu")),
     accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff")),
     Twall_("Twall", dict, p.size()),
     gamma_(dict.lookupOrDefault<scalar>("gamma", 1.4))
@@ -227,8 +227,8 @@ void Foam::smoluchowskiJumpTFvPatchScalarField::write(Ostream& os) const
 
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
-    writeEntryIfDifferent<word>(os, "mu", "thermo:mu", muName_);
+    writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
+    writeEntryIfDifferent<word>(os, "mu", "mu", muName_);
 
     writeEntry(os, "accommodationCoeff", accommodationCoeff_);
     writeEntry(os, "Twall", Twall_);

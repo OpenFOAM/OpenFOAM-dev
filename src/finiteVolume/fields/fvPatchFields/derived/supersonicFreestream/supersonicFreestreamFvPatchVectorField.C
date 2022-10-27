@@ -40,7 +40,7 @@ supersonicFreestreamFvPatchVectorField
     mixedFvPatchVectorField(p, iF),
     TName_("T"),
     pName_("p"),
-    psiName_("thermo:psi"),
+    psiName_("psi"),
     UInf_(Zero),
     pInf_(0),
     TInf_(0),
@@ -63,7 +63,7 @@ supersonicFreestreamFvPatchVectorField
     mixedFvPatchVectorField(p, iF, dict, false),
     TName_(dict.lookupOrDefault<word>("T", "T")),
     pName_(dict.lookupOrDefault<word>("p", "p")),
-    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
+    psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     UInf_(dict.lookup("UInf")),
     pInf_(dict.lookup<scalar>("pInf")),
     TInf_(dict.lookup<scalar>("TInf")),
@@ -280,7 +280,7 @@ void Foam::supersonicFreestreamFvPatchVectorField::write(Ostream& os) const
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "T", "T", TName_);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
-    writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
+    writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
     writeEntry(os, "UInf", UInf_);
     writeEntry(os, "pInf", pInf_);
     writeEntry(os, "TInf", TInf_);

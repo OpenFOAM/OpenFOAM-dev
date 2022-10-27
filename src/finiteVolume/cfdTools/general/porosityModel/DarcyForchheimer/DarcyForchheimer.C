@@ -57,7 +57,7 @@ Foam::porosityModels::DarcyForchheimer::DarcyForchheimer
     D_(cellZoneIDs_.size()),
     F_(cellZoneIDs_.size()),
     rhoName_(coeffs_.lookupOrDefault<word>("rho", "rho")),
-    muName_(coeffs_.lookupOrDefault<word>("mu", "thermo:mu")),
+    muName_(coeffs_.lookupOrDefault<word>("mu", "mu")),
     nuName_(coeffs_.lookupOrDefault<word>("nu", "nu"))
 {
     adjustNegativeResistance(dXYZ_);

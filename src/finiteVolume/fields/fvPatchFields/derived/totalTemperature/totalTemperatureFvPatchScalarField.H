@@ -32,7 +32,7 @@ Usage
         Property     | Description             | Required    | Default value
         U            | Velocity field name     | no          | U
         phi          | Flux field name         | no          | phi
-        psi          | Compressibility field name | no       | thermo:psi
+        psi          | Compressibility field name | no       | psi
         gamma        | ratio of specific heats (Cp/Cv) | yes |
         T0           | reference temperature   | yes         |
     \endtable
