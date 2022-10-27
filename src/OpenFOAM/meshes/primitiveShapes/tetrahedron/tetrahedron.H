@@ -152,11 +152,8 @@ public:
             //- Return volume
             inline scalar mag() const;
 
-            //- Return circum-centre
-            inline Point circumCentre() const;
-
-            //- Return circum-radius
-            inline scalar circumRadius() const;
+            //- Return the circum centre and radius
+            inline Tuple2<Point, scalar> circumSphere() const;
 
             //- Return quality: Ratio of tetrahedron and circum-sphere
             //  volume, scaled so that a regular tetrahedron has a

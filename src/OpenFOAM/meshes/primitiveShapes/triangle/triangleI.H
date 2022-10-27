@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,52 +116,33 @@ inline Foam::vector Foam::triangle<Point, PointRef>::normal() const
 
 
 template<class Point, class PointRef>
-inline Point Foam::triangle<Point, PointRef>::circumCentre() const
+inline Foam::Tuple2<Point, Foam::scalar>
+Foam::triangle<Point, PointRef>::circumCircle() const
 {
-    scalar d1 =  (c_ - a_) & (b_ - a_);
-    scalar d2 = -(c_ - b_) & (b_ - a_);
-    scalar d3 =  (c_ - a_) & (c_ - b_);
+    const scalar d1 =  (c_ - a_) & (b_ - a_);
+    const scalar d2 = -(c_ - b_) & (b_ - a_);
+    const scalar d3 =  (c_ - a_) & (c_ - b_);
 
-    scalar c1 = d2*d3;
-    scalar c2 = d3*d1;
-    scalar c3 = d1*d2;
+    const scalar c1 = d2*d3;
+    const scalar c2 = d3*d1;
+    const scalar c3 = d1*d2;
 
-    scalar c = c1 + c2 + c3;
+    const scalar denom = c1 + c2 + c3;
 
-    if (Foam::mag(c) < rootVSmall)
+    if (Foam::mag(denom) < rootVSmall)
     {
-        // Degenerate triangle, returning centre instead of circumCentre.
-
-        return centre();
-    }
-
-    return
-    (
-        ((c2 + c3)*a_ + (c3 + c1)*b_ + (c1 + c2)*c_)/(2*c)
-    );
-}
-
-
-template<class Point, class PointRef>
-inline Foam::scalar Foam::triangle<Point, PointRef>::circumRadius() const
-{
-    scalar d1 =  (c_ - a_) & (b_ - a_);
-    scalar d2 = -(c_ - b_) & (b_ - a_);
-    scalar d3 =  (c_ - a_) & (c_ - b_);
-
-    scalar denom = d2*d3 + d3*d1 + d1*d2;
-
-    if (Foam::mag(denom) < vSmall)
-    {
-        // Degenerate triangle, returning great for circumRadius.
-
-        return great;
+        // Degenerate. Return a point far away.
+        static const scalar sqrt3 = sqrt(scalar(3));
+        return Tuple2<Point, scalar>(point::uniform(great), sqrt3*great);
     }
     else
     {
-        scalar a = (d1 + d2)*(d2 + d3)*(d3 + d1) / denom;
-
-        return 0.5*Foam::sqrt(min(great, max(0, a)));
+        return
+            Tuple2<Point, scalar>
+            (
+                ((c2 + c3)*a_ + (c3 + c1)*b_ + (c1 + c2)*c_)/(2*denom),
+                sqrt(max(0, (d1 + d2)*(d2 + d3)*(d3 + d1)/(4*denom)))
+            );
     }
 }
 
@@ -169,15 +150,9 @@ inline Foam::scalar Foam::triangle<Point, PointRef>::circumRadius() const
 template<class Point, class PointRef>
 inline Foam::scalar Foam::triangle<Point, PointRef>::quality() const
 {
-    scalar c = circumRadius();
-
-    if (c < rootVSmall)
-    {
-        // zero circumRadius, something has gone wrong.
-        return small;
-    }
-
-    return mag()/(Foam::sqr(c)*3.0*sqrt(3.0)/4.0);
+    const scalar r = circumCircle().second();
+    static const scalar sqrt3 = sqrt(scalar(3));
+    return mag()/(0.75*sqrt3*sqr(min(r, great)) + rootVSmall);
 }
 
 

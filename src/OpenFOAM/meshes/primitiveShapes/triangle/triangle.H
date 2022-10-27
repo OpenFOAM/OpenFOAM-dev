@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,11 +140,8 @@ public:
             //- Return unit normal
             inline vector normal() const;
 
-            //- Return circum-centre
-            inline Point circumCentre() const;
-
-            //- Return circum-radius
-            inline scalar circumRadius() const;
+            //- Return the circum centre and radius
+            inline Tuple2<Point, scalar> circumCircle() const;
 
             //- Return quality: Ratio of triangle and circum-circle
             //  area, scaled so that an equilateral triangle has a
