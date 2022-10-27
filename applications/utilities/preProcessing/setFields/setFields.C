@@ -408,8 +408,18 @@ int main(int argc, char *argv[])
 {
     #include "addDictOption.H"
     #include "addRegionOption.H"
+    #include "addTimeOptions.H"
     #include "setRootCase.H"
     #include "createTime.H"
+
+    // Get times list
+    instantList Times = runTime.times();
+
+    // Set startTime and endTime depending on -time and -latestTime options
+    #include "checkTimeOptions.H"
+
+    runTime.setTime(Times[startTime], startTime);
+
     #include "createNamedMesh.H"
 
     const dictionary setFieldsDict(systemDict("setFieldsDict", args, mesh));
