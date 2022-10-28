@@ -24,7 +24,7 @@ massSource
     );
 
     phase           steam;
-    rho             thermo:rho.steam;
+    rho             rho.steam;
 
     massFlowRate
     {

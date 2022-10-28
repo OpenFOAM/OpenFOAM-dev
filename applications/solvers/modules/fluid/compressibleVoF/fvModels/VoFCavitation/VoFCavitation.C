@@ -130,7 +130,7 @@ void Foam::fv::compressible::VoFCavitation::addSup
     if (fieldName == "p_rgh")
     {
         const volScalarField::Internal& rho =
-            mesh().lookupObject<volScalarField>("thermo:rho");
+            mesh().lookupObject<volScalarField>("rho");
 
         const volScalarField::Internal& gh =
             mesh().lookupObject<volScalarField>("gh");

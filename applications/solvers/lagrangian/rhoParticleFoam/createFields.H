@@ -18,7 +18,7 @@ volScalarField rho
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    thermo.rho()
+    thermo.renameRho()
 );
 
 Info<< "\nReading field U\n" << endl;

@@ -30,7 +30,7 @@ massSource
     }
 
     phase           water;
-    rho             thermo:rho.water;
+    rho             rho.water;
 
     fieldValues
     {

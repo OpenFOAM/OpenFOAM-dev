@@ -39,11 +39,11 @@ divSchemes
     "div\(alphaRhoPhi.*,(h|e|k|epsilon).*\)"  Gauss limitedLinear 1;
     "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
 
-    div(alphaRhoPhi.water,(p|thermo:rho.water)) Gauss limitedLinear 1;
+    div(alphaRhoPhi.water,(p|rho.water)) Gauss limitedLinear 1;
 
-    div((((alpha.water*thermo:rho.water)*nuEff.water)*dev2(T(grad(U.water))))) Gauss linear;
+    div((((alpha.water*rho.water)*nuEff.water)*dev2(T(grad(U.water))))) Gauss linear;
 
-    div((((thermo:rho.particles*nut.particles)*dev2(T(grad(U.particles))))+(((thermo:rho.particles*lambda.particles)*div(phi.particles))*I)))  Gauss linear;
+    div((((rho.particles*nut.particles)*dev2(T(grad(U.particles))))+(((rho.particles*lambda.particles)*div(phi.particles))*I)))  Gauss linear;
 }
 
 laplacianSchemes

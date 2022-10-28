@@ -36,13 +36,13 @@ divSchemes
 
     "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss limitedLinear 1;
     "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,\(p\|thermo:rho.*\)\)" Gauss limitedLinear 1;
+    "div\(alphaRhoPhi.*,\(p\|rho.*\)\)" Gauss limitedLinear 1;
 
     div(alphaRhoPhi.solids,Theta.solids) Gauss limitedLinear 1;
 
     "div\(alphaRhoPhi.*,(k|epsilon).*\)"  Gauss limitedLinear 1;
 
-    div((((alpha.gas*thermo:rho.gas)*nuEff.gas)*dev2(T(grad(U.gas))))) Gauss linear;
+    div((((alpha.gas*rho.gas)*nuEff.gas)*dev2(T(grad(U.gas))))) Gauss linear;
 
     divDevTau(U.solids)             Gauss linear;
 }

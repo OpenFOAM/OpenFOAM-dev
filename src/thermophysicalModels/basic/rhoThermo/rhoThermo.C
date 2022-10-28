@@ -46,7 +46,7 @@ Foam::rhoThermo::implementation::implementation
     (
         IOobject
         (
-            phasePropertyName("thermo:rho", phaseName),
+            phasePropertyName("rho", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -122,6 +122,13 @@ Foam::tmp<Foam::scalarField> Foam::rhoThermo::implementation::rho
 ) const
 {
     return rho_.boundaryField()[patchi];
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::renameRho()
+{
+    rho_.rename(phasePropertyName("thermo:rho"));
+    return rho_;
 }
 
 

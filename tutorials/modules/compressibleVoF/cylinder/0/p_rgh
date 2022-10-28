@@ -29,7 +29,6 @@ boundaryField
     {
         type            prghTotalPressure;
         p0              $internalField;
-        rho             thermo:rho;
     }
 
     "region0_to_wallFilm_.*"

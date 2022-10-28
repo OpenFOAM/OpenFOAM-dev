@@ -26,19 +26,16 @@ boundaryField
     {
         type            prghTotalPressure;
         p0              uniform 1.18e5;
-        rho             thermo:rho;
     }
     lowerOutlet
     {
         type            prghEntrainmentPressure;
         p0              $internalField;
-        rho             thermo:rho;
     }
     upperOutlet
     {
         type            prghEntrainmentPressure;
         p0              $internalField;
-        rho             thermo:rho;
     }
     wall
     {

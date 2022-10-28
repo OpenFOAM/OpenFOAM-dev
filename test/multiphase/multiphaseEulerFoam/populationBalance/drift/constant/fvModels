@@ -23,7 +23,7 @@ waterSink
     massFlowRate    -21.86682;
 
     phase           water;
-    rho             thermo:rho.water;
+    rho             rho.water;
 
     fieldValues
     {

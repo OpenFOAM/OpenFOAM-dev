@@ -38,9 +38,9 @@ divSchemes
 
     "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss limitedLinear 1;
     "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,\(p\|thermo:rho.*\)\)" Gauss limitedLinear 1;
+    "div\(alphaRhoPhi.*,\(p\|rho.*\)\)" Gauss limitedLinear 1;
 
-    "div\(\(\(\(alpha.*\*thermo:rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
+    "div\(\(\(\(alpha.*\*rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
 }
 
 laplacianSchemes

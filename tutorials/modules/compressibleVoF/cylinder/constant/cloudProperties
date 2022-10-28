@@ -37,7 +37,7 @@ solution
 
     interpolationSchemes
     {
-        thermo:rho.air  cell;
+        rho.air  cell;
         U               cellPoint;
         mu.air          cell;
         T.air           cell;

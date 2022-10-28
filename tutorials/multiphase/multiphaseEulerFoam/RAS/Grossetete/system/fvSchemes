@@ -39,12 +39,12 @@ divSchemes
     "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss linearUpwind limited;
     "div\(alphaRhoPhi.*,f.*\)"      Gauss upwind;
     "div\(alphaRhoPhi.*,K.*\)"      Gauss linearUpwind limited;
-    "div\(alphaRhoPhi.*,\(p\|thermo:rho.*\)\)" Gauss linearUpwind limited;
+    "div\(alphaRhoPhi.*,\(p\|rho.*\)\)" Gauss linearUpwind limited;
     "div\(phi.*,kappai.*\)"         Gauss linearUpwind limited;
     "div\(alphaRhoPhi.*,(k|epsilon|omega).*\)"  Gauss upwind;
     "div\(phim,(k|epsilon)m\)"      Gauss upwind;
 
-    "div\(\(\(\(alpha.*\*thermo:rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
+    "div\(\(\(\(alpha.*\*rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
 }
 
 laplacianSchemes

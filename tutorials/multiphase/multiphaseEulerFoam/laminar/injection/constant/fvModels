@@ -24,7 +24,7 @@ massSource
     );
 
     phase           air;
-    rho             thermo:rho.air;
+    rho             rho.air;
 
     massFlowRate
     {

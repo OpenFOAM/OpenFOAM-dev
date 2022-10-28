@@ -31,7 +31,7 @@ boundaryField
         p0              $internalField;
         U               U.gas;
         phi             phi.gas;
-        rho             thermo:rho.gas;
+        rho             rho.gas;
         value           $internalField;
     }
 

@@ -79,7 +79,7 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
     (
         IOobject
         (
-            "thermo:rho",
+            "rho",
             U.mesh().time().timeName(),
             U.mesh(),
             IOobject::NO_READ,

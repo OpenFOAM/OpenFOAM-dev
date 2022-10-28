@@ -65,9 +65,9 @@ totalMass
             mesh().lookupObject<volScalarField>("alpha.liquid");
 
         const volScalarField& rhoGas =
-            mesh().lookupObject<volScalarField>("thermo:rho.gas");
+            mesh().lookupObject<volScalarField>("rho.gas");
         const volScalarField& rhoLiquid =
-            mesh().lookupObject<volScalarField>("thermo:rho.liquid");
+            mesh().lookupObject<volScalarField>("rho.liquid");
 
         const scalarField& v = mesh().V();
 

@@ -14,7 +14,7 @@ volScalarField rho
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),
-    thermo.rho()
+    thermo.renameRho()
 );
 
 volScalarField& p = thermo.p();

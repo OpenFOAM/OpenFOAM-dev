@@ -36,9 +36,9 @@ divSchemes
 
     "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss limitedLinear 1;
     "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,\(p\|thermo:rho.*\)\)" Gauss limitedLinear 1;
+    "div\(alphaRhoPhi.*,\(p\|rho.*\)\)" Gauss limitedLinear 1;
 
-    div((((alpha.air*thermo:rho.air)*nuEff.air)*dev2(T(grad(U.air))))) Gauss linear;
+    div((((alpha.air*rho.air)*nuEff.air)*dev2(T(grad(U.air))))) Gauss linear;
 }
 
 laplacianSchemes

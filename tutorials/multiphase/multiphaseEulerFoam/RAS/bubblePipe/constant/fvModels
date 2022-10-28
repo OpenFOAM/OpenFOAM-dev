@@ -23,7 +23,7 @@ massSource
     massFlowRate    6e-7;
 
     phase           air1;
-    rho             thermo:rho.air1;
+    rho             rho.air1;
 
     fieldValues
     {

@@ -37,7 +37,7 @@ divSchemes
 
     "div\(alphaPhi.*,f.*\)"         Gauss upwind;
 
-    "div\(\(\(\(alpha.*\*thermo:rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
+    "div\(\(\(\(alpha.*\*rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
 }
 
 laplacianSchemes

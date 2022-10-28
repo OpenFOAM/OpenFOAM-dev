@@ -793,7 +793,7 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             // Must have same name as rho to enable mapping
-            IOobject::groupName("thermo:rho", phaseName_),
+            IOobject::groupName("rho", phaseName_),
             time().timeName(),
             regionMesh(),
             IOobject::NO_READ,

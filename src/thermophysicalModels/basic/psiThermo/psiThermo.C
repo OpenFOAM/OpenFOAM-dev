@@ -115,6 +115,12 @@ Foam::tmp<Foam::scalarField> Foam::psiThermo::implementation::rho
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::renameRho()
+{
+    return rho();
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::rho0() const
 {
     return p().oldTime()*psi_.oldTime();

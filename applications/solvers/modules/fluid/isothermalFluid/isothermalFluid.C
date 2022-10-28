@@ -79,7 +79,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        thermo.rho()
+        thermo.renameRho()
     ),
 
     dpdt

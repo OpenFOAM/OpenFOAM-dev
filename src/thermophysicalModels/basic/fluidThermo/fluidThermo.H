@@ -114,6 +114,11 @@ public:
 
         // Fields derived from thermodynamic state variables
 
+            //- Rename the thermodynamic density field if stored and return
+            //  This is used by solvers which create a separate continuity rho
+            //  [kg/m^3]
+            virtual tmp<volScalarField> renameRho() = 0;
+
             //- Gamma = Cp/Cv []
             virtual tmp<volScalarField> gamma() const = 0;
 

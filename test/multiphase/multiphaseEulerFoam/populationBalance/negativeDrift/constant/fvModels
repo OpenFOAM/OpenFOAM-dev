@@ -23,7 +23,7 @@ waterSource
     massFlowRate    30.785654;
 
     phase           water;
-    rho             thermo:rho.water;
+    rho             rho.water;
 
     fieldValues
     {

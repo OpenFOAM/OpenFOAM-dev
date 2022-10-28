@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,6 +108,10 @@ public:
             //- Density for patch [kg/m^3]
             virtual tmp<scalarField> rho(const label patchi) const = 0;
 
+            //- Return the thermodynamic density field [kg/m^3]
+            //  This is used by solvers which create a separate continuity rho
+            virtual tmp<volScalarField> renameRho() = 0;
+
             //- Old-time density [kg/m^3]
             virtual tmp<volScalarField> rho0() const = 0;
 
@@ -170,6 +174,10 @@ public:
 
             //- Density for patch [kg/m^3]
             virtual tmp<scalarField> rho(const label patchi) const;
+
+            //- Return the thermodynamic density field [kg/m^3]
+            //  This is used by solvers which create a separate continuity rho
+            virtual tmp<volScalarField> renameRho();
 
             //- Old-time density [kg/m^3]
             virtual tmp<volScalarField> rho0() const;
