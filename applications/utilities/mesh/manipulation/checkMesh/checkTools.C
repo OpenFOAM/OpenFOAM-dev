@@ -44,6 +44,7 @@ License
 #include "writeFile.H"
 #include "coordSet.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 void Foam::printMeshStats(const polyMesh& mesh, const bool allTopology)
 {

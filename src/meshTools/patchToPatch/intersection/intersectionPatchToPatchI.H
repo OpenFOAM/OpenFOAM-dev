@@ -57,4 +57,18 @@ Foam::patchToPatches::intersection::tgtCouples() const
 }
 
 
+inline const Foam::List<Foam::scalar>&
+Foam::patchToPatches::intersection::srcCoverage() const
+{
+    return srcCoverage_;
+}
+
+
+inline const Foam::List<Foam::scalar>&
+Foam::patchToPatches::intersection::tgtCoverage() const
+{
+    return tgtCoverage_;
+}
+
+
 // ************************************************************************* //

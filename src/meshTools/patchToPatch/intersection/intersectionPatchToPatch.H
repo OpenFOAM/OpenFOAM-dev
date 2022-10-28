@@ -408,6 +408,12 @@ public:
         //- For each target face, the target and source areas for each
         //  source coupling
         inline const List<DynamicList<couple>>& tgtCouples() const;
+
+        //- Return the proportion of the source faces that are coupled
+        inline const List<scalar>& srcCoverage() const;
+
+        //- Return the proportion of the target faces that are coupled
+        inline const List<scalar>& tgtCoverage() const;
 };
 
 
