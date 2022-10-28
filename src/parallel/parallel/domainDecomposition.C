@@ -1717,7 +1717,7 @@ void Foam::domainDecomposition::writeComplete(const bool doSets) const
 
                 forAllConstIter(faceSet, procSet, iter)
                 {
-                    cSet.insert(faceMap[iter.key()]);
+                    cSet.insert(mag(faceMap[iter.key()]) - 1);
                 }
             }
             forAllConstIter(IOobjectList, pointSetObjects, iter)
@@ -1907,7 +1907,7 @@ void Foam::domainDecomposition::writeProcs(const bool doSets) const
                 faceSet set(procMesh, cs.name(), cs.size()/nProcs());
                 forAll(procFaceAddressing_[proci], i)
                 {
-                    if (cs.found(mag(procFaceAddressing_[proci][i])-1))
+                    if (cs.found(mag(procFaceAddressing_[proci][i]) - 1))
                     {
                         set.insert(i);
                     }
