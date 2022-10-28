@@ -52,4 +52,17 @@ maxAlphaCo      1;
 
 maxDeltaT       1;
 
+functions
+{
+    #includeFunc cutPlaneSurface
+    (
+        point=(0 0 0),
+        normal=(1 -1 0),
+        interpolate=no,
+        alpha.oil,
+        p_rgh,
+        U
+    )
+}
+
 // ************************************************************************* //

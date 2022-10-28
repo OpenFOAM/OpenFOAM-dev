@@ -9,44 +9,23 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      blockMeshDict;
+    object      meshQualityDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
+#includeEtc "caseDicts/mesh/generation/meshQualityDict.cfg"
 
-vertices
-(
-    (-0.275 -0.275 -0.125)
-    ( 0.275 -0.275 -0.125)
-    ( 0.275  0.275 -0.125)
-    (-0.275  0.275 -0.125)
-    (-0.275 -0.275  1.325)
-    ( 0.275 -0.275  1.325)
-    ( 0.275  0.275  1.325)
-    (-0.275  0.275  1.325)
-);
+//- Minimum quality of the tet formed by the face-centre
+//  and variable base point minimum decomposition triangles and
+//  the cell centre. Set to very negative number (e.g. -1e30) to
+//  disable.
+//     <0 = inside out tet,
+//      0 = flat tet
+//      1 = regular tet
+minTetQuality -1e30;
 
-blocks
-(
-    hex (0 1 2 3 4 5 6 7) (88 88 232) simpleGrading (1 1 1)
-);
-
-boundary
-(
-    allBoundary
-    {
-        type patch;
-        faces
-        (
-            (3 7 6 2)
-            (0 4 7 3)
-            (2 6 5 1)
-            (1 5 4 0)
-            (0 3 2 1)
-            (4 5 6 7)
-        );
-    }
-);
+//- Minimum face twist. Set to <-1 to disable. dot product of face normal
+// and face centre triangles normal
+minTwist 0.05;
 
 // ************************************************************************* //
