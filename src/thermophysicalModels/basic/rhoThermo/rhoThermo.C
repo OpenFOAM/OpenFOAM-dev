@@ -127,7 +127,7 @@ Foam::tmp<Foam::scalarField> Foam::rhoThermo::implementation::rho
 
 Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::renameRho()
 {
-    rho_.rename(phasePropertyName("thermo:rho"));
+    rho_.rename(phasePropertyName(Foam::typedName<rhoThermo>("rho")));
     return rho_;
 }
 
