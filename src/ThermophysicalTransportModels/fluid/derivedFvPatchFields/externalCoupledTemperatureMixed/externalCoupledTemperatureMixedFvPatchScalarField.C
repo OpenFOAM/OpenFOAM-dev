@@ -120,14 +120,10 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
             internalField().group()
         );
 
-    const basicThermo& thermo = ttm.thermo();
-
-    const fvPatchScalarField& hep = thermo.he().boundaryField()[patchi];
-
-    qDot = ttm.alphaEff(patchi)*hep.snGrad();
-
     // patch temperature [K]
     const scalarField Tp(*this);
+
+    qDot = ttm.kappaEff(patchi)*snGrad();
 
     // near wall cell temperature [K]
     const scalarField Tc(patchInternalField());

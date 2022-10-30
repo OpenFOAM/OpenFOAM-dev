@@ -297,17 +297,14 @@ void thermalBaffle::info()
     forAll(coupledPatches, i)
     {
         const label patchi = coupledPatches[i];
-        const fvPatchScalarField& phe = thermo_->he().boundaryField()[patchi];
-        const word patchName = regionMesh().boundary()[patchi].name();
 
-        Info<< indent << "Q : " << patchName << indent
-            <<
-            gSum
-            (
-                mag(regionMesh().Sf().boundaryField()[patchi])
-               *phe.snGrad()
-               *thermo_->alphahe(patchi)
-            )
+        Info<< indent << "Q : " << regionMesh().boundary()[patchi].name()
+            << indent
+            << gSum
+               (
+                   regionMesh().magSf().boundaryField()[patchi]
+                  *thermophysicalTransport_->q()().boundaryField()[patchi]
+               )
             << endl;
     }
 }

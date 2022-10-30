@@ -107,19 +107,16 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
     const compressibleMomentumTransportModel& turbModel =
         ttm.momentumTransport();
 
-    const scalarField alphaEffw(ttm.alphaEff(patchi));
-
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
     const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
     const vectorField& Uc = turbModel.U();
     const vectorField& Uw = turbModel.U().boundaryField()[patchi];
-    const scalarField& Tw = ttm.thermo().T().boundaryField()[patchi];
-    const scalarField Cpw(ttm.thermo().Cp(Tw, patchi));
+    const scalarField Cpw(ttm.thermo().Cp().boundaryField()[patchi]);
 
-    const scalarField kappaw(Cpw*alphaEffw);
-    const scalarField Pr(rhow*nuw*Cpw/kappaw);
+    const scalarField kappaEffw(ttm.kappaEff(patchi));
+    const scalarField Pr(rhow*nuw*Cpw/kappaEffw);
 
     scalarField& htc = *this;
     forAll(htc, facei)
@@ -130,11 +127,11 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
 
         if (Re < 5.0E+05)
         {
-            htc[facei] = 0.664*sqrt(Re)*cbrt(Pr[facei])*kappaw[facei]/L_;
+            htc[facei] = 0.664*sqrt(Re)*cbrt(Pr[facei])*kappaEffw[facei]/L_;
         }
         else
         {
-            htc[facei] = 0.037*pow(Re, 0.8)*cbrt(Pr[facei])*kappaw[facei]/L_;
+            htc[facei] = 0.037*pow(Re, 0.8)*cbrt(Pr[facei])*kappaEffw[facei]/L_;
         }
     }
 

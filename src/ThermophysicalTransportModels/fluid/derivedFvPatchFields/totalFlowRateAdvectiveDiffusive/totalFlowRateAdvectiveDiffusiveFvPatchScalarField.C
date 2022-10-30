@@ -157,7 +157,10 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    const scalarField alphap(ttm.alphaEff(patchi));
+    const scalarField alphap
+    (
+        ttm.kappaEff(patchi)/ttm.thermo().Cpv().boundaryField()[patchi]
+    );
 
     refValue() = massFluxFraction_;
     refGrad() = 0.0;

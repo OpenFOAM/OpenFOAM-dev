@@ -148,7 +148,11 @@ void Foam::fv::solidEquilibriumEnergySource::addSup
     const word& fieldName
 ) const
 {
-    const volScalarField alphahe(solidThermo().alphahe());
+    const volScalarField alphahe
+    (
+        "alphahe",
+        solidThermo().kappa()/solidThermo().Cpv()
+    );
 
     const volScalarField& A = solidAlpha();
     const volScalarField B(1 - A);
@@ -172,7 +176,11 @@ void Foam::fv::solidEquilibriumEnergySource::addSup
     const word& fieldName
 ) const
 {
-    const volScalarField alphahe(alpha*solidThermo().alphahe());
+    const volScalarField alphahe
+    (
+        "alphahe",
+        solidThermo().kappa()/solidThermo().Cpv()
+    );
 
     const volScalarField& A = solidAlpha();
     const volScalarField B(1 - A);

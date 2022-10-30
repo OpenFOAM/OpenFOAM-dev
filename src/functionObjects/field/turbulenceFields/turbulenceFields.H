@@ -67,7 +67,7 @@ Usage
         nuEff       | effective turbulence viscosity (incompressible)
         nut         | turbulence viscosity (compressible)
         nuEff       | effective turbulence viscosity (compressible)
-        alphaEff    | effective turbulence thermal diffusivity (compressible)
+        kappaEff    | effective turbulence thermal diffusivity (compressible)
         R           | Reynolds stress tensor
         devSigma | Deviatoric part of the effective Reynolds stress \
                    (incompressible)
@@ -115,7 +115,7 @@ public:
         omega,
         nut,
         nuEff,
-        alphaEff,
+        kappaEff,
         R,
         devTau
     };

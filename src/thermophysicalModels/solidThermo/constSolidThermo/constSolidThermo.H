@@ -179,6 +179,9 @@ public:
             //- Heat capacity at constant volume [J/kg/K]
             virtual const volScalarField& Cv() const;
 
+            //- Heat capacity at constant pressure/volume [J/kg/K]
+            virtual const volScalarField& Cpv() const;
+
 
         // Fields derived from thermodynamic state variables
 
@@ -295,24 +298,12 @@ public:
                 const label patchi
             ) const;
 
-            //- Heat capacity at constant pressure/volume [J/kg/K]
-            virtual tmp<volScalarField> Cpv() const;
-
             //- Heat capacity at constant pressure/volume for patch [J/kg/K]
             virtual tmp<scalarField> Cpv
             (
                 const scalarField& T,
                 const label patchi
             ) const;
-
-
-        // Fields derived from transport state variables
-
-            //- Thermal diffusivity for energy of mixture [kg/m/s]
-            virtual tmp<volScalarField> alphahe() const;
-
-            //- Thermal diffusivity for energy of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> alphahe(const label patchi) const;
 
             //- Return true if thermal conductivity is isotropic
             virtual bool isotropic() const

@@ -170,6 +170,12 @@ Foam::constSolidThermo::~constSolidThermo()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+const Foam::volScalarField& Foam::constSolidThermo::Cpv() const
+{
+    return Cv_;
+}
+
+
 Foam::volScalarField& Foam::constSolidThermo::he()
 {
     return e_;
@@ -367,12 +373,6 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cv
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::Cpv() const
-{
-    return Cv_;
-}
-
-
 Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cpv
 (
     const scalarField& T,
@@ -380,23 +380,6 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cpv
 ) const
 {
     return Cv_.boundaryField()[patchi];
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::alphahe() const
-{
-    NotImplemented;
-    return tmp<volScalarField>(nullptr);
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::constSolidThermo::alphahe
-(
-    const label patchi
-) const
-{
-    NotImplemented;
-    return tmp<scalarField>(nullptr);
 }
 
 

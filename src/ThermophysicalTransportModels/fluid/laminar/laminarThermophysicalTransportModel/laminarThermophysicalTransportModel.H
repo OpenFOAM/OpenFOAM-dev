@@ -170,7 +170,7 @@ public:
             return volScalarField::New
             (
                 "alphaEff",
-                this->thermo().alphahe()
+                this->thermo().kappa()/this->thermo().Cpv()
             );
         }
 
@@ -178,7 +178,9 @@ public:
         //  for patch [kg/m/s]
         virtual tmp<scalarField> alphaEff(const label patchi) const
         {
-            return this->thermo().alphahe(patchi);
+            return
+                this->thermo().kappa().boundaryField()[patchi]
+               /this->thermo().Cpv().boundaryField()[patchi];
         }
 
         //- Effective mass diffusion coefficient

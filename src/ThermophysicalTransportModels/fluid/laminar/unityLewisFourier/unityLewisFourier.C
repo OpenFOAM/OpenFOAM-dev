@@ -98,7 +98,10 @@ unityLewisFourier<BasicThermophysicalTransportModel>::q() const
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -fvc::interpolate(this->alpha()*this->thermo().alphahe())
+       -fvc::interpolate
+        (
+            this->alpha()*this->thermo().kappa()/this->thermo().Cpv()
+        )
        *fvc::snGrad(this->thermo().he())
     );
 }
@@ -109,7 +112,16 @@ tmp<fvScalarMatrix>
 unityLewisFourier<BasicThermophysicalTransportModel>::
 divq(volScalarField& he) const
 {
-    return -fvm::laplacian(this->alpha()*this->thermo().alphahe(), he);
+    volScalarField alphahe
+    (
+        volScalarField::New
+        (
+            "alphahe",
+            this->thermo().kappa()/this->thermo().Cpv()
+        )
+    );
+
+    return -fvm::laplacian(this->alpha()*alphahe, he);
 }
 
 

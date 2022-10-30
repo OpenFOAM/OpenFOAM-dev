@@ -370,6 +370,9 @@ public:
             //- Heat capacity at constant volume [J/kg/K]
             virtual const volScalarField& Cv() const = 0;
 
+            //- Heat capacity at constant pressure/volume [J/kg/K]
+            virtual const volScalarField& Cpv() const = 0;
+
 
         // Access to transport state variables
 
@@ -400,24 +403,12 @@ public:
                 const label patchi
             ) const = 0;
 
-            //- Heat capacity at constant pressure/volume [J/kg/K]
-            virtual tmp<volScalarField> Cpv() const = 0;
-
             //- Heat capacity at constant pressure/volume for patch [J/kg/K]
             virtual tmp<scalarField> Cpv
             (
                 const scalarField& T,
                 const label patchi
             ) const = 0;
-
-
-        // Fields derived from transport state variables
-
-            //- Thermal diffusivity of energy of mixture [kg/m/s]
-            virtual tmp<volScalarField> alphahe() const = 0;
-
-            //- Thermal diffusivity of energy of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> alphahe(const label patchi) const = 0;
 };
 
 

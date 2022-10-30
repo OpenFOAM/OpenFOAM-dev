@@ -503,7 +503,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::cacheFilmFields
     filmModel.toPrimary(filmPatchi, TFilmPatch_);
 
     CpFilmPatch_ =
-        thermalFilmModel.thermo().Cpv()().boundaryField()[filmPatchi];
+        thermalFilmModel.thermo().Cpv().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, CpFilmPatch_);
 }
 

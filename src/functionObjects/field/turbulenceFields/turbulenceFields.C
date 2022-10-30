@@ -57,7 +57,7 @@ const char* Foam::NamedEnum
     "omega",
     "nut",
     "nuEff",
-    "alphaEff",
+    "kappaEff",
     "R",
     "devTau"
 };
@@ -196,9 +196,9 @@ bool Foam::functionObjects::turbulenceFields::execute()
                     processField<scalar>(f, model.nuEff());
                     break;
                 }
-                case compressibleField::alphaEff:
+                case compressibleField::kappaEff:
                 {
-                    processField<scalar>(f, ttm.alphaEff());
+                    processField<scalar>(f, ttm.kappaEff());
                     break;
                 }
                 case compressibleField::R:
