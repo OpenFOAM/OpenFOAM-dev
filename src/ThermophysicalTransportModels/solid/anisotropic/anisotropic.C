@@ -401,19 +401,17 @@ Foam::solidThermophysicalTransportModels::anisotropic::divq
 {
     const solidThermo& thermo = this->thermo();
     const volSymmTensorField Kappa(this->Kappa());
+    const surfaceVectorField& Sf = thermo.mesh().Sf();
+    const surfaceScalarField& magSf = thermo.mesh().magSf();
 
     // Return heat flux source as an implicit energy correction
     // to the temperature gradient flux
     return
        -fvc::laplacian(Kappa, thermo.T())
-       -correction
+       -fvm::laplacianCorrection
         (
-            fvm::laplacian
-            (
-                Kappa/thermo.Cv(),
-                e,
-                "laplacian(alphae,e)"
-            )
+            (Sf & fvc::interpolate(Kappa/thermo.Cv()) & Sf)/sqr(magSf),
+            e
         );
 }
 

@@ -176,6 +176,36 @@ namespace fvm
         const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
+
+
+    template<class Type>
+    tmp<fvMatrix<Type>> laplacianCorrection
+    (
+        const GeometricField<scalar, fvPatchField, volMesh>&,
+        const GeometricField<Type, fvPatchField, volMesh>&
+    );
+
+    template<class Type>
+    tmp<fvMatrix<Type>> laplacianCorrection
+    (
+        const tmp<GeometricField<scalar, fvPatchField, volMesh>>&,
+        const GeometricField<Type, fvPatchField, volMesh>&
+    );
+
+
+    template<class Type>
+    tmp<fvMatrix<Type>> laplacianCorrection
+    (
+        const GeometricField<scalar, fvsPatchField, surfaceMesh>&,
+        const GeometricField<Type, fvPatchField, volMesh>&
+    );
+
+    template<class Type>
+    tmp<fvMatrix<Type>> laplacianCorrection
+    (
+        const tmp<GeometricField<scalar, fvsPatchField, surfaceMesh>>&,
+        const GeometricField<Type, fvPatchField, volMesh>&
+    );
 }
 
 

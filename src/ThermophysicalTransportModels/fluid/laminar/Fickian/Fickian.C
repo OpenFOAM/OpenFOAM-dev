@@ -309,7 +309,7 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
     const PtrList<volScalarField>& Y = composition.Y();
 
     tmpDivq.ref() -=
-        correction(fvm::laplacian(this->alpha()*this->alphaEff(), he));
+        fvm::laplacianCorrection(this->alpha()*this->alphaEff(), he);
 
     surfaceScalarField sumJ
     (

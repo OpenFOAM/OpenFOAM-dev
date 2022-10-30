@@ -27,6 +27,7 @@ License
 #include "surfaceFields.H"
 #include "fvMatrix.H"
 #include "laplacianScheme.H"
+#include "gaussLaplacianScheme.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -229,9 +230,9 @@ laplacian
     const word& name
 )
 {
-    tmp<fvMatrix<Type>> Laplacian(fvm::laplacian(tgamma(), vf, name));
+    tmp<fvMatrix<Type>> tLaplacian(fvm::laplacian(tgamma(), vf, name));
     tgamma.clear();
-    return Laplacian;
+    return tLaplacian;
 }
 
 
@@ -260,9 +261,9 @@ laplacian
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type>> Laplacian(fvm::laplacian(tgamma(), vf));
+    tmp<fvMatrix<Type>> tLaplacian(fvm::laplacian(tgamma(), vf));
     tgamma.clear();
-    return Laplacian;
+    return tLaplacian;
 }
 
 
@@ -325,9 +326,79 @@ laplacian
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type>> tfvm(fvm::laplacian(tGamma(), vf));
+    tmp<fvMatrix<Type>> tLaplacian(fvm::laplacian(tGamma(), vf));
     tGamma.clear();
-    return tfvm;
+    return tLaplacian;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type>
+tmp<fvMatrix<Type>>
+laplacianCorrection
+(
+    const GeometricField<scalar, fvPatchField, volMesh>& gamma,
+    const GeometricField<Type, fvPatchField, volMesh>& vf
+)
+{
+    return fvm::laplacianCorrection(fvc::interpolate(gamma), vf);
+}
+
+
+template<class Type>
+tmp<fvMatrix<Type>>
+laplacianCorrection
+(
+    const tmp<GeometricField<scalar, fvPatchField, volMesh>>& tgamma,
+    const GeometricField<Type, fvPatchField, volMesh>& vf
+)
+{
+    tmp<fvMatrix<Type>> tLaplacianCorrection
+    (
+        fvm::laplacianCorrection(tgamma(), vf)
+    );
+    tgamma.clear();
+    return tLaplacianCorrection;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type>
+tmp<fvMatrix<Type>>
+laplacianCorrection
+(
+    const GeometricField<scalar, fvsPatchField, surfaceMesh>& gamma,
+    const GeometricField<Type, fvPatchField, volMesh>& vf
+)
+{
+    return correction
+    (
+        fv::gaussLaplacianScheme<Type, scalar>::fvmLaplacianUncorrected
+        (
+            gamma*vf.mesh().magSf(),
+            vf.mesh().nonOrthDeltaCoeffs(),
+            vf
+        )
+    );
+}
+
+
+template<class Type>
+tmp<fvMatrix<Type>>
+laplacianCorrection
+(
+    const tmp<GeometricField<scalar, fvsPatchField, surfaceMesh>>& tGamma,
+    const GeometricField<Type, fvPatchField, volMesh>& vf
+)
+{
+    tmp<fvMatrix<Type>> tLaplacianCorrection
+    (
+        fvm::laplacianCorrection(tGamma(), vf)
+    );
+    tGamma.clear();
+    return tLaplacianCorrection;
 }
 
 

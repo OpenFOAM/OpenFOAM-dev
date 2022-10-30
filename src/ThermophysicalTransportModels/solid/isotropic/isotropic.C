@@ -105,15 +105,7 @@ Foam::solidThermophysicalTransportModels::isotropic::divq
     // to the temperature gradient flux
     return
        -fvc::laplacian(kappa(), thermo.T())
-       -correction
-        (
-            fvm::laplacian
-            (
-                kappa()/thermo.Cv(),
-                e,
-                "laplacian(alphae,e)"
-            )
-        );
+       -fvm::laplacianCorrection(kappa()/thermo.Cv(), e);
 }
 
 

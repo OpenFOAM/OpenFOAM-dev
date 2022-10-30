@@ -316,11 +316,21 @@ Foam::StationaryPhaseModel<BasePhaseModel>::divq(volScalarField& he) const
 {
     const volScalarField& alpha = *this;
 
-    return -fvm::laplacian
+    const surfaceScalarField alphaKappa
     (
-        fvc::interpolate(alpha)*fvc::interpolate(this->thermo().alphahe()),
-        he
+        alpha.name() + '*' + this->thermo().kappa().name(),
+        fvc::interpolate(alpha)*fvc::interpolate(this->thermo().kappa())
     );
+
+    // Return heat flux source as an implicit energy correction
+    // to the temperature gradient flux
+    return
+       -fvc::laplacian(alphaKappa, this->thermo().T())
+       -fvm::laplacianCorrection
+        (
+            alphaKappa/fvc::interpolate(this->thermo().Cpv()),
+            he
+        );
 }
 
 

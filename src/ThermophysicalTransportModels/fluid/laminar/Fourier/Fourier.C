@@ -130,8 +130,12 @@ Fourier<BasicThermophysicalTransportModel>::divq(volScalarField& he) const
     // Return heat flux source as an implicit energy correction
     // to the temperature gradient flux
     return
-        -correction(fvm::laplacian(this->alpha()*thermo.alphahe(), he))
-        -fvc::laplacian(this->alpha()*thermo.kappa(), thermo.T());
+        -fvc::laplacian(this->alpha()*thermo.kappa(), thermo.T())
+        -fvm::laplacianCorrection
+         (
+             this->alpha()*thermo.kappa()/thermo.Cpv(),
+             he
+         );
 }
 
 

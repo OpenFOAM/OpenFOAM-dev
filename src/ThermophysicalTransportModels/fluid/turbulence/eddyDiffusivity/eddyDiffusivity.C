@@ -163,8 +163,8 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
     // Return heat flux source as an implicit energy correction
     // to the temperature gradient flux
     return
-        -correction(fvm::laplacian(this->alpha()*this->alphaEff(), he))
-        -fvc::laplacian(this->alpha()*this->kappaEff(), this->thermo().T());
+        -fvc::laplacian(this->alpha()*this->kappaEff(), this->thermo().T())
+        -fvm::laplacianCorrection(this->alpha()*this->alphaEff(), he);
 }
 
 
