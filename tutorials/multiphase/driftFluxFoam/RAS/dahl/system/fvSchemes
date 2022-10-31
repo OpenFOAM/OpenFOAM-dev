@@ -30,8 +30,8 @@ divSchemes
 
     div(rhoPhi,U)       Gauss linearUpwind grad(U);
     div(tauDm)          Gauss linear;
-    "div\(phi,alpha.*\)" Gauss vanLeer;
-    "div\(phirb,alpha.*\)" Gauss linear;
+    div(phi,alpha) Gauss vanLeer;
+    div(phirb,alpha) Gauss linear;
     div(rhoPhi,k)       Gauss limitedLinear 1;
     div(rhoPhi,epsilon) Gauss limitedLinear 1;
 

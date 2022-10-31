@@ -28,15 +28,15 @@ divSchemes
 {
     default                         none;
 
-    "div\(phi,alpha.*\)"            Gauss vanLeer;
-    "div\(phir,alpha.*\)"           Gauss vanLeer;
+    div(phi,alpha)            Gauss vanLeer;
+    div(phir,alpha)           Gauss vanLeer;
 
-    "div\(alphaRhoPhi.*,U.*\)"      Gauss limitedLinearV 1;
-    "div\(phi.*,U.*\)"              Gauss limitedLinearV 1;
+    div(alphaRhoPhi,U)      Gauss limitedLinearV 1;
+    div(phi,U)              Gauss limitedLinearV 1;
 
-    "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,\(p\|rho.*\)\)" Gauss limitedLinear 1;
+    "div\(alphaRhoPhi,(h|e)\)"  Gauss limitedLinear 1;
+    div(alphaRhoPhi,K)      Gauss limitedLinear 1;
+    div(alphaRhoPhi,(p|rho)) Gauss limitedLinear 1;
 
     div((((alpha.air*rho.air)*nuEff.air)*dev2(T(grad(U.air))))) Gauss linear;
 }

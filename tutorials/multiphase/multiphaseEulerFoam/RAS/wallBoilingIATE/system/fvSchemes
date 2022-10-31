@@ -29,21 +29,21 @@ divSchemes
 {
     default                         none;
 
-    "div\(phi,alpha.*\)"            Gauss vanLeer;
-    "div\(phir,alpha.*\)"           Gauss vanLeer;
+    div(phi,alpha)            Gauss vanLeer;
+    div(phir,alpha)           Gauss vanLeer;
 
-    "div\(alphaRhoPhi.*,U.*\)"      Gauss linearUpwind limited;
-    "div\(phi.*,U.*\)"              Gauss linearUpwind limited;
+    div(alphaRhoPhi,U)      Gauss linearUpwind limited;
+    div(phi,U)              Gauss linearUpwind limited;
 
-    "div\(alphaRhoPhi.*,Yi\)"       Gauss linearUpwind limited;
-    "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss linearUpwind limited;
-    "div\(alphaRhoPhi.*,K.*\)"      Gauss linearUpwind limited;
-    "div\(alphaRhoPhi.*,\(p\|rho.*\)\)" Gauss linearUpwind limited;
-    "div\(phi.*,kappai.*\)"         Gauss linearUpwind limited;
-    "div\(alphaRhoPhi.*,(k|epsilon|omega).*\)"  Gauss linearUpwind limited;
+    div(alphaRhoPhi,Yi)       Gauss linearUpwind limited;
+    "div\(alphaRhoPhi,(h|e)\)"  Gauss linearUpwind limited;
+    div(alphaRhoPhi,K)      Gauss linearUpwind limited;
+    div(alphaRhoPhi,(p|rho)) Gauss linearUpwind limited;
+    div(phi,kappai)         Gauss linearUpwind limited;
+    "div\(alphaRhoPhi,(k|epsilon|omega)\)"  Gauss linearUpwind limited;
     "div\(phim,(k|epsilon)m\)"      Gauss linearUpwind limited;
 
-    "div\(\(\(\(alpha.*\*rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
+    div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes

@@ -34,7 +34,7 @@ divSchemes
     div(alphaRhoPhi,U)          Gauss limitedLinearV 1;
     div(phi,U)                  Gauss limitedLinearV 1;
 
-    div(alphaRhoPhi,e)          Gauss limitedLinear 1;
+    "div\(alphaRhoPhi,(h|e)\)"          Gauss limitedLinear 1;
     div(alphaRhoPhi,K)          Gauss limitedLinear 1;
     div(alphaRhoPhi,(p|rho))    Gauss limitedLinear 1;
 

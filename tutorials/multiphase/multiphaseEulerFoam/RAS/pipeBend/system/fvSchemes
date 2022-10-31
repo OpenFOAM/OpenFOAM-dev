@@ -25,19 +25,20 @@ gradSchemes
 
 divSchemes
 {
-    default                         none;
+    default                     none;
 
-    "div\(phi,alpha.*\)"            Gauss vanLeer;
-    "div\(phir,alpha.*\)"           Gauss vanLeer;
+    div(phi,alpha)              Gauss vanLeer;
+    div(phir,alpha)             Gauss vanLeer;
 
-    "div\(phi.*,U.*\)"              Gauss limitedLinearV 1;
-    "div\(alphaRhoPhi.*,U.*\)"      Gauss limitedLinearV 1;
+    div(phi,U)                  Gauss limitedLinearV 1;
+    div(alphaRhoPhi,U)          Gauss limitedLinearV 1;
 
-    "div\(alphaPhi.*,f.*\)"         Gauss limitedLinear 1;
-    "div\(alphaPhi.*,p\)"           Gauss limitedLinear 1;
+    "div\(alphaPhi,f.*\)"       Gauss limitedLinear 1;
 
-    "div\(alphaRhoPhi.*,(h|e|k|epsilon).*\)"  Gauss limitedLinear 1;
-    "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
+    div(alphaPhi,p)             Gauss limitedLinear 1;
+
+    "div\(alphaRhoPhi,(h|e|k|epsilon)\)"  Gauss limitedLinear 1;
+    div(alphaRhoPhi,K)          Gauss limitedLinear 1;
 
     div(alphaRhoPhi.water,(p|rho.water)) Gauss limitedLinear 1;
 
