@@ -91,6 +91,19 @@ class fvSchemes
         //- Read settings from the dictionary
         void read(const dictionary&);
 
+        //- Filter group extensions
+        word filterGroup(const word& name) const;
+
+        //- Lookup and return scheme for name from the schemes dictionary
+        //  or return defaultScheme if defined.
+        //  Wildcard lookup and group extension are enabled
+        ITstream& lookupScheme
+        (
+            const word& name,
+            const dictionary& schemes,
+            const ITstream& defaultScheme
+        ) const;
+
 
 public:
 
