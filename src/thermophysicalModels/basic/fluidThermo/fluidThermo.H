@@ -169,6 +169,12 @@ protected:
             //- Pressure [Pa]
             volScalarField& p_;
 
+            //- Compressibility [s^2/m^2]
+            volScalarField psi_;
+
+            //- Dynamic viscosity [kg/m/s]
+            volScalarField mu_;
+
 
 public:
 
@@ -195,6 +201,18 @@ public:
 
             //- Pressure [Pa]
             virtual const volScalarField& p() const;
+
+            //- Compressibility [s^2/m^2]
+            virtual const volScalarField& psi() const;
+
+
+        // Access to transport state variables
+
+            //- Dynamic viscosity of mixture [kg/m/s]
+            virtual tmp<volScalarField> mu() const;
+
+            //- Dynamic viscosity of mixture for patch [kg/m/s]
+            virtual tmp<scalarField> mu(const label patchi) const;
 
 
     // Member Operators

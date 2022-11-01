@@ -117,18 +117,6 @@ public:
             //- Add the given density correction to the density field.
             //  Used to update the density field following pressure solution
             virtual void correctRho(const volScalarField& deltaRho) = 0;
-
-            //- Compressibility [s^2/m^2]
-            virtual const volScalarField& psi() const = 0;
-
-
-        // Access to transport state variables
-
-            //- Dynamic viscosity of mixture [kg/m/s]
-            virtual tmp<volScalarField> mu() const = 0;
-
-            //- Dynamic viscosity of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> mu(const label patchi) const = 0;
 };
 
 
@@ -147,12 +135,6 @@ protected:
         //- Density field [kg/m^3]
         //  Named 'rho' to avoid (potential) conflict with solver density
         volScalarField rho_;
-
-        //- Compressibility [s^2/m^2]
-        volScalarField psi_;
-
-        //- Dynamic viscosity [kg/m/s]
-        volScalarField mu_;
 
 
 public:
@@ -193,18 +175,6 @@ public:
             //- Add the given density correction to the density field.
             //  Used to update the density field following pressure solution
             virtual void correctRho(const volScalarField& deltaRho);
-
-            //- Compressibility [s^2/m^2]
-            virtual const volScalarField& psi() const;
-
-
-        // Access to transport state variables
-
-            //- Dynamic viscosity of mixture [kg/m/s]
-            virtual tmp<volScalarField> mu() const;
-
-            //- Dynamic viscosity of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> mu(const label patchi) const;
 
 
     // Member Operators

@@ -54,34 +54,6 @@ Foam::rhoThermo::implementation::implementation
         ),
         mesh,
         dimDensity
-    ),
-
-    psi_
-    (
-        IOobject
-        (
-            phasePropertyName("psi", phaseName),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionSet(0, -2, 2, 0, 0)
-    ),
-
-    mu_
-    (
-        IOobject
-        (
-            phasePropertyName("mu", phaseName),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionSet(1, -1, -1, 0, 0)
     )
 {}
 
@@ -147,27 +119,6 @@ Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::rho0() const
 void Foam::rhoThermo::implementation::correctRho(const volScalarField& deltaRho)
 {
     rho_ += deltaRho;
-}
-
-
-const Foam::volScalarField& Foam::rhoThermo::implementation::psi() const
-{
-    return psi_;
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::mu() const
-{
-    return mu_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::rhoThermo::implementation::mu
-(
-    const label patchi
-) const
-{
-    return mu_.boundaryField()[patchi];
 }
 
 

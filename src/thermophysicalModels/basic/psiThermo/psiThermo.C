@@ -41,34 +41,6 @@ Foam::psiThermo::implementation::implementation
     const fvMesh& mesh,
     const word& phaseName
 )
-:
-    psi_
-    (
-        IOobject
-        (
-            phasePropertyName("psi", phaseName),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionSet(0, -2, 2, 0, 0)
-    ),
-
-    mu_
-    (
-        IOobject
-        (
-            phasePropertyName("mu", phaseName),
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionSet(1, -1, -1, 0, 0)
-    )
 {}
 
 
@@ -102,7 +74,7 @@ void Foam::psiThermo::correctRho(const Foam::volScalarField& deltaRho)
 
 Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::rho() const
 {
-    return p()*psi_;
+    return p()*psi();
 }
 
 
@@ -111,7 +83,7 @@ Foam::tmp<Foam::scalarField> Foam::psiThermo::implementation::rho
     const label patchi
 ) const
 {
-    return p().boundaryField()[patchi]*psi_.boundaryField()[patchi];
+    return p().boundaryField()[patchi]*psi().boundaryField()[patchi];
 }
 
 
@@ -123,28 +95,7 @@ Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::renameRho()
 
 Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::rho0() const
 {
-    return p().oldTime()*psi_.oldTime();
-}
-
-
-const Foam::volScalarField& Foam::psiThermo::implementation::psi() const
-{
-    return psi_;
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::mu() const
-{
-    return mu_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::psiThermo::implementation::mu
-(
-    const label patchi
-) const
-{
-    return mu_.boundaryField()[patchi];
+    return p().oldTime()*psi().oldTime();
 }
 
 
