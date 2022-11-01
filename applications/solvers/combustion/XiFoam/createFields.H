@@ -59,10 +59,17 @@ autoPtr<compressible::momentumTransportModel> turbulence
 );
 
 Info<< "Creating thermophysical transport model\n" << endl;
-autoPtr<fluidThermoThermophysicalTransportModel> thermophysicalTransport
-(
-    fluidThermoThermophysicalTransportModel::New(turbulence(), thermo)
-);
+turbulenceThermophysicalTransportModels::unityLewisEddyDiffusivity
+<
+    RASThermophysicalTransportModel
+    <
+        ThermophysicalTransportModel
+        <
+            compressibleMomentumTransportModel,
+            fluidThermo
+        >
+    >
+> thermophysicalTransport(turbulence(), thermo, true);
 
 Info<< "Creating field dpdt\n" << endl;
 volScalarField dpdt

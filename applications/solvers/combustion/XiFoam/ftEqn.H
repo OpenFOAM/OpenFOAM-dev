@@ -17,7 +17,7 @@ if (composition.contains("ft"))
     (
         fvm::ddt(rho, ft)
       + mvConvection->fvmDiv(phi, ft)
-      - fvm::laplacian(thermophysicalTransport->alphaEff(), ft)
+      - fvm::laplacian(thermophysicalTransport.DEff(ft), ft)
      ==
         fvModels.source(rho, ft)
     );

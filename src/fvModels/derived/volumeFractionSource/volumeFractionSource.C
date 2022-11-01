@@ -113,7 +113,7 @@ Foam::tmp<Foam::volScalarField> Foam::fv::volumeFractionSource::D
             fieldName == ttm.thermo().T().name()
           ? ttm.kappaEff()
           : fieldName == ttm.thermo().he().name()
-          ? ttm.alphaEff()
+          ? ttm.kappaEff()/ttm.thermo().Cpv()
           : ttm.momentumTransport().rho()*ttm.momentumTransport().nuEff();
     }
     else

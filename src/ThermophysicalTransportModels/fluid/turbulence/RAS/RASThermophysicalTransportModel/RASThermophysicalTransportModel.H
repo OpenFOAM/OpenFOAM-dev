@@ -154,9 +154,6 @@ public:
         //  of mixture for patch [W/m/K]
         virtual tmp<scalarField> kappaEff(const label patchi) const = 0;
 
-        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
-        virtual tmp<volScalarField> alphaEff() const = 0;
-
         //- Correct the RAS transport
         virtual void correct();
 

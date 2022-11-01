@@ -85,6 +85,13 @@ protected:
 
         virtual void correctAlphat();
 
+        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
+        //  Used for the implicit energy correction on the temperature laplacian
+        virtual tmp<volScalarField> alphaEff() const
+        {
+            return this->thermo().kappa()/this->thermo().Cpv() + alphat();
+        }
+
 
 public:
 
@@ -149,12 +156,6 @@ public:
             return
                 this->thermo().kappa().boundaryField()[patchi]
               + this->thermo().Cp().boundaryField()[patchi]*alphat(patchi);
-        }
-
-        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
-        virtual tmp<volScalarField> alphaEff() const
-        {
-            return this->thermo().kappa()/this->thermo().Cpv() + alphat();
         }
 
         //- Effective mass diffusion coefficient

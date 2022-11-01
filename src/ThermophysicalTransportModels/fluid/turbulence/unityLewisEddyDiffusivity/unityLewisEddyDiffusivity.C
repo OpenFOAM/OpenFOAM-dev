@@ -53,7 +53,8 @@ unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
 unityLewisEddyDiffusivity
 (
     const momentumTransportModel& momentumTransport,
-    const thermoModel& thermo
+    const thermoModel& thermo,
+    const bool allowDefaultPrt
 )
 :
     unityLewisEddyDiffusivity
@@ -61,7 +62,7 @@ unityLewisEddyDiffusivity
         typeName,
         momentumTransport,
         thermo,
-        false
+        allowDefaultPrt
     )
 {
     this->printCoeffs(typeName);

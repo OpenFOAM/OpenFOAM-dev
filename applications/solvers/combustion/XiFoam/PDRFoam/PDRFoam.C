@@ -70,7 +70,8 @@ Description
 #include "fvCFD.H"
 #include "psiuMulticomponentThermo.H"
 #include "compressibleMomentumTransportModels.H"
-#include "fluidThermoThermophysicalTransportModel.H"
+#include "RASThermophysicalTransportModel.H"
+#include "unityLewisEddyDiffusivity.H"
 #include "laminarFlameSpeed.H"
 #include "XiModel.H"
 #include "PDRDragModel.H"
@@ -144,7 +145,7 @@ int main(int argc, char *argv[])
             if (pimple.turbCorr())
             {
                 turbulence->correct();
-                thermophysicalTransport->correct();
+                thermophysicalTransport.correct();
             }
         }
 

@@ -10,7 +10,7 @@
           ? mvConvection->fvcDiv(fvc::absolute(phi, rho, U), p/rho)
           : -dpdt
         )
-      - fvm::laplacian(thermophysicalTransport->alphaEff(), hea)
+      + thermophysicalTransport.divq(hea)
       + fvModels.source(rho, hea)
     );
 

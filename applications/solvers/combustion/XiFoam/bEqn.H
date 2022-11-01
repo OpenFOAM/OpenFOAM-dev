@@ -52,7 +52,7 @@ if (ign.ignited())
       + mvConvection->fvmDiv(phi, b)
       + fvm::div(phiSt, b)
       - fvm::Sp(fvc::div(phiSt), b)
-      - fvm::laplacian(thermophysicalTransport->alphaEff(), b)
+      - fvm::laplacian(thermophysicalTransport.DEff(b), b)
      ==
         fvModels.source(rho, b)
     );
@@ -105,7 +105,7 @@ if (ign.ignited())
         phiSt
       - fvc::interpolate
         (
-            fvc::laplacian(thermophysicalTransport->alphaEff(), b)/mgb
+            fvc::laplacian(thermophysicalTransport.DEff(b), b)/mgb
         )*nf
       + fvc::interpolate(rho)*fvc::interpolate(Su*(1.0/Xi - Xi))*nf
     );
