@@ -13,7 +13,8 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Which of the steps to run
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
 castellatedMesh true;
 snap            true;
 addLayers       false;
@@ -24,7 +25,6 @@ geometry
     {
         type triSurfaceMesh;
         file "mixerVessel-vessel.stl";
-
         regions
         {
             vessel
@@ -33,12 +33,10 @@ geometry
             }
         }
     }
-
     oilInlet
     {
         type triSurfaceMesh;
         file "mixerVessel-oilInlet.stl";
-
         regions
         {
             oilInlet
@@ -47,12 +45,10 @@ geometry
             }
         }
     }
-
     outlet
     {
         type triSurfaceMesh;
         file "mixerVessel-outlet.stl";
-
         regions
         {
             outlet
@@ -61,12 +57,10 @@ geometry
             }
         }
     }
-
     shaftRotating
     {
         type triSurfaceMesh;
         file "mixerVessel-shaftRotating.stl";
-
         regions
         {
             shaftRotating
@@ -75,12 +69,10 @@ geometry
             }
         }
     }
-
     shaft
     {
         type triSurfaceMesh;
         file "mixerVessel-shaft.stl";
-
         regions
         {
             shaft
@@ -89,12 +81,10 @@ geometry
             }
         }
     }
-
     sparger
     {
         type triSurfaceMesh;
         file "mixerVessel-sparger.stl";
-
         regions
         {
             sparger
@@ -103,12 +93,10 @@ geometry
             }
         }
     }
-
     stirrer
     {
         type triSurfaceMesh;
         file "mixerVessel-stirrer.stl";
-
         regions
         {
             stirrer
@@ -117,12 +105,10 @@ geometry
             }
         }
     }
-
     baffles
     {
         type triSurfaceMesh;
         file "mixerVessel-baffles.stl";
-
         regions
         {
             baffles
@@ -131,7 +117,6 @@ geometry
             }
         }
     }
-
     rotating
     {
         type triSurfaceMesh;
@@ -139,430 +124,153 @@ geometry
     }
 };
 
-// Settings for the castellatedMesh generation.
 castellatedMeshControls
 {
-
-    // Refinement parameters
-    // ~~~~~~~~~~~~~~~~~~~~~
-
-    // If local number of cells is >= maxLocalCells on any processor
-    // switches from from refinement followed by balancing
-    // (current method) to (weighted) balancing before refinement.
-    maxLocalCells 100000;
-
-    // Overall cell limit (approximately). Refinement will stop immediately
-    // upon reaching this number so a refinement level might not complete.
-    // Note that this is the number of cells before removing the part which
-    // is not 'visible' from the keepPoint. The final number of cells might
-    // actually be a lot less.
-    maxGlobalCells 3000000;
-
-    // The surface refinement loop might spend lots of iterations refining just a
-    // few cells. This setting will cause refinement to stop if <= minimumRefine
-    // are selected for refinement. Note: it will at least do one iteration
-    // (unless the number of cells to refine is 0)
-    minRefinementCells 0;
-
-    // Allow a certain level of imbalance during refining
-    // (since balancing is quite expensive)
-    // Expressed as fraction of perfect balance (= overall number of cells /
-    // nProcs). 0=balance always.
-    maxLoadUnbalance 0.10;
-
-    // Number of buffer layers between different levels.
-    // 1 means normal 2:1 refinement restriction, larger means slower
-    // refinement.
-    nCellsBetweenLevels 1;
-
-
-    // Explicit feature edge refinement
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    // Specifies a level for any cell intersected by explicitly provided
-    // edges.
-    // This is a featureEdgeMesh, read from constant/geometry for now.
-    // Specify 'levels' in the same way as the 'distance' mode in the
-    // refinementRegions (see below). The old specification
-    //      level   2;
-    // is equivalent to
-    //      levels  ((0 2));
-
     features
     (
         {
            file "mixerVessel-shaftRotating.eMesh";
-           levels ((1 1));
+           levels ((0 0));
         }
         {
            file "mixerVessel-shaft.eMesh";
-           levels ((1 1));
+           levels ((0 0));
         }
         {
            file "mixerVessel-sparger.eMesh";
-           levels ((1 1));
+           levels ((0 0));
         }
         {
            file "mixerVessel-stirrer.eMesh";
-           levels ((1 1));
+           levels ((0 0));
         }
         {
            file "mixerVessel-baffles.eMesh";
-           levels ((1 1));
+           levels ((0 0));
         }
         {
            file "rotating.eMesh";
-           levels ((1 1));
+           levels ((0 0));
         }
         {
            file "mixerVessel-oilInlet.eMesh";
-           levels ((1 1));
+           levels ((0 0));
         }
         {
            file "mixerVessel-vessel.eMesh";
-           levels ((1 1));
+           levels ((0 0));
         }
         {
            file "mixerVessel-outlet.eMesh";
-           levels ((1 1));
+           levels ((0 0));
         }
-
     );
-
-    // Surface based refinement
-    // ~~~~~~~~~~~~~~~~~~~~~~~~
-
-    // Specifies two levels for every surface. The first is the minimum level,
-    // every cell intersecting a surface gets refined up to the minimum level.
-    // The second level is the maximum level. Cells that 'see' multiple
-    // intersections where the intersections make an
-    // angle > resolveFeatureAngle get refined up to the maximum level.
 
     refinementSurfaces
     {
         vessel
         {
-            level (1 2);
+            level (0 1);
             patchInfo
             {
                 type wall;
                 inGroups (meshedWalls);
             }
         }
-
         oilInlet
         {
-            level (0 1);
+            level (0 0);
             patchInfo
             {
                 type patch;
             }
         }
-
         outlet
         {
-            level (0 1);
+            level (0 0);
             patchInfo
             {
                 type patch;
             }
         }
-
         shaftRotating
         {
-            level (1 1);
+            level (0 0);
             patchInfo
             {
                 $../../vessel/patchInfo
             }
         }
-
         shaft
         {
-            level (1 1);
+            level (0 0);
             patchInfo
             {
                 $../../vessel/patchInfo
             }
         }
-
         sparger
         {
-            level (1 1);
+            level (0 0);
             patchInfo
             {
                 $../../vessel/patchInfo
             }
         }
-
         stirrer
         {
-            level (1 1);
+            level (0 0);
             patchInfo
             {
                 $../../vessel/patchInfo
             }
         }
-
         baffles
         {
-            level (1 1);
+            level (0 0);
             patchInfo
             {
                 $../../vessel/patchInfo
             }
         }
-
         rotating
         {
-            level (1 2);
+            level (0 0);
             cellZone rotating;
             faceZone rotating;
-            mode        insidePoint;
+            mode insidePoint;
             insidePoint (0 0.1 0.5);
         }
     }
 
-    // Feature angle:
-    // - used if min and max refinement level of a surface differ
-    // - used if feature snapping (see snapControls below) is used
-    resolveFeatureAngle 30;
-
-
-    // Mesh selection
-    // ~~~~~~~~~~~~~~
-
-    // After refinement patches get added for all refinementSurfaces and
-    // all cells intersecting the surfaces get put into these patches. The
-    // section reachable from the insidePoint is kept.
-    // NOTE: This point should never be on a face, always inside a cell, even
-    // after refinement.
     insidePoint (0 0.1 1.0);
 
     // Whether any faceZones (as specified in the refinementSurfaces)
     // are only on the boundary of corresponding cellZones or also allow
     // free-standing zone faces. Not used if there are no faceZones.
-    allowFreeStandingZoneFaces true;
+    allowFreeStandingZoneFaces false;
 }
 
-// Settings for the snapping.
 snapControls
 {
-    // Number of patch smoothing iterations before finding correspondence
-    // to surface
-    nSmoothPatch 3;
-
-    // Maximum relative distance for points to be attracted by surface.
-    // True distance is this factor times local maximum edge length.
-    // Note: changed(corrected) w.r.t 17x! (17x used 2* tolerance)
-    tolerance 3.0;
-
-    // Number of mesh displacement relaxation iterations.
-    nSolveIter 30;
-
-    // Maximum number of snapping relaxation iterations. Should stop
-    // before upon reaching a correct mesh.
-    nRelaxIter 5;
-
-    // Feature snapping
-
-        // Number of feature edge snapping iterations.
-        // Leave out altogether to disable.
-        nFeatureSnapIter 15;
-
-        // Detect (geometric only) features by sampling the surface
-        // (default=false).
-        implicitFeatureSnap false;
-
-        // Use castellatedMeshControls::features (default = true)
-        explicitFeatureSnap true;
-
-        // Detect features between multiple surfaces
-        // (only for explicitFeatureSnap, default = false)
-        multiRegionFeatureSnap false;
+    implicitFeatureSnap false;
+    explicitFeatureSnap true;
 }
 
-// Settings for the layer addition.
 addLayersControls
 {
-    // Are the thickness parameters below relative to the undistorted
-    // size of the refined cell outside layer (true) or absolute sizes (false).
-    relativeSizes true;
-
-    // Layer thickness specification. This can be specified in one of four ways
-    // - expansionRatio and finalLayerThickness (cell nearest internal mesh)
-    // - expansionRatio and firstLayerThickness (cell on surface)
-    // - overall thickness and firstLayerThickness
-    // - overall thickness and finalLayerThickness
-
-        // Expansion factor for layer mesh
-        expansionRatio 1.0;
-
-        // Wanted thickness of final added cell layer. If multiple layers
-        // is the thickness of the layer furthest away from the wall.
-        // Relative to undistorted size of cell outside layer.
-        // See relativeSizes parameter.
-        finalLayerThickness 0.3;
-
-        // Wanted thickness of the layer next to the wall.
-        // If relativeSizes this is relative to undistorted size of cell
-        // outside layer.
-        // firstLayerThickness 0.3;
-
-        // Wanted overall thickness of layers.
-        // If relativeSizes this is relative to undistorted size of cell
-        // outside layer.
-        // thickness 0.5
-
-
-    // Minimum overall thickness of total layers. If for any reason layer
-    // cannot be above minThickness do not add layer.
-    // If relativeSizes this is relative to undistorted size of cell
-    // outside layer..
-    minThickness 0.25;
-
-
-    // Per final patch (so not geometry!) the layer information
-    // Note: This behaviour changed after 21x. Any non-mentioned patches
-    //       now slide unless:
-    //          - nSurfaceLayers is explicitly mentioned to be 0.
-    //          - angle to nearest surface < slipFeatureAngle (see below)
     layers
-    {
-        vessel
-        {
-            nSurfaceLayers      1;
-            expansionRatio      1.3;
-            finalLayerThickness 0.5;
-            minThickness        0.1;
-        }
-    }
+    {}
 
-    // If points get not extruded do nGrow layers of connected faces that are
-    // also not grown. This helps convergence of the layer addition process
-    // close to features.
-    // Note: changed(corrected) w.r.t 17x! (didn't do anything in 17x)
-    nGrow 0;
-
-    // Advanced settings
-
-    // When not to extrude surface. 0 is flat surface, 90 is when two faces
-    // are perpendicular
-    featureAngle 60;
-
-    // At non-patched sides allow mesh to slip if extrusion direction makes
-    // angle larger than slipFeatureAngle.
-    slipFeatureAngle 30;
-
-    // Maximum number of snapping relaxation iterations. Should stop
-    // before upon reaching a correct mesh.
-    nRelaxIter 10;
-
-    // Number of smoothing iterations of surface normals
-    nSmoothSurfaceNormals 1;
-
-    // Number of smoothing iterations of interior mesh movement direction
-    nSmoothNormals 3;
-
-    // Smooth layer thickness over surface patches
-    nSmoothThickness 10;
-
-    // Stop layer growth on highly warped cells
-    maxFaceThicknessRatio 0.5;
-
-    // Reduce layer growth where ratio thickness to medial
-    // distance is large
-    maxThicknessToMedialRatio 0.3;
-
-    // Angle used to pick up medial axis points
-    // Note: changed(corrected) w.r.t 17x! 90 degrees corresponds to 130 in 17x.
-    minMedianAxisAngle 90;
-
-    // Create buffer region for new layer terminations
-    nBufferCellsNoExtrude 0;
-
-    // Overall max number of layer addition iterations. The mesher will exit
-    // if it reaches this number of iterations; possibly with an illegal
-    // mesh.
-    nLayerIter 50;
-
-    // Max number of iterations after which relaxed meshQuality controls
-    // get used. Up to nRelaxIter it uses the settings in meshQualityControls,
-    // after nRelaxIter it uses the values in meshQualityControls::relaxed.
-    nRelaxedIter 20;
-
-    // Additional reporting: if there are just a few faces where there
-    // are mesh errors (after adding the layers) print their face centres.
-    // This helps in tracking down problematic mesh areas.
-    // additionalReporting true;
+    relativeSizes true;
+    expansionRatio 1.2;
+    finalLayerThickness 0.5;
+    minThickness 1e-3;
 }
 
-// Generic mesh quality settings. At any undoable phase these determine
-// where to undo.
-meshQualityControls
-{
-    // Maximum non-orthogonality allowed. Set to 180 to disable.
-    maxNonOrtho 65;
+writeFlags
+();
 
-    // Max skewness allowed. Set to <0 to disable.
-    maxBoundarySkewness 20;
-    maxInternalSkewness 4;
-
-    // Max concaveness allowed. Is angle (in degrees) below which concavity
-    // is allowed. 0 is straight face, <0 would be convex face.
-    // Set to 180 to disable.
-    maxConcave 80;
-
-    //- Minimum cell pyramid volume relative to min bounding box length^3
-    //  Set to a fraction of the smallest cell volume expected.
-    //  Set to very negative number (e.g. -1e30) to disable.
-    minVol -1e30;
-
-    // Minimum quality of the tet formed by the face-centre
-    // and variable base point minimum decomposition triangles and
-    // the cell centre. This has to be a positive number for tracking
-    // to work. Set to very negative number (e.g. -1e30) to
-    // disable.
-    //    <0 = inside out tet,
-    //     0 = flat tet
-    //     1 = regular tet
-    minTetQuality -1e-30;
-
-    // Minimum face twist. Set to <-1 to disable. dot product of face normal
-    // and face centre triangles normal
-    minTwist 0.05;
-
-    // minimum normalised cell determinant
-    // 1 = hex, <= 0 = folded or flattened illegal cell
-    minDeterminant 0.001;
-
-    // minFaceWeight (0 -> 0.5)
-    minFaceWeight 0.05;
-
-    // minVolRatio (0 -> 1)
-    minVolRatio 0.01;
-
-    // Advanced
-
-    // Number of error distribution iterations
-    nSmoothScale 4;
-
-    // amount to scale back displacement at error points
-    errorReduction 0.75;
-
-    // Optional : some meshing phases allow usage of relaxed rules.
-    // See e.g. addLayersControls::nRelaxedIter.
-    relaxed
-    {
-        //- Maximum non-orthogonality allowed. Set to 180 to disable.
-        maxNonOrtho 75;
-    }
-}
-
-// Advanced
-
-// Merge tolerance. Is fraction of overall bounding box of initial mesh.
-// Note: the write tolerance needs to be higher than this.
 mergeTolerance 1e-6;
 
 // ************************************************************************* //

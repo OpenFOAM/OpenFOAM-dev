@@ -847,7 +847,8 @@ Foam::label Foam::patchToPatches::intersection::finalise
                 "openness", false, srcOpenness,
                 "error", false, srcError,
                 "depth", false, srcDepth,
-                "angle", false, srcAngle
+                "angle", false, srcAngle,
+                "normals", true, srcPointNormals
             );
 
             Info<< indent << "Writing target patch to "

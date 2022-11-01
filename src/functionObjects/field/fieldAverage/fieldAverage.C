@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,8 +123,6 @@ void Foam::functionObjects::fieldAverage::initialise()
 
     // ensure first averaging works unconditionally
     prevTimeIndex_ = -1;
-
-    initialised_ = true;
 }
 
 
@@ -142,11 +140,6 @@ void Foam::functionObjects::fieldAverage::restart()
 
 void Foam::functionObjects::fieldAverage::calcAverages()
 {
-    if (!initialised_)
-    {
-        initialise();
-    }
-
     const label currentTimeIndex = obr_.time().timeIndex();
     const scalar currentTime = obr_.time().value();
 
@@ -306,7 +299,6 @@ Foam::functionObjects::fieldAverage::fieldAverage
     restartOnOutput_(false),
     periodicRestart_(false),
     restartPeriod_(great),
-    initialised_(false),
     base_(baseType::iter),
     window_(-1.0),
     windowName_(""),
@@ -331,7 +323,6 @@ bool Foam::functionObjects::fieldAverage::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    initialised_ = false;
 
     Log << type() << " " << name() << ":" << nl;
 
@@ -360,6 +351,8 @@ bool Foam::functionObjects::fieldAverage::read(const dictionary& dict)
     }
 
     readAveragingProperties();
+
+    initialise();
 
     Log << endl;
 

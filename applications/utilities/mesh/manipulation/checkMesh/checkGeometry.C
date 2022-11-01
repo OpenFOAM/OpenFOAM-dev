@@ -1,3 +1,28 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
 #include "PatchTools.H"
 #include "checkGeometry.H"
 #include "polyMesh.H"
@@ -11,12 +36,14 @@
 
 #include "vtkSurfaceWriter.H"
 #include "setWriter.H"
+#include "writeFile.H"
+#include "nonConformalCyclicPolyPatch.H"
 
 #include "checkTools.H"
 #include "Time.H"
 
-// Find wedge with opposite orientation. Note: does not actually check that
-// it is opposite, only that it has opposite normal and same axis
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 Foam::label Foam::findOppositeWedge
 (
     const polyMesh& mesh,
@@ -942,5 +969,124 @@ Foam::label Foam::checkGeometry
         }
     }
 
+    if (allGeometry)
+    {
+        const fileName outputPath =
+            mesh.time().globalPath()
+           /functionObjects::writeFile::outputPrefix
+           /(mesh.name() != polyMesh::defaultRegion ? mesh.name() : word())
+           /"checkMesh"
+           /mesh.time().timeName();
+
+        const polyBoundaryMesh& patches = mesh.boundaryMesh();
+
+        // Compute coverage for all orig patches
+        PtrList<scalarField> patchCoverage(patches.size());
+        forAll(patches, nccPatchi)
+        {
+            if (isA<nonConformalCyclicPolyPatch>(patches[nccPatchi]))
+            {
+                const nonConformalCyclicPolyPatch& nccPp =
+                    refCast<const nonConformalCyclicPolyPatch>
+                    (patches[nccPatchi]);
+
+                if (nccPp.owner())
+                {
+                    const polyPatch& origPp = nccPp.origPatch();
+                    const polyPatch& nbrOrigPp = nccPp.nbrPatch().origPatch();
+
+                    const patchToPatches::intersection& intersection =
+                        nccPp.intersection();
+
+                    if (!patchCoverage.set(origPp.index()))
+                    {
+                        patchCoverage.set
+                        (
+                            origPp.index(),
+                            scalarField(origPp.size(), 0)
+                        );
+                    }
+
+                    patchCoverage[origPp.index()] +=
+                        intersection.srcCoverage();
+
+                    if (!patchCoverage.set(nbrOrigPp.index()))
+                    {
+                        patchCoverage.set
+                        (
+                            nbrOrigPp.index(),
+                            scalarField(nbrOrigPp.size(), 0)
+                        );
+                    }
+
+                    patchCoverage[nbrOrigPp.index()] +=
+                        intersection.tgtCoverage();
+                }
+            }
+        }
+
+        // Write out to surface files
+        forAll(patches, patchi)
+        {
+            if (patchCoverage.set(patchi))
+            {
+                const polyPatch& patch = patches[patchi];
+
+                // Collect the patch geometry
+                labelList pointToGlobal;
+                labelList uniqueMeshPointLabels;
+                autoPtr<globalIndex> globalPoints;
+                autoPtr<globalIndex> globalFaces;
+                faceList mergedFaces;
+                pointField mergedPoints;
+                Foam::PatchTools::gatherAndMerge
+                (
+                    mesh,
+                    patch.localFaces(),
+                    patch.meshPoints(),
+                    patch.meshPointMap(),
+                    pointToGlobal,
+                    uniqueMeshPointLabels,
+                    globalPoints,
+                    globalFaces,
+                    mergedFaces,
+                    mergedPoints
+                );
+
+                // Collect the patch coverage
+                scalarField mergedCoverage;
+                globalFaces().gather
+                (
+                    UPstream::worldComm,
+                    labelList(UPstream::procID(UPstream::worldComm)),
+                    patchCoverage[patchi],
+                    mergedCoverage
+                );
+
+                // Write the surface
+                if (Pstream::master())
+                {
+                    vtkSurfaceWriter
+                    (
+                        mesh.time().writeFormat(),
+                        mesh.time().writeCompression()
+                    ).write
+                    (
+                        outputPath,
+                        patch.name() + "_coverage",
+                        mergedPoints,
+                        mergedFaces,
+                        false,
+                        "coverage",
+                        mergedCoverage
+                    );
+                }
+            }
+        }
+    }
+
     return noFailedChecks;
 }
+
+
+// ************************************************************************* //

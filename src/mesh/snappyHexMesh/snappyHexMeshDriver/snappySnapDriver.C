@@ -2799,20 +2799,18 @@ void Foam::snappySnapDriver::doSnap
         }
     }
 
-
     // Merge any introduced baffles (from faceZones of faceType 'internal')
     {
         autoPtr<polyTopoChangeMap> mapPtr = mergeZoneBaffles(baffles);
 
         if (mapPtr.valid())
         {
-            forAll(duplicateFace, facei)
-            {
-                if (duplicateFace[facei] != -1)
-                {
-                    duplicateFace[facei] = mapPtr().reverseFaceMap()[facei];
-                }
-            }
+            meshRefinement::updateList
+            (
+                mapPtr().faceMap(),
+                label(-1),
+                duplicateFace
+            );
         }
     }
 
