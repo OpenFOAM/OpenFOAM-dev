@@ -119,7 +119,7 @@ Foam::tmp<Foam::volScalarField> Foam::dispersedPhaseInterface::Pr() const
 {
     return
          continuous().thermo().nu()
-        *continuous().thermo().Cpv()
+        *continuous().thermo().Cp()
         *continuous().rho()
         /continuous().thermo().kappa();
 }
