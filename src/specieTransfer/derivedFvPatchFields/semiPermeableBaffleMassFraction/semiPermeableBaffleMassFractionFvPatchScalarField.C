@@ -131,14 +131,16 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
 
     const scalarField alphaEffDeltap
     (
-        ttm.alphaEff(patch().index())*patch().deltaCoeffs()
+        ttm.kappaEff(patch().index())*patch().deltaCoeffs()
+       /ttm.thermo().Cp().boundaryField()[patch().index()]
     );
 
     const scalarField nbrAlphaEffDeltap
     (
         mpp.distribute
         (
-            ttm.alphaEff(nbrPatch.index())*nbrPatch.deltaCoeffs()
+            ttm.kappaEff(nbrPatch.index())*nbrPatch.deltaCoeffs()
+           /ttm.thermo().Cp().boundaryField()[nbrPatch.index()]
         )
     );
 

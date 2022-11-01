@@ -228,15 +228,15 @@ void Foam::specieTransferMassFractionFvPatchScalarField::updateCoeffs()
     tmp<scalarField> uPhip =
         refCast<const specieTransferVelocityFvPatchVectorField>(Up).phip();
 
+    const fluidThermophysicalTransportModel& ttm =
+        db().lookupType<fluidThermophysicalTransportModel>();
+
     // Get the diffusivity
-    // !!! <-- This is a potential lagging issue as alphaEff(patchi) calculates
-    // alpha on demand, so the value may be different from alphaEff() which
-    // uses the alpha field cached by the thermodynamics.
     const scalarField AAlphaEffp
     (
         patch().magSf()
-       *db().lookupType<fluidThermophysicalTransportModel>()
-       .alphaEff(patch().index())
+       *ttm.kappaEff(patch().index())
+       /ttm.thermo().Cp().boundaryField()[patch().index()]
     );
 
     // Set the gradient and value so that the transport and diffusion combined

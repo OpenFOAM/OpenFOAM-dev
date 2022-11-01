@@ -103,7 +103,8 @@ Foam::adsorptionMassFractionFvPatchScalarField::calcPhiYp() const
 
     const scalarField alphaEffDeltap
     (
-        ttm.alphaEff(patch().index())*patch().deltaCoeffs()
+        ttm.kappaEff(patch().index())*patch().deltaCoeffs()
+       /ttm.thermo().Cp().boundaryField()[patch().index()]
     );
 
     // Get the specie molecular weight, if needed
