@@ -157,9 +157,6 @@ protected:
         //- Restart period
         scalar restartPeriod_;
 
-        //- Initialised flag
-        bool initialised_;
-
         //- Averaging base type names
         static const NamedEnum<baseType, 2> baseTypeNames_;
 
