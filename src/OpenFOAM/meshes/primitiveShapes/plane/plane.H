@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,6 +73,7 @@ public:
     class ray
     {
         point refPoint_;
+
         vector dir_;
 
     public:
@@ -109,10 +110,15 @@ private:
     // Private Member Functions
 
         //- Calculates basePoint and normal vector given plane coefficients
-        void calcPntAndVec(const scalarList& C);
+        void calcPntAndVec
+        (
+            const scalar C1,
+            const scalar C2,
+            const scalar C3,
+            const scalar C4
+        );
 
         //- Calculates basePoint and normal vector given three points
-        //- Normal vector determined using right hand rule
         void calcPntAndVec
         (
             const point& point1,
@@ -139,27 +145,44 @@ public:
             const point& point3
         );
 
-        //- Construct from coefficients for the
-        //  plane equation: ax + by + cz + d = 0
-        explicit plane(const scalarList& C);
+        //- Construct from coefficients for the plane equation,
+        //  ax + by + cz + d = 0
+        explicit plane
+        (
+            const scalar a,
+            const scalar b,
+            const scalar c,
+            const scalar d
+        );
 
         //- Construct from dictionary
         explicit plane(const dictionary& planeDict);
 
-        //- Construct from Istream. Assumes the base + normal notation.
+        //- Construct from Istream
         explicit plane(Istream& is);
 
 
     // Member Functions
 
-        //- Return plane normal
-        const vector& normal() const;
+        //- Return whether or not this plane is valid
+        inline bool valid() const
+        {
+            return normal_ != vector::zero && point_ != point::max;
+        }
 
-        //- Return or return plane base point
-        const point& refPoint() const;
+        //- Return the plane normal
+        inline const vector& normal() const
+        {
+            return normal_;
+        }
 
-        //- Return coefficients for the
-        //  plane equation: ax + by + cz + d = 0
+        //- Return the plane base point
+        inline const point& refPoint() const
+        {
+            return point_;
+        }
+
+        //- Return coefficients for the plane equation, ax + by + cz + d = 0
         FixedList<scalar, 4> planeCoeffs() const;
 
         //- Return a point on the plane
@@ -176,7 +199,7 @@ public:
         scalar normalIntersect(const point& pnt0, const vector& dir) const;
 
         //- Return cut coefficient for plane and ray
-        scalar normalIntersect(const ray& r) const
+        inline scalar normalIntersect(const ray& r) const
         {
             return normalIntersect(r.refPoint(), r.dir());
         }
@@ -184,7 +207,7 @@ public:
         //- Return the cutting point between the plane and
         // a line passing through the supplied points
         template<class Point, class PointRef>
-        scalar lineIntersect(const line<Point, PointRef>& l) const
+        inline scalar lineIntersect(const line<Point, PointRef>& l) const
         {
             return normalIntersect(l.start(), l.vec());
         }
