@@ -1,0 +1,18 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Set application name
+application=$(getApplication)
+
+runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/titaniaSynthesis
+runApplication topoSet
+runApplication decomposePar
+runParallel    $application
+runApplication reconstructPar
+
+( cd validation && ./createGraphs )
+
+#------------------------------------------------------------------------------

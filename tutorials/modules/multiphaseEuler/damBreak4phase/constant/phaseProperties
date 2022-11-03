@@ -1,0 +1,163 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type basicMultiphaseSystem;
+
+phases (water oil mercury air);
+
+water
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   none;
+
+    residualAlpha 1e-3;
+}
+
+oil
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   none;
+
+    residualAlpha 1e-3;
+}
+
+mercury
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   none;
+
+    residualAlpha 1e-3;
+}
+
+air
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   none;
+
+    residualAlpha 1e-3;
+}
+
+blending
+{
+    default
+    {
+        type            segregated;
+    }
+}
+
+surfaceTension
+{
+    air_water
+    {
+        type            constant;
+        sigma           0.07;
+    }
+
+    air_oil
+    {
+        type            constant;
+        sigma           0.032;
+    }
+
+    air_mercury
+    {
+        type            constant;
+        sigma           0.486;
+    }
+
+    water_oil
+    {
+        type            constant;
+        sigma           0.03;
+    }
+
+    water_mercury
+    {
+        type            constant;
+        sigma           0.415;
+    }
+
+    oil_mercury
+    {
+        type            constant;
+        sigma           0.4;
+    }
+}
+
+interfaceCompression
+{
+    air_water       1;
+    air_oil         1;
+    air_mercury     1;
+    water_oil       1;
+    water_mercury   1;
+    oil_mercury     1;
+}
+
+drag
+{
+    air_segregatedWith_water
+    {
+        type            segregated;
+        m               0.1;
+        n               8;
+    }
+
+    air_segregatedWith_oil
+    {
+        $air_segregatedWith_water;
+    }
+
+    air_segregatedWith_mercury
+    {
+        $air_segregatedWith_water;
+    }
+
+    water_segregatedWith_oil
+    {
+        $air_segregatedWith_water;
+    }
+
+    water_segregatedWith_mercury
+    {
+        $air_segregatedWith_water;
+    }
+
+    oil_segregatedWith_mercury
+    {
+        $air_segregatedWith_water;
+    }
+}
+
+virtualMass
+{}
+
+heatTransfer
+{}
+
+phaseTransfer
+{}
+
+lift
+{}
+
+wallLubrication
+{}
+
+turbulentDispersion
+{}
+
+// ************************************************************************* //

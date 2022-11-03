@@ -1,0 +1,33 @@
+# Reference:
+#     Grossetete, C. (1995).
+#     Experimental investigation and numerical simulations of void profile
+#     development in a vertical cylindrical pipe (No. EDF--96-NB-00120).
+#     Electricite de France (EDF).
+#
+# Notes:
+#     See experiment 11-01 for Z/D = 55 on page 225 of the reference
+#
+0 0.035
+0.105 0.037
+0.21 0.04
+0.315 0.041
+0.42 0.041
+0.525 0.043
+0.577 0.043
+0.63 0.043
+0.682 0.044
+0.709 0.041
+0.735 0.043
+0.761 0.047
+0.787 0.054
+0.814 0.69
+0.84 0.087
+0.866 0.099
+0.892 0.107
+0.919 0.093
+0.945 0.076
+0.955 0.063
+0.966 0.048
+0.976 0.031
+0.982 0.021
+

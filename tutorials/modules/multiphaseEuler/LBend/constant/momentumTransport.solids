@@ -1,0 +1,48 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      momentumTransport.solids;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+simulationType  RAS;
+
+RAS
+{
+    model    kineticTheory;
+
+    turbulence      on;
+    printCoeffs     on;
+
+    kineticTheoryCoeffs
+    {
+        equilibrium             off;
+
+        e                       0.8;
+        alphaMinFriction        0.5;
+        residualAlpha           1e-6;
+
+        granularViscosityModel      Syamlal;
+        granularConductivityModel   Syamlal;
+        granularPressureModel       SyamlalRogersOBrien;
+        frictionalStressModel       Schaeffer;
+        radialModel                 CarnahanStarling;
+
+        SchaefferCoeffs
+        {
+            phi                     36;
+        }
+    }
+}
+
+
+// ************************************************************************* //

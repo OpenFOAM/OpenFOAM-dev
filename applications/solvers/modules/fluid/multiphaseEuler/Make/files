@@ -1,0 +1,10 @@
+setRDeltaT.C
+moveMesh.C
+alphaPredictor.C
+momentumPredictor.C
+thermophysicalPredictor.C
+compressibilityEqns.C
+pressureCorrector.C
+multiphaseEuler.C
+
+LIB = $(FOAM_LIBBIN)/libmultiphaseEuler

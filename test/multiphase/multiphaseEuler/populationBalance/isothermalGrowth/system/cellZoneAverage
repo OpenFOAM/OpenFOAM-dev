@@ -1,0 +1,26 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the average value of one or more fields in a cellZone.
+
+\*---------------------------------------------------------------------------*/
+
+type            volFieldValue;
+libs            ("libfieldFunctionObjects.so");
+
+writeControl    writeTime;
+writeInterval   1;
+
+fields          (p);
+regionType      cellZone;
+name            injection;
+
+operation       volAverage;
+writeFields     false;
+
+// ************************************************************************* //

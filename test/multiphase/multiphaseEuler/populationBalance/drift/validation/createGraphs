@@ -1,0 +1,45 @@
+#!/bin/sh
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo 'gnuplot not found - skipping graph creation' >&2
+    exit 1
+fi
+
+gnuplot<<EOF
+    set terminal postscript eps color enhanced "Helvetica,20"
+    set output '../numberDensity.eps'
+    set decimalsign '.'
+
+    set format xy '%g'
+    set xtics 1 mirror
+    set xlabel 'v(m^3)'
+    set ytics 0.005 mirror
+    set ylabel 'n(m^{-3}m^{-3})'
+
+    set xrange [1:15]
+    set yrange [0:1.5e-2]
+    set key top right
+
+    plot '<printf "1.876749927 0\n1.876749927 0.01\n4.144510443 0.01\n4.144510443 0\n"' w l dt 2 lc rgb 'black' t 'Initial condition',\
+    '<printf "7.957828406 0\n7.957828406 0.01\n10.14451044 0.01\n10.14451044 0\n"' w l lc rgb 'black' t 'Exact',\
+    '../postProcessing/numberDensity/6/numberDensity.xy' u 1:2 w lp ls 4 lc rgb 'black' t 'Numerical'
+
+    set output '../moments.eps'
+
+    set format xy '%g'
+    set xlabel 't(s)'
+    set ytics 0.5 mirror
+    set ylabel 'M_j(t)/M_j(t=0)'
+
+    set xrange [0:6]
+    set yrange [0.5:3.5]
+    set key top left
+
+    plot '../postProcessing/probes/0/integerMoment0(N,v).bubbles' u 1:(\$2/0.02186682) w p pt 5 lc rgb 'black' t 'j=0 (Numbers), numerical',\
+    '<printf "0 1\n6 1\n"' w l lc rgb 'black' t 'j=0 (Numbers), exact',\
+    '../postProcessing/probes/0/integerMoment1(N,v).bubbles' u 1:(\$2/0.066553351) w p pt 6 lc rgb 'black' t 'j=1 (Volume), numerical',\
+    '<printf "0 1\n6 3\n"' w l dt 2 lc rgb 'black' t 'j=1 (Volume), exact'
+EOF
+
+#------------------------------------------------------------------------------

@@ -1,0 +1,70 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default     Euler;
+}
+
+gradSchemes
+{
+    default     Gauss linear;
+}
+
+divSchemes
+{
+    default                     none;
+
+    div(phi,alpha)              Gauss vanLeer;
+    div(phir,alpha)             Gauss vanLeer;
+
+    div(phi,U)                  Gauss limitedLinearV 1;
+    div(alphaRhoPhi,U)          Gauss limitedLinearV 1;
+
+    "div\(alphaPhi,f.*\)"       Gauss limitedLinear 1;
+
+    div(alphaPhi,p)             Gauss limitedLinear 1;
+
+    "div\(alphaRhoPhi,(h|e|k|epsilon)\)"  Gauss limitedLinear 1;
+    div(alphaRhoPhi,K)          Gauss limitedLinear 1;
+
+    div(alphaRhoPhi.water,(p|rho.water)) Gauss limitedLinear 1;
+
+    div((((alpha.water*rho.water)*nuEff.water)*dev2(T(grad(U.water))))) Gauss linear;
+
+    div((((rho.particles*nut.particles)*dev2(T(grad(U.particles))))+(((rho.particles*lambda.particles)*div(phi.particles))*I)))  Gauss linear;
+}
+
+laplacianSchemes
+{
+    default     Gauss linear uncorrected;
+}
+
+interpolationSchemes
+{
+    default     linear;
+}
+
+snGradSchemes
+{
+    default     uncorrected;
+}
+
+wallDist
+{
+    method      meshWave;
+}
+
+// ************************************************************************* //

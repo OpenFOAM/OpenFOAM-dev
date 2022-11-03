@@ -1,0 +1,101 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     foamRun;
+
+solver          multiphaseEuler;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         4;
+
+deltaT          1e-4;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.5;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.8;
+
+maxDeltaT       1;
+
+functions
+{
+    #includeFunc    residuals(p_rgh, k.water, omega.water)
+    #includeFunc    timeStep
+    #includeFunc    writeObjects(d.air1)
+    #includeFunc    writeObjects(d.air2)
+    #includeFunc    phaseForces(phase=water)
+    #includeFunc    graphUniform
+    (
+        funcName=graph,
+        start=(0 0 0.89),
+        end=(0.025 0 0.89),
+        nPoints=100,
+        fields=
+        (
+            alpha.air1
+            alpha.air2
+            alpha.bubbles
+            liftForce.water
+            wallLubricationForce.water
+            turbulentDispersionForce.water
+        )
+    )
+
+    #includeFunc populationBalanceSizeDistribution
+    (
+        populationBalance=bubbles,
+        regionType=cellZone,
+        name=injection,
+        functionType=volumeDensity,
+        coordinateType=diameter,
+        normalise=yes,
+        funcName=probabilityDensity.injection
+    )
+
+    #includeFunc populationBalanceSizeDistribution
+    (
+        populationBalance=bubbles,
+        regionType=cellZone,
+        name=outlet,
+        functionType=volumeDensity,
+        coordinateType=diameter,
+        normalise=yes,
+        funcName=probabilityDensity.outlet
+    )
+}
+
+// ************************************************************************* //
