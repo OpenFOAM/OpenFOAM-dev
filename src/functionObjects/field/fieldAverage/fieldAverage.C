@@ -375,9 +375,20 @@ Foam::wordList Foam::functionObjects::fieldAverage::fields() const
 
 bool Foam::functionObjects::fieldAverage::execute()
 {
-    calcAverages();
+    if (functionObject::postProcess)
+    {
+        WarningInFunction
+            << "fieldAverage is not supported with the foamPostProcess utility"
+            << endl;
 
-    return true;
+        return false;
+    }
+    else
+    {
+        calcAverages();
+
+        return true;
+    }
 }
 
 
