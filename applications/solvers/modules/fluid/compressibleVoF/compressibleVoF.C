@@ -25,7 +25,6 @@ License
 
 #include "compressibleVoF.H"
 #include "localEulerDdtScheme.H"
-#include "hydrostaticInitialisation.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -297,14 +296,6 @@ Foam::scalar Foam::solvers::compressibleVoF::maxDeltaT() const
 }
 
 
-void Foam::solvers::compressibleVoF::prePredictor()
-{
-    fvModels().correct();
-    alphaPredictor();
-    turbulence.correctPhasePhi();
-}
-
-
 void Foam::solvers::compressibleVoF::preSolve()
 {
     // Read the controls
@@ -336,6 +327,14 @@ void Foam::solvers::compressibleVoF::preSolve()
 
     // Update the mesh for topology change, mesh to mesh mapping
     mesh.update();
+}
+
+
+void Foam::solvers::compressibleVoF::prePredictor()
+{
+    fvModels().correct();
+    alphaPredictor();
+    turbulence.correctPhasePhi();
 }
 
 

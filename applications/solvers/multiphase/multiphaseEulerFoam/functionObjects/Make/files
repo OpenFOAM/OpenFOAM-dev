@@ -1,6 +1,0 @@
-populationBalanceMoments/populationBalanceMoments.C
-populationBalanceSizeDistribution/populationBalanceSizeDistribution.C
-phaseForces/phaseForces.C
-phaseMap/phaseMap.C
-
-LIB = $(FOAM_LIBBIN)/libmultiphaseEulerFoamFunctionObjects

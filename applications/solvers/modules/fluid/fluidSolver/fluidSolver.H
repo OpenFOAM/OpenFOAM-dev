@@ -79,12 +79,6 @@ class fluidSolver
         scalar cumulativeContErr;
 
 
-    // Cached Courant numbers for time-step control
-
-        //- Current maximum Courant number
-        scalar CoNum;
-
-
     // Private Member Functions
 
         //- Correct the cached Courant numbers
@@ -100,6 +94,9 @@ protected:
 
         //- Switch to correct the flux after mesh change
         bool correctPhi;
+
+        //- Current maximum Courant number for time-step control
+        scalar CoNum;
 
         //- Read controls
         void read();
@@ -135,7 +132,7 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("incompresssibleFluid");
+    TypeName("fluidSolver");
 
 
     // Constructors
