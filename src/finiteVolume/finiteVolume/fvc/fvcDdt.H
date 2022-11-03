@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,8 +83,39 @@ namespace fvc
     template<class Type>
     tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
     (
+        const one&,
+        const GeometricField<Type, fvPatchField, volMesh>&
+    );
+
+    template<class Type>
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    (
         const volScalarField&,
         const volScalarField&,
+        const GeometricField<Type, fvPatchField, volMesh>&
+    );
+
+    template<class Type>
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    (
+        const one&,
+        const one&,
+        const GeometricField<Type, fvPatchField, volMesh>&
+    );
+
+    template<class Type>
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    (
+        const one&,
+        const volScalarField&,
+        const GeometricField<Type, fvPatchField, volMesh>&
+    );
+
+    template<class Type>
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    (
+        const volScalarField&,
+        const one&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
@@ -93,29 +124,6 @@ namespace fvc
     (
         const GeometricField<Type, fvsPatchField, surfaceMesh>&
     );
-
-    template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
-    (
-        const one&,
-        const GeometricField<Type, fvPatchField, volMesh>&
-    );
-
-    template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
-    (
-        const GeometricField<Type, fvPatchField, volMesh>&,
-        const one&
-    );
-
-    inline geometricZeroField ddt
-    (
-        const one&,
-        const one&
-    )
-    {
-        return geometricZeroField();
-    }
 
     template<class Type>
     tmp

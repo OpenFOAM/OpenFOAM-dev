@@ -59,18 +59,6 @@ template<class Type>
 tmp<fvMatrix<Type>>
 ddt
 (
-    const one&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
-)
-{
-    return ddt(vf);
-}
-
-
-template<class Type>
-tmp<fvMatrix<Type>>
-ddt
-(
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
@@ -96,6 +84,18 @@ ddt
         vf.mesh(),
         vf.mesh().schemes().ddt("ddt(" + rho.name() + ',' + vf.name() + ')')
     ).ref().fvmDdt(rho, vf);
+}
+
+
+template<class Type>
+tmp<fvMatrix<Type>>
+ddt
+(
+    const one&,
+    const GeometricField<Type, fvPatchField, volMesh>& vf
+)
+{
+    return ddt(vf);
 }
 
 

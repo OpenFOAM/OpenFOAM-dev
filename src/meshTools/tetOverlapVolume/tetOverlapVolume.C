@@ -61,6 +61,10 @@ Foam::scalar Foam::tetOverlapVolume::tetTetOverlapVol
 
     // face 0
     const plane pl0(tetB.b(), tetB.d(), tetB.c());
+    if (!pl0.valid())
+    {
+        return 0;
+    }
     const FixedList<point, 4> t({tetA.a(), tetA.b(), tetA.c(), tetA.d()});
     cutTetList1.clear();
     tetCut(t, pl0, cut::appendOp<tetListType>(cutTetList1), cut::noOp());
@@ -71,6 +75,10 @@ Foam::scalar Foam::tetOverlapVolume::tetTetOverlapVol
 
     // face 1
     const plane pl1(tetB.a(), tetB.c(), tetB.d());
+    if (!pl1.valid())
+    {
+        return 0;
+    }
     cutTetList2.clear();
     for (label i = 0; i < cutTetList1.size(); i++)
     {
@@ -84,6 +92,10 @@ Foam::scalar Foam::tetOverlapVolume::tetTetOverlapVol
 
     // face 2
     const plane pl2(tetB.a(), tetB.d(), tetB.b());
+    if (!pl2.valid())
+    {
+        return 0;
+    }
     cutTetList1.clear();
     for (label i = 0; i < cutTetList2.size(); i++)
     {
@@ -97,6 +109,10 @@ Foam::scalar Foam::tetOverlapVolume::tetTetOverlapVol
 
     // face 3
     const plane pl3(tetB.a(), tetB.b(), tetB.c());
+    if (!pl3.valid())
+    {
+        return 0;
+    }
     scalar v = 0;
     for (label i = 0; i < cutTetList1.size(); i++)
     {
