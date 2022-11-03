@@ -98,15 +98,12 @@ heatTransfer
 {
     gas_dispersedIn_liquid_inThe_gas
     {
-        type constantNu;
-        Nu  1e1;
-        residualAlpha 1e-4;
+        type spherical;
     }
 
     gas_dispersedIn_liquid_inThe_liquid
     {
         type RanzMarshall;
-        residualAlpha 1e-4;
     }
 }
 
@@ -139,7 +136,7 @@ lift
 
 wallLubrication
 {
-   gas_dispersedIn_liquid
+    gas_dispersedIn_liquid
     {
         type            Antal;
         Cw1             -0.01;
@@ -201,9 +198,6 @@ surfaceTension
 }
 
 phaseTransfer
-{}
-
-interfaceCompression
 {}
 
 // ************************************************************************* //

@@ -7,23 +7,43 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
+    version     2.0;
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      thermophysicalTransport;
+    object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-laminar
+phaseTurbulenceStabilisationGas
 {
-    model Fourier;
+    type    phaseTurbulenceStabilisation;
+
+    libs    ("libmultiphaseEulerFoamFvModels.so");
+
+    phase   gas;
+
+    alphaInversion  0.1;
 }
 
-RAS
+phaseTurbulenceStabilisationGas2
 {
-    model   eddyDiffusivity;
+    type    phaseTurbulenceStabilisation;
 
-    Prt     1;
+    libs    ("libmultiphaseEulerFoamFvModels.so");
+
+    phase   gas2;
+
+    alphaInversion  0.1;
 }
 
-// ************************************************************************* //
+phaseTurbulenceStabilisationLiquid
+{
+    type    phaseTurbulenceStabilisation;
+
+    libs    ("libmultiphaseEulerFoamFvModels.so");
+
+    phase   liquid;
+
+    alphaInversion  0.1;
+}

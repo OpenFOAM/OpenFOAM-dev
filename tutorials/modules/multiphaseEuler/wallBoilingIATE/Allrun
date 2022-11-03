@@ -31,4 +31,16 @@ runApplication foamPostProcess -latestTime -func "
 
 ./validation/createGraphs
 
+runApplication -append foamPostProcess -latestTime -func "
+    patchSurface
+    (
+        funcName=patchWallBoilingProperties,
+        patch=wall,
+        surfaceFormat=raw,
+        interpolate=false,
+        fields=(dDeparture.liquid fDeparture.liquid nucleationSiteDensity.liquid fLiquid.liquid quenchingHeatFlux.liquid evaporativeHeatFlux.liquid)
+    )"
+
+./validation/createWallBoilingPropertiesGraphs
+
 #------------------------------------------------------------------------------

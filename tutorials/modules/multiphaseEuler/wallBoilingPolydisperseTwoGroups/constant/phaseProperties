@@ -192,13 +192,11 @@ heatTransfer
     gas_dispersedIn_liquid_inThe_liquid
     {
         type RanzMarshall;
-        residualAlpha 1e-4;
     }
 
     gas2_dispersedIn_liquid_inThe_liquid
     {
         type RanzMarshall;
-        residualAlpha 1e-4;
     }
 }
 
@@ -230,26 +228,7 @@ lift
 
     gas2_dispersedIn_liquid
     {
-        type wallDamped;
-
-        lift
-        {
-            type Tomiyama;
-            Cl 0.288;
-
-            aspectRatio
-            {
-                type constant;
-                E0 1;
-            }
-        }
-
-        wallDamping
-        {
-            type    cosine;
-            Cd      1.0;
-            zeroWallDist 0.0002;
-        }
+        $gas_dispersedIn_liquid
     }
 }
 
@@ -264,9 +243,7 @@ wallLubrication
 
     gas2_dispersedIn_liquid
     {
-        type            Antal;
-        Cw1             -0.01;
-        Cw2             0.05;
+        $gas_dispersedIn_liquid
     }
 }
 
@@ -322,24 +299,7 @@ saturation
 
     gas2_liquid
     {
-        type function1;
-
-        function scale;
-
-        xScale 1e-6;
-        scale   1;
-        value
-        {
-            type                tableFile;
-            format              csv;
-            nHeaderLine         1;
-            refColumn           1;
-            componentColumns    (0);
-            mergeSeparators     no;
-            file "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-saturation.csv";
-            outOfBounds         clamp;
-            interpolationScheme linear;
-        }
+        $gas_liquid
     }
 }
 
@@ -353,8 +313,7 @@ surfaceTension
 
     gas2_liquid
     {
-        type            constant;
-        sigma           0.00176574;
+        $gas_liquid
     }
 }
 
