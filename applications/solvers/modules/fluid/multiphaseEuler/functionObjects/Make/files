@@ -2,5 +2,6 @@ populationBalanceMoments/populationBalanceMoments.C
 populationBalanceSizeDistribution/populationBalanceSizeDistribution.C
 phaseForces/phaseForces.C
 phaseMap/phaseMap.C
+wallBoilingProperties/wallBoilingProperties.C
 
 LIB = $(FOAM_LIBBIN)/libmultiphaseEulerFoamFunctionObjects
