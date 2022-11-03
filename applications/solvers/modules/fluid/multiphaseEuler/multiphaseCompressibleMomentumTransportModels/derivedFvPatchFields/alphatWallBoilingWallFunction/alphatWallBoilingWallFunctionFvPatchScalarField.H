@@ -184,11 +184,24 @@ private:
         //- Convective turbulent thermal diffusivity
         scalarField alphatConv_;
 
-        //- Departure diameter field
+        //- Departure diameter
         scalarField dDep_;
+
+        //- Departure frequency
+        scalarField fDep_;
+
+        //- Nucleation site density
+        scalarField N_;
+
+        //- Wall liquid fraction
+        scalarField fLiquid_;
 
         //- Quenching surface heat flux
         scalarField qq_;
+
+        //- Evaporative surface heat flux
+        scalarField qe_;
+
 
         //- Run-time selected heat flux partitioning model
         autoPtr<wallBoilingModels::partitioningModel>
@@ -269,10 +282,40 @@ public:
 
     // Member Functions
 
-        //- Return the departure diameter field
+        //- Return the departure diameter field [m]
         const scalarField& dDeparture() const
         {
             return dDep_;
+        }
+
+        //- Return the departure frequency field [Hz]
+        const scalarField& depFrequency() const
+        {
+            return fDep_;
+        }
+
+        //- Return the nucleation site density field [1/m^2]
+        const scalarField& nucSiteDensity() const
+        {
+            return N_;
+        }
+
+        //- Return the wall liquid fraction field [-]
+        const scalarField& wallLiquidFraction() const
+        {
+            return fLiquid_;
+        }
+
+        //- Return the quenching surface heat flux field [W/m^2]
+        const scalarField& quenching() const
+        {
+            return qq_;
+        }
+
+        //- Return the evaporative surface heat flux field [W/m^2]
+        const scalarField& evaporative() const
+        {
+            return qe_;
         }
 
 

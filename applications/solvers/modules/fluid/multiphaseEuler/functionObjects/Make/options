@@ -1,6 +1,7 @@
 EXE_INC = \
     -I../phaseSystems/lnInclude \
     -I../interfacialModels/lnInclude \
+    -I../multiphaseCompressibleMomentumTransportModels/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
@@ -15,6 +16,7 @@ EXE_INC = \
 LIB_LIBS = \
     -lphaseSystem \
     -lmultiphaseSystems \
+    -lmultiphaseMomentumTransportModels \
     -leulerianInterfacialModels \
     -leulerianInterfacialCompositionModels \
     -lmultiphaseMomentumTransportModels \

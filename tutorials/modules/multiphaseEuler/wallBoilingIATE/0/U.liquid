@@ -16,22 +16,22 @@ FoamFile
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (1.743138395 0 0);
+internalField   uniform (1.75175 0 0);
 
 boundaryField
 {
     inlet
     {
         type            mappedInternalValue;
-        average         (1.743138395 0 0);
+        average         (1.75175 0 0);
         interpolationScheme cell;
-        value           uniform (1.743138395 0 0);
+        value           uniform (1.75175 0 0);
     }
     outlet
     {
         type            pressureInletOutletVelocity;
         phi             phi.liquid;
-        value           uniform (1.743138395 0 0);
+        value           uniform (1.75175 0 0);
     }
     wall
     {

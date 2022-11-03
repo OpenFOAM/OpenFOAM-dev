@@ -246,7 +246,4 @@ surfaceTension
 phaseTransfer
 {}
 
-interfaceCompression
-{}
-
 // ************************************************************************* //

@@ -54,6 +54,13 @@ maxDeltaT       0.001;
 
 functions
 {
+    writeWallBoilingProperties
+    {
+        type            wallBoilingProperties;
+        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        writeControl    writeTime;
+        phase           liquid;
+    }
     outflow
     {
         type            surfaceFieldValue;
