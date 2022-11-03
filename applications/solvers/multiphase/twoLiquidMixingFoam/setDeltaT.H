@@ -33,15 +33,21 @@ Description
 
 if (adjustTimeStep)
 {
-    scalar deltaT =
-        min(maxCo/(CoNum + small), maxAlphaCo/(alphaCoNum + small))
-       *runTime.deltaTValue();
-    deltaT = min
-    (
-        min(deltaT, runTime.deltaTValue() + 0.1*deltaT),
-        1.2*runTime.deltaTValue()
-    );
-    runTime.setDeltaT(min(deltaT, maxDeltaT));
+    scalar deltaT = 1.2*runTime.deltaTValue();
+
+    if (CoNum > small)
+    {
+        deltaT = min(deltaT, runTime.deltaTValue()*maxCo/CoNum);
+    }
+
+    if (alphaCoNum > small)
+    {
+        deltaT = min(maxAlphaCo/alphaCoNum*runTime.deltaTValue(), deltaT);
+    }
+
+    deltaT = min(deltaT, maxDeltaT);
+
+    runTime.setDeltaT(deltaT);
 
     Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
 }

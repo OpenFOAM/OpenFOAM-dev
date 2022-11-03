@@ -55,33 +55,23 @@ void Foam::setDeltaT(Time& runTime, const PtrList<solver>& solvers)
 
 void Foam::adjustDeltaT(Time& runTime, const PtrList<solver>& solvers)
 {
+    // Update the time-step limited by the solvers maxDeltaT
     if (runTime.controlDict().lookupOrDefault("adjustTimeStep", false))
     {
-        scalar deltaT = great;
+        scalar deltaT = 1.2*runTime.deltaTValue();
+
+        bool transient = false;
 
         forAll(solvers, i)
         {
             if (solvers[i].transient())
             {
-                const scalar maxDeltaTi = solvers[i].maxDeltaT();
-
-                deltaT = min
-                (
-                    deltaT,
-                    min
-                    (
-                        min
-                        (
-                            maxDeltaTi,
-                            runTime.deltaTValue() + 0.1*maxDeltaTi
-                        ),
-                        1.2*runTime.deltaTValue()
-                    )
-                );
+                transient = true;
+                deltaT = min(deltaT, solvers[i].maxDeltaT());
             }
         }
 
-        if (deltaT != great)
+        if (transient)
         {
             runTime.setDeltaT(deltaT);
             Info<< "deltaT = " <<  runTime.deltaTValue() << endl;

@@ -33,11 +33,11 @@ Description
 
 if (adjustTimeStep)
 {
-    scalar deltaT = runTime.deltaTValue();
+    scalar deltaT = 1.2*runTime.deltaTValue();
 
     if (CoNum > small)
     {
-        deltaT = min(maxCo/CoNum*runTime.deltaTValue(), fvModels.maxDeltaT());
+        deltaT = min(deltaT, runTime.deltaTValue()*maxCo/CoNum);
     }
 
     if (alphaCoNum > small)
@@ -45,13 +45,9 @@ if (adjustTimeStep)
         deltaT = min(maxAlphaCo/alphaCoNum*runTime.deltaTValue(), deltaT);
     }
 
-    deltaT = min
-    (
-        min(deltaT, runTime.deltaTValue() + 0.1*deltaT),
-        1.2*runTime.deltaTValue()
-    );
+    deltaT = min(min(deltaT, fvModels.maxDeltaT()), maxDeltaT);
 
-    runTime.setDeltaT(min(deltaT, maxDeltaT));
+    runTime.setDeltaT(deltaT);
 
     Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
 }

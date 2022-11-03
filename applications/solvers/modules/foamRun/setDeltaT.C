@@ -43,20 +43,14 @@ void Foam::setDeltaT(Time& runTime, const solver& solver)
 
 void Foam::adjustDeltaT(Time& runTime, const solver& solver)
 {
-    // Update the time-step from the solver maxDeltaT
+    // Update the time-step limited by the solver maxDeltaT
     if
     (
         solver.transient()
      && runTime.controlDict().lookupOrDefault("adjustTimeStep", false)
     )
     {
-        scalar deltaT = solver.maxDeltaT();
-        deltaT = min
-        (
-            min(deltaT, runTime.deltaTValue() + 0.1*deltaT),
-            1.2*runTime.deltaTValue()
-        );
-        runTime.setDeltaT(deltaT);
+        runTime.setDeltaT(min(1.2*runTime.deltaTValue(), solver.maxDeltaT()));
         Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
     }
 }
