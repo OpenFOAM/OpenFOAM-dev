@@ -1,0 +1,24 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    This function looks up wall boiling wall functions and collects and writes
+    out out fields of bubble departure diameter, bubble departure frequency,
+    nucleation site density, effective liquid fraction at the wall, quenching
+    heat flux, and evaporative heat flux.
+
+\*---------------------------------------------------------------------------*/
+
+type                wallBoilingProperties;
+libs                ("libmultiphaseEulerFoamFunctionObjects.so");
+
+phase               <phaseName>;
+
+writeControl        writeTime;
+
+
+// ************************************************************************* //
