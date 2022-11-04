@@ -27,7 +27,7 @@
 #
 # Description
 #     Script to inform the user that multiphaseEulerFoam has been superseded
-#     and replaced by the more general compressibleVoF solver module executed by
+#     and replaced by the more general multiphaseEuler solver module executed by
 #     the foamRun application.
 #
 #------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ cat <<EOF
 multiphaseEulerFoam has been superseded and replaced by the more general
 multiphaseEuler solver module executed by the foamRun application:
 
-    foamRun -solver compressibleVoF
+    foamRun -solver multiphaseEuler
 
 EOF
 
