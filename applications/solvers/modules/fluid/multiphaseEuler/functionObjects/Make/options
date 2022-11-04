@@ -16,7 +16,6 @@ EXE_INC = \
 LIB_LIBS = \
     -lphaseSystem \
     -lmultiphaseSystems \
-    -lmultiphaseMomentumTransportModels \
     -leulerianInterfacialModels \
     -leulerianInterfacialCompositionModels \
     -lmultiphaseMomentumTransportModels \
