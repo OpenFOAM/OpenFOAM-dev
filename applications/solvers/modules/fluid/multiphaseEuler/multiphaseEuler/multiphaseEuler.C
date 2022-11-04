@@ -98,6 +98,60 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
 :
     fluidSolver(mesh),
 
+    faceMomentum
+    (
+        pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
+    ),
+
+    partialElimination
+    (
+        pimple.dict().lookupOrDefault<Switch>("partialElimination", false)
+    ),
+
+    nEnergyCorrectors
+    (
+        pimple.dict().lookupOrDefault<int>("nEnergyCorrectors", 1)
+    ),
+
+    trDeltaT
+    (
+        LTS
+      ? new volScalarField
+        (
+            IOobject
+            (
+                fv::localEulerDdt::rDeltaTName,
+                runTime.timeName(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
+            mesh,
+            dimensionedScalar(dimless/dimTime, 1),
+            extrapolatedCalculatedFvPatchScalarField::typeName
+        )
+      : nullptr
+    ),
+
+    trDeltaTf
+    (
+        LTS && faceMomentum
+      ? new surfaceScalarField
+        (
+            IOobject
+            (
+                fv::localEulerDdt::rDeltaTfName,
+                runTime.timeName(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
+            mesh,
+            dimensionedScalar(dimless/dimTime, 1)
+        )
+      : nullptr
+    ),
+
     buoyancy(mesh),
 
     fluidPtr(phaseSystem::New(mesh)),
@@ -120,12 +174,6 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
         fluid.incompressible()
     ),
 
-    faceMomentum(false),
-
-    partialElimination(false),
-
-    nEnergyCorrectors(1),
-
     MRF(fluid.MRF())
 {
     // Read the controls
@@ -136,48 +184,6 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
     if (transient())
     {
         correctCoNum();
-    }
-    else if (LTS)
-    {
-        Info<< "Using LTS" << endl;
-
-        trDeltaT = tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    fv::localEulerDdt::rDeltaTName,
-                    runTime.timeName(),
-                    mesh,
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::AUTO_WRITE
-                ),
-                mesh,
-                dimensionedScalar(dimless/dimTime, 1),
-                extrapolatedCalculatedFvPatchScalarField::typeName
-            )
-        );
-
-        if (faceMomentum)
-        {
-            trDeltaTf = tmp<surfaceScalarField>
-            (
-                new surfaceScalarField
-                (
-                    IOobject
-                    (
-                        fv::localEulerDdt::rDeltaTfName,
-                        runTime.timeName(),
-                        mesh,
-                        IOobject::READ_IF_PRESENT,
-                        IOobject::AUTO_WRITE
-                    ),
-                    mesh,
-                    dimensionedScalar(dimless/dimTime, 1)
-                )
-            );
-        }
     }
 }
 

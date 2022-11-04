@@ -75,6 +75,28 @@ class multiphaseEuler
 
 protected:
 
+    // Controls
+
+        //- Cell/face momentum equation switch
+        //  Defaults to false, i.e. uses the cell momentum equation
+        Switch faceMomentum;
+
+        //- Partial elimination drag contribution optimisation
+        //  Defaults to false
+        Switch partialElimination;
+
+        //- Number of energy correctors
+        //  Used to improve stability of phase-change sibulations
+        //  Defaults to 1
+        int nEnergyCorrectors;
+
+
+    //- Optional LTS reciprocal time-step field
+    tmp<volScalarField> trDeltaT;
+
+    //- Optional LTS reciprocal face time-step field
+    tmp<surfaceScalarField> trDeltaTf;
+
     //- Buoyancy force
     solvers::buoyancy buoyancy;
 
@@ -105,34 +127,12 @@ protected:
         Foam::pressureReference pressureReference;
 
 
-    // Controls
-
-        //- Cell/face momentum equation switch
-        //  Defaults to false, i.e. uses the cell momentum equation
-        Switch faceMomentum;
-
-        //- Partial elimination drag contribution optimisation
-        //  Defaults to false
-        Switch partialElimination;
-
-        //- Number of energy correctors
-        //  Used to improve stability of phase-change sibulations
-        //  Defaults to 1
-        int nEnergyCorrectors;
-
-
     // Optional models
 
         const IOMRFZoneList& MRF;
 
 
     // Cached temporary fields
-
-        //- Optional LTS reciprocal time-step field
-        tmp<volScalarField> trDeltaT;
-
-        //- Optional LTS reciprocal face time-step field
-        tmp<surfaceScalarField> trDeltaTf;
 
         //- Temporary phase momentum matrices
         //  shared between the momentum predictor and pressure corrector
