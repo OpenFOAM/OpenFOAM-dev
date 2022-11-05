@@ -33,6 +33,12 @@ Description
     coordinate system and optionally additional coordinate systems specified
     per-zone in the thermophysicalProperties dictionary.
 
+    If the coordinate transformed kappa does not align exactly with the boundary
+    because the patch face orientations do not conform to the coordinate system
+    exactly it may be beneficial for convergence and accuracy to enforce
+    alignment at the boundary by setting the optional \c boundaryAligned to
+    true.
+
 Usage
     Example of the anisotropic thermal conductivity specification in
     thermophysicalProperties with two zone-based coordinate systems in
@@ -40,6 +46,10 @@ Usage
 
     \verbatim
     model anisotropic;
+
+    // Force aligned handling of kappa irrespective
+    // of the calculated patch alignment factors.
+    boundaryAligned true;
 
     // Default coordinate system
     coordinateSystem
@@ -113,6 +123,11 @@ class anisotropic
 
         //- Optional zone coordinate systems
         PtrDictionary<coordinateSystem> zoneCoordinateSystems_;
+
+        //- Switch to override boundary alignment checks
+        //  and force aligned handling of kappa irrespective
+        //  of the calculated patch alignment factors
+        Switch boundaryAligned_;
 
         // List of patch faces adjacent to coordinate zones
         mutable labelListListList zonesPatchFaces_;
