@@ -16,7 +16,7 @@ FoamFile
 
 ddtSchemes
 {
-    default         backward;
+    default         Euler;
 }
 
 gradSchemes
