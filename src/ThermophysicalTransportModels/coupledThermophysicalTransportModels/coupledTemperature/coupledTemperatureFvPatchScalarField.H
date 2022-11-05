@@ -33,9 +33,9 @@ Description
     on both sides:
       - refGradient = qs_/kappa
       - refValue = neighbour value
-      - mixFraction = KDeltaNbr/(KDeltaNbr + KDelta())
+      - mixFraction = kappaByDeltaNbr/(kappaByDeltaNbr + kappaByDelta())
 
-    where KDelta is heat-transfer coefficient K*deltaCoeffs
+    where kappaByDelta is heat-transfer coefficient kappa*deltaCoeffs
     and qs is the optional source heat flux.
 
 Usage

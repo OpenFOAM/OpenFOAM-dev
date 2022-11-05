@@ -87,16 +87,8 @@ template<class Thermo>
 inline Foam::vector Foam::constIsoSolidTransport<Thermo>::
 Kappa(const scalar p, const scalar T) const
 {
-    return vector(kappa_, kappa_, kappa_);
-}
-
-
-template<class Thermo>
-inline Foam::scalar Foam::constIsoSolidTransport<Thermo>::
-mu(const scalar p, const scalar T) const
-{
     NotImplemented;
-    return scalar(0);
+    return vector(kappa_, kappa_, kappa_);
 }
 
 

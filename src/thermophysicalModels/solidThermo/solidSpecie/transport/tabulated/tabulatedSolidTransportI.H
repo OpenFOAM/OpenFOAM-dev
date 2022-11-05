@@ -92,17 +92,9 @@ inline Foam::vector Foam::tabulatedSolidTransport<Thermo>::Kappa
     const scalar p, const scalar T
 ) const
 {
+    NotImplemented;
     const scalar kappa = kappa_.value(T);
     return vector(kappa, kappa, kappa);
-}
-
-
-template<class Thermo>
-inline Foam::scalar Foam::tabulatedSolidTransport<Thermo>::
-mu(const scalar p, const scalar T) const
-{
-    NotImplemented;
-    return scalar(0);
 }
 
 

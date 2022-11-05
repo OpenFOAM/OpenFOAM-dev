@@ -122,10 +122,8 @@ public:
         inline scalar kappa(const scalar p, const scalar T) const;
 
         //- Anisotropic thermal conductivity [W/m/K]
+        //  Not implemented
         inline vector Kappa(const scalar p, const scalar T) const;
-
-         //- Dynamic viscosity [kg/m/s]
-        inline scalar mu(const scalar p, const scalar T) const;
 
         //- Write to Ostream
         void write(Ostream& os) const;

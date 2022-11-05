@@ -312,10 +312,7 @@ public:
             }
 
             //- Anisotropic thermal conductivity [W/m/K]
-            virtual tmp<volVectorField> Kappa() const;
-
-            //- Anisotropic thermal conductivity [W/m/K]
-            virtual tmp<vectorField> Kappa(const label patchi) const;
+            virtual const volVectorField& Kappa() const;
 
 
         //- Update properties

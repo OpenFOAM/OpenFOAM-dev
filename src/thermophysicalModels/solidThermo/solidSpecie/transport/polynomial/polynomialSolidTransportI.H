@@ -78,18 +78,6 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::New(const dictionary& dict)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Thermo, int PolySize>
-inline Foam::scalar Foam::polynomialSolidTransport<Thermo, PolySize>::mu
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    NotImplemented;
-    return scalar(0);
-}
-
-
-template<class Thermo, int PolySize>
 inline Foam::scalar Foam::polynomialSolidTransport<Thermo, PolySize>::kappa
 (
     const scalar p,
@@ -107,6 +95,7 @@ inline Foam::vector Foam::polynomialSolidTransport<Thermo, PolySize>::Kappa
     const scalar T
 ) const
 {
+    NotImplemented;
     const scalar kappa(kappaCoeffs_.value(T));
     return vector(kappa, kappa, kappa);
 }

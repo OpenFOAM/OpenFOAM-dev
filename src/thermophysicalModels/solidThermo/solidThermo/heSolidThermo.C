@@ -24,15 +24,14 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "heSolidThermo.H"
-#include "fvmLaplacian.H"
-#include "fvcLaplacian.H"
-#include "coordinateSystem.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class BasicSolidThermo, class MixtureType>
 void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
 {
+    const bool isotropic = this->isotropic();
+
     const scalarField& hCells = this->he_;
     const auto& pCells = this->p_;
 
@@ -41,6 +40,7 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
     scalarField& CvCells = this->Cv_.primitiveFieldRef();
     scalarField& rhoCells = this->rho_.primitiveFieldRef();
     scalarField& kappaCells = this->kappa_.primitiveFieldRef();
+    vectorField& KappaCells = this->Kappa_.primitiveFieldRef();
 
     forAll(TCells, celli)
     {
@@ -61,8 +61,16 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
         CvCells[celli] = thermoMixture.Cv(pCells[celli], TCells[celli]);
         rhoCells[celli] = thermoMixture.rho(pCells[celli], TCells[celli]);
 
-        kappaCells[celli] =
-            transportMixture.kappa(pCells[celli], TCells[celli]);
+        if (isotropic)
+        {
+            kappaCells[celli] =
+                transportMixture.kappa(pCells[celli], TCells[celli]);
+        }
+        else
+        {
+            KappaCells[celli] =
+                transportMixture.Kappa(pCells[celli], TCells[celli]);
+        }
     }
 
 
@@ -86,6 +94,9 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
     volScalarField::Boundary& kappaBf =
         this->kappa_.boundaryFieldRef();
 
+    volVectorField::Boundary& KappaBf =
+        this->Kappa_.boundaryFieldRef();
+
     forAll(this->T_.boundaryField(), patchi)
     {
         fvPatchScalarField& phe = heBf[patchi];
@@ -95,6 +106,7 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
         fvPatchScalarField& pCv = CvBf[patchi];
         fvPatchScalarField& prho = rhoBf[patchi];
         fvPatchScalarField& pkappa = kappaBf[patchi];
+        fvPatchVectorField& pKappa = KappaBf[patchi];
 
         if (pT.fixesValue())
         {
@@ -114,7 +126,16 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
 
-                pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
+                if (isotropic)
+                {
+                    pkappa[facei] =
+                        transportMixture.kappa(pp[facei], pT[facei]);
+                }
+                else
+                {
+                    pKappa[facei] =
+                        transportMixture.Kappa(pp[facei], pT[facei]);
+                }
             }
         }
         else
@@ -135,12 +156,19 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
 
-                pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
+                if (isotropic)
+                {
+                    pkappa[facei] =
+                        transportMixture.kappa(pp[facei], pT[facei]);
+                }
+                else
+                {
+                    pKappa[facei] =
+                        transportMixture.Kappa(pp[facei], pT[facei]);
+                }
             }
         }
     }
-
-    this->kappa_.correctBoundaryConditions();
 }
 
 
@@ -154,7 +182,20 @@ heSolidThermo
     const word& phaseName
 )
 :
-    heThermo<BasicSolidThermo, MixtureType>(mesh, phaseName)
+    heThermo<BasicSolidThermo, MixtureType>(mesh, phaseName),
+    Kappa_
+    (
+        IOobject
+        (
+            BasicSolidThermo::phasePropertyName("Kappa", phaseName),
+            mesh.time().timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        mesh,
+        dimensionedVector(dimEnergy/dimTime/dimLength/dimTemperature, Zero)
+    )
 {
     calculate();
 }
@@ -187,84 +228,10 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::correct()
 
 
 template<class BasicSolidThermo, class MixtureType>
-Foam::tmp<Foam::volVectorField>
+const Foam::volVectorField&
 Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
 {
-    const fvMesh& mesh = this->mesh();
-
-    tmp<volVectorField> tKappa
-    (
-        volVectorField::New
-        (
-            "Kappa",
-            mesh,
-            dimEnergy/dimTime/dimLength/dimTemperature
-        )
-    );
-
-    const auto& pCells = this->p_;
-    const scalarField& TCells = this->T_;
-
-    volVectorField& Kappa = tKappa.ref();
-    vectorField& KappaCells = Kappa.primitiveFieldRef();
-
-    forAll(KappaCells, celli)
-    {
-        Kappa[celli] =
-            this->cellTransportMixture
-            (
-                celli
-            ).Kappa(pCells[celli], TCells[celli]);
-    }
-
-    volVectorField::Boundary& KappaBf = Kappa.boundaryFieldRef();
-
-    forAll(KappaBf, patchi)
-    {
-        const auto& pp = this->p_.boundaryField()[patchi];
-        const scalarField& pT = this->T_.boundaryField()[patchi];
-
-        vectorField& Kappap = KappaBf[patchi];
-
-        forAll(Kappap, facei)
-        {
-            Kappap[facei] =
-                this->patchFaceTransportMixture
-                (
-                    patchi,
-                    facei
-                ).Kappa(pp[facei], pT[facei]);
-        }
-    }
-
-    return tKappa;
-}
-
-
-template<class BasicSolidThermo, class MixtureType>
-Foam::tmp<Foam::vectorField>
-Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa
-(
-    const label patchi
-) const
-{
-    const auto& pp = this->p_.boundaryField()[patchi];
-    const scalarField& Tp = this->T_.boundaryField()[patchi];
-
-    tmp<vectorField> tKappa(new vectorField(Tp.size()));
-    vectorField& Kappap = tKappa.ref();
-
-    forAll(Tp, facei)
-    {
-        Kappap[facei] =
-            this->patchFaceTransportMixture
-            (
-                patchi,
-                facei
-            ).Kappa(pp[patchi], Tp[facei]);
-    }
-
-    return tKappa;
+    return Kappa_;
 }
 
 

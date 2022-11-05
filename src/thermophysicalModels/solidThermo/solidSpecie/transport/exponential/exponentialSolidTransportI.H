@@ -97,17 +97,9 @@ inline Foam::vector Foam::exponentialSolidTransport<Thermo>::Kappa
     const scalar p, const scalar T
 ) const
 {
+    NotImplemented;
     const scalar kappa(kappa0_*pow(T/Tref_, n0_));
     return vector(kappa, kappa, kappa);
-}
-
-
-template<class Thermo>
-inline Foam::scalar Foam::exponentialSolidTransport<Thermo>::
-mu(const scalar p, const scalar T) const
-{
-    NotImplemented;
-    return scalar(0);
 }
 
 

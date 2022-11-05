@@ -383,20 +383,10 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cpv
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::constSolidThermo::Kappa() const
+const Foam::volVectorField& Foam::constSolidThermo::Kappa() const
 {
     NotImplemented;
-    return tmp<volVectorField>(nullptr);
-}
-
-
-Foam::tmp<Foam::vectorField> Foam::constSolidThermo::Kappa
-(
-    const label patchi
-) const
-{
-    NotImplemented;
-    return tmp<vectorField>(nullptr);
+    return volVectorField::null();
 }
 
 

@@ -212,8 +212,7 @@ Foam::solidThermophysicalTransportModels::anisotropic::Kappa() const
         setZonesPatchFaces();
     }
 
-    const tmp<volVectorField> tmaterialKappa(thermo.Kappa());
-    const volVectorField& materialKappa = tmaterialKappa();
+    const volVectorField& materialKappa = thermo.Kappa();
 
     tmp<volSymmTensorField> tKappa
     (
@@ -299,7 +298,7 @@ Foam::solidThermophysicalTransportModels::anisotropic::Kappa
     const solidThermo& thermo = this->thermo();
     const vectorField& CPf = thermo.mesh().boundary()[patchi].Cf();
 
-    const vectorField materialKappaPf(thermo.Kappa(patchi));
+    const vectorField& materialKappaPf(thermo.Kappa().boundaryField()[patchi]);
 
     tmp<symmTensorField> tKappa
     (

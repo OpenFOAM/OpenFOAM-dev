@@ -54,7 +54,15 @@ Foam::solidThermophysicalTransportModels::isotropic::isotropic
 )
 :
     solidThermophysicalTransportModel(typeName, thermo)
-{}
+{
+    if (!thermo.isotropic())
+    {
+        FatalIOErrorInFunction(*this)
+            << "Cannot instantiate an isotropic transport model "
+               "with anisotropic solid properties"
+            << exit(FatalIOError);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

@@ -234,9 +234,9 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
 
     const scalarField kappa(ttm.kappaEff(patchi));
 
-    const scalarField KDelta(kappa*patch().deltaCoeffs());
+    const scalarField kappaByDelta(kappa*patch().deltaCoeffs());
 
-    const scalarField KDeltaNbr
+    const scalarField kappaByDeltaNbr
     (
         contactRes_ == 0
       ? mpp.distribute
@@ -276,7 +276,8 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
     }
 
     // Both sides agree on
-    // - temperature : (KDelta*fld + KDeltaNbr*nbrFld)/(KDelta + KDeltaNbr)
+    // - temperature : (kappaByDelta*fld + kappaByDeltaNbr*nbrFld)
+    //                /(kappaByDelta + kappaByDeltaNbr)
     // - gradient    : (temperature - fld)*delta
     // We've got a degree of freedom in how to implement this in a mixed bc.
     // (what gradient, what fixedValue and mixing coefficient)
@@ -288,9 +289,9 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
     //    same on both sides. This leads to the choice of
     //    - refGradient = qTot/kappa;
     //    - refValue = neighbour value
-    //    - mixFraction = KDeltaNbr / (KDeltaNbr + KDelta)
+    //    - mixFraction = kappaByDeltaNbr / (kappaByDeltaNbr + kappaByDelta)
 
-    this->valueFraction() = KDeltaNbr/(KDeltaNbr + KDelta);
+    this->valueFraction() = kappaByDeltaNbr/(kappaByDeltaNbr + kappaByDelta);
     this->refValue() = TcNbr;
     this->refGrad() = qTot/kappa;
 

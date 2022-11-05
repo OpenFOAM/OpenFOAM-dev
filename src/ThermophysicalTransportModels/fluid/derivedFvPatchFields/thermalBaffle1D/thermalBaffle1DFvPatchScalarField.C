@@ -376,7 +376,7 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
             qrPrevious_ = qr;
         }
 
-        scalarField kappaDelta(kappap*patch().deltaCoeffs());
+        const scalarField kappaDelta(kappap*patch().deltaCoeffs());
 
         // Neighbour properties
         const scalarField nbrTp(mpp.distribute(nbrField()));
@@ -388,13 +388,13 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
             kappas[i] = solid().kappa(0.0, (Tp[i] + nbrTp[i])/2.0);
         }
 
-        scalarField KDeltaSolid(kappas/baffleThickness());
+        const scalarField kappaByDeltaSolid(kappas/baffleThickness());
 
-        scalarField alpha(KDeltaSolid - qr/Tp);
+        const scalarField alpha(kappaByDeltaSolid - qr/Tp);
 
         valueFraction() = alpha/(alpha + kappaDelta);
 
-        refValue() = (KDeltaSolid*nbrTp + qs()/2.0)/alpha;
+        refValue() = (kappaByDeltaSolid*nbrTp + qs()/2.0)/alpha;
 
         if (debug)
         {

@@ -113,10 +113,7 @@ public:
         virtual bool isotropic() const = 0;
 
         //- Anisotropic thermal conductivity [W/m/K]
-        virtual tmp<volVectorField> Kappa() const = 0;
-
-        //- Anisotropic thermal conductivity for patch [W/m/K]
-        virtual tmp<vectorField> Kappa(const label patchi) const = 0;
+        virtual const volVectorField& Kappa() const = 0;
 };
 
 
