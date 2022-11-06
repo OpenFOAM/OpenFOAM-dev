@@ -155,10 +155,6 @@ protected:
         //  used to recreate the flux after mesh-change
         autoPtr<surfaceVectorField> rhoUf;
 
-        //- Pointer to the vol momentum field
-        //  used for mesh-change to set rhoUf for introduced faces
-        autoPtr<volVectorField> rhoU;
-
         //- Pointer to the vol momentum divergence field
         //  used in correctPhi to ensure the corrected phi has the
         //  same divergence
