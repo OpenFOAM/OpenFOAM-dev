@@ -27,9 +27,6 @@ License
 #include "constrainHbyA.H"
 #include "constrainPressure.H"
 #include "findRefCell.H"
-#include "fvcFlux.H"
-#include "fvcMeshPhi.H"
-#include "fvcReconstruct.H"
 #include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvcSup.H"
@@ -38,6 +35,9 @@ License
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
+#include "fvcFlux.H"
+#include "fvcMeshPhi.H"
+#include "fvcReconstruct.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -72,7 +72,11 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 1.0
                /(
                    UEqns[phase.index()].A()
-                 + byDt(max(phase.residualAlpha() - alpha, scalar(0))*phase.rho())
+                 + byDt
+                   (
+                       max(phase.residualAlpha() - alpha, scalar(0))
+                      *phase.rho()
+                   )
                 )
             )
         );
@@ -264,7 +268,8 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             {
                 phaseModel& phase = phases[phasei];
                 phib +=
-                    alphafs[phasei].boundaryField()*phase.phi()().boundaryField();
+                    alphafs[phasei].boundaryField()
+                   *phase.phi()().boundaryField();
             }
 
             setSnGrad<fixedFluxPressureFvPatchScalarField>

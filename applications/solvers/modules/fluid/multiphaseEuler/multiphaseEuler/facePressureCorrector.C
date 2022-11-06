@@ -27,9 +27,6 @@ License
 #include "constrainHbyA.H"
 #include "constrainPressure.H"
 #include "findRefCell.H"
-#include "fvcFlux.H"
-#include "fvcMeshPhi.H"
-#include "fvcReconstruct.H"
 #include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvcSup.H"
@@ -38,6 +35,9 @@ License
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
+#include "fvcFlux.H"
+#include "fvcMeshPhi.H"
+#include "fvcReconstruct.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
