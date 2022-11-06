@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
         }
         else if (action == 1 || action == 2)
         {
-            // Mesh changing engine.
+            // Mesh topo-change engine.
             polyTopoChange meshMod(mesh);
 
             if (action == 1)
@@ -290,14 +290,11 @@ int main(int argc, char *argv[])
 
         Info<< nl<< "-- Mesh : moving:" << mesh.moving()
             << " topoChanged:" << mesh.topoChanged()
-            << " changing:" << mesh.changing()
             << endl;
-
 
 
         Info<< "Writing fields" << nl << endl;
         runTime.write();
-
 
 
         // Check mesh volume conservation

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,8 +85,11 @@ public:
         //- Construct from polyBoundaryMesh
         fvBoundaryMesh(const fvMesh&, const polyBoundaryMesh&);
 
+        //- Move constructor
+        fvBoundaryMesh(fvBoundaryMesh&&) = default;
+
         //- Disallow default bitwise copy construction
-        fvBoundaryMesh(const fvBoundaryMesh&);
+        fvBoundaryMesh(const fvBoundaryMesh&) = delete;
 
 
     // Member Functions

@@ -668,6 +668,35 @@ Foam::polyMesh::polyMesh
 }
 
 
+Foam::polyMesh::polyMesh(polyMesh&& mesh)
+:
+    objectRegistry(move(mesh)),
+    primitiveMesh(move(mesh)),
+    points_(move(mesh.points_)),
+    faces_(move(mesh.faces_)),
+    owner_(move(mesh.owner_)),
+    neighbour_(move(mesh.neighbour_)),
+    clearedPrimitives_(mesh.clearedPrimitives_),
+    boundary_(move(mesh.boundary_)),
+    bounds_(move(mesh.bounds_)),
+    comm_(mesh.comm_),
+    geometricD_(mesh.geometricD_),
+    solutionD_(mesh.solutionD_),
+    tetBasePtIsPtr_(move(mesh.tetBasePtIsPtr_)),
+    cellTreePtr_(move(mesh.cellTreePtr_)),
+    pointZones_(move(mesh.pointZones_)),
+    faceZones_(move(mesh.faceZones_)),
+    cellZones_(move(mesh.cellZones_)),
+    globalMeshDataPtr_(move(mesh.globalMeshDataPtr_)),
+    curMotionTimeIndex_(mesh.curMotionTimeIndex_),
+    oldPointsPtr_(move(mesh.oldPointsPtr_)),
+    oldCellCentresPtr_(move(mesh.oldCellCentresPtr_)),
+    storeOldCellCentres_(mesh.storeOldCellCentres_),
+    moving_(mesh.moving_),
+    topoChanged_(mesh.topoChanged_)
+{}
+
+
 void Foam::polyMesh::resetPrimitives
 (
     pointField&& points,

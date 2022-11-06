@@ -83,12 +83,6 @@ class polyBoundaryMesh
         //- Calculate the geometry for the patches (transformation tensors etc.)
         void calcGeometry();
 
-        //- Disallow default bitwise copy construction
-        polyBoundaryMesh(const polyBoundaryMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyBoundaryMesh&);
-
 
 public:
 
@@ -125,6 +119,12 @@ public:
             const polyMesh&,
             const polyPatchList&
         );
+
+        //- Move constructor
+        polyBoundaryMesh(polyBoundaryMesh&&) = default;
+
+        //- Disallow default bitwise copy construction
+        polyBoundaryMesh(const polyBoundaryMesh&) = delete;
 
 
     //- Destructor
@@ -265,6 +265,9 @@ public:
 
         //- Return reference to polyPatch by name.
         polyPatch& operator[](const word&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyBoundaryMesh&) = delete;
 
 
     // Ostream operator

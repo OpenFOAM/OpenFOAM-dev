@@ -580,6 +580,47 @@ Foam::fvMesh::fvMesh
 }
 
 
+Foam::fvMesh::fvMesh(fvMesh&& mesh)
+:
+    polyMesh(Foam::move(mesh)),
+    surfaceInterpolation(Foam::move(mesh)),
+    data(static_cast<const objectRegistry&>(*this)),
+    boundary_(Foam::move(mesh.boundary_)),
+    stitcher_(Foam::move(mesh.stitcher_)),
+    topoChanger_(Foam::move(mesh.topoChanger_)),
+    distributor_(Foam::move(mesh.distributor_)),
+    mover_(Foam::move(mesh.mover_)),
+    lduPtr_(Foam::move(mesh.lduPtr_)),
+    polyFacesBfPtr_(Foam::move(mesh.polyFacesBfPtr_)),
+    polyBFaceOffsetsPtr_(Foam::move(mesh.polyBFaceOffsetsPtr_)),
+    polyBFaceOffsetPatchesPtr_(Foam::move(mesh.polyBFaceOffsetPatchesPtr_)),
+    polyBFaceOffsetPatchFacesPtr_
+    (
+        Foam::move(mesh.polyBFaceOffsetPatchFacesPtr_)
+    ),
+    polyBFacePatchesPtr_(Foam::move(mesh.polyBFacePatchesPtr_)),
+    polyBFacePatchFacesPtr_(Foam::move(mesh.polyBFacePatchFacesPtr_)),
+    curTimeIndex_(mesh.curTimeIndex_),
+    VPtr_(Foam::move(mesh.VPtr_)),
+    V0Ptr_(Foam::move(mesh.V0Ptr_)),
+    V00Ptr_(Foam::move(mesh.V00Ptr_)),
+    SfSlicePtr_(Foam::move(mesh.SfSlicePtr_)),
+    SfPtr_(Foam::move(mesh.SfPtr_)),
+    magSfSlicePtr_(Foam::move(mesh.magSfSlicePtr_)),
+    magSfPtr_(Foam::move(mesh.magSfPtr_)),
+    CSlicePtr_(Foam::move(mesh.CSlicePtr_)),
+    CPtr_(Foam::move(mesh.CPtr_)),
+    CfSlicePtr_(Foam::move(mesh.CfSlicePtr_)),
+    CfPtr_(Foam::move(mesh.CfPtr_)),
+    phiPtr_(Foam::move(mesh.phiPtr_))
+{
+    if (debug)
+    {
+        Pout<< FUNCTION_NAME << "Moving fvMesh" << endl;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::fvMesh::~fvMesh()
@@ -589,6 +630,12 @@ Foam::fvMesh::~fvMesh()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::fvMesh::topoChanging() const
+{
+    return topoChanger_->dynamic();
+}
+
 
 bool Foam::fvMesh::dynamic() const
 {

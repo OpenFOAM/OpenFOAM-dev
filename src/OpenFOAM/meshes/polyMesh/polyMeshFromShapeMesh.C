@@ -811,8 +811,7 @@ Foam::polyMesh::polyMesh
     oldPointsPtr_(nullptr),
     oldCellCentresPtr_(nullptr),
     storeOldCellCentres_(false),
-    moving_(false),
-    topoChanged_(false)
+    moving_(false)
 {
     if (debug)
     {

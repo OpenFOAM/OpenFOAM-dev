@@ -388,8 +388,11 @@ public:
             const bool syncPar = true
         );
 
+        //- Move constructor
+        polyMesh(polyMesh&&);
+
         //- Disallow default bitwise copy construction
-        polyMesh(const polyMesh&);
+        polyMesh(const polyMesh&) = delete;
 
 
     //- Destructor
@@ -528,13 +531,14 @@ public:
                 return moving_;
             }
 
-            //- Has the mesh topology changed
+            //- Has the mesh topology changed this time-step
             bool topoChanged() const
             {
                 return topoChanged_;
             }
 
-            //- Is mesh changing (topology changing and/or moving)
+            //- Is mesh changing
+            //  Moving or mesh topology changed this time-step)
             bool changing() const
             {
                 return moving() || topoChanged();

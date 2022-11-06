@@ -443,8 +443,11 @@ public:
             const label nCells
         );
 
+        //- Move constructor
+        primitiveMesh(primitiveMesh&&) = default;
+
         //- Disallow default bitwise copy construction
-        primitiveMesh(const primitiveMesh&);
+        primitiveMesh(const primitiveMesh&) = delete;
 
 
     //- Destructor

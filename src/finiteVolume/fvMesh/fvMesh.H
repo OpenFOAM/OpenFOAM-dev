@@ -370,8 +370,11 @@ public:
             const bool syncPar = true
         );
 
+        //- Move constructor
+        fvMesh(fvMesh&&);
+
         //- Disallow default bitwise copy construction
-        fvMesh(const fvMesh&);
+        fvMesh(const fvMesh&) = delete;
 
 
     //- Destructor
@@ -531,6 +534,9 @@ public:
 
 
         // Edit
+
+            //- Does the mesh topology change?
+            bool topoChanging() const;
 
             //- Is this mesh dynamic?
             bool dynamic() const;

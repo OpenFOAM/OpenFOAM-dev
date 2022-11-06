@@ -118,8 +118,11 @@ public:
             const label nIoObjects = 128
         );
 
+        //- Move constructor
+        objectRegistry(objectRegistry&&) = default;
+
         //- Disallow default bitwise copy construction
-        objectRegistry(const objectRegistry&);
+        objectRegistry(const objectRegistry&) = delete;
 
 
     //- Destructor

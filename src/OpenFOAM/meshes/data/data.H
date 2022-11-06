@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,15 +53,6 @@ class data
 :
     public IOdictionary
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        data(const data&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const data&) = delete;
-
-
 public:
 
     //- Type information
@@ -72,6 +63,15 @@ public:
 
         //- Construct for objectRegistry
         data(const objectRegistry& obr);
+
+        //- Move constructor
+        data(data&&) = default;
+
+        //- Disallow default bitwise copy construction
+        data(const data&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const data&) = delete;
 };
 
 

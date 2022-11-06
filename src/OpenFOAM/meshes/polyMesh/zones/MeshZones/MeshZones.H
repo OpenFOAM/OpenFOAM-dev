@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,9 +79,6 @@ class MeshZones
         //- Read if IOobject flags set. Return true if read.
         bool read();
 
-        //- Disallow default bitwise copy construction
-        MeshZones(const MeshZones&);
-
         //- Disallow default bitwise assignment
         void operator=(const MeshZones<ZoneType, MeshType>&);
 
@@ -116,6 +113,12 @@ public:
             const MeshType&,
             const PtrList<ZoneType>&
         );
+
+        //- Move constructor
+        MeshZones(MeshZones&&) = default;
+
+        //- Disallow default bitwise copy construction
+        MeshZones(const MeshZones&) = delete;
 
 
     //- Destructor
