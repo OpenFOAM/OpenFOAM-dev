@@ -84,6 +84,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     fLiquid_(p.size(), 0),
     qq_(p.size(), 0),
     qe_(p.size(), 0),
+    tau_(0.8),
     partitioningModel_(nullptr),
     nucleationSiteModel_(nullptr),
     departureDiamModel_(nullptr),
@@ -116,6 +117,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     fLiquid_(p.size(), 0),
     qq_(p.size(), 0),
     qe_(p.size(), 0),
+    tau_(dict.lookupOrDefault<scalar>("bubbleWaitingTimeRatio", 0.8)),
     partitioningModel_(nullptr),
     nucleationSiteModel_(nullptr),
     departureDiamModel_(nullptr),
@@ -245,6 +247,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     fLiquid_(mapper(psf.fLiquid_)),
     qq_(mapper(psf.qq_)),
     qe_(mapper(psf.qe_)),
+    tau_(psf.tau_),
     partitioningModel_(psf.partitioningModel_, false),
     nucleationSiteModel_(psf.nucleationSiteModel_, false),
     departureDiamModel_(psf.departureDiamModel_, false),
@@ -269,6 +272,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     fLiquid_(psf.fLiquid_),
     qq_(psf.qq_),
     qe_(psf.qe_),
+    tau_(psf.tau_),
     partitioningModel_(psf.partitioningModel_, false),
     nucleationSiteModel_(psf.nucleationSiteModel_, false),
     departureDiamModel_(psf.departureDiamModel_, false),
@@ -598,7 +602,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                         2*(alphaw*Cpw)*fDep_
                        *sqrt
                         (
-                            (0.8/max(fDep_, small))/(pi*alphaw/rhoLiquidw)
+                            (tau_/max(fDep_, small))/(pi*alphaw/rhoLiquidw)
                         )
                     );
 
@@ -719,6 +723,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
     alphatPhaseChangeWallFunctionFvPatchScalarField::write(os);
 
     writeEntry(os, "phaseType", phaseTypeNames_[phaseType_]);
+    writeEntry(os, "bubbleWaitingTimeRatio", tau_);
     writeEntry(os, "alphatConv", alphatConv_);
     writeEntry(os, "dDeparture", dDep_);
     writeEntry(os, "depFrequency", fDep_);
