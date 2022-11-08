@@ -203,6 +203,10 @@ class refiner
         //- Protected cells (usually since not hexes)
         PackedBoolList protectedCells_;
 
+        //- Has the mesh refinement changed since the last time
+        //  the refinement history was written
+        mutable bool changedSinceWrite_;
+
         //- The time index used for updating
         label timeIndex_;
 

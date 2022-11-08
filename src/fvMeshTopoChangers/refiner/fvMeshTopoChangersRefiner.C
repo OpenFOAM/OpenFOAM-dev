@@ -1285,6 +1285,7 @@ Foam::fvMeshTopoChangers::refiner::refiner(fvMesh& mesh, const dictionary& dict)
     dumpLevel_(false),
     nRefinementIterations_(0),
     protectedCells_(mesh.nCells(), 0),
+    changedSinceWrite_(false),
     timeIndex_(-1)
 {
     // Read static part of dictionary
@@ -1646,6 +1647,11 @@ bool Foam::fvMeshTopoChangers::refiner::update()
         nRefinementIterations_++;
     }
 
+    if (hasChanged)
+    {
+        changedSinceWrite_ = true;
+    }
+
     return hasChanged;
 }
 
@@ -1678,7 +1684,7 @@ void Foam::fvMeshTopoChangers::refiner::distribute
 
 bool Foam::fvMeshTopoChangers::refiner::write(const bool write) const
 {
-    if (mesh().topoChanged())
+    if (changedSinceWrite_)
     {
         // Force refinement data to go to the current time directory.
         const_cast<hexRef8&>(meshCutter_).setInstance(mesh().time().timeName());
@@ -1711,6 +1717,8 @@ bool Foam::fvMeshTopoChangers::refiner::write(const bool write) const
 
             writeOk = writeOk && scalarCellLevel.write();
         }
+
+        changedSinceWrite_ = false;
 
         return writeOk;
     }
