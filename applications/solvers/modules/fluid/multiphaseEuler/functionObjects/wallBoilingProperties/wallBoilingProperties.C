@@ -92,7 +92,7 @@ bool Foam::functionObjects::wallBoilingProperties::execute()
 
 bool Foam::functionObjects::wallBoilingProperties::write()
 {
-    volScalarField dDepartureField
+    volScalarField dDeparture
     (
         volScalarField::New
         (
@@ -101,7 +101,7 @@ bool Foam::functionObjects::wallBoilingProperties::write()
             dimensionedScalar(dimLength, 0)
         )
     );
-    volScalarField fDepartureField
+    volScalarField fDeparture
     (
         volScalarField::New
         (
@@ -110,7 +110,7 @@ bool Foam::functionObjects::wallBoilingProperties::write()
             dimensionedScalar(inv(dimTime), 0)
         )
     );
-    volScalarField nucSiteDensityField
+    volScalarField nucleationSiteDensity
     (
         volScalarField::New
         (
@@ -119,29 +119,29 @@ bool Foam::functionObjects::wallBoilingProperties::write()
             dimensionedScalar(inv(dimArea), 0)
         )
     );
-    volScalarField fLiquidField
+    volScalarField wetFraction
     (
         volScalarField::New
         (
-            IOobject::groupName("fLiquid", phase_.name()),
+            IOobject::groupName("wetFraction", phase_.name()),
             mesh_,
             dimensionedScalar(dimless, 0)
         )
     );
-    volScalarField quenchingHeatFluxField
+    volScalarField qQuenching
     (
         volScalarField::New
         (
-            IOobject::groupName("quenchingHeatFlux", phase_.name()),
+            IOobject::groupName("qQuenching", phase_.name()),
             mesh_,
             dimensionedScalar(dimEnergy*inv(dimTime*dimArea), 0)
         )
     );
-    volScalarField evaporativeHeatFluxField
+    volScalarField qEvaporative
     (
         volScalarField::New
         (
-            IOobject::groupName("evaporativeHeatFlux", phase_.name()),
+            IOobject::groupName("qEvaporative", phase_.name()),
             mesh_,
             dimensionedScalar(dimEnergy*inv(dimTime*dimArea), 0)
         )
@@ -170,28 +170,28 @@ bool Foam::functionObjects::wallBoilingProperties::write()
                             const alphatWallBoilingWallFunction
                         >(alphatBf[patchi]);
 
-                    dDepartureField.boundaryFieldRef()[patchi] =
+                    dDeparture.boundaryFieldRef()[patchi] =
                         alphatw.dDeparture();
-                    fDepartureField.boundaryFieldRef()[patchi] =
-                        alphatw.depFrequency();
-                    nucSiteDensityField.boundaryFieldRef()[patchi] =
-                        alphatw.nucSiteDensity();
-                    fLiquidField.boundaryFieldRef()[patchi] =
-                        alphatw.wallLiquidFraction();
-                    quenchingHeatFluxField.boundaryFieldRef()[patchi] =
-                        alphatw.quenching();
-                    evaporativeHeatFluxField.boundaryFieldRef()[patchi] =
-                        alphatw.evaporative();
+                    fDeparture.boundaryFieldRef()[patchi] =
+                        alphatw.fDeparture();
+                    nucleationSiteDensity.boundaryFieldRef()[patchi] =
+                        alphatw.nucleationSiteDensity();
+                    wetFraction.boundaryFieldRef()[patchi] =
+                        alphatw.wetFraction();
+                    qQuenching.boundaryFieldRef()[patchi] =
+                        alphatw.qQuenching();
+                    qEvaporative.boundaryFieldRef()[patchi] =
+                        alphatw.qEvaporative();
             }
         }
     }
 
-    dDepartureField.write();
-    fDepartureField.write();
-    nucSiteDensityField.write();
-    fLiquidField.write();
-    quenchingHeatFluxField.write();
-    evaporativeHeatFluxField.write();
+    dDeparture.write();
+    fDeparture.write();
+    nucleationSiteDensity.write();
+    wetFraction.write();
+    qQuenching.write();
+    qEvaporative.write();
 
     return true;
 }

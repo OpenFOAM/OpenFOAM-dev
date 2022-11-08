@@ -38,7 +38,7 @@ runApplication -append foamPostProcess -latestTime -func "
         patch=wall,
         surfaceFormat=raw,
         interpolate=false,
-        fields=(dDeparture.liquid fDeparture.liquid nucleationSiteDensity.liquid fLiquid.liquid quenchingHeatFlux.liquid evaporativeHeatFlux.liquid)
+        fields=(dDeparture.liquid fDeparture.liquid nucleationSiteDensity.liquid wetFraction.liquid qQuenching.liquid qEvaporative.liquid)
     )"
 
 ./validation/createWallBoilingPropertiesGraphs

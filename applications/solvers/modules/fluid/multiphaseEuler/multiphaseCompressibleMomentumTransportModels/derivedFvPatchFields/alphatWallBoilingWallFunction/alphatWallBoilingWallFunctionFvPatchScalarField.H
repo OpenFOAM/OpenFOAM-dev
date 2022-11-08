@@ -88,6 +88,7 @@ Usage
         nucleationSiteModel|                   | yes         |
         departureDiamModel|                    | yes         |
         departureFreqModel|                    | yes         |
+        bubbleWaitingTime|                     | no          | yes
     \endtable
 
     NOTE: Runtime selectable submodels may require model specific entries
@@ -202,6 +203,8 @@ private:
         //- Evaporative surface heat flux
         scalarField qe_;
 
+        //- Bubble waiting time ratio
+        scalar tau_;
 
         //- Run-time selected heat flux partitioning model
         autoPtr<wallBoilingModels::partitioningModel>
@@ -289,31 +292,31 @@ public:
         }
 
         //- Return the departure frequency field [Hz]
-        const scalarField& depFrequency() const
+        const scalarField& fDeparture() const
         {
             return fDep_;
         }
 
         //- Return the nucleation site density field [1/m^2]
-        const scalarField& nucSiteDensity() const
+        const scalarField& nucleationSiteDensity() const
         {
             return N_;
         }
 
         //- Return the wall liquid fraction field [-]
-        const scalarField& wallLiquidFraction() const
+        const scalarField& wetFraction() const
         {
             return fLiquid_;
         }
 
         //- Return the quenching surface heat flux field [W/m^2]
-        const scalarField& quenching() const
+        const scalarField& qQuenching() const
         {
             return qq_;
         }
 
         //- Return the evaporative surface heat flux field [W/m^2]
-        const scalarField& evaporative() const
+        const scalarField& qEvaporative() const
         {
             return qe_;
         }
