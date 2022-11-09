@@ -16,16 +16,9 @@ FoamFile
 
 solvers
 {
-    "alpha.sludge.*"
+    "rho.*"
     {
-        nAlphaSubCycles     2;
-        nAlphaCorr          1;
-
-        solver          smoothSolver;
-        smoother        GaussSeidel;
-        tolerance       1e-9;
-        relTol          0;
-        nSweeps         1;
+        solver          diagonal;
     }
 
     p_rgh
@@ -42,19 +35,23 @@ solvers
         relTol          0;
     }
 
-    U
+    "(U|e)"
     {
-        solver          smoothSolver;
-        smoother        GaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-7;
         relTol          0.1;
-        nSweeps         1;
     }
 
-    UFinal
+    "(U|e)Final"
     {
         $U;
         relTol          0;
+    }
+
+    "Yi.*"
+    {
+        $eFinal;
     }
 }
 

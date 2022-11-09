@@ -8,16 +8,39 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      physicalProperties.water;
+    class       volScalarField;
+    location    "0";
+    object      water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-viscosityModel  constant;
+dimensions      [0 0 0 0 0 0 0];
 
-nu              1e-06;
-rho             990;
+internalField   uniform 1;
+
+boundaryField
+{
+    left
+    {
+        type            zeroGradient;
+    }
+    right
+    {
+        type            zeroGradient;
+    }
+    bottom
+    {
+        type            zeroGradient;
+    }
+    top
+    {
+        type            zeroGradient;
+    }
+    frontBack
+    {
+        type            empty;
+    }
+}
 
 
 // ************************************************************************* //

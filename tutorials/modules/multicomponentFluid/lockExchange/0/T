@@ -10,13 +10,13 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.sludge;
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 300;
 
 boundaryField
 {
