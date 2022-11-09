@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::immiscibleIncompressibleTwoPhaseMixture
 
 Description
-    An immiscible incompressible two-phase mixture transport model
+    Class to represent a mixture of two immiscible constant density phases
 
 SourceFiles
     immiscibleIncompressibleTwoPhaseMixture.C
@@ -57,12 +57,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        immiscibleIncompressibleTwoPhaseMixture
-        (
-            const volVectorField& U,
-            const surfaceScalarField& phi
-        );
+        //- Construct from the mixture velocity
+        immiscibleIncompressibleTwoPhaseMixture(const volVectorField& U);
 
 
     //- Destructor
@@ -72,12 +68,8 @@ public:
 
     // Member Functions
 
-        //- Correct the phase and interface properties
-        virtual void correct()
-        {
-            incompressibleTwoPhaseMixture::correct();
-            interfaceProperties::correct();
-        }
+        //- Correct the mixture and interface properties
+        virtual void correct();
 
         //- Read base phaseProperties dictionary
         virtual bool read();

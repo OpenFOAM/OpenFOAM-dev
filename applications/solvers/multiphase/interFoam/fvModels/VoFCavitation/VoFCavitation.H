@@ -86,7 +86,7 @@ SourceFiles
 namespace Foam
 {
 
-class immiscibleIncompressibleTwoPhaseMixture;
+class incompressibleTwoPhaseMixture;
 
 namespace fv
 {
@@ -102,7 +102,7 @@ class VoFCavitation
     // Private Data
 
         //- Reference to the mixture properties
-        const immiscibleIncompressibleTwoPhaseMixture& mixture_;
+        const incompressibleTwoPhaseMixture& mixture_;
 
         autoPtr<cavitationModel> cavitation_;
 

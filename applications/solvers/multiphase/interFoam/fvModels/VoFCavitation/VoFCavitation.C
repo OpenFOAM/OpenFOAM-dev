@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFCavitation.H"
-#include "immiscibleIncompressibleTwoPhaseMixture.H"
+#include "incompressibleTwoPhaseMixture.H"
 #include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvmSup.H"
@@ -62,7 +62,7 @@ Foam::fv::VoFCavitation::VoFCavitation
 
     mixture_
     (
-        mesh.lookupObjectRef<immiscibleIncompressibleTwoPhaseMixture>
+        mesh.lookupObjectRef<incompressibleTwoPhaseMixture>
         (
             "phaseProperties"
         )

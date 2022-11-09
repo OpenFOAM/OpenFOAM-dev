@@ -32,7 +32,7 @@ volVectorField U
 
 
 Info<< "Reading phaseProperties\n" << endl;
-immiscibleIncompressibleTwoPhaseMixture mixture(U, phi);
+immiscibleIncompressibleTwoPhaseMixture mixture(U);
 
 
 // Need to store rho for ddt(rho, U)

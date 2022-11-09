@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,29 +39,26 @@ namespace Foam
 
 Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
 (
-    const volVectorField& U,
-    const surfaceScalarField& phi
+    const fvMesh& mesh
 )
 :
-    twoPhaseMixture(U.mesh()),
+    twoPhaseMixture(mesh),
 
-    nuModel1_(viscosityModel::New(U.mesh(), phase1Name())),
-    nuModel2_(viscosityModel::New(U.mesh(), phase2Name())),
+    nuModel1_(viscosityModel::New(mesh, phase1Name())),
+    nuModel2_(viscosityModel::New(mesh, phase2Name())),
 
     rho1_("rho", dimDensity, nuModel1_()),
     rho2_("rho", dimDensity, nuModel2_()),
-
-    U_(U),
 
     nu_
     (
         IOobject
         (
             "nu",
-            U_.time().timeName(),
-            U_.db()
+            mesh.time().timeName(),
+            mesh
         ),
-        U_.mesh(),
+        mesh,
         dimensionedScalar(dimViscosity, 0),
         calculatedFvPatchScalarField::typeName
     )

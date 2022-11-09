@@ -1,7 +1,8 @@
 EXE_INC = \
     -ImultiphaseMixture/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/VoF \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceCompression/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
@@ -11,8 +12,9 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lmultiphaseInterFoam \
-    -linterfaceProperties \
     -lphysicalProperties \
+    -linterfaceCompression \
+    -linterfaceProperties \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lfiniteVolume \

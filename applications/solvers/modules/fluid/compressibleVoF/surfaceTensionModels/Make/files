@@ -1,3 +1,0 @@
-liquidProperties/liquidPropertiesSurfaceTension.C
-
-LIB = $(FOAM_LIBBIN)/libtwoPhaseSurfaceTension

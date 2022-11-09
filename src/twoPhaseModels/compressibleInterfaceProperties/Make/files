@@ -1,0 +1,3 @@
+surfaceTensionModels/liquidProperties/liquidPropertiesSurfaceTension.C
+
+LIB = $(FOAM_LIBBIN)/libcompressibleInterfaceProperties

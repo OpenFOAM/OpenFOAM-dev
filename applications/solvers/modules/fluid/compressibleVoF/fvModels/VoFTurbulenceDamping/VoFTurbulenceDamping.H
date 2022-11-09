@@ -81,7 +81,7 @@ SourceFiles
 namespace Foam
 {
 
-class compressibleTwoPhaseMixture;
+class immiscibleCompressibleTwoPhaseMixture;
 class interfaceProperties;
 class compressibleMomentumTransportModel;
 
@@ -111,7 +111,7 @@ class VoFTurbulenceDamping
         dimensionedScalar delta_;
 
         //- Reference to the mixture properties
-        const compressibleTwoPhaseMixture& mixture_;
+        const immiscibleCompressibleTwoPhaseMixture& mixture_;
 
         //- Reference to the interface properties
         const interfaceProperties& interface_;

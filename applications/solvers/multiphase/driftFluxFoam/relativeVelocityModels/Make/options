@@ -8,5 +8,6 @@ EXE_INC = \
 
 LIB_LIBS = \
     -lphysicalProperties \
+    -ltwoPhaseMixture \
     -lfiniteVolume \
     -lmeshTools

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,15 +31,11 @@ License
 Foam::immiscibleIncompressibleThreePhaseMixture::
 immiscibleIncompressibleThreePhaseMixture
 (
-    const volVectorField& U,
-    const surfaceScalarField& phi
+    const volVectorField& U
 )
 :
-    incompressibleThreePhaseMixture(U, phi),
-    threePhaseInterfaceProperties
-    (
-        static_cast<incompressibleThreePhaseMixture&>(*this)
-    )
+    incompressibleThreePhaseMixture(U.mesh()),
+    threePhaseInterfaceProperties(*this, alpha1(), alpha2(), alpha3(), U)
 {}
 
 

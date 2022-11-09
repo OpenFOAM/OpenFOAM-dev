@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,17 @@ class threePhaseInterfaceProperties
 {
     // Private Data
 
-        const incompressibleThreePhaseMixture& mixture_;
+        //- Volume fraction of phase 1
+        volScalarField& alpha1_;
+
+        //- Volume fraction of phase 2
+        volScalarField& alpha2_;
+
+        //- Volume fraction of phase 3
+        volScalarField& alpha3_;
+
+        //- Mixture velocity
+        const volVectorField& U_;
 
         //- Compression coefficient
         scalar cAlpha_;
@@ -67,7 +77,10 @@ class threePhaseInterfaceProperties
         //- Stabilisation for normalisation of the interface normal
         const dimensionedScalar deltaN_;
 
+        //- ...
         surfaceScalarField nHatf_;
+
+        //- ...
         volScalarField K_;
 
 
@@ -89,10 +102,15 @@ public:
 
     // Constructors
 
-        //- Construct from volume fraction field alpha and IOdictionary
+        //- Construct from dictionary, volume fraction fields and mixture
+        //  velocity
         threePhaseInterfaceProperties
         (
-            const incompressibleThreePhaseMixture& mixture
+            const IOdictionary& dict,
+            volScalarField& alpha1,
+            volScalarField& alpha2,
+            volScalarField& alpha3,
+            const volVectorField& U
         );
 
         //- Disallow default bitwise copy construction
@@ -103,6 +121,11 @@ public:
 
 
     // Member Functions
+
+        inline const volVectorField& U() const
+        {
+            return U_;
+        }
 
         scalar cAlpha() const
         {
@@ -126,8 +149,8 @@ public:
 
         tmp<volScalarField> sigma() const
         {
-            volScalarField limitedAlpha2(max(mixture_.alpha2(), scalar(0)));
-            volScalarField limitedAlpha3(max(mixture_.alpha3(), scalar(0)));
+            volScalarField limitedAlpha2(max(alpha2_, scalar(0)));
+            volScalarField limitedAlpha3(max(alpha3_, scalar(0)));
 
             return
                 (limitedAlpha2*sigma12_ + limitedAlpha3*sigma13_)

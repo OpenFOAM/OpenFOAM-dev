@@ -92,7 +92,7 @@ protected:
     // Phase properties
 
         //- The compressible two-phase mixture
-        compressibleTwoPhaseMixture mixture;
+        immiscibleCompressibleTwoPhaseMixture mixture;
 
         //- Reference to the primary phase-fraction
         volScalarField& alpha1;

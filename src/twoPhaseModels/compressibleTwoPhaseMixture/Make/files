@@ -1,0 +1,4 @@
+compressibleTwoPhases.C
+compressibleTwoPhaseMixture.C
+
+LIB = $(FOAM_LIBBIN)/libcompressibleTwoPhaseMixture

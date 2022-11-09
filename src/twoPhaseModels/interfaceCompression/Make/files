@@ -1,0 +1,13 @@
+interfaceCompression/interfaceCompression.C
+noInterfaceCompression/noInterfaceCompression.C
+
+MPLIC/MPLICface.C
+MPLIC/MPLICcellStorage.C
+MPLIC/MPLICcell.C
+MPLIC/MPLIC.C
+MPLIC/MPLICU.C
+
+PLIC/PLIC.C
+PLIC/PLICU.C
+
+LIB = $(FOAM_LIBBIN)/libinterfaceCompression

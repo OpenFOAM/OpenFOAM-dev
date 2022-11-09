@@ -38,29 +38,25 @@ void Foam::threePhaseInterfaceProperties::correctContactAngle
     surfaceVectorField::Boundary& nHatb
 ) const
 {
-    const volScalarField::Boundary& alpha1 =
-        mixture_.alpha1().boundaryField();
-    const volScalarField::Boundary& alpha2 =
-        mixture_.alpha2().boundaryField();
-    const volScalarField::Boundary& alpha3 =
-        mixture_.alpha3().boundaryField();
-    const volVectorField::Boundary& U =
-        mixture_.U().boundaryField();
+    const volScalarField::Boundary& alpha1Bf = alpha1_.boundaryField();
+    const volScalarField::Boundary& alpha2Bf = alpha2_.boundaryField();
+    const volScalarField::Boundary& alpha3Bf = alpha3_.boundaryField();
+    const volVectorField::Boundary& UBf = U_.boundaryField();
 
-    const fvMesh& mesh = mixture_.U().mesh();
+    const fvMesh& mesh = alpha1_.mesh();
     const fvBoundaryMesh& boundary = mesh.boundary();
 
     forAll(boundary, patchi)
     {
-        if (isA<alphaContactAngleFvPatchScalarField>(alpha1[patchi]))
+        if (isA<alphaContactAngleFvPatchScalarField>(alpha1Bf[patchi]))
         {
             const alphaContactAngleFvPatchScalarField& a2cap =
                 refCast<const alphaContactAngleFvPatchScalarField>
-                (alpha2[patchi]);
+                (alpha2Bf[patchi]);
 
             const alphaContactAngleFvPatchScalarField& a3cap =
                 refCast<const alphaContactAngleFvPatchScalarField>
-                (alpha3[patchi]);
+                (alpha3Bf[patchi]);
 
             scalarField twoPhaseAlpha2(max(a2cap, scalar(0)));
             scalarField twoPhaseAlpha3(max(a3cap, scalar(0)));
@@ -79,8 +75,8 @@ void Foam::threePhaseInterfaceProperties::correctContactAngle
             (
                 degToRad
                 (
-                   twoPhaseAlpha2*(180 - a2cap.theta(U[patchi], nHatp))
-                 + twoPhaseAlpha3*(180 - a3cap.theta(U[patchi], nHatp))
+                   twoPhaseAlpha2*(180 - a2cap.theta(UBf[patchi], nHatp))
+                 + twoPhaseAlpha3*(180 - a3cap.theta(UBf[patchi], nHatp))
                 )
             );
 
@@ -114,13 +110,11 @@ void Foam::threePhaseInterfaceProperties::correctContactAngle
 
 void Foam::threePhaseInterfaceProperties::calculateK()
 {
-    const volScalarField& alpha1 = mixture_.alpha1();
-
-    const fvMesh& mesh = alpha1.mesh();
+    const fvMesh& mesh = alpha1_.mesh();
     const surfaceVectorField& Sf = mesh.Sf();
 
     // Cell gradient of alpha
-    volVectorField gradAlpha(fvc::grad(alpha1));
+    volVectorField gradAlpha(fvc::grad(alpha1_));
 
     // Interpolated face-gradient of alpha
     surfaceVectorField gradAlphaf(fvc::interpolate(gradAlpha));
@@ -148,24 +142,29 @@ void Foam::threePhaseInterfaceProperties::calculateK()
 
 Foam::threePhaseInterfaceProperties::threePhaseInterfaceProperties
 (
-    const incompressibleThreePhaseMixture& mixture
+    const IOdictionary& dict,
+    volScalarField& alpha1,
+    volScalarField& alpha2,
+    volScalarField& alpha3,
+    const volVectorField& U
 )
 :
-    mixture_(mixture),
+    alpha1_(alpha1),
+    alpha2_(alpha2),
+    alpha3_(alpha3),
+    U_(U),
+
     cAlpha_
     (
-        mixture.U().mesh().solution().solverDict
-        (
-            mixture_.alpha1().name()
-        ).lookup<scalar>("cAlpha")
+        U.mesh().solution().solverDict(alpha1_.name()).lookup<scalar>("cAlpha")
     ),
-    sigma12_("sigma12", dimensionSet(1, 0, -2, 0, 0), mixture),
-    sigma13_("sigma13", dimensionSet(1, 0, -2, 0, 0), mixture),
+    sigma12_("sigma12", dimensionSet(1, 0, -2, 0, 0), dict),
+    sigma13_("sigma13", dimensionSet(1, 0, -2, 0, 0), dict),
 
     deltaN_
     (
         "deltaN",
-        1e-8/pow(average(mixture.U().mesh().V()), 1.0/3.0)
+        1e-8/pow(average(U.mesh().V()), 1.0/3.0)
     ),
 
     nHatf_
@@ -173,10 +172,10 @@ Foam::threePhaseInterfaceProperties::threePhaseInterfaceProperties
         IOobject
         (
             "nHatf",
-            mixture.alpha1().time().timeName(),
-            mixture.alpha1().mesh()
+            alpha1_.time().timeName(),
+            alpha1_.mesh()
         ),
-        mixture.alpha1().mesh(),
+        alpha1_.mesh(),
         dimensionedScalar(dimArea, 0)
     ),
 
@@ -185,10 +184,10 @@ Foam::threePhaseInterfaceProperties::threePhaseInterfaceProperties
         IOobject
         (
             "interfaceProperties:K",
-            mixture.alpha1().time().timeName(),
-            mixture.alpha1().mesh()
+            alpha1_.time().timeName(),
+            alpha1_.mesh()
         ),
-        mixture.alpha1().mesh(),
+        alpha1_.mesh(),
         dimensionedScalar(dimless/dimLength, 0)
     )
 {
@@ -201,7 +200,7 @@ Foam::threePhaseInterfaceProperties::threePhaseInterfaceProperties
 Foam::tmp<Foam::surfaceScalarField>
 Foam::threePhaseInterfaceProperties::surfaceTensionForce() const
 {
-    return fvc::interpolate(sigmaK())*fvc::snGrad(mixture_.alpha1());
+    return fvc::interpolate(sigmaK())*fvc::snGrad(alpha1_);
 }
 
 
@@ -210,8 +209,8 @@ Foam::threePhaseInterfaceProperties::nearInterface() const
 {
     return max
     (
-        pos0(mixture_.alpha1() - 0.01)*pos0(0.99 - mixture_.alpha1()),
-        pos0(mixture_.alpha2() - 0.01)*pos0(0.99 - mixture_.alpha2())
+        pos0(alpha1_ - 0.01)*pos0(0.99 - alpha1_),
+        pos0(alpha2_ - 0.01)*pos0(0.99 - alpha2_)
     );
 }
 

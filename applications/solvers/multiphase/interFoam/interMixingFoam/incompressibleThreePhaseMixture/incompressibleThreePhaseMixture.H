@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,9 +64,6 @@ class incompressibleThreePhaseMixture
         volScalarField alpha2_;
         volScalarField alpha3_;
 
-        const volVectorField& U_;
-        const surfaceScalarField& phi_;
-
         volScalarField nu_;
 
         autoPtr<viscosityModel> nuModel1_;
@@ -88,12 +85,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        incompressibleThreePhaseMixture
-        (
-            const volVectorField& U,
-            const surfaceScalarField& phi
-        );
+        //- Construct from a mesh
+        incompressibleThreePhaseMixture(const fvMesh& mesh);
 
 
     //- Destructor
@@ -165,18 +158,6 @@ public:
         {
             return rho3_;
         };
-
-        //- Return the velocity
-        const volVectorField& U() const
-        {
-            return U_;
-        }
-
-        //- Return the flux
-        const surfaceScalarField& phi() const
-        {
-            return phi_;
-        }
 
         //- Return const-access to phase1 viscosityModel
         const viscosityModel& nuModel1() const

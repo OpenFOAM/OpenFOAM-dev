@@ -61,7 +61,7 @@ surfaceScalarField rhoPhi
 
 Info<< "Reading phaseProperties\n" << endl;
 
-incompressibleTwoPhaseMixture mixture(U, phi);
+incompressibleTwoPhaseMixture mixture(mesh);
 
 volScalarField& alphav(mixture.alpha1());
 alphav.oldTime();

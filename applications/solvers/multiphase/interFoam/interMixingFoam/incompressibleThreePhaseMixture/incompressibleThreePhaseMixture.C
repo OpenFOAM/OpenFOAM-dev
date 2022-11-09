@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,8 +45,7 @@ void Foam::incompressibleThreePhaseMixture::calcNu()
 
 Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
 (
-    const volVectorField& U,
-    const surfaceScalarField& phi
+    const fvMesh& mesh
 )
 :
     IOdictionary
@@ -54,8 +53,8 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         IOobject
         (
             "phaseProperties",
-            U.time().constant(),
-            U.db(),
+            mesh.time().constant(),
+            mesh,
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
@@ -70,12 +69,12 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         IOobject
         (
             IOobject::groupName("alpha", phase1Name_),
-            U.time().timeName(),
-            U.mesh(),
+            mesh.time().timeName(),
+            mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        U.mesh()
+        mesh
     ),
 
     alpha2_
@@ -83,12 +82,12 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         IOobject
         (
             IOobject::groupName("alpha", phase2Name_),
-            U.time().timeName(),
-            U.mesh(),
+            mesh.time().timeName(),
+            mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        U.mesh()
+        mesh
     ),
 
     alpha3_
@@ -96,33 +95,30 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         IOobject
         (
             IOobject::groupName("alpha", phase3Name_),
-            U.time().timeName(),
-            U.mesh(),
+            mesh.time().timeName(),
+            mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        U.mesh()
+        mesh
     ),
-
-    U_(U),
-    phi_(phi),
 
     nu_
     (
         IOobject
         (
             "nu",
-            U.time().timeName(),
-            U.db()
+            mesh.time().timeName(),
+            mesh
         ),
-        U.mesh(),
+        mesh,
         dimensionedScalar(dimensionSet(0, 2, -1, 0, 0), 0),
         calculatedFvPatchScalarField::typeName
     ),
 
-    nuModel1_(viscosityModel::New(U.mesh(), phase1Name_)),
-    nuModel2_(viscosityModel::New(U.mesh(), phase2Name_)),
-    nuModel3_(viscosityModel::New(U.mesh(), phase3Name_)),
+    nuModel1_(viscosityModel::New(mesh, phase1Name_)),
+    nuModel2_(viscosityModel::New(mesh, phase2Name_)),
+    nuModel3_(viscosityModel::New(mesh, phase3Name_)),
 
     rho1_("rho", dimDensity, nuModel1_()),
     rho2_("rho", dimDensity, nuModel2_()),

@@ -25,11 +25,8 @@ Class
     Foam::interfaceProperties
 
 Description
-    Contains the interface properties.
-
-    Properties to aid interFoam:
-    -# Correct the alpha boundary condition for dynamic contact angle.
-    -# Calculate interface curvature.
+    Contains the interface properties. Surface tension, interface curvature,
+    and functionality to correct alpha contact angle boundary conditions.
 
 SourceFiles
     interfaceProperties.C
@@ -60,16 +57,25 @@ class interfaceProperties
         //- Keep a reference to the phaseProperties dictionary
         const dictionary& phasePropertiesDict_;
 
+        //- Volume fraction of phase 1
+        volScalarField& alpha1_;
+
+        //- Volume fraction of phase 2
+        volScalarField& alpha2_;
+
+        //- Mixture velocity
+        const volVectorField& U_;
+
         //- Surface tension
         autoPtr<surfaceTensionModel> sigmaPtr_;
 
         //- Stabilisation for normalisation of the interface normal
         const dimensionedScalar deltaN_;
 
-        volScalarField& alpha1_;
-        volScalarField& alpha2_;
-        const volVectorField& U_;
+        //- ...
         surfaceScalarField nHatf_;
+
+        //- ...
         volScalarField K_;
 
 
@@ -92,13 +98,14 @@ public:
 
     // Constructors
 
-        //- Construct from volume fraction field gamma and IOdictionary
+        //- Construct from dictionary, volume fraction fields and mixture
+        //  velocity
         interfaceProperties
         (
+            const IOdictionary& dict,
             volScalarField& alpha1,
             volScalarField& alpha2,
-            const volVectorField& U,
-            const IOdictionary&
+            const volVectorField& U
         );
 
         //- Disallow default bitwise copy construction
@@ -112,17 +119,22 @@ public:
 
     // Member Functions
 
+        inline const volVectorField& U() const
+        {
+            return U_;
+        }
+
         const dimensionedScalar& deltaN() const
         {
             return deltaN_;
         }
 
-        tmp<volVectorField> n() const;
-
         const surfaceScalarField& nHatf() const
         {
             return nHatf_;
         }
+
+        tmp<volVectorField> n() const;
 
         tmp<volScalarField> sigmaK() const;
 
@@ -135,6 +147,7 @@ public:
         //- Interface fraction in a cell
         tmp<volScalarField::Internal> fraction() const;
 
+        //- Correct the curvature
         void correct();
 
         //- Read phaseProperties dictionary

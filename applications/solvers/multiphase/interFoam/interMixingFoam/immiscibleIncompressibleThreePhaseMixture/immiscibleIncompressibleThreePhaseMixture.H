@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,17 +52,12 @@ class immiscibleIncompressibleThreePhaseMixture
     public incompressibleThreePhaseMixture,
     public threePhaseInterfaceProperties
 {
-
 public:
 
     // Constructors
 
-        //- Construct from components
-        immiscibleIncompressibleThreePhaseMixture
-        (
-            const volVectorField& U,
-            const surfaceScalarField& phi
-        );
+        //- Construct from the mixture velocity
+        immiscibleIncompressibleThreePhaseMixture(const volVectorField& U);
 
 
     //- Destructor

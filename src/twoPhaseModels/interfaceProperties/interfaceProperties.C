@@ -148,13 +148,17 @@ void Foam::interfaceProperties::calculateK()
 
 Foam::interfaceProperties::interfaceProperties
 (
+    const IOdictionary& dict,
     volScalarField& alpha1,
     volScalarField& alpha2,
-    const volVectorField& U,
-    const IOdictionary& dict
+    const volVectorField& U
 )
 :
     phasePropertiesDict_(dict),
+
+    alpha1_(alpha1),
+    alpha2_(alpha2),
+    U_(U),
 
     sigmaPtr_(surfaceTensionModel::New(dict, alpha1.mesh())),
 
@@ -163,10 +167,6 @@ Foam::interfaceProperties::interfaceProperties
         "deltaN",
         1e-8/pow(average(alpha1.mesh().V()), 1.0/3.0)
     ),
-
-    alpha1_(alpha1),
-    alpha2_(alpha2),
-    U_(U),
 
     nHatf_
     (

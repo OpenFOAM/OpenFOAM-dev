@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::incompressibleTwoPhaseMixture
 
 Description
-    A two-phase incompressible transportModel
+    Class to represent a mixture of two constant density phases
 
 SourceFiles
     incompressibleTwoPhaseMixture.C
@@ -36,6 +36,7 @@ SourceFiles
 #define incompressibleTwoPhaseMixture_H
 
 #include "twoPhaseMixture.H"
+#include "incompressibleTwoPhases.H"
 #include "viscosityModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,18 +51,24 @@ namespace Foam
 class incompressibleTwoPhaseMixture
 :
     public twoPhaseMixture,
+    virtual public incompressibleTwoPhases,
     public viscosity
 {
     // Private Data
 
+        //- Viscosity model for phase 1
         autoPtr<viscosityModel> nuModel1_;
+
+        //- Viscosity model for phase 2
         autoPtr<viscosityModel> nuModel2_;
 
+        //- Constant density of phase 1
         dimensionedScalar rho1_;
+
+        //- Constant density of phase 2
         dimensionedScalar rho2_;
 
-        const volVectorField& U_;
-
+        //- Mixture viscosity
         volScalarField nu_;
 
 
@@ -72,12 +79,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        incompressibleTwoPhaseMixture
-        (
-            const volVectorField& U,
-            const surfaceScalarField& phi
-        );
+        //- Construct from a mesh
+        incompressibleTwoPhaseMixture(const fvMesh& mesh);
 
 
     //- Destructor
@@ -110,12 +113,6 @@ public:
         {
             return rho2_;
         };
-
-        //- Return const-access to the mixture velocity
-        const volVectorField& U() const
-        {
-            return U_;
-        }
 
         //- Return the mixture density
         tmp<volScalarField> rho() const;

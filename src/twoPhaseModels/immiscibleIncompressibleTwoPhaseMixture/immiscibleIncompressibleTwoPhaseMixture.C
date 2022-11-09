@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,18 +28,21 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::immiscibleIncompressibleTwoPhaseMixture::
-immiscibleIncompressibleTwoPhaseMixture
-(
-    const volVectorField& U,
-    const surfaceScalarField& phi
-)
+immiscibleIncompressibleTwoPhaseMixture(const volVectorField& U)
 :
-    incompressibleTwoPhaseMixture(U, phi),
-    interfaceProperties(alpha1(), alpha2(), U, *this)
+    incompressibleTwoPhaseMixture(U.mesh()),
+    interfaceProperties(*this, alpha1(), alpha2(), U)
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+void Foam::immiscibleIncompressibleTwoPhaseMixture::correct()
+{
+    incompressibleTwoPhaseMixture::correct();
+    interfaceProperties::correct();
+}
+
 
 bool Foam::immiscibleIncompressibleTwoPhaseMixture::read()
 {

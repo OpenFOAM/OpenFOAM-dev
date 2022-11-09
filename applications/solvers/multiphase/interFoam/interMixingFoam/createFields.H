@@ -30,7 +30,7 @@ volVectorField U
 
 #include "createPhi.H"
 
-immiscibleIncompressibleThreePhaseMixture mixture(U, phi);
+immiscibleIncompressibleThreePhaseMixture mixture(U);
 
 volScalarField& alpha1(mixture.alpha1());
 volScalarField& alpha2(mixture.alpha2());

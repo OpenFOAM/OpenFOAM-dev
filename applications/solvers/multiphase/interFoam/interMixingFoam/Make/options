@@ -2,7 +2,8 @@ EXE_INC = \
     -I. \
     -I.. \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/VoF \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceCompression/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseProperties/alphaContactAngle/alphaContactAngle \
     -IimmiscibleIncompressibleThreePhaseMixture \
@@ -15,9 +16,9 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 EXE_LIBS = \
-    -ltwoPhaseMixture \
-    -ltwoPhaseProperties \
     -lphysicalProperties \
+    -linterfaceCompression \
+    -ltwoPhaseProperties \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lfiniteVolume \

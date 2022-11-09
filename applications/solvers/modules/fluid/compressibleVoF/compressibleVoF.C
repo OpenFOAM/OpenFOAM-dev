@@ -93,7 +93,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         linearInterpolate(U) & mesh.Sf()
     ),
 
-    mixture(U, phi),
+    mixture(U),
 
     alpha1(mixture.alpha1()),
 

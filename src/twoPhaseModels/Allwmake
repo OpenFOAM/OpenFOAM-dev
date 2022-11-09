@@ -4,11 +4,19 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-wmake $targetType twoPhaseMixture
-wmake $targetType interfaceProperties
+wmake $targetType interfaceCompression
+
 wmake $targetType twoPhaseProperties
+wmake $targetType interfaceProperties
+wmake $targetType compressibleInterfaceProperties
+
+wmake $targetType twoPhaseMixture
 wmake $targetType incompressibleTwoPhaseMixture
+wmake $targetType compressibleTwoPhaseMixture
 wmake $targetType immiscibleIncompressibleTwoPhaseMixture
-wmake $targetType cavitation
+wmake $targetType immiscibleCompressibleTwoPhaseMixture
+
+wmake $targetType incompressibleCavitation
+wmake $targetType compressibleCavitation
 
 #------------------------------------------------------------------------------
