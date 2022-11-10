@@ -62,30 +62,24 @@ void Foam::solvers::multiphaseEuler::read()
 
 void Foam::solvers::multiphaseEuler::correctCoNum()
 {
-    CoNum = 0;
-    scalar meanCoNum = 0.0;
+    scalarField sumPhi
+    (
+        fvc::surfaceSum(mag(phi))().primitiveField()
+    );
 
-    if (mesh.nInternalFaces())
+    forAll(phases, phasei)
     {
-        scalarField sumPhi
+        sumPhi = max
         (
-            fvc::surfaceSum(mag(phi))().primitiveField()
+            sumPhi,
+            fvc::surfaceSum(mag(phases[phasei].phi()))().primitiveField()
         );
-
-        forAll(phases, phasei)
-        {
-            sumPhi = max
-            (
-                sumPhi,
-                fvc::surfaceSum(mag(phases[phasei].phi()))().primitiveField()
-            );
-        }
-
-        CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
-
-        meanCoNum =
-            0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
     }
+
+    CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
+
+    const scalar meanCoNum =
+        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
 
     Info<< "Courant Number mean: " << meanCoNum
         << " max: " << CoNum << endl;
