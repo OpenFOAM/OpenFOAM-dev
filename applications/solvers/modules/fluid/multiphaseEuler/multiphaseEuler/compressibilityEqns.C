@@ -34,12 +34,13 @@ License
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 Foam::PtrList<Foam::fvScalarMatrix>
-Foam::solvers::multiphaseEuler::compressibilityEqns() const
+Foam::solvers::multiphaseEuler::compressibilityEqns
+(
+    const PtrList<volScalarField>& dmdts,
+    const PtrList<volScalarField>& d2mdtdps
+) const
 {
     PtrList<fvScalarMatrix> pEqnComps(phases.size());
-
-    PtrList<volScalarField> dmdts(fluid.dmdts());
-    PtrList<volScalarField> d2mdtdps(fluid.d2mdtdps());
 
     forAll(phases, phasei)
     {

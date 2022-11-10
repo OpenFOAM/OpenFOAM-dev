@@ -44,7 +44,10 @@ void Foam::solvers::multiphaseEuler::pressureCorrector()
     }
     else
     {
-        PtrList<fvScalarMatrix> pEqnComps(compressibilityEqns());
+        PtrList<fvScalarMatrix> pEqnComps
+        (
+            compressibilityEqns(fluid.dmdts(), fluid.d2mdtdps())
+        );
 
         forAll(phases, phasei)
         {

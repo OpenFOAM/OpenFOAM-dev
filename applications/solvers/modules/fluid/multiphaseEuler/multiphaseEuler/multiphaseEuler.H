@@ -185,7 +185,11 @@ private:
         void facePressureCorrector();
 
         //- Return the list of pressure equation compressibility contributions
-        PtrList<fvScalarMatrix> compressibilityEqns() const;
+        PtrList<fvScalarMatrix> compressibilityEqns
+        (
+            const PtrList<volScalarField>& dmdts,
+            const PtrList<volScalarField>& d2mdtdps
+        ) const;
 
 
 public:

@@ -102,6 +102,10 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
     // Explicit force fluxes
     PtrList<surfaceScalarField> phiFs(fluid.phiFs(rAUs));
 
+    // Mass transfer rates
+    PtrList<volScalarField> dmdts(fluid.dmdts());
+    PtrList<volScalarField> d2mdtdps(fluid.d2mdtdps());
+
     // --- Pressure corrector loop
     while (pimple.correct())
     {
@@ -282,7 +286,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
         }
 
         // Compressible pressure equations
-        PtrList<fvScalarMatrix> pEqnComps(compressibilityEqns());
+        PtrList<fvScalarMatrix> pEqnComps(compressibilityEqns(dmdts, d2mdtdps));
 
         // Cache p prior to solve for density update
         volScalarField p_rgh_0(p_rgh);
@@ -405,6 +409,15 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
         {
             phaseModel& phase = phases[phasei];
             phase.thermoRef().rho() += phase.thermo().psi()*(p_rgh - p_rgh_0);
+        }
+
+        // Update mass transfer rates for change in p_rgh
+        forAll(phases, phasei)
+        {
+            if (dmdts.set(phasei) && d2mdtdps.set(phasei))
+            {
+                dmdts[phasei] += d2mdtdps[phasei]*(p_rgh - p_rgh_0);
+            }
         }
 
         // Correct p_rgh for consistency with p and the updated densities
