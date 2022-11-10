@@ -85,6 +85,7 @@ wallDampingModels/sine/sineWallDamping.C
 
 phaseTransferModels/phaseTransferModel/phaseTransferModel.C
 phaseTransferModels/phaseTransferModel/phaseTransferModelNew.C
+phaseTransferModels/cavitation/cavitation.C
 phaseTransferModels/deposition/deposition.C
 phaseTransferModels/reactionDriven/reactionDriven.C
 

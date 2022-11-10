@@ -39,6 +39,7 @@ SourceFiles
 #define phaseInterface_H
 
 #include "phaseModel.H"
+#include "compressibleTwoPhases.H"
 #include "uniformDimensionedFields.H"
 #include "runTimeSelectionTables.H"
 
@@ -54,6 +55,8 @@ class phaseInterfaceKey;
 \*---------------------------------------------------------------------------*/
 
 class phaseInterface
+:
+    public compressibleTwoPhases
 {
 private:
 
@@ -289,6 +292,24 @@ public:
 
 
         // Access
+
+            //- Return the volume fraction of phase 1
+            virtual inline const volScalarField& alpha1() const;
+
+            //- Return the volume fraction of phase 2
+            virtual inline const volScalarField& alpha2() const;
+
+            //- Return the thermo for phase 1
+            virtual inline const rhoThermo& thermo1() const;
+
+            //- Return the thermo for phase 2
+            virtual inline const rhoThermo& thermo2() const;
+
+            //- Return the density of phase 1
+            virtual inline const volScalarField& rho1() const;
+
+            //- Return the density of phase 2
+            virtual inline const volScalarField& rho2() const;
 
             //- Return phase 1
             inline const phaseModel& phase1() const;

@@ -37,6 +37,9 @@ namespace Foam
 const Foam::dimensionSet Foam::phaseTransferModel::dimDmdt =
     Foam::dimDensity/Foam::dimTime;
 
+const Foam::dimensionSet Foam::phaseTransferModel::dimD2mdtdp =
+    Foam::dimDensity/Foam::dimTime/Foam::dimPressure;
+
 const Foam::hashedWordList Foam::phaseTransferModel::noSpecies_ =
     Foam::hashedWordList();
 
@@ -80,6 +83,12 @@ Foam::tmp<Foam::volScalarField> Foam::phaseTransferModel::dmdtf() const
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::phaseTransferModel::d2mdtdpf() const
+{
+    return tmp<volScalarField>(nullptr);
+}
+
+
 const Foam::hashedWordList& Foam::phaseTransferModel::species() const
 {
     return noSpecies_;
@@ -114,6 +123,20 @@ Foam::blendedPhaseTransferModel::dmdtf() const
             &phaseTransferModel::dmdtf,
             "dmdtf",
             phaseTransferModel::dimDmdt,
+            true
+        );
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::blendedPhaseTransferModel::d2mdtdpf() const
+{
+    return
+        evaluate
+        (
+            &phaseTransferModel::d2mdtdpf,
+            "d2mdtdpf",
+            phaseTransferModel::dimD2mdtdp,
             true
         );
 }

@@ -76,6 +76,9 @@ private:
             //- Bulk mass transfer rates
             phaseSystem::dmdtfTable dmdtfs_;
 
+            //- Bulk mass transfer pressure linearisation coefficients
+            phaseSystem::dmdtfTable d2mdtdpfs_;
+
             //- Specie mass transfer rates
             phaseSystem::dmidtfTable dmidtfs_;
 
@@ -124,6 +127,10 @@ public:
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;
+
+        //- Return the mass transfer pressure linearisation coefficients for
+        //  each phase
+        virtual PtrList<volScalarField> d2mdtdps() const;
 
         //- Return the momentum transfer matrices for the cell-based algorithm
         virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();

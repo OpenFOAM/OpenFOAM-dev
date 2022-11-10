@@ -27,6 +27,42 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+inline const Foam::volScalarField& Foam::phaseInterface::alpha1() const
+{
+    return phase1();
+}
+
+
+inline const Foam::volScalarField& Foam::phaseInterface::alpha2() const
+{
+    return phase2();
+}
+
+
+inline const Foam::rhoThermo& Foam::phaseInterface::thermo1() const
+{
+    return phase1().thermo();
+}
+
+
+inline const Foam::rhoThermo& Foam::phaseInterface::thermo2() const
+{
+    return phase2().thermo();
+}
+
+
+inline const Foam::volScalarField& Foam::phaseInterface::rho1() const
+{
+    return phase1().rho();
+}
+
+
+inline const Foam::volScalarField& Foam::phaseInterface::rho2() const
+{
+    return phase2().rho();
+}
+
+
 inline const Foam::phaseModel& Foam::phaseInterface::phase1() const
 {
     return phase1_;
@@ -41,7 +77,7 @@ inline const Foam::phaseModel& Foam::phaseInterface::phase2() const
 
 inline bool Foam::phaseInterface::contains(const phaseModel& phase) const
 {
-    return &phase1_ == &phase || & phase2_ == &phase;
+    return &phase1_ == &phase || &phase2_ == &phase;
 }
 
 

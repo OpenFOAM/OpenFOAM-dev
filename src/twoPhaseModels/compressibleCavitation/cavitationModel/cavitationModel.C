@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cavitationModel.H"
+#include "constantPressure.H"
 #include "fvmSup.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -48,16 +49,13 @@ Foam::compressible::cavitationModel::cavitationModel
 :
     phases_(phases),
     liquidIndex_(phases.index(dict.lookup<word>("liquid"))),
-    saturationModel_
-    (
-        saturationPressureModel::New(dict.subDict("saturationPressure"))
-    )
+    saturationModel_(saturationPressureModel::New("pSat", dict))
 {}
 
 
 bool Foam::compressible::cavitationModel::read(const dictionary& dict)
 {
-    saturationModel_.reset(saturationPressureModel::New(dict).ptr());
+    saturationModel_.reset(saturationPressureModel::New("pSat", dict).ptr());
 
     return true;
 }

@@ -82,6 +82,9 @@ public:
         //- Mass transfer rate dimensions
         static const dimensionSet dimDmdt;
 
+        //- Mass transfer rate derivative w.r.t pressure dimensions
+        static const dimensionSet dimD2mdtdp;
+
         //- Does this model require correcting on fixed flux boundaries?
         static const bool correctFixedFluxBCs = false;
 
@@ -119,6 +122,9 @@ public:
 
         //- The mass transfer rate for the mixture
         virtual tmp<volScalarField> dmdtf() const;
+
+        //- The mass transfer rate derivative w.r.t pressure for the mixture
+        virtual tmp<volScalarField> d2mdtdpf() const;
 
         //- The list of individual species that are transferred
         virtual const hashedWordList& species() const;
@@ -165,6 +171,9 @@ public:
 
         //- The mass transfer rate for the mixture
         tmp<volScalarField> dmdtf() const;
+
+        //- The mass transfer rate derivative w.r.t pressure for the mixture
+        tmp<volScalarField> d2mdtdpf() const;
 
         //- The list of individual species that are transferred
         hashedWordList species() const;

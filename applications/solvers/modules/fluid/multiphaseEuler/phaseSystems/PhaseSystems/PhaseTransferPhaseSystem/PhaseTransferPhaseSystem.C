@@ -182,6 +182,26 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
                     dimensionedScalar(dimDensity/dimTime, 0)
                 )
             );
+
+            d2mdtdpfs_.insert
+            (
+                interface,
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName
+                        (
+                            "phaseTransfer:d2mdtdpf",
+                            interface.name()
+                        ),
+                        this->mesh().time().timeName(),
+                        this->mesh()
+                    ),
+                    this->mesh(),
+                    dimensionedScalar(dimDensity/dimTime/dimPressure, 0)
+                )
+            );
         }
 
         dmidtfs_.insert(interface, new HashPtrTable<volScalarField>());
@@ -278,6 +298,24 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::dmdts() const
     }
 
     return dmdts;
+}
+
+
+template<class BasePhaseSystem>
+Foam::PtrList<Foam::volScalarField>
+Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::d2mdtdps() const
+{
+    PtrList<volScalarField> d2mdtdps(BasePhaseSystem::d2mdtdps());
+
+    forAllConstIter(phaseSystem::dmdtfTable, d2mdtdpfs_, d2mdtdpfIter)
+    {
+        const phaseInterface interface(*this, d2mdtdpfIter.key());
+
+        addField(interface.phase1(), "d2mdtdp", *d2mdtdpfIter(), d2mdtdps);
+        addField(interface.phase2(), "d2mdtdp", - *d2mdtdpfIter(), d2mdtdps);
+    }
+
+    return d2mdtdps;
 }
 
 
@@ -380,6 +418,7 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::correct()
         if (phaseTransferModelIter()->mixture())
         {
             *dmdtfs_[interface] = Zero;
+            *d2mdtdpfs_[interface] = Zero;
         }
 
         const hashedWordList species(phaseTransferModelIter()->species());
@@ -405,6 +444,7 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::correct()
         if (phaseTransferModelIter()->mixture())
         {
             *dmdtfs_[interface] += phaseTransferModelIter()->dmdtf();
+            *d2mdtdpfs_[interface] += phaseTransferModelIter()->d2mdtdpf();
         }
 
         const HashPtrTable<volScalarField> dmidtf

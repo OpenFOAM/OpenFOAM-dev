@@ -2,6 +2,10 @@ EXE_INC = \
     -I../phaseSystems/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/saturationModels/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/compressibleTwoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/compressibleCavitation/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
@@ -12,4 +16,6 @@ EXE_INC = \
 LIB_LIBS = \
     -lphaseSystem \
     -lfluidThermophysicalModels \
-    -lspecie
+    -lsaturationModels \
+    -lspecie \
+    -lcompressibleCavitationModels
