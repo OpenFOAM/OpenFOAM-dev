@@ -15,4 +15,6 @@ wmake $targetType barotropicCompressibilityModel
 
 wmake $targetType solidThermo
 
+wmake $targetType saturationModels
+
 #------------------------------------------------------------------------------

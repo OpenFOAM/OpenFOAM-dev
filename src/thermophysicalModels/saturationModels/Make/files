@@ -1,0 +1,14 @@
+saturationPressureModel/saturationPressureModel.C
+saturationPressureModel/saturationPressureModelNew.C
+saturationTemperatureModel/saturationTemperatureModel.C
+saturationTemperatureModel/saturationTemperatureModelNew.C
+
+Antoine/Antoine.C
+#AntoineExtended/AntoineExtended.C
+ArdenBuck/ArdenBuck.C
+constantPressure/constantPressure.C
+constantTemperature/constantTemperature.C
+function1Temperature/function1Temperature.C
+polynomialTemperature/polynomialTemperature.C
+
+LIB = $(FOAM_LIBBIN)/libsaturationModels
