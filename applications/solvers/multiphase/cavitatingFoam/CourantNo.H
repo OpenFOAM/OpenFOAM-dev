@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,20 +29,15 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-scalar CoNum = 0.0;
-scalar meanCoNum = 0.0;
-scalar acousticCoNum = 0.0;
+scalar CoNum = 0;
+scalar acousticCoNum = 0;
 
-if (mesh.nInternalFaces())
 {
-    scalarField sumPhi
-    (
-        fvc::surfaceSum(mag(phi))().primitiveField()
-    );
+    const scalarField sumPhi(fvc::surfaceSum(mag(phi))().primitiveField());
 
     CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
 
-    meanCoNum =
+    const scalar meanCoNum =
         0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
 
     acousticCoNum = 0.5*gMax
@@ -52,11 +47,11 @@ if (mesh.nInternalFaces())
             fvc::interpolate(scalar(1)/sqrt(psi))*mesh.magSf()
         )().primitiveField()/mesh.V().field()
     )*runTime.deltaTValue();
-}
 
-Info<< "phi Courant Number mean: " << meanCoNum
-    << " max: " << CoNum
-    << " acoustic max: " << acousticCoNum
-    << endl;
+    Info<< "phi Courant Number mean: " << meanCoNum
+        << " max: " << CoNum
+        << " acoustic max: " << acousticCoNum
+        << endl;
+}
 
 // ************************************************************************* //

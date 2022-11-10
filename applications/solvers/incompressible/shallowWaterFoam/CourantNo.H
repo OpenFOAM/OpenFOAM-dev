@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,39 +29,33 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-
-scalar CoNum = 0.0;
-scalar meanCoNum = 0.0;
-scalar waveCoNum = 0.0;
-
-if (mesh.nInternalFaces())
 {
-    scalarField sumPhi
+    const scalarField sumPhi
     (
         fvc::surfaceSum(mag(phi))().primitiveField()
-      / h.primitiveField()
+       /h.primitiveField()
     );
 
-    CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
+    const scalar CoNum =
+        0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
 
-    meanCoNum =
+    const scalar meanCoNum =
         0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
 
     // Gravity wave Courant number
-    waveCoNum = 0.25*gMax
+    const scalar waveCoNum = 0.25*gMax
     (
         fvc::surfaceSum
         (
             fvc::interpolate(sqrt(h))*mesh.magSf()
         )().primitiveField()/mesh.V().field()
     )*sqrt(magg).value()*runTime.deltaTValue();
+
+    Info<< "Courant number mean: " << meanCoNum
+        << " max: " << CoNum << endl;
+
+    Info<< "Gravity wave Courant number max: " << waveCoNum
+        << endl;
 }
-
-Info<< "Courant number mean: " << meanCoNum
-    << " max: " << CoNum << endl;
-
-Info<< "Gravity wave Courant number max: " << waveCoNum
-    << endl;
-
 
 // ************************************************************************* //

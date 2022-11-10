@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,23 +29,18 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-scalar CoNum = 0.0;
-scalar meanCoNum = 0.0;
+scalar CoNum = 0;
 
-if (mesh.nInternalFaces())
 {
-    scalarField sumPhi
-    (
-        fvc::surfaceSum(mag(phic))().primitiveField()
-    );
+    const scalarField sumPhi(fvc::surfaceSum(mag(phic))().primitiveField());
 
     CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
 
-    meanCoNum =
+    const scalar meanCoNum =
         0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
-}
 
-Info<< "Courant Number mean: " << meanCoNum
-    << " max: " << CoNum << endl;
+    Info<< "Courant Number mean: " << meanCoNum
+        << " max: " << CoNum << endl;
+}
 
 // ************************************************************************* //

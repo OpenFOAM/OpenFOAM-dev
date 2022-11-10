@@ -33,6 +33,11 @@ Description
 
 if (adjustTimeStep)
 {
+    const scalar maxAlphaCo
+    (
+        runTime.controlDict().lookup<scalar>("maxAlphaCo")
+    );
+
     scalar deltaT = 1.2*runTime.deltaTValue();
 
     if (CoNum > small)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,21 +30,16 @@ Description
 \*---------------------------------------------------------------------------*/
 
 {
-    scalar meanStCoNum = 0.0;
+    const scalarField sumPhi
+    (
+        fvc::surfaceSum(mag(phiSt))().primitiveField()
+       /rho.primitiveField()
+    );
 
-    if (mesh.nInternalFaces())
-    {
-       scalarField sumPhi
-        (
-            fvc::surfaceSum(mag(phiSt))().primitiveField()
-          / rho.primitiveField()
-        );
+    StCoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
 
-        StCoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
-
-        meanStCoNum =
-            0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
-    }
+    const scalar meanStCoNum =
+        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
 
     Info<< "St courant Number mean: " << meanStCoNum
         << " max: " << StCoNum << endl;

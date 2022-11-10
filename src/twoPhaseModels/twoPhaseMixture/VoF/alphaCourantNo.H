@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,17 +29,10 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-scalar maxAlphaCo
-(
-    runTime.controlDict().lookup<scalar>("maxAlphaCo")
-);
+scalar alphaCoNum = 0;
 
-scalar alphaCoNum = 0.0;
-scalar meanAlphaCoNum = 0.0;
-
-if (mesh.nInternalFaces())
 {
-    scalarField sumPhi
+    const scalarField sumPhi
     (
         mixture.nearInterface()().primitiveField()
        *fvc::surfaceSum(mag(phi))().primitiveField()
@@ -47,11 +40,11 @@ if (mesh.nInternalFaces())
 
     alphaCoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
 
-    meanAlphaCoNum =
+    const scalar meanAlphaCoNum =
         0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
-}
 
-Info<< "Interface Courant Number mean: " << meanAlphaCoNum
-    << " max: " << alphaCoNum << endl;
+    Info<< "Interface Courant Number mean: " << meanAlphaCoNum
+        << " max: " << alphaCoNum << endl;
+}
 
 // ************************************************************************* //
