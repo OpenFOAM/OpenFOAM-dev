@@ -331,6 +331,9 @@ int main(int argc, char *argv[])
                 }
             }
         }
+
+        // Flush file handler to clear any detected processor directories
+        fileHandler().flush();
     }
 
     // Check the specified number of processes is consistent with any existing
