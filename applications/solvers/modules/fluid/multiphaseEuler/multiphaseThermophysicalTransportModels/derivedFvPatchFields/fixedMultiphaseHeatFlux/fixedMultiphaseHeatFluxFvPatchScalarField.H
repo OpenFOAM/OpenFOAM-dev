@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fixedMultiPhaseHeatFluxFvPatchScalarField
+    Foam::fixedMultiphaseHeatFluxFvPatchScalarField
 
 Description
     Calculates a wall temperature that produces the specified overall wall heat
@@ -30,19 +30,19 @@ Description
 
     Intended to be used with copiedFixedValue to ensure that phase wall
     temperature are consistent:
-        - Set 'fixedMultiPhaseHeatFlux' boundary for one of the phases
+        - Set 'fixedMultiphaseHeatFlux' boundary for one of the phases
         - Use 'copiedFixedValue' for all the other phases.
 
 See also
     Foam::fixedValueFvPatchField
 
 SourceFiles
-    fixedMultiPhaseHeatFluxFvPatchScalarField.C
+    fixedMultiphaseHeatFluxFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixedMultiPhaseHeatFluxFvPatchScalarField_H
-#define fixedMultiPhaseHeatFluxFvPatchScalarField_H
+#ifndef fixedMultiphaseHeatFluxFvPatchScalarField_H
+#define fixedMultiphaseHeatFluxFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
 
@@ -52,10 +52,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-          Class fixedMultiPhaseHeatFluxFvPatchScalarField Declaration
+          Class fixedMultiphaseHeatFluxFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class fixedMultiPhaseHeatFluxFvPatchScalarField
+class fixedMultiphaseHeatFluxFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
@@ -74,20 +74,20 @@ class fixedMultiPhaseHeatFluxFvPatchScalarField
 public:
 
     //- Runtime type information
-    TypeName("fixedMultiPhaseHeatFlux");
+    TypeName("fixedMultiphaseHeatFlux");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        fixedMultiPhaseHeatFluxFvPatchScalarField
+        fixedMultiphaseHeatFluxFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        fixedMultiPhaseHeatFluxFvPatchScalarField
+        fixedMultiphaseHeatFluxFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -95,26 +95,26 @@ public:
         );
 
         //- Construct by mapping given
-        //  fixedMultiPhaseHeatFluxFvPatchScalarField
+        //  fixedMultiphaseHeatFluxFvPatchScalarField
         //  onto a new patch
-        fixedMultiPhaseHeatFluxFvPatchScalarField
+        fixedMultiphaseHeatFluxFvPatchScalarField
         (
-            const fixedMultiPhaseHeatFluxFvPatchScalarField&,
+            const fixedMultiphaseHeatFluxFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        fixedMultiPhaseHeatFluxFvPatchScalarField
+        fixedMultiphaseHeatFluxFvPatchScalarField
         (
-            const fixedMultiPhaseHeatFluxFvPatchScalarField&
+            const fixedMultiphaseHeatFluxFvPatchScalarField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        fixedMultiPhaseHeatFluxFvPatchScalarField
+        fixedMultiphaseHeatFluxFvPatchScalarField
         (
-            const fixedMultiPhaseHeatFluxFvPatchScalarField&,
+            const fixedMultiphaseHeatFluxFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -126,7 +126,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new fixedMultiPhaseHeatFluxFvPatchScalarField(*this, iF)
+                new fixedMultiphaseHeatFluxFvPatchScalarField(*this, iF)
             );
         }
 

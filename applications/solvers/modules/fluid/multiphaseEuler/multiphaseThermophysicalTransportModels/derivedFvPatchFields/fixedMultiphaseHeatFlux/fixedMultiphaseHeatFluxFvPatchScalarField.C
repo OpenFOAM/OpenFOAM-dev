@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fixedMultiPhaseHeatFluxFvPatchScalarField.H"
+#include "fixedMultiphaseHeatFluxFvPatchScalarField.H"
 #include "fvPatchFieldMapper.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,8 +33,8 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::
-fixedMultiPhaseHeatFluxFvPatchScalarField
+Foam::fixedMultiphaseHeatFluxFvPatchScalarField::
+fixedMultiphaseHeatFluxFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
@@ -47,8 +47,8 @@ fixedMultiPhaseHeatFluxFvPatchScalarField
 {}
 
 
-Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::
-fixedMultiPhaseHeatFluxFvPatchScalarField
+Foam::fixedMultiphaseHeatFluxFvPatchScalarField::
+fixedMultiphaseHeatFluxFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -62,10 +62,10 @@ fixedMultiPhaseHeatFluxFvPatchScalarField
 {}
 
 
-Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::
-fixedMultiPhaseHeatFluxFvPatchScalarField
+Foam::fixedMultiphaseHeatFluxFvPatchScalarField::
+fixedMultiphaseHeatFluxFvPatchScalarField
 (
-    const fixedMultiPhaseHeatFluxFvPatchScalarField& psf,
+    const fixedMultiphaseHeatFluxFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
@@ -78,10 +78,10 @@ fixedMultiPhaseHeatFluxFvPatchScalarField
 {}
 
 
-Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::
-fixedMultiPhaseHeatFluxFvPatchScalarField
+Foam::fixedMultiphaseHeatFluxFvPatchScalarField::
+fixedMultiphaseHeatFluxFvPatchScalarField
 (
-    const fixedMultiPhaseHeatFluxFvPatchScalarField& psf,
+    const fixedMultiphaseHeatFluxFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
@@ -95,7 +95,7 @@ fixedMultiPhaseHeatFluxFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::updateCoeffs()
+void Foam::fixedMultiphaseHeatFluxFvPatchScalarField::updateCoeffs()
 {
     if (updated())
     {
@@ -151,7 +151,7 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::updateCoeffs()
 }
 
 
-void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::autoMap
+void Foam::fixedMultiphaseHeatFluxFvPatchScalarField::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -161,7 +161,7 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::autoMap
 }
 
 
-void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::rmap
+void Foam::fixedMultiphaseHeatFluxFvPatchScalarField::rmap
 (
     const fvPatchScalarField& ptf,
     const labelList& addr
@@ -169,28 +169,28 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::rmap
 {
     fixedValueFvPatchScalarField::rmap(ptf, addr);
 
-    const fixedMultiPhaseHeatFluxFvPatchScalarField& mptf =
-        refCast<const fixedMultiPhaseHeatFluxFvPatchScalarField>(ptf);
+    const fixedMultiphaseHeatFluxFvPatchScalarField& mptf =
+        refCast<const fixedMultiphaseHeatFluxFvPatchScalarField>(ptf);
 
     q_.rmap(mptf.q_, addr);
 }
 
 
-void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::reset
+void Foam::fixedMultiphaseHeatFluxFvPatchScalarField::reset
 (
     const fvPatchScalarField& ptf
 )
 {
     fixedValueFvPatchScalarField::reset(ptf);
 
-    const fixedMultiPhaseHeatFluxFvPatchScalarField& mptf =
-        refCast<const fixedMultiPhaseHeatFluxFvPatchScalarField>(ptf);
+    const fixedMultiphaseHeatFluxFvPatchScalarField& mptf =
+        refCast<const fixedMultiphaseHeatFluxFvPatchScalarField>(ptf);
 
     q_.reset(mptf.q_);
 }
 
 
-void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::write(Ostream& os) const
+void Foam::fixedMultiphaseHeatFluxFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeEntry(os, "relax", relax_);
@@ -206,7 +206,7 @@ namespace Foam
     makePatchTypeField
     (
         fvPatchScalarField,
-        fixedMultiPhaseHeatFluxFvPatchScalarField
+        fixedMultiphaseHeatFluxFvPatchScalarField
     );
 }
 
