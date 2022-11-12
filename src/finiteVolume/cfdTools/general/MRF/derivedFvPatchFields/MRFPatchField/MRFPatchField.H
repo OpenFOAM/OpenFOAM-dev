@@ -73,6 +73,8 @@ public:
 
         void makeAbsolute(fvPatchField<vector>& Up) const;
 
+        void makeRelative(fvPatchField<vector>& Up) const;
+
         void write(Ostream&) const;
 };
 

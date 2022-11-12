@@ -90,6 +90,12 @@ void Foam::MRFPatchField::makeAbsolute(fvPatchField<vector>& Up) const
 }
 
 
+void Foam::MRFPatchField::makeRelative(fvPatchField<vector>& Up) const
+{
+    MRFzone(Up.db()).makeRelative(Up, Up.patch().index());
+}
+
+
 void Foam::MRFPatchField::write(Ostream& os) const
 {
     if (MRFZoneName_ != word::null)

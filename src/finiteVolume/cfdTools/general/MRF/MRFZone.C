@@ -350,6 +350,14 @@ void Foam::MRFZone::makeRelative
 }
 
 
+void Foam::MRFZone::makeRelative(Field<vector>& Up, const label patchi) const
+{
+    const vector Omega = this->Omega();
+
+    Up -= (Omega ^ (mesh_.Cf().boundaryField()[patchi] - origin_));
+}
+
+
 void Foam::MRFZone::makeAbsolute(volVectorField& U) const
 {
     const volVectorField& C = mesh_.C();

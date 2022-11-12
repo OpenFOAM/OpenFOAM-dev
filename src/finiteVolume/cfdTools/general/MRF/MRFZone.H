@@ -196,6 +196,10 @@ public:
             surfaceScalarField& phi
         ) const;
 
+        //- Make the given relative patch velocity relative
+        //  within the MRF region
+        void makeRelative(Field<vector>& Up, const label patchi) const;
+
         //- Make the given relative velocity absolute within the MRF region
         void makeAbsolute(volVectorField& U) const;
 

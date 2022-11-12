@@ -493,6 +493,7 @@ $(MRF)/MRFZoneList.C
 $(MRF)/IOMRFZoneList.C
 $(MRF)/derivedFvPatchFields/MRFPatchField/MRFPatchField.C
 $(MRF)/derivedFvPatchFields/MRFnoSlip/MRFnoSlipFvPatchVectorField.C
+$(MRF)/derivedFvPatchFields/MRFslip/MRFslipFvPatchVectorField.C
 $(MRF)/derivedFvPatchFields/MRFFreestreamVelocity/MRFFreestreamVelocityFvPatchVectorField.C
 
 fvModels = $(general)/fvModels
