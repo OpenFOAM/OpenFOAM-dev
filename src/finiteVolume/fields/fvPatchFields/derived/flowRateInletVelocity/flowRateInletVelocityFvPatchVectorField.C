@@ -306,6 +306,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::reset
     if (profile_.valid() && canEvaluate())
     {
         y_.reset(tiptf.y_);
+        setWallDist();
     }
 }
 
