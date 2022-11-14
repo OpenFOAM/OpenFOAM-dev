@@ -30,7 +30,6 @@ boundaryField
     "baffle3D_to_fluid_.*"
     {
         type            coupledTemperature;
-        kappa           kappa;
         value           $internalField;
     }
 }

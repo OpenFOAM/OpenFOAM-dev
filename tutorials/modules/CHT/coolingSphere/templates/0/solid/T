@@ -25,7 +25,6 @@ boundaryField
     {
         type            coupledTemperature;
         value           $internalField;
-        kappa           kappa;
     }
 }
 

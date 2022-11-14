@@ -22,7 +22,8 @@ boundaryField
     wall
     {
         type            coupledTemperature;
-        kappa           kappa;
+        thicknessLayers (1e-3);
+        kappaLayers     (1e-3);
         value           $internalField;
     }
 }

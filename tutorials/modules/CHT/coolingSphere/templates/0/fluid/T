@@ -37,7 +37,6 @@ boundaryField
     wall
     {
         type            coupledTemperature;
-        kappa           kappa;
         value           uniform $Tinitial;
     }
 
