@@ -236,7 +236,12 @@ flowRateInletVelocityFvPatchVectorField
     alphaName_(ptf.alphaName_),
     y_(),
     area_(NaN)
-{}
+{
+    if (ptf.y_.size())
+    {
+        y_ = mapper(ptf.y_);
+    }
+}
 
 
 Foam::flowRateInletVelocityFvPatchVectorField::
@@ -306,7 +311,6 @@ void Foam::flowRateInletVelocityFvPatchVectorField::reset
     if (profile_.valid() && canEvaluate())
     {
         y_.reset(tiptf.y_);
-        setWallDist();
     }
 }
 
