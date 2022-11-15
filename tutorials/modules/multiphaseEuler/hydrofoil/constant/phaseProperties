@@ -1,0 +1,118 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type    basicMultiphaseSystem;
+
+phases (gas liquid);
+
+gas
+{
+    type            purePhaseModel;
+
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               0.0002;
+    }
+
+    residualAlpha   1e-6;
+}
+
+liquid
+{
+    type            purePhaseModel;
+
+    diameterModel   none;
+
+    residualAlpha   1e-6;
+}
+
+blending
+{
+    default
+    {
+        type        continuous;
+        phase       liquid;
+    }
+}
+
+drag
+{
+    gas_dispersedIn_liquid
+    {
+        type        IshiiZuber;
+    }
+}
+
+virtualMass
+{}
+
+heatTransfer
+{
+    gas_dispersedIn_liquid
+    {
+        type        RanzMarshall;
+    }
+}
+
+lift
+{}
+
+wallLubrication
+{}
+
+turbulentDispersion
+{}
+
+aspectRatio
+{}
+
+surfaceTension
+{
+    gas_liquid
+    {
+        type        constant;
+        sigma       0.071;
+    }
+}
+
+saturation
+{}
+
+phaseTransfer
+{
+    gas_dispersedIn_liquid
+    {
+        type        cavitation;
+
+        model       Kunz;
+
+        liquid      liquid;
+
+        pSat        79995.75943;
+
+        UInf        5.33;
+        tInf        0.028142589;
+        Cc          100;
+        Cv          100;
+    }
+}
+
+interfaceCompression
+{}
+
+// ************************************************************************* //

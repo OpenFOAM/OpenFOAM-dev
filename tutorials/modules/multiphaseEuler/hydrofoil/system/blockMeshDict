@@ -1,0 +1,257 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1.0;
+
+x0 -0.381;
+x1 -0.081;
+x2 -0.02;
+xTip 0.0015;
+xTail 0.149571;
+x3 0.21;
+x4 0.96;
+
+y0 -0.096;
+y1 -0.03;
+y1Tip -0.022;
+y1Tail -0.038;
+yTipL 0.00625802;
+yTipU 0.0095993;
+yTail -0.00801537;
+y2 0;
+y3 0.03;
+y3Tip 0.038;
+y3Tail 0.022;
+y4 0.096;
+
+z 0.01;
+
+nX0 24;
+nX1 20;
+nX2 80;
+nX3 20;
+nX4 60;
+
+nY0 11;
+nY1 11;
+nY2 11;
+
+nO 16;
+
+geometry
+{
+    hydrofoilTip
+    {
+        type triSurfaceMesh;
+        file "NACAMOD66_6deg_tip.stl";
+    }
+    hydrofoilLower
+    {
+        type triSurfaceMesh;
+        file "NACAMOD66_6deg_lower.stl";
+    }
+    hydrofoilUpper
+    {
+        type triSurfaceMesh;
+        file "NACAMOD66_6deg_upper.stl";
+    }
+}
+
+vertices
+(
+    ($x0    $y0     #neg $z)
+    ($x0    $y1     #neg $z)
+    ($x0    $y3     #neg $z)
+    ($x0    $y4     #neg $z)
+
+    ($x1    $y0     #neg $z)
+    ($x1    $y1     #neg $z)
+    ($x1    $y3     #neg $z)
+    ($x1    $y4     #neg $z)
+
+    ($x2    $y0     #neg $z)
+    ($x2    $y1Tip  #neg $z)
+    ($x2    $y3Tip  #neg $z)
+    ($x2    $y4     #neg $z)
+
+    ($xTip  $yTipL  #neg $z)
+    ($xTip  $yTipU  #neg $z)
+
+    ($xTail $y0     #neg $z)
+    ($xTail $y1Tail #neg $z)
+    ($xTail $yTail  #neg $z)
+    ($xTail $y3Tail #neg $z)
+    ($xTail $y4     #neg $z)
+
+    ($x3    $y0     #neg $z)
+    ($x3    $y1     #neg $z)
+    ($x3    $y2     #neg $z)
+    ($x3    $y3     #neg $z)
+    ($x3    $y4     #neg $z)
+
+    ($x4    $y0     #neg $z)
+    ($x4    $y1     #neg $z)
+    ($x4    $y2     #neg $z)
+    ($x4    $y3     #neg $z)
+    ($x4    $y4     #neg $z)
+
+
+    ($x0    $y0     $z)
+    ($x0    $y1     $z)
+    ($x0    $y3     $z)
+    ($x0    $y4     $z)
+
+    ($x1    $y0     $z)
+    ($x1    $y1     $z)
+    ($x1    $y3     $z)
+    ($x1    $y4     $z)
+
+    ($x2    $y0     $z)
+    ($x2    $y1Tip  $z)
+    ($x2    $y3Tip  $z)
+    ($x2    $y4     $z)
+
+    ($xTip  $yTipL  $z)
+    ($xTip  $yTipU  $z)
+
+    ($xTail $y0     $z)
+    ($xTail $y1Tail $z)
+    ($xTail $yTail  $z)
+    ($xTail $y3Tail $z)
+    ($xTail $y4     $z)
+
+    ($x3    $y0     $z)
+    ($x3    $y1     $z)
+    ($x3    $y2     $z)
+    ($x3    $y3     $z)
+    ($x3    $y4     $z)
+
+    ($x4    $y0     $z)
+    ($x4    $y1     $z)
+    ($x4    $y2     $z)
+    ($x4    $y3     $z)
+    ($x4    $y4     $z)
+);
+
+blocks
+(
+    hex ( 0  4  5  1 29 33 34 30) ($nX0 $nY0 1) simpleGrading (0.1 1 1)
+    hex ( 1  5  6  2 30 34 35 31) ($nX0 $nY1 1) simpleGrading (0.1 1 1)
+    hex ( 2  6  7  3 31 35 36 32) ($nX0 $nY2 1) simpleGrading (0.1 1 1)
+
+    hex ( 4  8  9  5 33 37 38 34) ($nX1 $nY0 1) simpleGrading (1 1 1)
+    hex ( 5  9 10  6 34 38 39 35) ($nX1 $nY1 1) simpleGrading (1 1 1)
+    hex ( 6 10 11  7 35 39 40 36) ($nX1 $nY2 1) simpleGrading (1 1 1)
+
+    hex ( 8 14 15  9 37 43 44 38) ($nX2 $nY0 1) simpleGrading (1 1 1)
+    hex ( 9 15 16 12 38 44 45 41) ($nX2 $nO 1) edgeGrading (1 2 2 1 0.2 0.2 0.2 0.2 1 1 1 1)
+    hex ( 9 12 13 10 38 41 42 39) ($nO $nY1 1) simpleGrading (0.2 1 1)
+    hex (13 16 17 10 42 45 46 39) ($nX2 $nO 1) edgeGrading (2 1 1 2 5 5 5 5 1 1 1 1)
+    hex (10 17 18 11 39 46 47 40) ($nX2 $nY2 1) simpleGrading (1 1 1)
+
+    hex (14 19 20 15 43 48 49 44) ($nX3 $nY0 1) simpleGrading (1 1 1)
+    hex (15 20 21 16 44 49 50 45) ($nX3 $nO 1) edgeGrading (1 1 1 1 0.2 1 1 0.2 1 1 1 1)
+    hex (16 21 22 17 45 50 51 46) ($nX3 $nO 1) edgeGrading (1 1 1 1 5 1 1 5 1 1 1 1)
+    hex (17 22 23 18 46 51 52 47) ($nX3 $nY2 1) simpleGrading (1 1 1)
+
+    hex (19 24 25 20 48 53 54 49) ($nX4 $nY0 1) simpleGrading (10 1 1)
+    hex (20 25 26 21 49 54 55 50) ($nX4 $nO 1) simpleGrading (10 1 1)
+    hex (21 26 27 22 50 55 56 51) ($nX4 $nO 1) simpleGrading (10 1 1)
+    hex (22 27 28 23 51 56 57 52) ($nX4 $nY2 1) simpleGrading (10 1 1)
+);
+
+edges
+(
+    project 12 13 (hydrofoilTip)
+    project 12 16 (hydrofoilLower)
+    project 13 16 (hydrofoilUpper)
+
+    project 41 42 (hydrofoilTip)
+    project 41 45 (hydrofoilLower)
+    project 42 45 (hydrofoilUpper)
+
+    arc 9 10 30 (0 0 -1)
+    arc 9 15 20 (0 0 1)
+    arc 10 17 30 (0 0 -1)
+
+    arc 38 39 30 (0 0 -1)
+    arc 38 44 20 (0 0 1)
+    arc 39 46 30 (0 0 -1)
+);
+
+defaultPatch
+{
+    name frontAndBack;
+    type empty;
+}
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 1 30 29)
+            (1 2 31 30)
+            (2 3 32 31)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (24 25 54 53)
+            (25 26 55 54)
+            (26 27 56 55)
+            (27 28 57 56)
+        );
+    }
+    hydrofoil
+    {
+        type wall;
+        faces
+        (
+            (12 13 42 41)
+            (12 16 45 41)
+            (13 16 45 42)
+        );
+    }
+    walls
+    {
+        type wall;
+        faces
+        (
+            ( 0  4 33 29)
+            ( 4  8 37 33)
+            ( 8 14 43 37)
+            (14 19 48 43)
+            (19 24 53 48)
+
+            ( 3  7 36 32)
+            ( 7 11 40 36)
+            (11 18 47 40)
+            (18 23 52 47)
+            (23 28 57 52)
+        );
+    }
+);
+
+mergePatchPairs
+();
+
+// ************************************************************************* //
+

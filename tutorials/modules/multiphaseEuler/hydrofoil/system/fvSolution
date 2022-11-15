@@ -1,0 +1,100 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    "alpha.*"
+    {
+        nAlphaCorr      1;
+        nAlphaSubCycles 1;
+    };
+
+    p_rgh
+    {
+        solver          GAMG;
+        smoother        DICGaussSeidel;
+        tolerance       1e-8;
+        relTol          0.1;
+    };
+
+    p_rghFinal
+    {
+        $p_rgh;
+        relTol          0;
+    }
+
+    "U.*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-6;
+        relTol          0;
+    }
+
+    "(e|h).*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-8;
+        relTol          0.001;
+    }
+
+    "(k|omega).*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-8;
+        relTol          0;
+    }
+
+    Phi
+    {
+        $p_rgh;
+        relTol          0;
+    };
+}
+
+potentialFlow
+{
+    nNonOrthogonalCorrectors 10;
+}
+
+PIMPLE
+{
+    nOuterCorrectors    3;
+    nCorrectors         3;
+    nEnergyCorrectors   1;
+
+    transportCorrectionFinal yes;
+
+    faceMomentum        no;
+}
+
+cache
+{
+    grad(U);
+}
+
+relaxationFactors
+{
+    equations
+    {
+        ".*"            1;
+    }
+}
+
+
+// ************************************************************************* //

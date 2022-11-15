@@ -1,0 +1,63 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     foamRun;
+
+solver          multiphaseEuler;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.2;
+
+deltaT          2e-6;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.01;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  9;
+
+writeCompression uncompressed;
+
+timePrecision   14;
+
+timeFormat      general;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.8;
+
+maxDeltaT       1e-4;
+
+functions
+{
+    #includeFunc yPlus(phase=liquid)
+    #includeFunc cellMin(funcName=min, alpha.liquid, alpha.gas, p, p_rgh, U.liquid, U.gas, T.gas, T.liquid)
+    #includeFunc cellMax(funcName=max, alpha.liquid, alpha.gas, p, p_rgh, U.liquid, U.gas, T.gas, T.liquid)
+    #includeFunc hydrofoilPressure
+}
+
+
+// ************************************************************************* //

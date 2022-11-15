@@ -1,0 +1,48 @@
+#!/bin/sh
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo 'gnuplot not found - skipping graph creation' >&2
+    exit 1
+fi
+
+lowerFile=postProcessing/hydrofoilPressure/$(foamListTimes -latestTime)/lower.xy
+upperFile=postProcessing/hydrofoilPressure/$(foamListTimes -latestTime)/upper.xy
+
+gnuplot<<EOF
+
+\$experiment << end
+0.05 -1.416
+0.10 -1.400
+0.20 -1.375
+0.30 -1.148
+0.40 -0.744
+0.50 -0.695
+0.60 -0.582
+0.70 -0.520
+0.80 -0.341
+0.90 -0.108
+0.50  0.040
+end
+
+set terminal postscript eps size 8,9 color enhanced font "Helvetica,20"
+set output "./validation/$(basename "$PWD").eps"
+
+set grid
+
+c = 0.15
+UInf = 5.33
+pInf = 1e5
+rhoInf = 998.4
+
+set xlabel 'x/L'
+set ylabel 'Cp'
+plot [0:1] \
+    '$lowerFile' u (\$1/0.15):(2*(\$4-pInf)/(rhoInf*UInf*UInf)) w l lt 1 t 'Simulation Lower', \
+    '$upperFile' u (\$1/0.15):(2*(\$4-pInf)/(rhoInf*UInf*UInf)) w l lt 2 t 'Simulation Upper', \
+    '\$experiment' u 1:2 w p lt rgb "black" pt 4 t 'Experiment'
+
+EOF
+
+#------------------------------------------------------------------------------
+
