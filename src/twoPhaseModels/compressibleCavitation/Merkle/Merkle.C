@@ -67,45 +67,44 @@ Foam::compressible::cavitationModels::Merkle::Merkle
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::compressible::cavitationModels::Merkle::mDotAlphal() const
+Foam::compressible::cavitationModels::Merkle::mDotcvAlphal() const
 {
     const volScalarField::Internal& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
     const volScalarField::Internal mvCoeff_
     (
-        Cv_*phases_.rho1()()/(0.5*sqr(UInf_)*tInf_*phases_.rho2()())
+        Cv_*rhol()/(0.5*sqr(UInf_)*tInf_*rhov())
     );
 
     return Pair<tmp<volScalarField::Internal>>
     (
         mcCoeff_*max(p - pSat(), p0_),
-        mvCoeff_*min(p - pSat(), p0_)
+       -mvCoeff_*min(p - pSat(), p0_)
     );
 }
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::compressible::cavitationModels::Merkle::mDotP() const
+Foam::compressible::cavitationModels::Merkle::mDotcvP() const
 {
     const volScalarField::Internal& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal limitedAlpha1
+    const volScalarField::Internal limitedAlphal
     (
-        min(max(phases_.alpha1()(), scalar(0)), scalar(1))
+        min(max(alphal(), scalar(0)), scalar(1))
     );
 
     const volScalarField::Internal mvCoeff_
     (
-        Cv_*phases_.rho1()()/(0.5*sqr(UInf_)*tInf_*phases_.rho2()())
+        Cv_*rhol()/(0.5*sqr(UInf_)*tInf_*rhov())
     );
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*(1.0 - limitedAlpha1)*pos0(p - pSat()),
-
-        (-mvCoeff_)*limitedAlpha1*neg(p - pSat())
+        mcCoeff_*(1.0 - limitedAlphal)*pos0(p - pSat()),
+        (-mvCoeff_)*limitedAlphal*neg(p - pSat())
     );
 }
 

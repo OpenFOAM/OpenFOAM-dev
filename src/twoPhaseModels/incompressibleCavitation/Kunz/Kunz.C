@@ -54,8 +54,8 @@ Foam::cavitationModels::Kunz::Kunz
 
     p0_("0", pSat().dimensions(), 0.0),
 
-    mcCoeff_(Cc_*phases_.rho2()/tInf_),
-    mvCoeff_(Cv_*phases_.rho2()/(0.5*phases_.rho1()*sqr(UInf_)*tInf_))
+    mcCoeff_(Cc_*rhov()/tInf_),
+    mvCoeff_(Cv_*rhov()/(0.5*rhol()*sqr(UInf_)*tInf_))
 {
     correct();
 }
@@ -64,43 +64,41 @@ Foam::cavitationModels::Kunz::Kunz
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::cavitationModels::Kunz::mDotAlphal() const
+Foam::cavitationModels::Kunz::mDotcvAlpha() const
 {
     const volScalarField::Internal& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal limitedAlpha1
+    const volScalarField::Internal limitedAlphal
     (
-        min(max(phases_.alpha1()(), scalar(0)), scalar(1))
+        min(max(alphal(), scalar(0)), scalar(1))
     );
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*sqr(limitedAlpha1)
+        mcCoeff_*sqr(limitedAlphal)
        *max(p - pSat(), p0_)/max(p - pSat(), 0.01*pSat()),
-
-        mvCoeff_*min(p - pSat(), p0_)
+       -mvCoeff_*min(p - pSat(), p0_)
     );
 }
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::cavitationModels::Kunz::mDotP() const
+Foam::cavitationModels::Kunz::mDotcvP() const
 {
     const volScalarField::Internal& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal limitedAlpha1
+    const volScalarField::Internal limitedAlphal
     (
-        min(max(phases_.alpha1()(), scalar(0)), scalar(1))
+        min(max(alphal(), scalar(0)), scalar(1))
     );
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*sqr(limitedAlpha1)*(1.0 - limitedAlpha1)
+        mcCoeff_*sqr(limitedAlphal)*(1.0 - limitedAlphal)
        *pos0(p - pSat())/max(p - pSat(), 0.01*pSat()),
-
-        (-mvCoeff_)*limitedAlpha1*neg(p - pSat())
+        (-mvCoeff_)*limitedAlphal*neg(p - pSat())
     );
 }
 
@@ -118,8 +116,8 @@ bool Foam::cavitationModels::Kunz::read(const dictionary& dict)
         dict.lookup("Cc") >> Cc_;
         dict.lookup("Cv") >> Cv_;
 
-        mcCoeff_ = Cc_*phases_.rho2()/tInf_;
-        mvCoeff_ = Cv_*phases_.rho2()/(0.5*phases_.rho1()*sqr(UInf_)*tInf_);
+        mcCoeff_ = Cc_*rhov()/tInf_;
+        mvCoeff_ = Cv_*rhov()/(0.5*rhol()*sqr(UInf_)*tInf_);
 
         return true;
     }

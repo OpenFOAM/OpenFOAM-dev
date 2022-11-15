@@ -26,6 +26,8 @@ VoFCavitation
     {
         pSat    2300;   // Saturation pressure
 
+        liquid  water;
+
         UInf    20.0;
         tInf    0.005; // L = 0.1 m
         Cc      1000;
@@ -36,6 +38,8 @@ VoFCavitation
     {
         pSat    2300;   // Saturation pressure
 
+        liquid  water;
+
         UInf    20.0;
         tInf    0.005;  // L = 0.1 m
         Cc      80;
@@ -45,6 +49,8 @@ VoFCavitation
     SchnerrSauerCoeffs
     {
         pSat    2300;   // Saturation pressure
+
+        liquid  water;
 
         n       1.6e+13;
         dNuc    2.0e-06;

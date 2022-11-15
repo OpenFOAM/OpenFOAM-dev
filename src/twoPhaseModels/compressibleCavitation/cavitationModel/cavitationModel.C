@@ -47,6 +47,7 @@ Foam::compressible::cavitationModel::cavitationModel
 )
 :
     phases_(phases),
+    liquidIndex_(phases.index(dict.lookup<word>("liquid"))),
     pSat_("pSat", dimPressure, dict.lookup("pSat"))
 {}
 

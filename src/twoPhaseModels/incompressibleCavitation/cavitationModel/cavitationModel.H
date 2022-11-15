@@ -57,8 +57,38 @@ protected:
         //- Mixture properties
         const incompressibleTwoPhases& phases_;
 
+        //- Index of the liquid
+        const bool liquidIndex_;
+
         //- Saturation vapour pressure
         dimensionedScalar pSat_;
+
+
+    // Protected Member Functions
+
+        //- Return the liquid density
+        inline const volScalarField::Internal& alphal() const
+        {
+            return phases_.alpha(liquidIndex_);
+        }
+
+        //- Return the vapour density
+        inline const volScalarField::Internal& alphav() const
+        {
+            return phases_.alpha(!liquidIndex_);
+        }
+
+        //- Return the liquid density
+        inline const dimensionedScalar& rhol() const
+        {
+            return phases_.rho(liquidIndex_);
+        }
+
+        //- Return the vapour density
+        inline const dimensionedScalar& rhov() const
+        {
+            return phases_.rho(!liquidIndex_);
+        }
 
 
 public:
@@ -107,20 +137,34 @@ public:
 
     // Member Functions
 
-        //- Return const-access to the saturation vapour pressure
-        const dimensionedScalar& pSat() const
+        //- Return the saturation vapour pressure
+        inline const dimensionedScalar& pSat() const
         {
             return pSat_;
         }
 
         //- Return the mass condensation and vaporisation rates as a
-        //  coefficient to multiply (1 - alphal) for the condensation rate
-        //  and a coefficient to multiply  alphal for the vaporisation rate
-        virtual Pair<tmp<volScalarField::Internal>> mDotAlphal() const = 0;
+        //  coefficient to multiply alphav for the condensation rate and a
+        //  coefficient to multiply alphal for the vaporisation rate
+        virtual Pair<tmp<volScalarField::Internal>> mDotcvAlpha() const = 0;
 
         //- Return the mass condensation and vaporisation rates as coefficients
         //  to multiply (p - pSat)
-        virtual Pair<tmp<volScalarField::Internal>> mDotP() const = 0;
+        virtual Pair<tmp<volScalarField::Internal>> mDotcvP() const = 0;
+
+        //- Return the mass transfer rates of the two phases as coefficients to
+        //  multiply the volume fraction of the other phase
+        inline Pair<tmp<volScalarField::Internal>> mDot12Alpha() const
+        {
+            return liquidIndex_ ? reverse(mDotcvAlpha()) : mDotcvAlpha();
+        }
+
+        //- Return the mass transfer rates of the two phases as coefficients to
+        //  multiply (p - pSat)
+        inline Pair<tmp<volScalarField::Internal>> mDot12P() const
+        {
+            return liquidIndex_ ? reverse(mDotcvP()) : mDotcvP();
+        }
 
         //- Correct the cavitation model
         virtual void correct() = 0;

@@ -77,11 +77,23 @@ public:
         //- Return the thermo for phase 2
         virtual const rhoThermo& thermo2() const = 0;
 
+        //- Return the density of a given phase
+        inline const rhoThermo& thermo(const bool index) const
+        {
+            return index ? thermo2() : thermo1();
+        }
+
         //- Return the density of phase 1
         virtual const volScalarField& rho1() const = 0;
 
         //- Return the density of phase 2
         virtual const volScalarField& rho2() const = 0;
+
+        //- Return the density of a given phase
+        inline const volScalarField& rho(const bool index) const
+        {
+            return index ? rho2() : rho1();
+        }
 };
 
 

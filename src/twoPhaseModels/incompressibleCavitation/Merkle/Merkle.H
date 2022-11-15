@@ -97,13 +97,13 @@ public:
     // Member Functions
 
         //- Return the mass condensation and vaporisation rates as a
-        //  coefficient to multiply (1 - alphal) for the condensation rate
-        //  and a coefficient to multiply  alphal for the vaporisation rate
-        virtual Pair<tmp<volScalarField::Internal>> mDotAlphal() const;
+        //  coefficient to multiply alphav for the condensation rate and a
+        //  coefficient to multiply alphal for the vaporisation rate
+        virtual Pair<tmp<volScalarField::Internal>> mDotcvAlpha() const;
 
         //- Return the mass condensation and vaporisation rates as coefficients
         //  to multiply (p - pSat)
-        virtual Pair<tmp<volScalarField::Internal>> mDotP() const;
+        virtual Pair<tmp<volScalarField::Internal>> mDotcvP() const;
 
         //- Correct the Merkle phaseChange model
         virtual void correct();

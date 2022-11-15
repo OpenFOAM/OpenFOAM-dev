@@ -55,7 +55,7 @@ Foam::cavitationModels::Merkle::Merkle
     p0_("0", pSat().dimensions(), 0.0),
 
     mcCoeff_(Cc_/(0.5*sqr(UInf_)*tInf_)),
-    mvCoeff_(Cv_*phases_.rho1()/(0.5*sqr(UInf_)*tInf_*phases_.rho2()))
+    mvCoeff_(Cv_*rhol()/(0.5*sqr(UInf_)*tInf_*rhov()))
 {
     correct();
 }
@@ -64,7 +64,7 @@ Foam::cavitationModels::Merkle::Merkle
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::cavitationModels::Merkle::mDotAlphal() const
+Foam::cavitationModels::Merkle::mDotcvAlpha() const
 {
     const volScalarField::Internal& p =
         phases_.mesh().lookupObject<volScalarField>("p");
@@ -72,26 +72,26 @@ Foam::cavitationModels::Merkle::mDotAlphal() const
     return Pair<tmp<volScalarField::Internal>>
     (
         mcCoeff_*max(p - pSat(), p0_),
-        mvCoeff_*min(p - pSat(), p0_)
+       -mvCoeff_*min(p - pSat(), p0_)
     );
 }
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::cavitationModels::Merkle::mDotP() const
+Foam::cavitationModels::Merkle::mDotcvP() const
 {
     const volScalarField::Internal& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal limitedAlpha1
+    const volScalarField::Internal limitedAlphal
     (
-        min(max(phases_.alpha1()(), scalar(0)), scalar(1))
+        min(max(alphal(), scalar(0)), scalar(1))
     );
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*(1.0 - limitedAlpha1)*pos0(p - pSat()),
-        (-mvCoeff_)*limitedAlpha1*neg(p - pSat())
+        mcCoeff_*(1.0 - limitedAlphal)*pos0(p - pSat()),
+        (-mvCoeff_)*limitedAlphal*neg(p - pSat())
     );
 }
 
@@ -110,7 +110,7 @@ bool Foam::cavitationModels::Merkle::read(const dictionary& dict)
         dict.lookup("Cv") >> Cv_;
 
         mcCoeff_ = Cc_/(0.5*sqr(UInf_)*tInf_);
-        mvCoeff_ = Cv_*phases_.rho1()/(0.5*sqr(UInf_)*tInf_*phases_.rho2());
+        mvCoeff_ = Cv_*rhol()/(0.5*sqr(UInf_)*tInf_*rhov());
 
         return true;
     }

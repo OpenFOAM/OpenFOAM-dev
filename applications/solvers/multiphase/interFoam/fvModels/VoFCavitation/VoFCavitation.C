@@ -95,21 +95,21 @@ void Foam::fv::VoFCavitation::addSup
 
     if (fieldName == alphaName_)
     {
-        volScalarField::Internal alphalCoeff
+        const volScalarField::Internal alpha1Coeff
         (
             1.0/mixture_.rho1()
           - mixture_.alpha1()()*(1.0/mixture_.rho1() - 1.0/mixture_.rho2())
         );
 
-        const Pair<tmp<volScalarField::Internal>> mDotAlphal
+        const Pair<tmp<volScalarField::Internal>> mDot12Alpha
         (
-            cavitation_->mDotAlphal()
+            cavitation_->mDot12Alpha()
         );
 
-        const volScalarField::Internal vDotcAlphal(alphalCoeff*mDotAlphal[0]());
-        const volScalarField::Internal vDotvAlphal(alphalCoeff*mDotAlphal[1]());
+        const volScalarField::Internal vDot1Alpha(alpha1Coeff*mDot12Alpha[0]());
+        const volScalarField::Internal vDot2Alpha(alpha1Coeff*mDot12Alpha[1]());
 
-        eqn += fvm::Sp(vDotvAlphal - vDotcAlphal, eqn.psi()) + vDotcAlphal;
+        eqn += fvm::Sp(-vDot2Alpha - vDot1Alpha, eqn.psi()) + vDot1Alpha;
     }
 }
 
@@ -139,17 +139,17 @@ void Foam::fv::VoFCavitation::addSup
             1.0/mixture_.rho1() - 1.0/mixture_.rho2()
         );
 
-        const Pair<tmp<volScalarField::Internal>> mDotP
+        const Pair<tmp<volScalarField::Internal>> mDot12P
         (
-            cavitation_->mDotP()
+            cavitation_->mDot12P()
         );
 
-        const volScalarField::Internal vDotcP(pCoeff*mDotP[0]);
-        const volScalarField::Internal vDotvP(pCoeff*mDotP[1]);
+        const volScalarField::Internal vDot1P(pCoeff*mDot12P[0]);
+        const volScalarField::Internal vDot2P(pCoeff*mDot12P[1]);
 
         eqn +=
-            (vDotvP - vDotcP)*(cavitation_->pSat() - rho*gh)
-          - fvm::Sp(vDotvP - vDotcP, eqn.psi());
+            (vDot2P - vDot1P)*(cavitation_->pSat() - rho*gh)
+          - fvm::Sp(vDot2P - vDot1P, eqn.psi());
     }
 }
 

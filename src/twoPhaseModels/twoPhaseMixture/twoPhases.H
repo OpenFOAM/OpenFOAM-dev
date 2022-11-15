@@ -50,6 +50,7 @@ class twoPhases
 {
 public:
 
+    //- Runtime type information
     TypeName("twoPhases");
 
 
@@ -73,11 +74,37 @@ public:
             return alpha1().mesh();
         }
 
-        //- Return the phase-fraction of phase 1
+        //- Return the index associated with a given phase name
+        inline bool index(const word& name) const
+        {
+            if (alpha1().group() == name)
+            {
+                return false;
+            }
+
+            if (alpha2().group() == name)
+            {
+                return true;
+            }
+
+            FatalErrorInFunction
+                << "Index of phase " << name << " requested from phases"
+                << alpha1().group() << " and " << alpha2().group()
+                << exit(FatalError);
+            return false;
+        }
+
+        //- Return the volume-fraction of phase 1
         virtual const volScalarField& alpha1() const = 0;
 
-        //- Return the phase-fraction of phase 2
+        //- Return the volume-fraction of phase 2
         virtual const volScalarField& alpha2() const = 0;
+
+        //- Return the volume-fraction of a given phase
+        const volScalarField& alpha(const bool index) const
+        {
+            return index ? alpha2() : alpha1();
+        }
 };
 
 

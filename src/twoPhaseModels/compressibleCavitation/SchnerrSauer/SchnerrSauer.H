@@ -82,9 +82,9 @@ class SchnerrSauer
         dimensionedScalar alphaNuc() const;
 
         //- Reciprocal bubble radius
-        tmp<volScalarField::Internal>rRb
+        tmp<volScalarField::Internal> rRb
         (
-            const volScalarField::Internal& limitedAlpha1
+            const volScalarField::Internal& limitedAlphal
         ) const;
 
         //- Part of the condensation and vapourisation rates
@@ -118,13 +118,13 @@ public:
     // Member Functions
 
         //- Return the mass condensation and vaporisation rates as a
-        //  coefficient to multiply (1 - alphal) for the condensation rate
-        //  and a coefficient to multiply  alphal for the vaporisation rate
-        virtual Pair<tmp<volScalarField::Internal>> mDotAlphal() const;
+        //  coefficient to multiply alphav for the condensation rate and a
+        //  coefficient to multiply alphal for the vaporisation rate
+        virtual Pair<tmp<volScalarField::Internal>> mDotcvAlphal() const;
 
         //- Return the mass condensation and vaporisation rates as coefficients
         //  to multiply (p - pSat)
-        virtual Pair<tmp<volScalarField::Internal>> mDotP() const;
+        virtual Pair<tmp<volScalarField::Internal>> mDotcvP() const;
 
         //- Correct the SchnerrSauer phaseChange model
         virtual void correct();

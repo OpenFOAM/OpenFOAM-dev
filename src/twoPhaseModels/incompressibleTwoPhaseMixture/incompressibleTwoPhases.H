@@ -52,6 +52,7 @@ class incompressibleTwoPhases
 {
 public:
 
+    //- Runtime type information
     TypeName("incompressibleTwoPhases");
 
 
@@ -69,11 +70,17 @@ public:
 
     // Member Functions
 
-        //- Return const-access to phase1 density
+        //- Return the density of phase1
         virtual const dimensionedScalar& rho1() const = 0;
 
-        //- Return const-access to phase2 density
+        //- Return the density of phase2
         virtual const dimensionedScalar& rho2() const = 0;
+
+        //- Return the density of a given phase
+        inline const dimensionedScalar& rho(const bool index) const
+        {
+            return index ? rho2() : rho1();
+        }
 };
 
 

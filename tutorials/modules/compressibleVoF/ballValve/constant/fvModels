@@ -22,6 +22,8 @@ VoFCavitation
 
     model   SchnerrSauer;
 
+    liquid  water;
+
     pSat    2300;
 
     n       1.6e+13;
