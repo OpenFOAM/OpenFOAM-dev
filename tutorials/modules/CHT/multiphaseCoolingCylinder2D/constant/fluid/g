@@ -8,22 +8,14 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      T;
+    class       uniformDimensionedVectorField;
+    location    "constant";
+    object      g;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
+dimensions      [0 1 -2 0 0 0 0];
+value           (0 0 0);
 
-internalField   uniform 297;
-
-boundaryField
-{
-    wall
-    {
-        type            coupledTemperature;
-        value           $internalField;
-    }
-}
 
 // ************************************************************************* //

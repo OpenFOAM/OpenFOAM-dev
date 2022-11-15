@@ -8,22 +8,39 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      T;
+    class       dictionary;
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
-
-internalField   uniform 297;
-
-boundaryField
+ddtSchemes
 {
-    wall
-    {
-        type            coupledTemperature;
-        value           $internalField;
-    }
+    default         Euler;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    default         none;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         uncorrected;
 }
 
 // ************************************************************************* //

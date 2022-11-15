@@ -9,21 +9,41 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    object      T;
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
+dimensions          [1 -1 -2 0 0 0 0];
 
-internalField   uniform 297;
+internalField       uniform 1e5;
 
 boundaryField
 {
-    wall
+    inlet
     {
-        type            coupledTemperature;
+        type            fixedFluxPressure;
         value           $internalField;
     }
+
+    outlet
+    {
+        type            prghPressure;
+        p               $internalField;
+        value           $internalField;
+    }
+
+    topAndBottom
+    {
+        type            fixedFluxPressure;
+    }
+
+    wall
+    {
+        type            fixedFluxPressure;
+        value           $internalField;
+    }
+
+    #includeEtc "caseDicts/setConstraintTypes"
 }
 
 // ************************************************************************* //

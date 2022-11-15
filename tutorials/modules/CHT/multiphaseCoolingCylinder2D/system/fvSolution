@@ -8,22 +8,14 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      T;
+    class       dictionary;
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
-
-internalField   uniform 297;
-
-boundaryField
+"(PIMPLE|PISO)"
 {
-    wall
-    {
-        type            coupledTemperature;
-        value           $internalField;
-    }
+    nOuterCorrectors 3;
 }
 
 // ************************************************************************* //

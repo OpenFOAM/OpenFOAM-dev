@@ -8,22 +8,30 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      T;
+    class       dictionary;
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
+thermoType          constSolidThermo;
 
-internalField   uniform 297;
-
-boundaryField
+rho
 {
-    wall
-    {
-        type            coupledTemperature;
-        value           $internalField;
-    }
+    type        uniform;
+    value       8940;
 }
+
+Cv
+{
+    type        uniform;
+    value       385;
+}
+
+kappa
+{
+    type        uniform;
+    value       380;
+}
+
 
 // ************************************************************************* //

@@ -26,14 +26,15 @@ Class
 
 Description
     Mixed boundary condition for temperature, to be used for heat-transfer
-    on back-to-back baffles. Optional thin thermal layer resistances can be
-    specified through thicknessLayers and kappaLayers entries.
+    with another region in a CHT case.  Optional thin wall material layer
+    resistances can be specified through thicknessLayers and kappaLayers
+    entries.
 
     Specifies gradient and temperature such that the equations are the same
     on both sides:
       - refGradient = qs_/kappa
       - refValue = neighbour value
-      - mixFraction = kappaByDeltaNbr/(kappaByDeltaNbr + kappaByDelta())
+      - valueFraction = kappaByDeltaNbr/(kappaByDeltaNbr + kappaByDelta)
 
     where kappaByDelta is heat-transfer coefficient kappa*deltaCoeffs
     and qs is the optional source heat flux.
@@ -55,9 +56,8 @@ Usage
     <patchName>
     {
         type            coupledTemperature;
-        Tnbr            T;
-        thicknessLayers (0.1 0.2 0.3 0.4);
-        kappaLayers     (1 2 3 4);
+        thicknessLayers (0.1 0.2 0.3 0.4); // Optional wall layer thicknesses
+        kappaLayers     (1 2 3 4); // Optional wall layer conductivities
         qs              uniform 100;    // Optional source heat flux [W/m^2]
         value           uniform 300;
     }
@@ -101,23 +101,61 @@ class coupledTemperatureFvPatchScalarField
         //- Name of field on the neighbour region
         const word TnbrName_;
 
-         //- Name of the radiative heat flux in the neighbor region
+        //- Name of the radiative heat flux in the neighbor region
         const word qrNbrName_;
 
         //- Name of the radiative heat flux in local region
         const word qrName_;
 
-        //- Thickness of layers
+        //- Thickness of wall layers
         scalarList thicknessLayers_;
 
-        //- Conductivity of layers
+        //- Conductivity of wall layers
         scalarList kappaLayers_;
 
         //- Source heat flux [W/m^2]
         scalarField qs_;
 
-        //- Total contact resistance
-        scalar contactRes_;
+        //- Optional wall material conductivity/thickness
+        scalar wallKappaByDelta_;
+
+
+protected:
+
+    //- Get the patch kappa, kappa*Tc/delta and kappa/delta and also the
+    //  heat-flux obtained from the sum heat-flux provided
+    virtual void getThis
+    (
+        tmp<scalarField>& kappa,
+        tmp<scalarField>& sumKappaTByDelta,
+        tmp<scalarField>& sumKappaByDelta,
+        scalarField& qTot,
+        tmp<scalarField>& qByKappa
+    ) const;
+
+    //- Get the neighbour patch kappa*Tc/delta and kappa/delta
+    //  and the heat-flux correction
+    virtual void getNbr
+    (
+        tmp<scalarField>& sumKappaTByDeltaNbr,
+        tmp<scalarField>& sumKappaByDeltaNbr,
+        tmp<scalarField>& qNbr
+    ) const;
+
+    //- Get the neighbour patch wall temperature and heat-flux
+    //  when wall thermal resistance is specified
+    virtual void getNbr
+    (
+        tmp<scalarField>& TwNbr,
+        tmp<scalarField>& qNbr
+    ) const;
+
+    //- Add field to result which may have not been previously set
+    void add
+    (
+        tmp<scalarField>& result,
+        const tmp<scalarField>& field
+    ) const;
 
 
 public:

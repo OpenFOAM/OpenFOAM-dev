@@ -1,0 +1,158 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters         1;
+
+cylinderRadius      0.005; // Radius of the cylinder
+cylinderCore        0.002; // Radius of the core block inside the cylinder
+halfWidth            0.04; // Half the channel width
+halfThickness      0.0025; // Half the domain thickness
+xDownstream           0.1; // X-coordinate of the downstream outlet
+
+cylinderRadialCells    12; // Cells across the radius of the non-core part of the cylinder
+cylinderCoreCells      15; // Cells across the core block inside the cylinder
+widthCells             30; // Cells across the domain width
+downstreamCells        20; // Cells across the downstream region
+
+radialGrading          20; // Expansion ratio outside the cylinder in a radial direction
+
+geometry
+{
+    cylinder
+    {
+        type   searchableCylinder;
+        point1 (0 0 -100);
+        point2 (0 0 100);
+        radius $cylinderRadius;
+    }
+}
+
+vertices
+(
+    project (#neg $cylinderCore #neg $cylinderCore #neg $halfThickness) (cylinder)
+    project (     $cylinderCore #neg $cylinderCore #neg $halfThickness) (cylinder)
+    project (#neg $cylinderCore #neg $cylinderCore      $halfThickness) (cylinder)
+    project (     $cylinderCore #neg $cylinderCore      $halfThickness) (cylinder)
+
+    project (#neg $cylinderCore      $cylinderCore #neg $halfThickness) (cylinder)
+    project (     $cylinderCore      $cylinderCore #neg $halfThickness) (cylinder)
+    project (#neg $cylinderCore      $cylinderCore      $halfThickness) (cylinder)
+    project (     $cylinderCore      $cylinderCore      $halfThickness) (cylinder)
+
+    (#neg $halfWidth #neg $halfWidth #neg $halfThickness)
+    (     $halfWidth #neg $halfWidth #neg $halfThickness)
+    (#neg $halfWidth #neg $halfWidth      $halfThickness)
+    (     $halfWidth #neg $halfWidth      $halfThickness)
+
+    (#neg $halfWidth      $halfWidth #neg $halfThickness)
+    (     $halfWidth      $halfWidth #neg $halfThickness)
+    (#neg $halfWidth      $halfWidth      $halfThickness)
+    (     $halfWidth      $halfWidth      $halfThickness)
+
+    ($xDownstream #neg $halfWidth #neg $halfThickness)
+    ($xDownstream #neg $halfWidth      $halfThickness)
+    ($xDownstream      $halfWidth #neg $halfThickness)
+    ($xDownstream      $halfWidth      $halfThickness)
+
+    (#neg $cylinderCore #neg $cylinderCore #neg $halfThickness)
+    (     $cylinderCore #neg $cylinderCore #neg $halfThickness)
+    (     $cylinderCore #neg $cylinderCore      $halfThickness)
+    (#neg $cylinderCore #neg $cylinderCore      $halfThickness)
+
+    (#neg $cylinderCore      $cylinderCore #neg $halfThickness)
+    (     $cylinderCore      $cylinderCore #neg $halfThickness)
+    (     $cylinderCore      $cylinderCore      $halfThickness)
+    (#neg $cylinderCore      $cylinderCore      $halfThickness)
+);
+
+graded simpleGrading (1 $radialGrading 1);
+uniform simpleGrading (1 1 1);
+
+blocks
+(
+    hex (4 6 14 12 0 2 10 8) fluid (1 $widthCells $cylinderCoreCells) $graded
+    hex (7 5 13 15 3 1 9 11) fluid (1 $widthCells $cylinderCoreCells) $graded
+    hex (2 3 11 10 0 1 9 8) fluid ($cylinderCoreCells $widthCells 1) $graded
+    hex (7 6 14 15 5 4 12 13) fluid ($cylinderCoreCells $widthCells 1) $graded
+    hex (13 18 19 15 9 16 17 11) fluid ($downstreamCells 1 $cylinderCoreCells) $uniform
+
+    hex (24 25 26 27 20 21 22 23) solid ($cylinderCoreCells 1 $cylinderCoreCells) $uniform
+    hex (0 2 23 20 4 6 27 24) solid (1 $cylinderRadialCells $cylinderCoreCells) $uniform
+    hex (21 22 3 1 25 26 7 5) solid (1 $cylinderRadialCells $cylinderCoreCells) $uniform
+    hex (0 2 3 1 20 23 22 21) solid (1 $cylinderCoreCells $cylinderRadialCells) $uniform
+    hex (4 5 7 6 24 25 26 27) solid ($cylinderCoreCells 1 $cylinderRadialCells) $uniform
+);
+
+edges
+(
+    project 0 2 (cylinder)
+    project 2 3 (cylinder)
+    project 3 1 (cylinder)
+    project 1 0 (cylinder)
+    project 4 6 (cylinder)
+    project 6 7 (cylinder)
+    project 7 5 (cylinder)
+    project 5 4 (cylinder)
+    project 0 4 (cylinder)
+    project 2 6 (cylinder)
+    project 3 7 (cylinder)
+    project 1 5 (cylinder)
+);
+
+faces
+(
+);
+
+defaultPatch
+{
+    name    frontAndBack;
+    type    empty;
+}
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (8 10 14 12)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (16 17 19 18)
+        );
+    }
+
+    topAndBottom
+    {
+        type patch;
+        faces
+        (
+            (8 9 11 10)
+            (12 13 15 14)
+            (9 16 17 11)
+            (13 18 19 15)
+        );
+    }
+);
+
+
+// ************************************************************************* //

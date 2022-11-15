@@ -8,22 +8,44 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      T;
+    class       dictionary;
+    location    "constant";
+    object      physicalProperties.oil;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
-
-internalField   uniform 297;
-
-boundaryField
+thermoType
 {
-    wall
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          eConst;
+    equationOfState rhoConst;
+    specie          specie;
+    energy          sensibleInternalEnergy;
+}
+
+mixture
+{
+    specie
     {
-        type            coupledTemperature;
-        value           $internalField;
+        molWeight   160;
+    }
+    equationOfState
+    {
+        rho         800;
+    }
+    thermodynamics
+    {
+        Cv          2000;
+        Hf          0;
+    }
+    transport
+    {
+        mu          2e-3;
+        Pr          100;
     }
 }
+
 
 // ************************************************************************* //

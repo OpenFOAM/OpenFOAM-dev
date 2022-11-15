@@ -8,42 +8,43 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      T;
+    class       dictionary;
+    location    "constant";
+    object      physicalProperties.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
-
-internalField   uniform 297;
-
-boundaryField
+thermoType
 {
-    inlet
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          eConst;
+    equationOfState rPolynomial;
+    specie          specie;
+    energy          sensibleInternalEnergy;
+}
 
-    outlet
+mixture
+{
+    specie
     {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        molWeight   18;
     }
-
-    topAndBottom
+    equationOfState
     {
-        type            zeroGradient;
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16);
     }
-
-    wall
+    thermodynamics
     {
-        type            coupledTemperature;
-        value           $internalField;
+        Cv          4195;
+        Hf          0;
     }
-
-    #includeEtc "caseDicts/setConstraintTypes"
+    transport
+    {
+        mu          3.645e-4;
+        Pr          2.289;
+    }
 }
 
 

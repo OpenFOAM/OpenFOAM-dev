@@ -7,23 +7,42 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
-    class       volScalarField;
-    object      T;
+    format      binary;
+    class       volVectorField;
+    object      U.oil;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
+dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform 297;
+internalField   uniform (0.1 0 0);
 
 boundaryField
 {
-    wall
+    inlet
     {
-        type            coupledTemperature;
+        type            fixedValue;
+        value           uniform (0.1 0 0);
+    }
+
+    outlet
+    {
+        type            pressureInletOutletVelocity;
+        phi             phi.oil;
         value           $internalField;
     }
+
+    topAndBottom
+    {
+        type            slip;
+    }
+
+    wall
+    {
+        type            noSlip;
+    }
+
+    #includeEtc "caseDicts/setConstraintTypes"
 }
 
 // ************************************************************************* //

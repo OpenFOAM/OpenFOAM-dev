@@ -8,22 +8,20 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      T;
+    class       dictionary;
+    location    "constant";
+    object      momentumTransport.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
+simulationType  RAS;
 
-internalField   uniform 297;
-
-boundaryField
+RAS
 {
-    wall
-    {
-        type            coupledTemperature;
-        value           $internalField;
-    }
+    model    mixtureKEpsilon;
+
+    turbulence      on;
+    printCoeffs     on;
 }
 
 // ************************************************************************* //

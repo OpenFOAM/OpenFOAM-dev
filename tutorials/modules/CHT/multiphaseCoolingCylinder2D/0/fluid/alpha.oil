@@ -9,21 +9,42 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    object      T;
+    location    "0";
+    object      alpha.oil;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
+dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 297;
+internalField   uniform 0.1;
 
 boundaryField
 {
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 0.1;
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        phi             phi.oil;
+        inletValue      uniform 0.1;
+        value           uniform 0.1;
+    }
+
+    topAndBottom
+    {
+        type            zeroGradient;
+    }
+
     wall
     {
-        type            coupledTemperature;
-        value           $internalField;
+        type            zeroGradient;
     }
+
+    #includeEtc "caseDicts/setConstraintTypes"
 }
 
 // ************************************************************************* //

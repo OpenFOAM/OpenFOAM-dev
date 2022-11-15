@@ -1,0 +1,143 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type    basicMultiphaseSystem;
+
+phases  (oil water);
+
+oil
+{
+    type            purePhaseModel;
+    diameterModel   isothermal;
+    isothermalCoeffs
+    {
+        d0              3e-3;
+        p0              1e5;
+    }
+
+    residualAlpha   1e-6;
+}
+
+water
+{
+    type            purePhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+
+    residualAlpha   1e-6;
+}
+
+blending
+{
+    default
+    {
+        type            linear;
+        minFullyContinuousAlpha.oil 0.7;
+        minPartlyContinuousAlpha.oil 0.3;
+        minFullyContinuousAlpha.water 0.7;
+        minPartlyContinuousAlpha.water 0.3;
+    }
+
+    drag
+    {
+        type            linear;
+        minFullyContinuousAlpha.oil 0.7;
+        minPartlyContinuousAlpha.oil 0.5;
+        minFullyContinuousAlpha.water 0.7;
+        minPartlyContinuousAlpha.water 0.5;
+    }
+}
+
+surfaceTension
+{
+    oil_water
+    {
+        type            constant;
+        sigma           0.07;
+    }
+}
+
+drag
+{
+    oil_dispersedIn_water
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+    }
+
+    water_dispersedIn_oil
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+    }
+
+    oil_segregatedWith_water
+    {
+        type            segregated;
+        m               0.5;
+        n               8;
+    }
+}
+
+virtualMass
+{
+    oil_dispersedIn_water
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+
+    water_dispersedIn_oil
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+}
+
+heatTransfer
+{
+    oil_dispersedIn_water
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+
+    water_dispersedIn_oil
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+}
+
+phaseTransfer
+{}
+
+lift
+{}
+
+wallLubrication
+{}
+
+turbulentDispersion
+{}
+
+interfaceCompression
+{}
+
+// ************************************************************************* //

@@ -30,6 +30,101 @@ License
 #include "mappedPatchBase.H"
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+void Foam::coupledTemperatureFvPatchScalarField::getThis
+(
+    tmp<scalarField>& kappa,
+    tmp<scalarField>& sumKappaTByDelta,
+    tmp<scalarField>& sumKappaByDeltaNbr,
+    scalarField& sumq,
+    tmp<scalarField>& qByKappa
+) const
+{
+    const thermophysicalTransportModel& ttm =
+        patch().boundaryMesh().mesh()
+       .lookupType<thermophysicalTransportModel>();
+
+    kappa = ttm.kappaEff(patch().index());
+
+    qByKappa = sumq/kappa;
+
+    sumq = 0;
+
+    tmp<scalarField> qCorr(ttm.qCorr(patch().index()));
+
+    if (qCorr.valid())
+    {
+        sumq += qCorr;
+    }
+}
+
+
+void Foam::coupledTemperatureFvPatchScalarField::getNbr
+(
+    tmp<scalarField>& sumKappaTByDeltaNbr,
+    tmp<scalarField>& sumKappaByDeltaNbr,
+    tmp<scalarField>& qNbr
+) const
+{
+    const thermophysicalTransportModel& ttm =
+        patch().boundaryMesh().mesh()
+       .lookupType<thermophysicalTransportModel>();
+
+    sumKappaByDeltaNbr = ttm.kappaEff(patch().index())*patch().deltaCoeffs();
+
+    sumKappaTByDeltaNbr = sumKappaByDeltaNbr()*patchInternalField();
+
+    qNbr = ttm.qCorr(patch().index());
+}
+
+
+void Foam::coupledTemperatureFvPatchScalarField::getNbr
+(
+    tmp<scalarField>& TrefNbr,
+    tmp<scalarField>& qNbr
+) const
+{
+    const thermophysicalTransportModel& ttm =
+        patch().boundaryMesh().mesh()
+       .lookupType<thermophysicalTransportModel>();
+
+    const fvPatchScalarField& Tp =
+        patch().lookupPatchField<volScalarField, scalar>
+        (
+            internalField().name()
+        );
+
+    TrefNbr = Tp;
+
+    qNbr = ttm.qCorr(patch().index());
+}
+
+
+void Foam::coupledTemperatureFvPatchScalarField::add
+(
+    tmp<scalarField>& result,
+    const tmp<scalarField>& field
+) const
+{
+    if (result.valid())
+    {
+        result.ref() += field;
+    }
+    else
+    {
+        if (field.isTmp())
+        {
+            result = field;
+        }
+        else
+        {
+            result = field().clone();
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::coupledTemperatureFvPatchScalarField::
@@ -46,11 +141,11 @@ coupledTemperatureFvPatchScalarField
     thicknessLayers_(0),
     kappaLayers_(0),
     qs_(p.size()),
-    contactRes_(0)
+    wallKappaByDelta_(0)
 {
-    this->refValue() = 0.0;
-    this->refGrad() = 0.0;
-    this->valueFraction() = 1.0;
+    this->refValue() = 0;
+    this->refGrad() = 0;
+    this->valueFraction() = 1;
 }
 
 
@@ -69,7 +164,7 @@ coupledTemperatureFvPatchScalarField
     thicknessLayers_(0),
     kappaLayers_(0),
     qs_(p.size(), 0),
-    contactRes_(0.0)
+    wallKappaByDelta_(0)
 {
     if (!isA<mappedPatchBase>(this->patch().patch()))
     {
@@ -89,11 +184,11 @@ coupledTemperatureFvPatchScalarField
         if (thicknessLayers_.size() > 0)
         {
             // Calculate effective thermal resistance by harmonic averaging
-            forAll(thicknessLayers_, iLayer)
+            forAll(thicknessLayers_, i)
             {
-                contactRes_ += thicknessLayers_[iLayer]/kappaLayers_[iLayer];
+                wallKappaByDelta_ += thicknessLayers_[i]/kappaLayers_[i];
             }
-            contactRes_ = 1.0/contactRes_;
+            wallKappaByDelta_ = 1/wallKappaByDelta_;
         }
     }
 
@@ -130,8 +225,8 @@ coupledTemperatureFvPatchScalarField
     {
         // Start from user entered data. Assume fixedValue.
         refValue() = *this;
-        refGrad() = 0.0;
-        valueFraction() = 1.0;
+        refGrad() = 0;
+        valueFraction() = 1;
     }
 }
 
@@ -152,7 +247,7 @@ coupledTemperatureFvPatchScalarField
     thicknessLayers_(psf.thicknessLayers_),
     kappaLayers_(psf.kappaLayers_),
     qs_(mapper(psf.qs_)),
-    contactRes_(psf.contactRes_)
+    wallKappaByDelta_(psf.wallKappaByDelta_)
 {}
 
 
@@ -170,7 +265,7 @@ coupledTemperatureFvPatchScalarField
     thicknessLayers_(psf.thicknessLayers_),
     kappaLayers_(psf.kappaLayers_),
     qs_(psf.qs_),
-    contactRes_(psf.contactRes_)
+    wallKappaByDelta_(psf.wallKappaByDelta_)
 {}
 
 
@@ -188,8 +283,6 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag + 1;
 
-    const label patchi = patch().index();
-
     // Get the coupling information from the mappedPatchBase
     const mappedPatchBase& mpp =
         refCast<const mappedPatchBase>(patch().patch());
@@ -197,109 +290,93 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
     const fvPatch& patchNbr =
         refCast<const fvMesh>(mpp.nbrMesh()).boundary()[patchiNbr];
 
-    // Calculate the temperature by harmonic averaging
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    typedef coupledTemperatureFvPatchScalarField thisType;
-
     const fvPatchScalarField& TpNbr =
         patchNbr.lookupPatchField<volScalarField, scalar>(TnbrName_);
 
-    if (!isA<thisType>(TpNbr))
+    if (!isA<coupledTemperatureFvPatchScalarField>(TpNbr))
     {
         FatalErrorInFunction
             << "Patch field for " << internalField().name() << " on "
-            << patch().name() << " is of type " << thisType::typeName
-            << endl << "The neighbouring patch field " << TnbrName_ << " on "
+            << this->patch().name() << " is of type "
+            << coupledTemperatureFvPatchScalarField::typeName
+            << endl << "The neighbouring patch field "
+            << internalField().name() << " on "
             << patchNbr.name() << " is required to be the same, but is "
             << "currently of type " << TpNbr.type() << exit(FatalError);
     }
 
-    const thisType& coupledTemperatureNbr = refCast<const thisType>(TpNbr);
+    const coupledTemperatureFvPatchScalarField& coupledTemperatureNbr =
+        refCast<const coupledTemperatureFvPatchScalarField>(TpNbr);
 
-    const scalarField TcNbr
-    (
-        contactRes_ == 0
-      ? mpp.distribute(coupledTemperatureNbr.patchInternalField())
-      : mpp.distribute(coupledTemperatureNbr)
-    );
-
-    const thermophysicalTransportModel& ttm =
-        patch().boundaryMesh().mesh()
-       .lookupType<thermophysicalTransportModel>();
-
-    const thermophysicalTransportModel& ttmNbr =
-        patchNbr.boundaryMesh().mesh()
-       .lookupType<thermophysicalTransportModel>();
-
-    const scalarField kappa(ttm.kappaEff(patchi));
-
-    const scalarField kappaByDelta(kappa*patch().deltaCoeffs());
-
-    const scalarField kappaByDeltaNbr
-    (
-        contactRes_ == 0
-      ? mpp.distribute
-        (
-            ttmNbr.kappaEff(patchiNbr)*patchNbr.deltaCoeffs()
-        )
-      : tmp<scalarField>(new scalarField(size(), contactRes_))
-    );
-
-    scalarField qTot(qs_);
+    scalarField sumq(qs_);
 
     if (qrName_ != "none")
     {
-        qTot += patch().lookupPatchField<volScalarField, scalar>(qrName_);
+        sumq += patch().lookupPatchField<volScalarField, scalar>(qrName_);
     }
 
     if (qrNbrName_ != "none")
     {
-        qTot += mpp.distribute
+        sumq += mpp.distribute
         (
             patchNbr.lookupPatchField<volScalarField, scalar>(qrNbrName_)
         );
     }
 
-    tmp<scalarField> qCorr(ttm.qCorr(patchi));
+    tmp<scalarField> kappa;
+    tmp<scalarField> sumKappaTByDelta;
+    tmp<scalarField> sumKappaByDelta;
+    tmp<scalarField> qByKappa;
 
-    if (qCorr.valid())
+    // q = alpha.this*sumq
+    getThis(kappa, sumKappaTByDelta, sumKappaByDelta, sumq, qByKappa);
+
+    // Add neighbour contributions
     {
-        qTot += qCorr;
+        tmp<scalarField> sumKappaTByDeltaNbr;
+        tmp<scalarField> sumKappaByDeltaNbr;
+        tmp<scalarField> qNbr;
+
+        if (wallKappaByDelta_ == 0)
+        {
+            coupledTemperatureNbr.getNbr
+            (
+                sumKappaTByDeltaNbr,
+                sumKappaByDeltaNbr,
+                qNbr
+            );
+
+            add(sumKappaTByDelta, mpp.distribute(sumKappaTByDeltaNbr));
+            add(sumKappaByDelta, mpp.distribute(sumKappaByDeltaNbr));
+        }
+        else
+        {
+            // Get the neighbour wall temperature and flux correction
+            tmp<scalarField> TwNbr;
+            coupledTemperatureNbr.getNbr(TwNbr, qNbr);
+
+            add(sumKappaByDelta, scalarField(size(), wallKappaByDelta_));
+            add(sumKappaTByDelta, wallKappaByDelta_*mpp.distribute(TwNbr));
+        }
+
+        if (qNbr.valid())
+        {
+            sumq += mpp.distribute(qNbr);
+        }
     }
 
-    tmp<scalarField> qCorrNbr(ttmNbr.qCorr(patchiNbr));
+    this->valueFraction() =
+        sumKappaByDelta()/(kappa()*patch().deltaCoeffs() + sumKappaByDelta());
 
-    if (qCorrNbr.valid())
-    {
-        qTot += mpp.distribute(qCorrNbr);
-    }
+    this->refValue() = (sumKappaTByDelta() + sumq)/sumKappaByDelta();
 
-    // Both sides agree on
-    // - temperature : (kappaByDelta*fld + kappaByDeltaNbr*nbrFld)
-    //                /(kappaByDelta + kappaByDeltaNbr)
-    // - gradient    : (temperature - fld)*delta
-    // We've got a degree of freedom in how to implement this in a mixed bc.
-    // (what gradient, what fixedValue and mixing coefficient)
-    // Two reasonable choices:
-    // 1. specify above temperature on one side (preferentially the high side)
-    //    and above gradient on the other. So this will switch between pure
-    //    fixedValue and pure fixedGradient
-    // 2. specify gradient and temperature such that the equations are the
-    //    same on both sides. This leads to the choice of
-    //    - refGradient = qTot/kappa;
-    //    - refValue = neighbour value
-    //    - mixFraction = kappaByDeltaNbr / (kappaByDeltaNbr + kappaByDelta)
-
-    this->valueFraction() = kappaByDeltaNbr/(kappaByDeltaNbr + kappaByDelta);
-    this->refValue() = TcNbr;
-    this->refGrad() = qTot/kappa;
+    this->refGrad() = qByKappa;
 
     mixedFvPatchScalarField::updateCoeffs();
 
     if (debug)
     {
-        scalar Q = gSum(kappa*patch().magSf()*snGrad());
+        const scalar Q = gSum(kappa()*patch().magSf()*snGrad());
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
@@ -326,7 +403,6 @@ void Foam::coupledTemperatureFvPatchScalarField::write
 ) const
 {
     mixedFvPatchScalarField::write(os);
-    writeEntry(os, "Tnbr", TnbrName_);
     writeEntry(os, "qrNbr", qrNbrName_);
     writeEntry(os, "qr", qrName_);
     writeEntry(os, "thicknessLayers", thicknessLayers_);

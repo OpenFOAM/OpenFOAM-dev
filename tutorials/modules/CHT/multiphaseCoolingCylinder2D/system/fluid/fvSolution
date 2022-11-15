@@ -1,4 +1,4 @@
- /*--------------------------------*- C++ -*----------------------------------*\
+/*--------------------------------*- C++ -*----------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
@@ -9,64 +9,75 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 solvers
 {
-    "(rho|rhoFinal)"
+    "alpha.*"
     {
-        solver          diagonal;
+        nAlphaCorr      1;
+        nAlphaSubCycles 2;
     }
 
     p_rgh
     {
-        solver           GAMG;
-        smoother         GaussSeidel;
+        solver          GAMG;
+        smoother        DIC;
 
-        tolerance        1e-7;
-        relTol           0.01;
-
-        maxIter          100;
-    }
-
-    "(U|e|k|omega)"
-    {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-
-        tolerance       1e-6;
-        relTol          0.1;
+        tolerance       1e-7;
+        relTol          0.01;
     }
 
     p_rghFinal
     {
         $p_rgh;
-        relTol         0;
+        relTol          0;
     }
 
-    "(U|e|k|omega)Final"
+    "U.*"
     {
-        $U;
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
+        tolerance       1e-7;
+        relTol          0;
+    }
+
+    "e.*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
+        tolerance       1e-7;
+        relTol          0;
+    }
+
+    "(k|epsilon).*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
+        tolerance       1e-7;
         relTol          0;
     }
 }
 
 PIMPLE
 {
-    nCorrectors     2;
+    nCorrectors      1;
     nNonOrthogonalCorrectors 1;
-    pRefCell        0;
-    pRefValue       0;
 }
 
 relaxationFactors
 {
     equations
     {
-        ".*" 1;
+        ".*"            1;
     }
 }
+
 
 // ************************************************************************* //
