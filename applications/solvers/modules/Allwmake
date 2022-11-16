@@ -1,0 +1,16 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
+
+wmake $targetType fluidSolver
+wmake $targetType incompressibleFluid
+wmake $targetType isothermalFluid
+wmake $targetType fluid
+wmake $targetType multicomponentFluid
+compressibleVoF/Allwmake $targetType $*
+multiphaseEuler/Allwmake $targetType $*
+wmake $targetType solid
+
+#------------------------------------------------------------------------------
