@@ -59,7 +59,7 @@ SourceFiles
 #define ThermalPhaseChangePhaseSystem_H
 
 #include "phaseSystem.H"
-#include "saturationModel.H"
+#include "interfaceSaturationTemperatureModel.H"
 #include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -80,7 +80,7 @@ class ThermalPhaseChangePhaseSystem
 
         typedef HashTable
         <
-            autoPtr<saturationModel>,
+            autoPtr<interfaceSaturationTemperatureModel>,
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > saturationModelTable;
@@ -141,8 +141,11 @@ public:
 
     // Member Functions
 
-        //- Return the saturationModel
-        const saturationModel& saturation(const phaseInterfaceKey& key) const;
+        //- Return the saturation temperature model for an interface
+        const interfaceSaturationTemperatureModel& saturation
+        (
+            const phaseInterfaceKey& key
+        ) const;
 
         //- Return the mass transfer rate for an interface
         virtual tmp<volScalarField> dmdtf(const phaseInterfaceKey& key) const;

@@ -22,86 +22,105 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::saturationModels::constantSaturationConditions
+    Foam::interfaceSaturationTemperatureModel
 
 Description
-    Constant saturation pressure and temperature.
+    Wrapper around saturationTemperatureModel to facilitate convenient
+    construction on interfaces
 
 SourceFiles
-    constantSaturationConditions.C
+    interfaceSaturationTemperatureModel.C
+    interfaceSaturationTemperatureModelNew.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constantSaturationConditions_H
-#define constantSaturationConditions_H
+#ifndef interfaceSaturationTemperatureModel_H
+#define interfaceSaturationTemperatureModel_H
 
-#include "saturationModel.H"
+#include "volFields.H"
+#include "dictionary.H"
+#include "phaseInterface.H"
+#include "saturationTemperatureModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationModels
-{
 
 /*---------------------------------------------------------------------------*\
-                Class constantSaturationConditions Declaration
+             Class interfaceSaturationTemperatureModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class constantSaturationConditions
+class interfaceSaturationTemperatureModel
 :
-    public saturationModel
+    public regIOobject
 {
-protected:
-
     // Private Data
 
-        //- Constant saturation pressure
-        dimensionedScalar pSat_;
+        //- The saturation temperature model
+        autoPtr<saturationTemperatureModel> saturationModel_;
 
-        //- Constant saturation temperature
-        dimensionedScalar Tsat_;
+        //- The interface
+        const phaseInterface interface_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("constant");
+    TypeName("saturationTemperatureModel");
+
+
+    //- Declare runtime construction
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        interfaceSaturationTemperatureModel,
+        dictionary,
+        (
+            const dictionary& dict,
+            const phaseInterface& interface
+        ),
+        (dict, interface)
+    );
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        constantSaturationConditions
+        interfaceSaturationTemperatureModel
         (
             const dictionary& dict,
             const phaseInterface& interface
         );
 
+    // Selectors
+
+        static autoPtr<interfaceSaturationTemperatureModel> New
+        (
+            const dictionary& dict,
+            const phaseInterface& interface,
+            const bool outer=true
+        );
 
     //- Destructor
-    virtual ~constantSaturationConditions();
+    virtual ~interfaceSaturationTemperatureModel();
 
 
     // Member Functions
 
-        //- Saturation pressure
-        virtual tmp<volScalarField> pSat(const volScalarField& T) const;
-
-        //- Saturation pressure derivative w.r.t. temperature
-        virtual tmp<volScalarField> pSatPrime(const volScalarField& T) const;
-
-        //- Natural log of the saturation pressure
-        virtual tmp<volScalarField> lnPSat(const volScalarField& T) const;
+        //- Access the interface
+        const phaseInterface& interface() const;
 
         //- Saturation temperature
-        virtual tmp<volScalarField> Tsat(const volScalarField& p) const;
+        tmp<volScalarField> Tsat(const volScalarField& p) const;
+
+        // Dummy write for regIOobject
+        bool writeData(Ostream& os) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace saturationModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

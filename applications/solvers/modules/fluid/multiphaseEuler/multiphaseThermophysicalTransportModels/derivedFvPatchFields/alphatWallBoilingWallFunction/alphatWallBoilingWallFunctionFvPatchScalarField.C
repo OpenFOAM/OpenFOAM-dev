@@ -28,7 +28,7 @@ License
 #include "heatTransferPhaseSystem.H"
 #include "compressibleMomentumTransportModels.H"
 #include "phaseCompressibleMomentumTransportModel.H"
-#include "saturationModel.H"
+#include "interfaceSaturationTemperatureModel.H"
 #include "rhoMulticomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -389,7 +389,13 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
             const phaseInterface interface(vapor, liquid);
 
-            if (fluid.foundInterfacialModel<saturationModel>(interface))
+            if
+            (
+                fluid.foundInterfacialModel
+                <
+                    interfaceSaturationTemperatureModel
+                >(interface)
+            )
             {
                 // Retrieve turbulence properties from models
                 const phaseCompressible::momentumTransportModel& turbModel
@@ -462,8 +468,11 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 const scalarField Cpw(lThermo.Cp(Tw, patchi));
 
                 // Saturation temperature
-                const saturationModel& satModel =
-                    fluid.lookupInterfacialModel<saturationModel>(interface);
+                const interfaceSaturationTemperatureModel& satModel =
+                    fluid.lookupInterfacialModel
+                    <
+                        interfaceSaturationTemperatureModel
+                    >(interface);
                 const tmp<volScalarField> tTsat = satModel.Tsat(lThermo.p());
                 const volScalarField& Tsat = tTsat();
                 const fvPatchScalarField& Tsatw(Tsat.boundaryField()[patchi]);

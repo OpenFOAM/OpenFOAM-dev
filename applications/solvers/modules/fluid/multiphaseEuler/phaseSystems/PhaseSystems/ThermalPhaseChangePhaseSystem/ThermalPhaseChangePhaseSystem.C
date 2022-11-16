@@ -87,7 +87,10 @@ ThermalPhaseChangePhaseSystem
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
 
-        this->template validateMassTransfer<saturationModel>(interface);
+        this->template validateMassTransfer
+        <
+            interfaceSaturationTemperatureModel
+        >(interface);
 
         if
         (
@@ -218,7 +221,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-const Foam::saturationModel&
+const Foam::interfaceSaturationTemperatureModel&
 Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::saturation
 (
     const phaseInterfaceKey& key
@@ -329,7 +332,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
     forAllConstIter(phaseSystem::dmdtfTable, nDmdtfs_, nDmdtfIter)
     {
         const phaseInterface interface(*this, nDmdtfIter.key());
-        const saturationModel& satModel = this->saturation(nDmdtfIter.key());
+        const interfaceSaturationTemperatureModel& satModel =
+            this->saturation(nDmdtfIter.key());
 
         Tns.insert
         (

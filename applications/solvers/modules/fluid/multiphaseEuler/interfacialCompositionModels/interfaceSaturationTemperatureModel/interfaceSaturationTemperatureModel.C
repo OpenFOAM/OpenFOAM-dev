@@ -23,107 +23,72 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constantSaturationConditions.H"
-#include "addToRunTimeSelectionTable.H"
+#include "interfaceSaturationTemperatureModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationModels
-{
-    defineTypeNameAndDebug(constantSaturationConditions, 0);
-    addToRunTimeSelectionTable
+    defineTypeNameAndDebug(interfaceSaturationTemperatureModel, 0);
+    defineRunTimeSelectionTable
     (
-        saturationModel,
-        constantSaturationConditions,
+        interfaceSaturationTemperatureModel,
         dictionary
     );
-}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::saturationModels::constantSaturationConditions::
-constantSaturationConditions
+Foam::interfaceSaturationTemperatureModel::interfaceSaturationTemperatureModel
 (
     const dictionary& dict,
     const phaseInterface& interface
 )
 :
-    saturationModel(dict, interface),
-    pSat_("pSat", dimPressure, dict),
-    Tsat_("Tsat", dimTemperature, dict)
+    regIOobject
+    (
+        IOobject
+        (
+            IOobject::groupName(typeName, interface.name()),
+            interface.mesh().time().timeName(),
+            interface.mesh()
+        )
+    ),
+    saturationModel_(saturationTemperatureModel::New(dict)),
+    interface_(interface)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::saturationModels::constantSaturationConditions::
-~constantSaturationConditions()
+Foam::interfaceSaturationTemperatureModel::
+~interfaceSaturationTemperatureModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::saturationModels::constantSaturationConditions::pSat
-(
-    const volScalarField& T
-) const
+const Foam::phaseInterface&
+Foam::interfaceSaturationTemperatureModel::interface() const
 {
-    return volScalarField::New
-    (
-        "pSat",
-        T.mesh(),
-        pSat_
-    );
+    return interface_;
 }
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::saturationModels::constantSaturationConditions::pSatPrime
-(
-    const volScalarField& T
-) const
-{
-    return volScalarField::New
-    (
-        "pSatPrime",
-        T.mesh(),
-        dimensionedScalar(dimPressure/dimTemperature, 0)
-    );
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::saturationModels::constantSaturationConditions::lnPSat
-(
-    const volScalarField& T
-) const
-{
-    return volScalarField::New
-    (
-        "lnPSat",
-        T.mesh(),
-        dimensionedScalar(dimless, log(pSat_.value()))
-    );
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::saturationModels::constantSaturationConditions::Tsat
+Foam::interfaceSaturationTemperatureModel::Tsat
 (
     const volScalarField& p
 ) const
 {
-    return volScalarField::New
-    (
-        "Tsat",
-        p.mesh(),
-        Tsat_
-    );
+    return saturationModel_->Tsat(p);
+}
+
+
+bool Foam::interfaceSaturationTemperatureModel::writeData(Ostream& os) const
+{
+    return os.good();
 }
 
 

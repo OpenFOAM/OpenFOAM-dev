@@ -67,10 +67,7 @@ interfaceComposition
         type saturated;
         species ( H2O );
         Le 1.0;
-        saturationPressure
-        {
-            type ArdenBuck;
-        }
+        pSat ArdenBuck;
     }
 }
 

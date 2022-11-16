@@ -118,20 +118,18 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
 
     saturationModel12_.reset
     (
-        saturationModel::New
+        saturationPressureModel::New
         (
-            dict.subDict(species1Name_).subDict("interaction"),
-            interface,
-            false
+            "interaction",
+            dict.subDict(species1Name_)
         ).ptr()
     );
     saturationModel21_.reset
     (
-        saturationModel::New
+        saturationPressureModel::New
         (
-            dict.subDict(species2Name_).subDict("interaction"),
-            interface,
-            false
+            "interaction",
+            dict.subDict(species2Name_)
         ).ptr()
     );
 

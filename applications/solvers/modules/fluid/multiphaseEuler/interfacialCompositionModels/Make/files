@@ -14,13 +14,7 @@ interfaceCompositionModels/nonRandomTwoLiquid/nonRandomTwoLiquid.C
 interfaceCompositionModels/Raoult/Raoult.C
 interfaceCompositionModels/saturated/saturated.C
 
-saturationModels/saturationModel/saturationModel.C
-saturationModels/saturationModel/saturationModelNew.C
-saturationModels/Antoine/Antoine.C
-saturationModels/AntoineExtended/AntoineExtended.C
-saturationModels/ArdenBuck/ArdenBuck.C
-saturationModels/polynomial/polynomial.C
-saturationModels/function1/function1.C
-saturationModels/constantSaturationConditions/constantSaturationConditions.C
+interfaceSaturationTemperatureModel/interfaceSaturationTemperatureModel.C
+interfaceSaturationTemperatureModel/interfaceSaturationTemperatureModelNew.C
 
 LIB = $(FOAM_LIBBIN)/libeulerianInterfacialCompositionModels

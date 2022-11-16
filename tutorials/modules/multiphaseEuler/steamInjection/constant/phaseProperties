@@ -59,13 +59,12 @@ surfaceTension
     }
 }
 
-saturation
+saturationTemperature
 {
     steam_water
     {
-        type constant;
-        pSat 1e5;
-        Tsat 372.76;
+        type            constant;
+        value           372.76;
     }
 }
 

@@ -115,10 +115,7 @@ interfaceComposition
         type saturated;
         species ( water );
         Le 1.0;
-        saturationPressure
-        {
-            type ArdenBuck;
-        }
+        pSat ArdenBuck;
     }
 
     gas_liquid_inThe_liquid

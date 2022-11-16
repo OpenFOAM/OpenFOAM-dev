@@ -37,7 +37,7 @@ SourceFiles
 #define saturated_H
 
 #include "interfaceCompositionModel.H"
-#include "saturationModel.H"
+#include "saturationPressureModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,7 +65,7 @@ protected:
         label saturatedIndex_;
 
         //- Saturation pressure model
-        autoPtr<saturationModel> saturationModel_;
+        autoPtr<saturationPressureModel> saturationModel_;
 
 
     // Private Member Functions

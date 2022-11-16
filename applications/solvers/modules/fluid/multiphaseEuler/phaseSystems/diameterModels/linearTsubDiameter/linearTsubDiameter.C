@@ -25,7 +25,7 @@ License
 
 #include "linearTsubDiameter.H"
 #include "phaseSystem.H"
-#include "saturationModel.H"
+#include "interfaceSaturationTemperatureModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -103,10 +103,19 @@ void Foam::diameterModels::linearTsub::correct()
     const phaseModel& liquid = fluid.phases()[liquidPhaseName_];
     const phaseInterface interface(phase(), liquid);
 
-    if (fluid.foundInterfacialModel<saturationModel>(interface))
+    if
+    (
+        fluid.foundInterfacialModel
+        <
+            interfaceSaturationTemperatureModel
+        >(interface)
+    )
     {
-        const saturationModel& satModel =
-            fluid.lookupInterfacialModel<saturationModel>(interface);
+        const interfaceSaturationTemperatureModel& satModel =
+            fluid.lookupInterfacialModel
+            <
+                interfaceSaturationTemperatureModel
+            >(interface);
 
         const volScalarField Tsub
         (

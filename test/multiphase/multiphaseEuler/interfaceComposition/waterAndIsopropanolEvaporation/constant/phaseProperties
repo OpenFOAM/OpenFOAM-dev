@@ -82,10 +82,7 @@ interfaceComposition
              type saturated;
              species (H2O);
              Le 1.0;
-             saturationPressure
-             {
-                 type ArdenBuck;
-             }
+             pSat ArdenBuck;
         }
         C3H8O
         {
@@ -101,7 +98,7 @@ interfaceComposition
              type saturated;
              species (C3H8O);
              Le 1.0;
-             saturationPressure
+             pSat
              {
                  type Antoine;
                  A 22.7057916;

@@ -23,40 +23,32 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "saturationModel.H"
+#include "interfaceSaturationTemperatureModel.H"
 #include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::saturationModel> Foam::saturationModel::New
+Foam::autoPtr<Foam::interfaceSaturationTemperatureModel>
+Foam::interfaceSaturationTemperatureModel::New
 (
     const dictionary& dict,
     const phaseInterface& interface,
     const bool outer
 )
 {
+    DebugVar("**********");
+
     const dictionary& modelDict =
-        outer ? interface.fluid().modelSubDict<saturationModel>(dict) : dict;
+        outer
+      ? interface.fluid().modelSubDict
+        <interfaceSaturationTemperatureModel>(dict)
+      : dict;
 
-    const word saturationModelType(modelDict.lookup("type"));
-
-    Info<< "Selecting saturationModel for "
-        << interface.name() << ": " << saturationModelType << endl;
-
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(saturationModelType);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown saturationModelType type "
-            << saturationModelType << endl << endl
-            << "Valid saturationModel types are : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
-
-    return cstrIter()(modelDict, interface);
+    return
+        autoPtr<interfaceSaturationTemperatureModel>
+        (
+            new interfaceSaturationTemperatureModel(modelDict, interface)
+        );
 }
 
 

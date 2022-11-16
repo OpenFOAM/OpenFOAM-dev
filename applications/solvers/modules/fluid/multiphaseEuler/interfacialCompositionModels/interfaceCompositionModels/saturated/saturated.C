@@ -70,15 +70,7 @@ Foam::interfaceCompositionModels::saturated::saturated
     interfaceCompositionModel(dict, interface),
     saturatedName_(species()[0]),
     saturatedIndex_(composition().species()[saturatedName_]),
-    saturationModel_
-    (
-        saturationModel::New
-        (
-            dict.subDict("saturationPressure"),
-            interface,
-            false
-        )
-    )
+    saturationModel_(saturationPressureModel::New("pSat", dict))
 {
     if (species().size() != 1)
     {
