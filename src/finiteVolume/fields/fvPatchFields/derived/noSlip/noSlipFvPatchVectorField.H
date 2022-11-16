@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,12 @@ Class
     Foam::noSlipFvPatchVectorField
 
 Description
-    This boundary condition fixes the velocity to zero at walls.
+    This boundary condition fixes the velocity to zero at walls and assumes
+    the walls are stationary.
+
+    For stationary walls with sliding vertices, e.g. engine liners, the normal
+    component of the velocity is set from the wall face-flux to ensure
+    continuity.
 
 Usage
     Example of the boundary condition specification:
@@ -123,6 +128,9 @@ public:
 
 
     // Member Functions
+
+        //- Update the coefficients associated with the patch field
+        virtual void updateCoeffs();
 
         //- Write
         virtual void write(Ostream&) const;

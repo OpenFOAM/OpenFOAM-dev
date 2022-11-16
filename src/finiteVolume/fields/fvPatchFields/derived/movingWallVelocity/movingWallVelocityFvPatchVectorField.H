@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,9 @@ Class
     Foam::movingWallVelocityFvPatchVectorField
 
 Description
-    This boundary condition provides a velocity condition for cases with
-    moving walls.
+    This boundary condition provides a no-slip velocity condition for ridged
+    moving walls or flexible moving walls on which the mesh vertices move
+    with the surface.
 
 Usage
     Example of the boundary condition specification:

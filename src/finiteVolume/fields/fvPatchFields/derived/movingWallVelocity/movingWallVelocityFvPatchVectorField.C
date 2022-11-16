@@ -87,13 +87,21 @@ void Foam::movingWallVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = internalField().mesh();
+    const fvMesh& mesh = patch().boundaryMesh().mesh();
 
     if (mesh.moving())
     {
         const fvPatch& p = patch();
-        const polyPatch& pp = p.patch();
+
+        const volVectorField& U =
+            static_cast<const volVectorField&>(internalField());
+
+        const vectorField n(p.nf());
+        tmp<scalarField> Un = fvc::meshPhi(U, p.index())/(p.magSf() + vSmall);
+
         const pointField& oldPoints = mesh.oldPoints();
+
+        const polyPatch& pp = p.patch();
 
         vectorField oldFc(pp.size());
 
@@ -102,18 +110,10 @@ void Foam::movingWallVelocityFvPatchVectorField::updateCoeffs()
             oldFc[i] = pp[i].centre(oldPoints);
         }
 
-        const scalar deltaT = mesh.time().deltaTValue();
-
-        const vectorField Up((pp.faceCentres() - oldFc)/deltaT);
-
-        const volVectorField& U =
-            static_cast<const volVectorField&>(internalField());
-
-        const scalarField phip(fvc::meshPhi(U, p.index()));
-
-        const vectorField n(p.nf());
-        const scalarField& magSf = p.magSf();
-        tmp<scalarField> Un = phip/(magSf + vSmall);
+        const vectorField Up
+        (
+            (pp.faceCentres() - oldFc)/mesh.time().deltaTValue()
+        );
 
         vectorField::operator=(Up + n*(Un - (n & Up)));
     }

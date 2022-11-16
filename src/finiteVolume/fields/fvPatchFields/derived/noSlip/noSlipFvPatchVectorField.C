@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "noSlipFvPatchVectorField.H"
+#include "volFields.H"
+#include "fvcMeshPhi.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -78,6 +80,32 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::noSlipFvPatchVectorField::updateCoeffs()
+{
+    if (updated())
+    {
+        return;
+    }
+
+    const fvMesh& mesh = patch().boundaryMesh().mesh();
+
+    if (mesh.moving())
+    {
+        const fvPatch& p = patch();
+
+        const volVectorField& U =
+            static_cast<const volVectorField&>(internalField());
+
+        const vectorField n(p.nf());
+        tmp<scalarField> Un = fvc::meshPhi(U, p.index())/(p.magSf() + vSmall);
+
+        vectorField::operator=(n*Un);
+    }
+
+    fixedValueFvPatchVectorField::updateCoeffs();
+}
+
 
 void Foam::noSlipFvPatchVectorField::write(Ostream& os) const
 {
