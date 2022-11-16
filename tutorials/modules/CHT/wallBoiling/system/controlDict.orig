@@ -1,0 +1,176 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format          ascii;
+    class           dictionary;
+    location        "system";
+    object          controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     foamMultiRun;
+
+regionSolvers
+{
+    fluid           multiphaseEuler;
+    solid           solid;
+}
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         10;
+
+deltaT          0.0001;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.5;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  9;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.5;
+
+maxDi           200;
+
+maxDeltaT       0.005;
+
+functions
+{
+    #includeFunc wallHeatFlux(funcName=WHFliquid, writeFields=false, phase=liquid, region=fluid)
+    #includeFunc wallHeatFlux(funcName=WHFgas, writeFields=false, phase=gas, region=fluid)
+    #includeFunc wallHeatFlux(funcName=WHFsolid, writeFields=false, region=solid, log=yes)
+
+    writeWallBoilingProperties
+    {
+        type            wallBoilingProperties;
+        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        writeControl    writeTime;
+        region          fluid;
+        phase           liquid;
+    }
+    outflow
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        region          fluid;
+        regionType      patch;
+        name            outlet;
+        operation       sum;
+        fields          ( alphaRhoPhi.gas  alphaRhoPhi.liquid);
+    }
+    inflow
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        region          fluid;
+        regionType      patch;
+        name            inlet;
+        operation       sum;
+        fields          ( alphaRhoPhi.gas alphaRhoPhi.liquid);
+    }
+    outletGas
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        region          fluid;
+        regionType      patch;
+        name            outlet;
+        operation       sum;
+        weightField     alphaRhoPhi.gas;
+        fields          ( h.gas );
+    }
+    outletLiquid
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        region          fluid;
+        regionType      patch;
+        name            outlet;
+        operation       sum;
+        weightField     alphaRhoPhi.liquid;
+        fields          ( h.liquid );
+    }
+    inletGas
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        region          fluid;
+        regionType      patch;
+        name            inlet;
+        operation       sum;
+        weightField     alphaRhoPhi.gas;
+        fields          ( h.gas );
+    }
+    inletLiquid
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        region          fluid;
+        regionType      patch;
+        name            inlet;
+        operation       sum;
+        weightField     alphaRhoPhi.liquid;
+        fields          ( h.liquid );
+    }
+    writeObjects1
+    {
+        type        writeObjects;
+        libs        ("libutilityFunctionObjects.so");
+        region          fluid;
+
+        objects
+        (
+            rho.gas
+            mu.gas
+            psi.gas
+            kappa.gas
+            rho.liquid
+            mu.liquid
+            psi.liquid
+            kappa.liquid
+            h.liquid
+            h.gas
+        );
+        writeControl    writeTime;
+        writeInterval   1;
+    }
+}
+
+
+// ************************************************************************* //
