@@ -48,13 +48,16 @@ Foam::compressible::cavitationModel::cavitationModel
 :
     phases_(phases),
     liquidIndex_(phases.index(dict.lookup<word>("liquid"))),
-    pSat_("pSat", dimPressure, dict.lookup("pSat"))
+    saturationModel_
+    (
+        saturationPressureModel::New(dict.subDict("saturationPressure"))
+    )
 {}
 
 
 bool Foam::compressible::cavitationModel::read(const dictionary& dict)
 {
-    dict.lookup("pSat") >> pSat_;
+    saturationModel_.reset(saturationPressureModel::New(dict).ptr());
 
     return true;
 }

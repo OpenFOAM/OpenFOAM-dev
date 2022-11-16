@@ -56,7 +56,7 @@ Foam::compressible::cavitationModels::Kunz::Kunz
     Cc_("Cc", dimless, dict),
     Cv_("Cv", dimless, dict),
 
-    p0_("0", pSat().dimensions(), 0.0)
+    p0_("0", dimPressure, 0)
 {
     correct();
 }
@@ -81,11 +81,14 @@ Foam::compressible::cavitationModels::Kunz::mDotcvAlphal() const
         min(max(alphal(), scalar(0)), scalar(1))
     );
 
+    const volScalarField::Internal pSatv(this->pSatv());
+    const volScalarField::Internal pSatl(this->pSatl());
+
     return Pair<tmp<volScalarField::Internal>>
     (
         mcCoeff_*sqr(limitedAlphal)
-       *max(p - pSat(), p0_)/max(p - pSat(), 0.01*pSat()),
-       -mvCoeff_*min(p - pSat(), p0_)
+       *max(p - pSatv, p0_)/max(p - pSatv, 0.01*pSatv),
+       -mvCoeff_*min(p - pSatl, p0_)
     );
 }
 
@@ -107,11 +110,14 @@ Foam::compressible::cavitationModels::Kunz::mDotcvP() const
         min(max(alphal(), scalar(0)), scalar(1))
     );
 
+    const volScalarField::Internal pSatv(this->pSatv());
+    const volScalarField::Internal pSatl(this->pSatl());
+
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*sqr(limitedAlphal)*(1.0 - limitedAlphal)
-       *pos0(p - pSat())/max(p - pSat(), 0.01*pSat()),
-        (-mvCoeff_)*limitedAlphal*neg(p - pSat())
+        mcCoeff_*sqr(limitedAlphal)*(1 - limitedAlphal)
+       *pos0(p - pSatv)/max(p - pSatv, 0.01*pSatv),
+       -mvCoeff_*limitedAlphal*neg(p - pSatl)
     );
 }
 

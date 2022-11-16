@@ -38,6 +38,7 @@ SourceFiles
 #include "compressibleTwoPhases.H"
 #include "fvMatricesFwd.H"
 #include "Pair.H"
+#include "saturationPressureModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,8 +63,8 @@ protected:
         //- Index of the liquid
         const bool liquidIndex_;
 
-        //- Saturation vapour pressure
-        dimensionedScalar pSat_;
+        //- The saturation pressure model
+        autoPtr<saturationPressureModel> saturationModel_;
 
 
     // Protected Member Functions
@@ -90,6 +91,30 @@ protected:
         inline const volScalarField::Internal& rhov() const
         {
             return phases_.rho(!liquidIndex_);
+        }
+
+        //- Return the liquid thermo
+        inline const rhoThermo& thermol() const
+        {
+            return phases_.thermo(liquidIndex_);
+        }
+
+        //- Return the vapour thermo
+        inline const rhoThermo& thermov() const
+        {
+            return phases_.thermo(!liquidIndex_);
+        }
+
+        //- Return the saturation vapour pressure for the liquid
+        inline tmp<volScalarField::Internal> pSatl() const
+        {
+            return saturationModel_->pSat(thermol().T()());
+        }
+
+        //- Return the saturation vapour pressure for the vapour
+        inline tmp<volScalarField::Internal> pSatv() const
+        {
+            return saturationModel_->pSat(thermov().T()());
         }
 
 
@@ -139,10 +164,16 @@ public:
 
     // Member Functions
 
-        //- Return the saturation vapour pressure
-        inline const dimensionedScalar& pSat() const
+        //- Return the saturation vapour pressure for phase 1
+        inline tmp<volScalarField::Internal> pSat1() const
         {
-            return pSat_;
+            return liquidIndex_ ? pSatv() : pSatl();
+        }
+
+        //- Return the saturation vapour pressure for phase 2
+        inline tmp<volScalarField::Internal> pSat2() const
+        {
+            return liquidIndex_ ? pSatl() : pSatv();
         }
 
         //- Return the mass condensation and vaporisation rates as a

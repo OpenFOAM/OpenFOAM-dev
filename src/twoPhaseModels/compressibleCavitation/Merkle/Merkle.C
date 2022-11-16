@@ -56,7 +56,7 @@ Foam::compressible::cavitationModels::Merkle::Merkle
     Cc_("Cc", dimless, dict),
     Cv_("Cv", dimless, dict),
 
-    p0_("0", pSat().dimensions(), 0.0),
+    p0_("0", dimPressure, 0),
 
     mcCoeff_(Cc_/(0.5*sqr(UInf_)*tInf_))
 {
@@ -79,8 +79,8 @@ Foam::compressible::cavitationModels::Merkle::mDotcvAlphal() const
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*max(p - pSat(), p0_),
-       -mvCoeff_*min(p - pSat(), p0_)
+        mcCoeff_*max(p - pSatv(), p0_),
+       -mvCoeff_*min(p - pSatl(), p0_)
     );
 }
 
@@ -103,8 +103,8 @@ Foam::compressible::cavitationModels::Merkle::mDotcvP() const
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*(1.0 - limitedAlphal)*pos0(p - pSat()),
-        (-mvCoeff_)*limitedAlphal*neg(p - pSat())
+        mcCoeff_*(1 - limitedAlphal)*pos0(p - pSatv()),
+       -mvCoeff_*limitedAlphal*neg(p - pSatl())
     );
 }
 

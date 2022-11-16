@@ -149,7 +149,8 @@ void Foam::fv::compressible::VoFCavitation::addSup
         const volScalarField::Internal vDot2P(pCoeff*mDot12P[1]);
 
         eqn +=
-            (vDot2P - vDot1P)*(cavitation_->pSat() - rho*gh)
+            vDot2P*cavitation_->pSat1() - vDot1P*cavitation_->pSat2()
+          - (vDot2P - vDot1P)*rho*gh
           - fvm::Sp(vDot2P - vDot1P, eqn.psi());
     }
 }

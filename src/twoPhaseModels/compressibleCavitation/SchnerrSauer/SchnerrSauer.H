@@ -90,7 +90,8 @@ class SchnerrSauer
         //- Part of the condensation and vapourisation rates
         tmp<volScalarField::Internal> pCoeff
         (
-            const volScalarField::Internal& p
+            const volScalarField::Internal& p,
+            const volScalarField::Internal& pSat
         ) const;
 
 
