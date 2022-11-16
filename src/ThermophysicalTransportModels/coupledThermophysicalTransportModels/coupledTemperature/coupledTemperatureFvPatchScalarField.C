@@ -47,7 +47,7 @@ void Foam::coupledTemperatureFvPatchScalarField::getThis
 
     kappa = ttm.kappaEff(patch().index());
 
-    qByKappa = sumq/kappa;
+    qByKappa = sumq/kappa();
 
     sumq = 0;
 
