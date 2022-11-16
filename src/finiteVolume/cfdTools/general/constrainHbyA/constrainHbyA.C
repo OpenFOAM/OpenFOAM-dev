@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,6 +119,29 @@ Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhiHbyA
     }
 
     return tphiHbyANew;
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhid
+(
+    const tmp<surfaceScalarField>& tphid,
+    const volScalarField& p
+)
+{
+    surfaceScalarField& phid = tphid.ref();
+    surfaceScalarField::Boundary& phidBf = phid.boundaryFieldRef();
+
+    const volScalarField::Boundary& pBf = p.boundaryField();
+
+    forAll(pBf, patchi)
+    {
+        if (isA<fixedFluxPressureFvPatchScalarField>(pBf[patchi]))
+        {
+            phidBf[patchi] = 0;
+        }
+    }
+
+    return tphid;
 }
 
 

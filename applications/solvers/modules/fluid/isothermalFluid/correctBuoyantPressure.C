@@ -95,16 +95,20 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
 
     if (pimple.transonic())
     {
-        const surfaceScalarField phid
+        const surfaceScalarField phidByPsi
         (
-            "phid",
-            (fvc::interpolate(psi)/fvc::interpolate(rho))
-           *fvc::relative(phiHbyA, rho, U)
+            constrainPhid
+            (
+                fvc::relative(phiHbyA, rho, U)/fvc::interpolate(rho),
+                p_rgh
+            )
         );
+
+        const surfaceScalarField phid("phid", fvc::interpolate(psi)*phidByPsi);
 
         // Subtract the compressible part
         // The resulting flux will be zero for a perfect gas
-        phiHbyA -= fvc::interpolate(psi*p)*phiHbyA/fvc::interpolate(rho);
+        phiHbyA -= fvc::interpolate(psi*p_rgh)*phidByPsi;
 
         if (pimple.consistent())
         {
@@ -121,7 +125,7 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
         fvScalarMatrix p_rghDDtEqn
         (
             fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
-          + fvc::div(phiHbyA) + fvm::div(phid, p)
+          + fvc::div(phiHbyA) + fvm::div(phid, p_rgh)
          ==
             fvModels().source(psi, p_rgh, rho.name())
         );
