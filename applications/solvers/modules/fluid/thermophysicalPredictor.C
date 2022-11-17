@@ -37,7 +37,7 @@ void Foam::solvers::fluid::thermophysicalPredictor()
       + fvc::ddt(rho, K) + fvc::div(phi, K)
       + (
             he.name() == "e"
-          ? fvc::div(fvc::absolute(phi, rho, U), p/rho)
+          ? addMotionWork(fvc::div(phi, p/rho))
           : -dpdt
         )
       + thermophysicalTransport->divq(he)

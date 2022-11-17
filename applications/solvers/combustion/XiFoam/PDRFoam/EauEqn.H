@@ -8,7 +8,7 @@ if (ign.ignited())
       + (betav*fvc::ddt(rho, K) + fvc::div(phi, K))*rho/thermo.rhou()
       + (
             heau.name() == "eau"
-          ? mvConvection->fvcDiv(fvc::absolute(phi, rho, U), p/rho)
+          ? fvc::div(fvc::absolute(phi, rho, U), p/rho)
            *rho/thermo.rhou()
           : -betav*dpdt*rho/thermo.rhou()
         )

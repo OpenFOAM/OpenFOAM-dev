@@ -7,7 +7,7 @@
       + fvc::ddt(rho, K) + fvc::div(phi, K)
       + (
             hea.name() == "ea"
-          ? mvConvection->fvcDiv(fvc::absolute(phi, rho, U), p/rho)
+          ? fvc::div(fvc::absolute(phi, rho, U), p/rho)
           : -dpdt
         )
       + thermophysicalTransport.divq(hea)

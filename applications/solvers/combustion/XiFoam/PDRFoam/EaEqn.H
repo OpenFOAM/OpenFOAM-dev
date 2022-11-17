@@ -7,7 +7,7 @@
       + betav*fvc::ddt(rho, K) + fvc::div(phi, K)
       + (
             hea.name() == "ea"
-          ? mvConvection->fvcDiv(fvc::absolute(phi, rho, U), p/rho)
+          ? fvc::div(fvc::absolute(phi, rho, U), p/rho)
           : -betav*dpdt
         )
       - fvm::laplacian(Db, hea)

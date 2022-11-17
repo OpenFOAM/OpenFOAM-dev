@@ -54,6 +54,37 @@ void Foam::solvers::isothermalFluid::continuityErrors()
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::solvers::isothermalFluid::motionWork() const
+{
+    return fvc::div
+    (
+        fvc::interpolate(rho)*fvc::meshPhi(rho, U),
+        p/rho,
+        "div(phi,(p|rho))"
+    );
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::solvers::isothermalFluid::addMotionWork
+(
+    const tmp<volScalarField>& work
+) const
+{
+    if (mesh.moving())
+    {
+        return work + motionWork();
+    }
+    else
+    {
+        return work;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solvers::isothermalFluid::isothermalFluid

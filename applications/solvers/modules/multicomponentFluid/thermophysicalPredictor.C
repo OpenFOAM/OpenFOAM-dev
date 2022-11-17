@@ -51,9 +51,9 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
             fvScalarMatrix YiEqn
             (
                 fvm::ddt(rho, Yi)
-                + mvConvection->fvmDiv(phi, Yi)
-                + thermophysicalTransport->divj(Yi)
-                ==
+              + mvConvection->fvmDiv(phi, Yi)
+              + thermophysicalTransport->divj(Yi)
+             ==
                 reaction->R(Yi)
               + fvModels().source(rho, Yi)
             );
@@ -79,7 +79,7 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
       + fvc::ddt(rho, K) + fvc::div(phi, K)
       + (
             he.name() == "e"
-          ? mvConvection->fvcDiv(fvc::absolute(phi, rho, U), p/rho)
+          ? addMotionWork(mvConvection->fvcDiv(phi, p/rho))
           : -dpdt
         )
       + thermophysicalTransport->divq(he)
