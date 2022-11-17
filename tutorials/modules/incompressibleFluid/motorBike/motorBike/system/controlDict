@@ -48,7 +48,7 @@ runTimeModifiable true;
 
 functions
 {
-    #include "cuttingPlane"
+    #include "cutPlane"
     #include "streamlines"
     #include "forceCoeffs"
 }

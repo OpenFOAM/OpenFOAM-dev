@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,15 +35,7 @@ Foam::interpolationCellPoint<Type>::interpolationCellPoint
 )
 :
     fieldInterpolation<Type, interpolationCellPoint<Type>>(psi),
-    psip_
-    (
-        volPointInterpolation::New(psi.mesh()).interpolate
-        (
-            psi,
-            "volPointInterpolate(" + psi.name() + ')',
-            true        // use cache
-        )
-    )
+    interpolationVolPointInterpolation<Type>(psi)
 {
     // Uses cellPointWeight to do interpolation which needs tet decomposition
     (void)psi.mesh().tetBasePtIs();
@@ -58,7 +50,7 @@ Foam::interpolationCellPoint<Type>::interpolationCellPoint
 )
 :
     fieldInterpolation<Type, interpolationCellPoint<Type>>(psi),
-    psip_(psip)
+    interpolationVolPointInterpolation<Type>(psi, psip)
 {
     // Uses cellPointWeight to do interpolation which needs tet decomposition
     (void)psi.mesh().tetBasePtIs();

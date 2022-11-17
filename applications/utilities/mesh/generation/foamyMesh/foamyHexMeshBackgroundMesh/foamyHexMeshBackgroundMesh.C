@@ -41,7 +41,7 @@ Description
 #include "cellShape.H"
 #include "cellModeller.H"
 #include "DynamicField.H"
-#include "isoSurface.H"
+#include "cutPolyIsoSurface.H"
 #include "vtkSurfaceWriter.H"
 #include "syncTools.H"
 
@@ -707,13 +707,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        isoSurface iso
-        (
-            mesh,
-            cellDistance,
-            pointDistance,
-            0
-        );
+        cutPolyIsoSurface iso(mesh, pointDistance, 0);
 
         isoFaces.setSize(iso.size());
         forAll(isoFaces, i)

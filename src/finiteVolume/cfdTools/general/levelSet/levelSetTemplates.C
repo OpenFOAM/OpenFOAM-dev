@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "levelSet.H"
-#include "cut.H"
+#include "cutTriTet.H"
 #include "polyMeshTetDecomposition.H"
 #include "tetIndices.H"
 
@@ -73,7 +73,7 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
                     levelP[triIs[1]],
                     levelP[triIs[2]]
                 };
-            const cut::volumeIntegrateOp<Type>
+            const cutTriTet::volumeIntegrateOp<Type>
                 positive = FixedList<Type, 4>
                 ({
                     positiveC[cI],
@@ -81,7 +81,7 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
                     positiveP[triIs[1]],
                     positiveP[triIs[2]]
                 });
-            const cut::volumeIntegrateOp<Type>
+            const cutTriTet::volumeIntegrateOp<Type>
                 negative = FixedList<Type, 4>
                 ({
                     negativeC[cI],
@@ -90,7 +90,7 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
                     negativeP[triIs[2]]
                 });
 
-            v += cut::volumeOp()(tet);
+            v += cutTriTet::volumeOp()(tet);
 
             r += tetCut(tet, level, positive, negative);
         }
@@ -142,14 +142,14 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
                     levelP[e[0]],
                     levelP[e[1]]
                 };
-            const cut::areaMagIntegrateOp<Type>
+            const cutTriTet::areaMagIntegrateOp<Type>
                 positive = FixedList<Type, 3>
                 ({
                     positiveF[fI],
                     positiveP[e[0]],
                     positiveP[e[1]]
                 });
-            const cut::areaMagIntegrateOp<Type>
+            const cutTriTet::areaMagIntegrateOp<Type>
                 negative = FixedList<Type, 3>
                 ({
                     negativeF[fI],
@@ -157,7 +157,7 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
                     negativeP[e[1]]
                 });
 
-            a += cut::areaMagOp()(tri);
+            a += cutTriTet::areaMagOp()(tri);
 
             r += triCut(tri, level, positive, negative);
         }

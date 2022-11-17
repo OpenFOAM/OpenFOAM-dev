@@ -194,6 +194,9 @@ public:
         //- Return distance from the given point to the plane
         scalar distance(const point& p) const;
 
+        //- Return signed distance from the given point to the plane
+        scalar signedDistance(const point& p) const;
+
         //- Return cut coefficient for plane and line defined by
         //  origin and direction
         scalar normalIntersect(const point& pnt0, const vector& dir) const;

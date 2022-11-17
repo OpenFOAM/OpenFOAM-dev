@@ -22,7 +22,7 @@ surfaces
     (
         zNormal
         {
-            type            cuttingPlane;
+            type            cutPlane;
             planeType       pointAndNormal;
             point           (0 0 0);
             normal          (0 0 1);

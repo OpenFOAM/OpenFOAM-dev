@@ -34,20 +34,17 @@ $(setWriters)/csv/csvSetWriter.C
 $(setWriters)/gnuplot/gnuplotSetWriter.C
 $(setWriters)/none/noSetWriter.C
 
-cuttingPlane/cuttingPlane.C
-
 sampledSurface/sampledPatch/sampledPatch.C
 sampledSurface/sampledPatchInternalField/sampledPatchInternalField.C
-sampledSurface/sampledPlane/sampledPlane.C
-sampledSurface/isoSurface/isoSurface.C
-sampledSurface/isoSurface/sampledIsoSurface.C
-sampledSurface/distanceSurface/distanceSurface.C
-sampledSurface/sampledCuttingPlane/sampledCuttingPlane.C
+sampledSurface/sampledIsoSurfaceSurface/sampledIsoSurfaceSurface.C
+sampledSurface/sampledIsoSurface/sampledIsoSurface.C
+sampledSurface/sampledDistanceSurface/sampledDistanceSurface.C
+sampledSurface/sampledCutPlane/sampledCutPlane.C
 sampledSurface/sampledSurface/sampledSurface.C
 sampledSurface/sampledSurfaces/sampledSurfaces.C
 sampledSurface/sampledTriSurfaceMesh/sampledTriSurfaceMesh.C
-sampledSurface/thresholdCellFaces/thresholdCellFaces.C
-sampledSurface/thresholdCellFaces/sampledThresholdCellFaces.C
+sampledSurface/sampledThresholdCellFaces/thresholdCellFaces.C
+sampledSurface/sampledThresholdCellFaces/sampledThresholdCellFaces.C
 
 surfWriters = sampledSurface/writers
 

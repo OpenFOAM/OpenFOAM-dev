@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ inline Type Foam::interpolationPointMVC<Type>::interpolate
     const pointMVCWeight& cpw
 ) const
 {
-    return cpw.interpolate(psip_);
+    return cpw.interpolate(this->psip_);
 }
 
 
