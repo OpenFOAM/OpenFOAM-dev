@@ -36,8 +36,6 @@ Foam::interfaceSaturationTemperatureModel::New
     const bool outer
 )
 {
-    DebugVar("**********");
-
     const dictionary& modelDict =
         outer
       ? interface.fluid().modelSubDict
