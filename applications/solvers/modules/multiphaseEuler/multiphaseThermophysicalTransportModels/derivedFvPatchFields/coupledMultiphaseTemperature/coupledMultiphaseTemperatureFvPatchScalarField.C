@@ -71,9 +71,11 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getThis
         }
         else
         {
-            const scalarField T =
+            const scalarField T
+            (
                 thermo.T().boundaryField()[patch().index()]
-               .patchInternalField();
+               .patchInternalField()
+            );
 
             sumKappa += alphaKappaEff();
             sumKappaT += alphaKappaEff*T;
@@ -108,8 +110,10 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getNbr
         const fvPatchScalarField& alpha =
             phase.boundaryField()[patch().index()];
 
-        const scalarField T =
-            thermo.T().boundaryField()[patch().index()].patchInternalField();
+        const scalarField T
+        (
+            thermo.T().boundaryField()[patch().index()].patchInternalField()
+        );
 
         const scalarField alphaKappaEff(alpha*phase.kappaEff(patch().index()));
 
