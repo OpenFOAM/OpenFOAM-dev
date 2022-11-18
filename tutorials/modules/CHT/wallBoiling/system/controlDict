@@ -28,7 +28,7 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         10;
+endTime         8;
 
 deltaT          0.0001;
 
@@ -69,6 +69,7 @@ functions
         type            wallBoilingProperties;
         functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
         writeControl    writeTime;
+        executeAtStart  no;
         region          fluid;
         phase           liquid;
     }

@@ -17,7 +17,7 @@ backgroundMesh
 {
     length  3.5;
     rA     0.0096;
-    rB     0.0116;
+    rB     0.0106;
     lengthCells 350;
     rAcells 40;
     rBcells 10;

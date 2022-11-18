@@ -28,7 +28,7 @@ boundaryField
     wall_outer
     {
         type            externalTemperature;
-        q               uniform 61150.34;
+        q               uniform 66919.2;
         value           $internalField;
     }
     top

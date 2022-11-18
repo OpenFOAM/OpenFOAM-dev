@@ -40,31 +40,31 @@ gnuplot<<EOF
 
     set key at graph 0.99,0.95
     set xlabel 'Time (s)'
-    set xrange [0.5:10]
+    set xrange [0.5:8]
 
     set ylabel 'Mass in- and outflow (kg/s)'
     set yrange [0.5:0.8]
     plot \
         './postProcessing/fluid/inflow/$surfaceFile' \
-        every ::4::20000 u 1:(-1*360*\$3) w l lt 1 t 'liquid inflow', \
+        every ::10::20000 u 1:(-1*360*\$3) w l lt 1 t 'liquid inflow', \
         './postProcessing/fluid/outflow/$surfaceFile' \
-        every ::4::20000 u 1:(360*\$3) w l lt 3 t 'liquid outflow', \
+        every ::10::20000 u 1:(360*\$3) w l lt 3 t 'liquid outflow', \
         './postProcessing/fluid/outflow/$surfaceFile' \
-        every ::4::20000 u 1:(360*\$2+360*\$3) w l lt 4 t 'liquid + vapor outflow'
+        every ::10::20000 u 1:(360*\$2+360*\$3) w l lt 4 t 'liquid + vapor outflow'
 
     set ylabel 'Enthalpy in- and outflow (J/s)'
     set yrange [1.5e5:2.0e5]
     plot \
         './postProcessing/fluid/inletLiquid/$surfaceFile' \
-        every ::4::20000 u 1:(-1*360*\$2) w l lt 1 t 'liquid inflow', \
+        every ::10::20000 u 1:(-1*360*\$2) w l lt 1 t 'liquid inflow', \
         './postProcessing/fluid/inletLiquid/$surfaceFile' \
-        every ::4::20000 u 1:(-1*360*\$2+360*A*q) w l lt 8 t 'liquid inflow + wall heat flux', \
+        every ::10::20000 u 1:(-1*360*\$2+360*A*q) w l lt 8 t 'liquid inflow + wall heat flux', \
         './postProcessing/fluid/outletLiquid/$surfaceFile' \
-        every ::4::20000 u 1:(360*\$2) w l lt 3 t 'liquid outflow', \
+        every ::10::20000 u 1:(360*\$2) w l lt 3 t 'liquid outflow', \
         "<paste \
         ./postProcessing/fluid/outletLiquid/$surfaceFile \
         ./postProcessing/fluid/outletGas/$surfaceFile" \
-        every ::4::20000 u 1:(360*\$2+360*\$4) w l lt 4 t 'liquid + vapor outflow'
+        every ::10::20000 u 1:(360*\$2+360*\$4) w l lt 4 t 'liquid + vapor outflow'
 
     unset multiplot
 
