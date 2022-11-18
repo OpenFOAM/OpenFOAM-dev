@@ -140,7 +140,8 @@ coupledTemperatureFvPatchScalarField
     qrName_("undefined-qr"),
     thicknessLayers_(0),
     kappaLayers_(0),
-    qs_(p.size()),
+    qs_(),
+    Qs_(0),
     wallKappaByDelta_(0)
 {
     this->refValue() = 0;
@@ -163,7 +164,8 @@ coupledTemperatureFvPatchScalarField
     qrName_(dict.lookupOrDefault<word>("qr", "none")),
     thicknessLayers_(0),
     kappaLayers_(0),
-    qs_(p.size(), 0),
+    qs_(),
+    Qs_(0),
     wallKappaByDelta_(0)
 {
     if (!isA<mappedPatchBase>(this->patch().patch()))
@@ -201,15 +203,12 @@ coupledTemperatureFvPatchScalarField
                 << exit(FatalIOError);
         }
 
-        qs_ = scalarField("qs", dict, p.size());
+        qs_ = new scalarField("qs", dict, p.size());
     }
     else if (dict.found("Qs"))
     {
-        qs_ = scalarField
-        (
-            p.size(),
-            dict.lookup<scalar>("Qs")/gSum(patch().magSf())
-        );
+        Qs_ = dict.lookup<scalar>("Qs");
+        qs_ = new scalarField(p.size(), Qs_/gSum(patch().magSf()));
     }
 
     fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
@@ -246,7 +245,13 @@ coupledTemperatureFvPatchScalarField
     qrName_(psf.qrName_),
     thicknessLayers_(psf.thicknessLayers_),
     kappaLayers_(psf.kappaLayers_),
-    qs_(mapper(psf.qs_)),
+    qs_
+    (
+        psf.qs_.valid()
+      ? mapper(psf.qs_()).ptr()
+      : nullptr
+    ),
+    Qs_(psf.Qs_),
     wallKappaByDelta_(psf.wallKappaByDelta_)
 {}
 
@@ -264,7 +269,8 @@ coupledTemperatureFvPatchScalarField
     qrName_(psf.qrName_),
     thicknessLayers_(psf.thicknessLayers_),
     kappaLayers_(psf.kappaLayers_),
-    qs_(psf.qs_),
+    qs_(psf.qs_, false),
+    Qs_(psf.Qs_),
     wallKappaByDelta_(psf.wallKappaByDelta_)
 {}
 
@@ -308,7 +314,14 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
     const coupledTemperatureFvPatchScalarField& coupledTemperatureNbr =
         refCast<const coupledTemperatureFvPatchScalarField>(TpNbr);
 
-    scalarField sumq(qs_);
+    scalarField sumq(size(), 0);
+
+    if (qs_.valid())
+    {
+        sumq += qs_();
+    }
+
+    Info << sumq << endl;
 
     if (qrName_ != "none")
     {
@@ -403,10 +416,25 @@ void Foam::coupledTemperatureFvPatchScalarField::write
 ) const
 {
     mixedFvPatchScalarField::write(os);
-    writeEntry(os, "qrNbr", qrNbrName_);
-    writeEntry(os, "qr", qrName_);
-    writeEntry(os, "thicknessLayers", thicknessLayers_);
-    writeEntry(os, "kappaLayers", kappaLayers_);
+
+    writeEntryIfDifferent<word>(os, "Tnbr", "T", TnbrName_);
+    writeEntryIfDifferent<word>(os, "qrNbr", "none", qrNbrName_);
+    writeEntryIfDifferent<word>(os, "qr", "none", qrName_);
+
+    if (Qs_ != 0)
+    {
+        writeEntry(os, "Qs", Qs_);
+    }
+    else if (qs_.valid())
+    {
+        writeEntry(os, "qs", qs_());
+    }
+
+    if (thicknessLayers_.size())
+    {
+        writeEntry(os, "thicknessLayers", thicknessLayers_);
+        writeEntry(os, "kappaLayers", kappaLayers_);
+    }
 }
 
 

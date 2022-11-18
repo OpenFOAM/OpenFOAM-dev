@@ -113,8 +113,11 @@ class coupledTemperatureFvPatchScalarField
         //- Conductivity of wall layers
         scalarList kappaLayers_;
 
-        //- Source heat flux [W/m^2]
-        scalarField qs_;
+        //- Optional source heat flux [W/m^2]
+        autoPtr<scalarField> qs_;
+
+        //- Optional heat source [W]
+        scalar Qs_;
 
         //- Optional wall material conductivity/thickness
         scalar wallKappaByDelta_;
