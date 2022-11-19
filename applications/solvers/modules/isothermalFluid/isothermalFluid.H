@@ -195,13 +195,8 @@ private:
 
 protected:
 
-        //- Return the mesh-motion work
-        //  Used to correct dpdt of the enthalpy equation
-        //  or added to the div(Up) term of the internal energy equation
-        tmp<volScalarField> motionWork() const;
-
-        //- Adds the mesh-motion work to the work term provided
-        tmp<volScalarField> addMotionWork(const tmp<volScalarField>&) const;
+        //- Adds the mesh-motion work to the pressure work term provided
+        tmp<volScalarField> pressureWork(const tmp<volScalarField>&) const;
 
 
 public:

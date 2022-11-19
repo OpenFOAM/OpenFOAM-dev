@@ -35,9 +35,10 @@ void Foam::solvers::fluid::thermophysicalPredictor()
     (
         fvm::ddt(rho, he) + fvm::div(phi, he)
       + fvc::ddt(rho, K) + fvc::div(phi, K)
-      + (
+      + pressureWork
+        (
             he.name() == "e"
-          ? addMotionWork(fvc::div(phi, p/rho))
+          ? fvc::div(phi, p/rho)
           : -dpdt
         )
       + thermophysicalTransport->divq(he)

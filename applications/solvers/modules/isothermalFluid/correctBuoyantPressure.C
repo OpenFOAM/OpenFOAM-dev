@@ -262,11 +262,6 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
     if (thermo.dpdt())
     {
         dpdt = fvc::ddt(p);
-
-        if (mesh.moving())
-        {
-            dpdt -= motionWork();
-        }
     }
 }
 
