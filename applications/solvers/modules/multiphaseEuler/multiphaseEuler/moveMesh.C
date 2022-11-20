@@ -53,22 +53,20 @@ bool Foam::solvers::multiphaseEuler::moveMesh()
         // Move the mesh
         mesh.move();
 
-        if (mesh.changing())
+        if (mesh.changing() || mesh.topoChanged())
         {
             buoyancy.moveMesh();
 
             fluid.meshUpdate();
 
-            if (correctPhi)
-            {
-                fluid.correctPhi
-                (
-                    p_rgh,
-                    divU,
-                    pressureReference,
-                    pimple
-                );
-            }
+            fluid.correctPhi
+            (
+                p_rgh,
+                divU,
+                correctPhi,
+                pressureReference,
+                pimple
+            );
 
             meshCourantNo();
 

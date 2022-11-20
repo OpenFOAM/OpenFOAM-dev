@@ -710,6 +710,7 @@ void Foam::phaseSystem::correctPhi
 (
     const volScalarField& p_rgh,
     const tmp<volScalarField>& divU,
+    const bool correctPhi,
     const pressureReference& pressureReference,
     nonOrthogonalSolutionControl& pimple
 )
@@ -758,17 +759,20 @@ void Foam::phaseSystem::correctPhi
             phi_ += alphafs[phasei]*(mesh_.Sf() & phase.Uf());
         }
 
-        CorrectPhi
-        (
-            phi_,
-            movingPhases()[0].U(),
-            p_rgh,
-            // surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-            dimensionedScalar(dimTime/dimDensity, 1),
-            divU(),
-            pressureReference,
-            pimple
-        );
+        if (correctPhi)
+        {
+            CorrectPhi
+            (
+                phi_,
+                movingPhases()[0].U(),
+                p_rgh,
+                // surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+                dimensionedScalar(dimTime/dimDensity, 1),
+                divU(),
+                pressureReference,
+                pimple
+            );
+        }
 
         // Make the flux relative to the mesh motion
         fvc::makeRelative(phi_, movingPhases()[0].U());

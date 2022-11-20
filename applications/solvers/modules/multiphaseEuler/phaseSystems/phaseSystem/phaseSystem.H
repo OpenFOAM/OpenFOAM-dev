@@ -651,6 +651,7 @@ public:
             (
                 const volScalarField& p_rgh,
                 const tmp<volScalarField>& divU,
+                const bool correctPhi,
                 const pressureReference& pressureReference,
                 nonOrthogonalSolutionControl& pimple
             );

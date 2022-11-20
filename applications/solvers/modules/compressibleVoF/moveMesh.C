@@ -45,7 +45,7 @@ bool Foam::solvers::compressibleVoF::moveMesh()
         // Move the mesh
         mesh.move();
 
-        if (mesh.changing())
+        if (correctPhi || mesh.topoChanged())
         {
             buoyancy.moveMesh();
 
@@ -59,16 +59,19 @@ bool Foam::solvers::compressibleVoF::moveMesh()
 
                 correctUphiBCs(U, phi, true);
 
-                CorrectPhi
-                (
-                    phi,
-                    U,
-                    p_rgh,
-                    surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-                    divU(),
-                    pressureReference,
-                    pimple
-                );
+                if (correctPhi)
+                {
+                    CorrectPhi
+                    (
+                        phi,
+                        U,
+                        p_rgh,
+                        surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+                        divU(),
+                        pressureReference,
+                        pimple
+                    );
+                }
 
                 // Make the fluxes relative to the mesh motion
                 fvc::makeRelative(phi, U);

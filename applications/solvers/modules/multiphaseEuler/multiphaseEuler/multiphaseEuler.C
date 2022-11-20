@@ -207,7 +207,7 @@ void Foam::solvers::multiphaseEuler::preSolve()
     // Store divU from the previous mesh so that it can be
     // mapped and used in correctPhi to ensure the corrected phi
     // has the same divergence
-    if (correctPhi && mesh.topoChanged())
+    if (correctPhi)
     {
         // Construct and register divU for mapping
         divU = new volScalarField

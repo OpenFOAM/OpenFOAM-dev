@@ -44,7 +44,7 @@ bool Foam::solvers::isothermalFluid::moveMesh()
 
             MRF.update();
 
-            if (correctPhi)
+            if (correctPhi || mesh.topoChanged())
             {
                 // Calculate absolute flux
                 // from the mapped surface velocity
@@ -52,16 +52,19 @@ bool Foam::solvers::isothermalFluid::moveMesh()
 
                 correctUphiBCs(rho, U, phi, true);
 
-                CorrectPhi
-                (
-                    phi,
-                    buoyancy.valid() ? p_rgh : p,
-                    rho,
-                    thermo.psi(),
-                    dimensionedScalar("rAUf", dimTime, 1),
-                    divrhoU(),
-                    pimple
-                );
+                if (correctPhi)
+                {
+                    CorrectPhi
+                    (
+                        phi,
+                        buoyancy.valid() ? p_rgh : p,
+                        rho,
+                        thermo.psi(),
+                        dimensionedScalar("rAUf", dimTime, 1),
+                        divrhoU(),
+                        pimple
+                    );
+                }
 
                 // Make the fluxes relative to the mesh-motion
                 fvc::makeRelative(phi, rho, U);

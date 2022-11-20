@@ -39,7 +39,7 @@ bool Foam::solvers::incompressibleFluid::moveMesh()
         {
             MRF.update();
 
-            if (correctPhi)
+            if (correctPhi || mesh.topoChanged())
             {
                 // Calculate absolute flux
                 // from the mapped surface velocity
@@ -47,16 +47,19 @@ bool Foam::solvers::incompressibleFluid::moveMesh()
 
                 correctUphiBCs(U, phi, true);
 
-                CorrectPhi
-                (
-                    phi,
-                    U,
-                    p,
-                    dimensionedScalar("rAUf", dimTime, 1),
-                    geometricZeroField(),
-                    pressureReference,
-                    pimple
-                );
+                if (correctPhi)
+                {
+                    CorrectPhi
+                    (
+                        phi,
+                        U,
+                        p,
+                        dimensionedScalar("rAUf", dimTime, 1),
+                        geometricZeroField(),
+                        pressureReference,
+                        pimple
+                    );
+                }
 
                 // Make the flux relative to the mesh motion
                 fvc::makeRelative(phi, U);
