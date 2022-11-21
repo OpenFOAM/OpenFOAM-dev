@@ -132,7 +132,41 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getNbr
     tmp<scalarField>& qNbr
 ) const
 {
-    NotImplemented;
+    // Lookup the fluid model
+    const phaseSystem& fluid =
+        patch().boundaryMesh().mesh()
+       .lookupObject<phaseSystem>(phaseSystem::propertiesName);
+
+    TrefNbr = new scalarField(size(), scalar(0));
+    scalarField& Tw = TrefNbr.ref();
+
+    forAll(fluid.phases(), phasei)
+    {
+        const phaseModel& phase = fluid.phases()[phasei];
+        const fluidThermo& thermo = phase.thermo();
+
+        const fvPatchScalarField& alpha =
+            phase.boundaryField()[patch().index()];
+
+        Tw += alpha*thermo.T().boundaryField()[patch().index()];
+
+        /*
+        // Pending the addition of phase anisotropic thermal transport
+        tmp<scalarField> qCorr = ttm.qCorr(patch().index());
+
+        if (qCorr.valid())
+        {
+            if (qCorr.valid())
+            {
+                qNbr.ref() += alpha*qCorr;
+            }
+            else
+            {
+                qNbr = alpha*qCorr;
+            }
+        }
+        */
+    }
 }
 
 
