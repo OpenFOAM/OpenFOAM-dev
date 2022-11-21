@@ -321,8 +321,6 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
         sumq += qs_();
     }
 
-    Info << sumq << endl;
-
     if (qrName_ != "none")
     {
         sumq += patch().lookupPatchField<volScalarField, scalar>(qrName_);
