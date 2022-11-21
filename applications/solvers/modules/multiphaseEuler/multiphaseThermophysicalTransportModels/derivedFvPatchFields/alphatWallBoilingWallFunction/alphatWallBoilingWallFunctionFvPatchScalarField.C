@@ -636,11 +636,11 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                        /max(liquidw, scalar(1e-8))
                     );
 
-                    scalarField TsupPrev(max((Tw - Tsatw), scalar(0)));
+                    const scalarField TsupPrev(max((Tw - Tsatw), scalar(0)));
                     const_cast<fvPatchScalarField&>(Tw).evaluate();
-                    scalarField TsupNew(max((Tw - Tsatw), scalar(0)));
+                    const scalarField TsupNew(max((Tw - Tsatw), scalar(0)));
 
-                    scalar maxErr(max(mag(TsupPrev - TsupNew)));
+                    const scalar maxErr(gMax(mag(TsupPrev - TsupNew)));
 
                     if (debug)
                     {
