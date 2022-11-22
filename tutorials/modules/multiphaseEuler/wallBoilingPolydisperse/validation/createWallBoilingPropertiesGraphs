@@ -20,25 +20,27 @@ gnuplot<<EOF
     set ylabel 'Vertical coordinate (m)'
     set yrange [0:4]
 
+    set xtics rotate by -45
+
     set xlabel 'Departure diameter (mm)'
     plot \
         "postProcessing/patchWallBoilingProperties/$graphFile" \
-        u (\$4*1000):1 w lp lt 1 t 'Simulation' \
+        u (\$4*1e3):1 w l lt 1 t 'Simulation' \
 
     set xlabel 'Departure frequency (Hz)'
     plot \
         "postProcessing/patchWallBoilingProperties/$graphFile" \
-        u 5:1 w lp lt 1 t 'Simulation' \
+        u 5:1 w l lt 1 t 'Simulation' \
 
-    set xlabel 'Nucleation Site Density (1/m^2)'
+    set xlabel 'Nucleation Site Density (1/mm^2)'
     plot \
         "postProcessing/patchWallBoilingProperties/$graphFile" \
-        u 5:1 w lp lt 1 t 'Simulation' \
+        u (\$6/1e6):1 w l lt 1 t 'Simulation' \
 
     set xlabel 'Heat flux partitioning function, liquid (-)'
     plot \
         "postProcessing/patchWallBoilingProperties/$graphFile" \
-        u 7:1 w lp lt 1 t 'Simulation' \
+        u 7:1 w l lt 1 t 'Simulation' \
 
     set key at graph 0.99,0.95
 
