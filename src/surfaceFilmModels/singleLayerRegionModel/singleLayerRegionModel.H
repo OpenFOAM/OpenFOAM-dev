@@ -109,14 +109,11 @@ protected:
         //- Read control parameters from dictionary
         virtual bool read();
 
-        //- Read control parameters from dictionary
-        virtual bool read(const dictionary& dict);
-
 
 public:
 
     //- Runtime type information
-    TypeName("regionModel");
+    TypeName("singleLayerRegionModel");
 
 
     // Constructors
@@ -258,27 +255,6 @@ public:
                     volMesh
                 >::Boundary& pBf
             ) const;
-
-
-        // Evolution
-
-            //- Main driver routing to evolve the region - calls other evolves
-            virtual void evolve();
-
-            //- Pre-evolve region
-            virtual void preEvolveRegion();
-
-            //- Evolve the region
-            virtual void evolveRegion();
-
-            //- Post-evolve region
-            virtual void postEvolveRegion();
-
-
-        // I-O
-
-            //- Provide some feedback
-            virtual void info();
 
 
     // Member Operators

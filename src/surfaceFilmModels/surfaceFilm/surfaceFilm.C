@@ -75,8 +75,46 @@ Foam::surfaceFilm::~surfaceFilm()
 
 void Foam::surfaceFilm::evolve()
 {
-    singleLayerRegionModel::evolve();
+    Info<< "\nEvolving " << modelName_ << " for region "
+        << mesh_.name() << endl;
+
+    preEvolveRegion();
+
+    evolveRegion();
+
+    postEvolveRegion();
+
+    // Provide some feedback
+    if (infoOutput_)
+    {
+        Info<< incrIndent;
+        info();
+        Info<< endl << decrIndent;
+    }
+
+    if (time_.writeTime())
+    {
+        outputProperties().writeObject
+        (
+            IOstream::ASCII,
+            IOstream::currentVersion,
+            time_.writeCompression(),
+            true
+        );
+    }
 }
+
+
+void Foam::surfaceFilm::preEvolveRegion()
+{}
+
+
+void Foam::surfaceFilm::evolveRegion()
+{}
+
+
+void Foam::surfaceFilm::postEvolveRegion()
+{}
 
 
 // ************************************************************************* //

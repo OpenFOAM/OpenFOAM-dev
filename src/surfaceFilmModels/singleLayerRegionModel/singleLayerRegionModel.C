@@ -60,19 +60,6 @@ bool Foam::singleLayerRegionModel::read()
 }
 
 
-bool Foam::singleLayerRegionModel::read(const dictionary& dict)
-{
-    if (const dictionary* dictPtr = dict.subDictPtr(modelName_ + "Coeffs"))
-    {
-        coeffs_ <<= *dictPtr;
-    }
-
-    infoOutput_.readIfPresent("infoOutput", dict);
-
-    return true;
-}
-
-
 Foam::label Foam::singleLayerRegionModel::nbrCoupledPatchID
 (
     const singleLayerRegionModel& nbrRegion,
@@ -267,8 +254,6 @@ Foam::singleLayerRegionModel::singleLayerRegionModel
 
     if (!outputPropertiesPtr_.valid())
     {
-        const fileName uniformPath(word("uniform")/"regionModels");
-
         outputPropertiesPtr_.reset
         (
             new timeIOdictionary
@@ -277,7 +262,7 @@ Foam::singleLayerRegionModel::singleLayerRegionModel
                 (
                     regionName_ + "OutputProperties",
                     time_.timeName(),
-                    uniformPath/regionName_,
+                    "uniform"/regionName_,
                     primaryMesh_,
                     IOobject::READ_IF_PRESENT,
                     IOobject::NO_WRITE
@@ -378,54 +363,6 @@ Foam::singleLayerRegionModel::passivePatchIDs() const
 {
     return passivePatchIDs_;
 }
-
-
-void Foam::singleLayerRegionModel::evolve()
-{
-    Info<< "\nEvolving " << modelName_ << " for region "
-        << mesh_.name() << endl;
-
-    preEvolveRegion();
-
-    evolveRegion();
-
-    postEvolveRegion();
-
-    // Provide some feedback
-    if (infoOutput_)
-    {
-        Info<< incrIndent;
-        info();
-        Info<< endl << decrIndent;
-    }
-
-    if (time_.writeTime())
-    {
-        outputProperties().writeObject
-        (
-            IOstream::ASCII,
-            IOstream::currentVersion,
-            time_.writeCompression(),
-            true
-        );
-    }
-}
-
-
-void Foam::singleLayerRegionModel::preEvolveRegion()
-{}
-
-
-void Foam::singleLayerRegionModel::evolveRegion()
-{}
-
-
-void Foam::singleLayerRegionModel::postEvolveRegion()
-{}
-
-
-void Foam::singleLayerRegionModel::info()
-{}
 
 
 // ************************************************************************* //
