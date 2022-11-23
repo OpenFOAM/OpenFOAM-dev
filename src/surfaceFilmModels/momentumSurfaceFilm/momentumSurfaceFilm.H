@@ -36,14 +36,9 @@ SourceFiles
 #define momentumSurfaceFilm_H
 
 #include "surfaceFilm.H"
-#include "fvMesh.H"
-#include "volFields.H"
-#include "surfaceFields.H"
-#include "fvMatrices.H"
 #include "pimpleControl.H"
 #include "rhoThermo.H"
 #include "Function1.H"
-
 #include "ejectionModelList.H"
 #include "transferModelList.H"
 #include "forceList.H"

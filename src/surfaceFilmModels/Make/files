@@ -1,5 +1,3 @@
-singleLayerRegionModel/singleLayerRegionModel.C
-
 # Surface film models
 surfaceFilm/surfaceFilm.C
 momentumSurfaceFilm/momentumSurfaceFilm.C

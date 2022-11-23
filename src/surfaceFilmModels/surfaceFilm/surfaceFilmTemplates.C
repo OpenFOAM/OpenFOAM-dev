@@ -23,14 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "singleLayerRegionModel.H"
+#include "surfaceFilm.H"
 #include "zeroGradientFvPatchFields.H"
 #include "mappedValueAndPatchInternalValueFvPatchFields.H"
 
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::singleLayerRegionModel::toPrimary
+void Foam::surfaceFilm::toPrimary
 (
     const label regionPatchi,
     Field<Type>& regionField
@@ -57,7 +57,7 @@ void Foam::singleLayerRegionModel::toPrimary
 
 
 template<class Type>
-void Foam::singleLayerRegionModel::toRegion
+void Foam::surfaceFilm::toRegion
 (
     const label regionPatchi,
     Field<Type>& primaryField
@@ -84,7 +84,7 @@ void Foam::singleLayerRegionModel::toRegion
 
 
 template<class Type>
-void Foam::singleLayerRegionModel::toRegion
+void Foam::surfaceFilm::toRegion
 (
     Field<Type>& rf,
     const typename GeometricField<Type, fvPatchField, volMesh>::Boundary& pBf
@@ -108,8 +108,7 @@ void Foam::singleLayerRegionModel::toRegion
 
 
 template<class Type>
-Foam::wordList Foam::singleLayerRegionModel::
-mappedFieldAndInternalPatchTypes() const
+Foam::wordList Foam::surfaceFilm::mappedFieldAndInternalPatchTypes() const
 {
     wordList bTypes(mesh().boundaryMesh().size());
 

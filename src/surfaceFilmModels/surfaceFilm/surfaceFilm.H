@@ -35,7 +35,8 @@ SourceFiles
 #ifndef surfaceFilm_H
 #define surfaceFilm_H
 
-#include "singleLayerRegionModel.H"
+#include "fvMesh.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,9 +49,57 @@ namespace Foam
 
 class surfaceFilm
 :
-    public singleLayerRegionModel
+    public IOdictionary
 {
-    // Private data
+protected:
+
+    // Protected data
+
+        //- Reference to the primary mesh
+        const fvMesh& primaryMesh_;
+
+        //- Reference to the time
+        const Time& time_;
+
+        //- Information output
+        Switch infoOutput_;
+
+        //- Model type
+        const word modelType_;
+
+        //- Region name
+        word regionName_;
+
+        //- Region mesh
+        fvMesh mesh_;
+
+        //- Model coefficients dictionary
+        dictionary coeffs_;
+
+        //- Dictionary of output properties
+        autoPtr<IOdictionary> outputPropertiesPtr_;
+
+
+        // Addressing
+
+            //- List of patch IDs on the primary region coupled to this region
+            labelList primaryPatchIDs_;
+
+            //- List of patch IDs internally coupled with the primary region
+            labelList intCoupledPatchIDs_;
+
+            //- List of patch IDs opposite to internally coupled patches
+            labelList passivePatchIDs_;
+
+
+        //- Patch normal vectors
+        volVectorField nHat_;
+
+        //- Cell cross-sectional area magnitude [m^2]
+        volScalarField::Internal magSf_;
+
+        //- Cell layer volume/area [m]
+        volScalarField VbyA_;
 
         //- Acceleration due to gravity [m/s^2]
         const dimensionedVector& g_;
@@ -93,19 +142,117 @@ public:
 
         // Access
 
+            //- Return the reference to the time
+            inline const Time& time() const;
+
+            //- Return the reference to the primary mesh
+            inline const fvMesh& primaryMesh() const;
+
+            //- Return the region mesh
+            inline const fvMesh& mesh() const;
+
+            //- Return the information flag
+            inline const Switch& infoOutput() const;
+
+            //- Return the model coefficients dictionary
+            inline const dictionary& coeffs() const;
+
+            //- Return the solution dictionary
+            inline const dictionary& solution() const;
+
+            //- Return const access to the output properties dictionary
+            inline const IOdictionary& outputProperties() const;
+
+            //- Return output properties dictionary
+            inline IOdictionary& outputProperties();
+
             //- Return the acceleration due to gravity
             inline const dimensionedVector& g() const;
 
-            //- External hook to add sources to the film
-            virtual void addSources
+
+            // Region geometry
+
+                //- Return the patch normal vectors
+                const volVectorField& nHat() const;
+
+                //- Return the face area magnitudes [m^2]
+                const volScalarField::Internal& magSf() const;
+
+                //- Return the cell layer volume/area [m]
+                const volScalarField& VbyA() const;
+
+            // Addressing
+
+                //- Return true if patchi on the local region is a coupled
+                //  patch to the primary region
+                inline bool isCoupledPatch(const label regionPatchi) const;
+
+                //- Return true if patchi on the primary region is a coupled
+                //  patch to the local region
+                inline bool isRegionPatch(const label primaryPatchi) const;
+
+                //- Return the list of patch IDs on the primary region coupled
+                //  to this region
+                inline const labelList& primaryPatchIDs() const;
+
+                //- Return the list of patch IDs internally coupled with the
+                //  primary region
+                inline const labelList& intCoupledPatchIDs() const;
+
+                //- Return region ID corresponding to primaryPatchID
+                inline label regionPatchID(const label primaryPatchID) const;
+
+                //- Return the list of patch IDs opposite to internally
+                //  coupled patches
+                const labelList& passivePatchIDs() const;
+
+
+        // Patch type information
+
+            //- Return boundary types for mapped field patches
+            //  Also maps internal field value
+            //  Mapping region prescribed by underlying mapped poly patch
+            template<class Type>
+            wordList mappedFieldAndInternalPatchTypes() const;
+
+        // Helper
+
+            //- Return the coupled patch ID paired with coupled patch
+            //  regionPatchi
+            label nbrCoupledPatchID
             (
-                const label patchi,
-                const label facei,
-                const scalar massSource,
-                const vector& momentumSource,
-                const scalar pressureSource,
-                const scalar energySource
-            ) = 0;
+                const surfaceFilm& nbrRegion,
+                const label regionPatchi
+            ) const;
+
+            //- Convert a local region field to the primary region
+            template<class Type>
+            void toPrimary
+            (
+                const label regionPatchi,
+                Field<Type>& regionField
+            ) const;
+
+            //- Convert a primary region field to the local region
+            template<class Type>
+            void toRegion
+            (
+                const label regionPatchi,
+                Field<Type>& primaryFieldField
+            ) const;
+
+            //- Return a primary patch field mapped the local region
+            template<class Type>
+            void toRegion
+            (
+                Field<Type>& rf,
+                const typename GeometricField
+                <
+                    Type,
+                    fvPatchField,
+                    volMesh
+                >::Boundary& pBf
+            ) const;
 
 
         // Fields
@@ -146,6 +293,17 @@ public:
 
         // Evolution
 
+            //- External hook to add sources to the film
+            virtual void addSources
+            (
+                const label patchi,
+                const label facei,
+                const scalar massSource,
+                const vector& momentumSource,
+                const scalar pressureSource,
+                const scalar energySource
+            ) = 0;
+
             //- Main driver routing to evolve the region - calls other evolves
             virtual void evolve();
 
@@ -179,6 +337,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "surfaceFilmI.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "surfaceFilmTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

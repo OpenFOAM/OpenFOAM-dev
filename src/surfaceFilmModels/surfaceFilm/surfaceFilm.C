@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceFilm.H"
+#include "timeIOdictionary.H"
+#include "mappedWallPolyPatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,10 +37,18 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+
 bool Foam::surfaceFilm::read()
 {
-    if (singleLayerRegionModel::read())
+    if (regIOobject::read())
     {
+        if (const dictionary* dictPtr = subDictPtr(modelType_ + "Coeffs"))
+        {
+            coeffs_ <<= *dictPtr;
+        }
+
+        infoOutput_.readIfPresent("infoOutput", *this);
+
         return true;
     }
     else
@@ -48,20 +58,270 @@ bool Foam::surfaceFilm::read()
 }
 
 
+Foam::label Foam::surfaceFilm::nbrCoupledPatchID
+(
+    const surfaceFilm& nbrRegion,
+    const label regionPatchi
+) const
+{
+    label nbrPatchi = -1;
+
+    // region
+    const fvMesh& nbrRegionMesh = nbrRegion.mesh();
+
+    // boundary mesh
+    const polyBoundaryMesh& nbrPbm = nbrRegionMesh.boundaryMesh();
+
+    const polyBoundaryMesh& pbm = mesh().boundaryMesh();
+
+    if (regionPatchi > pbm.size() - 1)
+    {
+        FatalErrorInFunction
+            << "region patch index out of bounds: "
+            << "region patch index = " << regionPatchi
+            << ", maximum index = " << pbm.size() - 1
+            << abort(FatalError);
+    }
+
+    const polyPatch& pp = mesh().boundaryMesh()[regionPatchi];
+
+    if (!isA<mappedPatchBase>(pp))
+    {
+        FatalErrorInFunction
+            << "Expected a " << mappedPatchBase::typeName
+            << " patch, but found a " << pp.type() << abort(FatalError);
+    }
+
+    const mappedPatchBase& mpb = refCast<const mappedPatchBase>(pp);
+
+    // sample patch name on the primary region
+    const word& primaryPatchName = mpb.nbrPatchName();
+
+    // find patch on nbr region that has the same sample patch name
+    forAll(nbrRegion.intCoupledPatchIDs(), j)
+    {
+        const label nbrRegionPatchi = nbrRegion.intCoupledPatchIDs()[j];
+
+        const mappedPatchBase& mpb =
+            refCast<const mappedPatchBase>(nbrPbm[nbrRegionPatchi]);
+
+        if (mpb.nbrPatchName() == primaryPatchName)
+        {
+            nbrPatchi = nbrRegionPatchi;
+            break;
+        }
+    }
+
+    if (nbrPatchi == -1)
+    {
+        const polyPatch& p = mesh().boundaryMesh()[regionPatchi];
+
+        FatalErrorInFunction
+            << "Unable to find patch pair for local patch "
+            << p.name() << " and region " << nbrRegion.name()
+            << abort(FatalError);
+    }
+
+    return nbrPatchi;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::surfaceFilm::surfaceFilm
 (
     const word& modelType,
-    const fvMesh& mesh,
+    const fvMesh& primaryMesh,
     const dimensionedVector& g,
     const word& regionType
 )
 :
-    singleLayerRegionModel(mesh, regionType, modelType),
+    IOdictionary
+    (
+        IOobject
+        (
+            regionType + "Properties",
+            primaryMesh.time().constant(),
+            primaryMesh.time(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    ),
+    primaryMesh_(primaryMesh),
+    time_(primaryMesh.time()),
+    infoOutput_(true),
+    modelType_(modelType),
+    regionName_(lookup("regionName")),
+    mesh_
+    (
+        IOobject
+        (
+            regionName_,
+            time_.timeName(),
+            time_,
+            IOobject::MUST_READ
+        )
+    ),
+    coeffs_(optionalSubDict(modelType + "Coeffs")),
+    outputPropertiesPtr_(nullptr),
+    primaryPatchIDs_(),
+    intCoupledPatchIDs_(),
+    passivePatchIDs_(),
+    nHat_
+    (
+        IOobject
+        (
+            "nHat",
+            time_.timeName(),
+            mesh_
+        ),
+        mesh_,
+        dimensionedVector(dimless, Zero),
+        zeroGradientFvPatchField<vector>::typeName
+    ),
+    magSf_
+    (
+        IOobject
+        (
+            "magSf",
+            time_.timeName(),
+            mesh_
+        ),
+        mesh_,
+        dimensionedScalar(dimArea, 0)
+    ),
+    VbyA_
+    (
+        IOobject
+        (
+            "VbyA",
+            time_.timeName(),
+            mesh_
+        ),
+        mesh_,
+        dimensionedScalar(dimLength, 0),
+        zeroGradientFvPatchField<vector>::typeName
+    ),
     g_(g)
 {
+    label nBoundaryFaces = 0;
+    DynamicList<label> primaryPatchIDs;
+    DynamicList<label> intCoupledPatchIDs;
+    const polyBoundaryMesh& rbm = mesh_.boundaryMesh();
+
+    forAll(rbm, patchi)
+    {
+        const polyPatch& regionPatch = rbm[patchi];
+
+        if (isA<mappedPatchBase>(regionPatch))
+        {
+            DebugInFunction
+                << "found " << mappedWallPolyPatch::typeName
+                <<  " " << regionPatch.name() << endl;
+
+            intCoupledPatchIDs.append(patchi);
+
+            nBoundaryFaces += regionPatch.faceCells().size();
+
+            const mappedPatchBase& mapPatch =
+                refCast<const mappedPatchBase>(regionPatch);
+
+            if
+            (
+                primaryMesh_.time().foundObject<polyMesh>
+                (
+                    mapPatch.nbrRegionName()
+                )
+            )
+            {
+
+                const label primaryPatchi = mapPatch.nbrPolyPatch().index();
+                primaryPatchIDs.append(primaryPatchi);
+            }
+        }
+    }
+
+    primaryPatchIDs_.transfer(primaryPatchIDs);
+    intCoupledPatchIDs_.transfer(intCoupledPatchIDs);
+
+    if (returnReduce(nBoundaryFaces, sumOp<label>()) == 0)
+    {
+        WarningInFunction
+            << "Region model has no mapped boundary conditions - transfer "
+            << "between regions will not be possible" << endl;
+    }
+
+    if (!outputPropertiesPtr_.valid())
+    {
+        outputPropertiesPtr_.reset
+        (
+            new timeIOdictionary
+            (
+                IOobject
+                (
+                    regionName_ + "OutputProperties",
+                    time_.timeName(),
+                    "uniform"/regionName_,
+                    primaryMesh_,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE
+                )
+            )
+        );
+    }
+
     read();
+
+    nBoundaryFaces = 0;
+
+    forAll(intCoupledPatchIDs_, i)
+    {
+        const label patchi = intCoupledPatchIDs_[i];
+        const polyPatch& pp = rbm[patchi];
+        const labelList& fCells = pp.faceCells();
+
+        nBoundaryFaces += fCells.size();
+
+        UIndirectList<vector>(nHat_, fCells) = pp.faceNormals();
+        UIndirectList<scalar>(magSf_, fCells) = pp.magFaceAreas();
+    }
+    nHat_.correctBoundaryConditions();
+
+    if (nBoundaryFaces != mesh_.nCells())
+    {
+        FatalErrorInFunction
+            << "Number of primary region coupled boundary faces not equal to "
+            << "the number of cells in the local region" << nl << nl
+            << "Number of cells = " << mesh_.nCells() << nl
+            << "Boundary faces  = " << nBoundaryFaces << nl
+            << abort(FatalError);
+    }
+
+    passivePatchIDs_.setSize(intCoupledPatchIDs_.size(), -1);
+    forAll(intCoupledPatchIDs_, i)
+    {
+        const label patchi = intCoupledPatchIDs_[i];
+        const polyPatch& ppIntCoupled = rbm[patchi];
+        if (ppIntCoupled.size() > 0)
+        {
+            const label cellId = rbm[patchi].faceCells()[0];
+            const cell& cFaces = mesh_.cells()[cellId];
+            const label faceO
+            (
+                cFaces.opposingFaceLabel
+                (
+                    ppIntCoupled.start(), mesh_.faces()
+                )
+            );
+            passivePatchIDs_[i] = rbm.whichPatch(faceO);
+        }
+    }
+
+    Pstream::listCombineGather(passivePatchIDs_, maxEqOp<label>());
+    Pstream::listCombineScatter(passivePatchIDs_);
+
+    VbyA_.primitiveFieldRef() = mesh_.V()/magSf_;
+    VbyA_.correctBoundaryConditions();
 }
 
 
@@ -73,9 +333,37 @@ Foam::surfaceFilm::~surfaceFilm()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+const Foam::volVectorField&
+Foam::surfaceFilm::nHat() const
+{
+    return nHat_;
+}
+
+
+const Foam::volScalarField::Internal&
+Foam::surfaceFilm::magSf() const
+{
+    return magSf_;
+}
+
+
+const Foam::volScalarField&
+Foam::surfaceFilm::VbyA() const
+{
+    return VbyA_;
+}
+
+
+const Foam::labelList&
+Foam::surfaceFilm::passivePatchIDs() const
+{
+    return passivePatchIDs_;
+}
+
+
 void Foam::surfaceFilm::evolve()
 {
-    Info<< "\nEvolving " << modelName_ << " for region "
+    Info<< "\nEvolving " << modelType_ << " for region "
         << mesh_.name() << endl;
 
     preEvolveRegion();

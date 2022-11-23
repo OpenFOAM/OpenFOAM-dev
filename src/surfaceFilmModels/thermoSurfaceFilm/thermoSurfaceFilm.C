@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thermoSurfaceFilm.H"
-#include "fluidThermo.H"
 #include "basicSpecieMixture.H"
 #include "liquidThermo.H"
 
@@ -36,16 +35,6 @@ License
 #include "fvmDiv.H"
 #include "fvmSup.H"
 
-#include "zeroGradientFvPatchFields.H"
-#include "mixedFvPatchFields.H"
-#include "distributionMap.H"
-#include "constants.H"
-
-#include "heatTransferModel.H"
-#include "phaseChangeModel.H"
-#include "filmRadiationModel.H"
-
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

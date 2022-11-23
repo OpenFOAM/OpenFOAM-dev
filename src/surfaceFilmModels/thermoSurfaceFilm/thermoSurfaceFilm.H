@@ -49,13 +49,8 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class fluidThermo;
-
-
-// Forward declaration of classes
 namespace surfaceFilmModels
 {
-    class viscosityModel;
     class heatTransferModel;
     class phaseChangeModel;
     class radiationModel;

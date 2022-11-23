@@ -23,12 +23,134 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceFilm.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline const Foam::dimensionedVector&
-Foam::surfaceFilm::g() const
+inline const Foam::Time& Foam::surfaceFilm::time() const
+{
+    return time_;
+}
+
+
+inline const Foam::fvMesh& Foam::surfaceFilm::primaryMesh() const
+{
+    return primaryMesh_;
+}
+
+
+inline const Foam::fvMesh& Foam::surfaceFilm::mesh() const
+{
+    return mesh_;
+}
+
+
+inline const Foam::Switch& Foam::surfaceFilm::infoOutput() const
+{
+    return infoOutput_;
+}
+
+
+inline const Foam::dictionary& Foam::surfaceFilm::coeffs() const
+{
+    return coeffs_;
+}
+
+
+inline const Foam::dictionary& Foam::surfaceFilm::solution() const
+{
+    return mesh().solution().dict();
+}
+
+
+inline const Foam::IOdictionary& Foam::surfaceFilm::outputProperties() const
+{
+    if (!outputPropertiesPtr_.valid())
+    {
+        FatalErrorInFunction
+            << "outputProperties dictionary not available"
+            << abort(FatalError);
+    }
+
+    return outputPropertiesPtr_();
+}
+
+
+inline Foam::IOdictionary& Foam::surfaceFilm::outputProperties()
+{
+    if (!outputPropertiesPtr_.valid())
+    {
+        FatalErrorInFunction
+            << "outputProperties dictionary not available"
+            << abort(FatalError);
+    }
+
+    return outputPropertiesPtr_();
+}
+
+
+inline bool Foam::surfaceFilm::isCoupledPatch
+(
+    const label regionPatchi
+) const
+{
+    forAll(intCoupledPatchIDs_, i)
+    {
+        if (intCoupledPatchIDs_[i] == regionPatchi)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+inline bool Foam::surfaceFilm::isRegionPatch
+(
+    const label primaryPatchi
+) const
+{
+    forAll(primaryPatchIDs_, i)
+    {
+        if (primaryPatchIDs_[i] == primaryPatchi)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+inline const Foam::labelList& Foam::surfaceFilm::primaryPatchIDs() const
+{
+    return primaryPatchIDs_;
+}
+
+
+inline const Foam::labelList& Foam::surfaceFilm::intCoupledPatchIDs() const
+{
+    return intCoupledPatchIDs_;
+}
+
+
+inline Foam::label Foam::surfaceFilm::regionPatchID
+(
+    const label primaryPatchID
+) const
+{
+    forAll(primaryPatchIDs_, i)
+    {
+        if (primaryPatchIDs_[i] == primaryPatchID)
+        {
+            return intCoupledPatchIDs_[i];
+        }
+    }
+
+    return -1;
+}
+
+
+inline const Foam::dimensionedVector& Foam::surfaceFilm::g() const
 {
     return g_;
 }

@@ -483,7 +483,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
 :
     surfaceFilm(modelType, primaryMesh, g, regionType),
     phaseName_(coeffs_.lookupOrDefault("phase", word::null)),
-    pimple_(mesh()),
+    pimple_(mesh_),
 
     cumulativeContErr_(0),
 
