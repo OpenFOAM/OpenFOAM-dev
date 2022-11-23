@@ -52,7 +52,7 @@ maxCo           0.5;
 
 functions
 {
-    #include "cuttingPlane"
+    #include "cutPlane"
 }
 
 // ************************************************************************* //

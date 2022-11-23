@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,15 +40,7 @@ Foam::interpolationCellPointFace<Type>::interpolationCellPointFace
 )
 :
     fieldInterpolation<Type, interpolationCellPointFace<Type>>(psi),
-    psip_
-    (
-        volPointInterpolation::New(psi.mesh()).interpolate
-        (
-            psi,
-            "volPointInterpolate(" + psi.name() + ')',
-            true        // use cache
-        )
-    ),
+    interpolationVolPointInterpolation<Type>(psi),
     psis_(linearInterpolate(psi))
 {}
 
@@ -211,7 +203,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
         {
             for (label i=0; i<2; i++)
             {
-                ts[i] = psip_[tetPointLabels[i]];
+                ts[i] = this->psip_[tetPointLabels[i]];
             }
 
             if (closestFace < psis_.size())
@@ -301,7 +293,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
             // add up the point values ...
             for (label i=0; i<2; i++)
             {
-                Type vel = psip_[tetPointLabels[i]];
+                Type vel = this->psip_[tetPointLabels[i]];
                 t += phi[i]*vel;
             }
 

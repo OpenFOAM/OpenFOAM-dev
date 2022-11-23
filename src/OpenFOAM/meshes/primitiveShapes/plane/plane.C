@@ -309,13 +309,19 @@ Foam::point Foam::plane::aPoint() const
 
 Foam::point Foam::plane::nearestPoint(const point& p) const
 {
-    return p - normal_*((p - point_) & normal_);
+    return p - normal_*signedDistance(p);
 }
 
 
 Foam::scalar Foam::plane::distance(const point& p) const
 {
-    return mag((p - point_) & normal_);
+    return mag(signedDistance(p));
+}
+
+
+Foam::scalar Foam::plane::signedDistance(const point& p) const
+{
+    return (p - point_) & normal_;
 }
 
 

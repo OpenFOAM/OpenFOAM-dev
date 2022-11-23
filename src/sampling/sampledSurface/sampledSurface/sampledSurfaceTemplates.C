@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,52 +150,6 @@ Foam::sampledSurface::project
     tmp<Field<ReturnType>> tRes(new Field<ReturnType>(faces().size()));
     project(tRes(), field);
     return tRes;
-}
-
-
-template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
-Foam::sampledSurface::pointAverage
-(
-    const GeometricField<Type, pointPatchField, pointMesh>& pfld
-) const
-{
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(pfld.mesh()());
-
-    tmp<GeometricField<Type, fvPatchField, volMesh>> tcellAvg
-    (
-        GeometricField<Type, fvPatchField, volMesh>::New
-        (
-            "cellAvg",
-            mesh,
-            dimensioned<Type>("zero", dimless, Zero)
-        )
-    );
-    GeometricField<Type, fvPatchField, volMesh>& cellAvg = tcellAvg.ref();
-
-    labelField nPointCells(mesh.nCells(), 0);
-    {
-        for (label pointi = 0; pointi < mesh.nPoints(); pointi++)
-        {
-            const labelList& pCells = mesh.pointCells(pointi);
-
-            forAll(pCells, i)
-            {
-                label celli = pCells[i];
-
-                cellAvg[celli] += pfld[pointi];
-                nPointCells[celli]++;
-            }
-        }
-    }
-    forAll(cellAvg, celli)
-    {
-        cellAvg[celli] /= nPointCells[celli];
-    }
-    // Give value to calculatedFvPatchFields
-    cellAvg.correctBoundaryConditions();
-
-    return tcellAvg;
 }
 
 

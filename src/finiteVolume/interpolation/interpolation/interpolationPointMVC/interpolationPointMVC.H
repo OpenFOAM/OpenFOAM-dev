@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
 #ifndef interpolationPointMVC_H
 #define interpolationPointMVC_H
 
-#include "interpolation.H"
+#include "interpolationVolPointInterpolation.H"
 #include "pointMVCWeight.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,16 +48,9 @@ namespace Foam
 template<class Type>
 class interpolationPointMVC
 :
-    public fieldInterpolation<Type, interpolationPointMVC<Type>>
+    public fieldInterpolation<Type, interpolationPointMVC<Type>>,
+    public interpolationVolPointInterpolation<Type>
 {
-protected:
-
-    // Protected data
-
-        //- Interpolated volfield
-        const GeometricField<Type, pointPatchField, pointMesh> psip_;
-
-
 public:
 
     //- Runtime type information

@@ -290,6 +290,7 @@ $(interpolation)/interpolation/interpolations.C
 
 $(interpolation)/interpolationCell/makeInterpolationCell.C
 $(interpolation)/interpolationCellPatchConstrained/makeInterpolationCellPatchConstrained.C
+$(interpolation)/interpolationVolPointInterpolation/makeInterpolationVolPointInterpolation.C
 $(interpolation)/interpolationCellPoint/cellPointWeight/cellPointWeight.C
 $(interpolation)/interpolationCellPoint/makeInterpolationCellPoint.C
 $(interpolation)/interpolationCellPointFace/makeInterpolationCellPointFace.C

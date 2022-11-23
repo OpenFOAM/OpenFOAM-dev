@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
 #include "tetPointRef.H"
 #include "OFstream.H"
 #include "meshTools.H"
-#include "cut.H"
+#include "cutTriTet.H"
 
 using namespace Foam;
 
@@ -87,9 +87,9 @@ int main(int argc, char *argv[])
     // Do intersection
     typedef DynamicList<FixedList<point, 4>> tetList;
     tetList tetsIn1, tetsIn2, tetsOut;
-    cut::appendOp<tetList> tetOpIn1(tetsIn1);
-    cut::appendOp<tetList> tetOpIn2(tetsIn2);
-    cut::appendOp<tetList> tetOpOut(tetsOut);
+    cutTriTet::appendOp<tetList> tetOpIn1(tetsIn1);
+    cutTriTet::appendOp<tetList> tetOpIn2(tetsIn2);
+    cutTriTet::appendOp<tetList> tetOpOut(tetsOut);
 
     const plane p0(tetB[1], tetB[3], tetB[2]);
     tetsIn1.clear();

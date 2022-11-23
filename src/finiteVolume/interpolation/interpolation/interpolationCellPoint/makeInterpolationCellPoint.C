@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,8 @@ License
 
 namespace Foam
 {
-    makeInterpolation(interpolationCellPoint);
+    FOR_ALL_FIELD_TYPES(defineInterpolation, interpolationCellPoint);
+    FOR_ALL_FIELD_TYPES(makeInterpolation, interpolationCellPoint);
 }
 
 // ************************************************************************* //

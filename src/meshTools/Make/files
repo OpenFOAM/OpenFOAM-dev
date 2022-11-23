@@ -255,6 +255,10 @@ tetOverlapVolume/tetOverlapVolume.C
 triIntersect/triIntersect.C
 triIntersect/triIntersectLocationIO.C
 
+cutPoly/cellEdgeAddressing.C
+cutPoly/cutPoly.C
+cutPoly/cutPolyIsoSurface.C
+
 nonConformal/polyPatches/nonConformal/nonConformalPolyPatch.C
 nonConformal/polyPatches/nonConformalCoupled/nonConformalCoupledPolyPatch.C
 nonConformal/polyPatches/nonConformalCyclic/nonConformalCyclicPolyPatch.C

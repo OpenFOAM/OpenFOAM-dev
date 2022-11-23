@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "levelSet.H"
-#include "cut.H"
+#include "cutTriTet.H"
 #include "polyMeshTetDecomposition.H"
 #include "tetIndices.H"
 
@@ -38,6 +38,9 @@ Foam::tmp<Foam::scalarField> Foam::levelSetFraction
     const bool above
 )
 {
+    typedef cutTriTet::noOp noOp;
+    typedef cutTriTet::volumeOp volumeOp;
+
     tmp<scalarField> tResult(new scalarField(mesh.nCells(), Zero));
     scalarField& result = tResult.ref();
 
@@ -69,15 +72,15 @@ Foam::tmp<Foam::scalarField> Foam::levelSetFraction
                     levelP[triIs[2]]
                 };
 
-            v += cut::volumeOp()(tet);
+            v += volumeOp()(tet);
 
             if (above)
             {
-                r += tetCut(tet, level, cut::volumeOp(), cut::noOp());
+                r += tetCut(tet, level, volumeOp(), noOp());
             }
             else
             {
-                r += tetCut(tet, level, cut::noOp(), cut::volumeOp());
+                r += tetCut(tet, level, noOp(), volumeOp());
             }
         }
 
@@ -96,6 +99,9 @@ Foam::tmp<Foam::scalarField> Foam::levelSetFraction
     const bool above
 )
 {
+    typedef cutTriTet::noOp noOp;
+    typedef cutTriTet::areaMagOp areaMagOp;
+
     tmp<scalarField> tResult(new scalarField(patch.size(), 0));
     scalarField& result = tResult.ref();
 
@@ -124,15 +130,15 @@ Foam::tmp<Foam::scalarField> Foam::levelSetFraction
                     levelP[e[1]]
                 };
 
-            a += cut::areaMagOp()(tri);
+            a += areaMagOp()(tri);
 
             if (above)
             {
-                r += triCut(tri, level, cut::areaMagOp(), cut::noOp());
+                r += triCut(tri, level, areaMagOp(), noOp());
             }
             else
             {
-                r += triCut(tri, level, cut::noOp(), cut::areaMagOp());
+                r += triCut(tri, level, noOp(), areaMagOp());
             }
         }
 

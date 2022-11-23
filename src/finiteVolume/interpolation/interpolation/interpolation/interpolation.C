@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,8 +103,8 @@ Foam::tmp<Foam::Field<Type>>
 Foam::fieldInterpolation<Type, InterpolationType>::interpolate
 (
     const vectorField& position,
-    const labelField& celli,
-    const labelField& facei
+    const labelList& celli,
+    const labelList& facei
 ) const
 {
     tmp<Field<Type>> tField(new Field<Type>(position.size()));
@@ -131,10 +131,10 @@ Foam::tmp<Foam::Field<Type>>
 Foam::fieldInterpolation<Type, InterpolationType>::interpolate
 (
     const Field<barycentric>& coordinates,
-    const labelField& celli,
-    const labelField& tetFacei,
-    const labelField& tetPti,
-    const labelField& facei
+    const labelList& celli,
+    const labelList& tetFacei,
+    const labelList& tetPti,
+    const labelList& facei
 ) const
 {
     tmp<Field<Type>> tField(new Field<Type>(coordinates.size()));

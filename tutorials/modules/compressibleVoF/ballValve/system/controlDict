@@ -61,13 +61,15 @@ functions
         interpolate=no,
         fields=(alpha.water p_rgh p T U k epsilon)
     )
+
     #includeFunc isoSurface
     (
         isoField=alpha.water,
         isoValue=0.5,
         writeEmpty=yes
     )
-    #includeFunc wallsSurface
+
+    #includeFunc patchSurface(patch=".*(Walls|NonCouple)")
 }
 
 
