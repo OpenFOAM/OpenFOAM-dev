@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmSubModels::mappedConvectiveHeatTransfer
+    Foam::surfaceFilmModels::mappedConvectiveHeatTransfer
 
 Description
     Convective heat transfer model based on a re-working of a Nusselt number
@@ -43,9 +43,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace regionModels
-{
-namespace surfaceFilmSubModels
+namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -111,8 +109,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmSubModels
-} // End namespace regionModels
+} // End namespace surfaceFilmModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

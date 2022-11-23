@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmSubModels::waxSolventViscosity
+    Foam::surfaceFilmModels::waxSolventViscosity
 
 Description
     Wax solvent mixture viscosity model.
@@ -41,9 +41,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace regionModels
-{
-namespace surfaceFilmSubModels
+namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -120,8 +118,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmSubModels
-} // End namespace regionModels
+} // End namespace surfaceFilmModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

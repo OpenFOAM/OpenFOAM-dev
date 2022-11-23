@@ -30,217 +30,217 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 inline const Foam::dimensionedScalar&
-Foam::regionModels::momentumSurfaceFilm::deltaSmall() const
+Foam::momentumSurfaceFilm::deltaSmall() const
 {
     return deltaSmall_;
 }
 
 
 inline const Foam::word&
-Foam::regionModels::momentumSurfaceFilm::phaseName() const
+Foam::momentumSurfaceFilm::phaseName() const
 {
     return phaseName_;
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::rho() const
+Foam::momentumSurfaceFilm::rho() const
 {
     return thermo_->rho();
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::mu() const
+Foam::momentumSurfaceFilm::mu() const
 {
     return mu_;
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::delta() const
+Foam::momentumSurfaceFilm::delta() const
 {
     return delta_;
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::alpha() const
+Foam::momentumSurfaceFilm::alpha() const
 {
     return alpha_;
 }
 
 
 inline const Foam::volVectorField&
-Foam::regionModels::momentumSurfaceFilm::U() const
+Foam::momentumSurfaceFilm::U() const
 {
     return U_;
 }
 
 
 inline Foam::tmp<Foam::volVectorField::Internal>
-Foam::regionModels::momentumSurfaceFilm::Us() const
+Foam::momentumSurfaceFilm::Us() const
 {
     return momentumTransport_->Us();
 }
 
 
 inline const Foam::surfaceScalarField&
-Foam::regionModels::momentumSurfaceFilm::phi() const
+Foam::momentumSurfaceFilm::phi() const
 {
     return phi_;
 }
 
 
 inline const Foam::surfaceScalarField&
-Foam::regionModels::momentumSurfaceFilm::phiU() const
+Foam::momentumSurfaceFilm::phiU() const
 {
     return phiU_;
 }
 
 
 inline const Foam::volScalarField::Internal&
-Foam::regionModels::momentumSurfaceFilm::continuityErr() const
+Foam::momentumSurfaceFilm::continuityErr() const
 {
     return continuityErr_;
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::coverage() const
+Foam::momentumSurfaceFilm::coverage() const
 {
     return coverage_;
 }
 
 
 inline Foam::volVectorField&
-Foam::regionModels::momentumSurfaceFilm::USpPrimary()
+Foam::momentumSurfaceFilm::USpPrimary()
 {
     return USpPrimary_;
 }
 
 
 inline Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::pSpPrimary()
+Foam::momentumSurfaceFilm::pSpPrimary()
 {
     return pSpPrimary_;
 }
 
 
 inline Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::rhoSpPrimary()
+Foam::momentumSurfaceFilm::rhoSpPrimary()
 {
     return rhoSpPrimary_;
 }
 
 
 inline Foam::volVectorField::Internal&
-Foam::regionModels::momentumSurfaceFilm::USp()
+Foam::momentumSurfaceFilm::USp()
 {
     return USp_;
 }
 
 
 inline Foam::volScalarField::Internal&
-Foam::regionModels::momentumSurfaceFilm::pSp()
+Foam::momentumSurfaceFilm::pSp()
 {
     return pSp_;
 }
 
 
 inline Foam::volScalarField::Internal&
-Foam::regionModels::momentumSurfaceFilm::rhoSp()
+Foam::momentumSurfaceFilm::rhoSp()
 {
     return rhoSp_;
 }
 
 
 inline const Foam::volVectorField::Internal&
-Foam::regionModels::momentumSurfaceFilm::USp() const
+Foam::momentumSurfaceFilm::USp() const
 {
     return USp_;
 }
 
 
 inline const Foam::volScalarField::Internal&
-Foam::regionModels::momentumSurfaceFilm::pSp() const
+Foam::momentumSurfaceFilm::pSp() const
 {
     return pSp_;
 }
 
 
 inline const Foam::volScalarField::Internal&
-Foam::regionModels::momentumSurfaceFilm::rhoSp() const
+Foam::momentumSurfaceFilm::rhoSp() const
 {
     return rhoSp_;
 }
 
 
 inline const Foam::volVectorField&
-Foam::regionModels::momentumSurfaceFilm::UPrimary() const
+Foam::momentumSurfaceFilm::UPrimary() const
 {
     return UPrimary_;
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::pPrimary() const
+Foam::momentumSurfaceFilm::pPrimary() const
 {
     return thermo_->p();
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::rhoPrimary() const
+Foam::momentumSurfaceFilm::rhoPrimary() const
 {
     return rhoPrimary_;
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::muPrimary() const
+Foam::momentumSurfaceFilm::muPrimary() const
 {
     return muPrimary_;
 }
 
 
 inline const Foam::rhoThermo&
-Foam::regionModels::momentumSurfaceFilm::thermo() const
+Foam::momentumSurfaceFilm::thermo() const
 {
     return thermo_();
 }
 
 
-inline Foam::regionModels::surfaceFilmSubModels::ejectionModelList&
-Foam::regionModels::momentumSurfaceFilm::ejection()
+inline Foam::surfaceFilmModels::ejectionModelList&
+Foam::momentumSurfaceFilm::ejection()
 {
     return ejection_;
 }
 
 
-inline Foam::regionModels::surfaceFilmSubModels::transferModelList&
-Foam::regionModels::momentumSurfaceFilm::transfer()
+inline Foam::surfaceFilmModels::transferModelList&
+Foam::momentumSurfaceFilm::transfer()
 {
     return transfer_;
 }
 
 
-inline const Foam::regionModels::surfaceFilmSubModels::momentumTransportModel&
-Foam::regionModels::momentumSurfaceFilm::momentumTransport() const
+inline const Foam::surfaceFilmModels::momentumTransportModel&
+Foam::momentumSurfaceFilm::momentumTransport() const
 {
     return momentumTransport_();
 }
 
 
 inline Foam::tmp<Foam::volScalarField::Internal>
-Foam::regionModels::momentumSurfaceFilm::mass() const
+Foam::momentumSurfaceFilm::mass() const
 {
     return rho()()*delta_()*magSf();
 }
 
 
 inline Foam::tmp<Foam::volScalarField::Internal>
-Foam::regionModels::momentumSurfaceFilm::deltaMass() const
+Foam::momentumSurfaceFilm::deltaMass() const
 {
     return rhoSp_*magSf()*time().deltaT();
 }

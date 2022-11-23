@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::thermoSurfaceFilm
+    Foam::thermoSurfaceFilm
 
 Description
     Thermodynamic form of single-cell layer surface film model
@@ -51,11 +51,9 @@ namespace Foam
 // Forward declaration of classes
 class fluidThermo;
 
-namespace regionModels
-{
 
 // Forward declaration of classes
-namespace surfaceFilmSubModels
+namespace surfaceFilmModels
 {
     class viscosityModel;
     class heatTransferModel;
@@ -136,16 +134,16 @@ protected:
 
             //- Heat transfer coefficient between film surface and primary
             //  region [W/m^2/K]
-            autoPtr<surfaceFilmSubModels::heatTransferModel> htcs_;
+            autoPtr<surfaceFilmModels::heatTransferModel> htcs_;
 
             //- Heat transfer coefficient between wall and film [W/m^2/K]
-            autoPtr<surfaceFilmSubModels::heatTransferModel> htcw_;
+            autoPtr<surfaceFilmModels::heatTransferModel> htcw_;
 
             //- Phase change
-            autoPtr<surfaceFilmSubModels::phaseChangeModel> phaseChange_;
+            autoPtr<surfaceFilmModels::phaseChangeModel> phaseChange_;
 
             //- Radiation
-            autoPtr<surfaceFilmSubModels::radiationModel> radiation_;
+            autoPtr<surfaceFilmModels::radiationModel> radiation_;
 
 
         // Limits
@@ -273,17 +271,17 @@ public:
         // Sub-models
 
             //- Return const access to the (surface) heat transfer model
-            inline const surfaceFilmSubModels::heatTransferModel& htcs() const;
+            inline const surfaceFilmModels::heatTransferModel& htcs() const;
 
             //- Return const access to the (wall) heat transfer model
-            inline const surfaceFilmSubModels::heatTransferModel& htcw() const;
+            inline const surfaceFilmModels::heatTransferModel& htcw() const;
 
             //- Return const access to the phase change model
-            inline const surfaceFilmSubModels::phaseChangeModel&
+            inline const surfaceFilmModels::phaseChangeModel&
                 phaseChange() const;
 
             //- Return const access to the radiation model
-            inline const surfaceFilmSubModels::radiationModel&
+            inline const surfaceFilmModels::radiationModel&
                 radiation() const;
 
 
@@ -325,7 +323,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace regionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -51,22 +51,20 @@ License
 
 namespace Foam
 {
-namespace regionModels
-{
     defineTypeNameAndDebug(thermoSurfaceFilm, 0);
 }
-}
+
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::regionModels::thermoSurfaceFilm::read()
+bool Foam::thermoSurfaceFilm::read()
 {
     // No additional properties to read
     return momentumSurfaceFilm::read();
 }
 
 
-void Foam::regionModels::thermoSurfaceFilm::resetPrimaryRegionSourceTerms()
+void Foam::thermoSurfaceFilm::resetPrimaryRegionSourceTerms()
 {
     DebugInFunction << endl;
 
@@ -76,7 +74,7 @@ void Foam::regionModels::thermoSurfaceFilm::resetPrimaryRegionSourceTerms()
 }
 
 
-void Foam::regionModels::thermoSurfaceFilm::transferPrimaryRegionThermoFields()
+void Foam::thermoSurfaceFilm::transferPrimaryRegionThermoFields()
 {
     DebugInFunction << endl;
 
@@ -92,7 +90,7 @@ void Foam::regionModels::thermoSurfaceFilm::transferPrimaryRegionThermoFields()
 }
 
 
-void Foam::regionModels::thermoSurfaceFilm::transferPrimaryRegionSourceFields()
+void Foam::thermoSurfaceFilm::transferPrimaryRegionSourceFields()
 {
     DebugInFunction << endl;
 
@@ -118,7 +116,7 @@ void Foam::regionModels::thermoSurfaceFilm::transferPrimaryRegionSourceFields()
 }
 
 
-void Foam::regionModels::thermoSurfaceFilm::correctCoverage()
+void Foam::thermoSurfaceFilm::correctCoverage()
 {
     if (hydrophilic_)
     {
@@ -146,7 +144,7 @@ void Foam::regionModels::thermoSurfaceFilm::correctCoverage()
 }
 
 
-void Foam::regionModels::thermoSurfaceFilm::updateSubmodels()
+void Foam::thermoSurfaceFilm::updateSubmodels()
 {
     DebugInFunction << endl;
 
@@ -198,7 +196,7 @@ void Foam::regionModels::thermoSurfaceFilm::updateSubmodels()
 }
 
 
-Foam::tmp<Foam::fvScalarMatrix> Foam::regionModels::thermoSurfaceFilm::q
+Foam::tmp<Foam::fvScalarMatrix> Foam::thermoSurfaceFilm::q
 (
     volScalarField& h
 ) const
@@ -223,7 +221,7 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::regionModels::thermoSurfaceFilm::q
 }
 
 
-void Foam::regionModels::thermoSurfaceFilm::solveEnergy()
+void Foam::thermoSurfaceFilm::solveEnergy()
 {
     DebugInFunction << endl;
 
@@ -249,7 +247,7 @@ void Foam::regionModels::thermoSurfaceFilm::solveEnergy()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
+Foam::thermoSurfaceFilm::thermoSurfaceFilm
 (
     const word& modelType,
     const fvMesh& primaryMesh,
@@ -335,7 +333,7 @@ Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
 
     htcs_
     (
-        surfaceFilmSubModels::heatTransferModel::New
+        surfaceFilmModels::heatTransferModel::New
         (
             *this,
             coeffs().subDict("upperSurfaceModels")
@@ -344,15 +342,15 @@ Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
 
     htcw_
     (
-        surfaceFilmSubModels::heatTransferModel::New
+        surfaceFilmModels::heatTransferModel::New
         (
             *this,
             coeffs().subDict("lowerSurfaceModels")
         )
     ),
 
-    phaseChange_(surfaceFilmSubModels::phaseChangeModel::New(*this, coeffs())),
-    radiation_(surfaceFilmSubModels::radiationModel::New(*this, coeffs())),
+    phaseChange_(surfaceFilmModels::phaseChangeModel::New(*this, coeffs())),
+    radiation_(surfaceFilmModels::radiationModel::New(*this, coeffs())),
     Tmin_(-vGreat),
     Tmax_(vGreat)
 {
@@ -429,13 +427,13 @@ Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::regionModels::thermoSurfaceFilm::~thermoSurfaceFilm()
+Foam::thermoSurfaceFilm::~thermoSurfaceFilm()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::regionModels::thermoSurfaceFilm::addSources
+void Foam::thermoSurfaceFilm::addSources
 (
     const label patchi,
     const label facei,
@@ -461,7 +459,7 @@ void Foam::regionModels::thermoSurfaceFilm::addSources
 }
 
 
-void Foam::regionModels::thermoSurfaceFilm::preEvolveRegion()
+void Foam::thermoSurfaceFilm::preEvolveRegion()
 {
     DebugInFunction << endl;
 
@@ -470,7 +468,7 @@ void Foam::regionModels::thermoSurfaceFilm::preEvolveRegion()
 }
 
 
-void Foam::regionModels::thermoSurfaceFilm::evolveRegion()
+void Foam::thermoSurfaceFilm::evolveRegion()
 {
     DebugInFunction << endl;
 
@@ -513,14 +511,14 @@ void Foam::regionModels::thermoSurfaceFilm::evolveRegion()
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::regionModels::thermoSurfaceFilm::Ts() const
+Foam::thermoSurfaceFilm::Ts() const
 {
     return thermo().T();
 }
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::regionModels::thermoSurfaceFilm::Tw() const
+Foam::thermoSurfaceFilm::Tw() const
 {
     tmp<volScalarField::Internal> tTw
     (
@@ -549,7 +547,7 @@ Foam::regionModels::thermoSurfaceFilm::Tw() const
 }
 
 
-void Foam::regionModels::thermoSurfaceFilm::info()
+void Foam::thermoSurfaceFilm::info()
 {
     momentumSurfaceFilm::info();
 
@@ -565,7 +563,7 @@ void Foam::regionModels::thermoSurfaceFilm::info()
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::regionModels::thermoSurfaceFilm::SYi(const label i) const
+Foam::thermoSurfaceFilm::SYi(const label i) const
 {
     const basicSpecieMixture& primarySpecieThermo =
         refCast<const basicSpecieMixture>(primaryThermo_);
@@ -618,7 +616,7 @@ Foam::regionModels::thermoSurfaceFilm::SYi(const label i) const
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::regionModels::thermoSurfaceFilm::Sh() const
+Foam::thermoSurfaceFilm::Sh() const
 {
     tmp<volScalarField::Internal> tSh
     (

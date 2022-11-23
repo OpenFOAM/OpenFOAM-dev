@@ -104,7 +104,7 @@ protected:
             const wordList surfaceFilmNames_;
 
             //- Pointers to the surface films
-            mutable UPtrList<regionModels::surfaceFilm> surfaceFilms_;
+            mutable UPtrList<surfaceFilm> surfaceFilms_;
 
 
         // Cached injector fields per film patch
@@ -168,7 +168,7 @@ protected:
             //- Absorb parcel into film
             void absorbInteraction
             (
-                regionModels::surfaceFilm&,
+                surfaceFilm&,
                 const parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -188,7 +188,7 @@ protected:
             //- Parcel interaction with dry surface
             void drySplashInteraction
             (
-                regionModels::surfaceFilm&,
+                surfaceFilm&,
                 const parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -198,7 +198,7 @@ protected:
             //- Parcel interaction with wetted surface
             void wetSplashInteraction
             (
-                regionModels::surfaceFilm&,
+                surfaceFilm&,
                 parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -208,7 +208,7 @@ protected:
             //- Bai parcel splash interaction model
             void splashInteraction
             (
-                regionModels::surfaceFilm&,
+                surfaceFilm&,
                 const parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -221,14 +221,14 @@ protected:
 
 
         //- Return pointers to the films
-        virtual UPtrList<regionModels::surfaceFilm>& surfaceFilmPtrs() const;
+        virtual UPtrList<surfaceFilm>& surfaceFilmPtrs() const;
 
         //- Cache the film fields in preparation for injection
         virtual void cacheFilmFields
         (
             const label filmPatchi,
             const label primaryPatchi,
-            const regionModels::surfaceFilm& filmModel
+            const surfaceFilm& filmModel
         );
 
         //- Set the individual parcel properties

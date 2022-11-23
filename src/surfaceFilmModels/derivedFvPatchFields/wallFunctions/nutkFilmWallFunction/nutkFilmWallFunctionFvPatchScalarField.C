@@ -51,7 +51,7 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
     tmp<scalarField> tuTau(new scalarField(patch().size(), 0.0));
     scalarField& uTau = tuTau.ref();
 
-    typedef regionModels::surfaceFilm modelType;
+    typedef surfaceFilm modelType;
 
     bool foundFilm =
         db().time().foundObject<modelType>(filmName_+ "Properties");
@@ -145,7 +145,7 @@ nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
 )
 :
     nutkWallFunctionFvPatchScalarField(p, iF),
-    filmName_(regionModels::surfaceFilm::typeName),
+    filmName_(surfaceFilm::typeName),
     B_(5.5),
     yPlusCrit_(11.05)
 {}
@@ -164,7 +164,7 @@ nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
         dict.lookupOrDefault<word>
         (
             "film",
-            regionModels::surfaceFilm::typeName
+            surfaceFilm::typeName
         )
     ),
     B_(dict.lookupOrDefault("B", 5.5)),
@@ -226,7 +226,7 @@ void nutkFilmWallFunctionFvPatchScalarField::write(Ostream& os) const
     (
         os,
         "film",
-        regionModels::surfaceFilm::typeName,
+        surfaceFilm::typeName,
         filmName_
     );
     writeEntry(os, "B", B_);

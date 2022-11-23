@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::SurfaceFilmModel
+    Foam::SurfaceFilmModel
 
 Description
     Templated wall surface film model class.
@@ -49,10 +49,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-namespace regionModels
-{
-    class surfaceFilm;
-}
+class surfaceFilm;
 
 /*---------------------------------------------------------------------------*\
                       Class SurfaceFilmModel Declaration
@@ -109,7 +106,7 @@ protected:
     // Protected functions
 
         //- Return pointers to the films
-        virtual UPtrList<regionModels::surfaceFilm>&
+        virtual UPtrList<surfaceFilm>&
             surfaceFilmPtrs() const = 0;
 
         //- Cache the film fields in preparation for injection
@@ -117,7 +114,7 @@ protected:
         (
             const label filmPatchi,
             const label primaryPatchi,
-            const regionModels::surfaceFilm&
+            const surfaceFilm&
         );
 
         //- Set the individual parcel properties

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmSubModels::function1Viscosity
+    Foam::surfaceFilmModels::function1Viscosity
 
 Description
     The Foam::Function1 temperature-dependent viscosity model multiplies the
@@ -43,9 +43,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace regionModels
-{
-namespace surfaceFilmSubModels
+namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -110,8 +108,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmSubModels
-} // End namespace regionModels
+} // End namespace surfaceFilmModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -29,9 +29,7 @@ License
 
 namespace Foam
 {
-namespace regionModels
-{
-namespace surfaceFilmSubModels
+namespace surfaceFilmModels
 {
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
@@ -63,8 +61,7 @@ autoPtr<ejectionModel> ejectionModel::New
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmSubModels
-} // End namespace regionModels
+} // End namespace surfaceFilmModels
 } // End namespace Foam
 
 // ************************************************************************* //

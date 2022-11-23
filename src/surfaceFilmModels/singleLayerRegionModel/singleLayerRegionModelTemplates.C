@@ -30,7 +30,7 @@ License
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::regionModels::singleLayerRegionModel::toPrimary
+void Foam::singleLayerRegionModel::toPrimary
 (
     const label regionPatchi,
     Field<Type>& regionField
@@ -57,7 +57,7 @@ void Foam::regionModels::singleLayerRegionModel::toPrimary
 
 
 template<class Type>
-void Foam::regionModels::singleLayerRegionModel::toRegion
+void Foam::singleLayerRegionModel::toRegion
 (
     const label regionPatchi,
     Field<Type>& primaryField
@@ -84,7 +84,7 @@ void Foam::regionModels::singleLayerRegionModel::toRegion
 
 
 template<class Type>
-void Foam::regionModels::singleLayerRegionModel::toRegion
+void Foam::singleLayerRegionModel::toRegion
 (
     Field<Type>& rf,
     const typename GeometricField<Type, fvPatchField, volMesh>::Boundary& pBf
@@ -108,7 +108,7 @@ void Foam::regionModels::singleLayerRegionModel::toRegion
 
 
 template<class Type>
-Foam::wordList Foam::regionModels::singleLayerRegionModel::
+Foam::wordList Foam::singleLayerRegionModel::
 mappedFieldAndInternalPatchTypes() const
 {
     wordList bTypes(mesh().boundaryMesh().size());

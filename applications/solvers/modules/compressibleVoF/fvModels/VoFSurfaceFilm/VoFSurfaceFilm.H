@@ -66,7 +66,7 @@ class VoFSurfaceFilm
     // Private Data
 
         //- The surface film model
-        regionModels::thermoSurfaceFilm surfaceFilm_;
+        thermoSurfaceFilm surfaceFilm_;
 
         //- Current time index (used for updating)
         mutable label curTimeIndex_;

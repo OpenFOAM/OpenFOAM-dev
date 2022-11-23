@@ -22,13 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmSubModels::distributionContactAngleForce
+    Foam::surfaceFilmModels::distributionContactAngleForce
 
 Description
     PDF distribution based film contact angle force
 
 See also
-    Foam::regionModels::surfaceFilmSubModels::contactAngleForce
+    Foam::surfaceFilmModels::contactAngleForce
     Foam::distributionModel
 
 SourceFiles
@@ -47,9 +47,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace regionModels
-{
-namespace surfaceFilmSubModels
+namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -116,8 +114,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmSubModels
-} // End namespace regionModels
+} // End namespace surfaceFilmModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

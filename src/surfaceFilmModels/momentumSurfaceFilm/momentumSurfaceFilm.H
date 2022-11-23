@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::momentumSurfaceFilm
+    Foam::momentumSurfaceFilm
 
 Description
     Kinematic form of single-cell layer surface film model
@@ -53,11 +53,9 @@ SourceFiles
 
 namespace Foam
 {
-namespace regionModels
-{
 
 // Forward class declarations
-namespace surfaceFilmSubModels
+namespace surfaceFilmModels
 {
     class viscosityModel;
 }
@@ -190,7 +188,7 @@ protected:
         // Sub-models
 
             //- Viscosity model
-            autoPtr<surfaceFilmSubModels::viscosityModel> viscosity_;
+            autoPtr<surfaceFilmModels::viscosityModel> viscosity_;
 
             //- Surface tension function
             autoPtr<Function1<scalar>> sigma_;
@@ -199,17 +197,17 @@ protected:
             scalarField availableMass_;
 
             //- Cloud ejection
-            surfaceFilmSubModels::ejectionModelList ejection_;
+            surfaceFilmModels::ejectionModelList ejection_;
 
             //- Transfer with the continuous phase
-            surfaceFilmSubModels::transferModelList transfer_;
+            surfaceFilmModels::transferModelList transfer_;
 
             //- Momentum transport model
-            autoPtr<surfaceFilmSubModels::momentumTransportModel>
+            autoPtr<surfaceFilmModels::momentumTransportModel>
                 momentumTransport_;
 
             //- List of film forces
-            surfaceFilmSubModels::forceList forces_;
+            surfaceFilmModels::forceList forces_;
 
 
        // Checks
@@ -461,13 +459,13 @@ public:
             inline const rhoThermo& thermo() const;
 
             //- Ejection
-            inline surfaceFilmSubModels::ejectionModelList& ejection();
+            inline surfaceFilmModels::ejectionModelList& ejection();
 
             //- Transfer
-            inline surfaceFilmSubModels::transferModelList& transfer();
+            inline surfaceFilmModels::transferModelList& transfer();
 
             //- Momentum transport
-            inline const surfaceFilmSubModels::momentumTransportModel&
+            inline const surfaceFilmModels::momentumTransportModel&
                 momentumTransport() const;
 
 
@@ -522,7 +520,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace regionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

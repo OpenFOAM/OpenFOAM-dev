@@ -31,63 +31,63 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 inline const Foam::fluidThermo&
-Foam::regionModels::thermoSurfaceFilm::primaryThermo() const
+Foam::thermoSurfaceFilm::primaryThermo() const
 {
     return primaryThermo_;
 }
 
 
 inline const Foam::volScalarField::Internal&
-Foam::regionModels::thermoSurfaceFilm::hSp() const
+Foam::thermoSurfaceFilm::hSp() const
 {
     return hSp_;
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::thermoSurfaceFilm::hSpPrimary() const
+Foam::thermoSurfaceFilm::hSpPrimary() const
 {
     return hSpPrimary_;
 }
 
 
 inline const Foam::volScalarField&
-Foam::regionModels::thermoSurfaceFilm::TPrimary() const
+Foam::thermoSurfaceFilm::TPrimary() const
 {
     return TPrimary_;
 }
 
 
 inline const Foam::PtrList<Foam::volScalarField>&
-Foam::regionModels::thermoSurfaceFilm::YPrimary() const
+Foam::thermoSurfaceFilm::YPrimary() const
 {
     return YPrimary_;
 }
 
 
-inline const Foam::regionModels::surfaceFilmSubModels::heatTransferModel&
-Foam::regionModels::thermoSurfaceFilm::htcs() const
+inline const Foam::surfaceFilmModels::heatTransferModel&
+Foam::thermoSurfaceFilm::htcs() const
 {
     return htcs_();
 }
 
 
-inline const Foam::regionModels::surfaceFilmSubModels::heatTransferModel&
-Foam::regionModels::thermoSurfaceFilm::htcw() const
+inline const Foam::surfaceFilmModels::heatTransferModel&
+Foam::thermoSurfaceFilm::htcw() const
 {
     return htcw_();
 }
 
 
-inline const Foam::regionModels::surfaceFilmSubModels::phaseChangeModel&
-Foam::regionModels::thermoSurfaceFilm::phaseChange() const
+inline const Foam::surfaceFilmModels::phaseChangeModel&
+Foam::thermoSurfaceFilm::phaseChange() const
 {
     return phaseChange_();
 }
 
 
-inline const Foam::regionModels::surfaceFilmSubModels::radiationModel&
-Foam::regionModels::thermoSurfaceFilm::radiation() const
+inline const Foam::surfaceFilmModels::radiationModel&
+Foam::thermoSurfaceFilm::radiation() const
 {
     return radiation_();
 }

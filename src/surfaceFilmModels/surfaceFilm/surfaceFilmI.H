@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 inline const Foam::dimensionedVector&
-Foam::regionModels::surfaceFilm::g() const
+Foam::surfaceFilm::g() const
 {
     return g_;
 }

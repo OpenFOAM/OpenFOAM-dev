@@ -62,7 +62,7 @@ protected:
     // Protected Member Functions
 
         //- Return pointers to the films
-        virtual UPtrList<regionModels::surfaceFilm>& surfaceFilmPtrs() const;
+        virtual UPtrList<surfaceFilm>& surfaceFilmPtrs() const;
 
 
 public:

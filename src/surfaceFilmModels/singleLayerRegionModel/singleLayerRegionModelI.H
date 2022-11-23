@@ -26,62 +26,62 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 inline const Foam::fvMesh&
-Foam::regionModels::singleLayerRegionModel::primaryMesh() const
+Foam::singleLayerRegionModel::primaryMesh() const
 {
     return primaryMesh_;
 }
 
 
 inline const Foam::Time&
-Foam::regionModels::singleLayerRegionModel::time() const
+Foam::singleLayerRegionModel::time() const
 {
     return time_;
 }
 
 
 inline const Foam::Switch&
-Foam::regionModels::singleLayerRegionModel::infoOutput() const
+Foam::singleLayerRegionModel::infoOutput() const
 {
     return infoOutput_;
 }
 
 
 inline const Foam::word&
-Foam::regionModels::singleLayerRegionModel::modelName() const
+Foam::singleLayerRegionModel::modelName() const
 {
     return modelName_;
 }
 
 
 inline const Foam::fvMesh&
-Foam::regionModels::singleLayerRegionModel::mesh() const
+Foam::singleLayerRegionModel::mesh() const
 {
     return mesh_;
 }
 
 
-inline Foam::fvMesh& Foam::regionModels::singleLayerRegionModel::mesh()
+inline Foam::fvMesh& Foam::singleLayerRegionModel::mesh()
 {
     return mesh_;
 }
 
 
 inline const Foam::dictionary&
-Foam::regionModels::singleLayerRegionModel::coeffs() const
+Foam::singleLayerRegionModel::coeffs() const
 {
     return coeffs_;
 }
 
 
 inline const Foam::dictionary&
-Foam::regionModels::singleLayerRegionModel::solution() const
+Foam::singleLayerRegionModel::solution() const
 {
     return mesh().solution().dict();
 }
 
 
 inline const Foam::IOdictionary&
-Foam::regionModels::singleLayerRegionModel::outputProperties() const
+Foam::singleLayerRegionModel::outputProperties() const
 {
     if (!outputPropertiesPtr_.valid())
     {
@@ -95,7 +95,7 @@ Foam::regionModels::singleLayerRegionModel::outputProperties() const
 
 
 inline Foam::IOdictionary&
-Foam::regionModels::singleLayerRegionModel::outputProperties()
+Foam::singleLayerRegionModel::outputProperties()
 {
     if (!outputPropertiesPtr_.valid())
     {
@@ -108,7 +108,7 @@ Foam::regionModels::singleLayerRegionModel::outputProperties()
 }
 
 
-inline bool Foam::regionModels::singleLayerRegionModel::isCoupledPatch
+inline bool Foam::singleLayerRegionModel::isCoupledPatch
 (
     const label regionPatchi
 ) const
@@ -125,7 +125,7 @@ inline bool Foam::regionModels::singleLayerRegionModel::isCoupledPatch
 }
 
 
-inline bool Foam::regionModels::singleLayerRegionModel::isRegionPatch
+inline bool Foam::singleLayerRegionModel::isRegionPatch
 (
     const label primaryPatchi
 ) const
@@ -143,20 +143,20 @@ inline bool Foam::regionModels::singleLayerRegionModel::isRegionPatch
 
 
 inline const Foam::labelList&
-Foam::regionModels::singleLayerRegionModel::primaryPatchIDs() const
+Foam::singleLayerRegionModel::primaryPatchIDs() const
 {
     return primaryPatchIDs_;
 }
 
 
 inline const Foam::labelList&
-Foam::regionModels::singleLayerRegionModel::intCoupledPatchIDs() const
+Foam::singleLayerRegionModel::intCoupledPatchIDs() const
 {
     return intCoupledPatchIDs_;
 }
 
 
-inline Foam::label Foam::regionModels::singleLayerRegionModel::regionPatchID
+inline Foam::label Foam::singleLayerRegionModel::regionPatchID
 (
     const label primaryPatchID
 ) const

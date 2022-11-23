@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmSubModels::\\
+    Foam::surfaceFilmModels::\\
     temperatureDependentContactAngleForce
 
 Description
@@ -32,7 +32,7 @@ Description
     enable the use of, e.g.  constant, polynomial, table values.
 
 See also
-    Foam::regionModels::surfaceFilmSubModels::contactAngleForce
+    Foam::surfaceFilmModels::contactAngleForce
     Foam::Function1s
 
 SourceFiles
@@ -50,9 +50,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace regionModels
-{
-namespace surfaceFilmSubModels
+namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -110,8 +108,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmSubModels
-} // End namespace regionModels
+} // End namespace surfaceFilmModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

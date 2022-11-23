@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Type> Foam::regionModels::momentumSurfaceFilm::constrainFilmField
+Foam::tmp<Type> Foam::momentumSurfaceFilm::constrainFilmField
 (
     const tmp<Type>& tfield,
     const typename Type::cmptType& value

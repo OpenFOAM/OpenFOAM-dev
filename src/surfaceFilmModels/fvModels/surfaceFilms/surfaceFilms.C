@@ -71,7 +71,7 @@ Foam::fv::surfaceFilms::surfaceFilms
         dict.lookupOrDefault<wordList>
         (
             "surfaceFilms",
-            wordList(1, regionModels::surfaceFilm::typeName)
+            wordList(1, surfaceFilm::typeName)
         );
 
     surfaceFilms_.resize(surfaceFilmNames.size());
@@ -84,9 +84,9 @@ Foam::fv::surfaceFilms::surfaceFilms
         surfaceFilms_.set
         (
             i,
-            new regionModels::thermoSurfaceFilm
+            new thermoSurfaceFilm
             (
-                regionModels::thermoSurfaceFilm::typeName,
+                thermoSurfaceFilm::typeName,
                 mesh,
                 mesh.lookupObject<uniformDimensionedVectorField>("g"),
                 surfaceFilmNames[i]

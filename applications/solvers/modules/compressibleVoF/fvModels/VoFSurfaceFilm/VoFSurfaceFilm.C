@@ -60,10 +60,10 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
     fvModel(sourceName, modelType, dict, mesh),
     surfaceFilm_
     (
-        regionModels::thermoSurfaceFilm::typeName,
+        thermoSurfaceFilm::typeName,
         mesh,
         mesh.lookupObject<uniformDimensionedVectorField>("g"),
-        regionModels::surfaceFilm::typeName
+        surfaceFilm::typeName
     ),
     curTimeIndex_(-1)
 {}

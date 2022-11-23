@@ -39,7 +39,7 @@ void Foam::SurfaceFilmModel<CloudType>::cacheFilmFields
 (
     const label filmPatchi,
     const label primaryPatchi,
-    const regionModels::surfaceFilm& filmModel
+    const surfaceFilm& filmModel
 )
 {
     massParcelPatch_ = filmModel.cloudMassTrans().boundaryField()[filmPatchi];
@@ -159,7 +159,7 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
 {
     forAll(surfaceFilmPtrs(), filmi)
     {
-        const regionModels::surfaceFilm& filmModel = surfaceFilmPtrs()[filmi];
+        const surfaceFilm& filmModel = surfaceFilmPtrs()[filmi];
 
         const labelList& filmPatches = filmModel.intCoupledPatchIDs();
         const labelList& primaryPatches = filmModel.primaryPatchIDs();

@@ -206,7 +206,7 @@ modelsInFamily () {
         _modelDirs="\
             $(findModelDirs "$_familyDir" 2) \
             $(findModelDirs "$FOAM_SRC/lagrangian/parcel/fvModels") \
-            $(findModelDirs "$FOAM_SRC/regionModels/surfaceFilm/fvModels") \
+            $(findModelDirs "$FOAM_SRC/surfaceFilmModels/fvModels") \
             $(findModelDirs "$FOAM_SRC/radiationModels/fvModels/radiation")"
 
     [ "$_modelDirs" ] || return 0

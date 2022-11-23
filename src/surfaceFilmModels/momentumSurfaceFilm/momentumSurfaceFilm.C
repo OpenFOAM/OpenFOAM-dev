@@ -47,22 +47,19 @@ License
 
 namespace Foam
 {
-namespace regionModels
-{
     defineTypeNameAndDebug(momentumSurfaceFilm, 0);
-}
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::regionModels::momentumSurfaceFilm::read()
+bool Foam::momentumSurfaceFilm::read()
 {
     return surfaceFilm::read();
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::resetPrimaryRegionSourceTerms()
+void Foam::momentumSurfaceFilm::resetPrimaryRegionSourceTerms()
 {
     DebugInFunction << endl;
 
@@ -72,7 +69,7 @@ void Foam::regionModels::momentumSurfaceFilm::resetPrimaryRegionSourceTerms()
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::
+void Foam::momentumSurfaceFilm::
 transferPrimaryRegionThermoFields()
 {
     DebugInFunction << endl;
@@ -86,7 +83,7 @@ transferPrimaryRegionThermoFields()
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::
+void Foam::momentumSurfaceFilm::
 transferPrimaryRegionSourceFields()
 {
     DebugInFunction << endl;
@@ -135,14 +132,14 @@ transferPrimaryRegionSourceFields()
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::regionModels::momentumSurfaceFilm::pc()
+Foam::momentumSurfaceFilm::pc()
 {
     return -fvc::laplacian(sigma(), delta_);
 }
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::regionModels::momentumSurfaceFilm::pe()
+Foam::momentumSurfaceFilm::pe()
 {
     tmp<volScalarField> tpSp
     (
@@ -168,7 +165,7 @@ Foam::regionModels::momentumSurfaceFilm::pe()
 
 
 Foam::tmp<Foam::surfaceScalarField>
-Foam::regionModels::momentumSurfaceFilm::rhog() const
+Foam::momentumSurfaceFilm::rhog() const
 {
     return
         fvc::interpolate
@@ -179,7 +176,7 @@ Foam::regionModels::momentumSurfaceFilm::rhog() const
 
 
 Foam::tmp<Foam::surfaceScalarField>
-Foam::regionModels::momentumSurfaceFilm::gGradRho() const
+Foam::momentumSurfaceFilm::gGradRho() const
 {
     return
         fvc::interpolate
@@ -189,13 +186,13 @@ Foam::regionModels::momentumSurfaceFilm::gGradRho() const
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::correctCoverage()
+void Foam::momentumSurfaceFilm::correctCoverage()
 {
     coverage_ == pos(delta_ - deltaSmall_);
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::updateSubmodels()
+void Foam::momentumSurfaceFilm::updateSubmodels()
 {
     DebugInFunction << endl;
 
@@ -218,7 +215,7 @@ void Foam::regionModels::momentumSurfaceFilm::updateSubmodels()
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::predictDelta()
+void Foam::momentumSurfaceFilm::predictDelta()
 {
     DebugInFunction << endl;
 
@@ -234,13 +231,13 @@ void Foam::regionModels::momentumSurfaceFilm::predictDelta()
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::updateContinuityErr()
+void Foam::momentumSurfaceFilm::updateContinuityErr()
 {
     continuityErr_ = (fvc::ddt(alpha_, rho()) + fvc::div(phi_))() + rhoSp_;
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::continuityCheck()
+void Foam::momentumSurfaceFilm::continuityCheck()
 {
     const dimensionedScalar totalMass = fvc::domainIntegrate(mass());
 
@@ -273,7 +270,7 @@ void Foam::regionModels::momentumSurfaceFilm::continuityCheck()
 
 
 Foam::tmp<Foam::volVectorField::Internal>
-Foam::regionModels::momentumSurfaceFilm::Uw() const
+Foam::momentumSurfaceFilm::Uw() const
 {
     tmp<volVectorField::Internal> tUw
     (
@@ -303,7 +300,7 @@ Foam::regionModels::momentumSurfaceFilm::Uw() const
 
 
 Foam::tmp<Foam::fvVectorMatrix>
-Foam::regionModels::momentumSurfaceFilm::solveMomentum
+Foam::momentumSurfaceFilm::solveMomentum
 (
     const volScalarField& pc,
     const volScalarField& pe
@@ -369,7 +366,7 @@ Foam::regionModels::momentumSurfaceFilm::solveMomentum
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::solveAlpha
+void Foam::momentumSurfaceFilm::solveAlpha
 (
     const fvVectorMatrix& UEqn,
     const volScalarField& pc,
@@ -475,7 +472,7 @@ void Foam::regionModels::momentumSurfaceFilm::solveAlpha
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
+Foam::momentumSurfaceFilm::momentumSurfaceFilm
 (
     const word& modelType,
     const fvMesh& primaryMesh,
@@ -820,7 +817,7 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         this->mappedFieldAndInternalPatchTypes<scalar>()
     ),
 
-    viscosity_(surfaceFilmSubModels::viscosityModel::New(*this, coeffs(), mu_)),
+    viscosity_(surfaceFilmModels::viscosityModel::New(*this, coeffs(), mu_)),
 
     sigma_(Function1<scalar>::New("sigma", coeffs())),
 
@@ -832,7 +829,7 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
 
     momentumTransport_
     (
-        surfaceFilmSubModels::momentumTransportModel::New(*this, coeffs_)
+        surfaceFilmModels::momentumTransportModel::New(*this, coeffs_)
     ),
 
     forces_(*this, coeffs_),
@@ -869,14 +866,14 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::regionModels::momentumSurfaceFilm::~momentumSurfaceFilm()
+Foam::momentumSurfaceFilm::~momentumSurfaceFilm()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::regionModels::momentumSurfaceFilm::sigma() const
+Foam::momentumSurfaceFilm::sigma() const
 {
     tmp<volScalarField> tsigma
     (
@@ -897,7 +894,7 @@ Foam::regionModels::momentumSurfaceFilm::sigma() const
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::addSources
+void Foam::momentumSurfaceFilm::addSources
 (
     const label patchi,
     const label facei,
@@ -921,7 +918,7 @@ void Foam::regionModels::momentumSurfaceFilm::addSources
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::preEvolveRegion()
+void Foam::momentumSurfaceFilm::preEvolveRegion()
 {
     DebugInFunction << endl;
 
@@ -940,7 +937,7 @@ void Foam::regionModels::momentumSurfaceFilm::preEvolveRegion()
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::evolveRegion()
+void Foam::momentumSurfaceFilm::evolveRegion()
 {
     DebugInFunction << endl;
 
@@ -980,7 +977,7 @@ void Foam::regionModels::momentumSurfaceFilm::evolveRegion()
 
 
 Foam::scalar
-Foam::regionModels::momentumSurfaceFilm::CourantNumber() const
+Foam::momentumSurfaceFilm::CourantNumber() const
 {
     const scalarField sumPhi(fvc::surfaceSum(mag(phiU_))().primitiveField());
 
@@ -989,7 +986,7 @@ Foam::regionModels::momentumSurfaceFilm::CourantNumber() const
 
 
 Foam::scalar
-Foam::regionModels::momentumSurfaceFilm::maxDeltaT() const
+Foam::momentumSurfaceFilm::maxDeltaT() const
 {
     if (maxCo_ > 0)
     {
@@ -1003,34 +1000,34 @@ Foam::regionModels::momentumSurfaceFilm::maxDeltaT() const
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::regionModels::momentumSurfaceFilm::primaryMassTrans() const
+Foam::momentumSurfaceFilm::primaryMassTrans() const
 {
     return primaryMassTrans_;
 }
 
 
 const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::cloudMassTrans() const
+Foam::momentumSurfaceFilm::cloudMassTrans() const
 {
     return cloudMassTrans_;
 }
 
 
 const Foam::volScalarField&
-Foam::regionModels::momentumSurfaceFilm::cloudDiameterTrans() const
+Foam::momentumSurfaceFilm::cloudDiameterTrans() const
 {
     return cloudDiameterTrans_;
 }
 
 
 Foam::tmp<Foam::volVectorField>
-Foam::regionModels::momentumSurfaceFilm::primaryMomentumTrans() const
+Foam::momentumSurfaceFilm::primaryMomentumTrans() const
 {
     return primaryMomentumTrans_;
 }
 
 
-void Foam::regionModels::momentumSurfaceFilm::info()
+void Foam::momentumSurfaceFilm::info()
 {
     Info<< "\nSurface film: " << type() << endl;
 
@@ -1057,7 +1054,7 @@ void Foam::regionModels::momentumSurfaceFilm::info()
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::regionModels::momentumSurfaceFilm::Srho() const
+Foam::momentumSurfaceFilm::Srho() const
 {
     tmp<volScalarField::Internal> tSrho
     (
@@ -1097,7 +1094,7 @@ Foam::regionModels::momentumSurfaceFilm::Srho() const
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::regionModels::momentumSurfaceFilm::SYi
+Foam::momentumSurfaceFilm::SYi
 (
     const label i
 ) const
@@ -1112,7 +1109,7 @@ Foam::regionModels::momentumSurfaceFilm::SYi
 
 
 Foam::tmp<Foam::volVectorField::Internal>
-Foam::regionModels::momentumSurfaceFilm::SU() const
+Foam::momentumSurfaceFilm::SU() const
 {
     tmp<volVectorField::Internal> tSU
     (
@@ -1151,7 +1148,7 @@ Foam::regionModels::momentumSurfaceFilm::SU() const
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::regionModels::momentumSurfaceFilm::Sh() const
+Foam::momentumSurfaceFilm::Sh() const
 {
     return volScalarField::Internal::New
     (

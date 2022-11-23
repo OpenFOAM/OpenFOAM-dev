@@ -38,7 +38,7 @@ inclinedFilmNusseltInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    filmName_(regionModels::surfaceFilm::typeName),
+    filmName_(surfaceFilm::typeName),
     GammaMean_(),
     a_(),
     omega_()
@@ -59,7 +59,7 @@ inclinedFilmNusseltInletVelocityFvPatchVectorField
         dict.lookupOrDefault<word>
         (
             "film",
-            regionModels::surfaceFilm::typeName
+            surfaceFilm::typeName
         )
     ),
     GammaMean_(Function1<scalar>::New("GammaMean", dict)),
@@ -113,8 +113,8 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::updateCoeffs()
 
     // Retrieve the film region from the database
 
-    const regionModels::momentumSurfaceFilm& film =
-        db().time().lookupObject<regionModels::momentumSurfaceFilm>
+    const momentumSurfaceFilm& film =
+        db().time().lookupObject<momentumSurfaceFilm>
         (
             filmName_ + "Properties"
         );
@@ -186,7 +186,7 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::write
     (
         os,
         "film",
-        regionModels::surfaceFilm::typeName,
+        surfaceFilm::typeName,
         filmName_
     );
     writeEntry(os, GammaMean_());

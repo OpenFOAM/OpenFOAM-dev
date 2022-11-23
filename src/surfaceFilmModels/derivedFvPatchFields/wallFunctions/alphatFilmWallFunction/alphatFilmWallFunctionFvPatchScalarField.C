@@ -51,7 +51,7 @@ alphatFilmWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    filmName_(regionModels::surfaceFilm::typeName),
+    filmName_(surfaceFilm::typeName),
     B_(5.5),
     yPlusCrit_(11.05),
     Cmu_(0.09),
@@ -74,7 +74,7 @@ alphatFilmWallFunctionFvPatchScalarField
         dict.lookupOrDefault<word>
         (
             "film",
-            regionModels::surfaceFilm::typeName
+            surfaceFilm::typeName
         )
     ),
     B_(dict.lookupOrDefault("B", 5.5)),
@@ -130,7 +130,7 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    typedef regionModels::surfaceFilm modelType;
+    typedef surfaceFilm modelType;
 
     // Since we're inside initEvaluate/evaluate there might be processor
     // comms underway. Change the tag we use.
@@ -234,7 +234,7 @@ void alphatFilmWallFunctionFvPatchScalarField::write(Ostream& os) const
     (
         os,
         "film",
-        regionModels::surfaceFilm::typeName,
+        surfaceFilm::typeName,
         filmName_
     );
     writeEntry(os, "B", B_);

@@ -66,7 +66,7 @@ class surfaceFilms
     // Private Data
 
         //- The surface film models
-        PtrList<regionModels::thermoSurfaceFilm> surfaceFilms_;
+        PtrList<thermoSurfaceFilm> surfaceFilms_;
 
         //- For each surface film model, the corresponding density name in the
         //  primary region

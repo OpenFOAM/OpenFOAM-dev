@@ -34,16 +34,13 @@ License
 
 namespace Foam
 {
-namespace regionModels
-{
     defineTypeNameAndDebug(singleLayerRegionModel, 0);
-}
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::regionModels::singleLayerRegionModel::read()
+bool Foam::singleLayerRegionModel::read()
 {
     if (regIOobject::read())
     {
@@ -63,7 +60,7 @@ bool Foam::regionModels::singleLayerRegionModel::read()
 }
 
 
-bool Foam::regionModels::singleLayerRegionModel::read(const dictionary& dict)
+bool Foam::singleLayerRegionModel::read(const dictionary& dict)
 {
     if (const dictionary* dictPtr = dict.subDictPtr(modelName_ + "Coeffs"))
     {
@@ -76,7 +73,7 @@ bool Foam::regionModels::singleLayerRegionModel::read(const dictionary& dict)
 }
 
 
-Foam::label Foam::regionModels::singleLayerRegionModel::nbrCoupledPatchID
+Foam::label Foam::singleLayerRegionModel::nbrCoupledPatchID
 (
     const singleLayerRegionModel& nbrRegion,
     const label regionPatchi
@@ -146,7 +143,7 @@ Foam::label Foam::regionModels::singleLayerRegionModel::nbrCoupledPatchID
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
+Foam::singleLayerRegionModel::singleLayerRegionModel
 (
     const fvMesh& primaryMesh,
     const word& regionType,
@@ -349,41 +346,41 @@ Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::regionModels::singleLayerRegionModel::~singleLayerRegionModel()
+Foam::singleLayerRegionModel::~singleLayerRegionModel()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 const Foam::volVectorField&
-Foam::regionModels::singleLayerRegionModel::nHat() const
+Foam::singleLayerRegionModel::nHat() const
 {
     return nHat_;
 }
 
 
 const Foam::volScalarField::Internal&
-Foam::regionModels::singleLayerRegionModel::magSf() const
+Foam::singleLayerRegionModel::magSf() const
 {
     return magSf_;
 }
 
 
 const Foam::volScalarField&
-Foam::regionModels::singleLayerRegionModel::VbyA() const
+Foam::singleLayerRegionModel::VbyA() const
 {
     return VbyA_;
 }
 
 
 const Foam::labelList&
-Foam::regionModels::singleLayerRegionModel::passivePatchIDs() const
+Foam::singleLayerRegionModel::passivePatchIDs() const
 {
     return passivePatchIDs_;
 }
 
 
-void Foam::regionModels::singleLayerRegionModel::evolve()
+void Foam::singleLayerRegionModel::evolve()
 {
     Info<< "\nEvolving " << modelName_ << " for region "
         << mesh_.name() << endl;
@@ -415,19 +412,19 @@ void Foam::regionModels::singleLayerRegionModel::evolve()
 }
 
 
-void Foam::regionModels::singleLayerRegionModel::preEvolveRegion()
+void Foam::singleLayerRegionModel::preEvolveRegion()
 {}
 
 
-void Foam::regionModels::singleLayerRegionModel::evolveRegion()
+void Foam::singleLayerRegionModel::evolveRegion()
 {}
 
 
-void Foam::regionModels::singleLayerRegionModel::postEvolveRegion()
+void Foam::singleLayerRegionModel::postEvolveRegion()
 {}
 
 
-void Foam::regionModels::singleLayerRegionModel::info()
+void Foam::singleLayerRegionModel::info()
 {}
 
 

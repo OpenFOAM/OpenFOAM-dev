@@ -25,21 +25,17 @@ License
 
 #include "surfaceFilm.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace regionModels
-{
     defineTypeNameAndDebug(surfaceFilm, 0);
 }
-}
+
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::regionModels::surfaceFilm::read()
+bool Foam::surfaceFilm::read()
 {
     if (singleLayerRegionModel::read())
     {
@@ -54,7 +50,7 @@ bool Foam::regionModels::surfaceFilm::read()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::regionModels::surfaceFilm::surfaceFilm
+Foam::surfaceFilm::surfaceFilm
 (
     const word& modelType,
     const fvMesh& mesh,
@@ -71,13 +67,13 @@ Foam::regionModels::surfaceFilm::surfaceFilm
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::regionModels::surfaceFilm::~surfaceFilm()
+Foam::surfaceFilm::~surfaceFilm()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::regionModels::surfaceFilm::evolve()
+void Foam::surfaceFilm::evolve()
 {
     singleLayerRegionModel::evolve();
 }

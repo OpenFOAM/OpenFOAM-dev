@@ -29,10 +29,10 @@ License
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::UPtrList<Foam::regionModels::surfaceFilm>&
+Foam::UPtrList<Foam::surfaceFilm>&
 Foam::NoSurfaceFilm<CloudType>::surfaceFilmPtrs() const
 {
-    static UPtrList<regionModels::surfaceFilm> null;
+    static UPtrList<surfaceFilm> null;
     return null;
 }
 

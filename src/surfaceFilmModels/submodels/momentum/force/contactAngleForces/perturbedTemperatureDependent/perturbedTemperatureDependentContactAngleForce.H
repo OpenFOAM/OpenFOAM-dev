@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmSubModels::
+    Foam::surfaceFilmModels::
         perturbedTemperatureDependentContactAngleForce
 
 Description
@@ -34,10 +34,10 @@ Description
     Foam::distributionModels::distributionModel
 
 See also
-    Foam::regionModels::surfaceFilmSubModels::contactAngleForce
-    Foam::regionModels::surfaceFilmSubModels::\\
+    Foam::surfaceFilmModels::contactAngleForce
+    Foam::surfaceFilmModels::\\
     temperatureDependentContactAngleForce
-    Foam::regionModels::surfaceFilmSubModels::distributionContactAngleForce
+    Foam::surfaceFilmModels::distributionContactAngleForce
     Foam::Function1s
     Foam::distributionModel
 
@@ -58,9 +58,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace regionModels
-{
-namespace surfaceFilmSubModels
+namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -127,8 +125,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmSubModels
-} // End namespace regionModels
+} // End namespace surfaceFilmModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
