@@ -110,12 +110,6 @@ Foam::volScalarField& Foam::rhoThermo::implementation::rho()
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::rho0() const
-{
-    return rho_.oldTime();
-}
-
-
 void Foam::rhoThermo::implementation::correctRho(const volScalarField& deltaRho)
 {
     rho_ += deltaRho;

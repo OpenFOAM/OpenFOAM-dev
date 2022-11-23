@@ -138,10 +138,4 @@ Foam::volScalarField& Foam::solidThermo::implementation::rho()
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::solidThermo::implementation::rho0() const
-{
-    return rho_.oldTime();
-}
-
-
 // ************************************************************************* //

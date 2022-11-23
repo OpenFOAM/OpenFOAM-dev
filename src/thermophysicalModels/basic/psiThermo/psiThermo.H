@@ -111,9 +111,6 @@ public:
             //- Return the thermodynamic density field [kg/m^3]
             //  This is used by solvers which create a separate continuity rho
             virtual tmp<volScalarField> renameRho() = 0;
-
-            //- Old-time density [kg/m^3]
-            virtual tmp<volScalarField> rho0() const = 0;
 };
 
 
@@ -154,9 +151,6 @@ public:
             //- Return the thermodynamic density field [kg/m^3]
             //  This is used by solvers which create a separate continuity rho
             virtual tmp<volScalarField> renameRho();
-
-            //- Old-time density [kg/m^3]
-            virtual tmp<volScalarField> rho0() const;
 
 
     // Member Operators

@@ -255,9 +255,6 @@ public:
             //- Density for patch [kg/m^3]
             virtual tmp<scalarField> rho(const label patchi) const = 0;
 
-            //- Old-time density [kg/m^3]
-            virtual tmp<volScalarField> rho0() const = 0;
-
             //- Enthalpy/Internal energy [J/kg]
             //  Non-const access allowed for transport equations
             virtual volScalarField& he() = 0;

@@ -111,9 +111,6 @@ public:
             //- Return non-const access to the local density field [kg/m^3]
             virtual volScalarField& rho() = 0;
 
-            //- Old-time density [kg/m^3]
-            virtual tmp<volScalarField> rho0() const = 0;
-
             //- Add the given density correction to the density field.
             //  Used to update the density field following pressure solution
             virtual void correctRho(const volScalarField& deltaRho) = 0;
@@ -168,9 +165,6 @@ public:
 
             //- Return non-const access to the local density field [kg/m^3]
             virtual volScalarField& rho();
-
-            //- Old-time density [kg/m^3]
-            virtual tmp<volScalarField> rho0() const;
 
             //- Add the given density correction to the density field.
             //  Used to update the density field following pressure solution
