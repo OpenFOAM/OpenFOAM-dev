@@ -199,7 +199,7 @@ public:
         thermoSurfaceFilm
         (
             const word& modelType,
-            const fvMesh& mesh,
+            const fvMesh& primaryMesh,
             const dimensionedVector& g,
             const word& regionType,
             const bool readFields = true

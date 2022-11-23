@@ -175,12 +175,12 @@ void transferModelList::correct
 
 void transferModelList::info(Ostream& os)
 {
-    const polyBoundaryMesh& pbm = film().regionMesh().boundaryMesh();
+    const polyBoundaryMesh& pbm = film().mesh().boundaryMesh();
 
     scalar transferredMass = 0;
     scalarField patchTransferredMasses
     (
-        pbm.size() - film().regionMesh().globalData().processorPatches().size(),
+        pbm.size() - film().mesh().globalData().processorPatches().size(),
         0
     );
 

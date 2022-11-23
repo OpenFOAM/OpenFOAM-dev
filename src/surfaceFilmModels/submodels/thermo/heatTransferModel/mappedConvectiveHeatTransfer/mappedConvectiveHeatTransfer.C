@@ -75,11 +75,11 @@ mappedConvectiveHeatTransfer::mappedConvectiveHeatTransfer
         (
             htcConvPrimary_.name(),
             film.time().timeName(),
-            film.regionMesh(),
+            film.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        film.regionMesh(),
+        film.mesh(),
         dimensionedScalar(dimMass/pow3(dimTime)/dimTemperature, 0)
     )
 {

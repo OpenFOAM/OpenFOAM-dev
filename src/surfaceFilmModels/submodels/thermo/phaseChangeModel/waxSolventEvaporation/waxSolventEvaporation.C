@@ -88,8 +88,8 @@ waxSolventEvaporation::waxSolventEvaporation
         IOobject
         (
             typedName("Wwax"),
-            film.regionMesh().time().constant(),
-            film.regionMesh()
+            film.mesh().time().constant(),
+            film.mesh()
         ),
         coeffDict_.lookup<scalar>("Wwax")
     ),
@@ -98,8 +98,8 @@ waxSolventEvaporation::waxSolventEvaporation
         IOobject
         (
             typedName("Wsolvent"),
-            film.regionMesh().time().constant(),
-            film.regionMesh()
+            film.mesh().time().constant(),
+            film.mesh()
         ),
         coeffDict_.lookup<scalar>("Wsolvent")
     ),
@@ -108,8 +108,8 @@ waxSolventEvaporation::waxSolventEvaporation
         IOobject
         (
             typedName("Ysolvent0"),
-            film.regionMesh().time().constant(),
-            film.regionMesh(),
+            film.mesh().time().constant(),
+            film.mesh(),
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         )
@@ -119,12 +119,12 @@ waxSolventEvaporation::waxSolventEvaporation
         IOobject
         (
             typedName("Ysolvent"),
-            film.regionMesh().time().timeName(),
-            film.regionMesh(),
+            film.mesh().time().timeName(),
+            film.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        film.regionMesh()
+        film.mesh()
     ),
     deltaMin_(coeffDict_.lookup<scalar>("deltaMin")),
     L_(coeffDict_.lookup<scalar>("L")),
@@ -176,7 +176,7 @@ void waxSolventEvaporation::correctModel
     const scalarField& he = film.thermo().he();
     const scalarField& rhoInf = film.rhoPrimary();
     const scalarField& muInf = film.muPrimary();
-    const scalarField& V = film.regionMesh().V();
+    const scalarField& V = film.mesh().V();
     const scalarField& magSf = film.magSf();
     const scalarField& VbyA = film.VbyA();
     const vectorField dU(film.UPrimary() - film.Us());
@@ -196,13 +196,13 @@ void waxSolventEvaporation::correctModel
         IOobject
         (
             typedName("evapRateCoeff"),
-            film.regionMesh().time().timeName(),
-            film.regionMesh(),
+            film.mesh().time().timeName(),
+            film.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
         ),
-        film.regionMesh(),
+        film.mesh(),
         dimensionedScalar(dimDensity/dimTime, 0)
     );
 
@@ -211,13 +211,13 @@ void waxSolventEvaporation::correctModel
         IOobject
         (
             typedName("evapRateInf"),
-            film.regionMesh().time().timeName(),
-            film.regionMesh(),
+            film.mesh().time().timeName(),
+            film.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
         ),
-        film.regionMesh(),
+        film.mesh(),
         dimensionedScalar(evapRateCoeff.dimensions(), 0)
     );
 

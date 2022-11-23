@@ -54,13 +54,13 @@ Foam::regionModels::singleLayerRegionModel::modelName() const
 
 
 inline const Foam::fvMesh&
-Foam::regionModels::singleLayerRegionModel::regionMesh() const
+Foam::regionModels::singleLayerRegionModel::mesh() const
 {
     return mesh_;
 }
 
 
-inline Foam::fvMesh& Foam::regionModels::singleLayerRegionModel::regionMesh()
+inline Foam::fvMesh& Foam::regionModels::singleLayerRegionModel::mesh()
 {
     return mesh_;
 }
@@ -76,7 +76,7 @@ Foam::regionModels::singleLayerRegionModel::coeffs() const
 inline const Foam::dictionary&
 Foam::regionModels::singleLayerRegionModel::solution() const
 {
-    return regionMesh().solution().dict();
+    return mesh().solution().dict();
 }
 
 

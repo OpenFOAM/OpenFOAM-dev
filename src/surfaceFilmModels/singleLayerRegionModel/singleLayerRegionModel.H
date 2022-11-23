@@ -126,7 +126,7 @@ public:
         //- Construct from mesh, region type and name
         singleLayerRegionModel
         (
-            const fvMesh& mesh,
+            const fvMesh& primaryMesh,
             const word& regionType,
             const word& modelName,
             bool readFields = true
@@ -156,11 +156,11 @@ public:
             //- Return the model name
             inline const word& modelName() const;
 
-            //- Return the region mesh database
-            inline const fvMesh& regionMesh() const;
+            //- Return the region mesh
+            inline const fvMesh& mesh() const;
 
             //- Return the region mesh database for manipulation
-            inline fvMesh& regionMesh();
+            inline fvMesh& mesh();
 
             //- Return the model coefficients dictionary
             inline const dictionary& coeffs() const;

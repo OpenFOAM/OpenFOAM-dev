@@ -82,12 +82,12 @@ thixotropicViscosity::thixotropicViscosity
         IOobject
         (
             typedName("lambda"),
-            film.regionMesh().time().timeName(),
-            film.regionMesh(),
+            film.mesh().time().timeName(),
+            film.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        film.regionMesh()
+        film.mesh()
     )
 {
     lambda_.min(1);

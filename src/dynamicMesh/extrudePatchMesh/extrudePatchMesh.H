@@ -149,7 +149,7 @@ public:
         // Access functions
 
             //- Return region mesh
-            const fvMesh& regionMesh() const
+            const fvMesh& mesh() const
             {
                 return *this;
             }

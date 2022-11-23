@@ -57,7 +57,7 @@ void waxSolventViscosity::correctMu()
 
     const uniformDimensionedScalarField Wwax
     (
-        film.regionMesh().lookupObject<uniformDimensionedScalarField>
+        film.mesh().lookupObject<uniformDimensionedScalarField>
         (
             Foam::typedName<waxSolventEvaporation>("Wwax")
         )
@@ -65,7 +65,7 @@ void waxSolventViscosity::correctMu()
 
     const uniformDimensionedScalarField Wsolvent
     (
-        film.regionMesh().lookupObject<uniformDimensionedScalarField>
+        film.mesh().lookupObject<uniformDimensionedScalarField>
         (
             Foam::typedName<waxSolventEvaporation>("Wsolvent")
         )
@@ -73,7 +73,7 @@ void waxSolventViscosity::correctMu()
 
     const uniformDimensionedScalarField Ysolvent0
     (
-        film.regionMesh().lookupObject<uniformDimensionedScalarField>
+        film.mesh().lookupObject<uniformDimensionedScalarField>
         (
             Foam::typedName<waxSolventEvaporation>("Ysolvent0")
         )
@@ -81,7 +81,7 @@ void waxSolventViscosity::correctMu()
 
     const volScalarField& Ysolvent
     (
-        film.regionMesh().lookupObject<volScalarField>
+        film.mesh().lookupObject<volScalarField>
         (
             Foam::typedName<waxSolventEvaporation>("Ysolvent")
         )
@@ -117,12 +117,12 @@ waxSolventViscosity::waxSolventViscosity
         IOobject
         (
             typedName("muWax"),
-            film.regionMesh().time().timeName(),
-            film.regionMesh(),
+            film.mesh().time().timeName(),
+            film.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        film.regionMesh(),
+        film.mesh(),
         dimensionedScalar(dimDynamicViscosity, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
@@ -140,12 +140,12 @@ waxSolventViscosity::waxSolventViscosity
         IOobject
         (
             typedName("muSolvent"),
-            film.regionMesh().time().timeName(),
-            film.regionMesh(),
+            film.mesh().time().timeName(),
+            film.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        film.regionMesh(),
+        film.mesh(),
         dimensionedScalar(dimDynamicViscosity, 0),
         zeroGradientFvPatchScalarField::typeName
     ),

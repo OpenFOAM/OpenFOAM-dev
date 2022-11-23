@@ -61,11 +61,11 @@ primaryRadiation::primaryRadiation
         (
             "qin",
             film.time().timeName(),
-            film.regionMesh(),
+            film.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        film.regionMesh(),
+        film.mesh(),
         dimensionedScalar(dimMass/pow3(dimTime), 0)
     )
 {

@@ -66,7 +66,7 @@ drippingEjection::drippingEjection
             rndGen_
         )
     ),
-    diameter_(film.regionMesh().nCells(), -1.0)
+    diameter_(film.mesh().nCells(), -1.0)
 {}
 
 
@@ -97,7 +97,7 @@ void drippingEjection::correct
     const scalarField& delta = film.delta();
     const scalarField& rho = film.rho();
 
-    scalarField massDrip(film.regionMesh().nCells(), 0.0);
+    scalarField massDrip(film.mesh().nCells(), 0.0);
 
     forAll(gNorm, i)
     {

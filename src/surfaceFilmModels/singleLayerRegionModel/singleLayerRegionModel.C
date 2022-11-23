@@ -85,12 +85,12 @@ Foam::label Foam::regionModels::singleLayerRegionModel::nbrCoupledPatchID
     label nbrPatchi = -1;
 
     // region
-    const fvMesh& nbrRegionMesh = nbrRegion.regionMesh();
+    const fvMesh& nbrRegionMesh = nbrRegion.mesh();
 
     // boundary mesh
     const polyBoundaryMesh& nbrPbm = nbrRegionMesh.boundaryMesh();
 
-    const polyBoundaryMesh& pbm = regionMesh().boundaryMesh();
+    const polyBoundaryMesh& pbm = mesh().boundaryMesh();
 
     if (regionPatchi > pbm.size() - 1)
     {
@@ -101,7 +101,7 @@ Foam::label Foam::regionModels::singleLayerRegionModel::nbrCoupledPatchID
             << abort(FatalError);
     }
 
-    const polyPatch& pp = regionMesh().boundaryMesh()[regionPatchi];
+    const polyPatch& pp = mesh().boundaryMesh()[regionPatchi];
 
     if (!isA<mappedPatchBase>(pp))
     {
@@ -132,7 +132,7 @@ Foam::label Foam::regionModels::singleLayerRegionModel::nbrCoupledPatchID
 
     if (nbrPatchi == -1)
     {
-        const polyPatch& p = regionMesh().boundaryMesh()[regionPatchi];
+        const polyPatch& p = mesh().boundaryMesh()[regionPatchi];
 
         FatalErrorInFunction
             << "Unable to find patch pair for local patch "
@@ -148,7 +148,7 @@ Foam::label Foam::regionModels::singleLayerRegionModel::nbrCoupledPatchID
 
 Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
 (
-    const fvMesh& mesh,
+    const fvMesh& primaryMesh,
     const word& regionType,
     const word& modelName,
     bool readFields
@@ -159,14 +159,14 @@ Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
         IOobject
         (
             regionType + "Properties",
-            mesh.time().constant(),
-            mesh.time(),
+            primaryMesh.time().constant(),
+            primaryMesh.time(),
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         )
     ),
-    primaryMesh_(mesh),
-    time_(mesh.time()),
+    primaryMesh_(primaryMesh),
+    time_(primaryMesh.time()),
     infoOutput_(true),
     modelName_(modelName),
     regionName_(lookup("regionName")),
@@ -191,9 +191,9 @@ Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
         (
             "nHat",
             time_.timeName(),
-            regionMesh()
+            mesh_
         ),
-        regionMesh(),
+        mesh_,
         dimensionedVector(dimless, Zero),
         zeroGradientFvPatchField<vector>::typeName
     ),
@@ -203,9 +203,9 @@ Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
         (
             "magSf",
             time_.timeName(),
-            regionMesh()
+            mesh_
         ),
-        regionMesh(),
+        mesh_,
         dimensionedScalar(dimArea, 0)
     ),
     VbyA_
@@ -214,9 +214,9 @@ Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
         (
             "VbyA",
             time_.timeName(),
-            regionMesh()
+            mesh_
         ),
-        regionMesh(),
+        mesh_,
         dimensionedScalar(dimLength, 0),
         zeroGradientFvPatchField<vector>::typeName
     )
@@ -224,7 +224,7 @@ Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
     label nBoundaryFaces = 0;
     DynamicList<label> primaryPatchIDs;
     DynamicList<label> intCoupledPatchIDs;
-    const polyBoundaryMesh& rbm = regionMesh().boundaryMesh();
+    const polyBoundaryMesh& rbm = mesh_.boundaryMesh();
 
     forAll(rbm, patchi)
     {
@@ -309,12 +309,12 @@ Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
     }
     nHat_.correctBoundaryConditions();
 
-    if (nBoundaryFaces != regionMesh().nCells())
+    if (nBoundaryFaces != mesh_.nCells())
     {
         FatalErrorInFunction
             << "Number of primary region coupled boundary faces not equal to "
             << "the number of cells in the local region" << nl << nl
-            << "Number of cells = " << regionMesh().nCells() << nl
+            << "Number of cells = " << mesh_.nCells() << nl
             << "Boundary faces  = " << nBoundaryFaces << nl
             << abort(FatalError);
     }
@@ -327,12 +327,12 @@ Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
         if (ppIntCoupled.size() > 0)
         {
             const label cellId = rbm[patchi].faceCells()[0];
-            const cell& cFaces = regionMesh().cells()[cellId];
+            const cell& cFaces = mesh_.cells()[cellId];
             const label faceO
             (
                 cFaces.opposingFaceLabel
                 (
-                    ppIntCoupled.start(), regionMesh().faces()
+                    ppIntCoupled.start(), mesh_.faces()
                 )
             );
             passivePatchIDs_[i] = rbm.whichPatch(faceO);
@@ -342,7 +342,7 @@ Foam::regionModels::singleLayerRegionModel::singleLayerRegionModel
     Pstream::listCombineGather(passivePatchIDs_, maxEqOp<label>());
     Pstream::listCombineScatter(passivePatchIDs_);
 
-    VbyA_.primitiveFieldRef() = regionMesh().V()/magSf_;
+    VbyA_.primitiveFieldRef() = mesh_.V()/magSf_;
     VbyA_.correctBoundaryConditions();
 }
 
@@ -386,7 +386,7 @@ Foam::regionModels::singleLayerRegionModel::passivePatchIDs() const
 void Foam::regionModels::singleLayerRegionModel::evolve()
 {
     Info<< "\nEvolving " << modelName_ << " for region "
-        << regionMesh().name() << endl;
+        << mesh_.name() << endl;
 
     preEvolveRegion();
 

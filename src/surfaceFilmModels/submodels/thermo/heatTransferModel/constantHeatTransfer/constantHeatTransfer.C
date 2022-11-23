@@ -77,7 +77,7 @@ tmp<volScalarField::Internal> constantHeatTransfer::h() const
     return volScalarField::Internal::New
     (
         "htc",
-        filmModel_.regionMesh(),
+        filmModel_.mesh(),
         dimensionedScalar
         (
             dimEnergy/dimTime/sqr(dimLength)/dimTemperature,

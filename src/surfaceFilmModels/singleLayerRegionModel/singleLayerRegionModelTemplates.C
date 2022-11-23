@@ -43,7 +43,7 @@ void Foam::regionModels::singleLayerRegionModel::toPrimary
             const mappedPatchBase& mpb =
                 refCast<const mappedPatchBase>
                 (
-                    regionMesh().boundaryMesh()[regionPatchi]
+                    mesh().boundaryMesh()[regionPatchi]
                 );
             regionField = mpb.reverseDistribute(regionField);
             return;
@@ -70,7 +70,7 @@ void Foam::regionModels::singleLayerRegionModel::toRegion
             const mappedPatchBase& mpb =
                 refCast<const mappedPatchBase>
                 (
-                    regionMesh().boundaryMesh()[regionPatchi]
+                    mesh().boundaryMesh()[regionPatchi]
                 );
             primaryField = mpb.distribute(primaryField);
             return;
@@ -96,7 +96,7 @@ void Foam::regionModels::singleLayerRegionModel::toRegion
         const label primaryPatchi = primaryPatchIDs_[i];
 
         const polyPatch& regionPatch =
-            regionMesh().boundaryMesh()[regionPatchi];
+            mesh().boundaryMesh()[regionPatchi];
 
         const mappedPatchBase& mpb =
             refCast<const mappedPatchBase>(regionPatch);
@@ -111,7 +111,7 @@ template<class Type>
 Foam::wordList Foam::regionModels::singleLayerRegionModel::
 mappedFieldAndInternalPatchTypes() const
 {
-    wordList bTypes(regionMesh().boundaryMesh().size());
+    wordList bTypes(mesh().boundaryMesh().size());
 
     bTypes = zeroGradientFvPatchField<Type>::typeName;
 

@@ -66,7 +66,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
 
     // Apply defined patch radii
     const scalar rMin = 1e-6;
-    const fvMesh& mesh = film().regionMesh();
+    const fvMesh& mesh = film().mesh();
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     forAll(definedPatchRadii_, i)
@@ -101,7 +101,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
     const surfaceScalarField& phi
 ) const
 {
-    const fvMesh& mesh = film().regionMesh();
+    const fvMesh& mesh = film().mesh();
     const vectorField nf(mesh.Sf()/mesh.magSf());
     const unallocLabelList& own = mesh.owner();
     const unallocLabelList& nbr = mesh.neighbour();
@@ -199,7 +199,7 @@ curvatureSeparation::curvatureSeparation
     (
         coeffDict_.lookup("definedPatchRadii")
     );
-    const wordList& allPatchNames = film.regionMesh().boundaryMesh().names();
+    const wordList& allPatchNames = film.mesh().boundaryMesh().names();
 
     DynamicList<Tuple2<label, scalar>> prData(allPatchNames.size());
 
@@ -243,7 +243,7 @@ void curvatureSeparation::correct
 {
     const momentumSurfaceFilm& film =
         refCast<const momentumSurfaceFilm>(this->film());
-    const fvMesh& mesh = film.regionMesh();
+    const fvMesh& mesh = film.mesh();
 
     const volScalarField& delta = film.delta();
     const volVectorField& U = film.U();

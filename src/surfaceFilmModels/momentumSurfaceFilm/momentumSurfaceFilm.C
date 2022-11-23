@@ -149,7 +149,7 @@ Foam::regionModels::momentumSurfaceFilm::pe()
         volScalarField::New
         (
             "pSp",
-            regionMesh(),
+            mesh(),
             dimensionedScalar(pSp_.dimensions(), 0),
             zeroGradientFvPatchScalarField::typeName
         )
@@ -207,7 +207,7 @@ void Foam::regionModels::momentumSurfaceFilm::updateSubmodels()
 
     const volScalarField::Internal rVDt
     (
-        1/(time().deltaT()*regionMesh().V())
+        1/(time().deltaT()*mesh().V())
     );
 
     // Update mass source field
@@ -280,7 +280,7 @@ Foam::regionModels::momentumSurfaceFilm::Uw() const
         volVectorField::Internal::New
         (
             "Uw",
-            regionMesh(),
+            mesh(),
             dimensionedVector(dimVelocity, Zero)
         )
     );
@@ -291,7 +291,7 @@ Foam::regionModels::momentumSurfaceFilm::Uw() const
     for (label i=0; i<intCoupledPatchIDs_.size(); i++)
     {
         const label patchi = intCoupledPatchIDs_[i];
-        const polyPatch& pp = regionMesh().boundaryMesh()[patchi];
+        const polyPatch& pp = mesh().boundaryMesh()[patchi];
         UIndirectList<vector>(Uw, pp.faceCells()) =
             U_.boundaryField()[patchi];
     }
@@ -316,7 +316,7 @@ Foam::regionModels::momentumSurfaceFilm::solveMomentum
 
     const volScalarField::Internal rVDt
     (
-        1/(time().deltaT()*regionMesh().V())
+        1/(time().deltaT()*mesh().V())
     );
 
     // Momentum equation
@@ -352,8 +352,8 @@ Foam::regionModels::momentumSurfaceFilm::solveMomentum
                             fvc::snGrad(pe + pc, "snGrad(p)")
                           + gGradRho()*alphaf
                           + rhog()*fvc::snGrad(alpha_)
-                        )*regionMesh().magSf()
-                      - fvc::interpolate(rho())*(g() & regionMesh().Sf())
+                        )*mesh().magSf()
+                      - fvc::interpolate(rho())*(g() & mesh().Sf())
                     ), 0
                 )
             )
@@ -395,8 +395,8 @@ void Foam::regionModels::momentumSurfaceFilm::solveAlpha
                 (
                     fvc::snGrad(pe + pc, "snGrad(p)")
                   + gGradRho()*alphaf
-                )*regionMesh().magSf()
-              - rhof*(g() & regionMesh().Sf()),
+                )*mesh().magSf()
+              - rhof*(g() & mesh().Sf()),
                 0
             )
         )
@@ -420,7 +420,7 @@ void Foam::regionModels::momentumSurfaceFilm::solveAlpha
         alphaf*rhof*alpharAUf*rhogf
     );
 
-    regionMesh().schemes().setFluxRequired(alpha_.name());
+    mesh().schemes().setFluxRequired(alpha_.name());
 
     while (pimple_.correctNonOrthogonal())
     {
@@ -444,7 +444,7 @@ void Foam::regionModels::momentumSurfaceFilm::solveAlpha
             (
                 constrainFilmField
                 (
-                    rhogf*fvc::snGrad(alpha_)*regionMesh().magSf(),
+                    rhogf*fvc::snGrad(alpha_)*mesh().magSf(),
                     0
                 )
             );
@@ -478,15 +478,15 @@ void Foam::regionModels::momentumSurfaceFilm::solveAlpha
 Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
 (
     const word& modelType,
-    const fvMesh& mesh,
+    const fvMesh& primaryMesh,
     const dimensionedVector& g,
     const word& regionType,
     const bool readFields
 )
 :
-    surfaceFilm(modelType, mesh, g, regionType),
+    surfaceFilm(modelType, primaryMesh, g, regionType),
     phaseName_(coeffs_.lookupOrDefault("phase", word::null)),
-    pimple_(regionMesh()),
+    pimple_(mesh()),
 
     cumulativeContErr_(0),
 
@@ -499,14 +499,14 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "p",
             time().timeName(),
-            regionMesh()
+            mesh()
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimPressure, 0),
         this->mappedFieldAndInternalPatchTypes<scalar>()
     ),
 
-    thermo_(rhoThermo::New(regionMesh())),
+    thermo_(rhoThermo::New(mesh())),
 
     mu_
     (
@@ -514,11 +514,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "mu",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimPressure*dimTime, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
@@ -529,11 +529,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "delta",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        regionMesh()
+        mesh()
     ),
 
     alpha_
@@ -542,7 +542,7 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "alpha",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
@@ -556,11 +556,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "U",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        regionMesh()
+        mesh()
     ),
 
     Uw_
@@ -569,7 +569,7 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "Uw",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
@@ -582,11 +582,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "phi",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimMass/dimTime, 0)
     ),
 
@@ -596,9 +596,9 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "phiU",
             time().timeName(),
-            regionMesh()
+            mesh()
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimVolume/dimTime, 0)
     ),
 
@@ -608,9 +608,9 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "continuityErr",
             time().timeName(),
-            regionMesh()
+            mesh()
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(alpha_.dimensions()*dimDensity/dimTime, 0)
     ),
 
@@ -620,11 +620,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "coverage",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimless, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
@@ -635,11 +635,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "primaryMassTrans",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimMass, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
@@ -650,11 +650,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "cloudMassTrans",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimMass, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
@@ -665,11 +665,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "cloudDiameterTrans",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimLength, -1),
         zeroGradientFvPatchScalarField::typeName
     ),
@@ -680,11 +680,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "primaryMomentumTrans",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedVector(dimMass*dimVelocity, Zero),
         zeroGradientFvPatchVectorField::typeName
     ),
@@ -695,11 +695,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "rhoSp",
             time_.timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimDensity/dimTime, 0)
     ),
 
@@ -709,11 +709,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "USp",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedVector(dimDensity*dimVelocity/dimTime, Zero)
     ),
 
@@ -723,11 +723,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "pSp",
             time_.timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimPressure, 0)
     ),
 
@@ -737,11 +737,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             rhoSp_.name(),
             time().timeName(),
-            primaryMesh(),
+            primaryMesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        primaryMesh(),
+        primaryMesh,
         dimensionedScalar(dimMass, 0)
     ),
 
@@ -751,11 +751,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             USp_.name(),
             time().timeName(),
-            primaryMesh(),
+            primaryMesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        primaryMesh(),
+        primaryMesh,
         dimensionedVector(dimMass*dimVelocity, Zero)
     ),
 
@@ -765,11 +765,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             pSp_.name(),
             time().timeName(),
-            primaryMesh(),
+            primaryMesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        primaryMesh(),
+        primaryMesh,
         dimensionedScalar(dimMass*dimVelocity, 0)
     ),
 
@@ -779,11 +779,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
         (
             "U", // Must have same name as U to enable mapping
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedVector(dimVelocity, Zero),
         this->mappedFieldAndInternalPatchTypes<vector>()
     ),
@@ -795,11 +795,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
             // Must have same name as rho to enable mapping
             IOobject::groupName("rho", phaseName_),
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimDensity, 0),
         this->mappedFieldAndInternalPatchTypes<scalar>()
     ),
@@ -811,11 +811,11 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
             // Must have same name as rho to enable mapping
             IOobject::groupName("mu", phaseName_),
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimPressure*dimTime, 0),
         this->mappedFieldAndInternalPatchTypes<scalar>()
     ),
@@ -824,7 +824,7 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
 
     sigma_(Function1<scalar>::New("sigma", coeffs())),
 
-    availableMass_(regionMesh().nCells(), 0),
+    availableMass_(mesh().nCells(), 0),
 
     ejection_(*this, coeffs_),
 
@@ -853,7 +853,7 @@ Foam::regionModels::momentumSurfaceFilm::momentumSurfaceFilm
             (
                 "phi",
                 time().timeName(),
-                regionMesh(),
+                mesh(),
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE,
                 false
@@ -883,7 +883,7 @@ Foam::regionModels::momentumSurfaceFilm::sigma() const
         volScalarField::New
         (
             typedName("sigma"),
-            regionMesh(),
+            mesh(),
             dimensionedScalar(dimMass/sqr(dimTime), 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
@@ -984,7 +984,7 @@ Foam::regionModels::momentumSurfaceFilm::CourantNumber() const
 {
     const scalarField sumPhi(fvc::surfaceSum(mag(phiU_))().primitiveField());
 
-    return 0.5*gMax(sumPhi/regionMesh().V().field())*time_.deltaTValue();
+    return 0.5*gMax(sumPhi/mesh().V().field())*time_.deltaTValue();
 }
 
 

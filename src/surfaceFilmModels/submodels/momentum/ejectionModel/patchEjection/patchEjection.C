@@ -51,10 +51,10 @@ patchEjection::patchEjection
     ejectionModel(type(), film, dict),
     deltaStable_(coeffDict_.lookupOrDefault<scalar>("deltaStable", 0.0))
 {
-    const polyBoundaryMesh& pbm = film.regionMesh().boundaryMesh();
+    const polyBoundaryMesh& pbm = film.mesh().boundaryMesh();
     patchIDs_.setSize
     (
-        pbm.size() - film.regionMesh().globalData().processorPatches().size()
+        pbm.size() - film.mesh().globalData().processorPatches().size()
     );
 
     if (coeffDict_.found("patches"))
@@ -117,7 +117,7 @@ void patchEjection::correct
     const scalarField& rho = film().rho();
     const scalarField& magSf = film().magSf();
 
-    const polyBoundaryMesh& pbm = film().regionMesh().boundaryMesh();
+    const polyBoundaryMesh& pbm = film().mesh().boundaryMesh();
 
     forAll(patchIDs_, pidi)
     {

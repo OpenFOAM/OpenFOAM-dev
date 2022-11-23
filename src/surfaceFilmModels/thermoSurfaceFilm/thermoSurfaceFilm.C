@@ -184,7 +184,7 @@ void Foam::regionModels::thermoSurfaceFilm::updateSubmodels()
 
     const volScalarField::Internal rVDt
     (
-        1/(time().deltaT()*regionMesh().V())
+        1/(time().deltaT()*mesh().V())
     );
 
     volScalarField& he = thermo_->he();
@@ -252,17 +252,17 @@ void Foam::regionModels::thermoSurfaceFilm::solveEnergy()
 Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
 (
     const word& modelType,
-    const fvMesh& mesh,
+    const fvMesh& primaryMesh,
     const dimensionedVector& g,
     const word& regionType,
     const bool readFields
 )
 :
-    momentumSurfaceFilm(modelType, mesh, g, regionType, false),
+    momentumSurfaceFilm(modelType, primaryMesh, g, regionType, false),
 
     primaryThermo_
     (
-        mesh.lookupObject<fluidThermo>
+        primaryMesh.lookupObject<fluidThermo>
         (
             IOobject::groupName(physicalProperties::typeName, phaseName_)
         )
@@ -274,11 +274,11 @@ Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
         (
             "primaryEnergyTrans",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimEnergy, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
@@ -294,11 +294,11 @@ Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
         (
             "hSp",
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
     ),
 
@@ -308,11 +308,11 @@ Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
         (
             hSp_.name(),
             time().timeName(),
-            primaryMesh(),
+            primaryMesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        primaryMesh(),
+        primaryMesh,
         dimensionedScalar(hSp_.dimensions(), 0)
     ),
 
@@ -322,11 +322,11 @@ Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
         (
             "T", // Same name as T on primary region to enable mapping
             time().timeName(),
-            regionMesh(),
+            mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        regionMesh(),
+        mesh(),
         dimensionedScalar(dimTemperature, 0),
         this->mappedFieldAndInternalPatchTypes<scalar>()
     ),
@@ -384,11 +384,11 @@ Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
                     (
                         primarySpecieThermo.species()[i],
                         time().timeName(),
-                        regionMesh(),
+                        mesh(),
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
                     ),
-                    regionMesh(),
+                    mesh(),
                     dimensionedScalar(dimless, 0),
                     this->mappedFieldAndInternalPatchTypes<scalar>()
                 )
@@ -414,7 +414,7 @@ Foam::regionModels::thermoSurfaceFilm::thermoSurfaceFilm
             (
                 "phi",
                 time().timeName(),
-                regionMesh(),
+                mesh(),
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE,
                 false
@@ -527,7 +527,7 @@ Foam::regionModels::thermoSurfaceFilm::Tw() const
         volScalarField::Internal::New
         (
             "Tw",
-            regionMesh(),
+            mesh(),
             dimensionedScalar(dimTemperature, 0)
         )
     );
@@ -540,7 +540,7 @@ Foam::regionModels::thermoSurfaceFilm::Tw() const
     for (label i=0; i<intCoupledPatchIDs_.size(); i++)
     {
         label patchi = intCoupledPatchIDs_[i];
-        const polyPatch& pp = regionMesh().boundaryMesh()[patchi];
+        const polyPatch& pp = mesh().boundaryMesh()[patchi];
         UIndirectList<scalar>(Tw, pp.faceCells()) =
             T.boundaryField()[patchi];
     }

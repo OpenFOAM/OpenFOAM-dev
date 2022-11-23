@@ -141,12 +141,12 @@ void ejectionModelList::correct
 
 void ejectionModelList::info(Ostream& os)
 {
-    const polyBoundaryMesh& pbm = film().regionMesh().boundaryMesh();
+    const polyBoundaryMesh& pbm = film().mesh().boundaryMesh();
 
     scalar ejectedMass = 0;
     scalarField patchEjectedMasses
     (
-        pbm.size() - film().regionMesh().globalData().processorPatches().size(),
+        pbm.size() - film().mesh().globalData().processorPatches().size(),
         0
     );
 

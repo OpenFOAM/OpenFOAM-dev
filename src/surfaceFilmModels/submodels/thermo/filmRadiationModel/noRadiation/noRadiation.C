@@ -76,7 +76,7 @@ tmp<volScalarField::Internal> noRadiation::Shs()
     return volScalarField::Internal::New
     (
         typedName("Shs"),
-        film().regionMesh(),
+        film().mesh(),
         dimensionedScalar(dimMass/pow3(dimTime), 0)
     );
 }

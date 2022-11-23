@@ -53,7 +53,7 @@ BrunDrippingEjection::BrunDrippingEjection
     ubarStar_(coeffDict_.lookupOrDefault("ubarStar", 1.62208)),
     dCoeff_(coeffDict_.lookupOrDefault("dCoeff", 3.3)),
     deltaStable_(coeffDict_.lookupOrDefault("deltaStable", scalar(0))),
-    diameter_(film.regionMesh().nCells(), -1.0)
+    diameter_(film.mesh().nCells(), -1.0)
 {}
 
 

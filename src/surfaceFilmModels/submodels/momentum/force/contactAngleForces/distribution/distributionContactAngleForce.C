@@ -64,7 +64,7 @@ distributionContactAngleForce::distributionContactAngleForce
         volScalarField::New
         (
             typedName("theta"),
-            filmModel_.regionMesh(),
+            filmModel_.mesh(),
             dimensionedScalar(dimless, 0)
         )
     ),

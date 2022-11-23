@@ -76,12 +76,12 @@ solidification::solidification
         IOobject
         (
             typedName("mass"),
-            film.regionMesh().time().timeName(),
-            film.regionMesh(),
+            film.mesh().time().timeName(),
+            film.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        film.regionMesh(),
+        film.mesh(),
         dimensionedScalar(dimMass, 0)
     ),
     thickness_
@@ -89,12 +89,12 @@ solidification::solidification
         IOobject
         (
             typedName("thickness"),
-            film.regionMesh().time().timeName(),
-            film.regionMesh(),
+            film.mesh().time().timeName(),
+            film.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        film.regionMesh(),
+        film.mesh(),
         dimensionedScalar(dimLength, 0)
     )
 {}
@@ -127,7 +127,7 @@ void solidification::correctModel
         maxSolidificationFrac_,
         (
             maxSolidificationRate_
-           *filmModel_.regionMesh().time().deltaTValue()
+           *filmModel_.mesh().time().deltaTValue()
         ).value()
     );
 

@@ -61,11 +61,11 @@ constantRadiation::constantRadiation
         (
             typedName("qrConst"),
             film.time().timeName(),
-            film.regionMesh(),
+            film.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        film.regionMesh()
+        film.mesh()
     ),
     mask_
     (
@@ -73,11 +73,11 @@ constantRadiation::constantRadiation
         (
             typedName("mask"),
             film.time().timeName(),
-            film.regionMesh(),
+            film.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        film.regionMesh(),
+        film.mesh(),
         dimensionedScalar(dimless, 1.0)
     ),
     absorptivity_(coeffDict_.lookup<scalar>("absorptivity")),
@@ -117,7 +117,7 @@ tmp<volScalarField::Internal> constantRadiation::Shs()
         return volScalarField::Internal::New
         (
             typedName("Shs"),
-            film().regionMesh(),
+            film().mesh(),
             dimensionedScalar(dimMass/pow3(dimTime), 0)
         );
     }
