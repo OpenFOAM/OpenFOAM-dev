@@ -23,13 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "regionModel.H"
-#include "mappedPatchBase.H"
+#include "singleLayerRegionModel.H"
+#include "zeroGradientFvPatchFields.H"
+#include "mappedValueAndPatchInternalValueFvPatchFields.H"
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::regionModels::regionModel::toPrimary
+void Foam::regionModels::singleLayerRegionModel::toPrimary
 (
     const label regionPatchi,
     Field<Type>& regionField
@@ -56,7 +57,7 @@ void Foam::regionModels::regionModel::toPrimary
 
 
 template<class Type>
-void Foam::regionModels::regionModel::toRegion
+void Foam::regionModels::singleLayerRegionModel::toRegion
 (
     const label regionPatchi,
     Field<Type>& primaryField
@@ -83,7 +84,7 @@ void Foam::regionModels::regionModel::toRegion
 
 
 template<class Type>
-void Foam::regionModels::regionModel::toRegion
+void Foam::regionModels::singleLayerRegionModel::toRegion
 (
     Field<Type>& rf,
     const typename GeometricField<Type, fvPatchField, volMesh>::Boundary& pBf
@@ -103,6 +104,24 @@ void Foam::regionModels::regionModel::toRegion
         UIndirectList<Type>(rf, regionPatch.faceCells()) =
             mpb.distribute(pBf[primaryPatchi]);
     }
+}
+
+
+template<class Type>
+Foam::wordList Foam::regionModels::singleLayerRegionModel::
+mappedFieldAndInternalPatchTypes() const
+{
+    wordList bTypes(regionMesh().boundaryMesh().size());
+
+    bTypes = zeroGradientFvPatchField<Type>::typeName;
+
+    forAll(intCoupledPatchIDs_, i)
+    {
+        bTypes[intCoupledPatchIDs_[i]] =
+            mappedValueAndPatchInternalValueFvPatchField<Type>::typeName;
+    }
+
+    return bTypes;
 }
 
 

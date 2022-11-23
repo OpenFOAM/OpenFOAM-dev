@@ -23,85 +23,65 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "regionModel.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 inline const Foam::fvMesh&
-Foam::regionModels::regionModel::primaryMesh() const
+Foam::regionModels::singleLayerRegionModel::primaryMesh() const
 {
     return primaryMesh_;
 }
 
 
-inline const Foam::Time& Foam::regionModels::regionModel::time() const
+inline const Foam::Time&
+Foam::regionModels::singleLayerRegionModel::time() const
 {
     return time_;
 }
 
 
-inline const Foam::Switch& Foam::regionModels::regionModel::infoOutput() const
+inline const Foam::Switch&
+Foam::regionModels::singleLayerRegionModel::infoOutput() const
 {
     return infoOutput_;
 }
 
 
-inline const Foam::word& Foam::regionModels::regionModel::modelName() const
+inline const Foam::word&
+Foam::regionModels::singleLayerRegionModel::modelName() const
 {
     return modelName_;
 }
 
 
-inline const Foam::fvMesh& Foam::regionModels::regionModel::regionMesh() const
+inline const Foam::fvMesh&
+Foam::regionModels::singleLayerRegionModel::regionMesh() const
 {
-    if (time_.foundObject<fvMesh>(regionName_))
-    {
-        return time_.lookupObject<fvMesh>(regionName_);
-    }
-    else if (!regionMeshPtr_.valid())
-    {
-        FatalErrorInFunction
-         << "Region mesh not available" << abort(FatalError);
-    }
-
-    return regionMeshPtr_();
+    return mesh_;
 }
 
 
-inline Foam::fvMesh& Foam::regionModels::regionModel::regionMesh()
+inline Foam::fvMesh& Foam::regionModels::singleLayerRegionModel::regionMesh()
 {
-    if (time_.foundObject<fvMesh>(regionName_))
-    {
-        return const_cast<fvMesh&>
-        (
-            time_.lookupObject<fvMesh>(regionName_)
-        );
-    }
-    else if (!regionMeshPtr_.valid())
-    {
-        FatalErrorInFunction
-         << "Region mesh not available" << abort(FatalError);
-    }
-
-    return regionMeshPtr_();
+    return mesh_;
 }
 
 
-inline const Foam::dictionary& Foam::regionModels::regionModel::coeffs() const
+inline const Foam::dictionary&
+Foam::regionModels::singleLayerRegionModel::coeffs() const
 {
     return coeffs_;
 }
 
 
 inline const Foam::dictionary&
-Foam::regionModels::regionModel::solution() const
+Foam::regionModels::singleLayerRegionModel::solution() const
 {
     return regionMesh().solution().dict();
 }
 
 
 inline const Foam::IOdictionary&
-Foam::regionModels::regionModel::outputProperties() const
+Foam::regionModels::singleLayerRegionModel::outputProperties() const
 {
     if (!outputPropertiesPtr_.valid())
     {
@@ -115,7 +95,7 @@ Foam::regionModels::regionModel::outputProperties() const
 
 
 inline Foam::IOdictionary&
-Foam::regionModels::regionModel::outputProperties()
+Foam::regionModels::singleLayerRegionModel::outputProperties()
 {
     if (!outputPropertiesPtr_.valid())
     {
@@ -128,7 +108,7 @@ Foam::regionModels::regionModel::outputProperties()
 }
 
 
-inline bool Foam::regionModels::regionModel::isCoupledPatch
+inline bool Foam::regionModels::singleLayerRegionModel::isCoupledPatch
 (
     const label regionPatchi
 ) const
@@ -145,7 +125,7 @@ inline bool Foam::regionModels::regionModel::isCoupledPatch
 }
 
 
-inline bool Foam::regionModels::regionModel::isRegionPatch
+inline bool Foam::regionModels::singleLayerRegionModel::isRegionPatch
 (
     const label primaryPatchi
 ) const
@@ -163,20 +143,20 @@ inline bool Foam::regionModels::regionModel::isRegionPatch
 
 
 inline const Foam::labelList&
-Foam::regionModels::regionModel::primaryPatchIDs() const
+Foam::regionModels::singleLayerRegionModel::primaryPatchIDs() const
 {
     return primaryPatchIDs_;
 }
 
 
 inline const Foam::labelList&
-Foam::regionModels::regionModel::intCoupledPatchIDs() const
+Foam::regionModels::singleLayerRegionModel::intCoupledPatchIDs() const
 {
     return intCoupledPatchIDs_;
 }
 
 
-inline Foam::label Foam::regionModels::regionModel::regionPatchID
+inline Foam::label Foam::regionModels::singleLayerRegionModel::regionPatchID
 (
     const label primaryPatchID
 ) const

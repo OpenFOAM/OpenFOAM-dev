@@ -22,23 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::regionModel
+    Foam::regionModels::singleLayerRegionModel
 
 Description
-    Base class for region models
+    Base class for single layer region models
 
 SourceFiles
-    regionModelI.H
-    regionModel.C
-    regionModelTemplates.C
+    singleLayerRegionModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef regionModel_H
-#define regionModel_H
+#ifndef singleLayerRegionModel_H
+#define singleLayerRegionModel_H
 
 #include "fvMesh.H"
 #include "timeIOdictionary.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,27 +47,13 @@ namespace regionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class regionModel Declaration
+                    Class singleLayerRegionModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class regionModel
+class singleLayerRegionModel
 :
     public IOdictionary
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        regionModel(const regionModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const regionModel&) = delete;
-
-        //- Construct region mesh and fields
-        void constructMeshObjects();
-
-        //- Initialise the region
-        void initialise();
-
 
 protected:
 
@@ -86,8 +71,11 @@ protected:
         //- Model name
         const word modelName_;
 
-        //- Pointer to the region mesh database
-        autoPtr<fvMesh> regionMeshPtr_;
+        //- Region name
+        word regionName_;
+
+        //- Region mesh
+        fvMesh mesh_;
 
         //- Model coefficients dictionary
         dictionary coeffs_;
@@ -104,9 +92,18 @@ protected:
             //- List of patch IDs internally coupled with the primary region
             labelList intCoupledPatchIDs_;
 
+            //- List of patch IDs opposite to internally coupled patches
+            labelList passivePatchIDs_;
 
-        //- Region name
-        word regionName_;
+
+        //- Patch normal vectors
+        volVectorField nHat_;
+
+        //- Cell cross-sectional area magnitude [m^2]
+        volScalarField::Internal magSf_;
+
+        //- Cell layer volume/area [m]
+        volScalarField VbyA_;
 
 
     // Protected member functions
@@ -126,11 +123,8 @@ public:
 
     // Constructors
 
-        //- Construct null
-        regionModel(const fvMesh& mesh, const word& regionType);
-
         //- Construct from mesh, region type and name
-        regionModel
+        singleLayerRegionModel
         (
             const fvMesh& mesh,
             const word& regionType,
@@ -138,19 +132,12 @@ public:
             bool readFields = true
         );
 
-        //- Construct from mesh and name and dict
-        regionModel
-        (
-            const fvMesh& mesh,
-            const word& regionType,
-            const word& modelName,
-            const dictionary& dict,
-            bool readFields = true
-        );
+        //- Disallow default bitwise copy construction
+        singleLayerRegionModel(const singleLayerRegionModel&) = delete;
 
 
     //- Destructor
-    virtual ~regionModel();
+    virtual ~singleLayerRegionModel();
 
 
     // Member Functions
@@ -188,6 +175,18 @@ public:
             inline IOdictionary& outputProperties();
 
 
+            // Region geometry
+
+                //- Return the patch normal vectors
+                const volVectorField& nHat() const;
+
+                //- Return the face area magnitudes [m^2]
+                const volScalarField::Internal& magSf() const;
+
+                //- Return the cell layer volume/area [m]
+                const volScalarField& VbyA() const;
+
+
             // Addressing
 
                 //- Return true if patchi on the local region is a coupled
@@ -209,6 +208,19 @@ public:
                 //- Return region ID corresponding to primaryPatchID
                 inline label regionPatchID(const label primaryPatchID) const;
 
+                //- Return the list of patch IDs opposite to internally
+                //  coupled patches
+                const labelList& passivePatchIDs() const;
+
+
+        // Patch type information
+
+            //- Return boundary types for mapped field patches
+            //  Also maps internal field value
+            //  Mapping region prescribed by underlying mapped poly patch
+            template<class Type>
+            wordList mappedFieldAndInternalPatchTypes() const;
+
 
         // Helper
 
@@ -216,7 +228,7 @@ public:
             //  regionPatchi
             label nbrCoupledPatchID
             (
-                const regionModel& nbrRegion,
+                const singleLayerRegionModel& nbrRegion,
                 const label regionPatchi
             ) const;
 
@@ -269,6 +281,12 @@ public:
 
             //- Provide some feedback
             virtual void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleLayerRegionModel&) = delete;
 };
 
 
@@ -277,14 +295,15 @@ public:
 } // End namespace regionModels
 } // End namespace Foam
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "regionModelI.H"
+#include "singleLayerRegionModelI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "regionModelTemplates.C"
+    #include "singleLayerRegionModelTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

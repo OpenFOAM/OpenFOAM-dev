@@ -7,8 +7,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/multicomponentThermo/lnInclude \
     -I$(LIB_SRC)/radiationModels/lnInclude \
-    -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
-    -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude \
+    -I$(LIB_SRC)/surfaceFilmModels/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
@@ -22,7 +21,6 @@ LIB_LIBS = \
     -lmulticomponentThermophysicalModels \
     -lradiationModels \
     -lphysicalProperties \
-    -lregionModels \
     -lsurfaceFilmModels \
     -lsampling \
     -lfiniteVolume \
