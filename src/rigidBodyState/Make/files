@@ -1,3 +1,4 @@
-rigidBodyState.C
+rigidBodyState/rigidBodyState.C
+rigidBodyPoints/rigidBodyPoints.C
 
 LIB = $(FOAM_LIBBIN)/librigidBodyState

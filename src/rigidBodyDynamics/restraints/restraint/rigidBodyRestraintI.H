@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ inline Foam::point Foam::RBD::restraint::bodyPoint
     const point& p
 ) const
 {
-    return (model_.X0(bodyID_).inv() && spatialVector(Zero, p)).l();
+    return model_.p(bodyID_, p);
 }
 
 

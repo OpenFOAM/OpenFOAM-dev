@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -320,10 +320,16 @@ public:
         spatialTransform X0(const label bodyId) const;
 
         // Find the corresponding point in the master body frame
-        vector masterPoint(const label bodyID, const vector& p) const;
+        inline vector masterPoint(const label bodyID, const vector& p) const;
+
+        //- Return the current position of the given point on the given body
+        inline vector p(const label bodyID, const vector& p) const;
 
         //- Return the velocity of the given point on the given body
-        spatialVector v(const label bodyID, const vector& p) const;
+        inline spatialVector v(const label bodyID, const vector& p) const;
+
+        //- Return the acceleration of the given point on the given body
+        inline spatialVector a(const label bodyID, const vector& p) const;
 
         //- Apply the restraints and accumulate the internal joint forces
         //  into the tau field and external forces into the fx field

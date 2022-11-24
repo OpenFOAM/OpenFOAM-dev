@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,22 +27,22 @@ Class
 Description
     Writes the rigid body motion state.
 
+Usage
+    \table
+        Property     | Description                  | Required | Default value
+        type         | type name: rigidBodyState    | yes      |
+        angleUnits   | degrees or radians           | no       | radians
+    \endtable
+
     Example of function object specification:
     \verbatim
     rigidBodyState
     {
         type           rigidBodyState;
         libs           ("librigidBodyState.so");
-        angleFormat    degrees;
+        angleUnits     degrees;
     }
     \endverbatim
-
-Usage
-    \table
-        Property     | Description                  | Required | Default value
-        type         | type name: rigidBodyState    | yes |
-        angleFormat  | degrees or radians           | no       | radian
-    \endtable
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
@@ -78,10 +78,15 @@ class rigidBodyState
 {
     // Private Data
 
-        word angleFormat_;
+        word angleUnits_;
 
         //- List of the names of the rigid bodies
         wordList names_;
+
+
+    // Private Member Functions
+
+        const RBD::rigidBodyMotion& motion() const;
 
 
 protected:
@@ -117,8 +122,6 @@ public:
 
 
     // Member Functions
-
-        const RBD::rigidBodyMotion& motion() const;
 
         //- Read the rigidBodyState data
         virtual bool read(const dictionary&);

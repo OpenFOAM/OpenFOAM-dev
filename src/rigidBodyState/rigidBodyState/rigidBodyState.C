@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,18 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+const Foam::RBD::rigidBodyMotion&
+Foam::functionObjects::rigidBodyState::motion() const
+{
+    const fvMeshMovers::motionSolver& mover =
+        refCast<const fvMeshMovers::motionSolver>(mesh_.mover());
+
+    return (refCast<const RBD::rigidBodyMotion>(mover.motion()));
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::rigidBodyState::rigidBodyState
@@ -72,21 +84,11 @@ Foam::functionObjects::rigidBodyState::~rigidBodyState()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::RBD::rigidBodyMotion&
-Foam::functionObjects::rigidBodyState::motion() const
-{
-    const fvMeshMovers::motionSolver& mover =
-        refCast<const fvMeshMovers::motionSolver>(mesh_.mover());
-
-    return (refCast<const RBD::rigidBodyMotion>(mover.motion()));
-}
-
-
 bool Foam::functionObjects::rigidBodyState::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    angleFormat_ = dict.lookupOrDefault<word>("angleFormat", "radians");
+    angleUnits_ = dict.lookupOrDefault<word>("angleUnits", "radians");
 
     resetNames(names_);
 
@@ -97,7 +99,7 @@ bool Foam::functionObjects::rigidBodyState::read(const dictionary& dict)
 void Foam::functionObjects::rigidBodyState::writeFileHeader(const label i)
 {
     writeHeader(this->files()[i], "Motion State");
-    writeHeaderValue(this->files()[i], "Angle Units", angleFormat_);
+    writeHeaderValue(this->files()[i], "Angle Units", angleUnits_);
     writeCommented(this->files()[i], "Time");
 
     this->files()[i]<< tab
@@ -137,7 +139,7 @@ bool Foam::functionObjects::rigidBodyState::write()
 
             vector angularVelocity(vCofR.w());
 
-            if (angleFormat_ == "degrees")
+            if (angleUnits_ == "degrees")
             {
                 rotationAngle.x() = radToDeg(rotationAngle.x());
                 rotationAngle.y() = radToDeg(rotationAngle.y());
