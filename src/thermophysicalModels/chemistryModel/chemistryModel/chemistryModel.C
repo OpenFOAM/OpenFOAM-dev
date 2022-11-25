@@ -457,10 +457,11 @@ Foam::chemistryModel<ThermoType>::tc() const
     );
     scalarField& tc = ttc.ref();
 
-    const volScalarField& rho = this->mesh().lookupObject<volScalarField>
-    (
-        this->thermo().phasePropertyName("rho")
-    );
+    const volScalarField& rho =
+        this->mesh().template lookupObject<volScalarField>
+        (
+            this->thermo().phasePropertyName("rho")
+        );
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
@@ -586,10 +587,11 @@ Foam::chemistryModel<ThermoType>::calculateRR
 
     volScalarField::Internal& RR = tRR.ref();
 
-    const volScalarField& rho = this->mesh().lookupObject<volScalarField>
-    (
-        this->thermo().phasePropertyName("rho")
-    );
+    const volScalarField& rho =
+        this->mesh().template lookupObject<volScalarField>
+        (
+            this->thermo().phasePropertyName("rho")
+        );
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
@@ -644,10 +646,11 @@ void Foam::chemistryModel<ThermoType>::calculate()
         return;
     }
 
-    const volScalarField& rho = this->mesh().lookupObject<volScalarField>
-    (
-        this->thermo().phasePropertyName("rho")
-    );
+    const volScalarField& rho =
+        this->mesh().template lookupObject<volScalarField>
+        (
+            this->thermo().phasePropertyName("rho")
+        );
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
@@ -725,10 +728,11 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
         return deltaTMin;
     }
 
-    const volScalarField& rhovf = this->mesh().lookupObject<volScalarField>
-    (
-        this->thermo().phasePropertyName("rho")
-    );
+    const volScalarField& rhovf =
+        this->mesh().template lookupObject<volScalarField>
+        (
+            this->thermo().phasePropertyName("rho")
+        );
     const volScalarField& rho0vf = rhovf.oldTime();
 
     const volScalarField& T0vf = this->thermo().T().oldTime();
