@@ -155,7 +155,11 @@ Foam::solidThermophysicalTransportModels::anisotropic::anisotropic
 
     forAll(bMesh, patchi)
     {
-        if (bMesh[patchi].size())
+        if
+        (
+            !bMesh[patchi].coupled()
+          && returnReduce(bMesh[patchi].size(), sumOp<label>())
+        )
         {
             const vectorField n(bMesh[patchi].nf());
             const vectorField nKappa(n & Kappa(patchi));
