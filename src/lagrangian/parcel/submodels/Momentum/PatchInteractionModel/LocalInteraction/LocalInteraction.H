@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,6 @@ Description
 #define LocalInteraction_H
 
 #include "PatchInteractionModel.H"
-#include "patchInteractionDataList.H"
 #include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,10 +48,26 @@ class LocalInteraction
 :
     public PatchInteractionModel<CloudType>
 {
+    // Private Typedefs
+
+        //- Interaction type enumeration
+        typedef
+            typename PatchInteractionModel<CloudType>::interactionType
+            interactionType;
+
+
     // Private Data
 
-        //- List of participating patches
-        const patchInteractionDataList patchData_;
+        // Interactions
+
+            //- Patch interaction types
+            List<interactionType> patchInteractionTypes_;
+
+            //- Patch elasticity coefficients (for rebound)
+            List<scalar> patchEs_;
+
+            //- Patch restitution coefficients (for rebound)
+            List<scalar> patchMus_;
 
 
         // Counters for particle fates

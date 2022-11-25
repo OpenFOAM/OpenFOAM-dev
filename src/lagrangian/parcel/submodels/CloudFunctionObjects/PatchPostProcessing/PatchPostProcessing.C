@@ -200,8 +200,7 @@ template<class CloudType>
 void Foam::PatchPostProcessing<CloudType>::postPatch
 (
     const parcelType& p,
-    const polyPatch& pp,
-    bool&
+    const polyPatch& pp
 )
 {
     const label patchi = pp.index();

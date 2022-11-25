@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,51 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LocalInteraction.H"
+#include "wordAndDictionary.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+struct wordReAndDictionary
+:
+    public Tuple2<wordRe, dictionary>
+{
+    using Tuple2<wordRe, dictionary>::Tuple2;
+
+    wordReAndDictionary();
+
+    wordReAndDictionary(Istream& is);
+};
+
+
+inline Istream& operator>>(Istream& is, wordReAndDictionary& wd)
+{
+    wd.first() = wordRe(is);
+    dictionary d(is);
+    wd.second().transfer(d);
+    return is;
+}
+
+
+inline Ostream& operator<<(Ostream& os, const wordReAndDictionary& wd)
+{
+    return os << wd.first() << token::SPACE << wd.second();
+}
+
+
+inline wordReAndDictionary::wordReAndDictionary()
+{}
+
+
+inline wordReAndDictionary::wordReAndDictionary(Istream& is)
+{
+    is >> *this;
+}
+
+}
+
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
@@ -35,19 +80,28 @@ Foam::LocalInteraction<CloudType>::LocalInteraction
 )
 :
     PatchInteractionModel<CloudType>(dict, cloud, typeName),
-    patchData_(cloud.mesh(), this->coeffDict()),
-    nEscape_(patchData_.size(), 0),
-    massEscape_(patchData_.size(), 0.0),
-    nStick_(patchData_.size(), 0),
-    massStick_(patchData_.size(), 0.0),
+    patchInteractionTypes_
+    (
+        this->owner().mesh().boundaryMesh().size(),
+        PatchInteractionModel<CloudType>::itOther
+    ),
+    patchEs_(this->owner().mesh().boundaryMesh().size(), NaN),
+    patchMus_(this->owner().mesh().boundaryMesh().size(), NaN),
+    nEscape_(this->owner().mesh().boundaryMesh().size(), 0),
+    massEscape_(this->owner().mesh().boundaryMesh().size(), scalar(0)),
+    nStick_(this->owner().mesh().boundaryMesh().size(), 0),
+    massStick_(this->owner().mesh().boundaryMesh().size(), scalar(0)),
     writeFields_(this->coeffDict().lookupOrDefault("writeFields", false)),
     massEscapePtr_(nullptr),
     massStickPtr_(nullptr)
 {
+    const polyBoundaryMesh& patches = this->owner().mesh().boundaryMesh();
+
     if (writeFields_)
     {
-        word massEscapeName(this->owner().name() + ":massEscape");
-        word massStickName(this->owner().name() + ":massStick");
+        const word massEscapeName(this->owner().name() + ":massEscape");
+        const word massStickName(this->owner().name() + ":massStick");
+
         Info<< "    Interaction fields will be written to " << massEscapeName
             << " and " << massStickName << endl;
 
@@ -59,24 +113,110 @@ Foam::LocalInteraction<CloudType>::LocalInteraction
         Info<< "    Interaction fields will not be written" << endl;
     }
 
-    // check that interactions are valid/specified
-    forAll(patchData_, patchi)
+    // Get the patch-settings dictionaries
+    dictionary patchesDict;
+    if (this->coeffDict().isDict("patches"))
     {
-        const word& interactionTypeName =
-            patchData_[patchi].interactionTypeName();
-        const typename PatchInteractionModel<CloudType>::interactionType& it =
-            this->wordToInteractionType(interactionTypeName);
+        patchesDict = this->coeffDict().subDict("patches");
+    }
+    else
+    {
+        const List<wordReAndDictionary> patchNameAndDicts
+        (
+            this->coeffDict().lookup("patches")
+        );
+
+        forAll(patchNameAndDicts, dicti)
+        {
+            patchesDict.set
+            (
+                keyType(string(patchNameAndDicts[dicti].first())),
+                patchNameAndDicts[dicti].second()
+            );
+        }
+    }
+
+    // Read the patch settings
+    wordList unspecifiedNonConstraintPatches;
+    forAll(patches, patchi)
+    {
+        const word& patchName = patches[patchi].name();
+
+        const bool havePatchDict = patchesDict.found(patchName);
+
+        const bool patchIsConstraint =
+            polyPatch::constraintType(patches[patchi].type());
+
+        // No settings for constrained patch. No model.
+        if (!havePatchDict && patchIsConstraint)
+        {
+            patchInteractionTypes_[patchi] =
+                PatchInteractionModel<CloudType>::itNone;
+            continue;
+        }
+
+        // No settings for non-constrained patch. Error.
+        if (!havePatchDict && !patchIsConstraint)
+        {
+            unspecifiedNonConstraintPatches.append(patches[patchi].name());
+            continue;
+        }
+
+        const dictionary& patchDict = patchesDict.subDict(patchName);
+
+        // Settings for constrained patch. Ignored unless "patchType" is
+        // correctly specified.
+        if (havePatchDict && patchIsConstraint)
+        {
+            if (!patchDict.found("patchType"))
+            {
+                patchInteractionTypes_[patchi] =
+                    PatchInteractionModel<CloudType>::itNone;
+                continue;
+            }
+
+            const word patchType = patchDict.lookup<word>("patchType");
+
+            if (patchType != patches[patchi].type())
+            {
+                FatalErrorInFunction
+                    << "Type " << patchType
+                    << " specified for patch " << patchName
+                    << " does not match the patch type "
+                    << patches[patchi].type() << exit(FatalError);
+            }
+        }
+
+        // Read and set the interaction model
+        const word itName = patchDict.lookup<word>("type");
+        const interactionType it = this->wordToInteractionType(itName);
 
         if (it == PatchInteractionModel<CloudType>::itOther)
         {
-            const word& patchName = patchData_[patchi].patchName();
             FatalErrorInFunction
                 << "Unknown patch interaction type "
-                << interactionTypeName << " for patch " << patchName
-                << ". Valid selections are:"
-                << this->PatchInteractionModel<CloudType>::interactionTypeNames_
+                << itName << " for patch " << patchName
+                << ". Valid types are:"
+                << PatchInteractionModel<CloudType>::interactionTypeNames_
                 << nl << exit(FatalError);
         }
+
+        patchInteractionTypes_[patchi] = it;
+
+        if (it == PatchInteractionModel<CloudType>::itRebound)
+        {
+            patchEs_[patchi] = patchDict.lookupOrDefault<scalar>("e", 1);
+            patchMus_[patchi] = patchDict.lookupOrDefault<scalar>("mu", 0);
+        }
+    }
+
+    // Error if interactions are unspecified for non-constraint patches
+    if (!unspecifiedNonConstraintPatches.empty())
+    {
+        FatalErrorInFunction
+            << "No interaction type was specified for non-constraint patches: "
+            << unspecifiedNonConstraintPatches
+            << exit(FatalError);
     }
 }
 
@@ -88,7 +228,9 @@ Foam::LocalInteraction<CloudType>::LocalInteraction
 )
 :
     PatchInteractionModel<CloudType>(pim),
-    patchData_(pim.patchData_),
+    patchInteractionTypes_(pim.patchInteractionTypes_),
+    patchEs_(pim.patchEs_),
+    patchMus_(pim.patchMus_),
     nEscape_(pim.nEscape_),
     massEscape_(pim.massEscape_),
     nStick_(pim.nStick_),
@@ -174,100 +316,84 @@ bool Foam::LocalInteraction<CloudType>::correct
     bool& keepParticle
 )
 {
-    label patchi = patchData_.applyToPatch(pp.index());
+    const label patchi = pp.index();
 
-    if (patchi >= 0)
+    switch (patchInteractionTypes_[patchi])
     {
-        vector& U = p.U();
-        bool& moving = p.moving();
-
-        typename PatchInteractionModel<CloudType>::interactionType it =
-            this->wordToInteractionType
-            (
-                patchData_[patchi].interactionTypeName()
-            );
-
-        switch (it)
+        case PatchInteractionModel<CloudType>::itNone:
         {
-            case PatchInteractionModel<CloudType>::itNone:
-            {
-                return false;
-            }
-            case PatchInteractionModel<CloudType>::itEscape:
-            {
-                scalar dm = p.mass()*p.nParticle();
-
-                keepParticle = false;
-                moving = false;
-                U = Zero;
-                nEscape_[patchi]++;
-                massEscape_[patchi] += dm;
-                if (writeFields_)
-                {
-                    label pI = pp.index();
-                    label fI = pp.whichFace(p.face());
-                    massEscape().boundaryFieldRef()[pI][fI] += dm;
-                }
-                break;
-            }
-            case PatchInteractionModel<CloudType>::itStick:
-            {
-                scalar dm = p.mass()*p.nParticle();
-
-                keepParticle = true;
-                moving = false;
-                U = Zero;
-                nStick_[patchi]++;
-                massStick_[patchi] += dm;
-                if (writeFields_)
-                {
-                    label pI = pp.index();
-                    label fI = pp.whichFace(p.face());
-                    massStick().boundaryFieldRef()[pI][fI] += dm;
-                }
-                break;
-            }
-            case PatchInteractionModel<CloudType>::itRebound:
-            {
-                keepParticle = true;
-                moving = true;
-
-                vector nw;
-                vector Up;
-
-                this->owner().patchData(p, pp, nw, Up);
-
-                // Calculate motion relative to patch velocity
-                U -= Up;
-
-                scalar Un = U & nw;
-                vector Ut = U - Un*nw;
-
-                if (Un > 0)
-                {
-                    U -= (1.0 + patchData_[patchi].e())*Un*nw;
-                }
-
-                U -= patchData_[patchi].mu()*Ut;
-
-                // Return velocity to global space
-                U += Up;
-
-                break;
-            }
-            default:
-            {
-                FatalErrorInFunction
-                    << "Unknown interaction type "
-                    << patchData_[patchi].interactionTypeName()
-                    << "(" << it << ") for patch "
-                    << patchData_[patchi].patchName()
-                    << ". Valid selections are:" << this->interactionTypeNames_
-                    << endl << abort(FatalError);
-            }
+            return false;
         }
 
-        return true;
+        case PatchInteractionModel<CloudType>::itEscape:
+        {
+            const scalar dm = p.mass()*p.nParticle();
+
+            keepParticle = false;
+            p.moving() = false;
+            p.U() = Zero;
+            nEscape_[patchi] ++;
+            massEscape_[patchi] += dm;
+
+            if (writeFields_)
+            {
+                const label patchFacei = pp.whichFace(p.face());
+                massEscape().boundaryFieldRef()[patchi][patchFacei] += dm;
+            }
+
+            return true;
+        }
+
+        case PatchInteractionModel<CloudType>::itStick:
+        {
+            const scalar dm = p.mass()*p.nParticle();
+
+            keepParticle = true;
+            p.moving() = false;
+            p.U() = Zero;
+            nStick_[patchi] ++;
+            massStick_[patchi] += dm;
+
+            if (writeFields_)
+            {
+                const label patchFacei = pp.whichFace(p.face());
+                massStick().boundaryFieldRef()[patchi][patchFacei] += dm;
+            }
+
+            return true;
+        }
+
+        case PatchInteractionModel<CloudType>::itRebound:
+        {
+            keepParticle = true;
+            p.moving() = true;
+
+            vector nw, Up;
+            this->owner().patchData(p, pp, nw, Up);
+
+            // Make motion relative to patch velocity
+            p.U() -= Up;
+
+            const scalar Un = p.U() & nw;
+            const vector Ut = p.U() - Un*nw;
+
+            if (Un > 0)
+            {
+                p.U() -= (1 + patchEs_[patchi])*Un*nw;
+            }
+
+            p.U() -= patchMus_[patchi]*Ut;
+
+            // Return velocity to global space
+            p.U() += Up;
+
+            return true;
+        }
+
+        default:
+        {
+            return false;
+        }
     }
 
     return false;
@@ -277,45 +403,57 @@ bool Foam::LocalInteraction<CloudType>::correct
 template<class CloudType>
 void Foam::LocalInteraction<CloudType>::info(Ostream& os)
 {
-    // retrieve any stored data
-    labelList npe0(patchData_.size(), 0);
+    const polyBoundaryMesh& patches = this->owner().mesh().boundaryMesh();
+
+    // Determine the number of non-processor patches
+    label nPatches = patches.size();
+    for (; isA<processorPolyPatch>(patches[nPatches - 1]); nPatches --);
+
+    // Retrieve any stored data
+    labelList npe0(nPatches, 0);
     this->getModelProperty("nEscape", npe0);
 
-    scalarList mpe0(patchData_.size(), 0.0);
+    scalarList mpe0(nPatches, scalar(0));
     this->getModelProperty("massEscape", mpe0);
 
-    labelList nps0(patchData_.size(), 0);
+    labelList nps0(nPatches, 0);
     this->getModelProperty("nStick", nps0);
 
-    scalarList mps0(patchData_.size(), 0.0);
+    scalarList mps0(nPatches, scalar(0));
     this->getModelProperty("massStick", mps0);
 
-    // accumulate current data
-    labelList npe(nEscape_);
+    // Accumulate current data
+    labelList npe(SubList<label>(nEscape_, nPatches));
     Pstream::listCombineGather(npe, plusEqOp<label>());
     npe = npe + npe0;
 
-    scalarList mpe(massEscape_);
+    scalarList mpe(SubList<scalar>(massEscape_, nPatches));
     Pstream::listCombineGather(mpe, plusEqOp<scalar>());
     mpe = mpe + mpe0;
 
-    labelList nps(nStick_);
+    labelList nps(SubList<label>(nStick_, nPatches));
     Pstream::listCombineGather(nps, plusEqOp<label>());
     nps = nps + nps0;
 
-    scalarList mps(massStick_);
+    scalarList mps(SubList<scalar>(massStick_, nPatches));
     Pstream::listCombineGather(mps, plusEqOp<scalar>());
     mps = mps + mps0;
 
-
-    forAll(patchData_, i)
+    for (label patchi = 0; patchi < nPatches; ++ patchi)
     {
-        os  << "    Parcel fate (number, mass)      : patch "
-            <<  patchData_[i].patchName() << nl
-            << "      - escape                      = " << npe[i]
-            << ", " << mpe[i] << nl
-            << "      - stick                       = " << nps[i]
-            << ", " << mps[i] << nl;
+        if
+        (
+            patchInteractionTypes_[patchi]
+         != PatchInteractionModel<CloudType>::itNone
+        )
+        {
+            os  << "    Parcel fate (number, mass)      : patch "
+                << this->owner().mesh().boundaryMesh()[patchi].name() << nl
+                << "      - escape                      = " << npe[patchi]
+                << ", " << mpe[patchi] << nl
+                << "      - stick                       = " << nps[patchi]
+                << ", " << mps[patchi] << nl;
+        }
     }
 
     if (this->writeTime())
@@ -324,13 +462,13 @@ void Foam::LocalInteraction<CloudType>::info(Ostream& os)
         nEscape_ = 0;
 
         this->setModelProperty("massEscape", mpe);
-        massEscape_ = 0.0;
+        massEscape_ = scalar(0);
 
         this->setModelProperty("nStick", nps);
         nStick_ = 0;
 
         this->setModelProperty("massStick", mps);
-        massStick_ = 0.0;
+        massStick_ = scalar(0);
     }
 }
 

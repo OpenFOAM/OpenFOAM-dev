@@ -202,9 +202,13 @@ void Foam::trackedParticle::hitWallPatch
 }
 
 
-void Foam::trackedParticle::correctAfterParallelTransfer(trackingData& td)
+void Foam::trackedParticle::correctAfterParallelTransfer
+(
+    Cloud<trackedParticle>& cloud,
+    trackingData& td
+)
 {
-    particle::correctAfterParallelTransfer(td);
+    particle::correctAfterParallelTransfer(cloud, td);
 
     // Mark edge we are currently on (if any). This was set on the sending
     // processor but has not yet been set on the receiving side.

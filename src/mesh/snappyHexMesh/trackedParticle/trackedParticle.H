@@ -238,7 +238,11 @@ public:
 
             //- Do corrections to the particle and tracking data following a
             //  transfer between processors
-            void correctAfterParallelTransfer(trackingData&);
+            void correctAfterParallelTransfer
+            (
+                Cloud<trackedParticle>&,
+                trackingData&
+            );
 
 
     // Ostream Operator

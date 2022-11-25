@@ -317,7 +317,7 @@ void Foam::Cloud<ParticleType>::move
                     }
                     #endif
 
-                    p.prepareForParallelTransfer(td);
+                    p.prepareForParallelTransfer(cloud, td);
 
                     sendParticles[td.sendToProc].append(this->remove(&p));
 
@@ -393,7 +393,7 @@ void Foam::Cloud<ParticleType>::move
 
                     td.sendToPatch = patchi;
 
-                    p.correctAfterParallelTransfer(td);
+                    p.correctAfterParallelTransfer(cloud, td);
 
                     addParticle(newParticles.remove(&p));
                 }

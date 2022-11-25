@@ -276,6 +276,38 @@ protected:
 
     // Protected Member Functions
 
+        //- Set cell values
+        template<class TrackCloudType>
+        void setCellValues(TrackCloudType& cloud, trackingData& td);
+
+        //- Apply dispersion to the carrier phase velocity and update
+        //  parcel turbulence parameters
+        template<class TrackCloudType>
+        void calcDispersion
+        (
+            TrackCloudType& cloud,
+            trackingData& td,
+            const scalar dt
+        );
+
+        //- Correct cell values using latest transfer information
+        template<class TrackCloudType>
+        void cellValueSourceCorrection
+        (
+            TrackCloudType& cloud,
+            trackingData& td,
+            const scalar dt
+        );
+
+        //- Update parcel properties over the time interval
+        template<class TrackCloudType>
+        void calc
+        (
+            TrackCloudType& cloud,
+            trackingData& td,
+            const scalar dt
+        );
+
         //- Calculate new particle velocity
         template<class TrackCloudType>
         const vector calcVelocity
@@ -500,41 +532,6 @@ public:
             );
 
 
-        // Main calculation loop
-
-            //- Set cell values
-            template<class TrackCloudType>
-            void setCellValues(TrackCloudType& cloud, trackingData& td);
-
-            //- Apply dispersion to the carrier phase velocity and update
-            //  parcel turbulence parameters
-            template<class TrackCloudType>
-            void calcDispersion
-            (
-                TrackCloudType& cloud,
-                trackingData& td,
-                const scalar dt
-            );
-
-            //- Correct cell values using latest transfer information
-            template<class TrackCloudType>
-            void cellValueSourceCorrection
-            (
-                TrackCloudType& cloud,
-                trackingData& td,
-                const scalar dt
-            );
-
-            //- Update parcel properties over the time interval
-            template<class TrackCloudType>
-            void calc
-            (
-                TrackCloudType& cloud,
-                trackingData& td,
-                const scalar dt
-            );
-
-
         // Tracking
 
             //- Move the parcel
@@ -547,6 +544,20 @@ public:
             );
 
 
+        // Transformations
+
+            //- Transform the physical properties of the particle
+            //  according to the given transformation
+            virtual void transformProperties(const transformer&);
+
+
+        // Transfers
+
+            //- Make changes following a parallel transfer
+            template<class TrackCloudType>
+            void correctAfterParallelTransfer(TrackCloudType&, trackingData&);
+
+
         // Patch interactions
 
             //- Overridable function to handle the particle hitting a patch
@@ -554,13 +565,49 @@ public:
             template<class TrackCloudType>
             bool hitPatch(TrackCloudType& cloud, trackingData& td);
 
+            //- Overridable function to handle the particle hitting a wedgePatch
+            template<class TrackCloudType>
+            void hitWedgePatch(TrackCloudType&, trackingData&);
+
+            //- Overridable function to handle the particle hitting a
+            //  symmetryPlanePatch
+            template<class TrackCloudType>
+            void hitSymmetryPlanePatch(TrackCloudType&, trackingData&);
+
+            //- Overridable function to handle the particle hitting a
+            //  symmetryPatch
+            template<class TrackCloudType>
+            void hitSymmetryPatch(TrackCloudType&, trackingData&);
+
+            //- Overridable function to handle the particle hitting a
+            //  cyclicPatch
+            template<class TrackCloudType>
+            void hitCyclicPatch(TrackCloudType&, trackingData&);
+
+            //- Overridable function to handle the particle hitting an
+            //  nonConformalCyclicPolyPatch
+            template<class TrackCloudType>
+            bool hitNonConformalCyclicPatch
+            (
+                const vector& displacement,
+                const scalar fraction,
+                const label patchi,
+                TrackCloudType& cloud,
+                trackingData& td
+            );
+
+            //- Overridable function to handle the particle hitting a
+            //  processorPatch
+            using ParcelType::hitProcessorPatch;
+
             //- Overridable function to handle the particle hitting a wallPatch
             template<class TrackCloudType>
             void hitWallPatch(TrackCloudType& cloud, trackingData& td);
 
-            //- Transform the physical properties of the particle
-            //  according to the given transformation
-            virtual void transformProperties(const transformer&);
+            //- Overridable function to handle the particle hitting a basic
+            //  patch. Fall-through for the above.
+            template<class TrackCloudType>
+            void hitBasicPatch(TrackCloudType& cloud, trackingData& td);
 
 
         // I-O

@@ -103,6 +103,55 @@ void Foam::particle::writeFields(const TrackCloudType& c)
 
 
 template<class TrackCloudType>
+void Foam::particle::prepareForParallelTransfer
+(
+    TrackCloudType& cloud,
+    trackingData& td
+)
+{
+    if (td.sendFromPatch == patch(td.mesh))
+    {
+        prepareForProcessorTransfer(td);
+    }
+    else
+    {
+        prepareForNonConformalCyclicTransfer
+        (
+            td.mesh,
+            td.sendFromPatch,
+            td.sendToPatchFace
+        );
+    }
+}
+
+
+template<class TrackCloudType>
+void Foam::particle::correctAfterParallelTransfer
+(
+    TrackCloudType& cloud,
+    trackingData& td
+)
+{
+    const polyPatch& pp = td.mesh.boundaryMesh()[td.sendToPatch];
+
+    if (isA<processorPolyPatch>(pp))
+    {
+        correctAfterProcessorTransfer(td);
+    }
+    else if (isA<nonConformalCyclicPolyPatch>(pp))
+    {
+        correctAfterNonConformalCyclicTransfer(td.mesh, td.sendToPatch);
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Transfer patch type not recognised"
+            << exit(FatalError);
+    }
+}
+
+
+template<class TrackCloudType>
 void Foam::particle::hitFace
 (
     const vector& displacement,
@@ -179,7 +228,7 @@ void Foam::particle::hitFace
             }
             else
             {
-                td.keepParticle = false;
+                p.hitBasicPatch(cloud, ttd);
             }
         }
     }
@@ -354,6 +403,13 @@ void Foam::particle::hitProcessorPatch(TrackCloudType& cloud, trackingData& td)
 template<class TrackCloudType>
 void Foam::particle::hitWallPatch(TrackCloudType&, trackingData&)
 {}
+
+
+template<class TrackCloudType>
+void Foam::particle::hitBasicPatch(TrackCloudType&, trackingData& td)
+{
+    td.keepParticle = false;
+}
 
 
 // ************************************************************************* //

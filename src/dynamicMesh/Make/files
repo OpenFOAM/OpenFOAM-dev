@@ -56,8 +56,6 @@ perfectInterface/perfectInterface.C
 repatchMesh/repatchMesh.C
 repatchMesh/repatchPatch.C
 
-setUpdater/setUpdater.C
-
 meshModifiers = meshCut/meshModifiers
 $(meshModifiers)/boundaryCutter/boundaryCutter.C
 $(meshModifiers)/meshCutter/meshCutter.C
@@ -128,8 +126,6 @@ $(solidBodyMotionFunctions)/oscillatingRotatingMotion/oscillatingRotatingMotion.
 motionSolvers/displacement/solidBody/pointPatchFields/derived/solidBodyMotionDisplacement/solidBodyMotionDisplacementPointPatchVectorField.C
 
 createShellMesh/createShellMesh.C
-
-extrudePatchMesh/extrudePatchMesh.C
 
 polyMeshFilter/polyMeshFilterSettings.C
 polyMeshFilter/polyMeshFilter.C
