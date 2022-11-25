@@ -1,0 +1,120 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // filter
+    {
+        name    filterCellSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (1.5 -10 -10) (2 10 10);
+    }
+    {
+        name    filter;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     filterCellSet;
+    }
+
+
+    {
+        name    leftFluidCellSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (-10 -10 -10) (1.5 10 10);
+    }
+    {
+        name    leftFluid;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     leftFluidCellSet;
+    }
+    {
+        name    rightFluidCellSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (2 -1 -1) (10 10 10);
+    }
+    {
+        name    rightFluid;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     rightFluidCellSet;
+    }
+
+
+    // cycLeft
+    {
+        name    cycLeftFaceSet;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        set     filterCellSet;
+        option  all;
+    }
+    {
+        name    cycLeftFaceSet;
+        type    faceSet;
+        action  subset;
+        source  cellToFace;
+        set     leftFluidCellSet;
+        option  all;
+    }
+    // Create faceZone from cycLeft
+    {
+        name    cycLeft;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        faceSet cycLeftFaceSet;
+    }
+
+    // cycRight
+    {
+        name    cycRightFaceSet;
+        type    faceSet;
+        action  new;
+        source  cellToFace;
+        set     filterCellSet;
+        option  all;
+    }
+    {
+        name    cycRightFaceSet;
+        type    faceSet;
+        action  subset;
+        source  cellToFace;
+        set     rightFluidCellSet;
+        option  all;
+    }
+    // Create faceZone from cycRight
+    {
+        name    cycRight;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        faceSet cycRightFaceSet;
+    }
+);
+
+
+// ************************************************************************* //

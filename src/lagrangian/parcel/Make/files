@@ -57,10 +57,6 @@ RADIATION=submodels/addOns/radiation
 $(RADIATION)/absorptionEmission/cloudAbsorptionEmission/cloudAbsorptionEmission.C
 $(RADIATION)/scatter/cloudScatter/cloudScatter.C
 
-PATCHINTERACTION=submodels/Momentum/PatchInteractionModel
-$(PATCHINTERACTION)/LocalInteraction/patchInteractionData.C
-$(PATCHINTERACTION)/LocalInteraction/patchInteractionDataList.C
-
 MOMENTUMINJECTION=submodels/Momentum/InjectionModel
 $(MOMENTUMINJECTION)/MomentumLookupTableInjection/momentumParcelInjectionData.C
 $(MOMENTUMINJECTION)/MomentumLookupTableInjection/momentumParcelInjectionDataIO.C
