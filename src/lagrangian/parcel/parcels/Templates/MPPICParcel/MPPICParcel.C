@@ -45,8 +45,7 @@ template<class TrackCloudType>
 bool Foam::MPPICParcel<ParcelType>::move
 (
     TrackCloudType& cloud,
-    trackingData& td,
-    const scalar trackTime
+    trackingData& td
 )
 {
     typename TrackCloudType::parcelType& p =
@@ -56,14 +55,14 @@ bool Foam::MPPICParcel<ParcelType>::move
     {
         case trackingData::tpPredictTrack:
         {
-            ParcelType::move(cloud, td, trackTime);
+            ParcelType::move(cloud, td);
 
             break;
         }
         case trackingData::tpDampingNoTrack:
         {
             p.UCorrect() =
-                cloud.dampingModel().velocityCorrection(p, trackTime);
+                cloud.dampingModel().velocityCorrection(p, td.trackTime());
 
             td.keepParticle = true;
             td.sendToProc = -1;
@@ -73,7 +72,7 @@ bool Foam::MPPICParcel<ParcelType>::move
         case trackingData::tpPackingNoTrack:
         {
             p.UCorrect() =
-                cloud.packingModel().velocityCorrection(p, trackTime);
+                cloud.packingModel().velocityCorrection(p, td.trackTime());
 
             td.keepParticle = true;
             td.sendToProc = -1;
@@ -87,7 +86,7 @@ bool Foam::MPPICParcel<ParcelType>::move
 
             Swap(p.U(), p.UCorrect());
 
-            ParcelType::move(cloud, td, trackTime);
+            ParcelType::move(cloud, td);
 
             Swap(p.U(), p.UCorrect());
 

@@ -67,7 +67,7 @@ public:
             const label tetPti
         )
         :
-            particle(mesh, coordinates, celli, tetFacei, tetPti)
+            particle(mesh, coordinates, celli, tetFacei, tetPti, -1)
         {}
 
 

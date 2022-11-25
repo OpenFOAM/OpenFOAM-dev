@@ -167,7 +167,7 @@ void Foam::sampledSets::lineFace::calcSamples
                     );
                 }
 
-                particles.move(particles, tdBwd, rootGreat);
+                particles.move(particles, tdBwd);
 
                 segmentT[i] =
                     returnReduce

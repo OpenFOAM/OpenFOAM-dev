@@ -31,8 +31,7 @@ License
 template<class CloudType>
 void Foam::SuppressionCollision<CloudType>::collide
 (
-    typename CloudType::parcelType::trackingData& td,
-    const scalar dt
+    typename CloudType::parcelType::trackingData& td
 )
 {
     const parcelCloud& sc =
@@ -41,7 +40,7 @@ void Foam::SuppressionCollision<CloudType>::collide
 
     volScalarField vDotSweep(sc.vDotSweep());
 
-    dimensionedScalar Dt("dt", dimTime, dt);
+    dimensionedScalar Dt("dt", dimTime, td.trackTime());
     volScalarField P(typedName("p"), 1.0 - exp(-vDotSweep*Dt));
 
     forAllIter(typename CloudType, this->owner(), iter)

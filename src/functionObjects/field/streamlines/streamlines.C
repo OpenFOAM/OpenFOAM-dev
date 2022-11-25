@@ -334,13 +334,13 @@ bool Foam::functionObjects::streamlines::write()
             initialParticles = particles;
         }
 
-        particles.move(particles, td, rootGreat);
+        particles.move(particles, td);
 
         if (trackDirection_ == trackDirection::both)
         {
             particles.IDLList<streamlinesParticle>::operator=(initialParticles);
             td.trackForward_ = !td.trackForward_;
-            particles.move(particles, td, rootGreat);
+            particles.move(particles, td);
         }
     }
 

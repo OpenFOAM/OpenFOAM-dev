@@ -190,7 +190,7 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(sampledSetCloud&, trackingData&, const scalar);
+            bool move(sampledSetCloud&, trackingData&);
 
             //- Hit a wedge patch. Ends the track.
             void hitWedgePatch(sampledSetCloud&, trackingData&);

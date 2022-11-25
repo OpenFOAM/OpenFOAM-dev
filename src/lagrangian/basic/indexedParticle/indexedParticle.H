@@ -61,21 +61,6 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        indexedParticle
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const label index = 0
-        )
-        :
-            particle(mesh, coordinates, celli, tetFacei, tetPti),
-            index_(index)
-        {}
-
         //- Construct from Istream
         indexedParticle(Istream& is, bool readFields = true)
         :

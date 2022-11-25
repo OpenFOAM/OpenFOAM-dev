@@ -53,6 +53,7 @@ SourceFiles
 #include "runTimeSelectionTables.H"
 #include "CloudSubModelBase.H"
 #include "vector.H"
+#include "particle.H"
 #include "TimeFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -142,7 +143,7 @@ protected:
         virtual bool validInjection(const label parcelI) = 0;
 
         //- Determine properties for next time step/injection interval
-        virtual bool prepareForNextTimeStep
+        bool prepareForNextTimeStep
         (
             const scalar time,
             label& newParcels,
@@ -152,17 +153,26 @@ protected:
         //- Find the cell that contains the supplied position
         //  Will modify position slightly towards the owner cell centroid to
         //  ensure that it lies in a cell and not edge/face
-        virtual bool findCellAtPosition
+        bool findCellAtPosition
         (
+            const point& position,
+            barycentric& coordinates,
             label& celli,
             label& tetFacei,
             label& tetPti,
-            vector& position,
             bool errorOnNotFound = true
         );
 
+        //- Constrain a parcel's position appropriately to the geometric
+        //  dimensions of the mesh
+        void constrainPosition
+        (
+            typename CloudType::parcelType::trackingData& td,
+            typename CloudType::parcelType& parcel
+        );
+
         //- Set number of particles to inject given parcel properties
-        virtual scalar setNumberOfParticles
+        scalar setNumberOfParticles
         (
             const label parcels,
             const scalar volumeFraction,
@@ -171,7 +181,7 @@ protected:
         );
 
         //- Post injection checks
-        virtual void postInjectCheck
+        void postInjectCheck
         (
             const label parcelsAdded,
             const scalar massAdded
@@ -309,8 +319,7 @@ public:
             void injectSteadyState
             (
                 TrackCloudType& cloud,
-                typename CloudType::parcelType::trackingData& td,
-                const scalar trackTime
+                typename CloudType::parcelType::trackingData& td
             );
 
 
@@ -322,10 +331,11 @@ public:
                 const label parcelI,
                 const label nParcels,
                 const scalar time,
-                vector& position,
-                label& cellOwner,
+                barycentric& coordinates,
+                label& celli,
                 label& tetFacei,
-                label& tetPti
+                label& tetPti,
+                label& facei
             ) = 0;
 
             //- Set the parcel properties

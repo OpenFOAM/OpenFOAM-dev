@@ -67,6 +67,7 @@ Foam::FieldActivatedInjection<CloudType>::FieldActivatedInjection
             IOobject::NO_WRITE
         )
     ),
+    injectorCoordinates_(positions_.size()),
     injectorCells_(positions_.size()),
     injectorTetFaces_(positions_.size()),
     injectorTetPts_(positions_.size()),
@@ -112,6 +113,7 @@ Foam::FieldActivatedInjection<CloudType>::FieldActivatedInjection
     thresholdField_(im.thresholdField_),
     positionsFile_(im.positionsFile_),
     positions_(im.positions_),
+    injectorCoordinates_(im.injectorCoordinates_),
     injectorCells_(im.injectorCells_),
     injectorTetFaces_(im.injectorTetFaces_),
     injectorTetPts_(im.injectorTetPts_),
@@ -140,10 +142,11 @@ void Foam::FieldActivatedInjection<CloudType>::topoChange()
     {
         this->findCellAtPosition
         (
+            positions_[i],
+            injectorCoordinates_[i],
             injectorCells_[i],
             injectorTetFaces_[i],
-            injectorTetPts_[i],
-            positions_[i]
+            injectorTetPts_[i]
         );
     }
 }
@@ -198,14 +201,15 @@ void Foam::FieldActivatedInjection<CloudType>::setPositionAndCell
     const label parcelI,
     const label,
     const scalar,
-    vector& position,
-    label& cellOwner,
+    barycentric& coordinates,
+    label& celli,
     label& tetFacei,
-    label& tetPti
+    label& tetPti,
+    label& facei
 )
 {
-    position = positions_[parcelI];
-    cellOwner = injectorCells_[parcelI];
+    coordinates = injectorCoordinates_[parcelI];
+    celli = injectorCells_[parcelI];
     tetFacei = injectorTetFaces_[parcelI];
     tetPti = injectorTetPts_[parcelI];
 }

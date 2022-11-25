@@ -79,10 +79,11 @@ inline Foam::ThermoParcel<ParcelType>::ThermoParcel
     const barycentric& coordinates,
     const label celli,
     const label tetFacei,
-    const label tetPti
+    const label tetPti,
+    const label facei
 )
 :
-    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
+    ParcelType(mesh, coordinates, celli, tetFacei, tetPti, facei),
     T_(0.0),
     Cp_(0.0)
 {}

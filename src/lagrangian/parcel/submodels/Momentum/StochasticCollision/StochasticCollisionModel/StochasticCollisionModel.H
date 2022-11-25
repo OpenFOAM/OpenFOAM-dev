@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,11 +58,7 @@ class StochasticCollisionModel
 protected:
 
     //- Main collision routine
-    virtual void collide
-    (
-        typename CloudType::parcelType::trackingData& td,
-        const scalar dt
-    ) = 0;
+    virtual void collide(typename CloudType::parcelType::trackingData& td) = 0;
 
 
 public:
@@ -119,11 +115,7 @@ public:
     // Member Functions
 
         //- Update the model
-        void update
-        (
-            typename CloudType::parcelType::trackingData& td,
-            const scalar dt
-        );
+        void update(typename CloudType::parcelType::trackingData& td);
 };
 
 

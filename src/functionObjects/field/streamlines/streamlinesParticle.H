@@ -236,7 +236,7 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(streamlinesCloud&, trackingData&, const scalar);
+            bool move(streamlinesCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wedge
             void hitWedgePatch(streamlinesCloud&, trackingData&);

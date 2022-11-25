@@ -953,7 +953,7 @@ void Foam::DSMCCloud<ParcelType>::evolve()
     this->inflowBoundary().inflow();
 
     // Move the particles ballistically with their current velocities
-    Cloud<ParcelType>::move(*this, td, mesh_.time().deltaTValue());
+    Cloud<ParcelType>::move(*this, td);
 
     // Update cell occupancy
     buildCellOccupancy();

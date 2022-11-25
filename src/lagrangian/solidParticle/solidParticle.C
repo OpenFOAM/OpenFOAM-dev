@@ -38,12 +38,13 @@ namespace Foam
 bool Foam::solidParticle::move
 (
     solidParticleCloud& cloud,
-    trackingData& td,
-    const scalar trackTime
+    trackingData& td
 )
 {
     td.keepParticle = true;
     td.sendToProc = -1;
+
+    const scalar trackTime = td.mesh.time().deltaTValue();
 
     while (td.keepParticle && td.sendToProc == -1 && stepFraction() < 1)
     {
@@ -53,7 +54,6 @@ bool Foam::solidParticle::move
                 << " trackTime = " << trackTime
                 << " stepFraction() = " << stepFraction() << endl;
         }
-
 
         const scalar sfrac = stepFraction();
 

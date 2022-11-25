@@ -468,6 +468,7 @@ void Foam::meshRefinement::markFeatureCellLevel
     trackedParticle::trackingData td
     (
         startPointCloud,
+        2.0*mesh_.bounds().mag(),
         maxFeatureLevel,
         featureEdgeVisited
     );
@@ -476,15 +477,13 @@ void Foam::meshRefinement::markFeatureCellLevel
     // Track all particles to their end position (= starting feature point)
     // Note that the particle might have started on a different processor
     // so this will transfer across nicely until we can start tracking proper.
-    scalar maxTrackLen = 2.0*mesh_.bounds().mag();
-
     if (debug&meshRefinement::FEATURESEEDS)
     {
         Pout<< "Tracking " << startPointCloud.size()
-            << " particles over distance " << maxTrackLen
+            << " particles over distance " << td.maxTrackLen_
             << " to find the starting cell" << endl;
     }
-    startPointCloud.move(startPointCloud, td, maxTrackLen);
+    startPointCloud.move(startPointCloud, td);
 
 
     // Reset levels
@@ -559,10 +558,10 @@ void Foam::meshRefinement::markFeatureCellLevel
         if (debug&meshRefinement::FEATURESEEDS)
         {
             Pout<< "Tracking " << cloud.size()
-                << " particles over distance " << maxTrackLen
+                << " particles over distance " << td.maxTrackLen_
                 << " to mark cells" << endl;
         }
-        cloud.move(cloud, td, maxTrackLen);
+        cloud.move(cloud, td);
 
         // Make particle follow edge.
         forAllIter(Cloud<trackedParticle>, cloud, iter)

@@ -66,10 +66,11 @@ inline Foam::CollidingParcel<ParcelType>::CollidingParcel
     const barycentric& coordinates,
     const label celli,
     const label tetFacei,
-    const label tetPti
+    const label tetPti,
+    const label facei
 )
 :
-    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
+    ParcelType(mesh, coordinates, celli, tetFacei, tetPti, facei),
     f_(Zero),
     angularMomentum_(Zero),
     torque_(Zero),

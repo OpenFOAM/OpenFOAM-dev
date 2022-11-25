@@ -35,8 +35,7 @@ using namespace Foam::constant::mathematical;
 template<class CloudType>
 void Foam::ORourkeCollision<CloudType>::collide
 (
-    typename CloudType::parcelType::trackingData& td,
-    const scalar dt
+    typename CloudType::parcelType::trackingData& td
 )
 {
     const liquidMixtureProperties& liquids =
@@ -78,7 +77,8 @@ void Foam::ORourkeCollision<CloudType>::collide
                     scalar m1 = p1.nParticle()*p1.mass();
                     scalar m2 = p2.nParticle()*p2.mass();
 
-                    bool massChanged = collideParcels(dt, p1, p2, m1, m2);
+                    bool massChanged =
+                        collideParcels(td.trackTime(), p1, p2, m1, m2);
 
                     if (massChanged)
                     {

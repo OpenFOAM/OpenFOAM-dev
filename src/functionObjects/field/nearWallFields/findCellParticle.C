@@ -30,23 +30,6 @@ License
 Foam::findCellParticle::findCellParticle
 (
     const polyMesh& mesh,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPtI,
-    const vector& displacement,
-    const label data
-)
-:
-    particle(mesh, coordinates, celli, tetFacei, tetPtI),
-    displacement_(displacement),
-    data_(data)
-{}
-
-
-Foam::findCellParticle::findCellParticle
-(
-    const polyMesh& mesh,
     const vector& position,
     const label celli,
     const vector& displacement,
@@ -94,8 +77,7 @@ Foam::findCellParticle::findCellParticle(Istream& is, bool readFields)
 bool Foam::findCellParticle::move
 (
     Cloud<findCellParticle>& cloud,
-    trackingData& td,
-    const scalar maxTrackLen
+    trackingData& td
 )
 {
     td.keepParticle = true;

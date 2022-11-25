@@ -77,10 +77,11 @@ inline Foam::MomentumParcel<ParcelType>::MomentumParcel
     const barycentric& coordinates,
     const label celli,
     const label tetFacei,
-    const label tetPti
+    const label tetPti,
+    const label facei
 )
 :
-    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
+    ParcelType(mesh, coordinates, celli, tetFacei, tetPti, facei),
     moving_(true),
     typeId_(-1),
     nParticle_(0),

@@ -56,26 +56,6 @@ template<class ParcelType>
 inline Foam::DSMCParcel<ParcelType>::DSMCParcel
 (
     const polyMesh& mesh,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const vector& U,
-    const scalar Ei,
-    const label typeId
-)
-:
-    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
-    U_(U),
-    Ei_(Ei),
-    typeId_(typeId)
-{}
-
-
-template<class ParcelType>
-inline Foam::DSMCParcel<ParcelType>::DSMCParcel
-(
-    const polyMesh& mesh,
     const vector& position,
     const label celli,
     const vector& U,

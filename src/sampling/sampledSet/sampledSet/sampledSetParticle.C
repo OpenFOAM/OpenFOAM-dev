@@ -121,8 +121,7 @@ void Foam::sampledSetParticle::storeCell
 bool Foam::sampledSetParticle::move
 (
     sampledSetCloud& cloud,
-    trackingData& td,
-    const scalar
+    trackingData& td
 )
 {
     td.keepParticle = true;

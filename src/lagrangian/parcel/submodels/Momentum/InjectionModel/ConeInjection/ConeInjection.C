@@ -138,6 +138,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
             this->coeffDict()
         )
     ),
+    injectorCoordinates_(barycentric::uniform(NaN)),
     injectorCell_(-1),
     injectorTetFace_(-1),
     injectorTetPt_(-1),
@@ -211,6 +212,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
     position_(im.position_),
     positionIsConstant_(im.positionIsConstant_),
     direction_(im.direction_),
+    injectorCoordinates_(im.injectorCoordinates_),
     injectorCell_(im.injectorCell_),
     injectorTetFace_(im.injectorTetFace_),
     injectorTetPt_(im.injectorTetPt_),
@@ -245,10 +247,11 @@ void Foam::ConeInjection<CloudType>::topoChange()
         vector position = position_.value(0);
         this->findCellAtPosition
         (
+            position,
+            injectorCoordinates_,
             injectorCell_,
             injectorTetFace_,
-            injectorTetPt_,
-            position
+            injectorTetPt_
         );
     }
 }
@@ -307,10 +310,11 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
     const label parcelI,
     const label,
     const scalar time,
-    vector& position,
-    label& cellOwner,
+    barycentric& coordinates,
+    label& celli,
     label& tetFacei,
-    label& tetPti
+    label& tetPti,
+    label& facei
 )
 {
     Random& rndGen = this->owner().rndGen();
@@ -321,10 +325,11 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
     {
         case imPoint:
         {
-            position = position_.value(t);
+            const point pos = position_.value(t);
             if (positionIsConstant_)
             {
-                cellOwner = injectorCell_;
+                coordinates = injectorCoordinates_;
+                celli = injectorCell_;
                 tetFacei = injectorTetFace_;
                 tetPti = injectorTetPt_;
             }
@@ -332,10 +337,11 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
             {
                 this->findCellAtPosition
                 (
-                    cellOwner,
+                    pos,
+                    coordinates,
+                    celli,
                     tetFacei,
                     tetPti,
-                    position,
                     false
                 );
             }
@@ -350,13 +356,14 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
             const vector t2 = normalised(n ^ t1);
             const vector tanVec = t1*cos(beta) + t2*sin(beta);
             const scalar d = sqrt((1 - frac)*sqr(dInner_) + frac*sqr(dOuter_));
-            position = position_.value(t) + d/2*tanVec;
+            const point pos = position_.value(t) + d/2*tanVec;
             this->findCellAtPosition
             (
-                cellOwner,
+                pos,
+                coordinates,
+                celli,
                 tetFacei,
                 tetPti,
-                position,
                 false
             );
             break;

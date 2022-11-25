@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,7 +196,7 @@ void Foam::MPPICCloud<CloudType>::motion
 
     // force calculation and tracking
     td.part() = parcelType::trackingData::tpPredictTrack;
-    CloudType::move(cloud, td, this->db().time().deltaTValue());
+    CloudType::move(cloud, td);
 
 
     // Preliminary
@@ -227,11 +227,11 @@ void Foam::MPPICCloud<CloudType>::motion
 
         // calculate the damping velocity corrections without moving the parcels
         td.part() = parcelType::trackingData::tpDampingNoTrack;
-        CloudType::move(cloud, td, this->db().time().deltaTValue());
+        CloudType::move(cloud, td);
 
         // correct the parcel positions and velocities
         td.part() = parcelType::trackingData::tpCorrectTrack;
-        CloudType::move(cloud, td, this->db().time().deltaTValue());
+        CloudType::move(cloud, td);
 
         // finalise and free memory
         dampingModel_->cacheFields(false);
@@ -254,9 +254,9 @@ void Foam::MPPICCloud<CloudType>::motion
         td.updateAverages(cloud);
         packingModel_->cacheFields(true);
         td.part() = parcelType::trackingData::tpPackingNoTrack;
-        CloudType::move(cloud, td, this->db().time().deltaTValue());
+        CloudType::move(cloud, td);
         td.part() = parcelType::trackingData::tpCorrectTrack;
-        CloudType::move(cloud, td, this->db().time().deltaTValue());
+        CloudType::move(cloud, td);
         packingModel_->cacheFields(false);
     }
 

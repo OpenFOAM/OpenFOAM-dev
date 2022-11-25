@@ -92,6 +92,8 @@ public:
     {
     public:
 
+        const scalar maxTrackLen_;
+
         labelList& maxLevel_;
 
         List<PackedBoolList>& featureEdgeVisited_;
@@ -102,35 +104,21 @@ public:
             trackingData
             (
                 Cloud<trackedParticle>& cloud,
+                const scalar maxTrackLen,
                 labelList& maxLevel,
                 List<PackedBoolList>& featureEdgeVisited
             )
             :
                 particle::trackingData(cloud),
+                maxTrackLen_(maxTrackLen),
                 maxLevel_(maxLevel),
                 featureEdgeVisited_(featureEdgeVisited)
             {}
-
     };
 
 
 
     // Constructors
-
-        //- Construct from components
-        trackedParticle
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPtI,
-            const point& end,
-            const label level,
-            const label i,
-            const label j,
-            const label k
-        );
 
         //- Construct from a position and a cell, searching for the rest of the
         //  required topology
@@ -217,7 +205,7 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(Cloud<trackedParticle>&, trackingData&, const scalar);
+            bool move(Cloud<trackedParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wedge
             void hitWedgePatch(Cloud<trackedParticle>&, trackingData&);

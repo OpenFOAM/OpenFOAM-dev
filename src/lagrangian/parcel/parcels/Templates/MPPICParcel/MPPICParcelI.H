@@ -34,10 +34,11 @@ inline Foam::MPPICParcel<ParcelType>::MPPICParcel
     const barycentric& coordinates,
     const label celli,
     const label tetFacei,
-    const label tetPti
+    const label tetPti,
+    const label facei
 )
 :
-    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
+    ParcelType(mesh, coordinates, celli, tetFacei, tetPti, facei),
     UCorrect_(Zero)
 {}
 

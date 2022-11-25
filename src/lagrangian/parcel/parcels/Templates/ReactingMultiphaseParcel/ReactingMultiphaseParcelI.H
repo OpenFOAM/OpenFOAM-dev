@@ -73,10 +73,11 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
     const barycentric& coordinates,
     const label celli,
     const label tetFacei,
-    const label tetPti
+    const label tetPti,
+    const label facei
 )
 :
-    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
+    ParcelType(mesh, coordinates, celli, tetFacei, tetPti, facei),
     YGas_(0),
     YLiquid_(0),
     YSolid_(0),

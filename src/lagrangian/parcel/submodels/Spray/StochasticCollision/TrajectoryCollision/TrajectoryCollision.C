@@ -30,11 +30,10 @@ License
 template<class CloudType>
 void Foam::TrajectoryCollision<CloudType>::collide
 (
-    typename CloudType::parcelType::trackingData& td,
-    const scalar dt
+    typename CloudType::parcelType::trackingData& td
 )
 {
-    ORourkeCollision<CloudType>::collide(td, dt);
+    ORourkeCollision<CloudType>::collide(td);
 }
 
 

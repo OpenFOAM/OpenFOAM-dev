@@ -257,8 +257,7 @@ template<class TrackCloudType>
 bool Foam::MomentumParcel<ParcelType>::move
 (
     TrackCloudType& cloud,
-    trackingData& td,
-    const scalar trackTime
+    trackingData& td
 )
 {
     typename TrackCloudType::parcelType& p =
@@ -272,7 +271,12 @@ bool Foam::MomentumParcel<ParcelType>::move
     const scalarField& cellLengthScale = cloud.cellLengthScale();
     const scalar maxCo = cloud.solution().maxCo();
 
-    while (ttd.keepParticle && ttd.sendToProc == -1 && p.stepFraction() < 1)
+    while
+    (
+        ttd.keepParticle
+     && ttd.sendToProc == -1
+     && p.stepFraction() < ttd.stepFractionRange().second()
+    )
     {
         if (p.moving() && p.onFace())
         {
@@ -284,7 +288,7 @@ bool Foam::MomentumParcel<ParcelType>::move
         const scalar sfrac = p.stepFraction();
 
         // Total displacement over the time-step
-        const vector s = trackTime*U_;
+        const vector s = ttd.trackTime()*U_;
 
         // Cell length scale
         const scalar l = cellLengthScale[p.cell()];
@@ -295,7 +299,7 @@ bool Foam::MomentumParcel<ParcelType>::move
         // Fraction of the displacement to track in this loop. This is limited
         // to ensure that the both the time and distance tracked is less than
         // maxCo times the total value.
-        scalar f = 1 - p.stepFraction();
+        scalar f = ttd.stepFractionRange().second() - p.stepFraction();
         f = min(f, maxCo);
         f = min(f, maxCo/min(max(mag(s)/l, rootSmall), rootGreat));
         if (p.moving())
@@ -313,7 +317,7 @@ bool Foam::MomentumParcel<ParcelType>::move
             p.stepFraction() += f;
         }
 
-        const scalar dt = (p.stepFraction() - sfrac)*trackTime;
+        const scalar dt = (p.stepFraction() - sfrac)*ttd.trackTime();
 
         // Avoid problems with extremely small timesteps
         if (dt > rootVSmall)

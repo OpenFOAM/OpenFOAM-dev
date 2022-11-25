@@ -86,7 +86,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
                     mesh_,
                     patch.Cf()[patchFacei],
                     patch.faceCells()[patchFacei],
-                    - distance_*nf[patchFacei],
+                  - distance_*nf[patchFacei],
                     globalWalls.toGlobal(nPatchFaces) // passive data
                 )
             );
@@ -123,10 +123,6 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
     // Database to pass into findCellParticle::move
     findCellParticle::trackingData td(cloud, cellToWalls_, cellToSamples_);
 
-    // Track all particles to their end position.
-    scalar maxTrackLen = 2.0*mesh_.bounds().mag();
-
-
     // Debug: collect start points
     pointField start;
     if (debug)
@@ -141,7 +137,8 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
     }
 
 
-    cloud.move(cloud, td, maxTrackLen);
+    // Track
+    cloud.move(cloud, td);
 
 
     // Rework cell-to-globalpatchface into a map

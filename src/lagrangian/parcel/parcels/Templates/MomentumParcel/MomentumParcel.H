@@ -191,6 +191,16 @@ public:
             const vector& g_;
 
 
+            // Tracking Parameters
+
+                //- Track time. Total across the entire step.
+                scalar trackTime_;
+
+                //- Step fraction range to track between. Allows for the
+                //  creation of sub-steps.
+                Pair<scalar> stepFractionRange_;
+
+
     public:
 
         // Constructors
@@ -232,8 +242,20 @@ public:
             //- Access the continuous phase viscosity
             inline scalar& muc();
 
-            // Return const access to the gravitational acceleration vector
+            // Return the gravitational acceleration vector
             inline const vector& g() const;
+
+            //- Return the tracking time
+            inline scalar trackTime() const;
+
+            //- Access the tracking time
+            inline scalar& trackTime();
+
+            //- Return the step fraction range to track between
+            inline Pair<scalar> stepFractionRange() const;
+
+            //- Access the step fraction range to track between
+            inline Pair<scalar>& stepFractionRange();
     };
 
 
@@ -355,7 +377,8 @@ public:
             const barycentric& coordinates,
             const label celli,
             const label tetFacei,
-            const label tetPti
+            const label tetPti,
+            const label facei
         );
 
         //- Construct from a position and a cell, searching for the rest of the
@@ -536,12 +559,7 @@ public:
 
             //- Move the parcel
             template<class TrackCloudType>
-            bool move
-            (
-                TrackCloudType& cloud,
-                trackingData& td,
-                const scalar trackTime
-            );
+            bool move(TrackCloudType& cloud, trackingData& td);
 
 
         // Transformations

@@ -132,18 +132,6 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        inline solidParticle
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const scalar d,
-            const vector& U
-        );
-
         //- Construct from Istream
         solidParticle(Istream& is, bool readFields = true);
 
@@ -174,7 +162,7 @@ public:
         // Tracking
 
             //- Move
-            bool move(solidParticleCloud&, trackingData&, const scalar);
+            bool move(solidParticleCloud&, trackingData&);
 
 
         // Patch interactions

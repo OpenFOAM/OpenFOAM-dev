@@ -197,7 +197,8 @@ public:
             const barycentric& coordinates,
             const label celli,
             const label tetFacei,
-            const label tetPti
+            const label tetPti,
+            const label facei
         );
 
         //- Construct from a position and a cell, searching for the rest of the

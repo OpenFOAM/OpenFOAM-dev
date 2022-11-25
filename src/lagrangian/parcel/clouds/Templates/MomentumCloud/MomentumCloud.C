@@ -94,29 +94,57 @@ void Foam::MomentumCloud<CloudType>::solve
     typename parcelType::trackingData& td
 )
 {
+    this->changeTimeStep();
+
     if (solution_.steadyState())
     {
         cloud.storeState();
+    }
 
-        cloud.preEvolve();
+    cloud.preEvolve();
 
-        evolveCloud(cloud, td);
+    if (solution_.coupled())
+    {
+        cloud.resetSourceTerms();
+    }
 
-        if (solution_.coupled())
+    if (solution_.transient())
+    {
+        label preInjectionSize = this->size();
+
+        this->surfaceFilm().inject(cloud);
+
+        // Update the cellOccupancy if the size of the cloud has changed
+        // during the injection.
+        if (preInjectionSize != this->size())
         {
-            cloud.relaxSources(cloud.cloudCopy());
+            updateCellOccupancy();
+            preInjectionSize = this->size();
         }
+
+        injectors_.inject(cloud, td);
+
+        // Assume that motion will update the cellOccupancy as necessary
+        // before it is required.
+        cloud.motion(cloud, td);
+
+        stochasticCollision().update(td);
     }
     else
     {
-        cloud.preEvolve();
+        injectors_.injectSteadyState(cloud, td);
 
-        evolveCloud(cloud, td);
+        CloudType::move(cloud, td);
+    }
 
-        if (solution_.coupled())
-        {
-            cloud.scaleSources();
-        }
+    if (solution_.coupled() && solution_.transient())
+    {
+        cloud.scaleSources();
+    }
+
+    if (solution_.coupled() && solution_.steadyState())
+    {
+        cloud.relaxSources(cloud.cloudCopy());
     }
 
     cloud.info();
@@ -171,53 +199,6 @@ void Foam::MomentumCloud<CloudType>::updateCellOccupancy()
     if (cellOccupancyPtr_.valid())
     {
         buildCellOccupancy();
-    }
-}
-
-
-template<class CloudType>
-template<class TrackCloudType>
-void Foam::MomentumCloud<CloudType>::evolveCloud
-(
-    TrackCloudType& cloud,
-    typename parcelType::trackingData& td
-)
-{
-    if (solution_.coupled())
-    {
-        cloud.resetSourceTerms();
-    }
-
-    if (solution_.transient())
-    {
-        label preInjectionSize = this->size();
-
-        this->surfaceFilm().inject(cloud);
-
-        // Update the cellOccupancy if the size of the cloud has changed
-        // during the injection.
-        if (preInjectionSize != this->size())
-        {
-            updateCellOccupancy();
-            preInjectionSize = this->size();
-        }
-
-        injectors_.inject(cloud, td);
-
-
-        // Assume that motion will update the cellOccupancy as necessary
-        // before it is required.
-        cloud.motion(cloud, td);
-
-        stochasticCollision().update(td, solution_.trackTime());
-    }
-    else
-    {
-//        this->surfaceFilm().injectSteadyState(cloud);
-
-        injectors_.injectSteadyState(cloud, td, solution_.trackTime());
-
-        CloudType::move(cloud, td, solution_.trackTime());
     }
 }
 
@@ -553,8 +534,7 @@ Foam::MomentumCloud<CloudType>::~MomentumCloud()
 template<class CloudType>
 void Foam::MomentumCloud<CloudType>::setParcelThermoProperties
 (
-    parcelType& parcel,
-    const scalar lagrangianDt
+    parcelType& parcel
 )
 {
     parcel.rho() = constProps_.rho0();
@@ -565,13 +545,9 @@ template<class CloudType>
 void Foam::MomentumCloud<CloudType>::checkParcelProperties
 (
     parcelType& parcel,
-    const scalar lagrangianDt,
     const bool fullyDescribed
 )
 {
-    const scalar carrierDt = this->mesh().time().deltaTValue();
-    parcel.stepFraction() = (carrierDt - lagrangianDt)/carrierDt;
-
     if (parcel.typeId() == -1)
     {
         parcel.typeId() = constProps_.parcelTypeId();
@@ -694,7 +670,7 @@ void Foam::MomentumCloud<CloudType>::motion
     typename parcelType::trackingData& td
 )
 {
-    CloudType::move(cloud, td, solution_.trackTime());
+    CloudType::move(cloud, td);
 
     updateCellOccupancy();
 }
@@ -731,9 +707,7 @@ void Foam::MomentumCloud<CloudType>::patchData
             const vector& Uw0 =
                 U_.oldTime().boundaryField()[patchi][patchFacei];
 
-            const scalar f = p.currentTimeFraction(this->mesh());
-
-            const vector Uw = Uw0 + f*(Uw1 - Uw0);
+            const vector Uw = Uw0 + p.stepFraction()*(Uw1 - Uw0);
 
             const tensor nnw = nw*nw;
 

@@ -195,11 +195,10 @@ Foam::ReactingCloud<CloudType>::~ReactingCloud()
 template<class CloudType>
 void Foam::ReactingCloud<CloudType>::setParcelThermoProperties
 (
-    parcelType& parcel,
-    const scalar lagrangianDt
+    parcelType& parcel
 )
 {
-    CloudType::setParcelThermoProperties(parcel, lagrangianDt);
+    CloudType::setParcelThermoProperties(parcel);
 
     parcel.Y() = this->composition().YMixture0();
 }
@@ -209,11 +208,10 @@ template<class CloudType>
 void Foam::ReactingCloud<CloudType>::checkParcelProperties
 (
     parcelType& parcel,
-    const scalar lagrangianDt,
     const bool fullyDescribed
 )
 {
-    CloudType::checkParcelProperties(parcel, lagrangianDt, fullyDescribed);
+    CloudType::checkParcelProperties(parcel, fullyDescribed);
 
     if (fullyDescribed)
     {

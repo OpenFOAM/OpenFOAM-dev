@@ -339,7 +339,8 @@ public:
             const barycentric& coordinates,
             const label celli,
             const label tetFacei,
-            const label tetPti
+            const label tetPti,
+            const label facei
         );
 
         //- Construct from a position and a cell, searching for the rest of the
@@ -397,6 +398,9 @@ public:
             //- Return current face particle is on otherwise -1
             inline label face() const;
 
+            //- Return current face particle is on otherwise -1
+            inline label& face();
+
             //- Return the fraction of time-step completed
             inline scalar stepFraction() const;
 
@@ -417,17 +421,6 @@ public:
 
 
         // Check
-
-            //- Return the step fraction change within the overall time-step.
-            //  Returns the start value and the change as a scalar pair. Always
-            //  return Pair<scalar>(0, 1), unless sub-cycling is in effect, in
-            //  which case the values will reflect the span of the sub-cycle
-            //  within the time-step.
-            inline Pair<scalar> stepFractionSpan(const polyMesh& mesh) const;
-
-            //- Return the current fraction within the timestep. This differs
-            //  from the stored step fraction due to sub-cycling.
-            inline scalar currentTimeFraction(const polyMesh& mesh) const;
 
             //- Return the indices of the current tet that the
             //  particle occupies.

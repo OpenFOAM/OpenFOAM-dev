@@ -55,6 +55,7 @@ ReactingMultiphaseLookupTableInjection
             IOobject::NO_WRITE
         )
     ),
+    injectorCoordinates_(0),
     injectorCells_(0),
     injectorTetFaces_(0),
     injectorTetPts_(0)
@@ -62,6 +63,7 @@ ReactingMultiphaseLookupTableInjection
     duration_ = owner.db().time().userTimeToTime(duration_);
 
     // Set/cache the injector cells
+    injectorCoordinates_.setSize(injectors_.size());
     injectorCells_.setSize(injectors_.size());
     injectorTetFaces_.setSize(injectors_.size());
     injectorTetPts_.setSize(injectors_.size());
@@ -91,6 +93,7 @@ ReactingMultiphaseLookupTableInjection
     parcelsPerSecond_(im.parcelsPerSecond_),
     randomise_(im.randomise_),
     injectors_(im.injectors_),
+    injectorCoordinates_(im.injectorCoordinates_),
     injectorCells_(im.injectorCells_),
     injectorTetFaces_(im.injectorTetFaces_),
     injectorTetPts_(im.injectorTetPts_)
@@ -115,10 +118,11 @@ void Foam::ReactingMultiphaseLookupTableInjection<CloudType>::topoChange()
     {
         this->findCellAtPosition
         (
+            injectors_[i].x(),
+            injectorCoordinates_[i],
             injectorCells_[i],
             injectorTetFaces_[i],
-            injectorTetPts_[i],
-            injectors_[i].x()
+            injectorTetPts_[i]
         );
     }
 }
@@ -178,10 +182,11 @@ void Foam::ReactingMultiphaseLookupTableInjection<CloudType>::setPositionAndCell
     const label parcelI,
     const label nParcels,
     const scalar time,
-    vector& position,
-    label& cellOwner,
+    barycentric& coordinates,
+    label& celli,
     label& tetFacei,
-    label& tetPti
+    label& tetPti,
+    label& facei
 )
 {
     label injectorI = 0;
@@ -195,8 +200,8 @@ void Foam::ReactingMultiphaseLookupTableInjection<CloudType>::setPositionAndCell
         injectorI = parcelI*injectorCells_.size()/nParcels;
     }
 
-    position = injectors_[injectorI].x();
-    cellOwner = injectorCells_[injectorI];
+    coordinates = injectorCoordinates_[injectorI];
+    celli = injectorCells_[injectorI];
     tetFacei = injectorTetFaces_[injectorI];
     tetPti = injectorTetPts_[injectorI];
 }

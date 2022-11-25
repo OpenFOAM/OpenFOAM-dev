@@ -53,6 +53,7 @@ Foam::ManualInjection<CloudType>::ManualInjection
         )
     ),
     diameters_(positions_.size()),
+    injectorCoordinates_(positions_.size(), barycentric::uniform(NaN)),
     injectorCells_(positions_.size(), -1),
     injectorTetFaces_(positions_.size(), -1),
     injectorTetPts_(positions_.size(), -1),
@@ -93,6 +94,7 @@ Foam::ManualInjection<CloudType>::ManualInjection
     positionsFile_(im.positionsFile_),
     positions_(im.positions_),
     diameters_(im.diameters_),
+    injectorCoordinates_(im.injectorCoordinates_),
     injectorCells_(im.injectorCells_),
     injectorTetFaces_(im.injectorTetFaces_),
     injectorTetPts_(im.injectorTetPts_),
@@ -124,10 +126,11 @@ void Foam::ManualInjection<CloudType>::topoChange()
         (
             !this->findCellAtPosition
             (
+                positions_[pI],
+                injectorCoordinates_[pI],
                 injectorCells_[pI],
                 injectorTetFaces_[pI],
                 injectorTetPts_[pI],
-                positions_[pI],
                 !ignoreOutOfBounds_
             )
         )
@@ -141,6 +144,7 @@ void Foam::ManualInjection<CloudType>::topoChange()
     {
         inplaceSubset(keep, positions_);
         inplaceSubset(keep, diameters_);
+        inplaceSubset(keep, injectorCoordinates_);
         inplaceSubset(keep, injectorCells_);
         inplaceSubset(keep, injectorTetFaces_);
         inplaceSubset(keep, injectorTetPts_);
@@ -203,14 +207,15 @@ void Foam::ManualInjection<CloudType>::setPositionAndCell
     const label parcelI,
     const label,
     const scalar,
-    vector& position,
-    label& cellOwner,
+    barycentric& coordinates,
+    label& celli,
     label& tetFacei,
-    label& tetPti
+    label& tetPti,
+    label& facei
 )
 {
-    position = positions_[parcelI];
-    cellOwner = injectorCells_[parcelI];
+    coordinates = injectorCoordinates_[parcelI];
+    celli = injectorCells_[parcelI];
     tetFacei = injectorTetFaces_[parcelI];
     tetPti = injectorTetPts_[parcelI];
 }

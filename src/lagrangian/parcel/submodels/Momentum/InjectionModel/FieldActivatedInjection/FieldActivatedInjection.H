@@ -87,6 +87,9 @@ class FieldActivatedInjection
             //- Field of injector (x,y,z) positions
             GlobalIOField<vector> positions_;
 
+            //- List of coordinates corresponding to injector positions
+            List<barycentric> injectorCoordinates_;
+
             //- List of cell labels corresponding to injector positions
             labelList injectorCells_;
 
@@ -172,10 +175,11 @@ public:
                 const label parcelI,
                 const label nParcels,
                 const scalar time,
-                vector& position,
-                label& cellOwner,
+                barycentric& coordinates,
+                label& celli,
                 label& tetFacei,
-                label& tetPti
+                label& tetPti,
+                label& facei
             );
 
             //- Set the parcel properties

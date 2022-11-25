@@ -158,19 +158,6 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        inline DSMCParcel
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const vector& U,
-            const scalar Ei,
-            const label typeId
-        );
-
         //- Construct from a position and a cell, searching for the rest of the
         //  required topology
         inline DSMCParcel
@@ -228,12 +215,7 @@ public:
 
                 //- Move the parcel
                 template<class TrackCloudType>
-                bool move
-                (
-                    TrackCloudType& cloud,
-                    trackingData& td,
-                    const scalar trackTime
-                );
+                bool move(TrackCloudType& cloud, trackingData& td);
 
 
         // Patch interactions

@@ -55,6 +55,7 @@ Foam::MomentumLookupTableInjection<CloudType>::MomentumLookupTableInjection
             IOobject::NO_WRITE
         )
     ),
+    injectorCoordinates_(0),
     injectorCells_(0),
     injectorTetFaces_(0),
     injectorTetPts_(0)
@@ -90,6 +91,7 @@ Foam::MomentumLookupTableInjection<CloudType>::MomentumLookupTableInjection
     parcelsPerSecond_(im.parcelsPerSecond_),
     randomise_(im.randomise_),
     injectors_(im.injectors_),
+    injectorCoordinates_(im.injectorCoordinates_),
     injectorCells_(im.injectorCells_),
     injectorTetFaces_(im.injectorTetFaces_),
     injectorTetPts_(im.injectorTetPts_)
@@ -113,10 +115,11 @@ void Foam::MomentumLookupTableInjection<CloudType>::topoChange()
     {
         this->findCellAtPosition
         (
+            injectors_[i].x(),
+            injectorCoordinates_[i],
             injectorCells_[i],
             injectorTetFaces_[i],
-            injectorTetPts_[i],
-            injectors_[i].x()
+            injectorTetPts_[i]
         );
     }
 }
@@ -173,10 +176,11 @@ void Foam::MomentumLookupTableInjection<CloudType>::setPositionAndCell
     const label parcelI,
     const label nParcels,
     const scalar time,
-    vector& position,
-    label& cellOwner,
+    barycentric& coordinates,
+    label& celli,
     label& tetFacei,
-    label& tetPti
+    label& tetPti,
+    label& facei
 )
 {
     label injectorI = 0;
@@ -190,8 +194,8 @@ void Foam::MomentumLookupTableInjection<CloudType>::setPositionAndCell
         injectorI = int64_t(parcelI)*int64_t(injectors_.size())/nParcels;
     }
 
-    position = injectors_[injectorI].x();
-    cellOwner = injectorCells_[injectorI];
+    coordinates = injectorCoordinates_[injectorI];
+    celli = injectorCells_[injectorI];
     tetFacei = injectorTetFaces_[injectorI];
     tetPti = injectorTetPts_[injectorI];
 }

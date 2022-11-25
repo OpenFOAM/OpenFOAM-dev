@@ -222,43 +222,6 @@ inline Foam::molecule::constantProperties::constantProperties
 inline Foam::molecule::molecule
 (
     const polyMesh& mesh,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const tensor& Q,
-    const vector& v,
-    const vector& a,
-    const vector& pi,
-    const vector& tau,
-    const vector& specialPosition,
-    const constantProperties& constProps,
-    const label special,
-    const label id
-
-)
-:
-    particle(mesh, coordinates, celli, tetFacei, tetPti),
-    Q_(Q),
-    v_(v),
-    a_(a),
-    pi_(pi),
-    tau_(tau),
-    specialPosition_(specialPosition),
-    potentialEnergy_(0.0),
-    rf_(Zero),
-    special_(special),
-    id_(id),
-    siteForces_(constProps.nSites(), Zero),
-    sitePositions_(constProps.nSites())
-{
-    setSitePositions(mesh, constProps);
-}
-
-
-inline Foam::molecule::molecule
-(
-    const polyMesh& mesh,
     const vector& position,
     const label celli,
     const tensor& Q,

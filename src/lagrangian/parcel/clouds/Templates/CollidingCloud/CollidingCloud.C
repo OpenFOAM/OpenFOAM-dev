@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,34 +43,6 @@ void Foam::CollidingCloud<CloudType>::setModels()
         ).ptr()
     );
 }
-
-
-template<class CloudType>
-template<class TrackCloudType>
-void Foam::CollidingCloud<CloudType>::moveCollide
-(
-    TrackCloudType& cloud,
-    typename parcelType::trackingData& td,
-    const scalar deltaT
-)
-{
-    td.part() = parcelType::trackingData::tpVelocityHalfStep;
-    CloudType::move(cloud, td, deltaT);
-
-    td.part() = parcelType::trackingData::tpLinearTrack;
-    CloudType::move(cloud, td, deltaT);
-
-    // td.part() = parcelType::trackingData::tpRotationalTrack;
-    // CloudType::move(cloud, td, deltaT);
-
-    this->updateCellOccupancy();
-
-    this->collision().collide();
-
-    td.part() = parcelType::trackingData::tpVelocityHalfStep;
-    CloudType::move(cloud, td, deltaT);
-}
-
 
 
 template<class CloudType>
@@ -216,29 +188,40 @@ void  Foam::CollidingCloud<CloudType>::motion
     // + calculate forces in new position
     // + apply half deltaV with new force
 
-    label nSubCycles = collision().nSubCycles();
+    const label nSubCycles = collision().nSubCycles();
 
     if (nSubCycles > 1)
     {
         Info<< "    " << nSubCycles << " move-collide subCycles" << endl;
-
-        subCycleTime moveCollideSubCycle
-        (
-            const_cast<Time&>(this->db().time()),
-            nSubCycles
-        );
-
-        while(!(++moveCollideSubCycle).end())
-        {
-            moveCollide(cloud, td, this->db().time().deltaTValue());
-        }
-
-        moveCollideSubCycle.endSubCycle();
     }
-    else
+
+    for (label subCyclei = 0; subCyclei < nSubCycles; ++ subCyclei)
     {
-        moveCollide(cloud, td, this->db().time().deltaTValue());
+        td.stepFractionRange() =
+            Pair<scalar>
+            (
+                scalar(subCyclei)/nSubCycles,
+                scalar(subCyclei + 1)/nSubCycles
+            );
+
+        td.part() = parcelType::trackingData::tpVelocityHalfStep;
+        CloudType::move(cloud, td);
+
+        td.part() = parcelType::trackingData::tpLinearTrack;
+        CloudType::move(cloud, td);
+
+        // td.part() = parcelType::trackingData::tpRotationalTrack;
+        // CloudType::move(cloud, td);
+
+        this->updateCellOccupancy();
+
+        this->collision().collide();
+
+        td.part() = parcelType::trackingData::tpVelocityHalfStep;
+        CloudType::move(cloud, td);
     }
+
+    td.stepFractionRange() = Pair<scalar>(0, 1);
 }
 
 

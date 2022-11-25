@@ -253,14 +253,6 @@ protected:
             //  already been used
             void updateCellOccupancy();
 
-            //- Evolve the cloud
-            template<class TrackCloudType>
-            void evolveCloud
-            (
-                TrackCloudType& cloud,
-                typename parcelType::trackingData& td
-            );
-
             //- Post-evolve
             void postEvolve();
 
@@ -538,17 +530,12 @@ public:
         // Cloud evolution functions
 
             //- Set parcel thermo properties
-            void setParcelThermoProperties
-            (
-                parcelType& parcel,
-                const scalar lagrangianDt
-            );
+            void setParcelThermoProperties(parcelType& parcel);
 
             //- Check parcel properties
             void checkParcelProperties
             (
                 parcelType& parcel,
-                const scalar lagrangianDt,
                 const bool fullyDescribed
             );
 

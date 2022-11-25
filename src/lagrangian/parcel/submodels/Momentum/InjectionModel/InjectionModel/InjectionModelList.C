@@ -198,13 +198,12 @@ template<class TrackCloudType>
 void Foam::InjectionModelList<CloudType>::injectSteadyState
 (
     TrackCloudType& cloud,
-    typename CloudType::parcelType::trackingData& td,
-    const scalar trackTime
+    typename CloudType::parcelType::trackingData& td
 )
 {
     forAll(*this, i)
     {
-        this->operator[](i).injectSteadyState(cloud, td, trackTime);
+        this->operator[](i).injectSteadyState(cloud, td);
     }
 }
 

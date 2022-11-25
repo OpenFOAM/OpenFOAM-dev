@@ -44,23 +44,6 @@ inline Foam::solidParticle::trackingData::trackingData
 {}
 
 
-inline Foam::solidParticle::solidParticle
-(
-    const polyMesh& mesh,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const scalar d,
-    const vector& U
-)
-:
-    particle(mesh, coordinates, celli, tetFacei, tetPti),
-    d_(d),
-    U_(U)
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline const Foam::interpolationCellPoint<Foam::scalar>&

@@ -196,7 +196,8 @@ Foam::Cloud<ParticleType>::Cloud
     patchNbrProc_(patchNbrProc(pMesh)),
     patchNbrProcPatch_(patchNbrProcPatch(pMesh)),
     patchNonConformalCyclicPatches_(patchNonConformalCyclicPatches(pMesh)),
-    globalPositionsPtr_()
+    globalPositionsPtr_(),
+    timeIndex_(-1)
 {
     // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
     // build them, otherwise, if some processors have no particles then there
@@ -257,25 +258,36 @@ void Foam::Cloud<ParticleType>::cloudReset(const Cloud<ParticleType>& c)
 
 
 template<class ParticleType>
+void Foam::Cloud<ParticleType>::changeTimeStep()
+{
+    forAllIter(typename Cloud<ParticleType>, *this, pIter)
+    {
+        pIter().reset(0);
+    }
+
+    timeIndex_ = pMesh_.time().timeIndex();
+}
+
+
+template<class ParticleType>
 template<class TrackCloudType>
 void Foam::Cloud<ParticleType>::move
 (
     TrackCloudType& cloud,
-    typename ParticleType::trackingData& td,
-    const scalar trackTime
+    typename ParticleType::trackingData& td
 )
 {
+    // If the time has changed, modify the particles accordingly
+    if (timeIndex_ != pMesh_.time().timeIndex())
+    {
+        changeTimeStep();
+    }
+
     // Clear the global positions as these are about to change
     globalPositionsPtr_.clear();
 
     // Ensure rays are available for non conformal transfers
     storeRays();
-
-    // Initialise the stepFraction moved for the particles
-    forAllIter(typename Cloud<ParticleType>, *this, pIter)
-    {
-        pIter().reset(0);
-    }
 
     // Create transfer buffers
     PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
@@ -300,7 +312,7 @@ void Foam::Cloud<ParticleType>::move
             ParticleType& p = pIter();
 
             // Move the particle
-            bool keepParticle = p.move(cloud, td, trackTime);
+            const bool keepParticle = p.move(cloud, td);
 
             // If the particle is to be kept
             if (keepParticle)

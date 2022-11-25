@@ -195,6 +195,9 @@ private:
         //- Centreline direction in which to inject
         const TimeFunction1<vector> direction_;
 
+        //- Coordinates corresponding to the injector position
+        barycentric injectorCoordinates_;
+
         //- Cell label corresponding to the injector position
         label injectorCell_;
 
@@ -310,10 +313,11 @@ public:
                 const label parcelI,
                 const label nParcels,
                 const scalar time,
-                vector& position,
-                label& cellOwner,
+                barycentric& coordinates,
+                label& celli,
                 label& tetFacei,
-                label& tetPti
+                label& tetPti,
+                label& facei
             );
 
             //- Set the parcel properties

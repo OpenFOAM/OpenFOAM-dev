@@ -140,11 +140,10 @@ Foam::SprayCloud<CloudType>::~SprayCloud()
 template<class CloudType>
 void Foam::SprayCloud<CloudType>::setParcelThermoProperties
 (
-    parcelType& parcel,
-    const scalar lagrangianDt
+    parcelType& parcel
 )
 {
-    CloudType::setParcelThermoProperties(parcel, lagrangianDt);
+    CloudType::setParcelThermoProperties(parcel);
 
     const liquidMixtureProperties& liqMix = this->composition().liquids();
 
@@ -164,11 +163,10 @@ template<class CloudType>
 void Foam::SprayCloud<CloudType>::checkParcelProperties
 (
     parcelType& parcel,
-    const scalar lagrangianDt,
     const bool fullyDescribed
 )
 {
-    CloudType::checkParcelProperties(parcel, lagrangianDt, fullyDescribed);
+    CloudType::checkParcelProperties(parcel, fullyDescribed);
 
     // store the injection position and initial drop size
     parcel.position0() = parcel.position(this->mesh());

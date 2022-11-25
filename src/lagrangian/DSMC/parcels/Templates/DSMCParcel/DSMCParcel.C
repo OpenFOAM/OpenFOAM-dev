@@ -33,8 +33,7 @@ template<class TrackCloudType>
 bool Foam::DSMCParcel<ParcelType>::move
 (
     TrackCloudType& cloud,
-    trackingData& td,
-    const scalar trackTime
+    trackingData& td
 )
 {
     typename TrackCloudType::parcelType& p =
@@ -44,6 +43,8 @@ bool Foam::DSMCParcel<ParcelType>::move
     td.sendToProc = -1;
 
     const polyMesh& mesh = cloud.pMesh();
+
+    const scalar trackTime = mesh.time().deltaTValue();
 
     // For reduced-D cases, the velocity used to track needs to be
     // constrained, but the actual U_ of the parcel must not be

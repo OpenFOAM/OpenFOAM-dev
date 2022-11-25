@@ -157,10 +157,11 @@ public:
                 const label parcelI,
                 const label nParcels,
                 const scalar time,
-                vector& position,
-                label& cellOwner,
+                barycentric& coordinates,
+                label& celli,
                 label& tetFacei,
-                label& tetPti
+                label& tetPti,
+                label& facei
             );
 
             virtual void setProperties

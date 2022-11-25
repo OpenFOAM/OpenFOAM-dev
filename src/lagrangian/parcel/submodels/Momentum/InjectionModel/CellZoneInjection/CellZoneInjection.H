@@ -70,16 +70,16 @@ class CellZoneInjection
         //- Number density
         const scalar numberDensity_;
 
-        //- Field of parcel positions
-        List<vector> positions_;
+        //- Field of parcel coordinates
+        List<barycentric> injectorCoordinates_;
 
-        //- List of cell labels corresponding to injector positions
+        //- List of cell labels corresponding to injector coordinates
         labelList injectorCells_;
 
-        //- List of tetFace labels corresponding to injector positions
+        //- List of tetFace labels corresponding to injector coordinates
         labelList injectorTetFaces_;
 
-        //- List of tetPt labels corresponding to injector positions
+        //- List of tetPt labels corresponding to injector coordinates
         labelList injectorTetPts_;
 
         //- Field of parcel diameters
@@ -154,10 +154,11 @@ public:
                 const label parcelI,
                 const label nParcels,
                 const scalar time,
-                vector& position,
-                label& cellOwner,
+                barycentric& coordinates,
+                label& celli,
                 label& tetFacei,
-                label& tetPti
+                label& tetPti,
+                label& facei
             );
 
             //- Set the parcel properties

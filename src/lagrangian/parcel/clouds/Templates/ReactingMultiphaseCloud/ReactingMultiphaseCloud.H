@@ -255,17 +255,12 @@ public:
         // Cloud evolution functions
 
             //- Set parcel thermo properties
-            void setParcelThermoProperties
-            (
-                parcelType& parcel,
-                const scalar lagrangianDt
-            );
+            void setParcelThermoProperties(parcelType& parcel);
 
             //- Check parcel properties
             void checkParcelProperties
             (
                 parcelType& parcel,
-                const scalar lagrangianDt,
                 const bool fullyDescribed
             );
 

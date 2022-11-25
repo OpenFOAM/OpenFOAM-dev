@@ -435,20 +435,20 @@ void Foam::InflationInjection<CloudType>::setPositionAndCell
     const label parcelI,
     const label,
     const scalar,
-    vector& position,
-    label& cellOwner,
+    barycentric& coordinates,
+    label& celli,
     label& tetFacei,
-    label& tetPti
+    label& tetPti,
+    label& facei
 )
 {
-    position = newParticles_[parcelI].first().first();
-
     this->findCellAtPosition
     (
-        cellOwner,
+        newParticles_[parcelI].first().first(),
+        coordinates,
+        celli,
         tetFacei,
         tetPti,
-        position,
         false
     );
 }

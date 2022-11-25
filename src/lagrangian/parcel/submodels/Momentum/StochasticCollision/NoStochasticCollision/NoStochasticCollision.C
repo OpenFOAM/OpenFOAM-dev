@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,7 @@ License
 template<class CloudType>
 void Foam::NoStochasticCollision<CloudType>::collide
 (
-    typename CloudType::parcelType::trackingData&,
-    const scalar
+    typename CloudType::parcelType::trackingData&
 )
 {}
 

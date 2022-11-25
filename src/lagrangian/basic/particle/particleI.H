@@ -77,11 +77,7 @@ inline void Foam::particle::movingTetGeometry
     const vector ccOld = mesh.oldCellCentres()[celli_];
     const vector ccNew = mesh.cellCentres()[celli_];
 
-    // Old and new points and cell centres are not sub-cycled. If we are sub-
-    // cycling, then we have to account for the timestep change here by
-    // modifying the fractions that we take of the old and new geometry.
-    const Pair<scalar> s = stepFractionSpan(mesh);
-    const scalar f0 = s[0] + stepFraction_*s[1], f1 = fraction*s[1];
+    const scalar f0 = stepFraction_, f1 = fraction;
 
     centre[0] = ccOld + f0*(ccNew - ccOld);
     base[0] = ptsOld[triIs[0]] + f0*(ptsNew[triIs[0]] - ptsOld[triIs[0]]);
@@ -159,6 +155,12 @@ inline Foam::label Foam::particle::face() const
 }
 
 
+inline Foam::label& Foam::particle::face()
+{
+    return facei_;
+}
+
+
 inline Foam::scalar Foam::particle::stepFraction() const
 {
     return stepFraction_;
@@ -192,44 +194,6 @@ inline Foam::label Foam::particle::origId() const
 inline Foam::label& Foam::particle::origId()
 {
     return origId_;
-}
-
-
-inline Foam::Pair<Foam::scalar> Foam::particle::stepFractionSpan
-(
-    const polyMesh& mesh
-) const
-{
-    if (mesh.time().subCycling())
-    {
-        const TimeState& tsNew = mesh.time();
-        const TimeState& tsOld = mesh.time().prevTimeState();
-
-        const scalar tFrac =
-        (
-            (tsNew.value() - tsNew.deltaTValue())
-          - (tsOld.value() - tsOld.deltaTValue())
-        )/tsOld.deltaTValue();
-
-        const scalar dtFrac = tsNew.deltaTValue()/tsOld.deltaTValue();
-
-        return Pair<scalar>(tFrac, dtFrac);
-    }
-    else
-    {
-        return Pair<scalar>(0, 1);
-    }
-}
-
-
-inline Foam::scalar Foam::particle::currentTimeFraction
-(
-    const polyMesh& mesh
-) const
-{
-    const Pair<scalar> s = stepFractionSpan(mesh);
-
-    return s[0] + stepFraction_*s[1];
 }
 
 

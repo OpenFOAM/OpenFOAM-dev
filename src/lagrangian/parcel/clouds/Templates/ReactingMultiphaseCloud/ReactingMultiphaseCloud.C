@@ -152,11 +152,10 @@ Foam::ReactingMultiphaseCloud<CloudType>::~ReactingMultiphaseCloud()
 template<class CloudType>
 void Foam::ReactingMultiphaseCloud<CloudType>::setParcelThermoProperties
 (
-    parcelType& parcel,
-    const scalar lagrangianDt
+    parcelType& parcel
 )
 {
-    CloudType::setParcelThermoProperties(parcel, lagrangianDt);
+    CloudType::setParcelThermoProperties(parcel);
 
     label idGas = this->composition().idGas();
     label idLiquid = this->composition().idLiquid();
@@ -172,11 +171,10 @@ template<class CloudType>
 void Foam::ReactingMultiphaseCloud<CloudType>::checkParcelProperties
 (
     parcelType& parcel,
-    const scalar lagrangianDt,
     const bool fullyDescribed
 )
 {
-    CloudType::checkParcelProperties(parcel, lagrangianDt, fullyDescribed);
+    CloudType::checkParcelProperties(parcel, fullyDescribed);
 
     if (fullyDescribed)
     {

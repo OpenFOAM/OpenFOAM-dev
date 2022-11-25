@@ -91,6 +91,9 @@ class Cloud
         //- Temporary storage for the global particle positions
         mutable autoPtr<vectorField> globalPositionsPtr_;
 
+        //- Time index
+        mutable label timeIndex_;
+
 
     // Private Member Functions
 
@@ -243,13 +246,16 @@ public:
             //- Reset the particles
             void cloudReset(const Cloud<ParticleType>& c);
 
+            //- Change the particles' state from the end of the previous time
+            //  step to the start of the next time step
+            void changeTimeStep();
+
             //- Move the particles
             template<class TrackCloudType>
             void move
             (
                 TrackCloudType& cloud,
-                typename ParticleType::trackingData& td,
-                const scalar trackTime
+                typename ParticleType::trackingData& td
             );
 
 

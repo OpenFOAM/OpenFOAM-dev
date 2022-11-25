@@ -31,30 +31,6 @@ License
 Foam::trackedParticle::trackedParticle
 (
     const polyMesh& mesh,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPtI,
-    const point& end,
-    const label level,
-    const label i,
-    const label j,
-    const label k
-)
-:
-    particle(mesh, coordinates, celli, tetFacei, tetPtI),
-    start_(position(mesh)),
-    end_(end),
-    level_(level),
-    i_(i),
-    j_(j),
-    k_(k)
-{}
-
-
-Foam::trackedParticle::trackedParticle
-(
-    const polyMesh& mesh,
     const vector& position,
     const label celli,
     const point& end,
@@ -113,11 +89,10 @@ Foam::trackedParticle::trackedParticle(Istream& is, bool readFields)
 bool Foam::trackedParticle::move
 (
     Cloud<trackedParticle>& cloud,
-    trackingData& td,
-    const scalar trackTime
+    trackingData& td
 )
 {
-    scalar tEnd = (1.0 - stepFraction())*trackTime;
+    const scalar tEnd = (1.0 - stepFraction())*td.maxTrackLen_;
 
     if (tEnd <= small && onBoundaryFace(td.mesh))
     {

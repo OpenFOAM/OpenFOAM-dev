@@ -48,8 +48,7 @@ template<class TrackCloudType>
 bool Foam::CollidingParcel<ParcelType>::move
 (
     TrackCloudType& cloud,
-    trackingData& td,
-    const scalar trackTime
+    trackingData& td
 )
 {
     typename TrackCloudType::parcelType& p =
@@ -62,9 +61,11 @@ bool Foam::CollidingParcel<ParcelType>::move
             // First and last leapfrog velocity adjust part, required
             // before and after tracking and force calculation
 
-            p.U() += 0.5*trackTime*p.f()/p.mass();
+            const Pair<scalar>& sfr = td.stepFractionRange();
+            const scalar dt = (sfr.second() - sfr.first())*td.trackTime()/2;
 
-            p.angularMomentum() += 0.5*trackTime*p.torque();
+            p.U() += dt*p.f()/p.mass();
+            p.angularMomentum() += dt*p.torque();
 
             td.keepParticle = true;
             td.sendToProc = -1;
@@ -74,7 +75,7 @@ bool Foam::CollidingParcel<ParcelType>::move
 
         case trackingData::tpLinearTrack:
         {
-            ParcelType::move(cloud, td, trackTime);
+            ParcelType::move(cloud, td);
 
             break;
         }
@@ -84,13 +85,6 @@ bool Foam::CollidingParcel<ParcelType>::move
             NotImplemented;
 
             break;
-        }
-
-        default:
-        {
-            FatalErrorInFunction
-                << td.part() << " is an invalid part of the tracking method."
-                << abort(FatalError);
         }
     }
 

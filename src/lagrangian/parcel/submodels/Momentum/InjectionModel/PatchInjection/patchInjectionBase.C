@@ -42,13 +42,9 @@ Foam::patchInjectionBase::patchInjectionBase
 :
     patchName_(patchName),
     patchId_(mesh.boundaryMesh().findPatchID(patchName_)),
-    patchArea_(0.0),
-    patchNormal_(),
-    cellOwners_(),
-    triFace_(),
-    triToFace_(),
-    triCumulativeMagSf_(),
-    sumTriMagSf_(Pstream::nProcs() + 1, 0.0)
+    sumProcArea_(),
+    sumFaceArea_(),
+    sumFaceTriArea_()
 {
     if (patchId_ < 0)
     {
@@ -66,13 +62,9 @@ Foam::patchInjectionBase::patchInjectionBase(const patchInjectionBase& pib)
 :
     patchName_(pib.patchName_),
     patchId_(pib.patchId_),
-    patchArea_(pib.patchArea_),
-    patchNormal_(pib.patchNormal_),
-    cellOwners_(pib.cellOwners_),
-    triFace_(pib.triFace_),
-    triToFace_(pib.triToFace_),
-    triCumulativeMagSf_(pib.triCumulativeMagSf_),
-    sumTriMagSf_(pib.sumTriMagSf_)
+    sumProcArea_(pib.sumProcArea_),
+    sumFaceArea_(pib.sumFaceArea_),
+    sumFaceTriArea_(pib.sumFaceTriArea_)
 {}
 
 
@@ -88,65 +80,49 @@ void Foam::patchInjectionBase::topoChange(const polyMesh& mesh)
 {
     // Set/cache the injector cells
     const polyPatch& patch = mesh.boundaryMesh()[patchId_];
-    const pointField& points = patch.points();
 
-    cellOwners_ = patch.faceCells();
-
-    // Triangulate the patch faces and create addressing
-    DynamicList<label> triToFace(2*patch.size());
-    DynamicList<scalar> triMagSf(2*patch.size());
-    DynamicList<triFace> triFace(2*patch.size());
-
-    // Set zero value at the start of the tri area list
-    triMagSf.append(0.0);
-
-    // Create a triangulation engine
-    polygonTriangulate triEngine;
-
-    forAll(patch, facei)
+    // Initialise
+    sumProcArea_.resize(Pstream::nProcs(), 0);
+    sumFaceArea_.resize(patch.size(), 0);
+    sumFaceTriArea_.resize(patch.size());
+    forAll(patch, patchFacei)
     {
-        const face& f = patch[facei];
+        sumFaceTriArea_[patchFacei].resize(patch[patchFacei].nTriangles(), 0);
+    }
 
-        triEngine.triangulate(UIndirectList<point>(points, f));
+    // Cumulatively sum up the areas through the local patch
+    scalar patchArea = 0;
+    forAll(patch, patchFacei)
+    {
+        const label facei = patchFacei + patch.start();
+        const label celli = patch.faceCells()[patchFacei];
 
-        forAll(triEngine.triPoints(), i)
+        scalar patchFaceArea = 0;
+        for
+        (
+            label patchFaceTrii = 0;
+            patchFaceTrii < patch[patchFacei].nTriangles();
+            ++ patchFaceTrii
+        )
         {
-            triToFace.append(facei);
-            triFace.append(triEngine.triPoints(i, f));
-            triMagSf.append(triEngine.triPoints(i, f).mag(points));
+            const tetIndices tet(celli, facei, patchFaceTrii + 1);
+
+            patchFaceArea += tet.faceTri(mesh).mag();
+            sumFaceTriArea_[patchFacei][patchFaceTrii] = patchFaceArea;
         }
+
+        patchArea += patchFaceArea;
+        sumFaceArea_[patchFacei] = patchArea;
     }
 
-    forAll(sumTriMagSf_, i)
+    // Cumulatively sum the total areas across the processors
+    sumProcArea_[Pstream::myProcNo()] = patchArea;
+    Pstream::listCombineGather(sumProcArea_, maxEqOp<scalar>());
+    Pstream::listCombineScatter(sumProcArea_);
+    for (label proci = 1; proci < Pstream::nProcs(); proci ++)
     {
-        sumTriMagSf_[i] = 0.0;
+        sumProcArea_[proci] += sumProcArea_[proci - 1];
     }
-
-    sumTriMagSf_[Pstream::myProcNo() + 1] = sum(triMagSf);
-
-    Pstream::listCombineGather(sumTriMagSf_, maxEqOp<scalar>());
-    Pstream::listCombineScatter(sumTriMagSf_);
-
-    for (label i = 1; i < triMagSf.size(); i++)
-    {
-        triMagSf[i] += triMagSf[i-1];
-    }
-
-    // Transfer to persistent storage
-    triFace_.transfer(triFace);
-    triToFace_.transfer(triToFace);
-    triCumulativeMagSf_.transfer(triMagSf);
-
-    // Convert sumTriMagSf_ into cumulative sum of areas per proc
-    for (label i = 1; i < sumTriMagSf_.size(); i++)
-    {
-        sumTriMagSf_[i] += sumTriMagSf_[i-1];
-    }
-
-    const scalarField magSf(patch.magFaceAreas());
-    patchArea_ = sum(magSf);
-    patchNormal_ = patch.faceAreas()/magSf;
-    reduce(patchArea_, sumOp<scalar>());
 }
 
 
@@ -154,125 +130,75 @@ void Foam::patchInjectionBase::setPositionAndCell
 (
     const fvMesh& mesh,
     Random& rnd,
-    vector& position,
-    label& cellOwner,
+    barycentric& coordinates,
+    label& celli,
     label& tetFacei,
-    label& tetPti
+    label& tetPti,
+    label& facei
 )
 {
-    scalar areaFraction = rnd.globalScalar01()*patchArea_;
-
-    if (cellOwners_.size() > 0)
+    // Linear searching for area fractions
+    auto findArea = []
+    (
+        const scalarList& areas,
+        scalar& area
+    )
     {
-        // Determine which processor to inject from
-        label proci = 0;
-        forAllReverse(sumTriMagSf_, i)
+        for (label i = areas.size(); i > 0; i --)
         {
-            if (areaFraction >= sumTriMagSf_[i])
+            if (area >= areas[i - 1])
             {
-                proci = i;
-                break;
+                area -= areas[i - 1];
+                return i;
             }
         }
 
+        return 0;
+    };
+
+    const polyPatch& patch = mesh.boundaryMesh()[patchId_];
+
+    scalar area = rnd.globalScalar01()*sumProcArea_.last();
+
+    if (patch.size() > 0)
+    {
+        // Determine which processor to inject from
+        const label proci = findArea(sumProcArea_, area);
+
+        // If this processor...
         if (Pstream::myProcNo() == proci)
         {
-            // Find corresponding decomposed face triangle
-            label trii = 0;
-            scalar offset = sumTriMagSf_[proci];
-            forAllReverse(triCumulativeMagSf_, i)
-            {
-                if (areaFraction > triCumulativeMagSf_[i] + offset)
-                {
-                    trii = i;
-                    break;
-                }
-            }
+            // Determine the face to inject from
+            const label patchFacei = findArea(sumFaceArea_, area);
 
-            // Set cellOwner
-            label facei = triToFace_[trii];
-            cellOwner = cellOwners_[facei];
+            // Determine the face-tri to inject from
+            const label patchFaceTrii =
+                findArea(sumFaceTriArea_[patchFacei], area);
 
-            // Find random point in triangle
-            const polyPatch& patch = mesh.boundaryMesh()[patchId_];
-            const pointField& points = patch.points();
-            const face& tf = triFace_[trii];
-            const triPointRef tri(points[tf[0]], points[tf[1]], points[tf[2]]);
-            const point pf(tri.randomPoint(rnd));
-
-            // Position perturbed away from face (into domain)
-            const scalar a = rnd.scalarAB(0.1, 0.5);
-            const vector& pc = mesh.cellCentres()[cellOwner];
-            const vector d =
-                mag((pf - pc) & patchNormal_[facei])*patchNormal_[facei];
-
-            position = pf - a*d;
-
-            // Try to find tetFacei and tetPti in the current position
-            mesh.findTetFacePt(cellOwner, position, tetFacei, tetPti);
-
-            // tetFacei and tetPti not found, check if the cell has changed
-            if (tetFacei == -1 ||tetPti == -1)
-            {
-                mesh.findCellFacePt(position, cellOwner, tetFacei, tetPti);
-            }
-
-            // Both searches failed, choose a random position within
-            // the original cell
-            if (tetFacei == -1 ||tetPti == -1)
-            {
-                // Reset cellOwner
-                cellOwner = cellOwners_[facei];
-                const scalarField& V = mesh.V();
-
-                // Construct cell tet indices
-                const List<tetIndices> cellTetIs =
-                    polyMeshTetDecomposition::cellTetIndices(mesh, cellOwner);
-
-                // Construct cell tet volume fractions
-                scalarList cTetVFrac(cellTetIs.size(), 0.0);
-                for (label teti=1; teti<cellTetIs.size()-1; teti++)
-                {
-                    cTetVFrac[teti] =
-                        cTetVFrac[teti-1]
-                      + cellTetIs[teti].tet(mesh).mag()/V[cellOwner];
-                }
-                cTetVFrac.last() = 1;
-
-                // Set new particle position
-                const scalar volFrac = rnd.sample01<scalar>();
-                label teti = 0;
-                forAll(cTetVFrac, vfI)
-                {
-                    if (cTetVFrac[vfI] > volFrac)
-                    {
-                        teti = vfI;
-                        break;
-                    }
-                }
-                position = cellTetIs[teti].tet(mesh).randomPoint(rnd);
-                tetFacei = cellTetIs[teti].face();
-                tetPti = cellTetIs[teti].tetPt();
-            }
+            // Set the topology
+            const barycentric2D r = barycentric2D01(rnd);
+            coordinates = barycentric(0, r.a(), r.b(), r.c());
+            celli = mesh.faceOwner()[patch.start() + patchFacei];
+            tetFacei = patch.start() + patchFacei;
+            tetPti = patchFaceTrii + 1;
+            facei = patch.start() + patchFacei;
         }
         else
         {
-            cellOwner = -1;
+            coordinates = barycentric::uniform(NaN);
+            celli = -1;
             tetFacei = -1;
             tetPti = -1;
-
-            // Dummy position
-            position = pTraits<vector>::max;
+            facei = -1;
         }
     }
     else
     {
-        cellOwner = -1;
+        coordinates = barycentric::uniform(NaN);
+        celli = -1;
         tetFacei = -1;
         tetPti = -1;
-
-        // Dummy position
-        position = pTraits<vector>::max;
+        facei = -1;
     }
 }
 

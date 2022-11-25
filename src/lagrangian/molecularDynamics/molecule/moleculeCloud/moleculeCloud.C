@@ -1116,18 +1116,18 @@ void Foam::moleculeCloud::evolve()
     molecule::trackingData td(*this);
 
     td.part() = molecule::trackingData::tpVelocityHalfStep0;
-    Cloud<molecule>::move(*this, td, mesh_.time().deltaTValue());
+    Cloud<molecule>::move(*this, td);
 
     td.part() = molecule::trackingData::tpLinearTrack;
-    Cloud<molecule>::move(*this, td, mesh_.time().deltaTValue());
+    Cloud<molecule>::move(*this, td);
 
     td.part() = molecule::trackingData::tpRotationalTrack;
-    Cloud<molecule>::move(*this, td, mesh_.time().deltaTValue());
+    Cloud<molecule>::move(*this, td);
 
     calculateForce();
 
     td.part() = molecule::trackingData::tpVelocityHalfStep1;
-    Cloud<molecule>::move(*this, td, mesh_.time().deltaTValue());
+    Cloud<molecule>::move(*this, td);
 }
 
 

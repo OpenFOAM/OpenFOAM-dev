@@ -480,14 +480,15 @@ Foam::particle::particle
     const barycentric& coordinates,
     const label celli,
     const label tetFacei,
-    const label tetPti
+    const label tetPti,
+    const label facei
 )
 :
     coordinates_(coordinates),
     celli_(celli),
     tetFacei_(tetFacei),
     tetPti_(tetPti),
-    facei_(-1),
+    facei_(facei),
     stepFraction_(1),
     stepFractionBehind_(0),
     nTracksBehind_(0),

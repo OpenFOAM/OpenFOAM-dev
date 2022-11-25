@@ -259,25 +259,6 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        inline molecule
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const tensor& Q,
-            const vector& v,
-            const vector& a,
-            const vector& pi,
-            const vector& tau,
-            const vector& specialPosition,
-            const constantProperties& constProps,
-            const label special,
-            const label id
-        );
-
         //- Construct from a position and a cell, searching for the rest of the
         //  required topology
         inline molecule
@@ -316,7 +297,7 @@ public:
 
         // Tracking
 
-            bool move(moleculeCloud&, trackingData&, const scalar trackTime);
+            bool move(moleculeCloud&, trackingData&);
 
             virtual void transformProperties(const transformer&);
 

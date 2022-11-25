@@ -347,8 +347,7 @@ bool Foam::particle::hitNonConformalCyclicPatch
     const remote receiveProcFace =
         nccpp.ray
         (
-            stepFractionSpan(td.mesh)[0]
-          + stepFraction_*stepFractionSpan(td.mesh)[1],
+            stepFraction_,
             nccpp.origPatch().whichFace(facei_),
             sendPos,
             displacement - fraction*sendDisplacement,

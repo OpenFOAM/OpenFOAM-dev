@@ -68,14 +68,15 @@ Foam::tensor Foam::molecule::rotationTensorZ(scalar phi) const
 bool Foam::molecule::move
 (
     moleculeCloud& cloud,
-    trackingData& td,
-    const scalar trackTime
+    trackingData& td
 )
 {
     td.keepParticle = true;
     td.sendToProc = -1;
 
     const constantProperties& constProps(cloud.constProps(id_));
+
+    const scalar trackTime = td.mesh.time().deltaTValue();
 
     if (td.part() == trackingData::tpVelocityHalfStep0)
     {

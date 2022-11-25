@@ -201,14 +201,14 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
                         new parcelType(this->owner().pMesh(), pos, celli);
 
                     // Check/set new parcel thermo properties
-                    cloud.setParcelThermoProperties(*pPtr, 0.0);
+                    cloud.setParcelThermoProperties(*pPtr);
 
                     setParcelProperties(*pPtr, j);
 
                     if (pPtr->nParticle() > 0.001)
                     {
                         // Check new parcel properties
-                        cloud.checkParcelProperties(*pPtr, 0.0, false);
+                        cloud.checkParcelProperties(*pPtr, false);
 
                         // Add the new parcel to the cloud
                         cloud.addParticle(pPtr);

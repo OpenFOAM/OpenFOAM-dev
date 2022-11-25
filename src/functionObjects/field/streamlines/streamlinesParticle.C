@@ -200,8 +200,7 @@ Foam::streamlinesParticle::streamlinesParticle
 bool Foam::streamlinesParticle::move
 (
     streamlinesCloud& cloud,
-    trackingData& td,
-    const scalar
+    trackingData& td
 )
 {
     td.keepParticle = true;

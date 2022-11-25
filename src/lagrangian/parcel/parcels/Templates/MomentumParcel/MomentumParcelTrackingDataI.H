@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,9 @@ inline Foam::MomentumParcel<ParcelType>::trackingData::trackingData
     rhoc_(Zero),
     Uc_(Zero),
     muc_(Zero),
-    g_(cloud.g().value())
+    g_(cloud.g().value()),
+    trackTime_(cloud.solution().trackTime()),
+    stepFractionRange_(0, 1)
 {}
 
 
@@ -83,14 +85,6 @@ inline const Foam::interpolation<Foam::scalar>&
 Foam::MomentumParcel<ParcelType>::trackingData::muInterp() const
 {
     return muInterp_();
-}
-
-
-template<class ParcelType>
-inline const Foam::vector&
-Foam::MomentumParcel<ParcelType>::trackingData::g() const
-{
-    return g_;
 }
 
 
@@ -135,6 +129,46 @@ template<class ParcelType>
 inline Foam::scalar& Foam::MomentumParcel<ParcelType>::trackingData::muc()
 {
     return muc_;
+}
+
+
+template<class ParcelType>
+inline const Foam::vector&
+Foam::MomentumParcel<ParcelType>::trackingData::g() const
+{
+    return g_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar
+Foam::MomentumParcel<ParcelType>::trackingData::trackTime() const
+{
+    return trackTime_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar&
+Foam::MomentumParcel<ParcelType>::trackingData::trackTime()
+{
+    return trackTime_;
+}
+
+
+template<class ParcelType>
+inline Foam::Pair<Foam::scalar>
+Foam::MomentumParcel<ParcelType>::trackingData::stepFractionRange() const
+{
+    return stepFractionRange_;
+}
+
+
+template<class ParcelType>
+inline Foam::Pair<Foam::scalar>&
+Foam::MomentumParcel<ParcelType>::trackingData::stepFractionRange()
+{
+    return stepFractionRange_;
 }
 
 

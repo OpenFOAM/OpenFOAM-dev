@@ -116,18 +116,6 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        findCellParticle
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPtI,
-            const vector& displacement,
-            const label data
-        );
-
         //- Construct from a position and a cell, searching for the rest of the
         //  required topology
         findCellParticle
@@ -185,7 +173,7 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(Cloud<findCellParticle>&, trackingData&, const scalar);
+            bool move(Cloud<findCellParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wedge
             void hitWedgePatch(Cloud<findCellParticle>&, trackingData&);

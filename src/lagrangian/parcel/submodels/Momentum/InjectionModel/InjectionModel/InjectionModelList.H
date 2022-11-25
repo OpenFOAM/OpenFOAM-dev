@@ -118,8 +118,7 @@ public:
             void injectSteadyState
             (
                 TrackCloudType& cloud,
-                typename CloudType::parcelType::trackingData& td,
-                const scalar trackTime
+                typename CloudType::parcelType::trackingData& td
             );
 
 
