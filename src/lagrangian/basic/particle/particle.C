@@ -1020,48 +1020,6 @@ void Foam::particle::transformProperties(const transformer&)
 {}
 
 
-void Foam::particle::prepareForParallelTransfer
-(
-    trackingData& td
-)
-{
-    if (td.sendFromPatch == patch(td.mesh))
-    {
-        prepareForProcessorTransfer(td);
-    }
-    else
-    {
-        prepareForNonConformalCyclicTransfer
-        (
-            td.mesh,
-            td.sendFromPatch,
-            td.sendToPatchFace
-        );
-    }
-}
-
-
-void Foam::particle::correctAfterParallelTransfer(trackingData& td)
-{
-    const polyPatch& pp = td.mesh.boundaryMesh()[td.sendToPatch];
-
-    if (isA<processorPolyPatch>(pp))
-    {
-        correctAfterProcessorTransfer(td);
-    }
-    else if (isA<nonConformalCyclicPolyPatch>(pp))
-    {
-        correctAfterNonConformalCyclicTransfer(td.mesh, td.sendToPatch);
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Transfer patch type not recognised"
-            << exit(FatalError);
-    }
-}
-
-
 void Foam::particle::prepareForProcessorTransfer(trackingData& td)
 {
     // Store the local patch face in the face index

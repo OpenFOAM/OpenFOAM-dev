@@ -274,6 +274,11 @@ bool Foam::MomentumParcel<ParcelType>::move
 
     while (ttd.keepParticle && ttd.sendToProc == -1 && p.stepFraction() < 1)
     {
+        if (p.moving() && p.onFace())
+        {
+            cloud.functions().postFace(p);
+        }
+
         // Cache the current position, cell and step-fraction
         const point start = p.position(td.mesh);
         const scalar sfrac = p.stepFraction();
@@ -328,20 +333,48 @@ bool Foam::MomentumParcel<ParcelType>::move
 
         p.age() += dt;
 
-        if (p.moving() && p.onFace())
-        {
-            cloud.functions().postFace(p, ttd.keepParticle);
-        }
-
         cloud.functions().postMove(p, dt, start, ttd.keepParticle);
 
         if (p.moving() && p.onFace() && ttd.keepParticle)
         {
+            cloud.functions().preFace(p);
+
             p.hitFace(f*s - d, f, cloud, ttd);
         }
     }
 
     return ttd.keepParticle;
+}
+
+
+template<class ParcelType>
+void Foam::MomentumParcel<ParcelType>::transformProperties
+(
+    const transformer& transform
+)
+{
+    ParcelType::transformProperties(transform);
+
+    U_ = transform.transform(U_);
+}
+
+
+template<class ParcelType>
+template<class TrackCloudType>
+void Foam::MomentumParcel<ParcelType>::correctAfterParallelTransfer
+(
+    TrackCloudType& cloud,
+    trackingData& td
+)
+{
+    ParcelType::correctAfterParallelTransfer(cloud, td);
+
+    typename TrackCloudType::parcelType& p =
+        static_cast<typename TrackCloudType::parcelType&>(*this);
+
+    const polyPatch& pp = td.mesh.boundaryMesh()[td.sendToPatch];
+
+    cloud.functions().postPatch(p, pp);
 }
 
 
@@ -358,25 +391,132 @@ bool Foam::MomentumParcel<ParcelType>::hitPatch
 
     const polyPatch& pp = td.mesh.boundaryMesh()[p.patch(td.mesh)];
 
-    // Invoke post-processing model
-    cloud.functions().postPatch(p, pp, td.keepParticle);
-
-    // Invoke surface film model
+    // Allow a surface film model to consume the parcel
     if (cloud.surfaceFilm().transferParcel(p, pp, td.keepParticle))
     {
-        // All interactions done
+        cloud.functions().postPatch(p, pp);
         return true;
     }
-    else if (pp.coupled())
+
+    // Pass to the patch interaction model
+    if (cloud.patchInteraction().correct(p, pp, td.keepParticle))
     {
-        // Don't apply the patchInteraction models to coupled boundaries
-        return false;
+        cloud.functions().postPatch(p, pp);
+        return true;
     }
-    else
+
+    return false;
+}
+
+
+template<class ParcelType>
+template<class TrackCloudType>
+void Foam::MomentumParcel<ParcelType>::hitWedgePatch
+(
+    TrackCloudType& cloud,
+    trackingData& td
+)
+{
+    ParcelType::hitWedgePatch(cloud, td);
+
+    typename TrackCloudType::parcelType& p =
+        static_cast<typename TrackCloudType::parcelType&>(*this);
+
+    const polyPatch& pp = td.mesh.boundaryMesh()[p.patch(td.mesh)];
+
+    cloud.functions().postPatch(p, pp);
+}
+
+
+template<class ParcelType>
+template<class TrackCloudType>
+void Foam::MomentumParcel<ParcelType>::hitSymmetryPlanePatch
+(
+    TrackCloudType& cloud,
+    trackingData& td
+)
+{
+    ParcelType::hitSymmetryPlanePatch(cloud, td);
+
+    typename TrackCloudType::parcelType& p =
+        static_cast<typename TrackCloudType::parcelType&>(*this);
+
+    const polyPatch& pp = td.mesh.boundaryMesh()[p.patch(td.mesh)];
+
+    cloud.functions().postPatch(p, pp);
+}
+
+
+template<class ParcelType>
+template<class TrackCloudType>
+void Foam::MomentumParcel<ParcelType>::hitSymmetryPatch
+(
+    TrackCloudType& cloud,
+    trackingData& td
+)
+{
+    ParcelType::hitSymmetryPatch(cloud, td);
+
+    typename TrackCloudType::parcelType& p =
+        static_cast<typename TrackCloudType::parcelType&>(*this);
+
+    const polyPatch& pp = td.mesh.boundaryMesh()[p.patch(td.mesh)];
+
+    cloud.functions().postPatch(p, pp);
+}
+
+
+template<class ParcelType>
+template<class TrackCloudType>
+void Foam::MomentumParcel<ParcelType>::hitCyclicPatch
+(
+    TrackCloudType& cloud,
+    trackingData& td
+)
+{
+    ParcelType::hitCyclicPatch(cloud, td);
+
+    typename TrackCloudType::parcelType& p =
+        static_cast<typename TrackCloudType::parcelType&>(*this);
+
+    const polyPatch& pp = td.mesh.boundaryMesh()[p.patch(td.mesh)];
+
+    cloud.functions().postPatch(p, pp);
+}
+
+
+template<class ParcelType>
+template<class TrackCloudType>
+bool Foam::MomentumParcel<ParcelType>::hitNonConformalCyclicPatch
+(
+    const vector& displacement,
+    const scalar fraction,
+    const label patchi,
+    TrackCloudType& cloud,
+    trackingData& td
+)
+{
+    const bool result =
+        ParcelType::hitNonConformalCyclicPatch
+        (
+            displacement,
+            fraction,
+            patchi,
+            cloud,
+            td
+        );
+
+    if (td.sendToProc == -1 && result)
     {
-        // Invoke patch interaction model
-        return cloud.patchInteraction().correct(p, pp, td.keepParticle);
+        typename TrackCloudType::parcelType& p =
+            static_cast<typename TrackCloudType::parcelType&>(*this);
+
+        const polyPatch& pp = td.mesh.boundaryMesh()[patchi];
+
+        cloud.functions().postPatch(p, pp);
     }
+
+    return result;
 }
 
 
@@ -399,13 +539,21 @@ void Foam::MomentumParcel<ParcelType>::hitWallPatch
 
 
 template<class ParcelType>
-void Foam::MomentumParcel<ParcelType>::transformProperties
+template<class TrackCloudType>
+void Foam::MomentumParcel<ParcelType>::hitBasicPatch
 (
-    const transformer& transform
+    TrackCloudType& cloud,
+    trackingData& td
 )
 {
-    ParcelType::transformProperties(transform);
-    U_ = transform.transform(U_);
+    ParcelType::hitBasicPatch(cloud, td);
+
+    typename TrackCloudType::parcelType& p =
+        static_cast<typename TrackCloudType::parcelType&>(*this);
+
+    const polyPatch& pp = td.mesh.boundaryMesh()[p.patch(td.mesh)];
+
+    cloud.functions().postPatch(p, pp);
 }
 
 

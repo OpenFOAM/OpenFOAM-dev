@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,34 +39,36 @@ Foam::StandardWallInteraction<CloudType>::StandardWallInteraction
     (
         this->wordToInteractionType(this->coeffDict().lookup("type"))
     ),
-    e_(0.0),
-    mu_(0.0),
+    e_(0),
+    mu_(0),
     nEscape_(0),
-    massEscape_(0.0),
+    massEscape_(0),
     nStick_(0),
-    massStick_(0.0)
+    massStick_(0)
 {
     switch (interactionType_)
     {
         case PatchInteractionModel<CloudType>::itOther:
         {
-            const word interactionTypeName(this->coeffDict().lookup("type"));
-
             FatalErrorInFunction
-                << "Unknown interaction result type "
-                << interactionTypeName
-                << ". Valid selections are:" << this->interactionTypeNames_
-                << endl << exit(FatalError);
+                << "Unknown patch interaction type "
+                << this->coeffDict().template lookup<word>("type")
+                << ". Valid types are:"
+                << PatchInteractionModel<CloudType>::interactionTypeNames_
+                << nl << exit(FatalError);
 
             break;
         }
+
         case PatchInteractionModel<CloudType>::itRebound:
         {
-            e_ = this->coeffDict().lookupOrDefault("e", 1.0);
-            mu_ = this->coeffDict().lookupOrDefault("mu", 0.0);
+            e_ = this->coeffDict().template lookupOrDefault<scalar>("e", 1);
+            mu_ = this->coeffDict().template lookupOrDefault<scalar>("mu", 0);
+
             break;
         }
         default:
+
         {}
     }
 }
@@ -106,77 +108,71 @@ bool Foam::StandardWallInteraction<CloudType>::correct
     bool& keepParticle
 )
 {
-    vector& U = p.U();
-
-    bool& moving = p.moving();
-
-    if (isA<wallPolyPatch>(pp))
+    if (!isA<wallPolyPatch>(pp))
     {
-        switch (interactionType_)
-        {
-            case PatchInteractionModel<CloudType>::itNone:
-            {
-                return false;
-            }
-            case PatchInteractionModel<CloudType>::itEscape:
-            {
-                keepParticle = false;
-                moving = false;
-                U = Zero;
-                nEscape_++;
-                massEscape_ += p.mass()*p.nParticle();
-                break;
-            }
-            case PatchInteractionModel<CloudType>::itStick:
-            {
-                keepParticle = true;
-                moving = false;
-                U = Zero;
-                nStick_++;
-                break;
-            }
-            case PatchInteractionModel<CloudType>::itRebound:
-            {
-                keepParticle = true;
-                moving = true;
-
-                vector nw;
-                vector Up;
-
-                this->owner().patchData(p, pp, nw, Up);
-
-                // Calculate motion relative to patch velocity
-                U -= Up;
-
-                scalar Un = U & nw;
-                vector Ut = U - Un*nw;
-
-                if (Un > 0)
-                {
-                    U -= (1.0 + e_)*Un*nw;
-                }
-
-                U -= mu_*Ut;
-
-                // Return velocity to global space
-                U += Up;
-
-                break;
-            }
-            default:
-            {
-                FatalErrorInFunction
-                    << "Unknown interaction type "
-                    << this->interactionTypeToWord(interactionType_)
-                    << "(" << interactionType_ << ")" << endl
-                    << abort(FatalError);
-            }
-        }
-
-        return true;
+        return false;
     }
 
-    return false;
+    switch (interactionType_)
+    {
+        case PatchInteractionModel<CloudType>::itNone:
+        {
+            return false;
+        }
+
+        case PatchInteractionModel<CloudType>::itEscape:
+        {
+            keepParticle = false;
+            p.moving() = false;
+            p.U() = Zero;
+            nEscape_++;
+            massEscape_ += p.mass()*p.nParticle();
+
+            return true;
+        }
+
+        case PatchInteractionModel<CloudType>::itStick:
+        {
+            keepParticle = true;
+            p.moving() = false;
+            p.U() = Zero;
+            nStick_++;
+
+            return true;
+        }
+
+        case PatchInteractionModel<CloudType>::itRebound:
+        {
+            keepParticle = true;
+            p.moving() = true;
+
+            vector nw, Up;
+            this->owner().patchData(p, pp, nw, Up);
+
+            // Make motion relative to patch velocity
+            p.U() -= Up;
+
+            const scalar Un = p.U() & nw;
+            const vector Ut = p.U() - Un*nw;
+
+            if (Un > 0)
+            {
+                p.U() -= (1 + e_)*Un*nw;
+            }
+
+            p.U() -= mu_*Ut;
+
+            // Return velocity to global space
+            p.U() += Up;
+
+            return true;
+        }
+
+        default:
+        {
+            return false;
+        }
+    }
 }
 
 

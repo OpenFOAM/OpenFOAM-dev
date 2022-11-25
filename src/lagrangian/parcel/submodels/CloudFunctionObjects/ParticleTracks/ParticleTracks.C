@@ -24,29 +24,17 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ParticleTracks.H"
-#include "Pstream.H"
-#include "ListListOps.H"
 
 // * * * * * * * * * * * * * protected Member Functions  * * * * * * * * * * //
 
 template<class CloudType>
 void Foam::ParticleTracks<CloudType>::write()
 {
-    if (cloudPtr_.valid())
-    {
-        cloudPtr_->write();
+    cloudPtr_->write();
 
-        if (resetOnWrite_)
-        {
-            cloudPtr_->clear();
-        }
-    }
-    else
+    if (resetOnWrite_)
     {
-        if (debug)
-        {
-            InfoInFunction << "cloupPtr invalid" << endl;
-        }
+        cloudPtr_->clear();
     }
 }
 
@@ -108,43 +96,55 @@ void Foam::ParticleTracks<CloudType>::preEvolve()
 
 
 template<class CloudType>
-void Foam::ParticleTracks<CloudType>::postFace(const parcelType& p, bool&)
+void Foam::ParticleTracks<CloudType>::preFace(const parcelType& p)
 {
     if
     (
-        this->owner().solution().output()
-     || this->owner().solution().transient()
+        !this->owner().solution().output()
+     && !this->owner().solution().transient()
     )
     {
-        if (!cloudPtr_.valid())
-        {
-            FatalErrorInFunction
-             << "Cloud storage not allocated" << abort(FatalError);
-        }
+        return;
+    }
 
-        hitTableType::iterator iter =
-            faceHitCounter_.find(labelPair(p.origProc(), p.origId()));
+    const labelPair id(p.origProc(), p.origId());
 
-        label localI = -1;
-        if (iter != faceHitCounter_.end())
-        {
-            iter()++;
-            localI = iter();
-        }
-        else
-        {
-            localI = 1;
-            faceHitCounter_.insert(labelPair(p.origProc(), p.origId()), localI);
-        }
+    hitCountTable::iterator iter = faceHitCounter_.find(id);
 
-        label nSamples = floor(localI/trackInterval_);
-        if ((localI % trackInterval_ == 0) && (nSamples < maxSamples_))
-        {
-            cloudPtr_->append
-            (
-                static_cast<parcelType*>(p.clone().ptr())
-            );
-        }
+    label hitCount = -1;
+    if (iter != faceHitCounter_.end())
+    {
+        iter() ++;
+        hitCount = iter();
+    }
+    else
+    {
+        faceHitCounter_.insert(id, 1);
+        hitCount = 1;
+    }
+
+    const label nSamples = floor(hitCount/trackInterval_);
+
+    if ((hitCount % trackInterval_ == 0) && (nSamples < maxSamples_))
+    {
+        cloudPtr_->append
+        (
+            static_cast<parcelType*>(p.clone().ptr())
+        );
+    }
+}
+
+
+template<class CloudType>
+void Foam::ParticleTracks<CloudType>::postPatch
+(
+    const parcelType& p,
+    const polyPatch& pp
+)
+{
+    if (pp.coupled())
+    {
+        preFace(p);
     }
 }
 

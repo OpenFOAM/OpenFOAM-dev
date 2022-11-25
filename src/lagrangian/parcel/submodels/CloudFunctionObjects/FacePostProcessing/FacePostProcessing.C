@@ -349,7 +349,7 @@ Foam::FacePostProcessing<CloudType>::~FacePostProcessing()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::FacePostProcessing<CloudType>::postFace(const parcelType& p, bool&)
+void Foam::FacePostProcessing<CloudType>::preFace(const parcelType& p)
 {
     if
     (
@@ -378,6 +378,20 @@ void Foam::FacePostProcessing<CloudType>::postFace(const parcelType& p, bool&)
                 mass_[i][faceId] += p.mass()*p.nParticle();
             }
         }
+    }
+}
+
+
+template<class CloudType>
+void Foam::FacePostProcessing<CloudType>::postPatch
+(
+    const parcelType& p,
+    const polyPatch& pp
+)
+{
+    if (pp.coupled())
+    {
+        preFace(p);
     }
 }
 

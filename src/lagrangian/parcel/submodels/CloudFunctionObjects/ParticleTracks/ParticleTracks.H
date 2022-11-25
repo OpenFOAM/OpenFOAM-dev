@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define ParticleTracks_H
 
 #include "CloudFunctionObject.H"
+#include "Cloud.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,16 +52,17 @@ class ParticleTracks
 :
     public CloudFunctionObject<CloudType>
 {
+    // Private Typedefs
+
+        //- Convenience typedef for parcel type
+        typedef typename CloudType::parcelType parcelType;
+
+        //- Convenience typedef for hash hit-table
+        typedef HashTable<label, labelPair, typename labelPair::Hash<>>
+            hitCountTable;
+
+
     // Private Data
-
-        // Typedefs
-
-            //- Convenience typedef for parcel type
-            typedef typename CloudType::parcelType parcelType;
-
-            //- Convenience typedef for hash hit-table
-            typedef HashTable<label, labelPair, typename labelPair::Hash<>>
-                hitTableType;
 
         //- Number of face-hit intervals between storing parcel data
         label trackInterval_;
@@ -72,7 +74,7 @@ class ParticleTracks
         Switch resetOnWrite_;
 
         //- Table of number of times a particle has hit a face
-        hitTableType faceHitCounter_;
+        hitCountTable faceHitCounter_;
 
         //- Pointer to the cloud storage
         autoPtr<Cloud<parcelType>> cloudPtr_;
@@ -121,41 +123,22 @@ public:
 
     // Member Functions
 
-        // Access
-
-            //- Return const access to the track interval
-            inline label trackInterval() const;
-
-            //- Return const access to the max samples
-            inline label maxSamples() const;
-
-            //- Return const access to the reset on write flag
-            inline const Switch& resetOnWrite() const;
-
-            //- Return the table of number of times a particle has hit a face
-            inline const hitTableType& faceHitCounter() const;
-
-            //- Return const access to the cloud
-            inline const Cloud<parcelType>& cloud() const;
-
-
         // Evaluation
 
             //- Pre-evolve hook
             virtual void preEvolve();
 
+            //- Post-patch hook
+            virtual void postPatch(const parcelType& p, const polyPatch& pp);
+
             //- Post-face hook
-            virtual void postFace(const parcelType& p, bool& keepParticle);
+            virtual void preFace(const parcelType& p);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "ParticleTracksI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

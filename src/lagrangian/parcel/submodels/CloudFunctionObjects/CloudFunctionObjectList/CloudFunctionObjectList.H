@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,16 +122,14 @@ public:
             virtual void postPatch
             (
                 const typename CloudType::parcelType& p,
-                const polyPatch& pp,
-                bool& keepParticle
+                const polyPatch& pp
             );
 
+            //- Pre-face hook
+            virtual void preFace(const typename CloudType::parcelType& p);
+
             //- Post-face hook
-            virtual void postFace
-            (
-                const typename CloudType::parcelType& p,
-                bool& keepParticle
-            );
+            virtual void postFace(const typename CloudType::parcelType& p);
 };
 
 

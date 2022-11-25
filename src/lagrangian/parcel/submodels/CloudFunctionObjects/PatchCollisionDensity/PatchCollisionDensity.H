@@ -136,12 +136,7 @@ public:
             virtual void preEvolve();
 
             //- Post-patch hook
-            virtual void postPatch
-            (
-                const parcelType& p,
-                const polyPatch& pp,
-                bool& keepParticle
-            );
+            virtual void postPatch(const parcelType& p, const polyPatch& pp);
 };
 
 

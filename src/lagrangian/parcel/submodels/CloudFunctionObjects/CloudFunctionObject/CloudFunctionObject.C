@@ -117,8 +117,15 @@ template<class CloudType>
 void Foam::CloudFunctionObject<CloudType>::postPatch
 (
     const typename CloudType::parcelType&,
-    const polyPatch&,
-    bool&
+    const polyPatch&
+)
+{}
+
+
+template<class CloudType>
+void Foam::CloudFunctionObject<CloudType>::preFace
+(
+    const typename CloudType::parcelType&
 )
 {}
 
@@ -126,8 +133,7 @@ void Foam::CloudFunctionObject<CloudType>::postPatch
 template<class CloudType>
 void Foam::CloudFunctionObject<CloudType>::postFace
 (
-    const typename CloudType::parcelType&,
-    bool&
+    const typename CloudType::parcelType&
 )
 {}
 
