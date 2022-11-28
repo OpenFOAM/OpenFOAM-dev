@@ -131,15 +131,15 @@ Foam::solidThermophysicalTransportModels::anisotropic::anisotropic
         {
             if (iter().isDict())
             {
-                const word& name = iter().keyword();
+                const word& zoneName = iter().keyword();
                 const dictionary& dict = iter().dict();
 
-                Info<< "        " << name << endl;
+                Info<< "        " << zoneName << endl;
 
                 zoneCoordinateSystems_.insert
                 (
-                    name,
-                    coordinateSystem::New(name, dict).ptr()
+                    zoneName,
+                    coordinateSystem::New(zoneName, dict).ptr()
                 );
             }
         }
@@ -266,11 +266,13 @@ Foam::solidThermophysicalTransportModels::anisotropic::Kappa() const
         const labelList& zoneCells = mesh.cellZones()[iter().name()];
         const coordinateSystem& cs = iter();
 
+        symmTensorField& KappaIf = Kappa;
+
         forAll(zoneCells, i)
         {
             const label celli = zoneCells[i];
 
-            Kappa[celli] =
+            KappaIf[celli] =
                 cs.R().transformDiagTensor
                 (
                     mesh.C()[celli],
