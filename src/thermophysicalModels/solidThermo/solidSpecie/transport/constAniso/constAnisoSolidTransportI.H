@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo>
-inline Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
+inline Foam::constAnisoSolidTransport<Thermo>::constAnisoSolidTransport
 (
     const Thermo& t,
     const vector kappa
@@ -38,10 +38,10 @@ inline Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
 
 
 template<class Thermo>
-inline Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
+inline Foam::constAnisoSolidTransport<Thermo>::constAnisoSolidTransport
 (
     const word& name,
-    const constAnIsoSolidTransport& ct
+    const constAnisoSolidTransport& ct
 )
 :
     Thermo(name, ct),
@@ -50,33 +50,33 @@ inline Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::constAnIsoSolidTransport<Thermo>>
-Foam::constAnIsoSolidTransport<Thermo>::clone() const
+inline Foam::autoPtr<Foam::constAnisoSolidTransport<Thermo>>
+Foam::constAnisoSolidTransport<Thermo>::clone() const
 {
-    return autoPtr<constAnIsoSolidTransport<Thermo>>
+    return autoPtr<constAnisoSolidTransport<Thermo>>
     (
-        new constAnIsoSolidTransport<Thermo>(*this)
+        new constAnisoSolidTransport<Thermo>(*this)
     );
 }
 
 
 template<class Thermo>
-inline Foam::autoPtr<Foam::constAnIsoSolidTransport<Thermo>>
-Foam::constAnIsoSolidTransport<Thermo>::New
+inline Foam::autoPtr<Foam::constAnisoSolidTransport<Thermo>>
+Foam::constAnisoSolidTransport<Thermo>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<constAnIsoSolidTransport<Thermo>>
+    return autoPtr<constAnisoSolidTransport<Thermo>>
     (
-        new constAnIsoSolidTransport<Thermo>(dict)
+        new constAnisoSolidTransport<Thermo>(dict)
     );
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Thermo>
-inline Foam::scalar Foam::constAnIsoSolidTransport<Thermo>::
+inline Foam::scalar Foam::constAnisoSolidTransport<Thermo>::
 kappa(const scalar p, const scalar T) const
 {
     NotImplemented;
@@ -85,7 +85,7 @@ kappa(const scalar p, const scalar T) const
 
 
 template<class Thermo>
-inline Foam::vector Foam::constAnIsoSolidTransport<Thermo>::
+inline Foam::vector Foam::constAnisoSolidTransport<Thermo>::
 Kappa(const scalar p, const scalar T) const
 {
     return kappa_;
@@ -95,9 +95,9 @@ Kappa(const scalar p, const scalar T) const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Thermo>
-inline void Foam::constAnIsoSolidTransport<Thermo>::operator+=
+inline void Foam::constAnisoSolidTransport<Thermo>::operator+=
 (
-    const constAnIsoSolidTransport<Thermo>& ct
+    const constAnisoSolidTransport<Thermo>& ct
 )
 {
     scalar Y1 = this->Y();
@@ -113,13 +113,13 @@ inline void Foam::constAnIsoSolidTransport<Thermo>::operator+=
 
 
 template<class Thermo>
-inline Foam::constAnIsoSolidTransport<Thermo> Foam::operator*
+inline Foam::constAnisoSolidTransport<Thermo> Foam::operator*
 (
     const scalar s,
-    const constAnIsoSolidTransport<Thermo>& ct
+    const constAnisoSolidTransport<Thermo>& ct
 )
 {
-    return constAnIsoSolidTransport<Thermo>
+    return constAnisoSolidTransport<Thermo>
     (
         s*static_cast<const Thermo&>(ct),
         ct.kappa_

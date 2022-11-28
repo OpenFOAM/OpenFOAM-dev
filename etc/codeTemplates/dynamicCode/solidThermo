@@ -36,7 +36,7 @@ mixture
 transport
 (
     constIsoSolid
-    constAnIsoSolid
+    constAnisoSolid
     exponentialSolid
     polynomialSolid
     tabulatedSolid

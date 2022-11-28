@@ -38,7 +38,7 @@ License
 #include "sensibleInternalEnergy.H"
 
 #include "constIsoSolidTransport.H"
-#include "constAnIsoSolidTransport.H"
+#include "constAnisoSolidTransport.H"
 #include "exponentialSolidTransport.H"
 #include "polynomialSolidTransport.H"
 #include "tabulatedSolidTransport.H"
@@ -62,7 +62,7 @@ License
 
 #define forSolidTransports(Macro, Args...)                                     \
     forSolidEnergiesAndThermos(constIsoSolidTransport, Macro, Args);           \
-    forSolidEnergiesAndThermos(constAnIsoSolidTransport, Macro, Args);         \
+    forSolidEnergiesAndThermos(constAnisoSolidTransport, Macro, Args);         \
     forSolidEnergiesAndThermos(exponentialSolidTransport, Macro, Args);        \
     forSolidEnergiesAndThermos(polynomialSolidTransport, Macro, Args)          \
     forSolidEnergiesAndThermos(tabulatedSolidTransport, Macro, Args)

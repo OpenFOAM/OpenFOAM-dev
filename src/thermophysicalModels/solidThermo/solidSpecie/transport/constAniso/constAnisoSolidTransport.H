@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::constAnIsoSolidTransport
+    Foam::constAnisoSolidTransport
 
 Description
     Constant properties Transport package.
@@ -30,13 +30,13 @@ Description
     conductivity).
 
 SourceFiles
-    constAnIsoSolidTransportI.H
-    constAnIsoSolidTransport.C
+    constAnisoSolidTransportI.H
+    constAnisoSolidTransport.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constAnIsoSolidTransport_H
-#define constAnIsoSolidTransport_H
+#ifndef constAnisoSolidTransport_H
+#define constAnisoSolidTransport_H
 #include "vector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -44,29 +44,29 @@ SourceFiles
 namespace Foam
 {
 
-template<class Thermo> class constAnIsoSolidTransport;
+template<class Thermo> class constAnisoSolidTransport;
 
 template<class Thermo>
-inline constAnIsoSolidTransport<Thermo> operator*
+inline constAnisoSolidTransport<Thermo> operator*
 (
     const scalar,
-    const constAnIsoSolidTransport<Thermo>&
+    const constAnisoSolidTransport<Thermo>&
 );
 
 template<class Thermo>
 Ostream& operator<<
 (
     Ostream&,
-    const constAnIsoSolidTransport<Thermo>&
+    const constAnisoSolidTransport<Thermo>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                  Class constAnIsoSolidTransport Declaration
+                  Class constAnisoSolidTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo>
-class constAnIsoSolidTransport
+class constAnisoSolidTransport
 :
     public Thermo
 {
@@ -79,7 +79,7 @@ class constAnIsoSolidTransport
     // Private Member Functions
 
         //- Construct from components
-        inline constAnIsoSolidTransport(const Thermo& t, const vector kappa);
+        inline constAnisoSolidTransport(const Thermo& t, const vector kappa);
 
 
 public:
@@ -87,20 +87,20 @@ public:
     // Constructors
 
         //- Construct as named copy
-        inline constAnIsoSolidTransport
+        inline constAnisoSolidTransport
         (
             const word&,
-            const constAnIsoSolidTransport&
+            const constAnisoSolidTransport&
         );
 
         //- Construct from dictionary
-        constAnIsoSolidTransport(const dictionary&);
+        constAnisoSolidTransport(const dictionary&);
 
         //- Construct and return a clone
-        inline autoPtr<constAnIsoSolidTransport> clone() const;
+        inline autoPtr<constAnisoSolidTransport> clone() const;
 
         // Selector from dictionary
-        inline static autoPtr<constAnIsoSolidTransport> New
+        inline static autoPtr<constAnisoSolidTransport> New
         (
             const dictionary& dict
         );
@@ -111,7 +111,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "constAnIsoSolid<" + Thermo::typeName() + '>';
+            return "constAnisoSolid<" + Thermo::typeName() + '>';
         }
 
         //- Is the thermal conductivity isotropic
@@ -130,15 +130,15 @@ public:
 
     // Member Operators
 
-        inline void operator+=(const constAnIsoSolidTransport&);
+        inline void operator+=(const constAnisoSolidTransport&);
 
 
     // Friend operators
 
-        friend constAnIsoSolidTransport operator* <Thermo>
+        friend constAnisoSolidTransport operator* <Thermo>
         (
             const scalar,
-            const constAnIsoSolidTransport&
+            const constAnisoSolidTransport&
         );
 
 
@@ -147,7 +147,7 @@ public:
         friend Ostream& operator<< <Thermo>
         (
             Ostream&,
-            const constAnIsoSolidTransport&
+            const constAnisoSolidTransport&
         );
 };
 
@@ -158,10 +158,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "constAnIsoSolidTransportI.H"
+#include "constAnisoSolidTransportI.H"
 
 #ifdef NoRepository
-    #include "constAnIsoSolidTransport.C"
+    #include "constAnisoSolidTransport.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

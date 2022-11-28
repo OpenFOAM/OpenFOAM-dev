@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constAnIsoSolidTransport.H"
+#include "constAnisoSolidTransport.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo>
-Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
+Foam::constAnisoSolidTransport<Thermo>::constAnisoSolidTransport
 (
     const dictionary& dict
 )
@@ -42,7 +42,7 @@ Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Thermo>
-void Foam::constAnIsoSolidTransport<Thermo>::constAnIsoSolidTransport::write
+void Foam::constAnisoSolidTransport<Thermo>::constAnisoSolidTransport::write
 (
     Ostream& os
 ) const
@@ -61,7 +61,7 @@ template<class Thermo>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const constAnIsoSolidTransport<Thermo>& ct
+    const constAnisoSolidTransport<Thermo>& ct
 )
 {
     ct.write(os);
