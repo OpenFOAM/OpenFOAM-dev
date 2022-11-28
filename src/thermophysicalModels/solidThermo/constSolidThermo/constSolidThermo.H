@@ -28,8 +28,9 @@ Description
     Uniform or non-uniform constant solid thermodynamic properties
 
     Each physical property can specified as either \c uniform in which case the
-    value entry is read or \c file in which case the field file in read
-    from the constant directory.
+    value entry is read, \c zonal in which case the value entry and zone list
+    are read or \c file in which case the field file in read from the constant
+    directory.
 
 Usage
     Example of uniform constant solid properties specification:
@@ -52,6 +53,36 @@ Usage
         {
             type        uniform;
             value       380;
+        }
+    \endverbatim
+
+    Example of zonal constant solid properties specification where kappa is
+    different in different zones:
+    \verbatim
+        thermoType          constSolidThermo;
+
+        rho
+        {
+            type        uniform;
+            value       8940;
+        }
+
+        Cv
+        {
+            type        uniform;
+            value       385;
+        }
+
+        kappa
+        {
+            type        zonal;
+            value       380;
+
+            zones
+            {
+                heater      560;
+                insulation  100;
+            }
         }
     \endverbatim
 
@@ -92,7 +123,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class constSolidThermo Declaration
+                     Class constSolidThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 class constSolidThermo
@@ -110,15 +141,25 @@ class constSolidThermo
 
 protected:
 
+    // Protected constructors
+
+        //- Construct from mesh and phase name
+        constSolidThermo
+        (
+            const fvMesh&,
+            const bool readKappa,
+            const word& phaseName = word::null
+        );
+
+
     // Protected Member Functions
 
-        volScalarField readProperty
+        template<class Type>
+        GeometricField<Type, fvPatchField, volMesh> readProperty
         (
             const word& name,
             const dimensionSet& dimensions
         ) const;
-
-        void readProperty(const word& name, volScalarField& prop) const;
 
 
 public:
@@ -181,6 +222,19 @@ public:
 
             //- Heat capacity at constant pressure/volume [J/kg/K]
             virtual const volScalarField& Cpv() const;
+
+
+        // Access to transport state variables
+
+            //- Return true as the thermal conductivity is isotropic
+            virtual bool isotropic() const
+            {
+                return true;
+            }
+
+            //- Anisotropic thermal conductivity [W/m/K]
+            //  Not implemented
+            virtual const volVectorField& Kappa() const;
 
 
         // Fields derived from thermodynamic state variables
@@ -305,15 +359,6 @@ public:
                 const label patchi
             ) const;
 
-            //- Return true if thermal conductivity is isotropic
-            virtual bool isotropic() const
-            {
-                return true;
-            }
-
-            //- Anisotropic thermal conductivity [W/m/K]
-            virtual const volVectorField& Kappa() const;
-
 
         //- Update properties
         virtual void correct();
@@ -329,6 +374,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+#ifdef NoRepository
+    #include "constSolidThermoTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

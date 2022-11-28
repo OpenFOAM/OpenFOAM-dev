@@ -36,112 +36,17 @@ namespace Foam
 }
 
 
-/* * * * * * * * * * * * * * Protected Member Functions   * * * * * * * * * * */
-
-Foam::volScalarField Foam::constSolidThermo::readProperty
-(
-    const word& name,
-    const dimensionSet& dimensions
-) const
-{
-    const dictionary& propDict(subDict(name));
-    const word propType(propDict.lookup("type"));
-
-    if (propType == "uniform")
-    {
-        return volScalarField
-        (
-            IOobject
-            (
-                phasePropertyName(name),
-                mesh().time().constant(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh(),
-            dimensionedScalar(dimensions, propDict.lookup<scalar>("value"))
-        );
-    }
-    else if (propType == "file")
-    {
-        return volScalarField
-        (
-            IOobject
-            (
-                phasePropertyName(name),
-                mesh().time().constant(),
-                mesh(),
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh()
-        );
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Valid type entries are 'uniform' or 'file' for " << name
-            << abort(FatalError);
-
-        return volScalarField::null();
-    }
-}
-
-
-void Foam::constSolidThermo::readProperty
-(
-    const word& name,
-    volScalarField& prop
-) const
-{
-    const dictionary& propDict(subDict(name));
-    const word propType(propDict.lookup("type"));
-
-    if (propType == "uniform")
-    {
-        prop == dimensionedScalar
-        (
-            prop.name(),
-            prop.dimensions(),
-            propDict.lookup<scalar>("value")
-        );
-    }
-    else if (propType == "file")
-    {
-        const volScalarField propField
-        (
-            IOobject
-            (
-                prop.name(),
-                prop.mesh().time().constant(),
-                prop.mesh(),
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE
-            ),
-            prop.mesh()
-        );
-        prop == propField;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Valid type entries are 'uniform' or 'file' for " << prop.name()
-            << abort(FatalError);
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Protected Constructors  * * * * * * * * * * * //
 
 Foam::constSolidThermo::constSolidThermo
 (
     const fvMesh& mesh,
+    const bool readKappa,
     const word& phaseName
 )
 :
     solidThermo::composite(mesh, phaseName),
-    Cv_(readProperty("Cv", dimEnergy/dimMass/dimTemperature)),
+    Cv_(readProperty<scalar>("Cv", dimEnergy/dimMass/dimTemperature)),
     e_
     (
         IOobject
@@ -157,9 +62,25 @@ Foam::constSolidThermo::constSolidThermo
         this->heBoundaryBaseTypes()
     )
 {
-    readProperty("rho", rho_);
-    readProperty("kappa", kappa_);
+    rho_ = readProperty<scalar>("rho", rho_.dimensions());
+
+    if (readKappa)
+    {
+        kappa_ = readProperty<scalar>("kappa", kappa_.dimensions());
+    }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::constSolidThermo::constSolidThermo
+(
+    const fvMesh& mesh,
+    const word& phaseName
+)
+:
+    constSolidThermo(mesh, true, phaseName)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

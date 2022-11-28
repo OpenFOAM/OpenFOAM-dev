@@ -44,9 +44,9 @@ Foam::solidDisplacementThermo::solidDisplacementThermo
     constSolidThermo(mesh, phaseName),
     planeStress_(lookup("planeStress")),
     thermalStress_(lookup("thermalStress")),
-    E_(readProperty("E", dimPressure)),
-    nu_(readProperty("nu", dimless)),
-    alphav_(readProperty("alphav", dimless/dimTemperature))
+    E_(readProperty<scalar>("E", dimPressure)),
+    nu_(readProperty<scalar>("nu", dimless)),
+    alphav_(readProperty<scalar>("alphav", dimless/dimTemperature))
 {}
 
 
