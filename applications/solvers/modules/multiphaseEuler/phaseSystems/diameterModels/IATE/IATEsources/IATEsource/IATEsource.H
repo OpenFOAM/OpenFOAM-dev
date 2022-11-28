@@ -180,7 +180,7 @@ public:
         //- Return the bubble Eotvos number
         tmp<volScalarField> Eo() const;
 
-        //- Return the bubble Webber number
+        //- Return the bubble turbulent Weber number
         tmp<volScalarField> We() const;
 
         virtual tmp<fvScalarMatrix> R

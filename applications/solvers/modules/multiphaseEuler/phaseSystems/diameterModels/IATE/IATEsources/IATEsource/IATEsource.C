@@ -137,7 +137,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Eo() const
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::We() const
 {
     return
-        otherPhase().rho()*sqr(Ur())*phase().d()/sigma();
+        otherPhase().rho()*sqr(Ut())*phase().d()/sigma();
 }
 
 

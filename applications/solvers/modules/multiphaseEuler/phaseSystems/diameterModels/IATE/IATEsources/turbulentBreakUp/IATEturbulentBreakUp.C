@@ -88,7 +88,8 @@ Foam::diameterModels::IATEsources::turbulentBreakUp::R
         if (We[celli] > WeCr)
         {
             R[celli] =
-               2*Cti*Ut[celli]*sqrt(1 - WeCr/We[celli])*exp(-WeCr/We[celli]);
+                (Cti/18)*Ut[celli]*sqr(kappai[celli])
+               *sqrt(1 - WeCr/We[celli])*exp(-WeCr/We[celli]);
         }
     }
 
