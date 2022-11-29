@@ -394,7 +394,7 @@ public:
             );
 
             //- Return current time name
-            virtual word timeName() const;
+            const word& timeName() const;
 
             //- Search a given directory for valid time directories
             static instantList findTimes

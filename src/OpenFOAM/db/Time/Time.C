@@ -673,7 +673,7 @@ Foam::word Foam::Time::timeName(const scalar t, const int precision)
 }
 
 
-Foam::word Foam::Time::timeName() const
+const Foam::word& Foam::Time::timeName() const
 {
     return dimensionedScalar::name();
 }
