@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,8 @@ void Foam::functionObjects::timeActivatedFileUpdate::updateFile()
     label i = lastIndex_;
     while
     (
-        i < timeVsFile_.size()-1
-     && timeVsFile_[i+1].first() < time_.value()
+        i < fileVsTime_.size()-1
+     && fileVsTime_[i+1].first() <= time_.userTimeValue()
     )
     {
         i++;
@@ -62,11 +62,11 @@ void Foam::functionObjects::timeActivatedFileUpdate::updateFile()
 
     if (i > lastIndex_)
     {
-        Info<< nl << type() << ": copying file" << nl << timeVsFile_[i].second()
+        Info<< nl << type() << ": copying file" << nl << fileVsTime_[i].second()
             << nl << "to:" << nl << fileToUpdate_ << nl << endl;
 
         fileName destFile(fileToUpdate_ + Foam::name(pid()));
-        cp(timeVsFile_[i].second(), destFile);
+        cp(fileVsTime_[i].second(), destFile);
         mv(destFile, fileToUpdate_);
         lastIndex_ = i;
     }
@@ -85,7 +85,7 @@ Foam::functionObjects::timeActivatedFileUpdate::timeActivatedFileUpdate
     functionObject(name),
     time_(runTime),
     fileToUpdate_(dict.lookup("fileToUpdate")),
-    timeVsFile_(),
+    fileVsTime_(),
     lastIndex_(-1)
 {
     read(dict);
@@ -106,24 +106,24 @@ bool Foam::functionObjects::timeActivatedFileUpdate::read
 )
 {
     dict.lookup("fileToUpdate") >> fileToUpdate_;
-    dict.lookup("timeVsFile") >> timeVsFile_;
+    dict.lookupBackwardsCompatible({"fileVsTime", "timeVsFile"}) >> fileVsTime_;
 
     lastIndex_ = -1;
     fileToUpdate_.expand();
 
-    Info<< type() << ": time vs file list:" << nl;
-    forAll(timeVsFile_, i)
+    Info<< type() << ": file vs time list:" << nl;
+    forAll(fileVsTime_, i)
     {
-        timeVsFile_[i].second() = timeVsFile_[i].second().expand();
-        if (!isFile(timeVsFile_[i].second()))
+        fileVsTime_[i].second() = fileVsTime_[i].second().expand();
+        if (!isFile(fileVsTime_[i].second()))
         {
             FatalErrorInFunction
-                << "File: " << timeVsFile_[i].second() << " not found"
+                << "File: " << fileVsTime_[i].second() << " not found"
                 << nl << exit(FatalError);
         }
 
-        Info<< "    " << timeVsFile_[i].first() << tab
-            << timeVsFile_[i].second() << endl;
+        Info<< "    " << fileVsTime_[i].first() << tab
+            << fileVsTime_[i].second() << endl;
     }
     Info<< endl;
 

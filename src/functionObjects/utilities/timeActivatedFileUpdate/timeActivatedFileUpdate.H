@@ -27,9 +27,9 @@ Class
 Description
     Performs a file copy/replacement once a specified time has been reached.
 
-    Example usage to update the fvSolution dictionary at various times
-    throughout the calculation:
-
+Usage
+    Example usage to update the fvSolution dictionary at 0.1, 0.2 and 0.3s
+    during the run:
     \verbatim
     fileUpdate1
     {
@@ -40,7 +40,7 @@ Description
         writeControl    timeStep;
         writeInterval   1;
         fileToUpdate    "$FOAM_CASE/system/fvSolution";
-        timeVsFile
+        fileVsTime
         (
             (-1 "$FOAM_CASE/system/fvSolution.0")
             (0.10 "$FOAM_CASE/system/fvSolution.10")
@@ -88,8 +88,8 @@ class timeActivatedFileUpdate
         //- Name of file to update
         fileName fileToUpdate_;
 
-        //- List of times vs filenames
-        List<Tuple2<scalar, fileName>> timeVsFile_;
+        //- List of filenames vs time
+        List<Tuple2<scalar, fileName>> fileVsTime_;
 
         //- Index of last file copied
         label lastIndex_;
