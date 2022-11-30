@@ -239,7 +239,7 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
         typeIOobject<timeIOdictionary> propsDictHeader
         (
             name() + "Properties",
-            obr_.time().timeName(obr_.time().startTime().value()),
+            obr_.time().startTime().name(),
             "uniform",
             obr_,
             IOobject::MUST_READ_IF_MODIFIED,
