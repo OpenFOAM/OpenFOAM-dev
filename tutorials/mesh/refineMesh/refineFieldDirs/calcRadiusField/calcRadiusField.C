@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,14 +76,14 @@ int main(int argc, char *argv[])
         mesh.readUpdate();
 
         Info<< "Writing radius field over X,Y in "
-            <<  runTime.timeName() << endl;
+            <<  runTime.name() << endl;
 
         volScalarField radiusFieldXY
         (
             IOobject
             (
                 "radiusFieldXY",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     "radialDirection",
-                    runTime.timeName(),
+                    runTime.name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     "angularDirection",
-                    runTime.timeName(),
+                    runTime.name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     "heightDirection",
-                    runTime.timeName(),
+                    runTime.name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE

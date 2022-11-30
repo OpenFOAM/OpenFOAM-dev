@@ -42,7 +42,7 @@ void Foam::Cloud<ParticleType>::readCloudUniformProperties()
     typeIOobject<timeIOdictionary> dictObj
     (
         cloudPropertiesName,
-        time().timeName(),
+        time().name(),
         "uniform"/cloud::prefix/name(),
         db(),
         IOobject::MUST_READ_IF_MODIFIED,
@@ -76,7 +76,7 @@ void Foam::Cloud<ParticleType>::writeCloudUniformProperties() const
         IOobject
         (
             cloudPropertiesName,
-            time().timeName(),
+            time().name(),
             "uniform"/cloud::prefix/name(),
             db(),
             IOobject::NO_READ,
@@ -173,7 +173,7 @@ Foam::IOobject Foam::Cloud<ParticleType>::fieldIOobject
     return IOobject
     (
         fieldName,
-        time().timeName(),
+        time().name(),
         *this,
         r,
         IOobject::NO_WRITE,

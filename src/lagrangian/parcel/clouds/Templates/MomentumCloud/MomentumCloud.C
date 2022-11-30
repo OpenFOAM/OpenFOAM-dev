@@ -306,7 +306,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
         IOobject
         (
             cloudName + "OutputProperties",
-            this->mesh().time().timeName(),
+            this->mesh().time().name(),
             "uniform"/cloud::prefix/cloudName,
             this->mesh(),
             IOobject::READ_IF_PRESENT,
@@ -361,7 +361,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
             IOobject
             (
                 this->name() + ":UTrans",
-                this->db().time().timeName(),
+                this->db().time().name(),
                 this->db(),
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -377,7 +377,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
             IOobject
             (
                 this->name() + ":UCoeff",
-                this->db().time().timeName(),
+                this->db().time().name(),
                 this->db(),
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -454,7 +454,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
             IOobject
             (
                 this->name() + ":UTrans",
-                this->db().time().timeName(),
+                this->db().time().name(),
                 this->db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -470,7 +470,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
             IOobject
             (
                 name + ":UCoeff",
-                this->db().time().timeName(),
+                this->db().time().name(),
                 this->db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -509,7 +509,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
         IOobject
         (
             name + "OutputProperties",
-            this->mesh().time().timeName(),
+            this->mesh().time().name(),
             "uniform"/cloud::prefix/name,
             this->mesh(),
             IOobject::NO_READ,

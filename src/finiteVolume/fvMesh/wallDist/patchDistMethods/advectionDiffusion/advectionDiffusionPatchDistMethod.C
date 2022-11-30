@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,7 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
         IOobject
         (
             "ny",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE,

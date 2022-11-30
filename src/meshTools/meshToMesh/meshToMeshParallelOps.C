@@ -585,7 +585,7 @@ Foam::List<Foam::remote> Foam::meshToMesh::distributeMesh
             IOobject
             (
                 "local" + mesh.name().capitalise(),
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh.time(),
                 IOobject::NO_READ
             ),
@@ -842,7 +842,7 @@ void Foam::meshToMesh::trimLocalTgt()
             IOobject
             (
                 "trimmed" + oldLocalTgtMesh.name().capitalise(),
-                oldLocalTgtMesh.time().timeName(),
+                oldLocalTgtMesh.time().name(),
                 oldLocalTgtMesh.time(),
                 IOobject::NO_READ
             ),

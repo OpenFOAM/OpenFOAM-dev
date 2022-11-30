@@ -125,7 +125,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
             IOobject
             (
                 "splicedPhi",
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh
             ),
             phi,
@@ -198,7 +198,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
                 IOobject
                 (
                     "alphaf",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh
                 ),
                 mesh,
@@ -240,7 +240,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::interpolate
             IOobject
             (
                 "spicedTvff",
-                mesh().time().timeName(),
+                mesh().time().name(),
                 mesh()
             ),
             tvff,

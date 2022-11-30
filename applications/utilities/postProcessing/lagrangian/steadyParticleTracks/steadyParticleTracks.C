@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
         runTime.setTime(timeDirs[timeI], timeI);
         Info<< "Time = " << runTime.userTimeName() << endl;
 
-        const fileName vtkTimePath(vtkPath/runTime.timeName());
+        const fileName vtkTimePath(vtkPath/runTime.name());
         mkDir(vtkTimePath);
 
         Info<< "    Reading particle positions" << endl;
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
             IOobjectList cloudObjs
             (
                 mesh,
-                runTime.timeName(),
+                runTime.name(),
                 cloud::prefix/cloudName
             );
 

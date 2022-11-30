@@ -8,7 +8,7 @@ if (nAlphaSubCycles > 1)
         IOobject
         (
             "rhoPhiSum",
-            runTime.timeName(),
+            runTime.name(),
             mesh
         ),
         mesh,

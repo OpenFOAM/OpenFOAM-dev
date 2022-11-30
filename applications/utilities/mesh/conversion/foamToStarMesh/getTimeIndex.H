@@ -4,14 +4,14 @@
 
     if
     (
-        runTime.timeName() != runTime.constant()
-     && runTime.timeName() != "0"
+        runTime.name() != runTime.constant()
+     && runTime.name() != "0"
     )
     {
         typeIOobject<IOdictionary> io
         (
             "time",
-            runTime.timeName(),
+            runTime.name(),
             "uniform",
             runTime,
             IOobject::READ_IF_PRESENT,
@@ -26,7 +26,7 @@
                 IOobject
                 (
                     "time",
-                    runTime.timeName(),
+                    runTime.name(),
                     "uniform",
                     runTime,
                     IOobject::MUST_READ_IF_MODIFIED,
@@ -41,8 +41,8 @@
         }
         else
         {
-            timeName = runTime.timeName();
+            timeName = runTime.name();
         }
     }
 
-    Info<< "\nTime [" << timeName << "] = " << runTime.timeName() << nl;
+    Info<< "\nTime [" << timeName << "] = " << runTime.name() << nl;

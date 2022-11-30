@@ -148,7 +148,7 @@ const Foam::fileName& Foam::CloudFunctionObject<CloudType>::outputDir() const
 template<class CloudType>
 Foam::fileName Foam::CloudFunctionObject<CloudType>::writeTimeDir() const
 {
-    return outputDir_/this->owner().time().timeName();
+    return outputDir_/this->owner().time().name();
 }
 
 

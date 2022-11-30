@@ -170,7 +170,7 @@ void writeDecomposition
         IOobject
         (
             name,
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE,
@@ -276,7 +276,7 @@ void readFields
                     IOobject
                     (
                         name,
-                        mesh.thisDb().time().timeName(),
+                        mesh.thisDb().time().name(),
                         mesh.thisDb(),
                         IOobject::NO_READ,
                         IOobject::AUTO_WRITE
@@ -461,7 +461,7 @@ int main(int argc, char *argv[])
 
 
     // Get original objects (before incrementing time!)
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
     // We don't want to map the decomposition (mapping already tested when
     // mapping the cell centre field)
     IOobjectList::iterator iter = objects.find("decomposition");
@@ -661,7 +661,7 @@ int main(int argc, char *argv[])
     {
         mesh.setInstance(masterInstDir);
     }
-    Info<< "Writing redistributed mesh to " << runTime.timeName() << nl << endl;
+    Info<< "Writing redistributed mesh to " << runTime.name() << nl << endl;
     mesh.write();
 
 
@@ -676,7 +676,7 @@ int main(int argc, char *argv[])
 
     Info<< nl
         << "You can pick up the redecomposed mesh from the polyMesh directory"
-        << " in " << runTime.timeName() << "." << nl
+        << " in " << runTime.name() << "." << nl
         << "If you redecomposed the mesh to less processors you can delete"
         << nl
         << "the processor directories with 0 sized meshes in them." << nl
@@ -694,7 +694,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            fileName timeDir = procDir/runTime.timeName()/meshSubDir;
+            fileName timeDir = procDir/runTime.name()/meshSubDir;
             fileName constDir = procDir/runTime.constant()/meshSubDir;
 
             Info<< "    rm -r " << constDir.c_str() << nl

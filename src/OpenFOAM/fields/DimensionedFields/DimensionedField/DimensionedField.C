@@ -282,7 +282,7 @@ DimensionedField<Type, GeoMesh>::New
             IOobject
             (
                 name,
-                mesh.thisDb().time().timeName(),
+                mesh.thisDb().time().name(),
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -315,7 +315,7 @@ DimensionedField<Type, GeoMesh>::New
             IOobject
             (
                 name,
-                mesh.thisDb().time().timeName(),
+                mesh.thisDb().time().name(),
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -348,7 +348,7 @@ DimensionedField<Type, GeoMesh>::New
             IOobject
             (
                 name,
-                mesh.thisDb().time().timeName(),
+                mesh.thisDb().time().name(),
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,

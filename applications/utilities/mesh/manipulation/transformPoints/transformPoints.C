@@ -105,7 +105,7 @@ void rotateFields(const argList& args, const Time& runTime, const tensor& T)
     #include "createNamedMesh.H"
 
     // Read objects in time directory
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     // Read vol fields.
     PtrList<volScalarField> vsFlds;

@@ -82,7 +82,7 @@ Foam::solvers::buoyancy::buoyancy(const fvMesh& mesh_)
         IOobject
         (
             "p_rgh",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -104,7 +104,7 @@ Foam::autoPtr<Foam::solvers::buoyancy> Foam::solvers::buoyancy::New
     return typeIOobject<volScalarField>
         (
             "p_rgh",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ
         ).headerOk()

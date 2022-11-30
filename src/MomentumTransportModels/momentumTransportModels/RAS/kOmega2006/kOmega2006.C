@@ -217,7 +217,7 @@ kOmega2006<BasicMomentumTransportModel>::kOmega2006
         IOobject
         (
             IOobject::groupName("k", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -229,7 +229,7 @@ kOmega2006<BasicMomentumTransportModel>::kOmega2006
         IOobject
         (
             IOobject::groupName("omega", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

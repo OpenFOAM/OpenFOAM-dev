@@ -148,7 +148,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
             IOobject
             (
                 "cosAngle",
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh,
                 IOobject::NO_READ
             ),
@@ -300,7 +300,7 @@ void curvatureSeparation::correct
             IOobject
             (
                 "Fnet",
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh,
                 IOobject::NO_READ
             ),

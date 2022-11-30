@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1520,7 +1520,7 @@ Foam::fileOperations::masterUncollatedFileOperation::findInstance
         {
             // Shortcut: if actual directory is the timeName we've
             // already tested it
-            if (ts[instanceI].name() == time.timeName())
+            if (ts[instanceI].name() == time.name())
             {
                 continue;
             }
@@ -1552,7 +1552,7 @@ Foam::fileOperations::masterUncollatedFileOperation::findInstance
                     {
                         FatalErrorInFunction
                             << "Cannot find directory "
-                            << io.local() << " in times " << time.timeName()
+                            << io.local() << " in times " << time.name()
                             << " down to " << stopInstance
                             << exit(FatalError);
                     }
@@ -1561,7 +1561,7 @@ Foam::fileOperations::masterUncollatedFileOperation::findInstance
                         FatalErrorInFunction
                             << "Cannot find file \"" << io.name()
                             << "\" in directory " << io.local()
-                            << " in times " << time.timeName()
+                            << " in times " << time.name()
                             << " down to " << stopInstance
                             << exit(FatalError);
                     }
@@ -2339,7 +2339,7 @@ void Foam::fileOperations::masterUncollatedFileOperation::setTime
     {
         instantList& times = *iter();
 
-        const instant timeNow(tm.value(), tm.timeName());
+        const instant timeNow(tm.value(), tm.name());
 
         if (times.size() > 0 && times[0].name() == tm.constant())
         {
@@ -2358,7 +2358,7 @@ void Foam::fileOperations::masterUncollatedFileOperation::setTime
                 if (debug)
                 {
                     Pout<< "masterUncollatedFileOperation::setTime :"
-                        << " Caching time " << tm.timeName()
+                        << " Caching time " << tm.name()
                         << " for case:" << tm.path() << endl;
                 }
 
@@ -2374,7 +2374,7 @@ void Foam::fileOperations::masterUncollatedFileOperation::setTime
                 if (debug)
                 {
                     Pout<< "masterUncollatedFileOperation::setTime :"
-                        << " Caching time " << tm.timeName()
+                        << " Caching time " << tm.name()
                         << " for case:" << tm.path() << endl;
                 }
 

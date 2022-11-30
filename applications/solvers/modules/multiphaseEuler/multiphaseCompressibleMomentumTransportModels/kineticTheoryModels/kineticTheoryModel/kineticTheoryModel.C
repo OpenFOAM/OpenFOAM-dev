@@ -155,7 +155,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         IOobject
         (
             IOobject::groupName("Theta", phase_.name()),
-            U.time().timeName(),
+            U.time().name(),
             U.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -168,7 +168,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         IOobject
         (
             IOobject::groupName(typedName("lambda"), phase_.name()),
-            U.time().timeName(),
+            U.time().name(),
             U.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -182,7 +182,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         IOobject
         (
             IOobject::groupName(typedName("gs0"), phase_.name()),
-            U.time().timeName(),
+            U.time().name(),
             U.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -196,7 +196,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         IOobject
         (
             IOobject::groupName(typedName("kappa"), phase_.name()),
-            U.time().timeName(),
+            U.time().name(),
             U.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -210,7 +210,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         IOobject
         (
             IOobject::groupName(typedName("nuFric"), phase_.name()),
-            U.time().timeName(),
+            U.time().name(),
             U.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

@@ -28,7 +28,7 @@ int USERD_get_var_value_at_specific
         IOobject fieldObject
         (
             fieldNames[var2field[nVar]],
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE

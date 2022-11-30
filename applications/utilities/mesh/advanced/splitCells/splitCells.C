@@ -706,7 +706,7 @@ int main(int argc, char *argv[])
             mesh.setInstance(oldInstance);
         }
 
-        Info<< "Writing refined morphMesh to time " << runTime.timeName()
+        Info<< "Writing refined morphMesh to time " << runTime.name()
             << endl;
 
         mesh.write();

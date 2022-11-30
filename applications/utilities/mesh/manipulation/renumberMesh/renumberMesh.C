@@ -71,7 +71,7 @@ void writeCellLabels
         IOobject
         (
             name,
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -799,7 +799,7 @@ int main(int argc, char *argv[])
 
 
     // Read objects in time directory
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 

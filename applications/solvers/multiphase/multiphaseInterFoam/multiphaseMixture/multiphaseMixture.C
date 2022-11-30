@@ -82,7 +82,7 @@ Foam::multiphaseMixture::multiphaseMixture
         IOobject
         (
             "rhoPhi",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -96,7 +96,7 @@ Foam::multiphaseMixture::multiphaseMixture
         IOobject
         (
             "alphas",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -110,7 +110,7 @@ Foam::multiphaseMixture::multiphaseMixture
         IOobject
         (
             "nu",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_
         ),
         mu()/rho()
@@ -314,7 +314,7 @@ void Foam::multiphaseMixture::solve()
             IOobject
             (
                 "rhoPhiSum",
-                runTime.timeName(),
+                runTime.name(),
                 mesh_
             ),
             mesh_,
@@ -520,7 +520,7 @@ void Foam::multiphaseMixture::solveAlphas
         IOobject
         (
             "sumAlpha",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_
         ),
         mesh_,

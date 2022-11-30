@@ -151,7 +151,7 @@ void fieldInterpolator::interpolate()
                             IOobject
                             (
                                 fieldIter()->name(),
-                                runTime_.timeName(),
+                                runTime_.name(),
                                 fieldIter()->db(),
                                 IOobject::NO_READ,
                                 IOobject::NO_WRITE,
@@ -264,7 +264,7 @@ int main(int argc, char *argv[])
         runTime.setTime(timeDirs[timei], timei);
 
         // Read objects in time directory
-        IOobjectList objects(mesh, runTime.timeName());
+        IOobjectList objects(mesh, runTime.name());
 
         fieldInterpolator interpolator
         (

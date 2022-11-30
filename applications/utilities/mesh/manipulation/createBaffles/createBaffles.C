@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
     }
 
     // Read fields
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
     if (fields) Info<< "Reading geometric fields" << nl << endl;
     #include "readVolFields.H"
     #include "readSurfaceFields.H"
@@ -740,7 +740,7 @@ int main(int argc, char *argv[])
         mesh.setInstance(oldInstance);
     }
 
-    Info<< "Writing mesh to " << runTime.timeName() << endl;
+    Info<< "Writing mesh to " << runTime.name() << endl;
 
     mesh.write();
 

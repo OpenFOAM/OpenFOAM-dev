@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
         IOobject
         (
             "soot",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

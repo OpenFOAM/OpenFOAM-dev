@@ -209,7 +209,7 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
                 MixtureType::thermoType::heName(),
                 phaseName
             ),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -233,7 +233,7 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
         IOobject
         (
             BasicThermo::phasePropertyName("Cp", phaseName),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         mesh,
@@ -245,7 +245,7 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
         IOobject
         (
             BasicThermo::phasePropertyName("Cv", phaseName),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         mesh,

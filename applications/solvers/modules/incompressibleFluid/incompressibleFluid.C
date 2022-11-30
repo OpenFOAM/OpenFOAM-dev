@@ -64,7 +64,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
         IOobject
         (
             "p",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -79,7 +79,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
         IOobject
         (
             "U",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -92,7 +92,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
         IOobject
         (
             "phi",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -127,7 +127,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
             IOobject
             (
                 "Uf",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -151,7 +151,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
                 IOobject
                 (
                     fv::localEulerDdt::rDeltaTName,
-                    runTime.timeName(),
+                    runTime.name(),
                     mesh,
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE

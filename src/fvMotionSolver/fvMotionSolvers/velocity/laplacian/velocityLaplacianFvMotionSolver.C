@@ -60,7 +60,7 @@ Foam::velocityLaplacianFvMotionSolver::velocityLaplacianFvMotionSolver
         IOobject
         (
             "cellMotionU",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

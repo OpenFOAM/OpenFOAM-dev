@@ -69,7 +69,7 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         IOobject
         (
             IOobject::groupName("alpha", phase1Name_),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -82,7 +82,7 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         IOobject
         (
             IOobject::groupName("alpha", phase2Name_),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -95,7 +95,7 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         IOobject
         (
             IOobject::groupName("alpha", phase3Name_),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -108,7 +108,7 @@ Foam::incompressibleThreePhaseMixture::incompressibleThreePhaseMixture
         IOobject
         (
             "nu",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         mesh,

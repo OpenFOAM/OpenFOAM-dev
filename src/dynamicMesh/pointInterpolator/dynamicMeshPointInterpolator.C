@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ Foam::dynamicMeshPointInterpolator::curPointField() const
             IOobject
             (
                 word("uniformInterpolate(") + fieldName_ + ')',
-                pMesh.time().timeName(),
+                pMesh.time().name(),
                 pMesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE

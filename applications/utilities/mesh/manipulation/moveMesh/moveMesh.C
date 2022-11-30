@@ -56,14 +56,14 @@ int main(int argc, char *argv[])
     {
         Foam::Info
             << "Create mesh " << regionName << " for time = "
-            << runTime.timeName() << Foam::nl << Foam::endl;
+            << runTime.name() << Foam::nl << Foam::endl;
     }
     else
     {
         regionName = Foam::fvMesh::defaultRegion;
         Foam::Info
             << "Create mesh for time = "
-            << runTime.timeName() << Foam::nl << Foam::endl;
+            << runTime.name() << Foam::nl << Foam::endl;
     }
 
     Foam::fvMesh mesh
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
         Foam::IOobject
         (
             regionName,
-            runTime.timeName(),
+            runTime.name(),
             runTime,
             Foam::IOobject::MUST_READ
         )

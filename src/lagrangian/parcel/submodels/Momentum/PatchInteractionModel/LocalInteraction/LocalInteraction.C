@@ -264,7 +264,7 @@ Foam::volScalarField& Foam::LocalInteraction<CloudType>::massEscape()
                 IOobject
                 (
                     this->owner().name() + ":massEscape",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
@@ -293,7 +293,7 @@ Foam::volScalarField& Foam::LocalInteraction<CloudType>::massStick()
                 IOobject
                 (
                     this->owner().name() + ":massStick",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE

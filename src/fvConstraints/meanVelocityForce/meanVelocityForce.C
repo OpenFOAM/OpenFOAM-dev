@@ -71,7 +71,7 @@ void Foam::fv::meanVelocityForce::writeProps
             IOobject
             (
                 name() + "Properties",
-                mesh().time().timeName(),
+                mesh().time().name(),
                 "uniform",
                 mesh(),
                 IOobject::NO_READ,
@@ -161,7 +161,7 @@ bool Foam::fv::meanVelocityForce::constrain
         IOobject
         (
             name() + fieldName + "Sup",
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -185,7 +185,7 @@ bool Foam::fv::meanVelocityForce::constrain
                 IOobject
                 (
                     name() + ":rA",
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh(),
                     IOobject::NO_READ,
                     IOobject::NO_WRITE,

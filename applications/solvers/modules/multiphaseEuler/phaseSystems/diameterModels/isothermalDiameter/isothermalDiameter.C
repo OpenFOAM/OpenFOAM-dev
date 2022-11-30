@@ -54,7 +54,7 @@ Foam::diameterModels::isothermal::isothermal
         IOobject
         (
             IOobject::groupName("d", phase.name()),
-            phase.time().timeName(),
+            phase.time().name(),
             phase.mesh()
         ),
         phase.mesh(),

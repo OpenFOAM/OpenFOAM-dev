@@ -71,7 +71,7 @@ Foam::fv::heatTransferModels::function2::function2
         IOobject
         (
             typedName("htc"),
-            model.mesh().time().timeName(),
+            model.mesh().time().name(),
             model.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

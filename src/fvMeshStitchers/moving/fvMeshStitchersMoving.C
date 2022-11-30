@@ -543,7 +543,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
         IOobject
         (
             "MeshPhi",
-            subMesh.time().timeName(),
+            subMesh.time().name(),
             subMesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

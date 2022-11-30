@@ -100,7 +100,7 @@ void Foam::fvMeshTopoChangers::movingCone::addZonesAndModifiers()
         return;
     }
 
-    Info<< "Time = " << mesh().time().timeName() << endl
+    Info<< "Time = " << mesh().time().name() << endl
         << "Adding zones and modifiers to the mesh" << endl;
 
     const vectorField& fc = mesh().faceCentres();

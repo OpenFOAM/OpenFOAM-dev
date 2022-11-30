@@ -36,7 +36,7 @@ Foam::IOPosition<CloudType>::IOPosition(const CloudType& c)
         IOobject
         (
             "positions",
-            c.time().timeName(),
+            c.time().name(),
             c,
             IOobject::MUST_READ,
             IOobject::NO_WRITE

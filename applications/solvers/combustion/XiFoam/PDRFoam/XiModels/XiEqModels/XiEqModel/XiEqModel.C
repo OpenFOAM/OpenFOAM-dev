@@ -113,7 +113,7 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
         IOobject
         (
             "tns",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

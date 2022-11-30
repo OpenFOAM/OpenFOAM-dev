@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,7 +191,7 @@ LRR<BasicMomentumTransportModel>::LRR
         IOobject
         (
             IOobject::groupName("k", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -203,7 +203,7 @@ LRR<BasicMomentumTransportModel>::LRR
         IOobject
         (
             IOobject::groupName("epsilon", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

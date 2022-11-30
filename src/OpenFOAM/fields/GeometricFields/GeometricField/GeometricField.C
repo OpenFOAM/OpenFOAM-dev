@@ -141,7 +141,7 @@ bool Foam::GeometricField<Type, PatchField, GeoMesh>::readOldTimeIfPresent()
     typeIOobject<GeometricField<Type, PatchField, GeoMesh>> field0
     (
         this->name()  + "_0",
-        this->time().timeName(),
+        this->time().name(),
         this->db(),
         IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE,
@@ -747,7 +747,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::cloneUnSliced() const
             IOobject
             (
                 this->name(),
-                this->mesh().thisDb().time().timeName(),
+                this->mesh().thisDb().time().name(),
                 this->mesh().thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -778,7 +778,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             IOobject
             (
                 name,
-                diField.mesh().thisDb().time().timeName(),
+                diField.mesh().thisDb().time().name(),
                 diField.mesh().thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -811,7 +811,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             IOobject
             (
                 name,
-                mesh.thisDb().time().timeName(),
+                mesh.thisDb().time().name(),
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -845,7 +845,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             IOobject
             (
                 name,
-                mesh.thisDb().time().timeName(),
+                mesh.thisDb().time().name(),
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -881,7 +881,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             IOobject
             (
                 name,
-                mesh.thisDb().time().timeName(),
+                mesh.thisDb().time().name(),
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -1133,7 +1133,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::oldTime() const
             IOobject
             (
                 this->name() + "_0",
-                this->time().timeName(),
+                this->time().name(),
                 this->db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,

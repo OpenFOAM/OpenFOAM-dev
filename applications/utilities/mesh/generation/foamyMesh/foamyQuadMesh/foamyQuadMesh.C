@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 
     while (runTime.loop())
     {
-        Info<< nl << "Time = " << runTime.timeName() << endl;
+        Info<< nl << "Time = " << runTime.name() << endl;
 
         mesh.newPoints();
     }

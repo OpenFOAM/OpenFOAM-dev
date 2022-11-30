@@ -52,7 +52,7 @@ Foam::interfaceCompositionModels::Raoult::Raoult
         IOobject
         (
             IOobject::groupName("YNonVapour", this->interface().name()),
-            interface.mesh().time().timeName(),
+            interface.mesh().time().name(),
             interface.mesh()
         ),
         interface.mesh(),
@@ -63,7 +63,7 @@ Foam::interfaceCompositionModels::Raoult::Raoult
         IOobject
         (
             IOobject::groupName("YNonVapourPrime", this->interface().name()),
-            interface.mesh().time().timeName(),
+            interface.mesh().time().name(),
             interface.mesh()
         ),
         interface.mesh(),

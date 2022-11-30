@@ -79,7 +79,7 @@ bool writeZones(const word& name, const fileName& meshDir, Time& runTime)
     IOobject io
     (
         name,
-        runTime.timeName(),
+        runTime.name(),
         meshDir,
         runTime,
         IOobject::MUST_READ,
@@ -189,7 +189,7 @@ bool writeOptionalMeshObject
     IOobject io
     (
         name,
-        runTime.timeName(),
+        runTime.name(),
         meshDir,
         runTime,
         IOobject::MUST_READ,
@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
         }
 
         // Get list of objects from the database
-        IOobjectList objects(runTime, runTime.timeName(), regionPrefix);
+        IOobjectList objects(runTime, runTime.name(), regionPrefix);
 
         forAllConstIter(IOobjectList, objects, iter)
         {
@@ -384,7 +384,7 @@ int main(int argc, char *argv[])
             else
             {
                 Info<< "        Create polyMesh for time = "
-                    << runTime.timeName() << endl;
+                    << runTime.name() << endl;
 
                 meshPtr.reset
                 (
@@ -393,7 +393,7 @@ int main(int argc, char *argv[])
                         IOobject
                         (
                             regionName,
-                            runTime.timeName(),
+                            runTime.name(),
                             runTime,
                             Foam::IOobject::MUST_READ
                         )
@@ -428,7 +428,7 @@ int main(int argc, char *argv[])
 
 
                 // Do local scan for valid cloud objects
-                IOobjectList sprayObjs(runTime, runTime.timeName(), dir);
+                IOobjectList sprayObjs(runTime, runTime.name(), dir);
 
                 // Combine with all other cloud objects
                 stringList sprayFields(sprayObjs.sortedToc());

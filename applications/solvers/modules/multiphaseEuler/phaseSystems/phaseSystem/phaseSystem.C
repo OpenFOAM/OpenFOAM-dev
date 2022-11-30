@@ -241,7 +241,7 @@ Foam::phaseSystem::phaseSystem
         IOobject
         (
             "dpdt",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         mesh,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 "H",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             fvc::reconstruct(fvc::snGrad(psi)*mesh.magSf())
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
         {
             Info<< nl
                 << "Creating field H for time "
-                << runTime.timeName() << endl;
+                << runTime.name() << endl;
 
             H.write();
         }
@@ -109,14 +109,14 @@ int main(int argc, char *argv[])
         {
             Info<< nl
                 << "Creating field HdotGradH for time "
-                << runTime.timeName() << endl;
+                << runTime.name() << endl;
 
             volVectorField HdotGradH
             (
                 IOobject
                 (
                     "HdotGradH",
-                    runTime.timeName(),
+                    runTime.name(),
                     mesh
                 ),
                 H & fvc::grad(H)
@@ -130,14 +130,14 @@ int main(int argc, char *argv[])
     {
         Info<< nl
             << "Creating field B for time "
-            << runTime.timeName() << endl;
+            << runTime.name() << endl;
 
         volVectorField B
         (
             IOobject
             (
                 "B",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             constant::electromagnetic::mu0

@@ -139,7 +139,7 @@ bool Foam::functionObjects::age::execute()
             IOobject
             (
                 typeName,
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE,

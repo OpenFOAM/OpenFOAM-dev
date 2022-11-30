@@ -3,7 +3,7 @@
     typeIOobject<uniformDimensionedVectorField> linearAccelerationHeader
     (
         "linearAcceleration",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -25,7 +25,7 @@
     typeIOobject<uniformDimensionedVectorField> angularVelocityHeader
     (
         "angularVelocity",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -47,7 +47,7 @@
     typeIOobject<uniformDimensionedVectorField> angularAccelerationHeader
     (
         "angularAcceleration",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -69,7 +69,7 @@
     typeIOobject<uniformDimensionedVectorField> centreOfRotationHeader
     (
         "centreOfRotation",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE

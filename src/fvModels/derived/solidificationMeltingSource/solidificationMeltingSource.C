@@ -245,7 +245,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
         IOobject
         (
             this->name() + ":alpha1",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

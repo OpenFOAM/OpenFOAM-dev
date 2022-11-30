@@ -434,7 +434,7 @@ int main(int argc, char *argv[])
 
 
     // Search for list of objects for this time
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 
@@ -459,7 +459,7 @@ int main(int argc, char *argv[])
         stitcher.instance() = oldInstance;
         stitcher.writeOpt() = IOobject::NO_WRITE;
     }
-    Info<< nl << "Writing polyMesh to time " << runTime.timeName() << endl;
+    Info<< nl << "Writing polyMesh to time " << runTime.name() << endl;
 
     IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
 

@@ -173,7 +173,7 @@ Foam::interfaceProperties::interfaceProperties
         IOobject
         (
             "nHatf",
-            alpha1_.time().timeName(),
+            alpha1_.time().name(),
             alpha1_.mesh()
         ),
         alpha1_.mesh(),
@@ -185,7 +185,7 @@ Foam::interfaceProperties::interfaceProperties
         IOobject
         (
             "interfaceProperties:K",
-            alpha1_.time().timeName(),
+            alpha1_.time().name(),
             alpha1_.mesh()
         ),
         alpha1_.mesh(),

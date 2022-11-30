@@ -58,7 +58,7 @@ constantRadiation::constantRadiation
         IOobject
         (
             typedName("qrConst"),
-            film.time().timeName(),
+            film.time().name(),
             film.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -70,7 +70,7 @@ constantRadiation::constantRadiation
         IOobject
         (
             typedName("mask"),
-            film.time().timeName(),
+            film.time().name(),
             film.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

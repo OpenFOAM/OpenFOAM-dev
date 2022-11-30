@@ -65,7 +65,7 @@ void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
         globalMeshDataPtr_->topoChange();
     }
 
-    setInstance(time().timeName());
+    setInstance(time().name());
 
     // Map the old motion points if present
     if (oldPointsPtr_.valid())

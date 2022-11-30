@@ -1,14 +1,14 @@
 // write base thermo fields - not registered since will be re-read by
 // thermo package
 
-Info<< "Creating base fields for time " << runTime.timeName() << endl;
+Info<< "Creating base fields for time " << runTime.name() << endl;
 {
     volScalarField Ydefault
     (
         IOobject
         (
             "Ydefault",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE,
@@ -25,7 +25,7 @@ Info<< "Creating base fields for time " << runTime.timeName() << endl;
         IOobject
         (
             "p",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE,
@@ -42,7 +42,7 @@ Info<< "Creating base fields for time " << runTime.timeName() << endl;
         IOobject
         (
             "T",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE,

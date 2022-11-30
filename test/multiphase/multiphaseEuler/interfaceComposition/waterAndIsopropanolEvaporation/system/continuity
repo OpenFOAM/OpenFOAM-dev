@@ -46,7 +46,7 @@ codeRead
     volScalarField* dMass =
         new volScalarField
         (
-            IOobject("dMass", mesh().time().timeName(), mesh()),
+            IOobject("dMass", mesh().time().name(), mesh()),
             mesh(),
             dimensionedScalar(dimMass/dimVolume, 0)
         );
@@ -57,7 +57,7 @@ codeRead
     volScalarField* dEnergy =
         new volScalarField
         (
-            IOobject("dEnergy", mesh().time().timeName(), mesh()),
+            IOobject("dEnergy", mesh().time().name(), mesh()),
             mesh(),
             dimensionedScalar(dimEnergy/dimVolume, 0)
         );

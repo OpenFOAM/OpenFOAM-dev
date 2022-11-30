@@ -118,9 +118,9 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
                     << " cells" << endl;
 
 
-                fileName cutsFile("failedCuts_" + runTime.timeName() + ".obj");
+                fileName cutsFile("failedCuts_" + runTime.name() + ".obj");
 
-                Pout<< "Writing cuts for time " <<  runTime.timeName()
+                Pout<< "Writing cuts for time " <<  runTime.name()
                     << " to " << cutsFile << endl;
 
                 OFstream cutsStream(cutsFile);
@@ -146,9 +146,9 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
 
         if (debug)
         {
-            fileName cutsFile("cuts_" + runTime.timeName() + ".obj");
+            fileName cutsFile("cuts_" + runTime.name() + ".obj");
 
-            Pout<< "Writing cuts for time " <<  runTime.timeName()
+            Pout<< "Writing cuts for time " <<  runTime.name()
                 << " to " << cutsFile << endl;
 
             OFstream cutsStream(cutsFile);
@@ -185,7 +185,7 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
             if (debug)
             {
                 Pout<< "Writing refined polyMesh to time "
-                    << runTime.timeName() << endl;
+                    << runTime.name() << endl;
             }
 
             mesh_.write();

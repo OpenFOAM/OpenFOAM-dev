@@ -180,7 +180,7 @@ RNGkEpsilon<BasicMomentumTransportModel>::RNGkEpsilon
         IOobject
         (
             IOobject::groupName("k", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -192,7 +192,7 @@ RNGkEpsilon<BasicMomentumTransportModel>::RNGkEpsilon
         IOobject
         (
             IOobject::groupName("epsilon", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

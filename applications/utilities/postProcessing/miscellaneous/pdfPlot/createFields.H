@@ -20,7 +20,7 @@
         runTime.globalPath()
        /functionObjects::writeFile::outputPrefix
        /args.executable()
-       /runTime.timeName();
+       /runTime.name();
 
     mkDir(pdfPath);
 

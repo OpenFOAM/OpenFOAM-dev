@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     const bool overwrite = args.optionFound("overwrite");
 
     Info<< "Extruding from " << ExtrudeModeNames[surfaceFormat]
-        << " at time " << runTimeExtruded.timeName() << endl;
+        << " at time " << runTimeExtruded.name() << endl;
 
     IOdictionary extrude2DMeshDict
     (
@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
                 Foam::IOobject
                 (
                     Foam::polyMesh::defaultRegion,
-                    runTimeExtruded.timeName(),
+                    runTimeExtruded.name(),
                     runTimeExtruded,
                     Foam::IOobject::MUST_READ
                 )
@@ -318,7 +318,7 @@ int main(int argc, char *argv[])
     }
 
     // Take over refinement levels and write to new time directory.
-    Info<< "\nWriting extruded mesh to time = " << runTimeExtruded.timeName()
+    Info<< "\nWriting extruded mesh to time = " << runTimeExtruded.name()
         << nl << endl;
 
     mesh().write();

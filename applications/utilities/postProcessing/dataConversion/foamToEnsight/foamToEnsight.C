@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
     // Set Time to the last time before looking for the lagrangian objects
     runTime.setTime(Times.last(), Times.size()-1);
 
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     #include "checkMeshMoving.H"
 
@@ -316,7 +316,7 @@ int main(int argc, char *argv[])
             IOobjectList cloudObjs
             (
                 mesh,
-                runTime.timeName(),
+                runTime.name(),
                 cloud::prefix/cloudDirs[cloudI]
             );
 
@@ -361,7 +361,7 @@ int main(int argc, char *argv[])
             IOobjectList cloudObjs
             (
                 mesh,
-                runTime.timeName(),
+                runTime.name(),
                 cloud::prefix/cloudIter.key()
             );
 
@@ -391,7 +391,7 @@ int main(int argc, char *argv[])
         word timeName = itoa(timeIndex);
         word timeFile = prepend + timeName;
 
-        Info<< "Translating time = " << runTime.timeName() << nl;
+        Info<< "Translating time = " << runTime.name() << nl;
 
         polyMesh::readUpdateState meshState = mesh.readUpdate();
         if (timeIndex != 0 && meshSubsetter.hasSubMesh())
@@ -463,7 +463,7 @@ int main(int argc, char *argv[])
                 IOobject fieldObject
                 (
                     fieldName,
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
@@ -579,7 +579,7 @@ int main(int argc, char *argv[])
                 IOobject fieldObject
                 (
                     fieldName,
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     cloud::prefix/cloudName,
                     mesh,
                     IOobject::MUST_READ

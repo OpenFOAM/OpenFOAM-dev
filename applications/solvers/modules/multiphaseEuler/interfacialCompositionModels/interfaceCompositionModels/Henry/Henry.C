@@ -53,7 +53,7 @@ Foam::interfaceCompositionModels::Henry::Henry
         IOobject
         (
             IOobject::groupName("YSolvent", this->interface().name()),
-            interface.mesh().time().timeName(),
+            interface.mesh().time().name(),
             interface.mesh()
         ),
         interface.mesh(),

@@ -399,7 +399,7 @@ void Foam::fvMeshDistribute::receiveFields
                 IOobject
                 (
                     fieldNames[i],
-                    mesh.thisDb().time().timeName(),
+                    mesh.thisDb().time().name(),
                     mesh.thisDb(),
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE

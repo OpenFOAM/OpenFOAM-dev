@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -367,7 +367,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
 //        IOobject
 //        (
 //            "indices",
-//            time().timeName(),
+//            time().name(),
 //            name,
 //            time(),
 //            IOobject::NO_READ,
@@ -381,7 +381,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
         IOobject
         (
             "types",
-            time().timeName(),
+            time().name(),
             name,
             time(),
             IOobject::NO_READ,
@@ -395,7 +395,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
         IOobject
         (
             "processorIndices",
-            time().timeName(),
+            time().name(),
             name,
             time(),
             IOobject::NO_READ,
@@ -600,7 +600,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
             IOobject
             (
                 name,
-                time().timeName(),
+                time().name(),
                 time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE

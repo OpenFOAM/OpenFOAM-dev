@@ -47,7 +47,7 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
                 IOobject
                 (
                     fieldIoObject.name(),
-                    procMeshes_[proci]().time().timeName(),
+                    procMeshes_[proci]().time().name(),
                     procMeshes_[proci](),
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
@@ -125,7 +125,7 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
             IOobject
             (
                 fieldIoObject.name(),
-                completeMesh_().time().timeName(),
+                completeMesh_().time().name(),
                 completeMesh_(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE

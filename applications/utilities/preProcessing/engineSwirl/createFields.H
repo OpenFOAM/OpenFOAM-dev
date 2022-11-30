@@ -49,7 +49,7 @@ volVectorField U
     IOobject
     (
         "U",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE

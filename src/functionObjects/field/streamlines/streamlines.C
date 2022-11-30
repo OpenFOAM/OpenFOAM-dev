@@ -538,7 +538,7 @@ bool Foam::functionObjects::streamlines::write()
            /writeFile::outputPrefix
            /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
            /name()
-           /mesh_.time().timeName();
+           /mesh_.time().name();
         mkDir(outputPath);
 
         // Pass data to the formatter to write

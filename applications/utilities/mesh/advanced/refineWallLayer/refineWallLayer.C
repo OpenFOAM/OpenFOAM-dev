@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
     }
 
     // Write resulting mesh
-    Info<< "Writing refined mesh to time " << runTime.timeName() << endl;
+    Info<< "Writing refined mesh to time " << runTime.name() << endl;
 
     mesh.write();
 

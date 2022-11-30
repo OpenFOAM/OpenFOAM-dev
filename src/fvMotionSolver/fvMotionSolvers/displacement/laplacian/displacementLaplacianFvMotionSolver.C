@@ -63,7 +63,7 @@ Foam::displacementLaplacianFvMotionSolver::displacementLaplacianFvMotionSolver
         IOobject
         (
             "cellDisplacement",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -92,7 +92,7 @@ Foam::displacementLaplacianFvMotionSolver::displacementLaplacianFvMotionSolver
     typeIOobject<pointVectorField> io
     (
         "pointLocation",
-        fvMesh_.time().timeName(),
+        fvMesh_.time().name(),
         fvMesh_,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE

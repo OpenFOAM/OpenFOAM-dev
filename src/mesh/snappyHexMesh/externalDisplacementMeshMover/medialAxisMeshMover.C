@@ -1236,7 +1236,7 @@ void Foam::medialAxisMeshMover::findIsolatedRegions
             (
                 mesh().time().path()
               / "islandExcludePoints_"
-              + mesh().time().timeName()
+              + mesh().time().name()
               + ".obj"
             )
         );
@@ -1605,7 +1605,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
         IOobject
         (
             "scale",
-            pointDisplacement.time().timeName(),
+            pointDisplacement.time().name(),
             pointDisplacement.db(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -1630,7 +1630,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
         IOobject
         (
             "dispVec",
-            pointDisplacement.time().timeName(),
+            pointDisplacement.time().name(),
             pointDisplacement.db(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -1644,7 +1644,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
         IOobject
         (
             "medialRatio",
-            pointDisplacement.time().timeName(),
+            pointDisplacement.time().name(),
             pointDisplacement.db(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -1658,7 +1658,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
         IOobject
         (
             "pointMedialDist",
-            pointDisplacement.time().timeName(),
+            pointDisplacement.time().name(),
             pointDisplacement.db(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -1672,7 +1672,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
         IOobject
         (
             "medialVec",
-            pointDisplacement.time().timeName(),
+            pointDisplacement.time().name(),
             pointDisplacement.db(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -1808,7 +1808,7 @@ void Foam::medialAxisMeshMover::calculateDisplacement
             (
                 mesh().time().path()
               / "thicknessRatioExcludePoints_"
-              + mesh().time().timeName()
+              + mesh().time().name()
               + ".obj"
             )
         );
@@ -1826,7 +1826,7 @@ void Foam::medialAxisMeshMover::calculateDisplacement
             (
                 mesh().time().path()
               / "thicknessRatioExcludeMedialVec_"
-              + mesh().time().timeName()
+              + mesh().time().name()
               + ".obj"
             )
         );

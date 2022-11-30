@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Foam::motionSmootherData::motionSmootherData
         IOobject
         (
             "displacement",
-            pMesh.time().timeName(),
+            pMesh.time().name(),
             pMesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -49,7 +49,7 @@ Foam::motionSmootherData::motionSmootherData
         IOobject
         (
             "scale",
-            pMesh.time().timeName(),
+            pMesh.time().name(),
             pMesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -71,7 +71,7 @@ Foam::motionSmootherData::motionSmootherData
         IOobject
         (
             "displacement",
-            displacement.time().timeName(),
+            displacement.time().name(),
             displacement.mesh()(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -83,7 +83,7 @@ Foam::motionSmootherData::motionSmootherData
         IOobject
         (
             "scale",
-            displacement.time().timeName(),
+            displacement.time().name(),
             displacement.mesh()(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

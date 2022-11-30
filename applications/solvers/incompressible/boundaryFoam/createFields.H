@@ -4,7 +4,7 @@ volVectorField U
     IOobject
     (
         "U",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -19,7 +19,7 @@ surfaceScalarField phi
     IOobject
     (
         "phi",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::NO_WRITE

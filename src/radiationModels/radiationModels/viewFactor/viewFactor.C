@@ -270,7 +270,7 @@ Foam::radiationModels::viewFactor::viewFactor(const volScalarField& T)
         IOobject
         (
             "qr",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -328,7 +328,7 @@ Foam::radiationModels::viewFactor::viewFactor
         IOobject
         (
             "qr",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

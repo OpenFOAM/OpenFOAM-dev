@@ -175,7 +175,7 @@ bool Foam::points0MotionSolver::write() const
 {
     if (mesh().topoChanged())
     {
-        points0_.instance() = mesh().time().timeName();
+        points0_.instance() = mesh().time().name();
         points0_.write();
     }
 

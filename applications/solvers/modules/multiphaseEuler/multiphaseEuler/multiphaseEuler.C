@@ -115,7 +115,7 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
             IOobject
             (
                 fv::localEulerDdt::rDeltaTName,
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -135,7 +135,7 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
             IOobject
             (
                 fv::localEulerDdt::rDeltaTfName,
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE

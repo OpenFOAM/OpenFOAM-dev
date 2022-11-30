@@ -156,7 +156,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
         IOobject
         (
             IOobject::groupName("R", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -169,7 +169,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
         IOobject
         (
             IOobject::groupName("nut", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

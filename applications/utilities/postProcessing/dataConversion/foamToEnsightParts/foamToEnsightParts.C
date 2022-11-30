@@ -247,7 +247,7 @@ int main(int argc, char *argv[])
             OFstream timeStamp(dataDir/subDir/"time");
             timeStamp
                 << "#   timestep time" << nl
-                << subDir.c_str() << " " << runTime.timeName() << nl;
+                << subDir.c_str() << " " << runTime.name() << nl;
         }
 
         #include "moveMesh.H"
@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
             IOobject fieldObject
             (
                 fieldName,
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
@@ -375,7 +375,7 @@ int main(int argc, char *argv[])
             IOobjectList cloudObjs
             (
                 mesh,
-                runTime.timeName(),
+                runTime.name(),
                 cloud::prefix/cloudName
             );
 
@@ -409,7 +409,7 @@ int main(int argc, char *argv[])
                 if (!fieldObject)
                 {
                     Info<< "missing "
-                        << runTime.timeName()/cloud::prefix/cloudName
+                        << runTime.name()/cloud::prefix/cloudName
                         / fieldName
                         << endl;
                     continue;

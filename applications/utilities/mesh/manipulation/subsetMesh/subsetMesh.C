@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ void subsetVolFields
             IOobject
             (
                 fieldName,
-                baseMesh.time().timeName(),
+                baseMesh.time().name(),
                 baseMesh,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
@@ -102,7 +102,7 @@ void subsetSurfaceFields
             IOobject
             (
                 fieldName,
-                baseMesh.time().timeName(),
+                baseMesh.time().name(),
                 baseMesh,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
@@ -137,7 +137,7 @@ void subsetPointFields
             IOobject
             (
                 fieldName,
-                baseMesh.time().timeName(),
+                baseMesh.time().name(),
                 baseMesh,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
@@ -171,7 +171,7 @@ void subsetDimensionedFields
             IOobject
             (
                 fieldName,
-                baseMesh.time().timeName(),
+                baseMesh.time().name(),
                 baseMesh,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
     const word setName = args[1];
 
     word meshInstance = mesh.pointsInstance();
-    word fieldsInstance = runTime.timeName();
+    word fieldsInstance = runTime.name();
 
     const bool overwrite = args.optionFound("overwrite");
     const bool specifiedInstance = args.optionReadIfPresent
@@ -280,7 +280,7 @@ int main(int argc, char *argv[])
 
     if (fields)
     {
-        IOobjectList objects(mesh, runTime.timeName());
+        IOobjectList objects(mesh, runTime.name());
 
         // Read vol fields and subset
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -462,7 +462,7 @@ int main(int argc, char *argv[])
         }
 
         Info<< "Writing subsetted mesh and fields to time "
-            << runTime.timeName() << endl;
+            << runTime.name() << endl;
 
         subsetter.subMesh().write();
 
@@ -590,7 +590,7 @@ int main(int argc, char *argv[])
         }
 
         Info<< "Writing subsetted mesh to time "
-            << runTime.timeName() << endl;
+            << runTime.name() << endl;
 
         subsetter.subMesh().write();
     }

@@ -260,7 +260,7 @@ Foam::thermoSurfaceFilm::thermoSurfaceFilm
         IOobject
         (
             "primaryEnergyTrans",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -280,7 +280,7 @@ Foam::thermoSurfaceFilm::thermoSurfaceFilm
         IOobject
         (
             "hSp",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -294,7 +294,7 @@ Foam::thermoSurfaceFilm::thermoSurfaceFilm
         IOobject
         (
             hSp_.name(),
-            time().timeName(),
+            time().name(),
             primaryMesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -308,7 +308,7 @@ Foam::thermoSurfaceFilm::thermoSurfaceFilm
         IOobject
         (
             "T", // Same name as T on primary region to enable mapping
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -370,7 +370,7 @@ Foam::thermoSurfaceFilm::thermoSurfaceFilm
                     IOobject
                     (
                         primarySpecieThermo.species()[i],
-                        time().timeName(),
+                        time().name(),
                         mesh(),
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
@@ -400,7 +400,7 @@ Foam::thermoSurfaceFilm::thermoSurfaceFilm
             IOobject
             (
                 "phi",
-                time().timeName(),
+                time().name(),
                 mesh(),
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE,

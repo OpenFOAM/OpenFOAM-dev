@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ using namespace Foam;
 
 void printMesh(const Time& runTime, const polyMesh& mesh)
 {
-    Info<< "Time:" << runTime.timeName()
+    Info<< "Time:" << runTime.name()
         << "  cells:" << mesh.globalData().nTotalCells()
         << "  faces:" << mesh.globalData().nTotalFaces()
         << "  points:" << mesh.globalData().nTotalPoints()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ void Foam::fvMeshTopoChangers::raw::zeroUnmappedValues
                 IOobject
                 (
                     "zero",
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh(),
                     IOobject::NO_READ,
                     IOobject::NO_WRITE,

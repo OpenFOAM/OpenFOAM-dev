@@ -103,7 +103,7 @@ Foam::chemistryTabulationMethods::ISAT::ISAT
         IOobject
         (
             chemistry.thermo().phasePropertyName("TabulationResults"),
-            chemistry.time().timeName(),
+            chemistry.time().name(),
             chemistry.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

@@ -71,7 +71,7 @@ incompressibleTwoPhaseInteractingMixture
         IOobject
         (
             "mu",
-            U_.time().timeName(),
+            U_.time().name(),
             U_.db()
         ),
         U_.mesh(),

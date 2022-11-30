@@ -55,7 +55,7 @@ Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
         IOobject
         (
             "nu",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         mesh,

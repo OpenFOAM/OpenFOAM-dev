@@ -3028,7 +3028,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
     //        IOobject
     //        (
     //            "wantedLevel",
-    //            fMesh.time().timeName(),
+    //            fMesh.time().name(),
     //            fMesh,
     //            IOobject::NO_READ,
     //            IOobject::NO_WRITE,

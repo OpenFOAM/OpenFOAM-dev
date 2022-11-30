@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ void Foam::VoidFraction<CloudType>::preEvolve()
                 IOobject
                 (
                     this->owner().name() + "Theta",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE

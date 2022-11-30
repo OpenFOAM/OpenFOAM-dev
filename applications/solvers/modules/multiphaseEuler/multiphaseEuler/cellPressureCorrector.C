@@ -222,7 +222,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             IOobject
             (
                 "phiHbyA",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -245,7 +245,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             IOobject
             (
                 "rAUf",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             mesh,

@@ -86,7 +86,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
         IOobject
         (
             "L",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         mesh,

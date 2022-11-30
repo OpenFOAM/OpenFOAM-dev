@@ -60,7 +60,7 @@ Foam::volScalarField& Foam::basicThermo::lookupOrConstruct
                 IOobject
                 (
                     name,
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE
@@ -277,7 +277,7 @@ Foam::basicThermo::implementation::implementation
         IOobject
         (
             phasePropertyName("T", phaseName),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -290,7 +290,7 @@ Foam::basicThermo::implementation::implementation
         IOobject
         (
             phasePropertyName("kappa", phaseName),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE

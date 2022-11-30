@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 
     #include "createTimes.H"
 
-    Info<< "Reading master mesh for time = " << runTimeMaster.timeName() << nl;
+    Info<< "Reading master mesh for time = " << runTimeMaster.name() << nl;
 
     Info<< "Create mesh\n" << endl;
     mergePolyMesh masterMesh
@@ -113,14 +113,14 @@ int main(int argc, char *argv[])
         IOobject
         (
             masterRegion,
-            runTimeMaster.timeName(),
+            runTimeMaster.name(),
             runTimeMaster
         )
     );
     const word oldInstance = masterMesh.pointsInstance();
 
 
-    Info<< "Reading mesh to add for time = " << runTimeToAdd.timeName() << nl;
+    Info<< "Reading mesh to add for time = " << runTimeToAdd.name() << nl;
 
     Info<< "Create mesh\n" << endl;
     polyMesh meshToAdd
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             addRegion,
-            runTimeToAdd.timeName(),
+            runTimeToAdd.name(),
             runTimeToAdd
         )
     );
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
         runTimeMaster++;
     }
 
-    Info<< "Writing combined mesh to " << runTimeMaster.timeName() << endl;
+    Info<< "Writing combined mesh to " << runTimeMaster.name() << endl;
 
     masterMesh.addMesh(meshToAdd);
     masterMesh.merge();

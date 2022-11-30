@@ -129,7 +129,7 @@ ThermalPhaseChangePhaseSystem
                         "thermalPhaseChange:dmdtf",
                         interface.name()
                     ),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh(),
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
@@ -151,7 +151,7 @@ ThermalPhaseChangePhaseSystem
                         "thermalPhaseChange:d2mdtdpf",
                         interface.name()
                     ),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh(),
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
@@ -173,7 +173,7 @@ ThermalPhaseChangePhaseSystem
                         "thermalPhaseChange:Tf",
                         interface.name()
                     ),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh(),
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
@@ -197,7 +197,7 @@ ThermalPhaseChangePhaseSystem
                         "thermalPhaseChange:nucleation:dmdtf",
                         interface.name()
                     ),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh(),
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE

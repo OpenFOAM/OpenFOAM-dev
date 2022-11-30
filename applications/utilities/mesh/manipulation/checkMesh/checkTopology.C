@@ -336,7 +336,7 @@ Foam::label Foam::checkTopology
             Info<< "    The mesh has multiple regions which are not connected "
                    "by any face." << endl
                 << "  <<Writing region information to "
-                << mesh.time().timeName()/"cellToRegion"
+                << mesh.time().name()/"cellToRegion"
                 << endl;
 
             labelIOList ctr
@@ -344,7 +344,7 @@ Foam::label Foam::checkTopology
                 IOobject
                 (
                     "cellToRegion",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE

@@ -140,7 +140,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
             IOobject
             (
                 typedName("D"),
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -153,7 +153,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
             IOobject
             (
                 typedName("F"),
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE

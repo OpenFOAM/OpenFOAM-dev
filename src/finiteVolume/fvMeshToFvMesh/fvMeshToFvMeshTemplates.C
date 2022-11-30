@@ -150,7 +150,7 @@ Foam::fvMeshToFvMesh::mapSrcToTgt
             IOobject
             (
                 typedName("interpolate(" + field.name() + ")"),
-                tgtMesh.time().timeName(),
+                tgtMesh.time().name(),
                 tgtMesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE

@@ -976,7 +976,7 @@ Foam::label Foam::checkGeometry
            /functionObjects::writeFile::outputPrefix
            /(mesh.name() != polyMesh::defaultRegion ? mesh.name() : word())
            /"checkMesh"
-           /mesh.time().timeName();
+           /mesh.time().name();
 
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 

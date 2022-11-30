@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,7 +157,7 @@ bool Foam::AveragingMethod<Type>::write(const bool write) const
         IOobject
         (
             this->name() + ":cellValue",
-            this->time().timeName(),
+            this->time().name(),
             mesh_
         ),
         mesh_,
@@ -168,7 +168,7 @@ bool Foam::AveragingMethod<Type>::write(const bool write) const
         IOobject
         (
             this->name() + ":cellGrad",
-            this->time().timeName(),
+            this->time().name(),
             mesh_
         ),
         mesh_,
@@ -179,7 +179,7 @@ bool Foam::AveragingMethod<Type>::write(const bool write) const
         IOobject
         (
             this->name() + ":pointValue",
-            this->time().timeName(),
+            this->time().name(),
             mesh_
         ),
         pointMesh_,
@@ -190,7 +190,7 @@ bool Foam::AveragingMethod<Type>::write(const bool write) const
         IOobject
         (
             this->name() + ":pointGrad",
-            this->time().timeName(),
+            this->time().name(),
             mesh_
         ),
         pointMesh_,

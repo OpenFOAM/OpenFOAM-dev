@@ -115,7 +115,7 @@ waxSolventViscosity::waxSolventViscosity
         IOobject
         (
             typedName("muWax"),
-            film.mesh().time().timeName(),
+            film.mesh().time().name(),
             film.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -138,7 +138,7 @@ waxSolventViscosity::waxSolventViscosity
         IOobject
         (
             typedName("muSolvent"),
-            film.mesh().time().timeName(),
+            film.mesh().time().name(),
             film.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

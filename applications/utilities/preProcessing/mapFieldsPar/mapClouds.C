@@ -85,7 +85,7 @@ void mapCloudTypeFields
           : IOobject
             (
                 fieldName,
-                srcMesh.time().timeName(),
+                srcMesh.time().name(),
                 cloud::prefix/cloudDir,
                 srcMesh,
                 IOobject::NO_READ,
@@ -105,7 +105,7 @@ void mapCloudTypeFields
                 IOobject
                 (
                     fieldName,
-                    tgtMesh.time().timeName(),
+                    tgtMesh.time().name(),
                     cloud::prefix/cloudDir,
                     tgtMesh,
                     IOobject::NO_READ,
@@ -263,7 +263,7 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
         IOobjectList objects
         (
             srcMesh,
-            srcMesh.time().timeName(),
+            srcMesh.time().name(),
             cloud::prefix/cloudDirs[cloudi]
         );
 

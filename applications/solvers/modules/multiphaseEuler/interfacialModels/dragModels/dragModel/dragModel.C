@@ -52,7 +52,7 @@ Foam::dragModel::dragModel
         IOobject
         (
             IOobject::groupName(typeName, interface.name()),
-            interface.mesh().time().timeName(),
+            interface.mesh().time().name(),
             interface.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,

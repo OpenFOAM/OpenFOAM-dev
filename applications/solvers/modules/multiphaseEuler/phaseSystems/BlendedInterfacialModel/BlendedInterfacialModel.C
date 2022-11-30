@@ -685,7 +685,7 @@ void Foam::BlendedInterfacialModel<ModelType>::postProcessBlendingCoefficients
                     IOobject
                     (
                         fluid.phases()[phasei].volScalarField::name(),
-                        mesh.time().timeName(),
+                        mesh.time().name(),
                         mesh
                     ),
                     mesh,
@@ -1284,7 +1284,7 @@ Foam::BlendedInterfacialModel<ModelType>::BlendedInterfacialModel
         IOobject
         (
             IOobject::groupName(typeName, interface.name()),
-            interface.fluid().mesh().time().timeName(),
+            interface.fluid().mesh().time().name(),
             interface.fluid().mesh()
         )
     ),

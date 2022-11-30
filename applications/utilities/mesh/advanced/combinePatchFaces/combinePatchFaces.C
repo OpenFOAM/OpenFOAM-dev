@@ -444,7 +444,7 @@ int main(int argc, char *argv[])
             mesh.setInstance(oldInstance);
         }
 
-        Info<< "Writing morphed mesh to time " << runTime.timeName() << endl;
+        Info<< "Writing morphed mesh to time " << runTime.name() << endl;
 
         mesh.write();
     }

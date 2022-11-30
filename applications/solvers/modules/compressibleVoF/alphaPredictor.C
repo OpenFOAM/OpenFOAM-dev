@@ -52,7 +52,7 @@ void Foam::solvers::compressibleVoF::alphaPredictor()
             IOobject
             (
                 "alphaPhi1",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             mesh,
@@ -64,7 +64,7 @@ void Foam::solvers::compressibleVoF::alphaPredictor()
             IOobject
             (
                 "rhoPhiSum",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             mesh,

@@ -366,7 +366,7 @@ Foam::MeshedSurface<Face>::MeshedSurface
         IOobject
         (
             "dummyName",
-            t.timeName(),
+            t.name(),
             t,
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE,

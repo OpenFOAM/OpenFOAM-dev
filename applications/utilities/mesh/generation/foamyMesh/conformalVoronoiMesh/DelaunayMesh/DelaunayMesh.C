@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,14 +56,14 @@ Foam::DelaunayMesh<Triangulation>::DelaunayMesh
     cellCount_(0),
     runTime_(runTime)
 {
-    Info<< "Reading " << meshName << " from " << runTime.timeName() << endl;
+    Info<< "Reading " << meshName << " from " << runTime.name() << endl;
 
     pointIOField pts
     (
         IOobject
         (
             "points",
-            runTime.timeName(),
+            runTime.name(),
             meshName/polyMesh::meshSubDir,
             runTime,
             IOobject::READ_IF_PRESENT,
@@ -78,7 +78,7 @@ Foam::DelaunayMesh<Triangulation>::DelaunayMesh
             IOobject
             (
                 "types",
-                runTime.timeName(),
+                runTime.name(),
                 meshName,
                 runTime,
                 IOobject::MUST_READ,
@@ -92,7 +92,7 @@ Foam::DelaunayMesh<Triangulation>::DelaunayMesh
 //            IOobject
 //            (
 //                "indices",
-//                runTime.timeName(),
+//                runTime.name(),
 //                meshName,
 //                runTime,
 //                IOobject::MUST_READ,
@@ -105,7 +105,7 @@ Foam::DelaunayMesh<Triangulation>::DelaunayMesh
             IOobject
             (
                 "processorIndices",
-                runTime.timeName(),
+                runTime.name(),
                 meshName,
                 runTime,
                 IOobject::MUST_READ,

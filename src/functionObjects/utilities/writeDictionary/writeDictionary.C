@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,7 +190,7 @@ bool Foam::functionObjects::writeDictionary::write()
         }
         else
         {
-            bool processed = tryDirectory(i, obr_.time().timeName(), firstDict);
+            bool processed = tryDirectory(i, obr_.time().name(), firstDict);
 
             if (!processed)
             {

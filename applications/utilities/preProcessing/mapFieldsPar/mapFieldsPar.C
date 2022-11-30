@@ -50,7 +50,7 @@ void mapConsistentMesh
 )
 {
     Info<< nl << "Consistently creating and mapping fields for time "
-        << srcMesh.time().timeName() << nl << endl;
+        << srcMesh.time().name() << nl << endl;
 
     fvMeshToFvMesh interp(srcMesh, tgtMesh, mapMethod);
 
@@ -82,7 +82,7 @@ void mapSubMesh
 )
 {
     Info<< nl << "Creating and mapping fields for time "
-        << srcMesh.time().timeName() << nl << endl;
+        << srcMesh.time().name() << nl << endl;
 
     fvMeshToFvMesh interp
     (
@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             sourceRegion,
-            runTimeSource.timeName(),
+            runTimeSource.name(),
             runTimeSource
         ),
         false
@@ -251,7 +251,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             targetRegion,
-            runTimeTarget.timeName(),
+            runTimeTarget.name(),
             runTimeTarget
         ),
         false

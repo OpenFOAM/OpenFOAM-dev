@@ -11,7 +11,7 @@ if (nVar >= 0)
         IOobject
         (
             name,
-            runTime.timeName(),
+            runTime.name(),
             cloud::prefix,
             mesh,
             IOobject::MUST_READ,

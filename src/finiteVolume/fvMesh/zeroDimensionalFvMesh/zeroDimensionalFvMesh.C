@@ -50,7 +50,7 @@ Foam::fvMesh Foam::zeroDimensionalFvMesh(const objectRegistry& db)
         IOobject
         (
             fvMesh::defaultRegion,
-            db.time().timeName(),
+            db.time().name(),
             db,
             IOobject::READ_IF_PRESENT
         ),

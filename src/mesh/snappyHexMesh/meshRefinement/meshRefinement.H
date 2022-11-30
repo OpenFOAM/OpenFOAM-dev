@@ -1089,9 +1089,9 @@ public:
             //- Print some mesh stats.
             void printMeshInfo(const bool, const string&) const;
 
-            //- Replacement for Time::timeName() : return oldInstance (if
+            //- Replacement for Time::name() : return oldInstance (if
             //  overwrite_)
-            word timeName() const;
+            word name() const;
 
             //- Set instance of all local IOobjects
             void setInstance(const fileName&);

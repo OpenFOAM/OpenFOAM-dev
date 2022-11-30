@@ -498,7 +498,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "SigmaTcRMax",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -510,7 +510,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + ":collisionSelectionRemainder",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_
         ),
         mesh_,
@@ -521,7 +521,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             "q",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -533,7 +533,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             "fD",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -545,7 +545,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             "rhoN",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -557,7 +557,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             "rhoM",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -569,7 +569,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             "dsmcRhoN",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -581,7 +581,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             "linearKE",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -593,7 +593,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             "internalE",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -605,7 +605,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             "iDof",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -617,7 +617,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             "momentum",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -633,7 +633,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             IOobject
             (
                 "boundaryT",
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::MUST_READ,
                 IOobject::AUTO_WRITE
@@ -648,7 +648,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             IOobject
             (
                 "boundaryU",
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::MUST_READ,
                 IOobject::AUTO_WRITE
@@ -731,7 +731,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "SigmaTcRMax",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -745,7 +745,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + ":collisionSelectionRemainder",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_
         ),
         mesh_,
@@ -756,7 +756,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "q_",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -769,7 +769,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "fD_",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -787,7 +787,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "rhoN_",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -800,7 +800,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "rhoM_",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -813,7 +813,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "dsmcRhoN_",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -826,7 +826,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "linearKE_",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -839,7 +839,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "internalE_",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -852,7 +852,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "iDof_",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -865,7 +865,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         IOobject
         (
             this->name() + "momentum_",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -887,7 +887,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             IOobject
             (
                 "boundaryT",
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -903,7 +903,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
             IOobject
             (
                 "boundaryU",
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -1066,7 +1066,7 @@ void Foam::DSMCCloud<ParcelType>::dumpParticlePositions() const
     (
         this->db().time().path()/"parcelPositions_"
       + this->name() + "_"
-      + this->db().time().timeName() + ".obj"
+      + this->db().time().name() + ".obj"
     );
 
     forAllConstIter(typename DSMCCloud<ParcelType>, *this, iter)

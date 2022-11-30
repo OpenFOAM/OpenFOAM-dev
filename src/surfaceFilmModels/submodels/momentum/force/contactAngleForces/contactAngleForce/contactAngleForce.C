@@ -72,7 +72,7 @@ void contactAngleForce::initialise()
             IOobject
             (
                 "y",
-                filmModel_.mesh().time().timeName(),
+                filmModel_.mesh().time().name(),
                 filmModel_.mesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -104,7 +104,7 @@ contactAngleForce::contactAngleForce
         IOobject
         (
             typedName("contactForceMask"),
-            filmModel_.time().timeName(),
+            filmModel_.time().name(),
             filmModel_.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

@@ -46,7 +46,7 @@ volScalarField p
     IOobject
     (
         "p",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -61,7 +61,7 @@ volVectorField U
     IOobject
     (
         "U",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -77,7 +77,7 @@ volScalarField pB
     IOobject
     (
         "pB",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -92,7 +92,7 @@ volVectorField B
     IOobject
     (
         "B",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE

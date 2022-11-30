@@ -42,7 +42,7 @@ inline Foam::MPPICParcel<ParcelType>::trackingData::trackingData
             IOobject
             (
                 cloud.name() + ":volumeAverage",
-                cloud.db().time().timeName(),
+                cloud.db().time().name(),
                 cloud.mesh()
             ),
             cloud.solution().dict(),
@@ -56,7 +56,7 @@ inline Foam::MPPICParcel<ParcelType>::trackingData::trackingData
             IOobject
             (
                 cloud.name() + ":radiusAverage",
-                cloud.db().time().timeName(),
+                cloud.db().time().name(),
                 cloud.mesh()
             ),
             cloud.solution().dict(),
@@ -70,7 +70,7 @@ inline Foam::MPPICParcel<ParcelType>::trackingData::trackingData
             IOobject
             (
                 cloud.name() + ":rhoAverage",
-                cloud.db().time().timeName(),
+                cloud.db().time().name(),
                 cloud.mesh()
             ),
             cloud.solution().dict(),
@@ -84,7 +84,7 @@ inline Foam::MPPICParcel<ParcelType>::trackingData::trackingData
             IOobject
             (
                 cloud.name() + ":uAverage",
-                cloud.db().time().timeName(),
+                cloud.db().time().name(),
                 cloud.mesh()
             ),
             cloud.solution().dict(),
@@ -98,7 +98,7 @@ inline Foam::MPPICParcel<ParcelType>::trackingData::trackingData
             IOobject
             (
                 cloud.name() + ":uSqrAverage",
-                cloud.db().time().timeName(),
+                cloud.db().time().name(),
                 cloud.mesh()
             ),
             cloud.solution().dict(),
@@ -112,7 +112,7 @@ inline Foam::MPPICParcel<ParcelType>::trackingData::trackingData
             IOobject
             (
                 cloud.name() + ":frequencyAverage",
-                cloud.db().time().timeName(),
+                cloud.db().time().name(),
                 cloud.mesh()
             ),
             cloud.solution().dict(),
@@ -126,7 +126,7 @@ inline Foam::MPPICParcel<ParcelType>::trackingData::trackingData
             IOobject
             (
                 cloud.name() + ":massAverage",
-                cloud.db().time().timeName(),
+                cloud.db().time().name(),
                 cloud.mesh()
             ),
             cloud.solution().dict(),
@@ -161,7 +161,7 @@ inline void Foam::MPPICParcel<ParcelType>::trackingData::updateAverages
             IOobject
             (
                 cloud.name() + ":weightAverage",
-                cloud.db().time().timeName(),
+                cloud.db().time().name(),
                 cloud.mesh()
             ),
             cloud.solution().dict(),

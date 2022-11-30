@@ -87,7 +87,7 @@ Foam::fvMeshSubset::interpolate
             IOobject
             (
                 "subset"+vf.name(),
-                sMesh.time().timeName(),
+                sMesh.time().name(),
                 sMesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -228,7 +228,7 @@ Foam::fvMeshSubset::interpolate
             IOobject
             (
                 "subset"+sf.name(),
-                sMesh.time().timeName(),
+                sMesh.time().name(),
                 sMesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -407,7 +407,7 @@ Foam::fvMeshSubset::interpolate
             IOobject
             (
                 "subset"+pf.name(),
-                sMesh.time().timeName(),
+                sMesh.time().name(),
                 sMesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -520,7 +520,7 @@ Foam::fvMeshSubset::interpolate
             IOobject
             (
                 "subset"+df.name(),
-                sMesh.time().timeName(),
+                sMesh.time().name(),
                 sMesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE

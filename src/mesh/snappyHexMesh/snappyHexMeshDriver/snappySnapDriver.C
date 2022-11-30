@@ -463,7 +463,7 @@ Foam::tmp<Foam::scalarField> Foam::snappySnapDriver::edgePatchDist
     //        IOobject
     //        (
     //            "pointDist",
-    //            meshRefiner_.timeName(),
+    //            meshRefiner_.name(),
     //            mesh.DB(),
     //            IOobject::NO_READ,
     //            IOobject::AUTO_WRITE
@@ -486,7 +486,7 @@ Foam::tmp<Foam::scalarField> Foam::snappySnapDriver::edgePatchDist
     //        pointDist[pointi] /= mesh.pointEdges()[pointi].size();
     //    }
     //    Info<< "Writing patch distance to " << pointDist.name()
-    //        << " at time " << meshRefiner_.timeName() << endl;
+    //        << " at time " << meshRefiner_.name() << endl;
     //
     //    pointDist.write();
     //}
@@ -725,7 +725,7 @@ void Foam::snappySnapDriver::preSmoothPatch
     {
         const_cast<Time&>(mesh.time())++;
         Info<< "Writing patch smoothed mesh to time "
-            << meshRefiner.timeName() << '.' << endl;
+            << meshRefiner.name() << '.' << endl;
         meshRefiner.write
         (
             meshRefinement::debugType(debug),
@@ -734,7 +734,7 @@ void Foam::snappySnapDriver::preSmoothPatch
                 meshRefinement::writeLevel()
               | meshRefinement::WRITEMESH
             ),
-            mesh.time().path()/meshRefiner.timeName()
+            mesh.time().path()/meshRefiner.name()
         );
         Info<< "Dumped mesh in = "
             << mesh.time().cpuTimeIncrement() << " s\n" << nl << endl;
@@ -1026,7 +1026,7 @@ void Foam::snappySnapDriver::detectNearSurfaces
     //        OBJstream str
     //        (
     //            mesh.time().path()
-    //          / "surfaceHits_" + meshRefiner_.timeName() + ".obj"
+    //          / "surfaceHits_" + meshRefiner_.name() + ".obj"
     //        );
     //
     //        Info<< "Dumping intersections with rays to " << str.name()
@@ -1050,7 +1050,7 @@ void Foam::snappySnapDriver::detectNearSurfaces
     //        OBJstream str
     //        (
     //            mesh.time().path()
-    //          / "coplanarHits_" + meshRefiner_.timeName() + ".obj"
+    //          / "coplanarHits_" + meshRefiner_.name() + ".obj"
     //        );
     //
     //        Info<< "Dumping intersections with co-planar surfaces to "
@@ -1168,7 +1168,7 @@ void Foam::snappySnapDriver::detectNearSurfaces
             new OBJstream
             (
                 mesh.time().path()
-              / "detectNearSurfaces_" + meshRefiner_.timeName() + ".obj"
+              / "detectNearSurfaces_" + meshRefiner_.name() + ".obj"
             )
         );
     }
@@ -1734,7 +1734,7 @@ void Foam::snappySnapDriver::smoothDisplacement
     if (debug&meshRefinement::MESH)
     {
         const_cast<Time&>(mesh.time())++;
-        Info<< "Writing smoothed mesh to time " << meshRefiner_.timeName()
+        Info<< "Writing smoothed mesh to time " << meshRefiner_.name()
             << endl;
 
         // Moving mesh creates meshPhi. Can be cleared out by a mesh.clearOut
@@ -1749,7 +1749,7 @@ void Foam::snappySnapDriver::smoothDisplacement
                 meshRefinement::writeLevel()
               | meshRefinement::WRITEMESH
             ),
-            mesh.time().path()/meshRefiner_.timeName()
+            mesh.time().path()/meshRefiner_.name()
         );
         Info<< "Writing displacement field ..." << endl;
         disp.write();
@@ -1761,7 +1761,7 @@ void Foam::snappySnapDriver::smoothDisplacement
         dumpMove
         (
             mesh.time().path()
-          / "actualPatchDisplacement_" + meshRefiner_.timeName() + ".obj",
+          / "actualPatchDisplacement_" + meshRefiner_.name() + ".obj",
             pp.localPoints(),
             pp.localPoints() + actualPatchDisp
         );
@@ -1808,7 +1808,7 @@ bool Foam::snappySnapDriver::scaleMesh
         if (debug&meshRefinement::MESH)
         {
             const_cast<Time&>(mesh.time())++;
-            Info<< "Writing scaled mesh to time " << meshRefiner_.timeName()
+            Info<< "Writing scaled mesh to time " << meshRefiner_.name()
                 << endl;
             mesh.write();
 
@@ -2311,7 +2311,7 @@ void Foam::snappySnapDriver::doSnap
             {
                 const_cast<Time&>(mesh.time())++;
                 Pout<< "Writing duplicatedPoints mesh to time "
-                    << meshRefiner_.timeName()
+                    << meshRefiner_.name()
                     << endl;
                 meshRefiner_.write
                 (
@@ -2571,7 +2571,7 @@ void Foam::snappySnapDriver::doSnap
             //    {
             //        const_cast<Time&>(mesh.time())++;
             //        Info<< "Writing split diagonal mesh to time "
-            //            << meshRefiner_.timeName() << endl;
+            //            << meshRefiner_.name() << endl;
             //        meshRefiner_.write
             //        (
             //            meshRefinement::debugType(debug),
@@ -2580,7 +2580,7 @@ void Foam::snappySnapDriver::doSnap
             //                meshRefinement::writeLevel()
             //              | meshRefinement::WRITEMESH
             //            ),
-            //            mesh.time().path()/meshRefiner_.timeName()
+            //            mesh.time().path()/meshRefiner_.name()
             //        );
             //    }
             //}
@@ -2650,7 +2650,7 @@ void Foam::snappySnapDriver::doSnap
             //    {
             //        const_cast<Time&>(mesh.time())++;
             //        Info<< "Writing split warped mesh to time "
-            //            << meshRefiner_.timeName() << endl;
+            //            << meshRefiner_.name() << endl;
             //        meshRefiner_.write
             //        (
             //            meshRefinement::debugType(debug),
@@ -2659,7 +2659,7 @@ void Foam::snappySnapDriver::doSnap
             //                meshRefinement::writeLevel()
             //              | meshRefinement::WRITEMESH
             //            ),
-            //            mesh.time().path()/meshRefiner_.timeName()
+            //            mesh.time().path()/meshRefiner_.name()
             //        );
             //    }
             //}
@@ -2774,7 +2774,7 @@ void Foam::snappySnapDriver::doSnap
             {
                 const_cast<Time&>(mesh.time())++;
                 Info<< "Writing scaled mesh to time "
-                    << meshRefiner_.timeName() << endl;
+                    << meshRefiner_.name() << endl;
                 meshRefiner_.write
                 (
                     meshRefinement::debugType(debug),
@@ -2783,7 +2783,7 @@ void Foam::snappySnapDriver::doSnap
                         meshRefinement::writeLevel()
                       | meshRefinement::WRITEMESH
                     ),
-                    mesh.time().path()/meshRefiner_.timeName()
+                    mesh.time().path()/meshRefiner_.name()
                 );
                 Info<< "Writing displacement field ..." << endl;
                 meshMover.displacement().write();
@@ -2848,7 +2848,7 @@ void Foam::snappySnapDriver::doSnap
     {
         const_cast<Time&>(mesh.time())++;
         Info<< "Writing patchFace merged mesh to time "
-            << meshRefiner_.timeName() << endl;
+            << meshRefiner_.name() << endl;
         meshRefiner_.write
         (
             meshRefinement::debugType(debug),
@@ -2857,7 +2857,7 @@ void Foam::snappySnapDriver::doSnap
                 meshRefinement::writeLevel()
               | meshRefinement::WRITEMESH
             ),
-            meshRefiner_.timeName()
+            meshRefiner_.name()
         );
     }
 }

@@ -435,7 +435,7 @@ void Foam::ParticleCollector<CloudType>::write()
         if (outputFilePtr_.valid())
         {
             outputFilePtr_()
-                << time.timeName()
+                << time.name()
                 << tab << facei
                 << tab << faceMassTotal[facei]
                 << tab << faceMassFlowRate[facei]

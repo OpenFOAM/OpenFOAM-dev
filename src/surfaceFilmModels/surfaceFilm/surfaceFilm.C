@@ -157,7 +157,7 @@ Foam::surfaceFilm::surfaceFilm
         IOobject
         (
             regionName_,
-            time_.timeName(),
+            time_.name(),
             time_,
             IOobject::MUST_READ
         )
@@ -172,7 +172,7 @@ Foam::surfaceFilm::surfaceFilm
         IOobject
         (
             "nHat",
-            time_.timeName(),
+            time_.name(),
             mesh_
         ),
         mesh_,
@@ -184,7 +184,7 @@ Foam::surfaceFilm::surfaceFilm
         IOobject
         (
             "magSf",
-            time_.timeName(),
+            time_.name(),
             mesh_
         ),
         mesh_,
@@ -195,7 +195,7 @@ Foam::surfaceFilm::surfaceFilm
         IOobject
         (
             "VbyA",
-            time_.timeName(),
+            time_.name(),
             mesh_
         ),
         mesh_,
@@ -260,7 +260,7 @@ Foam::surfaceFilm::surfaceFilm
                 IOobject
                 (
                     regionName_ + "OutputProperties",
-                    time_.timeName(),
+                    time_.name(),
                     "uniform"/regionName_,
                     primaryMesh_,
                     IOobject::READ_IF_PRESENT,

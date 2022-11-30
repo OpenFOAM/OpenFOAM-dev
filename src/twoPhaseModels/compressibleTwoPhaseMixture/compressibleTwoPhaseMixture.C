@@ -52,7 +52,7 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
         IOobject
         (
             "p",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -64,7 +64,7 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
         IOobject
         (
             "T",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -78,7 +78,7 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
         IOobject
         (
             "rho",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -91,7 +91,7 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
         IOobject
         (
             IOobject::groupName("Alpha", phase1Name()),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         alpha1(),
@@ -102,7 +102,7 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
         IOobject
         (
             IOobject::groupName("Alpha", phase2Name()),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         alpha2(),
@@ -115,7 +115,7 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
             IOobject
             (
                 IOobject::groupName("T", phase1Name()),
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh
             ),
             T_,
@@ -130,7 +130,7 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
             IOobject
             (
                 IOobject::groupName("T", phase2Name()),
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh
             ),
             T_,

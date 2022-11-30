@@ -118,7 +118,7 @@ void MapGeometricFields
                 bfield[patchi].autoMap(mapper.boundaryMap()[patchi]);
             }
 
-            field.instance() = field.time().timeName();
+            field.instance() = field.time().name();
         }
         else if (polyMesh::debug)
         {

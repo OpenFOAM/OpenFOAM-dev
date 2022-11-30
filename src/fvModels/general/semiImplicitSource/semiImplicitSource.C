@@ -105,7 +105,7 @@ void Foam::fv::semiImplicitSource::addSupType
         IOobject
         (
             name() + fieldName + "Su",
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -141,7 +141,7 @@ void Foam::fv::semiImplicitSource::addSupType
         IOobject
         (
             name() + fieldName + "Sp",
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

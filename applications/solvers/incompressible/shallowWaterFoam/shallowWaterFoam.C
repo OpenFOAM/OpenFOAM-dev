@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 
     while (pimple.loop(runTime))
     {
-        Info<< "\n Time = " << runTime.timeName() << nl << endl;
+        Info<< "\n Time = " << runTime.name() << nl << endl;
 
         #include "CourantNo.H"
 

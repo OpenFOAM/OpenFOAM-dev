@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -314,7 +314,7 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(timeDirs[timeI], timeI);
 
-        Info<< "Time: " << runTime.timeName() << endl;
+        Info<< "Time: " << runTime.name() << endl;
 
         const word timeDesc = name(timeI);    // name(runTime.timeIndex());
 
@@ -335,7 +335,7 @@ int main(int argc, char *argv[])
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // Search for list of objects for this time
-        IOobjectList objects(mesh, runTime.timeName());
+        IOobjectList objects(mesh, runTime.name());
 
         HashSet<word> selectedFields;
         if (args.optionFound("fields"))
@@ -1222,7 +1222,7 @@ int main(int argc, char *argv[])
             IOobjectList sprayObjs
             (
                 mesh,
-                runTime.timeName(),
+                runTime.name(),
                 cloud::prefix/cloudDirs[cloudI]
             );
 
@@ -1354,7 +1354,7 @@ int main(int argc, char *argv[])
                         IOobject
                         (
                             labelNames[i],
-                            mesh.time().timeName(),
+                            mesh.time().name(),
                             cloud::prefix/cloudDirs[cloudI],
                             mesh,
                             IOobject::MUST_READ,
@@ -1378,7 +1378,7 @@ int main(int argc, char *argv[])
                         IOobject
                         (
                             scalarNames[i],
-                            mesh.time().timeName(),
+                            mesh.time().name(),
                             cloud::prefix/cloudDirs[cloudI],
                             mesh,
                             IOobject::MUST_READ,
@@ -1396,7 +1396,7 @@ int main(int argc, char *argv[])
                         IOobject
                         (
                             vectorNames[i],
-                            mesh.time().timeName(),
+                            mesh.time().name(),
                             cloud::prefix/cloudDirs[cloudI],
                             mesh,
                             IOobject::MUST_READ,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         << runTime.cpuTimeIncrement()
         << " s\n" << endl << endl;
 
-    Info<< "Time now = " << runTime.timeName() << endl;
+    Info<< "Time now = " << runTime.name() << endl;
 
     // Wall-reflection vectors
     const volVectorField& n = wallDist::New(mesh).n();
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
     runTime++;
 
-    Info<< "Time now = " << runTime.timeName() << endl;
+    Info<< "Time now = " << runTime.name() << endl;
 
     // Move points
 

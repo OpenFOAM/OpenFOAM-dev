@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,14 +91,14 @@ bool Foam::functionObjects::XiReactionRate::write()
         IOobject
         (
             "St",
-            time_.timeName(),
+            time_.name(),
             mesh_
         ),
         Xi*Su
     );
 
     Log << "    Writing turbulent flame-speed field " << St.name()
-        << " to " << time_.timeName() << endl;
+        << " to " << time_.name() << endl;
 
     St.write();
 
@@ -107,14 +107,14 @@ bool Foam::functionObjects::XiReactionRate::write()
         IOobject
         (
             "wdot",
-            time_.timeName(),
+            time_.name(),
             mesh_
         ),
         St*mag(fvc::grad(b))
     );
 
     Log << "    Writing reaction-rate field " << wdot.name()
-        << " to " << time_.timeName() << endl;
+        << " to " << time_.name() << endl;
 
     wdot.write();
 

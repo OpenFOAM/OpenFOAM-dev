@@ -178,7 +178,7 @@ void Foam::phaseSystem::fillFields
                 IOobject
                 (
                     IOobject::groupName(name, phase.name()),
-                    this->mesh_.time().timeName(),
+                    this->mesh_.time().name(),
                     this->mesh_
                 ),
                 this->mesh_,
@@ -214,7 +214,7 @@ void Foam::phaseSystem::fillFields
                 IOobject
                 (
                     IOobject::groupName(name, phase.name()),
-                    this->mesh_.time().timeName(),
+                    this->mesh_.time().name(),
                     this->mesh_
                 ),
                 this->mesh_,

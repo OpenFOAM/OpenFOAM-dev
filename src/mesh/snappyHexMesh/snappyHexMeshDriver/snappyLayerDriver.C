@@ -204,7 +204,7 @@ void Foam::snappyLayerDriver::checkMeshManifold() const
             //<< nonManifoldPoints.name()
             << endl;
 
-        // nonManifoldPoints.instance() = meshRefiner_.timeName();
+        // nonManifoldPoints.instance() = meshRefiner_.name();
         // nonManifoldPoints.write();
     }
     Info<< endl;
@@ -439,7 +439,7 @@ void Foam::snappyLayerDriver::handleFeatureAngle
                 (
                     mesh.time().path()
                   / "featureEdges_"
-                  + meshRefiner_.timeName()
+                  + meshRefiner_.name()
                   + ".obj"
                 )
             );
@@ -628,7 +628,7 @@ void Foam::snappyLayerDriver::handleWarpedFaces
 //
 //    if (nMultiPatchCells > 0)
 //    {
-//        multiPatchCells.instance() = meshRefiner_.timeName();
+//        multiPatchCells.instance() = meshRefiner_.name();
 //        Info<< "Writing " << nMultiPatchCells
 //            << " cells with multiple (connected) patch faces to cellSet "
 //            << multiPatchCells.objectPath() << endl;
@@ -851,7 +851,7 @@ Foam::snappyLayerDriver::makeLayerDisplacementField
     }
 
 
-    // Note: time().timeName() instead of meshRefinement::timeName() since
+    // Note: time().name() instead of meshRefinement::name() since
     // postprocessable field.
     tmp<pointVectorField> tfld
     (
@@ -2590,7 +2590,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                     addedCellSet.insert(celli);
                 }
             }
-            addedCellSet.instance() = meshRefiner_.timeName();
+            addedCellSet.instance() = meshRefiner_.name();
             Info<< "Writing "
                 << returnReduce(addedCellSet.size(), sumOp<label>())
                 << " added cells to cellSet "
@@ -2616,7 +2616,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                     layerFacesSet.insert(facei);
                 }
             }
-            layerFacesSet.instance() = meshRefiner_.timeName();
+            layerFacesSet.instance() = meshRefiner_.name();
             Info<< "Writing "
                 << returnReduce(layerFacesSet.size(), sumOp<label>())
                 << " faces inside added layer to faceSet "
@@ -2636,7 +2636,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                 IOobject
                 (
                     "nSurfaceLayers",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE,
@@ -2674,7 +2674,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                 IOobject
                 (
                     "thickness",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE,
@@ -2709,7 +2709,7 @@ bool Foam::snappyLayerDriver::writeLayerData
                 IOobject
                 (
                     "thicknessFraction",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE,
@@ -2884,7 +2884,7 @@ void Foam::snappyLayerDriver::addLayers
     {
         const_cast<Time&>(mesh.time())++;
         Info<< "Writing baffled mesh to time "
-            << meshRefiner_.timeName() << endl;
+            << meshRefiner_.name() << endl;
         meshRefiner_.write
         (
             meshRefinement::debugType(debug),
@@ -2893,7 +2893,7 @@ void Foam::snappyLayerDriver::addLayers
                 meshRefinement::writeLevel()
               | meshRefinement::WRITEMESH
             ),
-            mesh.time().path()/meshRefiner_.timeName()
+            mesh.time().path()/meshRefiner_.name()
         );
     }
 
@@ -3065,7 +3065,7 @@ void Foam::snappyLayerDriver::addLayers
         IOobject
         (
             "minThickness",
-            meshRefiner_.timeName(),
+            meshRefiner_.name(),
             mesh,
             IOobject::NO_READ
         ),
@@ -3252,7 +3252,7 @@ void Foam::snappyLayerDriver::addLayers
             {
                 dumpDisplacement
                 (
-                    mesh.time().path()/"layer_" + meshRefiner_.timeName(),
+                    mesh.time().path()/"layer_" + meshRefiner_.name(),
                     pp(),
                     patchDisp,
                     extrudeStatus
@@ -3260,7 +3260,7 @@ void Foam::snappyLayerDriver::addLayers
 
                 const_cast<Time&>(mesh.time())++;
                 Info<< "Writing shrunk mesh to time "
-                    << meshRefiner_.timeName() << endl;
+                    << meshRefiner_.name() << endl;
 
                 // See comment in snappySnapDriver why we should not remove
                 // meshPhi using mesh.clearOut().
@@ -3273,7 +3273,7 @@ void Foam::snappyLayerDriver::addLayers
                         meshRefinement::writeLevel()
                       | meshRefinement::WRITEMESH
                     ),
-                    mesh.time().path()/meshRefiner_.timeName()
+                    mesh.time().path()/meshRefiner_.name()
                 );
             }
 
@@ -3367,7 +3367,7 @@ void Foam::snappyLayerDriver::addLayers
             //?necessary? Update fields
             newMesh.topoChange(map);
 
-            newMesh.setInstance(meshRefiner_.timeName());
+            newMesh.setInstance(meshRefiner_.name());
 
             // Update numbering on addLayer:
             // - cell/point labels to be newMesh.
@@ -3413,7 +3413,7 @@ void Foam::snappyLayerDriver::addLayers
 
             if (debug&meshRefinement::MESH)
             {
-                Info<< "Writing layer mesh to time " << meshRefiner_.timeName()
+                Info<< "Writing layer mesh to time " << meshRefiner_.name()
                     << endl;
                 newMesh.write();
 
@@ -3425,7 +3425,7 @@ void Foam::snappyLayerDriver::addLayers
                         addedCellSet.insert(celli);
                     }
                 }
-                addedCellSet.instance() = meshRefiner_.timeName();
+                addedCellSet.instance() = meshRefiner_.name();
                 Info<< "Writing "
                     << returnReduce(addedCellSet.size(), sumOp<label>())
                     << " added cells to cellSet " << addedCellSet.name()
@@ -3445,7 +3445,7 @@ void Foam::snappyLayerDriver::addLayers
                         layerFacesSet.insert(facei);
                     }
                 }
-                layerFacesSet.instance() = meshRefiner_.timeName();
+                layerFacesSet.instance() = meshRefiner_.name();
                 Info<< "Writing "
                     << returnReduce(layerFacesSet.size(), sumOp<label>())
                     << " faces inside added layer to faceSet "
@@ -3532,7 +3532,7 @@ void Foam::snappyLayerDriver::addLayers
     }
 
     // Reset the instance for if in overwrite mode
-    mesh.setInstance(meshRefiner_.timeName());
+    mesh.setInstance(meshRefiner_.name());
 
     meshRefiner_.topoChange(map, labelList(0));
 

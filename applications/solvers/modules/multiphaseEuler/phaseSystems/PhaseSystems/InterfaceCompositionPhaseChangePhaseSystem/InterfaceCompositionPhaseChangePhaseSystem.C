@@ -249,7 +249,7 @@ InterfaceCompositionPhaseChangePhaseSystem
                         "interfaceCompositionPhaseChange:dmdtf",
                         interface.name()
                     ),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh(),
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
@@ -275,7 +275,7 @@ InterfaceCompositionPhaseChangePhaseSystem
                         "interfaceCompositionPhaseChange:Tf",
                         interface.name()
                     ),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh(),
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
@@ -321,7 +321,7 @@ InterfaceCompositionPhaseChangePhaseSystem
                                 ),
                                 interface.name()
                             ),
-                            this->mesh().time().timeName(),
+                            this->mesh().time().name(),
                             this->mesh()
                         ),
                         this->mesh(),
@@ -345,7 +345,7 @@ InterfaceCompositionPhaseChangePhaseSystem
                                 ),
                                 interface.name()
                             ),
-                            this->mesh().time().timeName(),
+                            this->mesh().time().name(),
                             this->mesh()
                         ),
                         this->mesh(),

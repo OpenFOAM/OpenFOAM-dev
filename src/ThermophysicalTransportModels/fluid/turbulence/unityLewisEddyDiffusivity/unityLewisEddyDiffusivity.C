@@ -112,7 +112,7 @@ unityLewisEddyDiffusivity
                 "alphat",
                 this->momentumTransport().alphaRhoPhi().group()
             ),
-            momentumTransport.time().timeName(),
+            momentumTransport.time().name(),
             momentumTransport.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -329,7 +329,7 @@ void Foam::vtkPVblockMesh::updateFoamMesh()
         if (debug)
         {
             InfoInFunction
-                << "Creating blockMesh at time=" << dbPtr_().timeName() << endl;
+                << "Creating blockMesh at time=" << dbPtr_().name() << endl;
         }
 
         // Set path for the blockMeshDict

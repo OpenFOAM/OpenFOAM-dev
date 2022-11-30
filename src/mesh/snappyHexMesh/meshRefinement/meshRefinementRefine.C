@@ -1797,7 +1797,7 @@ Foam::label Foam::meshRefinement::markProximityRefinement
         //(
         //    mesh_.time().path()
         //  / "findAllHigherIntersections_"
-        //  + mesh_.time().timeName()
+        //  + mesh_.time().name()
         //  + ".obj"
         //);
         //// All intersections
@@ -1805,7 +1805,7 @@ Foam::label Foam::meshRefinement::markProximityRefinement
         //(
         //    mesh_.time().path()
         //  / "findAllHigherIntersections2_"
-        //  + mesh_.time().timeName()
+        //  + mesh_.time().name()
         //  + ".obj"
         //);
 
@@ -2255,7 +2255,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::refine
     }
 
     // Reset the instance for if in overwrite mode
-    mesh_.setInstance(timeName());
+    mesh_.setInstance(name());
 
     // Update intersection info
     topoChange(map, getChangedFaces(map, cellsToRefine));
@@ -2280,12 +2280,12 @@ Foam::meshRefinement::refineAndBalance
     if (debug&meshRefinement::MESH)
     {
         Pout<< "Writing refined but unbalanced " << msg
-            << " mesh to time " << timeName() << endl;
+            << " mesh to time " << name() << endl;
         write
         (
             debugType(debug),
             writeType(writeLevel() | WRITEMESH),
-            mesh_.time().path()/timeName()
+            mesh_.time().path()/name()
         );
         Pout<< "Dumped debug data in = "
             << mesh_.time().cpuTimeIncrement() << " s" << endl;
@@ -2344,12 +2344,12 @@ Foam::meshRefinement::refineAndBalance
             if (debug&meshRefinement::MESH)
             {
                 Pout<< "Writing balanced " << msg
-                    << " mesh to time " << timeName() << endl;
+                    << " mesh to time " << name() << endl;
                 write
                 (
                     debugType(debug),
                     writeType(writeLevel() | WRITEMESH),
-                    mesh_.time().path()/timeName()
+                    mesh_.time().path()/name()
                 );
                 Pout<< "Dumped debug data in = "
                     << mesh_.time().cpuTimeIncrement() << " s" << endl;
@@ -2467,12 +2467,12 @@ Foam::meshRefinement::balanceAndRefine
         if (debug&meshRefinement::MESH)
         {
             Pout<< "Writing balanced " << msg
-                << " mesh to time " << timeName() << endl;
+                << " mesh to time " << name() << endl;
             write
             (
                 debugType(debug),
                 writeType(writeLevel() | WRITEMESH),
-                mesh_.time().path()/timeName()
+                mesh_.time().path()/name()
             );
             Pout<< "Dumped debug data in = "
                 << mesh_.time().cpuTimeIncrement() << " s" << endl;
@@ -2491,12 +2491,12 @@ Foam::meshRefinement::balanceAndRefine
     if (debug&meshRefinement::MESH)
     {
         Pout<< "Writing refined " << msg
-            << " mesh to time " << timeName() << endl;
+            << " mesh to time " << name() << endl;
         write
         (
             debugType(debug),
             writeType(writeLevel() | WRITEMESH),
-            mesh_.time().path()/timeName()
+            mesh_.time().path()/name()
         );
         Pout<< "Dumped debug data in = "
             << mesh_.time().cpuTimeIncrement() << " s" << endl;

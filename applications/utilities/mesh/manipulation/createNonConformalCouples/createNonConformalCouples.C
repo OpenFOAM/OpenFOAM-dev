@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
     const word oldInstance = mesh.pointsInstance();
 
     // Read the fields
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
     if (fields) Info<< "Reading geometric fields" << nl << endl;
     #include "readVolFields.H"
     #include "readSurfaceFields.H"
@@ -470,7 +470,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    mesh.setInstance(runTime.timeName());
+    mesh.setInstance(runTime.name());
 
     // Set the precision of the points data to 10
     IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
@@ -485,7 +485,7 @@ int main(int argc, char *argv[])
     }
 
     // Write resulting mesh
-    Info<< "Writing mesh to " << runTime.timeName() << nl << endl;
+    Info<< "Writing mesh to " << runTime.name() << nl << endl;
     mesh.write();
 
     Info<< "End\n" << endl;

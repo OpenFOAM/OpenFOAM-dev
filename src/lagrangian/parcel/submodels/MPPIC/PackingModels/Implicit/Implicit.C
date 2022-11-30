@@ -47,7 +47,7 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
         IOobject
         (
             this->owner().name() + ":alpha",
-            this->owner().db().time().timeName(),
+            this->owner().db().time().name(),
             this->owner().mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -141,7 +141,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             IOobject
             (
                 cloudName + ":rho",
-                this->owner().db().time().timeName(),
+                this->owner().db().time().name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -162,7 +162,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             IOobject
             (
                 cloudName + ":tauPrime",
-                this->owner().db().time().timeName(),
+                this->owner().db().time().name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -241,7 +241,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
                 IOobject
                 (
                     cloudName + ":U",
-                    this->owner().db().time().timeName(),
+                    this->owner().db().time().name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE

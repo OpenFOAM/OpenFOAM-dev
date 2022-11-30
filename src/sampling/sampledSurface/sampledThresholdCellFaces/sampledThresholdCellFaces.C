@@ -76,7 +76,7 @@ bool Foam::sampledSurfaces::thresholdCellFaces::updateGeometry() const
         {
             InfoInFunction
                 << "Reading " << fieldName_
-                << " from time " << fvm.time().timeName()
+                << " from time " << fvm.time().name()
                 << endl;
         }
 
@@ -87,7 +87,7 @@ bool Foam::sampledSurfaces::thresholdCellFaces::updateGeometry() const
                 IOobject
                 (
                     fieldName_,
-                    fvm.time().timeName(),
+                    fvm.time().name(),
                     fvm,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE,

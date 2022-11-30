@@ -151,7 +151,7 @@ void decomposeUniform
             {
                 fileHandler().ln
                 (
-                    parentPath/runTime.timeName()/uniformDir,
+                    parentPath/runTime.name()/uniformDir,
                     uniformDir
                 );
             }
@@ -169,7 +169,7 @@ void writeDecomposition(const domainDecomposition& meshes)
         IOobject
         (
             "cellProc",
-            meshes.completeMesh().time().timeName(),
+            meshes.completeMesh().time().name(),
             meshes.completeMesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -453,7 +453,7 @@ int main(int argc, char *argv[])
             (
                 writeCellProc
              && meshes.completeMesh().facesInstance()
-             == runTimes.completeTime().timeName()
+             == runTimes.completeTime().name()
             )
             {
                 writeDecomposition(meshes);
@@ -497,7 +497,7 @@ int main(int argc, char *argv[])
                                 IOobject
                                 (
                                     "",
-                                    procRunTime.timeName(),
+                                    procRunTime.name(),
                                     procRunTime
                                 ),
                                 word::null
@@ -523,7 +523,7 @@ int main(int argc, char *argv[])
                 IOobjectList objects
                 (
                     meshes.completeMesh(),
-                    runTimes.completeTime().timeName()
+                    runTimes.completeTime().name()
                 );
 
                 // Construct the vol fields
@@ -643,7 +643,7 @@ int main(int argc, char *argv[])
                     IOobjectList sprayObjs
                     (
                         meshes.completeMesh(),
-                        runTimes.completeTime().timeName(),
+                        runTimes.completeTime().name(),
                         cloud::prefix/cloudDirs[i],
                         IOobject::MUST_READ,
                         IOobject::NO_WRITE,
@@ -736,7 +736,7 @@ int main(int argc, char *argv[])
                         IOobjectList lagrangianObjects
                         (
                             meshes.completeMesh(),
-                            runTimes.completeTime().timeName(),
+                            runTimes.completeTime().name(),
                             cloud::prefix/cloudDirs[cloudI],
                             IOobject::MUST_READ,
                             IOobject::NO_WRITE,

@@ -222,7 +222,7 @@ void Foam::fvMesh::storeOldVol(const scalarField& V)
                 IOobject
                 (
                     "V0",
-                    time().timeName(),
+                    time().name(),
                     *this,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE,
@@ -381,7 +381,7 @@ Foam::fvMesh::fvMesh
                 IOobject
                 (
                     "V0",
-                    time().timeName(),
+                    time().name(),
                     *this,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE,
@@ -401,7 +401,7 @@ Foam::fvMesh::fvMesh
                 IOobject
                 (
                     "meshPhi",
-                    time().timeName(),
+                    time().name(),
                     *this,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE,
@@ -1161,7 +1161,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
             IOobject
             (
                 "meshPhi",
-                this->time().timeName(),
+                this->time().name(),
                 *this,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,

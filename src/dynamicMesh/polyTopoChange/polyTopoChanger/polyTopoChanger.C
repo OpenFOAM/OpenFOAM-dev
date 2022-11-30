@@ -251,7 +251,7 @@ void Foam::polyTopoChanger::update(const polyTopoChangeMap& m)
     // preserve the current state of modifiers corresponding with
     // the mesh.
     writeOpt() = IOobject::AUTO_WRITE;
-    instance() = mesh_.time().timeName();
+    instance() = mesh_.time().name();
 }
 
 

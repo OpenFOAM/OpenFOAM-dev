@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     if (!overwrite)
     {
         runTime++;
-        mesh.setInstance(runTime.timeName());
+        mesh.setInstance(runTime.name());
     }
 
 

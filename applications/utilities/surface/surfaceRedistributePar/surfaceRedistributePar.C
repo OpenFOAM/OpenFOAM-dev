@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     "faceCentres",                                  // name
-                    surfMesh.searchableSurface::time().timeName(),  // instance
+                    surfMesh.searchableSurface::time().name(),  // instance
                     surfMesh,
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE

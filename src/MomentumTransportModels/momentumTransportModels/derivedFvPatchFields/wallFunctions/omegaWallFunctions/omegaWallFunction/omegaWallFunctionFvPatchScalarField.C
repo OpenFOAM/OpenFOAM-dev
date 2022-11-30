@@ -89,7 +89,7 @@ void omegaWallFunctionFvPatchScalarField::createAveragingWeights()
         IOobject
         (
             "weights",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE,

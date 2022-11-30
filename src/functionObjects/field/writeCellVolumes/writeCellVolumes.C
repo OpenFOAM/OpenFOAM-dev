@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ bool Foam::functionObjects::writeCellVolumes::write()
         IOobject
         (
             mesh_.V().name(),
-            time_.timeName(),
+            time_.name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -89,7 +89,7 @@ bool Foam::functionObjects::writeCellVolumes::write()
     V.ref() = mesh_.V();
 
     Log << "    Writing cell-volumes field " << V.name()
-        << " to " << time_.timeName() << endl;
+        << " to " << time_.name() << endl;
 
     V.write();
 

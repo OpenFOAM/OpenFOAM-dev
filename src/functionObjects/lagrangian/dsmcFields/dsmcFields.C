@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,7 +155,7 @@ bool Foam::functionObjects::dsmcFields::write()
             IOobject
             (
                 "UMean",
-                obr_.time().timeName(),
+                obr_.time().name(),
                 obr_,
                 IOobject::NO_READ
             ),
@@ -168,7 +168,7 @@ bool Foam::functionObjects::dsmcFields::write()
             IOobject
             (
                 "translationalT",
-                obr_.time().timeName(),
+                obr_.time().name(),
                 obr_,
                 IOobject::NO_READ
             ),
@@ -183,7 +183,7 @@ bool Foam::functionObjects::dsmcFields::write()
             IOobject
             (
                 "internalT",
-                obr_.time().timeName(),
+                obr_.time().name(),
                 obr_,
                 IOobject::NO_READ
             ),
@@ -196,7 +196,7 @@ bool Foam::functionObjects::dsmcFields::write()
             IOobject
             (
                 "overallT",
-                obr_.time().timeName(),
+                obr_.time().name(),
                 obr_,
                 IOobject::NO_READ
             ),
@@ -210,7 +210,7 @@ bool Foam::functionObjects::dsmcFields::write()
             IOobject
             (
                 "p",
-                obr_.time().timeName(),
+                obr_.time().name(),
                 obr_,
                 IOobject::NO_READ
             ),

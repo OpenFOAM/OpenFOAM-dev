@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ void Foam::fieldToCell::applyToSet
     typeIOobject<volScalarField> fieldObject
     (
         fieldName_,
-        mesh().time().timeName(),
+        mesh().time().name(),
         mesh(),
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE,
@@ -140,7 +140,7 @@ void Foam::fieldToCell::applyToSet
     {
         WarningInFunction
             << "Cannot read field " << fieldName_
-            << " from time " << mesh().time().timeName() << endl;
+            << " from time " << mesh().time().name() << endl;
     }
     else if (fieldObject.IOobject::headerOk())
     {
@@ -166,7 +166,7 @@ void Foam::fieldToCell::applyToSet
         typeIOobject<volVectorField> fieldObject
         (
             fieldName_,
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE,

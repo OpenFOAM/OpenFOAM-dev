@@ -58,7 +58,7 @@ void Foam::functionObjects::readFields::loadField
         IOobject fieldHeader
         (
             fieldName,
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::NO_WRITE

@@ -122,7 +122,7 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
         IOobject
         (
             name_ + ".motionScale",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -147,7 +147,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
         typeIOobject<timeIOdictionary>
         (
             "rigidBodyMotionState",
-            mesh.time().timeName(),
+            mesh.time().name(),
             "uniform",
             mesh
         ).headerOk()
@@ -156,7 +156,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
             IOobject
             (
                 "rigidBodyMotionState",
-                mesh.time().timeName(),
+                mesh.time().name(),
                 "uniform",
                 mesh,
                 IOobject::READ_IF_PRESENT,
@@ -527,7 +527,7 @@ void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
     // points0 changed - set to write and check-in to database
     points0_.rename("points0");
     points0_.writeOpt() = IOobject::AUTO_WRITE;
-    points0_.instance() = mesh().time().timeName();
+    points0_.instance() = mesh().time().name();
     points0_.checkIn();
 }
 
@@ -539,7 +539,7 @@ bool Foam::rigidBodyMeshMotion::write() const
         IOobject
         (
             "rigidBodyMotionState",
-            mesh().time().timeName(),
+            mesh().time().name(),
             "uniform",
             mesh(),
             IOobject::NO_READ,

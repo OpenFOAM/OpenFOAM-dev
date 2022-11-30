@@ -495,7 +495,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "p",
-            time().timeName(),
+            time().name(),
             mesh()
         ),
         mesh(),
@@ -510,7 +510,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "mu",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -525,7 +525,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "delta",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -538,7 +538,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "alpha",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -552,7 +552,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "U",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -565,7 +565,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "Uw",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -578,7 +578,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "phi",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -592,7 +592,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "phiU",
-            time().timeName(),
+            time().name(),
             mesh()
         ),
         mesh(),
@@ -604,7 +604,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "continuityErr",
-            time().timeName(),
+            time().name(),
             mesh()
         ),
         mesh(),
@@ -616,7 +616,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "coverage",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -631,7 +631,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "primaryMassTrans",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -646,7 +646,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "cloudMassTrans",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -661,7 +661,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "cloudDiameterTrans",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -676,7 +676,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "primaryMomentumTrans",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -691,7 +691,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "rhoSp",
-            time_.timeName(),
+            time_.name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -705,7 +705,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "USp",
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -719,7 +719,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "pSp",
-            time_.timeName(),
+            time_.name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -733,7 +733,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             rhoSp_.name(),
-            time().timeName(),
+            time().name(),
             primaryMesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -747,7 +747,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             USp_.name(),
-            time().timeName(),
+            time().name(),
             primaryMesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -761,7 +761,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             pSp_.name(),
-            time().timeName(),
+            time().name(),
             primaryMesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -775,7 +775,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         IOobject
         (
             "U", // Must have same name as U to enable mapping
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -791,7 +791,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         (
             // Must have same name as rho to enable mapping
             IOobject::groupName("rho", phaseName_),
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -807,7 +807,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
         (
             // Must have same name as rho to enable mapping
             IOobject::groupName("mu", phaseName_),
-            time().timeName(),
+            time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -849,7 +849,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
             IOobject
             (
                 "phi",
-                time().timeName(),
+                time().name(),
                 mesh(),
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE,

@@ -135,7 +135,7 @@ Foam::lagrangianFieldDecomposer::decomposeField
             IOobject
             (
                 field.name(),
-                procMesh_.time().timeName(),
+                procMesh_.time().name(),
                 cloud::prefix/cloudName,
                 procMesh_,
                 IOobject::NO_READ,
@@ -167,7 +167,7 @@ Foam::lagrangianFieldDecomposer::decomposeFieldField
             IOobject
             (
                 field.name(),
-                procMesh_.time().timeName(),
+                procMesh_.time().name(),
                 cloud::prefix/cloudName,
                 procMesh_,
                 IOobject::NO_READ,

@@ -262,7 +262,7 @@ void Foam::Time::readModifiedObjects()
 
 bool Foam::Time::writeTimeDict() const
 {
-    const word tmName(timeName());
+    const word tmName(name());
 
     timeIOdictionary timeDict
     (
@@ -320,10 +320,10 @@ bool Foam::Time::writeObject
                 if
                 (
                     previousWriteTimes_.size() == 0
-                 || previousWriteTimes_.top() != timeName()
+                 || previousWriteTimes_.top() != name()
                 )
                 {
-                    previousWriteTimes_.push(timeName());
+                    previousWriteTimes_.push(name());
                 }
 
                 while (previousWriteTimes_.size() > purgeWrite_)

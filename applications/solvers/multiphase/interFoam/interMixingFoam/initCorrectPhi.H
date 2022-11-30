@@ -7,7 +7,7 @@ if (correctPhi)
         IOobject
         (
             "rAU",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

@@ -150,7 +150,7 @@ Foam::labelList Foam::domainDecomposition::distributeCells()
             IOobject
             (
                 weightName,
-                completeMesh().time().timeName(),
+                completeMesh().time().name(),
                 completeMesh(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE

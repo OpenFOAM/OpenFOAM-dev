@@ -274,10 +274,10 @@ int main(int argc, char *argv[])
     }
     else
     {
-        mesh.setInstance(runTime.timeName());
+        mesh.setInstance(runTime.name());
     }
 
-    Info<< "Writing mesh to " << runTime.timeName() << endl;
+    Info<< "Writing mesh to " << runTime.name() << endl;
     if (!mesh.write())
     {
         FatalErrorInFunction

@@ -43,7 +43,7 @@ Foam::cpuLoad::cpuLoad(const fvMesh& mesh, const word& name)
         IOobject
         (
             name,
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         mesh,

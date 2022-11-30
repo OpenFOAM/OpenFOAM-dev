@@ -457,7 +457,7 @@ int main(int argc, char *argv[])
         else
         {
             runTime.setTime(times[timei], timei);
-            instance = runTime.timeName();
+            instance = runTime.name();
         }
 
         #include "createNamedMesh.H"

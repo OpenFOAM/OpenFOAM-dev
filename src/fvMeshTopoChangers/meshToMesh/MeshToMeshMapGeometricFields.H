@@ -183,7 +183,7 @@ void MeshToMeshMapVolFields
 
         field.reset(mapper.mapSrcToTgt(field));
         evaluateConstraintTypes(field);
-        field.instance() = field.time().timeName();
+        field.instance() = field.time().name();
     }
 }
 
@@ -293,7 +293,7 @@ void NaNGeometricFields
             field.boundaryFieldRef()[patchi] == NaN;
         }
 
-        field.instance() = field.time().timeName();
+        field.instance() = field.time().name();
     }
 }
 

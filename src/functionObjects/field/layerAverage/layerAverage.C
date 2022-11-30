@@ -320,7 +320,7 @@ bool Foam::functionObjects::layerAverage::write()
            /writeFile::outputPrefix
            /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
            /name()
-           /mesh_.time().timeName();
+           /mesh_.time().name();
         mkDir(outputPath);
 
         scalarField layerDistance(layerCentre_.size(), 0);

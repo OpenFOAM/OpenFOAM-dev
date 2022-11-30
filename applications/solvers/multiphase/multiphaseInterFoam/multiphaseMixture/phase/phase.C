@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Foam::phase::phase
         IOobject
         (
             IOobject::groupName("alpha", phaseName),
-            U.mesh().time().timeName(),
+            U.mesh().time().name(),
             U.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

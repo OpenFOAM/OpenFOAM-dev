@@ -305,7 +305,7 @@ Foam::instantList Foam::timeSelector::selectIfPresent
             instant
             (
                 runTime.userTimeValue(),
-                runTime.timeName()
+                runTime.name()
             )
         );
     }

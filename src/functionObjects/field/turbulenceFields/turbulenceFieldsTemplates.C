@@ -61,7 +61,7 @@ void Foam::functionObjects::turbulenceFields::processField
                 IOobject
                 (
                     scopedName,
-                    obr_.time().timeName(),
+                    obr_.time().name(),
                     obr_,
                     IOobject::READ_IF_PRESENT,
                     IOobject::NO_WRITE

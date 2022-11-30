@@ -1055,7 +1055,7 @@ void Foam::InteractionLists<ParticleType>::writeReferredWallFaces() const
     OFstream str(objDir/objFileName);
 
     Info<< "    Writing "
-        << mesh_.time().timeName()/cloud::prefix/objFileName
+        << mesh_.time().name()/cloud::prefix/objFileName
         << endl;
 
     label offset = 1;

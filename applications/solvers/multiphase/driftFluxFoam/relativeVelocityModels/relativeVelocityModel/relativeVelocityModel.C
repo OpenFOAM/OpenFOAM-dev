@@ -82,7 +82,7 @@ Foam::relativeVelocityModel::relativeVelocityModel
         IOobject
         (
             "Udm",
-            mixture.U().time().timeName(),
+            mixture.U().time().name(),
             mixture.U().mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

@@ -794,7 +794,7 @@ Foam::tmp<Foam::pointField> Foam::motionSmootherAlgo::curPoints() const
         IOobject
         (
             "totalDisplacement",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE,

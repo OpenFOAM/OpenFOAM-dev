@@ -111,7 +111,7 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
                 IOobject
                 (
                     nccFieldPrefix_ + field.name(),
-                    mesh_.time().timeName(),
+                    mesh_.time().name(),
                     mesh_
                 ),
                 field

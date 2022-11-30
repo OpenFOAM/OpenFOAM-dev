@@ -335,7 +335,7 @@ void Foam::multiDirRefinement::refineHex8
     if (debug)
     {
         Pout<< "multiDirRefinement : updated mesh at time "
-            << mesh.time().timeName() << endl;
+            << mesh.time().name() << endl;
     }
 
     hexRefiner.topoChange(map);

@@ -643,7 +643,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemoveCells
     }
 
     // Reset the instance for if in overwrite mode
-    mesh_.setInstance(timeName());
+    mesh_.setInstance(name());
     setInstance(mesh_.facesInstance());
 
     // Update local mesh data
@@ -785,7 +785,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
     }
 
     // Reset the instance for if in overwrite mode
-    mesh_.setInstance(timeName());
+    mesh_.setInstance(name());
     setInstance(mesh_.facesInstance());
 
     // Update local mesh data
@@ -1642,7 +1642,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::meshRefinement::balance
         distribute(map);
 
         // Set correct instance (for if overwrite)
-        mesh_.setInstance(timeName());
+        mesh_.setInstance(name());
         setInstance(mesh_.facesInstance());
     }
 
@@ -1821,7 +1821,7 @@ Foam::tmp<Foam::pointVectorField> Foam::meshRefinement::makeDisplacementField
         }
     }
 
-    // Note: time().timeName() instead of meshRefinement::timeName() since
+    // Note: time().name() instead of meshRefinement::name() since
     // postprocessable field.
     tmp<pointVectorField> tfld
     (
@@ -2344,7 +2344,7 @@ void Foam::meshRefinement::distribute(const polyDistributionMap& map)
             if (faceMap.valid())
             {
                 // (ab)use the instance() to signal current modification time
-                geometry[i].instance() = geometry[i].time().timeName();
+                geometry[i].instance() = geometry[i].time().name();
             }
 
             faceMap.clear();
@@ -2504,7 +2504,7 @@ bool Foam::meshRefinement::write() const
         )
         {
             // Make sure it gets written to current time, not constant.
-            s.instance() = s.time().timeName();
+            s.instance() = s.time().name();
             writeOk = writeOk && s.write();
         }
     }
@@ -2654,7 +2654,7 @@ const
 }
 
 
-Foam::word Foam::meshRefinement::timeName() const
+Foam::word Foam::meshRefinement::name() const
 {
     if (overwrite_ && mesh_.time().timeIndex() == 0)
     {
@@ -2662,14 +2662,14 @@ Foam::word Foam::meshRefinement::timeName() const
     }
     else
     {
-        return mesh_.time().timeName();
+        return mesh_.time().name();
     }
 }
 
 
 void Foam::meshRefinement::dumpRefinementLevel() const
 {
-    // Note: use time().timeName(), not meshRefinement::timeName()
+    // Note: use time().name(), not meshRefinement::name()
     // so as to dump the fields to 0, not to constant.
     {
         volScalarField volRefLevel
@@ -2677,7 +2677,7 @@ void Foam::meshRefinement::dumpRefinementLevel() const
             IOobject
             (
                 "cellLevel",
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE,
@@ -2706,7 +2706,7 @@ void Foam::meshRefinement::dumpRefinementLevel() const
             IOobject
             (
                 "pointLevel",
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,

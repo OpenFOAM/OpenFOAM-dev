@@ -128,7 +128,7 @@ void executeFunctionObjects
     LIFOStack<regIOobject*> storedObjects;
 
     // Read objects in time directory
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     HashSet<word> requiredFields(requiredFields0);
     forAll(functions, i)
@@ -232,13 +232,13 @@ int main(int argc, char *argv[])
     {
         Info
             << "Create mesh " << regionName << " for time = "
-            << runTime.timeName() << nl << endl;
+            << runTime.name() << nl << endl;
     }
     else
     {
         Info
             << "Create mesh for time = "
-            << runTime.timeName() << nl << endl;
+            << runTime.name() << nl << endl;
     }
 
     fvMesh mesh
@@ -246,7 +246,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             regionName,
-            runTime.timeName(),
+            runTime.name(),
             runTime,
             IOobject::MUST_READ
         )

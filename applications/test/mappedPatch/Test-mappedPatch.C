@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "cc",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

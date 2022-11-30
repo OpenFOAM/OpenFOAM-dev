@@ -1,7 +1,7 @@
 typeIOobject<pointIOField> ioPoints
 (
     "points",
-    runTime.timeName(),
+    runTime.name(),
     mesh.name(),
     mesh
 );
@@ -15,7 +15,7 @@ if (ioPoints.headerOk())
         IOobject
         (
             "points",
-            runTime.timeName(),
+            runTime.name(),
             mesh.name(),
             mesh,
             IOobject::MUST_READ,

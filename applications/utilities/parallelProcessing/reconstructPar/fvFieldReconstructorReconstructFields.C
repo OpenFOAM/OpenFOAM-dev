@@ -110,7 +110,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
                 IOobject
                 (
                     fieldIoObject.name(),
-                    procMeshes_[proci].time().timeName(),
+                    procMeshes_[proci].time().name(),
                     procMeshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE,
@@ -126,7 +126,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
         IOobject
         (
             fieldIoObject.name(),
-            completeMesh_.time().timeName(),
+            completeMesh_.time().name(),
             completeMesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -274,7 +274,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
                 IOobject
                 (
                     fieldIoObject.name(),
-                    procMeshes_[proci].time().timeName(),
+                    procMeshes_[proci].time().name(),
                     procMeshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE,
@@ -290,7 +290,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
         IOobject
         (
             fieldIoObject.name(),
-            completeMesh_.time().timeName(),
+            completeMesh_.time().name(),
             completeMesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -437,7 +437,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                 IOobject
                 (
                     fieldIoObject.name(),
-                    procMeshes_[proci].time().timeName(),
+                    procMeshes_[proci].time().name(),
                     procMeshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE,
@@ -453,7 +453,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
         IOobject
         (
             fieldIoObject.name(),
-            completeMesh_.time().timeName(),
+            completeMesh_.time().name(),
             completeMesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE,

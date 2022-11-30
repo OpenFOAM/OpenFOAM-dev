@@ -9,14 +9,14 @@
     }
     else if
     (
-        runTime.timeName() != runTime.constant()
-     && runTime.timeName() != "0"
+        runTime.name() != runTime.constant()
+     && runTime.name() != "0"
     )
     {
         typeIOobject<IOdictionary> io
         (
             "time",
-            runTime.timeName(),
+            runTime.name(),
             "uniform",
             runTime,
             IOobject::READ_IF_PRESENT,
@@ -40,4 +40,4 @@
     }
 
     timeIndices.insert(timeIndex, timeDirs[timeI].value());
-    Info<< "\nTime [" << timeIndex << "] = " << runTime.timeName() << nl;
+    Info<< "\nTime [" << timeIndex << "] = " << runTime.name() << nl;

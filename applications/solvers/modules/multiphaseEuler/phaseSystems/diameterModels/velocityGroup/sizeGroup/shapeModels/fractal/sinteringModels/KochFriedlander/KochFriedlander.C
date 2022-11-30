@@ -116,7 +116,7 @@ Foam::diameterModels::shapeModels::sinteringModels::KochFriedlander::R() const
         IOobject
         (
             typedName("R"),
-            fi.time().timeName(),
+            fi.time().name(),
             fi.mesh()
         ),
         fi.mesh(),

@@ -394,7 +394,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createBaffles
 
 
     // Reset the instance for if in overwrite mode
-    mesh_.setInstance(timeName());
+    mesh_.setInstance(name());
 
     //- Redo the intersections on the newly create baffle faces. Note that
     //  this changes also the cell centre positions.
@@ -562,7 +562,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createZoneBaffles
             if (debug&MESH)
             {
                 const_cast<Time&>(mesh_.time())++;
-                Pout<< "Writing zone-baffled mesh to time " << timeName()
+                Pout<< "Writing zone-baffled mesh to time " << name()
                     << endl;
                 write
                 (
@@ -928,7 +928,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
     }
 
     // Reset the instance for if in overwrite mode
-    mesh_.setInstance(timeName());
+    mesh_.setInstance(name());
 
     // Update intersections. Recalculate intersections on merged faces since
     // this seems to give problems? Note: should not be necessary since
@@ -1674,7 +1674,7 @@ void Foam::meshRefinement::handleSnapProblems
                 problemFaces.insert(facei);
             }
         }
-        problemFaces.instance() = timeName();
+        problemFaces.instance() = name();
         Pout<< "Dumping " << problemFaces.size()
             << " problem faces to " << problemFaces.objectPath() << endl;
         problemFaces.write();
@@ -1703,7 +1703,7 @@ void Foam::meshRefinement::handleSnapProblems
     if (debug&MESH)
     {
         Pout<< "Writing extra baffled mesh to time "
-            << timeName() << endl;
+            << name() << endl;
         write
         (
             debugType(debug),
@@ -2275,7 +2275,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
 
     if (debug&MESH)
     {
-        Pout<< "Writing baffled mesh to time " << timeName()
+        Pout<< "Writing baffled mesh to time " << name()
             << endl;
         write
         (
@@ -2336,13 +2336,13 @@ void Foam::meshRefinement::baffleAndSplitMesh
 
     if (debug&MESH)
     {
-        Pout<< "Writing subsetted mesh to time " << timeName()
+        Pout<< "Writing subsetted mesh to time " << name()
             << endl;
         write
         (
             debugType(debug),
             writeType(writeLevel() | WRITEMESH),
-            runTime.path()/timeName()
+            runTime.path()/name()
         );
         Pout<< "Dumped debug data in = "
             << runTime.cpuTimeIncrement() << " s\n" << nl << endl;
@@ -2723,7 +2723,7 @@ Foam::meshRefinement::dupNonManifoldPoints
     }
 
     // Reset the instance for if in overwrite mode
-    mesh_.setInstance(timeName());
+    mesh_.setInstance(name());
 
     // Update intersections. Is mapping only (no faces created, positions stay
     // same) so no need to recalculate intersections.
@@ -3361,7 +3361,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
     }
 
     // Reset the instance for if in overwrite mode
-    mesh_.setInstance(timeName());
+    mesh_.setInstance(name());
 
     // Print some stats (note: zones are synchronised)
     if (mesh_.cellZones().size() > 0)

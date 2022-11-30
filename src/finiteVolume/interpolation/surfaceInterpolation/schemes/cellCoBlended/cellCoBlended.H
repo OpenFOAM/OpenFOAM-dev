@@ -219,7 +219,7 @@ public:
                 IOobject
                 (
                     "Co",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh
                 ),
                 mesh,

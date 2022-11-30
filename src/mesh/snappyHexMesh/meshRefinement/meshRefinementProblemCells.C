@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,7 +207,7 @@ Foam::Map<Foam::label> Foam::meshRefinement::findEdgeConnectedProblemCells
     if (debug&meshRefinement::MESH)
     {
         faceSet fSet(mesh_, "edgeConnectedFaces", candidateFaces);
-        fSet.instance() = timeName();
+        fSet.instance() = name();
         Pout<< "Writing " << fSet.size()
             << " with problematic topology to faceSet "
             << fSet.objectPath() << endl;
@@ -268,7 +268,7 @@ Foam::Map<Foam::label> Foam::meshRefinement::findEdgeConnectedProblemCells
 
     if (debug&meshRefinement::MESH)
     {
-        perpFaces.instance() = timeName();
+        perpFaces.instance() = name();
         Pout<< "Writing " << perpFaces.size()
             << " faces that are perpendicular to the surface to set "
             << perpFaces.objectPath() << endl;
@@ -573,7 +573,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
         if (debug&meshRefinement::MESH)
         {
             cellSet problemCellSet(mesh_, "problemCells", problemCells.toc());
-            problemCellSet.instance() = timeName();
+            problemCellSet.instance() = name();
             Pout<< "Writing " << problemCellSet.size()
                 << " cells that are edge connected to coarser cell to set "
                 << problemCellSet.objectPath() << endl;
@@ -673,7 +673,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
             const_cast<Time&>(mesh_.time())++;
             pointField oldPoints(mesh_.points());
             mesh_.movePoints(newPoints);
-            Pout<< "Writing newPoints mesh to time " << timeName()
+            Pout<< "Writing newPoints mesh to time " << name()
                 << endl;
             write
             (

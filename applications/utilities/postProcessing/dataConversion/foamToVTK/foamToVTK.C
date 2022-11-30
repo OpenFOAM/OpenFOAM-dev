@@ -456,7 +456,7 @@ int main(int argc, char *argv[])
             IOobjectList sprayObjs
             (
                 mesh,
-                runTime.timeName(),
+                runTime.name(),
                 cloud::prefix/cloudDirs[i]
             );
 
@@ -466,7 +466,7 @@ int main(int argc, char *argv[])
             {
                 if (allCloudDirs.insert(cloudDirs[i]))
                 {
-                    Info<< "At time: " << runTime.timeName()
+                    Info<< "At time: " << runTime.name()
                         << " detected cloud directory : " << cloudDirs[i]
                         << endl;
                 }
@@ -479,10 +479,10 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(timeDirs[timeI], timeI);
 
-        Info<< "Time: " << runTime.timeName() << endl;
+        Info<< "Time: " << runTime.name() << endl;
 
         word timeDesc =
-            useTimeName ? runTime.timeName() : Foam::name(runTime.timeIndex());
+            useTimeName ? runTime.name() : Foam::name(runTime.timeIndex());
 
         // Check for new polyMesh/ and update mesh, fvMeshSubset and cell
         // decomposition.
@@ -549,7 +549,7 @@ int main(int argc, char *argv[])
 
 
         // Search for list of objects for this time
-        IOobjectList objects(mesh, runTime.timeName());
+        IOobjectList objects(mesh, runTime.name());
 
         HashSet<word> selectedFields;
         bool specifiedFields = args.optionReadIfPresent
@@ -1148,7 +1148,7 @@ int main(int argc, char *argv[])
             IOobjectList sprayObjs
             (
                 mesh,
-                runTime.timeName(),
+                runTime.name(),
                 cloud::prefix/cloudName
             );
 

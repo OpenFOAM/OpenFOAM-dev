@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,7 +145,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
         IOobject
         (
             IOobject::groupName("sigma", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -162,7 +162,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
             typeIOobject<volSymmTensorField> header
             (
                 IOobject::groupName("sigma" + name(modei), alphaRhoPhi.group()),
-                this->runTime_.timeName(),
+                this->runTime_.name(),
                 this->mesh_,
                 IOobject::NO_READ
             );
@@ -181,7 +181,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
                         IOobject
                         (
                             header.name(),
-                            this->runTime_.timeName(),
+                            this->runTime_.name(),
                             this->mesh_,
                             IOobject::MUST_READ,
                             IOobject::AUTO_WRITE
@@ -200,7 +200,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
                         IOobject
                         (
                             header.name(),
-                            this->runTime_.timeName(),
+                            this->runTime_.name(),
                             this->mesh_,
                             IOobject::NO_READ,
                             IOobject::AUTO_WRITE

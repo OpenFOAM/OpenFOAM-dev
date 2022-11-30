@@ -284,7 +284,7 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
             IOobject
             (
                 name() + ":area",
-                mesh().time().timeName(),
+                mesh().time().name(),
                 mesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -563,7 +563,7 @@ void Foam::fv::rotorDiskSource::addSup
         IOobject
         (
             name() + ":rotorForce",
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh()
         ),
         mesh(),
@@ -604,7 +604,7 @@ void Foam::fv::rotorDiskSource::addSup
         IOobject
         (
             name() + ":rotorForce",
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh()
         ),
         mesh(),

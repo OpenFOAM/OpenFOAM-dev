@@ -183,7 +183,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
         IOobject
         (
             "Tu",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -195,7 +195,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
         IOobject
         (
             MixtureType::thermoType::heName() + 'u',
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

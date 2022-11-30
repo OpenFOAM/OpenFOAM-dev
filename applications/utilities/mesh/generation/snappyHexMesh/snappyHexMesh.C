@@ -623,13 +623,13 @@ void writeMesh
     const fvMesh& mesh = meshRefiner.mesh();
 
     meshRefiner.printMeshInfo(debugLevel, msg);
-    Info<< "Writing mesh to time " << meshRefiner.timeName() << endl;
+    Info<< "Writing mesh to time " << meshRefiner.name() << endl;
 
     meshRefiner.write
     (
         debugLevel,
         meshRefinement::writeType(writeLevel | meshRefinement::WRITEMESH),
-        mesh.time().path()/meshRefiner.timeName()
+        mesh.time().path()/meshRefiner.name()
     );
     Info<< "Wrote mesh in = "
         << mesh.time().cpuTimeIncrement() << " s." << endl;
@@ -677,7 +677,7 @@ int main(int argc, char *argv[])
     {
         Foam::Info
             << "Create mesh for time = "
-            << runTime.timeName() << Foam::nl << Foam::endl;
+            << runTime.name() << Foam::nl << Foam::endl;
 
         meshPtr.set
         (
@@ -686,7 +686,7 @@ int main(int argc, char *argv[])
                 Foam::IOobject
                 (
                     Foam::fvMesh::defaultRegion,
-                    runTime.timeName(),
+                    runTime.name(),
                     runTime,
                     Foam::IOobject::MUST_READ
                 ),
@@ -1035,7 +1035,7 @@ int main(int argc, char *argv[])
     (
         meshRefinement::debugType(debugLevel&meshRefinement::OBJINTERSECTIONS),
         meshRefinement::writeType(0),
-        mesh.time().path()/meshRefiner.timeName()
+        mesh.time().path()/meshRefiner.name()
     );
 
 
@@ -1441,7 +1441,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 "internalCellCentres",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE

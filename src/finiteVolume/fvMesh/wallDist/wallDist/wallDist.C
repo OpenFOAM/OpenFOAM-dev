@@ -43,7 +43,7 @@ void Foam::wallDist::constructn() const
         IOobject
         (
             "n" & patchTypeName_,
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh()
         ),
         mesh(),
@@ -85,7 +85,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
         IOobject
         (
             "y" & patchTypeName_,
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         mesh,
@@ -132,7 +132,7 @@ Foam::wallDist::wallDist
         IOobject
         (
             "y" & patchTypeName_,
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         mesh,

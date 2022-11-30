@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     regionSolvers[i].first(),
-                    runTime.timeName(),
+                    runTime.name(),
                     runTime,
                     IOobject::MUST_READ
                 )

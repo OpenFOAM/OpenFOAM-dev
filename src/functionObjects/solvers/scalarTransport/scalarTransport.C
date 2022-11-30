@@ -127,7 +127,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
         IOobject
         (
             fieldName_,
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -155,7 +155,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
             typeIOobject<surfaceScalarField> sPhiHeader
             (
                 IOobject::groupName("sPhi", s_.group()),
-                runTime.timeName(),
+                runTime.name(),
                 mesh_,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -423,7 +423,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
             IOobject
             (
                 "nHatf",
-                s_.time().timeName(),
+                s_.time().name(),
                 mesh_
             ),
             gradsf/(mag(gradsf) + deltaN_) & mesh_.Sf()

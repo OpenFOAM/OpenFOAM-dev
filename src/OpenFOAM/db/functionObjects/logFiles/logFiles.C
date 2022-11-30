@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ void Foam::functionObjects::logFiles::createFiles()
 {
     if (Pstream::master())
     {
-        const word timeName = fileObr_.time().timeName();
+        const word timeName = fileObr_.time().name();
 
         forAll(names_, i)
         {

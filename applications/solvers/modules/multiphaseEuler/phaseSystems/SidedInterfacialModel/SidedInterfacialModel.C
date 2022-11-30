@@ -41,7 +41,7 @@ Foam::SidedInterfacialModel<ModelType>::SidedInterfacialModel
         IOobject
         (
             IOobject::groupName(typeName, interface.name()),
-            interface.mesh().time().timeName(),
+            interface.mesh().time().name(),
             interface.mesh()
         )
     ),

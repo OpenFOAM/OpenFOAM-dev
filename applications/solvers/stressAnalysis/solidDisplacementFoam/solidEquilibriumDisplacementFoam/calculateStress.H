@@ -5,7 +5,7 @@ if (runTime.writeTime())
         IOobject
         (
             "sigma",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -18,7 +18,7 @@ if (runTime.writeTime())
         IOobject
         (
             "sigmaEq",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

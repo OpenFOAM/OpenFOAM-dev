@@ -65,7 +65,7 @@ Foam::XiModel::XiModel
         IOobject
         (
             "Xi",
-            b.time().timeName(),
+            b.time().name(),
             b.db(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

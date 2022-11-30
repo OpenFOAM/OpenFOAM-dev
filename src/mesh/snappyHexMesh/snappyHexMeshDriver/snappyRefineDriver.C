@@ -361,7 +361,7 @@ Foam::label Foam::snappyRefineDriver::gapOnlyRefine
             Pout<< "Dumping " << candidateCells.size()
                 << " cells to cellSet candidateCellsFromGap." << endl;
             cellSet c(mesh, "candidateCellsFromGap", candidateCells);
-            c.instance() = meshRefiner_.timeName();
+            c.instance() = meshRefiner_.name();
             c.write();
         }
 
@@ -444,7 +444,7 @@ Foam::label Foam::snappyRefineDriver::gapOnlyRefine
             Pout<< "Dumping " << candidateCells.size()
                 << " cells to cellSet candidateCellsFromGapPlusBuffer." << endl;
             cellSet c(mesh, "candidateCellsFromGapPlusBuffer", candidateCells);
-            c.instance() = meshRefiner_.timeName();
+            c.instance() = meshRefiner_.name();
             c.write();
         }
 
@@ -585,7 +585,7 @@ Foam::label Foam::snappyRefineDriver::danglingCellRefine
             {
                 Pout<< "Dumping " << candidateCellSet.size()
                     << " cells to cellSet candidateCellSet." << endl;
-                candidateCellSet.instance() = meshRefiner_.timeName();
+                candidateCellSet.instance() = meshRefiner_.name();
                 candidateCellSet.write();
             }
             candidateCells = candidateCellSet.toc();
@@ -698,7 +698,7 @@ void Foam::snappyRefineDriver::removeInsideCells
     if (debug&meshRefinement::MESH)
     {
         Pout<< "Writing subsetted mesh to time "
-            << meshRefiner_.timeName() << '.' << endl;
+            << meshRefiner_.name() << '.' << endl;
         meshRefiner_.write
         (
             meshRefinement::debugType(debug),
@@ -707,7 +707,7 @@ void Foam::snappyRefineDriver::removeInsideCells
                 meshRefinement::writeLevel()
               | meshRefinement::WRITEMESH
             ),
-            mesh.time().path()/meshRefiner_.timeName()
+            mesh.time().path()/meshRefiner_.name()
         );
         Pout<< "Dumped mesh in = "
             << mesh.time().cpuTimeIncrement() << " s\n" << nl << endl;
@@ -774,7 +774,7 @@ Foam::label Foam::snappyRefineDriver::shellRefine
                 << " cells to cellSet candidateCellsFromShells." << endl;
 
             cellSet c(mesh, "candidateCellsFromShells", candidateCells);
-            c.instance() = meshRefiner_.timeName();
+            c.instance() = meshRefiner_.name();
             c.write();
         }
 
@@ -963,7 +963,7 @@ void Foam::snappyRefineDriver::zonify
         if (debug&meshRefinement::MESH)
         {
             Pout<< "Writing zoned mesh to time "
-                << meshRefiner_.timeName() << '.' << endl;
+                << meshRefiner_.name() << '.' << endl;
             meshRefiner_.write
             (
                 meshRefinement::debugType(debug),
@@ -972,7 +972,7 @@ void Foam::snappyRefineDriver::zonify
                     meshRefinement::writeLevel()
                   | meshRefinement::WRITEMESH
                 ),
-                mesh.time().path()/meshRefiner_.timeName()
+                mesh.time().path()/meshRefiner_.name()
             );
         }
 
@@ -1077,7 +1077,7 @@ void Foam::snappyRefineDriver::splitAndMergeBaffles
     if (debug&meshRefinement::MESH)
     {
         Pout<< "Writing handleProblemCells mesh to time "
-            << meshRefiner_.timeName() << '.' << endl;
+            << meshRefiner_.name() << '.' << endl;
         meshRefiner_.write
         (
             meshRefinement::debugType(debug),
@@ -1086,7 +1086,7 @@ void Foam::snappyRefineDriver::splitAndMergeBaffles
                 meshRefinement::writeLevel()
               | meshRefinement::WRITEMESH
             ),
-            mesh.time().path()/meshRefiner_.timeName()
+            mesh.time().path()/meshRefiner_.name()
         );
     }
 }

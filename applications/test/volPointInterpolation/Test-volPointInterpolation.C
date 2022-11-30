@@ -38,7 +38,7 @@ bool interpolate(const fvMesh& mesh, const word& name)
     typeIOobject<VolField<Type>> io
     (
         name,
-        mesh.time().timeName(),
+        mesh.time().name(),
         mesh,
         IOobject::MUST_READ
     );

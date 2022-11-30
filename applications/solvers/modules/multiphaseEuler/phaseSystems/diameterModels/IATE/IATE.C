@@ -71,7 +71,7 @@ Foam::diameterModels::IATE::IATE
         IOobject
         (
             IOobject::groupName("kappai", phase.name()),
-            phase.time().timeName(),
+            phase.time().name(),
             phase.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

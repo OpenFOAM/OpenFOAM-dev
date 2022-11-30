@@ -272,7 +272,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V() const
             IOobject
             (
                 "V",
-                time().timeName(),
+                time().name(),
                 *this,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -315,7 +315,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
             IOobject
             (
                 "V00",
-                time().timeName(),
+                time().name(),
                 *this,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,

@@ -50,7 +50,7 @@ Foam::velocityMotionSolver::velocityMotionSolver
         IOobject
         (
             "pointMotionU",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

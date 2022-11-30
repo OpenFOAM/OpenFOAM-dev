@@ -69,7 +69,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::continuousGasKEpsilon
         IOobject
         (
             IOobject::groupName("nutEff", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

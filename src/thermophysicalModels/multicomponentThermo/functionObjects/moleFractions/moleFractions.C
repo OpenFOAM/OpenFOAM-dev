@@ -91,7 +91,7 @@ Foam::moleFractions<ThermoType>::moleFractions
                     IOobject
                     (
                         "X_" + Y[i].name(),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_
                     ),
                     mesh_,

@@ -76,7 +76,7 @@ bool Foam::functionObjects::phaseMap::write()
         IOobject
         (
             IOobject::groupName(phases_[0].member(), "map"),
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

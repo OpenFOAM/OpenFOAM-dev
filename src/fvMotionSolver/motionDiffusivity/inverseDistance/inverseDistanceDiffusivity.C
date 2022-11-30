@@ -74,7 +74,7 @@ Foam::inverseDistanceDiffusivity::operator()() const
         IOobject
         (
             "y",
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh()
         ),
         mesh(),

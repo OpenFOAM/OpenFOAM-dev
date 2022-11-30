@@ -20,7 +20,7 @@ volVectorField Uc
     IOobject
     (
         IOobject::groupName("U", continuousPhaseName),
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -34,7 +34,7 @@ volScalarField p
     IOobject
     (
         "p",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -51,7 +51,7 @@ surfaceScalarField phic
     IOobject
     (
         IOobject::groupName("phi", continuousPhaseName),
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
@@ -82,7 +82,7 @@ volScalarField rhoc
     IOobject
     (
         rhocValue.name(),
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
@@ -96,7 +96,7 @@ volScalarField muc
     IOobject
     (
         IOobject::groupName("mu", continuousPhaseName),
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
@@ -112,7 +112,7 @@ volScalarField alphac
     IOobject
     (
         IOobject::groupName("alpha", continuousPhaseName),
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE

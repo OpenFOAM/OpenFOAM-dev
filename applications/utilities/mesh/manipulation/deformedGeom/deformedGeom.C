@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
         typeIOobject<volVectorField> Uheader
         (
             "U",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ
         );

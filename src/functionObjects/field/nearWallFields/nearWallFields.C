@@ -103,7 +103,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
         OBJstream str
         (
             mesh_.time().path()
-           /"wantedTracks_" + mesh_.time().timeName() + ".obj"
+           /"wantedTracks_" + mesh_.time().name() + ".obj"
         );
         InfoInFunction << "Dumping tracks to " << str.name() << endl;
 
@@ -165,7 +165,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
             OBJstream str
             (
                 mesh_.time().path()
-               /"obtainedTracks_" + mesh_.time().timeName() + ".obj"
+               /"obtainedTracks_" + mesh_.time().name() + ".obj"
             );
             InfoInFunction << "Dumping obtained to " << str.name() << endl;
 
@@ -294,7 +294,7 @@ bool Foam::functionObjects::nearWallFields::execute()
 
     Log << type() << " " << name()
         << " write:" << nl
-        << "    Sampling fields to " << time_.timeName()
+        << "    Sampling fields to " << time_.name()
         << endl;
 
     sampleFields(vsf_);
@@ -311,7 +311,7 @@ bool Foam::functionObjects::nearWallFields::write()
 {
     DebugInFunction << endl;
 
-    Log << "    Writing sampled fields to " << time_.timeName()
+    Log << "    Writing sampled fields to " << time_.name()
         << endl;
 
     forAll(vsf_, i)

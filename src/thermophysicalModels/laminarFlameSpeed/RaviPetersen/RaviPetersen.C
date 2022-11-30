@@ -300,7 +300,7 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
         IOobject
         (
             "EqR",
-            p.time().timeName(),
+            p.time().name(),
             p.db(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,

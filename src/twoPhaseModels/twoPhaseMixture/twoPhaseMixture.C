@@ -179,7 +179,7 @@ Foam::twoPhaseMixture::twoPhaseMixture(const fvMesh& mesh)
         IOobject
         (
             IOobject::groupName("alpha", phase1Name_),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -192,7 +192,7 @@ Foam::twoPhaseMixture::twoPhaseMixture(const fvMesh& mesh)
         IOobject
         (
             IOobject::groupName("alpha", phase2Name_),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh
         ),
         1.0 - alpha1_

@@ -128,7 +128,7 @@ void Foam::functionObjects::fieldAverage::initialise()
 
 void Foam::functionObjects::fieldAverage::restart()
 {
-    Log << "    Restarting averaging at time " << obr_.time().timeName()
+    Log << "    Restarting averaging at time " << obr_.time().name()
         << nl << endl;
 
     totalIter_.clear();
@@ -204,7 +204,7 @@ void Foam::functionObjects::fieldAverage::writeAveragingProperties() const
         IOobject
         (
             name() + "Properties",
-            obr_.time().timeName(),
+            obr_.time().name(),
             "uniform",
             obr_,
             IOobject::NO_READ,
@@ -231,7 +231,7 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
 {
     if ((restartOnRestart_ || restartOnOutput_) && log)
     {
-        Info<< "    Starting averaging at time " << obr_.time().timeName()
+        Info<< "    Starting averaging at time " << obr_.time().name()
             << nl;
     }
     else
@@ -250,7 +250,7 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
         if (!propsDictHeader.headerOk())
         {
             Log << "    Starting averaging at time "
-                << obr_.time().timeName() << nl;
+                << obr_.time().name() << nl;
 
             return;
         }

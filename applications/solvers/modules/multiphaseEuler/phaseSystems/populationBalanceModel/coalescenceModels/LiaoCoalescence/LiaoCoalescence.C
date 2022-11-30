@@ -80,7 +80,7 @@ LiaoCoalescence
         IOobject
         (
             "CPack",
-            popBal_.time().timeName(),
+            popBal_.time().name(),
             popBal_.mesh()
         ),
         popBal_.mesh(),
@@ -100,7 +100,7 @@ LiaoCoalescence
         IOobject
         (
             "dCrit",
-            popBal_.time().timeName(),
+            popBal_.time().name(),
             popBal_.mesh()
         ),
         popBal_.mesh(),
@@ -116,7 +116,7 @@ LiaoCoalescence
         IOobject
         (
             "uRelTurb",
-            popBal_.time().timeName(),
+            popBal_.time().name(),
             popBal_.mesh()
         ),
         popBal_.mesh(),
@@ -132,7 +132,7 @@ LiaoCoalescence
         IOobject
         (
             "uRelBuoy",
-            popBal_.time().timeName(),
+            popBal_.time().name(),
             popBal_.mesh()
         ),
         popBal_.mesh(),
@@ -148,7 +148,7 @@ LiaoCoalescence
         IOobject
         (
             "uRelShear",
-            popBal_.time().timeName(),
+            popBal_.time().name(),
             popBal_.mesh()
         ),
         popBal_.mesh(),

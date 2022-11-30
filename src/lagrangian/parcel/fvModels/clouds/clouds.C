@@ -102,7 +102,7 @@ Foam::fv::clouds::clouds
                 IOobject
                 (
                     "rho",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh
                 ),
                 mesh,

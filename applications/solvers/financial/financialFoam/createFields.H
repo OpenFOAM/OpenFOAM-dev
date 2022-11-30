@@ -43,7 +43,7 @@ volScalarField V
     IOobject
     (
         "V",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -57,7 +57,7 @@ surfaceVectorField Pf
     IOobject
     (
         "Pf",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::NO_WRITE
@@ -71,7 +71,7 @@ volVectorField P
     IOobject
     (
         "P",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::NO_WRITE
@@ -90,7 +90,7 @@ volScalarField delta
     IOobject
     (
         "delta",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE

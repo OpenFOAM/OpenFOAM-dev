@@ -538,7 +538,7 @@ void subsetMesh
 
     if (writeMesh)
     {
-        Info<< "Writing refined mesh to time " << runTime.timeName() << nl
+        Info<< "Writing refined mesh to time " << runTime.name() << nl
             << endl;
 
         IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
@@ -744,7 +744,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "refinementLevel",
-            runTime.timeName(),
+            runTime.name(),
             polyMesh::defaultRegion,
             mesh,
             IOobject::READ_IF_PRESENT,
@@ -907,7 +907,7 @@ int main(int argc, char *argv[])
 
         if (writeMesh)
         {
-            Info<< "    Writing refined mesh to time " << runTime.timeName()
+            Info<< "    Writing refined mesh to time " << runTime.name()
                 << nl << endl;
 
             IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
@@ -977,7 +977,7 @@ int main(int argc, char *argv[])
 
         doRefinement(mesh, refineDict, hanging, refLevel);
 
-        Info<< "Writing refined mesh to time " << runTime.timeName() << nl
+        Info<< "Writing refined mesh to time " << runTime.name() << nl
             << endl;
 
         // Write final mesh
@@ -988,7 +988,7 @@ int main(int argc, char *argv[])
     }
     else if (!writeMesh)
     {
-        Info<< "Writing refined mesh to time " << runTime.timeName() << nl
+        Info<< "Writing refined mesh to time " << runTime.name() << nl
             << endl;
 
         // Write final mesh. (will have been written already if writeMesh=true)

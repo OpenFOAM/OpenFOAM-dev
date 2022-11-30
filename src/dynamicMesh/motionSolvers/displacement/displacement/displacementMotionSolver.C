@@ -49,7 +49,7 @@ Foam::displacementMotionSolver::displacementMotionSolver
         IOobject
         (
             "pointDisplacement",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

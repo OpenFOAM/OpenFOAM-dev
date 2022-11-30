@@ -102,7 +102,7 @@ Foam::Flux<CloudType, Derived>::Flux
         IOobject
         (
             this->owner().name() + ":" + Derived::typeName,
-            this->owner().mesh().time().timeName(),
+            this->owner().mesh().time().name(),
             this->owner().mesh()
         ),
         this->owner().mesh(),

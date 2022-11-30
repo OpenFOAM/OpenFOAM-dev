@@ -71,7 +71,7 @@ void writeDecomposition(const domainDecomposition& meshes)
         IOobject
         (
             "cellProc",
-            meshes.completeMesh().time().timeName(),
+            meshes.completeMesh().time().name(),
             meshes.completeMesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
             (
                 writeCellProc
              && meshes.completeMesh().facesInstance()
-             == runTimes.completeTime().timeName()
+             == runTimes.completeTime().name()
             )
             {
                 writeDecomposition(meshes);
@@ -323,7 +323,7 @@ int main(int argc, char *argv[])
             IOobjectList objects
             (
                 meshes.procMeshes()[0],
-                runTimes.procTimes()[0].timeName()
+                runTimes.procTimes()[0].name()
             );
 
             if (!noFields)
@@ -527,7 +527,7 @@ int main(int argc, char *argv[])
                             IOobjectList sprayObjs
                             (
                                 meshes.procMeshes()[proci],
-                                runTimes.procTimes()[proci].timeName(),
+                                runTimes.procTimes()[proci].name(),
                                 cloud::prefix/cloudDirs[i]
                             );
 

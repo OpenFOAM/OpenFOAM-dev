@@ -57,7 +57,7 @@ Foam::basicCombustionMixture::basicCombustionMixture
                 IOobject
                 (
                     IOobject::groupName(species_[i], phaseName),
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE

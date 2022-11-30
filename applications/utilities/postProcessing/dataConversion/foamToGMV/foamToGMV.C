@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,9 +74,9 @@ int main(int argc, char *argv[])
 
             // Set Time
             runTime.setTime(TimeList[n], n);
-            word CurTime = runTime.timeName();
+            word CurTime = runTime.name();
 
-            IOobjectList objects(mesh, runTime.timeName());
+            IOobjectList objects(mesh, runTime.name());
 
             #include "moveMesh.H"
 

@@ -38,7 +38,7 @@
         IOobject
         (
             "rho",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -51,7 +51,7 @@
         IOobject
         (
             "Rspecific",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -69,7 +69,7 @@
         IOobject
         (
             "U",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

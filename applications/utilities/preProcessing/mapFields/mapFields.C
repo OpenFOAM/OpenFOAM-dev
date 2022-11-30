@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 targetRegion,
-                runTimeTarget.timeName(),
+                runTimeTarget.name(),
                 runTimeTarget
             ),
             false
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     sourceRegion,
-                    runTimeSource.timeName(),
+                    runTimeSource.name(),
                     runTimeSource
                 ),
                 false
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 sourceRegion,
-                runTimeSource.timeName(),
+                runTimeSource.name(),
                 runTimeSource
             ),
             false
@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     targetRegion,
-                    runTimeTarget.timeName(),
+                    runTimeTarget.name(),
                     runTimeTarget
                 ),
                 false
@@ -360,7 +360,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     sourceRegion,
-                    runTimeSource.timeName(),
+                    runTimeSource.name(),
                     runTimeSource
                 ),
                 false
@@ -396,7 +396,7 @@ int main(int argc, char *argv[])
                         IOobject
                         (
                             targetRegion,
-                            runTimeTarget.timeName(),
+                            runTimeTarget.name(),
                             runTimeTarget
                         ),
                         false
@@ -445,7 +445,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 sourceRegion,
-                runTimeSource.timeName(),
+                runTimeSource.name(),
                 runTimeSource
             ),
             false
@@ -456,7 +456,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 targetRegion,
-                runTimeTarget.timeName(),
+                runTimeTarget.name(),
                 runTimeTarget
             ),
             false

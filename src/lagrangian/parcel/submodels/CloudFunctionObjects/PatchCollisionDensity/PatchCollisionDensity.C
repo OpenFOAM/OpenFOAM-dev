@@ -44,7 +44,7 @@ void Foam::PatchCollisionDensity<CloudType>::write()
         IOobject
         (
             this->owner().name() + ":numberCollisionDensity",
-            this->owner().mesh().time().timeName(),
+            this->owner().mesh().time().name(),
             this->owner().mesh()
         ),
         this->owner().mesh(),
@@ -59,7 +59,7 @@ void Foam::PatchCollisionDensity<CloudType>::write()
         IOobject
         (
             this->owner().name() + ":numberCollisionDensityRate",
-            this->owner().mesh().time().timeName(),
+            this->owner().mesh().time().name(),
             this->owner().mesh()
         ),
         this->owner().mesh(),
@@ -75,7 +75,7 @@ void Foam::PatchCollisionDensity<CloudType>::write()
         IOobject
         (
             this->owner().name() + ":massCollisionDensity",
-            this->owner().mesh().time().timeName(),
+            this->owner().mesh().time().name(),
             this->owner().mesh()
         ),
         this->owner().mesh(),
@@ -90,7 +90,7 @@ void Foam::PatchCollisionDensity<CloudType>::write()
         IOobject
         (
             this->owner().name() + ":massCollisionDensityRate",
-            this->owner().mesh().time().timeName(),
+            this->owner().mesh().time().name(),
             this->owner().mesh()
         ),
         this->owner().mesh(),
@@ -153,7 +153,7 @@ Foam::PatchCollisionDensity<CloudType>::PatchCollisionDensity
     typeIOobject<volScalarField> numberIo
     (
         this->owner().name() + ":numberCollisionDensity",
-        this->owner().mesh().time().timeName(),
+        this->owner().mesh().time().name(),
         this->owner().mesh(),
         IOobject::MUST_READ,
         IOobject::NO_WRITE
@@ -173,7 +173,7 @@ Foam::PatchCollisionDensity<CloudType>::PatchCollisionDensity
     typeIOobject<volScalarField> massIo
     (
         this->owner().name() + ":massCollisionDensity",
-        this->owner().mesh().time().timeName(),
+        this->owner().mesh().time().name(),
         this->owner().mesh(),
         IOobject::MUST_READ,
         IOobject::NO_WRITE

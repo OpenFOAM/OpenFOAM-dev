@@ -136,7 +136,7 @@ void Foam::FacePostProcessing<CloudType>::write()
         if (outputFilePtr_.set(zoneI))
         {
             OFstream& os = outputFilePtr_[zoneI];
-            os  << time.timeName() << token::TAB << sumMassTotal << token::TAB
+            os  << time.name() << token::TAB << sumMassTotal << token::TAB
                 << sumMassFlowRate<< endl;
         }
     }

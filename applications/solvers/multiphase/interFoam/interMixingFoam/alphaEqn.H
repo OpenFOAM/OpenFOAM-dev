@@ -7,7 +7,7 @@
         IOobject
         (
             "phir",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -23,7 +23,7 @@
             IOobject
             (
                 "lambda",
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,

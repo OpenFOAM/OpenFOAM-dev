@@ -71,7 +71,7 @@ bool Foam::conformalVoronoiMesh::distributeBackground(const Triangulation& mesh)
             IOobject
             (
                 "cellWeights",
-                bMesh.time().timeName(),
+                bMesh.time().name(),
                 bMesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE

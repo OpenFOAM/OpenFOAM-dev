@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "one",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
         zeroGradientFvPatchScalarField::typeName
     );
     Info<< "Writing one field "
-        << one.name() << " in " << runTime.timeName() << endl;
+        << one.name() << " in " << runTime.name() << endl;
     one.write();
 
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "ccX",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     );
     Info<< "Writing x component of cell centres to "
         << ccX.name()
-        << " in " << runTime.timeName() << endl;
+        << " in " << runTime.name() << endl;
     ccX.write();
 
 
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "surfaceOne",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
         calculatedFvsPatchScalarField::typeName
     );
     Info<< "Writing surface one field "
-        << surfaceOne.name() << " in " << runTime.timeName() << endl;
+        << surfaceOne.name() << " in " << runTime.name() << endl;
     surfaceOne.write();
 
 
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "pointX",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
     pointX.primitiveFieldRef() = mesh.points().component(0);
     pointX.correctBoundaryConditions();
     Info<< "Writing x-component field "
-        << pointX.name() << " in " << runTime.timeName() << endl;
+        << pointX.name() << " in " << runTime.name() << endl;
     pointX.write();
 
 

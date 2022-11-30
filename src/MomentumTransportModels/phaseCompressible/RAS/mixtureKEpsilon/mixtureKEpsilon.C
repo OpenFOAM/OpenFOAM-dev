@@ -147,7 +147,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
         IOobject
         (
             IOobject::groupName("k", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -159,7 +159,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
         IOobject
         (
             IOobject::groupName("epsilon", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -187,7 +187,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
                 IOobject
                 (
                     "km",
-                    this->runTime_.timeName(),
+                    this->runTime_.name(),
                     this->mesh_,
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE
@@ -203,7 +203,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
                 IOobject
                 (
                     "epsilonm",
-                    this->runTime_.timeName(),
+                    this->runTime_.name(),
                     this->mesh_,
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE
@@ -219,7 +219,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
                 IOobject
                 (
                     "Ct2",
-                    this->runTime_.timeName(),
+                    this->runTime_.name(),
                     this->mesh_,
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
@@ -236,7 +236,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
                 IOobject
                 (
                     "rhom",
-                    this->runTime_.timeName(),
+                    this->runTime_.name(),
                     this->mesh_,
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE

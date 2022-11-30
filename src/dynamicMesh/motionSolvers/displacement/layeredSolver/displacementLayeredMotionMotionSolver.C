@@ -325,7 +325,7 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
                 IOobject
                 (
                     mesh().cellZones()[cellZoneI].name() + "_" + fz.name(),
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh(),
                     IOobject::NO_READ,
                     IOobject::NO_WRITE,
@@ -418,7 +418,7 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
             IOobject
             (
                 mesh().cellZones()[cellZoneI].name() + ":distance",
-                mesh().time().timeName(),
+                mesh().time().name(),
                 mesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -441,7 +441,7 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
 
         Info<< "Writing " << pointScalarField::typeName
             << distance.name() << " to "
-            << mesh().time().timeName() << endl;
+            << mesh().time().name() << endl;
         distance.write();
     }
 

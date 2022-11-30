@@ -111,7 +111,7 @@ void Foam::PackingModels::Explicit<CloudType>::cacheFields(const bool store)
                 IOobject
                 (
                     cloudName + ":stressAverage",
-                    this->owner().db().time().timeName(),
+                    this->owner().db().time().name(),
                     mesh
                 ),
                 this->owner().solution().dict(),

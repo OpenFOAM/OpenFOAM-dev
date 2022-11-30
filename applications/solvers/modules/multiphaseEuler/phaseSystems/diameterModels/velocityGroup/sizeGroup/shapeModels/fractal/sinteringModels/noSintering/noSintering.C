@@ -75,7 +75,7 @@ Foam::diameterModels::shapeModels::sinteringModels::noSintering::R() const
         IOobject
         (
             typedName("R"),
-            fi.time().timeName(),
+            fi.time().name(),
             fi.mesh()
         ),
         fi.mesh(),

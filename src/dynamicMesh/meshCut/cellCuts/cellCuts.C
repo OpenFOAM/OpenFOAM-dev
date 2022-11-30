@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -278,7 +278,7 @@ void Foam::cellCuts::writeUncutOBJ
     // Cell edges
     OFstream cutsStream(dir / "cell_" + name(celli) + ".obj");
 
-    Pout<< "Writing cell for time " <<  mesh().time().timeName()
+    Pout<< "Writing cell for time " <<  mesh().time().name()
         << " to " << cutsStream.name() << nl;
 
     meshTools::writeOBJ
@@ -293,7 +293,7 @@ void Foam::cellCuts::writeUncutOBJ
     // Loop cutting cell in two
     OFstream cutStream(dir / "cellCuts_" + name(celli) + ".obj");
 
-    Pout<< "Writing raw cuts on cell for time " <<  mesh().time().timeName()
+    Pout<< "Writing raw cuts on cell for time " <<  mesh().time().name()
         << " to " << cutStream.name() << nl;
 
     const labelList& cPoints = mesh().cellPoints()[celli];
@@ -338,7 +338,7 @@ void Foam::cellCuts::writeOBJ
     // Cell edges
     OFstream cutsStream(dir / "cell_" + name(celli) + ".obj");
 
-    Pout<< "Writing cell for time " <<  mesh().time().timeName()
+    Pout<< "Writing cell for time " <<  mesh().time().name()
         << " to " << cutsStream.name() << nl;
 
     meshTools::writeOBJ
@@ -354,7 +354,7 @@ void Foam::cellCuts::writeOBJ
     // Loop cutting cell in two
     OFstream loopStream(dir / "cellLoop_" + name(celli) + ".obj");
 
-    Pout<< "Writing loop for time " <<  mesh().time().timeName()
+    Pout<< "Writing loop for time " <<  mesh().time().name()
         << " to " << loopStream.name() << nl;
 
     label vertI = 0;
@@ -365,7 +365,7 @@ void Foam::cellCuts::writeOBJ
     // Anchors for cell
     OFstream anchorStream(dir / "anchors_" + name(celli) + ".obj");
 
-    Pout<< "Writing anchors for time " <<  mesh().time().timeName()
+    Pout<< "Writing anchors for time " <<  mesh().time().name()
         << " to " << anchorStream.name() << endl;
 
     forAll(anchors, i)

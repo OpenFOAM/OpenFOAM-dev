@@ -815,7 +815,7 @@ void Foam::fvMeshSubset::setCellSubset
             IOobject
             (
                 baseMesh().name() + "SubSet",
-                baseMesh().time().timeName(),
+                baseMesh().time().name(),
                 baseMesh().time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -1314,7 +1314,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
             IOobject
             (
                 baseMesh().name(),
-                baseMesh().time().timeName(),
+                baseMesh().time().name(),
                 baseMesh().time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -1543,7 +1543,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
         IOobject
         (
             baseMesh().name(),
-            baseMesh().time().timeName(),
+            baseMesh().time().name(),
             baseMesh().time(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

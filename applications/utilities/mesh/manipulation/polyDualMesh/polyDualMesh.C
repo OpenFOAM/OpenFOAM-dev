@@ -479,7 +479,7 @@ int main(int argc, char *argv[])
 
 
     // Read objects in time directory
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 
@@ -529,7 +529,7 @@ int main(int argc, char *argv[])
         mesh.setInstance(oldInstance);
     }
 
-    Info<< "Writing dual mesh to " << runTime.timeName() << endl;
+    Info<< "Writing dual mesh to " << runTime.name() << endl;
 
     mesh.write();
 

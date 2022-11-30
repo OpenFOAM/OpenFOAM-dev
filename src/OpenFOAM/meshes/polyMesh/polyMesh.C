@@ -750,7 +750,7 @@ void Foam::polyMesh::resetPrimitives
 
 
     // Flags the mesh files as being changed
-    setInstance(time().timeName());
+    setInstance(time().name());
 
     // Check if the faces and cells are valid
     forAll(faces_, facei)
@@ -845,7 +845,7 @@ void Foam::polyMesh::reset(const polyMesh& newMesh)
     globalMeshDataPtr_.clear();
 
     // Flags the mesh files as being changed
-    setInstance(time().timeName());
+    setInstance(time().name());
 
     // Check if the faces and cells are valid
     forAll(faces_, facei)
@@ -1399,7 +1399,7 @@ void Foam::polyMesh::setPoints(const pointField& newPoints)
 
     points_ = newPoints;
 
-    setPointsInstance(time().timeName());
+    setPointsInstance(time().name());
 
     // Adjust parallel shared points
     if (globalMeshDataPtr_.valid())
@@ -1470,7 +1470,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
         }
     }
 
-    setPointsInstance(time().timeName());
+    setPointsInstance(time().name());
 
     tmp<scalarField> sweptVols = primitiveMesh::movePoints
     (

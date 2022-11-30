@@ -81,7 +81,7 @@ Foam::combustionModels::EDC::EDC
         IOobject
         (
             this->thermo().phasePropertyName(typedName("kappa")),
-            this->mesh().time().timeName(),
+            this->mesh().time().name(),
             this->mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

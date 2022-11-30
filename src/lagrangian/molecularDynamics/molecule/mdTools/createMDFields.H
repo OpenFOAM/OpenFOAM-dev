@@ -50,7 +50,7 @@ forAll(allSpeciesRhoN, rN)
             IOobject
             (
                 "rhoN_" + molecules.potential().idList()[rN],
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -71,7 +71,7 @@ volScalarField totalRhoN
     IOobject
     (
         "rhoN_total",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
@@ -105,7 +105,7 @@ forAll(allSpeciesRhoM, rM)
             IOobject
             (
                 "rhoM_" + molecules.potential().idList()[rM],
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -126,7 +126,7 @@ volScalarField totalRhoM
     IOobject
     (
         "rhoM_total",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
@@ -160,7 +160,7 @@ forAll(allSpeciesVelocity, v)
             IOobject
             (
                 "velocity_" + molecules.potential().idList()[v],
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -181,7 +181,7 @@ Info << "    Creating total velocity field" << endl;
 //     IOobject
 //     (
 //         "velocity_total",
-//         runTime.timeName(),
+//         runTime.name(),
 //         mesh,
 //         IOobject::NO_READ,
 //         IOobject::AUTO_WRITE
@@ -199,7 +199,7 @@ volVectorField totalVelocity
     IOobject
     (
         "velocity_total",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
@@ -230,7 +230,7 @@ forAll(allSpeciesTemperature, t)
             IOobject
             (
                 "temperature_" + molecules.potential().idList()[t],
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -251,7 +251,7 @@ volScalarField totalTemperature
     IOobject
     (
         "temperature_total",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
@@ -286,7 +286,7 @@ forAll(allSpeciesMeanKE, mKE)
             IOobject
             (
                 "meanKE_" + molecules.potential().idList()[mKE],
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -307,7 +307,7 @@ volScalarField totalMeanKE
     IOobject
     (
         "meanKE_total",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE

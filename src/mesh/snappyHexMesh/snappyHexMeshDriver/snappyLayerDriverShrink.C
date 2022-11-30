@@ -1327,7 +1327,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
             << "    " << medialRatio.name()
             << " : ratio of medial distance to wall distance" << nl
             << endl;
-        meshRefiner_.mesh().setInstance(meshRefiner_.timeName());
+        meshRefiner_.mesh().setInstance(meshRefiner_.name());
         meshRefiner_.write
         (
             meshRefinement::debugType(debug),
@@ -1336,7 +1336,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
                 meshRefinement::writeLevel()
               | meshRefinement::WRITEMESH
             ),
-            mesh.time().path()/meshRefiner_.timeName()
+            mesh.time().path()/meshRefiner_.name()
         );
         dispVec.write();
         medialDist.write();
@@ -1418,7 +1418,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
             (
                 mesh.time().path()
               / "thicknessRatioExcludePoints_"
-              + meshRefiner_.timeName()
+              + meshRefiner_.name()
               + ".obj"
             )
         );
@@ -1435,7 +1435,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
             (
                 mesh.time().path()
               / "thicknessRatioExcludeMedialVec_"
-              + meshRefiner_.timeName()
+              + meshRefiner_.name()
               + ".obj"
             )
         );
@@ -1754,7 +1754,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
     {
         const_cast<Time&>(mesh.time())++;
         Info<< "Writing wanted-displacement mesh (possibly illegal) to "
-            << meshRefiner_.timeName() << endl;
+            << meshRefiner_.name() << endl;
         pointField oldPoints(mesh.points());
 
         meshRefiner_.mesh().movePoints(meshMover.curPoints());
@@ -1767,7 +1767,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
         // (see snappyLayerDriver.C) so we now have to force writing all files
         // so we can easily step through time steps. Note that if you
         // don't write the mesh with layers this is not necessary.
-        meshRefiner_.mesh().setInstance(meshRefiner_.timeName());
+        meshRefiner_.mesh().setInstance(meshRefiner_.name());
 
         meshRefiner_.write
         (
@@ -1777,7 +1777,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
                 meshRefinement::writeLevel()
               | meshRefinement::WRITEMESH
             ),
-            mesh.time().path()/meshRefiner_.timeName()
+            mesh.time().path()/meshRefiner_.name()
         );
         dispVec.write();
         medialDist.write();

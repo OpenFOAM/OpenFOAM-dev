@@ -77,7 +77,7 @@ Foam::diameterModels::shapeModels::fractal::fractal
         IOobject
         (
             "kappa" + group.name().substr(1),
-            group.mesh().time().timeName(),
+            group.mesh().time().name(),
             group.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -98,7 +98,7 @@ Foam::diameterModels::shapeModels::fractal::fractal
         IOobject
         (
             "dColl" + group.name().substr(1),
-            group.mesh().time().timeName(),
+            group.mesh().time().name(),
             group.mesh()
         ),
         this->dColl()
@@ -108,7 +108,7 @@ Foam::diameterModels::shapeModels::fractal::fractal
         IOobject
         (
             IOobject::groupName("Su", kappa_.name()),
-            group.mesh().time().timeName(),
+            group.mesh().time().name(),
             group.mesh()
         ),
         group.mesh(),

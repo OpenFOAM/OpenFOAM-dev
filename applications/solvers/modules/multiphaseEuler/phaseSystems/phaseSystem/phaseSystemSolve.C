@@ -125,7 +125,7 @@ void Foam::phaseSystem::solve
         IOobject
         (
             "alphaVoid",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_
         ),
         mesh_,
@@ -173,7 +173,7 @@ void Foam::phaseSystem::solve
                     IOobject
                     (
                         "Sp",
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_
                     ),
                     mesh_,
@@ -525,7 +525,7 @@ void Foam::phaseSystem::solve
                     IOobject
                     (
                         "sumAlphaMoving",
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_
                     ),
                     mesh_,

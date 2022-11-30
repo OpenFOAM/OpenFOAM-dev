@@ -175,7 +175,7 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
                             "phaseTransfer:dmdtf",
                             interface.name()
                         ),
-                        this->mesh().time().timeName(),
+                        this->mesh().time().name(),
                         this->mesh()
                     ),
                     this->mesh(),
@@ -195,7 +195,7 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
                             "phaseTransfer:d2mdtdpf",
                             interface.name()
                         ),
-                        this->mesh().time().timeName(),
+                        this->mesh().time().name(),
                         this->mesh()
                     ),
                     this->mesh(),
@@ -228,7 +228,7 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
                             ),
                             interface.name()
                         ),
-                        this->mesh().time().timeName(),
+                        this->mesh().time().name(),
                         this->mesh()
                     ),
                     this->mesh(),

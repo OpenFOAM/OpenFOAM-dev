@@ -801,7 +801,7 @@ Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
                     IOobject
                     (
                         this->integerMomentFldName(),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_,
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
@@ -826,7 +826,7 @@ Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
                     IOobject
                     (
                         this->defaultFldName(),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_,
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
@@ -846,7 +846,7 @@ Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
                     IOobject
                     (
                         this->defaultFldName(),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_,
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
@@ -866,7 +866,7 @@ Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
                     IOobject
                     (
                         this->defaultFldName(),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_,
                         IOobject::NO_READ,
                         IOobject::NO_WRITE

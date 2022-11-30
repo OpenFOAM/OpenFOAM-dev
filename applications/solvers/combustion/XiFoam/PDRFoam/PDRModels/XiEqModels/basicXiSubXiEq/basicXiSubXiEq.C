@@ -112,7 +112,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::basicSubGrid::XiEq() const
         IOobject
         (
             "ns",
-            U.mesh().time().timeName(),
+            U.mesh().time().name(),
             U.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

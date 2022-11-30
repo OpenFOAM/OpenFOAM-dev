@@ -6,7 +6,7 @@
         IOobject
         (
             "alphaPhi",
-            runTime.timeName(),
+            runTime.name(),
             mesh
         ),
         mesh,
@@ -23,7 +23,7 @@
             IOobject
             (
                 "alphaPhiSum",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             mesh,

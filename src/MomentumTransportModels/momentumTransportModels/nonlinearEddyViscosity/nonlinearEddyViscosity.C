@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ nonlinearEddyViscosity
         IOobject
         (
             IOobject::groupName("nonlinearStress", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,

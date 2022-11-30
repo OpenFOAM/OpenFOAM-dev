@@ -184,7 +184,7 @@ v2f<BasicMomentumTransportModel>::v2f
         IOobject
         (
             IOobject::groupName("k", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -196,7 +196,7 @@ v2f<BasicMomentumTransportModel>::v2f
         IOobject
         (
             IOobject::groupName("epsilon", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -208,7 +208,7 @@ v2f<BasicMomentumTransportModel>::v2f
         IOobject
         (
             IOobject::groupName("v2", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -220,7 +220,7 @@ v2f<BasicMomentumTransportModel>::v2f
         IOobject
         (
             IOobject::groupName("f", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

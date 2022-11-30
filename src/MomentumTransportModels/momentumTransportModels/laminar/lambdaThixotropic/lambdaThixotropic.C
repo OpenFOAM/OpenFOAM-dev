@@ -76,7 +76,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
                 typedName("lambda"),
                 alphaRhoPhi.group()
             ),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -93,7 +93,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
                 typedName("nu"),
                 alphaRhoPhi.group()
             ),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

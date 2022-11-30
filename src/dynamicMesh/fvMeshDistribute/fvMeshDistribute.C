@@ -1638,7 +1638,7 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
             IOobject
             (
                 fvMesh::defaultRegion,
-                runTime.timeName(),
+                runTime.name(),
                 runTime,
                 IOobject::NO_READ
             ),
@@ -3007,7 +3007,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
     correctCoupledPatchFields<volSymmTensorField>();
     correctCoupledPatchFields<volTensorField>();
 
-    mesh_.setInstance(mesh_.time().timeName());
+    mesh_.setInstance(mesh_.time().name());
 
     // Print a bit
     if (debug)

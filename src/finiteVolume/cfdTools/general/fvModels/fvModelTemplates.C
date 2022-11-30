@@ -175,7 +175,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
         IOobject
         (
             "one",
-            this->mesh_.time().timeName(),
+            this->mesh_.time().name(),
             this->mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE,

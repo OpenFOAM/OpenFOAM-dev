@@ -171,7 +171,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
         // Have to explicitly update the mesh instance.
         const_cast<fvMesh&>(decomposition_().mesh()).setInstance
         (
-            time().timeName()
+            time().name()
         );
 
         decomposition_().mesh().write();
@@ -1225,7 +1225,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
     //         IOobject
     //         (
     //             "ptTargetCellSize",
-    //             runTime_.timeName(),
+    //             runTime_.name(),
     //             tetMesh,
     //             IOobject::NO_READ,
     //             IOobject::AUTO_WRITE
@@ -1310,7 +1310,7 @@ void Foam::conformalVoronoiMesh::writeCellCentres
 ) const
 {
     Info<< "Writing components of cellCentre positions to volScalarFields"
-        << " ccx, ccy, ccz in " <<  runTime_.timeName() << endl;
+        << " ccx, ccy, ccz in " <<  runTime_.name() << endl;
 
     for (direction i=0; i<vector::nComponents; i++)
     {
@@ -1319,7 +1319,7 @@ void Foam::conformalVoronoiMesh::writeCellCentres
             IOobject
             (
                 "cc" + word(vector::componentNames[i]),
-                runTime_.timeName(),
+                runTime_.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE

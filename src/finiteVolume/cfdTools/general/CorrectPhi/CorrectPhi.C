@@ -75,7 +75,7 @@ void Foam::CorrectPhi
         IOobject
         (
             "pcorr",
-            runTime.timeName(),
+            runTime.name(),
             mesh
         ),
         mesh,
@@ -149,7 +149,7 @@ void Foam::CorrectPhi
         IOobject
         (
             "pcorr",
-            runTime.timeName(),
+            runTime.name(),
             mesh
         ),
         mesh,

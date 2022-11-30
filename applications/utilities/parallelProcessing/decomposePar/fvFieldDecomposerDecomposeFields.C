@@ -113,7 +113,7 @@ Foam::fvFieldDecomposer::decomposeField
             IOobject
             (
                 field.name(),
-                procMesh_.time().timeName(),
+                procMesh_.time().name(),
                 procMesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -258,7 +258,7 @@ Foam::fvFieldDecomposer::decomposeField
             IOobject
             (
                 field.name(),
-                procMesh_.time().timeName(),
+                procMesh_.time().name(),
                 procMesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,

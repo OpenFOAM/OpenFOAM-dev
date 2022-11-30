@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
                 Foam::IOobject
                 (
                     Foam::polyMesh::defaultRegion,
-                    srcRunTimePtr->timeName(),
+                    srcRunTimePtr->name(),
                     srcRunTimePtr(),
                     Foam::IOobject::MUST_READ
                 )

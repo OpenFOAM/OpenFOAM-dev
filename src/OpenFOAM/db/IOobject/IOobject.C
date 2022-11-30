@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -365,13 +365,13 @@ void Foam::IOobject::updateInstance() const
         !instance_.isAbsolute()
      && instance_ != time().system()
      && instance_ != time().constant()
-     && instance_ != time().timeName()
+     && instance_ != time().name()
     )
     {
         scalar timeValue;
         if (readScalar(instance_.c_str(), timeValue))
         {
-            instance_ = time().timeName();
+            instance_ = time().name();
         }
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,14 +160,14 @@ int main(int argc, char *argv[])
 
     // Read the tetDualMesh
     Info<< "Create tetDualMesh for time = "
-        << runTime.timeName() << nl << endl;
+        << runTime.name() << nl << endl;
 
     fvMesh tetDualMesh
     (
         IOobject
         (
             "tetDualMesh",
-            runTime.timeName(),
+            runTime.name(),
             runTime,
             IOobject::MUST_READ
         ),
@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
 
 
     // Read objects in time directory
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     // Read vol fields, interpolate onto tet points
     PtrList<pointScalarField> psFlds;

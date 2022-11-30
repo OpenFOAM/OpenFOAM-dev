@@ -752,7 +752,7 @@ int main(int argc, char *argv[])
     )();
 
     // Read all fields in time and constant directories
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
     IOobjectList timeObjects(IOobjectList(mesh, mesh.facesInstance()));
     forAllConstIter(IOobjectList, timeObjects, iter)
     {

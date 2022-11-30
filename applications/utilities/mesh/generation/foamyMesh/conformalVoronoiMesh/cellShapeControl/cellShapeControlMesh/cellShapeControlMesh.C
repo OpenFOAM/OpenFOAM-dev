@@ -374,7 +374,7 @@ Foam::cellShapeControlMesh::cellShapeControlMesh(const Time& runTime)
             IOobject
             (
                 meshSubDir,
-                runTime.timeName(),
+                runTime.name(),
                 runTime,
                 IOobject::READ_IF_PRESENT,
                 IOobject::NO_WRITE
@@ -389,7 +389,7 @@ Foam::cellShapeControlMesh::cellShapeControlMesh(const Time& runTime)
                 IOobject
                 (
                     "sizes",
-                    runTime.timeName(),
+                    runTime.name(),
                     meshSubDir,
                     runTime,
                     IOobject::READ_IF_PRESENT,
@@ -404,7 +404,7 @@ Foam::cellShapeControlMesh::cellShapeControlMesh(const Time& runTime)
                 IOobject
                 (
                     "alignments",
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     meshSubDir,
                     mesh.time(),
                     IOobject::READ_IF_PRESENT,
@@ -654,7 +654,7 @@ void Foam::cellShapeControlMesh::write() const
         IOobject
         (
             "sizes",
-            mesh.time().timeName(),
+            mesh.time().name(),
             meshSubDir,
             mesh.time(),
             IOobject::NO_READ,
@@ -669,7 +669,7 @@ void Foam::cellShapeControlMesh::write() const
         IOobject
         (
             "alignments",
-            mesh.time().timeName(),
+            mesh.time().name(),
             meshSubDir,
             mesh.time(),
             IOobject::NO_READ,

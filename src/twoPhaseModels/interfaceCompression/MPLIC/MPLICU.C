@@ -54,7 +54,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLICU::interpolate
             IOobject
             (
                 "spicedTvff",
-                mesh().time().timeName(),
+                mesh().time().name(),
                 mesh()
             ),
             tvff,

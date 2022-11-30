@@ -6,7 +6,7 @@ volVectorField U
     IOobject
     (
         "U",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -26,7 +26,7 @@ volScalarField rhoInf
     IOobject
     (
         "rho",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
@@ -45,7 +45,7 @@ volScalarField mu
     IOobject
     (
         "mu",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
@@ -59,7 +59,7 @@ parcelClouds& clouds = parcelClouds::New(mesh, rhoInf, U, mu, g);
 typeIOobject<volVectorField> Hheader
 (
     "H",
-    runTime.timeName(),
+    runTime.name(),
     mesh,
     IOobject::MUST_READ,
     IOobject::AUTO_WRITE
@@ -77,7 +77,7 @@ if (Hheader.headerOk())
 typeIOobject<volVectorField> HdotGradHheader
 (
     "HdotGradH",
-    runTime.timeName(),
+    runTime.name(),
     mesh,
     IOobject::MUST_READ,
     IOobject::AUTO_WRITE

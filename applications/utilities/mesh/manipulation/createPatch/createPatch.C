@@ -777,7 +777,7 @@ int main(int argc, char *argv[])
     }
 
     // Write resulting mesh
-    Info<< "Writing repatched mesh to " << runTime.timeName() << nl << endl;
+    Info<< "Writing repatched mesh to " << runTime.name() << nl << endl;
     mesh.write();
 
     Info<< "End\n" << endl;

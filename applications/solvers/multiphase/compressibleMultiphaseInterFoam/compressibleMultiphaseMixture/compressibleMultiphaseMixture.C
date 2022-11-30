@@ -86,7 +86,7 @@ Foam::compressibleMultiphaseMixture::compressibleMultiphaseMixture
         IOobject
         (
             "p",
-            U.mesh().time().timeName(),
+            U.mesh().time().name(),
             U.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -99,7 +99,7 @@ Foam::compressibleMultiphaseMixture::compressibleMultiphaseMixture
         IOobject
         (
             "T",
-            U.mesh().time().timeName(),
+            U.mesh().time().name(),
             U.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -114,7 +114,7 @@ Foam::compressibleMultiphaseMixture::compressibleMultiphaseMixture
         IOobject
         (
             "rho",
-            U.mesh().time().timeName(),
+            U.mesh().time().name(),
             U.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -132,7 +132,7 @@ Foam::compressibleMultiphaseMixture::compressibleMultiphaseMixture
         IOobject
         (
             "rhoPhi",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -146,7 +146,7 @@ Foam::compressibleMultiphaseMixture::compressibleMultiphaseMixture
         IOobject
         (
             "alphas",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -542,7 +542,7 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
         IOobject
         (
             "sumAlpha",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_
         ),
         mesh_,
@@ -564,7 +564,7 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
             IOobject
             (
                 "Sp",
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_
             ),
             mesh_,
@@ -576,7 +576,7 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
             IOobject
             (
                 "Su",
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_
             ),
             // Divergence term is handled explicitly to be

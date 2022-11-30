@@ -338,7 +338,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::SpalartAllmarasDES
         IOobject
         (
             "nuTilda",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -408,7 +408,7 @@ tmp<volScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::k() const
         IOobject
         (
             "dTildaExtrapolated",
-            this->mesh_.time().timeName(),
+            this->mesh_.time().name(),
             this->mesh_
         ),
         this->mesh_,

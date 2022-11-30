@@ -72,7 +72,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         IOobject
         (
             "U",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -85,7 +85,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         IOobject
         (
             "phi",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -102,7 +102,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         typeIOobject<surfaceScalarField>
         (
             IOobject::groupName("alphaPhi", alpha1.group()),
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -120,7 +120,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         IOobject
         (
             "dgdt",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -148,7 +148,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         IOobject
         (
             "rhoPhi",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -161,7 +161,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         IOobject
         (
             IOobject::groupName("alphaPhi", alpha1.group()),
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -203,7 +203,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
             IOobject
             (
                 "Uf",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -227,7 +227,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
                 IOobject
                 (
                     fv::localEulerDdt::rDeltaTName,
-                    runTime.timeName(),
+                    runTime.name(),
                     mesh,
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
@@ -246,7 +246,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
             IOobject
             (
                 "rAU",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE

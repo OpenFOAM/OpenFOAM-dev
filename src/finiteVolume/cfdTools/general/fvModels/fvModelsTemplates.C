@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,7 +166,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
         IOobject
         (
             "one",
-            this->mesh_.time().timeName(),
+            this->mesh_.time().name(),
             this->mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE,

@@ -113,7 +113,7 @@ MomentumTransferPhaseSystem
                 IOobject
                 (
                     IOobject::groupName("Kd", interface.name()),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh()
                 ),
                 this->mesh(),
@@ -129,7 +129,7 @@ MomentumTransferPhaseSystem
                 IOobject
                 (
                     IOobject::groupName("Kdf", interface.name()),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh()
                 ),
                 this->mesh(),
@@ -155,7 +155,7 @@ MomentumTransferPhaseSystem
                 IOobject
                 (
                     IOobject::groupName("Vm", interface.name()),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh()
                 ),
                 this->mesh(),
@@ -171,7 +171,7 @@ MomentumTransferPhaseSystem
                 IOobject
                 (
                     IOobject::groupName("Vmf", interface.name()),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh()
                 ),
                 this->mesh(),

@@ -98,7 +98,7 @@ waveSurfacePressureFvPatchScalarField
                 IOobject
                 (
                     "zeta",
-                    db().time().timeName(),
+                    db().time().name(),
                     db(),
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE

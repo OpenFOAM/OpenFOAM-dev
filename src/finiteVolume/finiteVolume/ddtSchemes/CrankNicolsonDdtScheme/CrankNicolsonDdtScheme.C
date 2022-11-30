@@ -153,7 +153,7 @@ CrankNicolsonDdtScheme<Type>::ddt0_
                     IOobject
                     (
                         name,
-                        mesh().time().timeName(),
+                        mesh().time().name(),
                         mesh(),
                         IOobject::NO_READ,
                         IOobject::AUTO_WRITE

@@ -28,7 +28,7 @@ forAll(lagrangianScalarNames, i)
         IOobject
         (
             name,
-            runTime.timeName(),
+            runTime.name(),
             cloud::prefix,
             mesh,
             IOobject::MUST_READ,
@@ -57,7 +57,7 @@ forAll(lagrangianVectorNames, i)
         IOobject
         (
             name,
-            runTime.timeName(),
+            runTime.name(),
             cloud::prefix,
             mesh,
             IOobject::MUST_READ,

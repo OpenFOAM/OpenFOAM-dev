@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 
     const word fieldName = args[1];
 
-    IOobjectList objects(IOobjectList(mesh, mesh.time().timeName()));
+    IOobjectList objects(IOobjectList(mesh, mesh.time().name()));
 
     label processed = -1;
     processField<scalar>(mesh, objects, fieldName, processed);

@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 
 
     // Read objects in time directory
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
     }
 
     // Take over refinement levels and write to new time directory.
-    Pout<< "Writing mesh to time " << runTime.timeName() << endl;
+    Pout<< "Writing mesh to time " << runTime.name() << endl;
     mesh.write();
 
     Pout<< "End\n" << endl;

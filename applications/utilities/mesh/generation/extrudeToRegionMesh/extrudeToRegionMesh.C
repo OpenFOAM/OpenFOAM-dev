@@ -1067,7 +1067,7 @@ int main(int argc, char *argv[])
     if (!overwrite)
     {
         runTime++;
-        meshInstance = runTime.timeName();
+        meshInstance = runTime.name();
     }
     else
     {

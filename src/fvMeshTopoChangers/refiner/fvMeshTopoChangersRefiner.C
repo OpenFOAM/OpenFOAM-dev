@@ -1687,7 +1687,7 @@ bool Foam::fvMeshTopoChangers::refiner::write(const bool write) const
     if (changedSinceWrite_)
     {
         // Force refinement data to go to the current time directory.
-        const_cast<hexRef8&>(meshCutter_).setInstance(mesh().time().timeName());
+        const_cast<hexRef8&>(meshCutter_).setInstance(mesh().time().name());
 
         bool writeOk = meshCutter_.write(write);
 
@@ -1698,7 +1698,7 @@ bool Foam::fvMeshTopoChangers::refiner::write(const bool write) const
                 IOobject
                 (
                     "cellLevel",
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh(),
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE,

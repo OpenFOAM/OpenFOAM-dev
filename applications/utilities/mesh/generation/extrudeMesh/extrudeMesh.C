@@ -277,13 +277,13 @@ int main(int argc, char *argv[])
     {
         regionDir = regionName;
         Info<< "Create mesh " << regionName << " for time = "
-            << runTimeExtruded.timeName() << nl << endl;
+            << runTimeExtruded.name() << nl << endl;
     }
     else
     {
         regionName = fvMesh::defaultRegion;
         Info<< "Create mesh for time = "
-            << runTimeExtruded.timeName() << nl << endl;
+            << runTimeExtruded.name() << nl << endl;
     }
 
     const dictionary dict(systemDict("extrudeMeshDict", args, runTimeExtruded));

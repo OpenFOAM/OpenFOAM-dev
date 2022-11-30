@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     #include "createNamedMesh.H"
 
     // Read objects in time directory
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     Info<< "Reading geometric fields" << nl << endl;
 
@@ -91,8 +91,8 @@ int main(int argc, char *argv[])
             << " at index " << newPatchi << endl;
 
         runTime++;
-        mesh.setInstance(runTime.timeName());
-        Info<< "Writing mesh with added patch to " << runTime.timeName()
+        mesh.setInstance(runTime.name());
+        Info<< "Writing mesh with added patch to " << runTime.name()
             << endl;
         mesh.write();
     }
@@ -116,8 +116,8 @@ int main(int argc, char *argv[])
         fvMeshTools::reorderPatches(mesh, oldToNew, pbm.size()-1, true);
 
         runTime++;
-        mesh.setInstance(runTime.timeName());
-        Info<< "Writing mesh with removed patch to " << runTime.timeName()
+        mesh.setInstance(runTime.name());
+        Info<< "Writing mesh with removed patch to " << runTime.name()
             << endl;
         mesh.write();
     }
@@ -164,9 +164,9 @@ int main(int argc, char *argv[])
         }
 
         runTime++;
-        mesh.setInstance(runTime.timeName());
+        mesh.setInstance(runTime.name());
         Info<< "Writing mesh with added (local) patch to "
-            << runTime.timeName() << endl;
+            << runTime.name() << endl;
         mesh.write();
 
         // Remove the added patch
@@ -193,9 +193,9 @@ int main(int argc, char *argv[])
         }
 
         runTime++;
-        mesh.setInstance(runTime.timeName());
+        mesh.setInstance(runTime.name());
         Info<< "Writing mesh with removed (local) patch to "
-            << runTime.timeName() << endl;
+            << runTime.name() << endl;
         mesh.write();
     }
 

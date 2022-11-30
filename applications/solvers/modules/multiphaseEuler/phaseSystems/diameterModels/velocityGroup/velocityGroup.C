@@ -152,7 +152,7 @@ Foam::diameterModels::velocityGroup::velocityGroup
                 "f",
                 phase.name()
             ),
-            phase.time().timeName(),
+            phase.time().name(),
             phase.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

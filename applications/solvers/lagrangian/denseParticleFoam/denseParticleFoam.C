@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 "cloudSUu",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             mesh,
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 "cloudSUp",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             mesh,

@@ -73,7 +73,7 @@ int USERD_set_filenames
         IOobject
         (
             fvMesh::defaultRegion,
-            runTime.timeName(),
+            runTime.name(),
             runTime
         ),
         false
@@ -89,7 +89,7 @@ int USERD_set_filenames
     // set the number of fields and store their names
     // a valid field must exist for all time-steps
     runTime.setTime(timeDirs.last(), timeDirs.size()-1);
-    IOobjectList objects(*meshPtr, runTime.timeName());
+    IOobjectList objects(*meshPtr, runTime.name());
 
     fieldNames = objects.names();
 
@@ -164,7 +164,7 @@ int USERD_set_filenames
     IOobject sprayHeader
     (
         "positions",
-        runTime.timeName(),
+        runTime.name(),
         cloud::prefix,
         runTime,
         IOobject::NO_READ,
@@ -180,7 +180,7 @@ int USERD_set_filenames
 
         sprayPtr = new Cloud<passiveParticle>(*meshPtr, cloud::defaultName);
 
-        IOobjectList objects(*meshPtr, runTime.timeName(), cloud::prefix);
+        IOobjectList objects(*meshPtr, runTime.name(), cloud::prefix);
 
         lagrangianScalarNames =
             objects.names(sprayScalarFieldName);

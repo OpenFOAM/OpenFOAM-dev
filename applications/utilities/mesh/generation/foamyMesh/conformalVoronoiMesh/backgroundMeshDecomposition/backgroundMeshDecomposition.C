@@ -134,7 +134,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
         IOobject
         (
             "cellWeights",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -394,7 +394,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
             if (debug)
             {
                 // const_cast<Time&>(mesh_.time())++;
-                // Info<< "Time " << mesh_.time().timeName() << endl;
+                // Info<< "Time " << mesh_.time().name() << endl;
                 meshCutter_.write();
                 mesh_.write();
                 cellWeights.write();
@@ -423,7 +423,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
                 printMeshData(mesh_);
 
                 // const_cast<Time&>(mesh_.time())++;
-                // Info<< "Time " << mesh_.time().timeName() << endl;
+                // Info<< "Time " << mesh_.time().name() << endl;
                 meshCutter_.write();
                 mesh_.write();
                 cellWeights.write();
@@ -434,7 +434,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
     if (debug)
     {
         // const_cast<Time&>(mesh_.time())++;
-        // Info<< "Time " << mesh_.time().timeName() << endl;
+        // Info<< "Time " << mesh_.time().name() << endl;
         cellWeights.write();
         mesh_.write();
     }
@@ -786,7 +786,7 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
         IOobject
         (
             "backgroundMeshDecomposition",
-            runTime_.timeName(),
+            runTime_.name(),
             runTime_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE,
@@ -850,7 +850,7 @@ Foam::backgroundMeshDecomposition::distribute
     if (debug)
     {
         // const_cast<Time&>(mesh_.time())++;
-        // Info<< "Time " << mesh_.time().timeName() << endl;
+        // Info<< "Time " << mesh_.time().name() << endl;
         cellWeights.write();
         mesh_.write();
     }
@@ -960,7 +960,7 @@ Foam::backgroundMeshDecomposition::distribute
         if (debug)
         {
             // const_cast<Time&>(mesh_.time())++;
-            // Info<< "Time " << mesh_.time().timeName() << endl;
+            // Info<< "Time " << mesh_.time().name() << endl;
             cellWeights.write();
             mesh_.write();
         }
@@ -1004,7 +1004,7 @@ Foam::backgroundMeshDecomposition::distribute
             << endl;
 
         // const_cast<Time&>(mesh_.time())++;
-        // Info<< "Time " << mesh_.time().timeName() << endl;
+        // Info<< "Time " << mesh_.time().name() << endl;
         mesh_.write();
         cellWeights.write();
     }

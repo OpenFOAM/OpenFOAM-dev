@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ bool Foam::functionObjects::writeCellCentres::write()
         IOobject
         (
             "C",
-            time_.timeName(),
+            time_.name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -86,7 +86,7 @@ bool Foam::functionObjects::writeCellCentres::write()
     );
 
     Log << "    Writing cell-centre field " << C.name()
-        << " to " << time_.timeName() << endl;
+        << " to " << time_.name() << endl;
 
     C.write();
 
@@ -97,7 +97,7 @@ bool Foam::functionObjects::writeCellCentres::write()
             IOobject
             (
                 mesh_.C().name() + vector::componentNames[i],
-                time_.timeName(),
+                time_.name(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -109,7 +109,7 @@ bool Foam::functionObjects::writeCellCentres::write()
         Log << "    Writing the "
             << vector::componentNames[i]
             << " component field of the cell-centres " << Ci.name()
-            << " to " << time_.timeName() << endl;
+            << " to " << time_.name() << endl;
 
         Ci.write();
     }

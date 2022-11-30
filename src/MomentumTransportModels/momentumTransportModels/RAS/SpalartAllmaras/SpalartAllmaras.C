@@ -258,7 +258,7 @@ SpalartAllmaras<BasicMomentumTransportModel>::SpalartAllmaras
         IOobject
         (
             "nuTilda",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

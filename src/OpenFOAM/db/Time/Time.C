@@ -167,7 +167,7 @@ void Foam::Time::setControls()
         int oldPrecision = curPrecision_;
         int requiredPrecision = -1;
         bool found = false;
-        word oldTime(timeName());
+        word oldTime(name());
         for
         (
             curPrecision_ = maxPrecision_;
@@ -178,7 +178,7 @@ void Foam::Time::setControls()
             // Update the time formatting
             setTime(startTime_, 0);
 
-            word newTime(timeName());
+            word newTime(name());
 
             if (newTime == oldTime)
             {
@@ -207,7 +207,7 @@ void Foam::Time::setControls()
                 << "Increasing the timePrecision from " << oldPrecision
                 << " to " << curPrecision_
                 << " to support the formatting of the current time directory "
-                << timeName() << nl << endl;
+                << name() << nl << endl;
         }
         else
         {
@@ -241,7 +241,7 @@ void Foam::Time::setControls()
         IOobject
         (
             "time",
-            timeName(),
+            name(),
             "uniform",
             *this,
             IOobject::READ_IF_PRESENT,
@@ -305,7 +305,7 @@ void Foam::Time::setControls()
     string storedTimeName;
     if (timeDict.readIfPresent("name", storedTimeName))
     {
-        if (storedTimeName == timeName())
+        if (storedTimeName == name())
         {
             // Same time. No need to check stored value
             checkValue = false;
@@ -322,11 +322,11 @@ void Foam::Time::setControls()
         {
             word storedTimeName(timeName(storedTimeValue));
 
-            if (storedTimeName != timeName())
+            if (storedTimeName != name())
             {
                 IOWarningInFunction(timeDict)
                     << "Time read from time dictionary " << storedTimeName
-                    << " differs from actual time " << timeName() << '.' << nl
+                    << " differs from actual time " << name() << '.' << nl
                     << "    This may cause unexpected database behaviour."
                     << " If you are not interested" << nl
                     << "    in preserving time state delete"
@@ -673,12 +673,6 @@ Foam::word Foam::Time::timeName(const scalar t, const int precision)
 }
 
 
-const Foam::word& Foam::Time::timeName() const
-{
-    return dimensionedScalar::name();
-}
-
-
 Foam::instantList Foam::Time::times() const
 {
     return findTimes(path(), constant());
@@ -696,7 +690,7 @@ Foam::word Foam::Time::findInstance
     IOobject startIO
     (
         name,           // name might be empty!
-        timeName(),
+        dimensionedScalar::name(),
         dir,
         *this,
         rOpt
@@ -877,7 +871,7 @@ Foam::scalar Foam::Time::timeToUserTime(const scalar t) const
 
 Foam::word Foam::Time::userTimeName() const
 {
-    if (timeName() == constant())
+    if (name() == constant())
     {
         return constant();
     }
@@ -998,7 +992,7 @@ void Foam::Time::setTime(const instant& inst, const label newIndex)
         IOobject
         (
             "time",
-            timeName(),
+            name(),
             "uniform",
             *this,
             IOobject::READ_IF_PRESENT,

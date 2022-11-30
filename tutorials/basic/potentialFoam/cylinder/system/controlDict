@@ -103,7 +103,7 @@ functions
                 IOobject
                 (
                     "UA",
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     U.mesh(),
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE

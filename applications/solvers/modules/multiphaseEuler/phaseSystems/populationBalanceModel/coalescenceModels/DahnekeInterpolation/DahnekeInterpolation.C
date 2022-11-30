@@ -64,7 +64,7 @@ DahnekeInterpolation
         IOobject
         (
             "BrownianCollisionRate",
-            popBal_.mesh().time().timeName(),
+            popBal_.mesh().time().name(),
             popBal_.mesh()
         ),
         popBal_.mesh(),
@@ -76,7 +76,7 @@ DahnekeInterpolation
         IOobject
         (
             "ballisticCollisionRate",
-            popBal_.mesh().time().timeName(),
+            popBal_.mesh().time().name(),
             popBal_.mesh()
         ),
         popBal_.mesh(),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -456,23 +456,23 @@ int main(int argc, char *argv[])
         {
             if (patchFaces)
             {
-                writePatchFaces(mesh, runTime.timeName());
+                writePatchFaces(mesh, runTime.name());
             }
             if (patchEdges)
             {
-                writePatchBoundaryEdges(mesh, runTime.timeName());
+                writePatchBoundaryEdges(mesh, runTime.name());
             }
             if (doCell)
             {
                 label celli = args.optionRead<label>("cell");
 
-                writePoints(mesh, celli, runTime.timeName());
+                writePoints(mesh, celli, runTime.name());
             }
             if (doPoint)
             {
                 label pointi = args.optionRead<label>("point");
 
-                writePointCells(mesh, pointi, runTime.timeName());
+                writePointCells(mesh, pointi, runTime.name());
             }
             if (doFace)
             {
@@ -482,7 +482,7 @@ int main(int argc, char *argv[])
                 (
                     mesh.time().path()
                   / "meshPoints_"
-                  + runTime.timeName()
+                  + runTime.name()
                   + '_'
                   + name(facei)
                   + ".obj"
@@ -505,7 +505,7 @@ int main(int argc, char *argv[])
                 Info<< "Read " << cells.size() << " cells from set " << setName
                     << endl;
 
-                writePoints(mesh, cells.toc(), runTime.timeName());
+                writePoints(mesh, cells.toc(), runTime.name());
             }
             if (doFaceSet)
             {
@@ -520,7 +520,7 @@ int main(int argc, char *argv[])
                 (
                     mesh.time().path()
                   / "meshPoints_"
-                  + runTime.timeName()
+                  + runTime.name()
                   + '_'
                   + setName
                   + ".obj"
@@ -550,16 +550,16 @@ int main(int argc, char *argv[])
             )
             {
                 // points & edges
-                writePoints(mesh, runTime.timeName());
+                writePoints(mesh, runTime.name());
 
                 // face centres
-                writeFaceCentres(mesh, runTime.timeName());
+                writeFaceCentres(mesh, runTime.name());
 
                 // cell centres
-                writeCellCentres(mesh, runTime.timeName());
+                writeCellCentres(mesh, runTime.name());
 
                 // Patch face centres
-                writePatchCentres(mesh, runTime.timeName());
+                writePatchCentres(mesh, runTime.name());
             }
         }
         else

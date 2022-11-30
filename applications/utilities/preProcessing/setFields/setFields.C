@@ -63,7 +63,7 @@ bool setCellFieldType
     typeIOobject<fieldType> fieldHeader
     (
         fieldName,
-        mesh.time().timeName(),
+        mesh.time().name(),
         mesh,
         IOobject::MUST_READ
     );
@@ -209,7 +209,7 @@ bool setFaceFieldType
     typeIOobject<fieldType> fieldHeader
     (
         fieldName,
-        mesh.time().timeName(),
+        mesh.time().name(),
         mesh,
         IOobject::MUST_READ
     );

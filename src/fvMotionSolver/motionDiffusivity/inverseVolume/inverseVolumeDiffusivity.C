@@ -72,7 +72,7 @@ Foam::inverseVolumeDiffusivity::operator()() const
         IOobject
         (
             "V",
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,

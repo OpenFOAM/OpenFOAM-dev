@@ -14,7 +14,7 @@ for (label i=0; i < nTypes; i++)
         IOobject fieldObject
         (
             fieldName,
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
@@ -65,7 +65,7 @@ for (label i=0; i < nTypes; i++)
         IOobject lagrangianHeader
         (
             "positions",
-            runTime.timeName(),
+            runTime.name(),
             cloud::prefix,
             mesh,
             IOobject::NO_READ
@@ -75,7 +75,7 @@ for (label i=0; i < nTypes; i++)
         {
             Cloud<passiveParticle> particles(mesh, cloud::defaultName);
 
-            IOobjectList objects(mesh, runTime.timeName(), cloud::prefix);
+            IOobjectList objects(mesh, runTime.name(), cloud::prefix);
 
             wordList lagrangianScalarNames = objects.names("scalarField");
             wordList lagrangianVectorNames = objects.names("vectorField");

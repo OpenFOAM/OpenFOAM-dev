@@ -281,11 +281,11 @@ bool Foam::functionObjects::sampledSurfaces::write()
             if (debug)
             {
                 Pout<< "Creating directory "
-                    << outputPath_/mesh_.time().timeName() << nl << endl;
+                    << outputPath_/mesh_.time().name() << nl << endl;
 
             }
 
-            mkDir(outputPath_/mesh_.time().timeName());
+            mkDir(outputPath_/mesh_.time().name());
         }
 
         // Create a list of names of fields that are actually available
@@ -334,7 +334,7 @@ bool Foam::functionObjects::sampledSurfaces::write()
                 {
                     formatter_->write
                     (
-                        outputPath_/mesh_.time().timeName(),
+                        outputPath_/mesh_.time().name(),
                         s.name(),
                         mergeList_[surfi].points,
                         mergeList_[surfi].faces,
@@ -353,7 +353,7 @@ bool Foam::functionObjects::sampledSurfaces::write()
                 {
                     formatter_->write
                     (
-                        outputPath_/mesh_.time().timeName(),
+                        outputPath_/mesh_.time().name(),
                         s.name(),
                         s.points(),
                         s.faces(),

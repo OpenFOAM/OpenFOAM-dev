@@ -3,7 +3,7 @@ volSymmTensorField R
     IOobject
     (
         "R",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
@@ -18,7 +18,7 @@ setWriter::New(runTime.graphFormat())->write
     runTime.globalPath()
    /functionObjects::writeFile::outputPrefix
    /args.executable()
-   /runTime.timeName(),
+   /runTime.name(),
 
     args.executable(),
 

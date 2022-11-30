@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Foam::fileName Foam::functionObjects::writeFile::baseFileDir() const
 
 Foam::fileName Foam::functionObjects::writeFile::baseTimeDir() const
 {
-    return baseFileDir()/prefix_/fileObr_.time().timeName();
+    return baseFileDir()/prefix_/fileObr_.time().name();
 }
 
 
@@ -140,7 +140,7 @@ void Foam::functionObjects::writeFile::writeHeader
 
 void Foam::functionObjects::writeFile::writeTime(Ostream& os) const
 {
-    os  << setw(charWidth()) << fileObr_.time().timeName();
+    os  << setw(charWidth()) << fileObr_.time().name();
 }
 
 

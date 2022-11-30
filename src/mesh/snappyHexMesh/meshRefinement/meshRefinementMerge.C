@@ -110,7 +110,7 @@ License
 //
 //
 //        // Reset the instance for if in overwrite mode
-//        mesh_.setInstance(timeName());
+//        mesh_.setInstance(name());
 //
 //        faceCombiner.topoChange(map);
 //
@@ -208,7 +208,7 @@ License
 //        }
 //
 //        // Reset the instance for if in overwrite mode
-//        mesh_.setInstance(timeName());
+//        mesh_.setInstance(name());
 //
 //        pointRemover.topoChange(map);
 //
@@ -313,7 +313,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             }
             Pout<< "Writing all faces to be merged to set "
                 << allSets.objectPath() << endl;
-            allSets.instance() = timeName();
+            allSets.instance() = name();
             allSets.write();
 
             const_cast<Time&>(mesh_.time())++;
@@ -352,7 +352,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
         }
 
         // Reset the instance for if in overwrite mode
-        mesh_.setInstance(timeName());
+        mesh_.setInstance(name());
 
         faceCombiner.topoChange(map);
 
@@ -376,7 +376,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             checkData();
 
             Pout<< "Writing initial merged-faces mesh to time "
-                << timeName() << nl << endl;
+                << name() << nl << endl;
             write();
         }
 
@@ -437,7 +437,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
 
             if (debug&meshRefinement::MESH)
             {
-                errorFaces.instance() = timeName();
+                errorFaces.instance() = name();
                 Pout<< "Writing all faces in error to faceSet "
                     << errorFaces.objectPath() << nl << endl;
                 errorFaces.write();
@@ -483,7 +483,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             if (debug&meshRefinement::MESH)
             {
                 faceSet restoreSet(mesh_, "mastersToRestore", mastersToRestore);
-                restoreSet.instance() = timeName();
+                restoreSet.instance() = name();
                 Pout<< "Writing all " << mastersToRestore.size()
                     << " masterfaces to be restored to set "
                     << restoreSet.objectPath() << endl;
@@ -543,7 +543,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
 
 
             // Reset the instance for if in overwrite mode
-            mesh_.setInstance(timeName());
+            mesh_.setInstance(name());
 
             faceCombiner.topoChange(map);
 
@@ -581,7 +581,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
                 checkData();
 
                 Pout<< "Writing merged-faces mesh to time "
-                    << timeName() << nl << endl;
+                    << name() << nl << endl;
                 write();
             }
 
@@ -627,7 +627,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemovePoints
     }
 
     // Reset the instance for if in overwrite mode
-    mesh_.setInstance(timeName());
+    mesh_.setInstance(name());
 
     pointRemover.topoChange(map);
 
@@ -699,7 +699,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRestorePoints
     }
 
     // Reset the instance for if in overwrite mode
-    mesh_.setInstance(timeName());
+    mesh_.setInstance(name());
 
     pointRemover.topoChange(map);
 
@@ -882,7 +882,7 @@ Foam::label Foam::meshRefinement::mergeEdgesUndo
 
             if (debug&meshRefinement::MESH)
             {
-                errorFaces.instance() = timeName();
+                errorFaces.instance() = name();
                 Pout<< "**Writing all faces in error to faceSet "
                     << errorFaces.objectPath() << nl << endl;
                 errorFaces.write();
@@ -939,7 +939,7 @@ Foam::label Foam::meshRefinement::mergeEdgesUndo
         {
             const_cast<Time&>(mesh_.time())++;
             Pout<< "Writing merged-edges mesh to time "
-                << timeName() << nl << endl;
+                << name() << nl << endl;
             write();
         }
     }

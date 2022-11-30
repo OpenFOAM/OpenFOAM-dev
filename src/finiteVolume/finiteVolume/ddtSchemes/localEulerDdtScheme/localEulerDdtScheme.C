@@ -383,7 +383,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
             IOobject
             (
                 "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
-                mesh().time().timeName(),
+                mesh().time().name(),
                 mesh()
             ),
             this->fvcDdtPhiCoeff(U.oldTime(), phiUf0, phiCorr)
@@ -415,7 +415,7 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
             IOobject
             (
                 "ddtCorr(" + U.name() + ',' + phi.name() + ')',
-                mesh().time().timeName(),
+                mesh().time().name(),
                 mesh()
             ),
             this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime(), phiCorr)
@@ -458,7 +458,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
                 (
                     "ddtCorr("
                   + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh()
                 ),
                 this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr, rho.oldTime())
@@ -486,7 +486,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
                 (
                     "ddtCorr("
                   + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh()
                 ),
                 this->fvcDdtPhiCoeff
@@ -545,7 +545,7 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
                 (
                     "ddtCorr("
                   + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh()
                 ),
                 this->fvcDdtPhiCoeff
@@ -577,7 +577,7 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
                 (
                     "ddtCorr("
                   + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh()
                 ),
                 this->fvcDdtPhiCoeff

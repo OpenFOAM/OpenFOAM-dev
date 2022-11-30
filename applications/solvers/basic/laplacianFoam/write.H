@@ -7,7 +7,7 @@
             IOobject
             (
                 "gradTx",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -20,7 +20,7 @@
             IOobject
             (
                 "gradTy",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -33,7 +33,7 @@
             IOobject
             (
                 "gradTz",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE

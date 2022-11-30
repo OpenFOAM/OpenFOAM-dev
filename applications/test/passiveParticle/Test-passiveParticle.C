@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,12 +70,12 @@ int main(int argc, char *argv[])
             << nl << endl;
 
         runTime++;
-        Pout<< "Writing particles to time " << runTime.timeName() << endl;
+        Pout<< "Writing particles to time " << runTime.name() << endl;
         particles.write();
     }
 
     {
-        Pout<< "Rereading particles from time " << runTime.timeName()
+        Pout<< "Rereading particles from time " << runTime.name()
             << endl;
         passiveParticleCloud particles(mesh, cloudName);
         Pout<< "Reread particles:" << particles.size() << endl;

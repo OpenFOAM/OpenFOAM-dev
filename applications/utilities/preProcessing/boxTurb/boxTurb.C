@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     U.correctBoundaryConditions();
 
     Info<< "k("
-         << runTime.timeName()
+         << runTime.name()
          << ") = "
          << 3.0/2.0*average(magSqr(U)).value() << endl;
 
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
         runTime.path()
        /functionObjects::writeFile::outputPrefix
        /"graphs"
-       /runTime.timeName(),
+       /runTime.name(),
         "Ek",
         runTime.graphFormat()
     );

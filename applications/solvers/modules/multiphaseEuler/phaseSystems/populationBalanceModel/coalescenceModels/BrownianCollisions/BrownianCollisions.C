@@ -69,7 +69,7 @@ BrownianCollisions
         IOobject
         (
             "lambda",
-            popBal_.time().timeName(),
+            popBal_.time().name(),
             popBal_.mesh()
         ),
         popBal_.mesh(),

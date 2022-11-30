@@ -158,7 +158,7 @@ Foam::LimitedScheme<Type, Limiter, LimitFunc>::limiter
                     IOobject
                     (
                         limiterFieldName,
-                        mesh.time().timeName(),
+                        mesh.time().name(),
                         mesh,
                         IOobject::NO_READ,
                         IOobject::NO_WRITE

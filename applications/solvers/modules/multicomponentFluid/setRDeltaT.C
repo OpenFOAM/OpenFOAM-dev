@@ -100,7 +100,7 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
             IOobject
             (
                 "rDeltaTY",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             mesh,

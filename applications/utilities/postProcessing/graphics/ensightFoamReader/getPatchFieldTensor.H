@@ -8,7 +8,7 @@ if (nVar >= Num_variables - nSprayVariables)
 typeIOobject<volTensorField> fieldObjectPtr
 (
     fieldNames[var2field[nVar]],
-    runTime.timeName(),
+    runTime.name(),
     mesh,
     IOobject::NO_READ
 );
@@ -21,7 +21,7 @@ if (!fieldObjectPtr.headerOk())
 IOobject fieldObject
 (
     fieldNames[var2field[nVar]],
-    runTime.timeName(),
+    runTime.name(),
     mesh,
     IOobject::MUST_READ,
     IOobject::NO_WRITE

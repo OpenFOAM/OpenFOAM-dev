@@ -49,7 +49,7 @@ bool Foam::solidParticle::move
     {
         if (debug)
         {
-            Info<< "Time = " << td.mesh.time().timeName()
+            Info<< "Time = " << td.mesh.time().name()
                 << " trackTime = " << trackTime
                 << " stepFraction() = " << stepFraction() << endl;
         }

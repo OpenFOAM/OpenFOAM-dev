@@ -62,7 +62,7 @@ Foam::tmp
             IOobject
             (
                 fld.name(),
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh
             ),
             mesh,

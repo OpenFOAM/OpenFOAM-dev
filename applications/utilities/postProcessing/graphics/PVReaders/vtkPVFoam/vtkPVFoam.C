@@ -466,7 +466,7 @@ void Foam::vtkPVFoam::updateFoamMesh()
         {
             InfoInFunction << endl
                 << "    Creating OpenFOAM mesh for region " << meshRegion_
-                << " at time=" << dbPtr_().timeName() << endl;
+                << " at time=" << dbPtr_().name() << endl;
         }
 
         meshPtr_ = new fvMesh
@@ -474,7 +474,7 @@ void Foam::vtkPVFoam::updateFoamMesh()
             IOobject
             (
                 meshRegion_,
-                dbPtr_().timeName(),
+                dbPtr_().name(),
                 dbPtr_(),
                 IOobject::MUST_READ
             ),

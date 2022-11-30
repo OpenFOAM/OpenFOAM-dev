@@ -60,7 +60,7 @@ mappedConvectiveHeatTransfer::mappedConvectiveHeatTransfer
         IOobject
         (
             "htcConv",
-            film.time().timeName(),
+            film.time().name(),
             film.primaryMesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -72,7 +72,7 @@ mappedConvectiveHeatTransfer::mappedConvectiveHeatTransfer
         IOobject
         (
             htcConvPrimary_.name(),
-            film.time().timeName(),
+            film.time().name(),
             film.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

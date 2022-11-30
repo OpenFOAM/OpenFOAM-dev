@@ -1,7 +1,7 @@
 typeIOobject<surfaceScalarField> phiBHeader
 (
     "phiB",
-    runTime.timeName(),
+    runTime.name(),
     mesh,
     IOobject::NO_READ
 );
@@ -18,7 +18,7 @@ if (phiBHeader.headerOk())
         IOobject
         (
             "phiB",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -35,7 +35,7 @@ else
         IOobject
         (
             "phiB",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

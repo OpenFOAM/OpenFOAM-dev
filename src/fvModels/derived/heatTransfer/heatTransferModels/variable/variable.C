@@ -78,7 +78,7 @@ Foam::fv::heatTransferModels::variable::variable
         IOobject
         (
             typedName("htc"),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

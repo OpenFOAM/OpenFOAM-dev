@@ -256,7 +256,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
                 (
                     fieldName + '_' + regionTypeNames_[regionType_]
                   + '-' + volRegion::regionName_,
-                    obr_.time().timeName(),
+                    obr_.time().name(),
                     obr_,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE

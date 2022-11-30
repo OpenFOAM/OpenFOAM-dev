@@ -32,7 +32,7 @@ int USERD_get_maxsize_info
 
         runTimePtr->setTime(timeDirs[timeI], timeI);
 
-        Info<< "Checking time = " << runTimePtr->timeName() << endl;
+        Info<< "Checking time = " << runTimePtr->name() << endl;
 
         const cellShapeList& cells = meshPtr->cellShapes();
 

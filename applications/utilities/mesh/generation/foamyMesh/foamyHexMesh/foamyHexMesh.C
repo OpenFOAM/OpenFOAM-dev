@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
     conformalVoronoiMesh::debug = true;
 
-    Info<< "Create mesh for time = " << runTime.timeName() << nl << endl;
+    Info<< "Create mesh for time = " << runTime.name() << nl << endl;
 
     conformalVoronoiMesh mesh(runTime, foamyHexMeshDict);
 
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 
         runTime++;
 
-        mesh.writeMesh(runTime.timeName());
+        mesh.writeMesh(runTime.name());
     }
     else
     {
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
         {
             runTime++;
 
-            Info<< nl << "Time = " << runTime.timeName() << endl;
+            Info<< nl << "Time = " << runTime.name() << endl;
 
             mesh.move();
 

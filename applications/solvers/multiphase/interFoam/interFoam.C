@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     "rhoPhi",
-                    runTime.timeName(),
+                    runTime.name(),
                     mesh
                 ),
                 mesh,

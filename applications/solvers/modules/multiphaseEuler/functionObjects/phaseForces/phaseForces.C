@@ -83,7 +83,7 @@ Foam::functionObjects::phaseForces::phaseForces
                     IOobject
                     (
                         IOobject::groupName("dragForce", phase_.name()),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_
                     ),
                     mesh_,
@@ -106,7 +106,7 @@ Foam::functionObjects::phaseForces::phaseForces
                             "virtualMassForce",
                             phase_.name()
                         ),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_
                     ),
                     mesh_,
@@ -125,7 +125,7 @@ Foam::functionObjects::phaseForces::phaseForces
                     IOobject
                     (
                         IOobject::groupName("liftForce", phase_.name()),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_
                     ),
                     mesh_,
@@ -152,7 +152,7 @@ Foam::functionObjects::phaseForces::phaseForces
                             "wallLubricationForce",
                             phase_.name()
                         ),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_
                     ),
                     mesh_,
@@ -179,7 +179,7 @@ Foam::functionObjects::phaseForces::phaseForces
                             "turbulentDispersionForce",
                             phase_.name()
                         ),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_
                     ),
                     mesh_,

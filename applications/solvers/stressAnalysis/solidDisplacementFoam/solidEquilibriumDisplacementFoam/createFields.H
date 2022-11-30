@@ -6,7 +6,7 @@ volVectorField D
     IOobject
     (
         "D",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
@@ -20,7 +20,7 @@ volVectorField Dcorr
     IOobject
     (
         "Dcorr",
-        runTime.timeName(),
+        runTime.name(),
         mesh
     ),
     D
@@ -33,7 +33,7 @@ volSymmTensorField sigmaD
     IOobject
     (
         "sigmaD",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::NO_WRITE
@@ -46,7 +46,7 @@ volTensorField sigmaExp
     IOobject
     (
         "sigmaExp",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::NO_READ,
         IOobject::NO_WRITE

@@ -49,7 +49,7 @@ Foam::fluidThermo::implementation::implementation
         IOobject
         (
             phasePropertyName("psi", phaseName),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -63,7 +63,7 @@ Foam::fluidThermo::implementation::implementation
         IOobject
         (
             phasePropertyName("mu", phaseName),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

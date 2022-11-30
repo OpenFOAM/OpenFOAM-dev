@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -734,7 +734,7 @@ Foam::conformalVoronoiMesh::createPolyMeshFromPoints
             IOobject
             (
                 "foamyHexMesh_temporary",
-                runTime_.timeName(),
+                runTime_.name(),
                 runTime_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE

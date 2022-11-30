@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ Foam::interpolationCellPointWallModified<Type>::calcPointField
             IOobject
             (
                 psi.name() + "Extrapolated",
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh
             ),
             psi,

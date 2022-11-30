@@ -64,7 +64,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
         typeIOobject<timeIOdictionary>
         (
             "sixDoFRigidBodyMotionState",
-            mesh.time().timeName(),
+            mesh.time().name(),
             "uniform",
             mesh
         ).headerOk()
@@ -73,7 +73,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
             IOobject
             (
                 "sixDoFRigidBodyMotionState",
-                mesh.time().timeName(),
+                mesh.time().name(),
                 "uniform",
                 mesh,
                 IOobject::READ_IF_PRESENT,
@@ -95,7 +95,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
         IOobject
         (
             "motionScale",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -261,7 +261,7 @@ bool Foam::sixDoFRigidBodyMotionSolver::write() const
         IOobject
         (
             "sixDoFRigidBodyMotionState",
-            mesh().time().timeName(),
+            mesh().time().name(),
             "uniform",
             mesh(),
             IOobject::NO_READ,

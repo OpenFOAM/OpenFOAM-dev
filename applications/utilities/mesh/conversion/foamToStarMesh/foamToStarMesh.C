@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
             fileName meshName(exportName);
             if (state != polyMesh::UNCHANGED)
             {
-                meshName += '_' + runTime.timeName();
+                meshName += '_' + runTime.name();
             }
 
             writer.write(meshName);

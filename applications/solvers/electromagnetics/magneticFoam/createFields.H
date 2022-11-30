@@ -4,7 +4,7 @@
         IOobject
         (
             "psi",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -33,7 +33,7 @@
         IOobject
         (
             "murf",
-            runTime.timeName(),
+            runTime.name(),
             mesh
         ),
         mesh,
@@ -45,7 +45,7 @@
         IOobject
         (
             "Mrf",
-            runTime.timeName(),
+            runTime.name(),
             mesh
         ),
         mesh,

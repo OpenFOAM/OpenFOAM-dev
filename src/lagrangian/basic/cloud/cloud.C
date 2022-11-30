@@ -46,7 +46,7 @@ Foam::cloud::cloud(const objectRegistry& obr, const word& cloudName)
         IOobject
         (
             cloudName,
-            obr.time().timeName(),
+            obr.time().name(),
             prefix,
             obr,
             IOobject::NO_READ,

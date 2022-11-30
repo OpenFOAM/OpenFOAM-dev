@@ -59,7 +59,7 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
     IOobjectList sprayObjs
     (
         mesh,
-        mesh.time().timeName(),
+        mesh.time().name(),
         cloud::prefix/cloudName
     );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -979,7 +979,7 @@ void Foam::CV2D::write(const word& stage) const
         (
             stage
           + "Faces/allFaces_"
-          + runTime_.timeName()
+          + runTime_.name()
           + ".obj",
             false
         );
@@ -988,7 +988,7 @@ void Foam::CV2D::write(const word& stage) const
         (
             stage
           + "Triangles/allTriangles_"
-          + runTime_.timeName()
+          + runTime_.name()
           + ".obj",
             false
         );

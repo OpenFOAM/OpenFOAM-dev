@@ -71,7 +71,7 @@ Foam::diameterModels::IATEsources::turbulentBreakUp::R
         IOobject
         (
             typedName("R"),
-            iate_.phase().time().timeName(),
+            iate_.phase().time().name(),
             iate_.phase().mesh()
         ),
         iate_.phase().mesh(),

@@ -91,7 +91,7 @@ Foam::volScalarField& Foam::functionObjects::phaseScalarTransport::Phi()
                 IOobject
                 (
                     "Phi" + s_.name(),
-                    mesh_.time().timeName(),
+                    mesh_.time().name(),
                     mesh_,
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
@@ -295,7 +295,7 @@ Foam::functionObjects::phaseScalarTransport::phaseScalarTransport
         IOobject
         (
             fieldName_,
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -477,7 +477,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                         "alpha"
                       + word(toupper(fieldName_[0]))
                       + fieldName_(1, fieldName_.size() - 1),
-                        mesh_.time().timeName(),
+                        mesh_.time().name(),
                         mesh_,
                         IOobject::NO_READ,
                         IOobject::AUTO_WRITE

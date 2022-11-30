@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
     }
 
 
-    string oldTimeName(runTime.timeName());
+    string oldTimeName(runTime.name());
 
     if (!overwrite)
     {
@@ -358,7 +358,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "cellMap",
-            runTime.timeName(),
+            runTime.name(),
             polyMesh::meshSubDir,
             mesh,
             IOobject::NO_READ,
@@ -368,7 +368,7 @@ int main(int argc, char *argv[])
     );
     newToOld.note() =
         "From cells in mesh at "
-      + runTime.timeName()
+      + runTime.name()
       + " to cells in mesh at "
       + oldTimeName;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,7 @@ void Foam::radiationModels::fvDOM::initialise()
                 IOobject
                 (
                     "aLambda_" + Foam::name(lambdaI) ,
-                    mesh_.time().timeName(),
+                    mesh_.time().name(),
                     mesh_,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
@@ -226,7 +226,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
         IOobject
         (
             "G",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -239,7 +239,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
         IOobject
         (
             "qr",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -252,7 +252,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
         IOobject
         (
             "qem",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -265,7 +265,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
         IOobject
         (
             "qin",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -278,7 +278,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
         IOobject
         (
             "a",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -320,7 +320,7 @@ Foam::radiationModels::fvDOM::fvDOM
         IOobject
         (
             "G",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -333,7 +333,7 @@ Foam::radiationModels::fvDOM::fvDOM
         IOobject
         (
             "qr",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -346,7 +346,7 @@ Foam::radiationModels::fvDOM::fvDOM
         IOobject
         (
             "qem",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -359,7 +359,7 @@ Foam::radiationModels::fvDOM::fvDOM
         IOobject
         (
             "qin",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -372,7 +372,7 @@ Foam::radiationModels::fvDOM::fvDOM
         IOobject
         (
             "a",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -510,7 +510,7 @@ Foam::radiationModels::fvDOM::Ru() const
             IOobject
             (
                 "Ru",
-                mesh_.time().timeName(),
+                mesh_.time().name(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,

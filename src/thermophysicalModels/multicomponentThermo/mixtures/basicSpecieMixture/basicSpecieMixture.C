@@ -81,7 +81,7 @@ Foam::basicSpecieMixture::basicSpecieMixture
         typeIOobject<volScalarField> header
         (
             IOobject::groupName(species_[i], phaseName),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ
         );
@@ -97,7 +97,7 @@ Foam::basicSpecieMixture::basicSpecieMixture
                     IOobject
                     (
                         IOobject::groupName(species_[i], phaseName),
-                        mesh.time().timeName(),
+                        mesh.time().name(),
                         mesh,
                         IOobject::MUST_READ,
                         IOobject::AUTO_WRITE
@@ -119,7 +119,7 @@ Foam::basicSpecieMixture::basicSpecieMixture
                 typeIOobject<volScalarField> timeIO
                 (
                     YdefaultName,
-                    mesh.time().timeName(),
+                    mesh.time().name(),
                     mesh,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
@@ -165,7 +165,7 @@ Foam::basicSpecieMixture::basicSpecieMixture
                     IOobject
                     (
                         IOobject::groupName(species_[i], phaseName),
-                        mesh.time().timeName(),
+                        mesh.time().name(),
                         mesh,
                         IOobject::NO_READ,
                         IOobject::AUTO_WRITE

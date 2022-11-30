@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ surfaceVectorField Uf
     IOobject
     (
         "Uf",
-        runTime.timeName(),
+        runTime.name(),
         mesh,
         IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE

@@ -112,7 +112,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
                 IOobject
                 (
                     this->name() + ":rhoTrans_" + specieName,
-                    this->db().time().timeName(),
+                    this->db().time().name(),
                     this->db(),
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
@@ -154,7 +154,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
                 IOobject
                 (
                     this->name() + ":rhoTrans_" + specieName,
-                    this->db().time().timeName(),
+                    this->db().time().name(),
                     this->db(),
                     IOobject::NO_READ,
                     IOobject::NO_WRITE,

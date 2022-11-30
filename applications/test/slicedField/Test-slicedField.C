@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "p",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "U",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "C2",
-            runTime.timeName(),
+            runTime.name(),
             mesh
         ),
         mesh,
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "Sf2",
-            runTime.timeName(),
+            runTime.name(),
             mesh
         ),
         mesh,
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 "slicedPhi",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             phi,

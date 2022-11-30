@@ -361,7 +361,7 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST
         IOobject
         (
             IOobject::groupName("k", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -373,7 +373,7 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST
         IOobject
         (
             IOobject::groupName("omega", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

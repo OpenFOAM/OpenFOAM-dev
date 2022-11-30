@@ -45,11 +45,11 @@ void Foam::mapConsistentMesh
 
     Info<< nl
         << "Consistently creating and mapping fields for time "
-        << meshSource.time().timeName() << nl << endl;
+        << meshSource.time().name() << nl << endl;
 
     {
         // Search for list of objects for this time
-        IOobjectList objects(meshSource, meshSource.time().timeName());
+        IOobjectList objects(meshSource, meshSource.time().name());
 
         // Map volFields
         // ~~~~~~~~~~~~~
@@ -87,7 +87,7 @@ void Foam::mapConsistentMesh
 
     {
         // Search for list of target objects for this time
-        IOobjectList objects(meshTarget, meshTarget.time().timeName());
+        IOobjectList objects(meshTarget, meshTarget.time().name());
 
         // Mark surfaceFields as unmapped
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -129,12 +129,12 @@ void Foam::mapSubMesh
     );
 
     Info<< nl
-        << "Mapping fields for time " << meshSource.time().timeName()
+        << "Mapping fields for time " << meshSource.time().name()
         << nl << endl;
 
     {
         // Search for list of source objects for this time
-        IOobjectList objects(meshSource, meshSource.time().timeName());
+        IOobjectList objects(meshSource, meshSource.time().name());
 
         // Map volFields
         // ~~~~~~~~~~~~~
@@ -172,7 +172,7 @@ void Foam::mapSubMesh
 
     {
         // Search for list of target objects for this time
-        IOobjectList objects(meshTarget, meshTarget.time().timeName());
+        IOobjectList objects(meshTarget, meshTarget.time().name());
 
         // Mark surfaceFields as unmapped
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

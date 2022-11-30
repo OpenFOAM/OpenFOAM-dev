@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 
         runTime++;
 
-        Info<< "\n\nTime = " << runTime.timeName() << endl;
+        Info<< "\n\nTime = " << runTime.name() << endl;
 
         {
             // Make the fluxes absolute

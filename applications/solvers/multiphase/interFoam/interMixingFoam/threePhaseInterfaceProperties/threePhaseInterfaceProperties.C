@@ -172,7 +172,7 @@ Foam::threePhaseInterfaceProperties::threePhaseInterfaceProperties
         IOobject
         (
             "nHatf",
-            alpha1_.time().timeName(),
+            alpha1_.time().name(),
             alpha1_.mesh()
         ),
         alpha1_.mesh(),
@@ -184,7 +184,7 @@ Foam::threePhaseInterfaceProperties::threePhaseInterfaceProperties
         IOobject
         (
             "interfaceProperties:K",
-            alpha1_.time().timeName(),
+            alpha1_.time().name(),
             alpha1_.mesh()
         ),
         alpha1_.mesh(),

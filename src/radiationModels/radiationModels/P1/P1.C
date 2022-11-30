@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
         IOobject
         (
             "G",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -67,7 +67,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
         IOobject
         (
             "qr",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -80,7 +80,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
         IOobject
         (
             "a",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -93,7 +93,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
         IOobject
         (
             "e",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -106,7 +106,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
         IOobject
         (
             "E",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -125,7 +125,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
         IOobject
         (
             "G",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -137,7 +137,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
         IOobject
         (
             "qr",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -150,7 +150,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
         IOobject
         (
             "a",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -163,7 +163,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
         IOobject
         (
             "e",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -176,7 +176,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
         IOobject
         (
             "E",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -223,7 +223,7 @@ void Foam::radiationModels::P1::calculate()
         IOobject
         (
             "gammaRad",
-            G_.mesh().time().timeName(),
+            G_.mesh().time().name(),
             G_.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

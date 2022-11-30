@@ -70,7 +70,7 @@ strainRateViscosityModel::strainRateViscosityModel
                 typedName("nu"),
                 U.group()
             ),
-            U.time().timeName(),
+            U.time().name(),
             U.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

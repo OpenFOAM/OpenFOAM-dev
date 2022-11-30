@@ -2,7 +2,7 @@
     typeIOobject<pointIOField> io
     (
         "points",
-        runTime.timeName(),
+        runTime.name(),
         polyMesh::meshSubDir,
         mesh
     );

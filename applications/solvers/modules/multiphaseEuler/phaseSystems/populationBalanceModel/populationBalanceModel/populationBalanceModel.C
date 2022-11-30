@@ -77,7 +77,7 @@ void Foam::diameterModels::populationBalanceModel::registerVelocityGroups()
                                 "dilatationError",
                                 velGroup.phase().name()
                             ),
-                            fluid_.time().timeName(),
+                            fluid_.time().name(),
                             mesh_
                         ),
                         mesh_,
@@ -167,7 +167,7 @@ void Foam::diameterModels::populationBalanceModel::registerSizeGroups
             IOobject
             (
                 "Su",
-                fluid_.time().timeName(),
+                fluid_.time().name(),
                 mesh_
             ),
             mesh_,
@@ -182,7 +182,7 @@ void Foam::diameterModels::populationBalanceModel::registerSizeGroups
             IOobject
             (
                 "Sp",
-                fluid_.time().timeName(),
+                fluid_.time().name(),
                 mesh_
             ),
             mesh_,
@@ -236,7 +236,7 @@ void Foam::diameterModels::populationBalanceModel::initialiseDmdtfs()
                                 typedName("dmdtf"),
                                 interface.name()
                             ),
-                            mesh().time().timeName(),
+                            mesh().time().name(),
                             mesh()
                         ),
                         mesh(),
@@ -815,7 +815,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         IOobject
         (
             "Sui",
-            mesh_.time().timeName(),
+            mesh_.time().name(),
             mesh_
         ),
         mesh_,
@@ -879,7 +879,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                      "coalescenceRate",
-                     mesh_.time().timeName(),
+                     mesh_.time().name(),
                      mesh_
                 ),
                 mesh_,
@@ -905,7 +905,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                     "breakupRate",
-                    fluid_.time().timeName(),
+                    fluid_.time().name(),
                     mesh_
                 ),
                 mesh_,
@@ -923,7 +923,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                     "binaryBreakupRate",
-                    fluid_.time().timeName(),
+                    fluid_.time().name(),
                     mesh_
                 ),
                 mesh_,
@@ -959,7 +959,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                     "driftRate",
-                    fluid_.time().timeName(),
+                    fluid_.time().name(),
                     mesh_
                 ),
                 mesh_,
@@ -977,7 +977,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                     "nucleationRate",
-                    fluid_.time().timeName(),
+                    fluid_.time().name(),
                     mesh_
                 ),
                 mesh_,
@@ -1000,7 +1000,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                     IOobject::groupName("alpha", this->name()),
-                    fluid_.time().timeName(),
+                    fluid_.time().name(),
                     mesh_,
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
@@ -1017,7 +1017,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                     IOobject::groupName("d", this->name()),
-                    fluid_.time().timeName(),
+                    fluid_.time().name(),
                     mesh_,
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
@@ -1034,7 +1034,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 IOobject
                 (
                     IOobject::groupName("U", this->name()),
-                    fluid_.time().timeName(),
+                    fluid_.time().name(),
                     mesh_,
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE

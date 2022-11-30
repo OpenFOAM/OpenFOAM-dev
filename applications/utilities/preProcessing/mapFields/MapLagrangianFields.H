@@ -74,7 +74,7 @@ void MapLagrangianFields
                 IOobject
                 (
                     fieldIter()->name(),
-                    meshTarget.time().timeName(),
+                    meshTarget.time().name(),
                     cloud::prefix/cloudName,
                     meshTarget,
                     IOobject::NO_READ,
@@ -113,7 +113,7 @@ void MapLagrangianFields
                 IOobject
                 (
                     fieldIter()->name(),
-                    meshTarget.time().timeName(),
+                    meshTarget.time().name(),
                     cloud::prefix/cloudName,
                     meshTarget,
                     IOobject::NO_READ,
@@ -151,7 +151,7 @@ void MapLagrangianFields
                 IOobject
                 (
                     fieldIter()->name(),
-                    meshTarget.time().timeName(),
+                    meshTarget.time().name(),
                     cloud::prefix/cloudName,
                     meshTarget,
                     IOobject::NO_READ,

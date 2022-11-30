@@ -80,7 +80,7 @@ thixotropicViscosity::thixotropicViscosity
         IOobject
         (
             typedName("lambda"),
-            film.mesh().time().timeName(),
+            film.mesh().time().name(),
             film.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

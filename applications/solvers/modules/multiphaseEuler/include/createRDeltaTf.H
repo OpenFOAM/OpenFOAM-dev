@@ -9,7 +9,7 @@ if (LTS && faceMomentum)
             IOobject
             (
                 fv::localEulerDdt::rDeltaTfName,
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE

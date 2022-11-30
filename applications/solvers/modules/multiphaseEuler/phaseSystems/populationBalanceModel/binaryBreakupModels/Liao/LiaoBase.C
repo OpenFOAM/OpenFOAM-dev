@@ -40,7 +40,7 @@ Foam::diameterModels::LiaoBase::LiaoBase
         IOobject
         (
             "kolmogorovLengthScale",
-            populationBalance_.time().timeName(),
+            populationBalance_.time().name(),
             populationBalance_.mesh()
         ),
         populationBalance_.mesh(),
@@ -56,7 +56,7 @@ Foam::diameterModels::LiaoBase::LiaoBase
         IOobject
         (
             "shearStrainRate",
-            populationBalance_.time().timeName(),
+            populationBalance_.time().name(),
             populationBalance_.mesh()
         ),
         populationBalance_.mesh(),
@@ -72,7 +72,7 @@ Foam::diameterModels::LiaoBase::LiaoBase
         IOobject
         (
             "eddyStrainRate",
-            populationBalance_.time().timeName(),
+            populationBalance_.time().name(),
             populationBalance_.mesh()
         ),
         populationBalance_.mesh(),

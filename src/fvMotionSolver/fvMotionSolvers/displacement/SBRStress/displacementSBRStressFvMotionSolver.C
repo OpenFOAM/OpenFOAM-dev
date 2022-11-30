@@ -65,7 +65,7 @@ Foam::displacementSBRStressFvMotionSolver::displacementSBRStressFvMotionSolver
         IOobject
         (
             "cellDisplacement",
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

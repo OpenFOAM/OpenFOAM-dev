@@ -58,7 +58,7 @@ primaryRadiation::primaryRadiation
         IOobject
         (
             "qin",
-            film.time().timeName(),
+            film.time().name(),
             film.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

@@ -57,7 +57,7 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         IOobject
         (
             IOobject::groupName("gamma1", this->interface().name()),
-            interface.mesh().time().timeName(),
+            interface.mesh().time().name(),
             interface.mesh()
         ),
         interface.mesh(),
@@ -68,7 +68,7 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         IOobject
         (
             IOobject::groupName("gamma2", this->interface().name()),
-            interface.mesh().time().timeName(),
+            interface.mesh().time().name(),
             interface.mesh()
         ),
         interface.mesh(),

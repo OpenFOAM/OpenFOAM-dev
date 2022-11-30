@@ -194,10 +194,10 @@ bool Foam::functionObjects::sampledSets::write()
             if (debug)
             {
                 Pout<< "Creating directory "
-                    << outputPath_/mesh_.time().timeName() << nl << endl;
+                    << outputPath_/mesh_.time().name() << nl << endl;
             }
 
-            mkDir(outputPath_/mesh_.time().timeName());
+            mkDir(outputPath_/mesh_.time().name());
         }
 
         // Create a list of names of fields that are actually available
@@ -239,7 +239,7 @@ bool Foam::functionObjects::sampledSets::write()
                 {
                     formatter_->write
                     (
-                        outputPath_/mesh_.time().timeName(),
+                        outputPath_/mesh_.time().name(),
                         operator[](seti).name(),
                         masterSets_[seti],
                         fieldNames
@@ -257,7 +257,7 @@ bool Foam::functionObjects::sampledSets::write()
                 {
                     formatter_->write
                     (
-                        outputPath_/mesh_.time().timeName(),
+                        outputPath_/mesh_.time().name(),
                         operator[](seti).name(),
                         operator[](seti),
                         fieldNames

@@ -117,7 +117,7 @@ waxSolventEvaporation::waxSolventEvaporation
         IOobject
         (
             typedName("Ysolvent"),
-            film.mesh().time().timeName(),
+            film.mesh().time().name(),
             film.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -194,7 +194,7 @@ void waxSolventEvaporation::correctModel
         IOobject
         (
             typedName("evapRateCoeff"),
-            film.mesh().time().timeName(),
+            film.mesh().time().name(),
             film.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -209,7 +209,7 @@ void waxSolventEvaporation::correctModel
         IOobject
         (
             typedName("evapRateInf"),
-            film.mesh().time().timeName(),
+            film.mesh().time().name(),
             film.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,

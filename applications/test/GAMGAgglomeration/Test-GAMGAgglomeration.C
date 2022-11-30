@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 "agglomeration",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
         scalarAgglomeration.write();
 
         Info<< "Writing initial cell distribution to "
-            << runTime.timeName() << endl;
+            << runTime.name() << endl;
     }
 
 
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     "agglomeration",
-                    runTime.timeName(),
+                    runTime.name(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
 
         if (writeObj)
         {
-            OFstream str(runTime.path()/runTime.timeName()/"aggomeration.obj");
+            OFstream str(runTime.path()/runTime.name()/"aggomeration.obj");
             label vertI = 0;
 
             // Write all mesh cc

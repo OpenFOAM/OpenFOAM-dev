@@ -100,7 +100,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
         IOobject
         (
             "rho",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -113,7 +113,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
         IOobject
         (
             "dpdt",
-            runTime.timeName(),
+            runTime.name(),
             mesh
         ),
         mesh,
@@ -137,7 +137,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
         IOobject
         (
             "U",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -150,7 +150,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
         IOobject
         (
             "phi",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -202,7 +202,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
             IOobject
             (
                 "netForce",
-                runTime.timeName(),
+                runTime.name(),
                 mesh
             ),
             fvc::reconstruct
@@ -222,7 +222,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
             IOobject
             (
                 "rhoUf",
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
@@ -246,7 +246,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
                 IOobject
                 (
                     fv::localEulerDdt::rDeltaTName,
-                    runTime.timeName(),
+                    runTime.name(),
                     mesh,
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE

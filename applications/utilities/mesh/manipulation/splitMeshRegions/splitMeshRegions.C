@@ -717,7 +717,7 @@ autoPtr<polyTopoChangeMap> createRegionMesh
         IOobject
         (
             regionName,
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh.time(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
@@ -1366,7 +1366,7 @@ void writeCellToRegion(const fvMesh& mesh, const labelList& cellRegion)
             IOobject
             (
                 "cellToRegion",
-                mesh.time().timeName(),
+                mesh.time().name(),
                 mesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -1835,7 +1835,7 @@ int main(int argc, char *argv[])
     // Read objects in time directory
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 
@@ -1910,14 +1910,14 @@ int main(int argc, char *argv[])
         if (!overwrite)
         {
             runTime++;
-            mesh.setInstance(runTime.timeName());
+            mesh.setInstance(runTime.name());
         }
         else
         {
             mesh.setInstance(oldInstance);
         }
 
-        Info<< "Writing cellZones as new mesh to time " << runTime.timeName()
+        Info<< "Writing cellZones as new mesh to time " << runTime.name()
             << nl << endl;
 
         mesh.write();
@@ -2006,7 +2006,7 @@ int main(int argc, char *argv[])
                 faceToInterface,
                 interfacePatches,
                 regioni,
-                (overwrite ? oldInstance : runTime.timeName())
+                (overwrite ? oldInstance : runTime.name())
             );
         }
         else if (largestOnly)
@@ -2027,7 +2027,7 @@ int main(int argc, char *argv[])
                 faceToInterface,
                 interfacePatches,
                 regioni,
-                (overwrite ? oldInstance : runTime.timeName())
+                (overwrite ? oldInstance : runTime.name())
             );
         }
         else
@@ -2048,7 +2048,7 @@ int main(int argc, char *argv[])
                     faceToInterface,
                     interfacePatches,
                     regioni,
-                    (overwrite ? oldInstance : runTime.timeName())
+                    (overwrite ? oldInstance : runTime.name())
                 );
             }
         }

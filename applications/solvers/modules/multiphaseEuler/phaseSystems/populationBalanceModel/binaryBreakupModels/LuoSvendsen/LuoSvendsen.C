@@ -70,7 +70,7 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
         IOobject
         (
             "kolmogorovLengthScale",
-            popBal_.time().timeName(),
+            popBal_.time().name(),
             popBal_.mesh()
         ),
         popBal_.mesh(),

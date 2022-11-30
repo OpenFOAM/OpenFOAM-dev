@@ -48,7 +48,7 @@ Foam::solidThermo::implementation::implementation
         IOobject
         (
             phasePropertyName("p", phaseName),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -60,7 +60,7 @@ Foam::solidThermo::implementation::implementation
         IOobject
         (
             phasePropertyName("rho", phaseName),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

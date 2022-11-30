@@ -81,7 +81,7 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
         typeIOobject<timeIOdictionary>
         (
             "rigidBodyMotionState",
-            mesh.time().timeName(),
+            mesh.time().name(),
             "uniform",
             mesh
         ).headerOk()
@@ -90,7 +90,7 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
             IOobject
             (
                 "rigidBodyMotionState",
-                mesh.time().timeName(),
+                mesh.time().name(),
                 "uniform",
                 mesh,
                 IOobject::READ_IF_PRESENT,
@@ -332,7 +332,7 @@ bool Foam::rigidBodyMeshMotionSolver::write() const
         IOobject
         (
             "rigidBodyMotionState",
-            mesh().time().timeName(),
+            mesh().time().name(),
             "uniform",
             mesh(),
             IOobject::NO_READ,

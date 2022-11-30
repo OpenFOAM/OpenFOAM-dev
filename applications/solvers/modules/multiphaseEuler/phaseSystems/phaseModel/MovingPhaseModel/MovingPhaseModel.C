@@ -47,7 +47,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
     typeIOobject<surfaceScalarField> phiHeader
     (
         phiName,
-        U.mesh().time().timeName(),
+        U.mesh().time().name(),
         U.mesh(),
         IOobject::NO_READ
     );
@@ -63,7 +63,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
                 IOobject
                 (
                     phiName,
-                    U.mesh().time().timeName(),
+                    U.mesh().time().name(),
                     U.mesh(),
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE
@@ -97,7 +97,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
                 IOobject
                 (
                     phiName,
-                    U.mesh().time().timeName(),
+                    U.mesh().time().name(),
                     U.mesh(),
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
@@ -127,7 +127,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         IOobject
         (
             IOobject::groupName("U", this->name()),
-            fluid.mesh().time().timeName(),
+            fluid.mesh().time().name(),
             fluid.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -140,7 +140,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         IOobject
         (
             IOobject::groupName("alphaPhi", this->name()),
-            fluid.mesh().time().timeName(),
+            fluid.mesh().time().name(),
             fluid.mesh()
         ),
         fluid.mesh(),
@@ -151,7 +151,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         IOobject
         (
             IOobject::groupName("alphaRhoPhi", this->name()),
-            fluid.mesh().time().timeName(),
+            fluid.mesh().time().name(),
             fluid.mesh()
         ),
         fluid.mesh(),
@@ -186,7 +186,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         IOobject
         (
             IOobject::groupName("continuityError", this->name()),
-            fluid.mesh().time().timeName(),
+            fluid.mesh().time().name(),
             fluid.mesh()
         ),
         fluid.mesh(),
@@ -203,7 +203,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             IOobject
             (
                 IOobject::groupName("Uf", this->name()),
-                fluid.mesh().time().timeName(),
+                fluid.mesh().time().name(),
                 fluid.mesh(),
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE

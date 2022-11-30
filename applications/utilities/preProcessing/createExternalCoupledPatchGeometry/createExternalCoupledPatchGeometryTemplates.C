@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ void processField
 
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 
-    const word timeName(mesh.time().timeName());
+    const word timeName(mesh.time().name());
 
     IOobjectList fieldObjbjects(objects.lookupClass(fieldType::typeName));
 

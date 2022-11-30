@@ -9,7 +9,7 @@ correctUphiBCs(U, phi, true);
         IOobject
         (
             "pcorr",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

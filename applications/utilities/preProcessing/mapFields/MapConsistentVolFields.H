@@ -61,7 +61,7 @@ void MapConsistentVolFields
         typeIOobject<fieldType> fieldTargetIOobject
         (
             fieldIter()->name(),
-            meshTarget.time().timeName(),
+            meshTarget.time().name(),
             meshTarget,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

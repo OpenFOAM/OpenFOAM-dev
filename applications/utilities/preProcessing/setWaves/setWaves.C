@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 alphaName,
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::MUST_READ
             ),
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 UName,
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::MUST_READ
             ),
@@ -129,37 +129,37 @@ int main(int argc, char *argv[])
         // Create modelled fields on both cells and points
         volScalarField h
         (
-            IOobject("h", runTime.timeName(), mesh),
+            IOobject("h", runTime.name(), mesh),
             mesh,
             dimensionedScalar(dimLength, 0)
         );
         pointScalarField hp
         (
-            IOobject("hp", runTime.timeName(), mesh),
+            IOobject("hp", runTime.name(), mesh),
             pMesh,
             dimensionedScalar(dimLength, 0)
         );
         volVectorField uGas
         (
-            IOobject("uGas", runTime.timeName(), mesh),
+            IOobject("uGas", runTime.name(), mesh),
             mesh,
             dimensionedVector(dimVelocity, vector::zero)
         );
         pointVectorField uGasp
         (
-            IOobject("uGasp", runTime.timeName(), mesh),
+            IOobject("uGasp", runTime.name(), mesh),
             pMesh,
             dimensionedVector(dimVelocity, vector::zero)
         );
         volVectorField uLiq
         (
-            IOobject("uLiq", runTime.timeName(), mesh),
+            IOobject("uLiq", runTime.name(), mesh),
             mesh,
             dimensionedVector(dimVelocity, vector::zero)
         );
         pointVectorField uLiqp
         (
-            IOobject("uLiqp", runTime.timeName(), mesh),
+            IOobject("uLiqp", runTime.name(), mesh),
             pMesh,
             dimensionedVector(dimVelocity, vector::zero)
         );

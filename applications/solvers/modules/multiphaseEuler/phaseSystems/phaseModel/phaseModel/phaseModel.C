@@ -54,7 +54,7 @@ Foam::phaseModel::phaseModel
             IOobject
             (
                 IOobject::groupName("alpha", phaseName),
-                fluid.mesh().time().timeName(),
+                fluid.mesh().time().name(),
                 fluid.mesh(),
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
@@ -67,7 +67,7 @@ Foam::phaseModel::phaseModel
             IOobject
             (
                 IOobject::groupName("alpha", phaseName),
-                fluid.mesh().time().timeName(),
+                fluid.mesh().time().name(),
                 fluid.mesh(),
                 IOobject::MUST_READ,
                 IOobject::AUTO_WRITE

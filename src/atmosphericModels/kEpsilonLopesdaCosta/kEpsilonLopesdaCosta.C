@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,7 +203,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "Cmu",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -219,7 +219,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "C1",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -235,7 +235,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "C2",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -251,7 +251,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "sigmak",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -267,7 +267,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "sigmaEps",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -284,7 +284,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "CdSigma",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -295,7 +295,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "betap",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -306,7 +306,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "betad",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -317,7 +317,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "C4",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -328,7 +328,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             "C5",
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_
         ),
         this->mesh_,
@@ -340,7 +340,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             IOobject::groupName("k", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -352,7 +352,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         IOobject
         (
             IOobject::groupName("epsilon", alphaRhoPhi.group()),
-            this->runTime_.timeName(),
+            this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE

@@ -141,7 +141,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
             IOobject
             (
                 this->owner().name() + ":exponentAverage",
-                this->owner().db().time().timeName(),
+                this->owner().db().time().name(),
                 mesh
             ),
             this->owner().solution().dict(),
@@ -190,7 +190,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
             IOobject
             (
                 this->owner().name() + ":uTildeAverage",
-                this->owner().db().time().timeName(),
+                this->owner().db().time().name(),
                 mesh
             ),
             this->owner().solution().dict(),
@@ -213,7 +213,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
             IOobject
             (
                 this->owner().name() + ":uTildeSqrAverage",
-                this->owner().db().time().timeName(),
+                this->owner().db().time().name(),
                 mesh
             ),
             this->owner().solution().dict(),

@@ -74,7 +74,7 @@ solidification::solidification
         IOobject
         (
             typedName("mass"),
-            film.mesh().time().timeName(),
+            film.mesh().time().name(),
             film.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -87,7 +87,7 @@ solidification::solidification
         IOobject
         (
             typedName("thickness"),
-            film.mesh().time().timeName(),
+            film.mesh().time().name(),
             film.mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

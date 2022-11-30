@@ -90,9 +90,9 @@ bool Foam::functionObjects::writeVTK::write()
 {
     Info<< type() << " " << name() << " output:" << nl;
 
-    Info<< "Time: " << time_.timeName() << endl;
+    Info<< "Time: " << time_.name() << endl;
 
-    word timeDesc = time_.timeName();
+    word timeDesc = time_.name();
 
     // VTK/ directory in the case
     fileName fvPath(time_.path()/"VTK");

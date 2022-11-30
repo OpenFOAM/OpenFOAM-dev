@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
     {
         runTime.setTime(timeDirs[timeI], timeI);
 
-        Info<< nl << "Time = " << runTime.timeName() << endl;
+        Info<< nl << "Time = " << runTime.name() << endl;
 
 
         // Check for new mesh
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
 
 
         // Read objects in time directory
-        IOobjectList objects(mesh, runTime.timeName());
+        IOobjectList objects(mesh, runTime.name());
 
         if (fields) Info<< "Reading geometric fields" << nl << endl;
 
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
 
 
         // Write
-        Info<< "Writing mesh to time " << runTime.timeName() << endl;
+        Info<< "Writing mesh to time " << runTime.name() << endl;
         scMesh().write();
     }
 

@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
             IOobject
             (
                 UName,
-                runTime.timeName(),
+                runTime.name(),
                 mesh,
                 IOobject::MUST_READ
             ),
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         IOobject kIO
         (
             kName,
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ
         );
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
         IOobject epsilonIO
         (
             epsilonName,
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ
         );

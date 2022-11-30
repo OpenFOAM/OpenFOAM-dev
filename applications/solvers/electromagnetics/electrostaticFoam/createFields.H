@@ -29,7 +29,7 @@
         IOobject
         (
             "phi",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -44,7 +44,7 @@
         IOobject
         (
             "rho",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -59,7 +59,7 @@
         IOobject
         (
             "rhoFlux",
-            runTime.timeName(),
+            runTime.name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

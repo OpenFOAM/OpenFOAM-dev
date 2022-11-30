@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::surfaceTensionModel::surfaceTensionModel(const fvMesh& mesh)
         IOobject
         (
             typeName, mesh.name(),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE

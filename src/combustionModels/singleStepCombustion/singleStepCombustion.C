@@ -146,7 +146,7 @@ Foam::combustionModels::singleStepCombustion::singleStepCombustion
         IOobject
         (
             this->thermo().phasePropertyName("wFuel"),
-            this->mesh().time().timeName(),
+            this->mesh().time().name(),
             this->mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
@@ -161,7 +161,7 @@ Foam::combustionModels::singleStepCombustion::singleStepCombustion
         IOobject header
         (
             "fres_" + mixture_.species()[fresI],
-            this->mesh().time().timeName(),
+            this->mesh().time().name(),
             this->mesh()
         );
 
