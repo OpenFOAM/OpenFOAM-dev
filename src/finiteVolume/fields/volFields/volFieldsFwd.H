@@ -54,6 +54,9 @@ class GeometricField;
 template<class Type>
 using VolField = GeometricField<Type, fvPatchField, volMesh>;
 
+template<class Type>
+using VolInternalField = typename VolField<Type>::Internal;
+
 typedef GeometricField<label, fvPatchField, volMesh> volLabelField;
 typedef GeometricField<scalar, fvPatchField, volMesh> volScalarField;
 typedef GeometricField<vector, fvPatchField, volMesh> volVectorField;

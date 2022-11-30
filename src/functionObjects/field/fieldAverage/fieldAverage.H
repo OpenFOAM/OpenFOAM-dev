@@ -127,7 +127,6 @@ class fieldAverage
 :
     public fvMeshFunctionObject
 {
-
 public:
 
         //- Enumeration defining the averaging base type
@@ -179,25 +178,19 @@ protected:
         //  calculated and output
         PtrList<fieldAverageItem> faItems_;
 
-        // Counters
+        //- Iteration steps counter
+        List<label> totalIter_;
 
-            //- Iteration steps counter
-            List<label> totalIter_;
+        //- Total time counter
+        List<scalar> totalTime_;
 
-            //- Total time counter
-            List<scalar> totalTime_;
-
-            //- Index for periodic restart
-            label periodIndex_;
+        //- Index for periodic restart
+        label periodIndex_;
 
 
     // Protected Member Functions
 
         // Initialisation routines
-
-            //- Checkout fields (causes deletion) from the database
-            //  and reset lists
-            void resetFields();
 
             //- Reset lists (clear existing values) and initialise averaging.
             //  Check requested field averages are valid, populate field lists
@@ -206,21 +199,37 @@ protected:
             //- Restart averaging for restartOnOutput
             void restart();
 
-            //- Add mean average field to database
+            //- Read the mean average field
             template<class Type>
-            void addMeanFieldType(const label fieldi);
+            void readMeanFieldType(const label fieldi);
 
-            //- Add mean average field to database
+            //- Read the mean average field
             template<class Type>
-            void addMeanField(const label fieldi);
+            void readMeanField(const label fieldi);
 
-            //- Add prime-squared average field to database
-            template<class Type1, class Type2>
-            void addPrime2MeanFieldType(const label fieldi);
+            //- Initialise the mean average field
+            template<class Type>
+            void initialiseMeanFieldType(const label fieldi);
 
-            //- Add prime-squared average field to database
+            //- Initialise the mean average field
+            template<class Type>
+            void initialiseMeanField(const label fieldi);
+
+            //- Read the prime-squared average field
             template<class Type1, class Type2>
-            void addPrime2MeanField(const label fieldi);
+            void readPrime2MeanFieldType(const label fieldi);
+
+            //- Read the prime-squared average field
+            template<class Type1, class Type2>
+            void readPrime2MeanField(const label fieldi);
+
+            //- Initialise the prime-squared average field
+            template<class Type1, class Type2>
+            void initialisePrime2MeanFieldType(const label fieldi);
+
+            //- Initialise the prime-squared average field
+            template<class Type1, class Type2>
+            void initialisePrime2MeanField(const label fieldi);
 
 
         // Calculation functions
@@ -266,11 +275,8 @@ protected:
             template<class Type>
             void writeFields() const;
 
-            //- Write averaging properties - steps and time
-            void writeAveragingProperties() const;
-
-            //- Read averaging properties - steps and time
-            void readAveragingProperties();
+            //- Read
+            void read(const dictionary& dict, const bool construct);
 
 
 public:

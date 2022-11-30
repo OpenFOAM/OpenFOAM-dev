@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,14 +32,8 @@ Description
     {
         mean            on;   // (default = on)
         prime2Mean      on;   // (default = off)
-        base            time; // time or iteration (default = time)
-        window          200;  // optional averaging window
-        windowName      w1;   // optional window name (default = "")
     }
     \endverbatim
-
-    The averaging window corresponds to the averaging interval (iters or time)
-    If not specified, the averaging is over 'all iters/time'
 
 SourceFiles
     fieldAverageItem.C
