@@ -820,19 +820,34 @@ Foam::label Foam::Time::startTimeIndex() const
 
 Foam::dimensionedScalar Foam::Time::beginTime() const
 {
-    return dimensionedScalar("beginTime", dimTime, beginTime_);
+    return dimensionedScalar
+    (
+        timeName(timeToUserTime(beginTime_)),
+        dimTime,
+        beginTime_
+    );
 }
 
 
 Foam::dimensionedScalar Foam::Time::startTime() const
 {
-    return dimensionedScalar("startTime", dimTime, startTime_);
+    return dimensionedScalar
+    (
+        timeName(timeToUserTime(startTime_)),
+        dimTime,
+        startTime_
+    );
 }
 
 
 Foam::dimensionedScalar Foam::Time::endTime() const
 {
-    return dimensionedScalar("endTime", dimTime, endTime_);
+    return dimensionedScalar
+    (
+        timeName(timeToUserTime(endTime_)),
+        dimTime,
+        endTime_
+    );
 }
 
 
