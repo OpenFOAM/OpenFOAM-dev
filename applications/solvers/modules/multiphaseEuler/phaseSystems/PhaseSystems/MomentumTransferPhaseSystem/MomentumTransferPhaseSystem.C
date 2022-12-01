@@ -79,6 +79,31 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::addDmdtUfs
 }
 
 
+template<class BasePhaseSystem>
+void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::addTmpField
+(
+    tmp<surfaceScalarField>& result,
+    const tmp<surfaceScalarField>& field
+) const
+{
+    if (result.valid())
+    {
+        result.ref() += field;
+    }
+    else
+    {
+        if (field.isTmp())
+        {
+            result = field;
+        }
+        else
+        {
+            result = field().clone();
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
@@ -863,168 +888,89 @@ implicitPhasePressure() const
 
 
 template<class BasePhaseSystem>
-Foam::PtrList<Foam::surfaceScalarField>
-Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::DByAfs
+Foam::tmp<Foam::surfaceScalarField>
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::alphaDByAf
 (
     const PtrList<volScalarField>& rAUs,
     const PtrList<surfaceScalarField>& rAUfs
 ) const
 {
-    PtrList<surfaceScalarField> DByAfs(this->phaseModels_.size());
+    tmp<surfaceScalarField> alphaDByAf;
 
-    if (rAUfs.size())
+    // Add the phase pressure
+    forAll(this->phaseModels_, phasei)
     {
-        // Add the phase pressure
-        forAll(this->phaseModels_, phasei)
-        {
-            const phaseModel& phase = this->phaseModels_[phasei];
+        const phaseModel& phase = this->phaseModels_[phasei];
 
-            const surfaceScalarField pPrimeByAf
-            (
-                rAUfs[phasei]*fvc::interpolate(phase.pPrime())
-            );
-
-            addField(phase, "DByAf", pPrimeByAf, DByAfs);
-
-            forAll(this->phaseModels_, phasej)
-            {
-                if (phasej != phasei)
-                {
-                    const phaseModel& phase2 = this->phaseModels_[phasej];
-
-                    addField
-                    (
-                        phase2,
-                        "DByAf",
-                        fvc::interpolate
-                        (
-                            phase2
-                           /max(1 - phase, phase2.residualAlpha())
-                        )*pPrimeByAf,
-                        DByAfs
-                    );
-                }
-            }
-        }
-
-        // Add the turbulent dispersion
-        forAllConstIter
+        addTmpField
         (
-            turbulentDispersionModelTable,
-            turbulentDispersionModels_,
-            turbulentDispersionModelIter
-        )
-        {
-            const phaseInterface& interface =
-                turbulentDispersionModelIter()->interface();
+            alphaDByAf,
+            fvc::interpolate(max(phase, scalar(0)))
+           *fvc::interpolate(max(1 - phase, scalar(0))) // Optional
+           *(
+                rAUfs.size()
 
-            const surfaceScalarField Df
-            (
-                fvc::interpolate(turbulentDispersionModelIter()->D())
-            );
+                // Face-momentum form
+              ? rAUfs[phasei]*fvc::interpolate(phase.pPrime())
 
-            const surfaceScalarField alpha12f
-            (
-                fvc::interpolate(interface.phase1() + interface.phase2())
-            );
-
-            addField
-            (
-                interface.phase1(),
-                "DByAf",
-                rAUfs[interface.phase1().index()]*Df
-               /max(alpha12f, interface.phase1().residualAlpha()),
-                DByAfs
-            );
-            addField
-            (
-                interface.phase2(),
-                "DByAf",
-                rAUfs[interface.phase2().index()]*Df
-               /max(alpha12f, interface.phase2().residualAlpha()),
-                DByAfs
-            );
-        }
-    }
-    else
-    {
-        // Add the phase pressure
-        forAll(this->phaseModels_, phasei)
-        {
-            const phaseModel& phase = this->phaseModels_[phasei];
-
-            const surfaceScalarField pPrimeByAf
-            (
-                fvc::interpolate(rAUs[phasei]*phase.pPrime())
-            );
-
-            addField(phase, "DByAf", pPrimeByAf, DByAfs);
-
-            forAll(this->phaseModels_, phasej)
-            {
-                if (phasej != phasei)
-                {
-                    const phaseModel& phase2 = this->phaseModels_[phasej];
-
-                    addField
-                    (
-                        phase2,
-                        "DByAf",
-                        fvc::interpolate
-                        (
-                            phase2
-                           /max(1 - phase, phase2.residualAlpha())
-                        )*pPrimeByAf,
-                        DByAfs
-                    );
-                }
-            }
-        }
-
-        // Add the turbulent dispersion
-        forAllConstIter
-        (
-            turbulentDispersionModelTable,
-            turbulentDispersionModels_,
-            turbulentDispersionModelIter
-        )
-        {
-            const phaseInterface& interface =
-                turbulentDispersionModelIter()->interface();
-
-            const volScalarField D(turbulentDispersionModelIter()->D());
-
-            const volScalarField alpha12
-            (
-                interface.phase1() + interface.phase2()
-            );
-
-            addField
-            (
-                interface.phase1(),
-                "DByAf",
-                fvc::interpolate
-                (
-                    rAUs[interface.phase1().index()]*D
-                   /max(alpha12, interface.phase1().residualAlpha())
-                ),
-                DByAfs
-            );
-            addField
-            (
-                interface.phase2(),
-                "DByAf",
-                fvc::interpolate
-                (
-                    rAUs[interface.phase2().index()]*D
-                   /max(alpha12, interface.phase2().residualAlpha())
-                ),
-                DByAfs
-            );
-        }
+                // Cell-momentum form
+              : fvc::interpolate(rAUs[phasei]*phase.pPrime())
+            )
+        );
     }
 
-    return DByAfs;
+    // Add the turbulent dispersion
+    forAllConstIter
+    (
+        turbulentDispersionModelTable,
+        turbulentDispersionModels_,
+        turbulentDispersionModelIter
+    )
+    {
+        const phaseInterface& interface =
+            turbulentDispersionModelIter()->interface();
+
+        const surfaceScalarField alpha1f
+        (
+            fvc::interpolate(max(interface.phase1(), scalar(0)))
+        );
+
+        const surfaceScalarField alpha2f
+        (
+            fvc::interpolate(max(interface.phase2(), scalar(0)))
+        );
+
+        addTmpField
+        (
+            alphaDByAf,
+            alpha1f*alpha2f
+           /max(alpha1f + alpha2f, interface.phase1().residualAlpha())
+           *(
+                rAUfs.size()
+
+                // Face-momentum form
+              ? max
+                (
+                    rAUfs[interface.phase1().index()],
+                    rAUfs[interface.phase2().index()]
+                )
+               *fvc::interpolate(turbulentDispersionModelIter()->D())
+
+                // Cell-momentum form
+              : fvc::interpolate
+                (
+                    max
+                    (
+                        rAUs[interface.phase1().index()],
+                        rAUs[interface.phase2().index()]
+                    )
+                   *turbulentDispersionModelIter()->D()
+                )
+            )
+        );
+    }
+
+    return alphaDByAf;
 }
 
 

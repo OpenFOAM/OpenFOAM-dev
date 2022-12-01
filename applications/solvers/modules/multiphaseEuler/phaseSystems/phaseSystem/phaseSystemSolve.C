@@ -100,25 +100,6 @@ void Foam::phaseSystem::solve
         phases()[phasei].correctBoundaryConditions();
     }
 
-    PtrList<surfaceScalarField> alphaPhiDbyA0s(phases().size());
-    if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
-    {
-        const PtrList<surfaceScalarField> DByAfs(this->DByAfs(rAUs, rAUfs));
-
-        forAll(solvePhases, solvePhasei)
-        {
-            const phaseModel& phase = solvePhases[solvePhasei];
-            const volScalarField& alpha = phase;
-
-            alphaPhiDbyA0s.set
-            (
-                phase.index(),
-                DByAfs[phase.index()]
-               *fvc::snGrad(alpha, "bounded")*mesh_.magSf()
-            );
-        }
-    }
-
     // Calculate the void fraction
     volScalarField alphaVoid
     (
@@ -269,6 +250,12 @@ void Foam::phaseSystem::solve
             // Create correction fluxes
             PtrList<surfaceScalarField> alphaPhis(phases().size());
 
+            tmp<surfaceScalarField> alphaDByAf;
+            if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
+            {
+                alphaDByAf = this->alphaDByAf(rAUs, rAUfs);
+            }
+
             forAll(movingPhases(), movingPhasei)
             {
                 const phaseModel& phase = movingPhases()[movingPhasei];
@@ -383,12 +370,11 @@ void Foam::phaseSystem::solve
                     }
                 }
 
-                if (alphaPhiDbyA0s.set(phase.index()))
+                if (alphaDByAf.valid())
                 {
                     alphaPhi +=
-                        fvc::interpolate(max(alpha, scalar(0)))
-                       *fvc::interpolate(max(1 - alpha, scalar(0)))
-                       *alphaPhiDbyA0s[phase.index()];
+                        alphaDByAf()
+                       *fvc::snGrad(alpha, "bounded")*mesh_.magSf();
                 }
 
                 phase.correctInflowOutflow(alphaPhi);
@@ -465,29 +451,20 @@ void Foam::phaseSystem::solve
                 }
             }
 
-            if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
+            if (alphaDByAf.valid())
             {
-                const PtrList<surfaceScalarField> DByAfs
-                (
-                    this->DByAfs(rAUs, rAUfs)
-                );
+                // Update alphaDByAf due to changes in alpha
+                alphaDByAf = this->alphaDByAf(rAUs, rAUfs);
 
                 forAll(solvePhases, solvePhasei)
                 {
                     phaseModel& phase = solvePhases[solvePhasei];
                     volScalarField& alpha = phase;
 
-                    const surfaceScalarField alphaDbyA
-                    (
-                        fvc::interpolate(max(alpha, scalar(0)))
-                       *fvc::interpolate(max(1 - alpha, scalar(0)))
-                       *DByAfs[phase.index()]
-                    );
-
                     fvScalarMatrix alphaEqn
                     (
                         fvm::ddt(alpha) - fvc::ddt(alpha)
-                      - fvm::laplacian(alphaDbyA, alpha, "bounded")
+                      - fvm::laplacian(alphaDByAf(), alpha, "bounded")
                     );
 
                     alphaEqn.solve();

@@ -175,6 +175,12 @@ protected:
             phaseSystem::momentumTransferTable& eqns
         );
 
+        void addTmpField
+        (
+            tmp<surfaceScalarField>& result,
+            const tmp<surfaceScalarField>& field
+        ) const;
+
 
 public:
 
@@ -277,7 +283,7 @@ public:
 
         //- Return the phase diffusivity
         //  divided by the momentum central coefficient
-        virtual PtrList<surfaceScalarField> DByAfs
+        virtual tmp<surfaceScalarField> alphaDByAf
         (
             const PtrList<volScalarField>& rAUs,
             const PtrList<surfaceScalarField>& rAUfs
