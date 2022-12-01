@@ -155,7 +155,7 @@ protected:
     // Protected Member Functions
 
         template<class Type>
-        GeometricField<Type, fvPatchField, volMesh> readProperty
+        VolField<Type> readProperty
         (
             const word& name,
             const dimensionSet& dimensions

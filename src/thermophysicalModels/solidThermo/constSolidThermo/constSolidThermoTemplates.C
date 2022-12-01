@@ -28,8 +28,7 @@ License
 /* * * * * * * * * * * * * * Protected Member Functions   * * * * * * * * * * */
 
 template<class Type>
-Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>
-Foam::constSolidThermo::readProperty
+Foam::VolField<Type> Foam::constSolidThermo::readProperty
 (
     const word& name,
     const dimensionSet& dimensions
@@ -40,7 +39,7 @@ Foam::constSolidThermo::readProperty
 
     if (propType == "uniform" || propType == "zonal")
     {
-        GeometricField<Type, fvPatchField, volMesh> vtf
+        VolField<Type> vtf
         (
             IOobject
             (
@@ -112,7 +111,7 @@ Foam::constSolidThermo::readProperty
     }
     else if (propType == "file")
     {
-        return GeometricField<Type, fvPatchField, volMesh>
+        return VolField<Type>
         (
             IOobject
             (
@@ -131,7 +130,7 @@ Foam::constSolidThermo::readProperty
             << "Valid type entries are 'uniform' or 'file' for " << name
             << abort(FatalError);
 
-        return GeometricField<Type, fvPatchField, volMesh>::null();
+        return VolField<Type>::null();
     }
 }
 
