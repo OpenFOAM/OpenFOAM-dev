@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transformField
     const FieldType& field
 )
 {
-    word transFieldName(transformFieldName(field.name()));
+    const word transFieldName(transformFieldName(field.name()));
 
     store
     (
@@ -52,25 +52,22 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
     const word& fieldName
 )
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
-
-    if (mesh_.foundObject<VolFieldType>(fieldName))
+    if (mesh_.foundObject<VolField<Type>>(fieldName))
     {
         DebugInfo << type() << ": Field " << fieldName << endl;
 
-        transformField<VolFieldType>
+        transformField<VolField<Type>>
         (
-            mesh_.lookupObject<VolFieldType>(fieldName)
+            mesh_.lookupObject<VolField<Type>>(fieldName)
         );
     }
-    else if (mesh_.foundObject<SurfaceFieldType>(fieldName))
+    else if (mesh_.foundObject<SurfaceField<Type>>(fieldName))
     {
         DebugInfo << type() << ": Field " << fieldName << endl;
 
-        transformField<SurfaceFieldType>
+        transformField<SurfaceField<Type>>
         (
-            mesh_.lookupObject<SurfaceFieldType>(fieldName)
+            mesh_.lookupObject<SurfaceField<Type>>(fieldName)
         );
     }
 }

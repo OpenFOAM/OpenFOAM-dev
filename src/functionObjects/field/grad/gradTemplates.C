@@ -30,24 +30,21 @@ License
 template<class Type>
 bool Foam::functionObjects::grad::calcGrad()
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
-
-    if (foundObject<VolFieldType>(fieldName_))
+    if (foundObject<VolField<Type>>(fieldName_))
     {
         return store
         (
             resultName_,
-            fvc::grad(lookupObject<VolFieldType>(fieldName_)),
+            fvc::grad(lookupObject<VolField<Type>>(fieldName_)),
             mesh_.changing() && mesh_.solution().cache(resultName_)
         );
     }
-    else if (foundObject<SurfaceFieldType>(fieldName_))
+    else if (foundObject<SurfaceField<Type>>(fieldName_))
     {
         return store
         (
             resultName_,
-            fvc::grad(lookupObject<SurfaceFieldType>(fieldName_)),
+            fvc::grad(lookupObject<SurfaceField<Type>>(fieldName_)),
             mesh_.changing() && mesh_.solution().cache(resultName_)
         );
     }

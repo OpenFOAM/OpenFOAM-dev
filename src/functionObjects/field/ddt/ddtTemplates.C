@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,14 +30,12 @@ License
 template<class Type>
 bool Foam::functionObjects::ddt::calcDdt()
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
-
-    if (foundObject<VolFieldType>(fieldName_))
+    if (foundObject<VolField<Type>>(fieldName_))
     {
         return store
         (
             resultName_,
-            fvc::ddt(lookupObject<VolFieldType>(fieldName_))
+            fvc::ddt(lookupObject<VolField<Type>>(fieldName_))
         );
     }
     else

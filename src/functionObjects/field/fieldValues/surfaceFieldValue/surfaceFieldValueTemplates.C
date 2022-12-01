@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,18 +38,15 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::validField
     const word& fieldName
 ) const
 {
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
-    typedef GeometricField<Type, fvPatchField, volMesh> vf;
-
     if
     (
         regionType_ != regionTypes::sampledSurface
-     && obr_.foundObject<sf>(fieldName)
+     && obr_.foundObject<SurfaceField<Type>>(fieldName)
     )
     {
         return true;
     }
-    else if (obr_.foundObject<vf>(fieldName))
+    else if (obr_.foundObject<VolField<Type>>(fieldName))
     {
         return true;
     }
@@ -65,14 +62,12 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::getFieldValues
     const word& fieldName
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> vf;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
-
     if (regionType_ == regionTypes::sampledSurface)
     {
-        if (obr_.foundObject<vf>(fieldName))
+        if (obr_.foundObject<VolField<Type>>(fieldName))
         {
-            const vf& fld = obr_.lookupObject<vf>(fieldName);
+            const VolField<Type>& fld =
+                obr_.lookupObject<VolField<Type>>(fieldName);
 
             if (surfacePtr_().interpolate())
             {
@@ -102,7 +97,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::getFieldValues
                 return surfacePtr_().sample(fld);
             }
         }
-        else if (obr_.foundObject<sf>(fieldName))
+        else if (obr_.foundObject<SurfaceField<Type>>(fieldName))
         {
             FatalErrorInFunction
                 << "Surface field " << fieldName
@@ -113,14 +108,16 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::getFieldValues
     }
     else
     {
-        if (obr_.foundObject<vf>(fieldName))
+        if (obr_.foundObject<VolField<Type>>(fieldName))
         {
-            const vf& fld = obr_.lookupObject<vf>(fieldName);
+            const VolField<Type>& fld =
+                obr_.lookupObject<VolField<Type>>(fieldName);
             return filterField(fld);
         }
-        else if (obr_.foundObject<sf>(fieldName))
+        else if (obr_.foundObject<SurfaceField<Type>>(fieldName))
         {
-            const sf& fld = obr_.lookupObject<sf>(fieldName);
+            const SurfaceField<Type>& fld =
+                obr_.lookupObject<SurfaceField<Type>>(fieldName);
             return filterField(fld);
         }
     }
@@ -408,7 +405,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::functionObjects::fieldValues::surfaceFieldValue::filterField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& field
+    const VolField<Type>& field
 ) const
 {
     tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
@@ -442,7 +439,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::functionObjects::fieldValues::surfaceFieldValue::filterField
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& field
+    const SurfaceField<Type>& field
 ) const
 {
     tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));

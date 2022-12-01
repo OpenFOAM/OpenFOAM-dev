@@ -44,14 +44,12 @@ namespace functionObjects
 template<class Type>
 bool Foam::functionObjects::reconstruct::calcReconstruction()
 {
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
-
-    if (foundObject<SurfaceFieldType>(fieldName_))
+    if (foundObject<SurfaceField<Type>>(fieldName_))
     {
         return store
         (
             resultName_,
-            fvc::reconstruct(lookupObject<SurfaceFieldType>(fieldName_)),
+            fvc::reconstruct(lookupObject<SurfaceField<Type>>(fieldName_)),
             mesh_.changing() && mesh_.solution().cache(resultName_)
         );
     }

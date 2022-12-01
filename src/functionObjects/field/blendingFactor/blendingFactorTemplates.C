@@ -32,14 +32,12 @@ License
 template<class Type>
 bool Foam::functionObjects::blendingFactor::calcBF()
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> FieldType;
-
-    if (!foundObject<FieldType>(fieldName_))
+    if (!foundObject<VolField<Type>>(fieldName_))
     {
         return false;
     }
 
-    const FieldType& field = lookupObject<FieldType>(fieldName_);
+    const VolField<Type>& field = lookupObject<VolField<Type>>(fieldName_);
 
     const word divScheme("div(" + phiName_ + ',' + fieldName_ + ')');
     ITstream& its = mesh_.schemes().div(divScheme);

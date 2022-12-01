@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,23 +31,20 @@ License
 template<class Type>
 bool Foam::functionObjects::magSqr::calcMagSqr()
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
-
-    if (foundObject<VolFieldType>(fieldName_))
+    if (foundObject<VolField<Type>>(fieldName_))
     {
         return store
         (
             resultName_,
-            Foam::magSqr(lookupObject<VolFieldType>(fieldName_))
+            Foam::magSqr(lookupObject<VolField<Type>>(fieldName_))
         );
     }
-    else if (foundObject<SurfaceFieldType>(fieldName_))
+    else if (foundObject<SurfaceField<Type>>(fieldName_))
     {
         return store
         (
             resultName_,
-            Foam::magSqr(lookupObject<SurfaceFieldType>(fieldName_))
+            Foam::magSqr(lookupObject<SurfaceField<Type>>(fieldName_))
         );
     }
     else

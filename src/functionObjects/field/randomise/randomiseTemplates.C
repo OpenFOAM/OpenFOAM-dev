@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,14 +31,12 @@ License
 template<class Type>
 bool Foam::functionObjects::randomise::calcRandomised()
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
-
-    if (foundObject<VolFieldType>(fieldName_))
+    if (foundObject<VolField<Type>>(fieldName_))
     {
-        const VolFieldType& field = lookupObject<VolFieldType>(fieldName_);
+        const VolField<Type>& field = lookupObject<VolField<Type>>(fieldName_);
 
-        tmp<VolFieldType> rfieldt(new VolFieldType(field));
-        VolFieldType& rfield = rfieldt.ref();
+        tmp<VolField<Type>> rfieldt(new VolField<Type>(field));
+        VolField<Type>& rfield = rfieldt.ref();
 
         Random rand(1234567);
 

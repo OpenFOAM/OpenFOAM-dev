@@ -30,16 +30,14 @@ License
 template<class Type>
 void Foam::functionObjects::nearWallFields::createFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
+    PtrList<VolField<Type>>& sflds
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    HashTable<const VolField<Type>*> flds(obr_.lookupClass<VolField<Type>>());
 
-    HashTable<const VolFieldType*> flds(obr_.lookupClass<VolFieldType>());
-
-    forAllConstIter(typename HashTable<const VolFieldType*>, flds, iter)
+    forAllConstIter(typename HashTable<const VolField<Type>*>, flds, iter)
     {
-        const VolFieldType& fld = *iter();
+        const VolField<Type>& fld = *iter();
 
         if (fieldMap_.found(fld.name()))
         {
@@ -59,7 +57,7 @@ void Foam::functionObjects::nearWallFields::createFields
                 sflds.set
                 (
                     sz,
-                    new VolFieldType
+                    new VolField<Type>
                     (
                         IOobject
                         (
@@ -84,7 +82,7 @@ template<class Type>
 void Foam::functionObjects::nearWallFields::sampleBoundaryField
 (
     const interpolationCellPoint<Type>& interpolator,
-    GeometricField<Type, fvPatchField, volMesh>& fld
+    VolField<Type>& fld
 ) const
 {
     // Construct flat fields for all patch faces to be sampled
@@ -108,7 +106,7 @@ void Foam::functionObjects::nearWallFields::sampleBoundaryField
         sampledValues
     );
 
-    typename GeometricField<Type, fvPatchField, volMesh>::
+    typename VolField<Type>::
         Boundary& fldBf = fld.boundaryFieldRef();
 
     // Pick up data
@@ -133,15 +131,13 @@ void Foam::functionObjects::nearWallFields::sampleBoundaryField
 template<class Type>
 void Foam::functionObjects::nearWallFields::sampleFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
+    PtrList<VolField<Type>>& sflds
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
-
     forAll(sflds, i)
     {
         const word& fldName = reverseFieldMap_[sflds[i].name()];
-        const VolFieldType& fld = obr_.lookupObject<VolFieldType>(fldName);
+        const VolField<Type>& fld = obr_.lookupObject<VolField<Type>>(fldName);
 
         // Take over internal and boundary values
         sflds[i] == fld;

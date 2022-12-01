@@ -34,20 +34,17 @@ template<class Type>
 void Foam::functionObjects::readFields::loadField
 (
     const word& fieldName,
-    PtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
+    PtrList<VolField<Type>>& vflds,
+    PtrList<SurfaceField<Type>>& sflds
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
-
-    if (obr_.foundObject<VolFieldType>(fieldName))
+    if (obr_.foundObject<VolField<Type>>(fieldName))
     {
         DebugInfo
             << "readFields : Field " << fieldName << " already in database"
             << endl;
     }
-    else if (obr_.foundObject<SurfaceFieldType>(fieldName))
+    else if (obr_.foundObject<SurfaceField<Type>>(fieldName))
     {
         DebugInfo
             << "readFields : Field " << fieldName
@@ -67,7 +64,7 @@ void Foam::functionObjects::readFields::loadField
         if
         (
             fieldHeader.headerOk()
-         && fieldHeader.headerClassName() == VolFieldType::typeName
+         && fieldHeader.headerClassName() == VolField<Type>::typeName
         )
         {
             // Store field locally
@@ -75,12 +72,12 @@ void Foam::functionObjects::readFields::loadField
 
             label sz = vflds.size();
             vflds.setSize(sz+1);
-            vflds.set(sz, new VolFieldType(fieldHeader, mesh_));
+            vflds.set(sz, new VolField<Type>(fieldHeader, mesh_));
         }
         else if
         (
             fieldHeader.headerOk()
-         && fieldHeader.headerClassName() == SurfaceFieldType::typeName
+         && fieldHeader.headerClassName() == SurfaceField<Type>::typeName
         )
         {
             // Store field locally
@@ -88,7 +85,7 @@ void Foam::functionObjects::readFields::loadField
 
             label sz = sflds.size();
             sflds.setSize(sz+1);
-            sflds.set(sz, new SurfaceFieldType(fieldHeader, mesh_));
+            sflds.set(sz, new SurfaceField<Type>(fieldHeader, mesh_));
         }
     }
 }

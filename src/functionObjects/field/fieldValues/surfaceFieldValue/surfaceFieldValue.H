@@ -474,14 +474,14 @@ public:
         template<class Type>
         tmp<Field<Type>> filterField
         (
-            const GeometricField<Type, fvsPatchField, surfaceMesh>& field
+            const SurfaceField<Type>& field
         ) const;
 
         //- Filter a volume field according to faceIds
         template<class Type>
         tmp<Field<Type>> filterField
         (
-            const GeometricField<Type, fvPatchField, volMesh>& field
+            const VolField<Type>& field
         ) const;
 
         //- Read from dictionary

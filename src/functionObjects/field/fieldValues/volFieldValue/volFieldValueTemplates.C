@@ -34,9 +34,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::validField
     const word& fieldName
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> vf;
-
-    if (obr_.foundObject<vf>(fieldName))
+    if (obr_.foundObject<VolField<Type>>(fieldName))
     {
         return true;
     }
@@ -52,11 +50,9 @@ Foam::functionObjects::fieldValues::volFieldValue::getFieldValues
     const word& fieldName
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> vf;
-
-    if (obr_.foundObject<vf>(fieldName))
+    if (obr_.foundObject<VolField<Type>>(fieldName))
     {
-        return filterField(obr_.lookupObject<vf>(fieldName));
+        return filterField(obr_.lookupObject<VolField<Type>>(fieldName));
     }
 
     FatalErrorInFunction

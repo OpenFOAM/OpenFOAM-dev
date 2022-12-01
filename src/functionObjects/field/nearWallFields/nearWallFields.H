@@ -147,7 +147,7 @@ protected:
         template<class Type>
         void createFields
         (
-            PtrList<GeometricField<Type, fvPatchField, volMesh>>&
+            PtrList<VolField<Type>>&
         ) const;
 
         //- Override boundary fields with sampled values
@@ -155,13 +155,13 @@ protected:
         void sampleBoundaryField
         (
             const interpolationCellPoint<Type>& interpolator,
-            GeometricField<Type, fvPatchField, volMesh>& fld
+            VolField<Type>& fld
         ) const;
 
         template<class Type>
         void sampleFields
         (
-            PtrList<GeometricField<Type, fvPatchField, volMesh>>&
+            PtrList<VolField<Type>>&
         ) const;
 
 

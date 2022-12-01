@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,7 @@ License
 template<class Type>
 void Foam::functionObjects::residuals::writeFileHeader(const word& fieldName)
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
-    if (obr_.foundObject<fieldType>(fieldName))
+    if (obr_.foundObject<VolField<Type>>(fieldName))
     {
         typename pTraits<Type>::labelType validComponents
         (
@@ -60,9 +58,7 @@ void Foam::functionObjects::residuals::writeFileHeader(const word& fieldName)
 template<class Type>
 void Foam::functionObjects::residuals::writeResidual(const word& fieldName)
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
-    if (obr_.foundObject<fieldType>(fieldName))
+    if (obr_.foundObject<VolField<Type>>(fieldName))
     {
         if (Residuals<Type>::found(mesh_, fieldName))
         {

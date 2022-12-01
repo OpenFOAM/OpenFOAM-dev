@@ -158,7 +158,7 @@ protected:
         void processField
         (
             const word& fieldName,
-            const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvalue
+            const tmp<VolField<Type>>& tvalue
         );
 
 
