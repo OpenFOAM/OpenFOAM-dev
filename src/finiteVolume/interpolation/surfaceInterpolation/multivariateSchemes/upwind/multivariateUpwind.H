@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ public:
 
                 fieldScheme
                 (
-                    const GeometricField<Type, fvPatchField, volMesh>& field,
+                    const VolField<Type>& field,
                     const surfaceScalarField& faceFlux
                 )
                 :
@@ -125,7 +125,7 @@ public:
                 //- Return the interpolation weighting factors
                 tmp<surfaceScalarField> weights
                 (
-                    const GeometricField<Type, fvPatchField, volMesh>&
+                    const VolField<Type>&
                 ) const
                 {
                     return pos0(faceFlux_);
@@ -134,7 +134,7 @@ public:
 
         tmp<surfaceInterpolationScheme<Type>> operator()
         (
-            const GeometricField<Type, fvPatchField, volMesh>& field
+            const VolField<Type>& field
         ) const
         {
             return tmp<surfaceInterpolationScheme<Type>>

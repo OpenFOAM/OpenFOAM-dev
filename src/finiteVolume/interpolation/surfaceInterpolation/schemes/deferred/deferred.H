@@ -123,7 +123,7 @@ public:
         virtual tmp<SurfaceField<Type>>
         correction
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             return SurfaceField<Type>::New

@@ -53,27 +53,27 @@ namespace fvc
     template<class Type>
     tmp<SurfaceField<Type>> snGrad
     (
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<Type>&,
         const word& name
     );
 
     template<class Type>
     tmp<SurfaceField<Type>> snGrad
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+        const tmp<VolField<Type>>&,
         const word& name
     );
 
     template<class Type>
     tmp<SurfaceField<Type>> snGrad
     (
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
     tmp<SurfaceField<Type>> snGrad
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+        const tmp<VolField<Type>>&
     );
 }
 

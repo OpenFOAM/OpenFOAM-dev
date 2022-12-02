@@ -88,7 +88,7 @@ Foam::fvc::cellReduce
     const Type& nullValue
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> tvf
+    tmp<VolField<Type>> tvf
     (
         cellReduce
         (

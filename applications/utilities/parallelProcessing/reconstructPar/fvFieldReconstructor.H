@@ -152,16 +152,16 @@ public:
 
         //- Reconstruct volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>>
+        tmp<VolField<Type>>
         reconstructFvVolumeField
         (
             const IOobject& fieldIoObject,
-            const PtrList<GeometricField<Type, fvPatchField, volMesh>>&
+            const PtrList<VolField<Type>>&
         ) const;
 
         //- Read and reconstruct volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>>
+        tmp<VolField<Type>>
         reconstructFvVolumeField(const IOobject& fieldIoObject) const;
 
 

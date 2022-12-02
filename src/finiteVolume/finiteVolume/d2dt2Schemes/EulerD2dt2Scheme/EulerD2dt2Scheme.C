@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,10 +40,10 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 EulerD2dt2Scheme<Type>::fvcD2dt2
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const dimensionedScalar rDeltaT2
@@ -67,7 +67,7 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
         const volScalarField::Internal VV0(mesh().V() + mesh().V0());
         const volScalarField::Internal V0V00(mesh().V0() + mesh().V00());
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             d2dt2name,
             halfRdeltaT2*
@@ -89,7 +89,7 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
     }
     else
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             d2dt2name,
             rDeltaT2*
@@ -104,11 +104,11 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 EulerD2dt2Scheme<Type>::fvcD2dt2
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const dimensionedScalar rDeltaT2
@@ -143,7 +143,7 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
             )
         );
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             d2dt2name,
             quarterRdeltaT2*
@@ -190,7 +190,7 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
         const volScalarField rhoRho0(rho + rho.oldTime());
         const volScalarField rho0Rho00(rho.oldTime() +rho.oldTime().oldTime());
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             d2dt2name,
             halfRdeltaT2*
@@ -208,7 +208,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 EulerD2dt2Scheme<Type>::fvmD2dt2
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -268,7 +268,7 @@ tmp<fvMatrix<Type>>
 EulerD2dt2Scheme<Type>::fvmD2dt2
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -328,7 +328,7 @@ tmp<fvMatrix<Type>>
 EulerD2dt2Scheme<Type>::fvmD2dt2
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm

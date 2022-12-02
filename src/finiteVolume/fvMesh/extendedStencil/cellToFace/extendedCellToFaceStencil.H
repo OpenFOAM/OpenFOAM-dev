@@ -98,13 +98,13 @@ public:
     // Member Functions
 
         //- Use map to get the data into stencil order
-        template<class T>
+        template<class Type>
         static void collectData
         (
             const distributionMap& map,
             const labelListList& stencil,
-            const GeometricField<T, fvPatchField, volMesh>& fld,
-            List<List<T>>& stencilFld
+            const VolField<Type>& fld,
+            List<List<Type>>& stencilFld
         );
 
         //- Sum vol field contributions to create face values
@@ -114,7 +114,7 @@ public:
         (
             const distributionMap& map,
             const labelListList& stencil,
-            const GeometricField<Type, fvPatchField, volMesh>& fld,
+            const VolField<Type>& fld,
             const List<List<scalar>>& stencilWeights
         );
 };

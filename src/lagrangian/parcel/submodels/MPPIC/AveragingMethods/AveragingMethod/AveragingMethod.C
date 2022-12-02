@@ -152,7 +152,7 @@ bool Foam::AveragingMethod<Type>::write(const bool write) const
     Field<scalar> pointVolume(mesh_.nPoints(), 0);
 
     // output fields
-    GeometricField<Type, fvPatchField, volMesh> cellValue
+    VolField<Type> cellValue
     (
         IOobject
         (
@@ -163,7 +163,7 @@ bool Foam::AveragingMethod<Type>::write(const bool write) const
         mesh_,
         dimensioned<Type>("zero", dimless, Zero)
     );
-    GeometricField<GradType, fvPatchField, volMesh> cellGrad
+    VolField<GradType> cellGrad
     (
         IOobject
         (

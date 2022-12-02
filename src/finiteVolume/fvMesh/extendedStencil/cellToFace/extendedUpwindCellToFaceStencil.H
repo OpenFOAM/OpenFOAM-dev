@@ -177,7 +177,7 @@ public:
         tmp<SurfaceField<Type>> weightedSum
         (
             const surfaceScalarField& phi,
-            const GeometricField<Type, fvPatchField, volMesh>& fld,
+            const VolField<Type>& fld,
             const List<List<scalar>>& ownWeights,
             const List<List<scalar>>& neiWeights
         ) const;

@@ -62,13 +62,13 @@ public:
         //- Construct from components
         interpolationCellPoint
         (
-            const GeometricField<Type, fvPatchField, volMesh>& psi
+            const VolField<Type>& psi
         );
 
         //- Construct from components
         interpolationCellPoint
         (
-            const GeometricField<Type, fvPatchField, volMesh>& psi,
+            const VolField<Type>& psi,
             tmp<PointField<Type>> psip
         );
 

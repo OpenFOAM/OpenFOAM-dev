@@ -32,7 +32,7 @@ Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::extendedUpwindCellToFaceStencil::weightedSum
 (
     const surfaceScalarField& phi,
-    const GeometricField<Type, fvPatchField, volMesh>& fld,
+    const VolField<Type>& fld,
     const List<List<scalar>>& ownWeights,
     const List<List<scalar>>& neiWeights
 ) const

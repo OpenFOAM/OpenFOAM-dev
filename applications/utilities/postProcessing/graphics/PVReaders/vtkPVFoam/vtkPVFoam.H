@@ -534,7 +534,7 @@ class vtkPVFoam
             template<class Type>
             void convertVolFieldBlock
             (
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const VolField<Type>&,
                 autoPtr<PointField<Type>>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
@@ -545,7 +545,7 @@ class vtkPVFoam
             template<class Type>
             void convertVolInternalFieldBlock
             (
-                const typename GeometricField<Type, fvPatchField, volMesh>
+                const typename VolField<Type>
                     ::Internal&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
@@ -556,7 +556,7 @@ class vtkPVFoam
             template<class Type>
             void convertVolInternalField
             (
-                const typename GeometricField<Type, fvPatchField, volMesh>
+                const typename VolField<Type>
                     ::Internal&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
@@ -579,7 +579,7 @@ class vtkPVFoam
             template<class Type>
             void convertSurfaceField
             (
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const VolField<Type>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const label datasetNo,
@@ -652,7 +652,7 @@ class vtkPVFoam
             void convertPointField
             (
                 const PointField<Type>&,
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const VolField<Type>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const label datasetNo,

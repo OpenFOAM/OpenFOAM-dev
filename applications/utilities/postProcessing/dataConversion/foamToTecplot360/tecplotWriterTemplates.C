@@ -68,7 +68,7 @@ template<class Type>
 Foam::tmp<Field<Type>> Foam::tecplotWriter::getPatchField
 (
     const bool nearCellValue,
-    const GeometricField<Type, fvPatchField, volMesh>& vfld,
+    const VolField<Type>& vfld,
     const label patchi
 ) const
 {

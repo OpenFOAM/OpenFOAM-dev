@@ -90,7 +90,7 @@ public:
         //- Return the interpolation weighting factors
         tmp<surfaceScalarField> weights
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const
         {
             return this->mesh().surfaceInterpolation::weights();
@@ -106,7 +106,7 @@ public:
 
 template<class Type>
 tmp<SurfaceField<Type>>
-linearInterpolate(const GeometricField<Type, fvPatchField, volMesh>& vf)
+linearInterpolate(const VolField<Type>& vf)
 {
     return surfaceInterpolationScheme<Type>::interpolate
     (
@@ -118,7 +118,7 @@ linearInterpolate(const GeometricField<Type, fvPatchField, volMesh>& vf)
 
 template<class Type>
 tmp<SurfaceField<Type>>
-linearInterpolate(const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf)
+linearInterpolate(const tmp<VolField<Type>>& tvf)
 {
     tmp<SurfaceField<Type>> tinterp =
         linearInterpolate(tvf());

@@ -36,9 +36,9 @@ namespace Foam
 {
 
 template<class Type>
-void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
+void evaluateConstraintTypes(VolField<Type>& fld)
 {
-    typename GeometricField<Type, fvPatchField, volMesh>::
+    typename VolField<Type>::
         Boundary& fldBf = fld.boundaryFieldRef();
 
     if

@@ -54,60 +54,60 @@ namespace fvm
     template<class Type>
     tmp<fvMatrix<Type>> ddt
     (
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
     tmp<fvMatrix<Type>> ddt
     (
         const dimensionedScalar&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
     tmp<fvMatrix<Type>> ddt
     (
         const volScalarField&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
     tmp<fvMatrix<Type>> ddt
     (
         const one&,
-        const GeometricField<Type, fvPatchField, volMesh>&
-    );
-
-    template<class Type>
-    tmp<fvMatrix<Type>> ddt
-    (
-        const volScalarField&,
-        const volScalarField&,
-        const GeometricField<Type, fvPatchField, volMesh>&
-    );
-
-    template<class Type>
-    tmp<fvMatrix<Type>> ddt
-    (
-        const one&,
-        const one&,
-        const GeometricField<Type, fvPatchField, volMesh>&
-    );
-
-    template<class Type>
-    tmp<fvMatrix<Type>> ddt
-    (
-        const one&,
-        const volScalarField&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
     tmp<fvMatrix<Type>> ddt
     (
         const volScalarField&,
+        const volScalarField&,
+        const VolField<Type>&
+    );
+
+    template<class Type>
+    tmp<fvMatrix<Type>> ddt
+    (
         const one&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const one&,
+        const VolField<Type>&
+    );
+
+    template<class Type>
+    tmp<fvMatrix<Type>> ddt
+    (
+        const one&,
+        const volScalarField&,
+        const VolField<Type>&
+    );
+
+    template<class Type>
+    tmp<fvMatrix<Type>> ddt
+    (
+        const volScalarField&,
+        const one&,
+        const VolField<Type>&
     );
 }
 

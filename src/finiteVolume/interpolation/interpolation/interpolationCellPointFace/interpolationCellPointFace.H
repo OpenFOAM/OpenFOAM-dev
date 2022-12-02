@@ -87,7 +87,7 @@ public:
         //- Construct from components
         interpolationCellPointFace
         (
-            const GeometricField<Type, fvPatchField, volMesh>& psi
+            const VolField<Type>& psi
         );
 
 

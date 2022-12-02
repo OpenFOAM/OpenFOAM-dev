@@ -59,7 +59,7 @@ protected:
     // Protected data
 
         //- The vol field to interpolate
-        const GeometricField<Type, fvPatchField, volMesh>& psi_;
+        const VolField<Type>& psi_;
 
         //- Reference to the mesh
         const polyMesh& mesh_;
@@ -79,7 +79,7 @@ public:
             interpolation,
             dictionary,
             (
-                const GeometricField<Type, fvPatchField, volMesh>& psi
+                const VolField<Type>& psi
             ),
             (psi)
         );
@@ -91,14 +91,14 @@ public:
         static autoPtr<interpolation<Type>> New
         (
             const word& interpolationType,
-            const GeometricField<Type, fvPatchField, volMesh>& psi
+            const VolField<Type>& psi
         );
 
         //- Return a reference to the selected interpolation scheme
         static autoPtr<interpolation<Type>> New
         (
             const dictionary& interpolationSchemes,
-            const GeometricField<Type, fvPatchField, volMesh>& psi
+            const VolField<Type>& psi
         );
 
 
@@ -107,7 +107,7 @@ public:
         //- Construct from components
         interpolation
         (
-            const GeometricField<Type, fvPatchField, volMesh>& psi
+            const VolField<Type>& psi
         );
 
 
@@ -119,7 +119,7 @@ public:
     // Member Functions
 
         //- Return the field to be interpolated
-        const GeometricField<Type, fvPatchField, volMesh>& psi() const
+        const VolField<Type>& psi() const
         {
             return psi_;
         }

@@ -99,7 +99,7 @@ template<class Type>
 tmp<SurfaceField<Type>>
 snGradScheme<Type>::snGrad
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const tmp<surfaceScalarField>& tdeltaCoeffs,
     const word& snGradName
 )
@@ -156,7 +156,7 @@ template<class Type>
 tmp<SurfaceField<Type>>
 snGradScheme<Type>::sndGrad
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& sndGradName
 )
 {
@@ -168,7 +168,7 @@ template<class Type>
 tmp<SurfaceField<Type>>
 snGradScheme<Type>::snGrad
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     tmp<SurfaceField<Type>> tsf
@@ -189,7 +189,7 @@ template<class Type>
 tmp<SurfaceField<Type>>
 snGradScheme<Type>::snGrad
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 ) const
 {
     tmp<SurfaceField<Type>> tsf

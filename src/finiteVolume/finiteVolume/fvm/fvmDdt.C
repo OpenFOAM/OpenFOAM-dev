@@ -44,7 +44,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 ddt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fv::ddtScheme<Type>::New
@@ -60,7 +60,7 @@ tmp<fvMatrix<Type>>
 ddt
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fv::ddtScheme<Type>::New
@@ -76,7 +76,7 @@ tmp<fvMatrix<Type>>
 ddt
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fv::ddtScheme<Type>::New
@@ -92,7 +92,7 @@ tmp<fvMatrix<Type>>
 ddt
 (
     const one&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return ddt(vf);
@@ -105,7 +105,7 @@ ddt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fv::ddtScheme<Type>::New
@@ -128,7 +128,7 @@ ddt
 (
     const one&,
     const one&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return ddt(vf);
@@ -141,7 +141,7 @@ ddt
 (
     const one&,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return ddt(rho, vf);
@@ -154,7 +154,7 @@ ddt
 (
     const volScalarField& alpha,
     const one&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return ddt(alpha, vf);

@@ -54,20 +54,20 @@ namespace fvm
     tmp<fvMatrix<Type>> d2dt2
     (
         const dimensionedScalar&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
     tmp<fvMatrix<Type>> d2dt2
     (
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
     tmp<fvMatrix<Type>> d2dt2
     (
         const volScalarField&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 }
 

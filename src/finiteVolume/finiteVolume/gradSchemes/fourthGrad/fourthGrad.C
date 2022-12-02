@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::tmp
 >
 Foam::fv::fourthGrad<Type>::calcGrad
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vsf,
+    const VolField<Type>& vsf,
     const word& name
 ) const
 {
@@ -61,24 +61,24 @@ Foam::fv::fourthGrad<Type>::calcGrad
 
     // Assemble the second-order least-square gradient
     // Calculate the second-order least-square gradient
-    tmp<GeometricField<GradType, fvPatchField, volMesh>> tsecondfGrad
+    tmp<VolField<GradType>> tsecondfGrad
       = leastSquaresGrad<Type>(mesh).grad
         (
             vsf,
             "leastSquaresGrad(" + vsf.name() + ")"
         );
-    const GeometricField<GradType, fvPatchField, volMesh>& secondfGrad =
+    const VolField<GradType>& secondfGrad =
         tsecondfGrad();
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh>> tfGrad
+    tmp<VolField<GradType>> tfGrad
     (
-        GeometricField<GradType, fvPatchField, volMesh>::New
+        VolField<GradType>::New
         (
             name,
             secondfGrad
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& fGrad = tfGrad.ref();
+    VolField<GradType>& fGrad = tfGrad.ref();
 
     const vectorField& C = mesh.C();
 

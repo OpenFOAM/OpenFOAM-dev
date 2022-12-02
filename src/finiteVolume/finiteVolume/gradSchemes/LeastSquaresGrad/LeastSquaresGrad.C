@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ Foam::tmp
 >
 Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vtf,
+    const VolField<Type>& vtf,
     const word& name
 ) const
 {
@@ -58,9 +58,9 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
         mesh
     );
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh>> tlsGrad
+    tmp<VolField<GradType>> tlsGrad
     (
-        GeometricField<GradType, fvPatchField, volMesh>::New
+        VolField<GradType>::New
         (
             name,
             mesh,
@@ -73,7 +73,7 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad.ref();
+    VolField<GradType>& lsGrad = tlsGrad.ref();
     Field<GradType>& lsGradIf = lsGrad;
 
     const extendedCentredCellToCellStencil& stencil = lsv.stencil();

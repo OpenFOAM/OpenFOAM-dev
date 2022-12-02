@@ -86,7 +86,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvFieldDecomposer::decomposeField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& field
+    const VolField<Type>& field
 ) const
 {
     // Create dummy patch fields
@@ -106,9 +106,9 @@ Foam::fvFieldDecomposer::decomposeField
     }
 
     // Create the processor field with the dummy patch fields
-    tmp<GeometricField<Type, fvPatchField, volMesh>> tresF
+    tmp<VolField<Type>> tresF
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        new VolField<Type>
         (
             IOobject
             (
@@ -125,11 +125,11 @@ Foam::fvFieldDecomposer::decomposeField
             patchFields
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& resF = tresF.ref();
+    VolField<Type>& resF = tresF.ref();
 
     // Change the patch fields to the correct type using a mapper constructor
     // (with reference to the now correct internal field)
-    typename GeometricField<Type, fvPatchField, volMesh>::
+    typename VolField<Type>::
         Boundary& bf = resF.boundaryFieldRef();
     forAll(bf, procPatchi)
     {

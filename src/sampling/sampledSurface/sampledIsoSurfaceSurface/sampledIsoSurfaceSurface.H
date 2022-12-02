@@ -79,7 +79,7 @@ private:
         template<class Type>
         tmp<Field<Type>> sampleField
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vField
+            const VolField<Type>& vField
         ) const;
 
         //- Interpolate field to the surface's points

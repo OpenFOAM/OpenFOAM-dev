@@ -50,7 +50,7 @@ namespace Foam
 namespace fvc
 {
     template<class Type, class CombineOp>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
+    tmp<VolField<Type>> cellReduce
     (
         const SurfaceField<Type>&,
         const CombineOp& cop,
@@ -58,7 +58,7 @@ namespace fvc
     );
 
     template<class Type, class CombineOp>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
+    tmp<VolField<Type>> cellReduce
     (
         const tmp<SurfaceField<Type>>&,
         const CombineOp& cop,

@@ -53,7 +53,7 @@ template<class Type>
 tmp<SurfaceField<Type>>
 uncorrectedSnGrad<Type>::correction
 (
-    const GeometricField<Type, fvPatchField, volMesh>&
+    const VolField<Type>&
 ) const
 {
     NotImplemented;

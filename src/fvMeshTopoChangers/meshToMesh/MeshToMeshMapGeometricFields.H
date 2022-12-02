@@ -47,9 +47,9 @@ namespace Foam
 {
 
 template<class Type>
-void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
+void evaluateConstraintTypes(VolField<Type>& fld)
 {
-    typename GeometricField<Type, fvPatchField, volMesh>::
+    typename VolField<Type>::
         Boundary& fldBf = fld.boundaryFieldRef();
 
     if
@@ -135,23 +135,23 @@ void MeshToMeshMapVolFields
     const fvMeshToFvMesh& mapper
 )
 {
-    HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fields
+    HashTable<const VolField<Type>*> fields
     (
         mesh.objectRegistry::template
-            lookupClass<GeometricField<Type, fvPatchField, volMesh>>()
+            lookupClass<VolField<Type>>()
     );
 
     // Deleted old time fields
     for
     (
-        typename HashTable<const GeometricField<Type, fvPatchField, volMesh>*>::
+        typename HashTable<const VolField<Type>*>::
             iterator fieldIter = fields.begin();
         fieldIter != fields.end();
         ++fieldIter
     )
     {
-        GeometricField<Type, fvPatchField, volMesh>& field =
-            const_cast<GeometricField<Type, fvPatchField, volMesh>&>
+        VolField<Type>& field =
+            const_cast<VolField<Type>&>
             (*fieldIter());
 
         field.clearOldTimes();
@@ -160,19 +160,19 @@ void MeshToMeshMapVolFields
     fields =
     (
         mesh.objectRegistry::template
-            lookupClass<GeometricField<Type, fvPatchField, volMesh>>()
+            lookupClass<VolField<Type>>()
     );
 
     for
     (
-        typename HashTable<const GeometricField<Type, fvPatchField, volMesh>*>::
+        typename HashTable<const VolField<Type>*>::
             iterator fieldIter = fields.begin();
         fieldIter != fields.end();
         ++fieldIter
     )
     {
-        GeometricField<Type, fvPatchField, volMesh>& field =
-            const_cast<GeometricField<Type, fvPatchField, volMesh>&>
+        VolField<Type>& field =
+            const_cast<VolField<Type>&>
             (*fieldIter());
 
         if (fvMeshToFvMesh::debug)

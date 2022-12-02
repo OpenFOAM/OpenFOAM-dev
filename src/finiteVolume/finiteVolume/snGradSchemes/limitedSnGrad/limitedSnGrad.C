@@ -78,7 +78,7 @@ limitedSnGrad<Type>::~limitedSnGrad()
 template<class Type>
 tmp<surfaceScalarField> limitedSnGrad<Type>::deltaCoeffs
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     return correctedScheme_->deltaCoeffs(vf);
@@ -89,7 +89,7 @@ template<class Type>
 tmp<SurfaceField<Type>>
 limitedSnGrad<Type>::correction
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     const SurfaceField<Type> corr

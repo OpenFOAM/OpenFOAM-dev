@@ -159,14 +159,14 @@ public:
         //- Return the interpolation weighting factors
         virtual tmp<surfaceScalarField> limiter
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const = 0;
 
         //- Return the interpolation weighting factors for the given field,
         //  by limiting the given weights with the given limiter
         tmp<surfaceScalarField> weights
         (
-            const GeometricField<Type, fvPatchField, volMesh>&,
+            const VolField<Type>&,
             const surfaceScalarField& CDweights,
             tmp<surfaceScalarField> tLimiter
         ) const;
@@ -174,14 +174,14 @@ public:
         //- Return the interpolation weighting factors for the given field
         virtual tmp<surfaceScalarField> weights
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
         //- Return the interpolation weighting factors
         virtual tmp<SurfaceField<Type>>
         flux
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
 

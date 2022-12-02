@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ Foam::tmp
 >
 Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vsf,
+    const VolField<Type>& vsf,
     const word& name
 ) const
 {
@@ -119,7 +119,7 @@ Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
     }
 
 
-    const typename GeometricField<Type, fvPatchField, volMesh>::Boundary& bsf =
+    const typename VolField<Type>::Boundary& bsf =
         vsf.boundaryField();
 
     forAll(bsf, patchi)

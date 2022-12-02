@@ -117,7 +117,7 @@ public:
         //- Return the face-based blending factor
         virtual tmp<surfaceScalarField> blendingFactor
         (
-             const GeometricField<Type, fvPatchField, volMesh>& vf
+             const VolField<Type>& vf
         ) const
         {
             return surfaceScalarField::New
@@ -131,7 +131,7 @@ public:
         //- Return the interpolation limiter
         virtual tmp<surfaceScalarField> limiter
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const
         {
             return surfaceScalarField::New
@@ -145,7 +145,7 @@ public:
         //- Return the interpolation weighting factors
         virtual tmp<surfaceScalarField> weights
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             return

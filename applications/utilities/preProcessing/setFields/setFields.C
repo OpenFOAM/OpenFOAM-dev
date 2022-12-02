@@ -101,7 +101,7 @@ bool setCellFieldType
             }
         }
 
-        typename GeometricField<Type, fvPatchField, volMesh>::
+        typename VolField<Type>::
             Boundary& fieldBf = field.boundaryFieldRef();
 
         forAll(field.boundaryField(), patchi)

@@ -59,14 +59,14 @@ void Foam::vtkPVFoam::convertVolFields
         if
         (
             iter()->headerClassName()
-         != GeometricField<Type, fvPatchField, volMesh>::typeName
+         != VolField<Type>::typeName
         )
         {
             continue;
         }
 
         // Load field
-        GeometricField<Type, fvPatchField, volMesh> tf
+        VolField<Type> tf
         (
             *iter(),
             mesh
@@ -282,14 +282,14 @@ void Foam::vtkPVFoam::convertVolInternalFields
         if
         (
             iter()->headerClassName()
-         != GeometricField<Type, fvPatchField, volMesh>::Internal::typeName
+         != VolField<Type>::Internal::typeName
         )
         {
             continue;
         }
 
         // Load field
-        typename GeometricField<Type, fvPatchField, volMesh>::Internal tf
+        typename VolField<Type>::Internal tf
         (
             *iter(),
             mesh
@@ -328,7 +328,7 @@ void Foam::vtkPVFoam::convertVolInternalFields
 template<class Type>
 void Foam::vtkPVFoam::convertVolFieldBlock
 (
-    const GeometricField<Type, fvPatchField, volMesh>& tf,
+    const VolField<Type>& tf,
     autoPtr<PointField<Type>>& ptfPtr,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
@@ -370,7 +370,7 @@ void Foam::vtkPVFoam::convertVolFieldBlock
 template<class Type>
 void Foam::vtkPVFoam::convertVolInternalFieldBlock
 (
-    const typename GeometricField<Type, fvPatchField, volMesh>::Internal& tf,
+    const typename VolField<Type>::Internal& tf,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
     const List<polyDecomp>& decompLst
@@ -398,7 +398,7 @@ void Foam::vtkPVFoam::convertVolInternalFieldBlock
 template<class Type>
 void Foam::vtkPVFoam::convertVolInternalField
 (
-    const typename GeometricField<Type, fvPatchField, volMesh>::Internal& tf,
+    const typename VolField<Type>::Internal& tf,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
     const label datasetNo,

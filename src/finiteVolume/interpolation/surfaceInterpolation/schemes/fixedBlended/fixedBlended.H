@@ -164,7 +164,7 @@ public:
         tmp<surfaceScalarField>
         weights
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             return
@@ -178,7 +178,7 @@ public:
         tmp<SurfaceField<Type>>
         interpolate
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             return
@@ -199,7 +199,7 @@ public:
         virtual tmp<SurfaceField<Type>>
         correction
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             if (tScheme1_().corrected())

@@ -135,8 +135,8 @@ template<class Type>
 const Foam::cyclicFvPatchField<Type>&
 Foam::cyclicFvPatchField<Type>::nbrPatchField() const
 {
-    const GeometricField<Type, fvPatchField, volMesh>& fld =
-    static_cast<const GeometricField<Type, fvPatchField, volMesh>&>
+    const VolField<Type>& fld =
+    static_cast<const VolField<Type>&>
     (
         this->primitiveField()
     );

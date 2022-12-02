@@ -77,7 +77,7 @@ namespace fvc
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
     > grad
     (
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<Type>&,
         const word& name
     );
 
@@ -88,7 +88,7 @@ namespace fvc
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
     > grad
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+        const tmp<VolField<Type>>&,
         const word& name
     );
 
@@ -99,7 +99,7 @@ namespace fvc
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
     > grad
     (
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
@@ -109,7 +109,7 @@ namespace fvc
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
     > grad
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+        const tmp<VolField<Type>>&
     );
 }
 

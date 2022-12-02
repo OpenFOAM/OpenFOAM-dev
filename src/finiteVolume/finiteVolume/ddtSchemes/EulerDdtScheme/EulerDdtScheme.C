@@ -41,7 +41,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 EulerDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
@@ -53,9 +53,9 @@ EulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        tmp<GeometricField<Type, fvPatchField, volMesh>> tdtdt
+        tmp<VolField<Type>> tdtdt
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 mesh(),
@@ -75,7 +75,7 @@ EulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             mesh(),
@@ -92,10 +92,10 @@ EulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 EulerDdtScheme<Type>::fvcDdt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
@@ -104,7 +104,7 @@ EulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDeltaT*
@@ -120,7 +120,7 @@ EulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDeltaT*(vf - vf.oldTime())
@@ -130,11 +130,11 @@ EulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 EulerDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
@@ -143,7 +143,7 @@ EulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDeltaT*rho*
@@ -159,7 +159,7 @@ EulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDeltaT*rho*(vf - vf.oldTime())
@@ -169,11 +169,11 @@ EulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 EulerDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
@@ -182,7 +182,7 @@ EulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDeltaT*
@@ -201,7 +201,7 @@ EulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
@@ -211,12 +211,12 @@ EulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 EulerDdtScheme<Type>::fvcDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
@@ -225,7 +225,7 @@ EulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDeltaT*
@@ -252,7 +252,7 @@ EulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDeltaT
@@ -288,7 +288,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 EulerDdtScheme<Type>::fvmDdt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -324,7 +324,7 @@ tmp<fvMatrix<Type>>
 EulerDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -361,7 +361,7 @@ tmp<fvMatrix<Type>>
 EulerDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -401,7 +401,7 @@ EulerDdtScheme<Type>::fvmDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -442,7 +442,7 @@ template<class Type>
 tmp<typename EulerDdtScheme<Type>::fluxFieldType>
 EulerDdtScheme<Type>::fvcDdtUfCorr
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const SurfaceField<Type>& Uf
 )
 {
@@ -466,7 +466,7 @@ template<class Type>
 tmp<typename EulerDdtScheme<Type>::fluxFieldType>
 EulerDdtScheme<Type>::fvcDdtPhiCorr
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi
 )
 {
@@ -491,7 +491,7 @@ tmp<typename EulerDdtScheme<Type>::fluxFieldType>
 EulerDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const SurfaceField<Type>& Uf
 )
 {
@@ -503,7 +503,7 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
      && Uf.dimensions() == rho.dimensions()*dimVelocity
     )
     {
-        GeometricField<Type, fvPatchField, volMesh> rhoU0
+        VolField<Type> rhoU0
         (
             rho.oldTime()*U.oldTime()
         );
@@ -558,7 +558,7 @@ tmp<typename EulerDdtScheme<Type>::fluxFieldType>
 EulerDdtScheme<Type>::fvcDdtPhiCorr
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi
 )
 {
@@ -570,7 +570,7 @@ EulerDdtScheme<Type>::fvcDdtPhiCorr
      && phi.dimensions() == rho.dimensions()*dimFlux
     )
     {
-        GeometricField<Type, fvPatchField, volMesh> rhoU0
+        VolField<Type> rhoU0
         (
             rho.oldTime()*U.oldTime()
         );
@@ -629,7 +629,7 @@ EulerDdtScheme<Type>::fvcDdtPhiCorr
 template<class Type>
 tmp<surfaceScalarField> EulerDdtScheme<Type>::meshPhi
 (
-    const GeometricField<Type, fvPatchField, volMesh>&
+    const VolField<Type>&
 )
 {
     return mesh().phi();
@@ -639,7 +639,7 @@ tmp<surfaceScalarField> EulerDdtScheme<Type>::meshPhi
 template<class Type>
 tmp<scalarField> EulerDdtScheme<Type>::meshPhi
 (
-    const GeometricField<Type, fvPatchField, volMesh>&,
+    const VolField<Type>&,
     const label patchi
 )
 {

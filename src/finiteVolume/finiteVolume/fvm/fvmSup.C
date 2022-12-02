@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Su
 (
     const DimensionedField<Type, volMesh>& su,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const fvMesh& mesh = vf.mesh();
@@ -60,7 +60,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Su
 (
     const tmp<DimensionedField<Type, volMesh>>& tsu,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm = fvm::Su(tsu(), vf);
@@ -73,8 +73,8 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Su
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tsu,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const tmp<VolField<Type>>& tsu,
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm = fvm::Su(tsu(), vf);
@@ -88,7 +88,7 @@ Foam::zeroField
 Foam::fvm::Su
 (
     const zero&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return zeroField();
@@ -100,7 +100,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Sp
 (
     const volScalarField::Internal& sp,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const fvMesh& mesh = vf.mesh();
@@ -126,7 +126,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Sp
 (
     const tmp<volScalarField::Internal>& tsp,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm = fvm::Sp(tsp(), vf);
@@ -140,7 +140,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Sp
 (
     const tmp<volScalarField>& tsp,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm = fvm::Sp(tsp(), vf);
@@ -154,7 +154,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Sp
 (
     const dimensionedScalar& sp,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const fvMesh& mesh = vf.mesh();
@@ -180,7 +180,7 @@ Foam::zeroField
 Foam::fvm::Sp
 (
     const zero&,
-    const GeometricField<Type, fvPatchField, volMesh>&
+    const VolField<Type>&
 )
 {
     return zeroField();
@@ -192,7 +192,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::SuSp
 (
     const volScalarField::Internal& susp,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const fvMesh& mesh = vf.mesh();
@@ -221,7 +221,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::SuSp
 (
     const tmp<volScalarField::Internal>& tsusp,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm = fvm::SuSp(tsusp(), vf);
@@ -235,7 +235,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::SuSp
 (
     const tmp<volScalarField>& tsusp,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm = fvm::SuSp(tsusp(), vf);
@@ -249,7 +249,7 @@ Foam::zeroField
 Foam::fvm::SuSp
 (
     const zero&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return zeroField();
@@ -261,7 +261,7 @@ Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::S
 (
     const Pair<tmp<volScalarField::Internal>>& s,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm = fvm::Sp(s[1], vf) + s[0];

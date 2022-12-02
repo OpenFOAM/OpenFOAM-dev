@@ -41,7 +41,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 average
 (
     const SurfaceField<Type>& ssf
@@ -49,9 +49,9 @@ average
 {
     const fvMesh& mesh = ssf.mesh();
 
-    tmp<GeometricField<Type, fvPatchField, volMesh>> taverage
+    tmp<VolField<Type>> taverage
     (
-        GeometricField<Type, fvPatchField, volMesh>::New
+        VolField<Type>::New
         (
             "average("+ssf.name()+')',
             mesh,
@@ -64,7 +64,7 @@ average
         return taverage;
     }
 
-    GeometricField<Type, fvPatchField, volMesh>& av = taverage.ref();
+    VolField<Type>& av = taverage.ref();
 
     av.primitiveFieldRef() =
     (
@@ -72,7 +72,7 @@ average
        /surfaceSum(mesh.magSf())().primitiveField()
     );
 
-    typename GeometricField<Type, fvPatchField, volMesh>::
+    typename VolField<Type>::
     Boundary& bav = av.boundaryFieldRef();
 
     forAll(bav, patchi)
@@ -87,13 +87,13 @@ average
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 average
 (
     const tmp<SurfaceField<Type>>& tssf
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> taverage
+    tmp<VolField<Type>> taverage
     (
         fvc::average(tssf())
     );
@@ -103,10 +103,10 @@ average
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 average
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vtf
+    const VolField<Type>& vtf
 )
 {
     return fvc::average(linearInterpolate(vtf));
@@ -114,13 +114,13 @@ average
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 average
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvtf
+    const tmp<VolField<Type>>& tvtf
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> taverage
+    tmp<VolField<Type>> taverage
     (
         fvc::average(tvtf())
     );

@@ -107,7 +107,7 @@ class patch
         template<class Type>
         tmp<Field<Type>> sampleField
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vField
+            const VolField<Type>& vField
         ) const;
 
         //- Sample surface field on faces

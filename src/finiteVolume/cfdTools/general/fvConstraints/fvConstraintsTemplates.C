@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ bool Foam::fvConstraints::constrain(fvMatrix<Type>& eqn) const
 template<class Type>
 bool Foam::fvConstraints::constrain
 (
-    GeometricField<Type, fvPatchField, volMesh>& field
+    VolField<Type>& field
 ) const
 {
     const word& fieldName = field.name();

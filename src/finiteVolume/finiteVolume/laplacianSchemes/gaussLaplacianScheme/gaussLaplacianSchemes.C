@@ -37,7 +37,7 @@ Foam::tmp<Foam::fvMatrix<Foam::Type>>                                          \
 Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
 (                                                                              \
     const SurfaceField<scalar>& gamma,           \
-    const GeometricField<Type, fvPatchField, volMesh>& vf                      \
+    const VolField<Type>& vf                      \
 )                                                                              \
 {                                                                              \
     const fvMesh& mesh = this->mesh();                                         \
@@ -92,12 +92,12 @@ Foam::tmp<Foam::GeometricField<Foam::Type, Foam::fvPatchField, Foam::volMesh>> \
 Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvcLaplacian         \
 (                                                                              \
     const SurfaceField<scalar>& gamma,           \
-    const GeometricField<Type, fvPatchField, volMesh>& vf                      \
+    const VolField<Type>& vf                      \
 )                                                                              \
 {                                                                              \
     const fvMesh& mesh = this->mesh();                                         \
                                                                                \
-    tmp<GeometricField<Type, fvPatchField, volMesh>> tLaplacian                \
+    tmp<VolField<Type>> tLaplacian                \
     (                                                                          \
         fvc::div(gamma*this->tsnGradScheme_().snGrad(vf)*mesh.magSf())         \
     );                                                                         \

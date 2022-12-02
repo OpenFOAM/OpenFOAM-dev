@@ -93,7 +93,7 @@ public:
         //- Return the interpolation weighting factors for the given field
         virtual tmp<surfaceScalarField> deltaCoeffs
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const
         {
             return this->mesh().nonOrthDeltaCoeffs();
@@ -110,13 +110,13 @@ public:
         tmp<SurfaceField<Type>>
         fullGradCorrection
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
         //- Return the explicit correction to the faceCorrectedSnGrad
         //  for the given field using the gradients of the field components
         virtual tmp<SurfaceField<Type>>
-        correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
+        correction(const VolField<Type>&) const;
 };
 
 

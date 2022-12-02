@@ -56,7 +56,7 @@ void Foam::fv::limitMag::readCoeffs()
 template<class Type>
 inline bool Foam::fv::limitMag::constrainType
 (
-    GeometricField<Type, fvPatchField, volMesh>& psi
+    VolField<Type>& psi
 ) const
 {
     const scalar maxSqrPsi = sqr(max_);
@@ -80,7 +80,7 @@ inline bool Foam::fv::limitMag::constrainType
     // handle boundaries in the case of 'all'
     if (set_.selectionMode() == fvCellSet::selectionModeType::all)
     {
-        typename GeometricField<Type, fvPatchField, volMesh>::Boundary& psibf =
+        typename VolField<Type>::Boundary& psibf =
             psi.boundaryFieldRef();
 
         forAll(psibf, patchi)

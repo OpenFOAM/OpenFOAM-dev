@@ -113,7 +113,7 @@ public:
         //- Return the interpolation weighting factors
         virtual tmp<surfaceScalarField> weights
         (
-            const GeometricField<scalar, fvPatchField, volMesh>& vf
+            const VolField<scalar>& vf
         ) const
         {
             NotImplemented;
@@ -124,7 +124,7 @@ public:
         //- Return the face-interpolate of the given cell field
         virtual tmp<surfaceScalarField> interpolate
         (
-            const GeometricField<scalar, fvPatchField, volMesh>& vf
+            const VolField<scalar>& vf
         ) const;
 
 

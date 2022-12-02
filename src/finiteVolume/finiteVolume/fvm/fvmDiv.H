@@ -56,7 +56,7 @@ namespace fvm
     tmp<fvMatrix<Type>> div
     (
         const surfaceScalarField&,
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<Type>&,
         const word& name
     );
 
@@ -64,7 +64,7 @@ namespace fvm
     tmp<fvMatrix<Type>> div
     (
         const tmp<surfaceScalarField>&,
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<Type>&,
         const word& name
     );
 
@@ -73,14 +73,14 @@ namespace fvm
     tmp<fvMatrix<Type>> div
     (
         const surfaceScalarField&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
     tmp<fvMatrix<Type>> div
     (
         const tmp<surfaceScalarField>&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 }
 

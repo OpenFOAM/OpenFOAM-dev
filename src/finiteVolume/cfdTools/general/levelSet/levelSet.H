@@ -73,13 +73,13 @@ tmp<Field<Type>> levelSetAverage
 
 //- As the above overload, but both in cells and on patch faces
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>> levelSetAverage
+tmp<VolField<Type>> levelSetAverage
 (
     const volScalarField& levelC,
     const pointScalarField& levelP,
-    const GeometricField<Type, fvPatchField, volMesh>& positiveC,
+    const VolField<Type>& positiveC,
     const PointField<Type>& positiveP,
-    const GeometricField<Type, fvPatchField, volMesh>& negativeC,
+    const VolField<Type>& negativeC,
     const PointField<Type>& negativeP
 );
 

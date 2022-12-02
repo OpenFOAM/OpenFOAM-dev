@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ template<class Type>
 void Foam::ensightParts::writeField
 (
     ensightFile& os,
-    const GeometricField<Type, fvPatchField, volMesh>& field
+    const VolField<Type>& field
 ) const
 {
     // find offset to patch parts (ie, the first face data)

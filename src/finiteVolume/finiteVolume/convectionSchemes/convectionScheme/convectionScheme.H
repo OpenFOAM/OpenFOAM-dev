@@ -163,25 +163,25 @@ public:
         interpolate
         (
             const surfaceScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const = 0;
 
         virtual tmp<SurfaceField<Type>> flux
         (
             const surfaceScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const = 0;
 
         virtual tmp<fvMatrix<Type>> fvmDiv
         (
             const surfaceScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDiv
+        virtual tmp<VolField<Type>> fvcDiv
         (
             const surfaceScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const = 0;
 
 

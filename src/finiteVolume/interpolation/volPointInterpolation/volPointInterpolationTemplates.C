@@ -38,14 +38,14 @@ License
 template<class Type>
 void Foam::volPointInterpolation::interpolateUnconstrained
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     PointField<Type>& pf
 ) const
 {
     if (debug)
     {
         Pout<< "volPointInterpolation::interpolateUnconstrained("
-            << "const GeometricField<Type, fvPatchField, volMesh>&, "
+            << "const VolField<Type>&, "
             << "PointField<Type>&) : "
             << "interpolating field from cells to points"
             << endl;
@@ -80,9 +80,9 @@ void Foam::volPointInterpolation::interpolateUnconstrained
     }
 
     // Get the boundary neighbour field
-    const typename GeometricField<Type, fvPatchField, volMesh>::Boundary vfBnf
+    const typename VolField<Type>::Boundary vfBnf
     (
-        GeometricField<Type, fvPatchField, volMesh>::null(),
+        VolField<Type>::null(),
         vf.boundaryField().boundaryNeighbourField()
     );
 
@@ -138,7 +138,7 @@ void Foam::volPointInterpolation::interpolateUnconstrained
 template<class Type>
 void Foam::volPointInterpolation::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     PointField<Type>& pf
 ) const
 {
@@ -153,7 +153,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::volPointInterpolation::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name,
     const bool cache
 ) const
@@ -241,7 +241,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::volPointInterpolation::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     return interpolate(vf, "volPointInterpolate(" + vf.name() + ')', false);
@@ -252,7 +252,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::volPointInterpolation::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 ) const
 {
     tmp<PointField<Type>> tpf =

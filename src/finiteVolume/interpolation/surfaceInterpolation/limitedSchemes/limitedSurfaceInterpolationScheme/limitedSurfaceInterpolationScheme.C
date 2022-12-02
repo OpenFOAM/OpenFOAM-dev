@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,7 +140,7 @@ template<class Type>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::limitedSurfaceInterpolationScheme<Type>::weights
 (
-    const GeometricField<Type, fvPatchField, volMesh>& phi,
+    const VolField<Type>& phi,
     const surfaceScalarField& CDweights,
     tmp<surfaceScalarField> tLimiter
 ) const
@@ -183,7 +183,7 @@ template<class Type>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::limitedSurfaceInterpolationScheme<Type>::weights
 (
-    const GeometricField<Type, fvPatchField, volMesh>& phi
+    const VolField<Type>& phi
 ) const
 {
     return this->weights
@@ -198,7 +198,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::limitedSurfaceInterpolationScheme<Type>::flux
 (
-    const GeometricField<Type, fvPatchField, volMesh>& phi
+    const VolField<Type>& phi
 ) const
 {
     return faceFlux_*this->interpolate(phi);

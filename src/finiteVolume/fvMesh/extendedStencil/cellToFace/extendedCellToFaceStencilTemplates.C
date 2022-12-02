@@ -32,7 +32,7 @@ void Foam::extendedCellToFaceStencil::collectData
 (
     const distributionMap& map,
     const labelListList& stencil,
-    const GeometricField<Type, fvPatchField, volMesh>& fld,
+    const VolField<Type>& fld,
     List<List<Type>>& stencilFld
 )
 {
@@ -86,7 +86,7 @@ Foam::extendedCellToFaceStencil::weightedSum
 (
     const distributionMap& map,
     const labelListList& stencil,
-    const GeometricField<Type, fvPatchField, volMesh>& fld,
+    const VolField<Type>& fld,
     const List<List<scalar>>& stencilWeights
 )
 {

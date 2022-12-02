@@ -126,14 +126,14 @@ void Foam::volPointInterpolation::addSeparated
 template<class Type>
 void Foam::volPointInterpolation::interpolateInternalField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     PointField<Type>& pf
 ) const
 {
     if (debug)
     {
         Pout<< "volPointInterpolation::interpolateInternalField("
-            << "const GeometricField<Type, fvPatchField, volMesh>&, "
+            << "const VolField<Type>&, "
             << "PointField<Type>&) : "
             << "interpolating field from cells to points"
             << endl;
@@ -163,7 +163,7 @@ void Foam::volPointInterpolation::interpolateInternalField
 template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::volPointInterpolation::flatBoundaryField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     const fvMesh& mesh = vf.mesh();
@@ -210,7 +210,7 @@ Foam::tmp<Foam::Field<Type>> Foam::volPointInterpolation::flatBoundaryField
 template<class Type>
 void Foam::volPointInterpolation::interpolateBoundaryField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     PointField<Type>& pf
 ) const
 {
@@ -328,7 +328,7 @@ void Foam::volPointInterpolation::interpolateBoundaryField
 template<class Type>
 void Foam::volPointInterpolation::interpolateBoundaryField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     PointField<Type>& pf,
     const bool overrideFixedValue
 ) const
@@ -345,14 +345,14 @@ void Foam::volPointInterpolation::interpolateBoundaryField
 template<class Type>
 void Foam::volPointInterpolation::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     PointField<Type>& pf
 ) const
 {
     if (debug)
     {
         Pout<< "volPointInterpolation::interpolate("
-            << "const GeometricField<Type, fvPatchField, volMesh>&, "
+            << "const VolField<Type>&, "
             << "PointField<Type>&) : "
             << "interpolating field from cells to points"
             << endl;
@@ -369,7 +369,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::volPointInterpolation::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const wordList& patchFieldTypes
 ) const
 {
@@ -400,7 +400,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::volPointInterpolation::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
+    const tmp<VolField<Type>>& tvf,
     const wordList& patchFieldTypes
 ) const
 {
@@ -416,7 +416,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::volPointInterpolation::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name,
     const bool cache
 ) const
@@ -506,7 +506,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::volPointInterpolation::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     return interpolate(vf, "volPointInterpolate(" + vf.name() + ')', false);
@@ -517,7 +517,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::volPointInterpolation::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 ) const
 {
     // Construct tmp<pointField>

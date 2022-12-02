@@ -200,10 +200,10 @@ public:
         //- Map volField. Internal field set to average, patch fields straight
         //  copies.
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>>
+        tmp<VolField<Type>>
         interpolate
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
 

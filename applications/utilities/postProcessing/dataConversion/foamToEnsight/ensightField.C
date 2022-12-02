@@ -40,16 +40,16 @@ using namespace Foam;
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 volField
 (
     const fvMeshSubset& meshSubsetter,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     if (meshSubsetter.hasSubMesh())
     {
-        tmp<GeometricField<Type, fvPatchField, volMesh>> tfld
+        tmp<VolField<Type>> tfld
         (
             meshSubsetter.interpolate(vf)
         );
@@ -300,7 +300,7 @@ void writePatchField
 template<class Type>
 void ensightField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const ensightMesh& eMesh,
     const fileName& postProcPath,
     const word& prepend,
@@ -717,7 +717,7 @@ void ensightPointField
 template<class Type>
 void ensightField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const ensightMesh& eMesh,
     const fileName& postProcPath,
     const word& prepend,

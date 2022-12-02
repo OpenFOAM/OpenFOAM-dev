@@ -32,7 +32,7 @@ template<class Type>
 Foam::interpolationVolPointInterpolation<Type>::
 interpolationVolPointInterpolation
 (
-    const GeometricField<Type, fvPatchField, volMesh>& psi
+    const VolField<Type>& psi
 )
 :
     psip_
@@ -51,7 +51,7 @@ template<class Type>
 Foam::interpolationVolPointInterpolation<Type>::
 interpolationVolPointInterpolation
 (
-    const GeometricField<Type, fvPatchField, volMesh>& psi,
+    const VolField<Type>& psi,
     tmp<PointField<Type>> psip
 )
 :

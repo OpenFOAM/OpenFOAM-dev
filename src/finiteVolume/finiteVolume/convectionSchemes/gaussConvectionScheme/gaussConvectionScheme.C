@@ -52,7 +52,7 @@ tmp<SurfaceField<Type>>
 gaussConvectionScheme<Type>::interpolate
 (
     const surfaceScalarField&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     return tinterpScheme_().interpolate(vf);
@@ -64,7 +64,7 @@ tmp<SurfaceField<Type>>
 gaussConvectionScheme<Type>::flux
 (
     const surfaceScalarField& faceFlux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     return faceFlux*interpolate(faceFlux, vf);
@@ -76,7 +76,7 @@ tmp<fvMatrix<Type>>
 gaussConvectionScheme<Type>::fvmDiv
 (
     const surfaceScalarField& faceFlux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     tmp<surfaceScalarField> tweights = tinterpScheme_().weights(vf);
@@ -116,14 +116,14 @@ gaussConvectionScheme<Type>::fvmDiv
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 gaussConvectionScheme<Type>::fvcDiv
 (
     const surfaceScalarField& faceFlux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> tConvection
+    tmp<VolField<Type>> tConvection
     (
         fvc::surfaceIntegrate(flux(faceFlux, vf))
     );

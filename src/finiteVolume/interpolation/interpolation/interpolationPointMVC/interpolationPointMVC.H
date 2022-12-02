@@ -62,7 +62,7 @@ public:
         //- Construct from components
         interpolationPointMVC
         (
-            const GeometricField<Type, fvPatchField, volMesh>& psi
+            const VolField<Type>& psi
         );
 
 

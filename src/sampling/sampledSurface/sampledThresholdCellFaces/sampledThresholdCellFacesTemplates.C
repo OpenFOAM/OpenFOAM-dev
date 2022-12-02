@@ -32,7 +32,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::sampledSurfaces::thresholdCellFaces::sampleField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vField
+    const VolField<Type>& vField
 ) const
 {
     // Recreate geometry if time has changed

@@ -78,16 +78,16 @@ public:
                 template<class Type>
                 void mapSrcToTgt
                 (
-                    const GeometricField<Type, fvPatchField, volMesh>& field,
-                    GeometricField<Type, fvPatchField, volMesh>& result
+                    const VolField<Type>& field,
+                    VolField<Type>& result
                 ) const;
 
                 //- Interpolate a field with a defined operation. The initial
                 //  values of the result are set to zero.
                 template<class Type>
-                tmp<GeometricField<Type, fvPatchField, volMesh>> mapSrcToTgt
+                tmp<VolField<Type>> mapSrcToTgt
                 (
-                    const GeometricField<Type, fvPatchField, volMesh>& field
+                    const VolField<Type>& field
                 ) const;
 };
 

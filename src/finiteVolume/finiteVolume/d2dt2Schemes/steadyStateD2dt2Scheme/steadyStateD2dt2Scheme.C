@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,13 +40,13 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 steadyStateD2dt2Scheme<Type>::fvcD2dt2
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    return GeometricField<Type, fvPatchField, volMesh>::New
+    return VolField<Type>::New
     (
         "d2dt2("+vf.name()+')',
         mesh(),
@@ -61,14 +61,14 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 steadyStateD2dt2Scheme<Type>::fvcD2dt2
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    return GeometricField<Type, fvPatchField, volMesh>::New
+    return VolField<Type>::New
     (
         "d2dt2("+rho.name()+','+vf.name()+')',
         mesh(),
@@ -86,7 +86,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 steadyStateD2dt2Scheme<Type>::fvmD2dt2
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -107,7 +107,7 @@ tmp<fvMatrix<Type>>
 steadyStateD2dt2Scheme<Type>::fvmD2dt2
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -128,7 +128,7 @@ tmp<fvMatrix<Type>>
 steadyStateD2dt2Scheme<Type>::fvmD2dt2
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm

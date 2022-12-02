@@ -100,25 +100,25 @@ public:
         tmp<SurfaceField<Type>> interpolate
         (
             const surfaceScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
         tmp<SurfaceField<Type>> flux
         (
             const surfaceScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
         tmp<fvMatrix<Type>> fvmDiv
         (
             const surfaceScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDiv
+        tmp<VolField<Type>> fvcDiv
         (
             const surfaceScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
 

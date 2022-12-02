@@ -42,13 +42,13 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const SurfaceField<Type>& ssf
 )
 {
-    return GeometricField<Type, fvPatchField, volMesh>::New
+    return VolField<Type>::New
     (
         "div("+ssf.name()+')',
         fvc::surfaceIntegrate(ssf)
@@ -57,13 +57,13 @@ div
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const tmp<SurfaceField<Type>>& tssf
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> Div(fvc::div(tssf()));
+    tmp<VolField<Type>> Div(fvc::div(tssf()));
     tssf.clear();
     return Div;
 }
@@ -79,7 +79,7 @@ tmp
 >
 div
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -100,12 +100,12 @@ tmp
 >
 div
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvvf,
+    const tmp<VolField<Type>>& tvvf,
     const word& name
 )
 {
     typedef typename innerProduct<vector, Type>::type DivType;
-    tmp<GeometricField<DivType, fvPatchField, volMesh>> Div
+    tmp<VolField<DivType>> Div
     (
         fvc::div(tvvf(), name)
     );
@@ -123,7 +123,7 @@ tmp
 >
 div
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fvc::div(vf, "div("+vf.name()+')');
@@ -140,22 +140,22 @@ tmp
 >
 div
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvvf
+    const tmp<VolField<Type>>& tvvf
 )
 {
     typedef typename innerProduct<vector, Type>::type DivType;
-    tmp<GeometricField<DivType, fvPatchField, volMesh>> Div(fvc::div(tvvf()));
+    tmp<VolField<DivType>> Div(fvc::div(tvvf()));
     tvvf.clear();
     return Div;
 }
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const surfaceScalarField& flux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -169,15 +169,15 @@ div
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> Div
+    tmp<VolField<Type>> Div
     (
         fvc::div(tflux(), vf, name)
     );
@@ -187,15 +187,15 @@ div
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const surfaceScalarField& flux,
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
+    const tmp<VolField<Type>>& tvf,
     const word& name
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> Div
+    tmp<VolField<Type>> Div
     (
         fvc::div(flux, tvf(), name)
     );
@@ -205,15 +205,15 @@ div
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
+    const tmp<VolField<Type>>& tvf,
     const word& name
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> Div
+    tmp<VolField<Type>> Div
     (
         fvc::div(tflux(), tvf(), name)
     );
@@ -224,11 +224,11 @@ div
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const surfaceScalarField& flux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fvc::div
@@ -239,14 +239,14 @@ div
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> Div
+    tmp<VolField<Type>> Div
     (
         fvc::div(tflux(), vf)
     );
@@ -256,14 +256,14 @@ div
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const surfaceScalarField& flux,
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> Div
+    tmp<VolField<Type>> Div
     (
         fvc::div(flux, tvf())
     );
@@ -273,14 +273,14 @@ div
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> Div
+    tmp<VolField<Type>> Div
     (
         fvc::div(tflux(), tvf())
     );

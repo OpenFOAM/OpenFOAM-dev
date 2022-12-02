@@ -92,7 +92,7 @@ Foam::tmp
 >
 Foam::fv::gradScheme<Type>::grad
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vsf,
+    const VolField<Type>& vsf,
     const word& name
 ) const
 {
@@ -184,7 +184,7 @@ Foam::tmp
 >
 Foam::fv::gradScheme<Type>::grad
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vsf
+    const VolField<Type>& vsf
 ) const
 {
     return grad(vsf, "grad(" + vsf.name() + ')');
@@ -203,7 +203,7 @@ Foam::tmp
 >
 Foam::fv::gradScheme<Type>::grad
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvsf
+    const tmp<VolField<Type>>& tvsf
 ) const
 {
     typedef typename outerProduct<vector, Type>::type GradType;

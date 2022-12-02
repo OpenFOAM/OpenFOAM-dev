@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,8 +96,8 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 laplacianScheme<Type, GType>::fvmLaplacian
 (
-    const GeometricField<GType, fvPatchField, volMesh>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<GType>& gamma,
+    const VolField<Type>& vf
 )
 {
     return fvmLaplacian(tinterpGammaScheme_().interpolate(gamma)(), vf);
@@ -105,11 +105,11 @@ laplacianScheme<Type, GType>::fvmLaplacian
 
 
 template<class Type, class GType>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 laplacianScheme<Type, GType>::fvcLaplacian
 (
-    const GeometricField<GType, fvPatchField, volMesh>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<GType>& gamma,
+    const VolField<Type>& vf
 )
 {
     return fvcLaplacian(tinterpGammaScheme_().interpolate(gamma)(), vf);

@@ -31,7 +31,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::sampledSurfaces::patch::sampleField
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vField
+    const VolField<Type>& vField
 ) const
 {
     // One value per face

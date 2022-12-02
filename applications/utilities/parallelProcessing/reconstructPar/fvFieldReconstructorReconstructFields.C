@@ -142,7 +142,7 @@ Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvFieldReconstructor::reconstructFvVolumeField
 (
     const IOobject& fieldIoObject,
-    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& procFields
+    const PtrList<VolField<Type>>& procFields
 ) const
 {
     // Create the internalField
@@ -153,7 +153,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
 
     forAll(procFields, proci)
     {
-        const GeometricField<Type, fvPatchField, volMesh>& procField =
+        const VolField<Type>& procField =
             procFields[proci];
 
         // Set the cell values in the reconstructed field
@@ -240,9 +240,9 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
     }
 
     // Construct and return the field
-    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    return tmp<VolField<Type>>
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        new VolField<Type>
         (
             fieldIoObject,
             completeMesh_,
@@ -261,7 +261,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
     const IOobject& fieldIoObject
 ) const
 {
-    PtrList<GeometricField<Type, fvPatchField, volMesh>>
+    PtrList<VolField<Type>>
         procFields(procMeshes_.size());
 
     forAll(procMeshes_, proci)
@@ -269,7 +269,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
         procFields.set
         (
             proci,
-            new GeometricField<Type, fvPatchField, volMesh>
+            new VolField<Type>
             (
                 IOobject
                 (
@@ -507,7 +507,7 @@ void Foam::fvFieldReconstructor::reconstructFvVolumeFields
 )
 {
     const word& fieldClassName =
-        GeometricField<Type, fvPatchField, volMesh>::typeName;
+        VolField<Type>::typeName;
 
     IOobjectList fields = objects.lookupClass(fieldClassName);
 

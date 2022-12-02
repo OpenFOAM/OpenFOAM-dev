@@ -71,9 +71,9 @@ public:
     null()
     {}
 
-    inline tmp<GeometricField<Type, fvPatchField, volMesh>> operator()
+    inline tmp<VolField<Type>> operator()
     (
-        const GeometricField<Type, fvPatchField, volMesh>& phi
+        const VolField<Type>& phi
     ) const
     {
         return phi;
@@ -91,7 +91,7 @@ public:
 
     inline tmp<volScalarField> operator()
     (
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     ) const;
 };
 
@@ -124,7 +124,7 @@ public:
 
     inline tmp<volScalarField> operator()
     (
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     ) const;
 };
 

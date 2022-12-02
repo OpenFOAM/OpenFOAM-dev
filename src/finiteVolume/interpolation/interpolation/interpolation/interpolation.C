@@ -33,7 +33,7 @@ License
 template<class Type>
 Foam::interpolation<Type>::interpolation
 (
-    const GeometricField<Type, fvPatchField, volMesh>& psi
+    const VolField<Type>& psi
 )
 :
     psi_(psi),
@@ -47,7 +47,7 @@ template<class Type>
 Foam::autoPtr<Foam::interpolation<Type>> Foam::interpolation<Type>::New
 (
     const word& interpolationType,
-    const GeometricField<Type, fvPatchField, volMesh>& psi
+    const VolField<Type>& psi
 )
 {
     typename dictionaryConstructorTable::iterator cstrIter =
@@ -71,7 +71,7 @@ template<class Type>
 Foam::autoPtr<Foam::interpolation<Type>> Foam::interpolation<Type>::New
 (
     const dictionary& interpolationSchemes,
-    const GeometricField<Type, fvPatchField, volMesh>& psi
+    const VolField<Type>& psi
 )
 {
     return New(word(interpolationSchemes.lookup(psi.name())), psi);

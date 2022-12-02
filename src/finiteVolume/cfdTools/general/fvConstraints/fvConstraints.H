@@ -127,7 +127,7 @@ public:
             template<class Type>
             bool constrain
             (
-                GeometricField<Type, fvPatchField, volMesh>& field
+                VolField<Type>& field
             ) const;
 
 

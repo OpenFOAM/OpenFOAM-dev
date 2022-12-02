@@ -96,7 +96,7 @@ public:
         template<class Type>
         void collectData
         (
-            const GeometricField<Type, fvPatchField, volMesh>& fld,
+            const VolField<Type>& fld,
             List<List<Type>>& stencilFld
         ) const
         {
@@ -121,7 +121,7 @@ public:
             >
         > weightedSum
         (
-            const GeometricField<Type, fvPatchField, volMesh>& fld,
+            const VolField<Type>& fld,
             const List<List<WeightType>>& stencilWeights
         ) const
         {

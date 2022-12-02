@@ -31,12 +31,12 @@ License
 template<class Type>
 void Foam::patchWriter::write
 (
-    const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>& flds
+    const UPtrList<const VolField<Type>>& flds
 )
 {
     forAll(flds, fieldi)
     {
-        const GeometricField<Type, fvPatchField, volMesh>& fld = flds[fieldi];
+        const VolField<Type>& fld = flds[fieldi];
 
         os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '
             << nFaces_ << " float" << std::endl;
@@ -96,12 +96,12 @@ template<class Type>
 void Foam::patchWriter::write
 (
     const PrimitivePatchInterpolation<primitivePatch>& pInter,
-    const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>& flds
+    const UPtrList<const VolField<Type>>& flds
 )
 {
     forAll(flds, fieldi)
     {
-        const GeometricField<Type, fvPatchField, volMesh>& fld = flds[fieldi];
+        const VolField<Type>& fld = flds[fieldi];
 
         os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '
             << nPoints_ << " float" << std::endl;

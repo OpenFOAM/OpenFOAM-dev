@@ -115,8 +115,8 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
             << endl;
     }
 
-    GeometricField<Type, fvPatchField, volMesh>& psi =
-       const_cast<GeometricField<Type, fvPatchField, volMesh>&>(psi_);
+    VolField<Type>& psi =
+       const_cast<VolField<Type>&>(psi_);
 
     SolverPerformance<Type> solverPerfVec
     (
@@ -231,8 +231,8 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
             << endl;
     }
 
-    GeometricField<Type, fvPatchField, volMesh>& psi =
-       const_cast<GeometricField<Type, fvPatchField, volMesh>&>(psi_);
+    VolField<Type>& psi =
+       const_cast<VolField<Type>&>(psi_);
 
     LduMatrix<Type, scalar, scalar> coupledMatrix(psi.mesh());
     coupledMatrix.diag() = diag();

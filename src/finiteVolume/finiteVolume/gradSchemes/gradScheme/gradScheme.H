@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ public:
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
         > calcGrad
         (
-            const GeometricField<Type, fvPatchField, volMesh>&,
+            const VolField<Type>&,
             const word& name
         ) const = 0;
 
@@ -146,7 +146,7 @@ public:
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
         > grad
         (
-            const GeometricField<Type, fvPatchField, volMesh>&,
+            const VolField<Type>&,
             const word& name
         ) const;
 
@@ -159,7 +159,7 @@ public:
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
         > grad
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
         //- Calculate and return the grad of the given field
@@ -171,7 +171,7 @@ public:
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
         > grad
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+            const tmp<VolField<Type>>&
         ) const;
 };
 

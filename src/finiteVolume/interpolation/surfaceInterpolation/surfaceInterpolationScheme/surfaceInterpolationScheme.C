@@ -138,7 +138,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::surfaceInterpolationScheme<Type>::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const tmp<surfaceScalarField>& tlambdas,
     const tmp<surfaceScalarField>& tys
 )
@@ -226,7 +226,7 @@ Foam::tmp
 Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 (
     const SFType& Sf,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const tmp<surfaceScalarField>& tlambdas
 )
 {
@@ -309,7 +309,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::surfaceInterpolationScheme<Type>::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const tmp<surfaceScalarField>& tlambdas
 )
 {
@@ -330,7 +330,7 @@ Foam::tmp
 Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 (
     const surfaceVectorField& Sf,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     if (surfaceInterpolation::debug)
@@ -375,7 +375,7 @@ Foam::tmp
 Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 (
     const surfaceVectorField& Sf,
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 ) const
 {
     tmp
@@ -396,7 +396,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::surfaceInterpolationScheme<Type>::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     if (surfaceInterpolation::debug)
@@ -425,7 +425,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::surfaceInterpolationScheme<Type>::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 ) const
 {
     tmp<SurfaceField<Type>> tinterpVf

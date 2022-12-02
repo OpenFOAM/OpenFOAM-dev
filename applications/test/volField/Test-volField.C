@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
     #include "createPhi.H"
 
-    GeometricField<symmTensor, fvPatchField, volMesh> st
+    VolField<symmTensor> st
     (
         IOobject
         (

@@ -45,7 +45,7 @@ tmp<SurfaceField<Type>>
 boundedConvectionScheme<Type>::interpolate
 (
     const surfaceScalarField& phi,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     return scheme_().interpolate(phi, vf);
@@ -57,7 +57,7 @@ tmp<SurfaceField<Type>>
 boundedConvectionScheme<Type>::flux
 (
     const surfaceScalarField& faceFlux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     return scheme_().flux(faceFlux, vf);
@@ -69,7 +69,7 @@ tmp<fvMatrix<Type>>
 boundedConvectionScheme<Type>::fvmDiv
 (
     const surfaceScalarField& faceFlux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     return
@@ -79,11 +79,11 @@ boundedConvectionScheme<Type>::fvmDiv
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 boundedConvectionScheme<Type>::fvcDiv
 (
     const surfaceScalarField& faceFlux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     return

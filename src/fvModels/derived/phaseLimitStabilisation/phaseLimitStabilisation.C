@@ -66,7 +66,7 @@ void Foam::fv::phaseLimitStabilisation::addSupType
     const word& fieldName
 ) const
 {
-    const GeometricField<Type, fvPatchField, volMesh>& psi = eqn.psi();
+    const VolField<Type>& psi = eqn.psi();
 
     uniformDimensionedScalarField& rate =
         mesh().lookupObjectRef<uniformDimensionedScalarField>(rateName_);

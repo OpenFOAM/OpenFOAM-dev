@@ -33,7 +33,7 @@ License
 template<class Type>
 void Foam::patchProbes::sampleAndWrite
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vField
+    const VolField<Type>& vField
 )
 {
     Field<Type> values(sample(vField));
@@ -96,13 +96,13 @@ void Foam::patchProbes::sampleAndWrite
         (
             iter != objectRegistry::end()
          && iter()->type()
-         == GeometricField<Type, fvPatchField, volMesh>::typeName
+         == VolField<Type>::typeName
         )
         {
             sampleAndWrite
             (
                 mesh_.lookupObject
-                <GeometricField<Type, fvPatchField, volMesh>>
+                <VolField<Type>>
                 (
                     fields[fieldi]
                 )
@@ -148,7 +148,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::patchProbes::sample
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vField
+    const VolField<Type>& vField
 ) const
 {
     const Type unsetVal(-vGreat*pTraits<Type>::one);
@@ -187,7 +187,7 @@ Foam::patchProbes::sample(const word& fieldName) const
 {
     return sample
     (
-        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh>>
+        mesh_.lookupObject<VolField<Type>>
         (
             fieldName
         )

@@ -129,7 +129,7 @@ void subsetVolFields
     const label patchi,
     const Type& exposedValue,
     const word GeomVolType,
-    PtrList<GeometricField<Type, fvPatchField, volMesh>>& subFields
+    PtrList<VolField<Type>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -144,7 +144,7 @@ void subsetVolFields
 
             Info<< "Subsetting field " << fieldName << endl;
 
-            GeometricField<Type, fvPatchField, volMesh> volField
+            VolField<Type> volField
             (
                 *iter(),
                 baseMesh

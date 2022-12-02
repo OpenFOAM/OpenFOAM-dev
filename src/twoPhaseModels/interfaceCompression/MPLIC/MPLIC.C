@@ -228,7 +228,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
 
 Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::interpolate
 (
-    const GeometricField<scalar, fvPatchField, volMesh>& vf
+    const VolField<scalar>& vf
 ) const
 {
     tmp<surfaceScalarField> tvff(upwind<scalar>(mesh(), phi_).interpolate(vf));

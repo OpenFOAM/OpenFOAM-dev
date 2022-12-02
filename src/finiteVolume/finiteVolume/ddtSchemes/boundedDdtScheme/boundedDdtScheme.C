@@ -42,7 +42,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 boundedDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
@@ -53,10 +53,10 @@ boundedDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 boundedDdtScheme<Type>::fvcDdt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return scheme_.ref().fvcDdt(vf);
@@ -64,11 +64,11 @@ boundedDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 boundedDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return scheme_.ref().fvcDdt(rho, vf);
@@ -76,11 +76,11 @@ boundedDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 boundedDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return scheme_.ref().fvcDdt(rho, vf) - fvc::ddt(rho)*vf;
@@ -88,12 +88,12 @@ boundedDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 boundedDdtScheme<Type>::fvcDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return scheme_.ref().fvcDdt(alpha, rho, vf) - fvc::ddt(alpha, rho)*vf;
@@ -104,7 +104,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 boundedDdtScheme<Type>::fvmDdt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return scheme_.ref().fvmDdt(vf);
@@ -116,7 +116,7 @@ tmp<fvMatrix<Type>>
 boundedDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return scheme_.ref().fvmDdt(rho, vf);
@@ -128,7 +128,7 @@ tmp<fvMatrix<Type>>
 boundedDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return scheme_.ref().fvmDdt(rho, vf) - fvm::Sp(fvc::ddt(rho), vf);
@@ -141,7 +141,7 @@ boundedDdtScheme<Type>::fvmDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return
@@ -154,7 +154,7 @@ template<class Type>
 tmp<typename boundedDdtScheme<Type>::fluxFieldType>
 boundedDdtScheme<Type>::fvcDdtUfCorr
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const SurfaceField<Type>& Uf
 )
 {
@@ -166,7 +166,7 @@ template<class Type>
 tmp<typename boundedDdtScheme<Type>::fluxFieldType>
 boundedDdtScheme<Type>::fvcDdtPhiCorr
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi
 )
 {
@@ -179,7 +179,7 @@ tmp<typename boundedDdtScheme<Type>::fluxFieldType>
 boundedDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const SurfaceField<Type>& Uf
 )
 {
@@ -192,7 +192,7 @@ tmp<typename boundedDdtScheme<Type>::fluxFieldType>
 boundedDdtScheme<Type>::fvcDdtPhiCorr
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi
 )
 {
@@ -203,7 +203,7 @@ boundedDdtScheme<Type>::fvcDdtPhiCorr
 template<class Type>
 tmp<surfaceScalarField> boundedDdtScheme<Type>::meshPhi
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return scheme_.ref().meshPhi(vf);
@@ -213,7 +213,7 @@ tmp<surfaceScalarField> boundedDdtScheme<Type>::meshPhi
 template<class Type>
 tmp<scalarField> boundedDdtScheme<Type>::meshPhi
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const label patchi
 )
 {

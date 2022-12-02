@@ -93,9 +93,9 @@ Foam::extendedFaceToCellStencil::weightedSum
     List<List<Type>> stencilFld;
     collectData(map, stencil, fld, stencilFld);
 
-    tmp<GeometricField<Type, fvPatchField, volMesh>> tsfCorr
+    tmp<VolField<Type>> tsfCorr
     (
-        GeometricField<Type, fvPatchField, volMesh>::New
+        VolField<Type>::New
         (
             fld.name(),
             mesh,
@@ -107,7 +107,7 @@ Foam::extendedFaceToCellStencil::weightedSum
             )
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& sf = tsfCorr.ref();
+    VolField<Type>& sf = tsfCorr.ref();
 
     // cells
     forAll(sf, celli)

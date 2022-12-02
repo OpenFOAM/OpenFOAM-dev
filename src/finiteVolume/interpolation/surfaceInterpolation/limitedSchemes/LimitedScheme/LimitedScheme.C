@@ -33,22 +33,17 @@ License
 template<class Type, class Limiter, template<class> class LimitFunc>
 void Foam::LimitedScheme<Type, Limiter, LimitFunc>::calcLimiter
 (
-    const GeometricField<Type, fvPatchField, volMesh>& phi,
+    const VolField<Type>& phi,
     surfaceScalarField& limiterField
 ) const
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<typename Limiter::phiType, fvPatchField, volMesh>>
-        tlPhi = LimitFunc<Type>()(phi);
+    tmp<VolField<typename Limiter::phiType>> tlPhi = LimitFunc<Type>()(phi);
+    const VolField<typename Limiter::phiType>& lPhi = tlPhi();
 
-    const GeometricField<typename Limiter::phiType, fvPatchField, volMesh>&
-        lPhi = tlPhi();
-
-    tmp<GeometricField<typename Limiter::gradPhiType, fvPatchField, volMesh>>
-        tgradc(fvc::grad(lPhi));
-    const GeometricField<typename Limiter::gradPhiType, fvPatchField, volMesh>&
-        gradc = tgradc();
+    tmp<VolField<typename Limiter::gradPhiType>> tgradc(fvc::grad(lPhi));
+    const VolField<typename Limiter::gradPhiType>& gradc = tgradc();
 
     const surfaceScalarField& CDweights = mesh.surfaceInterpolation::weights();
 
@@ -76,7 +71,7 @@ void Foam::LimitedScheme<Type, Limiter, LimitFunc>::calcLimiter
         );
     }
 
-    const typename GeometricField<Type, fvPatchField, volMesh>::Boundary&
+    const typename VolField<Type>::Boundary&
         bPhi = phi.boundaryField();
 
     surfaceScalarField::Boundary& bLim =
@@ -140,7 +135,7 @@ template<class Type, class Limiter, template<class> class LimitFunc>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::LimitedScheme<Type, Limiter, LimitFunc>::limiter
 (
-    const GeometricField<Type, fvPatchField, volMesh>& phi
+    const VolField<Type>& phi
 ) const
 {
     const fvMesh& mesh = this->mesh();

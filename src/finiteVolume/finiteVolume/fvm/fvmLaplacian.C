@@ -45,7 +45,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -70,7 +70,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     surfaceScalarField Gamma
@@ -100,7 +100,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const zero&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -116,7 +116,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const zero&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return tmp<fvMatrix<Type>>
@@ -131,7 +131,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const one&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -144,7 +144,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const one&,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fvm::laplacian(vf);
@@ -156,7 +156,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const dimensioned<GType>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -182,7 +182,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const dimensioned<GType>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const GeometricField<GType, fvsPatchField, surfaceMesh> Gamma
@@ -208,8 +208,8 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const GeometricField<GType, fvPatchField, volMesh>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<GType>& gamma,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -225,8 +225,8 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const tmp<GeometricField<GType, fvPatchField, volMesh>>& tgamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const tmp<VolField<GType>>& tgamma,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -240,8 +240,8 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const GeometricField<GType, fvPatchField, volMesh>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<GType>& gamma,
+    const VolField<Type>& vf
 )
 {
     return fvm::laplacian
@@ -257,8 +257,8 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const tmp<GeometricField<GType, fvPatchField, volMesh>>& tgamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const tmp<VolField<GType>>& tgamma,
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tLaplacian(fvm::laplacian(tgamma(), vf));
@@ -274,7 +274,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -291,7 +291,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>& tgamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -306,7 +306,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fvm::laplacian
@@ -323,7 +323,7 @@ tmp<fvMatrix<Type>>
 laplacian
 (
     const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>& tGamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tLaplacian(fvm::laplacian(tGamma(), vf));
@@ -338,8 +338,8 @@ template<class Type>
 tmp<fvMatrix<Type>>
 laplacianCorrection
 (
-    const GeometricField<scalar, fvPatchField, volMesh>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<scalar>& gamma,
+    const VolField<Type>& vf
 )
 {
     return fvm::laplacianCorrection(fvc::interpolate(gamma), vf);
@@ -350,8 +350,8 @@ template<class Type>
 tmp<fvMatrix<Type>>
 laplacianCorrection
 (
-    const tmp<GeometricField<scalar, fvPatchField, volMesh>>& tgamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const tmp<VolField<scalar>>& tgamma,
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tLaplacianCorrection
@@ -370,7 +370,7 @@ tmp<fvMatrix<Type>>
 laplacianCorrection
 (
     const SurfaceField<scalar>& gamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return correction
@@ -390,7 +390,7 @@ tmp<fvMatrix<Type>>
 laplacianCorrection
 (
     const tmp<SurfaceField<scalar>>& tGamma,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tLaplacianCorrection

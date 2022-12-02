@@ -54,69 +54,69 @@ namespace Foam
 namespace fvc
 {
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    tmp<VolField<Type>> ddt
     (
         const dimensioned<Type>,
         const fvMesh&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    tmp<VolField<Type>> ddt
     (
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    tmp<VolField<Type>> ddt
     (
         const dimensionedScalar&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    tmp<VolField<Type>> ddt
     (
         const volScalarField&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    tmp<VolField<Type>> ddt
     (
         const one&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
-    (
-        const volScalarField&,
-        const volScalarField&,
-        const GeometricField<Type, fvPatchField, volMesh>&
-    );
-
-    template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
-    (
-        const one&,
-        const one&,
-        const GeometricField<Type, fvPatchField, volMesh>&
-    );
-
-    template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
-    (
-        const one&,
-        const volScalarField&,
-        const GeometricField<Type, fvPatchField, volMesh>&
-    );
-
-    template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
+    tmp<VolField<Type>> ddt
     (
         const volScalarField&,
+        const volScalarField&,
+        const VolField<Type>&
+    );
+
+    template<class Type>
+    tmp<VolField<Type>> ddt
+    (
         const one&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const one&,
+        const VolField<Type>&
+    );
+
+    template<class Type>
+    tmp<VolField<Type>> ddt
+    (
+        const one&,
+        const volScalarField&,
+        const VolField<Type>&
+    );
+
+    template<class Type>
+    tmp<VolField<Type>> ddt
+    (
+        const volScalarField&,
+        const one&,
+        const VolField<Type>&
     );
 
     template<class Type>
@@ -137,7 +137,7 @@ namespace fvc
     >
     ddtCorr
     (
-        const GeometricField<Type, fvPatchField, volMesh>& U,
+        const VolField<Type>& U,
         const SurfaceField<Type>& Uf
     );
 
@@ -153,7 +153,7 @@ namespace fvc
     >
     ddtCorr
     (
-        const GeometricField<Type, fvPatchField, volMesh>& U,
+        const VolField<Type>& U,
         const GeometricField
         <
             typename Foam::flux<Type>::type,
@@ -174,7 +174,7 @@ namespace fvc
     >
     ddtCorr
     (
-        const GeometricField<Type, fvPatchField, volMesh>& U,
+        const VolField<Type>& U,
         const GeometricField
         <
             typename Foam::flux<Type>::type,
@@ -197,7 +197,7 @@ namespace fvc
     ddtCorr
     (
         const volScalarField& rho,
-        const GeometricField<Type, fvPatchField, volMesh>& U,
+        const VolField<Type>& U,
         const SurfaceField<Type>& Uf
     );
 
@@ -214,7 +214,7 @@ namespace fvc
     ddtCorr
     (
         const volScalarField& rho,
-        const GeometricField<Type, fvPatchField, volMesh>& U,
+        const VolField<Type>& U,
         const GeometricField
         <
             typename Foam::flux<Type>::type,
@@ -236,7 +236,7 @@ namespace fvc
     ddtCorr
     (
         const volScalarField& rho,
-        const GeometricField<Type, fvPatchField, volMesh>& U,
+        const VolField<Type>& U,
         const GeometricField
         <
             typename Foam::flux<Type>::type,

@@ -62,9 +62,9 @@ reconstruct
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh>> treconField
+    tmp<VolField<GradType>> treconField
     (
-        GeometricField<GradType, fvPatchField, volMesh>::New
+        VolField<GradType>::New
         (
             "reconstruct("+ssf.name()+')',
             mesh,
@@ -128,7 +128,7 @@ reconstruct
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<GeometricField<GradType, fvPatchField, volMesh>> tvf
+    tmp<VolField<GradType>> tvf
     (
         fvc::reconstruct(tssf())
     );

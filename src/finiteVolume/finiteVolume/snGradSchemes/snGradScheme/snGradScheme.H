@@ -125,7 +125,7 @@ public:
         static tmp<SurfaceField<Type>>
         snGrad
         (
-            const GeometricField<Type, fvPatchField, volMesh>&,
+            const VolField<Type>&,
             const tmp<surfaceScalarField>&,
             const word& snGradName = "snGrad"
         );
@@ -134,14 +134,14 @@ public:
         static tmp<SurfaceField<Type>>
         sndGrad
         (
-            const GeometricField<Type, fvPatchField, volMesh>&,
+            const VolField<Type>&,
             const word& snGradName = "sndGrad"
         );
 
         //- Return the interpolation weighting factors for the given field
         virtual tmp<surfaceScalarField> deltaCoeffs
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const = 0;
 
         //- Return true if this scheme uses an explicit correction
@@ -153,7 +153,7 @@ public:
         //- Return the explicit correction to the snGrad
         //  for the given field
         virtual tmp<SurfaceField<Type>>
-        correction(const GeometricField<Type, fvPatchField, volMesh>&) const
+        correction(const VolField<Type>&) const
         {
             return tmp<SurfaceField<Type>>
             (
@@ -164,14 +164,14 @@ public:
         //- Return the snGrad of the given cell field
         //  with explicit correction
         virtual tmp<SurfaceField<Type>>
-        snGrad(const GeometricField<Type, fvPatchField, volMesh>&) const;
+        snGrad(const VolField<Type>&) const;
 
         //- Return the snGrad of the given tmp cell field
         //  with explicit correction
         tmp<SurfaceField<Type>>
         snGrad
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+            const tmp<VolField<Type>>&
         ) const;
 
 

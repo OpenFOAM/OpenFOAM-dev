@@ -92,11 +92,11 @@ public:
         void compact();
 
         //- Use map to get the data into stencil order
-        template<class T>
+        template<class Type>
         void collectData
         (
-            const GeometricField<T, fvPatchField, volMesh>& fld,
-            List<List<T>>& stencilFld
+            const VolField<Type>& fld,
+            List<List<Type>>& stencilFld
         ) const
         {
             extendedCellToFaceStencil::collectData
@@ -112,7 +112,7 @@ public:
         template<class Type>
         tmp<SurfaceField<Type>> weightedSum
         (
-            const GeometricField<Type, fvPatchField, volMesh>& fld,
+            const VolField<Type>& fld,
             const List<List<scalar>>& stencilWeights
         ) const
         {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ Foam::tmp
 Foam::surfaceInterpolationScheme<Foam::scalar>::dotInterpolate
 (
     const surfaceVectorField& Sf,
-    const GeometricField<scalar, fvPatchField, volMesh>&
+    const VolField<scalar>&
 ) const
 {
     NotImplemented;

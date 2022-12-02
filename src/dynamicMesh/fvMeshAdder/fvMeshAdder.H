@@ -86,8 +86,8 @@ class fvMeshAdder
         (
             const mapAddedPolyMesh& meshMap,
 
-            GeometricField<Type, fvPatchField, volMesh>& fld,
-            const GeometricField<Type, fvPatchField, volMesh>& fldToAdd
+            VolField<Type>& fld,
+            const VolField<Type>& fldToAdd
         );
 
         //- Update single surfaceField.

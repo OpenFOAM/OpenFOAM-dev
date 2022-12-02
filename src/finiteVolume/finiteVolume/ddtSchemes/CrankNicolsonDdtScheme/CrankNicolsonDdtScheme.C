@@ -341,14 +341,14 @@ CrankNicolsonDdtScheme<Type>::CrankNicolsonDdtScheme
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CrankNicolsonDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddt0(" + dt.name() + ')',
             dt.dimensions()
@@ -356,9 +356,9 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
     const word ddtName("ddt(" + dt.name() + ')');
 
-    tmp<GeometricField<Type, fvPatchField, volMesh>> tdtdt
+    tmp<VolField<Type>> tdtdt
     (
-        GeometricField<Type, fvPatchField, volMesh>::New
+        VolField<Type>::New
         (
             ddtName,
             mesh(),
@@ -398,14 +398,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CrankNicolsonDdtScheme<Type>::fvcDdt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddt0(" + vf.name() + ')',
             vf.dimensions()
@@ -440,7 +440,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             );
         }
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             (
@@ -464,7 +464,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                  - offCentre_(ddt0());
         }
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDtCoef*(vf - vf.oldTime()) - offCentre_(ddt0())
@@ -474,15 +474,15 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CrankNicolsonDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddt0(" + rho.name() + ',' + vf.name() + ')',
             rho.dimensions()*vf.dimensions()
@@ -517,7 +517,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             );
         }
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             (
@@ -541,7 +541,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                  - offCentre_(ddt0());
         }
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDtCoef*rho*(vf - vf.oldTime()) - offCentre_(ddt0())
@@ -551,15 +551,15 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CrankNicolsonDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddt0(" + rho.name() + ',' + vf.name() + ')',
             rho.dimensions()*vf.dimensions()
@@ -598,7 +598,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             );
         }
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             (
@@ -627,7 +627,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             ) - offCentre_(ddt0());
         }
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDtCoef*(rho*vf - rho.oldTime()*vf.oldTime()) - offCentre_(ddt0())
@@ -637,16 +637,16 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CrankNicolsonDdtScheme<Type>::fvcDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddt0(" + alpha.name() + ',' + rho.name() + ',' + vf.name() + ')',
             alpha.dimensions()*rho.dimensions()*vf.dimensions()
@@ -696,7 +696,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             );
         }
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             (
@@ -734,7 +734,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             ) - offCentre_(ddt0());
         }
 
-        return GeometricField<Type, fvPatchField, volMesh>::New
+        return VolField<Type>::New
         (
             ddtName,
             rDtCoef
@@ -752,11 +752,11 @@ template<class Type>
 tmp<fvMatrix<Type>>
 CrankNicolsonDdtScheme<Type>::fvmDdt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddt0(" + vf.name() + ')',
             vf.dimensions()
@@ -835,11 +835,11 @@ tmp<fvMatrix<Type>>
 CrankNicolsonDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddt0(" + rho.name() + ',' + vf.name() + ')',
             rho.dimensions()*vf.dimensions()
@@ -917,11 +917,11 @@ tmp<fvMatrix<Type>>
 CrankNicolsonDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddt0(" + rho.name() + ',' + vf.name() + ')',
             rho.dimensions()*vf.dimensions()
@@ -1008,11 +1008,11 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddt0(" + alpha.name() + ',' + rho.name() + ',' + vf.name() + ')',
             alpha.dimensions()*rho.dimensions()*vf.dimensions()
@@ -1117,12 +1117,12 @@ template<class Type>
 tmp<typename CrankNicolsonDdtScheme<Type>::fluxFieldType>
 CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const SurfaceField<Type>& Uf
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddtCorrDdt0(" + U.name() + ')',
             U.dimensions()
@@ -1170,12 +1170,12 @@ template<class Type>
 tmp<typename CrankNicolsonDdtScheme<Type>::fluxFieldType>
 CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi
 )
 {
-    DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-        ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
         (
             "ddtCorrDdt0(" + U.name() + ')',
             U.dimensions()
@@ -1225,7 +1225,7 @@ tmp<typename CrankNicolsonDdtScheme<Type>::fluxFieldType>
 CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const SurfaceField<Type>& Uf
 )
 {
@@ -1235,8 +1235,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
      && Uf.dimensions() == rho.dimensions()*dimVelocity
     )
     {
-        DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-            ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+        DDt0Field<VolField<Type>>& ddt0 =
+            ddt0_<VolField<Type>>
             (
                 "ddtCorrDdt0(" + rho.name() + ',' + U.name() + ')',
                 rho.dimensions()*U.dimensions()
@@ -1251,7 +1251,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 
         dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
-        GeometricField<Type, fvPatchField, volMesh> rhoU0
+        VolField<Type> rhoU0
         (
             rho.oldTime()*U.oldTime()
         );
@@ -1296,8 +1296,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
      && Uf.dimensions() == rho.dimensions()*dimVelocity
     )
     {
-        DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-            ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+        DDt0Field<VolField<Type>>& ddt0 =
+            ddt0_<VolField<Type>>
             (
                 "ddtCorrDdt0(" + U.name() + ')',
                 U.dimensions()
@@ -1363,7 +1363,7 @@ tmp<typename CrankNicolsonDdtScheme<Type>::fluxFieldType>
 CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi
 )
 {
@@ -1373,8 +1373,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
      && phi.dimensions() == rho.dimensions()*dimFlux
     )
     {
-        DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-            ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+        DDt0Field<VolField<Type>>& ddt0 =
+            ddt0_<VolField<Type>>
             (
                 "ddtCorrDdt0(" + rho.name() + ',' + U.name() + ')',
                 rho.dimensions()*U.dimensions()
@@ -1389,7 +1389,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
 
         dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
-        GeometricField<Type, fvPatchField, volMesh> rhoU0
+        VolField<Type> rhoU0
         (
             rho.oldTime()*U.oldTime()
         );
@@ -1430,8 +1430,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
      && phi.dimensions() == rho.dimensions()*dimFlux
     )
     {
-        DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
-            ddt0_<GeometricField<Type, fvPatchField, volMesh>>
+        DDt0Field<VolField<Type>>& ddt0 =
+            ddt0_<VolField<Type>>
             (
                 "ddtCorrDdt0(" + U.name() + ')',
                 U.dimensions()
@@ -1488,7 +1488,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
 template<class Type>
 tmp<surfaceScalarField> CrankNicolsonDdtScheme<Type>::meshPhi
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     DDt0Field<surfaceScalarField>& meshPhi0 = ddt0_<surfaceScalarField>
@@ -1514,7 +1514,7 @@ tmp<surfaceScalarField> CrankNicolsonDdtScheme<Type>::meshPhi
 template<class Type>
 tmp<scalarField> CrankNicolsonDdtScheme<Type>::meshPhi
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const label patchi
 )
 {

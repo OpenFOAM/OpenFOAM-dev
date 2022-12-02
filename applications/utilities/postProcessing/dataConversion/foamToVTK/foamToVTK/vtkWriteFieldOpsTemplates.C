@@ -97,7 +97,7 @@ void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
-    const GeometricField<Type, fvPatchField, volMesh>& vvf,
+    const VolField<Type>& vvf,
     const PointField<Type>& pvf,
     const vtkMesh& vMesh
 )
@@ -147,7 +147,7 @@ void Foam::vtkWriteOps::write
     std::ostream& os,
     const bool binary,
     const volPointInterpolation& pInterp,
-    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& flds,
+    const PtrList<VolField<Type>>& flds,
     const vtkMesh& vMesh
 )
 {

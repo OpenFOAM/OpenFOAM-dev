@@ -100,7 +100,7 @@ public:
         //- Return the interpolation weighting factors
         virtual tmp<surfaceScalarField> weights
         (
-            const GeometricField<scalar, fvPatchField, volMesh>&
+            const VolField<scalar>&
         ) const
         {
             NotImplemented;
@@ -112,7 +112,7 @@ public:
         virtual tmp<SurfaceField<scalar>>
         interpolate
         (
-            const GeometricField<scalar, fvPatchField, volMesh>& vf
+            const VolField<scalar>& vf
         ) const
         {
             return 1.0/(reverseLinear<scalar>(vf.mesh()).interpolate(1.0/vf));

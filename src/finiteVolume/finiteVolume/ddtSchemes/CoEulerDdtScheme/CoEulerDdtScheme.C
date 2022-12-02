@@ -142,7 +142,7 @@ tmp<surfaceScalarField> CoEulerDdtScheme<Type>::CofrDeltaT() const
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CoEulerDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
@@ -154,9 +154,9 @@ CoEulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        tmp<GeometricField<Type, fvPatchField, volMesh>> tdtdt
+        tmp<VolField<Type>> tdtdt
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 mesh(),
@@ -177,9 +177,9 @@ CoEulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return tmp<VolField<Type>>
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 mesh(),
@@ -197,10 +197,10 @@ CoEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CoEulerDdtScheme<Type>::fvcDdt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const volScalarField rDeltaT(CorDeltaT());
@@ -209,9 +209,9 @@ CoEulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return tmp<VolField<Type>>
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 rDeltaT()*
@@ -228,9 +228,9 @@ CoEulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return tmp<VolField<Type>>
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 rDeltaT*(vf - vf.oldTime())
@@ -241,11 +241,11 @@ CoEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CoEulerDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const volScalarField rDeltaT(CorDeltaT());
@@ -254,9 +254,9 @@ CoEulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return tmp<VolField<Type>>
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 rDeltaT()*rho.value()*
@@ -273,9 +273,9 @@ CoEulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return tmp<VolField<Type>>
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 rDeltaT*rho*(vf - vf.oldTime())
@@ -286,11 +286,11 @@ CoEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CoEulerDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const volScalarField rDeltaT(CorDeltaT());
@@ -299,9 +299,9 @@ CoEulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return tmp<VolField<Type>>
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 rDeltaT()*
@@ -321,9 +321,9 @@ CoEulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return tmp<VolField<Type>>
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
@@ -334,12 +334,12 @@ CoEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>>
+tmp<VolField<Type>>
 CoEulerDdtScheme<Type>::fvcDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     const volScalarField rDeltaT(CorDeltaT());
@@ -348,9 +348,9 @@ CoEulerDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return tmp<VolField<Type>>
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 rDeltaT()*
@@ -378,9 +378,9 @@ CoEulerDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return tmp<VolField<Type>>
         (
-            GeometricField<Type, fvPatchField, volMesh>::New
+            VolField<Type>::New
             (
                 ddtName,
                 rDeltaT
@@ -398,7 +398,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 CoEulerDdtScheme<Type>::fvmDdt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -434,7 +434,7 @@ tmp<fvMatrix<Type>>
 CoEulerDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -471,7 +471,7 @@ tmp<fvMatrix<Type>>
 CoEulerDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -511,7 +511,7 @@ CoEulerDdtScheme<Type>::fvmDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> tfvm
@@ -552,7 +552,7 @@ template<class Type>
 tmp<typename CoEulerDdtScheme<Type>::fluxFieldType>
 CoEulerDdtScheme<Type>::fvcDdtUfCorr
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const SurfaceField<Type>& Uf
 )
 {
@@ -576,7 +576,7 @@ template<class Type>
 tmp<typename CoEulerDdtScheme<Type>::fluxFieldType>
 CoEulerDdtScheme<Type>::fvcDdtPhiCorr
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi
 )
 {
@@ -601,7 +601,7 @@ tmp<typename CoEulerDdtScheme<Type>::fluxFieldType>
 CoEulerDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const SurfaceField<Type>& Uf
 )
 {
@@ -613,7 +613,7 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
      && Uf.dimensions() == dimDensity*dimVelocity
     )
     {
-        GeometricField<Type, fvPatchField, volMesh> rhoU0
+        VolField<Type> rhoU0
         (
             rho.oldTime()*U.oldTime()
         );
@@ -668,7 +668,7 @@ tmp<typename CoEulerDdtScheme<Type>::fluxFieldType>
 CoEulerDdtScheme<Type>::fvcDdtPhiCorr
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi
 )
 {
@@ -680,7 +680,7 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
      && phi.dimensions() == rho.dimensions()*dimFlux
     )
     {
-        GeometricField<Type, fvPatchField, volMesh> rhoU0
+        VolField<Type> rhoU0
         (
             rho.oldTime()*U.oldTime()
         );
@@ -739,7 +739,7 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
 template<class Type>
 tmp<surfaceScalarField> CoEulerDdtScheme<Type>::meshPhi
 (
-    const GeometricField<Type, fvPatchField, volMesh>&
+    const VolField<Type>&
 )
 {
     return surfaceScalarField::New
@@ -754,7 +754,7 @@ tmp<surfaceScalarField> CoEulerDdtScheme<Type>::meshPhi
 template<class Type>
 tmp<scalarField> CoEulerDdtScheme<Type>::meshPhi
 (
-    const GeometricField<Type, fvPatchField, volMesh>&,
+    const VolField<Type>&,
     const label patchi
 )
 {

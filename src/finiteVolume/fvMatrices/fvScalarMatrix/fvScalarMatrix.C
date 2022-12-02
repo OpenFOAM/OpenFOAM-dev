@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,8 +100,8 @@ Foam::solverPerformance Foam::fvMatrix<Foam::scalar>::fvSolver::solve
     const dictionary& solverControls
 )
 {
-    GeometricField<scalar, fvPatchField, volMesh>& psi =
-        const_cast<GeometricField<scalar, fvPatchField, volMesh>&>
+    VolField<scalar>& psi =
+        const_cast<VolField<scalar>&>
         (fvMat_.psi());
 
     scalarField saveDiag(fvMat_.diag());
@@ -149,8 +149,8 @@ Foam::solverPerformance Foam::fvMatrix<Foam::scalar>::solveSegregated
             << endl;
     }
 
-    GeometricField<scalar, fvPatchField, volMesh>& psi =
-       const_cast<GeometricField<scalar, fvPatchField, volMesh>&>(psi_);
+    VolField<scalar>& psi =
+       const_cast<VolField<scalar>&>(psi_);
 
     scalarField saveDiag(diag());
     addBoundaryDiag(diag(), 0);

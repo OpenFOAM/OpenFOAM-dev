@@ -32,13 +32,13 @@ License
 template<class Type>
 void Foam::fvMeshToFvMesh::mapSrcToTgt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& field,
-    GeometricField<Type, fvPatchField, volMesh>& result
+    const VolField<Type>& field,
+    VolField<Type>& result
 ) const
 {
     meshToMesh::mapSrcToTgt(field, result.primitiveFieldRef());
 
-    typename GeometricField<Type, fvPatchField, volMesh>::
+    typename VolField<Type>::
         Boundary& resultBf = result.boundaryFieldRef();
 
     forAll(srcToTgtPatchIDs(), i)
@@ -83,7 +83,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvMeshToFvMesh::mapSrcToTgt
 (
-    const GeometricField<Type, fvPatchField, volMesh>& field
+    const VolField<Type>& field
 ) const
 {
     const fvMesh& tgtMesh = static_cast<const fvMesh&>(meshToMesh::tgtMesh());

@@ -110,7 +110,7 @@ public:
 
         //- Sum surface field contributions to create cell values
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> weightedSum
+        tmp<VolField<Type>> weightedSum
         (
             const SurfaceField<Type>& fld,
             const List<List<scalar>>& stencilWeights

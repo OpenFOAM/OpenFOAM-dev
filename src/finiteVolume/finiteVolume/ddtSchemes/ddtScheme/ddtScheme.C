@@ -93,18 +93,18 @@ ddtScheme<Type>::~ddtScheme()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh>> ddtScheme<Type>::fvcDdt
+tmp<VolField<Type>> ddtScheme<Type>::fvcDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     NotImplemented;
 
-    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    return tmp<VolField<Type>>
     (
-        GeometricField<Type, fvPatchField, volMesh>::null()
+        VolField<Type>::null()
     );
 }
 
@@ -114,7 +114,7 @@ tmp<fvMatrix<Type>> ddtScheme<Type>::fvmDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     NotImplemented;
@@ -150,7 +150,7 @@ tmp<SurfaceField<Type>> ddtScheme<Type>::fvcDdt
 template<class Type>
 tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi,
     const fluxFieldType& phiCorr
 )
@@ -204,7 +204,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 template<class Type>
 tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi,
     const fluxFieldType& phiCorr,
     const volScalarField& rho
@@ -217,7 +217,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 template<class Type>
 tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi
 )
 {
@@ -228,7 +228,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 template<class Type>
 tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 (
-    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const VolField<Type>& U,
     const fluxFieldType& phi,
     const volScalarField& rho
 )

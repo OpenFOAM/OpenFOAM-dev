@@ -253,10 +253,10 @@ public:
 
             //- Map volume field
             template<class Type>
-            static tmp<GeometricField<Type, fvPatchField, volMesh>>
+            static tmp<VolField<Type>>
             interpolate
             (
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const VolField<Type>&,
                 const fvMesh& sMesh,
                 const labelList& patchMap,
                 const labelList& cellMap,
@@ -264,10 +264,10 @@ public:
             );
 
             template<class Type>
-            tmp<GeometricField<Type, fvPatchField, volMesh>>
+            tmp<VolField<Type>>
             interpolate
             (
-                const GeometricField<Type, fvPatchField, volMesh>&
+                const VolField<Type>&
             ) const;
 
             //- Map surface field. Optionally negates value if flipping

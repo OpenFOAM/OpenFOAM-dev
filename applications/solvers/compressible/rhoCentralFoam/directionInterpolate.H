@@ -5,7 +5,7 @@ namespace Foam
 template<class Type>
 tmp<SurfaceField<Type>> interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const surfaceScalarField& dir,
     const word& reconFieldName = word::null
 )

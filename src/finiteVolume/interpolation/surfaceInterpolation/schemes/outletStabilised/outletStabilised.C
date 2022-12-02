@@ -34,7 +34,7 @@ template<class Type>
 inline Foam::tmp<Foam::surfaceScalarField>
 Foam::outletStabilised<Type>::weights
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     tmp<surfaceScalarField> tw = tScheme_().weights(vf);
@@ -83,7 +83,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 inline Foam::outletStabilised<Type>::correction
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     if (tScheme_().corrected())

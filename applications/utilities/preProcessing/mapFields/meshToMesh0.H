@@ -267,7 +267,7 @@ public:
             void interpolateField
             (
                 Field<Type>&,
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const VolField<Type>&,
                 const labelList& adr,
                 const scalarListList& weights
             ) const;
@@ -277,7 +277,7 @@ public:
             void interpolateField
             (
                 Field<Type>&,
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const VolField<Type>&,
                 const labelListList& adr,
                 const scalarListList& weights
             ) const;
@@ -288,7 +288,7 @@ public:
             void interpolateField
             (
                 Field<Type>&,
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const VolField<Type>&,
                 const labelList& adr,
                 const vectorField& centres
             )const;
@@ -299,7 +299,7 @@ public:
             void interpolateInternalField
             (
                 Field<Type>&,
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const VolField<Type>&,
                 order=INTERPOLATE
             ) const;
 
@@ -307,7 +307,7 @@ public:
             void interpolateInternalField
             (
                 Field<Type>&,
-                const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+                const tmp<VolField<Type>>&,
                 order=INTERPOLATE
             ) const;
 
@@ -316,32 +316,32 @@ public:
             template<class Type>
             void interpolate
             (
-                GeometricField<Type, fvPatchField, volMesh>&,
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                VolField<Type>&,
+                const VolField<Type>&,
                 order=INTERPOLATE
             ) const;
 
             template<class Type>
             void interpolate
             (
-                GeometricField<Type, fvPatchField, volMesh>&,
-                const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+                VolField<Type>&,
+                const tmp<VolField<Type>>&,
                 order=INTERPOLATE
             ) const;
 
 
             //- Interpolate volume field
             template<class Type>
-            tmp<GeometricField<Type, fvPatchField, volMesh>> interpolate
+            tmp<VolField<Type>> interpolate
             (
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const VolField<Type>&,
                 order=INTERPOLATE
             ) const;
 
             template<class Type>
-            tmp<GeometricField<Type, fvPatchField, volMesh>> interpolate
+            tmp<VolField<Type>> interpolate
             (
-                const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+                const tmp<VolField<Type>>&,
                 order=INTERPOLATE
             ) const;
 };

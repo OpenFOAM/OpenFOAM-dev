@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,182 +52,182 @@ namespace Foam
 namespace fvc
 {
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<Type>&,
         const word&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+        const tmp<VolField<Type>>&,
         const word&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+        const tmp<VolField<Type>>&
     );
 
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const dimensioned<GType>&,
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<Type>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const dimensioned<GType>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+        const tmp<VolField<Type>>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const dimensioned<GType>&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const dimensioned<GType>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+        const tmp<VolField<Type>>&
     );
 
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const GeometricField<GType, fvPatchField, volMesh>&,
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<GType>&,
+        const VolField<Type>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvPatchField, volMesh>>&,
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const tmp<VolField<GType>>&,
+        const VolField<Type>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const GeometricField<GType, fvPatchField, volMesh>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+        const VolField<GType>&,
+        const tmp<VolField<Type>>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvPatchField, volMesh>>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+        const tmp<VolField<GType>>&,
+        const tmp<VolField<Type>>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const GeometricField<GType, fvPatchField, volMesh>&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<GType>&,
+        const VolField<Type>&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvPatchField, volMesh>>&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const tmp<VolField<GType>>&,
+        const VolField<Type>&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const GeometricField<GType, fvPatchField, volMesh>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+        const VolField<GType>&,
+        const tmp<VolField<Type>>&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvPatchField, volMesh>>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+        const tmp<VolField<GType>>&,
+        const tmp<VolField<Type>>&
     );
 
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const GeometricField<GType, fvsPatchField, surfaceMesh>&,
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<Type>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<Type>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const GeometricField<GType, fvsPatchField, surfaceMesh>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+        const tmp<VolField<Type>>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
+        const tmp<VolField<Type>>&,
         const word&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const GeometricField<GType, fvsPatchField, surfaceMesh>&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
-        const GeometricField<Type, fvPatchField, volMesh>&
+        const VolField<Type>&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const GeometricField<GType, fvsPatchField, surfaceMesh>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+        const tmp<VolField<Type>>&
     );
 
     template<class Type, class GType>
-    tmp<GeometricField<Type, fvPatchField, volMesh>> laplacian
+    tmp<VolField<Type>> laplacian
     (
         const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+        const tmp<VolField<Type>>&
     );
 }
 

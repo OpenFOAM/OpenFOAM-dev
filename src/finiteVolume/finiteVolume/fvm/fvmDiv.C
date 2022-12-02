@@ -45,7 +45,7 @@ tmp<fvMatrix<Type>>
 div
 (
     const surfaceScalarField& flux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -62,7 +62,7 @@ tmp<fvMatrix<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
@@ -77,7 +77,7 @@ tmp<fvMatrix<Type>>
 div
 (
     const surfaceScalarField& flux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fvm::div(flux, vf, "div("+flux.name()+','+vf.name()+')');
@@ -88,7 +88,7 @@ tmp<fvMatrix<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     tmp<fvMatrix<Type>> Div(fvm::div(tflux(), vf));

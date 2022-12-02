@@ -105,7 +105,7 @@ public:
         virtual tmp<SurfaceField<Type>>
         correction
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             const fvMesh& mesh = this->mesh();

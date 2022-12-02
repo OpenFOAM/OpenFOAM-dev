@@ -133,7 +133,7 @@ public:
         //- Return the interpolation weighting factors
         tmp<surfaceScalarField> weights
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             surfaceScalarField blendingFactor
@@ -149,7 +149,7 @@ public:
         //- Return the face-interpolate of the given cell field
         //  with explicit correction
         tmp<SurfaceField<Type>>
-        interpolate(const GeometricField<Type, fvPatchField, volMesh>& vf) const
+        interpolate(const VolField<Type>& vf) const
         {
             surfaceScalarField blendingFactor
             (
@@ -174,7 +174,7 @@ public:
         virtual tmp<SurfaceField<Type>>
         correction
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             surfaceScalarField blendingFactor

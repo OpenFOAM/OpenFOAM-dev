@@ -66,7 +66,7 @@ Foam::AveragingMethods::Basic<Type>::~Basic()
 template<class Type>
 void Foam::AveragingMethods::Basic<Type>::updateGrad()
 {
-    GeometricField<Type, fvPatchField, volMesh> tempData
+    VolField<Type> tempData
     (
         IOobject
         (

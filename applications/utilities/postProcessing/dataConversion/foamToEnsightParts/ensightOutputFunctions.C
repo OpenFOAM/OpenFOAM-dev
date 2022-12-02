@@ -229,7 +229,7 @@ void Foam::ensightVolField
     partsList.writeField
     (
         os,
-        GeometricField<Type, fvPatchField, volMesh>
+        VolField<Type>
         (
             fieldObject,
             mesh

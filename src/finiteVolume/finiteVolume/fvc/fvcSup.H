@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,59 +52,59 @@ namespace fvc
    // Explicit source
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> Su
+        tmp<VolField<Type>> Su
         (
-            const GeometricField<Type, fvPatchField, volMesh>&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&,
+            const VolField<Type>&
         );
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> Su
+        tmp<VolField<Type>> Su
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const tmp<VolField<Type>>&,
+            const VolField<Type>&
         );
 
 
     // Implicit source
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> Sp
+        tmp<VolField<Type>> Sp
         (
             const volScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         );
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> Sp
+        tmp<VolField<Type>> Sp
         (
             const tmp<volScalarField>&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         );
 
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> Sp
+        tmp<VolField<Type>> Sp
         (
             const dimensionedScalar&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         );
 
 
     // Implicit/Explicit source depending on sign of coefficient
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> SuSp
+        tmp<VolField<Type>> SuSp
         (
             const volScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         );
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> SuSp
+        tmp<VolField<Type>> SuSp
         (
             const tmp<volScalarField>&,
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         );
 }
 

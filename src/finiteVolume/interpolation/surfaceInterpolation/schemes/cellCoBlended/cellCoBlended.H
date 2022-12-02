@@ -191,7 +191,7 @@ public:
         //- Return the face-based blending factor
         virtual tmp<surfaceScalarField> blendingFactor
         (
-             const GeometricField<Type, fvPatchField, volMesh>& vf
+             const VolField<Type>& vf
         ) const
         {
             const fvMesh& mesh = this->mesh();
@@ -257,7 +257,7 @@ public:
         tmp<surfaceScalarField>
         weights
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             surfaceScalarField bf(blendingFactor(vf));
@@ -273,7 +273,7 @@ public:
         tmp<SurfaceField<Type>>
         interpolate
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             surfaceScalarField bf(blendingFactor(vf));
@@ -296,7 +296,7 @@ public:
         virtual tmp<SurfaceField<Type>>
         correction
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vf
+            const VolField<Type>& vf
         ) const
         {
             surfaceScalarField bf(blendingFactor(vf));

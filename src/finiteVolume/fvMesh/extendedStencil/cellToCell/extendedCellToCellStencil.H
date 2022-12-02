@@ -83,7 +83,7 @@ public:
         (
             const distributionMap& map,
             const labelListList& stencil,
-            const GeometricField<Type, fvPatchField, volMesh>& fld,
+            const VolField<Type>& fld,
             const List<List<WeightType>>& stencilWeights
         );
 };

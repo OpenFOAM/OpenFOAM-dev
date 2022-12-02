@@ -94,7 +94,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const surfaceScalarField& faceFlux,
     Istream& schemeData
 )
@@ -102,7 +102,7 @@ Foam::fvc::interpolate
     if (surfaceInterpolation::debug)
     {
         InfoInFunction
-            << "interpolating GeometricField<Type, fvPatchField, volMesh> "
+            << "interpolating VolField<Type> "
             << vf.name() << endl;
     }
 
@@ -114,7 +114,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const surfaceScalarField& faceFlux,
     const word& name
 )
@@ -122,7 +122,7 @@ Foam::fvc::interpolate
     if (surfaceInterpolation::debug)
     {
         InfoInFunction
-            << "interpolating GeometricField<Type, fvPatchField, volMesh> "
+            << "interpolating VolField<Type> "
             << vf.name() << " using " << name << endl;
     }
 
@@ -133,7 +133,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
+    const tmp<VolField<Type>>& tvf,
     const surfaceScalarField& faceFlux,
     const word& name
 )
@@ -150,7 +150,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const tmp<surfaceScalarField>& tFaceFlux,
     const word& name
 )
@@ -167,7 +167,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
+    const tmp<VolField<Type>>& tvf,
     const tmp<surfaceScalarField>& tFaceFlux,
     const word& name
 )
@@ -186,14 +186,14 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     Istream& schemeData
 )
 {
     if (surfaceInterpolation::debug)
     {
         InfoInFunction
-            << "interpolating GeometricField<Type, fvPatchField, volMesh> "
+            << "interpolating VolField<Type> "
             << vf.name() << endl;
     }
 
@@ -204,14 +204,14 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const VolField<Type>& vf,
     const word& name
 )
 {
     if (surfaceInterpolation::debug)
     {
         InfoInFunction
-            << "interpolating GeometricField<Type, fvPatchField, volMesh> "
+            << "interpolating VolField<Type> "
             << vf.name() << " using " << name
             << endl;
     }
@@ -223,7 +223,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
+    const tmp<VolField<Type>>& tvf,
     const word& name
 )
 {
@@ -240,13 +240,13 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     if (surfaceInterpolation::debug)
     {
         InfoInFunction
-            << "interpolating GeometricField<Type, fvPatchField, volMesh> "
+            << "interpolating VolField<Type> "
             << vf.name() << " using run-time selected scheme"
             << endl;
     }
@@ -259,7 +259,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvc::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 )
 {
     tmp<SurfaceField<Type>> tsf =
@@ -321,13 +321,13 @@ Foam::tmp
 Foam::fvc::dotInterpolate
 (
     const surfaceVectorField& Sf,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     if (surfaceInterpolation::debug)
     {
         InfoInFunction
-            << "interpolating GeometricField<Type, fvPatchField, volMesh> "
+            << "interpolating VolField<Type> "
             << vf.name() << " using run-time selected scheme"
             << endl;
     }
@@ -353,7 +353,7 @@ Foam::tmp
 Foam::fvc::dotInterpolate
 (
     const surfaceVectorField& Sf,
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 )
 {
     tmp

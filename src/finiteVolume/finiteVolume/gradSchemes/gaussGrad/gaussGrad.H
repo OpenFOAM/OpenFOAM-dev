@@ -130,7 +130,7 @@ public:
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
         > calcGrad
         (
-            const GeometricField<Type, fvPatchField, volMesh>& vsf,
+            const VolField<Type>& vsf,
             const word& name
         ) const;
 
@@ -138,7 +138,7 @@ public:
         // snGrad functions
         static void correctBoundaryConditions
         (
-            const GeometricField<Type, fvPatchField, volMesh>&,
+            const VolField<Type>&,
             GeometricField
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>&
         );

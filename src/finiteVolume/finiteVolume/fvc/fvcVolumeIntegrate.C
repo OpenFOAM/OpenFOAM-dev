@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ template<class Type>
 tmp<Field<Type>>
 volumeIntegrate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return vf.mesh().V()*vf.primitiveField();
@@ -54,7 +54,7 @@ template<class Type>
 tmp<Field<Type>>
 volumeIntegrate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 )
 {
     tmp<Field<Type>> tvivf = tvf().mesh().V()*tvf().primitiveField();
@@ -84,7 +84,7 @@ template<class Type>
 dimensioned<Type>
 domainIntegrate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return dimensioned<Type>
@@ -99,7 +99,7 @@ domainIntegrate
 template<class Type>
 dimensioned<Type> domainIntegrate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+    const tmp<VolField<Type>>& tvf
 )
 {
     dimensioned<Type> integral = domainIntegrate(tvf());

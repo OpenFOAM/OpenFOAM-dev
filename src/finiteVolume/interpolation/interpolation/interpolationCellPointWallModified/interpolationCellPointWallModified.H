@@ -64,7 +64,7 @@ class interpolationCellPointWallModified
         template <class TYPE>
         tmp<PointField<TYPE>> calcPointField
         (
-            const GeometricField<TYPE, fvPatchField, volMesh>& psi
+            const VolField<TYPE>& psi
         ) const;
 
         //- Compute the point field for a vector type
@@ -82,7 +82,7 @@ public:
         //- Construct from components
         interpolationCellPointWallModified
         (
-            const GeometricField<Type, fvPatchField, volMesh>& psi
+            const VolField<Type>& psi
         );
 };
 

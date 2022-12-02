@@ -79,7 +79,7 @@ namespace vtkWriteOps
     (
         std::ostream&,
         const bool binary,
-        const GeometricField<Type, fvPatchField, volMesh>&,
+        const VolField<Type>&,
         const PointField<Type>&,
         const vtkMesh&
     );
@@ -101,7 +101,7 @@ namespace vtkWriteOps
         std::ostream&,
         const bool binary,
         const volPointInterpolation&,
-        const PtrList<GeometricField<Type, fvPatchField, volMesh>>&,
+        const PtrList<VolField<Type>>&,
         const vtkMesh&
     );
 

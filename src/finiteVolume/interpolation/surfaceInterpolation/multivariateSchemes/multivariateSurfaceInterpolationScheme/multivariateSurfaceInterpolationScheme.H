@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,14 +58,14 @@ public:
     //- fieldTable
     class fieldTable
     :
-        public HashTable<const GeometricField<Type, fvPatchField, volMesh>*>
+        public HashTable<const VolField<Type>*>
     {
     public:
 
         fieldTable()
         {}
 
-        void add(const GeometricField<Type, fvPatchField, volMesh>& f)
+        void add(const VolField<Type>& f)
         {
             this->insert(f.name(), &f);
         }
@@ -173,7 +173,7 @@ public:
 
                 fieldScheme
                 (
-                    const GeometricField<Type, fvPatchField, volMesh>& field
+                    const VolField<Type>& field
                 )
                 :
                     surfaceInterpolationScheme<Type>(field.mesh())
@@ -185,13 +185,13 @@ public:
                 //- Return the interpolation weighting factors
                 virtual tmp<surfaceScalarField> weights
                 (
-                    const GeometricField<Type, fvPatchField, volMesh>& field
+                    const VolField<Type>& field
                 ) const = 0;
         };
 
         virtual tmp<surfaceInterpolationScheme<Type>> operator()
         (
-            const GeometricField<Type, fvPatchField, volMesh>& field
+            const VolField<Type>& field
         ) const = 0;
 };
 

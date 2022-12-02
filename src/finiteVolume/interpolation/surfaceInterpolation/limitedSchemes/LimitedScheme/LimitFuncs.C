@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ template<class Type>
 inline Foam::tmp<Foam::volScalarField>
 Foam::limitFuncs::magSqr<Type>::operator()
 (
-    const GeometricField<Type, fvPatchField, volMesh>& phi
+    const VolField<Type>& phi
 ) const
 {
     return Foam::magSqr(phi);
@@ -75,7 +75,7 @@ template<class Type>
 inline Foam::tmp<Foam::volScalarField>
 Foam::limitFuncs::rhoMagSqr<Type>::operator()
 (
-    const GeometricField<Type, fvPatchField, volMesh>& phi
+    const VolField<Type>& phi
 ) const
 {
     const volScalarField& rho =

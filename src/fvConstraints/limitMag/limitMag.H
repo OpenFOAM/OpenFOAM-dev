@@ -89,7 +89,7 @@ class limitMag
         template<class Type>
         inline bool constrainType
         (
-            GeometricField<Type, fvPatchField, volMesh>& psi
+            VolField<Type>& psi
         ) const;
 
 

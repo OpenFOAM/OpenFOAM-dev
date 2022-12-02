@@ -36,8 +36,8 @@ void Foam::fvMeshAdder::MapVolField
 (
     const mapAddedPolyMesh& meshMap,
 
-    GeometricField<Type, fvPatchField, volMesh>& fld,
-    const GeometricField<Type, fvPatchField, volMesh>& fldToAdd
+    VolField<Type>& fld,
+    const VolField<Type>& fldToAdd
 )
 {
     const fvMesh& mesh = fld.mesh();
@@ -62,7 +62,7 @@ void Foam::fvMeshAdder::MapVolField
     // Patch fields from old mesh
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    typename GeometricField<Type, fvPatchField, volMesh>::
+    typename VolField<Type>::
     Boundary& bfld = fld.boundaryFieldRef();
 
     {
@@ -256,37 +256,37 @@ void Foam::fvMeshAdder::MapVolFields
     const fvMesh& meshToAdd
 )
 {
-    HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fields
+    HashTable<const VolField<Type>*> fields
     (
         mesh.objectRegistry::lookupClass
-        <GeometricField<Type, fvPatchField, volMesh>>
+        <VolField<Type>>
         ()
     );
 
-    HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fieldsToAdd
+    HashTable<const VolField<Type>*> fieldsToAdd
     (
         meshToAdd.objectRegistry::lookupClass
-        <GeometricField<Type, fvPatchField, volMesh>>
+        <VolField<Type>>
         ()
     );
 
     for
     (
-        typename HashTable<const GeometricField<Type, fvPatchField, volMesh>*>::
+        typename HashTable<const VolField<Type>*>::
             iterator fieldIter = fields.begin();
         fieldIter != fields.end();
         ++fieldIter
     )
     {
-        GeometricField<Type, fvPatchField, volMesh>& fld =
-            const_cast<GeometricField<Type, fvPatchField, volMesh>&>
+        VolField<Type>& fld =
+            const_cast<VolField<Type>&>
             (
                 *fieldIter()
             );
 
         if (fieldsToAdd.found(fld.name()))
         {
-            const GeometricField<Type, fvPatchField, volMesh>& fldToAdd =
+            const VolField<Type>& fldToAdd =
                 *fieldsToAdd[fld.name()];
 
             if (debug)

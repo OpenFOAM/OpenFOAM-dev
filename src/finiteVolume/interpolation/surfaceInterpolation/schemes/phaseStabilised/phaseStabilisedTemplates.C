@@ -98,7 +98,7 @@ Foam::phaseStabilised<Type>::phaseStabilised
 template<class Type>
 Foam::tmp<Foam::surfaceScalarField> Foam::phaseStabilised<Type>::weights
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     const surfaceScalarField lambdaf(this->lambdaf());
@@ -110,7 +110,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::phaseStabilised<Type>::correction
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 ) const
 {
     if (tScheme_().corrected())

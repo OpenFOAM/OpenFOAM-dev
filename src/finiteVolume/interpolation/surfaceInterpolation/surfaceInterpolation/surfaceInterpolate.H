@@ -90,7 +90,7 @@ namespace fvc
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const GeometricField<Type, fvPatchField, volMesh>& tvf,
+        const VolField<Type>& tvf,
         const surfaceScalarField& faceFlux,
         Istream& schemeData
     );
@@ -99,7 +99,7 @@ namespace fvc
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const GeometricField<Type, fvPatchField, volMesh>& tvf,
+        const VolField<Type>& tvf,
         const surfaceScalarField& faceFlux,
         const word& name
     );
@@ -108,7 +108,7 @@ namespace fvc
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
+        const tmp<VolField<Type>>& tvf,
         const surfaceScalarField& faceFlux,
         const word& name
     );
@@ -117,7 +117,7 @@ namespace fvc
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const GeometricField<Type, fvPatchField, volMesh>& tvf,
+        const VolField<Type>& tvf,
         const tmp<surfaceScalarField>& faceFlux,
         const word& name
     );
@@ -126,7 +126,7 @@ namespace fvc
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
+        const tmp<VolField<Type>>& tvf,
         const tmp<surfaceScalarField>& faceFlux,
         const word& name
     );
@@ -136,7 +136,7 @@ namespace fvc
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const GeometricField<Type, fvPatchField, volMesh>& tvf,
+        const VolField<Type>& tvf,
         Istream& schemeData
     );
 
@@ -144,7 +144,7 @@ namespace fvc
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const GeometricField<Type, fvPatchField, volMesh>& tvf,
+        const VolField<Type>& tvf,
         const word& name
     );
 
@@ -152,7 +152,7 @@ namespace fvc
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
+        const tmp<VolField<Type>>& tvf,
         const word& name
     );
 
@@ -161,14 +161,14 @@ namespace fvc
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const GeometricField<Type, fvPatchField, volMesh>& tvf
+        const VolField<Type>& tvf
     );
 
     //- Interpolate tmp field onto faces using 'interpolate(\<name\>)'
     template<class Type>
     static tmp<SurfaceField<Type>> interpolate
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+        const tmp<VolField<Type>>& tvf
     );
 
 
@@ -208,7 +208,7 @@ namespace fvc
     > dotInterpolate
     (
         const surfaceVectorField& Sf,
-        const GeometricField<Type, fvPatchField, volMesh>& tvf
+        const VolField<Type>& tvf
     );
 
     //- Interpolate tmp field onto faces
@@ -226,7 +226,7 @@ namespace fvc
     > dotInterpolate
     (
         const surfaceVectorField& Sf,
-        const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
+        const tmp<VolField<Type>>& tvf
     );
 }
 

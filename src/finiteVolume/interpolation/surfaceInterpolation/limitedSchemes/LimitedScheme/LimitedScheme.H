@@ -71,7 +71,7 @@ class LimitedScheme
         //- Calculate the limiter
         void calcLimiter
         (
-            const GeometricField<Type, fvPatchField, volMesh>& phi,
+            const VolField<Type>& phi,
             surfaceScalarField& limiterField
         ) const;
 
@@ -131,7 +131,7 @@ public:
         //- Return the interpolation weighting factors
         virtual tmp<surfaceScalarField> limiter
         (
-            const GeometricField<Type, fvPatchField, volMesh>&
+            const VolField<Type>&
         ) const;
 
 

@@ -31,7 +31,7 @@ License
 template<class Type>
 Foam::interpolationPointMVC<Type>::interpolationPointMVC
 (
-    const GeometricField<Type, fvPatchField, volMesh>& psi
+    const VolField<Type>& psi
 )
 :
     fieldInterpolation<Type, interpolationPointMVC<Type>>(psi),

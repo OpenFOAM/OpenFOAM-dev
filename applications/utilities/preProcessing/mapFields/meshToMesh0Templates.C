@@ -57,7 +57,7 @@ template<class Type>
 void Foam::meshToMesh0::interpolateField
 (
     Field<Type>& toF,
-    const GeometricField<Type, fvPatchField, volMesh>& fromVf,
+    const VolField<Type>& fromVf,
     const labelListList& adr,
     const scalarListList& weights
 ) const
@@ -83,7 +83,7 @@ template<class Type>
 void Foam::meshToMesh0::interpolateField
 (
     Field<Type>& toF,
-    const GeometricField<Type, fvPatchField, volMesh>& fromVf,
+    const VolField<Type>& fromVf,
     const labelList& adr,
     const scalarListList& weights
 ) const
@@ -117,7 +117,7 @@ template<class Type>
 void Foam::meshToMesh0::interpolateField
 (
     Field<Type>& toF,
-    const GeometricField<Type, fvPatchField, volMesh>& fromVf,
+    const VolField<Type>& fromVf,
     const labelList& adr,
     const vectorField& centres
 ) const
@@ -139,7 +139,7 @@ template<class Type>
 void Foam::meshToMesh0::interpolateInternalField
 (
     Field<Type>& toF,
-    const GeometricField<Type, fvPatchField, volMesh>& fromVf,
+    const VolField<Type>& fromVf,
     meshToMesh0::order ord
 ) const
 {
@@ -216,7 +216,7 @@ template<class Type>
 void Foam::meshToMesh0::interpolateInternalField
 (
     Field<Type>& toF,
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfromVf,
+    const tmp<VolField<Type>>& tfromVf,
     meshToMesh0::order ord
 ) const
 {
@@ -228,14 +228,14 @@ void Foam::meshToMesh0::interpolateInternalField
 template<class Type>
 void Foam::meshToMesh0::interpolate
 (
-    GeometricField<Type, fvPatchField, volMesh>& toVf,
-    const GeometricField<Type, fvPatchField, volMesh>& fromVf,
+    VolField<Type>& toVf,
+    const VolField<Type>& fromVf,
     meshToMesh0::order ord
 ) const
 {
     interpolateInternalField(toVf, fromVf, ord);
 
-    typename GeometricField<Type, fvPatchField, volMesh>::
+    typename VolField<Type>::
         Boundary& toVfBf = toVf.boundaryFieldRef();
 
     forAll(toMesh_.boundaryMesh(), patchi)
@@ -322,8 +322,8 @@ void Foam::meshToMesh0::interpolate
 template<class Type>
 void Foam::meshToMesh0::interpolate
 (
-    GeometricField<Type, fvPatchField, volMesh>& toVf,
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfromVf,
+    VolField<Type>& toVf,
+    const tmp<VolField<Type>>& tfromVf,
     meshToMesh0::order ord
 ) const
 {
@@ -336,7 +336,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::meshToMesh0::interpolate
 (
-    const GeometricField<Type, fvPatchField, volMesh>& fromVf,
+    const VolField<Type>& fromVf,
     meshToMesh0::order ord
 ) const
 {
@@ -380,9 +380,9 @@ Foam::meshToMesh0::interpolate
 
 
     // Create the complete field from the pieces
-    tmp<GeometricField<Type, fvPatchField, volMesh>> ttoF
+    tmp<VolField<Type>> ttoF
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        new VolField<Type>
         (
             IOobject
             (
@@ -408,11 +408,11 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::meshToMesh0::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tfromVf,
+    const tmp<VolField<Type>>& tfromVf,
     meshToMesh0::order ord
 ) const
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> tint =
+    tmp<VolField<Type>> tint =
         interpolate(tfromVf(), ord);
     tfromVf.clear();
 

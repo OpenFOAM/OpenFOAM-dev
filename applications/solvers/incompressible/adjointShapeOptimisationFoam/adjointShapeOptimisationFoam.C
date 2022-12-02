@@ -56,7 +56,7 @@ Description
 template<class Type>
 void zeroCells
 (
-    GeometricField<Type, fvPatchField, volMesh>& vf,
+    VolField<Type>& vf,
     const labelList& cells
 )
 {

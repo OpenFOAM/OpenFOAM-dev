@@ -58,8 +58,8 @@ defineTemplateTypeNameAndDebug(volTensorField, 0);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<>
-tmp<GeometricField<scalar, fvPatchField, volMesh>>
-GeometricField<scalar, fvPatchField, volMesh>::component
+tmp<VolField<scalar>>
+VolField<scalar>::component
 (
     const direction
 ) const
@@ -69,10 +69,10 @@ GeometricField<scalar, fvPatchField, volMesh>::component
 
 
 template<>
-void GeometricField<scalar, fvPatchField, volMesh>::replace
+void VolField<scalar>::replace
 (
     const direction,
-    const GeometricField<scalar, fvPatchField, volMesh>& gsf
+    const VolField<scalar>& gsf
 )
 {
     *this == gsf;

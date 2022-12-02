@@ -44,7 +44,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 d2dt2
 (
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fv::d2dt2Scheme<Type>::New
@@ -60,7 +60,7 @@ tmp<fvMatrix<Type>>
 d2dt2
 (
     const dimensionedScalar& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fv::d2dt2Scheme<Type>::New
@@ -76,7 +76,7 @@ tmp<fvMatrix<Type>>
 d2dt2
 (
     const volScalarField& rho,
-    const GeometricField<Type, fvPatchField, volMesh>& vf
+    const VolField<Type>& vf
 )
 {
     return fv::d2dt2Scheme<Type>::New
