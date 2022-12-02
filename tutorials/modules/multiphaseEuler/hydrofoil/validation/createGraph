@@ -6,8 +6,8 @@ then
     exit 1
 fi
 
-lowerFile=postProcessing/hydrofoilPressure/$(foamListTimes -latestTime)/lower.xy
-upperFile=postProcessing/hydrofoilPressure/$(foamListTimes -latestTime)/upper.xy
+lowerFile=postProcessing/hydrofoilLowerPressure/$(foamListTimes -latestTime)/patchCutLayerAverage.xy
+upperFile=postProcessing/hydrofoilUpperPressure/$(foamListTimes -latestTime)/patchCutLayerAverage.xy
 
 gnuplot<<EOF
 
@@ -38,8 +38,8 @@ rhoInf = 998.4
 set xlabel 'x/L'
 set ylabel 'Cp'
 plot [0:1] \
-    '$lowerFile' u (\$1/0.15):(2*(\$4-pInf)/(rhoInf*UInf*UInf)) w l lt 1 t 'Simulation Lower', \
-    '$upperFile' u (\$1/0.15):(2*(\$4-pInf)/(rhoInf*UInf*UInf)) w l lt 2 t 'Simulation Upper', \
+    '$lowerFile' u (\$2/0.15):(2*(\$6-pInf)/(rhoInf*UInf*UInf)) w l lt 1 t 'Simulation Lower', \
+    '$upperFile' u (\$2/0.15):(2*(\$6-pInf)/(rhoInf*UInf*UInf)) w l lt 2 t 'Simulation Upper', \
     '\$experiment' u 1:2 w p lt rgb "black" pt 4 t 'Experiment'
 
 EOF
