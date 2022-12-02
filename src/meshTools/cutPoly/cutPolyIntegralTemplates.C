@@ -312,7 +312,7 @@ Foam::cutPoly::faceCutAreaIntegral
     auto result =
         faceAreaIntegral
         (
-            cutPoly::FaceCutValues<Type>
+            cutPoly::FaceCutValues<vector>
             (
                 f,
                 fCuts,
