@@ -33,7 +33,7 @@ License
 
 template<class Type>
 template<class TYPE>
-Foam::tmp<Foam::GeometricField<TYPE, Foam::pointPatchField, Foam::pointMesh>>
+Foam::tmp<Foam::PointField<TYPE>>
 Foam::interpolationCellPointWallModified<Type>::calcPointField
 (
     const VolField<TYPE>& psi

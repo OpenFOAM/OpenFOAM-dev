@@ -67,7 +67,7 @@ Foam::linearUpwind<Type>::linearUpwind
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::linearUpwind<Type>::correction
 (
     const VolField<Type>& vf

@@ -135,7 +135,7 @@ Foam::surfaceInterpolationScheme<Type>::~surfaceInterpolationScheme()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::surfaceInterpolationScheme<Type>::interpolate
 (
     const VolField<Type>& vf,
@@ -306,7 +306,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::surfaceInterpolationScheme<Type>::interpolate
 (
     const VolField<Type>& vf,
@@ -393,7 +393,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::surfaceInterpolationScheme<Type>::interpolate
 (
     const VolField<Type>& vf
@@ -422,7 +422,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::surfaceInterpolationScheme<Type>::interpolate
 (
     const tmp<VolField<Type>>& tvf

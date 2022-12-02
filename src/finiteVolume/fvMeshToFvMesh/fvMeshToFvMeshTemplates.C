@@ -80,7 +80,7 @@ void Foam::fvMeshToFvMesh::mapSrcToTgt
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::fvMeshToFvMesh::mapSrcToTgt
 (
     const VolField<Type>& field

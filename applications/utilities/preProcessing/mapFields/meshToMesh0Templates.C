@@ -333,7 +333,7 @@ void Foam::meshToMesh0::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::meshToMesh0::interpolate
 (
     const VolField<Type>& fromVf,
@@ -405,7 +405,7 @@ Foam::meshToMesh0::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::meshToMesh0::interpolate
 (
     const tmp<VolField<Type>>& tfromVf,

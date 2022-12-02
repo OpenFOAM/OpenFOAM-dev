@@ -36,13 +36,13 @@ template<>                                                                     \
 Foam::tmp<Foam::fvMatrix<Foam::Type>>                                          \
 Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
 (                                                                              \
-    const SurfaceField<scalar>& gamma,           \
-    const VolField<Type>& vf                      \
+    const SurfaceField<scalar>& gamma,                                         \
+    const VolField<Type>& vf                                                   \
 )                                                                              \
 {                                                                              \
     const fvMesh& mesh = this->mesh();                                         \
                                                                                \
-    SurfaceField<scalar> gammaMagSf              \
+    SurfaceField<scalar> gammaMagSf                                            \
     (                                                                          \
         gamma*mesh.magSf()                                                     \
     );                                                                         \
@@ -88,16 +88,16 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
                                                                                \
                                                                                \
 template<>                                                                     \
-Foam::tmp<Foam::GeometricField<Foam::Type, Foam::fvPatchField, Foam::volMesh>> \
+Foam::tmp<Foam::VolField<Foam::Type>> \
 Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvcLaplacian         \
 (                                                                              \
-    const SurfaceField<scalar>& gamma,           \
-    const VolField<Type>& vf                      \
+    const SurfaceField<scalar>& gamma,                                         \
+    const VolField<Type>& vf                                                   \
 )                                                                              \
 {                                                                              \
     const fvMesh& mesh = this->mesh();                                         \
                                                                                \
-    tmp<VolField<Type>> tLaplacian                \
+    tmp<VolField<Type>> tLaplacian                                             \
     (                                                                          \
         fvc::div(gamma*this->tsnGradScheme_().snGrad(vf)*mesh.magSf())         \
     );                                                                         \

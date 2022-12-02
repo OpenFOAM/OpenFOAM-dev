@@ -138,7 +138,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::fvFieldReconstructor::reconstructFvVolumeField
 (
     const IOobject& fieldIoObject,
@@ -255,7 +255,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::fvFieldReconstructor::reconstructFvVolumeField
 (
     const IOobject& fieldIoObject
@@ -302,7 +302,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvFieldReconstructor::reconstructFvSurfaceField
 (
     const IOobject& fieldIoObject,
@@ -418,7 +418,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvFieldReconstructor::reconstructFvSurfaceField
 (
     const IOobject& fieldIoObject

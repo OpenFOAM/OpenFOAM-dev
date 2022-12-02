@@ -83,7 +83,7 @@ Foam::tmp<Foam::Field<Type>> Foam::fvFieldDecomposer::mapFaceToFace
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::fvFieldDecomposer::decomposeField
 (
     const VolField<Type>& field
@@ -222,7 +222,7 @@ Foam::fvFieldDecomposer::decomposeField
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvFieldDecomposer::decomposeField
 (
     const SurfaceField<Type>& field

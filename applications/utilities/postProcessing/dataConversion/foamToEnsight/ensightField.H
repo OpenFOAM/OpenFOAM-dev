@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,18 +41,18 @@ SourceFiles
 
 //- Wrapper to get hold of the field or the subsetted field
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 volField
 (
     const Foam::fvMeshSubset&,
-    const Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>& vf
+    const Foam::VolField<Type>& vf
 );
 
 
 template<class Type>
 void ensightField
 (
-    const Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>& vf,
+    const Foam::VolField<Type>& vf,
     const Foam::ensightMesh& eMesh,
     const Foam::fileName& postProcPath,
     const Foam::word& prepend,

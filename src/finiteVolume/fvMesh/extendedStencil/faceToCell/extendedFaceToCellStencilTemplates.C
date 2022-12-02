@@ -78,7 +78,7 @@ void Foam::extendedFaceToCellStencil::collectData
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::extendedFaceToCellStencil::weightedSum
 (
     const distributionMap& map,

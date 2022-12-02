@@ -170,7 +170,7 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::levelSetAverage
 (
     const volScalarField& levelC,

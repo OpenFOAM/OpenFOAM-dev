@@ -91,7 +91,7 @@ Foam::tmp<Foam::surfaceInterpolationScheme<Type>> Foam::fvc::scheme
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const VolField<Type>& vf,
@@ -111,7 +111,7 @@ Foam::fvc::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const VolField<Type>& vf,
@@ -130,7 +130,7 @@ Foam::fvc::interpolate
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const tmp<VolField<Type>>& tvf,
@@ -147,7 +147,7 @@ Foam::fvc::interpolate
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const VolField<Type>& vf,
@@ -164,7 +164,7 @@ Foam::fvc::interpolate
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const tmp<VolField<Type>>& tvf,
@@ -183,7 +183,7 @@ Foam::fvc::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const VolField<Type>& vf,
@@ -201,7 +201,7 @@ Foam::fvc::interpolate
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const VolField<Type>& vf,
@@ -220,7 +220,7 @@ Foam::fvc::interpolate
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const tmp<VolField<Type>>& tvf,
@@ -237,7 +237,7 @@ Foam::fvc::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const VolField<Type>& vf
@@ -256,7 +256,7 @@ Foam::fvc::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvc::interpolate
 (
     const tmp<VolField<Type>>& tvf

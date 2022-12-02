@@ -32,7 +32,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type, class CombineOp>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::fvc::cellReduce
 (
     const SurfaceField<Type>& ssf,
@@ -80,7 +80,7 @@ Foam::fvc::cellReduce
 
 
 template<class Type, class CombineOp>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::fvc::cellReduce
 (
     const tmp<SurfaceField<Type>>& tssf,

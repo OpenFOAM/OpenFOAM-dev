@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
+Foam::tmp<Foam::PointField<Type>>
 Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
 {
     // Read the field for all the processors

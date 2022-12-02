@@ -132,7 +132,7 @@ void Foam::motionSmootherAlgo::checkConstraints
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
+Foam::tmp<Foam::PointField<Type>>
 Foam::motionSmootherAlgo::avg
 (
     const PointField<Type>& fld,

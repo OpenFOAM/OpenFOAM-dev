@@ -150,7 +150,7 @@ void Foam::volPointInterpolation::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
+Foam::tmp<Foam::PointField<Type>>
 Foam::volPointInterpolation::interpolate
 (
     const VolField<Type>& vf,
@@ -238,7 +238,7 @@ Foam::volPointInterpolation::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
+Foam::tmp<Foam::PointField<Type>>
 Foam::volPointInterpolation::interpolate
 (
     const VolField<Type>& vf
@@ -249,7 +249,7 @@ Foam::volPointInterpolation::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
+Foam::tmp<Foam::PointField<Type>>
 Foam::volPointInterpolation::interpolate
 (
     const tmp<VolField<Type>>& tvf

@@ -37,7 +37,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::~faceCorrectedSnGrad()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
 (
     const VolField<Type>& vf
@@ -116,7 +116,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fv::faceCorrectedSnGrad<Type>::correction
 (
     const VolField<Type>& vf

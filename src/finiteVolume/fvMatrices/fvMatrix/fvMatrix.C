@@ -863,7 +863,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fvMatrix<Type>::Sp() const
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::fvMatrix<Type>::H() const
 {
     tmp<VolField<Type>> tHphi
@@ -958,7 +958,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::H1() const
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvMatrix<Type>::
 flux() const
 {
@@ -2458,7 +2458,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::operator/
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::operator&
 (
     const fvMatrix<Type>& M,
@@ -2503,7 +2503,7 @@ Foam::operator&
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::operator&
 (
     const fvMatrix<Type>& M,
@@ -2516,7 +2516,7 @@ Foam::operator&
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::operator&
 (
     const fvMatrix<Type>& M,
@@ -2529,7 +2529,7 @@ Foam::operator&
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::operator&
 (
     const tmp<fvMatrix<Type>>& tM,
@@ -2542,7 +2542,7 @@ Foam::operator&
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::operator&
 (
     const tmp<fvMatrix<Type>>& tM,
@@ -2556,7 +2556,7 @@ Foam::operator&
 }
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::operator&
 (
     const tmp<fvMatrix<Type>>& tM,

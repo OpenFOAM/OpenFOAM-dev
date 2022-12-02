@@ -35,7 +35,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::fvMeshSubset::interpolate
 (
     const VolField<Type>& vf,
@@ -155,7 +155,7 @@ Foam::fvMeshSubset::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::tmp<Foam::VolField<Type>>
 Foam::fvMeshSubset::interpolate
 (
     const VolField<Type>& vf
@@ -173,7 +173,7 @@ Foam::fvMeshSubset::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvMeshSubset::interpolate
 (
     const SurfaceField<Type>& sf,
@@ -337,7 +337,7 @@ Foam::fvMeshSubset::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
+Foam::tmp<Foam::SurfaceField<Type>>
 Foam::fvMeshSubset::interpolate
 (
     const SurfaceField<Type>& sf
@@ -355,7 +355,7 @@ Foam::fvMeshSubset::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
+Foam::tmp<Foam::PointField<Type>>
 Foam::fvMeshSubset::interpolate
 (
     const PointField<Type>& pf,
@@ -487,7 +487,7 @@ Foam::fvMeshSubset::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
+Foam::tmp<Foam::PointField<Type>>
 Foam::fvMeshSubset::interpolate
 (
     const PointField<Type>& sf
