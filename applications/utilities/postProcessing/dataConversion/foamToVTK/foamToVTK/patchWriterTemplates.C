@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,12 +66,12 @@ void Foam::patchWriter::write
 template<class Type>
 void Foam::patchWriter::write
 (
-    const UPtrList<const GeometricField<Type, pointPatchField, pointMesh>>& flds
+    const UPtrList<const PointField<Type>>& flds
 )
 {
     forAll(flds, fieldi)
     {
-        const GeometricField<Type, pointPatchField, pointMesh>& fld =
+        const PointField<Type>& fld =
             flds[fieldi];
 
         os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '

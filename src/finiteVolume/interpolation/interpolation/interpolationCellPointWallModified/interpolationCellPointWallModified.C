@@ -43,7 +43,7 @@ Foam::interpolationCellPointWallModified<Type>::calcPointField
         << typeName << " interpolation is only defined for vector fields"
         << exit(FatalError);
 
-    return tmp<GeometricField<TYPE, pointPatchField, pointMesh>>(nullptr);
+    return tmp<PointField<TYPE>>(nullptr);
 }
 
 

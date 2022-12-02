@@ -69,7 +69,7 @@ public:
         interpolationCellPoint
         (
             const GeometricField<Type, fvPatchField, volMesh>& psi,
-            tmp<GeometricField<Type, pointPatchField, pointMesh>> psip
+            tmp<PointField<Type>> psip
         );
 
 

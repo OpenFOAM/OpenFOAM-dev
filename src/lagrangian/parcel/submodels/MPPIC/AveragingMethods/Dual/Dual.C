@@ -159,7 +159,7 @@ Type Foam::AveragingMethods::Dual<Type>::interpolate
 
 
 template<class Type>
-typename Foam::AveragingMethods::Dual<Type>::TypeGrad
+typename Foam::AveragingMethods::Dual<Type>::GradType
 Foam::AveragingMethods::Dual<Type>::interpolateGrad
 (
     const barycentric& coordinates,
@@ -185,7 +185,7 @@ Foam::AveragingMethods::Dual<Type>::interpolateGrad
 
     const vector t( - T.T().x() - T.T().y() - T.T().z());
 
-    const TypeGrad S
+    const GradType S
     (
         dataDual_[triIs[0]],
         dataDual_[triIs[1]],

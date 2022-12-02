@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
-    const GeometricField<Type, pointPatchField, pointMesh>& pvf,
+    const PointField<Type>& pvf,
     const vtkMesh& vMesh
 )
 {
@@ -98,7 +98,7 @@ void Foam::vtkWriteOps::write
     std::ostream& os,
     const bool binary,
     const GeometricField<Type, fvPatchField, volMesh>& vvf,
-    const GeometricField<Type, pointPatchField, pointMesh>& pvf,
+    const PointField<Type>& pvf,
     const vtkMesh& vMesh
 )
 {

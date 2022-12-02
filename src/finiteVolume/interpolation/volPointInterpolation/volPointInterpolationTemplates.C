@@ -39,14 +39,14 @@ template<class Type>
 void Foam::volPointInterpolation::interpolateUnconstrained
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
-    GeometricField<Type, pointPatchField, pointMesh>& pf
+    PointField<Type>& pf
 ) const
 {
     if (debug)
     {
         Pout<< "volPointInterpolation::interpolateUnconstrained("
             << "const GeometricField<Type, fvPatchField, volMesh>&, "
-            << "GeometricField<Type, pointPatchField, pointMesh>&) : "
+            << "PointField<Type>&) : "
             << "interpolating field from cells to points"
             << endl;
     }
@@ -139,7 +139,7 @@ template<class Type>
 void Foam::volPointInterpolation::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
-    GeometricField<Type, pointPatchField, pointMesh>& pf
+    PointField<Type>& pf
 ) const
 {
     interpolateUnconstrained(vf, pf);
@@ -180,9 +180,9 @@ Foam::volPointInterpolation::interpolate
             }
         }
 
-        tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf
+        tmp<PointField<Type>> tpf
         (
-            GeometricField<Type, pointPatchField, pointMesh>::New
+            PointField<Type>::New
             (
                 name,
                 pm,
@@ -255,7 +255,7 @@ Foam::volPointInterpolation::interpolate
     const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 ) const
 {
-    tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf =
+    tmp<PointField<Type>> tpf =
         interpolate(tvf());
 
     tvf.clear();

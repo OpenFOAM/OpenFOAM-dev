@@ -176,9 +176,9 @@ Foam::levelSetAverage
     const volScalarField& levelC,
     const pointScalarField& levelP,
     const GeometricField<Type, fvPatchField, volMesh>& positiveC,
-    const GeometricField<Type, pointPatchField, pointMesh>& positiveP,
+    const PointField<Type>& positiveP,
     const GeometricField<Type, fvPatchField, volMesh>& negativeC,
-    const GeometricField<Type, pointPatchField, pointMesh>& negativeP
+    const PointField<Type>& negativeP
 )
 {
     const fvMesh& mesh = levelC.mesh();

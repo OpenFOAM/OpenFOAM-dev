@@ -292,20 +292,20 @@ public:
 
             //- Map point field
             template<class Type>
-            static tmp<GeometricField<Type, pointPatchField, pointMesh>>
+            static tmp<PointField<Type>>
             interpolate
             (
-                const GeometricField<Type, pointPatchField, pointMesh>&,
+                const PointField<Type>&,
                 const pointMesh& sMesh,
                 const labelList& patchMap,
                 const labelList& pointMap
             );
 
             template<class Type>
-            tmp<GeometricField<Type, pointPatchField, pointMesh>>
+            tmp<PointField<Type>>
             interpolate
             (
-                const GeometricField<Type, pointPatchField, pointMesh>&
+                const PointField<Type>&
             ) const;
 
             //- Map dimensioned field

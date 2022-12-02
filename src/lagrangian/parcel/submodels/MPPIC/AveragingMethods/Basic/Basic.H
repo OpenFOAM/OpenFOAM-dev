@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ public:
     // Public Typedefs
 
         //- Gradient type
-        typedef typename AveragingMethod<Type>::TypeGrad TypeGrad;
+        typedef typename AveragingMethod<Type>::GradType GradType;
 
 
 private:
@@ -78,7 +78,7 @@ private:
         Field<Type>& data_;
 
         //- Gradient field
-        Field<TypeGrad> dataGrad_;
+        Field<GradType> dataGrad_;
 
 
     // Private Member Functions
@@ -138,7 +138,7 @@ public:
         ) const;
 
         //- Interpolate gradient
-        TypeGrad interpolateGrad
+        GradType interpolateGrad
         (
             const barycentric& coordinates,
             const tetIndices& tetIs
@@ -148,7 +148,7 @@ public:
         tmp<Field<Type>> primitiveField() const;
 
         //- Return an internal field of the gradient
-        tmp<Field<TypeGrad>> internalFieldGrad() const;
+        tmp<Field<GradType>> internalFieldGrad() const;
 };
 
 

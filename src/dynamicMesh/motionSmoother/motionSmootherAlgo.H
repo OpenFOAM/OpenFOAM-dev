@@ -170,17 +170,17 @@ class motionSmootherAlgo
 
         //- Average of connected points.
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh>> avg
+        tmp<PointField<Type>> avg
         (
-            const GeometricField<Type, pointPatchField, pointMesh>& fld,
+            const PointField<Type>& fld,
             const scalarField& edgeWeight
         ) const;
 
         //- Average position of connected points.
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh>> avgPositions
+        tmp<PointField<Type>> avgPositions
         (
-            const GeometricField<Type, pointPatchField, pointMesh>& fld,
+            const PointField<Type>& fld,
             const scalarField& edgeWeight
         ) const;
 
@@ -188,7 +188,7 @@ class motionSmootherAlgo
         template<class Type>
         static void checkConstraints
         (
-            GeometricField<Type, pointPatchField, pointMesh>&
+            PointField<Type>&
         );
 
         //- Test synchronisation of generic field (not positions!) on points
@@ -466,9 +466,9 @@ public:
                 template<class Type>
                 void smooth
                 (
-                    const GeometricField<Type, pointPatchField, pointMesh>& fld,
+                    const PointField<Type>& fld,
                     const scalarField& edgeWeight,
-                    GeometricField<Type, pointPatchField, pointMesh>& newFld
+                    PointField<Type>& newFld
                 ) const;
 
 

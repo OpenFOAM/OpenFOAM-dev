@@ -46,7 +46,7 @@ template<class Type>
 Foam::interpolationCellPoint<Type>::interpolationCellPoint
 (
     const GeometricField<Type, fvPatchField, volMesh>& psi,
-    tmp<GeometricField<Type, pointPatchField, pointMesh>> psip
+    tmp<PointField<Type>> psip
 )
 :
     fieldInterpolation<Type, interpolationCellPoint<Type>>(psi),

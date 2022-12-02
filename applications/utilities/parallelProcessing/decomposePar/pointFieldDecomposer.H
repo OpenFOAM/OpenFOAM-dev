@@ -145,10 +145,10 @@ public:
 
         //- Decompose point field
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh>>
+        tmp<PointField<Type>>
         decomposeField
         (
-            const GeometricField<Type, pointPatchField, pointMesh>&
+            const PointField<Type>&
         ) const;
 
         //- Decompose a list of fields

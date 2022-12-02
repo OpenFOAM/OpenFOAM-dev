@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ protected:
     //- Protected typedefs
 
         //- Gradient type
-        typedef typename outerProduct<vector, Type>::type TypeGrad;
+        typedef typename outerProduct<vector, Type>::type GradType;
 
 
     //- Protected data
@@ -149,7 +149,7 @@ public:
         ) const = 0;
 
         //- Interpolate gradient
-        virtual TypeGrad interpolateGrad
+        virtual GradType interpolateGrad
         (
             const barycentric& coordinates,
             const tetIndices& tetIs

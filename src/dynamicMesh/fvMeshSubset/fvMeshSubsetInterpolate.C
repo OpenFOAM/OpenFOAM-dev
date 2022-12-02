@@ -358,7 +358,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::fvMeshSubset::interpolate
 (
-    const GeometricField<Type, pointPatchField, pointMesh>& pf,
+    const PointField<Type>& pf,
     const pointMesh& sMesh,
     const labelList& patchMap,
     const labelList& pointMap
@@ -400,9 +400,9 @@ Foam::fvMeshSubset::interpolate
     }
 
     // Create the complete field from the pieces
-    tmp<GeometricField<Type, pointPatchField, pointMesh>> tresF
+    tmp<PointField<Type>> tresF
     (
-        new GeometricField<Type, pointPatchField, pointMesh>
+        new PointField<Type>
         (
             IOobject
             (
@@ -419,13 +419,13 @@ Foam::fvMeshSubset::interpolate
             patchFields
         )
     );
-    GeometricField<Type, pointPatchField, pointMesh>& resF = tresF.ref();
+    PointField<Type>& resF = tresF.ref();
 
 
     // 2. Change the pointPatchFields to the correct type using a mapper
     //  constructor (with reference to the now correct internal field)
 
-    typename GeometricField<Type, pointPatchField, pointMesh>::
+    typename PointField<Type>::
         Boundary& bf = resF.boundaryFieldRef();
 
     forAll(bf, patchi)
@@ -490,7 +490,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::fvMeshSubset::interpolate
 (
-    const GeometricField<Type, pointPatchField, pointMesh>& sf
+    const PointField<Type>& sf
 ) const
 {
     return interpolate

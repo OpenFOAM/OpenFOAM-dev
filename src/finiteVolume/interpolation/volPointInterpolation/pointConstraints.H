@@ -155,14 +155,14 @@ public:
             template<class Type>
             static void setPatchFields
             (
-                GeometricField<Type, pointPatchField, pointMesh>&
+                PointField<Type>&
             );
 
             //- Apply patch-patch constraints only
             template<class Type>
             void constrainCorners
             (
-                GeometricField<Type, pointPatchField, pointMesh>& pf
+                PointField<Type>& pf
             ) const;
 
             //- Apply boundary conditions (single-patch constraints) and
@@ -172,7 +172,7 @@ public:
             template<class Type>
             void constrain
             (
-                GeometricField<Type, pointPatchField, pointMesh>& pf,
+                PointField<Type>& pf,
                 const bool overrideValue = false
             ) const;
 
@@ -196,13 +196,13 @@ public:
 template<>
 void pointConstraints::constrainCorners<scalar>
 (
-    GeometricField<scalar, pointPatchField, pointMesh>& pf
+    PointField<scalar>& pf
 ) const;
 
 template<>
 void pointConstraints::constrainCorners<label>
 (
-    GeometricField<label, pointPatchField, pointMesh>& pf
+    PointField<label>& pf
 ) const;
 
 

@@ -54,14 +54,12 @@ class GeometricField;
 template<class Type>
 using PointField = GeometricField<Type, pointPatchField, pointMesh>;
 
-typedef GeometricField<label, pointPatchField, pointMesh> pointLabelField;
-typedef GeometricField<scalar, pointPatchField, pointMesh> pointScalarField;
-typedef GeometricField<vector, pointPatchField, pointMesh> pointVectorField;
-typedef GeometricField<sphericalTensor, pointPatchField, pointMesh>
-    pointSphericalTensorField;
-typedef GeometricField<symmTensor, pointPatchField, pointMesh>
-    pointSymmTensorField;
-typedef GeometricField<tensor, pointPatchField, pointMesh> pointTensorField;
+typedef PointField<label> pointLabelField;
+typedef PointField<scalar> pointScalarField;
+typedef PointField<vector> pointVectorField;
+typedef PointField<sphericalTensor> pointSphericalTensorField;
+typedef PointField<symmTensor> pointSymmTensorField;
+typedef PointField<tensor> pointTensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

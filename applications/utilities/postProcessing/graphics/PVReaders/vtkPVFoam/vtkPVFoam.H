@@ -535,7 +535,7 @@ class vtkPVFoam
             void convertVolFieldBlock
             (
                 const GeometricField<Type, fvPatchField, volMesh>&,
-                autoPtr<GeometricField<Type, pointPatchField, pointMesh>>&,
+                autoPtr<PointField<Type>>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const List<polyDecomp>& decompLst
@@ -641,7 +641,7 @@ class vtkPVFoam
             template<class Type>
             void convertPointFieldBlock
             (
-                const GeometricField<Type, pointPatchField, pointMesh>&,
+                const PointField<Type>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const List<polyDecomp>&
@@ -651,7 +651,7 @@ class vtkPVFoam
             template<class Type>
             void convertPointField
             (
-                const GeometricField<Type, pointPatchField, pointMesh>&,
+                const PointField<Type>&,
                 const GeometricField<Type, fvPatchField, volMesh>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,

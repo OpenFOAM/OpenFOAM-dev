@@ -35,7 +35,7 @@ License
 template<class Type>
 void Foam::motionSmootherAlgo::checkConstraints
 (
-    GeometricField<Type, pointPatchField, pointMesh>& pf
+    PointField<Type>& pf
 )
 {
     const polyMesh& mesh = pf.mesh();
@@ -135,20 +135,20 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::pointPatchField, Foam::pointMesh>>
 Foam::motionSmootherAlgo::avg
 (
-    const GeometricField<Type, pointPatchField, pointMesh>& fld,
+    const PointField<Type>& fld,
     const scalarField& edgeWeight
 ) const
 {
-    tmp<GeometricField<Type, pointPatchField, pointMesh>> tres
+    tmp<PointField<Type>> tres
     (
-        GeometricField<Type, pointPatchField, pointMesh>::New
+        PointField<Type>::New
         (
             "avg("+fld.name()+')',
             fld.mesh(),
             dimensioned<Type>("zero", fld.dimensions(), Zero)
         )
     );
-    GeometricField<Type, pointPatchField, pointMesh>& res = tres.ref();
+    PointField<Type>& res = tres.ref();
 
     const polyMesh& mesh = fld.mesh()();
 
@@ -224,9 +224,9 @@ Foam::motionSmootherAlgo::avg
 template<class Type>
 void Foam::motionSmootherAlgo::smooth
 (
-    const GeometricField<Type, pointPatchField, pointMesh>& fld,
+    const PointField<Type>& fld,
     const scalarField& edgeWeight,
-    GeometricField<Type, pointPatchField, pointMesh>& newFld
+    PointField<Type>& newFld
 ) const
 {
     tmp<pointVectorField> tavgFld = avg(fld, edgeWeight);

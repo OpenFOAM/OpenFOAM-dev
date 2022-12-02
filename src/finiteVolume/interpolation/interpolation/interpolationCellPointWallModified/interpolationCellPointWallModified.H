@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class interpolationCellPointWallModified
         //- Compute the point field for a type. This just throws an error. This
         //  interpolation method is only defined for vector fields.
         template <class TYPE>
-        tmp<GeometricField<TYPE, pointPatchField, pointMesh>> calcPointField
+        tmp<PointField<TYPE>> calcPointField
         (
             const GeometricField<TYPE, fvPatchField, volMesh>& psi
         ) const;

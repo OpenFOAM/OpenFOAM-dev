@@ -88,10 +88,10 @@ void Foam::pointConstraints::syncUntransformedData
 template<class Type>
 void Foam::pointConstraints::setPatchFields
 (
-    GeometricField<Type, pointPatchField, pointMesh>& pf
+    PointField<Type>& pf
 )
 {
-    typename GeometricField<Type, pointPatchField, pointMesh>::
+    typename PointField<Type>::
         Boundary& pfbf = pf.boundaryFieldRef();
 
     forAll(pfbf, patchi)
@@ -110,7 +110,7 @@ void Foam::pointConstraints::setPatchFields
 template<class Type>
 void Foam::pointConstraints::constrainCorners
 (
-    GeometricField<Type, pointPatchField, pointMesh>& pf
+    PointField<Type>& pf
 ) const
 {
     forAll(patchPatchPointConstraintPoints_, pointi)
@@ -127,7 +127,7 @@ void Foam::pointConstraints::constrainCorners
 template<class Type>
 void Foam::pointConstraints::constrain
 (
-    GeometricField<Type, pointPatchField, pointMesh>& pf,
+    PointField<Type>& pf,
     const bool overrideFixedValue
 ) const
 {

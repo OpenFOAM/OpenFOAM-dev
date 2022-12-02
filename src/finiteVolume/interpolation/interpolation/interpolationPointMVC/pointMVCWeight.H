@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,23 +43,20 @@ SourceFiles
 #ifndef pointMVCWeight_H
 #define pointMVCWeight_H
 
+#include "point.H"
+#include "pointFieldsFwd.H"
 #include "scalarField.H"
 #include "vectorField.H"
 #include "Map.H"
 #include "DynamicList.H"
-#include "point.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class polyMesh;
-class pointMesh;
-template<class T> class pointPatchField;
-template<class Type, template<class> class PatchField, class GeoMesh>
-class GeometricField;
 class face;
+class polyMesh;
 
 /*---------------------------------------------------------------------------*\
                        Class pointMVCWeight Declaration
@@ -142,7 +139,7 @@ public:
         template<class Type>
         inline Type interpolate
         (
-            const GeometricField<Type, pointPatchField, pointMesh>& psip
+            const PointField<Type>& psip
         ) const;
 };
 

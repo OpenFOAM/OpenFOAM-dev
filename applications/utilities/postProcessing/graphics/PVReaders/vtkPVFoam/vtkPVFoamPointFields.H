@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::vtkPVFoam::convertPointFields
         if
         (
             iter()->headerClassName()
-         != GeometricField<Type, pointPatchField, pointMesh>::typeName
+         != PointField<Type>::typeName
         )
         {
             continue;
@@ -66,7 +66,7 @@ void Foam::vtkPVFoam::convertPointFields
                 << fieldName << endl;
         }
 
-        GeometricField<Type, pointPatchField, pointMesh> ptf
+        PointField<Type> ptf
         (
             *iter(),
             pMesh
@@ -172,7 +172,7 @@ void Foam::vtkPVFoam::convertPointFields
 template<class Type>
 void Foam::vtkPVFoam::convertPointFieldBlock
 (
-    const GeometricField<Type, pointPatchField, pointMesh>& ptf,
+    const PointField<Type>& ptf,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
     const List<polyDecomp>& decompLst
@@ -201,7 +201,7 @@ void Foam::vtkPVFoam::convertPointFieldBlock
 template<class Type>
 void Foam::vtkPVFoam::convertPointField
 (
-    const GeometricField<Type, pointPatchField, pointMesh>& ptf,
+    const PointField<Type>& ptf,
     const GeometricField<Type, fvPatchField, volMesh>& tf,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,

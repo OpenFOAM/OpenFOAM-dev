@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,8 +108,8 @@ class fvMeshAdder
             const mapAddedPolyMesh& meshMap,
             const labelListList& oldMeshPoints,
 
-            GeometricField<Type, pointPatchField, pointMesh>& fld,
-            const GeometricField<Type, pointPatchField, pointMesh>& fldToAdd
+            PointField<Type>& fld,
+            const PointField<Type>& fldToAdd
         );
 
         //- Update single dimensionedField.

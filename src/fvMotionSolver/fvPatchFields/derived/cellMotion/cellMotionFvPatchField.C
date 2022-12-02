@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,9 +96,9 @@ void Foam::cellMotionFvPatchField<Type>::updateCoeffs()
     word pfName = this->internalField().name();
     pfName.replace("cell", "point");
 
-    const GeometricField<Type, pointPatchField, pointMesh>& pointMotion =
+    const PointField<Type>& pointMotion =
         this->db().objectRegistry::template
-            lookupObject<GeometricField<Type, pointPatchField, pointMesh>>
+            lookupObject<PointField<Type>>
             (pfName);
 
     forAll(p, i)

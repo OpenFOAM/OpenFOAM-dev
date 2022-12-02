@@ -424,7 +424,7 @@ void Foam::pointConstraints::constrainDisplacement
 template<>
 void Foam::pointConstraints::constrainCorners<Foam::scalar>
 (
-    GeometricField<scalar, pointPatchField, pointMesh>& pf
+    PointField<scalar>& pf
 ) const
 {}
 
@@ -432,7 +432,7 @@ void Foam::pointConstraints::constrainCorners<Foam::scalar>
 template<>
 void Foam::pointConstraints::constrainCorners<Foam::label>
 (
-    GeometricField<label, pointPatchField, pointMesh>& pf
+    PointField<label>& pf
 ) const
 {}
 

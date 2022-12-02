@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
 {
     const fvMesh& mesh = this->mesh();
 
-    GeometricField<Type, pointPatchField, pointMesh> pvf
+    PointField<Type> pvf
     (
         volPointInterpolation::New(mesh).interpolate(vf)
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,7 +143,7 @@ void Foam::AveragingMethods::Moment<Type>::add
       + coordinates[3]*this->mesh_.points()[triIs[2]];
 
     const Type v = value/this->mesh_.V()[celli];
-    const TypeGrad dv = transform_[celli] & (v*delta/scale_[celli]);
+    const GradType dv = transform_[celli] & (v*delta/scale_[celli]);
 
     data_[celli] += v;
     dataX_[celli] += v + dv.x();
@@ -171,7 +171,7 @@ Type Foam::AveragingMethods::Moment<Type>::interpolate
     return
         data_[celli]
       + (
-            TypeGrad
+            GradType
             (
                 dataX_[celli] - data_[celli],
                 dataY_[celli] - data_[celli],
@@ -183,7 +183,7 @@ Type Foam::AveragingMethods::Moment<Type>::interpolate
 
 
 template<class Type>
-typename Foam::AveragingMethods::Moment<Type>::TypeGrad
+typename Foam::AveragingMethods::Moment<Type>::GradType
 Foam::AveragingMethods::Moment<Type>::interpolateGrad
 (
     const barycentric& coordinates,
@@ -193,7 +193,7 @@ Foam::AveragingMethods::Moment<Type>::interpolateGrad
     const label celli(tetIs.cell());
 
     return
-        TypeGrad
+        GradType
         (
             dataX_[celli] - data_[celli],
             dataY_[celli] - data_[celli],

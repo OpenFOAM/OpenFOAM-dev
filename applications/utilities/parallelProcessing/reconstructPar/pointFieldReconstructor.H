@@ -114,7 +114,7 @@ public:
 
         //- Reconstruct field
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh>>
+        tmp<PointField<Type>>
         reconstructField(const IOobject& fieldIoObject);
 
         //- Reconstruct and write all fields

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -533,7 +533,7 @@ void ensightField
 template<class Type>
 void ensightPointField
 (
-    const GeometricField<Type, pointPatchField, pointMesh>& pf,
+    const PointField<Type>& pf,
     const ensightMesh& eMesh,
     const fileName& postProcPath,
     const word& prepend,
@@ -729,7 +729,7 @@ void ensightField
 {
     if (nodeValues)
     {
-        tmp<GeometricField<Type, pointPatchField, pointMesh>> pfld
+        tmp<PointField<Type>> pfld
         (
             volPointInterpolation::New(vf.mesh()).interpolate(vf)
         );

@@ -52,7 +52,7 @@ Foam::interpolationVolPointInterpolation<Type>::
 interpolationVolPointInterpolation
 (
     const GeometricField<Type, fvPatchField, volMesh>& psi,
-    tmp<GeometricField<Type, pointPatchField, pointMesh>> psip
+    tmp<PointField<Type>> psip
 )
 :
     psip_(psip)

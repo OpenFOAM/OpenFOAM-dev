@@ -52,7 +52,7 @@ protected:
     // Protected data
 
         //- Interpolated volfield
-        const GeometricField<Type, pointPatchField, pointMesh> psip_;
+        const PointField<Type> psip_;
 
 
 public:
@@ -74,7 +74,7 @@ public:
         interpolationVolPointInterpolation
         (
             const GeometricField<Type, fvPatchField, volMesh>& psi,
-            tmp<GeometricField<Type, pointPatchField, pointMesh>> psip
+            tmp<PointField<Type>> psip
         );
 
 
@@ -86,7 +86,7 @@ public:
     // Member Functions
 
         //- Access the point field
-        inline const GeometricField<Type, pointPatchField, pointMesh>&
+        inline const PointField<Type>&
             psip() const
         {
             return psip_;

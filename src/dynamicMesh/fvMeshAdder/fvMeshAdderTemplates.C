@@ -603,15 +603,15 @@ void Foam::fvMeshAdder::MapPointField
     const mapAddedPolyMesh& meshMap,
     const labelListList& oldMeshPoints,
 
-    GeometricField<Type, pointPatchField, pointMesh>& fld,
-    const GeometricField<Type, pointPatchField, pointMesh>& fldToAdd
+    PointField<Type>& fld,
+    const PointField<Type>& fldToAdd
 )
 {
     // This is a bit tricky:
     // - mesh pointed to by fld is invalid
     // - pointPatches pointed to be fld are invalid
 
-    typename GeometricField<Type, pointPatchField, pointMesh>::
+    typename PointField<Type>::
     Boundary& bfld = fld.boundaryFieldRef();
 
     // Internal field

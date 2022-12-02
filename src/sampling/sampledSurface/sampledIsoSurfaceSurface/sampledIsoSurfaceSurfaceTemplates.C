@@ -52,7 +52,7 @@ Foam::sampledSurfaces::sampledIsoSurfaceSurface::interpolateField
 
     if (isA<interpolationVolPointInterpolation<Type>>(interpolator))
     {
-        const GeometricField<Type, pointPatchField, pointMesh>& pField =
+        const PointField<Type>& pField =
             refCast<const interpolationVolPointInterpolation<Type>>
             (interpolator).psip();
 
