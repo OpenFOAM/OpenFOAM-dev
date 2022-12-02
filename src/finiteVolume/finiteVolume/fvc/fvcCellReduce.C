@@ -40,13 +40,11 @@ Foam::fvc::cellReduce
     const Type& nullValue
 )
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> volFieldType;
-
     const fvMesh& mesh = ssf.mesh();
 
-    tmp<volFieldType> tresult
+    tmp<VolField<Type>> tresult
     (
-        volFieldType::New
+        VolField<Type>::New
         (
             "cellReduce(" + ssf.name() + ')',
             mesh,
@@ -59,7 +57,7 @@ Foam::fvc::cellReduce
         )
     );
 
-    volFieldType& result = tresult.ref();
+    VolField<Type>& result = tresult.ref();
 
     const labelUList& own = mesh.owner();
     const labelUList& nbr = mesh.neighbour();

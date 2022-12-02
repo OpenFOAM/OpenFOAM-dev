@@ -55,28 +55,27 @@ void Foam::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 }
 
 
-template<class T, class Mesh>
+template<class Type, class Mesh>
 void Foam::fvMeshDistribute::saveBoundaryFields
 (
-    PtrList<FieldField<fvsPatchField, T>>& bflds
+    PtrList<FieldField<fvsPatchField, Type>>& bflds
 ) const
 {
     // Save whole boundary field
 
-    typedef GeometricField<T, fvsPatchField, Mesh> fldType;
-
-    HashTable<const fldType*> flds
+    HashTable<const SurfaceField<Type>*> flds
     (
-        static_cast<const fvMesh&>(mesh_).objectRegistry::lookupClass<fldType>()
+        static_cast<const fvMesh&>(mesh_)
+       .objectRegistry::lookupClass<SurfaceField<Type>>()
     );
 
     bflds.setSize(flds.size());
 
     label i = 0;
 
-    forAllConstIter(typename HashTable<const fldType*>, flds, iter)
+    forAllConstIter(typename HashTable<const SurfaceField<Type>*>, flds, iter)
     {
-        const fldType& fld = *iter();
+        const SurfaceField<Type>& fld = *iter();
 
         bflds.set(i, fld.boundaryField().clone().ptr());
 
@@ -85,11 +84,11 @@ void Foam::fvMeshDistribute::saveBoundaryFields
 }
 
 
-template<class T, class Mesh>
+template<class Type, class Mesh>
 void Foam::fvMeshDistribute::mapBoundaryFields
 (
     const polyTopoChangeMap& map,
-    const PtrList<FieldField<fvsPatchField, T>>& oldBflds
+    const PtrList<FieldField<fvsPatchField, Type>>& oldBflds
 )
 {
     // Map boundary field
@@ -97,11 +96,9 @@ void Foam::fvMeshDistribute::mapBoundaryFields
     const labelList& oldPatchStarts = map.oldPatchStarts();
     const labelList& faceMap = map.faceMap();
 
-    typedef GeometricField<T, fvsPatchField, Mesh> fldType;
-
-    HashTable<fldType*> flds
+    HashTable<SurfaceField<Type>*> flds
     (
-        mesh_.objectRegistry::lookupClass<fldType>()
+        mesh_.objectRegistry::lookupClass<SurfaceField<Type>>()
     );
 
     if (flds.size() != oldBflds.size())
@@ -112,19 +109,19 @@ void Foam::fvMeshDistribute::mapBoundaryFields
 
     label fieldi = 0;
 
-    forAllIter(typename HashTable<fldType*>, flds, iter)
+    forAllIter(typename HashTable<SurfaceField<Type>*>, flds, iter)
     {
-        fldType& fld = *iter();
-        typename fldType::Boundary& bfld =
+        SurfaceField<Type>& fld = *iter();
+        typename SurfaceField<Type>::Boundary& bfld =
             fld.boundaryFieldRef();
 
-        const FieldField<fvsPatchField, T>& oldBfld = oldBflds[fieldi++];
+        const FieldField<fvsPatchField, Type>& oldBfld = oldBflds[fieldi++];
 
         // Pull from old boundary field into bfld.
 
         forAll(bfld, patchi)
         {
-            fvsPatchField<T>& patchFld = bfld[patchi];
+            fvsPatchField<Type>& patchFld = bfld[patchi];
             label facei = patchFld.patch().start();
 
             forAll(patchFld, i)
@@ -147,35 +144,35 @@ void Foam::fvMeshDistribute::mapBoundaryFields
 }
 
 
-template<class T>
+template<class Type>
 void Foam::fvMeshDistribute::initMapExposedFaces
 (
-    PtrList<Field<T>>& iflds
+    PtrList<Field<Type>>& iflds
 ) const
 {
-    HashTable<const SurfaceField<T>*> flds
+    HashTable<const SurfaceField<Type>*> flds
     (
-        static_cast<const fvMesh&>(mesh_).lookupClass<SurfaceField<T>>()
+        static_cast<const fvMesh&>(mesh_).lookupClass<SurfaceField<Type>>()
     );
 
     iflds.setSize(flds.size());
 
     label fieldi = 0;
 
-    forAllConstIter(typename HashTable<const SurfaceField<T>*>, flds, iter)
+    forAllConstIter(typename HashTable<const SurfaceField<Type>*>, flds, iter)
     {
-        iflds.set(fieldi, Field<T>(mesh_.nFaces()));
+        iflds.set(fieldi, Field<Type>(mesh_.nFaces()));
 
-        const SurfaceField<T>& fld = *iter();
+        const SurfaceField<Type>& fld = *iter();
 
-        SubList<T>(iflds[fieldi], fld.primitiveField().size()) =
+        SubList<Type>(iflds[fieldi], fld.primitiveField().size()) =
             fld.primitiveField();
 
         forAll(fld.boundaryField(), patchi)
         {
-            const fvsPatchField<T>& pfld = fld.boundaryField()[patchi];
+            const fvsPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
-            SubList<T>(iflds[fieldi], pfld.size(), pfld.patch().start()) =
+            SubList<Type>(iflds[fieldi], pfld.size(), pfld.patch().start()) =
                 pfld;
         }
 
@@ -184,31 +181,31 @@ void Foam::fvMeshDistribute::initMapExposedFaces
 }
 
 
-template<class T>
+template<class Type>
 void Foam::fvMeshDistribute::mapExposedFaces
 (
     const polyTopoChangeMap& map,
-    const PtrList<Field<T>>& oldFlds
+    const PtrList<Field<Type>>& oldFlds
 )
 {
-    HashTable<SurfaceField<T>*> flds
+    HashTable<SurfaceField<Type>*> flds
     (
-        mesh_.objectRegistry::lookupClass<SurfaceField<T>>()
+        mesh_.objectRegistry::lookupClass<SurfaceField<Type>>()
     );
 
     label fieldi = 0;
 
-    forAllIter(typename HashTable<SurfaceField<T>*>, flds, iter)
+    forAllIter(typename HashTable<SurfaceField<Type>*>, flds, iter)
     {
-        SurfaceField<T>& fld = *iter();
+        SurfaceField<Type>& fld = *iter();
 
-        const Field<T>& oldFld = oldFlds[fieldi];
+        const Field<Type>& oldFld = oldFlds[fieldi];
 
         const bool negateIfFlipped = isFlux(fld);
 
         forAll(fld.boundaryField(), patchi)
         {
-            fvsPatchField<T>& patchFld = fld.boundaryFieldRef()[patchi];
+            fvsPatchField<Type>& patchFld = fld.boundaryFieldRef()[patchi];
 
             forAll(patchFld, i)
             {

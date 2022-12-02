@@ -164,13 +164,11 @@ void Foam::fv::rotorDiskSource::writeField
     const bool writeNow
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
     if (mesh().time().writeTime() || writeNow)
     {
-        tmp<fieldType> tfield
+        tmp<VolField<Type>> tfield
         (
-            new fieldType
+            new VolField<Type>
             (
                 IOobject
                 (

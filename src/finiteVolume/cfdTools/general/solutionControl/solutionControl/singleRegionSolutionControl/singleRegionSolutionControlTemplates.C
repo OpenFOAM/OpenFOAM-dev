@@ -28,14 +28,12 @@ License
 template<class Type>
 void Foam::singleRegionSolutionControl::storePrevIterTypeFields() const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
+    HashTable<VolField<Type>*>
+        flds(mesh_.objectRegistry::lookupClass<VolField<Type>>());
 
-    HashTable<fieldType*>
-        flds(mesh_.objectRegistry::lookupClass<fieldType>());
-
-    forAllIter(typename HashTable<fieldType*>, flds, iter)
+    forAllIter(typename HashTable<VolField<Type>*>, flds, iter)
     {
-        fieldType& fld = *iter();
+        VolField<Type>& fld = *iter();
 
         const word& fName = fld.name();
 

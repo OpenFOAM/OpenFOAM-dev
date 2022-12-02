@@ -113,30 +113,30 @@ class fvMeshDistribute
             label findNonEmptyPatch() const;
 
             //- Save boundary fields
-            template<class T, class Mesh>
+            template<class Type, class Mesh>
             void saveBoundaryFields
             (
-                PtrList<FieldField<fvsPatchField, T>>& bflds
+                PtrList<FieldField<fvsPatchField, Type>>& bflds
             ) const;
 
             //- Map boundary fields
-            template<class T, class Mesh>
+            template<class Type, class Mesh>
             void mapBoundaryFields
             (
                 const polyTopoChangeMap& map,
-                const PtrList<FieldField<fvsPatchField, T>>& oldBflds
+                const PtrList<FieldField<fvsPatchField, Type>>& oldBflds
             );
 
             //- Set value of exposed patch faces
-            template<class T>
-            void initMapExposedFaces(PtrList<Field<T>>& iflds) const;
+            template<class Type>
+            void initMapExposedFaces(PtrList<Field<Type>>& iflds) const;
 
             //- Set value of exposed patch faces
-            template<class T>
+            template<class Type>
             void mapExposedFaces
             (
                 const polyTopoChangeMap& map,
-                const PtrList<Field<T>>& oldFlds
+                const PtrList<Field<Type>>& oldFlds
             );
 
             //- Correct coupled patch fields

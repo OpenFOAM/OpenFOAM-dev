@@ -190,12 +190,7 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& vf
         ) = 0;
 
-        typedef GeometricField
-        <
-            typename flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        > fluxFieldType;
+        typedef SurfaceField<typename flux<Type>::type> fluxFieldType;
 
         virtual tmp<surfaceScalarField> fvcDdtPhiCoeff
         (

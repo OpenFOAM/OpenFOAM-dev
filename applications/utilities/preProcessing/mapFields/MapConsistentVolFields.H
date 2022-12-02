@@ -43,12 +43,10 @@ void MapConsistentVolFields
     const meshToMesh0::order& mapOrder
 )
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
     const fvMesh& meshSource = meshToMesh0Interp.fromMesh();
     const fvMesh& meshTarget = meshToMesh0Interp.toMesh();
 
-    IOobjectList fields = objects.lookupClass(fieldType::typeName);
+    IOobjectList fields = objects.lookupClass(VolField<Type>::typeName);
 
     forAllIter(IOobjectList, fields, fieldIter)
     {
@@ -56,9 +54,9 @@ void MapConsistentVolFields
             << endl;
 
         // Read field
-        fieldType fieldSource(*fieldIter(), meshSource);
+        VolField<Type> fieldSource(*fieldIter(), meshSource);
 
-        typeIOobject<fieldType> fieldTargetIOobject
+        typeIOobject<VolField<Type>> fieldTargetIOobject
         (
             fieldIter()->name(),
             meshTarget.time().name(),
@@ -70,7 +68,7 @@ void MapConsistentVolFields
         if (fieldTargetIOobject.headerOk())
         {
             // Read fieldTarget
-            fieldType fieldTarget
+            VolField<Type> fieldTarget
             (
                 fieldTargetIOobject,
                 meshTarget
@@ -92,7 +90,7 @@ void MapConsistentVolFields
             fieldTargetIOobject.readOpt() = IOobject::NO_READ;
 
             // Interpolate field
-            fieldType fieldTarget
+            VolField<Type> fieldTarget
             (
                 fieldTargetIOobject,
                 meshToMesh0Interp.interpolate

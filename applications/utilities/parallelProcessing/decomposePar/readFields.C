@@ -36,10 +36,11 @@ void Foam::readFields
     const bool readOldTime
 )
 {
-    typedef GeometricField<Type, PatchField, GeoMesh> GeoField;
-
-    // Search list of objects for fields of type GeomField
-    IOobjectList fieldObjects(objects.lookupClass(GeoField::typeName));
+    // Search list of objects for fields
+    IOobjectList fieldObjects(objects.lookupClass
+    (
+        GeometricField<Type, PatchField, GeoMesh>::typeName)
+    );
 
     // Remove the cellProc field
     IOobjectList::iterator cellProcIter = fieldObjects.find("cellProc");
@@ -59,7 +60,16 @@ void Foam::readFields
     {
         const IOobject& io = *fieldObjects[masterNames[i]];
 
-        fields.set(i, new GeoField(io, mesh, readOldTime));
+        fields.set
+        (
+            i,
+            new GeometricField<Type, PatchField, GeoMesh>
+            (
+                io,
+                mesh,
+                readOldTime
+            )
+        );
     }
 }
 

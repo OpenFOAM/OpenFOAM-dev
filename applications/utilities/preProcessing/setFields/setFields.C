@@ -50,9 +50,7 @@ bool setCellFieldType
     Istream& fieldValueStream
 )
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
-    if (fieldTypeDesc != fieldType::typeName + "Value")
+    if (fieldTypeDesc != VolField<Type>::typeName + "Value")
     {
         return false;
     }
@@ -60,7 +58,7 @@ bool setCellFieldType
     word fieldName(fieldValueStream);
 
     // Check the current time directory
-    typeIOobject<fieldType> fieldHeader
+    typeIOobject<VolField<Type>> fieldHeader
     (
         fieldName,
         mesh.time().name(),
@@ -71,7 +69,7 @@ bool setCellFieldType
     // Check the "constant" directory
     if (!fieldHeader.headerOk())
     {
-        fieldHeader = typeIOobject<fieldType>
+        fieldHeader = typeIOobject<VolField<Type>>
         (
             fieldName,
             mesh.time().constant(),
@@ -87,7 +85,7 @@ bool setCellFieldType
             << fieldHeader.headerClassName()
             << " " << fieldName << endl;
 
-        fieldType field(fieldHeader, mesh);
+        VolField<Type> field(fieldHeader, mesh);
 
         const Type value = pTraits<Type>(fieldValueStream);
 
@@ -196,9 +194,7 @@ bool setFaceFieldType
     Istream& fieldValueStream
 )
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
-    if (fieldTypeDesc != fieldType::typeName + "Value")
+    if (fieldTypeDesc != VolField<Type>::typeName + "Value")
     {
         return false;
     }
@@ -206,7 +202,7 @@ bool setFaceFieldType
     word fieldName(fieldValueStream);
 
     // Check the current time directory
-    typeIOobject<fieldType> fieldHeader
+    typeIOobject<VolField<Type>> fieldHeader
     (
         fieldName,
         mesh.time().name(),
@@ -217,7 +213,7 @@ bool setFaceFieldType
     // Check the "constant" directory
     if (!fieldHeader.headerOk())
     {
-        fieldHeader = typeIOobject<fieldType>
+        fieldHeader = typeIOobject<VolField<Type>>
         (
             fieldName,
             mesh.time().constant(),
@@ -234,8 +230,8 @@ bool setFaceFieldType
             << " " << fieldName << endl;
 
         // Read the field
-        fieldType field(fieldHeader, mesh);
-        typename fieldType::Boundary& fieldBf = field.boundaryFieldRef();
+        VolField<Type> field(fieldHeader, mesh);
+        typename VolField<Type>::Boundary& fieldBf = field.boundaryFieldRef();
 
         // Read the value
         const Type value = pTraits<Type>(fieldValueStream);
@@ -252,9 +248,9 @@ bool setFaceFieldType
         }
 
         // Create a copy of the boundary field
-        typename fieldType::Boundary fieldBfCopy
+        typename VolField<Type>::Boundary fieldBfCopy
         (
-            fieldType::Internal::null(),
+            VolField<Type>::Internal::null(),
             fieldBf
         );
 

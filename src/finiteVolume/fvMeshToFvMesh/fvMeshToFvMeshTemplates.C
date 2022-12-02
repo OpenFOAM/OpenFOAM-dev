@@ -86,12 +86,10 @@ Foam::fvMeshToFvMesh::mapSrcToTgt
     const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
     const fvMesh& tgtMesh = static_cast<const fvMesh&>(meshToMesh::tgtMesh());
 
     const fvBoundaryMesh& tgtBm = tgtMesh.boundary();
-    const typename fieldType::Boundary& srcBfld =
+    const typename VolField<Type>::Boundary& srcBfld =
         field.boundaryField();
 
     PtrList<fvPatchField<Type>> tgtPatchFields(tgtBm.size());
@@ -143,9 +141,9 @@ Foam::fvMeshToFvMesh::mapSrcToTgt
         }
     }
 
-    tmp<fieldType> tresult
+    tmp<VolField<Type>> tresult
     (
-        new fieldType
+        new VolField<Type>
         (
             IOobject
             (

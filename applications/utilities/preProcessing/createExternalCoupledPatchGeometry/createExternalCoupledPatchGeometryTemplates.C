@@ -43,16 +43,14 @@ void processField
         return;
     }
 
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
     const word timeName(mesh.time().name());
 
-    IOobjectList fieldObjbjects(objects.lookupClass(fieldType::typeName));
+    IOobjectList fieldObjbjects(objects.lookupClass(VolField<Type>::typeName));
 
     if (fieldObjbjects.lookup(fieldName) != nullptr)
     {
-        fieldType vtf(*fieldObjbjects.lookup(fieldName), mesh);
-        const typename fieldType::Boundary& bf =
+        VolField<Type> vtf(*fieldObjbjects.lookup(fieldName), mesh);
+        const typename VolField<Type>::Boundary& bf =
             vtf.boundaryField();
 
         forAll(bf, patchi)

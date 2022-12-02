@@ -139,8 +139,7 @@ class fvMatrix
 
 
         //- Face flux field for non-orthogonal correction
-        mutable GeometricField<Type, fvsPatchField, surfaceMesh>
-            *faceFluxCorrectionPtr_;
+        mutable SurfaceField<Type>* faceFluxCorrectionPtr_;
 
 
 protected:
@@ -330,13 +329,8 @@ public:
                 return boundaryCoeffs_;
             }
 
-
-            //- Declare return type of the faceFluxCorrectionPtr() function
-            typedef GeometricField<Type, fvsPatchField, surfaceMesh>
-                *surfaceTypeFieldPtr;
-
             //- Return pointer to face-flux non-orthogonal correction field
-            surfaceTypeFieldPtr& faceFluxCorrectionPtr()
+            SurfaceField<Type>*& faceFluxCorrectionPtr()
             {
                 return faceFluxCorrectionPtr_;
             }

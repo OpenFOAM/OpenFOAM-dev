@@ -46,8 +46,6 @@ Foam::tmp
 )
 {
     typedef typename outerProduct<WeightType, Type>::type WeightedType;
-    typedef GeometricField<WeightedType, fvPatchField, volMesh>
-        WeightedFieldType;
 
     const fvMesh& mesh = fld.mesh();
 
@@ -55,9 +53,9 @@ Foam::tmp
     List<List<Type>> stencilFld;
     extendedCellToFaceStencil::collectData(map, stencil, fld, stencilFld);
 
-    tmp<WeightedFieldType> twf
+    tmp<VolField<WeightedType>> twf
     (
-        new WeightedFieldType
+        new VolField<WeightedType>
         (
             IOobject
             (
@@ -74,7 +72,7 @@ Foam::tmp
             )
         )
     );
-    WeightedFieldType& wf = twf();
+    VolField<WeightedType>& wf = twf();
 
     forAll(wf, celli)
     {

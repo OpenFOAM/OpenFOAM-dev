@@ -158,18 +158,16 @@ Foam::volPointInterpolation::interpolate
     const bool cache
 ) const
 {
-    typedef GeometricField<Type, pointPatchField, pointMesh> PointFieldType;
-
     const pointMesh& pm = pointMesh::New(vf.mesh());
     const objectRegistry& db = pm.thisDb();
 
     if (!cache || vf.mesh().changing())
     {
         // Delete any old occurrences to avoid double registration
-        if (db.objectRegistry::template foundObject<PointFieldType>(name))
+        if (db.objectRegistry::template foundObject<PointField<Type>>(name))
         {
-            PointFieldType& pf =
-                db.objectRegistry::template lookupObjectRef<PointFieldType>
+            PointField<Type>& pf =
+                db.objectRegistry::template lookupObjectRef<PointField<Type>>
                 (
                     name
                 );
@@ -198,18 +196,18 @@ Foam::volPointInterpolation::interpolate
     }
     else
     {
-        if (!db.objectRegistry::template foundObject<PointFieldType>(name))
+        if (!db.objectRegistry::template foundObject<PointField<Type>>(name))
         {
             solution::cachePrintMessage("Calculating and caching", name, vf);
-            tmp<PointFieldType> tpf = interpolate(vf, name, false);
-            PointFieldType* pfPtr = tpf.ptr();
+            tmp<PointField<Type>> tpf = interpolate(vf, name, false);
+            PointField<Type>* pfPtr = tpf.ptr();
             regIOobject::store(pfPtr);
             return *pfPtr;
         }
         else
         {
-            PointFieldType& pf =
-                db.objectRegistry::template lookupObjectRef<PointFieldType>
+            PointField<Type>& pf =
+                db.objectRegistry::template lookupObjectRef<PointField<Type>>
                 (
                     name
                 );
@@ -226,10 +224,10 @@ Foam::volPointInterpolation::interpolate
                 delete &pf;
 
                 solution::cachePrintMessage("Recalculating", name, vf);
-                tmp<PointFieldType> tpf = interpolate(vf, name, false);
+                tmp<PointField<Type>> tpf = interpolate(vf, name, false);
 
                 solution::cachePrintMessage("Storing", name, vf);
-                PointFieldType* pfPtr = tpf.ptr();
+                PointField<Type>* pfPtr = tpf.ptr();
                 regIOobject::store(pfPtr);
 
                 return *pfPtr;

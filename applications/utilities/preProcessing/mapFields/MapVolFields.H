@@ -43,16 +43,14 @@ void MapVolFields
     const meshToMesh0::order& mapOrder
 )
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
     const fvMesh& meshSource = meshToMesh0Interp.fromMesh();
     const fvMesh& meshTarget = meshToMesh0Interp.toMesh();
 
-    IOobjectList fields = objects.lookupClass(fieldType::typeName);
+    IOobjectList fields = objects.lookupClass(VolField<Type>::typeName);
 
     forAllIter(IOobjectList, fields, fieldIter)
     {
-        typeIOobject<fieldType> fieldTargetIOobject
+        typeIOobject<VolField<Type>> fieldTargetIOobject
         (
             fieldIter()->name(),
             meshTarget.time().name(),
@@ -66,10 +64,10 @@ void MapVolFields
             Info<< "    interpolating " << fieldIter()->name() << endl;
 
             // Read field fieldSource
-            fieldType fieldSource(*fieldIter(), meshSource);
+            VolField<Type> fieldSource(*fieldIter(), meshSource);
 
             // Read fieldTarget
-            fieldType fieldTarget
+            VolField<Type> fieldTarget
             (
                 fieldTargetIOobject,
                 meshTarget

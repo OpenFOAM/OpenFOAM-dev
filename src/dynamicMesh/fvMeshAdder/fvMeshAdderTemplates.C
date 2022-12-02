@@ -553,31 +553,29 @@ void Foam::fvMeshAdder::MapSurfaceFields
     const fvMesh& meshToAdd
 )
 {
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> fldType;
-
-    HashTable<const fldType*> fields
+    HashTable<const SurfaceField<Type>*> fields
     (
-        mesh.objectRegistry::lookupClass<fldType>()
+        mesh.objectRegistry::lookupClass<SurfaceField<Type>>()
     );
 
-    HashTable<const fldType*> fieldsToAdd
+    HashTable<const SurfaceField<Type>*> fieldsToAdd
     (
-        meshToAdd.objectRegistry::lookupClass<fldType>()
+        meshToAdd.objectRegistry::lookupClass<SurfaceField<Type>>()
     );
 
     for
     (
-        typename HashTable<const fldType*>::
+        typename HashTable<const SurfaceField<Type>*>::
             iterator fieldIter = fields.begin();
         fieldIter != fields.end();
         ++fieldIter
     )
     {
-        fldType& fld = const_cast<fldType&>(*fieldIter());
+        SurfaceField<Type>& fld = const_cast<SurfaceField<Type>&>(*fieldIter());
 
         if (fieldsToAdd.found(fld.name()))
         {
-            const fldType& fldToAdd = *fieldsToAdd[fld.name()];
+            const SurfaceField<Type>& fldToAdd = *fieldsToAdd[fld.name()];
 
             if (debug)
             {
@@ -856,24 +854,25 @@ void Foam::fvMeshAdder::MapPointFields
     const objectRegistry& meshToAdd
 )
 {
-    typedef GeometricField<Type, pointPatchField, pointMesh> fldType;
+    HashTable<const PointField<Type>*>
+        fields(mesh.thisDb().lookupClass<PointField<Type>>());
 
-    HashTable<const fldType*> fields(mesh.thisDb().lookupClass<fldType>());
-    HashTable<const fldType*> fieldsToAdd(meshToAdd.lookupClass<fldType>());
+    HashTable<const PointField<Type>*>
+        fieldsToAdd(meshToAdd.lookupClass<PointField<Type>>());
 
     for
     (
-        typename HashTable<const fldType*>::
+        typename HashTable<const PointField<Type>*>::
             iterator fieldIter = fields.begin();
         fieldIter != fields.end();
         ++fieldIter
     )
     {
-        fldType& fld = const_cast<fldType&>(*fieldIter());
+        PointField<Type>& fld = const_cast<PointField<Type>&>(*fieldIter());
 
         if (fieldsToAdd.found(fld.name()))
         {
-            const fldType& fldToAdd = *fieldsToAdd[fld.name()];
+            const PointField<Type>& fldToAdd = *fieldsToAdd[fld.name()];
 
             if (debug)
             {
@@ -923,33 +922,32 @@ void Foam::fvMeshAdder::MapDimFields
     const fvMesh& meshToAdd
 )
 {
-    typedef DimensionedField<Type, volMesh> fldType;
-
     // Note: use strict flag on lookupClass to avoid picking up
     //       volFields
-    HashTable<const fldType*> fields
+    HashTable<const VolInternalField<Type>*> fields
     (
-        mesh.objectRegistry::lookupClass<fldType>(true)
+        mesh.objectRegistry::lookupClass<VolInternalField<Type>>(true)
     );
 
-    HashTable<const fldType*> fieldsToAdd
+    HashTable<const VolInternalField<Type>*> fieldsToAdd
     (
-        meshToAdd.objectRegistry::lookupClass<fldType>(true)
+        meshToAdd.objectRegistry::lookupClass<VolInternalField<Type>>(true)
     );
 
     for
     (
-        typename HashTable<const fldType*>::
+        typename HashTable<const VolInternalField<Type>*>::
             iterator fieldIter = fields.begin();
         fieldIter != fields.end();
         ++fieldIter
     )
     {
-        fldType& fld = const_cast<fldType&>(*fieldIter());
+        VolInternalField<Type>& fld =
+            const_cast<VolInternalField<Type>&>(*fieldIter());
 
         if (fieldsToAdd.found(fld.name()))
         {
-            const fldType& fldToAdd = *fieldsToAdd[fld.name()];
+            const VolInternalField<Type>& fldToAdd = *fieldsToAdd[fld.name()];
 
             if (debug)
             {

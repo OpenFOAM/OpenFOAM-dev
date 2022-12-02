@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,8 +109,8 @@ Foam::cyclicFvsPatchField<Type>::patchNeighbourField
     const Pstream::commsTypes commsType
 ) const
 {
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> geoField;
-    const geoField& gf = refCast<const geoField>(this->internalField());
+    const SurfaceField<Type>& gf =
+        refCast<const SurfaceField<Type>>(this->internalField());
 
     const cyclicFvPatch& cp = refCast<const cyclicFvPatch>(this->patch());
 

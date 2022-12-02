@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,6 @@ void Foam::motionSmootherAlgo::checkConstraints
     GeometricField<Type, pointPatchField, pointMesh>& pf
 )
 {
-    typedef GeometricField<Type, pointPatchField, pointMesh> FldType;
-
     const polyMesh& mesh = pf.mesh();
 
     const polyBoundaryMesh& bm = mesh.boundaryMesh();
@@ -57,7 +55,7 @@ void Foam::motionSmootherAlgo::checkConstraints
     }
 
 
-    typename FldType::Boundary& bFld = pf.boundaryField();
+    typename PointField<Type>::Boundary& bFld = pf.boundaryField();
 
 
     // Evaluate in reverse order

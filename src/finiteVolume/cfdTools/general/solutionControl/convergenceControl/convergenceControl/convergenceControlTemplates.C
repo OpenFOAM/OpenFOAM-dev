@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,9 +72,7 @@ void Foam::convergenceControl::getInitialTypeResiduals
     scalar& r
 )
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
-    if (mesh.foundObject<fieldType>(fieldName))
+    if (mesh.foundObject<VolField<Type>>(fieldName))
     {
         const DynamicList<SolverPerformance<Type>>& sp
         (
