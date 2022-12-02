@@ -96,9 +96,9 @@ Foam::extendedCellToFaceStencil::weightedSum
     List<List<Type>> stencilFld;
     collectData(map, stencil, fld, stencilFld);
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
+    tmp<SurfaceField<Type>> tsfCorr
     (
-        GeometricField<Type, fvsPatchField, surfaceMesh>::New
+        SurfaceField<Type>::New
         (
             fld.name(),
             mesh,
@@ -110,7 +110,7 @@ Foam::extendedCellToFaceStencil::weightedSum
             )
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsfCorr.ref();
+    SurfaceField<Type>& sf = tsfCorr.ref();
 
     // Internal faces
     for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
@@ -126,7 +126,7 @@ Foam::extendedCellToFaceStencil::weightedSum
 
     // Boundaries. Either constrained or calculated so assign value
     // directly (instead of nicely using operator==)
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+    typename SurfaceField<Type>::
         Boundary& bSfCorr = sf.boundaryFieldRef();
 
     forAll(bSfCorr, patchi)

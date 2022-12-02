@@ -138,7 +138,7 @@ Foam::fvc::interpolate
     const word& name
 )
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf =
+    tmp<SurfaceField<Type>> tsf =
         interpolate(tvf(), faceFlux, name);
 
     tvf.clear();
@@ -155,7 +155,7 @@ Foam::fvc::interpolate
     const word& name
 )
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf =
+    tmp<SurfaceField<Type>> tsf =
         interpolate(vf, tFaceFlux(), name);
 
     tFaceFlux.clear();
@@ -172,7 +172,7 @@ Foam::fvc::interpolate
     const word& name
 )
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf =
+    tmp<SurfaceField<Type>> tsf =
         interpolate(tvf(), tFaceFlux(), name);
 
     tvf.clear();
@@ -227,7 +227,7 @@ Foam::fvc::interpolate
     const word& name
 )
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf =
+    tmp<SurfaceField<Type>> tsf =
         interpolate(tvf(), name);
 
     tvf.clear();
@@ -262,7 +262,7 @@ Foam::fvc::interpolate
     const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 )
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf =
+    tmp<SurfaceField<Type>> tsf =
         interpolate(tvf());
     tvf.clear();
     return tsf;

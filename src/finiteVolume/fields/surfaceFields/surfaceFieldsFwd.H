@@ -54,14 +54,12 @@ class GeometricField;
 template<class Type>
 using SurfaceField = GeometricField<Type, fvsPatchField, surfaceMesh>;
 
-typedef GeometricField<label, fvsPatchField, surfaceMesh> surfaceLabelField;
-typedef GeometricField<scalar, fvsPatchField, surfaceMesh> surfaceScalarField;
-typedef GeometricField<vector, fvsPatchField, surfaceMesh> surfaceVectorField;
-typedef GeometricField<sphericalTensor, fvsPatchField, surfaceMesh>
-    surfaceSphericalTensorField;
-typedef GeometricField<symmTensor, fvsPatchField, surfaceMesh>
-    surfaceSymmTensorField;
-typedef GeometricField<tensor, fvsPatchField, surfaceMesh> surfaceTensorField;
+typedef SurfaceField<label> surfaceLabelField;
+typedef SurfaceField<scalar> surfaceScalarField;
+typedef SurfaceField<vector> surfaceVectorField;
+typedef SurfaceField<sphericalTensor> surfaceSphericalTensorField;
+typedef SurfaceField<symmTensor> surfaceSymmTensorField;
+typedef SurfaceField<tensor> surfaceTensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -219,7 +219,7 @@ public:
 
         //- Zero the MRF region of the given field
         template<class Type>
-        void zero(GeometricField<Type, fvsPatchField, surfaceMesh>& phi) const;
+        void zero(SurfaceField<Type>& phi) const;
 
         //- Update MRFZone faces if the mesh topology changes
         void update();

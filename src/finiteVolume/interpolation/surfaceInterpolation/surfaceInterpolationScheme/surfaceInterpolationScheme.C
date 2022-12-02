@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,16 +165,16 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
     const labelUList& P = mesh.owner();
     const labelUList& N = mesh.neighbour();
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
+    tmp<SurfaceField<Type>> tsf
     (
-        GeometricField<Type, fvsPatchField, surfaceMesh>::New
+        SurfaceField<Type>::New
         (
             "interpolate("+vf.name()+')',
             mesh,
             vf.dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
+    SurfaceField<Type>& sf = tsf.ref();
 
     Field<Type>& sfi = sf.primitiveFieldRef();
 
@@ -185,7 +185,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 
 
     // Interpolate across coupled patches using given lambdas and ys
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+    typename SurfaceField<Type>::
         Boundary& sfbf = sf.boundaryFieldRef();
 
     forAll(lambdas.boundaryField(), pi)
@@ -409,7 +409,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
             << endl;
     }
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
+    tmp<SurfaceField<Type>> tsf
         = interpolate(vf, weights(vf));
 
     if (corrected())
@@ -428,7 +428,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
     const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 ) const
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tinterpVf
+    tmp<SurfaceField<Type>> tinterpVf
         = interpolate(tvf());
     tvf.clear();
     return tinterpVf;

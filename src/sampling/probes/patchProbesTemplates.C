@@ -59,7 +59,7 @@ void Foam::patchProbes::sampleAndWrite
 template<class Type>
 void Foam::patchProbes::sampleAndWrite
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
+    const SurfaceField<Type>& sField
 )
 {
     Field<Type> values(sample(sField));
@@ -126,13 +126,13 @@ void Foam::patchProbes::sampleAndWriteSurfaceFields
         (
             iter != objectRegistry::end()
          && iter()->type()
-         == GeometricField<Type, fvsPatchField, surfaceMesh>::typeName
+         == SurfaceField<Type>::typeName
         )
         {
             sampleAndWrite
             (
                 mesh_.lookupObject
-                <GeometricField<Type, fvsPatchField, surfaceMesh>>
+                <SurfaceField<Type>>
                 (
                     fields[fieldi]
                 )
@@ -199,7 +199,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::patchProbes::sample
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
+    const SurfaceField<Type>& sField
 ) const
 {
     const Type unsetVal(-vGreat*pTraits<Type>::one);

@@ -75,13 +75,13 @@ tmp<surfaceScalarField> phaseStabilisedSnGrad<Type>::deltaCoeffs
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+tmp<SurfaceField<Type>>
 phaseStabilisedSnGrad<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
-    const GeometricField<Type, fvsPatchField, surfaceMesh> corr
+    const SurfaceField<Type> corr
     (
         correctedScheme_().correction(vf)
     );

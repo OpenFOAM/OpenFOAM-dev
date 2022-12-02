@@ -153,7 +153,7 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
 template<class Type>
 void Foam::MRFZone::zero
 (
-    GeometricField<Type, fvsPatchField, surfaceMesh>& phi
+    SurfaceField<Type>& phi
 ) const
 {
     Field<Type>& phii = phi.primitiveFieldRef();
@@ -163,7 +163,7 @@ void Foam::MRFZone::zero
         phii[internalFaces_[i]] = Zero;
     }
 
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::Boundary& phibf =
+    typename SurfaceField<Type>::Boundary& phibf =
         phi.boundaryFieldRef();
 
     forAll(patchFaces_, patchi)

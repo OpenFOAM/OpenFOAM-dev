@@ -128,7 +128,7 @@ public:
 
         //- Return the explicit correction to the face-interpolate
         //  set to zero on the near-boundary faces where upwind is applied
-        inline virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        inline virtual tmp<SurfaceField<Type>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf

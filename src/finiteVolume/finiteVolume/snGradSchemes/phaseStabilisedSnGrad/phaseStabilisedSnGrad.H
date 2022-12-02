@@ -96,7 +96,7 @@ public:
 
         //- Return the explicit correction to the phaseStabilisedSnGrad
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        virtual tmp<SurfaceField<Type>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
 
 

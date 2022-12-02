@@ -196,14 +196,14 @@ namespace fvm
     template<class Type>
     tmp<fvMatrix<Type>> laplacianCorrection
     (
-        const GeometricField<scalar, fvsPatchField, surfaceMesh>&,
+        const SurfaceField<scalar>&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
     tmp<fvMatrix<Type>> laplacianCorrection
     (
-        const tmp<GeometricField<scalar, fvsPatchField, surfaceMesh>>&,
+        const tmp<SurfaceField<scalar>>&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 }

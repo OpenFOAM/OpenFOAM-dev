@@ -119,7 +119,7 @@ Foam::phaseStabilised<Type>::correction
     }
     else
     {
-        return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        return tmp<SurfaceField<Type>>
         (
             nullptr
         );

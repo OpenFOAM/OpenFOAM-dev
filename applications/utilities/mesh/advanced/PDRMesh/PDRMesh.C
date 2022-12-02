@@ -201,7 +201,7 @@ void subsetSurfaceFields
     const label patchi,
     const Type& exposedValue,
     const word GeomSurfType,
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& subFields
+    PtrList<SurfaceField<Type>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -216,7 +216,7 @@ void subsetSurfaceFields
 
             Info<< "Subsetting field " << fieldName << endl;
 
-            GeometricField<Type, fvsPatchField, surfaceMesh> volField
+            SurfaceField<Type> volField
             (
                 *iter(),
                 baseMesh

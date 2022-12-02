@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ tmp
 >
 reconstruct
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf
+    const SurfaceField<Type>& ssf
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;
@@ -89,7 +89,7 @@ reconstruct
         rf[nei] -= (Cf[facei] - C[nei])*ssf[facei];
     }
 
-    const typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+    const typename SurfaceField<Type>::
     Boundary& bsf = ssf.boundaryField();
 
     forAll(bsf, patchi)
@@ -124,7 +124,7 @@ tmp
 >
 reconstruct
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf
+    const tmp<SurfaceField<Type>>& tssf
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;

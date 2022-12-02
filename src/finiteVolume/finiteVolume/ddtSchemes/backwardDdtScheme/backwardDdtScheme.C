@@ -638,7 +638,7 @@ tmp<typename backwardDdtScheme<Type>::fluxFieldType>
 backwardDdtScheme<Type>::fvcDdtUfCorr
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
@@ -709,7 +709,7 @@ backwardDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();

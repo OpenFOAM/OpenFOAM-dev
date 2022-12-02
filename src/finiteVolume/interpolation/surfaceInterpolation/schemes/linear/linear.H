@@ -105,7 +105,7 @@ public:
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+tmp<SurfaceField<Type>>
 linearInterpolate(const GeometricField<Type, fvPatchField, volMesh>& vf)
 {
     return surfaceInterpolationScheme<Type>::interpolate
@@ -117,10 +117,10 @@ linearInterpolate(const GeometricField<Type, fvPatchField, volMesh>& vf)
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+tmp<SurfaceField<Type>>
 linearInterpolate(const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf)
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tinterp =
+    tmp<SurfaceField<Type>> tinterp =
         linearInterpolate(tvf());
     tvf.clear();
     return tinterp;

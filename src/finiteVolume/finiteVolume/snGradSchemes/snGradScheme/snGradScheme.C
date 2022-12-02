@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ snGradScheme<Type>::~snGradScheme()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+tmp<SurfaceField<Type>>
 snGradScheme<Type>::snGrad
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
@@ -106,17 +106,17 @@ snGradScheme<Type>::snGrad
 {
     const fvMesh& mesh = vf.mesh();
 
-    // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
+    // construct SurfaceField<Type>
+    tmp<SurfaceField<Type>> tsf
     (
-        GeometricField<Type, fvsPatchField, surfaceMesh>::New
+        SurfaceField<Type>::New
         (
             snGradName + "("+vf.name()+')',
             mesh,
             vf.dimensions()*tdeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tsf.ref();
+    SurfaceField<Type>& ssf = tsf.ref();
 
     // set reference to difference factors array
     const scalarField& deltaCoeffs = tdeltaCoeffs();
@@ -131,7 +131,7 @@ snGradScheme<Type>::snGrad
             deltaCoeffs[facei]*(vf[neighbour[facei]] - vf[owner[facei]]);
     }
 
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+    typename SurfaceField<Type>::
         Boundary& ssfbf = ssf.boundaryFieldRef();
 
     forAll(vf.boundaryField(), patchi)
@@ -153,7 +153,7 @@ snGradScheme<Type>::snGrad
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+tmp<SurfaceField<Type>>
 snGradScheme<Type>::sndGrad
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
@@ -165,13 +165,13 @@ snGradScheme<Type>::sndGrad
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+tmp<SurfaceField<Type>>
 snGradScheme<Type>::snGrad
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
+    tmp<SurfaceField<Type>> tsf
     (
         snGrad(vf, deltaCoeffs(vf))
     );
@@ -186,13 +186,13 @@ snGradScheme<Type>::snGrad
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+tmp<SurfaceField<Type>>
 snGradScheme<Type>::snGrad
 (
     const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 ) const
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
+    tmp<SurfaceField<Type>> tsf
     (
         snGrad(tvf())
     );

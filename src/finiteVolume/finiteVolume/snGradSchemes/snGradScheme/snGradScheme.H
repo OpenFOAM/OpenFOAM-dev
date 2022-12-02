@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ public:
 
 
         //- Return the snGrad of the given cell field with the given deltaCoeffs
-        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        static tmp<SurfaceField<Type>>
         snGrad
         (
             const GeometricField<Type, fvPatchField, volMesh>&,
@@ -131,7 +131,7 @@ public:
         );
 
         //- Return the sndGrad of the given cell field
-        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        static tmp<SurfaceField<Type>>
         sndGrad
         (
             const GeometricField<Type, fvPatchField, volMesh>&,
@@ -152,10 +152,10 @@ public:
 
         //- Return the explicit correction to the snGrad
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        virtual tmp<SurfaceField<Type>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const
         {
-            return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+            return tmp<SurfaceField<Type>>
             (
                 nullptr
             );
@@ -163,12 +163,12 @@ public:
 
         //- Return the snGrad of the given cell field
         //  with explicit correction
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        virtual tmp<SurfaceField<Type>>
         snGrad(const GeometricField<Type, fvPatchField, volMesh>&) const;
 
         //- Return the snGrad of the given tmp cell field
         //  with explicit correction
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        tmp<SurfaceField<Type>>
         snGrad
         (
             const tmp<GeometricField<Type, fvPatchField, volMesh>>&

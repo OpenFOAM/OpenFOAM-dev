@@ -369,7 +369,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 laplacianCorrection
 (
-    const GeometricField<scalar, fvsPatchField, surfaceMesh>& gamma,
+    const SurfaceField<scalar>& gamma,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
@@ -389,7 +389,7 @@ template<class Type>
 tmp<fvMatrix<Type>>
 laplacianCorrection
 (
-    const tmp<GeometricField<scalar, fvsPatchField, surfaceMesh>>& tGamma,
+    const tmp<SurfaceField<scalar>>& tGamma,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {

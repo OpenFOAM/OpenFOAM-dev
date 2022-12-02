@@ -155,7 +155,7 @@ tmp<typename boundedDdtScheme<Type>::fluxFieldType>
 boundedDdtScheme<Type>::fvcDdtUfCorr
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     return scheme_.ref().fvcDdtUfCorr(U, Uf);
@@ -180,7 +180,7 @@ boundedDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     return scheme_.ref().fvcDdtUfCorr(rho, U, Uf);

@@ -137,7 +137,7 @@ public:
 
         //- Return the explicit correction to the face-interpolate
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        virtual tmp<SurfaceField<Type>>
         correction(const GeometricField<Type, fvPatchField, volMesh>& vf) const
         {
             return tLimiter_().limiter(vf)*tInterp_().correction(vf);

@@ -75,9 +75,9 @@ Foam::linearUpwind<Type>::correction
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
+    tmp<SurfaceField<Type>> tsfCorr
     (
-        GeometricField<Type, fvsPatchField, surfaceMesh>::New
+        SurfaceField<Type>::New
         (
             "linearUpwind::correction(" + vf.name() + ')',
             mesh,
@@ -85,7 +85,7 @@ Foam::linearUpwind<Type>::correction
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();
+    SurfaceField<Type>& sfCorr = tsfCorr.ref();
 
     const surfaceScalarField& faceFlux = this->faceFlux_;
 
@@ -120,7 +120,7 @@ Foam::linearUpwind<Type>::correction
                 (Cf[facei] - C[celli]) & gradVf[celli];
         }
 
-        typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+        typename SurfaceField<Type>::
             Boundary& bSfCorr = sfCorr.boundaryFieldRef();
 
         forAll(bSfCorr, patchi)

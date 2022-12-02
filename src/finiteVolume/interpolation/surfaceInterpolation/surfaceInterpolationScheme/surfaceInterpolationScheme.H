@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,7 +143,7 @@ public:
 
         //- Return the face-interpolate of the given cell field
         //  with the given owner and neighbour weigting factors
-        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        static tmp<SurfaceField<Type>>
         interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>&,
@@ -172,7 +172,7 @@ public:
 
         //- Return the face-interpolate of the given cell field
         //  with the given weighting factors
-        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        static tmp<SurfaceField<Type>>
         interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>&,
@@ -193,10 +193,10 @@ public:
 
         //- Return the explicit correction to the face-interpolate
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        virtual tmp<SurfaceField<Type>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const
         {
-            return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+            return tmp<SurfaceField<Type>>
             (
                 nullptr
             );
@@ -239,12 +239,12 @@ public:
 
         //- Return the face-interpolate of the given cell field
         //  with explicit correction
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        virtual tmp<SurfaceField<Type>>
         interpolate(const GeometricField<Type, fvPatchField, volMesh>&) const;
 
         //- Return the face-interpolate of the given tmp cell field
         //  with explicit correction
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        tmp<SurfaceField<Type>>
         interpolate
         (
             const tmp<GeometricField<Type, fvPatchField, volMesh>>&

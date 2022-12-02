@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,7 +116,7 @@ void Foam::vtkPVFoam::convertSurfaceField
 template<class Type>
 void Foam::vtkPVFoam::convertSurfaceField
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& tf,
+    const SurfaceField<Type>& tf,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
     const label datasetNo,
@@ -198,14 +198,14 @@ void Foam::vtkPVFoam::convertSurfaceFields
         if
         (
             iter()->headerClassName()
-         != GeometricField<Type, fvsPatchField, surfaceMesh>::typeName
+         != SurfaceField<Type>::typeName
         )
         {
             continue;
         }
 
         // Load field
-        const GeometricField<Type, fvsPatchField, surfaceMesh> tf
+        const SurfaceField<Type> tf
         (
             *iter(),
             mesh

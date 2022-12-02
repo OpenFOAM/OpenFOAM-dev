@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 template<class Type>
 Foam::tmp<Field<Type>> Foam::surfaceMeshWriter::getFaceField
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& sfld
+    const SurfaceField<Type>& sfld
 ) const
 {
     const polyBoundaryMesh& patches = sfld.mesh().boundaryMesh();
@@ -65,13 +65,13 @@ void Foam::surfaceMeshWriter::write
 (
     const UPtrList
     <
-        const GeometricField<Type, fvsPatchField, surfaceMesh>
+        const SurfaceField<Type>
     >& sflds
 )
 {
     forAll(sflds, fieldi)
     {
-        const GeometricField<Type, fvsPatchField, surfaceMesh>& fld =
+        const SurfaceField<Type>& fld =
             sflds[fieldi];
 
         os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '

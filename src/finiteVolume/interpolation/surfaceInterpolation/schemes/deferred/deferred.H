@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,13 +120,13 @@ public:
         }
 
         //- Return the explicit correction to the face-interpolate
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        virtual tmp<SurfaceField<Type>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
         ) const
         {
-            return GeometricField<Type, fvsPatchField, surfaceMesh>::New
+            return SurfaceField<Type>::New
             (
                 "deferred::correction(" + vf.name() + ')',
                 tScheme_->interpolate(vf)

@@ -229,7 +229,7 @@ tmp<typename steadyStateDdtScheme<Type>::fluxFieldType>
 steadyStateDdtScheme<Type>::fvcDdtUfCorr
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     return fluxFieldType::New
@@ -274,7 +274,7 @@ steadyStateDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     return fluxFieldType::New

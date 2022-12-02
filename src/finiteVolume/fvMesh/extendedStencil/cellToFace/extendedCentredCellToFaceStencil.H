@@ -110,7 +110,7 @@ public:
 
         //- Sum vol field contributions to create face values
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> weightedSum
+        tmp<SurfaceField<Type>> weightedSum
         (
             const GeometricField<Type, fvPatchField, volMesh>& fld,
             const List<List<scalar>>& stencilWeights

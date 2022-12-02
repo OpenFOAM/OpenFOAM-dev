@@ -225,7 +225,7 @@ template<class Type>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvFieldDecomposer::decomposeField
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& field
+    const SurfaceField<Type>& field
 ) const
 {
     const SubList<label> faceAddressingIf
@@ -251,9 +251,9 @@ Foam::fvFieldDecomposer::decomposeField
     }
 
     // Create the processor field with the dummy patch fields
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tresF
+    tmp<SurfaceField<Type>> tresF
     (
-        new GeometricField<Type, fvsPatchField, surfaceMesh>
+        new SurfaceField<Type>
         (
             IOobject
             (
@@ -275,11 +275,11 @@ Foam::fvFieldDecomposer::decomposeField
             patchFields
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& resF = tresF.ref();
+    SurfaceField<Type>& resF = tresF.ref();
 
     // Change the patch fields to the correct type using a mapper constructor
     // (with reference to the now correct internal field)
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+    typename SurfaceField<Type>::
         Boundary& bf = resF.boundaryFieldRef();
     forAll(procMesh_.boundary(), procPatchi)
     {

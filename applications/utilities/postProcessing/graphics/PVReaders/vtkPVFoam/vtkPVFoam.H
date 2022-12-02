@@ -591,7 +591,7 @@ class vtkPVFoam
             template<class Type>
             void convertSurfaceField
             (
-                const GeometricField<Type, fvsPatchField, surfaceMesh>& tf,
+                const SurfaceField<Type>& tf,
                 vtkMultiBlockDataSet* output,
                 const arrayRange& range,
                 const label datasetNo,

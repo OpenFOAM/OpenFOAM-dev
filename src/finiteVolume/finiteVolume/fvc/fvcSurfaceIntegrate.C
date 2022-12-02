@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ template<class Type>
 void surfaceIntegrate
 (
     Field<Type>& ivf,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf
+    const SurfaceField<Type>& ssf
 )
 {
     const fvMesh& mesh = ssf.mesh();
@@ -80,7 +80,7 @@ template<class Type>
 tmp<GeometricField<Type, fvPatchField, volMesh>>
 surfaceIntegrate
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf
+    const SurfaceField<Type>& ssf
 )
 {
     const fvMesh& mesh = ssf.mesh();
@@ -113,7 +113,7 @@ template<class Type>
 tmp<GeometricField<Type, fvPatchField, volMesh>>
 surfaceIntegrate
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf
+    const tmp<SurfaceField<Type>>& tssf
 )
 {
     tmp<GeometricField<Type, fvPatchField, volMesh>> tvf
@@ -129,7 +129,7 @@ template<class Type>
 tmp<GeometricField<Type, fvPatchField, volMesh>>
 surfaceSum
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf
+    const SurfaceField<Type>& ssf
 )
 {
     const fvMesh& mesh = ssf.mesh();
@@ -177,7 +177,7 @@ surfaceSum
 template<class Type>
 tmp<GeometricField<Type, fvPatchField, volMesh>> surfaceSum
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf
+    const tmp<SurfaceField<Type>>& tssf
 )
 {
     tmp<GeometricField<Type, fvPatchField, volMesh>> tvf = surfaceSum(tssf());

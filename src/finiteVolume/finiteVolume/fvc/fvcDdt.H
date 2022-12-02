@@ -120,9 +120,9 @@ namespace fvc
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> ddt
+    tmp<SurfaceField<Type>> ddt
     (
-        const GeometricField<Type, fvsPatchField, surfaceMesh>&
+        const SurfaceField<Type>&
     );
 
     template<class Type>
@@ -138,7 +138,7 @@ namespace fvc
     ddtCorr
     (
         const GeometricField<Type, fvPatchField, volMesh>& U,
-        const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+        const SurfaceField<Type>& Uf
     );
 
     template<class Type>
@@ -181,7 +181,7 @@ namespace fvc
             fvsPatchField,
             surfaceMesh
         >& phi,
-        const autoPtr<GeometricField<Type, fvsPatchField, surfaceMesh>>& Uf
+        const autoPtr<SurfaceField<Type>>& Uf
     );
 
     template<class Type>
@@ -198,7 +198,7 @@ namespace fvc
     (
         const volScalarField& rho,
         const GeometricField<Type, fvPatchField, volMesh>& U,
-        const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+        const SurfaceField<Type>& Uf
     );
 
     template<class Type>
@@ -243,7 +243,7 @@ namespace fvc
             fvsPatchField,
             surfaceMesh
         >& phi,
-        const autoPtr<GeometricField<Type, fvsPatchField, surfaceMesh>>& Uf
+        const autoPtr<SurfaceField<Type>>& Uf
     );
 }
 

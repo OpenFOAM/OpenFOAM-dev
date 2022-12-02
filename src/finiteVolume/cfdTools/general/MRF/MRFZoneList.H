@@ -158,9 +158,9 @@ public:
         //- Filter-out the MRF region contribution from the given field
         // setting the corresponding values to zero
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> zeroFilter
+        tmp<SurfaceField<Type>> zeroFilter
         (
-            const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tphi
+            const tmp<SurfaceField<Type>>& tphi
         ) const;
 
         //- Update MRFZone faces if the mesh topology changes

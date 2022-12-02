@@ -45,7 +45,7 @@ correction
         volPointInterpolation::New(mesh).interpolate(vf)
     );
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr =
+    tmp<SurfaceField<Type>> tsfCorr =
         linearInterpolate(vf);
 
     Field<Type>& sfCorr = tsfCorr.ref().primitiveFieldRef();
@@ -103,7 +103,7 @@ correction
     }
 
 
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+    typename SurfaceField<Type>::
         Boundary& bSfCorr = tsfCorr.ref().boundaryFieldRef();
 
     forAll(bSfCorr, patchi)

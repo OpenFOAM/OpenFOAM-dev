@@ -1118,7 +1118,7 @@ tmp<typename CrankNicolsonDdtScheme<Type>::fluxFieldType>
 CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
@@ -1128,8 +1128,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
             U.dimensions()
         );
 
-    DDt0Field<GeometricField<Type, fvsPatchField, surfaceMesh>>& dUfdt0 =
-        ddt0_<GeometricField<Type, fvsPatchField, surfaceMesh>>
+    DDt0Field<SurfaceField<Type>>& dUfdt0 =
+        ddt0_<SurfaceField<Type>>
         (
             "ddtCorrDdt0(" + Uf.name() + ')',
             Uf.dimensions()
@@ -1226,7 +1226,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     if
@@ -1242,8 +1242,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
                 rho.dimensions()*U.dimensions()
             );
 
-        DDt0Field<GeometricField<Type, fvsPatchField, surfaceMesh>>& dUfdt0 =
-            ddt0_<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        DDt0Field<SurfaceField<Type>>& dUfdt0 =
+            ddt0_<SurfaceField<Type>>
             (
                 "ddtCorrDdt0(" + Uf.name() + ')',
                 Uf.dimensions()
@@ -1303,8 +1303,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
                 U.dimensions()
             );
 
-        DDt0Field<GeometricField<Type, fvsPatchField, surfaceMesh>>& dUfdt0 =
-            ddt0_<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        DDt0Field<SurfaceField<Type>>& dUfdt0 =
+            ddt0_<SurfaceField<Type>>
             (
                 "ddtCorrDdt0(" + Uf.name() + ')',
                 Uf.dimensions()

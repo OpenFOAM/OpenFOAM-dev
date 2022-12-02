@@ -52,7 +52,7 @@ class interpolationCellPointFace
     // Private Data
 
         //- Linearly interpolated volfield
-        const GeometricField<Type, fvsPatchField, surfaceMesh> psis_;
+        const SurfaceField<Type> psis_;
 
         bool findTet
         (

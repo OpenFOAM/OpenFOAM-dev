@@ -48,8 +48,8 @@ Foam::fv::correctedSnGrad<Type>::fullGradCorrection
 {
     const fvMesh& mesh = this->mesh();
 
-    // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf =
+    // construct SurfaceField<Type>
+    tmp<SurfaceField<Type>> tssf =
         linear<typename outerProduct<vector, Type>::type>(mesh).dotInterpolate
         (
             mesh.nonOrthCorrectionVectors(),
@@ -74,17 +74,17 @@ Foam::fv::correctedSnGrad<Type>::correction
 {
     const fvMesh& mesh = this->mesh();
 
-    // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf
+    // construct SurfaceField<Type>
+    tmp<SurfaceField<Type>> tssf
     (
-        GeometricField<Type, fvsPatchField, surfaceMesh>::New
+        SurfaceField<Type>::New
         (
             "snGradCorr("+vf.name()+')',
             mesh,
             vf.dimensions()*mesh.nonOrthDeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
+    SurfaceField<Type>& ssf = tssf.ref();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {

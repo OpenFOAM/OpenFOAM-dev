@@ -313,14 +313,14 @@ void Foam::fvMeshAdder::MapSurfaceField
 (
     const mapAddedPolyMesh& meshMap,
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& fld,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& fldToAdd
+    SurfaceField<Type>& fld,
+    const SurfaceField<Type>& fldToAdd
 )
 {
     const fvMesh& mesh = fld.mesh();
     const labelList& oldPatchStarts = meshMap.oldPatchStarts();
 
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+    typename SurfaceField<Type>::
     Boundary& bfld = fld.boundaryFieldRef();
 
     // Internal field

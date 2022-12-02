@@ -306,7 +306,7 @@ Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
 Foam::fvFieldReconstructor::reconstructFvSurfaceField
 (
     const IOobject& fieldIoObject,
-    const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& procFields
+    const PtrList<SurfaceField<Type>>& procFields
 ) const
 {
     // Create the internalField
@@ -317,7 +317,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
 
     forAll(procMeshes_, proci)
     {
-        const GeometricField<Type, fvsPatchField, surfaceMesh>& procField =
+        const SurfaceField<Type>& procField =
             procFields[proci];
 
         // Set the internal face values in the reconstructed field
@@ -403,9 +403,9 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
     }
 
     // Construct and return the field
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+    return tmp<SurfaceField<Type>>
     (
-        new GeometricField<Type, fvsPatchField, surfaceMesh>
+        new SurfaceField<Type>
         (
             fieldIoObject,
             completeMesh_,
@@ -424,7 +424,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
     const IOobject& fieldIoObject
 ) const
 {
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>
+    PtrList<SurfaceField<Type>>
         procFields(procMeshes_.size());
 
     forAll(procMeshes_, proci)
@@ -432,7 +432,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
         procFields.set
         (
             proci,
-            new GeometricField<Type, fvsPatchField, surfaceMesh>
+            new SurfaceField<Type>
             (
                 IOobject
                 (
@@ -543,7 +543,7 @@ void Foam::fvFieldReconstructor::reconstructFvSurfaceFields
 )
 {
     const word& fieldClassName =
-        GeometricField<Type, fvsPatchField, surfaceMesh>::typeName;
+        SurfaceField<Type>::typeName;
 
     IOobjectList fields = objects.lookupClass(fieldClassName);
 

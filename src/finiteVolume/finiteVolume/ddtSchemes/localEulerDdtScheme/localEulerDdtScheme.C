@@ -177,17 +177,17 @@ localEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+tmp<SurfaceField<Type>>
 localEulerDdtScheme<Type>::fvcDdt
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& sf
+    const SurfaceField<Type>& sf
 )
 {
     const surfaceScalarField& rDeltaT = localRDeltaTf();
 
     const word ddtName("ddt("+sf.name()+')');
 
-    return GeometricField<Type, fvsPatchField, surfaceMesh>::New
+    return SurfaceField<Type>::New
     (
         ddtName,
         rDeltaT*(sf - sf.oldTime())
@@ -365,7 +365,7 @@ tmp<typename localEulerDdtScheme<Type>::fluxFieldType>
 localEulerDdtScheme<Type>::fvcDdtUfCorr
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     const surfaceScalarField rDeltaT(fvc::interpolate(localRDeltaT()));
@@ -431,7 +431,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     const surfaceScalarField rDeltaT(fvc::interpolate(localRDeltaT()));

@@ -286,7 +286,7 @@ public:
         virtual tmp<fluxFieldType> fvcDdtUfCorr
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
-            const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+            const SurfaceField<Type>& Uf
         );
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
@@ -299,7 +299,7 @@ public:
         (
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& U,
-            const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+            const SurfaceField<Type>& Uf
         );
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
@@ -332,7 +332,7 @@ template<>
 tmp<surfaceScalarField> CrankNicolsonDdtScheme<scalar>::fvcDdtUfCorr
 (
     const GeometricField<scalar, fvPatchField, volMesh>& U,
-    const GeometricField<scalar, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<scalar>& Uf
 );
 
 template<>

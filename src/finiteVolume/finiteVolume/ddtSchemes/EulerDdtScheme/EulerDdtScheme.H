@@ -114,9 +114,9 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& psi
         );
 
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvcDdt
+        virtual tmp<SurfaceField<Type>> fvcDdt
         (
-            const GeometricField<Type, fvsPatchField, surfaceMesh>&
+            const SurfaceField<Type>&
         );
 
         virtual tmp<fvMatrix<Type>> fvmDdt
@@ -148,7 +148,7 @@ public:
         virtual tmp<fluxFieldType> fvcDdtUfCorr
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
-            const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+            const SurfaceField<Type>& Uf
         );
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
@@ -161,7 +161,7 @@ public:
         (
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& U,
-            const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+            const SurfaceField<Type>& Uf
         );
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
@@ -194,7 +194,7 @@ template<>
 tmp<surfaceScalarField> EulerDdtScheme<scalar>::fvcDdtUfCorr
 (
     const GeometricField<scalar, fvPatchField, volMesh>& U,
-    const GeometricField<scalar, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<scalar>& Uf
 );
 
 template<>

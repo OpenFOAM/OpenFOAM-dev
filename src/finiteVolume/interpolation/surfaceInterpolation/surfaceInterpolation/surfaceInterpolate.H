@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ namespace fvc
 
     //- Interpolate field onto faces using scheme given by Istream
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const GeometricField<Type, fvPatchField, volMesh>& tvf,
         const surfaceScalarField& faceFlux,
@@ -97,7 +97,7 @@ namespace fvc
 
     //- Interpolate field onto faces using scheme given by name in fvSchemes
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const GeometricField<Type, fvPatchField, volMesh>& tvf,
         const surfaceScalarField& faceFlux,
@@ -106,7 +106,7 @@ namespace fvc
 
     //- Interpolate field onto faces using scheme given by name in fvSchemes
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
         const surfaceScalarField& faceFlux,
@@ -115,7 +115,7 @@ namespace fvc
 
     //- Interpolate field onto faces using scheme given by name in fvSchemes
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const GeometricField<Type, fvPatchField, volMesh>& tvf,
         const tmp<surfaceScalarField>& faceFlux,
@@ -124,7 +124,7 @@ namespace fvc
 
     //- Interpolate field onto faces using scheme given by name in fvSchemes
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
         const tmp<surfaceScalarField>& faceFlux,
@@ -134,7 +134,7 @@ namespace fvc
 
     //- Interpolate field onto faces using scheme given by Istream
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const GeometricField<Type, fvPatchField, volMesh>& tvf,
         Istream& schemeData
@@ -142,7 +142,7 @@ namespace fvc
 
     //- Interpolate field onto faces using scheme given by name in fvSchemes
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const GeometricField<Type, fvPatchField, volMesh>& tvf,
         const word& name
@@ -150,7 +150,7 @@ namespace fvc
 
     //- Interpolate field onto faces using scheme given by name in fvSchemes
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
         const word& name
@@ -159,14 +159,14 @@ namespace fvc
 
     //- Interpolate field onto faces using 'interpolate(\<name\>)'
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const GeometricField<Type, fvPatchField, volMesh>& tvf
     );
 
     //- Interpolate tmp field onto faces using 'interpolate(\<name\>)'
     template<class Type>
-    static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
+    static tmp<SurfaceField<Type>> interpolate
     (
         const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
     );

@@ -50,10 +50,10 @@ Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
         volPointInterpolation::New(mesh).interpolate(vf)
     );
 
-    // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
+    // construct SurfaceField<Type>
+    tmp<SurfaceField<Type>> tsfCorr
     (
-        GeometricField<Type, fvsPatchField, surfaceMesh>::New
+        SurfaceField<Type>::New
         (
             "snGradCorr("+vf.name()+')',
             mesh,
@@ -124,17 +124,17 @@ Foam::fv::faceCorrectedSnGrad<Type>::correction
 {
     const fvMesh& mesh = this->mesh();
 
-    // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf
+    // construct SurfaceField<Type>
+    tmp<SurfaceField<Type>> tssf
     (
-        GeometricField<Type, fvsPatchField, surfaceMesh>::New
+        SurfaceField<Type>::New
         (
             "snGradCorr("+vf.name()+')',
             mesh,
             vf.dimensions()*mesh.nonOrthDeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
+    SurfaceField<Type>& ssf = tssf.ref();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {

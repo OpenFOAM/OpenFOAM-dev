@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ public:
              || skewCorrectionVectors::New(this->mesh()).skew();
         }
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        tmp<SurfaceField<Type>>
         skewCorrection
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -131,9 +131,9 @@ public:
 
             const skewCorrectionVectors& scv = skewCorrectionVectors::New(mesh);
 
-            tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
+            tmp<SurfaceField<Type>> tsfCorr
             (
-                GeometricField<Type, fvsPatchField, surfaceMesh>::New
+                SurfaceField<Type>::New
                 (
                     "skewCorrected::skewCorrection(" + vf.name() + ')',
                     mesh,
@@ -171,7 +171,7 @@ public:
 
 
         //- Return the explicit correction to the face-interpolate
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        virtual tmp<SurfaceField<Type>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -196,7 +196,7 @@ public:
             else
             {
                 return
-                    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+                    tmp<SurfaceField<Type>>
                     (
                         nullptr
                     );

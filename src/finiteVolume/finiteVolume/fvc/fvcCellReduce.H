@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace fvc
     template<class Type, class CombineOp>
     tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
     (
-        const GeometricField<Type, fvsPatchField, surfaceMesh>&,
+        const SurfaceField<Type>&,
         const CombineOp& cop,
         const Type& nullValue = pTraits<Type>::zero
     );
@@ -60,7 +60,7 @@ namespace fvc
     template<class Type, class CombineOp>
     tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
     (
-        const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>&,
+        const tmp<SurfaceField<Type>>&,
         const CombineOp& cop,
         const Type& nullValue = pTraits<Type>::zero
     );

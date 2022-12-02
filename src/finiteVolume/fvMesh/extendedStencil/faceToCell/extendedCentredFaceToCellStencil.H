@@ -112,7 +112,7 @@ public:
         template<class Type>
         tmp<GeometricField<Type, fvPatchField, volMesh>> weightedSum
         (
-            const GeometricField<Type, fvsPatchField, surfaceMesh>& fld,
+            const SurfaceField<Type>& fld,
             const List<List<scalar>>& stencilWeights
         ) const
         {

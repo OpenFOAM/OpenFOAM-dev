@@ -86,7 +86,7 @@ public:
         (
             const distributionMap& map,
             const labelListList& stencil,
-            const GeometricField<Type, fvsPatchField, surfaceMesh>& fld,
+            const SurfaceField<Type>& fld,
             const List<List<scalar>>& stencilWeights
         );
 };

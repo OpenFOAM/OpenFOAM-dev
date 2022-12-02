@@ -356,7 +356,7 @@ Foam::fvMatrix<Type>::fvMatrix(const fvMatrix<Type>& fvm)
     if (fvm.faceFluxCorrectionPtr_)
     {
         faceFluxCorrectionPtr_ = new
-        GeometricField<Type, fvsPatchField, surfaceMesh>
+        SurfaceField<Type>
         (
             *(fvm.faceFluxCorrectionPtr_)
         );
@@ -407,7 +407,7 @@ Foam::fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>& tfvm)
         else
         {
             faceFluxCorrectionPtr_ = new
-                GeometricField<Type, fvsPatchField, surfaceMesh>
+                SurfaceField<Type>
                 (
                     *(tfvm().faceFluxCorrectionPtr_)
                 );
@@ -971,17 +971,17 @@ flux() const
             << abort(FatalError);
     }
 
-    // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tfieldFlux
+    // construct SurfaceField<Type>
+    tmp<SurfaceField<Type>> tfieldFlux
     (
-        GeometricField<Type, fvsPatchField, surfaceMesh>::New
+        SurfaceField<Type>::New
         (
             "flux(" + psi_.name() + ')',
             psi_.mesh(),
             dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& fieldFlux =
+    SurfaceField<Type>& fieldFlux =
         tfieldFlux.ref();
 
     for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
@@ -1020,7 +1020,7 @@ flux() const
         }
     }
 
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+    typename SurfaceField<Type>::
         Boundary& ffbf = fieldFlux.boundaryFieldRef();
 
     forAll(ffbf, patchi)
@@ -1069,7 +1069,7 @@ void Foam::fvMatrix<Type>::operator=(const fvMatrix<Type>& fvmv)
     else if (fvmv.faceFluxCorrectionPtr_)
     {
         faceFluxCorrectionPtr_ =
-            new GeometricField<Type, fvsPatchField, surfaceMesh>
+            new SurfaceField<Type>
             (*fvmv.faceFluxCorrectionPtr_);
     }
 }
@@ -1116,7 +1116,7 @@ void Foam::fvMatrix<Type>::operator+=(const fvMatrix<Type>& fvmv)
     else if (fvmv.faceFluxCorrectionPtr_)
     {
         faceFluxCorrectionPtr_ = new
-        GeometricField<Type, fvsPatchField, surfaceMesh>
+        SurfaceField<Type>
         (
             *fvmv.faceFluxCorrectionPtr_
         );
@@ -1150,7 +1150,7 @@ void Foam::fvMatrix<Type>::operator-=(const fvMatrix<Type>& fvmv)
     else if (fvmv.faceFluxCorrectionPtr_)
     {
         faceFluxCorrectionPtr_ =
-            new GeometricField<Type, fvsPatchField, surfaceMesh>
+            new SurfaceField<Type>
             (-*fvmv.faceFluxCorrectionPtr_);
     }
 }

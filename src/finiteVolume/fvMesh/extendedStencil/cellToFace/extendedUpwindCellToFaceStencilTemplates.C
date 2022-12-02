@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,9 +45,9 @@ Foam::extendedUpwindCellToFaceStencil::weightedSum
     List<List<Type>> neiFld;
     collectData(neiMap(), neiStencil(), fld, neiFld);
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
+    tmp<SurfaceField<Type>> tsfCorr
     (
-        GeometricField<Type, fvsPatchField, surfaceMesh>::New
+        SurfaceField<Type>::New
         (
             fld.name(),
             mesh,
@@ -59,7 +59,7 @@ Foam::extendedUpwindCellToFaceStencil::weightedSum
             )
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsfCorr.ref();
+    SurfaceField<Type>& sf = tsfCorr.ref();
 
     // Internal faces
     for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
@@ -89,7 +89,7 @@ Foam::extendedUpwindCellToFaceStencil::weightedSum
 
     // Boundaries. Either constrained or calculated so assign value
     // directly (instead of nicely using operator==)
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+    typename SurfaceField<Type>::
         Boundary& bSfCorr = sf.boundaryFieldRef();
 
     forAll(bSfCorr, patchi)

@@ -88,10 +88,10 @@ inline Foam::outletStabilised<Type>::correction
 {
     if (tScheme_().corrected())
     {
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tcorr =
+        tmp<SurfaceField<Type>> tcorr =
             tScheme_().correction(vf);
 
-        GeometricField<Type, fvsPatchField, surfaceMesh>& corr =
+        SurfaceField<Type>& corr =
             tcorr.ref();
 
         const fvMesh& mesh_ = this->mesh();
@@ -132,7 +132,7 @@ inline Foam::outletStabilised<Type>::correction
     }
     else
     {
-        return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        return tmp<SurfaceField<Type>>
         (
             nullptr
         );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ public:
         }
 
         //- Return the explicit correction to the face-interpolate
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        virtual tmp<SurfaceField<Type>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -121,15 +121,15 @@ public:
             const surfaceScalarField kVecP(sqr(scalar(1) - lambda)*lambda);
             const surfaceScalarField kVecN(sqr(lambda)*(lambda - scalar(1)));
 
-            tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
+            tmp<SurfaceField<Type>> tsfCorr
             (
-                GeometricField<Type, fvsPatchField, surfaceMesh>::New
+                SurfaceField<Type>::New
                 (
                     "cubic::correction(" + vf.name() +')',
                     surfaceInterpolationScheme<Type>::interpolate(vf, kSc, -kSc)
                 )
             );
-            GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr =
+            SurfaceField<Type>& sfCorr =
                 tsfCorr.ref();
 
             for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
@@ -158,7 +158,7 @@ public:
                 );
             }
 
-            typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+            typename SurfaceField<Type>::
                 Boundary& sfCorrbf = sfCorr.boundaryFieldRef();
 
             forAll(sfCorrbf, pi)

@@ -455,7 +455,7 @@ void ensightField
     {
         // Interpolates cell values to faces - needed only when exporting
         // faceZones...
-        GeometricField<Type, fvsPatchField, surfaceMesh> sf
+        SurfaceField<Type> sf
         (
             linearInterpolate(vf)
         );

@@ -177,10 +177,10 @@ ddt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+tmp<SurfaceField<Type>>
 ddt
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& sf
+    const SurfaceField<Type>& sf
 )
 {
     return fv::ddtScheme<Type>::New
@@ -196,7 +196,7 @@ tmp<GeometricField<typename flux<Type>::type, fvsPatchField, surfaceMesh>>
 ddtCorr
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     return fv::ddtScheme<Type>::New
@@ -239,7 +239,7 @@ ddtCorr
         fvsPatchField,
         surfaceMesh
     >& phi,
-    const autoPtr<GeometricField<Type, fvsPatchField, surfaceMesh>>& Uf
+    const autoPtr<SurfaceField<Type>>& Uf
 )
 {
     if (U.mesh().dynamic())
@@ -259,7 +259,7 @@ ddtCorr
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const SurfaceField<Type>& Uf
 )
 {
     return fv::ddtScheme<Type>::New
@@ -304,7 +304,7 @@ ddtCorr
         fvsPatchField,
         surfaceMesh
     >& phi,
-    const autoPtr<GeometricField<Type, fvsPatchField, surfaceMesh>>& Uf
+    const autoPtr<SurfaceField<Type>>& Uf
 )
 {
     if (U.mesh().dynamic())

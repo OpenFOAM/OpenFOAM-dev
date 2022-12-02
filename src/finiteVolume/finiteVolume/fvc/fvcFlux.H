@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,14 +57,14 @@ namespace fvc
     tmp<surfaceScalarField> flux(const tmp<volVectorField>& tvvf);
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const surfaceScalarField&,
         const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&,
@@ -72,7 +72,7 @@ namespace fvc
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&,
@@ -80,7 +80,7 @@ namespace fvc
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const tmp<surfaceScalarField>&,
         const GeometricField<Type, fvPatchField, volMesh>&,
@@ -88,7 +88,7 @@ namespace fvc
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const surfaceScalarField&,
         const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
@@ -96,7 +96,7 @@ namespace fvc
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const tmp<surfaceScalarField>&,
         const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
@@ -105,28 +105,28 @@ namespace fvc
 
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const tmp<surfaceScalarField>&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const surfaceScalarField&,
         const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    tmp<SurfaceField<Type>> flux
     (
         const tmp<surfaceScalarField>&,
         const tmp<GeometricField<Type, fvPatchField, volMesh>>&

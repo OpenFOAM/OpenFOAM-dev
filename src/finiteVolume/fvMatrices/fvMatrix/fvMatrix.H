@@ -450,7 +450,7 @@ public:
             tmp<volScalarField> H1() const;
 
             //- Return the face-flux field from the matrix
-            tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+            tmp<SurfaceField<Type>>
                 flux() const;
 
 

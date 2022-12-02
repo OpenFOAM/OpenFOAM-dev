@@ -50,7 +50,7 @@ tmp
 >
 grad
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf
+    const SurfaceField<Type>& ssf
 )
 {
     return fv::gaussGrad<Type>::gradf(ssf, "grad(" + ssf.name() + ')');
@@ -67,7 +67,7 @@ tmp
 >
 grad
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf
+    const tmp<SurfaceField<Type>>& tssf
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;

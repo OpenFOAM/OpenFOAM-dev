@@ -35,7 +35,7 @@ template<class Type, class CombineOp>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvc::cellReduce
 (
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf,
+    const SurfaceField<Type>& ssf,
     const CombineOp& cop,
     const Type& nullValue
 )
@@ -83,7 +83,7 @@ template<class Type, class CombineOp>
 Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvc::cellReduce
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf,
+    const tmp<SurfaceField<Type>>& tssf,
     const CombineOp& cop,
     const Type& nullValue
 )

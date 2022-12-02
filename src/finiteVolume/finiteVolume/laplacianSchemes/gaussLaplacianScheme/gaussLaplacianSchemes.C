@@ -36,13 +36,13 @@ template<>                                                                     \
 Foam::tmp<Foam::fvMatrix<Foam::Type>>                                          \
 Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
 (                                                                              \
-    const GeometricField<scalar, fvsPatchField, surfaceMesh>& gamma,           \
+    const SurfaceField<scalar>& gamma,           \
     const GeometricField<Type, fvPatchField, volMesh>& vf                      \
 )                                                                              \
 {                                                                              \
     const fvMesh& mesh = this->mesh();                                         \
                                                                                \
-    GeometricField<scalar, fvsPatchField, surfaceMesh> gammaMagSf              \
+    SurfaceField<scalar> gammaMagSf              \
     (                                                                          \
         gamma*mesh.magSf()                                                     \
     );                                                                         \
@@ -60,7 +60,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
         if (mesh.schemes().fluxRequired(vf.name()))                            \
         {                                                                      \
             fvm.faceFluxCorrectionPtr() = new                                  \
-            GeometricField<Type, fvsPatchField, surfaceMesh>                   \
+            SurfaceField<Type>                   \
             (                                                                  \
                 gammaMagSf*this->tsnGradScheme_().correction(vf)               \
             );                                                                 \
@@ -91,7 +91,7 @@ template<>                                                                     \
 Foam::tmp<Foam::GeometricField<Foam::Type, Foam::fvPatchField, Foam::volMesh>> \
 Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvcLaplacian         \
 (                                                                              \
-    const GeometricField<scalar, fvsPatchField, surfaceMesh>& gamma,           \
+    const SurfaceField<scalar>& gamma,           \
     const GeometricField<Type, fvPatchField, volMesh>& vf                      \
 )                                                                              \
 {                                                                              \

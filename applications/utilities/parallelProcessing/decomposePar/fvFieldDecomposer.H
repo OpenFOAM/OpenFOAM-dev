@@ -154,10 +154,10 @@ public:
 
         //- Decompose surface field
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+        tmp<SurfaceField<Type>>
         decomposeField
         (
-            const GeometricField<Type, fvsPatchField, surfaceMesh>& field
+            const SurfaceField<Type>& field
         ) const;
 
         //- Decompose a list of fields

@@ -166,7 +166,7 @@ private:
         template<class Type>
         void sampleAndWrite
         (
-            const GeometricField<Type, fvsPatchField, surfaceMesh>&
+            const SurfaceField<Type>&
         );
 
         //- Sample and write all the fields of the given type
@@ -266,7 +266,7 @@ public:
         template<class Type>
         tmp<Field<Type>> sample
         (
-            const GeometricField<Type, fvsPatchField, surfaceMesh>&
+            const SurfaceField<Type>&
         ) const;
 
 
