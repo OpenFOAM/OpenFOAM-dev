@@ -83,11 +83,8 @@ public:
 
     // Member Functions
 
-        tmp
-        <
-            GeometricField
-            <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
-        > fvcDiv
+
+        tmp<VolField<typename innerProduct<vector, Type>::type>> fvcDiv
         (
             const VolField<Type>&
         );

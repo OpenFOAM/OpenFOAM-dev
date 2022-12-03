@@ -31,12 +31,7 @@ License
 template<class Type>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::outerProduct<Foam::vector, Type>::type,
-        Foam::fvPatchField,
-        Foam::volMesh
-    >
+    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
 Foam::fv::gaussGrad<Type>::gradf
 (
@@ -106,12 +101,7 @@ Foam::fv::gaussGrad<Type>::gradf
 template<class Type>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::outerProduct<Foam::vector, Type>::type,
-        Foam::fvPatchField,
-        Foam::volMesh
-    >
+    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
 Foam::fv::gaussGrad<Type>::calcGrad
 (
@@ -137,16 +127,11 @@ template<class Type>
 void Foam::fv::gaussGrad<Type>::correctBoundaryConditions
 (
     const VolField<Type>& vsf,
-    GeometricField
-    <
-        typename outerProduct<vector, Type>::type, fvPatchField, volMesh
-    >& gGrad
+    VolField<typename outerProduct<vector, Type>::type>& gGrad
 )
 {
-    typename GeometricField
-    <
-        typename outerProduct<vector, Type>::type, fvPatchField, volMesh
-    >::Boundary& gGradbf = gGrad.boundaryFieldRef();
+    typename VolField<typename outerProduct<vector, Type>::type>::Boundary&
+        gGradbf = gGrad.boundaryFieldRef();
 
     forAll(vsf.boundaryField(), patchi)
     {

@@ -51,63 +51,45 @@ namespace Foam
 namespace fvc
 {
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > grad
+    tmp<VolField<typename outerProduct<vector, Type>::type>>
+    grad
     (
         const SurfaceField<Type>&
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > grad
+    tmp<VolField<typename outerProduct<vector, Type>::type>>
+    grad
     (
         const tmp<SurfaceField<Type>>&
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > grad
+    tmp<VolField<typename outerProduct<vector, Type>::type>>
+    grad
     (
         const VolField<Type>&,
         const word& name
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > grad
+    tmp<VolField<typename outerProduct<vector, Type>::type>>
+    grad
     (
         const tmp<VolField<Type>>&,
         const word& name
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > grad
+    tmp<VolField<typename outerProduct<vector, Type>::type>>
+    grad
     (
         const VolField<Type>&
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > grad
+    tmp<VolField<typename outerProduct<vector, Type>::type>>
+    grad
     (
         const tmp<VolField<Type>>&
     );

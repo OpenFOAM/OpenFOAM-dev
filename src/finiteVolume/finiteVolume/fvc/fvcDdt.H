@@ -126,75 +126,29 @@ namespace fvc
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >
-    >
-    ddtCorr
+    tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     (
         const VolField<Type>& U,
         const SurfaceField<Type>& Uf
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >
-    >
-    ddtCorr
+    tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     (
         const VolField<Type>& U,
-        const GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >& phi
+        const SurfaceField<typename Foam::flux<Type>::type>& phi
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >
-    >
-    ddtCorr
+    tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     (
         const VolField<Type>& U,
-        const GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >& phi,
+        const SurfaceField<typename Foam::flux<Type>::type>& phi,
         const autoPtr<SurfaceField<Type>>& Uf
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >
-    >
-    ddtCorr
+    tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     (
         const volScalarField& rho,
         const VolField<Type>& U,
@@ -202,47 +156,19 @@ namespace fvc
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >
-    >
-    ddtCorr
+    tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     (
         const volScalarField& rho,
         const VolField<Type>& U,
-        const GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >& phi
+        const SurfaceField<typename Foam::flux<Type>::type>& phi
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >
-    >
-    ddtCorr
+    tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     (
         const volScalarField& rho,
         const VolField<Type>& U,
-        const GeometricField
-        <
-            typename Foam::flux<Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >& phi,
+        const SurfaceField<typename Foam::flux<Type>::type>& phi,
         const autoPtr<SurfaceField<Type>>& Uf
     );
 }

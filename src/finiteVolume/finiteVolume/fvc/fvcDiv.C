@@ -70,13 +70,7 @@ div
 
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename innerProduct<vector, Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename innerProduct<vector, Type>::type>>
 div
 (
     const VolField<Type>& vf,
@@ -91,13 +85,7 @@ div
 
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename innerProduct<vector, Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename innerProduct<vector, Type>::type>>
 div
 (
     const tmp<VolField<Type>>& tvvf,
@@ -114,13 +102,7 @@ div
 }
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename innerProduct<vector, Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename innerProduct<vector, Type>::type>>
 div
 (
     const VolField<Type>& vf
@@ -131,13 +113,7 @@ div
 
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename innerProduct<vector, Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename innerProduct<vector, Type>::type>>
 div
 (
     const tmp<VolField<Type>>& tvvf

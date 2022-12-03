@@ -64,22 +64,14 @@ namespace fvc
 
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > div
+    tmp<VolField<typename innerProduct<vector, Type>::type>> div
     (
         const VolField<Type>&,
         const word& name
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > div
+    tmp<VolField<typename innerProduct<vector, Type>::type>> div
     (
         const tmp<VolField<Type>>&,
         const word& name
@@ -87,21 +79,13 @@ namespace fvc
 
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > div
+    tmp<VolField<typename innerProduct<vector, Type>::type>> div
     (
         const VolField<Type>&
     );
 
     template<class Type>
-    tmp
-    <
-        GeometricField
-        <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > div
+    tmp<VolField<typename innerProduct<vector, Type>::type>> div
     (
         const tmp<VolField<Type>>&
     );

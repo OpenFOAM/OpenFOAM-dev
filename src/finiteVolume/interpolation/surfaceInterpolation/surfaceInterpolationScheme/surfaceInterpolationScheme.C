@@ -216,11 +216,9 @@ template<class Type>
 template<class SFType>
 Foam::tmp
 <
-    Foam::GeometricField
+    Foam::SurfaceField
     <
-        typename Foam::innerProduct<typename SFType::value_type, Type>::type,
-        Foam::fvsPatchField,
-        Foam::surfaceMesh
+        typename Foam::innerProduct<typename SFType::value_type, Type>::type
     >
 >
 Foam::surfaceInterpolationScheme<Type>::dotInterpolate
@@ -253,16 +251,16 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
     const labelUList& P = mesh.owner();
     const labelUList& N = mesh.neighbour();
 
-    tmp<GeometricField<RetType, fvsPatchField, surfaceMesh>> tsf
+    tmp<SurfaceField<RetType>> tsf
     (
-        GeometricField<RetType, fvsPatchField, surfaceMesh>::New
+        SurfaceField<RetType>::New
         (
             "interpolate("+vf.name()+')',
             mesh,
             Sf.dimensions()*vf.dimensions()
         )
     );
-    GeometricField<RetType, fvsPatchField, surfaceMesh>& sf = tsf.ref();
+    SurfaceField<RetType>& sf = tsf.ref();
 
     Field<RetType>& sfi = sf.primitiveFieldRef();
 
@@ -275,8 +273,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 
     // Interpolate across coupled patches using given lambdas
 
-    typename GeometricField<RetType, fvsPatchField, surfaceMesh>::
-        Boundary& sfbf = sf.boundaryFieldRef();
+    typename SurfaceField<RetType>::Boundary& sfbf = sf.boundaryFieldRef();
 
     forAll(lambdas.boundaryField(), pi)
     {
@@ -320,11 +317,9 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 template<class Type>
 Foam::tmp
 <
-    Foam::GeometricField
+    Foam::SurfaceField
     <
-        typename Foam::innerProduct<Foam::vector, Type>::type,
-        Foam::fvsPatchField,
-        Foam::surfaceMesh
+        typename Foam::innerProduct<Foam::vector, Type>::type
     >
 >
 Foam::surfaceInterpolationScheme<Type>::dotInterpolate
@@ -345,12 +340,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 
     tmp
     <
-        GeometricField
-        <
-            typename Foam::innerProduct<Foam::vector, Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >
+        SurfaceField<typename Foam::innerProduct<Foam::vector, Type>::type>
     > tsf = dotInterpolate(Sf, vf, weights(vf));
 
     if (corrected())
@@ -365,11 +355,9 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 template<class Type>
 Foam::tmp
 <
-    Foam::GeometricField
+    Foam::SurfaceField
     <
-        typename Foam::innerProduct<Foam::vector, Type>::type,
-        Foam::fvsPatchField,
-        Foam::surfaceMesh
+        typename Foam::innerProduct<Foam::vector, Type>::type
     >
 >
 Foam::surfaceInterpolationScheme<Type>::dotInterpolate
@@ -380,12 +368,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 {
     tmp
     <
-        GeometricField
-        <
-            typename Foam::innerProduct<Foam::vector, Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >
+        SurfaceField<typename Foam::innerProduct<Foam::vector, Type>::type>
     > tSfDotinterpVf = dotInterpolate(Sf, tvf());
     tvf.clear();
     return tSfDotinterpVf;

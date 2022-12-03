@@ -192,8 +192,7 @@ ddt
 
 
 template<class Type>
-tmp<GeometricField<typename flux<Type>::type, fvsPatchField, surfaceMesh>>
-ddtCorr
+tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 (
     const VolField<Type>& U,
     const SurfaceField<Type>& Uf
@@ -208,16 +207,10 @@ ddtCorr
 
 
 template<class Type>
-tmp<GeometricField<typename flux<Type>::type, fvsPatchField, surfaceMesh>>
-ddtCorr
+tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 (
     const VolField<Type>& U,
-    const GeometricField
-    <
-        typename flux<Type>::type,
-        fvsPatchField,
-        surfaceMesh
-    >& phi
+    const SurfaceField<typename flux<Type>::type>& phi
 )
 {
     return fv::ddtScheme<Type>::New
@@ -229,16 +222,10 @@ ddtCorr
 
 
 template<class Type>
-tmp<GeometricField<typename flux<Type>::type, fvsPatchField, surfaceMesh>>
-ddtCorr
+tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 (
     const VolField<Type>& U,
-    const GeometricField
-    <
-        typename flux<Type>::type,
-        fvsPatchField,
-        surfaceMesh
-    >& phi,
+    const SurfaceField<typename flux<Type>::type>& phi,
     const autoPtr<SurfaceField<Type>>& Uf
 )
 {
@@ -254,8 +241,7 @@ ddtCorr
 
 
 template<class Type>
-tmp<GeometricField<typename flux<Type>::type, fvsPatchField, surfaceMesh>>
-ddtCorr
+tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
@@ -271,17 +257,11 @@ ddtCorr
 
 
 template<class Type>
-tmp<GeometricField<typename flux<Type>::type, fvsPatchField, surfaceMesh>>
-ddtCorr
+tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
-    const GeometricField
-    <
-        typename flux<Type>::type,
-        fvsPatchField,
-        surfaceMesh
-    >& phi
+    const SurfaceField<typename flux<Type>::type>& phi
 )
 {
     return fv::ddtScheme<Type>::New
@@ -293,17 +273,11 @@ ddtCorr
 
 
 template<class Type>
-tmp<GeometricField<typename flux<Type>::type, fvsPatchField, surfaceMesh>>
-ddtCorr
+tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
-    const GeometricField
-    <
-        typename flux<Type>::type,
-        fvsPatchField,
-        surfaceMesh
-    >& phi,
+    const SurfaceField<typename flux<Type>::type>& phi,
     const autoPtr<SurfaceField<Type>>& Uf
 )
 {

@@ -40,21 +40,13 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
->
+tmp<VolField<typename innerProduct<vector, Type>::type>>
 gaussDivScheme<Type>::fvcDiv
 (
     const VolField<Type>& vf
 )
 {
-    tmp
-    <
-        GeometricField
-        <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > tDiv
+    tmp<VolField<typename innerProduct<vector, Type>::type>> tDiv
     (
         fvc::surfaceIntegrate
         (

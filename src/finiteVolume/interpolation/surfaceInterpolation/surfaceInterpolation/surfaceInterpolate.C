@@ -311,12 +311,7 @@ Foam::fvc::interpolate
 template<class Type>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::innerProduct<Foam::vector, Type>::type,
-        Foam::fvsPatchField,
-        Foam::surfaceMesh
-    >
+    Foam::SurfaceField<typename Foam::innerProduct<Foam::vector, Type>::type>
 >
 Foam::fvc::dotInterpolate
 (
@@ -343,12 +338,7 @@ Foam::fvc::dotInterpolate
 template<class Type>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::innerProduct<Foam::vector, Type>::type,
-        Foam::fvsPatchField,
-        Foam::surfaceMesh
-    >
+    Foam::SurfaceField<typename Foam::innerProduct<Foam::vector, Type>::type>
 >
 Foam::fvc::dotInterpolate
 (
@@ -356,15 +346,10 @@ Foam::fvc::dotInterpolate
     const tmp<VolField<Type>>& tvf
 )
 {
-    tmp
-    <
-        GeometricField
-        <
-            typename Foam::innerProduct<Foam::vector, Type>::type,
-            fvsPatchField,
-            surfaceMesh
-        >
-    > tsf = dotInterpolate(Sf, tvf());
+    tmp<SurfaceField<typename Foam::innerProduct<Foam::vector, Type>::type>> tsf
+    (
+        dotInterpolate(Sf, tvf())
+    );
     tvf.clear();
     return tsf;
 }

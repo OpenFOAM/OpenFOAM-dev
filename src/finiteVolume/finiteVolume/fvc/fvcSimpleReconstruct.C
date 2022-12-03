@@ -40,13 +40,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename outerProduct<vector,Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename outerProduct<vector, Type>::type>>
 reconstruct
 (
     const SurfaceField<Type>& ssf
@@ -115,13 +109,7 @@ reconstruct
 
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename outerProduct<vector, Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename outerProduct<vector, Type>::type>>
 reconstruct
 (
     const tmp<SurfaceField<Type>>& tssf

@@ -35,12 +35,7 @@ License
 template<class Type, class Stencil>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::outerProduct<Foam::vector, Type>::type,
-        Foam::fvPatchField,
-    Foam::volMesh
-    >
+    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
 Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
 (

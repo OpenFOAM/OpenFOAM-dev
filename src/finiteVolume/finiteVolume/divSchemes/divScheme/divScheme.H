@@ -135,11 +135,7 @@ public:
             return mesh_;
         }
 
-        virtual tmp
-        <
-            GeometricField
-            <typename innerProduct<vector, Type>::type, fvPatchField, volMesh>
-        > fvcDiv
+        virtual tmp<VolField<typename innerProduct<vector, Type>::type>> fvcDiv
         (
             const VolField<Type>&
         ) = 0;

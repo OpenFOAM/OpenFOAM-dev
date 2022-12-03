@@ -83,12 +83,7 @@ Foam::fv::gradScheme<Type>::~gradScheme()
 template<class Type>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::outerProduct<Foam::vector, Type>::type,
-        Foam::fvPatchField,
-        Foam::volMesh
-    >
+    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
 Foam::fv::gradScheme<Type>::grad
 (
@@ -175,12 +170,7 @@ Foam::fv::gradScheme<Type>::grad
 template<class Type>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::outerProduct<Foam::vector, Type>::type,
-        Foam::fvPatchField,
-        Foam::volMesh
-    >
+    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
 Foam::fv::gradScheme<Type>::grad
 (
@@ -194,12 +184,7 @@ Foam::fv::gradScheme<Type>::grad
 template<class Type>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::outerProduct<Foam::vector, Type>::type,
-        Foam::fvPatchField,
-        Foam::volMesh
-    >
+    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
 Foam::fv::gradScheme<Type>::grad
 (

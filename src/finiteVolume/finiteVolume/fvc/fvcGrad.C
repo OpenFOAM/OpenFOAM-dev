@@ -41,13 +41,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename outerProduct<vector, Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename outerProduct<vector, Type>::type>>
 grad
 (
     const SurfaceField<Type>& ssf
@@ -58,20 +52,13 @@ grad
 
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename outerProduct<vector,Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename outerProduct<vector, Type>::type>>
 grad
 (
     const tmp<SurfaceField<Type>>& tssf
 )
 {
-    typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<VolField<GradType>> Grad
+    tmp<VolField<typename outerProduct<vector, Type>::type>> Grad
     (
         fvc::grad(tssf())
     );
@@ -81,13 +68,7 @@ grad
 
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename outerProduct<vector,Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename outerProduct<vector, Type>::type>>
 grad
 (
     const VolField<Type>& vf,
@@ -103,26 +84,15 @@ grad
 
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename outerProduct<vector,Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename outerProduct<vector, Type>::type>>
 grad
 (
     const tmp<VolField<Type>>& tvf,
     const word& name
 )
 {
-    tmp
-    <
-        GeometricField
-        <
-            typename outerProduct<vector, Type>::type, fvPatchField, volMesh
-        >
-    > tGrad
+
+    tmp<VolField<typename outerProduct<vector, Type>::type>> tGrad
     (
         fvc::grad(tvf(), name)
     );
@@ -132,13 +102,7 @@ grad
 
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename outerProduct<vector,Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename outerProduct<vector, Type>::type>>
 grad
 (
     const VolField<Type>& vf
@@ -149,20 +113,13 @@ grad
 
 
 template<class Type>
-tmp
-<
-    GeometricField
-    <
-        typename outerProduct<vector,Type>::type, fvPatchField, volMesh
-    >
->
+tmp<VolField<typename outerProduct<vector, Type>::type>>
 grad
 (
     const tmp<VolField<Type>>& tvf
 )
 {
-    typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<VolField<GradType>> Grad
+    tmp<VolField<typename outerProduct<vector, Type>::type>> Grad
     (
         fvc::grad(tvf())
     );

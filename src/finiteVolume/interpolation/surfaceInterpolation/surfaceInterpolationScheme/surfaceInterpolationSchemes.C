@@ -63,11 +63,9 @@ makeBaseSurfaceInterpolationScheme(tensor)
 template<>
 Foam::tmp
 <
-    Foam::GeometricField
+    Foam::SurfaceField
     <
-        typename Foam::innerProduct<Foam::vector, Foam::scalar>::type,
-        Foam::fvsPatchField,
-        Foam::surfaceMesh
+        typename Foam::innerProduct<Foam::vector, Foam::scalar>::type
     >
 >
 Foam::surfaceInterpolationScheme<Foam::scalar>::dotInterpolate
@@ -78,24 +76,10 @@ Foam::surfaceInterpolationScheme<Foam::scalar>::dotInterpolate
 {
     NotImplemented;
 
-    return
-        tmp
-        <
-            GeometricField
-            <
-                typename innerProduct<vector, scalar>::type,
-                fvsPatchField,
-                surfaceMesh
-            >
-        >
-        (
-            GeometricField
-            <
-                typename innerProduct<vector, scalar>::type,
-                fvsPatchField,
-                surfaceMesh
-            >::null()
-        );
+    return tmp<SurfaceField<typename innerProduct<vector, scalar>::type>>
+    (
+        SurfaceField<typename innerProduct<vector, scalar>::type >::null()
+    );
 }
 
 

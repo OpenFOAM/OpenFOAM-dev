@@ -111,12 +111,8 @@ public:
 
         //- Return the gradient of the given field
         //  calculated using Gauss' theorem on the given surface field
-        static
-        tmp
-        <
-            GeometricField
-            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-        > gradf
+        static tmp<VolField<typename outerProduct<vector, Type>::type>>
+        gradf
         (
             const SurfaceField<Type>&,
             const word& name
@@ -124,11 +120,8 @@ public:
 
         //- Return the gradient of the given field to the gradScheme::grad
         //  for optional caching
-        virtual tmp
-        <
-            GeometricField
-            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-        > calcGrad
+        virtual tmp<VolField<typename outerProduct<vector, Type>::type>>
+        calcGrad
         (
             const VolField<Type>& vsf,
             const word& name
@@ -139,8 +132,7 @@ public:
         static void correctBoundaryConditions
         (
             const VolField<Type>&,
-            GeometricField
-            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>&
+            VolField<typename outerProduct<vector, Type>::type>&
         );
 
 

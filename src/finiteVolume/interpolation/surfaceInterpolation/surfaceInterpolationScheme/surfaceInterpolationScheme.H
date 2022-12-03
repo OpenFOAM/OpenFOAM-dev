@@ -156,11 +156,9 @@ public:
         template<class SFType>
         static tmp
         <
-            GeometricField
+            SurfaceField
             <
-                typename innerProduct<typename SFType::value_type, Type>::type,
-                fvsPatchField,
-                surfaceMesh
+                typename innerProduct<typename SFType::value_type, Type>::type
             >
         >
         dotInterpolate
@@ -204,16 +202,7 @@ public:
 
         //- Return the face-interpolate of the given cell field
         //  with explicit correction dotted with given field Sf
-        virtual
-        tmp
-        <
-            GeometricField
-            <
-                typename innerProduct<vector, Type>::type,
-                fvsPatchField,
-                surfaceMesh
-            >
-        >
+        virtual tmp<SurfaceField<typename innerProduct<vector, Type>::type>>
         dotInterpolate
         (
             const surfaceVectorField& Sf,
@@ -222,15 +211,7 @@ public:
 
         //- Return the face-interpolate of the given tmp cell field
         //  with explicit correction dotted with given field Sf
-        tmp
-        <
-            GeometricField
-            <
-                typename innerProduct<vector, Type>::type,
-                fvsPatchField,
-                surfaceMesh
-            >
-        >
+        tmp<SurfaceField<typename innerProduct<vector, Type>::type>>
         dotInterpolate
         (
             const surfaceVectorField& Sf,
@@ -259,15 +240,7 @@ public:
 
 
 template<>
-tmp
-<
-    GeometricField
-    <
-        typename innerProduct<vector, scalar>::type,
-        fvsPatchField,
-        surfaceMesh
-    >
->
+tmp<SurfaceField<typename innerProduct<vector, scalar>::type>>
 surfaceInterpolationScheme<scalar>::dotInterpolate
 (
     const surfaceVectorField& Sf,

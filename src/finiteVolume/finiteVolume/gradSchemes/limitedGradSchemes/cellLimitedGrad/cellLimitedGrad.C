@@ -61,12 +61,7 @@ void Foam::fv::cellLimitedGrad<Type, Limiter>::limitGradient
 template<class Type, class Limiter>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::outerProduct<Foam::vector, Type>::type,
-        Foam::fvPatchField,
-        Foam::volMesh
-    >
+    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
 Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
 (
@@ -76,23 +71,15 @@ Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
 {
     const fvMesh& mesh = vsf.mesh();
 
-    tmp
-    <
-        GeometricField
-        <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > tGrad = basicGradScheme_().calcGrad(vsf, name);
+    tmp<VolField<typename outerProduct<vector, Type>::type>>
+        tGrad = basicGradScheme_().calcGrad(vsf, name);
 
     if (k_ < small)
     {
         return tGrad;
     }
 
-    GeometricField
-    <
-        typename outerProduct<vector, Type>::type,
-        fvPatchField,
-        volMesh
-    >& g = tGrad.ref();
+    VolField<typename outerProduct<vector, Type>::type>& g = tGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();

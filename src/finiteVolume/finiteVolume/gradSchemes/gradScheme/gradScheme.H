@@ -128,11 +128,8 @@ public:
         //- Calculate and return the grad of the given field.
         //  Used by grad either to recalculate the cached gradient when it is
         //  out of date with respect to the field or when it is not cached.
-        virtual tmp
-        <
-            GeometricField
-            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-        > calcGrad
+        virtual tmp<VolField<typename outerProduct<vector, Type>::type>>
+        calcGrad
         (
             const VolField<Type>&,
             const word& name
@@ -140,11 +137,8 @@ public:
 
         //- Calculate and return the grad of the given field
         //  which may have been cached
-        tmp
-        <
-            GeometricField
-            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-        > grad
+        tmp<VolField<typename outerProduct<vector, Type>::type>>
+        grad
         (
             const VolField<Type>&,
             const word& name
@@ -153,11 +147,8 @@ public:
         //- Calculate and return the grad of the given field
         //  with the default name
         //  which may have been cached
-        tmp
-        <
-            GeometricField
-            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-        > grad
+        tmp<VolField<typename outerProduct<vector, Type>::type>>
+        grad
         (
             const VolField<Type>&
         ) const;
@@ -165,11 +156,8 @@ public:
         //- Calculate and return the grad of the given field
         //  with the default name
         //  which may have been cached
-        tmp
-        <
-            GeometricField
-            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-        > grad
+        tmp<VolField<typename outerProduct<vector, Type>::type>>
+        grad
         (
             const tmp<VolField<Type>>&
         ) const;

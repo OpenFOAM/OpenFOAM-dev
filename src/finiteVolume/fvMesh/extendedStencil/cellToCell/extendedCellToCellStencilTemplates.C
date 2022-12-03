@@ -31,12 +31,7 @@ License
 template<class Type, class WeightType>
 Foam::tmp
 <
-    Foam::GeometricField
-    <
-        typename Foam::outerProduct<WeightType, Type>::type,
-        Foam::fvPatchField,
-        Foam::volMesh
-    >
+    Foam::VolField<typename Foam::outerProduct<WeightType, Type>::type>
 > Foam::extendedCellToCellStencil::weightedSum
 (
     const distributionMap& map,

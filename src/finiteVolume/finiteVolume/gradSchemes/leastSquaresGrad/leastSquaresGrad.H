@@ -84,11 +84,8 @@ public:
 
         //- Return the gradient of the given field to the gradScheme::grad
         //  for optional caching
-        virtual tmp
-        <
-            GeometricField
-            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-        > calcGrad
+        virtual tmp<VolField<typename outerProduct<vector, Type>::type>>
+        calcGrad
         (
             const VolField<Type>& vsf,
             const word& name

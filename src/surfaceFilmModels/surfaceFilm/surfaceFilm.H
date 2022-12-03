@@ -246,12 +246,7 @@ public:
             void toRegion
             (
                 Field<Type>& rf,
-                const typename GeometricField
-                <
-                    Type,
-                    fvPatchField,
-                    volMesh
-                >::Boundary& pBf
+                const typename VolField<Type>::Boundary& pBf
             ) const;
 
 

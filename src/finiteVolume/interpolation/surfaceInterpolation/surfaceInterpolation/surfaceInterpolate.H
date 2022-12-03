@@ -196,16 +196,8 @@ namespace fvc
     //- Interpolate field onto faces
     //  and 'dot' with given surfaceVectorField Sf
     template<class Type>
-    static
-    tmp
-    <
-        GeometricField
-        <
-            typename innerProduct<vector, Type>::type,
-            fvsPatchField,
-            surfaceMesh
-            >
-    > dotInterpolate
+    static tmp<SurfaceField < typename innerProduct<vector, Type>::type>>
+    dotInterpolate
     (
         const surfaceVectorField& Sf,
         const VolField<Type>& tvf
@@ -214,16 +206,8 @@ namespace fvc
     //- Interpolate tmp field onto faces
     //  and 'dot' with given surfaceVectorField Sf
     template<class Type>
-    static
-    tmp
-    <
-        GeometricField
-        <
-            typename innerProduct<vector, Type>::type,
-            fvsPatchField,
-            surfaceMesh
-            >
-    > dotInterpolate
+    static tmp<SurfaceField<typename innerProduct<vector, Type>::type>>
+    dotInterpolate
     (
         const surfaceVectorField& Sf,
         const tmp<VolField<Type>>& tvf
