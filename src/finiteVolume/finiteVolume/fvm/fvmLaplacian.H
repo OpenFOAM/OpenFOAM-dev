@@ -150,7 +150,7 @@ namespace fvm
     template<class Type, class GType>
     tmp<fvMatrix<Type>> laplacian
     (
-        const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+        const SurfaceField<GType>&,
         const VolField<Type>&,
         const word&
     );
@@ -158,7 +158,7 @@ namespace fvm
     template<class Type, class GType>
     tmp<fvMatrix<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
+        const tmp<SurfaceField<GType>>&,
         const VolField<Type>&,
         const word&
     );
@@ -166,14 +166,14 @@ namespace fvm
     template<class Type, class GType>
     tmp<fvMatrix<Type>> laplacian
     (
-        const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+        const SurfaceField<GType>&,
         const VolField<Type>&
     );
 
     template<class Type, class GType>
     tmp<fvMatrix<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
+        const tmp<SurfaceField<GType>>&,
         const VolField<Type>&
     );
 

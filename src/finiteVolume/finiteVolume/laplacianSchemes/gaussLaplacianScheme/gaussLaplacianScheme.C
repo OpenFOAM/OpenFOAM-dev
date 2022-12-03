@@ -148,7 +148,7 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 gaussLaplacianScheme<Type, GType>::fvmLaplacian
 (
-    const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
+    const SurfaceField<GType>& gamma,
     const VolField<Type>& vf
 )
 {
@@ -195,7 +195,7 @@ template<class Type, class GType>
 tmp<VolField<Type>>
 gaussLaplacianScheme<Type, GType>::fvcLaplacian
 (
-    const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
+    const SurfaceField<GType>& gamma,
     const VolField<Type>& vf
 )
 {

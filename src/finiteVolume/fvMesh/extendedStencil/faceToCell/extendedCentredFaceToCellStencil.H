@@ -92,11 +92,11 @@ public:
         void compact();
 
         //- Use map to get the data into stencil order
-        template<class T>
+        template<class Type>
         void collectData
         (
-            const GeometricField<T, fvsPatchField, surfaceMesh>& fld,
-            List<List<T>>& stencilFld
+            const SurfaceField<Type>& fld,
+            List<List<Type>>& stencilFld
         ) const
         {
             extendedFaceToCellStencil::collectData

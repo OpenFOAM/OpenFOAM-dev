@@ -110,7 +110,7 @@ laplacian
     const word& name
 )
 {
-    GeometricField<GType, fvsPatchField, surfaceMesh> Gamma
+    SurfaceField<GType> Gamma
     (
         IOobject
         (
@@ -153,7 +153,7 @@ laplacian
     const VolField<Type>& vf
 )
 {
-    GeometricField<GType, fvsPatchField, surfaceMesh> Gamma
+    SurfaceField<GType> Gamma
     (
         IOobject
         (
@@ -335,7 +335,7 @@ template<class Type, class GType>
 tmp<VolField<Type>>
 laplacian
 (
-    const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
+    const SurfaceField<GType>& gamma,
     const VolField<Type>& vf,
     const word& name
 )
@@ -352,7 +352,7 @@ template<class Type, class GType>
 tmp<VolField<Type>>
 laplacian
 (
-    const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>& tgamma,
+    const tmp<SurfaceField<GType>>& tgamma,
     const VolField<Type>& vf,
     const word& name
 )
@@ -370,7 +370,7 @@ template<class Type, class GType>
 tmp<VolField<Type>>
 laplacian
 (
-    const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
+    const SurfaceField<GType>& gamma,
     const tmp<VolField<Type>>& tvf,
     const word& name
 )
@@ -387,7 +387,7 @@ laplacian
 template<class Type, class GType>
 tmp<VolField<Type>> laplacian
 (
-    const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>& tgamma,
+    const tmp<SurfaceField<GType>>& tgamma,
     const tmp<VolField<Type>>& tvf,
     const word& name
 )
@@ -406,7 +406,7 @@ template<class Type, class GType>
 tmp<VolField<Type>>
 laplacian
 (
-    const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
+    const SurfaceField<GType>& gamma,
     const VolField<Type>& vf
 )
 {
@@ -423,7 +423,7 @@ template<class Type, class GType>
 tmp<VolField<Type>>
 laplacian
 (
-    const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>& tgamma,
+    const tmp<SurfaceField<GType>>& tgamma,
     const VolField<Type>& vf
 )
 {
@@ -440,7 +440,7 @@ template<class Type, class GType>
 tmp<VolField<Type>>
 laplacian
 (
-    const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
+    const SurfaceField<GType>& gamma,
     const tmp<VolField<Type>>& tvf
 )
 {
@@ -456,7 +456,7 @@ laplacian
 template<class Type, class GType>
 tmp<VolField<Type>> laplacian
 (
-    const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>& tgamma,
+    const tmp<SurfaceField<GType>>& tgamma,
     const tmp<VolField<Type>>& tvf
 )
 {

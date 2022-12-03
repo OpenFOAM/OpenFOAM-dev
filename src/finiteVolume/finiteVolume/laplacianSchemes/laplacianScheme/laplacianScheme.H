@@ -172,7 +172,7 @@ public:
 
         virtual tmp<fvMatrix<Type>> fvmLaplacian
         (
-            const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+            const SurfaceField<GType>&,
             const VolField<Type>&
         ) = 0;
 
@@ -189,7 +189,7 @@ public:
 
         virtual tmp<VolField<Type>> fvcLaplacian
         (
-            const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+            const SurfaceField<GType>&,
             const VolField<Type>&
         ) = 0;
 

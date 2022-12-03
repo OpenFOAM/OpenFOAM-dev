@@ -173,7 +173,7 @@ namespace fvc
     template<class Type, class GType>
     tmp<VolField<Type>> laplacian
     (
-        const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+        const SurfaceField<GType>&,
         const VolField<Type>&,
         const word&
     );
@@ -181,7 +181,7 @@ namespace fvc
     template<class Type, class GType>
     tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
+        const tmp<SurfaceField<GType>>&,
         const VolField<Type>&,
         const word&
     );
@@ -189,7 +189,7 @@ namespace fvc
     template<class Type, class GType>
     tmp<VolField<Type>> laplacian
     (
-        const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+        const SurfaceField<GType>&,
         const tmp<VolField<Type>>&,
         const word&
     );
@@ -197,7 +197,7 @@ namespace fvc
     template<class Type, class GType>
     tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
+        const tmp<SurfaceField<GType>>&,
         const tmp<VolField<Type>>&,
         const word&
     );
@@ -205,28 +205,28 @@ namespace fvc
     template<class Type, class GType>
     tmp<VolField<Type>> laplacian
     (
-        const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+        const SurfaceField<GType>&,
         const VolField<Type>&
     );
 
     template<class Type, class GType>
     tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
+        const tmp<SurfaceField<GType>>&,
         const VolField<Type>&
     );
 
     template<class Type, class GType>
     tmp<VolField<Type>> laplacian
     (
-        const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+        const SurfaceField<GType>&,
         const tmp<VolField<Type>>&
     );
 
     template<class Type, class GType>
     tmp<VolField<Type>> laplacian
     (
-        const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>&,
+        const tmp<SurfaceField<GType>>&,
         const tmp<VolField<Type>>&
     );
 }

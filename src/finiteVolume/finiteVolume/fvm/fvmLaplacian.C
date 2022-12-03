@@ -160,7 +160,7 @@ laplacian
     const word& name
 )
 {
-    const GeometricField<GType, fvsPatchField, surfaceMesh> Gamma
+    const SurfaceField<GType> Gamma
     (
         IOobject
         (
@@ -185,7 +185,7 @@ laplacian
     const VolField<Type>& vf
 )
 {
-    const GeometricField<GType, fvsPatchField, surfaceMesh> Gamma
+    const SurfaceField<GType> Gamma
     (
         IOobject
         (
@@ -273,7 +273,7 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
+    const SurfaceField<GType>& gamma,
     const VolField<Type>& vf,
     const word& name
 )
@@ -290,7 +290,7 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>& tgamma,
+    const tmp<SurfaceField<GType>>& tgamma,
     const VolField<Type>& vf,
     const word& name
 )
@@ -305,7 +305,7 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
+    const SurfaceField<GType>& gamma,
     const VolField<Type>& vf
 )
 {
@@ -322,7 +322,7 @@ template<class Type, class GType>
 tmp<fvMatrix<Type>>
 laplacian
 (
-    const tmp<GeometricField<GType, fvsPatchField, surfaceMesh>>& tGamma,
+    const tmp<SurfaceField<GType>>& tGamma,
     const VolField<Type>& vf
 )
 {

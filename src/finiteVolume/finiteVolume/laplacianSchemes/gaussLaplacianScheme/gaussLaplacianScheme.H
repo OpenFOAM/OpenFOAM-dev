@@ -124,13 +124,13 @@ public:
 
         tmp<fvMatrix<Type>> fvmLaplacian
         (
-            const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+            const SurfaceField<GType>&,
             const VolField<Type>&
         );
 
         tmp<VolField<Type>> fvcLaplacian
         (
-            const GeometricField<GType, fvsPatchField, surfaceMesh>&,
+            const SurfaceField<GType>&,
             const VolField<Type>&
         );
 };
