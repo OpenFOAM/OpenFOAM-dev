@@ -499,17 +499,16 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFs
     {
         const phaseModel& phase = this->phaseModels_[phasei];
 
-        const surfaceScalarField pPrimeByAf
-        (
-            fvc::interpolate(rAUs[phasei]*phase.pPrime())
-        );
+        const tmp<volScalarField> pPrime(phase.pPrime());
 
-        const surfaceScalarField snGradAlpha1
+        addField
         (
-            fvc::snGrad(phase)*this->mesh_.magSf()
+            phase,
+            "phiF",
+            fvc::interpolate(rAUs[phasei]*pPrime(), pPrime().name())
+           *fvc::snGrad(phase)*this->mesh_.magSf(),
+            phiFs
         );
-
-        addField(phase, "phiF", pPrimeByAf*snGradAlpha1, phiFs);
     }
 
     // Add the turbulent dispersion force
@@ -665,17 +664,14 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
     {
         const phaseModel& phase = this->phaseModels_[phasei];
 
-        const surfaceScalarField pPrimeByAf
+        addField
         (
+            phase,
+            "phiFf",
             rAUfs[phasei]*fvc::interpolate(phase.pPrime())
+           *fvc::snGrad(phase)*this->mesh_.magSf(),
+            phiFfs
         );
-
-        const surfaceScalarField snGradAlpha1
-        (
-            fvc::snGrad(phase)*this->mesh_.magSf()
-        );
-
-        addField(phase, "phiFf", pPrimeByAf*snGradAlpha1, phiFfs);
     }
 
     // Add the turbulent dispersion force
@@ -902,6 +898,8 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::alphaDByAf
     {
         const phaseModel& phase = this->phaseModels_[phasei];
 
+        const tmp<volScalarField> pPrime(phase.pPrime());
+
         addTmpField
         (
             alphaDByAf,
@@ -911,10 +909,10 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::alphaDByAf
                 rAUfs.size()
 
                 // Face-momentum form
-              ? rAUfs[phasei]*fvc::interpolate(phase.pPrime())
+              ? rAUfs[phasei]*fvc::interpolate(pPrime())
 
                 // Cell-momentum form
-              : fvc::interpolate(rAUs[phasei]*phase.pPrime())
+              : fvc::interpolate(rAUs[phasei]*pPrime(), pPrime().name())
             )
         );
     }
