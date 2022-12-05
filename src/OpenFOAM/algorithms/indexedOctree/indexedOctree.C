@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2570,6 +2570,11 @@ Foam::labelBits Foam::indexedOctree<Type>::findNode
 template<class Type>
 Foam::label Foam::indexedOctree<Type>::findInside(const point& sample) const
 {
+    if (nodes_.empty())
+    {
+        return -1;
+    }
+
     labelBits index = findNode(0, sample);
 
     const node& nod = nodes_[getNode(index)];
@@ -2602,6 +2607,11 @@ const Foam::labelList& Foam::indexedOctree<Type>::findIndices
     const point& sample
 ) const
 {
+    if (nodes_.empty())
+    {
+        return emptyList<label>();
+    }
+
     labelBits index = findNode(0, sample);
 
     const node& nod = nodes_[getNode(index)];
