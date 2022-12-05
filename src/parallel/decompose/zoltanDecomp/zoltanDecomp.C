@@ -248,6 +248,14 @@ Foam::label Foam::zoltanDecomp::decompose
     List<label>& finalDecomp
 ) const
 {
+    if (Pstream::parRun() && !points.size())
+    {
+        Pout<< "No points on processor " << Pstream::myProcNo() << nl
+            << "    Zoltan cannot redistribute without points"
+               "on all processors." << endl;
+        FatalErrorInFunction << exit(FatalError);
+    }
+
     stringList args(1);
     args[0] = "zoltanDecomp";
 
