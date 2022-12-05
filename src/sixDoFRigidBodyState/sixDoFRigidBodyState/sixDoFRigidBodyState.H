@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
     {
         type           sixDoFRigidBodyState;
         libs           ("libsixDoFRigidBodyState.so");
-        angleFormat    degrees;
+        angleUnits     degrees;
     }
     \endverbatim
 
@@ -41,7 +41,7 @@ Usage
     \table
         Property     | Description                  | Required | Default value
         type         | type name: sixDoFRigidBodyState    | yes |
-        angleFormat  | degrees or radians           | no       | radian
+        angleUnits  | degrees or radians           | no       | radian
     \endtable
 
 See also
@@ -80,7 +80,7 @@ class sixDoFRigidBodyState
 {
     // Private Data
 
-        word angleFormat_;
+        word angleUnits_;
 
 
     // Private Member Functions

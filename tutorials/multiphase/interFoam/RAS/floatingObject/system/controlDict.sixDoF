@@ -56,7 +56,7 @@ functions
     {
         type           sixDoFRigidBodyState;
         libs           ("libsixDoFRigidBodyState.so");
-        angleFormat    degrees;
+        angleUnits     degrees;
     }
 }
 

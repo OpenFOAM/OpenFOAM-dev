@@ -88,7 +88,11 @@ bool Foam::functionObjects::rigidBodyState::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    angleUnits_ = dict.lookupOrDefault<word>("angleUnits", "radians");
+    angleUnits_ = dict.lookupOrDefaultBackwardsCompatible<word>
+    (
+        {"angleUnits", "angleFormat"},
+        "radians"
+    );
 
     resetNames(names_);
 

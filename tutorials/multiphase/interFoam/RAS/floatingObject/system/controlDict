@@ -56,7 +56,7 @@ functions
     {
         type           rigidBodyState;
         libs           ("librigidBodyState.so");
-        angleFormat    degrees;
+        angleUnits     degrees;
     }
 }
 

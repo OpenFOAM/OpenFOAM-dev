@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Description
         type           sixDoFRigidBodyControl;
         libs           ("libsixDoFRigidBodyState.so");
 
-        angleFormat    degrees;
+        angleUnits     degrees;
 
         window                      1;
         convergedVelocity           (1e-2 1e-2 1e-2);
@@ -47,13 +47,13 @@ Description
     \endverbatim
 
     Note the units of the \c convergedAngularVelocity are specified by the \c
-    angleFormat entry.
+    angleUnits entry.
 
 Usage
     \table
     Property     | Description                       | Required | Default value
     type         | Type name: sixDoFRigidBodyControl | yes      |
-    angleFormat  | Degrees or radians                | no       | radian
+    angleUnits  | Degrees or radians                | no       | radian
     window       | Averaging window                  | yes      |
     convergedVelocity | Linear velocity convergence criterion         | yes |
     convergedAngularVelocity | Angular velocity convergence criterion | yes |

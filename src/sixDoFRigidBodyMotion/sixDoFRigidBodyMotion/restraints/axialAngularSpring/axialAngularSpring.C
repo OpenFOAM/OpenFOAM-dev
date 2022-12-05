@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,20 +177,26 @@ bool Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::read
 
     moment_ = Function1<scalar>::New("moment", sDoFRBMRCoeffs_);
 
-    const word angleFormat = sDoFRBMRCoeffs_.lookup("angleFormat");
+    const word angleUnits
+    (
+        sDoFRBMRCoeffs_.lookupBackwardsCompatible
+        (
+            {"angleUnits", "angleFormat"}
+        )
+    );
 
-    if (angleFormat == "degrees" || angleFormat == "degree")
+    if (angleUnits == "degrees" || angleUnits == "degree")
     {
         convertToDegrees_ = true;
     }
-    else if (angleFormat == "radians" || angleFormat == "radian")
+    else if (angleUnits == "radians" || angleUnits == "radian")
     {
         convertToDegrees_ = false;
     }
     else
     {
         FatalErrorInFunction
-            << "angleFormat must be degree, degrees, radian or radians"
+            << "angleUnits must be degree, degrees, radian or radians"
             << abort(FatalError);
     }
 
@@ -211,7 +217,7 @@ void Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::write
 
     moment_->write(os);
 
-    writeKeyword(os, "angleFormat");
+    writeKeyword(os, "angleUnits");
 
     if (convertToDegrees_)
     {

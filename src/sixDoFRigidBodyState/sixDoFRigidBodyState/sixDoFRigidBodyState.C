@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,11 @@ bool Foam::functionObjects::sixDoFRigidBodyState::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    angleFormat_ = dict.lookupOrDefault<word>("angleFormat", "radians");
+    angleUnits_ = dict.lookupOrDefaultBackwardsCompatible<word>
+    (
+        {"angleUnits", "angleFormat"},
+        "radians"
+    );
 
     resetName(typeName);
 
@@ -90,7 +94,7 @@ void Foam::functionObjects::sixDoFRigidBodyState::writeFileHeader(const label)
     OFstream& file = this->file();
 
     writeHeader(file, "Motion State");
-    writeHeaderValue(file, "Angle Units", angleFormat_);
+    writeHeaderValue(file, "Angle Units", angleUnits_);
     writeCommented(file, "Time");
 
     file<< tab
@@ -130,7 +134,7 @@ Foam::functionObjects::sixDoFRigidBodyState::angularVelocity() const
 {
     vector angularVelocity(motion().omega());
 
-    if (angleFormat_ == "degrees")
+    if (angleUnits_ == "degrees")
     {
         angularVelocity.x() = radToDeg(angularVelocity.x());
         angularVelocity.y() = radToDeg(angularVelocity.y());
@@ -156,7 +160,7 @@ bool Foam::functionObjects::sixDoFRigidBodyState::write()
 
         vector angularVelocity(motion.omega());
 
-        if (angleFormat_ == "degrees")
+        if (angleUnits_ == "degrees")
         {
             rotationAngle.x() = radToDeg(rotationAngle.x());
             rotationAngle.y() = radToDeg(rotationAngle.y());
