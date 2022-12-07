@@ -68,8 +68,4 @@ bool Foam::thermophysicalTransportModel::read()
 }
 
 
-void Foam::thermophysicalTransportModel::correct()
-{}
-
-
 // ************************************************************************* //

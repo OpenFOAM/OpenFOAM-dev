@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -30,18 +31,17 @@ gradSchemes
 
 divSchemes
 {
-    default             none;
+    div(phi,alpha)      Gauss interfaceCompression vanLeer 1;
 
-    div(phi,U)          Gauss linearUpwind limited;
+    div(rhoPhi,U)       Gauss linearUpwind limited;
 
     turbulence          Gauss limitedLinear 1;
+    div(rhoPhi,T)       $turbulence;
+    div(rhoPhi,K)       $turbulence;
+    div(phi,p)          $turbulence;
     div(phi,k)          $turbulence;
-    div(phi,omega)      $turbulence;
-    div(phi,e)          $turbulence;
-    div(phi,K)          $turbulence;
-    div(phi,(p|rho))    $turbulence;
 
-    div(((rho*nuEff)*dev2(T(grad(U)))))    Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
@@ -57,11 +57,6 @@ interpolationSchemes
 snGradSchemes
 {
     default         corrected;
-}
-
-wallDist
-{
-    method meshWave;
 }
 
 // ************************************************************************* //

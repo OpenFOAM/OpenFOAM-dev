@@ -7,42 +7,41 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volVectorField;
-    object      U.water;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      setFieldsDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+defaultFieldValues
+(
+    volScalarFieldValue alpha.water 0
+);
 
-internalField   uniform (0.1 0 0);
-
-boundaryField
-{
-    inlet
+regions
+(
+    // Set cell values
+    boxToCell
     {
-        type            fixedValue;
-        value           $internalField;
+        box (-1 -1 -1) (1 0 1);
+
+        fieldValues
+        (
+            volScalarFieldValue alpha.water 1
+        );
     }
 
-    outlet
+    // Set patch values (using ==)
+    boxToFace
     {
-        type            pressureInletOutletVelocity;
-        phi             phi.water;
-        value           $internalField;
-    }
+        box (-1 -1 -1) (1 0 1);
 
-    topAndBottom
-    {
-        type            slip;
+        fieldValues
+        (
+            volScalarFieldValue alpha.water 1
+        );
     }
-
-    wall
-    {
-        type            noSlip;
-    }
-
-    #includeEtc "caseDicts/setConstraintTypes"
-}
+);
 
 // ************************************************************************* //

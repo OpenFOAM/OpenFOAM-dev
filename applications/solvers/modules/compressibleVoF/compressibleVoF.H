@@ -59,6 +59,7 @@ See also
 
 #include "fluidSolver.H"
 #include "compressibleInterPhaseTransportModel.H"
+#include "compressibleInterPhaseThermophysicalTransportModel.H"
 #include "buoyancy.H"
 #include "pressureReference.H"
 
@@ -144,7 +145,13 @@ protected:
     // Momentum transport
 
         //- Momentum transport model
-        compressibleInterPhaseTransportModel turbulence;
+        compressibleInterPhaseTransportModel momentumTransport;
+
+
+    // Thermophysical transport
+
+        compressibleInterPhaseThermophysicalTransportModel
+            thermophysicalTransport;
 
 
     // Optional models

@@ -7,42 +7,53 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volVectorField;
-    object      U.water;
+    format      ascii;
+    class       volScalarField;
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+kInlet          0.02;
+intensityInlet  0.01;
 
-internalField   uniform (0.1 0 0);
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 0.02;
 
 boundaryField
 {
     inlet
     {
-        type            fixedValue;
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.01;
         value           $internalField;
     }
 
     outlet
     {
-        type            pressureInletOutletVelocity;
-        phi             phi.water;
+        type            inletOutlet;
+        inletValue      $internalField;
         value           $internalField;
     }
 
-    topAndBottom
+    top
     {
-        type            slip;
+        type            zeroGradient;
+    }
+
+    bottom
+    {
+        type            zeroGradient;
     }
 
     wall
     {
-        type            noSlip;
+        type            kqRWallFunction;
+        value           $internalField;
     }
 
     #includeEtc "caseDicts/setConstraintTypes"
 }
+
 
 // ************************************************************************* //

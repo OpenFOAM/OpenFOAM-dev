@@ -7,42 +7,48 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volVectorField;
-    object      U.water;
+    format      ascii;
+    class       volScalarField;
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform (0.1 0 0);
+internalField   uniform 1e5;
 
 boundaryField
 {
     inlet
     {
-        type            fixedValue;
+        type            fixedFluxPressure;
         value           $internalField;
     }
 
     outlet
     {
-        type            pressureInletOutletVelocity;
-        phi             phi.water;
-        value           $internalField;
+        type            zeroGradient;
     }
 
-    topAndBottom
+    top
     {
-        type            slip;
+        type            prghTotalPressure;
+        p0              $internalField;
+    }
+
+    bottom
+    {
+        type            fixedFluxPressure;
     }
 
     wall
     {
-        type            noSlip;
+        type            fixedFluxPressure;
+        value           $internalField;
     }
 
     #includeEtc "caseDicts/setConstraintTypes"
 }
+
 
 // ************************************************************************* //

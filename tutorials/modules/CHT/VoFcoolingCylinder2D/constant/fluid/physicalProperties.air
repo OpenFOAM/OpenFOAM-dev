@@ -7,42 +7,45 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volVectorField;
-    object      U.water;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
-
-internalField   uniform (0.1 0 0);
-
-boundaryField
+thermoType
 {
-    inlet
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
-
-    outlet
-    {
-        type            pressureInletOutletVelocity;
-        phi             phi.water;
-        value           $internalField;
-    }
-
-    topAndBottom
-    {
-        type            slip;
-    }
-
-    wall
-    {
-        type            noSlip;
-    }
-
-    #includeEtc "caseDicts/setConstraintTypes"
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          hConst;
+    equationOfState rhoConst; // perfectGas;
+    specie          specie;
+    energy          sensibleInternalEnergy;
 }
+
+mixture
+{
+    specie
+    {
+        molWeight   28.9;
+    }
+    equationOfState
+    {
+        rho         1;
+    }
+    thermodynamics
+    {
+        Cp          1007;
+        Hf          0;
+    }
+    transport
+    {
+        mu          1.84e-05;
+        Pr          0.7;
+    }
+}
+
 
 // ************************************************************************* //

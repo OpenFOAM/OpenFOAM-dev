@@ -7,42 +7,40 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volVectorField;
-    object      U.water;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
-
-internalField   uniform (0.1 0 0);
-
-boundaryField
+solvers
 {
-    inlet
+    e
     {
-        type            fixedValue;
-        value           $internalField;
+        solver           PCG;
+        preconditioner   DIC;
+        tolerance        1e-06;
+        relTol           0.1;
     }
 
-    outlet
+    eFinal
     {
-        type            pressureInletOutletVelocity;
-        phi             phi.water;
-        value           $internalField;
+        $e;
+        relTol           0;
     }
+}
 
-    topAndBottom
+PIMPLE
+{
+    nNonOrthogonalCorrectors 0;
+}
+
+relaxationFactors
+{
+    equations
     {
-        type            slip;
+        ".*" 1;
     }
-
-    wall
-    {
-        type            noSlip;
-    }
-
-    #includeEtc "caseDicts/setConstraintTypes"
 }
 
 // ************************************************************************* //

@@ -7,42 +7,40 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volVectorField;
-    object      U.water;
+    format      ascii;
+    class       dictionary;
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
-
-internalField   uniform (0.1 0 0);
-
-boundaryField
+ddtSchemes
 {
-    inlet
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
+    default         Euler;
+}
 
-    outlet
-    {
-        type            pressureInletOutletVelocity;
-        phi             phi.water;
-        value           $internalField;
-    }
+gradSchemes
+{
+    default         Gauss linear;
+}
 
-    topAndBottom
-    {
-        type            slip;
-    }
+divSchemes
+{
+    default         none;
+}
 
-    wall
-    {
-        type            noSlip;
-    }
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
 
-    #includeEtc "caseDicts/setConstraintTypes"
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         uncorrected;
 }
 
 // ************************************************************************* //

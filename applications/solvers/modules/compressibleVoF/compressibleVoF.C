@@ -171,7 +171,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
 
     K("K", 0.5*magSqr(U)),
 
-    turbulence
+    momentumTransport
     (
         rho,
         U,
@@ -180,6 +180,8 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         alphaPhi1,
         mixture
     ),
+
+    thermophysicalTransport(momentumTransport),
 
     MRF(mesh)
 {
@@ -328,7 +330,7 @@ void Foam::solvers::compressibleVoF::prePredictor()
 {
     fvModels().correct();
     alphaPredictor();
-    turbulence.correctPhasePhi();
+    momentumTransport.correctPhasePhi();
 }
 
 
@@ -336,7 +338,7 @@ void Foam::solvers::compressibleVoF::momentumTransportCorrector()
 {
     if (pimple.transportCorr())
     {
-        turbulence.correct();
+        momentumTransport.correct();
     }
 }
 

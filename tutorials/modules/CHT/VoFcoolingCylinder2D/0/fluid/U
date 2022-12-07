@@ -7,9 +7,9 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
+    format      ascii;
     class       volVectorField;
-    object      U.water;
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -27,12 +27,17 @@ boundaryField
 
     outlet
     {
+        type            inletOutlet;
+        inletValue      uniform (0 0 0);
+    }
+
+    top
+    {
         type            pressureInletOutletVelocity;
-        phi             phi.water;
         value           $internalField;
     }
 
-    topAndBottom
+    bottom
     {
         type            slip;
     }
@@ -44,5 +49,6 @@ boundaryField
 
     #includeEtc "caseDicts/setConstraintTypes"
 }
+
 
 // ************************************************************************* //

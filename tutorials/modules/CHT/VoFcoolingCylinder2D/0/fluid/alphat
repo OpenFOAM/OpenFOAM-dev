@@ -7,39 +7,38 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volVectorField;
-    object      U.water;
+    format      ascii;
+    class       volScalarField;
+    object      alphat;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [1 -1 -1 0 0 0 0];
 
-internalField   uniform (0.1 0 0);
+internalField   uniform 0;
 
 boundaryField
 {
-    inlet
+    "(inlet|outlet)"
     {
-        type            fixedValue;
-        value           $internalField;
+        type            calculated;
+        value           uniform 0;
     }
 
-    outlet
+    top
     {
-        type            pressureInletOutletVelocity;
-        phi             phi.water;
-        value           $internalField;
+        type            zeroGradient;
     }
 
-    topAndBottom
+    bottom
     {
-        type            slip;
+        type            zeroGradient;
     }
 
     wall
     {
-        type            noSlip;
+        type            compressible::alphatWallFunction;
+        value           uniform 0;
     }
 
     #includeEtc "caseDicts/setConstraintTypes"

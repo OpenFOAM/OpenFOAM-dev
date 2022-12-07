@@ -135,44 +135,6 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::compressibleInterPhaseTransportModel::alphaEff() const
-{
-    if (twoPhaseTransport_)
-    {
-        return
-            mixture_.alpha1()
-           *(
-                mixture_.thermo1().kappa()
-              + mixture_.thermo1().rho()*mixture_.thermo1().Cp()
-               *turbulence1_->nut()
-            )/mixture_.thermo1().Cv()
-          + mixture_.alpha2()
-           *(
-                mixture_.thermo2().kappa()
-              + mixture_.thermo2().rho()*mixture_.thermo2().Cp()
-               *turbulence2_->nut()
-            )/mixture_.thermo2().Cv();
-    }
-    else
-    {
-        return
-            mixture_.alpha1()
-           *(
-                mixture_.thermo1().kappa()
-              + mixture_.thermo1().rho()*mixture_.thermo1().Cp()
-               *turbulence_->nut()
-            )/mixture_.thermo1().Cv()
-          + mixture_.alpha2()
-           *(
-                mixture_.thermo2().kappa()
-              + mixture_.thermo2().rho()*mixture_.thermo2().Cp()
-               *turbulence_->nut()
-            )/mixture_.thermo2().Cv();
-    }
-}
-
-
 Foam::tmp<Foam::fvVectorMatrix>
 Foam::compressibleInterPhaseTransportModel::divDevTau
 (

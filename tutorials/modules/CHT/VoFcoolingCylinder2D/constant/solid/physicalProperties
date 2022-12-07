@@ -7,42 +7,31 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volVectorField;
-    object      U.water;
+    format      ascii;
+    class       dictionary;
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+thermoType          constSolidThermo;
 
-internalField   uniform (0.1 0 0);
-
-boundaryField
+rho
 {
-    inlet
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
-
-    outlet
-    {
-        type            pressureInletOutletVelocity;
-        phi             phi.water;
-        value           $internalField;
-    }
-
-    topAndBottom
-    {
-        type            slip;
-    }
-
-    wall
-    {
-        type            noSlip;
-    }
-
-    #includeEtc "caseDicts/setConstraintTypes"
+    type        uniform;
+    value       2000;
 }
+
+Cv
+{
+    type        uniform;
+    value       100;
+}
+
+kappa
+{
+    type        uniform;
+    value       1;
+}
+
 
 // ************************************************************************* //

@@ -7,39 +7,46 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volVectorField;
-    object      U.water;
+    format      ascii;
+    class       volScalarField;
+    object      omega;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [0 0 -1 0 0 0 0];
 
-internalField   uniform (0.1 0 0);
+internalField   uniform 10;
 
 boundaryField
 {
     inlet
     {
-        type            fixedValue;
+        type            turbulentMixingLengthFrequencyInlet;
+        mixingLength    0.0035;
         value           $internalField;
     }
 
     outlet
     {
-        type            pressureInletOutletVelocity;
-        phi             phi.water;
+        type            inletOutlet;
+        inletValue      $internalField;
         value           $internalField;
     }
 
-    topAndBottom
+    top
     {
-        type            slip;
+        type            zeroGradient;
+    }
+
+    bottom
+    {
+        type            zeroGradient;
     }
 
     wall
     {
-        type            noSlip;
+        type            omegaWallFunction;
+        value           $internalField;
     }
 
     #includeEtc "caseDicts/setConstraintTypes"

@@ -36,7 +36,7 @@ void Foam::solvers::compressibleVoF::thermophysicalPredictor()
     fvScalarMatrix TEqn
     (
         fvm::ddt(rho, T) + fvm::div(rhoPhi, T) - fvm::Sp(contErr(), T)
-      - fvm::laplacian(turbulence.alphaEff(), T)
+      - fvm::laplacian(thermophysicalTransport.alphaEff(), T)
       + (
              mixture.totalInternalEnergy()
           ?

@@ -33,7 +33,7 @@ void Foam::solvers::compressibleVoF::momentumPredictor()
     (
         fvm::ddt(rho, U) + fvm::div(rhoPhi, U) - fvm::Sp(contErr(), U)
       + MRF.DDt(rho, U)
-      + turbulence.divDevTau(U)
+      + momentumTransport.divDevTau(U)
      ==
         fvModels().source(rho, U)
     );
