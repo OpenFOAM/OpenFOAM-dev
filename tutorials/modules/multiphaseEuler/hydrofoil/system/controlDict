@@ -54,9 +54,50 @@ maxDeltaT       1e-4;
 functions
 {
     #includeFunc yPlus(phase=liquid)
-    #includeFunc cellMin(funcName=min, alpha.liquid, alpha.gas, p, p_rgh, U.liquid, U.gas, T.gas, T.liquid)
-    #includeFunc cellMax(funcName=max, alpha.liquid, alpha.gas, p, p_rgh, U.liquid, U.gas, T.gas, T.liquid)
-    #includeFunc hydrofoilPressure
+
+    #includeFunc cellMin
+    (
+        funcName=min,
+        alpha.liquid,
+        alpha.gas,
+        p,
+        p_rgh,
+        U.liquid,
+        U.gas,
+        T.gas,
+        T.liquid
+    )
+
+    #includeFunc cellMax
+    (
+        funcName=max,
+        alpha.liquid,
+        alpha.gas,
+        p,
+        p_rgh,
+        U.liquid,
+        U.gas,
+        T.gas,
+        T.liquid
+    )
+
+    #includeFunc graphPatchCutLayerAverage
+    (
+        funcName=hydrofoilLowerPressure,
+        patch=hydrofoilLower,
+        direction=(0.15 -0.016 0),
+        nPoints=100,
+        p
+    )
+
+    #includeFunc graphPatchCutLayerAverage
+    (
+        funcName=hydrofoilUpperPressure,
+        patch=hydrofoilUpper,
+        direction=(0.15 -0.016 0),
+        nPoints=100,
+        p
+    )
 }
 
 

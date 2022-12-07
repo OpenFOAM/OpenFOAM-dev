@@ -220,13 +220,30 @@ boundary
             (27 28 57 56)
         );
     }
-    hydrofoil
+    hydrofoilTip
     {
         type wall;
+        inGroups (hydrofoil);
         faces
         (
             (12 13 42 41)
+        );
+    }
+    hydrofoilLower
+    {
+        type wall;
+        inGroups (hydrofoil);
+        faces
+        (
             (12 16 45 41)
+        );
+    }
+    hydrofoilUpper
+    {
+        type wall;
+        inGroups (hydrofoil);
+        faces
+        (
             (13 16 45 42)
         );
     }
