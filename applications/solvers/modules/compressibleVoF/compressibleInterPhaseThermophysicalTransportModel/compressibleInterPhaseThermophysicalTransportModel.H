@@ -25,6 +25,10 @@ Class
     Foam::compressibleInterPhaseThermophysicalTransportModel
 
 Description
+    Compressible two-phase VoF thermophysicalTransportModel
+
+    Provides the mixture thermal conductivity and diffusivity for
+    Fourier's temperature gradient heat flux model.
 
 SourceFiles
     compressibleInterPhaseThermophysicalTransportModel.C

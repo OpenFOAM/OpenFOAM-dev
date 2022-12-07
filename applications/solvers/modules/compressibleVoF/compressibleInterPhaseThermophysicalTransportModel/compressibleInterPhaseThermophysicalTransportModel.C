@@ -182,9 +182,12 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::alphaEff() const
 Foam::tmp<Foam::surfaceScalarField>
 Foam::compressibleInterPhaseThermophysicalTransportModel::q() const
 {
-    NotImplemented;
-
-    return tmp<surfaceScalarField>(nullptr);
+    return surfaceScalarField::New
+    (
+        "q",
+        -fvc::interpolate(kappaEff())
+        *fvc::snGrad(momentumTransport_.mixture_.T())
+    );
 }
 
 

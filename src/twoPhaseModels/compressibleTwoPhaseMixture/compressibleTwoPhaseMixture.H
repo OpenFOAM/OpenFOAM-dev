@@ -119,6 +119,12 @@ public:
             return T_;
         }
 
+        //- Return mixture temperature [K]
+        const volScalarField& T() const
+        {
+            return T_;
+        }
+
         //- Return the thermo for phase 1
         const rhoThermo& thermo1() const
         {
