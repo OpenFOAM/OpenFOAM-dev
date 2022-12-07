@@ -25,9 +25,9 @@ Application
     rhoParticleFoam
 
 Description
-    Transient solver for the passive transport of a particle cloud.
-
-    Uses a pre- calculated velocity field to evolve the cloud.
+    Transient solver for the transport of a particles through an compressible
+    carrier phase. Does not evolve the carrier; uses pre-computed carrier
+    property fields.
 
 \*---------------------------------------------------------------------------*/
 
