@@ -282,14 +282,14 @@ void Foam::vtkPVFoam::convertVolInternalFields
         if
         (
             iter()->headerClassName()
-         != VolField<Type>::Internal::typeName
+         != VolInternalField<Type>::typeName
         )
         {
             continue;
         }
 
         // Load field
-        typename VolField<Type>::Internal tf
+        VolInternalField<Type> tf
         (
             *iter(),
             mesh
@@ -370,7 +370,7 @@ void Foam::vtkPVFoam::convertVolFieldBlock
 template<class Type>
 void Foam::vtkPVFoam::convertVolInternalFieldBlock
 (
-    const typename VolField<Type>::Internal& tf,
+    const VolInternalField<Type>& tf,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
     const List<polyDecomp>& decompLst
@@ -398,7 +398,7 @@ void Foam::vtkPVFoam::convertVolInternalFieldBlock
 template<class Type>
 void Foam::vtkPVFoam::convertVolInternalField
 (
-    const typename VolField<Type>::Internal& tf,
+    const VolInternalField<Type>& tf,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
     const label datasetNo,

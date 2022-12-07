@@ -100,7 +100,7 @@ void Foam::fv::semiImplicitSource::addSupType
 
     const VolField<Type>& psi = eqn.psi();
 
-    typename VolField<Type>::Internal Su
+    VolInternalField<Type> Su
     (
         IOobject
         (
