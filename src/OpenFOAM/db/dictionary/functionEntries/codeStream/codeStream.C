@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ namespace Foam
 {
 namespace functionEntries
 {
-    defineTypeNameAndDebug(codeStream, 1);
+    defineTypeNameAndDebug(codeStream, 0);
 
     addToMemberFunctionSelectionTable
     (
@@ -107,7 +107,7 @@ Foam::functionEntries::codeStream::getFunction
     // See if library is loaded
     void* lib = libs.findLibrary(libPath);
 
-    if (!lib)
+    if (debug && !lib)
     {
         Info<< "Using #codeStream with " << libPath << endl;
     }
@@ -321,8 +321,11 @@ Foam::string Foam::functionEntries::codeStream::run
     Istream& is
 )
 {
-    Info<< "Using #codeStream at line " << is.lineNumber()
-        << " in file " <<  parentDict.name() << endl;
+    if (debug)
+    {
+        Info<< "Using #codeStream at line " << is.lineNumber()
+            << " in file " <<  parentDict.name() << endl;
+    }
 
     dynamicCode::checkSecurity
     (
