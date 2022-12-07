@@ -22,13 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    rhoParticleFoam
+    particleFoam
 
 Description
-    Transient solver for the passive transport of a single kinematic
-    particle cloud, with optional mesh motion and mesh topology changes.
-
-    Uses a pre-calculated velocity field to evolve the cloud.
+    Transient solver for the transport of a particles through an incompressible
+    carrier phase. Does not evolve the carrier; uses pre-computed carrier
+    property fields.
 
 \*---------------------------------------------------------------------------*/
 

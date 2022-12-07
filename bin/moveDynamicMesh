@@ -26,8 +26,8 @@
 #     moveDynamicMesh
 #
 # Description
-#     Script to inform the user that the uncoupledKinematicParcelFoam solver
-#     has been renamed rhoParticleFoam.
+#     Script to inform the user that the moveDynamicMesh solver
+#     has been renamed moveMesh.
 #
 #------------------------------------------------------------------------------
 
