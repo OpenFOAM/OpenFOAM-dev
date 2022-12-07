@@ -215,7 +215,7 @@ public:
         //- Correct the species concentrations
         virtual void correctSpecies();
 
-        //- Correct the turbulence
+        //- Correct the momentumTransport
         virtual void correctTurbulence();
 
         //- Correct the energy transport

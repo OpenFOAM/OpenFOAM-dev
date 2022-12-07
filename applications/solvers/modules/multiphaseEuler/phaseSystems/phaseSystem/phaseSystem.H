@@ -635,7 +635,7 @@ public:
             //- Correct the species mass fractions
             virtual void correctSpecies();
 
-            //- Correct the turbulence
+            //- Correct the momentumTransport
             virtual void correctTurbulence();
 
             //- Correct the energy transport e.g. alphat

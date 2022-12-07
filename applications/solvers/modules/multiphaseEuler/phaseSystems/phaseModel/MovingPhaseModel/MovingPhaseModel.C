@@ -161,7 +161,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
     DUDt_(nullptr),
     DUDtf_(nullptr),
     divU_(nullptr),
-    turbulence_
+    momentumTransport_
     (
         phaseCompressible::momentumTransportModel::New
         (
@@ -179,7 +179,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         <
             phaseCompressible::momentumTransportModel,
             transportThermoModel
-        >::New(turbulence_, this->thermo_)
+        >::New(momentumTransport_, this->thermo_)
     ),
     continuityError_
     (
@@ -273,7 +273,7 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correctTurbulence()
 {
     BasePhaseModel::correctTurbulence();
 
-    turbulence_->correct();
+    momentumTransport_->correct();
 }
 
 
@@ -324,7 +324,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::UEqn()
       + fvm::div(alphaRhoPhi_, U_)
       + fvm::SuSp(-this->continuityError(), U_)
       + this->fluid().MRF().DDt(alpha*rho, U_)
-      + turbulence_->divDevTau(U_)
+      + momentumTransport_->divDevTau(U_)
     );
 }
 
@@ -343,7 +343,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::UfEqn()
         fvm::div(alphaRhoPhi_, U_)
       + fvm::SuSp(fvc::ddt(*this, rho) - this->continuityError(), U_)
       + this->fluid().MRF().DDt(alpha*rho, U_)
-      + turbulence_->divDevTau(U_)
+      + momentumTransport_->divDevTau(U_)
     );
 }
 
@@ -534,7 +534,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::k() const
 {
-    return turbulence_->k();
+    return momentumTransport_->k();
 }
 
 
@@ -542,7 +542,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::pPrime() const
 {
-    return turbulence_->pPrime();
+    return momentumTransport_->pPrime();
 }
 
 

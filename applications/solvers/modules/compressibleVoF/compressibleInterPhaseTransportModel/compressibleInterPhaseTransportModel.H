@@ -83,13 +83,13 @@ class compressibleInterPhaseTransportModel
         tmp<surfaceScalarField> alphaRhoPhi2_;
 
         //- Mixture transport model (constructed for mixture transport)
-        autoPtr<compressible::momentumTransportModel> turbulence_;
+        autoPtr<compressible::momentumTransportModel> mixtureMomentumTransport_;
 
         //- Phase-1 transport model (constructed for two-phase transport)
-        autoPtr<phaseCompressible::momentumTransportModel> turbulence1_;
+        autoPtr<phaseCompressible::momentumTransportModel> momentumTransport1_;
 
         //- Phase-2 transport model (constructed for two-phase transport)
-        autoPtr<phaseCompressible::momentumTransportModel> turbulence2_;
+        autoPtr<phaseCompressible::momentumTransportModel> momentumTransport2_;
 
         friend class compressibleInterPhaseThermophysicalTransportModel;
 

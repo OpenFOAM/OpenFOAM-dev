@@ -92,7 +92,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
             )
         );
 
-        turbulence1_ =
+        momentumTransport1_ =
         (
             phaseCompressible::momentumTransportModel::New
             (
@@ -105,7 +105,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
             )
         );
 
-        turbulence2_ =
+        momentumTransport2_ =
         (
             phaseCompressible::momentumTransportModel::New
             (
@@ -120,7 +120,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
     }
     else
     {
-        turbulence_ = compressible::momentumTransportModel::New
+        mixtureMomentumTransport_ = compressible::momentumTransportModel::New
         (
             rho,
             U,
@@ -128,7 +128,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
             mixture
         );
 
-        turbulence_->validate();
+        mixtureMomentumTransport_->validate();
     }
 }
 
@@ -144,12 +144,12 @@ Foam::compressibleInterPhaseTransportModel::divDevTau
     if (twoPhaseTransport_)
     {
         return
-            turbulence1_->divDevTau(U)
-          + turbulence2_->divDevTau(U);
+            momentumTransport1_->divDevTau(U)
+          + momentumTransport2_->divDevTau(U);
     }
     else
     {
-        return turbulence_->divDevTau(U);
+        return mixtureMomentumTransport_->divDevTau(U);
     }
 }
 
@@ -171,12 +171,12 @@ void Foam::compressibleInterPhaseTransportModel::correct()
 {
     if (twoPhaseTransport_)
     {
-        turbulence1_->correct();
-        turbulence2_->correct();
+        momentumTransport1_->correct();
+        momentumTransport2_->correct();
     }
     else
     {
-        turbulence_->correct();
+        mixtureMomentumTransport_->correct();
     }
 }
 

@@ -101,7 +101,7 @@ protected:
         autoPtr<viscosityModel> viscosity;
 
         //- Pointer to the momentum transport model
-        autoPtr<incompressible::momentumTransportModel> turbulence;
+        autoPtr<incompressible::momentumTransportModel> momentumTransport;
 
 
     // Continuity properties

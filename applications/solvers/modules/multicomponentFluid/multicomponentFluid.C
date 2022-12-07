@@ -55,13 +55,13 @@ Foam::solvers::multicomponentFluid::multicomponentFluid(fvMesh& mesh)
 
     Y(composition.Y()),
 
-    reaction(combustionModel::New(thermo, turbulence())),
+    reaction(combustionModel::New(thermo, momentumTransport())),
 
     thermophysicalTransport
     (
         fluidMulticomponentThermophysicalTransportModel::New
         (
-            turbulence(),
+            momentumTransport(),
             thermo
         )
     )

@@ -66,13 +66,13 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::kappaEff() const
            *(
                 mixture_.thermo1().kappa()
               + mixture_.thermo1().rho()*mixture_.thermo1().Cp()
-               *momentumTransport_.turbulence1_->nut()
+               *momentumTransport_.momentumTransport1_->nut()
             )
           + mixture_.alpha2()
            *(
                 mixture_.thermo2().kappa()
               + mixture_.thermo2().rho()*mixture_.thermo2().Cp()
-               *momentumTransport_.turbulence2_->nut()
+               *momentumTransport_.momentumTransport2_->nut()
             );
     }
     else
@@ -82,13 +82,13 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::kappaEff() const
            *(
                 mixture_.thermo1().kappa()
               + mixture_.thermo1().rho()*mixture_.thermo1().Cp()
-               *momentumTransport_.turbulence_->nut()
+               *momentumTransport_.mixtureMomentumTransport_->nut()
             )
           + mixture_.alpha2()
            *(
                 mixture_.thermo2().kappa()
               + mixture_.thermo2().rho()*mixture_.thermo2().Cp()
-               *momentumTransport_.turbulence_->nut()
+               *momentumTransport_.mixtureMomentumTransport_->nut()
             );
     }
 }
@@ -110,13 +110,13 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::kappaEff
                 mixture_.thermo1().kappa().boundaryField()[patchi]
               + mixture_.thermo1().rho(patchi)
                *mixture_.thermo1().Cp().boundaryField()[patchi]
-               *momentumTransport_.turbulence1_->nut(patchi)
+               *momentumTransport_.momentumTransport1_->nut(patchi)
             )
           + mixture_.alpha2().boundaryField()[patchi]
            *(
                 mixture_.thermo2().kappa().boundaryField()[patchi]
               + mixture_.thermo2().rho(patchi)*mixture_.thermo2().Cp()
-               *momentumTransport_.turbulence2_->nut(patchi)
+               *momentumTransport_.momentumTransport2_->nut(patchi)
             );
     }
     else
@@ -126,14 +126,14 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::kappaEff
            *(
                 mixture_.thermo1().kappa().boundaryField()[patchi]
               + mixture_.thermo1().rho(patchi)*mixture_.thermo1().Cp()
-               *momentumTransport_.turbulence_->nut(patchi)
+               *momentumTransport_.mixtureMomentumTransport_->nut(patchi)
             )
           + mixture_.alpha2()
            *(
                 mixture_.thermo2().kappa().boundaryField()[patchi]
               + mixture_.thermo2().rho(patchi)
                *mixture_.thermo2().Cp().boundaryField()[patchi]
-               *momentumTransport_.turbulence_->nut(patchi)
+               *momentumTransport_.mixtureMomentumTransport_->nut(patchi)
             );
     }
 }
@@ -151,13 +151,13 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::alphaEff() const
            *(
                 mixture_.thermo1().kappa()
               + mixture_.thermo1().rho()*mixture_.thermo1().Cp()
-               *momentumTransport_.turbulence1_->nut()
+               *momentumTransport_.momentumTransport1_->nut()
             )/mixture_.thermo1().Cv()
           + mixture_.alpha2()
            *(
                 mixture_.thermo2().kappa()
               + mixture_.thermo2().rho()*mixture_.thermo2().Cp()
-               *momentumTransport_.turbulence2_->nut()
+               *momentumTransport_.momentumTransport2_->nut()
             )/mixture_.thermo2().Cv();
     }
     else
@@ -167,13 +167,13 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::alphaEff() const
            *(
                 mixture_.thermo1().kappa()
               + mixture_.thermo1().rho()*mixture_.thermo1().Cp()
-               *momentumTransport_.turbulence_->nut()
+               *momentumTransport_.mixtureMomentumTransport_->nut()
             )/mixture_.thermo1().Cv()
           + mixture_.alpha2()
            *(
                 mixture_.thermo2().kappa()
               + mixture_.thermo2().rho()*mixture_.thermo2().Cp()
-               *momentumTransport_.turbulence_->nut()
+               *momentumTransport_.mixtureMomentumTransport_->nut()
             )/mixture_.thermo2().Cv();
     }
 }

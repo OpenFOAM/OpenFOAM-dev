@@ -26,9 +26,10 @@ Class
 
 Description
     Class which represents a moving fluid phase. Holds the velocity, fluxes and
-    turbulence model and can generate the momentum equation. The interface is
-    quite restrictive as it also has to support an equivalent stationary model,
-    which does not store motion fields or a turbulence model.
+    momentumTransport model and can generate the momentum equation. The
+    interface is quite restrictive as it also has to support an equivalent
+    stationary model, which does not store motion fields or a momentumTransport
+    model.
 
     Possible future extensions include separating the turbulent functionality
     into another layer.
@@ -121,7 +122,7 @@ protected:
         tmp<volScalarField> divU_;
 
         //- Turbulence model
-        autoPtr<phaseCompressible::momentumTransportModel> turbulence_;
+        autoPtr<phaseCompressible::momentumTransportModel> momentumTransport_;
 
         //- Thermophysical transport model
         autoPtr
@@ -167,7 +168,8 @@ public:
 
     // Member Functions
 
-        //- Correct the phase properties other than the thermo and turbulence
+        //- Correct the phase properties other than the thermo
+        //  and momentumTransport
         virtual void correct();
 
         //- Correct the continuity error
@@ -176,7 +178,7 @@ public:
         //- Correct the kinematics
         virtual void correctKinematics();
 
-        //- Correct the turbulence
+        //- Correct the momentumTransport
         virtual void correctTurbulence();
 
         //- Correct the energy transport e.g. alphat

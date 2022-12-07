@@ -160,7 +160,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
 
     K("K", 0.5*magSqr(U)),
 
-    turbulence
+    momentumTransport
     (
         compressible::momentumTransportModel::New
         (
@@ -180,7 +180,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
 
     thermo.validate("isothermalFluid", "h", "e");
     mesh.schemes().setFluxRequired(p.name());
-    turbulence->validate();
+    momentumTransport->validate();
 
     if (buoyancy.valid())
     {
@@ -354,7 +354,7 @@ void Foam::solvers::isothermalFluid::momentumTransportCorrector()
 {
     if (pimple.transportCorr())
     {
-        turbulence->correct();
+        momentumTransport->correct();
     }
 }
 

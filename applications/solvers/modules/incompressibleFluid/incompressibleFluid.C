@@ -102,7 +102,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
 
     viscosity(viscosityModel::New(mesh)),
 
-    turbulence
+    momentumTransport
     (
         incompressible::momentumTransportModel::New
         (
@@ -116,7 +116,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
 {
     mesh.schemes().setFluxRequired(p.name());
 
-    turbulence->validate();
+    momentumTransport->validate();
 
     if (mesh.dynamic())
     {
@@ -220,7 +220,7 @@ void Foam::solvers::incompressibleFluid::momentumTransportCorrector()
     if (pimple.transportCorr())
     {
         viscosity->correct();
-        turbulence->correct();
+        momentumTransport->correct();
     }
 }
 

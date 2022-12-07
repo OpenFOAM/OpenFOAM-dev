@@ -72,7 +72,7 @@ Foam::fv::compressible::VoFTurbulenceDamping::VoFTurbulenceDamping
         )
     ),
     interface_(mixture_),
-    turbulence_
+    momentumTransport_
     (
         mesh.lookupType<compressibleMomentumTransportModel>(phaseName_)
     ),
@@ -86,22 +86,26 @@ Foam::fv::compressible::VoFTurbulenceDamping::VoFTurbulenceDamping
     if (mesh.foundObject<volScalarField>(epsilonName))
     {
         fieldName_ = epsilonName;
-        C2_.read(turbulence_.coeffDict());
+        C2_.read(momentumTransport_.coeffDict());
     }
     else if (mesh.foundObject<volScalarField>(omegaName))
     {
         fieldName_ = omegaName;
-        betaStar_.read(turbulence_.coeffDict());
+        betaStar_.read(momentumTransport_.coeffDict());
 
         // Read beta for k-omega models or beta1 for k-omega SST
-        if (turbulence_.coeffDict().found("beta"))
+        if (momentumTransport_.coeffDict().found("beta"))
         {
-            beta_.read(turbulence_.coeffDict());
+            beta_.read(momentumTransport_.coeffDict());
         }
         else
         {
-            beta_ =
-                dimensionedScalar("beta1", dimless, turbulence_.coeffDict());
+            beta_ = dimensionedScalar
+            (
+                "beta1",
+                dimless,
+                momentumTransport_.coeffDict()
+            );
         }
     }
     else
@@ -142,7 +146,7 @@ void Foam::fv::compressible::VoFTurbulenceDamping::addSup
 
     if (fieldName == "epsilon")
     {
-        eqn += interface_.fraction()*C2_*aRhoSqrnu*turbulence_.k()()
+        eqn += interface_.fraction()*C2_*aRhoSqrnu*momentumTransport_.k()()
            /pow4(delta_);
     }
     else if (fieldName == "omega")
@@ -193,7 +197,7 @@ void Foam::fv::compressible::VoFTurbulenceDamping::addSup
 
     if (fieldName == IOobject::groupName("epsilon", phaseName_))
     {
-        eqn += interface_.fraction()*C2_*taRhoSqrnu*turbulence_.k()()
+        eqn += interface_.fraction()*C2_*taRhoSqrnu*momentumTransport_.k()()
            /pow4(delta_);
     }
     else if (fieldName == IOobject::groupName("omega", phaseName_))

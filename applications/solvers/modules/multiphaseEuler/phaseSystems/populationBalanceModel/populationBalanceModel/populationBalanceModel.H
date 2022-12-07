@@ -488,7 +488,7 @@ public:
             const phaseModel& dispersedPhase
         ) const;
 
-        //- Return reference to turbulence model of the continuous phase
+        //- Return reference to momentumTransport model of the continuous phase
         const phaseCompressible::momentumTransportModel&
             continuousTurbulence() const;
 

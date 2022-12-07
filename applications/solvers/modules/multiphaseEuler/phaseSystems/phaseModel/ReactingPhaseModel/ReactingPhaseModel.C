@@ -40,7 +40,7 @@ Foam::ReactingPhaseModel<BasePhaseModel>::ReactingPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, referencePhase, index),
-    reaction_(combustionModel::New(this->thermo_(), this->turbulence_()))
+    reaction_(combustionModel::New(this->thermo_(), this->momentumTransport_()))
 {}
 
 

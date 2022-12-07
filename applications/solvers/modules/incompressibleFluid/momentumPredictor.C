@@ -33,7 +33,7 @@ void Foam::solvers::incompressibleFluid::momentumPredictor()
     (
         fvm::ddt(U) + fvm::div(phi, U)
       + MRF.DDt(U)
-      + turbulence->divDevSigma(U)
+      + momentumTransport->divDevSigma(U)
      ==
         fvModels().source(U)
     );

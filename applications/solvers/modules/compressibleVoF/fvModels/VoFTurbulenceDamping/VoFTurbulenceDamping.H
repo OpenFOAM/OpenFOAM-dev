@@ -25,17 +25,17 @@ Class
     Foam::fv::compressible::VoFTurbulenceDamping
 
 Description
-    Free-surface turbulence damping function
+    Free-surface momentumTransport damping function
 
     Adds an extra source term to the mixture or phase epsilon or omega
-    equation to reduce turbulence generated near a free-surface.  The
+    equation to reduce momentumTransport generated near a free-surface.  The
     implementation is based on
 
     Reference:
     \verbatim
         Frederix, E. M. A., Mathur, A., Dovizio, D., Geurts, B. J.,
         & Komen, E. M. J. (2018).
-        Reynolds-averaged modeling of turbulence damping
+        Reynolds-averaged modeling of momentumTransport damping
         near a large-scale interface in two-phase flow.
         Nuclear engineering and design, 333, 122-130.
     \endverbatim
@@ -46,7 +46,7 @@ Description
     be set appropriately for the case by performing test runs and comparing with
     known results.  Clearly this model is far from general and more research is
     needed in order that \c delta can be obtained directly from the interface
-    flow and turbulence conditions.
+    flow and momentumTransport conditions.
 
 Usage
     Example usage:
@@ -57,7 +57,7 @@ Usage
 
         libs    ("libcompressibleVoFTurbulenceDamping.so");
 
-        // Interface turbulence damping length scale
+        // Interface momentumTransport damping length scale
         // This is a required input as described in section 3.3 of the paper
         delta   1e-4;
 
@@ -106,7 +106,7 @@ class VoFTurbulenceDamping
         //- Field name
         word fieldName_;
 
-        //- Interface turbulence damping length scale
+        //- Interface momentumTransport damping length scale
         //  This is a required input as described in section 3.3 of the paper
         dimensionedScalar delta_;
 
@@ -116,8 +116,8 @@ class VoFTurbulenceDamping
         //- Reference to the interface properties
         const interfaceProperties& interface_;
 
-        //- Reference to the mixture turbulence model
-        const compressibleMomentumTransportModel& turbulence_;
+        //- Reference to the mixture momentumTransport model
+        const compressibleMomentumTransportModel& momentumTransport_;
 
         // Turbulence model coefficients
 

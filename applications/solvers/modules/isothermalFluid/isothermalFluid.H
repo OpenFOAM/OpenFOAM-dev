@@ -130,7 +130,7 @@ protected:
     // Momentum transport
 
         //- Pointer to the momentum transport model
-        autoPtr<compressible::momentumTransportModel> turbulence;
+        autoPtr<compressible::momentumTransportModel> momentumTransport;
 
 
     // Continuity properties

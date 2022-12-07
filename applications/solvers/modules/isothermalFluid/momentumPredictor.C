@@ -33,7 +33,7 @@ void Foam::solvers::isothermalFluid::momentumPredictor()
     (
         fvm::ddt(rho, U) + fvm::div(phi, U)
       + MRF.DDt(rho, U)
-      + turbulence->divDevTau(U)
+      + momentumTransport->divDevTau(U)
      ==
         fvModels().source(rho, U)
     );
