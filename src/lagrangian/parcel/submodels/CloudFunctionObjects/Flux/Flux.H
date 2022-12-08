@@ -164,7 +164,7 @@ public:
     // Member Functions
 
         //- Return the flux contribution for a single particle
-        static scalar dPhiSf(const typename CloudType::particleType& p)
+        static scalar dPhiDeltaT(const typename CloudType::particleType& p)
         {
             return p.nParticle();
         }
@@ -201,7 +201,7 @@ public:
     // Member Functions
 
         //- Return the flux contribution for a single particle
-        static scalar dPhiSf(const typename CloudType::particleType& p)
+        static scalar dPhiDeltaT(const typename CloudType::particleType& p)
         {
             return p.nParticle()*p.volume();
         }
@@ -238,7 +238,7 @@ public:
     // Member Functions
 
         //- Return the flux contribution for a single particle
-        static scalar dPhiSf(const typename CloudType::particleType& p)
+        static scalar dPhiDeltaT(const typename CloudType::particleType& p)
         {
             return p.nParticle()*p.mass();
         }

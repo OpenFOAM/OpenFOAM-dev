@@ -29,15 +29,15 @@ License
 
 template<class CloudType>
 const Foam::dimensionSet Foam::NumberFlux<CloudType>::dimensions =
-    dimless/dimArea/dimTime;
+    dimless/dimTime;
 
 template<class CloudType>
 const Foam::dimensionSet Foam::VolumeFlux<CloudType>::dimensions =
-    dimVolume/dimArea/dimTime;
+    dimVolume/dimTime;
 
 template<class CloudType>
 const Foam::dimensionSet Foam::MassFlux<CloudType>::dimensions =
-    dimMass/dimArea/dimTime;
+    dimMass/dimTime;
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
@@ -72,17 +72,12 @@ void Foam::Flux<CloudType, Derived>::accumulate
 
     const scalar sign = own == isPre ? +1 : -1;
 
-    const scalar magSff =
-        isInternal
-      ? this->owner().mesh().magSf()[facei]
-      : this->owner().mesh().magSf().boundaryField()[patchi][patchFacei];
-
     scalar& phif =
         isInternal
       ? phi_[facei]
       : phi_.boundaryFieldRef()[patchi][patchFacei];
 
-    phif += sign*Derived::dPhiSf(p)/magSff/mesh.time().deltaTValue();
+    phif += sign*Derived::dPhiDeltaT(p)/mesh.time().deltaTValue();
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
