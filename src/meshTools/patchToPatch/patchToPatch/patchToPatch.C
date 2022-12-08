@@ -617,8 +617,9 @@ void Foam::patchToPatch::intersectPatches
             if (debug)
             {
                 Info<< indent << "Completed " << nSrcFaceComplete << '/'
-                    << srcPatch.size() << " source faces " << decrIndent
-                    << endl;
+                    << srcPatch.size() << " source faces and "
+                    << nTgtFaceComplete << '/' << tgtPatch.size()
+                    << " target faces " << decrIndent << endl;
             }
         }
 

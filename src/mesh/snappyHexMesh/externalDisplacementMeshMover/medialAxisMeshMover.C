@@ -892,8 +892,6 @@ void Foam::medialAxisMeshMover::syncPatchDisplacement
     const indirectPrimitivePatch& pp = adaptPatchPtr_();
     const labelList& meshPoints = pp.meshPoints();
 
-    label nChangedTotal = 0;
-
     while (true)
     {
         label nChanged = 0;
@@ -920,81 +918,11 @@ void Foam::medialAxisMeshMover::syncPatchDisplacement
             }
         }
 
-        // labelList syncPatchNLayers(patchNLayers);
-        //
-        // syncTools::syncPointList
-        //(
-        //    mesh(),
-        //    meshPoints,
-        //    syncPatchNLayers,
-        //    minEqOp<label>(),
-        //    labelMax            // null value
-        //);
-        //
-        //// Reset if differs
-        //// 1. take max
-        // forAll(syncPatchNLayers, i)
-        //{
-        //    if (syncPatchNLayers[i] != patchNLayers[i])
-        //    {
-        //        if
-        //        (
-        //            unmarkExtrusion
-        //            (
-        //                i,
-        //                patchDisp,
-        //                patchNLayers,
-        //                extrudeStatus
-        //            )
-        //        )
-        //        {
-        //            nChanged++;
-        //        }
-        //    }
-        //}
-        //
-        // syncTools::syncPointList
-        //(
-        //    mesh(),
-        //    meshPoints,
-        //    syncPatchNLayers,
-        //    maxEqOp<label>(),
-        //    labelMin            // null value
-        //);
-        //
-        //// Reset if differs
-        //// 2. take min
-        // forAll(syncPatchNLayers, i)
-        //{
-        //    if (syncPatchNLayers[i] != patchNLayers[i])
-        //    {
-        //        if
-        //        (
-        //            unmarkExtrusion
-        //            (
-        //                i,
-        //                patchDisp,
-        //                patchNLayers,
-        //                extrudeStatus
-        //            )
-        //        )
-        //        {
-        //            nChanged++;
-        //        }
-        //    }
-        //}
-
-        nChangedTotal += nChanged;
-
         if (!returnReduce(nChanged, sumOp<label>()))
         {
             break;
         }
     }
-
-    // Info<< "Prevented extrusion on "
-    //    << returnReduce(nChangedTotal, sumOp<label>())
-    //    << " coupled patch points during syncPatchDisplacement." << endl;
 }
 
 

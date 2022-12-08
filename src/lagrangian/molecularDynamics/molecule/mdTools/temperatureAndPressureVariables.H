@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,6 @@ scalar accumulatedTotalMass = 0.0;
 scalar accumulatedTotalAngularKE = 0.0;
 
 scalar accumulatedTotalLinearKE = 0.0;
-
-scalar accumulatedTotalPE = 0.0;
 
 scalar accumulatedTotalrDotfSum = 0.0;
 

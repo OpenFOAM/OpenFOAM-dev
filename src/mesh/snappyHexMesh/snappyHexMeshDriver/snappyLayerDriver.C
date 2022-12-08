@@ -1347,8 +1347,6 @@ void Foam::snappyLayerDriver::syncPatchDisplacement
     const fvMesh& mesh = meshRefiner_.mesh();
     const labelList& meshPoints = pp.meshPoints();
 
-    label nChangedTotal = 0;
-
     while (true)
     {
         label nChanged = 0;
@@ -1447,17 +1445,12 @@ void Foam::snappyLayerDriver::syncPatchDisplacement
                 }
             }
         }
-        nChangedTotal += nChanged;
 
         if (!returnReduce(nChanged, sumOp<label>()))
         {
             break;
         }
     }
-
-    // Info<< "Prevented extrusion on "
-    //    << returnReduce(nChangedTotal, sumOp<label>())
-    //    << " coupled patch points during syncPatchDisplacement." << endl;
 }
 
 
@@ -2845,7 +2838,7 @@ void Foam::snappyLayerDriver::mergePatchFacesUndo
         }
     }
 
-    label nChanged = meshRefiner_.mergePatchFacesUndo
+    meshRefiner_.mergePatchFacesUndo
     (
         minCos,
         concaveCos,
@@ -2854,7 +2847,7 @@ void Foam::snappyLayerDriver::mergePatchFacesUndo
         duplicateFace
     );
 
-    nChanged += meshRefiner_.mergeEdgesUndo(minCos, motionDict);
+    meshRefiner_.mergeEdgesUndo(minCos, motionDict);
 }
 
 

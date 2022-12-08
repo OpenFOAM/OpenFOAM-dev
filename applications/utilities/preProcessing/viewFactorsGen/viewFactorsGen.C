@@ -526,11 +526,9 @@ int main(int argc, char *argv[])
 
     labelListList visibleFaceFaces(nCoarseFaces);
 
-    label nViewFactors = 0;
     forAll(nVisibleFaceFaces, facei)
     {
         visibleFaceFaces[facei].setSize(nVisibleFaceFaces[facei]);
-        nViewFactors += nVisibleFaceFaces[facei];
     }
 
 

@@ -627,7 +627,6 @@ void Foam::radiationModels::viewFactor::calculate()
         if (pp.size() > 0)
         {
             scalarField& qrp = qrBf[patchID];
-            const scalarField& sf = mesh_.magSf().boundaryField()[patchID];
             const labelList& agglom = finalAgglom_[patchID];
             label nAgglom = max(agglom)+1;
 
@@ -636,7 +635,6 @@ void Foam::radiationModels::viewFactor::calculate()
             const labelList& coarsePatchFace =
                 coarseMesh_.patchFaceMap()[patchID];
 
-            scalar heatFlux = 0.0;
             forAll(coarseToFine, coarseI)
             {
                 label globalCoarse =
@@ -648,7 +646,6 @@ void Foam::radiationModels::viewFactor::calculate()
                     label facei = fineFaces[k];
 
                     qrp[facei] = q[globalCoarse];
-                    heatFlux += qrp[facei]*sf[facei];
                 }
                 globCoarseId ++;
             }
