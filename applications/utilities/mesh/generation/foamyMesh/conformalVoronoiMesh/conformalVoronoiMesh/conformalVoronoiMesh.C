@@ -827,7 +827,6 @@ Foam::conformalVoronoiMesh::conformalVoronoiMesh
 :
     DistributedDelaunayMesh<Delaunay>(runTime),
     runTime_(runTime),
-    rndGen_(64293*Pstream::myProcNo()),
     foamyHexMeshControls_(foamyHexMeshDict),
     allGeometry_
     (
@@ -846,7 +845,7 @@ Foam::conformalVoronoiMesh::conformalVoronoiMesh
     geometryToConformTo_
     (
         runTime_,
-        rndGen_,
+        rndGen(),
         allGeometry_,
         foamyHexMeshDict.subDict("surfaceConformation")
     ),
@@ -856,7 +855,7 @@ Foam::conformalVoronoiMesh::conformalVoronoiMesh
       ? new backgroundMeshDecomposition
         (
             runTime_,
-            rndGen_,
+            rndGen(),
             geometryToConformTo_,
             foamyHexMeshControls().foamyHexMeshDict().subDict
             (
@@ -884,7 +883,7 @@ Foam::conformalVoronoiMesh::conformalVoronoiMesh
         (
             foamyHexMeshDict.subDict("initialPoints"),
             runTime_,
-            rndGen_,
+            rndGen(),
             geometryToConformTo_,
             cellShapeControl_,
             decomposition_
@@ -986,7 +985,7 @@ void Foam::conformalVoronoiMesh::initialiseForConformation()
             new backgroundMeshDecomposition
             (
                 runTime_,
-                rndGen_,
+                rndGen(),
                 geometryToConformTo_,
                 foamyHexMeshControls().foamyHexMeshDict().subDict
                 (

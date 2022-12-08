@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,9 +138,6 @@ private:
 
         //- The time registry of the application
         const Time& runTime_;
-
-        //- Random number generator
-        mutable Random rndGen_;
 
         //- Controls for the conformal Voronoi meshing process
         cvControls foamyHexMeshControls_;
@@ -901,9 +898,6 @@ public:
 
             //- Return the Time object
             inline const Time& time() const;
-
-            //- Return the random number generator
-            inline Random& rndGen() const;
 
             //- Return the allGeometry object
             inline const searchableSurfaces& allGeometry() const;

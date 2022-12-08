@@ -395,9 +395,6 @@ void stableSort(UList<T>&);
 template<class T, class Cmp>
 void stableSort(UList<T>&, const Cmp&);
 
-template<class T>
-void shuffle(UList<T>&);
-
 // Reverse the first n elements of the list
 template<class T>
 inline void reverse(UList<T>&, const label n);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ inline const Foam::Time& Foam::DelaunayMesh<Triangulation>::time() const
 
 
 template<class Triangulation>
-void Foam::DelaunayMesh<Triangulation>::timeCheck
+inline void Foam::DelaunayMesh<Triangulation>::timeCheck
 (
     const string& description,
     const bool check
@@ -90,30 +90,37 @@ inline Foam::label Foam::DelaunayMesh<Triangulation>::getNewVertexIndex() const
 
 
 template<class Triangulation>
-Foam::label Foam::DelaunayMesh<Triangulation>::cellCount() const
+inline Foam::label Foam::DelaunayMesh<Triangulation>::cellCount() const
 {
     return cellCount_;
 }
 
 
 template<class Triangulation>
-Foam::label Foam::DelaunayMesh<Triangulation>::vertexCount() const
+inline Foam::label Foam::DelaunayMesh<Triangulation>::vertexCount() const
 {
     return vertexCount_;
 }
 
 
 template<class Triangulation>
-void Foam::DelaunayMesh<Triangulation>::resetCellCount()
+inline void Foam::DelaunayMesh<Triangulation>::resetCellCount()
 {
     cellCount_ = 0;
 }
 
 
 template<class Triangulation>
-void Foam::DelaunayMesh<Triangulation>::resetVertexCount()
+inline void Foam::DelaunayMesh<Triangulation>::resetVertexCount()
 {
     vertexCount_ = 0;
+}
+
+
+template<class Triangulation>
+inline Foam::Random& Foam::DelaunayMesh<Triangulation>::rndGen() const
+{
+    return rndGen_;
 }
 
 

@@ -264,10 +264,7 @@ Foam::boundSphere(const PointField& ps, Random& rndGen)
     else
     {
         labelList pis(identity(ps.size()));
-        forAll(pis, i)
-        {
-            Swap(pis[i], pis[rndGen.sampleAB<label>(i, ps.size())]);
-        }
+        rndGen.permute(pis);
         FixedList<label, 4> boundaryPis({-1, -1, -1, -1});
         return weizlBoundSphere(ps, pis, ps.size(), boundaryPis, 0);
     }
@@ -286,11 +283,7 @@ Foam::boundSphere(const PointField& ps)
     else
     {
         labelList pis(identity(ps.size()));
-        Random rndGen(0);
-        forAll(pis, i)
-        {
-            Swap(pis[i], pis[rndGen.sampleAB<label>(i, ps.size())]);
-        }
+        Random(0).permute(pis);
         FixedList<label, 4> boundaryPis({-1, -1, -1, -1});
         return weizlBoundSphere(ps, pis, ps.size(), boundaryPis, 0);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,7 @@ SourceFiles
 #include "CGALTriangulation3Ddefs.H"
 #include "Time.H"
 #include "autoPtr.H"
+#include "Random.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -105,6 +106,9 @@ private:
 
         //- Reference to Time
         const Time& runTime_;
+
+        //- Random number generator
+        mutable Random rndGen_;
 
         //- Spatial sort traits to use with a pair of point pointers and an int.
         //  Taken from a post on the CGAL lists: 2010-01/msg00004.html by
@@ -217,6 +221,10 @@ public:
 
             //- Set the vertex count to zero
             inline void resetVertexCount();
+
+
+        //- Access the random number generator
+        inline Random& rndGen() const;
 
 
         // Triangulation manipulation functions

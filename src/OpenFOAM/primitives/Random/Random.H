@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,6 +141,11 @@ public:
             //  cores. Use of this is discouraged. It is expensive and
             //  introduces non-randomness in all cores other then the master.
             scalar globalScalar01();
+
+
+        //- Randomly permute a list
+        template<class Container>
+        inline void permute(Container& l);
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,6 @@ inline Foam::Random::type Foam::Random::sample()
 
     return x_ >> 17;
 }
-
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -133,6 +132,16 @@ template<>
 inline Foam::scalar Foam::Random::sampleNormal()
 {
     return scalarNormal();
+}
+
+
+template<class Container>
+inline void Foam::Random::permute(Container& l)
+{
+    for (label i = 0; i < l.size(); ++ i)
+    {
+        Swap(l[i], l[sampleAB<label>(i, l.size())]);
+    }
 }
 
 

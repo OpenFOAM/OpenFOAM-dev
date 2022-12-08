@@ -900,7 +900,7 @@ Foam::DistributedDelaunayMesh<Triangulation>::rangeInsertReferredWithInfo
         );
     }
 
-    std::random_shuffle(pointsBbDistSqr.begin(), pointsBbDistSqr.end());
+    this->rndGen().permute(pointsBbDistSqr);
 
     // Sort in ascending order by the distance of the point from the centre
     // of the processor bounding box

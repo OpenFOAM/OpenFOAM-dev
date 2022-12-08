@@ -40,7 +40,8 @@ Foam::DelaunayMesh<Triangulation>::DelaunayMesh(const Time& runTime)
     Triangulation(),
     vertexCount_(0),
     cellCount_(0),
-    runTime_(runTime)
+    runTime_(runTime),
+    rndGen_(64293*Pstream::myProcNo())
 {}
 
 
@@ -54,7 +55,8 @@ Foam::DelaunayMesh<Triangulation>::DelaunayMesh
     Triangulation(),
     vertexCount_(0),
     cellCount_(0),
-    runTime_(runTime)
+    runTime_(runTime),
+    rndGen_(64293*Pstream::myProcNo())
 {
     Info<< "Reading " << meshName << " from " << runTime.name() << endl;
 
@@ -302,7 +304,7 @@ Foam::Map<Foam::label> Foam::DelaunayMesh<Triangulation>::rangeInsertWithInfo
         );
     }
 
-    std::random_shuffle(points.begin(), points.end());
+    rndGen().permute(points);
 
     spatial_sort
     (

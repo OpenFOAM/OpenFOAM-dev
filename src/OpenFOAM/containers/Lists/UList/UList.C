@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,13 +136,6 @@ template<class T, class Cmp>
 void Foam::stableSort(UList<T>& a, const Cmp& cmp)
 {
     std::stable_sort(a.begin(), a.end(), cmp);
-}
-
-
-template<class T>
-void Foam::shuffle(UList<T>& a)
-{
-    std::random_shuffle(a.begin(), a.end());
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -566,7 +566,7 @@ bool Foam::autoDensity::fillBox
         // Randomise the order of the points to (potentially) improve the speed
         // of assessing the density ratio, and prevent a box being filled from a
         // corner when only some these points are required.
-        shuffle(samplePoints);
+        rndGen().permute(samplePoints);
 
         scalarField sampleSizes = cellShapeControls().cellSize(samplePoints);
 

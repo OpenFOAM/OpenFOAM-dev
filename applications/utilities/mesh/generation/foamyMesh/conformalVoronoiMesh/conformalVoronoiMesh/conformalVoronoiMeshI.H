@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -293,9 +293,9 @@ inline Foam::point Foam::conformalVoronoiMesh::perturbPoint
 
     scalar pert = 1e-12*defaultCellSize();
 
-    perturbedPt.x() += pert*(rndGen_.scalar01() - 0.5);
-    perturbedPt.y() += pert*(rndGen_.scalar01() - 0.5);
-    perturbedPt.z() += pert*(rndGen_.scalar01() - 0.5);
+    perturbedPt.x() += pert*(rndGen().scalar01() - 0.5);
+    perturbedPt.y() += pert*(rndGen().scalar01() - 0.5);
+    perturbedPt.z() += pert*(rndGen().scalar01() - 0.5);
 
     return perturbedPt;
 }
@@ -530,12 +530,6 @@ inline bool Foam::conformalVoronoiMesh::isProcBoundaryEdge
 inline const Foam::Time& Foam::conformalVoronoiMesh::time() const
 {
     return runTime_;
-}
-
-
-inline Foam::Random& Foam::conformalVoronoiMesh::rndGen() const
-{
-    return rndGen_;
 }
 
 
