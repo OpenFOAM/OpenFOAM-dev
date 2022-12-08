@@ -151,6 +151,14 @@ protected:
         //  Used for buoyant simulations only
         tmp<volVectorField> netForce;
 
+        //- Pointer to the vol momentum field
+        //  used for mesh-change to set rhoUf for introduced faces
+        autoPtr<volVectorField> rhoU;
+
+        //- Pointer to the old-time vol momentum field
+        //  used for mesh-change to set rhoUf.oldTime() for introduced faces
+        autoPtr<volVectorField> rhoU0;
+
         //- Pointer to the surface momentum field
         //  used to recreate the flux after mesh-change
         autoPtr<surfaceVectorField> rhoUf;

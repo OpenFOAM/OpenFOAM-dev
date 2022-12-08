@@ -418,7 +418,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             << "Constructing as copy" << endl << this->info() << endl;
     }
 
-    if (gf.field0Ptr_)
+    if (gf.field0Ptr_ && notNull(gf.field0Ptr_))
     {
         field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
         (
@@ -448,7 +448,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             << "Constructing by moving" << endl << this->info() << endl;
     }
 
-    if (gf.field0Ptr_)
+    if (gf.field0Ptr_ && notNull(gf.field0Ptr_))
     {
         field0Ptr_ = gf.field0Ptr_;
         gf.field0Ptr_ = nullptr;
@@ -506,7 +506,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             << endl << this->info() << endl;
     }
 
-    if (!readIfPresent() && gf.field0Ptr_)
+    if (!readIfPresent() && gf.field0Ptr_ && notNull(gf.field0Ptr_))
     {
         field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
         (
@@ -568,7 +568,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             << endl << this->info() << endl;
     }
 
-    if (!readIfPresent() && gf.field0Ptr_)
+    if (!readIfPresent() && gf.field0Ptr_ && notNull(gf.field0Ptr_))
     {
         field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
         (
@@ -631,7 +631,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     boundaryField_ == gf.boundaryField_;
 
-    if (!readIfPresent() && gf.field0Ptr_)
+    if (!readIfPresent() && gf.field0Ptr_ && notNull(gf.field0Ptr_))
     {
         field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
         (
@@ -673,7 +673,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     boundaryField_ == gf.boundaryField_;
 
-    if (!readIfPresent() && gf.field0Ptr_)
+    if (!readIfPresent() && gf.field0Ptr_ && notNull(gf.field0Ptr_))
     {
         field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
         (

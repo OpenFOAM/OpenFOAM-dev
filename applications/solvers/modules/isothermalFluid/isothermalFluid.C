@@ -302,15 +302,12 @@ void Foam::solvers::isothermalFluid::preSolve()
 
     fvModels().preUpdateMesh();
 
-    //- Pointer to the vol momentum field
-    //  used for mesh-change to set rhoUf for introduced faces
-    autoPtr<volVectorField> rhoU;
-    autoPtr<volVectorField> rhoU0;
-
     // Store momentum to set rhoUf for introduced faces
     if (mesh.topoChanging())
     {
         rhoU = new volVectorField("rhoU", rho*U);
+
+        InfoInFunction << "rhoUf().nOldTimes() " << rhoUf().nOldTimes() << endl;
 
         if (rhoUf().nOldTimes() > 1)
         {
@@ -321,8 +318,7 @@ void Foam::solvers::isothermalFluid::preSolve()
     // Update the mesh for topology change, mesh to mesh mapping
     mesh.update();
 
-    rhoU.clear();
-    rhoU0.clear();
+    InfoInFunction << "rhoUf().nOldTimes() " << rhoUf().nOldTimes() << endl;
 }
 
 

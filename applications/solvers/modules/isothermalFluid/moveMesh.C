@@ -35,6 +35,11 @@ bool Foam::solvers::isothermalFluid::moveMesh()
         // Move the mesh
         mesh.move();
 
+        // The rhoU and rhoU0 fields can be cleared following mesh-motion
+        // now the mesh has been re-stitched as necessary
+        rhoU.clear();
+        rhoU0.clear();
+
         if (mesh.changing())
         {
             if (buoyancy.valid())

@@ -645,8 +645,6 @@ bool Foam::fvMesh::dynamic() const
 
 bool Foam::fvMesh::update()
 {
-    if (!conformal()) stitcher_->disconnect(true, true);
-
     if
     (
         stitcher_->stitches()
@@ -656,6 +654,8 @@ bool Foam::fvMesh::update()
     {
         nullOldestTimeFields();
     }
+
+    if (!conformal()) stitcher_->disconnect(true, true);
 
     const bool hasV00 = V00Ptr_;
     deleteDemandDrivenData(V00Ptr_);
