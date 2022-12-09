@@ -116,8 +116,8 @@ void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
         }
     }
 
-    meshObject::topoChange<polyMesh>(*this, map);
-    meshObject::topoChange<pointMesh>(*this, map);
+    meshObjects::topoChange<polyMesh>(*this, map);
+    meshObjects::topoChange<pointMesh>(*this, map);
 
     // Reset valid directions (could change by faces put into empty patches)
     geometricD_ = Zero;
@@ -127,15 +127,15 @@ void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
 
 void Foam::polyMesh::mapMesh(const polyMeshMap& map)
 {
-    meshObject::mapMesh<polyMesh>(*this, map);
-    meshObject::mapMesh<pointMesh>(*this, map);
+    meshObjects::mapMesh<polyMesh>(*this, map);
+    meshObjects::mapMesh<pointMesh>(*this, map);
 }
 
 
 void Foam::polyMesh::distribute(const polyDistributionMap& map)
 {
-    meshObject::distribute<polyMesh>(*this, map);
-    meshObject::distribute<pointMesh>(*this, map);
+    meshObjects::distribute<polyMesh>(*this, map);
+    meshObjects::distribute<pointMesh>(*this, map);
 }
 
 

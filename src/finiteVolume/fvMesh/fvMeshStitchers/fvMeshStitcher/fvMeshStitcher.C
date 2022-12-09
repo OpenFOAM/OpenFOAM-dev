@@ -1259,8 +1259,8 @@ bool Foam::fvMeshStitcher::disconnect
         Info<< decrIndent;
     }
 
-    meshObject::movePoints<fvMesh>(mesh_);
-    meshObject::movePoints<lduMesh>(mesh_);
+    meshObjects::movePoints<fvMesh>(mesh_);
+    meshObjects::movePoints<lduMesh>(mesh_);
 
     const_cast<Time&>(mesh_.time()).functionObjects().movePoints(mesh_);
 
@@ -1521,8 +1521,8 @@ bool Foam::fvMeshStitcher::connect
         Info<< decrIndent;
     }
 
-    meshObject::movePoints<fvMesh>(mesh_);
-    meshObject::movePoints<lduMesh>(mesh_);
+    meshObjects::movePoints<fvMesh>(mesh_);
+    meshObjects::movePoints<lduMesh>(mesh_);
 
     const_cast<Time&>(mesh_.time()).functionObjects().movePoints(mesh_);
 
@@ -1584,8 +1584,8 @@ void Foam::fvMeshStitcher::reconnect(const bool geometric) const
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();
 
-    meshObject::movePoints<fvMesh>(mesh_);
-    meshObject::movePoints<lduMesh>(mesh_);
+    meshObjects::movePoints<fvMesh>(mesh_);
+    meshObjects::movePoints<lduMesh>(mesh_);
 
     const_cast<Time&>(mesh_.time()).functionObjects().movePoints(mesh_);
 }

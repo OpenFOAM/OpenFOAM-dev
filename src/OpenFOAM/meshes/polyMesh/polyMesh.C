@@ -1188,7 +1188,7 @@ void Foam::polyMesh::reorderPatches
     boundary_.clearGeom();
     clearAddressing(true);
     // Clear all but PatchMeshObjects
-    meshObject::clearUpto
+    meshObjects::clearUpto
     <
         polyMesh,
         TopologicalMeshObject,
@@ -1197,7 +1197,7 @@ void Foam::polyMesh::reorderPatches
     (
         *this
     );
-    meshObject::clearUpto
+    meshObjects::clearUpto
     <
         pointMesh,
         TopologicalMeshObject,
@@ -1210,8 +1210,8 @@ void Foam::polyMesh::reorderPatches
     boundary_.reorderPatches(newToOld, validBoundary);
 
     // Warn mesh objects
-    meshObject::reorderPatches<polyMesh>(*this, newToOld, validBoundary);
-    meshObject::reorderPatches<pointMesh>(*this, newToOld, validBoundary);
+    meshObjects::reorderPatches<polyMesh>(*this, newToOld, validBoundary);
+    meshObjects::reorderPatches<pointMesh>(*this, newToOld, validBoundary);
 }
 
 
@@ -1254,7 +1254,7 @@ void Foam::polyMesh::addPatch
     clearAddressing(true);
 
     // Clear all but PatchMeshObjects
-    meshObject::clearUpto
+    meshObjects::clearUpto
     <
         polyMesh,
         TopologicalMeshObject,
@@ -1263,7 +1263,7 @@ void Foam::polyMesh::addPatch
     (
         *this
     );
-    meshObject::clearUpto
+    meshObjects::clearUpto
     <
         pointMesh,
         TopologicalMeshObject,
@@ -1293,8 +1293,8 @@ void Foam::polyMesh::addPatch
     }
 
     // Warn mesh objects
-    meshObject::addPatch<polyMesh>(*this, insertPatchi);
-    meshObject::addPatch<pointMesh>(*this, insertPatchi);
+    meshObjects::addPatch<polyMesh>(*this, insertPatchi);
+    meshObjects::addPatch<pointMesh>(*this, insertPatchi);
 }
 
 
@@ -1423,8 +1423,8 @@ void Foam::polyMesh::setPoints(const pointField& newPoints)
     geometricD_ = Zero;
     solutionD_ = Zero;
 
-    meshObject::movePoints<polyMesh>(*this);
-    meshObject::movePoints<pointMesh>(*this);
+    meshObjects::movePoints<polyMesh>(*this);
+    meshObjects::movePoints<pointMesh>(*this);
 }
 
 
@@ -1500,8 +1500,8 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
     geometricD_ = Zero;
     solutionD_ = Zero;
 
-    meshObject::movePoints<polyMesh>(*this);
-    meshObject::movePoints<pointMesh>(*this);
+    meshObjects::movePoints<polyMesh>(*this);
+    meshObjects::movePoints<pointMesh>(*this);
 
     if (debug && moveError)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,13 +29,18 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(meshObject, 0);
+    defineTypeNameAndDebug(meshObjects, 0);
+    defineTypeNameAndDebug(typeMeshObject, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::meshObject::meshObject(const word& typeName, const objectRegistry& obr)
+Foam::typeMeshObject::typeMeshObject
+(
+    const word& typeName,
+    const objectRegistry& obr
+)
 :
     regIOobject
     (
@@ -49,7 +54,7 @@ Foam::meshObject::meshObject(const word& typeName, const objectRegistry& obr)
 {}
 
 
-Foam::meshObject::meshObject(const word& typeName, const IOobject& io)
+Foam::typeMeshObject::typeMeshObject(const word& typeName, const IOobject& io)
 :
     regIOobject(io)
 {}

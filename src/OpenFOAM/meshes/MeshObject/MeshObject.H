@@ -148,63 +148,24 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                         Class meshObject Declaration
+                       Class typeMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
-class meshObject
+class typeMeshObject
 :
     public regIOobject
 {
 public:
 
     // Declare name of the class and its debug switch
-    ClassName("meshObject");
+    ClassName("typeMeshObject");
 
 
     // Constructors
 
-        meshObject(const word& typeName, const objectRegistry& obr);
+        typeMeshObject(const word& typeName, const objectRegistry& obr);
 
-        meshObject(const word& typeName, const IOobject& io);
-
-
-    // Static member functions
-
-        template<class Mesh>
-        static void movePoints(objectRegistry&);
-
-        template<class Mesh>
-        static void topoChange(objectRegistry&, const polyTopoChangeMap&);
-
-        template<class Mesh>
-        static void mapMesh(objectRegistry&, const polyMeshMap&);
-
-        template<class Mesh>
-        static void distribute(objectRegistry&, const polyDistributionMap&);
-
-        template<class Mesh>
-        static void addPatch(objectRegistry&, const label patchi);
-
-        template<class Mesh>
-        static void reorderPatches
-        (
-            objectRegistry&,
-            const labelUList& newToOld,
-            const bool validBoundary
-        );
-
-        template<class Mesh, template<class> class MeshObjectType>
-        static void clear(objectRegistry&);
-
-        //- Clear all meshObject derived from FromType up to (but not including)
-        //  ToType. Used to clear e.g. all non-updateable meshObjects
-        template
-        <
-            class Mesh,
-            template<class> class FromType,
-            template<class> class ToType
-        >
-        static void clearUpto(objectRegistry&);
+        typeMeshObject(const word& typeName, const IOobject& io);
 };
 
 
@@ -215,18 +176,18 @@ public:
 template<class Mesh>
 class TopologicalMeshObject
 :
-    public meshObject
+    public typeMeshObject
 {
 public:
 
     TopologicalMeshObject(const word& typeName, const objectRegistry& obr)
     :
-        meshObject(typeName, obr)
+        typeMeshObject(typeName, obr)
     {}
 
     TopologicalMeshObject(const word& typeName, const IOobject& io)
     :
-        meshObject(typeName, io)
+        typeMeshObject(typeName, io)
     {}
 };
 
@@ -362,6 +323,52 @@ public:
 
     //- Inserted patch at patchi
     virtual void addPatch(const label patchi) = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                       namespace meshObject Declaration
+\*---------------------------------------------------------------------------*/
+
+namespace meshObjects
+{
+    NamespaceName("meshObjects");
+
+    template<class Mesh>
+    void movePoints(objectRegistry&);
+
+    template<class Mesh>
+    void topoChange(objectRegistry&, const polyTopoChangeMap&);
+
+    template<class Mesh>
+    void mapMesh(objectRegistry&, const polyMeshMap&);
+
+    template<class Mesh>
+    void distribute(objectRegistry&, const polyDistributionMap&);
+
+    template<class Mesh>
+    void addPatch(objectRegistry&, const label patchi);
+
+    template<class Mesh>
+    void reorderPatches
+    (
+        objectRegistry&,
+        const labelUList& newToOld,
+        const bool validBoundary
+    );
+
+    template<class Mesh, template<class> class MeshObjectType>
+    void clear(objectRegistry&);
+
+    //- Clear all MeshObject derived from FromType up to (but not including)
+    //  ToType. Used to clear e.g. all non-updateable meshObjects
+    template
+    <
+        class Mesh,
+        template<class> class FromType,
+        template<class> class ToType
+    >
+    void clearUpto(objectRegistry&);
 };
 
 

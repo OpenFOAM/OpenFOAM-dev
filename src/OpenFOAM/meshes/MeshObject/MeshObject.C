@@ -64,7 +64,7 @@ Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     }
     else
     {
-        if (meshObject::debug)
+        if (meshObjects::debug)
         {
             Pout<< "MeshObject::New(" << Mesh::typeName
                 << "&) : constructing " << Type::typeName
@@ -95,7 +95,7 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     }
     else
     {
-        if (meshObject::debug)
+        if (meshObjects::debug)
         {
             Pout<< "MeshObject::New(const " << Mesh::typeName
                 << "&) : constructing " << Type::typeName
@@ -128,7 +128,7 @@ Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     }
     else
     {
-        if (meshObject::debug)
+        if (meshObjects::debug)
         {
             Pout<< "MeshObject::New(" << Mesh::typeName
                 << "&, const Data1&) : constructing " << Type::typeName
@@ -161,7 +161,7 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
     }
     else
     {
-        if (meshObject::debug)
+        if (meshObjects::debug)
         {
             Pout<< "MeshObject::New(const " << Mesh::typeName
                 << "&, const Data1&) : constructing " << Type::typeName
@@ -184,7 +184,7 @@ bool Foam::MeshObject<Mesh, MeshObjectType, Type>::Delete(const Mesh& mesh)
 {
     if (found(mesh))
     {
-        if (meshObject::debug)
+        if (meshObjects::debug)
         {
             Pout<< "MeshObject::Delete(const Mesh&) : deleting "
                 << Type::typeName << endl;
@@ -231,16 +231,16 @@ bool Foam::MeshObject<Mesh, MeshObjectType, Type>::found
 
 
 template<class Mesh>
-void Foam::meshObject::movePoints(objectRegistry& obr)
+void Foam::meshObjects::movePoints(objectRegistry& obr)
 {
     HashTable<GeometricMeshObject<Mesh>*> meshObjects
     (
         obr.lookupClass<GeometricMeshObject<Mesh>>()
     );
 
-    if (meshObject::debug)
+    if (meshObjects::debug)
     {
-        Pout<< "meshObject::movePoints(objectRegistry&) :"
+        Pout<< "meshObjects::movePoints(objectRegistry&) :"
             << " moving " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
@@ -254,7 +254,7 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
     {
         if (isA<MoveableMeshObject<Mesh>>(*iter()))
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Moving " << iter()->name() << endl;
             }
@@ -262,7 +262,7 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
         }
         else
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Destroying " << iter()->name() << endl;
             }
@@ -273,7 +273,7 @@ void Foam::meshObject::movePoints(objectRegistry& obr)
 
 
 template<class Mesh>
-void Foam::meshObject::distribute
+void Foam::meshObjects::distribute
 (
     objectRegistry& obr,
     const polyDistributionMap& map
@@ -284,9 +284,9 @@ void Foam::meshObject::distribute
         obr.lookupClass<GeometricMeshObject<Mesh>>()
     );
 
-    if (meshObject::debug)
+    if (meshObjects::debug)
     {
-        Pout<< "meshObject::distribute(objectRegistry&, "
+        Pout<< "meshObjects::distribute(objectRegistry&, "
                "const polyDistributionMap& map) : updating "
             << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
@@ -301,7 +301,7 @@ void Foam::meshObject::distribute
     {
         if (isA<UpdateableMeshObject<Mesh>>(*iter()))
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Distributing " << iter()->name() << endl;
             }
@@ -310,7 +310,7 @@ void Foam::meshObject::distribute
         }
         else
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Destroying " << iter()->name() << endl;
             }
@@ -321,7 +321,7 @@ void Foam::meshObject::distribute
 
 
 template<class Mesh>
-void Foam::meshObject::topoChange
+void Foam::meshObjects::topoChange
 (
     objectRegistry& obr,
     const polyTopoChangeMap& map
@@ -332,9 +332,9 @@ void Foam::meshObject::topoChange
         obr.lookupClass<GeometricMeshObject<Mesh>>()
     );
 
-    if (meshObject::debug)
+    if (meshObjects::debug)
     {
-        Pout<< "meshObject::topoChange(objectRegistry&, "
+        Pout<< "meshObjects::topoChange(objectRegistry&, "
                "const polyTopoChangeMap& map) : updating " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
@@ -348,7 +348,7 @@ void Foam::meshObject::topoChange
     {
         if (isA<UpdateableMeshObject<Mesh>>(*iter()))
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Updating " << iter()->name() << endl;
             }
@@ -356,7 +356,7 @@ void Foam::meshObject::topoChange
         }
         else
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Destroying " << iter()->name() << endl;
             }
@@ -367,7 +367,7 @@ void Foam::meshObject::topoChange
 
 
 template<class Mesh>
-void Foam::meshObject::mapMesh
+void Foam::meshObjects::mapMesh
 (
     objectRegistry& obr,
     const polyMeshMap& map
@@ -378,9 +378,9 @@ void Foam::meshObject::mapMesh
         obr.lookupClass<GeometricMeshObject<Mesh>>()
     );
 
-    if (meshObject::debug)
+    if (meshObjects::debug)
     {
-        Pout<< "meshObject::mapMesh(objectRegistry&, "
+        Pout<< "meshObjects::mapMesh(objectRegistry&, "
                "const polyMeshMap& map) : updating " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
@@ -394,7 +394,7 @@ void Foam::meshObject::mapMesh
     {
         if (isA<UpdateableMeshObject<Mesh>>(*iter()))
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Updating " << iter()->name() << endl;
             }
@@ -402,7 +402,7 @@ void Foam::meshObject::mapMesh
         }
         else
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Destroying " << iter()->name() << endl;
             }
@@ -413,16 +413,16 @@ void Foam::meshObject::mapMesh
 
 
 template<class Mesh>
-void Foam::meshObject::addPatch(objectRegistry& obr, const label patchi)
+void Foam::meshObjects::addPatch(objectRegistry& obr, const label patchi)
 {
     HashTable<GeometricMeshObject<Mesh>*> meshObjects
     (
         obr.lookupClass<GeometricMeshObject<Mesh>>()
     );
 
-    if (meshObject::debug)
+    if (meshObjects::debug)
     {
-        Pout<< "meshObject::addPatch(objectRegistry&, "
+        Pout<< "meshObjects::addPatch(objectRegistry&, "
                "const label patchi) : updating " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
@@ -436,7 +436,7 @@ void Foam::meshObject::addPatch(objectRegistry& obr, const label patchi)
     {
         if (isA<PatchMeshObject<Mesh>>(*iter()))
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Adding patch to " << iter()->name() << endl;
             }
@@ -444,7 +444,7 @@ void Foam::meshObject::addPatch(objectRegistry& obr, const label patchi)
         }
         else
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Destroying " << iter()->name() << endl;
             }
@@ -455,7 +455,7 @@ void Foam::meshObject::addPatch(objectRegistry& obr, const label patchi)
 
 
 template<class Mesh>
-void Foam::meshObject::reorderPatches
+void Foam::meshObjects::reorderPatches
 (
     objectRegistry& obr,
     const labelUList& newToOld,
@@ -467,9 +467,9 @@ void Foam::meshObject::reorderPatches
         obr.lookupClass<GeometricMeshObject<Mesh>>()
     );
 
-    if (meshObject::debug)
+    if (meshObjects::debug)
     {
-        Pout<< "meshObject::addPatch(objectRegistry&, "
+        Pout<< "meshObjects::addPatch(objectRegistry&, "
                "const labelUList&, const bool) : updating " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
@@ -483,7 +483,7 @@ void Foam::meshObject::reorderPatches
     {
         if (isA<PatchMeshObject<Mesh>>(*iter()))
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Adding patch to " << iter()->name() << endl;
             }
@@ -495,7 +495,7 @@ void Foam::meshObject::reorderPatches
         }
         else
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Destroying " << iter()->name() << endl;
             }
@@ -506,23 +506,23 @@ void Foam::meshObject::reorderPatches
 
 
 template<class Mesh, template<class> class MeshObjectType>
-void Foam::meshObject::clear(objectRegistry& obr)
+void Foam::meshObjects::clear(objectRegistry& obr)
 {
     HashTable<MeshObjectType<Mesh>*> meshObjects
     (
         obr.lookupClass<MeshObjectType<Mesh>>()
     );
 
-    if (meshObject::debug)
+    if (meshObjects::debug)
     {
-        Pout<< "meshObject::clear(objectRegistry&) :"
+        Pout<< "meshObjects::clear(objectRegistry&) :"
             << " clearing " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
 
     forAllIter(typename HashTable<MeshObjectType<Mesh>*>, meshObjects, iter)
     {
-        if (meshObject::debug)
+        if (meshObjects::debug)
         {
             Pout<< "    Destroying " << iter()->name() << endl;
         }
@@ -537,16 +537,16 @@ template
     template<class> class FromType,
     template<class> class ToType
 >
-void Foam::meshObject::clearUpto(objectRegistry& obr)
+void Foam::meshObjects::clearUpto(objectRegistry& obr)
 {
     HashTable<FromType<Mesh>*> meshObjects
     (
         obr.lookupClass<FromType<Mesh>>()
     );
 
-    if (meshObject::debug)
+    if (meshObjects::debug)
     {
-        Pout<< "meshObject::clearUpto(objectRegistry&) :"
+        Pout<< "meshObjects::clearUpto(objectRegistry&) :"
             << " clearing " << Mesh::typeName
             << " meshObjects for region " << obr.name() << endl;
     }
@@ -555,7 +555,7 @@ void Foam::meshObject::clearUpto(objectRegistry& obr)
     {
         if (!isA<ToType<Mesh>>(*iter()))
         {
-            if (meshObject::debug)
+            if (meshObjects::debug)
             {
                 Pout<< "    Destroying " << iter()->name() << endl;
             }

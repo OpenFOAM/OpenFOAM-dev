@@ -58,8 +58,8 @@ void Foam::polyMesh::clearGeom()
     }
 
     // Clear all geometric mesh objects
-    meshObject::clear<pointMesh, GeometricMeshObject>(*this);
-    meshObject::clear<polyMesh, GeometricMeshObject>(*this);
+    meshObjects::clear<pointMesh, GeometricMeshObject>(*this);
+    meshObjects::clear<polyMesh, GeometricMeshObject>(*this);
 
     primitiveMesh::clearGeom();
 
@@ -86,7 +86,7 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
     {
         // Part of a mesh update. Keep meshObjects that have an topoChange
         // callback
-        meshObject::clearUpto
+        meshObjects::clearUpto
         <
             pointMesh,
             TopologicalMeshObject,
@@ -95,7 +95,7 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
         (
             *this
         );
-        meshObject::clearUpto
+        meshObjects::clearUpto
         <
             polyMesh,
             TopologicalMeshObject,
@@ -107,8 +107,8 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
     }
     else
     {
-        meshObject::clear<pointMesh, TopologicalMeshObject>(*this);
-        meshObject::clear<polyMesh, TopologicalMeshObject>(*this);
+        meshObjects::clear<pointMesh, TopologicalMeshObject>(*this);
+        meshObjects::clear<polyMesh, TopologicalMeshObject>(*this);
     }
 
     primitiveMesh::clearAddressing();

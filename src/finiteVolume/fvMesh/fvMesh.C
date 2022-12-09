@@ -69,14 +69,14 @@ void Foam::fvMesh::clearGeomNotOldVol()
         Pout<< FUNCTION_NAME << "clearGeomNotOldVol" << endl;
     }
 
-    meshObject::clearUpto
+    meshObjects::clearUpto
     <
         fvMesh,
         GeometricMeshObject,
         MoveableMeshObject
     >(*this);
 
-    meshObject::clearUpto
+    meshObjects::clearUpto
     <
         lduMesh,
         GeometricMeshObject,
@@ -155,7 +155,7 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
     {
         // Part of a mesh update. Keep meshObjects that have an topoChange
         // callback
-        meshObject::clearUpto
+        meshObjects::clearUpto
         <
             fvMesh,
             TopologicalMeshObject,
@@ -164,7 +164,7 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
         (
             *this
         );
-        meshObject::clearUpto
+        meshObjects::clearUpto
         <
             lduMesh,
             TopologicalMeshObject,
@@ -176,8 +176,8 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
     }
     else
     {
-        meshObject::clear<fvMesh, TopologicalMeshObject>(*this);
-        meshObject::clear<lduMesh, TopologicalMeshObject>(*this);
+        meshObjects::clear<fvMesh, TopologicalMeshObject>(*this);
+        meshObjects::clear<lduMesh, TopologicalMeshObject>(*this);
     }
 
     deleteDemandDrivenData(lduPtr_);
@@ -1133,8 +1133,8 @@ void Foam::fvMesh::setPoints(const pointField& p)
     boundary_.movePoints();
     surfaceInterpolation::movePoints();
 
-    meshObject::movePoints<fvMesh>(*this);
-    meshObject::movePoints<lduMesh>(*this);
+    meshObjects::movePoints<fvMesh>(*this);
+    meshObjects::movePoints<lduMesh>(*this);
 
     const_cast<Time&>(time()).functionObjects().movePoints(*this);
 }
@@ -1217,8 +1217,8 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
     boundary_.movePoints();
     surfaceInterpolation::movePoints();
 
-    meshObject::movePoints<fvMesh>(*this);
-    meshObject::movePoints<lduMesh>(*this);
+    meshObjects::movePoints<fvMesh>(*this);
+    meshObjects::movePoints<lduMesh>(*this);
 
     const_cast<Time&>(time()).functionObjects().movePoints(*this);
 
@@ -1317,8 +1317,8 @@ void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    meshObject::topoChange<fvMesh>(*this, map);
-    meshObject::topoChange<lduMesh>(*this, map);
+    meshObjects::topoChange<fvMesh>(*this, map);
+    meshObjects::topoChange<lduMesh>(*this, map);
 
     const_cast<Time&>(time()).functionObjects().topoChange(map);
 
@@ -1353,8 +1353,8 @@ void Foam::fvMesh::mapMesh(const polyMeshMap& map)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    meshObject::mapMesh<fvMesh>(*this, map);
-    meshObject::mapMesh<lduMesh>(*this, map);
+    meshObjects::mapMesh<fvMesh>(*this, map);
+    meshObjects::mapMesh<lduMesh>(*this, map);
 
     const_cast<Time&>(time()).functionObjects().mapMesh(map);
 
@@ -1378,8 +1378,8 @@ void Foam::fvMesh::distribute(const polyDistributionMap& map)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    meshObject::distribute<fvMesh>(*this, map);
-    meshObject::distribute<lduMesh>(*this, map);
+    meshObjects::distribute<fvMesh>(*this, map);
+    meshObjects::distribute<lduMesh>(*this, map);
 
     const_cast<Time&>(time()).functionObjects().distribute(map);
 
