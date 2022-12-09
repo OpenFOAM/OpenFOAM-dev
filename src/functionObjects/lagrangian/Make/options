@@ -5,7 +5,8 @@ EXE_INC = \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/lagrangian/parcel/lnInclude \
     -I$(LIB_SRC)/lagrangian/DSMC/lnInclude \
-    -I$(LIB_SRC)/surfaceFilmModels/lnInclude
+    -I$(LIB_SRC)/surfaceFilmModels/lnInclude \
+    -I$(LIB_SRC)/functionObjects/utilities/lnInclude
 
 LIB_LIBS = \
     -lfiniteVolume \
@@ -14,4 +15,5 @@ LIB_LIBS = \
     -llagrangian \
     -llagrangianParcel \
     -llagrangianParcelTurbulence \
-    -lsurfaceFilmModels
+    -lsurfaceFilmModels \
+    -lutilityFunctionObjects

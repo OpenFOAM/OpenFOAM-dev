@@ -1,0 +1,20 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Stops the run when all clouds are empty (i.e., have no particles)
+
+\*---------------------------------------------------------------------------*/
+
+type            stopAtEmptyClouds;
+libs            ("liblagrangianFunctionObjects.so");
+
+action          nextWrite;
+
+executeControl  timeStep;
+
+// ************************************************************************* //
