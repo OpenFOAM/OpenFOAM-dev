@@ -307,8 +307,6 @@ void Foam::solvers::isothermalFluid::preSolve()
     {
         rhoU = new volVectorField("rhoU", rho*U);
 
-        InfoInFunction << "rhoUf().nOldTimes() " << rhoUf().nOldTimes() << endl;
-
         if (rhoUf().nOldTimes() > 1)
         {
             rhoU0 = new volVectorField("rhoU_0", rho.oldTime()*U.oldTime());
@@ -317,8 +315,6 @@ void Foam::solvers::isothermalFluid::preSolve()
 
     // Update the mesh for topology change, mesh to mesh mapping
     mesh.update();
-
-    InfoInFunction << "rhoUf().nOldTimes() " << rhoUf().nOldTimes() << endl;
 }
 
 
