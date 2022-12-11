@@ -84,7 +84,7 @@ protected:
         fluidMulticomponentThermo& thermo;
 
 
-    // Compositon
+    // Composition
 
         basicSpecieMixture& composition;
         PtrList<volScalarField>& Y;
