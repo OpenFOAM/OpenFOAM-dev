@@ -76,7 +76,7 @@ Foam::chemistryModel<ThermoType>::chemistryModel
                 IOobject
                 (
                     "RR." + Yvf_[fieldi].name(),
-                    this->mesh().time().name(),
+                    this->mesh().time().timeName(),
                     this->mesh(),
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
@@ -101,7 +101,7 @@ Foam::chemistryModel<ThermoType>::chemistryModel
             typeIOobject<volScalarField> header
             (
                 Yvf_[i].name(),
-                this->mesh().time().name(),
+                this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ
             );
@@ -457,11 +457,8 @@ Foam::chemistryModel<ThermoType>::tc() const
     );
     scalarField& tc = ttc.ref();
 
-    const volScalarField& rho =
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->thermo().phasePropertyName("rho")
-        );
+    tmp<volScalarField> trho(this->thermo().rho());
+    const scalarField& rho = trho();
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
@@ -587,11 +584,8 @@ Foam::chemistryModel<ThermoType>::calculateRR
 
     volScalarField::Internal& RR = tRR.ref();
 
-    const volScalarField& rho =
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->thermo().phasePropertyName("rho")
-        );
+    tmp<volScalarField> trho(this->thermo().rho());
+    const scalarField& rho = trho();
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
@@ -646,11 +640,8 @@ void Foam::chemistryModel<ThermoType>::calculate()
         return;
     }
 
-    const volScalarField& rho =
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->thermo().phasePropertyName("rho")
-        );
+    tmp<volScalarField> trho(this->thermo().rho());
+    const scalarField& rho = trho();
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
@@ -728,12 +719,14 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
         return deltaTMin;
     }
 
-    const volScalarField& rhovf =
+    tmp<volScalarField> trhovf(this->thermo().rho());
+    const volScalarField& rhovf = trhovf();
+
+    const volScalarField& rho0vf =
         this->mesh().template lookupObject<volScalarField>
         (
             this->thermo().phasePropertyName("rho")
-        );
-    const volScalarField& rho0vf = rhovf.oldTime();
+        ).oldTime();
 
     const volScalarField& T0vf = this->thermo().T().oldTime();
     const volScalarField& p0vf = this->thermo().p().oldTime();
