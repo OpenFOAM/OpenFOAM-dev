@@ -26,12 +26,16 @@ Application
 
 Description
     Calculate the geometric compression ratio.
+
     Note that if you have valves and/or extra volumes it will not work,
-    since it calculates the volume at BDC and TCD.
+    since it calculates the volume at BDC and TDC.
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "volMesh.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
