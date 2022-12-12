@@ -160,7 +160,51 @@ Foam::fvMeshToFvMesh::mapSrcToTgt
         )
     );
 
-    mapSrcToTgt(field, tresult.ref());
+    fvMeshToFvMesh::mapSrcToTgt<Type>(field, tresult.ref());
+
+    return tresult;
+}
+
+
+template<class Type>
+void Foam::fvMeshToFvMesh::mapSrcToTgt
+(
+    const VolInternalField<Type>& field,
+    VolInternalField<Type>& result
+) const
+{
+    meshToMesh::mapSrcToTgt(field, result);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::VolInternalField<Type>>
+Foam::fvMeshToFvMesh::mapSrcToTgt
+(
+    const VolInternalField<Type>& field
+) const
+{
+    const fvMesh& tgtMesh = static_cast<const fvMesh&>(meshToMesh::tgtMesh());
+
+    tmp<VolInternalField<Type>> tresult
+    (
+        new VolInternalField<Type>
+        (
+            IOobject
+            (
+                typedName("interpolate(" + field.name() + ")"),
+                tgtMesh.time().name(),
+                tgtMesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            tgtMesh,
+            field.dimensions(),
+            Field<Type>(tgtMesh.nCells(), Zero)
+        )
+    );
+
+    fvMeshToFvMesh::mapSrcToTgt<Type>(field, tresult.ref());
 
     return tresult;
 }

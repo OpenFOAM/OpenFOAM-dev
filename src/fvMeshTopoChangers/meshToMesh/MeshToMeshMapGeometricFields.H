@@ -49,8 +49,7 @@ namespace Foam
 template<class Type>
 void evaluateConstraintTypes(VolField<Type>& fld)
 {
-    typename VolField<Type>::
-        Boundary& fldBf = fld.boundaryFieldRef();
+    typename VolField<Type>::Boundary& fldBf = fld.boundaryFieldRef();
 
     if
     (
@@ -137,8 +136,7 @@ void MeshToMeshMapVolFields
 {
     HashTable<const VolField<Type>*> fields
     (
-        mesh.objectRegistry::template
-            lookupClass<VolField<Type>>()
+        mesh.objectRegistry::template lookupClass<VolField<Type>>()
     );
 
     // Deleted old time fields
@@ -159,8 +157,7 @@ void MeshToMeshMapVolFields
 
     fields =
     (
-        mesh.objectRegistry::template
-            lookupClass<VolField<Type>>()
+        mesh.objectRegistry::template lookupClass<VolField<Type>>()
     );
 
     for
@@ -183,6 +180,43 @@ void MeshToMeshMapVolFields
 
         field.reset(mapper.mapSrcToTgt(field));
         evaluateConstraintTypes(field);
+        field.instance() = field.time().name();
+    }
+}
+
+
+template<class Type>
+void MeshToMeshMapVolInternalFields
+(
+    const fvMesh& mesh,
+    const fvMeshToFvMesh& mapper
+)
+{
+    // Note: use strict flag on lookupClass to avoid picking up volFields
+    HashTable<const VolInternalField<Type>*> fields
+    (
+        mesh.objectRegistry::template lookupClass<VolInternalField<Type>>(true)
+    );
+
+    for
+    (
+        typename HashTable<const VolInternalField<Type>*>::
+            iterator fieldIter = fields.begin();
+        fieldIter != fields.end();
+        ++fieldIter
+    )
+    {
+        VolInternalField<Type>& field =
+            const_cast<VolInternalField<Type>&>
+            (*fieldIter());
+
+        if (fvMeshToFvMesh::debug)
+        {
+            Info<< "Mapping " << field.typeName << ' ' << field.name()
+                << endl;
+        }
+
+        field.reset(mapper.mapSrcToTgt<Type>(field));
         field.instance() = field.time().name();
     }
 }

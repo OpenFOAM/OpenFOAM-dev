@@ -210,6 +210,11 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             MeshToMeshMapVolFields<Type>(mesh(), mapper);
         FOR_ALL_FIELD_TYPES(mapVolFieldType);
 
+        // Map all the volFields in the objectRegistry
+        #define mapVolInternalFieldType(Type, nullArg)                         \
+            MeshToMeshMapVolInternalFields<Type>(mesh(), mapper);
+        FOR_ALL_FIELD_TYPES(mapVolInternalFieldType);
+
         // Set all the surfaceFields in the objectRegistry to NaN
         #define NaNSurfaceFieldType(Type, nullArg)                             \
             NaNGeometricFields                                                 \

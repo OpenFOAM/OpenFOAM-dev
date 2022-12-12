@@ -89,6 +89,27 @@ public:
                 (
                     const VolField<Type>& field
                 ) const;
+
+
+            // Source-to-target volume internal field mapping
+
+                //- Interpolate a field with a defined operation. Values
+                //  passed in via 'result' are used to initialise the return
+                //  value.
+                template<class Type>
+                void mapSrcToTgt
+                (
+                    const VolInternalField<Type>& field,
+                    VolInternalField<Type>& result
+                ) const;
+
+                //- Interpolate a field with a defined operation. The initial
+                //  values of the result are set to zero.
+                template<class Type>
+                tmp<VolInternalField<Type>> mapSrcToTgt
+                (
+                    const VolInternalField<Type>& field
+                ) const;
 };
 
 

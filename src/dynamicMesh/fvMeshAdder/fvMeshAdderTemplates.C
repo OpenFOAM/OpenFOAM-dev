@@ -258,16 +258,12 @@ void Foam::fvMeshAdder::MapVolFields
 {
     HashTable<const VolField<Type>*> fields
     (
-        mesh.objectRegistry::lookupClass
-        <VolField<Type>>
-        ()
+        mesh.objectRegistry::lookupClass<VolField<Type>>()
     );
 
     HashTable<const VolField<Type>*> fieldsToAdd
     (
-        meshToAdd.objectRegistry::lookupClass
-        <VolField<Type>>
-        ()
+        meshToAdd.objectRegistry::lookupClass<VolField<Type>>()
     );
 
     for
@@ -854,11 +850,15 @@ void Foam::fvMeshAdder::MapPointFields
     const objectRegistry& meshToAdd
 )
 {
-    HashTable<const PointField<Type>*>
-        fields(mesh.thisDb().lookupClass<PointField<Type>>());
+    HashTable<const PointField<Type>*> fields
+    (
+        mesh.thisDb().lookupClass<PointField<Type>>()
+    );
 
-    HashTable<const PointField<Type>*>
-        fieldsToAdd(meshToAdd.lookupClass<PointField<Type>>());
+    HashTable<const PointField<Type>*> fieldsToAdd
+    (
+        meshToAdd.lookupClass<PointField<Type>>()
+    );
 
     for
     (
@@ -922,8 +922,7 @@ void Foam::fvMeshAdder::MapDimFields
     const fvMesh& meshToAdd
 )
 {
-    // Note: use strict flag on lookupClass to avoid picking up
-    //       volFields
+    // Note: use strict flag on lookupClass to avoid picking up volFields
     HashTable<const VolInternalField<Type>*> fields
     (
         mesh.objectRegistry::lookupClass<VolInternalField<Type>>(true)
