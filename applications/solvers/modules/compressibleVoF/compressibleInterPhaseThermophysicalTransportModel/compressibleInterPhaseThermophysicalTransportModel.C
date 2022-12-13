@@ -115,20 +115,22 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::kappaEff
           + mixture_.alpha2().boundaryField()[patchi]
            *(
                 mixture_.thermo2().kappa().boundaryField()[patchi]
-              + mixture_.thermo2().rho(patchi)*mixture_.thermo2().Cp()
+              + mixture_.thermo2().rho(patchi)
+               *mixture_.thermo2().Cp().boundaryField()[patchi]
                *momentumTransport_.momentumTransport2_->nut(patchi)
             );
     }
     else
     {
         return
-            mixture_.alpha1()
+            mixture_.alpha1().boundaryField()[patchi]
            *(
                 mixture_.thermo1().kappa().boundaryField()[patchi]
-              + mixture_.thermo1().rho(patchi)*mixture_.thermo1().Cp()
+              + mixture_.thermo1().rho(patchi)
+               *mixture_.thermo1().Cp().boundaryField()[patchi]
                *momentumTransport_.mixtureMomentumTransport_->nut(patchi)
             )
-          + mixture_.alpha2()
+          + mixture_.alpha2().boundaryField()[patchi]
            *(
                 mixture_.thermo2().kappa().boundaryField()[patchi]
               + mixture_.thermo2().rho(patchi)

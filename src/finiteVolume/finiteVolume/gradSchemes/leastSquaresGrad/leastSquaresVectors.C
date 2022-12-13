@@ -38,19 +38,24 @@ namespace Foam
 
 Foam::leastSquaresVectors::leastSquaresVectors(const fvMesh& mesh)
 :
-    MeshObject<fvMesh, Foam::MoveableMeshObject, leastSquaresVectors>(mesh),
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        leastSquaresVectors
+    >(mesh),
     pVectors_
     (
         IOobject
         (
             "LeastSquaresP",
-            mesh_.pointsInstance(),
-            mesh_,
+            mesh.pointsInstance(),
+            mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
         ),
-        mesh_,
+        mesh,
         dimensionedVector(dimless/dimLength, Zero)
     ),
     nVectors_
@@ -58,13 +63,13 @@ Foam::leastSquaresVectors::leastSquaresVectors(const fvMesh& mesh)
         IOobject
         (
             "LeastSquaresN",
-            mesh_.pointsInstance(),
-            mesh_,
+            mesh.pointsInstance(),
+            mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
         ),
-        mesh_,
+        mesh,
         dimensionedVector(dimless/dimLength, Zero)
     )
 {
@@ -87,11 +92,11 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
         InfoInFunction << "Calculating least square gradient vectors" << endl;
     }
 
-    const fvMesh& mesh = mesh_;
+    const fvMesh& mesh = this->mesh();
 
     // Set local references to mesh data
-    const labelUList& owner = mesh_.owner();
-    const labelUList& neighbour = mesh_.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceScalarField& w = mesh.weights();
@@ -99,7 +104,7 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
 
 
     // Set up temporary storage for the dd tensor (before inversion)
-    symmTensorField dd(mesh_.nCells(), Zero);
+    symmTensorField dd(mesh().nCells(), Zero);
 
     forAll(owner, facei)
     {

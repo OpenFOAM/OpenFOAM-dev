@@ -36,7 +36,7 @@ Foam::parcelClouds::parcelClouds
     const dimensionedVector& g
 )
 :
-    MeshObject<fvMesh, UpdateableMeshObject, parcelClouds>(mesh),
+    DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, parcelClouds>(mesh),
     parcelCloudList(rho, U, mu, g)
 {}
 
@@ -50,7 +50,7 @@ Foam::parcelClouds::parcelClouds
     const fluidThermo& carrierThermo
 )
 :
-    MeshObject<fvMesh, UpdateableMeshObject, parcelClouds>(mesh),
+    DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, parcelClouds>(mesh),
     parcelCloudList(rho, U, g, carrierThermo)
 {}
 

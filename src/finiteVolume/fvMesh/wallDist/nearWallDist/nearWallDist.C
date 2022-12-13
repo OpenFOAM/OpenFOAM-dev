@@ -85,7 +85,12 @@ void Foam::nearWallDist::correct()
 
 Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
 :
-    MeshObject<fvMesh, Foam::UpdateableMeshObject, nearWallDist>(mesh),
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        UpdateableMeshObject,
+        nearWallDist
+    >(mesh),
     y_
     (
         mesh.boundary(),

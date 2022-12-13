@@ -431,20 +431,11 @@ int main(int argc, char *argv[])
 
                 const pointMesh& completePMesh =
                     pointMesh::New(meshes.completeMesh());
-                PtrList<pointMesh> procPMeshes(nProcs);
-                forAll(procPMeshes, proci)
-                {
-                    procPMeshes.set
-                    (
-                        proci,
-                        new pointMesh(meshes.procMeshes()[proci])
-                    );
-                }
 
                 pointFieldReconstructor pointReconstructor
                 (
                     completePMesh,
-                    procPMeshes,
+                    meshes.procMeshes(),
                     meshes.procPointAddressing()
                 );
 

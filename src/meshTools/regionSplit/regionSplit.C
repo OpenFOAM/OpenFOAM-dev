@@ -394,8 +394,8 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
 
 Foam::regionSplit::regionSplit(const polyMesh& mesh, const bool doGlobalRegions)
 :
-    MeshObject<polyMesh, Foam::TopologicalMeshObject, regionSplit>(mesh),
-    labelList(mesh.nCells(), -1)
+    labelList(mesh.nCells(), -1),
+    mesh_(mesh)
 {
     globalNumberingPtr_ = calcRegionSplit
     (
@@ -414,8 +414,8 @@ Foam::regionSplit::regionSplit
     const bool doGlobalRegions
 )
 :
-    MeshObject<polyMesh, Foam::TopologicalMeshObject, regionSplit>(mesh),
-    labelList(mesh.nCells(), -1)
+    labelList(mesh.nCells(), -1),
+    mesh_(mesh)
 {
     globalNumberingPtr_ = calcRegionSplit
     (
@@ -435,8 +435,8 @@ Foam::regionSplit::regionSplit
     const bool doGlobalRegions
 )
 :
-    MeshObject<polyMesh, Foam::TopologicalMeshObject, regionSplit>(mesh),
-    labelList(mesh.nCells(), -1)
+    labelList(mesh.nCells(), -1),
+    mesh_(mesh)
 {
     globalNumberingPtr_ = calcRegionSplit
     (

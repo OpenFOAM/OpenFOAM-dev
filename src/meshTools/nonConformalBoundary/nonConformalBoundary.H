@@ -36,7 +36,7 @@ SourceFiles
 #ifndef nonConformalBoundary_H
 #define nonConformalBoundary_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "polyMesh.H"
 #include "indirectPrimitivePatch.H"
 
@@ -53,7 +53,12 @@ class nonConformalCoupledPolyPatch;
 
 class nonConformalBoundary
 :
-    public MeshObject<polyMesh, MoveableMeshObject, nonConformalBoundary>
+    public DemandDrivenMeshObject
+    <
+        polyMesh,
+        MoveableMeshObject,
+        nonConformalBoundary
+    >
 {
     // Private Data
 
@@ -104,6 +109,21 @@ class nonConformalBoundary
         const vectorField& ownerOrigBoundaryPointNormals0() const;
 
 
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        polyMesh,
+        MoveableMeshObject,
+        nonConformalBoundary
+    >;
+
+    // Protected Constructors
+
+        //- Construct from mesh
+        explicit nonConformalBoundary(const polyMesh& mesh);
+
+
 public:
 
     //- Runtime type information
@@ -111,9 +131,6 @@ public:
 
 
     // Constructors
-
-        //- Construct from a mesh
-        nonConformalBoundary(const polyMesh& mesh);
 
         //- Disallow default bitwise copy construction
         nonConformalBoundary(const nonConformalBoundary&) = delete;

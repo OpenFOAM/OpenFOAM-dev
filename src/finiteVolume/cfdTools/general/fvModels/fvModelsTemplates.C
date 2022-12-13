@@ -166,13 +166,13 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
         IOobject
         (
             "one",
-            this->mesh_.time().name(),
-            this->mesh_,
+            this->mesh().time().name(),
+            this->mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
         ),
-        this->mesh_,
+        this->mesh(),
         dimensionedScalar(dimless, 1.0)
     );
 

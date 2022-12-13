@@ -789,7 +789,11 @@ int main(int argc, char *argv[])
                 writer.write(ptf);
 
                 // Interpolated volFields
-                volPointInterpolation pInterp(mesh);
+                const volPointInterpolation& pInterp
+                (
+                    volPointInterpolation::New(mesh)
+                );
+
                 writer.write(pInterp, vsf);
                 writer.write(pInterp, vvf);
                 writer.write(pInterp, vsptf);

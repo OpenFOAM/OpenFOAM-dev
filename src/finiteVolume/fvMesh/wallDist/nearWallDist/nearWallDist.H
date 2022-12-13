@@ -36,7 +36,7 @@ SourceFiles
 #ifndef nearWallDist_H
 #define nearWallDist_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -52,7 +52,7 @@ class fvMesh;
 
 class nearWallDist
 :
-    public MeshObject<fvMesh, UpdateableMeshObject, nearWallDist>
+    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, nearWallDist>
 {
     // Private Data
 
@@ -69,6 +69,21 @@ class nearWallDist
         void correct();
 
 
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        UpdateableMeshObject,
+        nearWallDist
+    >;
+
+    // Protected Constructors
+
+        //- Construct from mesh
+        explicit nearWallDist(const fvMesh& mesh);
+
+
 public:
 
     // Declare name of the class and its debug switch
@@ -76,9 +91,6 @@ public:
 
 
     // Constructors
-
-        //- Construct from components
-        nearWallDist(const fvMesh& mesh);
 
         //- Disallow default bitwise copy construction
         nearWallDist(const nearWallDist&) = delete;

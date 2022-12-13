@@ -37,7 +37,7 @@ SourceFiles
 #ifndef volPointInterpolation_H
 #define volPointInterpolation_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "scalarList.H"
 #include "volFields.H"
 #include "pointFields.H"
@@ -53,7 +53,12 @@ namespace Foam
 
 class volPointInterpolation
 :
-    public MeshObject<fvMesh, UpdateableMeshObject, volPointInterpolation>
+    public DemandDrivenMeshObject
+    <
+        fvMesh,
+        UpdateableMeshObject,
+        volPointInterpolation
+    >
 {
     // Private Data
 
@@ -76,6 +81,21 @@ class volPointInterpolation
         void makeWeights();
 
 
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        UpdateableMeshObject,
+        volPointInterpolation
+    >;
+
+    // Protected Constructors
+
+        //- Constructor given fvMesh
+        explicit volPointInterpolation(const fvMesh&);
+
+
 public:
 
     // Declare name of the class and its debug switch
@@ -83,9 +103,6 @@ public:
 
 
     // Constructors
-
-        //- Constructor given fvMesh and pointMesh.
-        explicit volPointInterpolation(const fvMesh&);
 
         //- Disallow default bitwise copy construction
         volPointInterpolation(const volPointInterpolation&) = delete;

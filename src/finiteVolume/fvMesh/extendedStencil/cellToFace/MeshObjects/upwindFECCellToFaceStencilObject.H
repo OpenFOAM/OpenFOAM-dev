@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 
 #include "extendedUpwindCellToFaceStencil.H"
 #include "FECCellToFaceStencil.H"
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,7 +48,7 @@ namespace Foam
 
 class upwindFECCellToFaceStencilObject
 :
-    public MeshObject
+    public DemandDrivenMeshObject
     <
         fvMesh,
         TopologicalMeshObject,
@@ -57,11 +57,16 @@ class upwindFECCellToFaceStencilObject
     public extendedUpwindCellToFaceStencil
 {
 
-public:
+protected:
 
-    TypeName("upwindFECCellToFaceStencil");
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopologicalMeshObject,
+        upwindFECCellToFaceStencilObject
+    >;
 
-    // Constructors
+    // Protected Constructors
 
         //- Construct from uncompacted face stencil
         upwindFECCellToFaceStencilObject
@@ -71,10 +76,10 @@ public:
             const scalar minOpposedness
         )
         :
-            MeshObject
+            DemandDrivenMeshObject
             <
                 fvMesh,
-                Foam::TopologicalMeshObject,
+                TopologicalMeshObject,
                 upwindFECCellToFaceStencilObject
             >(mesh),
             extendedUpwindCellToFaceStencil
@@ -92,6 +97,9 @@ public:
             }
         }
 
+public:
+
+    TypeName("upwindFECCellToFaceStencil");
 
     //- Destructor
     virtual ~upwindFECCellToFaceStencilObject()

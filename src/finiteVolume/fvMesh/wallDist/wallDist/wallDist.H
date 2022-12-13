@@ -53,7 +53,7 @@ SourceFiles
 #ifndef wallDist_H
 #define wallDist_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "patchDistMethod.H"
 #include "volFields.H"
 
@@ -68,7 +68,7 @@ namespace Foam
 
 class wallDist
 :
-    public MeshObject<fvMesh, UpdateableMeshObject, wallDist>
+    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, wallDist>
 {
     // Private Data
 
@@ -97,13 +97,16 @@ class wallDist
         void constructn() const;
 
 
-public:
+protected:
 
-    // Declare name of the class and its debug switch
-    ClassName("wallDist");
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        UpdateableMeshObject,
+        wallDist
+    >;
 
-
-    // Constructors
+    // Protected Constructors
 
         //- Construct from mesh and optional patch type name
         wallDist
@@ -119,6 +122,15 @@ public:
             const labelHashSet& patchIDs,
             const word& patchTypeName = "patch"
         );
+
+
+public:
+
+    // Declare name of the class and its debug switch
+    ClassName("wallDist");
+
+
+    // Constructors
 
         //- Disallow default bitwise copy construction
         wallDist(const wallDist&) = delete;

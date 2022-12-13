@@ -42,7 +42,7 @@ SourceFiles
 #ifndef twoDPointCorrector_H
 #define twoDPointCorrector_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "pointField.H"
 #include "labelList.H"
 #include "vector.H"
@@ -61,7 +61,12 @@ class polyMesh;
 
 class twoDPointCorrector
 :
-    public MeshObject<polyMesh, UpdateableMeshObject, twoDPointCorrector>
+    public DemandDrivenMeshObject
+    <
+        polyMesh,
+        UpdateableMeshObject,
+        twoDPointCorrector
+    >
 {
     // Private Data
 
@@ -102,6 +107,21 @@ class twoDPointCorrector
         static const scalar edgeOrthogonalityTol;
 
 
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        polyMesh,
+        UpdateableMeshObject,
+        twoDPointCorrector
+    >;
+
+    // Protected Constructors
+
+        //- Construct from mesh
+        explicit twoDPointCorrector(const polyMesh& mesh);
+
+
 public:
 
     // Declare name of the class and its debug switch
@@ -109,9 +129,6 @@ public:
 
 
     // Constructors
-
-        //- Construct from components
-        twoDPointCorrector(const polyMesh& mesh);
 
         //- Disallow default bitwise copy construction
         twoDPointCorrector(const twoDPointCorrector&) = delete;

@@ -101,7 +101,6 @@ SourceFiles
 #include "globalIndex.H"
 #include "labelPair.H"
 #include "boolList.H"
-#include "MeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -116,10 +115,12 @@ class polyMesh;
 
 class regionSplit
 :
-    public MeshObject<polyMesh, TopologicalMeshObject, regionSplit>,
     public labelList
 {
     // Private Data
+
+        //- Reference to the polyMesh
+        const polyMesh& mesh_;
 
         mutable autoPtr<globalIndex> globalNumberingPtr_;
 
@@ -180,8 +181,17 @@ public:
             const bool doGlobalRegions = Pstream::parRun()
         );
 
+        //- Disallow default bitwise copy construction
+        regionSplit(const regionSplit&) = delete;
+
 
     // Member Functions
+
+        //- Return reference to the polyMesh
+        const polyMesh& mesh() const
+        {
+            return mesh_;
+        }
 
         //- Return global region numbering
         const globalIndex& globalNumbering() const

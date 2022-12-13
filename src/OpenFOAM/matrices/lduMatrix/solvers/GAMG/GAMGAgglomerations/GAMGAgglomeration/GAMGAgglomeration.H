@@ -37,7 +37,7 @@ SourceFiles
 #ifndef GAMGAgglomeration_H
 #define GAMGAgglomeration_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "lduPrimitiveMesh.H"
 #include "lduInterfacePtrsList.H"
 #include "primitiveFields.H"
@@ -61,7 +61,12 @@ class GAMGProcAgglomeration;
 
 class GAMGAgglomeration
 :
-    public MeshObject<lduMesh, GeometricMeshObject, GAMGAgglomeration>
+    public DemandDrivenMeshObject
+    <
+        lduMesh,
+        GeometricMeshObject,
+        GAMGAgglomeration
+    >
 {
 protected:
 

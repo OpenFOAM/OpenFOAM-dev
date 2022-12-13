@@ -24,13 +24,14 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointFieldReconstructor.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::pointFieldReconstructor::pointFieldReconstructor
 (
     const pointMesh& completeMesh,
-    const PtrList<pointMesh>& procMeshes,
+    const PtrList<fvMesh>& procMeshes,
     const labelListList& pointProcAddressing
 )
 :
@@ -46,7 +47,7 @@ Foam::pointFieldReconstructor::pointFieldReconstructor
     // Create the pointPatch addressing
     forAll(procMeshes_, proci)
     {
-        const pointMesh& procMesh = procMeshes_[proci];
+        const pointMesh& procMesh = pointMesh::New(procMeshes_[proci]);
 
         patchPointAddressing_[proci].setSize(procMesh.boundary().size());
 

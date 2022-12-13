@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 
 #include "extendedCentredCellToCellStencil.H"
 #include "CECCellToCellStencil.H"
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,7 +48,7 @@ namespace Foam
 
 class centredCECCellToCellStencilObject
 :
-    public MeshObject
+    public DemandDrivenMeshObject
     <
         fvMesh,
         TopologicalMeshObject,
@@ -57,11 +57,16 @@ class centredCECCellToCellStencilObject
     public extendedCentredCellToCellStencil
 {
 
-public:
+protected:
 
-    TypeName("centredCECCellToCellStencil");
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopologicalMeshObject,
+        centredCECCellToCellStencilObject
+    >;
 
-    // Constructors
+    // Protected Constructors
 
         //- Construct from uncompacted cell stencil
         explicit centredCECCellToCellStencilObject
@@ -69,15 +74,19 @@ public:
             const fvMesh& mesh
         )
         :
-            MeshObject
+            DemandDrivenMeshObject
             <
                 fvMesh,
-                Foam::TopologicalMeshObject,
+                TopologicalMeshObject,
                 centredCECCellToCellStencilObject
             >(mesh),
             extendedCentredCellToCellStencil(CECCellToCellStencil(mesh))
         {}
 
+
+public:
+
+    TypeName("centredCECCellToCellStencil");
 
     //- Destructor
     virtual ~centredCECCellToCellStencilObject()

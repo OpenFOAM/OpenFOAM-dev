@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ SourceFiles
 #define LeastSquaresVectors_H
 
 #include "extendedCentredCellToCellStencil.H"
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,7 +58,12 @@ namespace fv
 template<class Stencil>
 class LeastSquaresVectors
 :
-    public MeshObject<fvMesh, MoveableMeshObject, LeastSquaresVectors<Stencil>>
+    public DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        LeastSquaresVectors<Stencil>
+    >
 {
     // Private Data
 
@@ -72,19 +77,28 @@ class LeastSquaresVectors
         void calcLeastSquaresVectors();
 
 
-public:
+protected:
 
-    // Declare name of the class and its debug switch
-    TypeName("LeastSquaresVectors");
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        LeastSquaresVectors<Stencil>
+    >;
 
-
-    // Constructors
+    // Protected Constructors
 
         //- Construct given an fvMesh and the minimum determinant criterion
         LeastSquaresVectors
         (
             const fvMesh&
         );
+
+
+public:
+
+    // Declare name of the class and its debug switch
+    TypeName("LeastSquaresVectors");
 
 
     //- Destructor
@@ -96,7 +110,7 @@ public:
         //- Return reference to the stencil
         const extendedCentredCellToCellStencil& stencil() const
         {
-            return Stencil::New(this->mesh_);
+            return Stencil::New(this->mesh());
         }
 
         //- Return reference to the least square vectors

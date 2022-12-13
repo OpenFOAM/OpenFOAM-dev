@@ -46,6 +46,8 @@ SourceFiles
 namespace Foam
 {
 
+class fvMesh;
+
 /*---------------------------------------------------------------------------*\
                    Class pointFieldReconstructor Declaration
 \*---------------------------------------------------------------------------*/
@@ -58,7 +60,7 @@ class pointFieldReconstructor
         const pointMesh& completeMesh_;
 
         //- List of processor meshes
-        const PtrList<pointMesh>& procMeshes_;
+        const PtrList<fvMesh>& procMeshes_;
 
         //- List of processor point addressing lists
         const labelListList& pointProcAddressing_;
@@ -96,7 +98,7 @@ public:
         pointFieldReconstructor
         (
             const pointMesh& mesh,
-            const PtrList<pointMesh>& procMeshes,
+            const PtrList<fvMesh>& procMeshes,
             const labelListList& pointProcAddressing
         );
 

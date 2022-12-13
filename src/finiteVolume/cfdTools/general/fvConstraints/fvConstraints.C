@@ -140,7 +140,7 @@ Foam::fvConstraints::fvConstraints
     const fvMesh& mesh
 )
 :
-    MeshObject<fvMesh, Foam::UpdateableMeshObject, fvConstraints>
+    DemandDrivenMeshObject<fvMesh, Foam::UpdateableMeshObject, fvConstraints>
     (
         mesh,
         createIOobject(mesh)

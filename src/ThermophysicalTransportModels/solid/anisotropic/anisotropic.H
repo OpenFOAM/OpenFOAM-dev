@@ -101,6 +101,7 @@ SourceFiles
 #include "solidThermophysicalTransportModel.H"
 #include "coordinateSystem.H"
 #include "PtrDictionary.H"
+#include "MeshObjects.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -115,7 +116,8 @@ namespace solidThermophysicalTransportModels
 
 class anisotropic
 :
-    public solidThermophysicalTransportModel
+    public solidThermophysicalTransportModel,
+    public UpdateableMeshObject<fvMesh>
 {
     // Private member data
 
@@ -186,6 +188,21 @@ public:
 
         //- Correct the anisotropic viscosity
         virtual void correct();
+
+
+        // Mesh changes
+
+            //- Update for mesh motion
+            virtual bool movePoints();
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap& map);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap& map);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap& map);
 };
 
 

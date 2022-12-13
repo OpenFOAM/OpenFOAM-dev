@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,12 @@ Foam::fv::LeastSquaresVectors<Stencil>::LeastSquaresVectors
     const fvMesh& mesh
 )
 :
-    MeshObject<fvMesh, Foam::MoveableMeshObject, LeastSquaresVectors>(mesh),
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        LeastSquaresVectors
+    >(mesh),
     vectors_(mesh.nCells())
 {
     calcLeastSquaresVectors();
@@ -57,7 +62,7 @@ void Foam::fv::LeastSquaresVectors<Stencil>::calcLeastSquaresVectors()
         InfoInFunction << "Calculating least square gradient vectors" << endl;
     }
 
-    const fvMesh& mesh = this->mesh_;
+    const fvMesh& mesh = this->mesh();
     const extendedCentredCellToCellStencil& stencil = this->stencil();
 
     stencil.collectData(mesh.C(), vectors_);

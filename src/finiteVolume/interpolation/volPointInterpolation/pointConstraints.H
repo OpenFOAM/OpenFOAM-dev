@@ -43,7 +43,7 @@ SourceFiles
 #ifndef pointConstraints_H
 #define pointConstraints_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "tensorField.H"
 #include "pointFieldsFwd.H"
 #include "pointConstraint.H"
@@ -61,7 +61,12 @@ class polyMesh;
 
 class pointConstraints
 :
-    public MeshObject<pointMesh, UpdateableMeshObject, pointConstraints>
+    public DemandDrivenMeshObject
+    <
+        pointMesh,
+        UpdateableMeshObject,
+        pointConstraints
+    >
 {
     // Private Data
 
@@ -81,6 +86,21 @@ class pointConstraints
         void makePatchPatchAddressing();
 
 
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        pointMesh,
+        UpdateableMeshObject,
+        pointConstraints
+    >;
+
+    // Protected Constructors
+
+        //- Constructor from pointMesh.
+        explicit pointConstraints(const pointMesh&);
+
+
 public:
 
     // Declare name of the class and its debug switch
@@ -88,9 +108,6 @@ public:
 
 
     // Constructors
-
-        //- Constructor from pointMesh.
-        explicit pointConstraints(const pointMesh&);
 
         //- Disallow default bitwise copy construction
         pointConstraints(const pointConstraints&) = delete;

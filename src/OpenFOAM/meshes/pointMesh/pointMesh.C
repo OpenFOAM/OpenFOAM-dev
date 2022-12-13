@@ -41,7 +41,7 @@ namespace Foam
 
 Foam::pointMesh::pointMesh(const polyMesh& pMesh)
 :
-    MeshObject<polyMesh, Foam::PatchMeshObject, pointMesh>(pMesh),
+    DemandDrivenMeshObject<polyMesh, PatchMeshObject, pointMesh>(pMesh),
     GeoMesh<polyMesh>(pMesh),
     boundary_(*this, pMesh.boundaryMesh())
 {

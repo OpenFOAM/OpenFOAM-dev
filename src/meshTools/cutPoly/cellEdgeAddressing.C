@@ -156,7 +156,12 @@ Foam::cellEdgeAddressing::cellEdgeAddressing
 
 Foam::cellEdgeAddressingList::cellEdgeAddressingList(const polyMesh& mesh)
 :
-    MeshObject<polyMesh, UpdateableMeshObject, cellEdgeAddressingList>(mesh),
+    DemandDrivenMeshObject
+    <
+        polyMesh,
+        UpdateableMeshObject,
+        cellEdgeAddressingList
+    >(mesh),
     list_(mesh.nCells())
 {}
 

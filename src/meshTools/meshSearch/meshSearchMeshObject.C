@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,12 @@ namespace Foam
 
 Foam::meshSearchMeshObject::meshSearchMeshObject(const polyMesh& mesh)
 :
-    MeshObject<polyMesh, Foam::GeometricMeshObject, meshSearchMeshObject>(mesh),
+    DemandDrivenMeshObject
+    <
+        polyMesh,
+        GeometricMeshObject,
+        meshSearchMeshObject
+    >(mesh),
     meshSearch(mesh)
 {}
 

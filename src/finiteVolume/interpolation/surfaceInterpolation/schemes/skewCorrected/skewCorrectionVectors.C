@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,20 +38,25 @@ namespace Foam
 
 Foam::skewCorrectionVectors::skewCorrectionVectors(const fvMesh& mesh)
 :
-    MeshObject<fvMesh, Foam::MoveableMeshObject, skewCorrectionVectors>(mesh),
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        skewCorrectionVectors
+    >(mesh),
     skew_(false),
     skewCorrectionVectors_
     (
         IOobject
         (
             "skewCorrectionVectors",
-            mesh_.pointsInstance(),
-            mesh_,
+            mesh.pointsInstance(),
+            mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
         ),
-        mesh_,
+        mesh,
         dimless
     )
 {
@@ -71,12 +76,12 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
     }
 
     // Set local references to mesh data
-    const volVectorField& C = mesh_.C();
-    const surfaceVectorField& Cf = mesh_.Cf();
-    const surfaceVectorField& Sf = mesh_.Sf();
+    const volVectorField& C = mesh().C();
+    const surfaceVectorField& Cf = mesh().Cf();
+    const surfaceVectorField& Sf = mesh().Sf();
 
-    const labelUList& owner = mesh_.owner();
-    const labelUList& neighbour = mesh_.neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     forAll(owner, facei)
     {
@@ -129,7 +134,7 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
     if (Sf.primitiveField().size())
     {
         skewCoeff =
-            max(mag(skewCorrectionVectors_)*mesh_.deltaCoeffs()).value();
+            max(mag(skewCorrectionVectors_)*mesh().deltaCoeffs()).value();
     }
 
     if (debug)

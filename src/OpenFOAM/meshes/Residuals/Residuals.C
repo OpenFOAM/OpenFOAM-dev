@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,12 @@ License
 template<class Type>
 Foam::Residuals<Type>::Residuals(const polyMesh& mesh)
 :
-    MeshObject<polyMesh, GeometricMeshObject, Residuals<Type>>(mesh),
+    DemandDrivenMeshObject
+    <
+        polyMesh,
+        GeometricMeshObject,
+        Residuals<Type>
+    >(mesh),
     prevTimeIndex_(-1)
 {}
 
@@ -41,7 +46,12 @@ Foam::Residuals<Type>::Residuals(const polyMesh& mesh)
 template<class Type>
 Foam::List<Foam::word> Foam::Residuals<Type>::fieldNames(const polyMesh& mesh)
 {
-    return MeshObject<polyMesh, GeometricMeshObject, Residuals<Type>>::New
+    return DemandDrivenMeshObject
+    <
+        polyMesh,
+        GeometricMeshObject,
+        Residuals<Type>
+    >::New
     (
         mesh
     ).HashTable<DynamicList<SolverPerformance<Type>>>::toc();
@@ -51,7 +61,12 @@ Foam::List<Foam::word> Foam::Residuals<Type>::fieldNames(const polyMesh& mesh)
 template<class Type>
 bool Foam::Residuals<Type>::found(const polyMesh& mesh, const word& fieldName)
 {
-    return MeshObject<polyMesh, GeometricMeshObject, Residuals<Type>>::New
+    return DemandDrivenMeshObject
+    <
+        polyMesh,
+        GeometricMeshObject,
+        Residuals<Type>
+        >::New
     (
         mesh
     ).HashTable<DynamicList<SolverPerformance<Type>>>::found(fieldName);
@@ -66,7 +81,12 @@ Foam::Residuals<Type>::field
     const word& fieldName
 )
 {
-    return MeshObject<polyMesh, GeometricMeshObject, Residuals<Type>>::New
+    return DemandDrivenMeshObject
+    <
+        polyMesh,
+        GeometricMeshObject,
+        Residuals<Type>
+    >::New
     (
         mesh
     )[fieldName];
@@ -82,7 +102,12 @@ void Foam::Residuals<Type>::append
 {
     Residuals<Type>& residuals = const_cast<Residuals<Type>&>
     (
-        MeshObject<polyMesh, GeometricMeshObject, Residuals<Type>>::New
+        DemandDrivenMeshObject
+        <
+            polyMesh,
+            GeometricMeshObject,
+            Residuals<Type>
+        >::New
         (
             mesh
         )

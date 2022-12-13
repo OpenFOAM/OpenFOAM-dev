@@ -26,7 +26,7 @@ License
 #include "fvMeshStitcher.H"
 #include "globalIndex.H"
 #include "fvcSurfaceIntegrate.H"
-#include "MeshObject.H"
+#include "meshObjects.H"
 #include "syncTools.H"
 #include "surfaceToVolVelocity.H"
 

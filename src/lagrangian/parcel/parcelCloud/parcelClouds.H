@@ -41,7 +41,7 @@ SourceFiles
 #ifndef parcelClouds_H
 #define parcelClouds_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "parcelCloudList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,12 +56,19 @@ namespace Foam
 
 class parcelClouds
 :
-    public MeshObject<fvMesh, UpdateableMeshObject, parcelClouds>,
+    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, parcelClouds>,
     public parcelCloudList
 {
-private:
+protected:
 
-    // Private Constructors
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        UpdateableMeshObject,
+        parcelClouds
+    >;
+
+    // Protected Constructors
 
         //- Construct with given mesh and carrier fields
         parcelClouds
@@ -83,9 +90,6 @@ private:
             const fluidThermo& carrierThermo
         );
 
-        //- Let Private Cesh object call the private constructors
-        friend class MeshObject<fvMesh, UpdateableMeshObject, parcelClouds>;
-
 
 public:
 
@@ -95,7 +99,12 @@ public:
         parcelClouds(const parcelClouds&) = delete;
 
         //- Inherit the base New method
-        using MeshObject<fvMesh, UpdateableMeshObject, parcelClouds>::New;
+        using DemandDrivenMeshObject
+        <
+            fvMesh,
+            UpdateableMeshObject,
+            parcelClouds
+        >::New;
 
 
     //- Destructor

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,10 +62,11 @@ class edgeStats
         //- Component (0,1,2) of normal direction or 3 if 3D case.
         direction normalDir_;
 
+
     // Private Member Functions
 
         //- If 2d get component of normal dir.
-        direction getNormalDir(const twoDPointCorrector*) const;
+        direction getNormalDir(const twoDPointCorrector&) const;
 
 
 public:

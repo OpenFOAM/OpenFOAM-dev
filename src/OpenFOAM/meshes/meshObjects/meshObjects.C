@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,41 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "MeshObject.H"
+#include "meshObjects.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
 namespace Foam
 {
     defineTypeNameAndDebug(meshObjects, 0);
-    defineTypeNameAndDebug(typeMeshObject, 0);
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::typeMeshObject::typeMeshObject
-(
-    const word& typeName,
-    const objectRegistry& obr
-)
-:
-    regIOobject
-    (
-        IOobject
-        (
-            typeName,
-            obr.instance(),
-            obr
-        )
-    )
-{}
-
-
-Foam::typeMeshObject::typeMeshObject(const word& typeName, const IOobject& io)
-:
-    regIOobject(io)
-{}
 
 
 // ************************************************************************* //

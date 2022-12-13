@@ -333,7 +333,12 @@ void Foam::pointConstraints::makePatchPatchAddressing()
 
 Foam::pointConstraints::pointConstraints(const pointMesh& pm)
 :
-    MeshObject<pointMesh, Foam::UpdateableMeshObject, pointConstraints>(pm)
+    DemandDrivenMeshObject
+    <
+        pointMesh,
+        UpdateableMeshObject,
+        pointConstraints
+    >(pm)
 {
     if (debug)
     {

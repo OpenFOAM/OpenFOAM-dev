@@ -51,6 +51,8 @@ namespace solidThermophysicalTransportModels
 void Foam::solidThermophysicalTransportModels::anisotropic::
 setZonesPatchFaces() const
 {
+    if (!zoneCoordinateSystems_.size()) return;
+
     // Find all the patch faces adjacent to zones
 
     const fvMesh& mesh = thermo().mesh();
@@ -114,6 +116,7 @@ Foam::solidThermophysicalTransportModels::anisotropic::anisotropic
 )
 :
     solidThermophysicalTransportModel(typeName, thermo),
+    UpdateableMeshObject(*this, thermo.mesh()),
     coordinateSystem_(coordinateSystem::New(thermo.mesh(), coeffDict())),
     boundaryAligned_
     (
@@ -225,11 +228,6 @@ Foam::solidThermophysicalTransportModels::anisotropic::Kappa() const
 {
     const solidThermo& thermo = this->thermo();
     const fvMesh& mesh = thermo.mesh();
-
-    if (zoneCoordinateSystems_.size() && mesh.topoChanged())
-    {
-        setZonesPatchFaces();
-    }
 
     const volVectorField& materialKappa = thermo.Kappa();
 
@@ -439,6 +437,39 @@ Foam::solidThermophysicalTransportModels::anisotropic::divq
 void Foam::solidThermophysicalTransportModels::anisotropic::correct()
 {
     solidThermophysicalTransportModel::correct();
+}
+
+
+bool Foam::solidThermophysicalTransportModels::anisotropic::movePoints()
+{
+    return true;
+}
+
+
+void Foam::solidThermophysicalTransportModels::anisotropic::topoChange
+(
+    const polyTopoChangeMap& map
+)
+{
+    setZonesPatchFaces();
+}
+
+
+void Foam::solidThermophysicalTransportModels::anisotropic::mapMesh
+(
+    const polyMeshMap& map
+)
+{
+    setZonesPatchFaces();
+}
+
+
+void Foam::solidThermophysicalTransportModels::anisotropic::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    setZonesPatchFaces();
 }
 
 

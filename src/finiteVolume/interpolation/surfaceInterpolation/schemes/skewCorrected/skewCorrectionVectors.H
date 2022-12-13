@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef skewCorrectionVectors_H
 #define skewCorrectionVectors_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "fvMesh.H"
 #include "surfaceFields.H"
 
@@ -52,7 +52,12 @@ class fvMesh;
 
 class skewCorrectionVectors
 :
-    public MeshObject<fvMesh, MoveableMeshObject, skewCorrectionVectors>
+    public DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        skewCorrectionVectors
+    >
 {
     // Private Data
 
@@ -66,14 +71,23 @@ class skewCorrectionVectors
         void calcSkewCorrectionVectors();
 
 
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        skewCorrectionVectors
+    >;
+
+    // Protected Constructors
+
+        explicit skewCorrectionVectors(const fvMesh& mesh);
+
+
 public:
 
     TypeName("skewCorrectionVectors");
-
-
-    // Constructors
-
-        explicit skewCorrectionVectors(const fvMesh& mesh);
 
 
     //- Destructor

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,212 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "MeshObject.H"
+#include "meshObjects.H"
+#include "MeshObjects.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Foam::MeshObject<Mesh, MeshObjectType, Type>::MeshObject(const Mesh& mesh)
-:
-    MeshObjectType<Mesh>(Type::typeName, mesh.thisDb()),
-    mesh_(mesh)
-{}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Foam::MeshObject<Mesh, MeshObjectType, Type>::MeshObject
-(
-    const Mesh& mesh,
-    const IOobject& io
-)
-:
-    MeshObjectType<Mesh>(Type::typeName, io),
-    mesh_(mesh)
-{}
-
-
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
-(
-    Mesh& mesh
-)
+template<class Mesh>
+void Foam::meshObjects::Delete(regIOobject& io)
 {
-    if (found(mesh))
+    if (meshObjects::debug)
     {
-        return mesh.thisDb().objectRegistry::template lookupObjectRef<Type>
-        (
-            Type::typeName
-        );
+        Pout<< "    Destroying " << io.name() << endl;
+    }
+
+    if (io.ownedByRegistry())
+    {
+        io.checkOut();
     }
     else
     {
-        if (meshObjects::debug)
-        {
-            Pout<< "MeshObject::New(" << Mesh::typeName
-                << "&) : constructing " << Type::typeName
-                << " for region " << mesh.name() << endl;
-        }
-
-        Type* objectPtr = new Type(mesh);
-
-        regIOobject::store(static_cast<MeshObjectType<Mesh>*>(objectPtr));
-
-        return *objectPtr;
+        FatalErrorInFunction
+            << "Attempt to checkout and delete object " << io.name()
+            << " not owned by registry."
+            << abort(FatalError);
     }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
-(
-    const Mesh& mesh
-)
-{
-    if (found(mesh))
-    {
-        return mesh.thisDb().objectRegistry::template lookupObjectRef<Type>
-        (
-            Type::typeName
-        );
-    }
-    else
-    {
-        if (meshObjects::debug)
-        {
-            Pout<< "MeshObject::New(const " << Mesh::typeName
-                << "&) : constructing " << Type::typeName
-                << " for region " << mesh.name() << endl;
-        }
-
-        Type* objectPtr = new Type(mesh);
-
-        regIOobject::store(static_cast<MeshObjectType<Mesh>*>(objectPtr));
-
-        return *objectPtr;
-    }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-template<class... Args>
-Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
-(
-    Mesh& mesh,
-    const Args&... args
-)
-{
-    if (found(mesh))
-    {
-        return mesh.thisDb().objectRegistry::template lookupObjectRef<Type>
-        (
-            Type::typeName
-        );
-    }
-    else
-    {
-        if (meshObjects::debug)
-        {
-            Pout<< "MeshObject::New(" << Mesh::typeName
-                << "&, const Data1&) : constructing " << Type::typeName
-                << " for region " << mesh.name() << endl;
-        }
-
-        Type* objectPtr = new Type(mesh, args...);
-
-        regIOobject::store(static_cast<MeshObjectType<Mesh>*>(objectPtr));
-
-        return *objectPtr;
-    }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-template<class... Args>
-const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
-(
-    const Mesh& mesh,
-    const Args&... args
-)
-{
-    if (found(mesh))
-    {
-        return mesh.thisDb().objectRegistry::template lookupObject<Type>
-        (
-            Type::typeName
-        );
-    }
-    else
-    {
-        if (meshObjects::debug)
-        {
-            Pout<< "MeshObject::New(const " << Mesh::typeName
-                << "&, const Data1&) : constructing " << Type::typeName
-                << " for region " << mesh.name() << endl;
-        }
-
-        Type* objectPtr = new Type(mesh, args...);
-
-        regIOobject::store(static_cast<MeshObjectType<Mesh>*>(objectPtr));
-
-        return *objectPtr;
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-bool Foam::MeshObject<Mesh, MeshObjectType, Type>::Delete(const Mesh& mesh)
-{
-    if (found(mesh))
-    {
-        if (meshObjects::debug)
-        {
-            Pout<< "MeshObject::Delete(const Mesh&) : deleting "
-                << Type::typeName << endl;
-        }
-
-        return mesh.thisDb().checkOut
-        (
-            const_cast<Type&>
-            (
-                mesh.thisDb().objectRegistry::template lookupObject<Type>
-                (
-                    Type::typeName
-                )
-            )
-        );
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Foam::MeshObject<Mesh, MeshObjectType, Type>::~MeshObject()
-{
-    MeshObjectType<Mesh>::release();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-bool Foam::MeshObject<Mesh, MeshObjectType, Type>::found
-(
-    const Mesh& mesh
-)
-{
-    return mesh.thisDb().objectRegistry::template foundObject<Type>
-    (
-        Type::typeName
-    );
-}
-
 
 template<class Mesh>
 void Foam::meshObjects::movePoints(objectRegistry& obr)
@@ -256,17 +78,13 @@ void Foam::meshObjects::movePoints(objectRegistry& obr)
         {
             if (meshObjects::debug)
             {
-                Pout<< "    Moving " << iter()->name() << endl;
+                Pout<< "    Moving " << iter()->io_.name() << endl;
             }
             dynamic_cast<MoveableMeshObject<Mesh>*>(iter())->movePoints();
         }
         else
         {
-            if (meshObjects::debug)
-            {
-                Pout<< "    Destroying " << iter()->name() << endl;
-            }
-            obr.checkOut(*iter());
+            Delete<Mesh>(iter()->io_);
         }
     }
 }
@@ -303,18 +121,14 @@ void Foam::meshObjects::distribute
         {
             if (meshObjects::debug)
             {
-                Pout<< "    Distributing " << iter()->name() << endl;
+                Pout<< "    Distributing " << iter()->io_.name() << endl;
             }
             dynamic_cast<DistributeableMeshObject<Mesh>*>(iter())
             ->distribute(map);
         }
         else
         {
-            if (meshObjects::debug)
-            {
-                Pout<< "    Destroying " << iter()->name() << endl;
-            }
-            obr.checkOut(*iter());
+            Delete<Mesh>(iter()->io_);
         }
     }
 }
@@ -350,17 +164,13 @@ void Foam::meshObjects::topoChange
         {
             if (meshObjects::debug)
             {
-                Pout<< "    Updating " << iter()->name() << endl;
+                Pout<< "    Updating " << iter()->io_.name() << endl;
             }
             dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->topoChange(map);
         }
         else
         {
-            if (meshObjects::debug)
-            {
-                Pout<< "    Destroying " << iter()->name() << endl;
-            }
-            obr.checkOut(*iter());
+            Delete<Mesh>(iter()->io_);
         }
     }
 }
@@ -396,17 +206,13 @@ void Foam::meshObjects::mapMesh
         {
             if (meshObjects::debug)
             {
-                Pout<< "    Updating " << iter()->name() << endl;
+                Pout<< "    Updating " << iter()->io_.name() << endl;
             }
             dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->mapMesh(map);
         }
         else
         {
-            if (meshObjects::debug)
-            {
-                Pout<< "    Destroying " << iter()->name() << endl;
-            }
-            obr.checkOut(*iter());
+            Delete<Mesh>(iter()->io_);
         }
     }
 }
@@ -438,17 +244,13 @@ void Foam::meshObjects::addPatch(objectRegistry& obr, const label patchi)
         {
             if (meshObjects::debug)
             {
-                Pout<< "    Adding patch to " << iter()->name() << endl;
+                Pout<< "    Adding patch to " << iter()->io_.name() << endl;
             }
             dynamic_cast<PatchMeshObject<Mesh>*>(iter())->addPatch(patchi);
         }
         else
         {
-            if (meshObjects::debug)
-            {
-                Pout<< "    Destroying " << iter()->name() << endl;
-            }
-            obr.checkOut(*iter());
+            Delete<Mesh>(iter()->io_);
         }
     }
 }
@@ -485,7 +287,7 @@ void Foam::meshObjects::reorderPatches
         {
             if (meshObjects::debug)
             {
-                Pout<< "    Adding patch to " << iter()->name() << endl;
+                Pout<< "    Adding patch to " << iter()->io_.name() << endl;
             }
             dynamic_cast<PatchMeshObject<Mesh>*>(iter())->reorderPatches
             (
@@ -495,11 +297,7 @@ void Foam::meshObjects::reorderPatches
         }
         else
         {
-            if (meshObjects::debug)
-            {
-                Pout<< "    Destroying " << iter()->name() << endl;
-            }
-            obr.checkOut(*iter());
+            Delete<Mesh>(iter()->io_);
         }
     }
 }
@@ -522,11 +320,7 @@ void Foam::meshObjects::clear(objectRegistry& obr)
 
     forAllIter(typename HashTable<MeshObjectType<Mesh>*>, meshObjects, iter)
     {
-        if (meshObjects::debug)
-        {
-            Pout<< "    Destroying " << iter()->name() << endl;
-        }
-        obr.checkOut(*iter());
+        Delete<Mesh>(iter()->io_);
     }
 }
 
@@ -555,11 +349,7 @@ void Foam::meshObjects::clearUpto(objectRegistry& obr)
     {
         if (!isA<ToType<Mesh>>(*iter()))
         {
-            if (meshObjects::debug)
-            {
-                Pout<< "    Destroying " << iter()->name() << endl;
-            }
-            obr.checkOut(*iter());
+            Delete<Mesh>(iter()->io_);
         }
     }
 }

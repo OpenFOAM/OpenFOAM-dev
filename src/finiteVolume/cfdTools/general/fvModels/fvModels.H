@@ -37,7 +37,7 @@ SourceFiles
 
 #include "fvModel.H"
 #include "PtrListDictionary.H"
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "HashSet.H"
 #include "volFields.H"
 #include "geometricOneField.H"
@@ -60,7 +60,7 @@ Ostream& operator<<(Ostream& os, const fvModels& models);
 
 class fvModels
 :
-    public MeshObject<fvMesh, UpdateableMeshObject, fvModels>,
+    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, fvModels>,
     public dictionary,
     public PtrListDictionary<fvModel>
 {
@@ -92,6 +92,17 @@ class fvModels
         ) const;
 
 
+
+protected:
+
+    friend class DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, fvModels>;
+
+    // Protected Constructors
+
+        //- Construct from components with list of field names
+        explicit fvModels(const fvMesh& mesh);
+
+
 public:
 
     //- Runtime type information
@@ -100,14 +111,16 @@ public:
 
     // Constructors
 
-        //- Construct from components with list of field names
-        fvModels(const fvMesh& mesh);
-
         //- Disallow default bitwise copy construction
         fvModels(const fvModels&) = delete;
 
         //- Inherit the base New method
-        using MeshObject<fvMesh, UpdateableMeshObject, fvModels>::New;
+        using DemandDrivenMeshObject
+        <
+            fvMesh,
+            UpdateableMeshObject,
+            fvModels
+        >::New;
 
 
     //- Destructor

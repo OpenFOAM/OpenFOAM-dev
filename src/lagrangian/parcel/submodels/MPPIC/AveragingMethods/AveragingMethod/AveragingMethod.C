@@ -146,7 +146,7 @@ bool Foam::AveragingMethod<Type>::writeData(Ostream& os) const
 template<class Type>
 bool Foam::AveragingMethod<Type>::write(const bool write) const
 {
-    const pointMesh pointMesh_(mesh_);
+    const pointMesh& pointMesh_(pointMesh::New(mesh_));
 
     // point volumes
     Field<scalar> pointVolume(mesh_.nPoints(), 0);

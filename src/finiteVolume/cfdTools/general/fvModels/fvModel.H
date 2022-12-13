@@ -41,7 +41,6 @@ SourceFiles
 #include "dimensionSet.H"
 #include "fvModelM.H"
 #include "geometricOneField.H"
-#include "MeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

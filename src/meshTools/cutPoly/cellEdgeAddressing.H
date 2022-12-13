@@ -37,7 +37,7 @@ SourceFiles
 #ifndef cellEdgeAddressing_H
 #define cellEdgeAddressing_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "polyMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -108,23 +108,35 @@ public:
 
 class cellEdgeAddressingList
 :
-    public MeshObject<polyMesh, UpdateableMeshObject, cellEdgeAddressingList>
+    public DemandDrivenMeshObject
+    <
+        polyMesh,
+        UpdateableMeshObject,
+        cellEdgeAddressingList
+    >
 {
-private:
-
     // Private Data
 
         //- Edge addressing for each cell
         mutable PtrList<cellEdgeAddressing> list_;
 
 
-public:
+protected:
 
-    // Constructors
+    friend class DemandDrivenMeshObject
+    <
+        polyMesh,
+        UpdateableMeshObject,
+        cellEdgeAddressingList
+    >;
+
+    // Protected Constructors
 
         //- Construct for a mesh
         cellEdgeAddressingList(const polyMesh& mesh);
 
+
+public:
 
     // Member Functions
 

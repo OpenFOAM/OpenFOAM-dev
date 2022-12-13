@@ -324,7 +324,12 @@ void Foam::volPointInterpolation::makeWeights()
 
 Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
 :
-    MeshObject<fvMesh, Foam::UpdateableMeshObject, volPointInterpolation>(vm)
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        UpdateableMeshObject,
+        volPointInterpolation
+    >(vm)
 {
     makeWeights();
 }

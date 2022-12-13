@@ -53,6 +53,8 @@ Fickian<BasicThermophysicalTransportModel>::Fickian
         thermo
     ),
 
+    UpdateableMeshObject(*this, thermo.mesh()),
+
     mixtureDiffusionCoefficients_(true),
 
     DFuncs_(this->thermo().composition().species().size()),
@@ -501,6 +503,43 @@ void Fickian<BasicThermophysicalTransportModel>::correct()
             );
         }
     }
+}
+
+
+template<class BasicThermophysicalTransportModel>
+bool Fickian<BasicThermophysicalTransportModel>::movePoints()
+{
+    return true;
+}
+
+
+template<class BasicThermophysicalTransportModel>
+void Fickian<BasicThermophysicalTransportModel>::topoChange
+(
+    const polyTopoChangeMap& map
+)
+{
+    correct();
+}
+
+
+template<class BasicThermophysicalTransportModel>
+void Fickian<BasicThermophysicalTransportModel>::mapMesh
+(
+    const polyMeshMap& map
+)
+{
+    correct();
+}
+
+
+template<class BasicThermophysicalTransportModel>
+void Fickian<BasicThermophysicalTransportModel>::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    correct();
 }
 
 

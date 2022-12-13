@@ -33,7 +33,7 @@ Description
 #define pointMesh_H
 
 #include "GeoMesh.H"
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "polyMesh.H"
 #include "pointBoundaryMesh.H"
 
@@ -48,13 +48,23 @@ namespace Foam
 
 class pointMesh
 :
-    public MeshObject<polyMesh, PatchMeshObject, pointMesh>,
+    public DemandDrivenMeshObject<polyMesh, PatchMeshObject, pointMesh>,
     public GeoMesh<polyMesh>
 {
     // Permanent data
 
         //- Boundary mesh
         pointBoundaryMesh boundary_;
+
+
+protected:
+
+    friend class DemandDrivenMeshObject<polyMesh, PatchMeshObject, pointMesh>;
+
+    // Protected Constructors
+
+        //- Construct from polyMesh
+        explicit pointMesh(const polyMesh& pMesh);
 
 
 public:
@@ -68,9 +78,6 @@ public:
 
 
     // Constructors
-
-        //- Construct from polyMesh
-        explicit pointMesh(const polyMesh& pMesh);
 
         //- Disallow default bitwise copy construction
         pointMesh(const pointMesh&) = delete;

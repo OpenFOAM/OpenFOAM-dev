@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ SourceFiles
 #ifndef FitData_H
 #define FitData_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,7 +54,7 @@ namespace Foam
 template<class FitDataType, class ExtendedStencil, class Polynomial>
 class FitData
 :
-    public MeshObject<fvMesh, MoveableMeshObject, FitDataType>
+    public DemandDrivenMeshObject<fvMesh, MoveableMeshObject, FitDataType>
 {
     // Private Data
 
@@ -82,18 +82,14 @@ class FitData
 
 protected:
 
-        //- Find the normal direction (i) and j and k directions for face faci
-        void findFaceDirs
-        (
-            vector& idir,        // value changed in return
-            vector& jdir,        // value changed in return
-            vector& kdir,        // value changed in return
-            const label faci
-        );
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        FitDataType
+    >;
 
-public:
-
-    // Constructors
+    // Protected Constructors
 
         //- Construct from components
         FitData
@@ -105,6 +101,19 @@ public:
             const scalar centralWeight
         );
 
+
+    // Protected Member Functions
+
+        //- Find the normal direction (i) and j and k directions for face faci
+        void findFaceDirs
+        (
+            vector& idir,        // value changed in return
+            vector& jdir,        // value changed in return
+            vector& kdir,        // value changed in return
+            const label faci
+        );
+
+public:
 
     //- Destructor
     virtual ~FitData()

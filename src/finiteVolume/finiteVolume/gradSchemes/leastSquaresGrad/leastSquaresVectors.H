@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef leastSquaresVectors_H
 #define leastSquaresVectors_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "fvMesh.H"
 #include "surfaceFields.H"
 
@@ -50,7 +50,12 @@ namespace Foam
 
 class leastSquaresVectors
 :
-    public MeshObject<fvMesh, MoveableMeshObject, leastSquaresVectors>
+    public DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        leastSquaresVectors
+    >
 {
     // Private Data
 
@@ -65,16 +70,25 @@ class leastSquaresVectors
         void calcLeastSquaresVectors();
 
 
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        leastSquaresVectors
+    >;
+
+    // Protected Constructors
+
+        //- Construct given an fvMesh
+        explicit leastSquaresVectors(const fvMesh&);
+
+
 public:
 
     // Declare name of the class and its debug switch
     TypeName("leastSquaresVectors");
-
-
-    // Constructors
-
-        //- Construct given an fvMesh
-        explicit leastSquaresVectors(const fvMesh&);
 
 
     //- Destructor

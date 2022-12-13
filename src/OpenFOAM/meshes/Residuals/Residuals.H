@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,8 @@ Class
     Foam::Residuals
 
 Description
-    MeshObject to store the solver performance residuals of all the fields
-    of the type it is instantiated on.
+    DemandDrivenMeshObject to store the solver performance residuals of all
+    the fields of the type it is instantiated on.
 
 SourceFiles
     Residuals.C
@@ -36,7 +36,7 @@ SourceFiles
 #ifndef Residuals_H
 #define Residuals_H
 
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "polyMesh.H"
 #include "solverPerformance.H"
 
@@ -52,13 +52,33 @@ namespace Foam
 template<class Type>
 class Residuals
 :
-    public MeshObject<polyMesh, GeometricMeshObject, Residuals<Type>>,
+    public DemandDrivenMeshObject
+    <
+        polyMesh,
+        GeometricMeshObject,
+        Residuals<Type>
+    >,
     public HashTable<DynamicList<SolverPerformance<Type>>>
 {
     // Private Data
 
         //- Previously used time-index, used for reset between iterations
         mutable label prevTimeIndex_;
+
+
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        polyMesh,
+        GeometricMeshObject,
+        Residuals<Type>
+    >;
+
+    // Protected Constructors
+
+        //- Construct for given mesh
+        explicit Residuals(const polyMesh& mesh);
 
 
 public:
@@ -68,9 +88,6 @@ public:
 
 
     // Constructors
-
-        //- Construct for given mesh
-        Residuals(const polyMesh& mesh);
 
         //- Disallow default bitwise copy construction
         Residuals(const Residuals<Type>&) = delete;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,35 +40,32 @@ const Foam::scalar Foam::edgeStats::edgeTol_ = 1e-3;
 
 Foam::direction Foam::edgeStats::getNormalDir
 (
-    const twoDPointCorrector* correct2DPtr
+    const twoDPointCorrector& correct2D
 ) const
 {
-    direction dir = 3;
+    const vector& normal = correct2D.planeNormal();
 
-    if (correct2DPtr)
+    if (mag(normal & vector(1, 0, 0)) > 1-edgeTol_)
     {
-        const vector& normal = correct2DPtr->planeNormal();
-
-        if (mag(normal & vector(1, 0, 0)) > 1-edgeTol_)
-        {
-            dir = 0;
-        }
-        else if (mag(normal & vector(0, 1, 0)) > 1-edgeTol_)
-        {
-            dir = 1;
-        }
-        else if (mag(normal & vector(0, 0, 1)) > 1-edgeTol_)
-        {
-            dir = 2;
-        }
+        return 0;
     }
-    return dir;
+    else if (mag(normal & vector(0, 1, 0)) > 1-edgeTol_)
+    {
+        return 1;
+    }
+    else if (mag(normal & vector(0, 0, 1)) > 1-edgeTol_)
+    {
+        return 2;
+    }
+    else
+    {
+        return 3;
+    }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from mesh
 Foam::edgeStats::edgeStats(const polyMesh& mesh)
 :
     mesh_(mesh),
@@ -95,19 +92,12 @@ Foam::edgeStats::edgeStats(const polyMesh& mesh)
         if (twoDMotion)
         {
             Info<< "Correcting for 2D motion" << endl << endl;
-
-            autoPtr<twoDPointCorrector> correct2DPtr
-            (
-                new twoDPointCorrector(mesh)
-            );
-
-            normalDir_ = getNormalDir(&correct2DPtr());
+            normalDir_ = getNormalDir(twoDPointCorrector::New(mesh));
         }
     }
 }
 
 
-// Construct from components
 Foam::edgeStats::edgeStats
 (
     const polyMesh& mesh,
@@ -115,7 +105,12 @@ Foam::edgeStats::edgeStats
 )
 :
     mesh_(mesh),
-    normalDir_(getNormalDir(correct2DPtr))
+    normalDir_
+    (
+        correct2DPtr
+      ? getNormalDir(*correct2DPtr)
+      : 3
+    )
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -231,7 +231,12 @@ Foam::GAMGAgglomeration::GAMGAgglomeration
     const dictionary& controlDict
 )
 :
-    MeshObject<lduMesh, Foam::GeometricMeshObject, GAMGAgglomeration>(mesh),
+    DemandDrivenMeshObject
+    <
+        lduMesh,
+        GeometricMeshObject,
+        GAMGAgglomeration
+    >(mesh),
 
     maxLevels_(50),
 
@@ -446,7 +451,7 @@ const Foam::lduMesh& Foam::GAMGAgglomeration::meshLevel
 {
     if (i == 0)
     {
-        return mesh_;
+        return mesh();
     }
     else
     {

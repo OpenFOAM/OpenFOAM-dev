@@ -37,7 +37,7 @@ SourceFiles
 
 #include "fvConstraint.H"
 #include "PtrListDictionary.H"
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 #include "HashSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,7 +57,7 @@ Ostream& operator<<(Ostream& os, const fvConstraints& constraints);
 
 class fvConstraints
 :
-    public MeshObject<fvMesh, UpdateableMeshObject, fvConstraints>,
+    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, fvConstraints>,
     public dictionary,
     public PtrListDictionary<fvConstraint>
 {
@@ -94,7 +94,12 @@ public:
         fvConstraints(const fvConstraints&) = delete;
 
         //- Inherit the base New method
-        using MeshObject<fvMesh, UpdateableMeshObject, fvConstraints>::New;
+        using DemandDrivenMeshObject
+        <
+            fvMesh,
+            UpdateableMeshObject,
+            fvConstraints
+        >::New;
 
 
     //- Destructor

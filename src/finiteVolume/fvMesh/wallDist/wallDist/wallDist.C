@@ -67,7 +67,7 @@ void Foam::wallDist::constructn() const
 
 Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
 :
-    MeshObject<fvMesh, Foam::UpdateableMeshObject, wallDist>(mesh),
+    DemandDrivenMeshObject<fvMesh, Foam::UpdateableMeshObject, wallDist>(mesh),
     patchIDs_(mesh.boundaryMesh().findPatchIDs<wallPolyPatch>()),
     patchTypeName_(patchTypeName),
     pdm_
@@ -114,7 +114,7 @@ Foam::wallDist::wallDist
     const word& patchTypeName
 )
 :
-    MeshObject<fvMesh, Foam::UpdateableMeshObject, wallDist>(mesh),
+    DemandDrivenMeshObject<fvMesh, Foam::UpdateableMeshObject, wallDist>(mesh),
     patchIDs_(patchIDs),
     patchTypeName_(patchTypeName),
     pdm_

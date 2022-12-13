@@ -82,7 +82,7 @@ SourceFiles
 
 #include "coordinateSystem.H"
 #include "PtrDictionary.H"
-#include "MeshObject.H"
+#include "DemandDrivenMeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,9 +97,29 @@ namespace coordinateSystems
 
 class coordinateSystems
 :
-    public MeshObject<objectRegistry, GeometricMeshObject, coordinateSystems>,
+    public DemandDrivenMeshObject
+    <
+        objectRegistry,
+        GeometricMeshObject,
+        coordinateSystems
+    >,
     public PtrDictionary<coordinateSystem>
 {
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        objectRegistry,
+        GeometricMeshObject,
+        coordinateSystems
+    >;
+
+    // Protected Constructors
+
+        //- Read construct from objectRegistry
+        explicit coordinateSystems(const objectRegistry& obr);
+
+
 public:
 
     //- Runtime type information
@@ -108,13 +128,10 @@ public:
 
     // Constructors
 
-        //- Read construct from objectRegistry
-        explicit coordinateSystems(const objectRegistry& obr);
-
         //- Disallow default bitwise copy construction
         coordinateSystems(const coordinateSystems&) = delete;
 
-        using MeshObject
+        using DemandDrivenMeshObject
         <
             objectRegistry,
             GeometricMeshObject,
@@ -158,7 +175,7 @@ public:
 template<>
 struct typeGlobal
 <
-    MeshObject
+    DemandDrivenMeshObject
     <
         objectRegistry,
         GeometricMeshObject,

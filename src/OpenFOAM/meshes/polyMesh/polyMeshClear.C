@@ -26,7 +26,7 @@ License
 #include "polyMesh.H"
 #include "primitiveMesh.H"
 #include "globalMeshData.H"
-#include "MeshObject.H"
+#include "meshObjects.H"
 #include "indexedOctree.H"
 #include "treeDataCell.H"
 #include "pointMesh.H"

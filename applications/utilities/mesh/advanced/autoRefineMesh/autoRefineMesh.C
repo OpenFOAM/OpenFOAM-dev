@@ -663,7 +663,7 @@ int main(int argc, char *argv[])
         if (twoDMotion)
         {
             Info<< "Correcting for 2D motion" << endl << endl;
-            correct2DPtr = new twoDPointCorrector(mesh);
+            correct2DPtr = &twoDPointCorrector::New(mesh);
         }
     }
 

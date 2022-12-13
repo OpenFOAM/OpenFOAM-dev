@@ -33,7 +33,7 @@ License
 #include "polyMeshTetDecomposition.H"
 #include "indexedOctree.H"
 #include "treeDataCell.H"
-#include "MeshObject.H"
+#include "meshObjects.H"
 #include "pointMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

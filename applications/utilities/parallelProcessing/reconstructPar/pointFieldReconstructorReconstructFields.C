@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointFieldReconstructor.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -47,12 +48,12 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
                 IOobject
                 (
                     fieldIoObject.name(),
-                    procMeshes_[proci]().time().name(),
-                    procMeshes_[proci](),
+                    procMeshes_[proci].time().name(),
+                    procMeshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 ),
-                procMeshes_[proci]
+                pointMesh::New(procMeshes_[proci])
             )
         );
     }

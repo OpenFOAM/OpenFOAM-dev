@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createMeshNoChangers.H"
 
-    volPointInterpolation pInterp(mesh);
+    const volPointInterpolation& pInterp(volPointInterpolation::New(mesh));
 
     // Get times list
     instantList Times = runTime.times();

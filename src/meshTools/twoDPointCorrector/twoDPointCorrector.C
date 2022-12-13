@@ -55,7 +55,7 @@ void Foam::twoDPointCorrector::calcAddressing() const
     // error.
 
     // Try and find a wedge patch
-    const polyBoundaryMesh& patches = mesh_.boundaryMesh();
+    const polyBoundaryMesh& patches = mesh().boundaryMesh();
 
     forAll(patches, patchi)
     {
@@ -117,12 +117,12 @@ void Foam::twoDPointCorrector::calcAddressing() const
     }
 
     // Select edges to be included in check.
-    normalEdgeIndicesPtr_ = new labelList(mesh_.nEdges());
+    normalEdgeIndicesPtr_ = new labelList(mesh().nEdges());
     labelList& neIndices = *normalEdgeIndicesPtr_;
 
-    const edgeList& meshEdges = mesh_.edges();
+    const edgeList& meshEdges = mesh().edges();
 
-    const pointField& meshPoints = mesh_.points();
+    const pointField& meshPoints = mesh().points();
 
     label nNormalEdges = 0;
 
@@ -196,8 +196,13 @@ void Foam::twoDPointCorrector::snapToWedge
 
 Foam::twoDPointCorrector::twoDPointCorrector(const polyMesh& mesh)
 :
-    MeshObject<polyMesh, Foam::UpdateableMeshObject, twoDPointCorrector>(mesh),
-    required_(mesh_.nGeometricD() == 2),
+    DemandDrivenMeshObject
+    <
+        polyMesh,
+        UpdateableMeshObject,
+        twoDPointCorrector
+    >(mesh),
+    required_(mesh.nGeometricD() == 2),
     planeNormalPtr_(nullptr),
     normalEdgeIndicesPtr_(nullptr),
     isWedge_(false),
@@ -277,7 +282,7 @@ void Foam::twoDPointCorrector::correctPoints(pointField& p) const
     // such that vectors AP and planeNormal are parallel
 
     // Get reference to edges
-    const edgeList&  meshEdges = mesh_.edges();
+    const edgeList&  meshEdges = mesh().edges();
 
     const labelList& neIndices = normalEdgeIndices();
     const vector& pn = planeNormal();
@@ -290,7 +295,7 @@ void Foam::twoDPointCorrector::correctPoints(pointField& p) const
 
         // calculate average point position
         point A = 0.5*(pStart + pEnd);
-        meshTools::constrainToMeshCentre(mesh_, A);
+        meshTools::constrainToMeshCentre(mesh(), A);
 
         if (isWedge_)
         {
@@ -321,7 +326,7 @@ void Foam::twoDPointCorrector::correctDisplacement
     // such that vectors AP and planeNormal are parallel
 
     // Get reference to edges
-    const edgeList&  meshEdges = mesh_.edges();
+    const edgeList&  meshEdges = mesh().edges();
 
     const labelList& neIndices = normalEdgeIndices();
     const vector& pn = planeNormal();
@@ -338,7 +343,7 @@ void Foam::twoDPointCorrector::correctDisplacement
 
         // calculate average point position
         point A = 0.5*(pStart + pEnd);
-        meshTools::constrainToMeshCentre(mesh_, A);
+        meshTools::constrainToMeshCentre(mesh(), A);
 
         if (isWedge_)
         {

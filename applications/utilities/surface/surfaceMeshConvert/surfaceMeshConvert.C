@@ -143,7 +143,10 @@ int main(int argc, char *argv[])
 
     if (args.optionFound("from") || args.optionFound("to"))
     {
-        coordinateSystems::coordinateSystems csLst(runTime);
+        const coordinateSystems::coordinateSystems& csLst
+        (
+            coordinateSystems::coordinateSystems::New(runTime)
+        );
 
         if (args.optionFound("from"))
         {

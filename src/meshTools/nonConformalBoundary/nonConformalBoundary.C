@@ -66,7 +66,7 @@ Foam::nonConformalBoundary::boundary(const labelList& patches) const
     DynamicList<label> faces;
     forAll(patches, i)
     {
-        const polyPatch& pp = mesh_.boundaryMesh()[patches[i]];
+        const polyPatch& pp = mesh().boundaryMesh()[patches[i]];
 
         faces.append(identity(pp.size()) + pp.start());
     }
@@ -74,8 +74,8 @@ Foam::nonConformalBoundary::boundary(const labelList& patches) const
     return
         indirectPrimitivePatch
         (
-            IndirectList<face>(mesh_.faces(), faces),
-            mesh_.points()
+            IndirectList<face>(mesh().faces(), faces),
+            mesh().points()
         );
 }
 
@@ -87,7 +87,7 @@ Foam::nonConformalBoundary::meshPointOwnerOrigBoundaryPoint() const
     {
         meshPointOwnerOrigBoundaryPointPtr_.set
         (
-            new labelList(mesh_.nPoints(), -1)
+            new labelList(mesh().nPoints(), -1)
         );
 
         forAll(ownerOrigBoundary_.meshPoints(), ownerOrigBoundaryPointi)
@@ -122,7 +122,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointNormals() const
 
         syncTools::syncPointList
         (
-            mesh_,
+            mesh(),
             ownerOrigBoundary_.meshPoints(),
             pointNormals,
             plusEqOp<vector>(),
@@ -153,13 +153,13 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointNormals0() const
             forAll(faces[facei], facePointi)
             {
                 pointNormals[faces[facei][facePointi]] +=
-                    faces[facei].normal(mesh_.oldPoints());
+                    faces[facei].normal(mesh().oldPoints());
             }
         }
 
         syncTools::syncPointList
         (
-            mesh_,
+            mesh(),
             ownerOrigBoundary_.meshPoints(),
             pointNormals,
             plusEqOp<vector>(),
@@ -180,7 +180,12 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointNormals0() const
 
 Foam::nonConformalBoundary::nonConformalBoundary(const polyMesh& mesh)
 :
-    MeshObject<polyMesh, MoveableMeshObject, nonConformalBoundary>(mesh),
+    DemandDrivenMeshObject
+    <
+        polyMesh,
+        MoveableMeshObject,
+        nonConformalBoundary
+    >(mesh),
     ownerOrigBoundary_(boundary(ownerOrigPatchIDs())),
     meshPointOwnerOrigBoundaryPointPtr_(nullptr),
     ownerOrigBoundaryPointMeshPointPtr_(nullptr),
@@ -218,7 +223,7 @@ Foam::labelList Foam::nonConformalBoundary::nonConformalNonCoupledPatchIDs
     label (nonConformalCoupledPolyPatch::*method)() const
 ) const
 {
-    const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
+    const polyBoundaryMesh& pbm = mesh().boundaryMesh();
 
     labelHashSet origPatchIDTable;
     DynamicList<label> nonCoupledPatchIDs(pbm.size());
@@ -306,7 +311,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointMeshPoint() const
             const label meshEdgei =
                 ownerOrigBoundaryEdgeMeshEdge()[ownerOrigBoundaryEdgei];
 
-            const edge& e = mesh_.edges()[meshEdgei];
+            const edge& e = mesh().edges()[meshEdgei];
 
             forAll(e, i)
             {
@@ -335,9 +340,9 @@ Foam::nonConformalBoundary::ownerOrigBoundaryEdgeMeshEdge() const
     {
         // Create boundary of all owner-orig and proc patches
         labelList ownerOrigAndProcPatchIDs = this->ownerOrigPatchIDs();
-        forAll(mesh_.boundaryMesh(), patchi)
+        forAll(mesh().boundaryMesh(), patchi)
         {
-            if (isA<processorPolyPatch>(mesh_.boundaryMesh()[patchi]))
+            if (isA<processorPolyPatch>(mesh().boundaryMesh()[patchi]))
             {
                 ownerOrigAndProcPatchIDs.append(patchi);
             }
@@ -352,8 +357,8 @@ Foam::nonConformalBoundary::ownerOrigBoundaryEdgeMeshEdge() const
         (
             ownerOrigAndProcBoundary.meshEdges
             (
-                mesh_.edges(),
-                mesh_.pointEdges()
+                mesh().edges(),
+                mesh().pointEdges()
             )
         );
 
@@ -396,7 +401,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryEdgeMeshEdge() const
         // Synchronise
         syncTools::syncEdgeList
         (
-            mesh_,
+            mesh(),
             ownerOrigAndProcBoundaryMeshEdges,
             rMap,
             maxEqOp<label>(),
@@ -451,7 +456,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryEdges() const
             const label meshEdgei =
                 ownerOrigBoundaryEdgeMeshEdge()[ownerOrigBoundaryEdgei];
 
-            const edge& e = mesh_.edges()[meshEdgei];
+            const edge& e = mesh().edges()[meshEdgei];
 
             remoteEdges.append(edge(map[e.start()], map[e.end()]));
         }
@@ -501,7 +506,7 @@ Foam::nonConformalBoundary::patchPointOwnerOrigBoundaryPoints
 {
     if (!patchPointOwnerOrigBoundaryPointsPtr_.set(patchi))
     {
-        const polyPatch& pp = mesh_.boundaryMesh()[patchi];
+        const polyPatch& pp = mesh().boundaryMesh()[patchi];
 
         const faceList patchOwnerOrigBoundaryLocalFaces
         (
