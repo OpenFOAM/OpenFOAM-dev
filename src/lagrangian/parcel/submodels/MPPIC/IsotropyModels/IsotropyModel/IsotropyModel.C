@@ -63,7 +63,12 @@ Foam::IsotropyModel<CloudType>::IsotropyModel
 )
 :
     CloudSubModelBase<CloudType>(cm),
-    timeScaleModel_(cm.timeScaleModel_->clone())
+    timeScaleModel_
+    (
+        cm.timeScaleModel_.valid()
+      ? cm.timeScaleModel_->clone().ptr()
+      : nullptr
+    )
 {}
 
 
