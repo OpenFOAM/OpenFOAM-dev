@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,8 +45,8 @@ Description
 //    #include "CGAL/Robust_circumcenter_traits_3.h"
 //    typedef CGAL::Robust_circumcenter_traits_3<baseK>           K;
 
-    #include "CGAL/Robust_circumcenter_filtered_traits_3.h"
-    typedef CGAL::Robust_circumcenter_filtered_traits_3<baseK>  K;
+    #include "CGAL/Robust_weighted_circumcenter_filtered_traits_3.h"
+    typedef CGAL::Robust_weighted_circumcenter_filtered_traits_3<baseK> K;
 
 #else
 
