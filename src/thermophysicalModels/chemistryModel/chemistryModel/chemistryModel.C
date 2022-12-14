@@ -719,9 +719,6 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
         return deltaTMin;
     }
 
-    tmp<volScalarField> trhovf(this->thermo().rho());
-    const volScalarField& rhovf = trhovf();
-
     const volScalarField& rho0vf =
         this->mesh().template lookupObject<volScalarField>
         (
@@ -743,7 +740,6 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
 
     forAll(rho0vf, celli)
     {
-        const scalar rho = rhovf[celli];
         const scalar rho0 = rho0vf[celli];
 
         scalar p = p0vf[celli];
@@ -883,7 +879,7 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
         // Set the RR vector (used in the solver)
         for (label i=0; i<nSpecie_; i++)
         {
-            RR_[i][celli] = (Y_[i]*rho - Y0[i]*rho0)/deltaT[celli];
+            RR_[i][celli] = rho0*(Y_[i] - Y0[i])/deltaT[celli];
         }
 
         if (loadBalancing_)

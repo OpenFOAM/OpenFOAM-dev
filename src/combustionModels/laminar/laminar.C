@@ -57,10 +57,6 @@ Foam::combustionModels::laminar::laminar
         turb,
         combustionProperties
     ),
-    outerCorrect_
-    (
-        this->coeffs().lookupOrDefault("outerCorrect", false)
-    ),
     integrateReactionRate_
     (
         this->coeffs().lookupOrDefault("integrateReactionRate", true)
@@ -68,6 +64,10 @@ Foam::combustionModels::laminar::laminar
     maxIntegrationTime_
     (
         this->coeffs().lookupOrDefault("maxIntegrationTime", vGreat)
+    ),
+    outerCorrect_
+    (
+        this->coeffs().lookupOrDefault("outerCorrect", false)
     ),
     timeIndex_(-1),
     chemistryPtr_(basicChemistryModel::New(thermo))
@@ -93,7 +93,11 @@ Foam::combustionModels::laminar::~laminar()
 
 void Foam::combustionModels::laminar::correct()
 {
-    if (!outerCorrect_ && timeIndex_ == this->mesh().time().timeIndex())
+    if
+    (
+        (integrateReactionRate_ || !outerCorrect_)
+     && timeIndex_ == this->mesh().time().timeIndex()
+    )
     {
         return;
     }
@@ -146,12 +150,12 @@ bool Foam::combustionModels::laminar::read()
 {
     if (combustionModel::read())
     {
-        outerCorrect_ =
-            this->coeffs().lookupOrDefault("outerCorrect", false);
         integrateReactionRate_ =
             this->coeffs().lookupOrDefault("integrateReactionRate", true);
         maxIntegrationTime_ =
             this->coeffs().lookupOrDefault("maxIntegrationTime", vGreat);
+        outerCorrect_ =
+            this->coeffs().lookupOrDefault("outerCorrect", false);
         return true;
     }
     else

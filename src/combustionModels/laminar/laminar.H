@@ -56,15 +56,16 @@ class laminar
 {
     // Private Data
 
-        //- Run chemistry correction on every outer iteration. Default false.
-        bool outerCorrect_;
-
         //- Integrate reaction rate over the time-step
         //  using the selected ODE solver. Default true.
         bool integrateReactionRate_;
 
         //- Maximum integration time permitted. Default vGreat.
         scalar maxIntegrationTime_;
+
+        //- Run chemistry rate calculation on every outer iteration. Default
+        //  false. Has no effect if integrating.
+        bool outerCorrect_;
 
         //- The time index of the last correction
         label timeIndex_;
