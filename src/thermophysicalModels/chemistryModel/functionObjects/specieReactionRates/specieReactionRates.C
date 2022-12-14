@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,33 +127,38 @@ bool Foam::functionObjects::specieReactionRates::write()
     // Region volume
     const scalar V = this->V();
 
-    for (label ri=0; ri<nReaction; ri++)
+    for (label reactioni=0; reactioni<nReaction; reactioni++)
     {
         if (Pstream::master())
         {
             writeTime(file());
-            file() << token::TAB << ri;
+            file() << token::TAB << reactioni;
         }
 
-        for (label si=0; si<nSpecie; si++)
-        {
-            volScalarField::Internal RR
-            (
-                chemistryModel_.calculateRR(ri, si)
-            );
+        const PtrList<volScalarField::Internal> RR
+        (
+            chemistryModel_.reactionRR(reactioni)
+        );
 
+        for (label speciei=0; speciei<nSpecie; speciei++)
+        {
             scalar sumVRRi = 0;
 
             if (isNull(cellIDs()))
             {
-                sumVRRi = fvc::domainIntegrate(RR).value();
+                sumVRRi = fvc::domainIntegrate(RR[speciei]).value();
             }
             else
             {
-                sumVRRi = gSum
-                (
-                    scalarField(fvMeshFunctionObject::mesh_.V()*RR, cellIDs())
-                );
+                sumVRRi =
+                    gSum
+                    (
+                        scalarField
+                        (
+                            fvMeshFunctionObject::mesh_.V()*RR[speciei],
+                            cellIDs()
+                        )
+                    );
             }
 
             if (Pstream::master())

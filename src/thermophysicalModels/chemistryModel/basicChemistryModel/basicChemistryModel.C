@@ -52,12 +52,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-void Foam::basicChemistryModel::correct()
-{}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::basicChemistryModel::basicChemistryModel

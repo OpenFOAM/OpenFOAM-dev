@@ -26,14 +26,6 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
-Foam::chemistryModel<ThermoType>::RR()
-{
-    return RR_;
-}
-
-
-template<class ThermoType>
 inline const Foam::multicomponentMixture<ThermoType>&
 Foam::chemistryModel<ThermoType>::mixture() const
 {
@@ -65,18 +57,10 @@ inline Foam::label Foam::chemistryModel<ThermoType>::nReaction() const
 
 
 template<class ThermoType>
-inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
-Foam::chemistryModel<ThermoType>::RR(const label i) const
+inline const Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
+Foam::chemistryModel<ThermoType>::RR() const
 {
-    return RR_[i];
-}
-
-
-template<class ThermoType>
-Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
-Foam::chemistryModel<ThermoType>::RR(const label i)
-{
-    return RR_[i];
+    return RR_;
 }
 
 

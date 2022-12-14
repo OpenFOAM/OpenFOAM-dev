@@ -182,10 +182,6 @@ class chemistryModel
 
     // Private Member Functions
 
-        //- Write access to chemical source terms
-        //  (e.g. for multi-chemistry model)
-        inline PtrList<volScalarField::Internal>& RR();
-
         //- Solve the reaction system for the given time step
         //  of given type and return the characteristic time
         //  Variable number of species added
@@ -214,43 +210,34 @@ public:
 
     // Member Functions
 
-        //- Return reference to the mixture
-        inline const multicomponentMixture<ThermoType>& mixture() const;
+        // Access
 
-        //- The reactions
-        inline const PtrList<Reaction<ThermoType>>& reactions() const;
+            //- Return reference to the mixture
+            inline const multicomponentMixture<ThermoType>& mixture() const;
 
-        //- Thermodynamic data of the species
-        inline const PtrList<ThermoType>& specieThermos() const;
+            //- The reactions
+            inline const PtrList<Reaction<ThermoType>>& reactions() const;
 
-        //- The number of reactions
-        virtual inline label nReaction() const;
-
-        //- Calculates the reaction rates
-        virtual void calculate();
+            //- Thermodynamic data of the species
+            inline const PtrList<ThermoType>& specieThermos() const;
 
 
-        // Chemistry model functions (overriding abstract functions in
-        // basicChemistryModel.H)
+        // Overrides to basicChemistryModel functions
 
-            //- Return const access to the chemical source terms for specie, i
-            inline const volScalarField::Internal& RR
+            //- The number of reactions
+            virtual inline label nReaction() const;
+
+            //- Return reaction rates of the species [kg/m^3/s]
+            virtual inline const PtrList<volScalarField::Internal>& RR() const;
+
+            //- Return reaction rates of the species in reactioni [kg/m^3/s]
+            virtual PtrList<volScalarField::Internal> reactionRR
             (
-                const label i
+                const label reactioni
             ) const;
 
-            //- Return non const access to chemical source terms [kg/m^3/s]
-            virtual volScalarField::Internal& RR
-            (
-                const label i
-            );
-
-            //- Return reaction rate of the speciei in reactionI
-            virtual tmp<volScalarField::Internal> calculateRR
-            (
-                const label reactionI,
-                const label speciei
-            ) const;
+            //- Calculates the reaction rates
+            virtual void calculate();
 
             //- Solve the reaction system for the given time step
             //  and return the characteristic time
@@ -267,8 +254,9 @@ public:
             virtual tmp<volScalarField> Qdot() const;
 
 
-        // ODE functions (overriding abstract functions in ODE.H)
+        // Overrides to ODESystem
 
+            //- Calculate the ODE derivatives
             virtual void derivatives
             (
                 const scalar t,
@@ -277,6 +265,7 @@ public:
                 scalarField& dYTpdt
             ) const;
 
+            //- Calculate the ODE jacobian
             virtual void jacobian
             (
                 const scalar t,
@@ -286,6 +275,10 @@ public:
                 scalarSquareMatrix& J
             ) const;
 
+
+        // ODE solution functions
+
+            //- Solve the ODE system
             virtual void solve
             (
                 scalar& p,
@@ -297,7 +290,7 @@ public:
             ) const = 0;
 
 
-        // Mechanism reduction access functions
+        // Mechanism reduction functions
 
             //- Return true if specie i is active
             inline bool active(const label i) const;

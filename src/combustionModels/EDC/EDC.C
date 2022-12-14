@@ -205,7 +205,7 @@ Foam::combustionModels::EDC::R(volScalarField& Y) const
     fvScalarMatrix& Su = tSu.ref();
 
     const label specieI = this->thermo().composition().species()[Y.member()];
-    Su += chemistryPtr_->RR(specieI);
+    Su += chemistryPtr_->RR()[specieI];
 
     return kappa_*tSu;
 }

@@ -93,12 +93,6 @@ protected:
         volScalarField::Internal deltaTChem_;
 
 
-    // Protected Member Functions
-
-        //- Correct function - updates due to mesh changes
-        void correct();
-
-
 public:
 
     //- Runtime type information
@@ -158,49 +152,31 @@ public:
         //- Return the latest estimation of integration step
         inline const volScalarField::Internal& deltaTChem() const;
 
+        //- Return reaction rates of the species [kg/m^3/s]
+        virtual const PtrList<volScalarField::Internal>& RR() const = 0;
 
-        // Functions to be derived in derived classes
+        //- Return reaction rates of the species in reactioni [kg/m^3/s]
+        virtual PtrList<volScalarField::Internal> reactionRR
+        (
+            const label reactioni
+        ) const = 0;
 
-            // Fields
+        //- Calculates the reaction rates
+        virtual void calculate() = 0;
 
-                //- Return const access to chemical source terms [kg/m^3/s]
-                virtual const volScalarField::Internal& RR
-                (
-                    const label i
-                ) const = 0;
+        //- Solve the reaction system for the given time step
+        //  and return the characteristic time
+        virtual scalar solve(const scalar deltaT) = 0;
 
-                //- Return access to chemical source terms [kg/m^3/s]
-                virtual volScalarField::Internal& RR
-                (
-                    const label i
-                ) = 0;
+        //- Solve the reaction system for the given time step
+        //  and return the characteristic time
+        virtual scalar solve(const scalarField& deltaT) = 0;
 
-                //- Return reaction rate of the speciei in reactioni
-                virtual tmp<volScalarField::Internal> calculateRR
-                (
-                    const label reactioni,
-                    const label speciei
-                ) const = 0;
+        //- Return the chemical time scale
+        virtual tmp<volScalarField> tc() const = 0;
 
-
-            // Chemistry solution
-
-                //- Calculates the reaction rates
-                virtual void calculate() = 0;
-
-                //- Solve the reaction system for the given time step
-                //  and return the characteristic time
-                virtual scalar solve(const scalar deltaT) = 0;
-
-                //- Solve the reaction system for the given time step
-                //  and return the characteristic time
-                virtual scalar solve(const scalarField& deltaT) = 0;
-
-                //- Return the chemical time scale
-                virtual tmp<volScalarField> tc() const = 0;
-
-                //- Return the heat release rate [kg/m/s^3]
-                virtual tmp<volScalarField> Qdot() const = 0;
+        //- Return the heat release rate [kg/m/s^3]
+        virtual tmp<volScalarField> Qdot() const = 0;
 
 
     // Member Operators
