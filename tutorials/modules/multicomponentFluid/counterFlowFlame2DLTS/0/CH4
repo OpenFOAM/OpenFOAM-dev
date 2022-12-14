@@ -16,30 +16,27 @@ FoamFile
 
 dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 0.0;
+internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     fuel
     {
         type            fixedValue;
-        value           uniform 1.0;
+        value           uniform 1;
     }
     air
     {
         type            fixedValue;
-        value           uniform 0.0;
+        value           uniform 0;
     }
     outlet
     {
         type            inletOutlet;
-        inletValue      uniform 0.0;
-        value           uniform 0.0;
-
-    }
-    frontAndBack
-    {
-        type            empty;
+        inletValue      uniform 0;
+        value           uniform 0;
     }
 }
 

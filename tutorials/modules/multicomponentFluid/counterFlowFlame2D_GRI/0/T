@@ -38,10 +38,6 @@ boundaryField
         inletValue      uniform 293;
         value           uniform 293;
     }
-    frontAndBack
-    {
-        type            empty;
-    }
 }
 
 

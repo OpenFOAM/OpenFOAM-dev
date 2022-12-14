@@ -35,10 +35,6 @@ boundaryField
         type            totalPressure;
         p0              $internalField;
     }
-    frontAndBack
-    {
-        type            empty;
-    }
 }
 
 
