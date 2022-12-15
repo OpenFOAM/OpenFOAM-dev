@@ -74,13 +74,13 @@ protected:
         //- Patch ID
         const label patchId_;
 
-        //- ...
+        //- Cumulative sum of the total patch areas in each process
         scalarList sumProcArea_;
 
-        //- ...
+        //- Cumulative sum of the face areas in the patch
         scalarList sumFaceArea_;
 
-        //- ...
+        //- Cumulative sum of the triangle areas in each patch face
         scalarListList sumFaceTriArea_;
 
 

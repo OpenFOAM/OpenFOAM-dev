@@ -65,8 +65,6 @@ Foam::PatchInjection<CloudType>::PatchInjection
 {
     duration_ = owner.db().time().userTimeToTime(duration_);
 
-    patchInjectionBase::topoChange(owner.mesh());
-
     // Set total volume/mass to inject
     this->volumeTotal_ = flowRateProfile_.integral(0.0, duration_);
 }

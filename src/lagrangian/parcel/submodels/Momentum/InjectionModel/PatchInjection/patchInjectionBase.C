@@ -82,12 +82,15 @@ void Foam::patchInjectionBase::topoChange(const polyMesh& mesh)
     const polyPatch& patch = mesh.boundaryMesh()[patchId_];
 
     // Initialise
-    sumProcArea_.resize(Pstream::nProcs(), 0);
-    sumFaceArea_.resize(patch.size(), 0);
+    sumProcArea_.resize(Pstream::nProcs());
+    sumProcArea_ = 0;
+    sumFaceArea_.resize(patch.size());
+    sumFaceArea_ = 0;
     sumFaceTriArea_.resize(patch.size());
     forAll(patch, patchFacei)
     {
-        sumFaceTriArea_[patchFacei].resize(patch[patchFacei].nTriangles(), 0);
+        sumFaceTriArea_[patchFacei].resize(patch[patchFacei].nTriangles());
+        sumFaceTriArea_[patchFacei] = 0;
     }
 
     // Cumulatively sum up the areas through the local patch
