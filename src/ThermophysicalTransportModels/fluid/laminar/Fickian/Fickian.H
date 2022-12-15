@@ -41,7 +41,6 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 
 #include "Function2.H"
-#include "MeshObjects.H"
 
 #ifndef Fickian_H
 #define Fickian_H
