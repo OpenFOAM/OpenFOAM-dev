@@ -636,10 +636,10 @@ public:
             virtual void correctSpecies();
 
             //- Correct the momentumTransport
-            virtual void correctTurbulence();
+            virtual void correctMomentumTransport();
 
             //- Correct the energy transport e.g. alphat
-            virtual void correctEnergyTransport();
+            virtual void correctThermophysicalTransport();
 
             //- Update the fluid properties for mesh changes
             virtual void meshUpdate();

@@ -434,9 +434,16 @@ Foam::solidThermophysicalTransportModels::anisotropic::divq
 }
 
 
-void Foam::solidThermophysicalTransportModels::anisotropic::correct()
+void Foam::solidThermophysicalTransportModels::anisotropic::predict()
 {
-    solidThermophysicalTransportModel::correct();
+    solidThermophysicalTransportModel::predict();
+
+    // Recalculate zonesPatchFaces if they have been deleted
+    // following mesh changes
+    if (!zonesPatchFaces_.size())
+    {
+        setZonesPatchFaces();
+    }
 }
 
 
@@ -451,7 +458,8 @@ void Foam::solidThermophysicalTransportModels::anisotropic::topoChange
     const polyTopoChangeMap& map
 )
 {
-    setZonesPatchFaces();
+    // Delete the cached zonesPatchFaces, will be re-created in predict
+    zonesPatchFaces_.clear();
 }
 
 
@@ -460,7 +468,8 @@ void Foam::solidThermophysicalTransportModels::anisotropic::mapMesh
     const polyMeshMap& map
 )
 {
-    setZonesPatchFaces();
+    // Delete the cached zonesPatchFaces, will be re-created in predict
+    zonesPatchFaces_.clear();
 }
 
 
@@ -469,7 +478,8 @@ void Foam::solidThermophysicalTransportModels::anisotropic::distribute
     const polyDistributionMap& map
 )
 {
-    setZonesPatchFaces();
+    // Delete the cached zonesPatchFaces, will be re-created in predict
+    zonesPatchFaces_.clear();
 }
 
 

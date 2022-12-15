@@ -154,7 +154,12 @@ public:
         //  of mixture for patch [W/m/K]
         virtual tmp<scalarField> kappaEff(const label patchi) const = 0;
 
-        //- Correct the LES transport
+        //- Predict the LES transport coefficients if possible
+        //  without solving thermophysical transport model equations
+        virtual void predict();
+
+        //- Solve the thermophysical transport model equations
+        //  and correct the LES transport coefficients
         virtual void correct();
 
 

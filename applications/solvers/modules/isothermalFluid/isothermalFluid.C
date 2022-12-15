@@ -342,17 +342,13 @@ void Foam::solvers::isothermalFluid::pressureCorrector()
 }
 
 
-void Foam::solvers::isothermalFluid::momentumTransportCorrector()
+void Foam::solvers::isothermalFluid::postCorrector()
 {
     if (pimple.transportCorr())
     {
         momentumTransport->correct();
     }
 }
-
-
-void Foam::solvers::isothermalFluid::thermophysicalTransportCorrector()
-{}
 
 
 void Foam::solvers::isothermalFluid::postSolve()

@@ -143,7 +143,7 @@ public:
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 
         //- Correct the unityLewisFourier viscosity
-        virtual void correct();
+        virtual void predict();
 };
 
 

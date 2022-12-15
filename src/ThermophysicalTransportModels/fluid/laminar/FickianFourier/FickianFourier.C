@@ -50,7 +50,7 @@ FickianFourier
     )
 {
     read();
-    this->correct();
+    this->predict();
 
     this->printCoeffs(typeName);
 }

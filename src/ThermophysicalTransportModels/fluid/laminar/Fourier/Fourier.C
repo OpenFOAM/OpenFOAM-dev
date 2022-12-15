@@ -170,12 +170,12 @@ Fourier<BasicThermophysicalTransportModel>::divj(volScalarField& Yi) const
 
 
 template<class BasicThermophysicalTransportModel>
-void Fourier<BasicThermophysicalTransportModel>::correct()
+void Fourier<BasicThermophysicalTransportModel>::predict()
 {
     laminarThermophysicalTransportModel
     <
         BasicThermophysicalTransportModel
-    >::correct();
+    >::predict();
 }
 
 

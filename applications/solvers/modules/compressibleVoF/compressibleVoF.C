@@ -331,20 +331,18 @@ void Foam::solvers::compressibleVoF::prePredictor()
     fvModels().correct();
     alphaPredictor();
     momentumTransport.correctPhasePhi();
+    thermophysicalTransport.predict();
 }
 
 
-void Foam::solvers::compressibleVoF::momentumTransportCorrector()
+void Foam::solvers::compressibleVoF::postCorrector()
 {
     if (pimple.transportCorr())
     {
         momentumTransport.correct();
+        thermophysicalTransport.correct();
     }
 }
-
-
-void Foam::solvers::compressibleVoF::thermophysicalTransportCorrector()
-{}
 
 
 void Foam::solvers::compressibleVoF::postSolve()

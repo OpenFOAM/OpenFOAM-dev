@@ -173,6 +173,7 @@ int main(int argc, char *argv[])
         while (pimple.loop())
         {
             fvModels.correct();
+            thermophysicalTransport->predict();
 
             #include "UEqn.H"
 

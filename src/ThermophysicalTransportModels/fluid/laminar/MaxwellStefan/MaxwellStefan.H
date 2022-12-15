@@ -209,7 +209,7 @@ public:
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 
         //- Update the diffusion coefficients and flux corrections
-        virtual void correct();
+        virtual void predict();
 };
 
 

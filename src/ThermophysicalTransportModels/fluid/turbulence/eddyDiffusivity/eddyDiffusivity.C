@@ -203,9 +203,9 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divj
 
 
 template<class TurbulenceThermophysicalTransportModel>
-void eddyDiffusivity<TurbulenceThermophysicalTransportModel>::correct()
+void eddyDiffusivity<TurbulenceThermophysicalTransportModel>::predict()
 {
-    TurbulenceThermophysicalTransportModel::correct();
+    TurbulenceThermophysicalTransportModel::predict();
     correctAlphat();
 }
 

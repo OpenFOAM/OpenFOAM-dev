@@ -148,6 +148,10 @@ bool Foam::solidThermophysicalTransportModel::read()
 }
 
 
+void Foam::solidThermophysicalTransportModel::predict()
+{}
+
+
 void Foam::solidThermophysicalTransportModel::correct()
 {}
 

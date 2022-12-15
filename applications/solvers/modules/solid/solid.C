@@ -156,7 +156,9 @@ bool Foam::solvers::solid::moveMesh()
 
 
 void Foam::solvers::solid::prePredictor()
-{}
+{
+    thermophysicalTransport->predict();
+}
 
 
 void Foam::solvers::solid::momentumPredictor()
@@ -195,12 +197,13 @@ void Foam::solvers::solid::pressureCorrector()
 {}
 
 
-void Foam::solvers::solid::momentumTransportCorrector()
-{}
-
-
-void Foam::solvers::solid::thermophysicalTransportCorrector()
-{}
+void Foam::solvers::solid::postCorrector()
+{
+    if (pimple.transportCorr())
+    {
+        thermophysicalTransport->correct();
+    }
+}
 
 
 void Foam::solvers::solid::postSolve()

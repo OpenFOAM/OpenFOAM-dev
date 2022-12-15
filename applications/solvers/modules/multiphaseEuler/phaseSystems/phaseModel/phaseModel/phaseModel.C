@@ -180,11 +180,11 @@ void Foam::phaseModel::correctSpecies()
 {}
 
 
-void Foam::phaseModel::correctTurbulence()
+void Foam::phaseModel::correctMomentumTransport()
 {}
 
 
-void Foam::phaseModel::correctEnergyTransport()
+void Foam::phaseModel::correctThermophysicalTransport()
 {}
 
 

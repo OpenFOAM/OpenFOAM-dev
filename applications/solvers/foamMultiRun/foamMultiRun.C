@@ -183,8 +183,7 @@ int main(int argc, char *argv[])
 
             forAll(solvers, i)
             {
-                solvers[i].momentumTransportCorrector();
-                solvers[i].thermophysicalTransportCorrector();
+                solvers[i].postCorrector();
             }
         }
 

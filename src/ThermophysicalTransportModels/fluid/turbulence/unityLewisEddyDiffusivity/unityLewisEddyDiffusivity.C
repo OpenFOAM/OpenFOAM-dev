@@ -205,9 +205,9 @@ unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divj
 
 template<class TurbulenceThermophysicalTransportModel>
 void unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
-correct()
+predict()
 {
-    TurbulenceThermophysicalTransportModel::correct();
+    TurbulenceThermophysicalTransportModel::predict();
     correctAlphat();
 }
 

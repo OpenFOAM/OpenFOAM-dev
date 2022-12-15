@@ -63,8 +63,17 @@ Foam::solvers::fluid::~fluid()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::fluid::thermophysicalTransportCorrector()
+void Foam::solvers::fluid::prePredictor()
 {
+    isothermalFluid::prePredictor();
+    thermophysicalTransport->predict();
+}
+
+
+void Foam::solvers::fluid::postCorrector()
+{
+    isothermalFluid::postCorrector();
+
     if (pimple.transportCorr())
     {
         thermophysicalTransport->correct();

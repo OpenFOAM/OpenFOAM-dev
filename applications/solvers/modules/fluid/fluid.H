@@ -99,13 +99,16 @@ public:
 
     // Member Functions
 
+        //- Called at the start of the PIMPLE loop
+        virtual void prePredictor();
+
         //- Construct and solve the energy equation,
         //  convert to temperature
         //  and update thermophysical and transport properties
         virtual void thermophysicalPredictor();
 
-        //- Correct the thermophysical transport modelling
-        virtual void thermophysicalTransportCorrector();
+        //- Correct the momentum and thermophysical transport modelling
+        virtual void postCorrector();
 
 
     // Member Operators

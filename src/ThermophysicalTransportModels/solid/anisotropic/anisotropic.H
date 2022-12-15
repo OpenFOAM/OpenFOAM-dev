@@ -187,7 +187,7 @@ public:
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
         //- Correct the anisotropic viscosity
-        virtual void correct();
+        virtual void predict();
 
 
         // Mesh changes

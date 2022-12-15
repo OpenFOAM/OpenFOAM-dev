@@ -165,6 +165,16 @@ template<class BasicThermophysicalTransportModel>
 void Foam::laminarThermophysicalTransportModel
 <
     BasicThermophysicalTransportModel
+>::predict()
+{
+    BasicThermophysicalTransportModel::predict();
+}
+
+
+template<class BasicThermophysicalTransportModel>
+void Foam::laminarThermophysicalTransportModel
+<
+    BasicThermophysicalTransportModel
 >::correct()
 {
     BasicThermophysicalTransportModel::correct();

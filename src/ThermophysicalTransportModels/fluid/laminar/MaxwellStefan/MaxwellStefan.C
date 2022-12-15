@@ -608,9 +608,9 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::transform
 
 
 template<class BasicThermophysicalTransportModel>
-void MaxwellStefan<BasicThermophysicalTransportModel>::correct()
+void MaxwellStefan<BasicThermophysicalTransportModel>::predict()
 {
-    BasicThermophysicalTransportModel::correct();
+    BasicThermophysicalTransportModel::predict();
 
     const basicSpecieMixture& composition = this->thermo().composition();
     const label d = composition.defaultSpecie();

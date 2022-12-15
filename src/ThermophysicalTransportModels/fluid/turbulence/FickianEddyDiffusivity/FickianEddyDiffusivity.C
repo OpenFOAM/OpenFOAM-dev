@@ -52,7 +52,7 @@ FickianEddyDiffusivity
     Sct_("Sct", dimless, this->coeffDict_)
 {
     read();
-    this->correct();
+    this->predict();
 
     this->printCoeffs(typeName);
 }

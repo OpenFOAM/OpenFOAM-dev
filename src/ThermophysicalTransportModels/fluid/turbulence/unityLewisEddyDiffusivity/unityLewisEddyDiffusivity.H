@@ -205,7 +205,7 @@ public:
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 
         //- Correct the unityLewisEddyDiffusivity viscosity
-        virtual void correct();
+        virtual void predict();
 };
 
 

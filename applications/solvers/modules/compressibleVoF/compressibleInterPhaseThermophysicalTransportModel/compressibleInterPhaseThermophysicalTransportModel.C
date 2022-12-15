@@ -215,6 +215,10 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::divq
 }
 
 
+void Foam::compressibleInterPhaseThermophysicalTransportModel::predict()
+{}
+
+
 void Foam::compressibleInterPhaseThermophysicalTransportModel::correct()
 {}
 

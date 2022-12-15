@@ -126,7 +126,7 @@ public:
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 
         //- Correct the Fourier viscosity
-        virtual void correct();
+        virtual void predict();
 };
 
 

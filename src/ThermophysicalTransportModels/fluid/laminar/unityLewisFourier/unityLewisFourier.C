@@ -154,12 +154,12 @@ divj(volScalarField& Yi) const
 
 
 template<class BasicThermophysicalTransportModel>
-void unityLewisFourier<BasicThermophysicalTransportModel>::correct()
+void unityLewisFourier<BasicThermophysicalTransportModel>::predict()
 {
     laminarThermophysicalTransportModel
     <
         BasicThermophysicalTransportModel
-    >::correct();
+    >::predict();
 }
 
 

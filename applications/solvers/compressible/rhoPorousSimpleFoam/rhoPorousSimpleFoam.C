@@ -64,6 +64,8 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
+        thermophysicalTransport->predict();
+
         // Pressure-velocity SIMPLE corrector
         {
             #include "UEqn.H"

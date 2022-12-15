@@ -176,6 +176,14 @@ bool Foam::RASThermophysicalTransportModel
 
 template<class BasicThermophysicalTransportModel>
 void Foam::RASThermophysicalTransportModel<BasicThermophysicalTransportModel>::
+predict()
+{
+    BasicThermophysicalTransportModel::predict();
+}
+
+
+template<class BasicThermophysicalTransportModel>
+void Foam::RASThermophysicalTransportModel<BasicThermophysicalTransportModel>::
 correct()
 {
     BasicThermophysicalTransportModel::correct();

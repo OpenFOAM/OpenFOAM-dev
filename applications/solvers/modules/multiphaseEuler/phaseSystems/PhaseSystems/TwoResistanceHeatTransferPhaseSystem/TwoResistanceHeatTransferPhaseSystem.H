@@ -137,7 +137,7 @@ public:
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
         //- Correct the energy transport e.g. alphat and Tf
-        virtual void correctEnergyTransport();
+        virtual void correctThermophysicalTransport();
 
         //- Correct the interface thermodynamics
         virtual void correctInterfaceThermo() = 0;

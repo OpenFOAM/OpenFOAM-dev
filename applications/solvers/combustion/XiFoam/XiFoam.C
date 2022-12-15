@@ -157,6 +157,7 @@ int main(int argc, char *argv[])
             }
 
             fvModels.correct();
+            thermophysicalTransport.predict();
 
             #include "UEqn.H"
             #include "ftEqn.H"

@@ -143,12 +143,8 @@ public:
         //- Construct and solve the pressure equation in the PISO loop
         virtual void pressureCorrector();
 
-        //- Correct the momentum transport modelling
-        //  Newtonian, non-Newtonian or turbulent
-        virtual void momentumTransportCorrector();
-
         //- Correct the thermophysical transport modelling
-        virtual void thermophysicalTransportCorrector();
+        virtual void postCorrector();
 
         //- Called after the PIMPLE loop at the end of the time-step
         virtual void postSolve();

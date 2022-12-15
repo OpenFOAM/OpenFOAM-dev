@@ -144,7 +144,7 @@ public:
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 
         //- Update the diffusion coefficients
-        virtual void correct();
+        virtual void predict();
 
 
         // Mesh changes

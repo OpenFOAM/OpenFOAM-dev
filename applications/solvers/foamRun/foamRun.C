@@ -138,8 +138,7 @@ int main(int argc, char *argv[])
             solver.momentumPredictor();
             solver.thermophysicalPredictor();
             solver.pressureCorrector();
-            solver.momentumTransportCorrector();
-            solver.thermophysicalTransportCorrector();
+            solver.postCorrector();
         }
 
         solver.postSolve();

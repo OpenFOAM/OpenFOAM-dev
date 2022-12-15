@@ -186,7 +186,12 @@ public:
             const label patchi
         ) const = 0;
 
-        //- Correct the laminar transport
+        //- Predict the laminar transport coefficients if possible
+        //  without solving thermophysical transport model equations
+        virtual void predict();
+
+        //- Solve the thermophysical transport model equations
+        //  and correct the laminar transport coefficients
         virtual void correct();
 
 

@@ -117,9 +117,9 @@ Foam::solidThermophysicalTransportModels::isotropic::divq
 }
 
 
-void Foam::solidThermophysicalTransportModels::isotropic::correct()
+void Foam::solidThermophysicalTransportModels::isotropic::predict()
 {
-    solidThermophysicalTransportModel::correct();
+    solidThermophysicalTransportModel::predict();
 }
 
 

@@ -248,17 +248,14 @@ void Foam::solvers::multiphaseEuler::prePredictor()
 }
 
 
-void Foam::solvers::multiphaseEuler::momentumTransportCorrector()
+void Foam::solvers::multiphaseEuler::postCorrector()
 {
     if (pimple.flow() && pimple.transportCorr())
     {
-        fluid.correctTurbulence();
+        fluid.correctMomentumTransport();
+        fluid.correctThermophysicalTransport();
     }
 }
-
-
-void Foam::solvers::multiphaseEuler::thermophysicalTransportCorrector()
-{}
 
 
 void Foam::solvers::multiphaseEuler::postSolve()
