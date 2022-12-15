@@ -274,6 +274,9 @@ public:
 
     // Constructors
 
+        //- Construct from mesh only, no topology change
+        polyTopoChangeMap(const polyMesh& mesh);
+
         //- Construct from components. Copy (except for oldCellVolumes).
         polyTopoChangeMap
         (

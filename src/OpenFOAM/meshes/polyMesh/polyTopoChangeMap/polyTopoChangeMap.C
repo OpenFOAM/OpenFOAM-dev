@@ -28,6 +28,15 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
+Foam::polyTopoChangeMap::polyTopoChangeMap(const polyMesh& mesh)
+:
+    mesh_(mesh),
+    nOldPoints_(-1),
+    nOldFaces_(-1),
+    nOldCells_(-1)
+{}
+
+
 Foam::polyTopoChangeMap::polyTopoChangeMap
 (
     const polyMesh& mesh,

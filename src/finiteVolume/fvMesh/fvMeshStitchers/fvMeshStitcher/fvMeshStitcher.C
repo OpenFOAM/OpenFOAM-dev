@@ -27,6 +27,7 @@ License
 #include "globalIndex.H"
 #include "fvcSurfaceIntegrate.H"
 #include "meshObjects.H"
+#include "polyTopoChangeMap.H"
 #include "syncTools.H"
 #include "surfaceToVolVelocity.H"
 
@@ -1259,10 +1260,13 @@ bool Foam::fvMeshStitcher::disconnect
         Info<< decrIndent;
     }
 
-    meshObjects::movePoints<fvMesh>(mesh_);
-    meshObjects::movePoints<lduMesh>(mesh_);
+    // Create null polyTopoChangeMap
+    const polyTopoChangeMap map(mesh_);
 
-    const_cast<Time&>(mesh_.time()).functionObjects().movePoints(mesh_);
+    meshObjects::topoChange<fvMesh>(mesh_, map);
+    meshObjects::topoChange<lduMesh>(mesh_, map);
+
+    const_cast<Time&>(mesh_.time()).functionObjects().topoChange(map);
 
     return true;
 }
@@ -1521,10 +1525,13 @@ bool Foam::fvMeshStitcher::connect
         Info<< decrIndent;
     }
 
-    meshObjects::movePoints<fvMesh>(mesh_);
-    meshObjects::movePoints<lduMesh>(mesh_);
+    // Create null polyTopoChangeMap
+    const polyTopoChangeMap map(mesh_);
 
-    const_cast<Time&>(mesh_.time()).functionObjects().movePoints(mesh_);
+    meshObjects::topoChange<fvMesh>(mesh_, map);
+    meshObjects::topoChange<lduMesh>(mesh_, map);
+
+    const_cast<Time&>(mesh_.time()).functionObjects().topoChange(map);
 
     return true;
 }
@@ -1584,10 +1591,13 @@ void Foam::fvMeshStitcher::reconnect(const bool geometric) const
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();
 
-    meshObjects::movePoints<fvMesh>(mesh_);
-    meshObjects::movePoints<lduMesh>(mesh_);
+    // Create null polyTopoChangeMap
+    const polyTopoChangeMap map(mesh_);
 
-    const_cast<Time&>(mesh_.time()).functionObjects().movePoints(mesh_);
+    meshObjects::topoChange<fvMesh>(mesh_, map);
+    meshObjects::topoChange<lduMesh>(mesh_, map);
+
+    const_cast<Time&>(mesh_.time()).functionObjects().topoChange(map);
 }
 
 
