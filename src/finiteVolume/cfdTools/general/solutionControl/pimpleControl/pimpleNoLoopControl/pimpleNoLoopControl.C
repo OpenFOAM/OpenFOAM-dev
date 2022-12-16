@@ -53,6 +53,7 @@ Foam::pimpleNoLoopControl::pimpleNoLoopControl
     ),
     pimpleLoopPtr_(nullptr),
     simpleRho_(false),
+    transportPredictionFirst_(true),
     transportCorrectionFinal_(true)
 {
     read();
@@ -91,6 +92,9 @@ bool Foam::pimpleNoLoopControl::read()
             {"simpleRho", "SIMPLErho"},
             mesh().schemes().steady()
         );
+
+    transportPredictionFirst_ =
+        dict().lookupOrDefault<bool>("transportPredictionFirst", true);
 
     transportCorrectionFinal_ =
         dict().lookupOrDefaultBackwardsCompatible<bool>

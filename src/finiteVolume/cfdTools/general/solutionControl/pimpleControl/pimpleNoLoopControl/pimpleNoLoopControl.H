@@ -82,8 +82,12 @@ protected:
         //  rather than PISO mode
         bool simpleRho_;
 
-        //- Switch to control whether turbulence is solved just on the final
-        //  pimple iteration, or on every pimple iteration
+        //- Switch to control whether transport models are predicted
+        //  just on the first pimple iteration, or on every pimple iteration
+        bool transportPredictionFirst_;
+
+        //- Switch to control whether transport models are corrected
+        //  just on the final pimple iteration, or on every pimple iteration
         bool transportCorrectionFinal_;
 
 
@@ -123,8 +127,11 @@ public:
             //- Switch to indicate whether to update the density in simple mode
             inline bool simpleRho() const;
 
-            //- Flag to indicate whether to correct the transport properties
-            inline bool transportCorr() const;
+            //- Flag to indicate whether to predict the transport models
+            inline bool predictTransport() const;
+
+            //- Flag to indicate whether to correct the transport models
+            inline bool correctTransport() const;
 
             //- Flag to indicate the first iteration
             inline bool firstIter() const;

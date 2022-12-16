@@ -52,7 +52,7 @@ PIMPLE
     nNonOrthogonalCorrectors 0;
     pRefCell            0;
     pRefValue           0;
-    turbOnFinalIterOnly no;
+    transportCorrectionFinal no;
 }
 
 relaxationFactors

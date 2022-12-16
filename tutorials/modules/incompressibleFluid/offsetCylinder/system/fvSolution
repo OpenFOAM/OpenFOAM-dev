@@ -47,6 +47,7 @@ PIMPLE
     nOuterCorrectors    5;
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;
+    transportPredictionFirst yes;
 }
 
 

@@ -39,7 +39,13 @@ inline bool Foam::pimpleNoLoopControl::simpleRho() const
 }
 
 
-inline bool Foam::pimpleNoLoopControl::transportCorr() const
+inline bool Foam::pimpleNoLoopControl::predictTransport() const
+{
+    return !transportPredictionFirst_ || firstIter();
+}
+
+
+inline bool Foam::pimpleNoLoopControl::correctTransport() const
 {
     return !transportCorrectionFinal_ || finalIter();
 }

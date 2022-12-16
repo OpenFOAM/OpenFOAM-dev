@@ -78,7 +78,7 @@ PIMPLE
 
     correctPhi      yes;
     moveMeshOuterCorrectors yes;
-    turbOnFinalIterOnly yes;
+    transportCorrectionFinal yes;
 }
 
 relaxationFactors

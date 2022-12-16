@@ -74,12 +74,6 @@ public:
 
         using pimpleSingleRegionControl::run;
 
-        //- Flag to indicate whether to correct the transport properties
-        bool turbCorr() const
-        {
-            return transportCorr();
-        }
-
         //- Flag to indicate the first iteration
         bool firstPimpleIter() const
         {
