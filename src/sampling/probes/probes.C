@@ -382,14 +382,16 @@ void Foam::probes::topoChange(const polyTopoChangeMap& map)
         }
 
         // 1. Update cells
+        if (!map.reverseCellMap().empty())
         {
             DynamicList<label> elems(elementList_.size());
 
             const labelList& reverseMap = map.reverseCellMap();
             forAll(elementList_, i)
             {
-                label celli = elementList_[i];
-                label newCelli = reverseMap[celli];
+                const label celli = elementList_[i];
+                const label newCelli = reverseMap[celli];
+
                 if (newCelli == -1)
                 {
                     // cell removed
@@ -410,14 +412,16 @@ void Foam::probes::topoChange(const polyTopoChangeMap& map)
         }
 
         // 2. Update faces
+        if (!map.reverseFaceMap().empty())
         {
             DynamicList<label> elems(faceList_.size());
 
             const labelList& reverseMap = map.reverseFaceMap();
             forAll(faceList_, i)
             {
-                label facei = faceList_[i];
-                label newFacei = reverseMap[facei];
+                const label facei = faceList_[i];
+                const label newFacei = reverseMap[facei];
+
                 if (newFacei == -1)
                 {
                     // face removed
