@@ -257,6 +257,13 @@ Foam::laminarModel<BasicMomentumTransportModel>::sigma() const
 
 
 template<class BasicMomentumTransportModel>
+void Foam::laminarModel<BasicMomentumTransportModel>::predict()
+{
+    BasicMomentumTransportModel::predict();
+}
+
+
+template<class BasicMomentumTransportModel>
 void Foam::laminarModel<BasicMomentumTransportModel>::correct()
 {
     BasicMomentumTransportModel::correct();

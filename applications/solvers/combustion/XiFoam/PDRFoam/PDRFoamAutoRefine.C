@@ -173,7 +173,12 @@ int main(int argc, char *argv[])
         while (pimple.loop())
         {
             fvModels.correct();
-            thermophysicalTransport->predict();
+
+            if (pimple.predictTransport())
+            {
+                turbulence->predict();
+                thermophysicalTransport->predict();
+            }
 
             #include "UEqn.H"
 
@@ -193,7 +198,7 @@ int main(int argc, char *argv[])
                 #include "pEqn.H"
             }
 
-            if (pimple.turbCorr())
+            if (pimple.correctTransport())
             {
                 turbulence->correct();
                 thermophysicalTransport->correct();

@@ -180,6 +180,14 @@ void Foam::phaseModel::correctSpecies()
 {}
 
 
+void Foam::phaseModel::predictMomentumTransport()
+{}
+
+
+void Foam::phaseModel::predictThermophysicalTransport()
+{}
+
+
 void Foam::phaseModel::correctMomentumTransport()
 {}
 

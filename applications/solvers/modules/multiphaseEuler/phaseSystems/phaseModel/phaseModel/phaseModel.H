@@ -215,6 +215,12 @@ public:
         //- Correct the species concentrations
         virtual void correctSpecies();
 
+        //- Predict the momentumTransport
+        virtual void predictMomentumTransport();
+
+        //- Predict the energy transport
+        virtual void predictThermophysicalTransport();
+
         //- Correct the momentumTransport
         virtual void correctMomentumTransport();
 

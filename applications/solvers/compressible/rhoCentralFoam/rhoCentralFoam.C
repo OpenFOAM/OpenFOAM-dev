@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
         // --- Solve density
         solve(fvm::ddt(rho) + fvc::div(phi));
 
+        turbulence->predict();
         thermophysicalTransport->predict();
 
         // --- Solve momentum

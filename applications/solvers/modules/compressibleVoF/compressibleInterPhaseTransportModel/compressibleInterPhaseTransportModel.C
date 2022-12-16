@@ -167,6 +167,20 @@ void Foam::compressibleInterPhaseTransportModel::correctPhasePhi()
 }
 
 
+void Foam::compressibleInterPhaseTransportModel::predict()
+{
+    if (twoPhaseTransport_)
+    {
+        momentumTransport1_->predict();
+        momentumTransport2_->predict();
+    }
+    else
+    {
+        mixtureMomentumTransport_->predict();
+    }
+}
+
+
 void Foam::compressibleInterPhaseTransportModel::correct()
 {
     if (twoPhaseTransport_)

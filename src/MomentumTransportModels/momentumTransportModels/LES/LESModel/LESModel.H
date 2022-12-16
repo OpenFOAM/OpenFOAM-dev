@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -224,6 +224,11 @@ public:
         {
             return this->nut(patchi) + this->nu(patchi);
         }
+
+        //- Predict the turbulence transport coefficients if possible
+        //  without solving turbulence transport model equations
+        virtual void predict()
+        {}
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();

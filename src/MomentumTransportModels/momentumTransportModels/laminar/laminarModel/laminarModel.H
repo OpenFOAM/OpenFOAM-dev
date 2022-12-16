@@ -175,7 +175,10 @@ public:
         //- Return the stress tensor [m^2/s^2], i.e. 0 for laminar flow
         virtual tmp<volSymmTensorField> sigma() const;
 
-        //- Correct the laminar viscosity
+        //- Predict the laminar viscosity
+        virtual void predict();
+
+        //- Predict the laminar viscosity
         virtual void correct();
 
 

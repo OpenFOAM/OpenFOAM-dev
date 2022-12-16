@@ -67,6 +67,8 @@ int main(int argc, char *argv[])
 
         fvModels.correct();
 
+        turbulence->predict();
+
         // Pressure-velocity SIMPLE corrector
         {
             #include "UEqn.H"

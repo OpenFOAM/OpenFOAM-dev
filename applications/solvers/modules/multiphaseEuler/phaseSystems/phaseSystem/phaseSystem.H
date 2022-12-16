@@ -635,6 +635,12 @@ public:
             //- Correct the species mass fractions
             virtual void correctSpecies();
 
+            //- Predict the momentumTransport
+            virtual void predictMomentumTransport();
+
+            //- Predict the energy transport e.g. alphat
+            virtual void predictThermophysicalTransport();
+
             //- Correct the momentumTransport
             virtual void correctMomentumTransport();
 

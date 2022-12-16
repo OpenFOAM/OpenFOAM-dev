@@ -178,6 +178,12 @@ public:
         //- Correct the kinematics
         virtual void correctKinematics();
 
+        //- Predict the momentumTransport
+        virtual void predictMomentumTransport();
+
+        //- Predict the energy transport e.g. alphat
+        virtual void predictThermophysicalTransport();
+
         //- Correct the momentumTransport
         virtual void correctMomentumTransport();
 

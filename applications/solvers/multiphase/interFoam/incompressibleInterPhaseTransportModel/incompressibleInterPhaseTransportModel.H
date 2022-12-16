@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,6 +117,9 @@ public:
         //- Correct the phase mass-fluxes
         // (required for the two-phase transport option)
         void correctPhasePhi();
+
+        //- Predict the phase or mixture transport models
+        void predict();
 
         //- Correct the phase or mixture transport models
         void correct();

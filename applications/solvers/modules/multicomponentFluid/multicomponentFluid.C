@@ -85,7 +85,11 @@ Foam::solvers::multicomponentFluid::~multicomponentFluid()
 void Foam::solvers::multicomponentFluid::prePredictor()
 {
     isothermalFluid::prePredictor();
-    thermophysicalTransport->predict();
+
+    if (pimple.predictTransport())
+    {
+        thermophysicalTransport->predict();
+    }
 }
 
 
@@ -93,7 +97,7 @@ void Foam::solvers::multicomponentFluid::postCorrector()
 {
     isothermalFluid::postCorrector();
 
-    if (pimple.transportCorr())
+    if (pimple.correctTransport())
     {
         thermophysicalTransport->correct();
     }

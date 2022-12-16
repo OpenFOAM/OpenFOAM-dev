@@ -103,6 +103,8 @@ int main(int argc, char *argv[])
         zeroCells(alpha, inletCells);
         // zeroCells(alpha, outletCells);
 
+        turbulence->predict();
+
         // Pressure-velocity SIMPLE corrector
         {
             fvModels.correct();

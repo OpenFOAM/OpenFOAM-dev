@@ -89,6 +89,11 @@ int main(int argc, char *argv[])
 
             mixture.correct();
 
+            if (pimple.predictTransport())
+            {
+                turbulence->predict();
+            }
+
             #include "UEqn.H"
 
             // --- Pressure corrector loop
@@ -97,7 +102,7 @@ int main(int argc, char *argv[])
                 #include "pEqn.H"
             }
 
-            if (pimple.turbCorr())
+            if (pimple.correctTransport())
             {
                 turbulence->correct();
             }

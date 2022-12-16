@@ -40,6 +40,11 @@ void Foam::solvers::isothermalFluid::prePredictor()
     }
 
     fvModels().correct();
+
+    if (pimple.predictTransport())
+    {
+        momentumTransport->predict();
+    }
 }
 
 

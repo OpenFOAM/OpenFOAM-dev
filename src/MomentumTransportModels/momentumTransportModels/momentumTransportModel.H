@@ -205,11 +205,16 @@ public:
         //- Return the stress tensor [m^2/s^2]
         virtual tmp<volSymmTensorField> sigma() const = 0;
 
-        //- Validate the turbulence fields after construction
+        //- Validate the fields after construction
         //  Update derived fields as required
         virtual void validate();
 
-        //- Solve the turbulence equations and correct the turbulence viscosity
+        //- Predict the momentum transport coefficients if possible
+        //  without solving momentum transport model equations
+        virtual void predict() = 0;
+
+        //- Solve the momentum transport model equations
+        //  and correct the momentum transport coefficients
         virtual void correct() = 0;
 
 

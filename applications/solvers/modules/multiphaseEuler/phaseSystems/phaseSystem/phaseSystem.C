@@ -644,6 +644,24 @@ void Foam::phaseSystem::correctSpecies()
 }
 
 
+void Foam::phaseSystem::predictMomentumTransport()
+{
+    forAll(phaseModels_, phasei)
+    {
+        phaseModels_[phasei].predictMomentumTransport();
+    }
+}
+
+
+void Foam::phaseSystem::predictThermophysicalTransport()
+{
+    forAll(phaseModels_, phasei)
+    {
+        phaseModels_[phasei].predictThermophysicalTransport();
+    }
+}
+
+
 void Foam::phaseSystem::correctMomentumTransport()
 {
     forAll(phaseModels_, phasei)

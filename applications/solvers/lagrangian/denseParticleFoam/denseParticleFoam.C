@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
                 #include "pEqn.H"
             }
 
-            if (pimple.turbCorr())
+            if (pimple.correctTransport())
             {
                 continuousPhaseTurbulence->correct();
             }

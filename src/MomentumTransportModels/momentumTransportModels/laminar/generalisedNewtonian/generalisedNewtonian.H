@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,8 +119,12 @@ public:
         //- Return the effective viscosity on patch
         virtual tmp<scalarField> nuEff(const label patchi) const;
 
-        //- Correct the generalisedNewtonian viscosity
-        virtual void correct();
+        //- Predict the generalisedNewtonian viscosity
+        virtual void predict();
+
+        //- The generalisedNewtonian viscosity is not corrected
+        virtual void correct()
+        {}
 };
 
 

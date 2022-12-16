@@ -241,7 +241,6 @@ template<class BasePhaseModel>
 void Foam::MovingPhaseModel<BasePhaseModel>::correct()
 {
     BasePhaseModel::correct();
-    thermophysicalTransport_->predict();
 }
 
 
@@ -266,6 +265,22 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correctKinematics()
     {
         K_.ref() = 0.5*magSqr(this->U());
     }
+}
+
+
+template<class BasePhaseModel>
+void Foam::MovingPhaseModel<BasePhaseModel>::predictMomentumTransport()
+{
+    BasePhaseModel::predictMomentumTransport();
+    momentumTransport_->predict();
+}
+
+
+template<class BasePhaseModel>
+void Foam::MovingPhaseModel<BasePhaseModel>::predictThermophysicalTransport()
+{
+    BasePhaseModel::predictThermophysicalTransport();
+    thermophysicalTransport_->predict();
 }
 
 

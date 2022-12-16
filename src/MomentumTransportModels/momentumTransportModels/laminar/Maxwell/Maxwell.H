@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,8 +181,11 @@ public:
             volVectorField& U
         ) const;
 
-        //- Solve the turbulence equations and correct eddy-Viscosity and
-        //  related properties
+        //- The Maxwell stress is not predicted
+        virtual void predict()
+        {}
+
+        //- Correct the Maxwell stress
         virtual void correct();
 };
 

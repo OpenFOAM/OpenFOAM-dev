@@ -125,6 +125,9 @@ public:
         // (required for the two-phase transport option)
         void correctPhasePhi();
 
+        //- Predict the phase or mixture transport models
+        void predict();
+
         //- Correct the phase or mixture transport models
         void correct();
 

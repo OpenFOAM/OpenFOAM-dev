@@ -66,7 +66,11 @@ Foam::solvers::fluid::~fluid()
 void Foam::solvers::fluid::prePredictor()
 {
     isothermalFluid::prePredictor();
-    thermophysicalTransport->predict();
+
+    if (pimple.predictTransport())
+    {
+        thermophysicalTransport->predict();
+    }
 }
 
 
@@ -74,7 +78,7 @@ void Foam::solvers::fluid::postCorrector()
 {
     isothermalFluid::postCorrector();
 
-    if (pimple.transportCorr())
+    if (pimple.correctTransport())
     {
         thermophysicalTransport->correct();
     }

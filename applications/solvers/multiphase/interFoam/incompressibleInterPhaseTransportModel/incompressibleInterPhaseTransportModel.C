@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,6 +144,20 @@ void Foam::incompressibleInterPhaseTransportModel::correctPhasePhi()
     if (twoPhaseTransport_)
     {
         alphaPhi2_.ref() = (phi_ - alphaPhi10_);
+    }
+}
+
+
+void Foam::incompressibleInterPhaseTransportModel::predict()
+{
+    if (twoPhaseTransport_)
+    {
+        turbulence1_->predict();
+        turbulence2_->predict();
+    }
+    else
+    {
+        turbulence_->predict();
     }
 }
 

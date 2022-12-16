@@ -134,6 +134,10 @@ void Foam::momentumTransportModel::validate()
 {}
 
 
+void Foam::momentumTransportModel::predict()
+{}
+
+
 void Foam::momentumTransportModel::correct()
 {}
 
