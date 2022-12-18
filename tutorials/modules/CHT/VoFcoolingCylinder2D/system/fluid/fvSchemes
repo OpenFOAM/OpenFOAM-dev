@@ -36,7 +36,8 @@ divSchemes
     div(rhoPhi,U)       Gauss linearUpwind limited;
 
     turbulence          Gauss limitedLinear 1;
-    div(rhoPhi,T)       $turbulence;
+    div(alphaRhoPhi,e)  $turbulence;
+    div(alphaRhoPhi,T)  Gauss upwind;
     div(rhoPhi,K)       $turbulence;
     div(phi,p)          $turbulence;
     div(phi,k)          $turbulence;

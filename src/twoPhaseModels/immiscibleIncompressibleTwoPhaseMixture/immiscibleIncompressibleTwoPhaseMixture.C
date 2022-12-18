@@ -40,7 +40,6 @@ immiscibleIncompressibleTwoPhaseMixture(const volVectorField& U)
 void Foam::immiscibleIncompressibleTwoPhaseMixture::correct()
 {
     incompressibleTwoPhaseMixture::correct();
-    interfaceProperties::correct();
 }
 
 

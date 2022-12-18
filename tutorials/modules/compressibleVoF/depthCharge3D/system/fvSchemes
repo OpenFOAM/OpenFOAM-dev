@@ -29,7 +29,10 @@ divSchemes
     div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
 
     div(rhoPhi,U)  Gauss upwind;
-    div(rhoPhi,T)  Gauss upwind;
+
+    div(alphaRhoPhi,e) Gauss upwind;
+    div(alphaRhoPhi,T) Gauss upwind;
+
     div(rhoPhi,K)  Gauss upwind;
     div(phi,p)      Gauss upwind;
     div(phi,k)      Gauss upwind;

@@ -89,7 +89,7 @@ Foam::fv::VoFClouds::VoFClouds
 
 Foam::wordList Foam::fv::VoFClouds::addSupFields() const
 {
-    return wordList({thermo_.rho()().name(), "U", "T"});
+    return wordList({thermo_.rho()().name(), thermo_.he().name(), "U"});
 }
 
 
@@ -108,7 +108,7 @@ void Foam::fv::VoFClouds::correct()
 
 void Foam::fv::VoFClouds::addSup
 (
-    const volScalarField& rho,
+    const volScalarField& alpha,
     fvMatrix<scalar>& eqn,
     const word& fieldName
 ) const
@@ -122,13 +122,31 @@ void Foam::fv::VoFClouds::addSup
     {
         eqn += clouds_.Srho();
     }
-    else if (fieldName == "T")
+    else
     {
-        const volScalarField::Internal Cv(thermo_.Cv());
+        FatalErrorInFunction
+            << "Support for field " << fieldName << " is not implemented"
+            << exit(FatalError);
+    }
+}
 
-        eqn +=
-            clouds_.Sh(eqn.psi())()/Cv
-          + clouds_.Srho()*(eqn.psi() - thermo_.he()/Cv);
+
+void Foam::fv::VoFClouds::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<scalar>& eqn,
+    const word& fieldName
+) const
+{
+    if (debug)
+    {
+        Info<< type() << ": applying source to " << eqn.psi().name() << endl;
+    }
+
+    if (fieldName == thermo_.he().name())
+    {
+        eqn += clouds_.Sh(eqn.psi());
     }
     else
     {

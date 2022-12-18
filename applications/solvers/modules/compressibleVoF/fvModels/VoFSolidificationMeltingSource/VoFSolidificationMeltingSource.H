@@ -88,6 +88,9 @@ SourceFiles
 
 namespace Foam
 {
+
+class compressibleTwoPhaseMixture;
+
 namespace fv
 {
 
@@ -118,6 +121,9 @@ class VoFSolidificationMeltingSource
 
         //- Coefficient used in porosity calc - default = 0.001
         scalar q_;
+
+        //- VoF thermo
+        const compressibleTwoPhaseMixture& thermo_;
 
         //- Solid phase fraction
         mutable volScalarField alphaSolid_;
@@ -171,15 +177,16 @@ public:
 
         // Add explicit and implicit contributions to compressible equation
 
-            //- Add explicit contribution to compressible enthalpy equation
+            //- Add explicit contribution to phase energy equation
             virtual void addSup
             (
+                const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
                 const word& fieldName
             ) const;
 
-            //- Add implicit contribution to compressible momentum equation
+            //- Add implicit contribution to mixture momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,

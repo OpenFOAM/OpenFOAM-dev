@@ -215,7 +215,8 @@
 
         alpha2 = 1.0 - alpha1;
 
-        mixture.correct();
+        // Correct only the mixture interface for the interface compression flux
+        mixture.interfaceProperties::correct();
     }
 
     if (alphaApplyPrevCorr && MULESCorr)
@@ -228,19 +229,13 @@
         talphaPhi1Corr0.clear();
     }
 
-    #include "rhofs.H"
-
     if
     (
         word(mesh.schemes().ddt("ddt(rho,U)"))
-     == fv::EulerDdtScheme<vector>::typeName
-     || word(mesh.schemes().ddt("ddt(rho,U)"))
-     == fv::localEulerDdtScheme<vector>::typeName
+     != fv::EulerDdtScheme<vector>::typeName
+     && word(mesh.schemes().ddt("ddt(rho,U)"))
+     != fv::localEulerDdtScheme<vector>::typeName
     )
-    {
-        rhoPhi = alphaPhi1*(rho1f - rho2f) + phiCN*rho2f;
-    }
-    else
     {
         if (ocCoeff > 0)
         {
@@ -248,9 +243,6 @@
             alphaPhi1 =
                 (alphaPhi1 - (1.0 - cnCoeff)*alphaPhi1.oldTime())/cnCoeff;
         }
-
-        // Calculate the end-of-time-step mass flux
-        rhoPhi = alphaPhi1*(rho1f - rho2f) + phi*rho2f;
     }
 
     Info<< "Phase-1 volume fraction = "

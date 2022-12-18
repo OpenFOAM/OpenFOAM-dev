@@ -33,10 +33,11 @@ divSchemes
     div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
     div(rhoPhi,U)   Gauss limitedLinear 1;
     div(rhoPhi,K)   Gauss limitedLinear 1;
-    div(rhoPhi,T)   Gauss limitedLinear 1;
+    div(phi,p)      Gauss upwind;
+    div(alphaRhoPhi,e) Gauss limitedLinear 1;
+    div(alphaRhoPhi,T) Gauss upwind;
     div(rhoPhi,k)   Gauss upwind;
     div(rhoPhi,epsilon) Gauss upwind;
-    div(phi,p)      Gauss upwind;
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 

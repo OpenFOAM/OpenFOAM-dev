@@ -77,10 +77,10 @@ class compressibleInterPhaseTransportModel
         const surfaceScalarField& alphaPhi1_;
 
         //- Phase-1 mass-flux (constructed for two-phase transport)
-        tmp<surfaceScalarField> alphaRhoPhi1_;
+        const surfaceScalarField& alphaRhoPhi1_;
 
         //- Phase-2 mass-flux (constructed for two-phase transport)
-        tmp<surfaceScalarField> alphaRhoPhi2_;
+        const surfaceScalarField& alphaRhoPhi2_;
 
         //- Mixture transport model (constructed for mixture transport)
         autoPtr<compressible::momentumTransportModel> mixtureMomentumTransport_;
@@ -106,6 +106,8 @@ public:
             const surfaceScalarField& phi,
             const surfaceScalarField& rhoPhi,
             const surfaceScalarField& alphaPhi1,
+            const surfaceScalarField& alphaRhoPhi1,
+            const surfaceScalarField& alphaRhoPhi2,
             const compressibleTwoPhaseMixture& mixture
         );
 
@@ -120,10 +122,6 @@ public:
 
         //- Return the effective momentum stress divergence
         tmp<fvVectorMatrix> divDevTau(volVectorField& U) const;
-
-        //- Correct the phase mass-fluxes
-        // (required for the two-phase transport option)
-        void correctPhasePhi();
 
         //- Predict the phase or mixture transport models
         void predict();

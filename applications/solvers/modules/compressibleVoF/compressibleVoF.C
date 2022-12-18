@@ -96,6 +96,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
     mixture(U),
 
     alpha1(mixture.alpha1()),
+    alpha2(mixture.alpha2()),
 
     alphaRestart
     (
@@ -169,6 +170,18 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         phi*fvc::interpolate(alpha1)
     ),
 
+    alphaRhoPhi1
+    (
+        IOobject::groupName("alphaRhoPhi", alpha1.group()),
+        fvc::interpolate(mixture.thermo1().rho())*alphaPhi1
+    ),
+
+    alphaRhoPhi2
+    (
+        IOobject::groupName("alphaRhoPhi", alpha2.group()),
+        fvc::interpolate(mixture.thermo2().rho())*(phi - alphaPhi1)
+    ),
+
     K("K", 0.5*magSqr(U)),
 
     momentumTransport
@@ -178,6 +191,8 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         phi,
         rhoPhi,
         alphaPhi1,
+        alphaRhoPhi1,
+        alphaRhoPhi2,
         mixture
     ),
 
@@ -330,7 +345,6 @@ void Foam::solvers::compressibleVoF::prePredictor()
 {
     fvModels().correct();
     alphaPredictor();
-    momentumTransport.correctPhasePhi();
 
     if (pimple.predictTransport())
     {

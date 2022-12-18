@@ -70,9 +70,9 @@ class incompressibleInterPhaseTransportModel
         const surfaceScalarField& phi_;
 
         //- Phase volumetric flux
-        const surfaceScalarField& alphaPhi10_;
+        const surfaceScalarField& alphaPhi1_;
 
-        //- Phase-2 mass-flux (constructed from alphaPhi10_ and phi_)
+        //- Phase-2 mass-flux (constructed from alphaPhi1_ and phi_)
         tmp<surfaceScalarField> alphaPhi2_;
 
         //- Mixture transport model (constructed for mixture transport)
@@ -94,7 +94,7 @@ public:
         (
             const volVectorField& U,
             const surfaceScalarField& phi,
-            const surfaceScalarField& alphaPhi10,
+            const surfaceScalarField& alphaPhi1,
             const incompressibleTwoPhaseMixture& mixture
         );
 

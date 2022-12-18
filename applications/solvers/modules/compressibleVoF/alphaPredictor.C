@@ -36,8 +36,6 @@ void Foam::solvers::compressibleVoF::alphaPredictor()
 {
     #include "alphaControls.H"
 
-    volScalarField& alpha2(mixture.alpha2());
-
     const volScalarField& rho1 = mixture.thermo1().rho();
     const volScalarField& rho2 = mixture.thermo2().rho();
 
@@ -47,30 +45,6 @@ void Foam::solvers::compressibleVoF::alphaPredictor()
     {
         dimensionedScalar totalDeltaT = runTime.deltaT();
 
-        talphaPhi1 = new surfaceScalarField
-        (
-            IOobject
-            (
-                "alphaPhi1",
-                runTime.name(),
-                mesh
-            ),
-            mesh,
-            dimensionedScalar(alphaPhi1.dimensions(), 0)
-        );
-
-        surfaceScalarField rhoPhiSum
-        (
-            IOobject
-            (
-                "rhoPhiSum",
-                runTime.name(),
-                mesh
-            ),
-            mesh,
-            dimensionedScalar(rhoPhi.dimensions(), 0)
-        );
-
         tmp<volScalarField> trSubDeltaT;
 
         if (LTS)
@@ -79,31 +53,59 @@ void Foam::solvers::compressibleVoF::alphaPredictor()
                 fv::localEulerDdt::localRSubDeltaT(mesh, nAlphaSubCycles);
         }
 
+        // Create a temporary alphaPhi1 to accumulate the sub-cycled alphaPhi1
+        tmp<surfaceScalarField> talphaPhi1
+        (
+            surfaceScalarField::New
+            (
+                "alphaPhi1",
+                mesh,
+                dimensionedScalar(alphaPhi1.dimensions(), 0)
+            )
+        );
+
+        // Sub-cycle on both alpha1 and alpha2
+        List<volScalarField*> alphaPtrs({&alpha1, &alpha2});
+
         for
         (
-            subCycle<volScalarField> alphaSubCycle(alpha1, nAlphaSubCycles);
+            subCycle<volScalarField, subCycleFields> alphaSubCycle
+            (
+                alphaPtrs,
+                nAlphaSubCycles
+            );
             !(++alphaSubCycle).end();
         )
         {
             #include "alphaEqn.H"
             talphaPhi1.ref() += (runTime.deltaT()/totalDeltaT)*alphaPhi1;
-            rhoPhiSum += (runTime.deltaT()/totalDeltaT)*rhoPhi;
         }
 
         alphaPhi1 = talphaPhi1();
-        rhoPhi = rhoPhiSum;
     }
     else
     {
         #include "alphaEqn.H"
     }
 
-    contErr =
-        (
-            fvc::ddt(rho)()() + fvc::div(rhoPhi)()()
-          - (fvModels().source(alpha1, rho1)&rho1)()
-          - (fvModels().source(alpha2, rho2)&rho2)()
-        );
+    mixture.correct();
+
+    alphaRhoPhi1 = fvc::interpolate(rho1)*alphaPhi1;
+    alphaRhoPhi2 = fvc::interpolate(rho2)*(phi - alphaPhi1);
+
+    rhoPhi = alphaRhoPhi1 + alphaRhoPhi2;
+
+    contErr1 =
+    (
+        fvc::ddt(alpha1, rho1)()() + fvc::div(alphaRhoPhi1)()()
+      - (fvModels().source(alpha1, rho1)&rho1)()
+    );
+
+    contErr2 =
+    (
+        fvc::ddt(alpha2, rho2)()() + fvc::div(alphaRhoPhi2)()()
+      - (fvModels().source(alpha2, rho2)&rho2)()
+    );
 }
 
 

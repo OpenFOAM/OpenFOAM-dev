@@ -34,8 +34,6 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
 {
     volScalarField& p = mixture.p();
 
-    const volScalarField& alpha2(mixture.alpha2());
-
     const volScalarField& rho1 = mixture.rho1();
     const volScalarField& rho2 = mixture.rho2();
 

@@ -31,7 +31,8 @@ void Foam::solvers::compressibleVoF::momentumPredictor()
 {
     tUEqn =
     (
-        fvm::ddt(rho, U) + fvm::div(rhoPhi, U) - fvm::Sp(contErr(), U)
+        fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
+      - fvm::Sp(contErr1() + contErr2(), U)
       + MRF.DDt(rho, U)
       + momentumTransport.divDevTau(U)
      ==

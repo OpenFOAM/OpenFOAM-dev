@@ -95,8 +95,11 @@ protected:
         //- The compressible two-phase mixture
         immiscibleCompressibleTwoPhaseMixture mixture;
 
-        //- Reference to the primary phase-fraction
+        //- Reference to the phase1-fraction
         volScalarField& alpha1;
+
+        //- Reference to the phase2-fraction
+        volScalarField& alpha2;
 
         //- Switch indicating if this is a restart
         bool alphaRestart;
@@ -137,6 +140,12 @@ protected:
         // Phase-1 volumetric flux
         surfaceScalarField alphaPhi1;
 
+        // Phase-1 mass-flux
+        surfaceScalarField alphaRhoPhi1;
+
+        // Phase-2 mass-flux
+        surfaceScalarField alphaRhoPhi2;
+
         //- Kinetic energy field
         //  Used in the energy equation
         volScalarField K;
@@ -164,7 +173,9 @@ protected:
 
         tmp<volScalarField> rAU;
 
-        tmp<volScalarField::Internal> contErr;
+        tmp<volScalarField::Internal> contErr1;
+
+        tmp<volScalarField::Internal> contErr2;
 
         //- MULES Correction
         tmp<surfaceScalarField> talphaPhi1Corr0;

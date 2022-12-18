@@ -92,6 +92,15 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
     relax_(NaN),
     Cu_(NaN),
     q_(NaN),
+
+    thermo_
+    (
+        mesh().lookupObject<compressibleTwoPhaseMixture>
+        (
+            "phaseProperties"
+        )
+    ),
+
     alphaSolid_
     (
         IOobject
@@ -115,12 +124,13 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
 
 Foam::wordList Foam::fv::VoFSolidificationMeltingSource::addSupFields() const
 {
-    return wordList({"U", "T"});
+    return wordList({"U", thermo_.thermo1().he().name()});
 }
 
 
 void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
+    const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
     const word& fieldName
@@ -131,24 +141,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    const compressibleTwoPhaseMixture& thermo
-    (
-        mesh().lookupObject<compressibleTwoPhaseMixture>
-        (
-            "phaseProperties"
-        )
-    );
-
-    const volScalarField CpVoF(thermo.thermo1().Cp());
-
-    if (eqn.psi().dimensions() == dimTemperature)
-    {
-        eqn += L_/CpVoF*(fvc::ddt(rho, alphaSolid_));
-    }
-    else
-    {
-        eqn += L_*(fvc::ddt(rho, alphaSolid_));
-    }
+    eqn += L_*(fvc::ddt(rho, alphaSolid_));
 }
 
 

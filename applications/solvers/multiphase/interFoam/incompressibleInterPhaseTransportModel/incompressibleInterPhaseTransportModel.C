@@ -32,14 +32,14 @@ incompressibleInterPhaseTransportModel
 (
     const volVectorField& U,
     const surfaceScalarField& phi,
-    const surfaceScalarField& alphaPhi10,
+    const surfaceScalarField& alphaPhi1,
     const incompressibleTwoPhaseMixture& mixture
 )
 :
     twoPhaseTransport_(false),
     mixture_(mixture),
     phi_(phi),
-    alphaPhi10_(alphaPhi10)
+    alphaPhi1_(alphaPhi1)
 {
     {
         IOdictionary momentumTransport
@@ -75,7 +75,7 @@ incompressibleInterPhaseTransportModel
             new surfaceScalarField
             (
                 IOobject::groupName("alphaPhi", alpha2.group()),
-                (phi_ - alphaPhi10_)
+                (phi_ - alphaPhi1_)
             )
         );
 
@@ -85,7 +85,7 @@ incompressibleInterPhaseTransportModel
             (
                 alpha1,
                 U,
-                alphaPhi10_,
+                alphaPhi1_,
                 phi,
                 mixture.nuModel1()
             )
@@ -143,7 +143,7 @@ void Foam::incompressibleInterPhaseTransportModel::correctPhasePhi()
 {
     if (twoPhaseTransport_)
     {
-        alphaPhi2_.ref() = (phi_ - alphaPhi10_);
+        alphaPhi2_.ref() = (phi_ - alphaPhi1_);
     }
 }
 
