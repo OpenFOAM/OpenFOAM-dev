@@ -904,7 +904,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::alphaDByAf
         (
             alphaDByAf,
             fvc::interpolate(max(phase, scalar(0)))
-           *fvc::interpolate(max(1 - phase, scalar(0))) // Optional
            *(
                 rAUfs.size()
 
