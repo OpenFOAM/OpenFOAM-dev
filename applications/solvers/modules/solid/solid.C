@@ -71,7 +71,7 @@ void Foam::solvers::solid::correctDiNum()
     const scalar meanDiNum =
         average(kapparhoCpbyDelta).value()*runTime.deltaTValue();
 
-    Info<< "Region: " << mesh.name() << " Diffusion Number mean: " << meanDiNum
+    Info<< "Diffusion Number mean: " << meanDiNum
         << " max: " << DiNum << endl;
 }
 
