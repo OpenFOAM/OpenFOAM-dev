@@ -63,7 +63,7 @@ void Foam::functionObjects::fieldAverage::initialise()
     {
         if (totalTime_[fieldi] < 0)
         {
-            totalTime_[fieldi] = obr_.time().deltaTValue();
+            totalTime_[fieldi] = 0;
         }
     }
 
@@ -89,7 +89,7 @@ void Foam::functionObjects::fieldAverage::restart()
     Log << "    Restarting averaging at time " << obr_.time().name() << nl;
 
     // Clear the times
-    totalIter_ = 1;
+    totalIter_ = 0;
     totalTime_ = -1;
 
     // Clear mean fields
@@ -144,6 +144,13 @@ void Foam::functionObjects::fieldAverage::calcAverages()
         initialise();
     }
 
+    // Increment the time and iteration totals
+    forAll(faItems_, fieldi)
+    {
+        totalIter_[fieldi]++;
+        totalTime_[fieldi] += obr_.time().deltaTValue();
+    }
+
     Log << "    Calculating averages" << nl;
 
     addMeanSqrToPrime2Mean<scalar, scalar>();
@@ -157,12 +164,6 @@ void Foam::functionObjects::fieldAverage::calcAverages()
 
     calculatePrime2MeanFields<scalar, scalar>();
     calculatePrime2MeanFields<vector, symmTensor>();
-
-    forAll(faItems_, fieldi)
-    {
-        totalIter_[fieldi]++;
-        totalTime_[fieldi] += obr_.time().deltaTValue();
-    }
 
     Log << endl;
 }
@@ -243,7 +244,7 @@ void Foam::functionObjects::fieldAverage::read
                 dict.lookup("fields"),
                 fieldAverageItem::iNew(*this)
             );
-        totalIter_.setSize(faItems_.size(), 1);
+        totalIter_.setSize(faItems_.size(), 0);
         totalTime_.setSize(faItems_.size(), -1);
 
         typeIOobject<timeIOdictionary> propsDictHeader
@@ -321,7 +322,7 @@ void Foam::functionObjects::fieldAverage::read
                 dict.lookup("fields"),
                 fieldAverageItem::iNew(*this)
             );
-        totalIter_.resize(faItems_.size(), 1);
+        totalIter_.resize(faItems_.size(), 0);
         totalTime_.resize(faItems_.size(), -1);
 
         // Map from field to old-field index
