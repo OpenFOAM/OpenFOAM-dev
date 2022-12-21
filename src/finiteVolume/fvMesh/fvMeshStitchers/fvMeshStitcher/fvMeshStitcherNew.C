@@ -43,7 +43,6 @@ Foam::autoPtr<Foam::fvMeshStitcher> Foam::fvMeshStitcher::New
             (
                 "dynamicMeshDict",
                 mesh.time().constant(),
-                mesh.dbDir(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::NO_WRITE,
