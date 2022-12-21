@@ -123,8 +123,8 @@ public:
         //- Return the list of fields constrained by the fvConstraint
         virtual wordList constrainedFields() const;
 
-        //- Constrain the energy field
-        virtual bool constrain(volScalarField& he) const;
+        //- Constrain the pressure field
+        virtual bool constrain(volScalarField& p) const;
 
         //- Update for mesh motion
         virtual bool movePoints();
