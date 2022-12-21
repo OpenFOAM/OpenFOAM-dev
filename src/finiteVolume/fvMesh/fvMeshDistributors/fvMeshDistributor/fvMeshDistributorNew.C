@@ -42,7 +42,6 @@ Foam::autoPtr<Foam::fvMeshDistributor> Foam::fvMeshDistributor::New
             (
                 "dynamicMeshDict",
                 mesh.time().constant(),
-                mesh.dbDir(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::NO_WRITE,

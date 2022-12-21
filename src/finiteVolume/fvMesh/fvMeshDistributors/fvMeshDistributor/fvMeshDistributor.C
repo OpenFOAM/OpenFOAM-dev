@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,6 @@ Foam::fvMeshDistributor::fvMeshDistributor(fvMesh& mesh)
             (
                 "dynamicMeshDict",
                 mesh.time().constant(),
-                mesh.dbDir(),
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::NO_WRITE,
