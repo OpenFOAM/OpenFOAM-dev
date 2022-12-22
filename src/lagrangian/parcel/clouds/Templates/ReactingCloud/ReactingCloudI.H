@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
             sourceField.primitiveFieldRef() =
                 rhoTrans_[i]/(this->db().time().deltaTValue()*this->mesh().V());
 
-            const dimensionedScalar Yismall("Yismall", dimless, small);
+            const dimensionedScalar Yismall(dimless, small);
 
             return
                 fvm::Sp(neg(sourceField)*sourceField/(Yi + Yismall), Yi)
@@ -178,40 +178,48 @@ Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
 {
     if (this->solution().coupled())
     {
-        tmp<volScalarField> trhoTrans
-        (
-            volScalarField::New
-            (
-                this->name() + ":rhoTrans",
-                this->mesh(),
-                dimensionedScalar(dimMass/dimTime/dimVolume, 0)
-            )
-        );
-
-        scalarField& sourceField = trhoTrans.ref();
-
         if (this->solution().semiImplicit("rho"))
         {
+            tmp<volScalarField> trhoTrans =
+                volScalarField::New
+                (
+                    this->name() + ":rhoTrans",
+                    this->mesh(),
+                    dimensionedScalar(dimMass/dimTime/dimVolume, 0)
+                );
 
+            scalarField& sourceField = trhoTrans.ref();
             forAll(rhoTrans_, i)
             {
                 sourceField += rhoTrans_[i];
             }
             sourceField /= this->db().time().deltaTValue()*this->mesh().V();
 
-            return fvm::SuSp(trhoTrans()/rho, rho);
+            return
+                fvm::Sp(neg(trhoTrans())*trhoTrans()/rho, rho)
+              + pos0(trhoTrans())*trhoTrans();
         }
         else
         {
             tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(rho, dimMass/dimTime));
             fvScalarMatrix& fvm = tfvm.ref();
 
+            tmp<volScalarField> trhoTransV =
+                volScalarField::New
+                (
+                    this->name() + ":rhoTransV",
+                    this->mesh(),
+                    dimensionedScalar(dimMass/dimTime, 0)
+                );
+
+            scalarField& sourceField = trhoTransV.ref();
             forAll(rhoTrans_, i)
             {
                 sourceField += rhoTrans_[i];
             }
+            sourceField /= this->db().time().deltaTValue();
 
-            fvm.source() = -trhoTrans()/this->db().time().deltaT();
+            fvm.source() = -trhoTransV();
 
             return tfvm;
         }
