@@ -607,9 +607,9 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
             Tf = (H1*T1 + H2*T2 + dmdtfNew*L)/(H1 + H2);
 
             Info<< Tf.name()
-                << ": min = " << min(Tf.primitiveField())
-                << ", mean = " << average(Tf.primitiveField())
-                << ", max = " << max(Tf.primitiveField())
+                << ": min = " << gMin(Tf.primitiveField())
+                << ", mean = " << gAverage(Tf.primitiveField())
+                << ", max = " << gMax(Tf.primitiveField())
                 << endl;
 
             const scalar dmdtfRelax =
@@ -618,9 +618,9 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
             dmdtf = (1 - dmdtfRelax)*dmdtf + dmdtfRelax*dmdtfNew;
 
             Info<< dmdtf.name()
-                << ": min = " << min(dmdtf.primitiveField())
-                << ", mean = " << average(dmdtf.primitiveField())
-                << ", max = " << max(dmdtf.primitiveField())
+                << ": min = " << gMin(dmdtf.primitiveField())
+                << ", mean = " << gAverage(dmdtf.primitiveField())
+                << ", max = " << gMax(dmdtf.primitiveField())
                 << ", integral = " << fvc::domainIntegrate(dmdtf).value()
                 << endl;
         }
@@ -683,9 +683,9 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
             if (wallBoilingActive)
             {
                 Info<< nDmdtf.name()
-                    << ": min = " << min(nDmdtf.primitiveField())
-                    << ", mean = " << average(nDmdtf.primitiveField())
-                    << ", max = " << max(nDmdtf.primitiveField())
+                    << ": min = " << gMin(nDmdtf.primitiveField())
+                    << ", mean = " << gAverage(nDmdtf.primitiveField())
+                    << ", max = " << gMax(nDmdtf.primitiveField())
                     << ", integral = " << fvc::domainIntegrate(nDmdtf).value()
                     << endl;
             }
