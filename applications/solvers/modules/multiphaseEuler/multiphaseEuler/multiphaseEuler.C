@@ -244,7 +244,6 @@ void Foam::solvers::multiphaseEuler::prePredictor()
     if (pimple.flow() && pimple.predictTransport())
     {
         fluid.predictMomentumTransport();
-        fluid.predictThermophysicalTransport();
     }
 
     if (pimple.thermophysics())
