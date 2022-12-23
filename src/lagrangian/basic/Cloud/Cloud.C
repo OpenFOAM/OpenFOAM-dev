@@ -418,6 +418,8 @@ void Foam::Cloud<ParticleType>::move
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
 {
+    if (!map.mesh().topoChanged()) return;
+
     // Ask for the tetBasePtIs to trigger all processors to build
     // them, otherwise, if some processors have no particles then
     // there is a comms mismatch.
