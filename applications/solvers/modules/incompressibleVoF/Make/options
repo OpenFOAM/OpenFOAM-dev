@@ -1,0 +1,31 @@
+EXE_INC = \
+    -I$(FOAM_SOLVERS)/modules/VoFSolver/lnInclude \
+    -I$(FOAM_SOLVERS)/modules/fluidSolver/lnInclude \
+    -IincompressibleInterPhaseTransportModel/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/VoF \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceCompression/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/incompressibleTwoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseIncompressible/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude
+
+LIB_LIBS = \
+    -lVoFSolver \
+    -lincompressibleInterPhaseTransportModel \
+    -lphysicalProperties \
+    -linterfaceCompression \
+    -lincompressibleTwoPhaseMixture \
+    -lmomentumTransportModels \
+    -lincompressibleMomentumTransportModels \
+    -lphaseIncompressibleMomentumTransportModels \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lfvModels \
+    -lfvConstraints \
+    -lsampling

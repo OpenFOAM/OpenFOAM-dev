@@ -45,7 +45,7 @@ SourceFiles
 #define compressibleInterPhaseTransportModel_H
 
 #include "twoPhaseMixture.H"
-#include "immiscibleCompressibleTwoPhaseMixture.H"
+#include "compressibleTwoPhaseMixture.H"
 #include "compressibleMomentumTransportModels.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 

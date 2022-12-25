@@ -68,6 +68,7 @@
             << endl;
     }
 
+    mixture.correct();
+
     rhoPhi = alphaPhi*(rho1 - rho2) + phi*rho2;
-    rho = mixture.rho();
 }

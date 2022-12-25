@@ -124,6 +124,15 @@ public:
             return alpha2_;
         }
 
+        //- Return the mixture density
+        virtual const volScalarField& rho() const = 0;
+
+        //- Interface fraction in a cell
+        tmp<volScalarField::Internal> interfaceFraction() const;
+
+        //- Correct the mixture properties
+        virtual void correct() = 0;
+
         //- Read base phaseProperties dictionary
         virtual bool read() = 0;
 };

@@ -1,31 +1,9 @@
-#include "readThermodynamicProperties.H"
+Info<< "Reading phaseProperties\n" << endl;
 
-Info<< "Reading field p\n" << endl;
-volScalarField p
-(
-    IOobject
-    (
-        "p",
-        runTime.name(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
+cavitatingTwoPhaseMixture mixture(mesh);
 
-volScalarField rho
-(
-    IOobject
-    (
-        "rho",
-        runTime.name(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
+volScalarField& p(mixture.p());
+volScalarField& rho(mixture.rho());
 
 Info<< "Reading field U\n" << endl;
 volVectorField U
@@ -57,33 +35,6 @@ surfaceScalarField rhoPhi
         IOobject::NO_WRITE
     ),
     fvc::interpolate(rho)*phi
-);
-
-Info<< "Reading phaseProperties\n" << endl;
-
-incompressibleTwoPhaseMixture mixture(mesh);
-
-volScalarField& alphav(mixture.alpha1());
-alphav.oldTime();
-
-volScalarField& alphal(mixture.alpha2());
-
-Info<< "Creating compressibilityModel\n" << endl;
-autoPtr<barotropicCompressibilityModel> psiModel =
-    barotropicCompressibilityModel::New
-    (
-        thermodynamicProperties,
-        alphav
-    );
-
-const volScalarField& psi = psiModel->psi();
-
-rho == max
-(
-    psi*p
-  + alphal*rhol0
-  + ((alphav*psiv + alphal*psil) - psi)*pSat,
-    rhoMin
 );
 
 mesh.schemes().setFluxRequired(p.name());

@@ -75,10 +75,12 @@ class incompressibleTwoPhaseInteractingMixture
         //- Optional maximum dispersed phase-fraction (e.g. packing limit)
         scalar alphaMax_;
 
-        //- Optional MRF zones
-        IOMRFZoneList MRF_;
+        volScalarField rho_;
 
         volScalarField mu_;
+
+        //- Optional MRF zones
+        IOMRFZoneList MRF_;
 
         //- Dispersed phase relative velocity model
         autoPtr<relativeVelocityModel> UdmModel_;
@@ -134,8 +136,8 @@ public:
         //- Return const-access to the mixture velocity
         const volVectorField& U() const;
 
-        //- Return MRF zones
-        const IOMRFZoneList& MRF() const;
+        //- Return the mixture density
+        virtual const volScalarField& rho() const;
 
         //- Return the dynamic mixture viscosity
         tmp<volScalarField> mu() const;
@@ -143,17 +145,14 @@ public:
         //- Return the dynamic mixture viscosity for patch
         virtual tmp<scalarField> mu(const label patchi) const;
 
-        //- Return the mixture density
-        virtual tmp<volScalarField> rho() const;
-
-        //- Return the mixture density for patch
-        virtual tmp<scalarField> rho(const label patchi) const;
-
         //- Return the mixture viscosity
         virtual tmp<volScalarField> nu() const;
 
         //- Return the mixture viscosity for patch
         virtual tmp<scalarField> nu(const label patchi) const;
+
+        //- Return MRF zones
+        const IOMRFZoneList& MRF() const;
 
         //- Return the diffusion velocity of the dispersed phase
         const volVectorField& Udm() const;

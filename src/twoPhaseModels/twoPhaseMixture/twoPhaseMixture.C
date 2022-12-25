@@ -25,6 +25,8 @@ License
 
 #include "twoPhaseMixture.H"
 #include "viscosityModel.H"
+#include "surfaceInterpolate.H"
+#include "fvcGrad.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -205,6 +207,82 @@ Foam::twoPhaseMixture::twoPhaseMixture(const fvMesh& mesh)
 bool Foam::twoPhaseMixture::read()
 {
     return regIOobject::read();
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::twoPhaseMixture::interfaceFraction() const
+{
+    const fvMesh& mesh = alpha1_.mesh();
+
+    tmp<volScalarField::Internal> tA
+    (
+        volScalarField::Internal::New
+        (
+            "A",
+            mesh,
+            dimensionedScalar(dimless, 0)
+        )
+    );
+    volScalarField::Internal& A = tA.ref();
+
+    const surfaceVectorField& Sf = mesh.Sf();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
+
+    const surfaceScalarField alphaf(fvc::interpolate(alpha1_));
+
+    const volVectorField::Internal gradAlpha(fvc::grad(alpha1_));
+    const volVectorField::Internal n
+    (
+        gradAlpha/(mag(gradAlpha) + dimensionedScalar(dimless/dimLength, small))
+    );
+
+    const scalarField& ialpha = alpha1_;
+    const scalarField& ialphaf = alphaf;
+    scalarField sumnSf(mesh.nCells(), 0);
+
+    forAll(own, facei)
+    {
+        {
+            const scalar nSf(mag(n[own[facei]] & Sf[facei]));
+            A[own[facei]] += nSf*(ialphaf[facei] - ialpha[own[facei]]);
+            sumnSf[own[facei]] += nSf;
+        }
+        {
+            const scalar nSf(mag(n[nei[facei]] & Sf[facei]));
+            A[nei[facei]] += nSf*(ialphaf[facei] - ialpha[nei[facei]]);
+            sumnSf[nei[facei]] += nSf;
+        }
+    }
+
+    forAll(mesh.boundary(), patchi)
+    {
+        const labelUList& own = mesh.boundary()[patchi].faceCells();
+        const fvsPatchScalarField& palphaf = alphaf.boundaryField()[patchi];
+
+        forAll(mesh.boundary()[patchi], facei)
+        {
+            const scalar nSf(mag(n[own[facei]] & Sf[facei]));
+            A[own[facei]] += nSf*(palphaf[facei] - ialpha[own[facei]]);
+            sumnSf[own[facei]] += nSf;
+        }
+    }
+
+    scalarField& a = A.field();
+    forAll(a, i)
+    {
+        if (sumnSf[i] > small)
+        {
+            a[i] = 2*mag(a[i])/sumnSf[i];
+        }
+        else
+        {
+            a[i] = 0;
+        }
+    }
+
+    return tA;
 }
 
 

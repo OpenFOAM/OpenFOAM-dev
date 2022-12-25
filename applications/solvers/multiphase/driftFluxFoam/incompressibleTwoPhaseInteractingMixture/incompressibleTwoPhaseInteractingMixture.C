@@ -64,7 +64,19 @@ incompressibleTwoPhaseInteractingMixture
     ),
     alphaMax_(lookupOrDefault("alphaMax", 1.0)),
 
-    MRF_(U.mesh()),
+    rho_
+    (
+        IOobject
+        (
+            "rho",
+            U_.time().name(),
+            U_.mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        U_.mesh(),
+        dimensionedScalar("rho", dimDensity, 0)
+    ),
 
     mu_
     (
@@ -78,6 +90,8 @@ incompressibleTwoPhaseInteractingMixture
         dimensionedScalar(dimensionSet(1, -1, -1, 0, 0), 0),
         calculatedFvPatchScalarField::typeName
     ),
+
+    MRF_(U.mesh()),
 
     UdmModel_(relativeVelocityModel::New(*this, *this, g))
 {
@@ -156,11 +170,10 @@ Foam::incompressibleTwoPhaseInteractingMixture::U() const
     return U_;
 }
 
-
-const Foam::IOMRFZoneList&
-Foam::incompressibleTwoPhaseInteractingMixture::MRF() const
+const Foam::volScalarField&
+Foam::incompressibleTwoPhaseInteractingMixture::rho() const
 {
-    return MRF_;
+    return rho_;
 }
 
 
@@ -179,32 +192,23 @@ Foam::incompressibleTwoPhaseInteractingMixture::mu(const label patchi) const
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::incompressibleTwoPhaseInteractingMixture::rho() const
-{
-    return alpha1()*rhod_ + alpha2()*rhoc_;
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::incompressibleTwoPhaseInteractingMixture::rho(const label patchi) const
-{
-    return
-        alpha1().boundaryField()[patchi]*rhod_.value()
-      + alpha2().boundaryField()[patchi]*rhoc_.value();
-}
-
-
-Foam::tmp<Foam::volScalarField>
 Foam::incompressibleTwoPhaseInteractingMixture::nu() const
 {
-    return mu_/rho();
+    return mu_/rho_;
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::incompressibleTwoPhaseInteractingMixture::nu(const label patchi) const
 {
-    return mu_.boundaryField()[patchi]/rho(patchi);
+    return mu_.boundaryField()[patchi]/rho_.boundaryField()[patchi];
+}
+
+
+const Foam::IOMRFZoneList&
+Foam::incompressibleTwoPhaseInteractingMixture::MRF() const
+{
+    return MRF_;
 }
 
 
@@ -224,6 +228,7 @@ Foam::incompressibleTwoPhaseInteractingMixture::divTauDm() const
 
 void Foam::incompressibleTwoPhaseInteractingMixture::correct()
 {
+    rho_ = alpha1()*rhod_ + alpha2()*rhoc_;
     mu_ = muModel_->mu(rhoc_*nucModel_->nu(), U_);
     UdmModel_->correct();
 }

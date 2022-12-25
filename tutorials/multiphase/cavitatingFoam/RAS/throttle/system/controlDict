@@ -16,7 +16,7 @@ FoamFile
 
 application     cavitatingFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 

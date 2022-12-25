@@ -38,20 +38,7 @@ Info<< "Reading incompressibleTwoPhaseInteractingMixture\n" << endl;
 incompressibleTwoPhaseInteractingMixture mixture(U, phi, g);
 
 volScalarField& alpha1(mixture.alpha1());
-
-// Mixture density
-volScalarField rho
-(
-    IOobject
-    (
-        "rho",
-        runTime.name(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::NO_WRITE
-    ),
-    mixture.rho()
-);
+const volScalarField& rho(mixture.rho());
 
 // Mass flux
 surfaceScalarField rhoPhi

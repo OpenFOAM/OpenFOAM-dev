@@ -32,79 +32,58 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::compressibleVoF::alphaPredictor()
+void Foam::solvers::compressibleVoF::alphaSuSp
+(
+    const surfaceScalarField& phiCN,
+    tmp<volScalarField>& divU,
+    tmp<volScalarField::Internal>& Su,
+    tmp<volScalarField::Internal>& Sp
+)
 {
-    #include "alphaControls.H"
-
-    const volScalarField& rho1 = mixture.thermo1().rho();
-    const volScalarField& rho2 = mixture.thermo2().rho();
-
-    tmp<surfaceScalarField> talphaPhi1(alphaPhi1);
-
-    if (nAlphaSubCycles > 1)
-    {
-        dimensionedScalar totalDeltaT = runTime.deltaT();
-
-        tmp<volScalarField> trSubDeltaT;
-
-        if (LTS)
-        {
-            trSubDeltaT =
-                fv::localEulerDdt::localRSubDeltaT(mesh, nAlphaSubCycles);
-        }
-
-        // Create a temporary alphaPhi1 to accumulate the sub-cycled alphaPhi1
-        tmp<surfaceScalarField> talphaPhi1
-        (
-            surfaceScalarField::New
-            (
-                "alphaPhi1",
-                mesh,
-                dimensionedScalar(alphaPhi1.dimensions(), 0)
-            )
-        );
-
-        // Sub-cycle on both alpha1 and alpha2
-        List<volScalarField*> alphaPtrs({&alpha1, &alpha2});
-
-        for
-        (
-            subCycle<volScalarField, subCycleFields> alphaSubCycle
-            (
-                alphaPtrs,
-                nAlphaSubCycles
-            );
-            !(++alphaSubCycle).end();
-        )
-        {
-            #include "alphaEqn.H"
-            talphaPhi1.ref() += (runTime.deltaT()/totalDeltaT)*alphaPhi1;
-        }
-
-        alphaPhi1 = talphaPhi1();
-    }
-    else
-    {
-        #include "alphaEqn.H"
-    }
-
-    mixture.correct();
-
-    alphaRhoPhi1 = fvc::interpolate(rho1)*alphaPhi1;
-    alphaRhoPhi2 = fvc::interpolate(rho2)*(phi - alphaPhi1);
-
-    rhoPhi = alphaRhoPhi1 + alphaRhoPhi2;
-
-    contErr1 =
+    Sp = volScalarField::Internal::New
     (
-        fvc::ddt(alpha1, rho1)()() + fvc::div(alphaRhoPhi1)()()
-      - (fvModels().source(alpha1, rho1)&rho1)()
+        "Sp",
+        mesh,
+        dimensionedScalar(dgdt.dimensions(), 0)
     );
 
-    contErr2 =
+    Su = volScalarField::Internal::New
     (
-        fvc::ddt(alpha2, rho2)()() + fvc::div(alphaRhoPhi2)()()
-      - (fvModels().source(alpha2, rho2)&rho2)()
+        "Su",
+        mesh,
+        dimensionedScalar(dgdt.dimensions(), 0)
+    );
+
+    if (fvModels().addsSupToField(alpha1.name()))
+    {
+        // Phase change alpha1 source
+        const fvScalarMatrix alphaSup(fvModels().source(alpha1));
+
+        Su = alphaSup.Su();
+        Sp = alphaSup.Sp();
+    }
+
+    volScalarField::Internal& SpRef = Sp.ref();
+    volScalarField::Internal& SuRef = Su.ref();
+
+    forAll(dgdt, celli)
+    {
+        if (dgdt[celli] > 0.0)
+        {
+            SpRef[celli] -= dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
+            SuRef[celli] += dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
+        }
+        else if (dgdt[celli] < 0.0)
+        {
+            SpRef[celli] += dgdt[celli]/max(alpha1[celli], 1e-4);
+        }
+    }
+
+    divU =
+    (
+        mesh.moving()
+      ? fvc::div(phiCN + mesh.phi())
+      : fvc::div(phiCN)
     );
 }
 

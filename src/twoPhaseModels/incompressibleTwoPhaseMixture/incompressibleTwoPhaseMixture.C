@@ -50,6 +50,20 @@ Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
     rho1_("rho", dimDensity, nuModel1_()),
     rho2_("rho", dimDensity, nuModel2_()),
 
+    rho_
+    (
+        IOobject
+        (
+            "rho",
+            mesh.time().name(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        dimensionedScalar("rho", dimDensity, 0)
+    ),
+
     nu_
     (
         IOobject
@@ -68,17 +82,6 @@ Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField>
-Foam::incompressibleTwoPhaseMixture::rho() const
-{
-    return volScalarField::New
-    (
-        "rho",
-        alpha1()*rho1_ + (scalar(1) - alpha1())*rho2_
-    );
-}
-
 
 Foam::tmp<Foam::volScalarField>
 Foam::incompressibleTwoPhaseMixture::mu() const
@@ -151,6 +154,8 @@ bool Foam::incompressibleTwoPhaseMixture::read()
 
 void Foam::incompressibleTwoPhaseMixture::correct()
 {
+    rho_ = alpha1()*rho1_ + alpha2()*rho2_;
+
     nuModel1_->correct();
     nuModel2_->correct();
 

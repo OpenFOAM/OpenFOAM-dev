@@ -144,9 +144,6 @@ public:
         //  Field values are 1 near and 0 away from the interface.
         tmp<volScalarField> nearInterface() const;
 
-        //- Interface fraction in a cell
-        tmp<volScalarField::Internal> fraction() const;
-
         //- Correct the curvature
         void correct();
 

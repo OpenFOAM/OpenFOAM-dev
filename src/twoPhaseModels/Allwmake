@@ -13,8 +13,6 @@ wmake $targetType compressibleInterfaceProperties
 wmake $targetType twoPhaseMixture
 wmake $targetType incompressibleTwoPhaseMixture
 wmake $targetType compressibleTwoPhaseMixture
-wmake $targetType immiscibleIncompressibleTwoPhaseMixture
-wmake $targetType immiscibleCompressibleTwoPhaseMixture
 
 wmake $targetType incompressibleCavitation
 wmake $targetType compressibleCavitation

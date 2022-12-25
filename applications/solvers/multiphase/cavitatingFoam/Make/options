@@ -1,23 +1,20 @@
 EXE_INC = \
+    -IcavitatingTwoPhaseMixture \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/VoF \
-    -I$(LIB_SRC)/twoPhaseModels/interfaceCompression/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/incompressibleTwoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/barotropicCompressibilityModel/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/barotropicCompressibilityModel/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
     -lphysicalProperties \
-    -linterfaceCompression \
-    -lincompressibleTwoPhaseMixture \
+    -ltwoPhaseMixture \
+    -lbarotropicCompressibilityModel \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
-    -lbarotropicCompressibilityModel \
     -lfiniteVolume \
     -lmeshTools \
     -lfvModels \

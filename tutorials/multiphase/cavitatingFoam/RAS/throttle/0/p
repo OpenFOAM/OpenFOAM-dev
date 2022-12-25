@@ -27,8 +27,8 @@ boundaryField
 
     outlet
     {
-        type            fixedValue;
-        value           uniform 100e5;
+        type            totalPressure;
+        p0              uniform 100e5;
     }
 
     walls

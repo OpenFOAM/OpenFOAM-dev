@@ -34,8 +34,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "barotropicCompressibilityModel.H"
-#include "incompressibleTwoPhaseMixture.H"
+#include "cavitatingTwoPhaseMixture.H"
 #include "incompressibleMomentumTransportModels.H"
 #include "CorrectPhi.H"
 #include "pimpleControl.H"
@@ -90,7 +89,8 @@ int main(int argc, char *argv[])
         while (pimple.loop())
         {
             #include "rhoEqn.H"
-            #include "alphavPsi.H"
+
+            mixture.correct();
 
             if (pimple.predictTransport())
             {

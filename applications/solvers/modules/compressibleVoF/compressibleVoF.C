@@ -39,82 +39,19 @@ namespace solvers
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::solvers::compressibleVoF::correctCoNum()
-{
-    fluidSolver::correctCoNum(phi);
-
-    const scalarField sumPhi
-    (
-        mixture.nearInterface()().primitiveField()
-       *fvc::surfaceSum(mag(phi))().primitiveField()
-    );
-
-    alphaCoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
-
-    const scalar meanAlphaCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
-
-    Info<< "Interface Courant Number mean: " << meanAlphaCoNum
-        << " max: " << alphaCoNum << endl;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
 :
-    fluidSolver(mesh),
-
-    U
+    VoFSolver
     (
-        IOobject
-        (
-            "U",
-            runTime.name(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
+        mesh,
+        autoPtr<twoPhaseMixture>(new compressibleTwoPhaseMixture(mesh))
     ),
 
-    phi
-    (
-        IOobject
-        (
-            "phi",
-            runTime.name(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        linearInterpolate(U) & mesh.Sf()
-    ),
+    mixture(refCast<compressibleTwoPhaseMixture>(VoFSolver::mixture)),
 
-    mixture(U),
-
-    alpha1(mixture.alpha1()),
-    alpha2(mixture.alpha2()),
-
-    alphaRestart
-    (
-        typeIOobject<surfaceScalarField>
-        (
-            IOobject::groupName("alphaPhi", alpha1.group()),
-            runTime.name(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ).headerOk()
-    ),
-
-    buoyancy(mesh),
-
-    p_rgh(buoyancy.p_rgh),
-
-    rho(mixture.rho()),
+    p(mixture.p()),
 
     dgdt
     (
@@ -129,9 +66,9 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         alpha1*fvc::div(phi)
     ),
 
-    pressureReference
+    pressureReference_
     (
-        mixture.p(),
+        p,
         p_rgh,
         pimple.dict(),
         false
@@ -142,32 +79,6 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         "pMin",
         dimPressure,
         mixture
-    ),
-
-    rhoPhi
-    (
-        IOobject
-        (
-            "rhoPhi",
-            runTime.name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        fvc::interpolate(rho)*phi
-    ),
-
-    alphaPhi1
-    (
-        IOobject
-        (
-            IOobject::groupName("alphaPhi", alpha1.group()),
-            runTime.name(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        phi*fvc::interpolate(alpha1)
     ),
 
     alphaRhoPhi1
@@ -196,65 +107,10 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         mixture
     ),
 
-    thermophysicalTransport(momentumTransport),
-
-    MRF(mesh)
+    thermophysicalTransport(momentumTransport)
 {
     // Read the controls
     read();
-
-    mesh.schemes().setFluxRequired(p_rgh.name());
-    mesh.schemes().setFluxRequired(alpha1.name());
-
-    if (alphaRestart)
-    {
-        Info << "Restarting alpha" << endl;
-    }
-
-    if (mesh.dynamic())
-    {
-        Info<< "Constructing face momentum Uf" << endl;
-
-        Uf = new surfaceVectorField
-        (
-            IOobject
-            (
-                "Uf",
-                runTime.name(),
-                mesh,
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            ),
-            fvc::interpolate(U)
-        );
-    }
-
-    if (transient())
-    {
-        correctCoNum();
-    }
-    else if (LTS)
-    {
-        Info<< "Using LTS" << endl;
-
-        trDeltaT = tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    fv::localEulerDdt::rDeltaTName,
-                    runTime.name(),
-                    mesh,
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::AUTO_WRITE
-                ),
-                mesh,
-                dimensionedScalar(dimless/dimTime, 1),
-                extrapolatedCalculatedFvPatchScalarField::typeName
-            )
-        );
-    }
 
     if (correctPhi)
     {
@@ -283,73 +139,49 @@ Foam::solvers::compressibleVoF::~compressibleVoF()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::scalar Foam::solvers::compressibleVoF::maxDeltaT() const
-{
-    const scalar maxAlphaCo
-    (
-        runTime.controlDict().lookup<scalar>("maxAlphaCo")
-    );
-
-    const scalar deltaT = fluidSolver::maxDeltaT();
-
-    if (alphaCoNum > small)
-    {
-        return min
-        (
-            deltaT,
-            maxAlphaCo/(alphaCoNum + small)*runTime.deltaTValue()
-        );
-    }
-    else
-    {
-        return deltaT;
-    }
-}
-
-
-void Foam::solvers::compressibleVoF::preSolve()
-{
-    // Read the controls
-    read();
-
-    if (transient())
-    {
-        correctCoNum();
-    }
-    else if (LTS)
-    {
-        setRDeltaT();
-    }
-
-    // Store divU from the previous mesh so that it can be mapped
-    // and used in correctPhi to ensure the corrected phi has the
-    // same divergence
-    if (correctPhi && mesh.topoChanged())
-    {
-        // Construct and register divU for mapping
-        divU = new volScalarField
-        (
-            "divU0",
-            fvc::div(fvc::absolute(phi, U))
-        );
-    }
-
-    fvModels().preUpdateMesh();
-
-    // Update the mesh for topology change, mesh to mesh mapping
-    mesh.update();
-}
-
-
 void Foam::solvers::compressibleVoF::prePredictor()
 {
-    fvModels().correct();
-    alphaPredictor();
+    VoFSolver::prePredictor();
+
+    const volScalarField& rho1 = mixture.thermo1().rho();
+    const volScalarField& rho2 = mixture.thermo2().rho();
+
+    alphaRhoPhi1 = fvc::interpolate(rho1)*alphaPhi1;
+    alphaRhoPhi2 = fvc::interpolate(rho2)*(phi - alphaPhi1);
+
+    rhoPhi = alphaRhoPhi1 + alphaRhoPhi2;
+
+    contErr1 =
+    (
+        fvc::ddt(alpha1, rho1)()() + fvc::div(alphaRhoPhi1)()()
+      - (fvModels().source(alpha1, rho1)&rho1)()
+    );
+
+    contErr2 =
+    (
+        fvc::ddt(alpha2, rho2)()() + fvc::div(alphaRhoPhi2)()()
+      - (fvModels().source(alpha2, rho2)&rho2)()
+    );
 
     if (pimple.predictTransport())
     {
         momentumTransport.predict();
+    }
+
+    if (pimple.predictTransport())
+    {
         thermophysicalTransport.predict();
+    }
+}
+
+
+void Foam::solvers::compressibleVoF::momentumPredictor()
+{
+    VoFSolver::momentumPredictor();
+
+    if (pimple.momentumPredictor())
+    {
+        K = 0.5*magSqr(U);
     }
 }
 
@@ -361,12 +193,6 @@ void Foam::solvers::compressibleVoF::postCorrector()
         momentumTransport.correct();
         thermophysicalTransport.correct();
     }
-}
-
-
-void Foam::solvers::compressibleVoF::postSolve()
-{
-    divU.clear();
 }
 
 

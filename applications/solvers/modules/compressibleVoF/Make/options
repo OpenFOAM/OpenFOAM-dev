@@ -1,4 +1,5 @@
 EXE_INC = \
+    -I$(FOAM_SOLVERS)/modules/VoFSolver/lnInclude \
     -I$(FOAM_SOLVERS)/modules/fluidSolver/lnInclude \
     -IcompressibleInterPhaseTransportModel/lnInclude \
     -IcompressibleInterPhaseThermophysicalTransportModel/lnInclude \
@@ -9,7 +10,6 @@ EXE_INC = \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/compressibleTwoPhaseMixture/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/immiscibleCompressibleTwoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
@@ -18,14 +18,14 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
-    -lfluidSolver \
+    -lVoFSolver \
     -lcompressibleInterPhaseTransportModel \
     -lcompressibleInterPhaseThermophysicalTransportModel \
     -lphysicalProperties \
     -lfluidThermophysicalModels \
     -linterfaceCompression \
     -lcompressibleInterfaceProperties \
-    -limmiscibleCompressibleTwoPhaseMixture \
+    -lcompressibleTwoPhaseMixture \
     -lfiniteVolume \
     -lmeshTools \
     -lfvModels \

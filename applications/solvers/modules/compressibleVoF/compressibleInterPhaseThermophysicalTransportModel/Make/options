@@ -5,7 +5,6 @@ EXE_INC = \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/compressibleTwoPhaseMixture/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/immiscibleCompressibleTwoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
@@ -17,7 +16,7 @@ EXE_INC = \
 LIB_LIBS = \
     -lphysicalProperties \
     -lfluidThermophysicalModels \
-    -limmiscibleCompressibleTwoPhaseMixture \
+    -lcompressibleTwoPhaseMixture \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
     -lphaseCompressibleMomentumTransportModels \

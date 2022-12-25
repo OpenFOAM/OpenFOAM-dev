@@ -68,6 +68,9 @@ class incompressibleTwoPhaseMixture
         //- Constant density of phase 2
         dimensionedScalar rho2_;
 
+        //- Mixture density
+        volScalarField rho_;
+
         //- Mixture viscosity
         volScalarField nu_;
 
@@ -115,7 +118,10 @@ public:
         };
 
         //- Return the mixture density
-        tmp<volScalarField> rho() const;
+        virtual const volScalarField& rho() const
+        {
+            return rho_;
+        }
 
         //- Return the dynamic laminar viscosity
         tmp<volScalarField> mu() const;
@@ -138,7 +144,7 @@ public:
         //- Return the face-interpolated kinematic laminar viscosity
         tmp<surfaceScalarField> nuf() const;
 
-        //- Correct the laminar viscosity
+        //- Correct the mixture density and laminar viscosity
         virtual void correct();
 
         //- Read base phaseProperties dictionary

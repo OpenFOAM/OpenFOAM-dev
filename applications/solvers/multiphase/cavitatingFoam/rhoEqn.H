@@ -11,6 +11,4 @@
 
     Info<< "max-min rho: " << max(rho).value()
         << " " << min(rho).value() << endl;
-
-    rho == max(rho, rhoMin);
 }

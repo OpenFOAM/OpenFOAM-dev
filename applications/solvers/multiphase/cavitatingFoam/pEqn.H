@@ -1,12 +1,7 @@
 {
     if (pimple.nCorr() == 1)
     {
-        p =
-        (
-            rho
-          - alphal*rhol0
-          - ((alphav*psiv + alphal*psil) - psi)*pSat
-        )/psi;
+        mixture.correctPressure();
     }
 
     surfaceScalarField rhof("rhof", fvc::interpolate(rho));
@@ -22,14 +17,14 @@
 
     phi -= phiGradp/rhof;
 
-    volScalarField rho0(rho - psi*p);
+    const volScalarField rho0(rho - mixture.psi()*p);
 
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
             fvc::ddt(rho)
-          + psi*correction(fvm::ddt(p))
+          + mixture.psi()*correction(fvm::ddt(p))
           + fvc::div(phi, rho)
           + fvc::div(phiGradp)
           - fvm::laplacian(rhorAUf, p)
@@ -46,18 +41,11 @@
     Info<< "Predicted p max-min : " << max(p).value()
         << " " << min(p).value() << endl;
 
-    rho == max(rho0 + psi*p, rhoMin);
+    rho == rho0 + mixture.psi()*p;
 
-    #include "alphavPsi.H"
+    mixture.correct();
 
-    p =
-    (
-        rho
-      - alphal*rhol0
-      - ((alphav*psiv + alphal*psil) - psi)*pSat
-    )/psi;
-
-    p.correctBoundaryConditions();
+    mixture.correctPressure();
 
     Info<< "Phase-change corrected p max-min : " << max(p).value()
         << " " << min(p).value() << endl;

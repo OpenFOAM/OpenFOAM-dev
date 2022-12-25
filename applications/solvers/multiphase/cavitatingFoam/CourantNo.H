@@ -44,7 +44,7 @@ scalar acousticCoNum = 0;
     (
         fvc::surfaceSum
         (
-            fvc::interpolate(scalar(1)/sqrt(psi))*mesh.magSf()
+            fvc::interpolate(scalar(1)/sqrt(mixture.psi()))*mesh.magSf()
         )().primitiveField()/mesh.V().field()
     )*runTime.deltaTValue();
 

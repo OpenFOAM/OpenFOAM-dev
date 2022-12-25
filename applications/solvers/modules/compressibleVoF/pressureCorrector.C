@@ -32,8 +32,6 @@ License
 
 void Foam::solvers::compressibleVoF::pressureCorrector()
 {
-    volScalarField& p = mixture.p();
-
     const volScalarField& rho1 = mixture.rho1();
     const volScalarField& rho2 = mixture.rho2();
 
@@ -70,7 +68,7 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
         surfaceScalarField phig
         (
             (
-                mixture.surfaceTensionForce()
+                interface.surfaceTensionForce()
               - buoyancy.ghf*fvc::snGrad(rho)
             )*rAUf*mesh.magSf()
         );

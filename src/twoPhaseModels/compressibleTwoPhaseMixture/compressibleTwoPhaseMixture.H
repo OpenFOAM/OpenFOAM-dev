@@ -162,7 +162,7 @@ public:
         }
 
         //- Return mixture density [kg/m^3]
-        const volScalarField& rho() const
+        virtual const volScalarField& rho() const
         {
             return rho_;
         }
