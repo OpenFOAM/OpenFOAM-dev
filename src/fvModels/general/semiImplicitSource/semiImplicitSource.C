@@ -160,7 +160,7 @@ void Foam::fv::semiImplicitSource::addSupType
     UIndirectList<scalar>(Sp, set_.cells()) =
         fieldSp_[fieldName]->value(t)/VDash;
 
-    eqn += Su + fvm::SuSp(Sp, psi);
+    eqn += Su - fvm::SuSp(-Sp, psi);
 }
 
 
