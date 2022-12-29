@@ -26,6 +26,8 @@ License
 #include "kineticTheoryModel.H"
 #include "mathematicalConstants.H"
 #include "phaseSystem.H"
+#include "fvcDdt.H"
+#include "fvcSup.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 

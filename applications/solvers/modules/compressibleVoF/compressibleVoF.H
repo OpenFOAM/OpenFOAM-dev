@@ -63,6 +63,7 @@ See also
 #include "compressibleInterPhaseThermophysicalTransportModel.H"
 #include "buoyancy.H"
 #include "pressureReference.H"
+#include "fvmSup.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

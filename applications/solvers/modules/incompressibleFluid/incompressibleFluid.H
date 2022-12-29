@@ -58,6 +58,7 @@ See also
 #include "viscosityModel.H"
 #include "incompressibleMomentumTransportModels.H"
 #include "pressureReference.H"
+#include "IOMRFZoneList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

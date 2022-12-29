@@ -24,10 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "anisotropicFilter.H"
+#include "fvcSurfaceIntegrate.H"
+#include "fvcSnGrad.H"
 #include "addToRunTimeSelectionTable.H"
-#include "zeroGradientFvPatchFields.H"
-#include "wallFvPatch.H"
-#include "fvc.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

@@ -28,6 +28,11 @@ License
 #include "constrainPressure.H"
 #include "adjustPhi.H"
 #include "findRefCell.H"
+#include "fvcMeshPhi.H"
+#include "fvcFlux.H"
+#include "fvcDdt.H"
+#include "fvcSnGrad.H"
+#include "fvcReconstruct.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

@@ -59,6 +59,7 @@ See also
 #include "compressibleMomentumTransportModels.H"
 #include "buoyancy.H"
 #include "pressureReference.H"
+#include "IOMRFZoneList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -94,7 +95,7 @@ protected:
 
         //- Rate of change of the pressure
         //  Used in the enthalpy equation
-        volScalarField dpdt;
+        volScalarField::Internal dpdt;
 
 
     // Optional buoyancy
@@ -204,7 +205,10 @@ private:
 protected:
 
         //- Adds the mesh-motion work to the pressure work term provided
-        tmp<volScalarField> pressureWork(const tmp<volScalarField>&) const;
+        tmp<volScalarField::Internal> pressureWork
+        (
+            const tmp<volScalarField::Internal>&
+        ) const;
 
 
 public:

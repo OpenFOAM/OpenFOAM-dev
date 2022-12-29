@@ -26,6 +26,10 @@ License
 #include "isothermalFluid.H"
 #include "localEulerDdtScheme.H"
 #include "hydrostaticInitialisation.H"
+#include "fvcMeshPhi.H"
+#include "fvcVolumeIntegrate.H"
+#include "fvcReconstruct.H"
+#include "fvcSnGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -56,10 +60,10 @@ void Foam::solvers::isothermalFluid::continuityErrors()
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volScalarField::Internal>
 Foam::solvers::isothermalFluid::pressureWork
 (
-    const tmp<volScalarField>& work
+    const tmp<volScalarField::Internal>& work
 ) const
 {
     if (mesh.moving())
@@ -71,11 +75,11 @@ Foam::solvers::isothermalFluid::pressureWork
                 fvc::interpolate(rho)*fvc::meshPhi(rho, U),
                 p/rho,
                 "div(phi,(p|rho))"
-            );
+            )();
     }
     else
     {
-        return work;
+        return move(work);
     }
 }
 
@@ -178,7 +182,6 @@ Foam::solvers::isothermalFluid::isothermalFluid
     // Read the controls
     read();
 
-    thermo.validate("isothermalFluid", "h", "e");
     mesh.schemes().setFluxRequired(p.name());
     momentumTransport->validate();
 

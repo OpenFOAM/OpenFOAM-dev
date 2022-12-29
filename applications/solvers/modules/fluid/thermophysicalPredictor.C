@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fluid.H"
+#include "fvcDdt.H"
+#include "fvmDiv.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -38,7 +40,7 @@ void Foam::solvers::fluid::thermophysicalPredictor()
       + pressureWork
         (
             he.name() == "e"
-          ? fvc::div(phi, p/rho)
+          ? fvc::div(phi, p/rho)()
           : -dpdt
         )
       + thermophysicalTransport->divq(he)

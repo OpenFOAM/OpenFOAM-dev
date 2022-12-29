@@ -9,6 +9,7 @@ wmake $targetType incompressibleFluid
 wmake $targetType isothermalFluid
 wmake $targetType fluid
 wmake $targetType multicomponentFluid
+wmake $targetType XiFluid
 wmake $targetType VoFSolver
 incompressibleVoF/Allwmake $targetType $*
 compressibleVoF/Allwmake $targetType $*

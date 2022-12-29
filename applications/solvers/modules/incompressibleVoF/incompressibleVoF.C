@@ -26,6 +26,7 @@ License
 #include "incompressibleVoF.H"
 #include "localEulerDdtScheme.H"
 #include "CorrectPhi.H"
+#include "geometricZeroField.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

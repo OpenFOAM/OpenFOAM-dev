@@ -17,4 +17,6 @@ wmake $targetType solidThermo
 
 wmake $targetType saturationModels
 
+wmake $targetType ignition
+
 #------------------------------------------------------------------------------

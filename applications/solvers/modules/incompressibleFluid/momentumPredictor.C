@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleFluid.H"
+#include "fvmDiv.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

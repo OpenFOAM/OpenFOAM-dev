@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "qZeta.H"
+#include "fvcMagSqrGradGrad.H"
 #include "bound.H"
 #include "addToRunTimeSelectionTable.H"
 

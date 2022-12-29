@@ -52,7 +52,9 @@ Foam::solvers::fluid::fluid(fvMesh& mesh)
             thermo
         )
     )
-{}
+{
+    thermo.validate(type(), "h", "e");
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

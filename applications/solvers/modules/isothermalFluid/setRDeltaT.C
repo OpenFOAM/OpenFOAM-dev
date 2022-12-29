@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "isothermalFluid.H"
+#include "fvcFlux.H"
 #include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

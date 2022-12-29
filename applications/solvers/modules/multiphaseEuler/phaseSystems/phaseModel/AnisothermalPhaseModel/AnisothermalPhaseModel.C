@@ -25,6 +25,10 @@ License
 
 #include "AnisothermalPhaseModel.H"
 #include "phaseSystem.H"
+#include "fvcMeshPhi.H"
+#include "fvcDdt.H"
+#include "fvmDiv.H"
+#include "fvmSup.H"
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 

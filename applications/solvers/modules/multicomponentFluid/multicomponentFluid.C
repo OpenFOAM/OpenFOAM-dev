@@ -66,6 +66,8 @@ Foam::solvers::multicomponentFluid::multicomponentFluid(fvMesh& mesh)
         )
     )
 {
+    thermo.validate(type(), "h", "e");
+
     forAll(Y, i)
     {
         fields.add(Y[i]);

@@ -27,6 +27,10 @@ License
 #include "constrainHbyA.H"
 #include "constrainPressure.H"
 #include "adjustPhi.H"
+#include "fvcMeshPhi.H"
+#include "fvcFlux.H"
+#include "fvcDdt.H"
+#include "fvcSnGrad.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

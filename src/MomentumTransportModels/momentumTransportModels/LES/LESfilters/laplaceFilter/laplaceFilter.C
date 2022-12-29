@@ -24,10 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "laplaceFilter.H"
+#include "fvcLaplacian.H"
 #include "addToRunTimeSelectionTable.H"
-#include "calculatedFvPatchFields.H"
-#include "fvm.H"
-#include "fvc.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

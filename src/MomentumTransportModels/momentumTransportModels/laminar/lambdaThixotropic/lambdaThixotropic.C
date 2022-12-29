@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lambdaThixotropic.H"
+#include "fvmDiv.H"
+#include "fvmSup.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "uniformDimensionedFields.H"

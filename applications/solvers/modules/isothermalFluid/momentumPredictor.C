@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "isothermalFluid.H"
+#include "fvmDiv.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

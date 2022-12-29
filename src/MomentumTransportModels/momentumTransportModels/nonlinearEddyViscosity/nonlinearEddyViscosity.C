@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nonlinearEddyViscosity.H"
-#include "fvc.H"
-#include "fvm.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

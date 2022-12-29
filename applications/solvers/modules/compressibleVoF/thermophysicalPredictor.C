@@ -24,6 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressibleVoF.H"
+#include "fvcMeshPhi.H"
+#include "fvcDdt.H"
+#include "fvmDiv.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

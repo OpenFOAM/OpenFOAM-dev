@@ -25,8 +25,8 @@ License
 
 #include "cavitation.H"
 #include "phaseSystem.H"
+#include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvCFD.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

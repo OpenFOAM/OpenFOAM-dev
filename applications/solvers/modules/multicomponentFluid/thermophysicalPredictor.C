@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "multicomponentFluid.H"
+#include "fvcDdt.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -80,7 +81,7 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
       + pressureWork
         (
             he.name() == "e"
-          ? mvConvection->fvcDiv(phi, p/rho)
+          ? mvConvection->fvcDiv(phi, p/rho)()
           : -dpdt
         )
       + thermophysicalTransport->divq(he)

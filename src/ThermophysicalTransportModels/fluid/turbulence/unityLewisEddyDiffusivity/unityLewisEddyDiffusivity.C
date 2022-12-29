@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "unityLewisEddyDiffusivity.H"
+#include "fvcSnGrad.H"
 #include "fvmLaplacian.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

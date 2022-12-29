@@ -25,6 +25,7 @@ License
 
 #include "compressibleInterPhaseThermophysicalTransportModel.H"
 #include "compressibleInterPhaseTransportModel.H"
+#include "fvcSnGrad.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
