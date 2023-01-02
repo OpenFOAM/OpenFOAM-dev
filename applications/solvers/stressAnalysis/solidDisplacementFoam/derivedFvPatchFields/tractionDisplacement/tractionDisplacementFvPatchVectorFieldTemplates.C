@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,14 +63,22 @@ void Foam::tractionDisplacementFvPatchVectorField::updateCoeffs
 
     const vectorField n(patch().nf());
 
+    gradient() = ((traction_ - pressure*n))/twoMuLambda;
+
     const fvPatchField<symmTensor>& sigmaD =
         patch().lookupPatchField<volSymmTensorField, symmTensor>("sigmaD");
 
-    gradient() =
-    (
-        (traction_ - pressure*n)
-      + twoMuLambda*fvPatchField<vector>::snGrad() - (n & sigmaD)
-    )/twoMuLambda;
+    if (db().foundObject<volTensorField>("sigmaExp"))
+    {
+        const fvPatchField<tensor>& sigmaExp =
+            patch().lookupPatchField<volTensorField, tensor>("sigmaExp");
+
+        gradient() -= ((n & (sigmaD + sigmaExp)))/twoMuLambda;
+    }
+    else
+    {
+        gradient() -= (n & sigmaD)/twoMuLambda - fvPatchField<vector>::snGrad();
+    }
 
     if (thermo.thermalStress())
     {

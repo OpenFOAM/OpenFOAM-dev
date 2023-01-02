@@ -10,27 +10,38 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      fvSolution;
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
+d2dt2Schemes
 {
-    "(D|Dcorr)"
-    {
-        solver          GAMG;
-        tolerance       1e-06;
-        relTol          0.99;
-        smoother        GaussSeidel;
-        nCellsInCoarsestLevel 6;
-    }
+    default         steadyState;
 }
 
-stressAnalysis
+gradSchemes
 {
-    nCorrectors     1;
-    D               1e-10;
-    accelerationFactor 1.8; // lower for other Poisson ratio (e.g. 0.1 for 0.3)
+    default         Gauss cubic;
+}
+
+divSchemes
+{
+    default         Gauss cubic;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
+
+interpolationSchemes
+{
+    default         cubic;
+}
+
+snGradSchemes
+{
+    default         uncorrected;
 }
 
 

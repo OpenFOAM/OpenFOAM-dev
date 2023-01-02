@@ -10,28 +10,37 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      fvSolution;
+    object      controlDict.org;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
-{
-    "(D|Dcorr)"
-    {
-        solver          GAMG;
-        tolerance       1e-06;
-        relTol          0.99;
-        smoother        GaussSeidel;
-        nCellsInCoarsestLevel 6;
-    }
-}
+application     solidDisplacementFoam;
 
-stressAnalysis
-{
-    nCorrectors     1;
-    D               1e-10;
-    accelerationFactor 1.8; // lower for other Poisson ratio (e.g. 0.1 for 0.3)
-}
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         7e4;
+
+deltaT          1;
+
+writeControl    runTime;
+
+writeInterval   1000;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
 
 
 // ************************************************************************* //

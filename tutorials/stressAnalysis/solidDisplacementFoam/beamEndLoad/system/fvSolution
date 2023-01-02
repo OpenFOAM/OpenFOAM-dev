@@ -16,12 +16,14 @@ FoamFile
 
 solvers
 {
-    "(D|Dcorr)"
+    D
     {
         solver          GAMG;
-        tolerance       1e-06;
-        relTol          0.99;
         smoother        GaussSeidel;
+
+        tolerance       1e-10;
+        relTol          0.99;
+
         nCellsInCoarsestLevel 6;
     }
 }
@@ -30,7 +32,8 @@ stressAnalysis
 {
     nCorrectors     1;
     D               1e-10;
-    accelerationFactor 1.8; // lower for other Poisson ratio (e.g. 0.1 for 0.3)
+    // accelerationFactor 2;   // lower for other Poisson ratio (e.g. 0.1 for 0.3)
+    compactNormalStress no;
 }
 
 

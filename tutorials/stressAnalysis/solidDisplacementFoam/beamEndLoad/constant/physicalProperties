@@ -9,29 +9,48 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      fvSolution;
+    location    "constant";
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
+rho
 {
-    "(D|Dcorr)"
-    {
-        solver          GAMG;
-        tolerance       1e-06;
-        relTol          0.99;
-        smoother        GaussSeidel;
-        nCellsInCoarsestLevel 6;
-    }
+    type        uniform;
+    value       7854;
 }
 
-stressAnalysis
+nu
 {
-    nCorrectors     1;
-    D               1e-10;
-    accelerationFactor 1.8; // lower for other Poisson ratio (e.g. 0.1 for 0.3)
+    type        uniform;
+    value       0.0;
 }
 
+E
+{
+    type        uniform;
+    value       2e+11;
+}
+
+Cv
+{
+    type        uniform;
+    value       434;
+}
+
+kappa
+{
+    type        uniform;
+    value       60.5;
+}
+
+alphav
+{
+    type        uniform;
+    value       1.1e-05;
+}
+
+planeStress     yes;
+thermalStress   no;
 
 // ************************************************************************* //
