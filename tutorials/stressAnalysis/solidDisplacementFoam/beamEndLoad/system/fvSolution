@@ -30,11 +30,8 @@ solvers
 
 stressAnalysis
 {
-    nCorrectors     1;
-    D               1e-10;
-    // accelerationFactor 2;   // lower for other Poisson ratio (e.g. 0.1 for 0.3)
     compactNormalStress no;
+    accelerationFactor  1.9; // Lower for higher Poisson ratio
 }
-
 
 // ************************************************************************* //

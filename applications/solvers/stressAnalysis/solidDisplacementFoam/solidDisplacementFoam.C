@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,9 @@ Application
     solidDisplacementFoam
 
 Description
-    Transient segregated finite-volume solver of linear-elastic,
-    small-strain deformation of a solid body, with optional thermal
-    diffusion and thermal stresses.
+    Transient and steady-state segregated finite-volume solver of
+    linear-elastic, small-strain deformation of a solid body, with optional
+    thermal diffusion and thermal stresses.
 
     Simple linear elasticity structural analysis code.
     Solves for the displacement vector field D, also generating the
@@ -112,6 +112,13 @@ int main(int argc, char *argv[])
                 fvConstraints.constrain(DEqn);
 
                 initialResidual = DEqn.solve().max().initialResidual();
+
+                // For steady-state optionally accelerate the solution
+                // by over-relaxing the displacement
+                if (mesh.schemes().steady() && accFac > 1)
+                {
+                    D += (accFac - 1)*(D - D.oldTime());
+                }
 
                 if (!compactNormalStress)
                 {
