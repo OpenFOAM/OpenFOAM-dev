@@ -128,6 +128,7 @@ public:
 
     typedef ParticleType particleType;
 
+    typedef typename IDLList<ParticleType>::value_type value_type;
     typedef typename IDLList<ParticleType>::iterator iterator;
     typedef typename IDLList<ParticleType>::const_iterator const_iterator;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef IOPosition_H
 #define IOPosition_H
 
-#include "regIOobject.H"
+#include "polyMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,6 +62,9 @@ class IOPosition
 
     // Private Data
 
+        //- Reference to the mesh
+        const polyMesh& mesh_;
+
         //- Reference to the cloud
         const CloudType& cloud_;
 
@@ -79,6 +82,9 @@ public:
 
 
     // Constructors
+
+        //- Construct from components
+        IOPosition(const IOobject&, const polyMesh&, const CloudType&);
 
         //- Construct from cloud
         IOPosition(const CloudType&);

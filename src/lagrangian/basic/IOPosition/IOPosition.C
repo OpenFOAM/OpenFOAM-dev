@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,22 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "IOPosition.H"
-#include "polyMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class CloudType>
+Foam::IOPosition<CloudType>::IOPosition
+(
+    const IOobject& io,
+    const polyMesh& mesh,
+    const CloudType& c
+)
+:
+    regIOobject(io),
+    mesh_(mesh),
+    cloud_(c)
+{}
+
 
 template<class CloudType>
 Foam::IOPosition<CloudType>::IOPosition(const CloudType& c)
@@ -42,6 +55,7 @@ Foam::IOPosition<CloudType>::IOPosition(const CloudType& c)
             IOobject::NO_WRITE
         )
     ),
+    mesh_(c.pMesh()),
     cloud_(c)
 {}
 
@@ -90,7 +104,7 @@ void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
         for (label i=0; i<s; i++)
         {
             // Read position only
-            c.append(new typename CloudType::particleType(is, false));
+            c.append(new typename CloudType::value_type(is, false));
         }
 
         // Read end of contents
@@ -119,7 +133,7 @@ void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
             is.putBack(lastToken);
 
             // Read position only
-            c.append(new typename CloudType::particleType(is, false));
+            c.append(new typename CloudType::value_type(is, false));
             is  >> lastToken;
         }
     }
