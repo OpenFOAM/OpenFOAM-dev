@@ -10,11 +10,13 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      controlDict.org;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     solidDisplacementFoam;
+application     foamRun;
+
+solver          solidDisplacement;
 
 startFrom       startTime;
 
@@ -22,27 +24,23 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         100;
+endTime         10000;
 
 deltaT          1;
 
-writeControl    timeStep;
+writeControl    runTime;
 
-writeInterval   20;
+writeInterval   1000;
 
 purgeWrite      0;
 
 writeFormat     ascii;
-
-writePrecision  6;
 
 writeCompression off;
 
 timeFormat      general;
 
 timePrecision   6;
-
-graphFormat     raw;
 
 runTimeModifiable true;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::hydrostaticDisplacementFvPatchVectorField
+    Foam::tractionDisplacementFvPatchVectorField
 
 Description
     Fixed traction boundary condition for the standard linear elastic, fixed
-    coefficient displacement equation in which the traction is caused by
-    the hydrostatic pressure of an external liquid reservoir.
+    coefficient displacement equation.
 
 SourceFiles
-    hydrostaticDisplacementFvPatchVectorField.C
+    tractionDisplacementFvPatchVectorField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hydrostaticDisplacementFvPatchVectorField_H
-#define hydrostaticDisplacementFvPatchVectorField_H
+#ifndef tractionDisplacementFvPatchVectorField_H
+#define tractionDisplacementFvPatchVectorField_H
 
-#include "tractionDisplacementFvPatchVectorField.H"
+#include "fixedGradientFvPatchFields.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,42 +45,43 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class hydrostaticDisplacementFvPatch Declaration
+                 Class tractionDisplacementFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
-class hydrostaticDisplacementFvPatchVectorField
+class tractionDisplacementFvPatchVectorField
 :
-    public tractionDisplacementFvPatchVectorField
+    public fixedGradientFvPatchVectorField
 {
     // Private Data
 
-        //- Density of surrounding liquid
-        scalar rhoLiquid_;
+        vectorField traction_;
+        autoPtr<Function1<scalar>> pressure_;
 
-        //- Pressure above the liquid
-        scalar liquidSurfacePressure_;
+protected:
 
-        //- Point on liquid surface
-        vector liquidSurfacePoint_;
+        //- Update the coefficients associated with the patch field
+        //  for the given pressure
+        template<class Type>
+        void updateCoeffs(const Type& pressure);
 
 
 public:
 
     //- Runtime type information
-    TypeName("hydrostaticDisplacement");
+    TypeName("tractionDisplacement");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        hydrostaticDisplacementFvPatchVectorField
+        tractionDisplacementFvPatchVectorField
         (
             const fvPatch&,
             const DimensionedField<vector, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        hydrostaticDisplacementFvPatchVectorField
+        tractionDisplacementFvPatchVectorField
         (
             const fvPatch&,
             const DimensionedField<vector, volMesh>&,
@@ -88,25 +89,25 @@ public:
         );
 
         //- Construct by mapping given
-        //  hydrostaticDisplacementFvPatchVectorField onto a new patch
-        hydrostaticDisplacementFvPatchVectorField
+        //  tractionDisplacementFvPatchVectorField onto a new patch
+        tractionDisplacementFvPatchVectorField
         (
-            const hydrostaticDisplacementFvPatchVectorField&,
+            const tractionDisplacementFvPatchVectorField&,
             const fvPatch&,
             const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        hydrostaticDisplacementFvPatchVectorField
+        tractionDisplacementFvPatchVectorField
         (
-            const hydrostaticDisplacementFvPatchVectorField&
+            const tractionDisplacementFvPatchVectorField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        hydrostaticDisplacementFvPatchVectorField
+        tractionDisplacementFvPatchVectorField
         (
-            const hydrostaticDisplacementFvPatchVectorField&,
+            const tractionDisplacementFvPatchVectorField&,
             const DimensionedField<vector, volMesh>&
         );
 
@@ -118,12 +119,40 @@ public:
         {
             return tmp<fvPatchVectorField>
             (
-                new hydrostaticDisplacementFvPatchVectorField(*this, iF)
+                new tractionDisplacementFvPatchVectorField(*this, iF)
             );
         }
 
 
     // Member Functions
+
+        // Access
+
+            virtual const vectorField& traction() const
+            {
+                return traction_;
+            }
+
+            virtual vectorField& traction()
+            {
+                return traction_;
+            }
+
+
+        // Mapping functions
+
+            //- Map (and resize as needed) from self given a mapping object
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
+
+            //- Reverse map the given fvPatchField onto this fvPatchField
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchVectorField&, const labelList&);
+
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const fvPatchVectorField&);
+
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
@@ -136,6 +165,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "tractionDisplacementFvPatchVectorFieldTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -1,21 +1,23 @@
 EXE_INC = \
-    -I. \
-    -IsolidDisplacementThermo \
-    -IderivedFvPatchFields/tractionDisplacement \
-    -IderivedFvPatchFields/hydrostaticDisplacement \
+    -I$(FOAM_SOLVERS)/modules/solid/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/thermophysicalTransportModel/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/solid/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude
 
-EXE_LIBS = \
+LIB_LIBS = \
+    -lsolid \
     -lsolidThermo \
     -lsolidDisplacementThermo \
     -lsolidThermophysicalTransportModels \
+    -lcoupledThermophysicalTransportModels \
+    -lspecie \
     -lfiniteVolume \
     -lmeshTools \
+    -lsampling \
     -lfvModels \
     -lfvConstraints

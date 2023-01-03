@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ protected:
 
     // Thermophysical properties
 
-        autoPtr<solidThermo> pThermo;
+        autoPtr<solidThermo> thermo_;
 
         solidThermo& thermo;
 
@@ -85,15 +85,15 @@ protected:
         scalar DiNum;
 
 
+    // Protected Member Functions
+
+        //- Read controls
+        virtual void read();
+
+
 private:
 
     // Private Member Functions
-
-        //- Read controls
-        void read();
-
-        //- Set rDeltaT for LTS
-        // void setRDeltaT();
 
         //- Correct the cached Courant numbers
         void correctDiNum();
@@ -106,6 +106,9 @@ public:
 
 
     // Constructors
+
+        //- Construct from region mesh and thermophysical properties
+        solid(fvMesh& mesh, autoPtr<solidThermo>);
 
         //- Construct from region mesh
         solid(fvMesh& mesh);

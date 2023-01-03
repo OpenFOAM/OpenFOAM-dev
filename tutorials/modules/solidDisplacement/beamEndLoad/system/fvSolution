@@ -16,22 +16,22 @@ FoamFile
 
 solvers
 {
-    "(D|e)"
+    D
     {
         solver          GAMG;
-        tolerance       1e-06;
-        relTol          0.9;
         smoother        GaussSeidel;
-        nCellsInCoarsestLevel 20;
+
+        tolerance       1e-10;
+        relTol          0.99;
+
+        nCellsInCoarsestLevel 6;
     }
 }
 
-stressAnalysis
+PIMPLE
 {
-    compactNormalStress yes;
-    nCorrectors     1;
-    D               1e-06;
+    compactNormalStress no;
+    accelerationFactor  1.9; // Lower for higher Poisson ratio
 }
-
 
 // ************************************************************************* //

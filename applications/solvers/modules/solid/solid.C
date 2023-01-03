@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,12 +78,16 @@ void Foam::solvers::solid::correctDiNum()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solvers::solid::solid(fvMesh& mesh)
+Foam::solvers::solid::solid
+(
+    fvMesh& mesh,
+    autoPtr<solidThermo> thermoPtr
+)
 :
     solver(mesh),
 
-    pThermo(solidThermo::New(mesh)),
-    thermo(pThermo()),
+    thermo_(thermoPtr),
+    thermo(thermo_()),
 
     T(thermo.T()),
 
@@ -91,9 +95,6 @@ Foam::solvers::solid::solid(fvMesh& mesh)
 
     DiNum(0)
 {
-    // Read the controls
-    read();
-
     thermo.validate("solid", "h", "e");
 
     if (transient())
@@ -107,6 +108,16 @@ Foam::solvers::solid::solid(fvMesh& mesh)
             << " solver does not support LTS, use 'steadyState' ddtScheme"
             << exit(FatalError);
     }
+}
+
+
+
+Foam::solvers::solid::solid(fvMesh& mesh)
+:
+    solid(mesh, solidThermo::New(mesh))
+{
+    // Read the controls
+    read();
 }
 
 

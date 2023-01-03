@@ -3229,31 +3229,6 @@ _snappyHexMesh_ ()
 }
 complete -o filenames -o nospace -F _snappyHexMesh_ snappyHexMesh
 
-_solidDisplacementFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvConstraints -listFvModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _solidDisplacementFoam_ solidDisplacementFoam
-
 _splitBaffles_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -5256,6 +5231,56 @@ _simpleFoam_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _simpleFoam_ simpleFoam
+
+_solidDisplacementFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -fileHandler)
+            opts="uncollated collated masterUncollated" ; extra="" ;;
+        -hostRoots|-libs|-roots|-solver)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _solidDisplacementFoam_ solidDisplacementFoam
+
+_solidEquilibriumDisplacementFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -fileHandler)
+            opts="uncollated collated masterUncollated" ; extra="" ;;
+        -hostRoots|-libs|-roots|-solver)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _solidEquilibriumDisplacementFoam_ solidEquilibriumDisplacementFoam
 
 _XiFoam_ ()
 {
