@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -911,8 +911,6 @@ Foam::DistributedDelaunayMesh<Triangulation>::rangeInsertReferredWithInfo
     typename Triangulation::Locate_type lt;
     int li, lj;
 
-    label nNotInserted = 0;
-
     labelPairHashSet uninserted
     (
         Triangulation::number_of_vertices()
@@ -1037,7 +1035,6 @@ Foam::DistributedDelaunayMesh<Triangulation>::rangeInsertReferredWithInfo
         else
         {
             uninserted.insert(labelPair(vert.procIndex(), vert.index()));
-            nNotInserted++;
         }
     }
 

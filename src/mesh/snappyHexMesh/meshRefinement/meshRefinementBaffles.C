@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1831,14 +1831,11 @@ Foam::label Foam::meshRefinement::markPatchZones
 
     // Protect all non-manifold edges
     {
-        label nProtected = 0;
-
         forAll(nMasterFacesPerEdge, edgei)
         {
             if (nMasterFacesPerEdge[edgei] > 2)
             {
                 allEdgeInfo[edgei] = -2;
-                nProtected++;
             }
         }
     }
@@ -1989,8 +1986,6 @@ void Foam::meshRefinement::consistentOrientation
     // - slaves of coupled faces
     // - non-manifold edges
     {
-        label nProtected = 0;
-
         forAll(patch.addressing(), facei)
         {
             const label meshFacei = patch.addressing()[facei];
@@ -2005,7 +2000,6 @@ void Foam::meshRefinement::consistentOrientation
             {
                 // Slave side. Mark so doesn't get visited.
                 allFaceInfo[facei] = orientedSurface::NOFLIP;
-                nProtected++;
             }
         }
     }

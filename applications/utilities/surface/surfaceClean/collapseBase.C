@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -776,8 +776,6 @@ label collapseBase
 {
     label nTotalSplit = 0;
 
-    label iter = 0;
-
     while (true)
     {
         // Detect faces to collapse
@@ -971,17 +969,7 @@ label collapseBase
         // Pack the triangles
         newTris.shrink();
 
-        // Pout<< "Resetting surface from " << surf.size() << " to "
-        //    << newTris.size() << " triangles" << endl;
         surf = triSurface(newTris, surf.patches(), surf.localPoints());
-
-        //{
-        //    fileName fName("bla" + name(iter) + ".obj");
-        //    Pout<< "Writing surf to " << fName << endl;
-        //    surf.write(fName);
-        //}
-
-        iter++;
     }
 
     // Remove any unused vertices

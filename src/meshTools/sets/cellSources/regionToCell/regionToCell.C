@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -294,7 +294,6 @@ void Foam::regionToCell::erode
 
         // Select all cells using these points
 
-        label nChanged = 0;
         forAll(boundaryPoint, pointi)
         {
             if (boundaryPoint[pointi])
@@ -306,7 +305,6 @@ void Foam::regionToCell::erode
                     if (!removeCell[celli])
                     {
                         removeCell[celli] = true;
-                        nChanged++;
                     }
                 }
             }

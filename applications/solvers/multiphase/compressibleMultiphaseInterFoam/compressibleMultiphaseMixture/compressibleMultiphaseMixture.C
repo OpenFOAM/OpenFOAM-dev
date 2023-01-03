@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -463,9 +463,6 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
     const scalar cAlpha
 )
 {
-    static label nSolves=-1;
-    nSolves++;
-
     word alphaScheme("div(phi,alpha)");
     word alpharScheme("div(phirb,alpha)");
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,7 +192,7 @@ ddt
 
 
 template<class Type>
-tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
+tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
 (
     const VolField<Type>& U,
     const SurfaceField<Type>& Uf
@@ -207,10 +207,10 @@ tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 
 
 template<class Type>
-tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
+tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
 (
     const VolField<Type>& U,
-    const SurfaceField<typename flux<Type>::type>& phi
+    const SurfaceField<typename Foam::flux<Type>::type>& phi
 )
 {
     return fv::ddtScheme<Type>::New
@@ -222,10 +222,10 @@ tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 
 
 template<class Type>
-tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
+tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
 (
     const VolField<Type>& U,
-    const SurfaceField<typename flux<Type>::type>& phi,
+    const SurfaceField<typename Foam::flux<Type>::type>& phi,
     const autoPtr<SurfaceField<Type>>& Uf
 )
 {
@@ -241,7 +241,7 @@ tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 
 
 template<class Type>
-tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
+tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
@@ -257,11 +257,11 @@ tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 
 
 template<class Type>
-tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
+tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
-    const SurfaceField<typename flux<Type>::type>& phi
+    const SurfaceField<typename Foam::flux<Type>::type>& phi
 )
 {
     return fv::ddtScheme<Type>::New
@@ -273,11 +273,11 @@ tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
 
 
 template<class Type>
-tmp<SurfaceField<typename flux<Type>::type>> ddtCorr
+tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
-    const SurfaceField<typename flux<Type>::type>& phi,
+    const SurfaceField<typename Foam::flux<Type>::type>& phi,
     const autoPtr<SurfaceField<Type>>& Uf
 )
 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2458,7 +2458,6 @@ Foam::autoPtr<Foam::globalIndex> Foam::globalMeshData::mergePoints
     globalIndex globalPPoints(meshPoints.size());
 
     labelList patchToCoupled(meshPoints.size(), -1);
-    label nCoupled = 0;
     labelList coupledToGlobalPatch(pointSlavesMap.constructSize(), -1);
 
     // Note: loop over patch since usually smaller
@@ -2472,13 +2471,8 @@ Foam::autoPtr<Foam::globalIndex> Foam::globalMeshData::mergePoints
         {
             patchToCoupled[patchPointi] = iter();
             coupledToGlobalPatch[iter()] = globalPPoints.toGlobal(patchPointi);
-            nCoupled++;
         }
     }
-
-    // Pout<< "Patch:" << nl
-    //    << "    points:" << meshPoints.size() << nl
-    //    << "    of which on coupled patch:" << nCoupled << endl;
 
 
     // Determine master of connected points
@@ -2559,12 +2553,6 @@ Foam::autoPtr<Foam::globalIndex> Foam::globalMeshData::mergePoints
     }
 
     autoPtr<globalIndex> globalPointsPtr(new globalIndex(nMasters));
-
-    // Pout<< "Patch:" << nl
-    //    << "    points:" << meshPoints.size() << nl
-    //    << "    of which on coupled patch:" << nCoupled << nl
-    //    << "    of which master:" << nMasters << endl;
-
 
 
     // Push back compact numbering for master point onto slaves

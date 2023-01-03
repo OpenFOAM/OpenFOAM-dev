@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -202,9 +202,6 @@ void Foam::GAMGAgglomeration::agglomerateLduAddressing
     boolList& faceFlipMap = faceFlipMap_[fineLevelIndex];
 
 
-    label nFlipped = 0;
-    label nDissapear = 0;
-
     forAll(faceRestrictAddr, fineFacei)
     {
         label coarseFacei = faceRestrictAddr[fineFacei];
@@ -221,7 +218,6 @@ void Foam::GAMGAgglomeration::agglomerateLduAddressing
             if (cOwn == rmUpperAddr && cNei == rmLowerAddr)
             {
                 faceFlipMap[fineFacei] = true;
-                nFlipped++;
             }
             else if (cOwn == rmLowerAddr && cNei == rmUpperAddr)
             {
@@ -239,10 +235,6 @@ void Foam::GAMGAgglomeration::agglomerateLduAddressing
                     << " cNei:" << cNei
                     << exit(FatalError);
             }
-        }
-        else
-        {
-            nDissapear++;
         }
     }
 

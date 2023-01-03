@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -443,7 +443,6 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
     // Determine blocked faces
     boolList blockedFace(mesh_.nFaces(), false);
-    label nBlocked = 0;
 
     {
         for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
@@ -458,7 +457,6 @@ bool Foam::functionObjects::regionSizeDistribution::write()
             )
             {
                 blockedFace[facei] = true;
-                nBlocked++;
             }
         }
 
@@ -487,7 +485,6 @@ bool Foam::functionObjects::regionSizeDistribution::write()
                     )
                     {
                         blockedFace[start+i] = true;
-                        nBlocked++;
                     }
                 }
             }

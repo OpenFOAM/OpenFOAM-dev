@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,16 +79,9 @@ bool Foam::controlMeshRefinement::detectEdge
 
     Foam::point midPoint = (a + b)/2.0;
 
-    label nIterations = 0;
-
     while (true)
     {
-        nIterations++;
-
-        if
-        (
-            magSqr(a - b) < tolSqr
-        )
+        if (magSqr(a - b) < tolSqr)
         {
             pointFound.setPoint(midPoint);
             pointFound.setHit();

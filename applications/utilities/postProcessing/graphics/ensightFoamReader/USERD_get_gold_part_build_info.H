@@ -8,7 +8,7 @@ int USERD_get_gold_part_build_info
     char *part_descriptions[Z_BUFL],
     int *number_of_nodes,
     int *number_of_elements[Z_MAXTYPE],
-    int *ijk_dimensions[3],
+    int *ijk_dimensions[9],
     int *iblanking_options[6]
 )
 {

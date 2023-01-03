@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,8 +71,6 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
         {
             return false;
         }
-
-        label nVert = foamyHexMesh_.number_of_vertices();
 
         const label initialNumOfPoints = pts.size();
 
@@ -267,7 +265,6 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
                 for (label i = 0; i < 2; ++i)
                 {
                     pts.remove();
-                    nVert--;
                 }
 
                 return false;
@@ -504,8 +501,6 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
             return false;
         }
 
-        label nVert = foamyHexMesh_.number_of_vertices();
-
         const label initialNumOfPoints = pts.size();
 
         const scalar ppDist = foamyHexMesh_.pointPairDistance(featPt);
@@ -703,7 +698,6 @@ bool Foam::featurePointConformer::createSpecialisedFeaturePoint
                 for (label i = 0; i < 2; ++i)
                 {
                     pts.remove();
-                    nVert--;
                 }
 
                 return false;

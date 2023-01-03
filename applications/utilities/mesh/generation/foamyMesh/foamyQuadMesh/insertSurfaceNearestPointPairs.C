@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,12 +122,10 @@ void Foam::CV2D::insertPointPairs
     if (meshControls().objOutput())
     {
         OFstream str(fName);
-        label vertI = 0;
 
         forAll(surfacePoints, ppi)
         {
             meshTools::writeOBJ(str, toPoint3D(surfacePoints[ppi]));
-            vertI++;
         }
 
         Info<< "insertPointPairs: Written " << surfacePoints.size()

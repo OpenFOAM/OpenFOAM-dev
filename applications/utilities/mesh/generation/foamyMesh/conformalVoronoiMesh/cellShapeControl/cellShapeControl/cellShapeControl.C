@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,52 +183,21 @@ Foam::tensor Foam::cellShapeControl::cellAlignment(const point& pt) const
     }
     else
     {
-        label nFarPoints = 0;
+        triad tri;
+
         for (label pI = 0; pI < 4; ++pI)
         {
-            if (ch->vertex(pI)->farPoint())
+            if (bary[pI] > small)
             {
-                nFarPoints++;
+                tri += triad(bary[pI]*ch->vertex(pI)->alignment());
             }
         }
 
-//        if (nFarPoints != 0)
-//        {
-//            for (label pI = 0; pI < 4; ++pI)
-//            {
-//                if (!ch->vertex(pI)->farPoint())
-//                {
-//                    alignment = ch->vertex(pI)->alignment();
-//                }
-//            }
-//        }
-//        else
-        {
-            triad tri;
+        tri.normalise();
+        tri.orthogonalise();
+        tri = tri.sortxyz();
 
-            for (label pI = 0; pI < 4; ++pI)
-            {
-                if (bary[pI] > small)
-                {
-                    tri += triad(bary[pI]*ch->vertex(pI)->alignment());
-                }
-            }
-
-            tri.normalise();
-            tri.orthogonalise();
-            tri = tri.sortxyz();
-
-            alignment = tri;
-        }
-
-//        cellShapeControlMesh::Vertex_handle nearV =
-//            shapeControlMesh_.nearest_vertex_in_cell
-//            (
-//                toPoint<cellShapeControlMesh::Point>(pt),
-//                ch
-//            );
-//
-//        alignment = nearV->alignment();
+        alignment = tri;
     }
 
     return alignment;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,23 +169,14 @@ template<class Triangulation>
 void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
 {
     label nInternal = 0;
-    label nInternalRef = 0;
     label nUnassigned = 0;
-    label nUnassignedRef = 0;
     label nInternalNearBoundary = 0;
-    label nInternalNearBoundaryRef = 0;
     label nInternalSurface = 0;
-    label nInternalSurfaceRef = 0;
     label nInternalFeatureEdge = 0;
-    label nInternalFeatureEdgeRef = 0;
     label nInternalFeaturePoint = 0;
-    label nInternalFeaturePointRef = 0;
     label nExternalSurface = 0;
-    label nExternalSurfaceRef = 0;
     label nExternalFeatureEdge = 0;
-    label nExternalFeatureEdgeRef = 0;
     label nExternalFeaturePoint = 0;
-    label nExternalFeaturePointRef = 0;
     label nFar = 0;
     label nReferred = 0;
 
@@ -201,7 +192,6 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
             if (vit->referred())
             {
                 nReferred++;
-                nInternalRef++;
             }
 
             nInternal++;
@@ -211,7 +201,6 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
             if (vit->referred())
             {
                 nReferred++;
-                nUnassignedRef++;
             }
 
             nUnassigned++;
@@ -221,7 +210,6 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
             if (vit->referred())
             {
                 nReferred++;
-                nInternalNearBoundaryRef++;
             }
 
             nInternalNearBoundary++;
@@ -231,7 +219,6 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
             if (vit->referred())
             {
                 nReferred++;
-                nInternalSurfaceRef++;
             }
 
             nInternalSurface++;
@@ -241,7 +228,6 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
             if (vit->referred())
             {
                 nReferred++;
-                nInternalFeatureEdgeRef++;
             }
 
             nInternalFeatureEdge++;
@@ -251,7 +237,6 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
             if (vit->referred())
             {
                 nReferred++;
-                nInternalFeaturePointRef++;
             }
 
             nInternalFeaturePoint++;
@@ -261,7 +246,6 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
             if (vit->referred())
             {
                 nReferred++;
-                nExternalSurfaceRef++;
             }
 
             nExternalSurface++;
@@ -271,7 +255,6 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
             if (vit->referred())
             {
                 nReferred++;
-                nExternalFeatureEdgeRef++;
             }
 
             nExternalFeatureEdge++;
@@ -281,7 +264,6 @@ void Foam::DelaunayMesh<Triangulation>::printVertexInfo(Ostream& os) const
             if (vit->referred())
             {
                 nReferred++;
-                nExternalFeaturePointRef++;
             }
 
             nExternalFeaturePoint++;

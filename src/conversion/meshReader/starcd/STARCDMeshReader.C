@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -633,7 +633,7 @@ etc,
 void Foam::meshReaders::STARCD::readBoundary(const fileName& inputName)
 {
     const word fileSignature = "PROSTAR_BOUNDARY";
-    label nPatches = 0, nFaces = 0, nBafflePatches = 0, maxId = 0;
+    label nPatches = 0, nBafflePatches = 0, maxId = 0;
     label lineLabel, starCellId, cellFaceId, starRegion, configNumber;
     word patchType;
 
@@ -672,7 +672,6 @@ void Foam::meshReaders::STARCD::readBoundary(const fileName& inputName)
 
             while ((is >> lineLabel).good())
             {
-                nFaces++;
                 is  >> starCellId
                     >> cellFaceId
                     >> starRegion

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,9 +114,10 @@ void Foam::writeVTKFields
     forAll(values, fieldi)
     {
         Info<< "        writing field " << fieldNames[fieldi] << endl;
+
         os  << nl << fieldNames[fieldi] << ' ' << pTraits<Type>::nComponents
             << ' ' << values[fieldi].size() << " float" << nl;
-        label offset = 0;
+
         forAll(addr, trackI)
         {
             const List<label> ids(addr[trackI]);
@@ -135,7 +136,6 @@ void Foam::writeVTKFields
                     os  << ' ';
                 }
             }
-            offset += ids.size();
         }
     }
 }

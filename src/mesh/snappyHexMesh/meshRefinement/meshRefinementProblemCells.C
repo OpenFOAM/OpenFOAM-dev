@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -714,7 +714,6 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
         // Get number of anchor points (pointLevel <= cellLevel)
 
         label nBoundaryAnchors = 0;
-        label nNonAnchorBoundary = 0;
         label nonBoundaryAnchor = -1;
 
         forAll(cPoints, i)
@@ -734,74 +733,52 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
                     nonBoundaryAnchor = pointi;
                 }
             }
-            else if (isBoundaryPoint[pointi])
-            {
-                nNonAnchorBoundary++;
-            }
         }
 
         if (nBoundaryAnchors == 8)
         {
             const cell& cFaces = mesh_.cells()[celli];
 
-            // Count boundary faces.
-            label nBfaces = 0;
-
-            forAll(cFaces, cFacei)
+            if
+            (
+                checkCollapse
+            && !isCollapsedCell(newPoints, volFraction, celli)
+            )
             {
-                if (isBoundaryFace[cFaces[cFacei]])
-                {
-                    nBfaces++;
-                }
+                nPrevented++;
+
+                // Pout<< "Preventing baffling/removal of 8 anchor point"
+                //    << " cell "
+                //    << celli << " at " << mesh_.cellCentres()[celli]
+                //    << " since new volume "
+                //    << mesh_.cells()[celli].mag(newPoints, mesh_.faces())
+                //    << " old volume " << mesh_.cellVolumes()[celli]
+                //    << endl;
             }
-
-            // If nBfaces > 1 make all non-boundary non-baffle faces baffles.
-            // We assume that this situation is where there is a single
-            // cell sticking out which would get flattened.
-
-            // Eugene: delete cell no matter what.
-            // if (nBfaces > 1)
+            else
             {
-                if
-                (
-                    checkCollapse
-                && !isCollapsedCell(newPoints, volFraction, celli)
-                )
+                // Block all faces of cell
+                forAll(cFaces, cf)
                 {
-                    nPrevented++;
-                    // Pout<< "Preventing baffling/removal of 8 anchor point"
-                    //    << " cell "
-                    //    << celli << " at " << mesh_.cellCentres()[celli]
-                    //    << " since new volume "
-                    //    << mesh_.cells()[celli].mag(newPoints, mesh_.faces())
-                    //    << " old volume " << mesh_.cellVolumes()[celli]
-                    //    << endl;
-                }
-                else
-                {
-                    // Block all faces of cell
-                    forAll(cFaces, cf)
+                    const label facei = cFaces[cf];
+
+                    if
+                    (
+                        facePatch[facei] == -1
+                     && mesh_.isInternalFace(facei)
+                    )
                     {
-                        const label facei = cFaces[cf];
+                        facePatch[facei] = nearestAdaptPatch[facei];
+                        nBaffleFaces++;
 
-                        if
+                        // Mark face as a 'boundary'
+                        markBoundaryFace
                         (
-                            facePatch[facei] == -1
-                         && mesh_.isInternalFace(facei)
-                        )
-                        {
-                            facePatch[facei] = nearestAdaptPatch[facei];
-                            nBaffleFaces++;
-
-                            // Mark face as a 'boundary'
-                            markBoundaryFace
-                            (
-                                facei,
-                                isBoundaryFace,
-                                isBoundaryEdge,
-                                isBoundaryPoint
-                            );
-                        }
+                            facei,
+                            isBoundaryFace,
+                            isBoundaryEdge,
+                            isBoundaryPoint
+                        );
                     }
                 }
             }

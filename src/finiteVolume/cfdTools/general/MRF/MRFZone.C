@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,14 +67,11 @@ void Foam::MRFZone::setMRFFaces()
         zoneCell[cellLabels[i]] = true;
     }
 
-    label nZoneFaces = 0;
-
     for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
         if (zoneCell[own[facei]] || zoneCell[nei[facei]])
         {
             faceInMRF[facei] = true;
-            nZoneFaces++;
         }
     }
 
@@ -91,7 +88,6 @@ void Foam::MRFZone::setMRFFaces()
                 if (zoneCell[own[facei]])
                 {
                     faceInMRF[facei] = true;
-                    nZoneFaces++;
                 }
             }
         }
